@@ -14,7 +14,9 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
-    frame: false
+    frame: false,
+    width: 800,
+    height: 600
   })
   mainWindow.loadURL('file://' + path.join(__dirname, '/main.html'))
   mainWindow.webContents.on('new-window', (e) => {
