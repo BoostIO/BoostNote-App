@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import { Octicon, LinkButton } from 'components'
-import { Map } from 'immutable'
+import FolderButton from './FolderButton'
 
 const Root = styled.div`
   position: relative;
@@ -15,7 +15,7 @@ const StorageSection = styled.div`
 `
 
 const NavButton = styled(LinkButton)`
-  ${(p) => p.active ? p.theme.navButtonActive : p.theme.navButton}
+  ${(p) => p.theme.navButton}
   display: block;
   height: 24px;
   line-height: 24px;
@@ -23,10 +23,6 @@ const NavButton = styled(LinkButton)`
   padding: 0 10px;
   cursor: pointer;
   width: 100%;
-`
-
-const FolderButton = styled(NavButton)`
-  padding: 0 20px;
 `
 
 const BottomButton = styled.button`
@@ -63,8 +59,8 @@ class Nav extends React.Component {
 
             return <FolderButton
               key={folderName}
-              to={folderPath}
-              active={router.isActive(folderPath)}
+              folderPath={folderPath}
+              folderName={folderName}
             >
               {folderName}
             </FolderButton>

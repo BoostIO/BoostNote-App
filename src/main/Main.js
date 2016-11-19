@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled, { ThemeProvider } from 'styled-components'
 import TitleBar from './TitleBar'
 import themes from './lib/themes'
-import Nav from './Nav'
+import Nav from './Nav/Nav'
 import { Map } from 'immutable'
 import StorageManager from './lib/StorageManager'
 

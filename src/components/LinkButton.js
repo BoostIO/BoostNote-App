@@ -14,10 +14,18 @@ class LinkButton extends React.Component {
   }
 
   render () {
+    let { to, className } = this.props
+    const { router } = this.context
+    className = _.isString(className)
+      ? className
+      : ''
+    className += router.isActive(to) ? ' active' : ''
+
     return (
       <button
         onClick={this.handleClick}
-        {..._.omit(this.props, ['active'])}
+        {..._.omit(this.props, ['active', 'className'])}
+        className={className}
       />
     )
   }

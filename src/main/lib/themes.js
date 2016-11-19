@@ -48,18 +48,10 @@ const defaultTheme = {
     &:active {
       background-color: #DCDCDC;
     }
-  `,
-  navButtonActive: `
-    display: block;
-    outline: none;
-    border: none;
-    background-color: transparent;
-    text-align: left;
-    text-decoration: none;
-    font-size: ${defaultUIFontSize};
-    font-family: ${defaultUIFontFamily};
-    background-color: ${defaultUIActiveColor};
-    color: white;
+    &.active {
+      background-color: ${defaultUIActiveColor};
+      color: white;
+    }
   `
 }
 
