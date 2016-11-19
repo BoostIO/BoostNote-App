@@ -13,9 +13,6 @@ const SearchInput = styled.input`
   height: 26px;
   padding: 0 10px;
   box-sizing: border-box;
-  &:focus {
-    border: ${(p) => p.theme.activeBorder}
-  }
 `
 
 const Button = styled.button`

@@ -18,6 +18,9 @@ const defaultTheme = {
     color: ${defaultUIColor};
     font-size: ${defaultUIFontSize};
     font-family: ${defaultUIFontFamily};
+    &:focus {
+      border-color: ${defaultUIActiveColor};
+    }
   `,
   button: `
     border: solid 1px
