@@ -48,6 +48,11 @@ export function list () {
   return Promise.resolve(new OrderedMap(dbs))
 }
 
+const NOTE_ID_PREFIX = 'note:'
+const FOLDER_ID_PREFIX = 'folder:'
+const isNoteId = new RegExp(`^${NOTE_ID_PREFIX}.+`)
+const isFolderId = new RegExp(`^${FOLDER_ID_PREFIX}.+`)
+
 /**
  * load dataMap from a storage
  *
@@ -61,11 +66,32 @@ export function load (name) {
 
   return db
     .allDocs({include_docs: true})
-    .then((docs) => {
-      return {
-        notes: new Map([]),
-        folders: new Map([['Notes', {}]])
+    .then((data) => {
+      let { notes, folders } = data.rows.reduce((sum, row) => {
+        if (isNoteId.test(row.id)) {
+          let noteId = row.id.substring(NOTE_ID_PREFIX.length)
+          sum.notes.push([noteId, row])
+        } else if (isFolderId.test(row.id)) {
+          let folderPath = row.id.substring(FOLDER_ID_PREFIX.length)
+          sum.folders.push([folderPath, row])
+        }
+        return sum
+      }, {
+        notes: [],
+        folders: []
+      })
+      let noteMap = new Map(notes)
+      let folderMap = new Map(folders)
+
+      // Each repository should have `Notes` folder by default.
+      if (folderMap.get('Notes') == null) {
+        folderMap = folderMap.set('Notes', {})
       }
+
+      return new Map([
+        ['notes', noteMap],
+        ['folders', folderMap]
+      ])
     })
 }
 /**

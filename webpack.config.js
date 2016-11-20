@@ -31,6 +31,7 @@ const config = {
     'sander',
     'electron-devtools-installer',
     'octicons',
+    'filenamify',
     {
       react: 'var React',
       'react-dom': 'var ReactDOM',

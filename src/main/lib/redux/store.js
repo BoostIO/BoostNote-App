@@ -24,6 +24,16 @@ function storageMap (state = defaultStorageMap, action) {
   switch (action.type) {
     case 'LOAD_ALL_STORAGES':
       return action.payload.storageMap
+    case 'UPDATE_FOLDER':
+      {
+        const { storageName, folderPath, folderData } = action.payload
+        return state.setIn([
+          storageName,
+          'folders',
+          folderPath
+        ],
+        folderData)
+      }
   }
   return state
 }

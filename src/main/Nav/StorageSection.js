@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { Octicon, LinkButton } from 'components'
 import FolderButton from './FolderButton'
 import ContextMenu from 'main/lib/ContextMenu'
+import StorageManager from 'main/lib/StorageManager'
+import filenamify from 'filenamify'
 
 const NavButton = styled(LinkButton)`
   ${p => p.theme.navButton}
@@ -63,7 +65,7 @@ class StorageSection extends React.Component {
     }
 
     this.handleNewNameInputKeyDown = e => {
-      switch (e) {
+      switch (e.keyCode) {
         case 13:
           this.confirmCreating()
           break
@@ -79,9 +81,17 @@ class StorageSection extends React.Component {
   }
 
   createNewFolder () {
+    const { storageData } = this.props
+
+    let count = 0
+    let newName = 'New Folder'
+    while (storageData.hasIn(['folders', newName])) {
+      newName = `New Folder (${++count})`
+    }
+
     this.setState({
       isCreatingFolder: true,
-      newName: 'New Folder'
+      newName
     }, () => {
       this.newNameInput.focus()
       this.newNameInput.select()
@@ -89,9 +99,30 @@ class StorageSection extends React.Component {
   }
 
   confirmCreating () {
+    const { storageName, storageData } = this.props
+    const { store } = this.context
+
+    let count = 0
+    let originalName = filenamify(this.state.newName, {replacement: '_'})
+    let newName = originalName
+    while (storageData.hasIn(['folders', newName])) {
+      newName = `${originalName} (${++count})`
+    }
+
+    StorageManager
+      .upsertFolder(storageName, newName)
+      .then((res) => {
+        store.dispatch({
+          type: 'UPDATE_FOLDER',
+          payload: {
+            storageName,
+            folderPath: newName
+          }
+        })
+      })
+
     this.setState({
-      isCreatingFolder: false,
-      newName: 'New Folder'
+      isCreatingFolder: false
     }, () => {
       this.storageButton.focus()
     })
@@ -110,7 +141,8 @@ class StorageSection extends React.Component {
     const { router } = this.context
     const { storageName, storageData } = this.props
 
-    const folderList = storageData.folders
+    const folderList = storageData.get('folders')
+      .sortBy((v, key) => key.toLowerCase())
       .map((meta, folderName) => {
         const folderPath = `/storages/${storageName}/folders/${folderName}`
 
@@ -162,6 +194,9 @@ StorageSection.contextTypes = {
   router: PropTypes.shape({
     push: PropTypes.func,
     isActive: PropTypes.func
+  }),
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
   })
 }
 
