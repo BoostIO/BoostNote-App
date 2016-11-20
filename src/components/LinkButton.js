@@ -13,6 +13,10 @@ class LinkButton extends React.Component {
     }
   }
 
+  focus () {
+    this.refs.root.focus()
+  }
+
   render () {
     let { to, className } = this.props
     const { router } = this.context
@@ -23,9 +27,11 @@ class LinkButton extends React.Component {
 
     return (
       <button
+        ref='root'
         onClick={this.handleClick}
-        {..._.omit(this.props, ['active', 'className'])}
         className={className}
+        children={this.props.children}
+        onContextMenu={this.props.onContextMenu}
       />
     )
   }
