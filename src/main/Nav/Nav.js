@@ -6,12 +6,12 @@ import StorageSection from './StorageSection'
 const Root = styled.div`
   position: relative;
   min-width: 150px;
-  width: ${(p) => p.width}px;
+  width: ${p => p.width}px;
   overflow: hidden;
 `
 
 const BottomButton = styled.button`
-  ${(p) => p.theme.navButton}
+  ${p => p.theme.navButton}
   display: block;
   position: absolute;
   bottom: 0;
@@ -31,7 +31,7 @@ class Nav extends React.Component {
     this.state = {
     }
 
-    this.handleNewFolderClick = (e) => {
+    this.handleNewFolderClick = e => {
       this.refs['storage-' + this.context.router.params.storageName].createNewFolder()
     }
   }

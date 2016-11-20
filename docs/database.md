@@ -1,32 +1,39 @@
 # Database
 
-## Sequences
+Inpad uses pouchDB as a storage and the pouchDB uses levelDown as a default.
 
-### Initialization
+## Default Storage
 
-When app started
+By default, Inpad provides a storage, named `notebook`
+The storage can not be deleted and renamed. User only can reset the data of it.
 
-DB 관리
+If it deleted from out of the app, the app will try to create it again.
 
-파일과의 연결처리.
-항상 기동시 레벨 DB와 덤프파일간에 레플리케이션을 시도한다.
-파일 워치를 넣어두어서 해당파일이 바뀌면 레플리케이션을 시도한다.
+## Default Folder
 
-스토리지 변경후 레플리케이트까지 10초 유예기간
+Each storage has a default folder, named `Notes`.
+It also can not be deleted and renamed.
 
-*.padstorage 확장자
+If it deleted from out of the app, the app will try to create it again.
 
-스토리지 = 데이터베이스
-작성자는 이메일로 구분한다.
-공유전에는 이메일을 입력하게한다.
-입력시 해당이메일을 글로벌 프로필로 사용할지 질문한다.
+## `_id` conventions
 
-디폴트DB는 항상 계속 가져옴
+Database of pouchDB doesn't have a concept of table. It is just a key-value documents store.
+So, we have to put **Notes** and **Folders** into same space.
 
+Inpad will set prefix for each type of data.
 
-Keys|
+type|conventions
 ---|---
-folder_${path}/path|
-note_${createdAt}
-_local/resourcesPath|
-_local/remotes|
+Note|`note:$RANDOM_HASH$`
+Folder|`folder:$PATH_OF_FOLDER$`
+
+### `$RANDOM_HASH$`
+
+This is a string of 10 Random bytes. It can be issued easily by `main/lib/util.randomBytes`.
+
+> the returned hash is not unique. You should check if it is duplicated before creating a new note.
+
+### `$PATH_OF_FOLDERS$`
+
+This string should be a valid path. When creating a folder, the app will convert it into a valid path if it is invalid.

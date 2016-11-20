@@ -18,20 +18,20 @@ class StorageCreate extends React.Component {
       name: '',
       isSaving: false
     }
-  }
 
-  handleNameChange = (e) => {
-    this.setState({
-      name: e.target.value
-    })
-  }
+    this.handleNameChange = e => {
+      this.setState({
+        name: e.target.value
+      })
+    }
 
-  handleConfirmClick = (e) => {
-    this.setState({
-      isSaving: true
-    }, () => {
+    this.handleConfirmClick = e => {
+      this.setState({
+        isSaving: true
+      }, () => {
 
-    })
+      })
+    }
   }
 
   render () {

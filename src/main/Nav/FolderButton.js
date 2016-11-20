@@ -10,7 +10,7 @@ const Root = styled.div`
 `
 
 const Button = styled(LinkButton)`
-  ${(p) => p.theme.navButton}
+  ${p => p.theme.navButton}
   display: block;
   height: 24px;
   line-height: 24px;
@@ -21,7 +21,7 @@ const Button = styled(LinkButton)`
 `
 
 const RenameInput = styled.input`
-  ${(p) => p.theme.input}
+  ${p => p.theme.input}
   height: 20px;
   line-height: 20px;
   padding: 0 5px;
@@ -45,7 +45,7 @@ class FolderButton extends React.Component {
       ContextMenu.open([
         {
           label: 'Rename Folder...',
-          click: () => this.rename()
+          click: e => this.rename()
         },
         {
           label: 'Delete Folder...'
@@ -58,7 +58,7 @@ class FolderButton extends React.Component {
         },
         {
           label: 'New Folder...',
-          click: () => this.props.createNewButton()
+          click: e => this.props.createNewButton()
         }
       ])
     }

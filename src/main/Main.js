@@ -38,7 +38,7 @@ const Slider = styled.div`
 const SliderLine = styled.div`
   margin-left: 2px;
   width: 1px;
-  background-color: ${(p) => p.active ? p.theme.activeBorderColor : p.theme.borderColor};
+  background-color: ${p => p.active ? p.theme.activeBorderColor : p.theme.borderColor};
 `
 
 const Content = styled.div`
@@ -56,7 +56,7 @@ class Main extends React.Component {
       isSliderActive: false
     }
 
-    this.handleSliderMouseDown = () => {
+    this.handleSliderMouseDown = e => {
       window.addEventListener('mouseup', this.handleSliderMouseUp)
       window.addEventListener('mousemove', this.handleSliderMouseMove)
       this.setState({
@@ -64,13 +64,13 @@ class Main extends React.Component {
       })
     }
 
-    this.handleSliderMouseMove = (e) => {
+    this.handleSliderMouseMove = e => {
       this.setState({
         navWidth: e.clientX
       })
     }
 
-    this.handleSliderMouseUp = (e) => {
+    this.handleSliderMouseUp = e => {
       window.removeEventListener('mouseup', this.handleSliderMouseUp)
       window.removeEventListener('mousemove', this.handleSliderMouseMove)
 

@@ -5,7 +5,7 @@ import FolderButton from './FolderButton'
 import ContextMenu from 'main/lib/ContextMenu'
 
 const NavButton = styled(LinkButton)`
-  ${(p) => p.theme.navButton}
+  ${p => p.theme.navButton}
   display: block;
   height: 24px;
   line-height: 24px;
@@ -21,7 +21,7 @@ const NewFolder = styled.div`
   align-items: center;
 `
 const NewFolderNameInput = styled.input`
-  ${(p) => p.theme.input}
+  ${p => p.theme.input}
   height: 20px;
   line-height: 20px;
   padding: 0 5px;

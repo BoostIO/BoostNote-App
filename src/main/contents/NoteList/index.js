@@ -14,12 +14,12 @@ const Root = styled.div`
 `
 
 const Left = styled.div`
-  width: ${(p) => p.width}px;
+  width: ${p => p.width}px;
   min-width: 150px;
 `
 
 const LeftMenu = styled.div`
-  border-bottom: ${(p) => p.theme.border}
+  border-bottom: ${p => p.theme.border}
 `
 
 const LeftList = styled.div`
@@ -42,7 +42,9 @@ const Slider = styled.div`
 const SliderLine = styled.div`
   margin-left: 2px;
   width: 1px;
-  background-color: ${(p) => p.active ? p.theme.activeBorderColor : p.theme.borderColor};
+  background-color: ${p => p.active
+    ? p.theme.activeBorderColor
+    : p.theme.borderColor};
 `
 
 const Detail = styled.div`
@@ -56,7 +58,7 @@ class NoteList extends React.Component {
       listWidth: props.status.get('noteListWidth')
     }
 
-    this.handleSliderMouseDown = () => {
+    this.handleSliderMouseDown = e => {
       window.addEventListener('mouseup', this.handleSliderMouseUp)
       window.addEventListener('mousemove', this.handleSliderMouseMove)
       this.setState({
@@ -64,13 +66,13 @@ class NoteList extends React.Component {
       })
     }
 
-    this.handleSliderMouseMove = (e) => {
+    this.handleSliderMouseMove = e => {
       this.setState({
         listWidth: e.clientX - this.props.status.get('navWidth')
       })
     }
 
-    this.handleSliderMouseUp = (e) => {
+    this.handleSliderMouseUp = e => {
       window.removeEventListener('mouseup', this.handleSliderMouseUp)
       window.removeEventListener('mousemove', this.handleSliderMouseMove)
 
@@ -86,7 +88,7 @@ class NoteList extends React.Component {
       <Root>
         <Left width={this.state.listWidth}>
           <LeftMenu>
-            Sort By <select/>
+            Sort By <select />
             <button><Octicon icon='grabber' size='12' /></button>
             <button><Octicon icon='three-bars' size='12' /></button>
           </LeftMenu>

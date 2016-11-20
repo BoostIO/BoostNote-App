@@ -1,6 +1,6 @@
 # Coding Conventions
 
-## Bound callback
+## Binding callback
 
 It should be placed inside of a constructor.
 
@@ -44,3 +44,29 @@ class SomeAnotherComponent {
   }
 }
 ```
+
+## `ref` for Styled components
+
+If you tried to use `ref` for styled component, you will get a instance of the component not the element object.
+To access the root element of it, you have to access children array.
+
+The library give another option `innerRef`. We use this instead of accessing children.
+
+```jsx
+const CustomButton = styled.button`
+  font-size: 24px;
+`
+
+class WrappedButton {
+  someMethod () {
+    this.button.focus()
+  }
+
+  render () {
+    return <CustomButton
+      innerRef={c => (this.button = c)}
+    />
+  }
+}
+```
+

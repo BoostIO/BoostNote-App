@@ -22,8 +22,8 @@ const Icon = styled.svg`
   width: 1em;
   height: 1em;
   vertical-align: middle;
-  fill: ${(p) => _.isString(p.color) ? p.color : 'inherit'};
-  ${(p) => p.pulse ? pulseStyle : ''}
+  fill: ${p => _.isString(p.color) ? p.color : 'inherit'};
+  ${p => p.pulse ? pulseStyle : ''}
 `
 
 class Octicon extends React.Component {

@@ -6,7 +6,7 @@ import Octicon from 'components/Octicon'
 const { remote } = require('electron')
 
 const SearchInput = styled.input`
-  ${(p) => p.theme.input}
+  ${p => p.theme.input}
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
   margin: 0 2.5px;
@@ -16,7 +16,7 @@ const SearchInput = styled.input`
 `
 
 const Button = styled.button`
-  ${(p) => p.theme.button}
+  ${p => p.theme.button}
   padding: 0;
   width: 30px;
   height: 26px;
@@ -32,7 +32,7 @@ const Seperator = styled.div`
 `
 
 const BordedTitleBar = styled(MacTitleBar)`
-  border-bottom: ${(p) => p.theme.border};
+  border-bottom: ${p => p.theme.border};
 `
 
 const Root = styled.div`
@@ -48,34 +48,34 @@ class TitleBar extends React.Component {
       search: ''
     }
 
-    this.handleChange = (e) => {
+    this.handleChange = e => {
       this.setState({
         search: e.target.value
       })
     }
-  }
 
-  handleCloseClick = () => {
-    remote.getCurrentWindow().close()
-  }
+    this.handleCloseClick = e => {
+      remote.getCurrentWindow().close()
+    }
 
-  handleResizeClick () {
-    let currentWindow = remote.getCurrentWindow()
-    let isFullscreen = currentWindow.isFullScreen()
+    this.handleMinimizeClick = e => {
+      remote.getCurrentWindow().minimize()
+    }
 
-    currentWindow.setFullScreen(!isFullscreen)
+    this.handleMaximizeClick = e => {
+      remote.getCurrentWindow().maximize()
+    }
 
-    this.setState({
-      isFullscreen: !isFullscreen
-    })
-  }
+    this.handleResizeClick = e => {
+      let currentWindow = remote.getCurrentWindow()
+      let isFullscreen = currentWindow.isFullScreen()
 
-  handleMinimizeClick = () => {
-    remote.getCurrentWindow().minimize()
-  }
+      currentWindow.setFullScreen(!isFullscreen)
 
-  handleMaximizeClick = () => {
-    remote.getCurrentWindow().maximize()
+      this.setState({
+        isFullscreen: !isFullscreen
+      })
+    }
   }
 
   render () {
@@ -89,7 +89,7 @@ class TitleBar extends React.Component {
           onCloseClick={this.handleCloseClick}
           onMinimizeClick={this.handleMinimizeClick}
           onMaximizeClick={this.handleMaximizeClick}
-          onResizeClick={this.handleResizeClick.bind(this)}
+          onResizeClick={this.handleResizeClick}
         >
           <Toolbar height='36' horizontalAlignment='center'>
             <SearchInput
