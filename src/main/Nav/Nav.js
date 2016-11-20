@@ -1,28 +1,13 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
-import { Octicon, LinkButton } from 'components'
-import FolderButton from './FolderButton'
+import { Octicon } from 'components'
+import StorageSection from './StorageSection'
 
 const Root = styled.div`
   position: relative;
   min-width: 150px;
   width: ${(p) => p.width}px;
   overflow: hidden;
-`
-
-const StorageSection = styled.div`
-  margin: 10px 0;
-`
-
-const NavButton = styled(LinkButton)`
-  ${(p) => p.theme.navButton}
-  display: block;
-  height: 24px;
-  line-height: 24px;
-  margin: 0;
-  padding: 0 10px;
-  cursor: pointer;
-  width: 100%;
 `
 
 const BottomButton = styled.button`
@@ -45,47 +30,30 @@ class Nav extends React.Component {
 
     this.state = {
     }
+
+    this.handleNewFolderClick = (e) => {
+      this.refs['storage-' + this.context.router.params.storageName].createNewFolder()
+    }
   }
 
   render () {
     const { storageMap } = this.props
-    const { router } = this.context
 
     const storageList = storageMap
-      .map((data, storageName) => {
-        const folderList = data.folders
-          .map((meta, folderName) => {
-            const folderPath = `/storages/${storageName}/folders/${folderName}`
-
-            return <FolderButton
-              key={folderName}
-              folderPath={folderPath}
-              folderName={folderName}
-            >
-              {folderName}
-            </FolderButton>
-          })
-          .toArray()
-        const storagePath = `/storages/${storageName}/all-notes`
-        const isStorageActive = router.isActive(storagePath)
+      .map((storageData, storageName) => {
         return <StorageSection
+          ref={'storage-' + storageName}
           key={storageName}
-          >
-          <NavButton
-            to={storagePath}
-            active={isStorageActive}
-          >
-            <Octicon icon='repo' size={12} color={isStorageActive && 'white'} /> {storageName}
-          </NavButton>
-          {folderList}
-        </StorageSection>
+          storageName={storageName}
+          storageData={storageData}
+        />
       })
       .toArray()
 
     return (
       <Root width={this.props.width}>
         {storageList}
-        <BottomButton>
+        <BottomButton onClick={this.handleNewFolderClick}>
           <Octicon icon='plus' /> Add Folder
         </BottomButton>
       </Root>
@@ -99,7 +67,8 @@ Nav.propTypes = {
 Nav.contextTypes = {
   router: PropTypes.shape({
     push: PropTypes.func,
-    isActive: PropTypes.func
+    isActive: PropTypes.func,
+    params: PropTypes.object
   })
 }
 
