@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import styled from 'styled-components'
 import { TitleBar as MacTitleBar } from 'react-desktop/macOs'
 import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
@@ -116,7 +117,9 @@ class TitleBar extends React.Component {
     }
 
     this.handleRootDoubleClick = e => {
-      this.toggleMaximize()
+      if (e.target === findDOMNode(this.titlebar) || e.target === findDOMNode(this.toolbar)) {
+        this.toggleMaximize()
+      }
     }
   }
 
@@ -150,7 +153,9 @@ class TitleBar extends React.Component {
           onDoubleClick={this.handleRootDoubleClick}
           innerRef={c => (this.titlebar = c)}
         >
-          <ToolBar>
+          <ToolBar
+            innerRef={c => (this.toolbar = c)}
+          >
             <SearchInput
               placeholder='Search...'
               value={this.state.search}
