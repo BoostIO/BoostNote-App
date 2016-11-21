@@ -16,7 +16,10 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({
     frame: false,
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: {
+      blinkFeatures: 'OverlayScrollbars'
+    }
   })
   mainWindow.loadURL('file://' + path.join(__dirname, '/main.html'))
   mainWindow.webContents.on('new-window', (e) => {

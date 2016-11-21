@@ -10,6 +10,16 @@ const Root = styled.div`
   overflow: hidden;
 `
 
+const StorageList = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow-y: auto;
+`
+
 const BottomButton = styled.button`
   ${p => p.theme.navButton}
   display: block;
@@ -52,7 +62,9 @@ class Nav extends React.Component {
 
     return (
       <Root width={this.props.width}>
-        {storageList}
+        <StorageList>
+          {storageList}
+        </StorageList>
         <BottomButton onClick={this.handleNewFolderClick}>
           <Octicon icon='plus' /> Add Folder
         </BottomButton>
