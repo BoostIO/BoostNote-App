@@ -5,6 +5,8 @@ import ContextMenu from 'main/lib/ContextMenu'
 import Dialog from 'main/lib/Dialog'
 import StorageManager from 'main/lib/StorageManager'
 
+const DEFAULT_FOLDER_NAME = 'Notes'
+
 const Root = styled.div`
   display: flex;
   align-items: center;
@@ -44,14 +46,20 @@ class FolderButton extends React.Component {
     }
 
     this.handleContextMenu = e => {
+      const { folderName } = this.props
+
+      const isDefaultFolder = folderName === DEFAULT_FOLDER_NAME
+
       ContextMenu.open([
         {
           label: 'Rename Folder...',
-          click: e => this.rename()
+          click: e => this.rename(),
+          enabled: !isDefaultFolder
         },
         {
           label: 'Delete Folder...',
-          click: e => this.delete()
+          click: e => this.delete(),
+          enabled: !isDefaultFolder
         },
         // {
         //   label: 'New Sub Folder...'
@@ -101,6 +109,9 @@ class FolderButton extends React.Component {
   delete () {
     const { storageName, folderName } = this.props
     const { store } = this.context
+
+    if (folderName === DEFAULT_FOLDER_NAME) return null
+
     Dialog.showMessageBox({
       message: `Are you sure you want to delete "${folderName}"?`,
       detail: 'All notes and any subfolders will be deleted.',
