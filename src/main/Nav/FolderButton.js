@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import { LinkButton } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
+import Dialog from 'main/lib/Dialog'
+import StorageManager from 'main/lib/StorageManager'
 
 const Root = styled.div`
   display: flex;
@@ -48,11 +50,12 @@ class FolderButton extends React.Component {
           click: e => this.rename()
         },
         {
-          label: 'Delete Folder...'
+          label: 'Delete Folder...',
+          click: e => this.delete()
         },
-        {
-          label: 'New Sub Folder...'
-        },
+        // {
+        //   label: 'New Sub Folder...'
+        // },
         {
           type: 'separator'
         },
@@ -95,6 +98,29 @@ class FolderButton extends React.Component {
     })
   }
 
+  delete () {
+    const { storageName, folderName } = this.props
+    const { store } = this.context
+    Dialog.showMessageBox({
+      message: `Are you sure you want to delete "${folderName}"?`,
+      detail: 'All notes and any subfolders will be deleted.',
+      buttons: ['Confirm', 'Cancel']
+    }, (index) => {
+      if (index === 0) {
+        StorageManager.deleteFolder(storageName, folderName)
+          .then(() => {
+            store.dispatch({
+              type: 'DELETE_FOLDER',
+              payload: {
+                storageName,
+                folderName
+              }
+            })
+          })
+      }
+    })
+  }
+
   cancelRenaming () {
     this.setState({
       isRenaming: false
@@ -113,7 +139,7 @@ class FolderButton extends React.Component {
   }
 
   render () {
-    const { folderPath, folderName } = this.props
+    const { folderURL, folderName } = this.props
 
     return (
       <Root>
@@ -126,7 +152,7 @@ class FolderButton extends React.Component {
             onChange={this.handleInputChange}
           />
           : <Button
-            to={folderPath}
+            to={folderURL}
             innerRef={c => (this.button = c)}
             onContextMenu={this.handleContextMenu}
           >
@@ -139,8 +165,14 @@ class FolderButton extends React.Component {
 }
 
 FolderButton.propTypes = {
-  folderPath: PropTypes.string,
+  folderURL: PropTypes.string,
   folderName: PropTypes.string
+}
+
+FolderButton.contextTypes = {
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
+  })
 }
 
 export default FolderButton

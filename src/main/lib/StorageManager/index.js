@@ -115,22 +115,22 @@ export function loadAll () {
     .then((storageMap) => new OrderedMap(storageMap))
 }
 
-export function upsertFolder (name, folderPath) {
+export function upsertFolder (name, folderName) {
   const db = dbs.get(name)
   if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
   return db
     .put({
-      _id: 'folder:' + folderPath
+      _id: 'folder:' + folderName
     })
 }
 
-export function deleteFolder (name, folderPath) {
+export function deleteFolder (name, folderName) {
   const db = dbs.get(name)
   if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
-  return db
-    .put({
-      _id: 'folder:' + folderPath,
-      _deleted: true
+  return db.get('folder:' + folderName)
+    .then((doc) => {
+      doc._deleted = true
+      return db.put(doc)
     })
 }
 

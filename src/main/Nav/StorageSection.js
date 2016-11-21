@@ -151,6 +151,7 @@ class StorageSection extends React.Component {
 
         return <FolderButton
           key={folderName}
+          storageName={storageName}
           folderURL={folderURL}
           folderName={folderName}
           createNewButton={this.createNewFolder}

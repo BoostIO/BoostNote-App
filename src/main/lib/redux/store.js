@@ -26,13 +26,22 @@ function storageMap (state = defaultStorageMap, action) {
       return action.payload.storageMap
     case 'UPDATE_FOLDER':
       {
-        const { storageName, folderPath, folderData } = action.payload
+        const { storageName, folderName, folderData } = action.payload
         return state.setIn([
           storageName,
           'folders',
-          folderPath
+          folderName
         ],
         folderData)
+      }
+    case 'DELETE_FOLDER':
+      {
+        const { storageName, folderName } = action.payload
+        return state.deleteIn([
+          storageName,
+          'folders',
+          folderName
+        ])
       }
   }
   return state
