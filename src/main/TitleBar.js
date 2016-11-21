@@ -1,9 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import { TitleBar as MacTitleBar, Toolbar } from 'react-desktop/macOs'
+import { TitleBar as MacTitleBar } from 'react-desktop/macOs'
+import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
 import Octicon from 'components/Octicon'
+import _ from 'lodash'
 
 const { remote } = require('electron')
+
+const OSX = global.process.platform === 'darwin'
+const WIN = global.process.platform === 'win32'
+// const LINUX = global.process.platform === 'linux'
 
 const SearchInput = styled.input`
   ${p => p.theme.input}
@@ -23,6 +29,9 @@ const Button = styled.button`
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
   margin: 0 2.5px;
+  &:last-child {
+    margin-left: auto;
+  }
 `
 
 const Seperator = styled.div`
@@ -31,9 +40,31 @@ const Seperator = styled.div`
   height: 26px;
 `
 
-const BordedTitleBar = styled(MacTitleBar)`
-  border-bottom: ${p => p.theme.border};
+const ToolBar = styled.div`
+  height: ${OSX ? 36 : 31}px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: ${OSX ? 0 : 10}px;
 `
+
+const BordedTitleBar = styled(OSX ? MacTitleBar : WindowsTitleBar)`
+  border-bottom: ${p => p.theme.border};
+  ${WIN ? 'flex-direction: row-reverse;' : ''}
+`
+
+const AttributedTitleBar = (props) => {
+  return OSX
+    ? <BordedTitleBar
+      transparent
+      inset
+      {..._.omit(props, ['isMaximized', 'onRestoreDownClick'])}
+    />
+    : <BordedTitleBar
+      {..._.omit(props, ['isFullscreen', 'onResizeClick'])}
+    />
+}
 
 const Root = styled.div`
   position: relative;
@@ -60,10 +91,17 @@ class TitleBar extends React.Component {
 
     this.handleMinimizeClick = e => {
       remote.getCurrentWindow().minimize()
+      this.setState({
+        isMaximized: false
+      })
     }
 
     this.handleMaximizeClick = e => {
-      remote.getCurrentWindow().maximize()
+      this.toggleMaximize()
+    }
+
+    this.handleRestoreDownClick = e => {
+      this.toggleMaximize()
     }
 
     this.handleResizeClick = e => {
@@ -76,22 +114,43 @@ class TitleBar extends React.Component {
         isFullscreen: !isFullscreen
       })
     }
+
+    this.handleRootDoubleClick = e => {
+      this.toggleMaximize()
+    }
+  }
+
+  toggleMaximize () {
+    let currentWindow = remote.getCurrentWindow()
+
+    let isMaximized = currentWindow.isMaximized()
+    if (isMaximized) {
+      currentWindow.unmaximize()
+    } else {
+      currentWindow.maximize()
+    }
+
+    this.setState({
+      isMaximized: !isMaximized
+    })
   }
 
   render () {
     return (
       <Root>
-        <BordedTitleBar
-          inset
+        <AttributedTitleBar
           controls
-          transparent
+          isMaximized={this.state.isMaximized}
           isFullscreen={this.state.isFullscreen}
           onCloseClick={this.handleCloseClick}
           onMinimizeClick={this.handleMinimizeClick}
           onMaximizeClick={this.handleMaximizeClick}
+          onRestoreDownClick={this.handleRestoreDownClick}
           onResizeClick={this.handleResizeClick}
+          onDoubleClick={this.handleRootDoubleClick}
+          innerRef={c => (this.titlebar = c)}
         >
-          <Toolbar height='36' horizontalAlignment='center'>
+          <ToolBar>
             <SearchInput
               placeholder='Search...'
               value={this.state.search}
@@ -104,8 +163,8 @@ class TitleBar extends React.Component {
             <Button>
               <Octicon icon='settings' />
             </Button>
-          </Toolbar>
-        </BordedTitleBar>
+          </ToolBar>
+        </AttributedTitleBar>
       </Root>
     )
   }
