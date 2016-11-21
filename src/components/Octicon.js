@@ -16,13 +16,12 @@ const pulseStyle = `
   animation: ${pulse} 0.5s linear infinite;
 `
 
-const Icon = styled.svg`
+const Root = styled.svg`
   display: inline-block;
   line-height: 1em;
   width: 1em;
   height: 1em;
   vertical-align: middle;
-  fill: ${p => _.isString(p.color) ? p.color : 'inherit'};
   ${p => p.pulse ? pulseStyle : ''}
 `
 
@@ -35,13 +34,11 @@ class Octicon extends React.Component {
   }
 
   render () {
-    const { size, icon } = this.props
+    const { icon } = this.props
     const octicon = octicons[icon]
     return (
-      <Icon
-        {...this.props}
-        width={size}
-        height={size}
+      <Root
+        className='Octicon'
         viewBox={octicon.options.viewBox}
         dangerouslySetInnerHTML={{__html: octicon.path}}
       />

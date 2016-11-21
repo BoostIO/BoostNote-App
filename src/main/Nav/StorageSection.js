@@ -15,6 +15,9 @@ const NavButton = styled(LinkButton)`
   padding: 0 10px;
   cursor: pointer;
   width: 100%;
+  &.active .Octicon {
+    fill: white;
+  }
 `
 
 const NewFolder = styled.div`
@@ -116,7 +119,7 @@ class StorageSection extends React.Component {
           type: 'UPDATE_FOLDER',
           payload: {
             storageName,
-            folderPath: newName
+            folderName: newName
           }
         })
       })
@@ -144,11 +147,11 @@ class StorageSection extends React.Component {
     const folderList = storageData.get('folders')
       .sortBy((v, key) => key.toLowerCase())
       .map((meta, folderName) => {
-        const folderPath = `/storages/${storageName}/folders/${folderName}`
+        const folderURL = `/storages/${storageName}/folders/${folderName}`
 
         return <FolderButton
           key={folderName}
-          folderPath={folderPath}
+          folderURL={folderURL}
           folderName={folderName}
           createNewButton={this.createNewFolder}
         >
@@ -157,18 +160,16 @@ class StorageSection extends React.Component {
       })
       .toArray()
 
-    const storagePath = `/storages/${storageName}/all-notes`
-    const isStorageActive = router.isActive(storagePath)
+    const storageURL = `/storages/${storageName}/all-notes`
 
     return (
       <Root>
         <NavButton
           innerRef={c => (this.storageButton = c)}
-          to={storagePath}
-          active={isStorageActive}
+          to={storageURL}
           onContextMenu={this.handleNavButtonContextMenu}
         >
-          <Octicon icon='repo' size={12} color={isStorageActive && 'white'} /> {storageName}
+          <Octicon icon='repo' /> {storageName}
         </NavButton>
         {folderList}
         {this.state.isCreatingFolder &&
