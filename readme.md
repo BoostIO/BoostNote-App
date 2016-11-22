@@ -4,7 +4,7 @@ A simple note app for developer.
 
 ## Documents
 
-- [Build](./build.md)
-- [Coding Conventions](./coding-conventions.md)
-- [App Context](./context.md)
-- [Database](./database.md)
+- [Build](./docs/build.md)
+- [Coding Conventions](./docs/coding-conventions.md)
+- [App Context](./docs/context.md)
+- [Database](./docs/database.md)
