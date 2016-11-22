@@ -1,59 +1,10 @@
-import { combineReducers, createStore } from 'redux'
-import { routerReducer } from 'react-router-redux'
-import { Map, OrderedMap } from 'immutable'
-function config (state = {}, action) {
-  return state
-}
+import reducers from './reducers'
+import { createStore } from 'redux'
 
-const defaultStatus = Map({
-  navWidth: 150,
-  noteListWidth: 200
-})
+const store = createStore(reducers)
 
-function status (state = defaultStatus, action) {
-  // switch (action.type) {
-  //   case 'UPDATE_STATUS':
-  //     return Object.assign({}, state, action.payload)
-  // }
-  return state
-}
-
-const defaultStorageMap = OrderedMap()
-
-function storageMap (state = defaultStorageMap, action) {
-  switch (action.type) {
-    case 'LOAD_ALL_STORAGES':
-      return action.payload.storageMap
-    case 'UPDATE_FOLDER':
-      {
-        const { storageName, folderName, folderData } = action.payload
-        return state.setIn([
-          storageName,
-          'folders',
-          folderName
-        ],
-        folderData)
-      }
-    case 'DELETE_FOLDER':
-      {
-        const { storageName, folderName } = action.payload
-        return state.deleteIn([
-          storageName,
-          'folders',
-          folderName
-        ])
-      }
-  }
-  return state
-}
-
-let reducer = combineReducers({
-  config,
-  status,
-  storageMap,
-  routing: routerReducer
-})
-
-let store = createStore(reducer)
+module.hot.accept('./reducers', () =>
+  store.replaceReducer(reducers)
+)
 
 export default store

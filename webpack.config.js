@@ -9,6 +9,7 @@ const config = {
     main: [
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/only-dev-server',
       './src/main/index.js'
     ]
   },
@@ -41,13 +42,10 @@ const config = {
     }
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js?$/,
         use: [
-          {
-            loader: 'react-hot-loader/webpack'
-          },
           {
             loader: 'babel-loader'
           }
