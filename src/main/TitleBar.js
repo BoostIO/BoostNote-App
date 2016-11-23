@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import styled from 'styled-components'
 import { TitleBar as MacTitleBar } from 'react-desktop/macOs'
 import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
+import StorageManager from './lib/StorageManager'
+import { Map } from 'immutable'
 
 const { remote } = require('electron')
 
@@ -121,6 +123,10 @@ class TitleBar extends React.Component {
         this.toggleMaximize()
       }
     }
+
+    this.handleNewButtonClick = e => {
+      this.createNote()
+    }
   }
 
   toggleMaximize () {
@@ -136,6 +142,44 @@ class TitleBar extends React.Component {
     this.setState({
       isMaximized: !isMaximized
     })
+  }
+
+  createNote () {
+    const { router, store } = this.context
+
+    let storageName = router.params.storageName
+    if (!_.isString(storageName)) {
+      storageName = 'notebook'
+    }
+
+    let folderName = router.params.folderName
+    if (!_.isString(folderName)) {
+      folderName = 'Notes'
+    }
+
+    // TODO: this should be moved to redux saga
+    StorageManager
+      .createNote(storageName, {
+        folder: folderName,
+        title: '',
+        content: '',
+        tags: []
+      })
+      .then((doc) => {
+        store.dispatch({
+          type: 'CREATE_NOTE',
+          payload: {
+            storageName,
+            noteId: doc.id,
+            note: new Map({
+              folder: folderName,
+              title: '',
+              content: '',
+              tags: []
+            })
+          }
+        })
+      })
   }
 
   render () {
@@ -161,7 +205,7 @@ class TitleBar extends React.Component {
               value={this.state.search}
               onChange={this.handleChange}
             />
-            <Button>
+            <Button onClick={this.handleNewButtonClick}>
               <Octicon icon='plus' />
             </Button>
             <Seperator />
@@ -176,6 +220,18 @@ class TitleBar extends React.Component {
 }
 
 TitleBar.propTypes = {
+}
+
+TitleBar.contextTypes = {
+  router: PropTypes.shape({
+    params: PropTypes.shape({
+      storageName: PropTypes.string,
+      folderName: PropTypes.string
+    })
+  }),
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
+  })
 }
 
 export default TitleBar

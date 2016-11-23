@@ -53,11 +53,14 @@ function storageMap (state = defaultStorageMap, action) {
           'notes',
           noteId
         ], note)
+
         state = state.updateIn([
           storageName,
           'folders',
-          note.folder
+          note.get('folder'),
+          'notes'
         ], noteSet => noteSet.add(noteId))
+
         return state
       }
     case 'UPDATE_NOTE':
@@ -86,10 +89,12 @@ function storageMap (state = defaultStorageMap, action) {
           state = state.updateIn([
             storageName,
             'folders',
-            note.folder
+            note.get('folder'),
+            'notes'
           ], noteSet => noteSet.add(noteId))
+
+          return state
         }
-        return state
       }
   }
   return state

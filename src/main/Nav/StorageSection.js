@@ -119,7 +119,10 @@ class StorageSection extends React.Component {
           type: 'UPDATE_FOLDER',
           payload: {
             storageName,
-            folderName: newName
+            folderName: newName,
+            folder: new Map([
+              ['notes', new Set()]
+            ])
           }
         })
       })
@@ -141,7 +144,6 @@ class StorageSection extends React.Component {
   }
 
   render () {
-    const { router } = this.context
     const { storageName, storageData } = this.props
 
     const folderList = storageData.get('folders')
@@ -193,10 +195,6 @@ StorageSection.propTypes = {
 }
 
 StorageSection.contextTypes = {
-  router: PropTypes.shape({
-    push: PropTypes.func,
-    isActive: PropTypes.func
-  }),
   store: PropTypes.shape({
     dispatch: PropTypes.func
   })

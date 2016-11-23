@@ -1,7 +1,7 @@
 const sander = require('sander')
 const path = require('path')
 const PouchDB = require('pouchdb')
-const { OrderedMap, Map } = require('immutable')
+const { OrderedMap, Map, Set } = require('immutable')
 const util = require('../util')
 
 const electron = require('electron')
@@ -72,10 +72,17 @@ export function load (name) {
       let { notes, folders } = data.rows.reduce((sum, row) => {
         if (isNoteId.test(row.id)) {
           let noteId = row.id.substring(NOTE_ID_PREFIX.length)
-          sum.notes.push([noteId, row])
+          sum.notes.push([noteId, new Map({
+            folder: row.doc.folder,
+            titile: row.doc.title,
+            content: row.doc.content,
+            tags: new Set(row.doc.tags)
+          })])
         } else if (isFolderId.test(row.id)) {
           let folderPath = row.id.substring(FOLDER_ID_PREFIX.length)
-          sum.folders.push([folderPath, row])
+          sum.folders.push([folderPath, new Map({
+            notes: new Set()
+          })])
         }
         return sum
       }, {
@@ -85,9 +92,21 @@ export function load (name) {
       let noteMap = new Map(notes)
       let folderMap = new Map(folders)
 
+      noteMap.forEach((note, noteId) => {
+        folderMap = folderMap.updateIn(
+          [note.get('folder'), 'notes'],
+          noteSet => {
+            if (noteSet == null) return new Set([noteId])
+            return noteSet.add(noteId)
+          }
+        )
+      })
+
       // Each repository should have `Notes` folder by default.
-      if (folderMap.get('Notes') == null) {
-        folderMap = folderMap.set('Notes', {})
+      if (!folderMap.has('Notes')) {
+        folderMap = folderMap.set('Notes', new Map({
+          notes: new Set()
+        }))
       }
 
       return new Map([
@@ -147,14 +166,18 @@ export function createNote (name, payload) {
         if (doc == null) return id
         return genNoteId()
       })
+      .catch((err) => {
+        if (err.name === 'not_found') return id
+        throw err
+      })
   }
 
   return genNoteId()
     .then((noteId) => {
       return db
-        .put({}, payload, {
+        .put(Object.assign({}, payload, {
           _id: noteId
-        })
+        }))
     })
 }
 
