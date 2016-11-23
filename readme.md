@@ -8,3 +8,4 @@ A simple note app for developer.
 - [Coding Conventions](./docs/coding-conventions.md)
 - [App Context](./docs/context.md)
 - [Database](./docs/database.md)
+- [Redux](./docs/redux)
