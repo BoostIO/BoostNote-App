@@ -60,10 +60,10 @@ const AttributedTitleBar = (props) => {
     ? <BordedTitleBar
       transparent
       inset
-      {..._.omit(props, ['isMaximized', 'onRestoreDownClick'])}
+      {..._.omit(props, ['isMaximized', 'onRestoreDownClick', 'innerRef'])}
     />
     : <BordedTitleBar
-      {..._.omit(props, ['isFullscreen', 'onResizeClick'])}
+      {..._.omit(props, ['isFullscreen', 'onResizeClick', 'innerRef'])}
     />
 }
 
