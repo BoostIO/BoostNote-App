@@ -12,36 +12,38 @@ const storagesPath = path.join(remote.app.getPath('userData'), 'storages')
 let dbs
 
 /**
+ * !!TEST IS NEEDED!!
+ */
+
+/**
  * Initialize db connection
  * If nothing is found, add a new connection
  *
  * @return {OrderedMap} All DB connections
  */
 export function init () {
-  return sander.readdir(storagesPath)
+  let dirNames
+  try {
+    dirNames = sander.readdirSync(storagesPath)
+  } catch (err) {
     // If `storages` doesn't exist, create it.
-    .catch((err) => {
-      if (err.code === 'ENOENT') {
-        return sander.mkdir(storagesPath)
-          .then(() => [])
-      } else throw err
-    })
-    // If `storages/default` doesn't exist, create it.
-    .then(function (dirNames) {
-      if (!dirNames.some((dirName) => dirName === 'notebook')) {
-        return sander.mkdir(storagesPath, 'notebook')
-          .then(() => dirNames.push('notebook'))
-      }
-      return dirNames
-    })
-    .then(function initPouchDBs (dirNames) {
-      dbs = dirNames.reduce(function (map, name) {
-        return map.set(name, new PouchDB(path.join(storagesPath, name)))
-      }, new OrderedMap())
+    if (err.code === 'ENOENT') {
+      dirNames = sander.mkdirSync(storagesPath)
+    } else throw err
+  }
+  // If `storages/notebook` doesn't exist, create it.
+  if (!dirNames.some((dirName) => dirName === 'notebook')) {
+    dirNames.unshift(path.join(storagesPath, 'notebook'))
+  }
 
-      return dbs
-    })
+  dbs = dirNames.reduce(function (map, name) {
+    return map.set(name, new PouchDB(path.join(storagesPath, name)))
+  }, new OrderedMap())
+
+  return dbs
 }
+
+init()
 
 export function list () {
   if (dbs == null) return init()

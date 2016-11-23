@@ -94,10 +94,8 @@ class Main extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props
-    StorageManager.init()
-      .then(() => {
-        return StorageManager.loadAll()
-      })
+
+    StorageManager.loadAll()
       .then((data) => {
         dispatch({
           type: 'LOAD_ALL_STORAGES',
