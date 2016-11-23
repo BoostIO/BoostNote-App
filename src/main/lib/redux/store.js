@@ -3,8 +3,10 @@ import { createStore } from 'redux'
 
 const store = createStore(reducers)
 
-module.hot.accept('./reducers', () =>
-  store.replaceReducer(reducers)
-)
+if (module.hot) {
+  module.hot.accept('./reducers', () =>
+    store.replaceReducer(reducers)
+  )
+}
 
 export default store

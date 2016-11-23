@@ -22,7 +22,8 @@ document.addEventListener('dragover', function (e) {
   e.stopPropagation()
 })
 
-let history = syncHistoryWithStore(hashHistory, store)
+const history = syncHistoryWithStore(hashHistory, store)
+
 const render = () => {
   ReactDOM.render(
     <AppContainer>
