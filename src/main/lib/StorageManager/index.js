@@ -28,7 +28,8 @@ export function init () {
   } catch (err) {
     // If `storages` doesn't exist, create it.
     if (err.code === 'ENOENT') {
-      dirNames = sander.mkdirSync(storagesPath)
+      sander.mkdirSync(storagesPath)
+      dirNames = []
     } else throw err
   }
   // If `storages/notebook` doesn't exist, create it.
