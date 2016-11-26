@@ -8,6 +8,7 @@
     "start": "NODE_ENV=development electron app/index.js",
     "pack": "build --dir",
     "dist": "build",
+    "lint": "standard",
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
     "rebuild": "electron-rebuild"
   },
@@ -20,8 +21,9 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.18.0",
-    "babel-eslint": "^7.1.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.7",
+    "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
@@ -72,7 +74,8 @@
       "react"
     ],
     "plugins": [
-      "react-hot-loader/babel"
+      "react-hot-loader/babel",
+      "transform-class-properties"
     ]
   }
 }

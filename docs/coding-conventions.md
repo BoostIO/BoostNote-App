@@ -8,10 +8,11 @@ It should be placed inside of a constructor.
 class SomeComponent {
   constructor (props) {
     super(props)
-    this.someHandler = e => {
-      e.preventDefault()
-      ...
-    }
+  }
+
+  someHandler = e => {
+    e.preventDefault()
+    ...
   }
 }
 ```
@@ -22,15 +23,13 @@ Wrong cases
 class SomeAnotherComponent {
   constructor (props) {
     super(props)
+
+    this.someHandler = e => {
+      e.preventDefault()
+      ...
+    }
   }
 
-  // Wrong
-  someHandler = e => {
-    e.preventDefault()
-    ...
-  }
-
-  // Wrong
   someAnotherHandler () {
     e.preventDefault()
     ...
