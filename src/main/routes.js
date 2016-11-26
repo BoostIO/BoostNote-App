@@ -9,8 +9,7 @@ import StorageCreate from './contents/StorageCreate'
 const routes = (
   <Route path='/' component={Main}>
 
-    <IndexRedirect to='home' />
-    <Route path='home' component={NoteList} />
+    <IndexRedirect to='storages/notebook' />
 
     <Route path='storages/:storageName'>
       <IndexRedirect to='all-notes' />
