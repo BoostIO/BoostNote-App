@@ -77,7 +77,9 @@ export function load (name) {
             folder: row.doc.folder,
             titile: row.doc.title,
             content: row.doc.content,
-            tags: new Set(row.doc.tags)
+            tags: new Set(row.doc.tags),
+            createdAt: row.doc.createdAt,
+            updatedAt: row.doc.updatedAt
           })])
         } else if (isFolderId.test(row.id)) {
           let folderPath = row.id.substring(FOLDER_ID_PREFIX.length)

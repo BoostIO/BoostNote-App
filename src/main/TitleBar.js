@@ -163,7 +163,9 @@ class TitleBar extends React.Component {
         folder: folderName,
         title: '',
         content: '',
-        tags: []
+        tags: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
       })
       .then((doc) => {
         store.dispatch({
@@ -175,7 +177,9 @@ class TitleBar extends React.Component {
               folder: folderName,
               title: '',
               content: '',
-              tags: []
+              tags: [],
+              createdAt: new Date(),
+              updatedAt: new Date()
             })
           }
         })
