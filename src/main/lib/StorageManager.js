@@ -77,7 +77,7 @@ export function load (name) {
           let noteId = row.id.substring(NOTE_ID_PREFIX.length)
           sum.notes.push([noteId, new Map({
             folder: row.doc.folder,
-            titile: row.doc.title,
+            title: row.doc.title,
             content: row.doc.content,
             tags: new Set(row.doc.tags),
             createdAt: row.doc.createdAt,

@@ -6,7 +6,6 @@ import StorageSection from './StorageSection'
 const Root = styled.div`
   position: relative;
   min-width: 150px;
-  width: ${p => p.width}px;
   overflow: hidden;
 `
 
@@ -61,7 +60,7 @@ class Nav extends React.Component {
       .toArray()
 
     return (
-      <Root width={this.props.width}>
+      <Root style={{width: this.props.width}}>
         <StorageList>
           {storageList}
         </StorageList>

@@ -78,14 +78,17 @@ function storageMap (state = defaultStorageMap, action) {
           'notes',
           noteId
         ], note)
+        console.log(note.toJS())
 
         // note is moved to another folder
-        if (oldNote.get('folder') !== note.folder) {
+        if (oldNote.get('folder') !== note.get('folder')) {
           state = state.updateIn([
             storageName,
             'folders',
-            oldNote.get('folder')
+            oldNote.get('folder'),
+            'notes'
           ], noteSet => noteSet.delete(noteId))
+
           state = state.updateIn([
             storageName,
             'folders',

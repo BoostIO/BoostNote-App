@@ -1,10 +1,16 @@
 const defaultUIColor = '#333'
+const defaultUIInactiveColor = '#999'
+const defaultUIInverseColor = '#FFF'
 const defaultUIActiveColor = '#4F9DFB'
 const defaultBorderColor = '#DEDCDE'
 const defaultUIFontSize = '12px'
 const defaultUIFontFamily = 'Helvetica, Arial, sans-serif'
 
 const defaultTheme = {
+  color: defaultUIColor,
+  inactiveColor: defaultUIInactiveColor,
+  inverseColor: defaultUIInverseColor,
+  activeColor: defaultUIActiveColor,
   borderColor: defaultBorderColor,
   border: 'solid 1px ' + defaultBorderColor,
   activeBorderColor: defaultUIActiveColor,
