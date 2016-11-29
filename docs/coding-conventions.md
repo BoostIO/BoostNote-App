@@ -1,5 +1,46 @@
 # Coding Conventions
 
+We are following `feross/Standard`.
+
+## Callbacks in template literal of Styled components
+
+For shorthand, use `p` for `props`.
+
+```js
+styled.div`
+  {p => p.theme.someStyleString}
+`
+```
+
+## Ref
+
+All `ref` should be a call back and bind it to instance directly. So, it can be accessed without calling `refs`.
+
+If the element is wrapped by styled components, it is needed to use `innerRef`.
+
+Also, expressions of the callbacks should be like `c => (this.someName = c)` to prevent the error of eslint. `c` stands for `component`
+
+```jsx
+
+const Root = styled.div`
+  ...
+`
+
+  render () {
+    return (
+      <Root
+        innerRef={c => (this.root = c)}
+      >
+        <MarkdownEditor
+          ref={c => (this.editor = c)}
+          value={this.state.content}
+          onChange={this.handleContentChange}
+        />
+      </Root>
+    )
+  }
+```
+
 ## Binding callback
 
 It should be placed inside of a constructor.

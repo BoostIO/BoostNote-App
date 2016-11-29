@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import styled, { keyframes } from 'styled-components'
-import _ from 'lodash'
 import octicons from 'octicons'
 
 const pulse = keyframes`
