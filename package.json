@@ -1,15 +1,16 @@
 {
-  "name": "Inpad",
+  "name": "inpad",
   "version": "0.1.0",
   "description": "A simple note app for developer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development electron app/index.js",
     "pack": "build --dir",
     "dist": "build",
     "lint": "standard",
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
+    "test:run": "NODE_ENV=test electron ./tools/webpack-test.js",
+    "test:serve": "NODE_ENV=test webpack-dev-server --config webpack.config.js",
     "rebuild": "electron-rebuild"
   },
   "keywords": [
@@ -33,6 +34,7 @@
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.3.0",
     "file-loader": "^0.9.0",
+    "json-loader": "^0.5.4",
     "react-desktop": "^0.2.14",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-router": "^3.0.0",
@@ -45,37 +47,27 @@
   },
   "dependencies": {
     "codemirror": "^5.20.2",
+    "color": "^0.11.4",
     "filenamify": "^1.2.1",
     "github-markdown-css": "^2.4.1",
     "immutable": "^3.8.1",
     "leveldown": "^1.5.0",
     "lodash": "^4.16.6",
+    "moment": "^2.17.0",
     "octicons": "^5.0.1",
     "pouchdb": "^6.0.7",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",
+    "remark": "^6.2.0",
+    "remark-emoji": "^1.1.1",
+    "remark-html": "^5.1.0",
+    "remark-lint": "^5.2.0",
     "sander": "^0.5.1",
     "styled-components": "^1.0.10"
   },
   "standard": {
     "parser": "babel-eslint"
-  },
-  "babel": {
-    "presets": [
-      [
-        "es2015",
-        {
-          "modules": false
-        }
-      ],
-      "stage-2",
-      "react"
-    ],
-    "plugins": [
-      "react-hot-loader/babel",
-      "transform-class-properties"
-    ]
   }
 }

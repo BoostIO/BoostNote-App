@@ -2,12 +2,14 @@ const sander = require('sander')
 const path = require('path')
 const PouchDB = require('pouchdb')
 const { OrderedMap, Map, Set } = require('immutable')
-const util = require('../util')
+const util = require('lib/util')
 
 const electron = require('electron')
 const { remote } = electron
 
-const storagesPath = path.join(remote.app.getPath('userData'), 'storages')
+const storagesPath = process.env.NODE_ENV !== 'test'
+  ? path.join(remote.app.getPath('userData'), 'storages')
+  : path.join(remote.app.getPath('userData'), 'test-storages')
 
 let dbs
 
@@ -34,7 +36,7 @@ export function init () {
   }
   // If `storages/notebook` doesn't exist, create it.
   if (!dirNames.some((dirName) => dirName === 'notebook')) {
-    dirNames.unshift(path.join(storagesPath, 'notebook'))
+    dirNames.unshift('notebook')
   }
 
   dbs = dirNames.reduce(function (map, name) {
@@ -188,13 +190,14 @@ export function updateNote (name, noteId, payload) {
   const db = dbs.get(name)
   if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
 
-  return db.get(noteId)
+  return db.get('note:' + noteId)
     .then((doc) => {
       return db
-        .put({}, doc, payload, {
+        .put(Object.assign({}, doc, payload, {
           _id: doc._id,
-          _rev: doc._rev
-        })
+          _rev: doc._rev,
+          updatedAt: new Date()
+        }))
     })
 }
 
