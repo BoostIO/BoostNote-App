@@ -4,7 +4,8 @@ import TagSelect from './TagSelect'
 import moment from 'moment'
 import MarkdownEditor from 'components/MarkdownEditor'
 import StorageManager from 'main/lib/StorageManager'
-import { Map, Set } from 'immutable'
+import { Set } from 'immutable'
+import markdown from 'lib/markdown'
 
 const Root = styled.div`
   flex: 1;
@@ -68,6 +69,7 @@ class Detail extends React.Component {
     }
 
     const input = {
+      title: markdown.getTitle(this.state.content),
       tags: this.state.tags.toArray(),
       content: this.state.content
     }

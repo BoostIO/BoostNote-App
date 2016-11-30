@@ -58,6 +58,7 @@ const config = {
     'remark-html',
     'remark-emoji',
     'lodash',
+    'strip-markdown',
     {
       react: 'var React',
       'react-dom': 'var ReactDOM',
