@@ -38,6 +38,7 @@ class CodeEditor extends React.Component {
 
   componentDidUpdate () {
     if (this.props.value !== this.value) {
+      this.value = this.props.value
       this.codemirror.off('change', this.handleChange)
       this.codemirror.setValue(this.props.value)
       this.codemirror.on('change', this.handleChange)

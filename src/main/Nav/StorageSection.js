@@ -5,6 +5,7 @@ import FolderButton from './FolderButton'
 import ContextMenu from 'main/lib/ContextMenu'
 import StorageManager from 'main/lib/StorageManager'
 import filenamify from 'filenamify'
+import { Map, Set } from 'immutable'
 
 const NavButton = styled(LinkButton)`
   ${p => p.theme.navButton}
@@ -114,12 +115,12 @@ class StorageSection extends React.Component {
 
     StorageManager
       .upsertFolder(storageName, newName)
-      .then((res) => {
+      .then(res => {
         store.dispatch({
           type: 'UPDATE_FOLDER',
           payload: {
             storageName,
-            folderName: newName,
+            folderName: res.id,
             folder: new Map([
               ['notes', new Set()]
             ])

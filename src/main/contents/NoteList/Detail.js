@@ -81,15 +81,13 @@ class Detail extends React.Component {
 
     StorageManager
       .updateNote(router.params.storageName, noteKey, input)
-      .then(() => {
+      .then(res => {
         store.dispatch({
           type: 'UPDATE_NOTE',
           payload: {
             storageName: router.params.storageName,
-            noteId: noteKey,
-            note: new Map(Object.assign({}, note.toJS(), input, {
-              updatedAt: new Date()
-            }))
+            noteId: res.id,
+            note: res.note
           }
         })
       })
@@ -114,10 +112,13 @@ class Detail extends React.Component {
       if (noteKey != null) {
         this.dispatchUpdate()
       }
-      this.setState({
-        tags: new Set(nextProps.note.get('tags')),
-        content: nextProps.note.get('content')
-      })
+
+      if (nextProps.note != null) {
+        this.setState({
+          tags: new Set(nextProps.note.get('tags')),
+          content: nextProps.note.get('content')
+        })
+      }
     }
   }
 

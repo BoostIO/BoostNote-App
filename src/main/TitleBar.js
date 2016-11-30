@@ -6,7 +6,6 @@ import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
 import StorageManager from './lib/StorageManager'
-import { Map } from 'immutable'
 
 const { remote } = require('electron')
 
@@ -167,20 +166,13 @@ class TitleBar extends React.Component {
         createdAt: new Date(),
         updatedAt: new Date()
       })
-      .then((doc) => {
+      .then(res => {
         store.dispatch({
           type: 'CREATE_NOTE',
           payload: {
             storageName,
-            noteId: doc.id,
-            note: new Map({
-              folder: folderName,
-              title: '',
-              content: '',
-              tags: [],
-              createdAt: new Date(),
-              updatedAt: new Date()
-            })
+            noteId: res.id,
+            note: res.note
           }
         })
       })
