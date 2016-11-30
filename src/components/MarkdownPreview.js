@@ -11,6 +11,9 @@ class MarkdownPreview extends React.Component {
 
   componentDidMount () {
     this.mountContent()
+
+    this.iframe.contentWindow.document.head.innerHTML = '<link href="../node_modules/github-markdown-css/github-markdown.css" rel="stylesheet">'
+    this.iframe.contentWindow.document.body.className = 'markdown-body'
   }
 
   componentWillUnmount () {
@@ -55,6 +58,7 @@ class MarkdownPreview extends React.Component {
       <iframe ref={c => (this.iframe = c)}
         className={'MarkdownPreview ' + className}
         style={style}
+        sandbox='allow-scripts'
       />
     )
   }
