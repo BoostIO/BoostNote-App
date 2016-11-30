@@ -1,7 +1,7 @@
 {
   "name": "inpad",
   "version": "0.1.0",
-  "description": "A simple note app for developer",
+  "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development electron app/index.js",
@@ -16,7 +16,8 @@
   "keywords": [
     "markdown",
     "snippet",
-    "note"
+    "notes",
+    "gfm"
   ],
   "author": "Sarah Seo <sarah.seo.0311@gmail.com>",
   "license": "MIT",

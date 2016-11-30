@@ -1,6 +1,6 @@
 # Inpad
 
-A simple note app for developer.
+A Polished Notes App with Github Flavored Markdown
 
 ## Documents
 
@@ -9,3 +9,8 @@ A simple note app for developer.
 - [App Context](./docs/context.md)
 - [Database](./docs/database.md)
 - [Redux](./docs/redux)
+- [Testing](./docs/testing.md)
+
+## License
+
+[MIT © Sarah Seo](./LICENSE.md)

@@ -15,10 +15,6 @@ const storagesPath = process.env.NODE_ENV !== 'test'
 let dbs
 
 /**
- * !!TEST IS NEEDED!!
- */
-
-/**
  * Initialize db connection
  * If nothing is found, add a new connection
  *
