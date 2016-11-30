@@ -34,22 +34,15 @@ const BodyEditor = styled(MarkdownEditor)`
   position: relative;
   flex: 1;
 `
-
-const defaultNote = {
-  tags: [],
-  content: ''
-}
-
 class Detail extends React.Component {
   constructor (props) {
     super(props)
 
     let { note } = props
-    if (note == null) note = defaultNote
 
     this.state = {
-      tags: new Set(note.tags),
-      content: note.content
+      tags: note.get('tags'),
+      content: note.get('content')
     }
 
     this.queueTimer = null
@@ -70,12 +63,12 @@ class Detail extends React.Component {
     const isContentChanged = note.get('content') !== this.state.content
     const areTagsChanged = !note.get('tags').equals(new Set(this.state.tags))
 
-    if (!isContentChanged && !areTagsChanged) {
+    if (noteKey == null || (!isContentChanged && !areTagsChanged)) {
       return false
     }
 
     const input = {
-      tags: new Set(this.state.tags),
+      tags: this.state.tags.toArray(),
       content: this.state.content
     }
 
@@ -108,17 +101,16 @@ class Detail extends React.Component {
   componentWillReceiveProps (nextProps) {
     const nextNoteKey = nextProps.noteKey
     const { noteKey } = this.props
+
     if (nextNoteKey !== noteKey) {
       if (noteKey != null) {
         this.dispatchUpdate()
       }
 
-      if (nextProps.note != null) {
-        this.setState({
-          tags: new Set(nextProps.note.get('tags')),
-          content: nextProps.note.get('content')
-        })
-      }
+      this.setState({
+        tags: new Set(nextProps.note.get('tags')),
+        content: nextProps.note.get('content')
+      })
     }
   }
 
@@ -130,8 +122,6 @@ class Detail extends React.Component {
 
   render () {
     const { note } = this.props
-
-    if (note == null) return <div>No note.</div>
 
     return (
       <Root>

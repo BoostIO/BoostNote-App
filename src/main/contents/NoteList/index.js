@@ -218,10 +218,14 @@ class NoteList extends React.Component {
             active={this.state.isSliderActive}
           />
         </Slider>
-        <Detail
-          noteKey={location.query.key}
-          note={activeNote}
-        />
+        {location.query.key != null && activeNote != null
+          ? <Detail
+            noteKey={location.query.key}
+            note={activeNote}
+          />
+          : <div>No note.</div>
+        }
+
       </Root>
     )
   }

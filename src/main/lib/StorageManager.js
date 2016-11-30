@@ -221,6 +221,7 @@ export function createNote (name, payload) {
 export function updateNote (name, noteId, payload) {
   const db = dbs.get(name)
   if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
+
   return db.get(NOTE_ID_PREFIX + noteId)
     .then((doc) => {
       payload = Object.assign({}, doc,

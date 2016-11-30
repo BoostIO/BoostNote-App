@@ -36,6 +36,11 @@ class MarkdownEditor extends React.Component {
     this.state = {
       mode: PREVIEW_MODE
     }
+    this.value = this.props.value
+  }
+
+  componentDidMount () {
+    this.value = this.props.value
   }
 
   handlePreviewMouseUp = e => {
@@ -59,6 +64,7 @@ class MarkdownEditor extends React.Component {
 
   render () {
     const { className, style, value } = this.props
+
     return (
       <div
         className={className}

@@ -78,7 +78,6 @@ function storageMap (state = defaultStorageMap, action) {
           'notes',
           noteId
         ], note)
-        console.log(note.toJS())
 
         // note is moved to another folder
         if (oldNote.get('folder') !== note.get('folder')) {
