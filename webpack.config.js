@@ -46,7 +46,6 @@ const config = {
   externals: [
     'electron',
     'styled-components',
-    'pouchdb',
     'sander',
     'electron-devtools-installer',
     'octicons',
@@ -65,7 +64,8 @@ const config = {
       'react-redux': 'var ReactRedux',
       'redux': 'var Redux',
       'immutable': 'var Immutable',
-      'codemirror': 'var CodeMirror'
+      'codemirror': 'var CodeMirror',
+      'pouchdb': 'var PouchDB'
     }
   ],
   module: {

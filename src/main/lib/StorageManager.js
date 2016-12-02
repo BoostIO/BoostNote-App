@@ -1,53 +1,87 @@
-const sander = require('sander')
-const path = require('path')
 const PouchDB = require('pouchdb')
 const { OrderedMap, Map, Set } = require('immutable')
 const util = require('lib/util')
 const _ = require('lodash')
 
-const electron = require('electron')
-const { remote } = electron
-
-const storagesPath = process.env.NODE_ENV !== 'test'
-  ? path.join(remote.app.getPath('userData'), 'storages')
-  : path.join(remote.app.getPath('userData'), 'test-storages')
-
-let dbs
+const defaultStorageName = 'Notebook'
+const defaultStorages = [{name: defaultStorageName}]
 
 /**
- * Initialize db connection
- * If nothing is found, add a new connection
+ * Read localStorage to get storage list
+ * This function is used by #list only
  *
- * @return {OrderedMap} All DB connections
+ * @returns {Array} Array of storage data
  */
-export function init () {
-  let dirNames
+function readLocalStorage () {
+  // If on test env, never read localStoarge
+  if (process.env.NODE_ENV === 'test') {
+    return [{
+      name: 'Test Notebook'
+    }]
+  }
+
+  let storages
   try {
-    dirNames = sander.readdirSync(storagesPath)
-  } catch (err) {
-    // If `storages` doesn't exist, create it.
-    if (err.code === 'ENOENT') {
-      sander.mkdirSync(storagesPath)
-      dirNames = []
-    } else throw err
-  }
-  // If `storages/notebook` doesn't exist, create it.
-  if (!dirNames.some((dirName) => dirName === 'notebook')) {
-    dirNames.unshift('notebook')
-  }
+    storages = JSON.parse(window.localStorage.getItem('storages'))
 
-  dbs = dirNames.reduce(function (map, name) {
-    return map.set(name, new PouchDB(path.join(storagesPath, name)))
-  }, new OrderedMap())
+    // Check if it is an array.
+    if (!_.isArray(storages)) {
+      throw new Error('Storages must be an array')
+    }
 
-  return dbs
+    // Check if the default storage exsits.
+    if (!storages.some(storage => storage.name === defaultStorageName)) {
+      storages.push({
+        name: defaultStorageName
+      })
+      window.localStorage.setItem('storages', JSON.stringify(storages))
+    }
+
+    return storages
+  } catch (e) {
+    console.warn('Reset storages because of :', e)
+
+    // If the data is corrupted, reset it.
+    storages = defaultStorages.slice()
+    window.localStorage.setItem('storages', JSON.stringify(storages))
+
+    return storages
+  }
 }
 
-init()
+function newDB (name) {
+  return new PouchDB(name, {adapter: 'websql'})
+}
+
+let dbMap = null
 
 export function list () {
-  if (dbs == null) return init()
-  return Promise.resolve(new OrderedMap(dbs))
+  let storages = readLocalStorage()
+
+  dbMap = new OrderedMap(storages.map(storage => {
+    return [storage.name, newDB(storage.name)]
+  }))
+  return dbMap
+}
+
+export function getDB (name) {
+  if (dbMap == null) list()
+
+  let db = dbMap.get(name)
+
+  if (db == null) {
+    db = newDB(name)
+
+    dbMap.set(name, db)
+
+    let storages = readLocalStorage()
+    storages.push({
+      name
+    })
+    window.localStorage.setItem('stoarges', JSON.stringify(storages))
+  }
+
+  return db
 }
 
 const NOTE_ID_PREFIX = 'note:'
@@ -63,10 +97,7 @@ const isFolderId = new RegExp(`^${FOLDER_ID_PREFIX}.+`)
  * including `notes` and `folders` field
  */
 export function load (name) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
-
-  return db
+  return getDB(name)
     .allDocs({include_docs: true})
     .then((data) => {
       let { notes, folders } = data.rows.reduce((sum, row) => {
@@ -123,25 +154,23 @@ export function load (name) {
  * @return {OrderedMap} Data Map of all storages
  */
 export function loadAll () {
-  const promises = dbs
+  const promises = list()
     .keySeq()
-    .map((name) => {
+    .map(name => {
       return load(name)
         // struct tuple
-        .then((dataMap) => [name, dataMap])
+        .then(dataMap => [name, dataMap])
     })
     // Promise.all only understands array
     .toArray()
 
   return Promise.all(promises)
-    // destruct tuple
-    .then((storageMap) => new OrderedMap(storageMap))
+    // convert to an OrderedMap
+    .then(storageMap => new OrderedMap(storageMap))
 }
 
 export function upsertFolder (name, folderName) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
-
+  const db = getDB(name)
   return db
     .get(FOLDER_ID_PREFIX + folderName)
     .catch((err) => {
@@ -161,13 +190,43 @@ export function upsertFolder (name, folderName) {
     })
 }
 
+const noteView = {
+  _id: '_design/notes',
+  views: {
+    by_folder: {
+      map: `function mapFun(doc) {
+        emit(doc.folder);
+      }`
+    }
+  }
+}
+
 export function deleteFolder (name, folderName) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
-  return db.get(FOLDER_ID_PREFIX + folderName)
+  const db = getDB(name)
+  return db
+    .get(FOLDER_ID_PREFIX + folderName)
     .then((doc) => {
       doc._deleted = true
       return db.put(doc)
+    })
+    .then(() => {
+      return db.put(noteView)
+        .catch(err => {
+          if (err.name !== 'conflict') throw err
+        })
+        .then(() => {
+          return db.query('notes/by_folder', {
+            key: folderName,
+            include_docs: true
+          })
+        })
+        .then(function (result) {
+          let docs = result.rows.map(row => {
+            row.doc._deleted = true
+            return row.doc
+          })
+          return db.bulkDocs(docs)
+        })
     })
     .then((res) => {
       return {
@@ -177,8 +236,7 @@ export function deleteFolder (name, folderName) {
 }
 
 export function createNote (name, payload) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
+  const db = getDB(name)
 
   function genNoteId () {
     let id = util.randomBytes()
@@ -215,8 +273,7 @@ export function createNote (name, payload) {
 }
 
 export function updateNote (name, noteId, payload) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
+  const db = getDB(name)
 
   return db.get(NOTE_ID_PREFIX + noteId)
     .then((doc) => {
@@ -245,8 +302,7 @@ export function updateNote (name, noteId, payload) {
 }
 
 export function deleteNote (name, noteId) {
-  const db = dbs.get(name)
-  if (db == null) return Promise.reject(new Error('DB doesn\'t exist.'))
+  const db = getDB(name)
 
   return db.get(NOTE_ID_PREFIX + noteId)
     .then((doc) => {
@@ -262,7 +318,6 @@ export function deleteNote (name, noteId) {
 }
 
 export default {
-  init,
   list,
   load,
   loadAll,

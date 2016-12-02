@@ -1,23 +1,22 @@
 import StorageManager from './StorageManager'
-// import _ from 'lodash'
 import { Map, Set } from 'immutable'
 
 export default t => {
-  let listTest = StorageManager.list()
+  let listTest = Promise.resolve(StorageManager.list())
     .then((map) => {
       t.ok(map.size > 0, 'At least, one db should exist')
-      t.ok(map.has('notebook'), 'Default DB, notebook, should exist.')
+      t.ok(map.has('Test Notebook'), 'Default DB, Test Notebook, should exist.')
     })
 
   let loadAllTest = StorageManager.loadAll()
       .then(storageMap => {
         t.ok(storageMap.size > 0)
-        t.ok(storageMap.get('notebook').has('notes'))
-        t.ok(storageMap.get('notebook').has('folders'))
+        t.ok(storageMap.get('Test Notebook').has('notes'))
+        t.ok(storageMap.get('Test Notebook').has('folders'))
       })
 
   let folderRev = null
-  let createAndDeleteFolderTest = StorageManager.upsertFolder('notebook', 'test-folder')
+  let createAndDeleteFolderTest = StorageManager.upsertFolder('Test Notebook', 'test-folder')
     .then(data => {
       const { folder, id } = data
       t.ok(folder instanceof Map)
@@ -26,9 +25,9 @@ export default t => {
 
       folderRev = folder.get('rev')
 
-      return StorageManager.list()
+      return Promise.resolve(StorageManager.list())
         .then(storageDBMap => {
-          return storageDBMap.get('notebook').get('folder:test-folder')
+          return storageDBMap.get('Test Notebook').get('folder:test-folder')
         })
     })
     .then(folderDoc => {
@@ -36,13 +35,13 @@ export default t => {
     })
     .then(() => {
       // Delete test
-      return StorageManager.deleteFolder('notebook', 'test-folder')
+      return StorageManager.deleteFolder('Test Notebook', 'test-folder')
     })
     .then(res => {
       t.ok(res.id, 'test-folder')
-      return StorageManager.list()
+      return Promise.resolve(StorageManager.list())
         .then(storageDBMap => {
-          return storageDBMap.get('notebook').get('folder:test-folder')
+          return storageDBMap.get('Test Notebook').get('folder:test-folder')
         })
         .catch((err) => {
           t.equal(err.name, 'not_found')
@@ -50,7 +49,7 @@ export default t => {
     })
 
   let createUpdateDeleteNoteTest = StorageManager
-    .createNote('notebook', {
+    .createNote('Test Notebook', {
       title: 'test',
       content: '# test',
       tags: ['abc'],
@@ -68,7 +67,7 @@ export default t => {
     })
     .then(noteId => {
       return StorageManager
-        .updateNote('notebook', noteId, {
+        .updateNote('Test Notebook', noteId, {
           title: 'test2'
         })
     })
@@ -80,13 +79,13 @@ export default t => {
     })
     .then(noteId => {
       return StorageManager
-        .deleteNote('notebook', noteId)
+        .deleteNote('Test Notebook', noteId)
         .then(data => {
           t.equal(data.id, noteId)
 
-          return StorageManager.list()
+          return Promise.resolve(StorageManager.list())
             .then(storageDBMap => {
-              return storageDBMap.get('notebook').get('note:' + noteId)
+              return storageDBMap.get('Test Notebook').get('note:' + noteId)
             })
             .catch((err) => {
               t.equal(err.name, 'not_found')
@@ -94,10 +93,42 @@ export default t => {
         })
     })
 
+  let createDummyNote = StorageManager
+    .createNote('Test Notebook', {
+      title: 'test',
+      content: '# test',
+      tags: ['abc'],
+      folder: 'test-folder3'
+    })
+  let createDummyFolder = StorageManager.upsertFolder('Test Notebook', 'test-folder3')
+
+  let folderDeleteTest = Promise.all([createDummyNote, createDummyFolder])
+    .then(data => {
+      let note = data[0]
+      return StorageManager.deleteFolder('Test Notebook', 'test-folder3')
+        .then(res => {
+          return Promise.resolve(StorageManager.list())
+            .then(storageDBMap => {
+              return storageDBMap.get('Test Notebook').get('note:' + note.id)
+            })
+        })
+        .then(doc => {
+          t.fail('The note still exists', 'The note should be deleted and this statement shouldn\'t be fired')
+        })
+        .catch(err => {
+          if (err.name === 'not_found') {
+            t.ok(true)
+            return
+          }
+          throw err
+        })
+    })
+
   return Promise.all([
     listTest,
     loadAllTest,
     createAndDeleteFolderTest,
-    createUpdateDeleteNoteTest
+    createUpdateDeleteNoteTest,
+    folderDeleteTest
   ])
 }
