@@ -123,7 +123,8 @@ class Detail extends React.Component {
   }
 
   render () {
-    const { note } = this.props
+    const { note, noteKey } = this.props
+    const { router } = this.context
 
     return (
       <Root>
@@ -137,6 +138,7 @@ class Detail extends React.Component {
           innerRef={c => (this.editor = c)}
           value={this.state.content}
           onChange={this.handleContentChange}
+          docKey={`${router.params.storageName}/${noteKey}`}
         />
       </Root>
     )

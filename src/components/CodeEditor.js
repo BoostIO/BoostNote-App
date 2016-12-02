@@ -2,10 +2,14 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import CodeMirror from 'codemirror'
 import _ from 'lodash'
+import { Map } from 'immutable'
+
+let docMap = new Map()
 
 const Root = styled.div`
   .CodeMirror {
     min-height: 100%;
+    font-family: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
   }
 `
 
@@ -18,9 +22,10 @@ class CodeEditor extends React.Component {
   }
 
   componentDidMount () {
-    this.value = this.props.value
+    const { value, docKey } = this.props
+    this.value = value
     this.codemirror = CodeMirror(this.root, {
-      value: _.isString(this.props.value) ? this.props.value : '',
+      value: _.isString(value) ? value : '',
       lineNumbers: true,
       lineWrapping: true,
       keyMap: 'sublime',
@@ -29,11 +34,25 @@ class CodeEditor extends React.Component {
 
     this.codemirror.on('blur', this.handleBlur)
     this.codemirror.on('change', this.handleChange)
+    docMap = docMap.set(docKey, this.codemirror.getDoc())
   }
 
   componentWillUnmount () {
     this.codemirror.off('blur', this.handleBlur)
     this.codemirror.off('change', this.handleChange)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    // Swap doc when docKey changed to isolate undo history between notes
+    if (this.props.docKey !== nextProps.docKey) {
+      let nextDoc = docMap.get(nextProps.docKey)
+
+      if (nextDoc == null) {
+        nextDoc = new CodeMirror.Doc(nextProps.value)
+        docMap = docMap.set(nextProps.docKey, nextDoc)
+      }
+      this.codemirror.swapDoc(nextDoc)
+    }
   }
 
   componentDidUpdate () {
@@ -63,7 +82,7 @@ class CodeEditor extends React.Component {
     if (this.props.onChange != null) this.props.onChange()
   }
 
-  focus = e => {
+  focus () {
     this.codemirror.focus()
   }
 
@@ -80,7 +99,8 @@ class CodeEditor extends React.Component {
 }
 
 CodeEditor.propTypes = {
-  value: PropTypes.string
+  value: PropTypes.string,
+  docKey: PropTypes.string
 }
 
 export default CodeEditor

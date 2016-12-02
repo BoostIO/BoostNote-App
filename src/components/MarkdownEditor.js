@@ -63,7 +63,7 @@ class MarkdownEditor extends React.Component {
   }
 
   render () {
-    const { className, style, value } = this.props
+    const { className, style, value, docKey } = this.props
 
     return (
       <div
@@ -87,6 +87,7 @@ class MarkdownEditor extends React.Component {
           onBlur={this.handleEditorBlur}
           onChange={this.handleEditorChange}
           value={value}
+          docKey={docKey}
         />
       </div>
     )
@@ -95,7 +96,8 @@ class MarkdownEditor extends React.Component {
 
 MarkdownEditor.propTypes = {
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  docKey: PropTypes.string
 }
 
 export default MarkdownEditor
