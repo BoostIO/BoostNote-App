@@ -39,6 +39,21 @@ function storageMap (state = defaultStorageMap, action) {
     case 'DELETE_FOLDER':
       {
         const { storageName, folderName } = action.payload
+        const noteSet = state.getIn([
+          storageName,
+          'folders',
+          folderName,
+          'notes'
+        ])
+        state = noteSet
+          .reduce((state, noteId) => {
+            return state.deleteIn([
+              storageName,
+              'notes',
+              noteId
+            ])
+          }, state)
+
         return state.deleteIn([
           storageName,
           'folders',
