@@ -122,6 +122,10 @@ class Detail extends React.Component {
     }
   }
 
+  focusEditor () {
+    this.editor.focus()
+  }
+
   render () {
     const { note, noteKey } = this.props
     const { router } = this.context

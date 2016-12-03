@@ -175,6 +175,15 @@ class TitleBar extends React.Component {
             note: res.note
           }
         })
+        router.push({
+          pathname: router.location.pathname,
+          query: {
+            key: res.id
+          },
+          state: {
+            active: true
+          }
+        })
       })
   }
 

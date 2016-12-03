@@ -44,11 +44,7 @@ class MarkdownEditor extends React.Component {
   }
 
   handlePreviewMouseUp = e => {
-    this.setState({
-      mode: EDIT_MODE
-    }, () => {
-      this.editor.focus()
-    })
+    this.focus()
   }
 
   handleEditorBlur = e => {
@@ -60,6 +56,14 @@ class MarkdownEditor extends React.Component {
   handleEditorChange = e => {
     this.value = this.editor.value
     if (this.props.onChange != null) this.props.onChange(e)
+  }
+
+  focus () {
+    this.setState({
+      mode: EDIT_MODE
+    }, () => {
+      this.editor.focus()
+    })
   }
 
   render () {
