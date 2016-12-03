@@ -5,18 +5,21 @@ const { app, BrowserWindow } = electron
 const path = require('path')
 
 let mainWindow = null
+const OSX = process.platform === 'darwin'
+const WIN = process.platform === 'win32'
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (!OSX) {
     app.quit()
   }
 })
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
-    frame: false,
+    frame: !WIN,
     width: 800,
     height: 600,
+    titleBarStyle: 'hidden-inset',
     webPreferences: {
       blinkFeatures: 'OverlayScrollbars'
     }

@@ -21,6 +21,7 @@ const SearchInput = styled.input`
   height: 26px;
   padding: 0 10px;
   box-sizing: border-box;
+  margin-left: auto;
 `
 
 const Button = styled.button`
@@ -31,24 +32,17 @@ const Button = styled.button`
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
   margin: 0 2.5px;
-  &:last-child {
-    margin-left: auto;
-  }
-`
-
-const Seperator = styled.div`
-  display: inline-block;
-  margin: 0 10px;
-  height: 26px;
 `
 
 const ToolBar = styled.div`
   height: ${OSX ? 36 : 31}px;
   flex: 1;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding-right: ${OSX ? 0 : 10}px;
+  padding-left: 140px;
 `
 
 const BordedTitleBar = styled(OSX ? MacTitleBar : WindowsTitleBar)`
@@ -57,14 +51,15 @@ const BordedTitleBar = styled(OSX ? MacTitleBar : WindowsTitleBar)`
 `
 
 const AttributedTitleBar = (props) => {
-  return OSX
+  return WIN
     ? <BordedTitleBar
+      controls
+      {..._.omit(props, ['isFullscreen', 'onResizeClick', 'innerRef'])}
+    />
+    : <BordedTitleBar
       transparent
       inset
       {..._.omit(props, ['isMaximized', 'onRestoreDownClick', 'innerRef'])}
-    />
-    : <BordedTitleBar
-      {..._.omit(props, ['isFullscreen', 'onResizeClick', 'innerRef'])}
     />
 }
 
@@ -191,7 +186,6 @@ class TitleBar extends React.Component {
     return (
       <Root>
         <AttributedTitleBar
-          controls
           isMaximized={this.state.isMaximized}
           isFullscreen={this.state.isFullscreen}
           onCloseClick={this.handleCloseClick}
@@ -205,15 +199,17 @@ class TitleBar extends React.Component {
           <ToolBar
             innerRef={c => (this.toolbar = c)}
           >
+            <Button>
+              <Octicon icon='trashcan' />
+            </Button>
+            <Button onClick={this.handleNewButtonClick}>
+              <Octicon icon='plus' />
+            </Button>
             <SearchInput
               placeholder='Search...'
               value={this.state.search}
               onChange={this.handleChange}
             />
-            <Button onClick={this.handleNewButtonClick}>
-              <Octicon icon='plus' />
-            </Button>
-            <Seperator />
             <Button>
               <Octicon icon='settings' />
             </Button>
