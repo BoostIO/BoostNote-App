@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { Map } from 'immutable'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
-import Color from 'color'
 import Detail from './Detail'
+import { isFinallyBlurred } from 'lib/util'
 
 const Root = styled.div`
   display: flex;
@@ -20,6 +20,7 @@ const Left = styled.div`
   min-width: 150px;
   display: flex;
   flex-direction: column;
+  outline: none;
 `
 
 const LeftMenu = styled.div`
@@ -38,12 +39,32 @@ const LeftListItem = styled.div`
   font-size: 12px;
   cursor: pointer;
   transition: 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
   &:hover {
-    background-color: ${p => Color(p.theme.activeColor).clearer(0.8).rgbString()};
+    background-color: ${p => p.theme.buttonHoverColor};
   }
-  &.active, &:active {
-    background-color: ${p => p.theme.activeColor};
-    color: ${p => p.theme.inverseColor};
+  &:active {
+    background-color: ${p => p.theme.buttonActiveColor};
+  }
+  &.active {
+    background-color: ${p => p.isFocused
+      ? p.theme.activeColor
+      : p.theme.buttonActiveColor};
+    color: ${p => p.isFocused
+      ? p.theme.inverseColor
+      : p.theme.color};
+    .Octicon {
+      fill: ${p => p.isFocused
+        ? p.theme.inverseColor
+        : p.theme.color};
+    }
+    .empty {
+      color: inherit;
+    }
+  }
+  .empty {
+    color: ${p => p.theme.inactiveColor};
   }
 `
 
@@ -70,7 +91,8 @@ class NoteList extends React.Component {
     super(props)
 
     this.state = {
-      listWidth: props.status.get('noteListWidth')
+      listWidth: props.status.get('noteListWidth'),
+      isLeftFocused: false
     }
 
     this.refreshTimer = null
@@ -125,6 +147,10 @@ class NoteList extends React.Component {
       })
     }
 
+    if (location.state != null && location.state.active) {
+      this.detail.focusEditor()
+    }
+
     this.setRefreshTimer()
   }
 
@@ -177,6 +203,22 @@ class NoteList extends React.Component {
     return notes
   }
 
+  handleFocus = e => {
+    if (!this.state.isLeftFocused) {
+      this.setState({
+        isLeftFocused: true
+      })
+    }
+  }
+
+  handleBlur = e => {
+    if (isFinallyBlurred(e, this.left)) {
+      this.setState({
+        isLeftFocused: false
+      })
+    }
+  }
+
   render () {
     const { location } = this.props
     const noteListMap = this.noteListMap = this.getNotes()
@@ -190,18 +232,25 @@ class NoteList extends React.Component {
           key={key}
           onClick={(e) => this.handleListItemClick(e, key)}
           className={isActive && 'active'}
+          isFocused={this.state.isLeftFocused}
         >
-          {isValidTitle ? title : <span>Unnamed</span>}
+          {isValidTitle ? title : <span className='empty'>Empty</span>}
         </LeftListItem>
       })
       .toArray()
 
-    const activeNote = noteListMap.get(location.query.key)
+    const activeNote = location.query.key == null
+      ? noteListMap.first()
+      : noteListMap.get(location.query.key)
 
     return (
       <Root>
         <Left
           style={{width: this.state.listWidth}}
+          innerRef={c => (this.left = c)}
+          tabIndex='0'
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
         >
           <LeftMenu>
             Sort By <select />
@@ -220,8 +269,9 @@ class NoteList extends React.Component {
             active={this.state.isSliderActive}
           />
         </Slider>
-        {location.query.key != null && activeNote != null
+        {activeNote != null
           ? <Detail
+            ref={c => (this.detail = c)}
             noteKey={location.query.key}
             note={activeNote}
           />

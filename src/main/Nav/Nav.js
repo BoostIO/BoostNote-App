@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import { Octicon } from 'components'
 import StorageSection from './StorageSection'
+import { isFinallyBlurred } from 'lib/util'
 
 const Root = styled.div`
   position: relative;
@@ -57,22 +58,19 @@ class Nav extends React.Component {
   }
 
   handleFocus = e => {
-    this.setState({
-      isFocused: true
-    })
+    if (!this.state.isFocused) {
+      this.setState({
+        isFocused: true
+      })
+    }
   }
 
   handleBlur = e => {
-    let el = e.relatedTarget
-    while (el != null) {
-      if (el === this.root) {
-        return false
-      }
-      el = el.parentNode
+    if (isFinallyBlurred(e, this.root)) {
+      this.setState({
+        isFocused: false
+      })
     }
-    this.setState({
-      isFocused: false
-    })
   }
 
   render () {
