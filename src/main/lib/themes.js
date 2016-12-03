@@ -6,15 +6,28 @@ const defaultBorderColor = '#DEDCDE'
 const defaultUIFontSize = '12px'
 const defaultUIFontFamily = 'Helvetica, Arial, sans-serif'
 
+// Button Color
+const defaultUIButtonHoverColor = '#EEE'
+const defaultUIButtonActiveColor = '#CECECE'
+
 const defaultTheme = {
+  // Color
   color: defaultUIColor,
   inactiveColor: defaultUIInactiveColor,
   inverseColor: defaultUIInverseColor,
   activeColor: defaultUIActiveColor,
   borderColor: defaultBorderColor,
+  buttonHoverColor: defaultUIButtonHoverColor,
+  buttonActiveColor: defaultUIButtonActiveColor,
   border: 'solid 1px ' + defaultBorderColor,
   activeBorderColor: defaultUIActiveColor,
   activeBorder: 'solid 1px ' + defaultUIActiveColor,
+
+  // Typo
+  fontSize: defaultUIFontSize,
+  fontFamily: defaultUIFontFamily,
+
+  // UI
   input: `
     border: solid 1px
     ${defaultBorderColor};
@@ -39,27 +52,6 @@ const defaultTheme = {
     font-family: ${defaultUIFontFamily};
     &:active {
       background-color: #DCDCDC;
-    }
-  `,
-  navButton: `
-    display: block;
-    outline: none;
-    border: none;
-    background-color: transparent;
-    text-align: left;
-    color: ${defaultUIColor};
-    text-decoration: none;
-    font-size: ${defaultUIFontSize};
-    font-family: ${defaultUIFontFamily};
-    &:hover {
-      background-color: #EEE;
-    }
-    &:active {
-      background-color: #DCDCDC;
-    }
-    &.active {
-      background-color: ${defaultUIActiveColor};
-      color: white;
     }
   `
 }

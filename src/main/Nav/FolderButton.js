@@ -14,14 +14,41 @@ const Root = styled.div`
 `
 
 const Button = styled(LinkButton)`
-  ${p => p.theme.navButton}
   display: block;
+  width: 100%;
   height: 24px;
   line-height: 24px;
   margin: 0;
   padding: 0 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
   cursor: pointer;
-  flex: 1;
+  color: ${p => p.theme.color};
+  text-decoration: none;
+  text-align: left;
+  font-size: ${p => p.theme.fontSize};
+  font-family: ${p => p.theme.fontFamily};
+  &:hover {
+    background-color: ${p => p.theme.buttonHoverColor};
+  }
+  &:active {
+    background-color: ${p => p.theme.buttonActiveColor};
+  }
+  &.active {
+    font-weight: bold;
+    background-color: ${p => p.isFocused
+      ? p.theme.activeColor
+      : p.theme.buttonActiveColor};
+    color: ${p => p.isFocused
+      ? p.theme.inverseColor
+      : p.theme.color};
+    .Octicon {
+      fill: ${p => p.isFocused
+        ? p.theme.inverseColor
+        : p.theme.color};
+    }
+  }
 `
 
 const RenameInput = styled.input`
@@ -150,7 +177,7 @@ class FolderButton extends React.Component {
   }
 
   render () {
-    const { folderURL, folderName } = this.props
+    const { folderURL, folderName, isFocused } = this.props
 
     return (
       <Root>
@@ -166,6 +193,8 @@ class FolderButton extends React.Component {
             to={folderURL}
             innerRef={c => (this.button = c)}
             onContextMenu={this.handleContextMenu}
+            className='NavButton'
+            isFocused={isFocused}
           >
             {folderName}
           </Button>

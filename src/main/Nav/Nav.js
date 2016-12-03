@@ -5,32 +5,42 @@ import StorageSection from './StorageSection'
 
 const Root = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 150px;
-  overflow: hidden;
+  &:focus {
+    outline: none;
+  }
 `
 
 const StorageList = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 30px;
-  left: 0;
-  right: 0;
   width: 100%;
   overflow-y: auto;
+  flex: 1;
 `
 
 const BottomButton = styled.button`
-  ${p => p.theme.navButton}
   display: block;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30px;
   width: 100%;
+  height: 30px;
   line-height: 30px;
+  margin: 0;
   padding: 0 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
   cursor: pointer;
+  color: ${p => p.theme.color};
+  text-decoration: none;
+  text-align: left;
+  font-size: ${p => p.theme.fontSize};
+  font-family: ${p => p.theme.fontFamily};
+  &:hover {
+    background-color: ${p => p.theme.buttonHoverColor};
+  }
+  &:active {
+    background-color: ${p => p.theme.buttonActiveColor};
+  }
 `
 
 class Nav extends React.Component {
@@ -38,11 +48,31 @@ class Nav extends React.Component {
     super(props)
 
     this.state = {
+      isFocused: false
     }
 
     this.handleNewFolderClick = e => {
       this.refs['storage-' + this.context.router.params.storageName].createNewFolder()
     }
+  }
+
+  handleFocus = e => {
+    this.setState({
+      isFocused: true
+    })
+  }
+
+  handleBlur = e => {
+    let el = e.relatedTarget
+    while (el != null) {
+      if (el === this.root) {
+        return false
+      }
+      el = el.parentNode
+    }
+    this.setState({
+      isFocused: false
+    })
   }
 
   render () {
@@ -55,12 +85,18 @@ class Nav extends React.Component {
           key={storageName}
           storageName={storageName}
           storageData={storageData}
+          isFocused={this.state.isFocused}
         />
       })
       .toArray()
 
     return (
-      <Root style={{width: this.props.width}}>
+      <Root style={{width: this.props.width}}
+        innerRef={c => (this.root = c)}
+        tabIndex='0'
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
+      >
         <StorageList>
           {storageList}
         </StorageList>

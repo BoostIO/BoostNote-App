@@ -8,16 +8,40 @@ import filenamify from 'filenamify'
 import { Map, Set } from 'immutable'
 
 const NavButton = styled(LinkButton)`
-  ${p => p.theme.navButton}
   display: block;
+  width: 100%;
   height: 24px;
   line-height: 24px;
   margin: 0;
   padding: 0 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
   cursor: pointer;
-  width: 100%;
-  &.active .Octicon {
-    fill: white;
+  color: ${p => p.theme.color};
+  text-decoration: none;
+  text-align: left;
+  font-size: ${p => p.theme.fontSize};
+  font-family: ${p => p.theme.fontFamily};
+  &:hover {
+    background-color: ${p => p.theme.buttonHoverColor};
+  }
+  &:active {
+    background-color: ${p => p.theme.buttonActiveColor};
+  }
+  &.active {
+    font-weight: bold;
+    background-color: ${p => p.isFocused
+      ? p.theme.activeColor
+      : p.theme.buttonActiveColor};
+    color: ${p => p.isFocused
+      ? p.theme.inverseColor
+      : p.theme.color};
+    .Octicon {
+      fill: ${p => p.isFocused
+        ? p.theme.inverseColor
+        : p.theme.color};
+    }
   }
 `
 
@@ -145,7 +169,7 @@ class StorageSection extends React.Component {
   }
 
   render () {
-    const { storageName, storageData } = this.props
+    const { storageName, storageData, isFocused } = this.props
 
     const folderList = storageData.get('folders')
       .sortBy((v, key) => key.toLowerCase())
@@ -158,6 +182,7 @@ class StorageSection extends React.Component {
           folderURL={folderURL}
           folderName={folderName}
           createNewButton={this.createNewFolder}
+          isFocused={isFocused}
         >
           {folderName}
         </FolderButton>
@@ -172,6 +197,8 @@ class StorageSection extends React.Component {
           innerRef={c => (this.storageButton = c)}
           to={storageURL}
           onContextMenu={this.handleNavButtonContextMenu}
+          className='NavButton'
+          isFocused={isFocused}
         >
           <Octicon icon='repo' /> {storageName}
         </NavButton>
@@ -193,6 +220,9 @@ class StorageSection extends React.Component {
 }
 
 StorageSection.propTypes = {
+  storageName: PropTypes.string,
+  storageData: PropTypes.instanceOf(Map),
+  isFocused: PropTypes.bool
 }
 
 StorageSection.contextTypes = {
