@@ -25,7 +25,7 @@ class CodeEditor extends React.Component {
     const { value, docKey } = this.props
     this.value = value
     this.codemirror = CodeMirror(this.root, {
-      value: _.isString(value) ? value : '',
+      value: new CodeMirror.Doc(_.isString(value) ? value : ''),
       lineNumbers: true,
       lineWrapping: true,
       keyMap: 'sublime',
@@ -40,12 +40,16 @@ class CodeEditor extends React.Component {
   componentWillUnmount () {
     this.codemirror.off('blur', this.handleBlur)
     this.codemirror.off('change', this.handleChange)
+
+    // Unlink document by force
+    this.codemirror.swapDoc(new CodeMirror.Doc(''))
   }
 
   componentWillReceiveProps (nextProps) {
-    // Swap doc when docKey changed to isolate undo history between notes
     if (this.props.docKey !== nextProps.docKey) {
       let nextDoc = docMap.get(nextProps.docKey)
+      let currentDoc = this.codemirror.getDoc()
+      docMap = docMap.set(this.props.docKey, currentDoc)
 
       if (nextDoc == null) {
         nextDoc = new CodeMirror.Doc(nextProps.value)
