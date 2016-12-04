@@ -103,7 +103,7 @@ class CodeEditor extends React.Component {
     if (syntax == null) syntax = CodeMirror.findModeByName('Plain Text')
 
     this.codemirror.setOption('mode', syntax.mime)
-    CodeMirror.autoLoadMode(this.editor, syntax.mode)
+    CodeMirror.autoLoadMode(this.codemirror, syntax.mode)
   }
 
   render () {
