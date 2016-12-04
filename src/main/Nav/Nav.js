@@ -10,6 +10,7 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 150px;
+  background-color: ${p => p.theme.navBackgroundColor};
   &:focus {
     outline: none;
   }

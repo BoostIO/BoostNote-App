@@ -18,7 +18,7 @@ const Root = styled.div`
 
 const Body = styled.div`
   position: absolute;
-  top: 36px;
+  top: 37px;
   left: 0;
   bottom: 0;
   right: 0;

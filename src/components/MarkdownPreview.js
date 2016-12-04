@@ -20,6 +20,9 @@ class MarkdownPreview extends React.Component {
     <link href="../node_modules/github-markdown-css/github-markdown.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../node_modules/codemirror/lib/codemirror.css">
     <style>
+      .markdown-body{
+        font-size: 14px;
+      }
       .CodeMirror {
         height: inherit;
       }

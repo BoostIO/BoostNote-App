@@ -65,6 +65,7 @@ const AttributedTitleBar = (props) => {
 
 const Root = styled.div`
   position: relative;
+  background-color: ${p => p.theme.titleBarBackgroundColor};
 `
 
 class TitleBar extends React.Component {

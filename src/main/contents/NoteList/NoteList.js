@@ -41,7 +41,6 @@ const LeftListItem = styled.div`
   padding: 0 10px;
   font-size: 12px;
   cursor: pointer;
-  transition: 0.15s;
   overflow: hidden;
   text-overflow: ellipsis;
   &:hover {
