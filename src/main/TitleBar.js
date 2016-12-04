@@ -128,6 +128,19 @@ class TitleBar extends React.Component {
   }
 
   handleMouseDown = e => {
+    let el = document.activeElement
+    if (el.nodeName === 'TEXTAREA') {
+      el = el.parentNode
+      while (el != null) {
+        if (el.attributes.tabIndex != null) {
+          el.focus()
+          e.stopPropagation()
+          e.preventDefault()
+          return
+        }
+        el = el.parentNode
+      }
+    }
     e.stopPropagation()
     e.preventDefault()
   }
