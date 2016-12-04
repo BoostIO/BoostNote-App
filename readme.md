@@ -2,6 +2,22 @@
 
 A Polished Notes App with Github Flavored Markdown
 
+## Features
+
+- More organize option
+- Github Flavored Markdown(with Latex)
+- PouchDB
+
+## Using
+
+- React
+- React Router
+- Styled Components
+- Redux
+- Redux Saga
+- Webpack
+- PouchDB / LevelDB
+
 ## Documents
 
 - [Build](./docs/build.md)

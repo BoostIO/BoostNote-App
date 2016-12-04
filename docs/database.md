@@ -1,10 +1,10 @@
 # Database
 
-Inpad uses pouchDB as a storage and the pouchDB uses levelDown as a default.
+Inpad uses pouchDB as a storage and the pouchDB uses WebSQL as a default.
 
 ## Default Storage
 
-By default, Inpad provides a storage, named `notebook`
+By default, Inpad provides a storage, named `Notebook`
 The storage can not be deleted and renamed. User only can reset the data of it.
 
 If it deleted from out of the app, the app will try to create it again.
@@ -27,6 +27,7 @@ type|conventions
 ---|---
 Note|`note:$RANDOM_HASH$`
 Folder|`folder:$PATH_OF_FOLDER$`
+Tag|`tag:$TAG$`
 
 ### `$RANDOM_HASH$`
 
@@ -37,3 +38,7 @@ This is a string of 10 Random bytes. It can be issued easily by `main/lib/util.r
 ### `$PATH_OF_FOLDERS$`
 
 This string should be a valid path. When creating a folder, the app will convert it into a valid path if it is invalid.
+
+### `$TAG$`
+
+Tag is a lowcased alphanumeric string.
