@@ -94,7 +94,7 @@ class Detail extends React.Component {
     this.queueTimer = window.setTimeout(() => {
       this.queueTimer = null
       this.dispatchUpdate()
-    }, 1500)
+    }, 1000)
   }
 
   invalidateDispatchTimer () {

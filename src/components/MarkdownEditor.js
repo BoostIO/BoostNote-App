@@ -92,6 +92,7 @@ class MarkdownEditor extends React.Component {
           onChange={this.handleEditorChange}
           value={value}
           docKey={docKey}
+          mode={'GitHub Flavored Markdown'}
         />
       </div>
     )

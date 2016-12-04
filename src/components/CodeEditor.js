@@ -9,7 +9,9 @@ let docMap = new Map()
 const Root = styled.div`
   .CodeMirror {
     min-height: 100%;
-    font-family: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    line-height: 1.4;
   }
 `
 
@@ -22,7 +24,7 @@ class CodeEditor extends React.Component {
   }
 
   componentDidMount () {
-    const { value, docKey } = this.props
+    const { value, docKey, mode } = this.props
     this.value = value
     this.codemirror = CodeMirror(this.root, {
       value: new CodeMirror.Doc(_.isString(value) ? value : ''),
@@ -31,6 +33,8 @@ class CodeEditor extends React.Component {
       keyMap: 'sublime',
       inputStyle: 'textarea'
     })
+
+    this.setSyntaxMode(mode)
 
     this.codemirror.on('blur', this.handleBlur)
     this.codemirror.on('change', this.handleChange)
@@ -56,6 +60,10 @@ class CodeEditor extends React.Component {
         docMap = docMap.set(nextProps.docKey, nextDoc)
       }
       this.codemirror.swapDoc(nextDoc)
+    }
+
+    if (this.props.mode !== nextProps.mode) {
+      this.setSyntaxMode(nextProps.mode)
     }
   }
 
@@ -88,6 +96,14 @@ class CodeEditor extends React.Component {
 
   focus () {
     this.codemirror.focus()
+  }
+
+  setSyntaxMode (mode) {
+    let syntax = CodeMirror.findModeByName(mode)
+    if (syntax == null) syntax = CodeMirror.findModeByName('Plain Text')
+
+    this.codemirror.setOption('mode', syntax.mime)
+    CodeMirror.autoLoadMode(this.editor, syntax.mode)
   }
 
   render () {
