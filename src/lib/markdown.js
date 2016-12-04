@@ -6,10 +6,6 @@ const strip = require('strip-markdown')
 
 const parser = remark()
   .use(lint)
-  .use((p) => {
-    window.p = p
-
-  })
   .use(html)
   .use(emoji)
 
