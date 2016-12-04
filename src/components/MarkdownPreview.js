@@ -49,7 +49,7 @@ class MarkdownPreview extends React.Component {
       let syntax = CodeMirror.findModeByName(block.className.substring(9))
       if (syntax == null) syntax = CodeMirror.findModeByName('Plain Text')
       CodeMirror.requireMode(syntax.mode, () => {
-        let value = block.innerHTML
+        let value = _.unescape(block.innerHTML)
         block.innerHTML = ''
         block.parentNode.className = ` cm-s-default CodeMirror`
         CodeMirror.runMode(value, syntax.mime, block, {
