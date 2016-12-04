@@ -265,6 +265,8 @@ export function createNote (name, payload) {
               content: payload.content,
               tags: new Set(payload.tags),
               folder: payload.folder,
+              createdAt: new Date(),
+              updatedAt: new Date(),
               rev: res.rev
             })
           }
@@ -294,6 +296,8 @@ export function updateNote (name, noteId, payload) {
               content: payload.content,
               tags: new Set(payload.tags),
               folder: payload.folder,
+              createdAt: payload.createdAt,
+              updatedAt: payload.updatedAt,
               rev: res.rev
             })
           }

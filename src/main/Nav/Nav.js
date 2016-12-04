@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Octicon } from 'components'
 import StorageSection from './StorageSection'
 import { isFinallyBlurred } from 'lib/util'
+import commander from 'main/lib/commander'
 
 const Root = styled.div`
   position: relative;
@@ -57,6 +58,14 @@ class Nav extends React.Component {
     }
   }
 
+  componentDidMount () {
+    window.addEventListener('core:delete', this.handleCoreDelete)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('core:delete', this.handleCoreDelete)
+  }
+
   handleFocus = e => {
     if (!this.state.isFocused) {
       this.setState({
@@ -70,6 +79,17 @@ class Nav extends React.Component {
       this.setState({
         isFocused: false
       })
+    }
+  }
+
+  handleCoreDelete = e => {
+    if (this.state.isFocused) {
+      const { router } = this.context
+      const { storageName, folderName } = router.params
+
+      if (folderName != null) {
+        commander.deleteFolder(storageName, folderName)
+      }
     }
   }
 
@@ -98,7 +118,9 @@ class Nav extends React.Component {
         <StorageList>
           {storageList}
         </StorageList>
-        <BottomButton onClick={this.handleNewFolderClick}>
+        <BottomButton onClick={this.handleNewFolderClick}
+          title='Create a folder'
+        >
           <Octicon icon='plus' /> Add Folder
         </BottomButton>
       </Root>

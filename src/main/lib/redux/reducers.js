@@ -109,9 +109,33 @@ function storageMap (state = defaultStorageMap, action) {
             note.get('folder'),
             'notes'
           ], noteSet => noteSet.add(noteId))
-
-          return state
         }
+        return state
+      }
+    case 'DELETE_NOTE':
+      {
+        const { storageName, noteId } = action.payload
+
+        let oldNote = state.getIn([
+          storageName,
+          'notes',
+          noteId
+        ])
+
+        state = state.deleteIn([
+          storageName,
+          'notes',
+          noteId
+        ])
+
+        state = state.updateIn([
+          storageName,
+          'folders',
+          oldNote.get('folder'),
+          'notes'
+        ], noteSet => noteSet.delete(noteId))
+
+        return state
       }
   }
   return state

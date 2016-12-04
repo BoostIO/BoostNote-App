@@ -6,6 +6,9 @@ import Octicon from 'components/Octicon'
 import _ from 'lodash'
 import Detail from './Detail'
 import { isFinallyBlurred } from 'lib/util'
+import Dialog from 'main/lib/Dialog'
+import StorageManager from 'main/lib/StorageManager'
+import moment from 'moment'
 
 const Root = styled.div`
   display: flex;
@@ -86,12 +89,19 @@ const SliderLine = styled.div`
     : p.theme.borderColor};
 `
 
+const Right = styled.div`
+  flex: 1;
+  position: relative;
+  outline: none;
+`
+
 class NoteList extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
       listWidth: props.status.get('noteListWidth'),
+      isRightFocused: false,
       isLeftFocused: false
     }
 
@@ -137,8 +147,8 @@ class NoteList extends React.Component {
     const { location } = this.props
     const { router } = this.context
 
-    const needsRedirectFirstNote = this.noteListMap.size > 0 && this.noteListMap.get(location.query.key) == null
-    if (needsRedirectFirstNote) {
+    const needsRedirectToFirstNote = this.noteListMap.size > 0 && this.noteListMap.get(location.query.key) == null
+    if (needsRedirectToFirstNote) {
       router.push({
         pathname: location.pathname,
         query: {
@@ -154,8 +164,13 @@ class NoteList extends React.Component {
     this.setRefreshTimer()
   }
 
+  componentDidMount () {
+    window.addEventListener('core:delete', this.handleCoreDelete)
+  }
+
   componentWillUnmount () {
     this.invalidateRefreshTimer()
+    window.removeEventListener('core:delete', this.handleCoreDelete)
   }
 
   setRefreshTimer () {
@@ -185,7 +200,7 @@ class NoteList extends React.Component {
       if (noteSet == null) return new Map()
 
       notes = noteSet
-        .map((noteId) => {
+        .map(noteId => {
           return [
             noteId,
             storageMap
@@ -201,9 +216,69 @@ class NoteList extends React.Component {
       notes = new Map()
     }
     return notes
+      .sort((a, b) => {
+        return moment(b.get('updatedAt')).toDate() - moment(a.get('updatedAt')).toDate()
+      })
   }
 
-  handleFocus = e => {
+  handleCoreDelete = e => {
+    if ((this.state.isLeftFocused || this.state.isRightFocused) && this.noteListMap.size > 0) {
+      const { router, store } = this.context
+      const { storageName } = router.params
+      const { key } = router.location.query
+
+      const noteMapKeys = this.noteListMap.keySeq()
+      const targetIndex = noteMapKeys.keyOf(key)
+      const nextIndex = targetIndex + 1 < noteMapKeys.size
+        ? targetIndex + 1
+        : targetIndex - 1
+      const nextNoteKey = noteMapKeys.get(nextIndex)
+
+      Dialog.showMessageBox({
+        message: `Are you sure you want to delete the selected note?`,
+        buttons: ['Delete Note', 'Cancel']
+      }, (index) => {
+        if (index === 0) {
+          StorageManager.deleteNote(storageName, key)
+            .then(() => {
+              router.push({
+                pathname: router.location.pathname,
+                query: {
+                  key: nextNoteKey
+                }
+              })
+            })
+            .then(() => {
+              store.dispatch({
+                type: 'DELETE_NOTE',
+                payload: {
+                  storageName,
+                  noteId: key
+                }
+              })
+            })
+        }
+      })
+    }
+  }
+
+  handleRightFocus = e => {
+    if (!this.state.isRightFocused) {
+      this.setState({
+        isRightFocused: true
+      })
+    }
+  }
+
+  handleRightBlur = e => {
+    if (isFinallyBlurred(e, this.right)) {
+      this.setState({
+        isRightFocused: false
+      })
+    }
+  }
+
+  handleLeftFocus = e => {
     if (!this.state.isLeftFocused) {
       this.setState({
         isLeftFocused: true
@@ -211,7 +286,7 @@ class NoteList extends React.Component {
     }
   }
 
-  handleBlur = e => {
+  handleLeftBlur = e => {
     if (isFinallyBlurred(e, this.left)) {
       this.setState({
         isLeftFocused: false
@@ -249,8 +324,8 @@ class NoteList extends React.Component {
           style={{width: this.state.listWidth}}
           innerRef={c => (this.left = c)}
           tabIndex='0'
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
+          onFocus={this.handleLeftFocus}
+          onBlur={this.handleLeftBlur}
         >
           <LeftMenu>
             Sort By <select />
@@ -269,14 +344,21 @@ class NoteList extends React.Component {
             active={this.state.isSliderActive}
           />
         </Slider>
-        {activeNote != null
-          ? <Detail
-            ref={c => (this.detail = c)}
-            noteKey={location.query.key}
-            note={activeNote}
-          />
-          : <div>No note.</div>
-        }
+        <Right
+          innerRef={c => (this.right = c)}
+          tabIndex='0'
+          onFocus={this.handleRightFocus}
+          onBlur={this.handleRightBlur}
+        >
+          {activeNote != null
+            ? <Detail
+              ref={c => (this.detail = c)}
+              noteKey={location.query.key}
+              note={activeNote}
+            />
+            : <div>No note.</div>
+          }
+        </Right>
 
       </Root>
     )
@@ -289,6 +371,9 @@ NoteList.propTypes = {
 NoteList.contextTypes = {
   router: PropTypes.shape({
     push: PropTypes.func
+  }),
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
   }),
   status: PropTypes.instanceOf(Map)
 }

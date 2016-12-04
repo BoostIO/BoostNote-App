@@ -8,7 +8,8 @@ import { Set } from 'immutable'
 import markdown from 'lib/markdown'
 
 const Root = styled.div`
-  flex: 1;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `

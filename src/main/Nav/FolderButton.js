@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import { LinkButton } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
-import Dialog from 'main/lib/Dialog'
-import StorageManager from 'main/lib/StorageManager'
+import commander from 'main/lib/commander'
 
 const DEFAULT_FOLDER_NAME = 'Notes'
 
@@ -135,28 +134,7 @@ class FolderButton extends React.Component {
 
   delete () {
     const { storageName, folderName } = this.props
-    const { store } = this.context
-
-    if (folderName === DEFAULT_FOLDER_NAME) return null
-
-    Dialog.showMessageBox({
-      message: `Are you sure you want to delete "${folderName}"?`,
-      detail: 'All notes and any subfolders will be deleted.',
-      buttons: ['Confirm', 'Cancel']
-    }, (index) => {
-      if (index === 0) {
-        StorageManager.deleteFolder(storageName, folderName)
-          .then(() => {
-            store.dispatch({
-              type: 'DELETE_FOLDER',
-              payload: {
-                storageName,
-                folderName
-              }
-            })
-          })
-      }
-    })
+    commander.deleteFolder(storageName, folderName)
   }
 
   cancelRenaming () {

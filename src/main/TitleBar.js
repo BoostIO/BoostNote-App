@@ -123,6 +123,19 @@ class TitleBar extends React.Component {
     }
   }
 
+  handleDeleteButtonClick = e => {
+    window.dispatchEvent(new window.CustomEvent('core:delete'))
+  }
+
+  handleMouseDown = e => {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
+  handleSearchInputMouseDown = e => {
+    e.stopPropagation()
+  }
+
   toggleMaximize () {
     let currentWindow = remote.getCurrentWindow()
 
@@ -184,7 +197,9 @@ class TitleBar extends React.Component {
 
   render () {
     return (
-      <Root>
+      <Root
+        onMouseDown={this.handleMouseDown}
+      >
         <AttributedTitleBar
           isMaximized={this.state.isMaximized}
           isFullscreen={this.state.isFullscreen}
@@ -199,18 +214,25 @@ class TitleBar extends React.Component {
           <ToolBar
             innerRef={c => (this.toolbar = c)}
           >
-            <Button>
+            <Button onClick={this.handleDeleteButtonClick}
+              title='Delete'>
               <Octicon icon='trashcan' />
             </Button>
-            <Button onClick={this.handleNewButtonClick}>
+            <Button onClick={this.handleNewButtonClick}
+              title='Create a note'
+            >
               <Octicon icon='plus' />
             </Button>
             <SearchInput
               placeholder='Search...'
               value={this.state.search}
               onChange={this.handleChange}
+              title='Quickly find notes'
+              onMouseDown={this.handleSearchInputMouseDown}
             />
-            <Button>
+            <Button
+              title='Preferences'
+            >
               <Octicon icon='settings' />
             </Button>
           </ToolBar>
