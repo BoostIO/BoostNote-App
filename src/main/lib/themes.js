@@ -1,10 +1,8 @@
-import Color from 'color'
-
 const defaultUIColor = '#333'
 const defaultUIInactiveColor = '#999'
 const defaultUIInverseColor = '#FFF'
 const defaultUIActiveColor = '#4F9DFB'
-const defaultBorderColor = '#D1D1D1'
+const defaultBorderColor = '#DDD'
 const defaultUIBackgroundColor = '#F8F8F8'
 const defaultUIFontSize = '12px'
 const defaultUIFontFamily = 'Helvetica, Arial, sans-serif'
