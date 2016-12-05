@@ -110,7 +110,7 @@ class CodeEditor extends React.Component {
     const { className, style } = this.props
     return (
       <Root
-        className={className}
+        className={['CodeEditor', className].join(' ')}
         style={style}
         innerRef={c => (this.root = c)}
       />

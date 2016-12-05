@@ -17,19 +17,20 @@ const Root = styled.div`
 const StatusBar = styled.div`
   width: 100%;
   height: 30px;
-  border-bottom: ${p => p.theme.border};
   display: flex;
 `
 
 const StatusBarLeft = styled.div`
   flex: 1;
+  padding: 0 10px;
+  overflow-x: auto;
 `
 
 const StatusBarRight = styled.div`
   font-size: 12px;
   line-height: 30px;
-  color: ${p => p.theme.inactiveColor}
-  padding: 0 5px;
+  color: ${p => p.theme.inactiveColor};
+  padding: 0 10px;
 `
 
 const BodyEditor = styled(MarkdownEditor)`
@@ -53,6 +54,14 @@ class Detail extends React.Component {
   handleContentChange = e => {
     this.setState({
       content: this.editor.value
+    }, () => {
+      this.setDispatchTimer()
+    })
+  }
+
+  handleTagChange = newTags => {
+    this.setState({
+      tags: newTags
     }, () => {
       this.setDispatchTimer()
     })
@@ -105,11 +114,13 @@ class Detail extends React.Component {
     const nextNoteKey = nextProps.noteKey
     const { noteKey } = this.props
 
+    // Note changed
     if (nextNoteKey !== noteKey) {
       if (noteKey != null) {
         this.dispatchUpdate()
       }
 
+      this.tagSelect.resetInput()
       this.setState({
         tags: new Set(nextProps.note.get('tags')),
         content: nextProps.note.get('content')
@@ -135,7 +146,11 @@ class Detail extends React.Component {
       <Root>
         <StatusBar>
           <StatusBarLeft>
-            <TagSelect value={note.get('tags')} />
+            <TagSelect
+              ref={c => (this.tagSelect = c)}
+              value={this.state.tags}
+              onChange={this.handleTagChange}
+            />
           </StatusBarLeft>
           <StatusBarRight>{moment(note.get('updatedAt')).fromNow()}</StatusBarRight>
         </StatusBar>
@@ -144,6 +159,7 @@ class Detail extends React.Component {
           value={this.state.content}
           onChange={this.handleContentChange}
           docKey={`${router.params.storageName}/${noteKey}`}
+          codeEditorStyle={p => `border-top: ${p.theme.border};`}
         />
       </Root>
     )
