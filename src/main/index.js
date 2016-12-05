@@ -6,6 +6,10 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import App from './App'
 import history from './history'
 
+// Disable Pinch Zoom
+const {webFrame} = require('electron')
+webFrame.setZoomLevelLimits(1, 1)
+
 const isDev = process.env.NODE_ENV !== 'production'
 
 if (isDev) {
@@ -14,6 +18,7 @@ if (isDev) {
     .catch((err) => console.log('An error occurred: ', err))
 }
 
+// Ignore drag & drop event
 document.addEventListener('drop', function (e) {
   e.preventDefault()
   e.stopPropagation()
