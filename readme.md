@@ -25,6 +25,7 @@ A Polished Notes App with Github Flavored Markdown
 - [App Context](./docs/context.md)
 - [Database](./docs/database.md)
 - [Redux](./docs/redux)
+- [Key Bindings](./docs/key-bindings.md)
 - [Testing](./docs/testing.md)
 
 ## License
