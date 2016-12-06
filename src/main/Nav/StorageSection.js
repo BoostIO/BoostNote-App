@@ -172,7 +172,12 @@ class StorageSection extends React.Component {
     const { storageName, storageData, isFocused } = this.props
 
     const folderList = storageData.get('folders')
-      .sortBy((v, key) => key.toLowerCase())
+      // Sort by localeCompare except 'Notes'. 'Notes' folder should be came first.
+      .sortBy((v, key) => key.toLowerCase(), (a, b) => {
+        if (a === 'notes') return -1
+        if (b === 'notes') return 1
+        return a.localeCompare(b)
+      })
       .map((meta, folderName) => {
         const folderURL = `/storages/${storageName}/folders/${folderName}`
 
