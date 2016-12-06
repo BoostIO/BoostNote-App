@@ -1,4 +1,4 @@
-import StorageManager from './StorageManager'
+import StorageManager from 'main/lib/StorageManager'
 import { Map, Set } from 'immutable'
 
 export default t => {

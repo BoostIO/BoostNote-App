@@ -30,7 +30,7 @@ function runTest (key, spec, isReloaded) {
 }
 
 function loadContext () {
-  return require.context('../src', true, /\.spec\.js$/)
+  return require.context('../specs', true, /\.spec\.js$/)
 }
 
 let specContext = loadContext()
