@@ -12,7 +12,7 @@ const routes = (
     <IndexRedirect to='storages/Notebook' />
 
     <Route path='storages/:storageName'>
-      <IndexRedirect to='Notes' />
+      <IndexRedirect to='folders/Notes' />
       <Route path='all-notes' component={NoteList} />
       <Route path='settings' component={StorageIndex} />
       <Route path='folders/:folderName' component={NoteList} />
