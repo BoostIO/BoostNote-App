@@ -126,16 +126,24 @@ class StorageSection extends React.Component {
     })
   }
 
-  confirmCreating () {
-    const { storageName, storageData } = this.props
-    const { store } = this.context
+  resolveNewName = newName => {
+    const { storageData } = this.props
 
     let count = 0
-    let originalName = filenamify(this.state.newName, {replacement: '_'})
-    let newName = originalName
-    while (storageData.hasIn(['folders', newName])) {
-      newName = `${originalName} (${++count})`
+    let originalName = filenamify(newName, {replacement: '_'})
+    let resolvedName = originalName
+    while (storageData.hasIn(['folders', resolvedName])) {
+      resolvedName = `${originalName} (${++count})`
     }
+
+    return resolvedName
+  }
+
+  confirmCreating () {
+    const { storageName } = this.props
+    const { store } = this.context
+
+    const newName = this.resolveNewName(this.state.newName)
 
     StorageManager
       .upsertFolder(storageName, newName)
@@ -184,6 +192,7 @@ class StorageSection extends React.Component {
         return <FolderButton
           key={folderName}
           storageName={storageName}
+          resolveNewName={this.resolveNewName}
           folderURL={folderURL}
           folderName={folderName}
           createNewButton={this.createNewFolder}

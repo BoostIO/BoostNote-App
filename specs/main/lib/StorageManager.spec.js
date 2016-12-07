@@ -124,11 +124,68 @@ export default t => {
         })
     })
 
+  // Create dummy for folder renaming test
+  let createAnotherDummyNote = StorageManager
+    .createNote('Test Notebook', {
+      title: 'test',
+      content: '# test',
+      tags: ['abc'],
+      folder: 'test-folder4'
+    })
+  let createAnotherDummyFolder = StorageManager.upsertFolder('Test Notebook', 'test-folder4')
+
+  /**
+   * Rename folder
+   * - check notes in the target folder is moved
+   * - check new folder is created with the new name
+   * - check original folder is deleted
+   *
+   * TODO: THE BELOW CODE MUST BE REWRITTEN.
+   */
+  let folderRenameTest = Promise.all([createAnotherDummyNote, createAnotherDummyFolder])
+    .then(data => {
+      let note = data[0]
+      return StorageManager.renameFolder('Test Notebook', 'test-folder4', 'test-folder5')
+        .then(res => {
+          return Promise.resolve(StorageManager.list())
+            .then(storageDBMap => {
+              return storageDBMap.get('Test Notebook').get('note:' + note.id)
+            })
+        })
+        .then(doc => {
+          t.equal(doc.folder, 'test-folder5')
+        })
+        .then(() => {
+          return Promise.resolve(StorageManager.list())
+            .then(storageDBMap => {
+              return Promise.all([
+                storageDBMap.get('Test Notebook').get('folder:test-folder4')
+                  .then(doc => {
+                    t.fail('The folder still exists', 'The folder should be deleted and this statement shouldn\'t be fired')
+                  })
+                  .catch(err => {
+                    if (err.name === 'not_found') {
+                      t.ok(true)
+                      return
+                    }
+                    throw err
+                  }),
+                storageDBMap.get('Test Notebook').get('folder:test-folder5')
+                  .then(doc => {
+                    t.ok(doc != null)
+                  })
+              ])
+            })
+
+        })
+    })
+
   return Promise.all([
     listTest,
     loadAllTest,
     createAndDeleteFolderTest,
     createUpdateDeleteNoteTest,
-    folderDeleteTest
+    folderDeleteTest,
+    folderRenameTest
   ])
 }

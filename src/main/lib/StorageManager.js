@@ -174,7 +174,7 @@ export function upsertFolder (name, folderName) {
   return db
     .get(FOLDER_ID_PREFIX + folderName)
     .catch((err) => {
-      if (err.name === 'not_found') return null
+      if (err.name === 'not_found') return {}
       throw err
     })
     .then(doc => {
@@ -223,6 +223,52 @@ export function deleteFolder (name, folderName) {
         .then(function (result) {
           let docs = result.rows.map(row => {
             row.doc._deleted = true
+            return row.doc
+          })
+          return db.bulkDocs(docs)
+        })
+    })
+    .then((res) => {
+      return {
+        id: folderName
+      }
+    })
+}
+
+export function renameFolder (name, folderName, newFolderName) {
+  const db = getDB(name)
+  return db
+    .get(FOLDER_ID_PREFIX + folderName)
+    .then(doc => {
+      doc._deleted = true
+      return db.put(doc)
+    })
+    .then(res => {
+      return db.get(FOLDER_ID_PREFIX + newFolderName)
+    })
+    .catch(err => {
+      if (err.name === 'not_found') return {}
+      throw err
+    })
+    .then(doc => {
+      return db.put(Object.assign({
+        _id: FOLDER_ID_PREFIX + newFolderName
+      }, doc))
+    })
+    .then(() => {
+      return db.put(noteView)
+        .catch(err => {
+          if (err.name !== 'conflict') throw err
+        })
+        .then(() => {
+          return db.query('notes/by_folder', {
+            key: folderName,
+            include_docs: true
+          })
+        })
+        .then(function (result) {
+          let docs = result.rows.map(row => {
+            row.doc.folder = newFolderName
             return row.doc
           })
           return db.bulkDocs(docs)
@@ -329,5 +375,6 @@ export default {
   deleteFolder,
   createNote,
   updateNote,
-  deleteNote
+  deleteNote,
+  renameFolder
 }

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { LinkButton } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
 import commander from 'main/lib/commander'
+import StorageManager from 'main/lib/StorageManager'
+import { routerShape } from 'react-router'
 
 const DEFAULT_FOLDER_NAME = 'Notes'
 
@@ -150,7 +152,29 @@ class FolderButton extends React.Component {
     this.setState({
       isRenaming: false
     }, () => {
-      this.button.focus()
+      const { storageName, resolveNewName, folderName } = this.props
+      const { store, router } = this.context
+
+      const newFolderName = resolveNewName(this.state.newName)
+
+      StorageManager
+        .renameFolder(storageName, folderName, newFolderName)
+        .then(res => {
+          if (router.params.folderName === folderName) {
+            router.push(`/storages/${storageName}/folders/${newFolderName}`)
+          }
+          store.dispatch({
+            type: 'MOVE_FOLDER',
+            payload: {
+              storageName,
+              folderName,
+              newFolderName: newFolderName,
+              folder: new Map([
+                ['notes', new Set()]
+              ])
+            }
+          })
+        })
     })
   }
 
@@ -184,13 +208,16 @@ class FolderButton extends React.Component {
 
 FolderButton.propTypes = {
   folderURL: PropTypes.string,
-  folderName: PropTypes.string
+  folderName: PropTypes.string,
+  storageName: PropTypes.string,
+  resolveNewName: PropTypes.func
 }
 
 FolderButton.contextTypes = {
   store: PropTypes.shape({
     dispatch: PropTypes.func
-  })
+  }),
+  router: routerShape
 }
 
 export default FolderButton
