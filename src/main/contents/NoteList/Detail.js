@@ -79,7 +79,9 @@ class Detail extends React.Component {
     }
 
     const input = {
-      title: markdown.getTitle(this.state.content),
+      title: this.state.content.length > 0
+        ? markdown.getTitle(this.state.content)
+        : '',
       tags: this.state.tags.toArray(),
       content: this.state.content
     }
