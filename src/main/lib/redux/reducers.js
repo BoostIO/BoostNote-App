@@ -96,6 +96,7 @@ function storageMap (state = defaultStorageMap, action) {
           newFolderName
         ], new Map([['notes', noteSet]]))
       }
+    // TODO: Need tag reducers
     case 'CREATE_NOTE':
       {
         const { storageName, noteId, note } = action.payload

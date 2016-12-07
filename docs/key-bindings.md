@@ -13,7 +13,8 @@ core:new-folder     | Cmd + Shift + N    | Ctrl + Shift + N  | Create a new fold
 core:focus-search   | Cmd + P            | Ctrl + P          | Focus search input
 core:hide-window    | Cmd + W            | Ctrl + W          | Hide window
 core:quit           | Cmd + Q            | Ctrl + Q          | Quit app
-core:delete         | Cmd + Backspace    | Delete            | Delete(Fire delete note )
+core:delete         | Cmd + Backspace    | Delete            | Delete
+core:refresh        | Cmd + R            | Ctrl + R, F5      | Delete
 
 ## Nav(Left Navigator)
 
@@ -41,3 +42,4 @@ Command                 | macOS Key          | Windows/Linux Key | Description
 ------------------------|--------------------|-------------------|-------------
 editor:focus-editor     | Esc                | Esc               | Focus List
 editor:focus-tag-select | Cmd + '            | Ctrl + '          | Focus Tag Select
+editor:find             | Cmd + f            | Ctrl + f          | Find in note

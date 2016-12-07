@@ -47,10 +47,6 @@ It should be placed inside of a constructor.
 
 ```js
 class SomeComponent {
-  constructor (props) {
-    super(props)
-  }
-
   someHandler = e => {
     e.preventDefault()
     ...

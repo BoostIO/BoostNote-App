@@ -56,15 +56,14 @@ class CodeEditor extends React.Component {
       docMap = docMap.set(this.props.docKey, currentDoc)
 
       if (nextDoc == null) {
-        nextDoc = new CodeMirror.Doc(nextProps.value)
+        let syntax = CodeMirror.findModeByName(nextProps.mode)
+        nextDoc = new CodeMirror.Doc(nextProps.value, syntax.mime)
         docMap = docMap.set(nextProps.docKey, nextDoc)
       }
       this.codemirror.swapDoc(nextDoc)
     }
 
-    if (this.props.mode !== nextProps.mode) {
-      this.setSyntaxMode(nextProps.mode)
-    }
+    if (this.props.mode !== nextProps.mode) this.setSyntaxMode(nextProps.mode)
   }
 
   componentDidUpdate () {

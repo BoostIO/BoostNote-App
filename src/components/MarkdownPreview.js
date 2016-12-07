@@ -5,6 +5,18 @@ import _ from 'lodash'
 
 CodeMirror.modeURL = '../node_modules/codemirror/mode/%N/%N.js'
 
+// TODO: should override whole meta.js
+function parseMode (mode) {
+  switch (mode) {
+    case 'js':
+    case 'javascript':
+      mode = 'jsx'
+  }
+  let syntax = CodeMirror.findModeByName(mode)
+  if (syntax == null) syntax = CodeMirror.findModeByName('Plain Text')
+  return syntax
+}
+
 class MarkdownPreview extends React.Component {
   constructor (props) {
     super(props)
@@ -49,8 +61,8 @@ class MarkdownPreview extends React.Component {
     // Re-render codeblokcs by CodeMirror run mode
     let codeBlocks = this.iframe.contentWindow.document.body.querySelectorAll('pre code')
     _.forEach(codeBlocks, (block) => {
-      let syntax = CodeMirror.findModeByName(block.className.substring(9))
-      if (syntax == null) syntax = CodeMirror.findModeByName('Plain Text')
+      let syntax = parseMode(block.className.substring(9))
+
       CodeMirror.requireMode(syntax.mode, () => {
         let value = _.unescape(block.innerHTML)
         block.innerHTML = ''

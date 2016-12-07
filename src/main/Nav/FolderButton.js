@@ -191,7 +191,6 @@ class FolderButton extends React.Component {
     this.setState({
       isRenaming: false
     }, () => {
-      console.log(this.button)
       this.button.focus()
     })
   }
