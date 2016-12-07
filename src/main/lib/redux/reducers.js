@@ -1,21 +1,36 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import { Map, OrderedMap } from 'immutable'
+import _ from 'lodash'
 
 function config (state = {}, action) {
   return state
 }
 
+let storedStatus
+try {
+  storedStatus = JSON.parse(window.localStorage.getItem('status'))
+  if (!_.isObject(storedStatus)) throw new Error('Status data should be an object.')
+} catch (err) {
+  console.warn(err.stack)
+  storedStatus = {}
+}
+
 const defaultStatus = Map({
   navWidth: 150,
   noteListWidth: 200
-})
+}).merge(storedStatus)
 
 function status (state = defaultStatus, action) {
-  // switch (action.type) {
-  //   case 'UPDATE_STATUS':
-  //     return Object.assign({}, state, action.payload)
-  // }
+  switch (action.type) {
+    case 'UPDATE_STATUS':
+      const newStatus = state.merge(action.payload.status)
+
+      // TODO: this should be extracted to redux saga middleware
+      window.localStorage.setItem('status', JSON.stringify(newStatus.toJS()))
+
+      return newStatus
+  }
   return state
 }
 

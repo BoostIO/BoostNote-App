@@ -4,12 +4,13 @@ import { Octicon } from 'components'
 import StorageSection from './StorageSection'
 import { isFinallyBlurred } from 'lib/util'
 import commander from 'main/lib/commander'
+import { NAV_MIN_WIDTH } from 'main/lib/consts'
 
 const Root = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 150px;
+  min-width: ${NAV_MIN_WIDTH}px;
   background-color: ${p => p.theme.navBackgroundColor};
   &:focus {
     outline: none;

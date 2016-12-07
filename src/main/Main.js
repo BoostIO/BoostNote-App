@@ -6,6 +6,7 @@ import themes from './lib/themes'
 import Nav from './Nav/Nav'
 import { Map } from 'immutable'
 import StorageManager from './lib/StorageManager'
+import { NAV_MIN_WIDTH } from 'main/lib/consts'
 
 const Root = styled.div`
   position: absolute;
@@ -66,7 +67,7 @@ class Main extends React.Component {
 
     this.handleSliderMouseMove = e => {
       this.setState({
-        navWidth: e.clientX
+        navWidth: e.clientX > NAV_MIN_WIDTH ? e.clientX : NAV_MIN_WIDTH
       })
     }
 
@@ -74,9 +75,20 @@ class Main extends React.Component {
       window.removeEventListener('mouseup', this.handleSliderMouseUp)
       window.removeEventListener('mousemove', this.handleSliderMouseMove)
 
+      const width = e.clientX > NAV_MIN_WIDTH ? e.clientX : NAV_MIN_WIDTH
       this.setState({
         isSliderActive: false,
-        navWidth: e.clientX
+        navWidth: width
+      }, () => {
+        const { store } = this.context
+        const { status } = this.props
+
+        store.dispatch({
+          type: 'UPDATE_STATUS',
+          payload: {
+            status: status.set('navWidth', width)
+          }
+        })
       })
     }
   }
@@ -138,6 +150,12 @@ class Main extends React.Component {
 }
 
 Main.propTypes = {
+}
+
+Main.contextTypes = {
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
+  })
 }
 
 Main.childContextTypes = {

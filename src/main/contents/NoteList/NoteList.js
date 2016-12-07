@@ -9,6 +9,7 @@ import Dialog from 'main/lib/Dialog'
 import StorageManager from 'main/lib/StorageManager'
 import moment from 'moment'
 import NoteItem from './NoteItem'
+import { LIST_MIN_WIDTH } from 'main/lib/consts'
 
 const Root = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const Root = styled.div`
 `
 
 const Left = styled.div`
-  min-width: 150px;
+  min-width: ${LIST_MIN_WIDTH}px;
   display: flex;
   flex-direction: column;
   outline: none;
@@ -56,6 +57,7 @@ const Right = styled.div`
   flex: 1;
   position: relative;
   outline: none;
+  ${p => p.ignore ? 'pointer-events: none;' : ''}
 `
 
 class NoteList extends React.Component {
@@ -80,8 +82,9 @@ class NoteList extends React.Component {
   }
 
   handleSliderMouseMove = e => {
+    const width = e.clientX - this.props.status.get('navWidth')
     this.setState({
-      listWidth: e.clientX - this.props.status.get('navWidth')
+      listWidth: width > LIST_MIN_WIDTH ? width : LIST_MIN_WIDTH
     })
   }
 
@@ -89,9 +92,21 @@ class NoteList extends React.Component {
     window.removeEventListener('mouseup', this.handleSliderMouseUp)
     window.removeEventListener('mousemove', this.handleSliderMouseMove)
 
+    let width = e.clientX - this.props.status.get('navWidth')
+    width = width > LIST_MIN_WIDTH ? width : LIST_MIN_WIDTH
+
     this.setState({
       isSliderActive: false,
-      listWidth: e.clientX - this.props.status.get('navWidth')
+      listWidth: width
+    }, () => {
+      const { store, status } = this.context
+
+      store.dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: status.set('noteListWidth', width)
+        }
+      })
     })
   }
 
@@ -298,6 +313,7 @@ class NoteList extends React.Component {
           tabIndex='0'
           onFocus={this.handleRightFocus}
           onBlur={this.handleRightBlur}
+          ignore={this.state.isSliderActive}
         >
           {activeNote != null
             ? <Detail
