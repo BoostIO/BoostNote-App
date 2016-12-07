@@ -70,7 +70,8 @@ class FolderButton extends React.Component {
 
     this.state = {
       isRenaming: false,
-      newName: props.folderName
+      newName: props.folderName,
+      isDragEntered: false
     }
 
     this.handleContextMenu = e => {
@@ -121,6 +122,53 @@ class FolderButton extends React.Component {
       this.setState({
         newName: this.input.value
       })
+    }
+  }
+
+  handleDragEnter = e => {
+    this.setState({
+      isDragEntered: true
+    })
+  }
+
+  handleDragLeave = e => {
+    this.setState({
+      isDragEntered: false
+    })
+  }
+
+  handleDrop = e => {
+    const data = JSON.parse(e.dataTransfer.getData('application/json'))
+
+    this.setState({
+      isDragEntered: false
+    }, () => {
+      this.parseDropData(data)
+    })
+  }
+
+  parseDropData (data) {
+    const { storageName, folderName } = this.props
+    const { store } = this.context
+
+    switch (data.type) {
+      case 'MOVE_NOTE':
+        const noteId = data.payload.noteKey
+
+        StorageManager
+          .updateNote(storageName, noteId, {
+            folder: folderName
+          })
+          .then(res => {
+            store.dispatch({
+              type: 'UPDATE_NOTE',
+              payload: {
+                storageName,
+                noteId: res.id,
+                note: res.note
+              }
+            })
+          })
     }
   }
 
@@ -182,7 +230,11 @@ class FolderButton extends React.Component {
     const { folderURL, folderName, isFocused } = this.props
 
     return (
-      <Root>
+      <Root
+        onDragEnter={this.handleDragEnter}
+        onDragLeave={this.handleDragLeave}
+        onDrop={this.handleDrop}
+      >
         {this.state.isRenaming
           ? <RenameInput
             innerRef={c => (this.input = c)}
@@ -195,7 +247,10 @@ class FolderButton extends React.Component {
             to={folderURL}
             innerRef={c => (this.button = c)}
             onContextMenu={this.handleContextMenu}
-            className='NavButton'
+            className={this.state.isDragEntered
+              ? 'NavButton active'
+              : 'NavButton'
+            }
             isFocused={isFocused}
           >
             {folderName}

@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Map } from 'immutable'
 import Octicon from 'components/Octicon'
-import _ from 'lodash'
 import Detail from './Detail'
 import { isFinallyBlurred } from 'lib/util'
 import Dialog from 'main/lib/Dialog'
 import StorageManager from 'main/lib/StorageManager'
 import moment from 'moment'
+import NoteItem from './NoteItem'
 
 const Root = styled.div`
   display: flex;
@@ -32,42 +32,6 @@ const LeftMenu = styled.div`
 
 const LeftList = styled.div`
   overflow-y: auto;
-`
-
-const LeftListItem = styled.div`
-  border-bottom: ${p => p.theme.border}
-  height: 24px;
-  line-height: 24px;
-  padding: 0 10px;
-  font-size: 12px;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  &:hover {
-    background-color: ${p => p.theme.buttonHoverColor};
-  }
-  &:active {
-    background-color: ${p => p.theme.buttonActiveColor};
-  }
-  &.active {
-    background-color: ${p => p.isFocused
-      ? p.theme.activeColor
-      : p.theme.buttonActiveColor};
-    color: ${p => p.isFocused
-      ? p.theme.inverseColor
-      : p.theme.color};
-    .Octicon {
-      fill: ${p => p.isFocused
-        ? p.theme.inverseColor
-        : p.theme.color};
-    }
-    .empty {
-      color: inherit;
-    }
-  }
-  .empty {
-    color: ${p => p.theme.inactiveColor};
-  }
 `
 
 const Slider = styled.div`
@@ -128,17 +92,6 @@ class NoteList extends React.Component {
     this.setState({
       isSliderActive: false,
       listWidth: e.clientX - this.props.status.get('navWidth')
-    })
-  }
-
-  handleListItemClick = (e, key) => {
-    const { router } = this.context
-
-    router.push({
-      pathname: router.location.pathname,
-      query: {
-        key
-      }
     })
   }
 
@@ -299,17 +252,14 @@ class NoteList extends React.Component {
 
     const noteList = noteListMap
       .map((note, key) => {
-        let title = note.get('title')
-        let isValidTitle = _.isString(title) && title.trim().length > 0
         let isActive = location.query.key === key
-        return <LeftListItem
+        return <NoteItem
           key={key}
-          onClick={(e) => this.handleListItemClick(e, key)}
-          className={isActive && 'active'}
+          active={isActive}
           isFocused={this.state.isLeftFocused}
-        >
-          {isValidTitle ? title : <span className='empty'>Empty</span>}
-        </LeftListItem>
+          noteKey={key}
+          note={note}
+        />
       })
       .toArray()
 
@@ -377,4 +327,4 @@ NoteList.contextTypes = {
   status: PropTypes.instanceOf(Map)
 }
 
-export default connect((x) => x)(NoteList)
+export default connect(x => x)(NoteList)

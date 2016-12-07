@@ -326,7 +326,7 @@ export function updateNote (name, noteId, payload) {
   return db.get(NOTE_ID_PREFIX + noteId)
     .then((doc) => {
       payload = Object.assign({}, doc,
-        _.pick(payload, ['title', 'content', 'tags']),
+        _.pick(payload, ['title', 'content', 'tags', 'folder']),
         {
           _id: doc._id,
           _rev: doc._rev,
