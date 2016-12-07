@@ -6,7 +6,7 @@
 
 ### `config`
 
-User Preferences. Check [Config](config.md)
+User Preferences. Check [Config](./config.md)
 
 ### `status`
 
@@ -22,6 +22,9 @@ storageMap: OrderedMap <storageName, V>
       |- notes: Map <noteId, V>
           |- noteId: Map
       |- folders: Map <folderName, V>
+          |- folderName: Map
+            |- notes: Set // map for fast indexing by folder
+      |- tags: Map: Map <tagName, V>
           |- folderName: Map
             |- notes: Set // map for fast indexing by folder
 ```

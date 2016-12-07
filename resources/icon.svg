@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Inpad Logo</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(92.000000, 92.000000)">
+            <polygon id="Polygon" fill="#5FACFF" points="420 0 783.73067 210 783.73067 630 420 840 56.2693304 630 56.2693304 210"></polygon>
+            <polygon id="Polygon" fill="#FFFFFF" points="419.773762 67.2 725.307525 243.6 725.307525 596.4 419.773762 772.8 114.24 596.4 114.24 243.6"></polygon>
+            <polygon id="Path-2" fill="#E7E7E7" points="112.56 241.92 420 421.68 420 772.8 112.56 594.72"></polygon>
+            <polygon id="Path-2" fill="#CACACA" points="727.805142 241.92 420 421.68 420 772.8 727.805142 594.72"></polygon>
+            <rect id="Rectangle-2" fill="#555555" x="168" y="268.8" width="470.4" height="268.8" rx="20"></rect>
+            <path d="M314.112422,483.84 L276.574922,361.523203 L275.615156,361.523203 C276.965944,386.40614 277.641328,403.006365 277.641328,411.324375 L277.641328,483.84 L248.101875,483.84 L248.101875,327.931406 L293.104219,327.931406 L330.001875,447.155625 L330.641719,447.155625 L369.778828,327.931406 L414.781172,327.931406 L414.781172,483.84 L383.962031,483.84 L383.962031,410.044688 C383.962031,406.561076 384.015351,402.54432 384.121992,397.994297 C384.228633,393.444274 384.708511,381.358457 385.561641,361.736484 L384.601875,361.736484 L344.398359,483.84 L314.112422,483.84 Z" id="M" fill="#FFFFFF"></path>
+            <path d="M537.6,436.8 L537.6,324.24 L504,324.24 L504,436.8 L470.4,436.8 L520.8,487.2 L571.2,436.8 L537.6,436.8 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

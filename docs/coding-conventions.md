@@ -61,6 +61,7 @@ class SomeAnotherComponent {
   constructor (props) {
     super(props)
 
+    // This is wrong JUST FOR NOW because React Hot Loader doesn't support.
     this.someHandler = e => {
       e.preventDefault()
       ...
