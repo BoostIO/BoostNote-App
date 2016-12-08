@@ -18,7 +18,11 @@ try {
 
 const defaultStatus = Map({
   navWidth: 150,
-  noteListWidth: 200
+  noteListWidth: 200,
+  // NORMAL, COMPACT
+  noteListStyle: 'NORMAL',
+  // UPDATED_AT, CREATED_AT, ALPHABET
+  noteListSort: 'UPDATED_AT'
 }).merge(storedStatus)
 
 function status (state = defaultStatus, action) {

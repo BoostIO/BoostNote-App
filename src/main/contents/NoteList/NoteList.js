@@ -10,6 +10,7 @@ import StorageManager from 'main/lib/StorageManager'
 import moment from 'moment'
 import NoteItem from './NoteItem'
 import { LIST_MIN_WIDTH } from 'main/lib/consts'
+import _ from 'lodash'
 
 const Root = styled.div`
   display: flex;
@@ -29,6 +30,35 @@ const Left = styled.div`
 
 const LeftMenu = styled.div`
   border-bottom: ${p => p.theme.border};
+  display: flex;
+  height: 20px;
+`
+
+const LeftMenuSortSelect = styled.div`
+  flex: 1;
+  display: flex;
+  line-height: 20px;
+  color: ${p => p.theme.inactiveColor};
+  select {
+    width: 100%;
+    font-size: 10px;
+    outline: none;
+    border: none;
+    background: transparent;
+    height: 20px;
+    color: ${p => p.theme.inactiveColor};
+    &:active {
+      color: ${p => p.theme.activeColor};
+    }
+  }
+`
+
+const LeftMenuButton = styled.button`
+  ${p => p.theme.button};
+  border-width: 0 0 0 1px;
+  width: 24px;
+  ${p => p.active ? `fill: ${p.theme.activeColor};` : ''}
+  border-radius: 0;
 `
 
 const LeftList = styled.div`
@@ -66,6 +96,8 @@ class NoteList extends React.Component {
 
     this.state = {
       listWidth: props.status.get('noteListWidth'),
+      listStyle: props.status.get('noteListStyle'),
+      listSort: props.status.get('noteListSort'),
       isRightFocused: false,
       isLeftFocused: false
     }
@@ -76,6 +108,7 @@ class NoteList extends React.Component {
   handleSliderMouseDown = e => {
     window.addEventListener('mouseup', this.handleSliderMouseUp)
     window.addEventListener('mousemove', this.handleSliderMouseMove)
+
     this.setState({
       isSliderActive: true
     })
@@ -151,6 +184,26 @@ class NoteList extends React.Component {
     window.clearTimeout(this.refreshTimer)
   }
 
+  getSortMethod () {
+    switch (this.state.listSort) {
+      case 'CREATED_AT':
+        return (a, b) => {
+          return moment(b.get('createdAt')).toDate() - moment(a.get('createdAt')).toDate()
+        }
+      case 'ALPHABET':
+        return (a, b) => {
+          const aTitle = _.isString(a.get('title')) ? a.get('title') : ''
+          const bTitle = _.isString(b.get('title')) ? b.get('title') : ''
+          return aTitle.localeCompare(bTitle)
+        }
+      default:
+      case 'UPDATED_AT':
+        return (a, b) => {
+          return moment(b.get('updatedAt')).toDate() - moment(a.get('updatedAt')).toDate()
+        }
+    }
+  }
+
   getNotes () {
     const { storageMap, params } = this.props
     let notes = new Map()
@@ -182,10 +235,8 @@ class NoteList extends React.Component {
     } else {
       notes = new Map()
     }
-    return notes
-      .sort((a, b) => {
-        return moment(b.get('updatedAt')).toDate() - moment(a.get('updatedAt')).toDate()
-      })
+
+    return notes.sort(this.getSortMethod())
   }
 
   handleCoreDelete = e => {
@@ -261,6 +312,52 @@ class NoteList extends React.Component {
     }
   }
 
+  handleSortSelectChange = e => {
+    let listSort = e.target.value
+    this.setState({
+      listSort
+    }, () => {
+      const { store, status } = this.context
+
+      store.dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: status.set('noteListSort', listSort)
+        }
+      })
+    })
+  }
+  handleCompactButtonClick = e => {
+    const listStyle = 'COMPACT'
+    this.setState({
+      listStyle
+    }, () => {
+      const { store, status } = this.context
+
+      store.dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: status.set('noteListStyle', listStyle)
+        }
+      })
+    })
+  }
+  handleNormalButtonClick = e => {
+    const listStyle = 'NORMAL'
+    this.setState({
+      listStyle
+    }, () => {
+      const { store, status } = this.context
+
+      store.dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: status.set('noteListStyle', listStyle)
+        }
+      })
+    })
+  }
+
   render () {
     const { location } = this.props
     const noteListMap = this.noteListMap = this.getNotes()
@@ -270,6 +367,7 @@ class NoteList extends React.Component {
         let isActive = location.query.key === key
         return <NoteItem
           key={key}
+          compact={this.state.listStyle === 'COMPACT'}
           active={isActive}
           isFocused={this.state.isLeftFocused}
           noteKey={key}
@@ -292,9 +390,31 @@ class NoteList extends React.Component {
           onBlur={this.handleLeftBlur}
         >
           <LeftMenu>
-            Sort By <select />
-            <button><Octicon icon='grabber' size='12' /></button>
-            <button><Octicon icon='three-bars' size='12' /></button>
+            <LeftMenuSortSelect>
+              <select
+                title='Sort by'
+                value={this.state.listSort}
+                onChange={this.handleSortSelectChange}
+              >
+                <option value='CREATED_AT'>Ceated At</option>
+                <option value='UPDATED_AT'>Updated At</option>
+                <option value='ALPHABET'>Alphabetical</option>
+              </select>
+            </LeftMenuSortSelect>
+            <LeftMenuButton
+              title='Compact list'
+              active={this.state.listStyle === 'COMPACT'}
+              onClick={this.handleCompactButtonClick}
+            >
+              <Octicon icon='grabber' size='12' />
+            </LeftMenuButton>
+            <LeftMenuButton
+              title='Normal list'
+              active={this.state.listStyle === 'NORMAL'}
+              onClick={this.handleNormalButtonClick}
+            >
+              <Octicon icon='three-bars' size='12' />
+            </LeftMenuButton>
           </LeftMenu>
           <LeftList>
             {noteList}

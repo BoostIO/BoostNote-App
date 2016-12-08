@@ -19,7 +19,7 @@ const Root = styled.div`
     margin: 0 2px;
     height: 20px;
     font-size: 13px;
-    border: none;
+    border: ${p => p.theme.border};
     line-height: 20px;
     padding: 0 6px;
     border-radius: 4px;
