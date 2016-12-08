@@ -14,13 +14,13 @@
 - Github Flavored Markdown(with Latex)
 - Using PouchDB(competible CouchDB and  any LevelDB adapter)
 
-## Using
+## Stack
 
+- Electron
 - React
 - React Router
 - Styled Components
 - Redux
-- Redux Saga
 - Webpack
 - PouchDB / LevelDB
 
