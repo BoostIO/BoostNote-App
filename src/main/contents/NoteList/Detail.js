@@ -78,10 +78,14 @@ class Detail extends React.Component {
       return false
     }
 
+    const parsed = markdown.parse(this.state.content)
+    const meta = {
+      title: parsed.data.title,
+      preview: parsed.data.preview
+    }
+
     const input = {
-      title: this.state.content.length > 0
-        ? markdown.getTitle(this.state.content)
-        : '',
+      meta,
       tags: this.state.tags.toArray(),
       content: this.state.content
     }

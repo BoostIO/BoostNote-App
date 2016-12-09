@@ -2,49 +2,27 @@ const remark = require('remark')
 const lint = require('remark-lint')
 const html = require('remark-html')
 const emoji = require('remark-emoji')
-const strip = require('strip-markdown')
+const metaMapper = require('./metaMapper')
 
-const parser = remark()
-  .use(lint)
+const quickRenderer = remark()
   .use(html)
   .use(emoji)
 
-function parse (value) {
+function quickRender (value) {
   if (value == null) return ''
-  return parser.process(value).toString()
+  return quickRenderer.process(value, {breaks: true})
 }
 
-const getTitleParser = remark()
-  .use(p => {
-    return (node, file) => {
-      let titleNode = null
-
-      // Try to find the first heading
-      for (let child of node.children) {
-        if (child.type === 'heading' && child.depth === 1) {
-          titleNode = child
-          break
-        }
-      }
-
-      // If no heading found, use first paragraph.
-      if (titleNode == null) {
-        titleNode = node.children[0]
-      }
-      return {
-        children: [titleNode],
-        type: 'root'
-      }
-    }
-  })
+const parser = remark()
+  .use(lint)
   .use(emoji)
-  .use(strip)
+  .use(metaMapper)
 
-function getTitle (value) {
-  return getTitleParser.process(value).toString()
+function parse (value) {
+  return parser.process(value)
 }
 
 export default {
-  parse,
-  getTitle
+  quickRender,
+  parse
 }

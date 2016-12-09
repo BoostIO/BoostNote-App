@@ -50,7 +50,9 @@ export default t => {
 
   let createUpdateDeleteNoteTest = StorageManager
     .createNote('Test Notebook', {
-      title: 'test',
+      meta: {
+        title: 'test'
+      },
       content: '# test',
       tags: ['abc'],
       folder: 'test-folder2'
@@ -58,7 +60,7 @@ export default t => {
     .then(data => {
       const { note, id } = data
       t.ok(note instanceof Map)
-      t.equal(note.get('title'), 'test')
+      t.equal(note.getIn(['meta', 'title']), 'test')
       t.equal(note.get('content'), '# test')
       t.ok(note.get('tags') instanceof Set)
       t.ok(note.get('tags').has('abc'))
@@ -68,11 +70,13 @@ export default t => {
     .then(noteId => {
       return StorageManager
         .updateNote('Test Notebook', noteId, {
-          title: 'test2'
+          meta: {
+            title: 'test2'
+          }
         })
     })
     .then(data => {
-      t.equal(data.note.get('title'), 'test2')
+      t.equal(data.note.getIn(['meta', 'title']), 'test2')
       t.equal(data.note.get('content'), '# test')
 
       return data.id

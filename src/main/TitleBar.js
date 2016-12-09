@@ -182,7 +182,7 @@ class TitleBar extends React.Component {
     StorageManager
       .createNote(storageName, {
         folder: folderName,
-        title: '',
+        meta: {},
         content: '',
         tags: [],
         createdAt: new Date(),

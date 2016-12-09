@@ -105,7 +105,7 @@ export function load (name) {
           let noteId = row.id.substring(NOTE_ID_PREFIX.length)
           sum.notes.push([noteId, new Map({
             folder: row.doc.folder,
-            title: row.doc.title,
+            meta: new Map(row.doc.meta),
             content: row.doc.content,
             tags: new Set(row.doc.tags),
             createdAt: row.doc.createdAt,
@@ -307,7 +307,7 @@ export function createNote (name, payload) {
           return {
             id: noteId,
             note: new Map({
-              title: payload.title,
+              meta: new Map(payload.meta),
               content: payload.content,
               tags: new Set(payload.tags),
               folder: payload.folder,
@@ -326,7 +326,7 @@ export function updateNote (name, noteId, payload) {
   return db.get(NOTE_ID_PREFIX + noteId)
     .then((doc) => {
       payload = Object.assign({}, doc,
-        _.pick(payload, ['title', 'content', 'tags', 'folder']),
+        _.pick(payload, ['meta', 'content', 'tags', 'folder']),
         {
           _id: doc._id,
           _rev: doc._rev,
@@ -338,7 +338,7 @@ export function updateNote (name, noteId, payload) {
           return {
             id: noteId,
             note: new Map({
-              title: payload.title,
+              meta: new Map(payload.meta),
               content: payload.content,
               tags: new Set(payload.tags),
               folder: payload.folder,

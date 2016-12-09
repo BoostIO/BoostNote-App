@@ -56,7 +56,7 @@ class MarkdownPreview extends React.Component {
     const { content } = this.props
 
     // Render markdown
-    this.iframe.contentWindow.document.body.innerHTML = markdown.parse(content)
+    this.iframe.contentWindow.document.body.innerHTML = markdown.quickRender(content)
 
     // Re-render codeblokcs by CodeMirror run mode
     let codeBlocks = this.iframe.contentWindow.document.body.querySelectorAll('pre code')

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { routerShape } from 'react-router'
 import Octicon from 'components/Octicon'
+import _ from 'lodash'
 
 /**
  * Check the title is empty.
@@ -13,7 +14,7 @@ import Octicon from 'components/Octicon'
 
  */
 function isValidTitle (title) {
-  return title.trim().length > 0
+  return _.isString(title) && title.trim().length > 0
 }
 
 const Root = styled.div`
@@ -22,7 +23,7 @@ const Root = styled.div`
     ? 'border-color: transparent;'
     : ''
   }
-  padding: 0 10px 4px;
+  padding: 4px 10px 0;
   font-size: 12px;
   cursor: pointer;
   &:hover {
@@ -49,23 +50,39 @@ const Root = styled.div`
     .empty {
       color: inherit;
     }
+    .preview {
+      color: ${p => p.isFocused
+        ? 'inherit'
+        : p.theme.inactiveColor};
+    }
   }
   .empty {
     color: ${p => p.theme.inactiveColor};
   }
   .title {
     flex: 1;
-    height: 24px;
-    line-height: 24px;
+    height: 20px;
+    line-height: 20px;
     overflow: hidden;
     font-weight: bold;
     text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .preview {
+    flex: 1;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: ${p => p.theme.inactiveColor}
   }
   .tags {
     font-size: 12px;
     height: 16px;
     line-height: 16px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     display: flex;
   }
   .tags .Octicon {
@@ -78,8 +95,7 @@ const Root = styled.div`
     flex: 1;
     display: flex;
     margin-left: 4px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: auto;
   }
   .tags .list .item {
     line-height: 14px;
@@ -92,22 +108,6 @@ const Root = styled.div`
     border-radius: 3px;
     background-color: white;
     color: ${p => p.theme.color};
-  }
-`
-
-const CompactRoot = styled(Root)`
-  display: flex;
-  padding: 0 0 0 10px;
-  .tags {
-    height: 24px;
-    width: 24px;
-    line-height: 24px;
-    margin-bottom: 0;
-    position: relative;
-    justify-content: center;
-  }
-  .tags .Octicon {
-    height: 24px;
   }
   .tags .count {
     position: absolute;
@@ -129,8 +129,39 @@ const CompactRoot = styled(Root)`
     background-color: ${p => p.theme.buttonActiveColor};
   }
   &.active .tags .count {
-    color: ${p => p.theme.inverseColor};
-    background-color: ${p => p.theme.activeColor};
+    color: ${p => p.isFocused
+      ? p.theme.inverseColor
+      : p.theme.inactiveColor};
+    background-color: ${p => p.isFocused
+      ? p.theme.activeColor
+      : p.theme.buttonActiveColor};
+  }
+  .tags .icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    margin: -5px;
+  }
+`
+
+const CompactRoot = styled(Root)`
+  display: flex;
+  padding: 0 0 0 10px;
+  .title {
+    height: 24px;
+    line-height: 24px;
+  }
+  .tags {
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    margin-bottom: 0;
+    position: relative;
+  }
+  .tags .icon {
+    margin: 0;
   }
 `
 
@@ -177,7 +208,8 @@ class NoteItem extends React.Component {
   render () {
     const { active, isFocused, note, compact } = this.props
 
-    const title = note.get('title')
+    const title = note.getIn(['meta', 'title'])
+    const preview = note.getIn(['meta', 'preview'])
     let classNameArr = []
     if (active) classNameArr.push('active')
 
@@ -203,8 +235,10 @@ class NoteItem extends React.Component {
         </div>
         {tags.length > 0 &&
           <div className='tags' title={tags.join(', ')}>
-            <Octicon icon='tag' />
-            <div className='count'>{tags.length}</div>
+            <div className='icon'>
+              <Octicon icon='tag' />
+              <div className='count'>{tags.length}</div>
+            </div>
           </div>
         }
       </CompactRoot>
@@ -216,9 +250,15 @@ class NoteItem extends React.Component {
       <div className='title'>
         {isValidTitle(title) ? title : <span className='empty'>Empty</span>}
       </div>
+      <div className='preview'>
+        {isValidTitle(preview) ? preview : <span className='empty'>Empty</span>}
+      </div>
       {tags.length > 0 &&
         <div className='tags' title={tags.join(', ')}>
-          <Octicon icon='tag' />
+          <div className='icon'>
+            <Octicon icon='tag' />
+            <div className='count'>{tags.length}</div>
+          </div>
           <div className='list'>
             {tags.map(tag => <div className='item' key={tag}>{tag}</div>)}
           </div>
@@ -237,7 +277,10 @@ NoteItem.propTypes = {
   isFocused: PropTypes.bool,
   noteKey: PropTypes.string,
   note: ImmutablePropTypes.mapContains({
-    title: PropTypes.string
+    meta: ImmutablePropTypes.mapContains({
+      title: PropTypes.string,
+      preview: PropTypes.string
+    })
   })
 }
 
