@@ -23,11 +23,11 @@ So, we have to put **Notes** and **Folders** into same space.
 
 Inpad will set prefix for each type of data.
 
-type|conventions
----|---
-Note|`note:$RANDOM_HASH$`
-Folder|`folder:$PATH_OF_FOLDER$`
-Tag|`tag:$TAG$`
+type   | conventions
+-------|--------------------
+Note   | `note:$RANDOM_HASH$`
+Folder | `folder:$PATH_OF_FOLDER$`
+Tag    | `tag:$TAG$`
 
 ### `$RANDOM_HASH$`
 
@@ -42,3 +42,17 @@ This string should be a valid path. When creating a folder, the app will convert
 ### `$TAG$`
 
 Tag is a lowcased alphanumeric string.
+
+## Schemes
+
+### Note
+
+Attribute | type        | Note
+----------|-------------|---------------
+meta      | Map<Any>    | Containing title, preview, todo status and other information
+content   | String      | Raw content string
+tags      | Set<String> | Tag set. Tag is a string without space.
+folder    | String      | Path of note
+cratedAt  | Date        | Creation date
+updatedAt | Date        | Last update date
+rev       | String      | Rev key of pouchDB
