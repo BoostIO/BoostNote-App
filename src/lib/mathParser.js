@@ -53,7 +53,6 @@ blockTokenizer.locator = function locator (value, fromIndex) {
 }
 blockTokenizer.notInLink = true
 
-
 module.exports = function plugin (p) {
   const Parser = p.Parser
 

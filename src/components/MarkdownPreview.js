@@ -61,6 +61,8 @@ class MarkdownPreview extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
+    // TODO: Rebounce render
+    // TODO: Use web worker
     if (prevProps.content !== this.props.content) {
       this.unmountContent()
       this.mountContent()

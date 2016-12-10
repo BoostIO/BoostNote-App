@@ -4,11 +4,11 @@
 <h2 align='center'>A Polished Notes App with Github Flavored Markdown</h2>
 <h3 align="center">for macOS, Windows and Linux</h5>
 
+![Screen shot](./resources/screenshot.png)
+
 # Inpad
 
 [![Join the chat at https://gitter.im/inpad-app/Lobby](https://badges.gitter.im/inpad-app/Lobby.svg)](https://gitter.im/inpad-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-![Screen shot](./resources/screenshot.png)
 
 ## Features
 
