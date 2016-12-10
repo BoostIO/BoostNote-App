@@ -245,12 +245,7 @@ class NoteList extends React.Component {
       const { storageName } = router.params
       const { key } = router.location.query
 
-      const noteMapKeys = this.noteListMap.keySeq()
-      const targetIndex = noteMapKeys.keyOf(key)
-      const nextIndex = targetIndex + 1 < noteMapKeys.size
-        ? targetIndex + 1
-        : targetIndex - 1
-      const nextNoteKey = noteMapKeys.get(nextIndex)
+      const nextNoteKey = this.getNextKey()
 
       Dialog.showMessageBox({
         message: `Are you sure you want to delete the selected note?`,
@@ -358,6 +353,18 @@ class NoteList extends React.Component {
     })
   }
 
+  getNextKey = () => {
+    const { router } = this.context
+    const { key } = router.location.query
+
+    const noteMapKeys = this.noteListMap.keySeq()
+    const targetIndex = noteMapKeys.keyOf(key)
+    const nextIndex = targetIndex + 1 < noteMapKeys.size
+      ? targetIndex + 1
+      : targetIndex - 1
+    return noteMapKeys.get(nextIndex)
+  }
+
   render () {
     const { location } = this.props
     const noteListMap = this.noteListMap = this.getNotes()
@@ -372,6 +379,7 @@ class NoteList extends React.Component {
           isFocused={this.state.isLeftFocused}
           noteKey={key}
           note={note}
+          getNextKey={this.getNextKey}
         />
       })
       .toArray()

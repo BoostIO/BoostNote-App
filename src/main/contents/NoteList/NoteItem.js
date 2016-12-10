@@ -4,6 +4,9 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { routerShape } from 'react-router'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
+import ContextMenu from 'main/lib/ContextMenu'
+import Dialog from 'main/lib/Dialog'
+import StorageManager from 'main/lib/StorageManager'
 
 /**
  * Check the title is empty.
@@ -205,6 +208,50 @@ class NoteItem extends React.Component {
     })
   }
 
+  handleContextMenu = e => {
+    ContextMenu.open([
+      {
+        label: 'Delete Note...',
+        click: e => this.delete()
+      }
+    ])
+  }
+
+  delete () {
+    console.log()
+    Dialog.showMessageBox({
+      message: `Are you sure you want to delete the selected note?`,
+      buttons: ['Delete Note', 'Cancel']
+    }, (index) => {
+      const { router, store } = this.context
+      const { storageName } = router.params
+      const { noteKey, getNextKey } = this.props
+
+      if (index === 0) {
+        StorageManager.deleteNote(storageName, noteKey)
+          .then(() => {
+            if (router.location.query.key === noteKey) {
+              router.push({
+                pathname: router.location.pathname,
+                query: {
+                  key: getNextKey()
+                }
+              })
+            }
+          })
+          .then(() => {
+            store.dispatch({
+              type: 'DELETE_NOTE',
+              payload: {
+                storageName,
+                noteId: noteKey
+              }
+            })
+          })
+      }
+    })
+  }
+
   render () {
     const { active, isFocused, note, compact } = this.props
 
@@ -222,6 +269,7 @@ class NoteItem extends React.Component {
       onClick: this.handleClick,
       onDragStart: this.handleDragStart,
       onDragEnd: this.handleDragEnd,
+      onContextMenu: this.handleContextMenu,
       draggable: true,
       isDragging: this.state.isDragging
     }
@@ -269,7 +317,10 @@ class NoteItem extends React.Component {
 }
 
 NoteItem.contextTypes = {
-  router: routerShape
+  router: routerShape,
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
+  })
 }
 
 NoteItem.propTypes = {
