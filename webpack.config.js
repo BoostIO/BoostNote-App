@@ -58,6 +58,7 @@ const config = {
     'remark-emoji',
     'lodash',
     'strip-markdown',
+    'katex',
     {
       react: 'var React',
       'react-dom': 'var ReactDOM',

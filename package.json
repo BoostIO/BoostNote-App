@@ -50,6 +50,7 @@
     "filenamify": "^1.2.1",
     "github-markdown-css": "^2.4.1",
     "immutable": "^3.8.1",
+    "katex": "^0.6.0",
     "leveldown": "^1.5.0",
     "lodash": "^4.16.6",
     "moment": "^2.17.0",

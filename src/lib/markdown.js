@@ -2,11 +2,13 @@ const remark = require('remark')
 const lint = require('remark-lint')
 const html = require('remark-html')
 const emoji = require('remark-emoji')
-const metaMapper = require('./metaMapper')
+const meta = require('./metaMapper')
+const math = require('./mathParser')
 
 const quickRenderer = remark()
-  .use(html)
+  .use(math)
   .use(emoji)
+  .use(html)
 
 function quickRender (value) {
   if (value == null) return ''
@@ -14,15 +16,18 @@ function quickRender (value) {
 }
 
 const parser = remark()
-  .use(lint)
+  .use(math)
   .use(emoji)
-  .use(metaMapper)
+  .use(meta)
+  .use(lint)
+  .use(html)
 
 function parse (value) {
-  return parser.process(value)
+  return parser.process(value, {breaks: true})
 }
 
 export default {
   quickRender,
+  parser,
   parse
 }
