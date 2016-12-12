@@ -171,6 +171,10 @@ class TitleBar extends React.Component {
     }
   }
 
+  handlePreferencesButtonClick = e => {
+    window.dispatchEvent(new window.CustomEvent('main:open-preferences'))
+  }
+
   toggleMaximize () {
     let currentWindow = remote.getCurrentWindow()
 
@@ -269,6 +273,7 @@ class TitleBar extends React.Component {
             />
             <Button
               title='Preferences'
+              onClick={this.handlePreferencesButtonClick}
             >
               <Octicon icon='settings' />
             </Button>

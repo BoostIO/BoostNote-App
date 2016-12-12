@@ -165,10 +165,11 @@ if (OSX) {
         type: 'separator'
       },
       {
-        label: 'preferences',
+        label: 'Preferences',
+        accelerator: 'CmdOrCtrl + ,',
         click: e => {
-          if (global.windows.preferences) {
-            global.windows.preferences.send('open')
+          if (global.windows.main) {
+            global.windows.main.webContents.send('open-preferences')
           }
         }
       },

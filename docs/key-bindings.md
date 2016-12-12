@@ -12,6 +12,7 @@ Command             | macOS Key           | Windows/Linux Key    | Description
 --------------------|---------------------|----------------------|-------------
 main:new-note       | **Cmd - N**         | **Ctrl - N**         | Dispatch `title:new-note`
 main:new-folder     | **Cmd - Shift - N** | **Ctrl - Shift - N** | Dispatch `nav:new-folder`
+main:delete         | **Backspace**       | **Delete**           | Dispatch `nav:delete` and `detail:delete`
 main:focus-search   | **Cmd - Alt - F**   | **Ctrl - Alt - F**   | Dispatch `title:focus-search`
 main:focus-nav      |                     |                      | Dispatch `nav:focus`
 main:focus-list     |                     |                      | Dispatch `list:focus`
@@ -19,7 +20,6 @@ main:focus-detail   |                     |                      | Dispatch `det
 main:find           | **Cmd - F**         | **Ctrl - F**         | Dispatch `detail:find`
 main:hide           | **Cmd - W**         | **Ctrl - W**         | Hide window
 main:quit           | **Cmd - Q**         | **Ctrl - Q**         | Quit app
-main:delete         | **Backspace**       | **Delete**           | Dispatch `nav:delete` and `detail:delete`
 main:refresh        | **Cmd - R**         | **Ctrl - R, F5**     | Refresh
 main:preferences    | **Cmd - ,**         | **Ctrl - ,**         | Open Preferences window
 main:print          | **Cmd - P**         | **Ctrl - P**         | Dispatch `detail:print`

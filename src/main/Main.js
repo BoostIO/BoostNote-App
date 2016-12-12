@@ -9,6 +9,8 @@ import StorageManager from './lib/StorageManager'
 import { NAV_MIN_WIDTH } from 'main/lib/consts'
 import ipc from './lib/ipc'
 
+const { remote } = require('electron')
+
 const Root = styled.div`
   position: absolute;
   top: 0;
@@ -103,6 +105,11 @@ class Main extends React.Component {
     window.addEventListener('main:focus-list', this.handleFocusList)
     window.addEventListener('main:focus-detail', this.handleFocusDetail)
     window.addEventListener('main:find', this.handleFind)
+    window.addEventListener('main:hide', this.handleHide)
+    window.addEventListener('main:quit', this.handleQuit)
+    window.addEventListener('main:refresh', this.handleRefresh)
+    window.addEventListener('main:open-preferences', this.handleOpenPreferences)
+    window.addEventListener('main:print', this.handlePrint)
 
     ipc.mount()
 
@@ -131,6 +138,11 @@ class Main extends React.Component {
     window.removeEventListener('main:focus-list', this.handleFocusList)
     window.removeEventListener('main:focus-detail', this.handleFocusDetail)
     window.removeEventListener('main:find', this.handleFind)
+    window.removeEventListener('main:hide', this.handleHide)
+    window.removeEventListener('main:quit', this.handleQuit)
+    window.removeEventListener('main:refresh', this.handleRefresh)
+    window.removeEventListener('main:open-preferences', this.handleOpenPreferences)
+    window.removeEventListener('main:print', this.handlePrint)
 
     ipc.unmount()
   }
@@ -173,6 +185,30 @@ class Main extends React.Component {
 
   handleFind = e => {
     window.dispatchEvent(new window.CustomEvent('detail:find'))
+  }
+
+  handleHide = e => {
+    remote.getCurrentWindow().hide()
+  }
+
+  handleQuit = e => {
+    remote.app.quit()
+  }
+
+  handleRefresh = e => {
+    remote.getCurrentWindow().reload()
+  }
+
+  handleOpenPreferences = e => {
+    if (remote.getGlobal('windows').preferences.isVisible()) {
+      remote.getGlobal('windows').preferences.hide()
+    } else {
+      remote.getGlobal('windows').preferences.show()
+    }
+  }
+
+  handlePrint = e => {
+    window.dispatchEvent(new window.CustomEvent('detail:print'))
   }
 
   render () {
