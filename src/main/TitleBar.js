@@ -118,14 +118,28 @@ class TitleBar extends React.Component {
         this.toggleMaximize()
       }
     }
+  }
 
-    this.handleNewButtonClick = e => {
-      this.createNote()
-    }
+  componentDidMount () {
+    window.addEventListener('title:new-note', this.handleNewButtonClick)
+    window.addEventListener('title:focus-search', this.handleWindowFocusSearch)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('title:new-note', this.handleNewButtonClick)
+    window.removeEventListener('title:focus-search', this.handleWindowFocusSearch)
+  }
+
+  handleNewButtonClick = e => {
+    this.createNote()
+  }
+
+  handleWindowFocusSearch = e => {
+    this.search.focus()
   }
 
   handleDeleteButtonClick = e => {
-    window.dispatchEvent(new window.CustomEvent('core:delete'))
+    window.dispatchEvent(new window.CustomEvent('main:delete'))
   }
 
   handleMouseDown = e => {
@@ -150,6 +164,13 @@ class TitleBar extends React.Component {
     e.stopPropagation()
   }
 
+  handleSearchInputKeyDown = e => {
+    switch (e.keyCode) {
+      case 27:
+        window.dispatchEvent(new window.CustomEvent('main:focus-list'))
+    }
+  }
+
   toggleMaximize () {
     let currentWindow = remote.getCurrentWindow()
 
@@ -165,7 +186,7 @@ class TitleBar extends React.Component {
     })
   }
 
-  createNote () {
+  createNote = () => {
     const { router, store } = this.context
 
     let storageName = router.params.storageName
@@ -238,11 +259,13 @@ class TitleBar extends React.Component {
               <Octicon icon='plus' />
             </Button>
             <SearchInput
+              innerRef={c => (this.search = c)}
               placeholder='Search...'
               value={this.state.search}
               onChange={this.handleChange}
               title='Quickly find notes'
               onMouseDown={this.handleSearchInputMouseDown}
+              onKeyDown={this.handleSearchInputKeyDown}
             />
             <Button
               title='Preferences'

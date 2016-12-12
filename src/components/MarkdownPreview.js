@@ -4,7 +4,7 @@ import CodeMirror from 'codemirror'
 import _ from 'lodash'
 import katex from 'katex'
 
-CodeMirror.modeURL = '../node_modules/codemirror/mode/%N/%N.js'
+CodeMirror.modeURL = '../../node_modules/codemirror/mode/%N/%N.js'
 
 // TODO: should override whole meta.js
 function parseMode (mode) {
@@ -30,9 +30,9 @@ class MarkdownPreview extends React.Component {
     this.mountContent()
 
     this.iframe.contentWindow.document.head.innerHTML = `
-    <link href="../node_modules/github-markdown-css/github-markdown.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../node_modules/codemirror/lib/codemirror.css">
-    <link rel="stylesheet" type="text/css" href="../node_modules/katex/dist/katex.min.css">
+    <link href="../../node_modules/github-markdown-css/github-markdown.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../node_modules/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="../../node_modules/katex/dist/katex.min.css">
     <style>
       .markdown-body{
         font-size: 14px;
@@ -87,6 +87,7 @@ class MarkdownPreview extends React.Component {
         let rendered = document.createElement('div')
         block.parentNode.parentNode.replaceChild(rendered, block.parentNode)
         rendered.className = 'katex'
+        rendered.title = value.trim()
         rendered.innerHTML = katex.renderToString(value)
         return
       }
@@ -108,6 +109,7 @@ class MarkdownPreview extends React.Component {
       let rendered = document.createElement('span')
       inline.parentNode.replaceChild(rendered, inline)
       rendered.className = 'katex'
+      rendered.title = value.trim()
       rendered.innerHTML = katex.renderToString(value)
     })
     console.timeEnd('queue override')

@@ -54,18 +54,20 @@ class Nav extends React.Component {
     this.state = {
       isFocused: false
     }
-
-    this.handleNewFolderClick = e => {
-      this.refs['storage-' + this.context.router.params.storageName].createNewFolder()
-    }
   }
 
   componentDidMount () {
-    window.addEventListener('core:delete', this.handleCoreDelete)
+    window.addEventListener('nav:new-folder', this.handleNewFolderClick)
+    window.addEventListener('nav:delete', this.handleWindowDelete)
   }
 
   componentWillUnmount () {
-    window.removeEventListener('core:delete', this.handleCoreDelete)
+    window.removeEventListener('nav:new-folder', this.handleNewFolderClick)
+    window.removeEventListener('nav:delete', this.handleWindowDelete)
+  }
+
+  handleNewFolderClick = e => {
+    this.refs['storage-' + this.context.router.params.storageName].createNewFolder()
   }
 
   handleFocus = e => {
@@ -84,7 +86,7 @@ class Nav extends React.Component {
     }
   }
 
-  handleCoreDelete = e => {
+  handleWindowDelete = e => {
     if (this.state.isFocused) {
       const { router } = this.context
       const { storageName, folderName } = router.params

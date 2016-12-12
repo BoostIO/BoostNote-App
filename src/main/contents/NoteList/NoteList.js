@@ -165,12 +165,14 @@ class NoteList extends React.Component {
   }
 
   componentDidMount () {
-    window.addEventListener('core:delete', this.handleCoreDelete)
+    window.addEventListener('list:focus', this.handleWindowFocus)
+    window.addEventListener('list:delete', this.handleWindowDelete)
   }
 
   componentWillUnmount () {
     this.invalidateRefreshTimer()
-    window.removeEventListener('core:delete', this.handleCoreDelete)
+    window.removeEventListener('list:focus', this.handleWindowFocus)
+    window.removeEventListener('list:delete', this.handleWindowDelete)
   }
 
   setRefreshTimer () {
@@ -239,7 +241,7 @@ class NoteList extends React.Component {
     return notes.sort(this.getSortMethod())
   }
 
-  handleCoreDelete = e => {
+  handleWindowDelete = e => {
     if ((this.state.isLeftFocused || this.state.isRightFocused) && this.noteListMap.size > 0) {
       const { router, store } = this.context
       const { storageName } = router.params
@@ -273,6 +275,10 @@ class NoteList extends React.Component {
         }
       })
     }
+  }
+
+  handleWindowFocus = e => {
+    this.left.focus()
   }
 
   handleRightFocus = e => {

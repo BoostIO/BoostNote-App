@@ -7,6 +7,7 @@ import Nav from './Nav/Nav'
 import { Map } from 'immutable'
 import StorageManager from './lib/StorageManager'
 import { NAV_MIN_WIDTH } from 'main/lib/consts'
+import ipc from './lib/ipc'
 
 const Root = styled.div`
   position: absolute;
@@ -93,18 +94,18 @@ class Main extends React.Component {
     }
   }
 
-  componentWillUnmount () {
-    window.removeEventListener('mouseup', this.handleSliderMouseUp)
-    window.removeEventListener('mousemove', this.handleSliderMouseMove)
-  }
-
-  getChildContext () {
-    return {
-      status: this.props.status
-    }
-  }
-
   componentDidMount () {
+    window.addEventListener('main:new-note', this.handleNewNote)
+    window.addEventListener('main:new-folder', this.handleNewFolder)
+    window.addEventListener('main:delete', this.handleDelete)
+    window.addEventListener('main:focus-search', this.handleFocusSearch)
+    window.addEventListener('main:focus-nav', this.handleFocusNav)
+    window.addEventListener('main:focus-list', this.handleFocusList)
+    window.addEventListener('main:focus-detail', this.handleFocusDetail)
+    window.addEventListener('main:find', this.handleFind)
+
+    ipc.mount()
+
     const { dispatch } = this.props
 
     StorageManager.loadAll()
@@ -116,6 +117,62 @@ class Main extends React.Component {
           }
         })
       })
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('mouseup', this.handleSliderMouseUp)
+    window.removeEventListener('mousemove', this.handleSliderMouseMove)
+
+    window.removeEventListener('main:new-note', this.handleNewNote)
+    window.removeEventListener('main:new-folder', this.handleNewFolder)
+    window.removeEventListener('main:delete', this.handleDelete)
+    window.removeEventListener('main:focus-search', this.handleFocusSearch)
+    window.removeEventListener('main:focus-nav', this.handleFocusNav)
+    window.removeEventListener('main:focus-list', this.handleFocusList)
+    window.removeEventListener('main:focus-detail', this.handleFocusDetail)
+    window.removeEventListener('main:find', this.handleFind)
+
+    ipc.unmount()
+  }
+
+  getChildContext () {
+    return {
+      status: this.props.status
+    }
+  }
+
+  handleNewNote = e => {
+    window.dispatchEvent(new window.CustomEvent('title:new-note'))
+  }
+
+  handleNewFolder = e => {
+    window.dispatchEvent(new window.CustomEvent('nav:new-folder'))
+    console.log('dfs')
+  }
+
+  handleDelete = e => {
+    window.dispatchEvent(new window.CustomEvent('nav:delete'))
+    window.dispatchEvent(new window.CustomEvent('list:delete'))
+  }
+
+  handleFocusSearch = e => {
+    window.dispatchEvent(new window.CustomEvent('title:focus-search'))
+  }
+
+  handleFocusNav = e => {
+    window.dispatchEvent(new window.CustomEvent('nav:focus'))
+  }
+
+  handleFocusList = e => {
+    window.dispatchEvent(new window.CustomEvent('list:focus'))
+  }
+
+  handleFocusDetail = e => {
+    window.dispatchEvent(new window.CustomEvent('detail:focus'))
+  }
+
+  handleFind = e => {
+    window.dispatchEvent(new window.CustomEvent('detail:find'))
   }
 
   render () {
@@ -162,4 +219,4 @@ Main.childContextTypes = {
   status: PropTypes.instanceOf(Map)
 }
 
-export default connect((x) => x)(Main)
+export default connect(x => x)(Main)
