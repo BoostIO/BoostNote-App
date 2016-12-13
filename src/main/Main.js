@@ -97,19 +97,9 @@ class Main extends React.Component {
   }
 
   componentDidMount () {
-    window.addEventListener('main:new-note', this.handleNewNote)
-    window.addEventListener('main:new-folder', this.handleNewFolder)
-    window.addEventListener('main:delete', this.handleDelete)
-    window.addEventListener('main:focus-search', this.handleFocusSearch)
-    window.addEventListener('main:focus-nav', this.handleFocusNav)
-    window.addEventListener('main:focus-list', this.handleFocusList)
-    window.addEventListener('main:focus-detail', this.handleFocusDetail)
-    window.addEventListener('main:find', this.handleFind)
     window.addEventListener('main:hide', this.handleHide)
     window.addEventListener('main:quit', this.handleQuit)
     window.addEventListener('main:refresh', this.handleRefresh)
-    window.addEventListener('main:open-preferences', this.handleOpenPreferences)
-    window.addEventListener('main:print', this.handlePrint)
 
     ipc.mount()
 
@@ -130,61 +120,18 @@ class Main extends React.Component {
     window.removeEventListener('mouseup', this.handleSliderMouseUp)
     window.removeEventListener('mousemove', this.handleSliderMouseMove)
 
-    window.removeEventListener('main:new-note', this.handleNewNote)
-    window.removeEventListener('main:new-folder', this.handleNewFolder)
-    window.removeEventListener('main:delete', this.handleDelete)
-    window.removeEventListener('main:focus-search', this.handleFocusSearch)
-    window.removeEventListener('main:focus-nav', this.handleFocusNav)
-    window.removeEventListener('main:focus-list', this.handleFocusList)
-    window.removeEventListener('main:focus-detail', this.handleFocusDetail)
-    window.removeEventListener('main:find', this.handleFind)
     window.removeEventListener('main:hide', this.handleHide)
     window.removeEventListener('main:quit', this.handleQuit)
     window.removeEventListener('main:refresh', this.handleRefresh)
-    window.removeEventListener('main:open-preferences', this.handleOpenPreferences)
-    window.removeEventListener('main:print', this.handlePrint)
 
     ipc.unmount()
   }
 
   getChildContext () {
     return {
-      status: this.props.status
+      status: this.props.status,
+      keymap: this.props.keymap
     }
-  }
-
-  handleNewNote = e => {
-    window.dispatchEvent(new window.CustomEvent('title:new-note'))
-  }
-
-  handleNewFolder = e => {
-    window.dispatchEvent(new window.CustomEvent('nav:new-folder'))
-    console.log('dfs')
-  }
-
-  handleDelete = e => {
-    window.dispatchEvent(new window.CustomEvent('nav:delete'))
-    window.dispatchEvent(new window.CustomEvent('list:delete'))
-  }
-
-  handleFocusSearch = e => {
-    window.dispatchEvent(new window.CustomEvent('title:focus-search'))
-  }
-
-  handleFocusNav = e => {
-    window.dispatchEvent(new window.CustomEvent('nav:focus'))
-  }
-
-  handleFocusList = e => {
-    window.dispatchEvent(new window.CustomEvent('list:focus'))
-  }
-
-  handleFocusDetail = e => {
-    window.dispatchEvent(new window.CustomEvent('detail:focus'))
-  }
-
-  handleFind = e => {
-    window.dispatchEvent(new window.CustomEvent('detail:find'))
   }
 
   handleHide = e => {
@@ -197,18 +144,6 @@ class Main extends React.Component {
 
   handleRefresh = e => {
     remote.getCurrentWindow().reload()
-  }
-
-  handleOpenPreferences = e => {
-    if (remote.getGlobal('windows').preferences.isVisible()) {
-      remote.getGlobal('windows').preferences.hide()
-    } else {
-      remote.getGlobal('windows').preferences.show()
-    }
-  }
-
-  handlePrint = e => {
-    window.dispatchEvent(new window.CustomEvent('detail:print'))
   }
 
   render () {
@@ -252,7 +187,8 @@ Main.contextTypes = {
 }
 
 Main.childContextTypes = {
-  status: PropTypes.instanceOf(Map)
+  status: PropTypes.instanceOf(Map),
+  keymap: PropTypes.instanceOf(Map)
 }
 
 export default connect(x => x)(Main)

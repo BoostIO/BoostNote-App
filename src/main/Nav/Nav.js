@@ -5,6 +5,9 @@ import StorageSection from './StorageSection'
 import { isFinallyBlurred } from 'lib/util'
 import commander from 'main/lib/commander'
 import { NAV_MIN_WIDTH } from 'main/lib/consts'
+import CodeMirror from 'codemirror'
+import _ from 'lodash'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 
 const Root = styled.div`
   position: relative;
@@ -58,12 +61,25 @@ class Nav extends React.Component {
 
   componentDidMount () {
     window.addEventListener('nav:new-folder', this.handleNewFolderClick)
+    window.addEventListener('nav:focus', this.handleWindowFocus)
+    window.addEventListener('nav:up', this.handleWindowUp)
+    window.addEventListener('nav:down', this.handleWindowDown)
     window.addEventListener('nav:delete', this.handleWindowDelete)
   }
 
   componentWillUnmount () {
     window.removeEventListener('nav:new-folder', this.handleNewFolderClick)
+    window.removeEventListener('nav:focus', this.handleWindowFocus)
+    window.removeEventListener('nav:up', this.handleWindowUp)
+    window.removeEventListener('nav:down', this.handleWindowDown)
     window.removeEventListener('nav:delete', this.handleWindowDelete)
+  }
+
+  handleKeyDown = e => {
+    const keyName = CodeMirror.keyName(e)
+    const { keymap } = this.context
+
+    keymap.hasIn(['nav', keyName]) && window.dispatchEvent(new window.CustomEvent(keymap.getIn(['nav', keyName])))
   }
 
   handleNewFolderClick = e => {
@@ -86,6 +102,18 @@ class Nav extends React.Component {
     }
   }
 
+  handleWindowFocus = e => {
+    this.focus()
+  }
+
+  handleWindowUp = e => {
+    this.goToNextLink(-1)
+  }
+
+  handleWindowDown = e => {
+    this.goToNextLink()
+  }
+
   handleWindowDelete = e => {
     if (this.state.isFocused) {
       const { router } = this.context
@@ -97,16 +125,55 @@ class Nav extends React.Component {
     }
   }
 
+  goToNextLink (offset = 1) {
+    const { router } = this.context
+    const { storageName, folderName } = router.params
+
+    let targetIndex = -1
+    if (folderName == null) {
+      // Storage focus
+      targetIndex = this.linkList.indexOf(storageName)
+    } else {
+      // Folder focused
+      targetIndex = this.linkList.indexOf(storageName + '/' + folderName)
+    }
+
+    targetIndex += offset
+
+    if (targetIndex > -1) {
+      const nextLink = this.linkList[targetIndex]
+        .replace(/\//, '/folders/')
+
+      router.push('storages/' + nextLink)
+    }
+  }
+
+  focus () {
+    this.root.focus()
+  }
+
   render () {
     const { storageMap } = this.props
 
-    const storageList = storageMap
+    this.linkList = []
+
+    const storageList = this.storageList = storageMap
       .map((storageData, storageName) => {
+        this.linkList.push(storageName)
+        const folderMap = storageData.get('folders')
+          // Sort by localeCompare except 'Notes'. 'Notes' folder should be came first.
+          .sortBy((v, key) => key.toLowerCase(), (a, b) => {
+            if (a === 'notes') return -1
+            if (b === 'notes') return 1
+            return a.localeCompare(b)
+          })
+        this.linkList = this.linkList.concat(folderMap.map((folder, key) => storageName + '/' + key).toArray())
+
         return <StorageSection
           ref={'storage-' + storageName}
           key={storageName}
           storageName={storageName}
-          storageData={storageData}
+          folderMap={folderMap}
           isFocused={this.state.isFocused}
         />
       })
@@ -116,6 +183,7 @@ class Nav extends React.Component {
       <Root style={{width: this.props.width}}
         innerRef={c => (this.root = c)}
         tabIndex='0'
+        onKeyDown={this.handleKeyDown}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
       >
@@ -140,6 +208,9 @@ Nav.contextTypes = {
     push: PropTypes.func,
     isActive: PropTypes.func,
     params: PropTypes.object
+  }),
+  keymap: ImmutablePropTypes.mapContains({
+    nav: ImmutablePropTypes.map
   })
 }
 

@@ -93,6 +93,7 @@ class StorageSection extends React.Component {
     }
 
     this.handleNewNameInputKeyDown = e => {
+      e.stopPropagation()
       switch (e.keyCode) {
         case 13:
           this.confirmCreating()
@@ -109,11 +110,11 @@ class StorageSection extends React.Component {
   }
 
   createNewFolder () {
-    const { storageData } = this.props
+    const { folderMap } = this.props
 
     let count = 0
     let newName = 'New Folder'
-    while (storageData.hasIn(['folders', newName])) {
+    while (folderMap.has(newName)) {
       newName = `New Folder (${++count})`
     }
 
@@ -127,12 +128,12 @@ class StorageSection extends React.Component {
   }
 
   resolveNewName = newName => {
-    const { storageData } = this.props
+    const { folderMap } = this.props
 
     let count = 0
     let originalName = filenamify(newName, {replacement: '_'})
     let resolvedName = originalName
-    while (storageData.hasIn(['folders', resolvedName])) {
+    while (folderMap.has(resolvedName)) {
       resolvedName = `${originalName} (${++count})`
     }
 
@@ -177,15 +178,9 @@ class StorageSection extends React.Component {
   }
 
   render () {
-    const { storageName, storageData, isFocused } = this.props
+    const { storageName, folderMap, isFocused } = this.props
 
-    const folderList = storageData.get('folders')
-      // Sort by localeCompare except 'Notes'. 'Notes' folder should be came first.
-      .sortBy((v, key) => key.toLowerCase(), (a, b) => {
-        if (a === 'notes') return -1
-        if (b === 'notes') return 1
-        return a.localeCompare(b)
-      })
+    const folderList = folderMap
       .map((meta, folderName) => {
         const folderURL = `/storages/${storageName}/folders/${folderName}`
 
@@ -235,7 +230,7 @@ class StorageSection extends React.Component {
 
 StorageSection.propTypes = {
   storageName: PropTypes.string,
-  storageData: PropTypes.instanceOf(Map),
+  folderMap: PropTypes.instanceOf(Map),
   isFocused: PropTypes.bool
 }
 

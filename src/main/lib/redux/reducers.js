@@ -1,7 +1,36 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-import { Map, OrderedMap } from 'immutable'
+import Immutable, { Map, OrderedMap } from 'immutable'
 import _ from 'lodash'
+
+const defaultKeymap = Immutable.fromJS({
+  main: {
+  },
+  nav: {
+    A: 'title:new-note',
+    'Shift-A': 'nav:new-folder',
+    Enter: 'list:focus',
+    Up: 'nav:up',
+    Down: 'nav:down',
+    D: 'nav:delete'
+  },
+  list: {
+    Enter: 'detail:focus',
+    E: 'detail:focus',
+    Esc: 'nav:focus',
+    Up: 'list:up',
+    Down: 'list:down',
+    D: 'list:delete'
+  },
+  detail: {
+    Esc: 'list:focus',
+    "Cmd-'": 'detail:focus-tag-select'
+  }
+})
+
+function keymap (state = defaultKeymap, ation) {
+  return state
+}
 
 function config (state = {}, action) {
   return state
@@ -198,6 +227,7 @@ function storageMap (state = defaultStorageMap, action) {
 }
 
 let reducers = combineReducers({
+  keymap,
   config,
   status,
   storageMap,

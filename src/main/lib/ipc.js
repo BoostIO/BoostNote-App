@@ -3,31 +3,32 @@ import store from './redux/store'
 const { ipcRenderer } = require('electron')
 
 function handleNewNote (e) {
-  window.dispatchEvent(new window.CustomEvent('main:new-note'))
+  window.dispatchEvent(new window.CustomEvent('title:new-note'))
 }
 
 function handleNewFolder (e) {
-  window.dispatchEvent(new window.CustomEvent('main:new-folder'))
+  window.dispatchEvent(new window.CustomEvent('nav:new-folder'))
 }
 
 function handleDelete (e) {
-  window.dispatchEvent(new window.CustomEvent('main:delete'))
+  window.dispatchEvent(new window.CustomEvent('nav:delete'))
+  window.dispatchEvent(new window.CustomEvent('list:delete'))
 }
 
 function handleFocusSearch (e) {
-  window.dispatchEvent(new window.CustomEvent('main:focus-search'))
+  window.dispatchEvent(new window.CustomEvent('title:focus-search'))
 }
 
 function handleFind (e) {
-  window.dispatchEvent(new window.CustomEvent('main:find'))
+  window.dispatchEvent(new window.CustomEvent('detail:find'))
 }
 
 function handlePrint (e) {
-  window.dispatchEvent(new window.CustomEvent('main:print'))
+  window.dispatchEvent(new window.CustomEvent('detail:print'))
 }
 
 function handleOpenPreferences (e) {
-  window.dispatchEvent(new window.CustomEvent('main:open-preferences'))
+  window.dispatchEvent(new window.CustomEvent('title:open-preferences'))
 }
 
 function handleUpdateConfig (e, config) {

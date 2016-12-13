@@ -123,11 +123,13 @@ class TitleBar extends React.Component {
   componentDidMount () {
     window.addEventListener('title:new-note', this.handleNewButtonClick)
     window.addEventListener('title:focus-search', this.handleWindowFocusSearch)
+    window.addEventListener('title:open-preferences', this.handleOpenPreferences)
   }
 
   componentWillUnmount () {
     window.removeEventListener('title:new-note', this.handleNewButtonClick)
     window.removeEventListener('title:focus-search', this.handleWindowFocusSearch)
+    window.removeEventListener('title:open-preferences', this.handleOpenPreferences)
   }
 
   handleNewButtonClick = e => {
@@ -136,6 +138,10 @@ class TitleBar extends React.Component {
 
   handleWindowFocusSearch = e => {
     this.search.focus()
+  }
+
+  handleOpenPreferences = e => {
+    this.openPreferences()
   }
 
   handleDeleteButtonClick = e => {
@@ -172,7 +178,15 @@ class TitleBar extends React.Component {
   }
 
   handlePreferencesButtonClick = e => {
-    window.dispatchEvent(new window.CustomEvent('main:open-preferences'))
+    this.openPreferences()
+  }
+
+  openPreferences () {
+    if (remote.getGlobal('windows').preferences.isVisible()) {
+      remote.getGlobal('windows').preferences.hide()
+    } else {
+      remote.getGlobal('windows').preferences.show()
+    }
   }
 
   toggleMaximize () {
