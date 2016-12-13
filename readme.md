@@ -27,6 +27,11 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 - Redux
 - Webpack
 - PouchDB / LevelDB
+- Remark
+- Katex
+- Codemirror
+- Octicon
+- Github Markdown CSS
 
 ## Development
 
@@ -35,7 +40,7 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 - [App Context](./docs/context.md)
 - [Config](./docs/context.md)
 - [Database](./docs/database.md)
-- [Redux](./docs/redux)
+- [Redux](./docs/redux.md)
 - [Key Bindings](./docs/key-bindings.md)
 - [Testing](./docs/testing.md)
 

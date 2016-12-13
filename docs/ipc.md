@@ -18,13 +18,13 @@ global.windows.preferences.webContents.send('Stop')
 
 Name             | Payload       | Action
 -----------------|---------------|------------------------
-new-note         |               | Dispatch `main:new-note` event to window
-new-folder       |               | Dispatch `main:new-folder` event to window
-delete           |               | Dispatch `main:delete` event to window
-focus-search     |               | Dispatch `main:focus-search` event to window
-find             |               | Dispatch `main:find` event to window
-print            |               | Dispatch `main:print` event to window
-open-preferences |               | Dispatch `main:open-preferences` event to window
+new-note         |               | Dispatch `title:new-note` event to window
+new-folder       |               | Dispatch `nav:new-folder` event to window
+delete           |               | Dispatch `nav:delete` and `detail:delete` event to window
+focus-search     |               | Dispatch `title:focus-search` event to window
+find             |               | Dispatch `detail:find` event to window
+print            |               | Dispatch `detail:print` event to window
+open-preferences |               | Dispatch `title:open-preferences` event to window
 update-config | Config Object | Apply the updated config
 
 ### Preferences
