@@ -40,8 +40,8 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 - [App Context](./docs/context.md)
 - [Config](./docs/context.md)
 - [Database](./docs/database.md)
-- [Redux](./docs/redux.md)
-- [Key Bindings](./docs/key-bindings.md)
+- [Redux Store](./docs/redux-store.md)
+- [Keymap and Commands](./docs/keymap-and-commands.md)
 - [Testing](./docs/testing.md)
 
 ## License
