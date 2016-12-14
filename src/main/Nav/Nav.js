@@ -6,7 +6,6 @@ import { isFinallyBlurred } from 'lib/util'
 import commander from 'main/lib/commander'
 import { NAV_MIN_WIDTH } from 'main/lib/consts'
 import CodeMirror from 'codemirror'
-import _ from 'lodash'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 
 const Root = styled.div`
@@ -79,7 +78,10 @@ class Nav extends React.Component {
     const keyName = CodeMirror.keyName(e)
     const { keymap } = this.context
 
-    keymap.hasIn(['nav', keyName]) && window.dispatchEvent(new window.CustomEvent(keymap.getIn(['nav', keyName])))
+    if (keymap.hasIn(['nav', keyName])) {
+      e.preventDefault()
+      window.dispatchEvent(new window.CustomEvent(keymap.getIn(['nav', keyName])))
+    }
   }
 
   handleNewFolderClick = e => {
@@ -107,11 +109,11 @@ class Nav extends React.Component {
   }
 
   handleWindowUp = e => {
-    this.goToNextLink(-1)
+    this.move(-1)
   }
 
   handleWindowDown = e => {
-    this.goToNextLink()
+    this.move()
   }
 
   handleWindowDelete = e => {
@@ -125,23 +127,18 @@ class Nav extends React.Component {
     }
   }
 
-  goToNextLink (offset = 1) {
+  move (offset = 1) {
     const { router } = this.context
     const { storageName, folderName } = router.params
 
-    let targetIndex = -1
-    if (folderName == null) {
-      // Storage focus
-      targetIndex = this.linkList.indexOf(storageName)
-    } else {
-      // Folder focused
-      targetIndex = this.linkList.indexOf(storageName + '/' + folderName)
-    }
+    const currentIndex = folderName == null
+      ? this.linkList.indexOf(storageName)
+      : this.linkList.indexOf(storageName + '/' + folderName)
 
-    targetIndex += offset
+    const nextIndex = currentIndex + offset
 
-    if (targetIndex > -1) {
-      const nextLink = this.linkList[targetIndex]
+    if (nextIndex > -1 && nextIndex < this.linkList.length) {
+      const nextLink = this.linkList[nextIndex]
         .replace(/\//, '/folders/')
 
       router.push('storages/' + nextLink)

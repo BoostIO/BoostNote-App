@@ -78,6 +78,10 @@ class TagSelect extends React.Component {
         if (e.target.selectionStart === 0) {
           this.removeTag()
         }
+        break
+      case 27:
+        e.preventDefault()
+        window.dispatchEvent(new window.CustomEvent('detail:focus'))
     }
   }
 
@@ -108,6 +112,10 @@ class TagSelect extends React.Component {
     })
   }
 
+  focus () {
+    this.input.focus()
+  }
+
   render () {
     const { value } = this.props
 
@@ -126,6 +134,7 @@ class TagSelect extends React.Component {
           {tagList}
         </div>
         <input
+          ref={c => (this.input = c)}
           value={this.state.newTag}
           onChange={this.handleInputChange}
           onKeyDown={this.handleInputKeyDown}

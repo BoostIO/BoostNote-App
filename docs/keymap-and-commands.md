@@ -62,6 +62,7 @@ macOS     | Windows/Linux | Command
 A         | A             | `title:new-note`
 Shift - A | Shift - A     | `nav:new-folder`
 Enter     | Enter         | `list:focus`
+Right     | Right         | `list:focus`
 Up        | Up            | `nav:up`
 Down      | Down          | `nav:down`
 D         | D             | `nav:delete`
@@ -84,7 +85,9 @@ macOS    | Windows/Linux | Command
 ---------|---------------|-----------------------------
 Enter    | Enter         | `detail:focus`
 E        | E             | `detail:focus`
+Right    | Right         | `detail:focus`
 Esc      | Esc           | `nav:focus`
+Left     | Left          | `nav:focus`
 Up       | Up            | `list:up`
 Down     | Down          | `list:down`
 D        | D             | `list:delete`
@@ -105,7 +108,7 @@ list:delete         | Delete a note
 macOS    | Windows/Linux | Command
 ---------|---------------|-----------------------------
 Esc      | Esc           | `list:focus`
-Cmd - \` | Ctrl - \`     | `detail:focus-tag-select`
+Cmd - '  | Ctrl - '      | `detail:focus-tag-select`
 
 ### Commands
 

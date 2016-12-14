@@ -240,11 +240,9 @@ class TitleBar extends React.Component {
           pathname: router.location.pathname,
           query: {
             key: res.id
-          },
-          state: {
-            active: true
           }
         })
+        window.dispatchEvent(new window.CustomEvent('detail:focus'))
       })
   }
 

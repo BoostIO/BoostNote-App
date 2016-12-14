@@ -51,6 +51,38 @@ class Detail extends React.Component {
     this.queueTimer = null
   }
 
+  componentWillReceiveProps (nextProps) {
+    const nextNoteKey = nextProps.noteKey
+    const { noteKey } = this.props
+
+    // Note changed
+    if (nextNoteKey !== noteKey) {
+      if (noteKey != null) {
+        this.dispatchUpdate()
+      }
+
+      this.tagSelect.resetInput()
+      this.setState({
+        tags: new Set(nextProps.note.get('tags')),
+        content: nextProps.note.get('content')
+      })
+    }
+  }
+
+  componentDidMount () {
+    window.addEventListener('detail:focus', this.handleWindowFocus)
+    window.addEventListener('detail:focus-tag-select', this.handleWindowFocusTagSelect)
+  }
+
+  componentWillUnmount () {
+    if (this.queueTimer != null) {
+      this.dispatchUpdate()
+    }
+
+    window.removeEventListener('detail:focus', this.handleWindowFocus)
+    window.removeEventListener('detail:focus-tag-select', this.handleWindowFocusTagSelect)
+  }
+
   handleContentChange = e => {
     this.setState({
       content: this.editor.value
@@ -65,6 +97,14 @@ class Detail extends React.Component {
     }, () => {
       this.setDispatchTimer()
     })
+  }
+
+  handleWindowFocus = e => {
+    this.focusEditor()
+  }
+
+  handleWindowFocusTagSelect = e => {
+    this.tagSelect.focus()
   }
 
   dispatchUpdate () {
@@ -114,30 +154,6 @@ class Detail extends React.Component {
 
   invalidateDispatchTimer () {
     window.clearTimeout(this.queueTimer)
-  }
-
-  componentWillReceiveProps (nextProps) {
-    const nextNoteKey = nextProps.noteKey
-    const { noteKey } = this.props
-
-    // Note changed
-    if (nextNoteKey !== noteKey) {
-      if (noteKey != null) {
-        this.dispatchUpdate()
-      }
-
-      this.tagSelect.resetInput()
-      this.setState({
-        tags: new Set(nextProps.note.get('tags')),
-        content: nextProps.note.get('content')
-      })
-    }
-  }
-
-  componentWillUnmount () {
-    if (this.queueTimer != null) {
-      this.dispatchUpdate()
-    }
   }
 
   focusEditor () {

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import styled from 'styled-components'
 import { Map } from 'immutable'
 import Octicon from 'components/Octicon'
@@ -11,6 +12,7 @@ import moment from 'moment'
 import NoteItem from './NoteItem'
 import { LIST_MIN_WIDTH } from 'main/lib/consts'
 import _ from 'lodash'
+import CodeMirror from 'codemirror'
 
 const Root = styled.div`
   display: flex;
@@ -62,6 +64,7 @@ const LeftMenuButton = styled.button`
 `
 
 const LeftList = styled.div`
+  flex: 1;
   overflow-y: auto;
 `
 
@@ -157,88 +160,41 @@ class NoteList extends React.Component {
       })
     }
 
-    if (location.state != null && location.state.active) {
-      this.detail.focusEditor()
-    }
-
     this.setRefreshTimer()
   }
 
   componentDidMount () {
     window.addEventListener('list:focus', this.handleWindowFocus)
+    window.addEventListener('list:up', this.handleWindowUp)
+    window.addEventListener('list:down', this.handleWindowDown)
     window.addEventListener('list:delete', this.handleWindowDelete)
   }
 
   componentWillUnmount () {
     this.invalidateRefreshTimer()
+
     window.removeEventListener('list:focus', this.handleWindowFocus)
+    window.removeEventListener('list:up', this.handleWindowUp)
+    window.removeEventListener('list:down', this.handleWindowDown)
     window.removeEventListener('list:delete', this.handleWindowDelete)
   }
 
-  setRefreshTimer () {
-    this.invalidateRefreshTimer()
-    this.refreshTimer = window.setTimeout(() => {
-      this.forceUpdate()
-    }, 60 * 1000)
-  }
+  handleLeftKeyDown = e => {
+    const keyName = CodeMirror.keyName(e)
+    const { keymap } = this.context
 
-  invalidateRefreshTimer () {
-    window.clearTimeout(this.refreshTimer)
-  }
-
-  getSortMethod () {
-    switch (this.state.listSort) {
-      case 'CREATED_AT':
-        return (a, b) => {
-          return moment(b.get('createdAt')).toDate() - moment(a.get('createdAt')).toDate()
-        }
-      case 'ALPHABET':
-        return (a, b) => {
-          const aTitle = _.isString(a.get('title')) ? a.get('title') : ''
-          const bTitle = _.isString(b.get('title')) ? b.get('title') : ''
-          return aTitle.localeCompare(bTitle)
-        }
-      default:
-      case 'UPDATED_AT':
-        return (a, b) => {
-          return moment(b.get('updatedAt')).toDate() - moment(a.get('updatedAt')).toDate()
-        }
+    if (keymap.hasIn(['list', keyName])) {
+      e.preventDefault()
+      window.dispatchEvent(new window.CustomEvent(keymap.getIn(['list', keyName])))
     }
   }
 
-  getNotes () {
-    const { storageMap, params } = this.props
-    let notes = new Map()
+  handleWindowUp = e => {
+    this.move(-1)
+  }
 
-    if (params.folderName != null) {
-      let noteSet = storageMap
-        .getIn([
-          params.storageName,
-          'folders',
-          params.folderName,
-          'notes'
-        ])
-
-      if (noteSet == null) return new Map()
-
-      notes = noteSet
-        .map(noteId => {
-          return [
-            noteId,
-            storageMap
-              .getIn([params.storageName, 'notes', noteId])
-          ]
-        })
-        .toArray()
-      notes = new Map(notes)
-    } else if (params.storageName != null) {
-      notes = storageMap.getIn([params.storageName, 'notes'])
-      if (notes == null) return new Map()
-    } else {
-      notes = new Map()
-    }
-
-    return notes.sort(this.getSortMethod())
+  handleWindowDown = e => {
+    this.move(1)
   }
 
   handleWindowDelete = e => {
@@ -328,6 +284,7 @@ class NoteList extends React.Component {
       })
     })
   }
+
   handleCompactButtonClick = e => {
     const listStyle = 'COMPACT'
     this.setState({
@@ -343,6 +300,7 @@ class NoteList extends React.Component {
       })
     })
   }
+
   handleNormalButtonClick = e => {
     const listStyle = 'NORMAL'
     this.setState({
@@ -357,6 +315,102 @@ class NoteList extends React.Component {
         }
       })
     })
+  }
+
+  handleRightKeyDown = e => {
+    const keyName = CodeMirror.keyName(e)
+    const { keymap } = this.context
+
+    if (keymap.hasIn(['detail', keyName])) {
+      e.preventDefault()
+      window.dispatchEvent(new window.CustomEvent(keymap.getIn(['detail', keyName])))
+    }
+  }
+
+  setRefreshTimer () {
+    this.invalidateRefreshTimer()
+    this.refreshTimer = window.setTimeout(() => {
+      this.forceUpdate()
+    }, 60 * 1000)
+  }
+
+  invalidateRefreshTimer () {
+    window.clearTimeout(this.refreshTimer)
+  }
+
+  getSortMethod () {
+    switch (this.state.listSort) {
+      case 'CREATED_AT':
+        return (a, b) => {
+          return moment(b.get('createdAt')).toDate() - moment(a.get('createdAt')).toDate()
+        }
+      case 'ALPHABET':
+        return (a, b) => {
+          const aTitle = _.isString(a.get('title')) ? a.get('title') : ''
+          const bTitle = _.isString(b.get('title')) ? b.get('title') : ''
+          return aTitle.localeCompare(bTitle)
+        }
+      default:
+      case 'UPDATED_AT':
+        return (a, b) => {
+          return moment(b.get('updatedAt')).toDate() - moment(a.get('updatedAt')).toDate()
+        }
+    }
+  }
+
+  getNotes () {
+    const { storageMap, params } = this.props
+    let notes = new Map()
+
+    if (params.folderName != null) {
+      let noteSet = storageMap
+        .getIn([
+          params.storageName,
+          'folders',
+          params.folderName,
+          'notes'
+        ])
+
+      if (noteSet == null) return new Map()
+
+      notes = noteSet
+        .map(noteId => {
+          return [
+            noteId,
+            storageMap
+              .getIn([params.storageName, 'notes', noteId])
+          ]
+        })
+        .toArray()
+      notes = new Map(notes)
+    } else if (params.storageName != null) {
+      notes = storageMap.getIn([params.storageName, 'notes'])
+      if (notes == null) return new Map()
+    } else {
+      notes = new Map()
+    }
+
+    return notes.sort(this.getSortMethod())
+  }
+
+  move (offset = 1) {
+    const { router } = this.context
+    const { location } = this.props
+
+    const { key } = router.location.query
+
+    const noteMapKeys = this.noteListMap.keySeq()
+    const currentIndex = noteMapKeys.keyOf(key)
+    const nextIndex = currentIndex + offset
+
+    if (nextIndex > -1 && nextIndex < this.noteListMap.size) {
+      router.push({
+        pathname: location.pathname,
+        query: {
+          key: noteMapKeys.get(nextIndex)
+        }
+      })
+    }
   }
 
   getNextKey = () => {
@@ -400,6 +454,7 @@ class NoteList extends React.Component {
           style={{width: this.state.listWidth}}
           innerRef={c => (this.left = c)}
           tabIndex='0'
+          onKeyDown={this.handleLeftKeyDown}
           onFocus={this.handleLeftFocus}
           onBlur={this.handleLeftBlur}
         >
@@ -445,6 +500,7 @@ class NoteList extends React.Component {
         <Right
           innerRef={c => (this.right = c)}
           tabIndex='0'
+          onKeyDown={this.handleRightKeyDown}
           onFocus={this.handleRightFocus}
           onBlur={this.handleRightBlur}
           ignore={this.state.isSliderActive}
@@ -455,6 +511,7 @@ class NoteList extends React.Component {
               noteKey={location.query.key}
               note={activeNote}
             />
+            // TODO: set some styles to Empty page
             : <div>No note.</div>
           }
         </Right>
@@ -474,7 +531,10 @@ NoteList.contextTypes = {
   store: PropTypes.shape({
     dispatch: PropTypes.func
   }),
-  status: PropTypes.instanceOf(Map)
+  status: PropTypes.instanceOf(Map),
+  keymap: ImmutablePropTypes.mapContains({
+    list: ImmutablePropTypes.map
+  })
 }
 
 export default connect(x => x)(NoteList)
