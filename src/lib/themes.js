@@ -9,8 +9,8 @@ const defaultUIFontFamily = 'Helvetica, Arial, sans-serif'
 const defaultBackgroundColor = '#FFF'
 
 // Button Color
-const defaultUIButtonHoverColor = '#F4F4F4'
-const defaultUIButtonActiveColor = '#EEE'
+const defaultUIButtonHoverColor = '#EEE'
+const defaultUIButtonActiveColor = '#E5E5E5'
 
 const defaultTheme = {
   // Color
