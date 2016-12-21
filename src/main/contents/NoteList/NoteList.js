@@ -10,7 +10,7 @@ import Dialog from 'main/lib/Dialog'
 import StorageManager from 'main/lib/StorageManager'
 import moment from 'moment'
 import NoteItem from './NoteItem'
-import { LIST_MIN_WIDTH } from 'main/lib/consts'
+import { LIST_MIN_WIDTH } from 'lib/consts'
 import _ from 'lodash'
 import CodeMirror from 'codemirror'
 
@@ -59,8 +59,10 @@ const LeftMenuButton = styled.button`
   ${p => p.theme.button};
   border-width: 0 0 0 1px;
   width: 24px;
-  ${p => p.active ? `fill: ${p.theme.activeColor};` : ''}
   border-radius: 0;
+  .Octicon {
+    ${p => p.active ? `fill: ${p.theme.activeColor};` : ''}
+  }
 `
 
 const LeftList = styled.div`
@@ -426,7 +428,7 @@ class NoteList extends React.Component {
   }
 
   render () {
-    const { location } = this.props
+    const { location, config } = this.props
     const noteListMap = this.noteListMap = this.getNotes()
 
     const noteList = noteListMap
@@ -510,6 +512,7 @@ class NoteList extends React.Component {
               ref={c => (this.detail = c)}
               noteKey={location.query.key}
               note={activeNote}
+              config={config}
             />
             // TODO: set some styles to Empty page
             : <div>No note.</div>

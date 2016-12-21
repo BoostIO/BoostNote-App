@@ -79,7 +79,10 @@ class TagSelect extends React.Component {
           this.removeTag()
         }
         break
+      // 9: Tab, 27: Esc
+      case 9:
       case 27:
+        this.setState({newTag: ''})
         e.preventDefault()
         window.dispatchEvent(new window.CustomEvent('detail:focus'))
     }

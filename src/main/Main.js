@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import styled, { ThemeProvider } from 'styled-components'
 import TitleBar from './TitleBar'
 import themes from 'lib/themes'
 import Nav from './Nav/Nav'
-import { Map } from 'immutable'
 import StorageManager from './lib/StorageManager'
-import { NAV_MIN_WIDTH } from 'main/lib/consts'
+import { NAV_MIN_WIDTH } from 'lib/consts'
 import ipc from './lib/ipc'
 
 const { remote } = require('electron')
@@ -130,7 +130,8 @@ class Main extends React.Component {
   getChildContext () {
     return {
       status: this.props.status,
-      keymap: this.props.keymap
+      keymap: this.props.keymap,
+      config: this.props.config
     }
   }
 
@@ -187,8 +188,9 @@ Main.contextTypes = {
 }
 
 Main.childContextTypes = {
-  status: PropTypes.instanceOf(Map),
-  keymap: PropTypes.instanceOf(Map)
+  status: ImmutablePropTypes.map,
+  keymap: ImmutablePropTypes.map,
+  config: ImmutablePropTypes.map
 }
 
 export default connect(x => x)(Main)

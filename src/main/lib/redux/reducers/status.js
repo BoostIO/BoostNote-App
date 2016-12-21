@@ -1,14 +1,5 @@
-import { Map } from 'immutable'
 import _ from 'lodash'
-
-const defaultStatus = Map({
-  navWidth: 150,
-  noteListWidth: 200,
-  // NORMAL, COMPACT
-  noteListStyle: 'NORMAL',
-  // UPDATED_AT, CREATED_AT, ALPHABET
-  noteListSort: 'UPDATED_AT'
-})
+import { DEFAULT_STATUS } from 'lib/consts'
 
 let storedStatus
 try {
@@ -19,7 +10,7 @@ try {
   storedStatus = {}
 }
 
-const initialStatus = defaultStatus.merge(storedStatus)
+const initialStatus = DEFAULT_STATUS.merge(storedStatus)
 
 function status (state = initialStatus, action) {
   switch (action.type) {

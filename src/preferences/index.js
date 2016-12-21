@@ -7,7 +7,7 @@ import App from './App'
 import history from './history'
 
 // Disable Pinch Zoom
-const {webFrame} = require('electron')
+const { webFrame } = require('electron')
 webFrame.setZoomLevelLimits(1, 1)
 
 const isDev = process.env.NODE_ENV !== 'production'

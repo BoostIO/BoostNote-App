@@ -25,6 +25,7 @@ const defaultTheme = {
 
   buttonHoverColor: defaultUIButtonHoverColor,
   buttonActiveColor: defaultUIButtonActiveColor,
+
   border: 'solid 1px ' + defaultBorderColor,
   activeBorderColor: defaultUIActiveColor,
   activeBorder: 'solid 1px ' + defaultUIActiveColor,
@@ -35,8 +36,7 @@ const defaultTheme = {
 
   // UI
   input: `
-    border: solid 1px
-    ${defaultBorderColor};
+    border: solid 1px ${defaultBorderColor};
     outline: none;
     border-radius: 4px;
     background-color: #FCFCFC;
@@ -56,8 +56,18 @@ const defaultTheme = {
     color: ${defaultUIColor};
     font-size: ${defaultUIFontSize};
     font-family: ${defaultUIFontFamily};
+    &:hover {
+      background-color: ${defaultUIButtonHoverColor};
+    }
     &:active {
-      background-color: #DCDCDC;
+      background-color: ${defaultUIButtonActiveColor};
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .Octicon {
+      fill: ${defaultUIColor};
     }
   `
 }

@@ -4,7 +4,7 @@ import { Octicon } from 'components'
 import StorageSection from './StorageSection'
 import { isFinallyBlurred } from 'lib/util'
 import commander from 'main/lib/commander'
-import { NAV_MIN_WIDTH } from 'main/lib/consts'
+import { NAV_MIN_WIDTH } from 'lib/consts'
 import CodeMirror from 'codemirror'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 

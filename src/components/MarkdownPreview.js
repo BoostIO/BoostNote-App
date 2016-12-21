@@ -18,6 +18,19 @@ function parseMode (mode) {
   return syntax
 }
 
+function buildFontStyle (fontSize, fontFamily, codeBlockFontFamily) {
+  return `
+    .markdown-body {
+      font-size: ${fontSize}px;
+      font-family: ${fontFamily}, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+    .markdown-body code,
+    .markdown-body pre {
+      font-family: ${codeBlockFontFamily};
+    }
+  `
+}
+
 class MarkdownPreview extends React.Component {
   constructor (props) {
     super(props)
@@ -27,16 +40,12 @@ class MarkdownPreview extends React.Component {
   }
 
   componentDidMount () {
-    this.mountContent()
-
     this.iframe.contentWindow.document.head.innerHTML = `
     <link href="../../node_modules/github-markdown-css/github-markdown.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../../node_modules/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" id="codeMirrorTheme">
     <link rel="stylesheet" type="text/css" href="../../node_modules/katex/dist/katex.min.css">
     <style>
-      .markdown-body{
-        font-size: 14px;
-      }
       .CodeMirror {
         height: inherit;
       }
@@ -52,8 +61,13 @@ class MarkdownPreview extends React.Component {
         position: relative;
       }
     </style>
+    <style id='font'>
+      ${buildFontStyle(this.props.fontSize, this.props.fontFamily, this.props.codeBlockFontFamily)}
+    </style>
     `
     this.iframe.contentWindow.document.body.className = 'markdown-body'
+
+    this.mountContent()
   }
 
   componentWillUnmount () {
@@ -63,10 +77,29 @@ class MarkdownPreview extends React.Component {
   componentDidUpdate (prevProps) {
     // TODO: Rebounce render
     // TODO: Use web worker
-    if (prevProps.content !== this.props.content) {
+    if (prevProps.content !== this.props.content || prevProps.codeBlockTheme !== this.props.codeBlockTheme) {
       this.unmountContent()
       this.mountContent()
     }
+
+    if (prevProps.fontFamily !== this.props.fontFamily ||
+      prevProps.fontSize !== this.props.fontSize ||
+      prevProps.codeBlockFontFamily !== this.props.codeBlockFontFamily
+    ) {
+      this.applyFont()
+    }
+  }
+
+  handleContentClick = e => {
+    this.props.onClick != null && this.props.onClick()
+  }
+
+  handleContentMouseUp = e => {
+    this.props.onMouseUp != null && this.props.onMouseUp()
+  }
+
+  handleContentMouseDown = e => {
+    this.props.onMouseDown != null && this.props.onMouseDown()
   }
 
   mountContent () {
@@ -77,6 +110,12 @@ class MarkdownPreview extends React.Component {
     console.time('parse md')
     this.iframe.contentWindow.document.body.innerHTML = markdown.quickRender(content)
     console.timeEnd('parse md')
+
+    console.time('load theme')
+    if (this.props.codeBlockTheme !== 'default') {
+      this.iframe.contentWindow.document.getElementById('codeMirrorTheme').href = '../../node_modules/codemirror/theme/' + this.props.codeBlockTheme + '.css'
+    }
+    console.timeEnd('load theme')
 
     console.time('queue override')
     // Re-render codeblokcs by CodeMirror run mode and Katex
@@ -96,7 +135,7 @@ class MarkdownPreview extends React.Component {
       CodeMirror.requireMode(syntax.mode, () => {
         let value = _.unescape(block.innerHTML)
         block.innerHTML = ''
-        block.parentNode.className = ` cm-s-default CodeMirror`
+        block.parentNode.className = ` cm-s-${this.props.codeBlockTheme} CodeMirror`
         CodeMirror.runMode(value, syntax.mime, block, {
           tabSize: 2
         })
@@ -129,16 +168,8 @@ class MarkdownPreview extends React.Component {
     this.iframe.contentWindow.document.removeEventListener('mousedown', this.handleContentMouseDown)
   }
 
-  handleContentClick = e => {
-    this.props.onClick != null && this.props.onClick()
-  }
-
-  handleContentMouseUp = e => {
-    this.props.onMouseUp != null && this.props.onMouseUp()
-  }
-
-  handleContentMouseDown = e => {
-    this.props.onMouseDown != null && this.props.onMouseDown()
+  applyFont () {
+    this.iframe.contentWindow.document.getElementById('font').innerHTML = buildFontStyle(this.props.fontSize, this.props.fontFamily, this.props.codeBlockFontFamily)
   }
 
   render () {

@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
 import MarkdownPreview from './MarkdownPreview'
-import _ from 'lodash'
 
 const WrappedCodeEditor = styled(CodeEditor)`
   position: absolute;
@@ -11,12 +10,6 @@ const WrappedCodeEditor = styled(CodeEditor)`
   left: 0;
   right: 0;
   bottom: 0;
-  ${p => p == null
-    ? ''
-    : _.isString(p.overrideStyle)
-    ? p.overrideStyle
-    : p.overrideStyle(p)
-  }
 `
 
 const WrappedMarkdownPreview = styled(MarkdownPreview)`
@@ -74,7 +67,9 @@ class MarkdownEditor extends React.Component {
   }
 
   render () {
-    const { className, style, value, docKey, codeEditorStyle } = this.props
+    const { className, style, value, docKey,
+      theme, fontSize, fontFamily, codeBlockTheme, codeBlockFontFamily,
+      editorFontSize, editorFontFamily, editorTheme, indentStyle, indentSize } = this.props
 
     return (
       <div
@@ -89,6 +84,11 @@ class MarkdownEditor extends React.Component {
           onMouseUp={this.handlePreviewMouseUp}
           onMouseDown={this.handlePreviewMouseDown}
           content={value}
+          theme={theme}
+          fontSize={fontSize}
+          fontFamily={fontFamily}
+          codeBlockTheme={codeBlockTheme}
+          codeBlockFontFamily={codeBlockFontFamily}
         />
         <WrappedCodeEditor
           innerRef={c => (this.editor = c)}
@@ -100,7 +100,11 @@ class MarkdownEditor extends React.Component {
           value={value}
           docKey={docKey}
           mode={'GitHub Flavored Markdown'}
-          overrideStyle={codeEditorStyle}
+          fontSize={editorFontSize}
+          fontFamily={editorFontFamily}
+          theme={editorTheme}
+          indentStyle={indentStyle}
+          indentSize={indentSize}
         />
       </div>
     )

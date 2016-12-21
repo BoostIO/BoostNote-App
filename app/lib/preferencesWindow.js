@@ -1,11 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
 const preferencesWindow = new BrowserWindow({
-  width: 800,
-  height: 600,
+  width: 640,
+  height: 480,
   show: false,
-  titleBarStyle: 'hidden-inset',
   webPreferences: {
     blinkFeatures: 'OverlayScrollbars'
   }

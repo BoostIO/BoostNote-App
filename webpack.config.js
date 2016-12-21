@@ -3,6 +3,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
+const util = require('./tools/util')
 
 const port = process.env.NODE_ENV !== 'test'
   ? 8080
@@ -15,6 +16,12 @@ const entry = process.env.NODE_ENV !== 'test'
       'webpack-dev-server/client?http://localhost:' + port,
       'webpack/hot/only-dev-server',
       './src/main/index.js'
+    ],
+    preferences: [
+      'react-hot-loader/patch',
+      'webpack-dev-server/client?http://localhost:' + port,
+      'webpack/hot/only-dev-server',
+      './src/preferences/index.js'
     ]
   }
   : {
@@ -40,7 +47,8 @@ const config = {
     new webpack.NamedModulesPlugin(),
     new NodeTargetPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
+      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`,
+      'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
     })
   ],
   externals: [

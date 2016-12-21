@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import styled from 'styled-components'
 import TagSelect from './TagSelect'
 import moment from 'moment'
@@ -36,6 +37,9 @@ const StatusBarRight = styled.div`
 const BodyEditor = styled(MarkdownEditor)`
   position: relative;
   flex: 1;
+  .CodeMirror {
+    border-top: ${p => p.theme.border};
+  }
 `
 class Detail extends React.Component {
   constructor (props) {
@@ -161,7 +165,7 @@ class Detail extends React.Component {
   }
 
   render () {
-    const { note, noteKey } = this.props
+    const { note, noteKey, config } = this.props
     const { router } = this.context
 
     return (
@@ -181,7 +185,16 @@ class Detail extends React.Component {
           value={this.state.content}
           onChange={this.handleContentChange}
           docKey={`${router.params.storageName}/${noteKey}`}
-          codeEditorStyle={p => `border-top: ${p.theme.border};`}
+          theme={config.get('theme')}
+          fontSize={config.get('previewFontSize')}
+          fontFamily={config.get('previewFontFamily')}
+          codeBlockTheme={config.get('previewCodeBlockTheme')}
+          codeBlockFontFamily={config.get('previewCodeBlockFontFamily')}
+          editorFontSize={config.get('editorFontSize')}
+          editorFontFamily={config.get('editorFontFamily')}
+          editorTheme={config.get('editorTheme')}
+          indentStyle={config.get('editorIndentStyle')}
+          indentSize={config.get('editorIndentSize')}
         />
       </Root>
     )
@@ -191,6 +204,9 @@ class Detail extends React.Component {
 Detail.propTypes = {
   noteKey: PropTypes.string,
   note: PropTypes.shape({
+  }),
+  config: ImmutablePropTypes.mapContains({
+
   })
 }
 

@@ -4,13 +4,18 @@ import CodeMirror from 'codemirror'
 import _ from 'lodash'
 import { Map } from 'immutable'
 
+const req = require.context('style-loader?singleton!css-loader!../../node_modules/codemirror/theme', true, /\.css$/)
+req.keys().forEach(key => {
+  req(key)
+})
+
 let docMap = new Map()
 
 const Root = styled.div`
   .CodeMirror {
     min-height: 100%;
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    font-size: 14px;
+    font-family: ${p => p.fontFamily}, monospace;
+    font-size: ${p => p.fontSize}px;
     line-height: 1.4;
   }
 `
@@ -30,11 +35,12 @@ class CodeEditor extends React.Component {
       value: new CodeMirror.Doc(_.isString(value) ? value : ''),
       lineNumbers: true,
       lineWrapping: true,
-      indentUnit: 2,
-      tabSize: 2,
+      theme: this.props.theme,
+      indentUnit: this.props.indentSize,
+      tabSize: this.props.indentSize,
       keyMap: 'sublime',
       inputStyle: 'textarea',
-      indentWithTabs: 'space',
+      indentWithTabs: this.props.indentStyle === 'tab',
       extraKeys: {
         Tab: function (cm) {
           if (cm.somethingSelected()) cm.indentSelection('add')
@@ -84,12 +90,31 @@ class CodeEditor extends React.Component {
     if (this.props.mode !== nextProps.mode) this.setSyntaxMode(nextProps.mode)
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
     if (this.props.value !== this.value) {
       this.value = this.props.value
       this.codemirror.off('change', this.handleChange)
       this.codemirror.setValue(this.props.value)
       this.codemirror.on('change', this.handleChange)
+    }
+
+    if (this.props.fontSize !== prevProps.fontSize ||
+    this.props.fontFamily !== prevProps.fontFamily) {
+      this.codemirror.refresh()
+    }
+
+    if (this.props.indentSize !== prevProps.indentSize) {
+      this.codemirror.setOption('indentUnit', this.props.indentSize)
+      this.codemirror.setOption('tabSize', this.props.indentSize)
+    }
+
+    if (this.props.indentStyle !== prevProps.indentStyle) {
+      this.codemirror.setOption('indentWithTabs', this.props.indentStyle === 'tab')
+    }
+
+    if (this.props.theme !== prevProps.theme) {
+      this.codemirror.setOption('theme', this.props.theme)
+      this.codemirror.refresh()
     }
   }
 
@@ -124,12 +149,14 @@ class CodeEditor extends React.Component {
   }
 
   render () {
-    const { className, style } = this.props
+    const { className, style, fontSize, fontFamily } = this.props
     return (
       <Root
         className={['CodeEditor', className].join(' ')}
         style={style}
         innerRef={c => (this.root = c)}
+        fontSize={fontSize}
+        fontFamily={fontFamily}
       />
     )
   }
