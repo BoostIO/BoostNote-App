@@ -3,11 +3,23 @@ import styled from 'styled-components'
 import CodeMirror from 'codemirror'
 import _ from 'lodash'
 import { Map } from 'immutable'
+import { CODEMIRROR_THEMES } from 'lib/consts'
 
-const req = require.context('style-loader?singleton!css-loader!../../node_modules/codemirror/theme', true, /\.css$/)
-req.keys().forEach(key => {
-  req(key)
+CODEMIRROR_THEMES.forEach(theme => {
+  if (theme.value === 'default') {
+    return
+  }
+
+  let linkEl = document.getElementById('codemirror-' + theme.value)
+  if (linkEl == null) {
+    linkEl = document.createElement('link')
+    linkEl.rel = 'stylesheet'
+    linkEl.type = 'text/css'
+    document.head.appendChild(linkEl)
+  }
+  linkEl.href = '../../node_modules/codemirror/theme/' + theme.value + '.css'
 })
+
 
 let docMap = new Map()
 
