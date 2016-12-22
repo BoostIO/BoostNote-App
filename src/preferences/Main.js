@@ -36,8 +36,16 @@ class Main extends React.Component {
     }
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.config.get('theme') !== this.props.config.get('theme')) {
+      this.forceUpdate()
+    }
+  }
+
   render () {
-    return <ThemeProvider theme={themes.default}>
+    const { config } = this.props
+
+    return <ThemeProvider theme={config.get('theme') === 'dark' ? themes.dark : themes.default}>
       <Root>
         <TabNav />
         {this.getTab()}

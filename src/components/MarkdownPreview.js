@@ -20,12 +20,12 @@ function parseMode (mode) {
 
 function buildFontStyle (fontSize, fontFamily, codeBlockFontFamily) {
   return `
-    .markdown-body {
+   .markdown-body {
       font-size: ${fontSize}px;
       font-family: ${fontFamily}, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
-    .markdown-body code,
-    .markdown-body pre {
+   .markdown-body code,
+   .markdown-body pre {
       font-family: ${codeBlockFontFamily};
     }
   `
@@ -60,6 +60,70 @@ class MarkdownPreview extends React.Component {
         top: 0.4em;
         position: relative;
       }
+      body[theme="dark"].markdown-body {
+        background-color: #1E1E1E;
+      }
+      body[theme="dark"].markdown-body {
+        color: #EEE;
+      }
+
+      body[theme="dark"].markdown-body hr {
+        background-color: #444;
+      }
+
+      body[theme="dark"].markdown-body blockquote {
+        color: #999;
+        border-left: 0.25em solid #444;
+      }
+
+      body[theme="dark"].markdown-body kbd {
+        background-color: #fcfcfc;
+        border: solid 1px #444;
+        border-bottom-color: #555;
+        box-shadow: inset 0 -1px 0 #555;
+      }
+
+      body[theme="dark"].markdown-body h1 .octicon-link,
+      body[theme="dark"].markdown-body h2 .octicon-link,
+      body[theme="dark"].markdown-body h3 .octicon-link,
+      body[theme="dark"].markdown-body h4 .octicon-link,
+      body[theme="dark"].markdown-body h5 .octicon-link,
+      body[theme="dark"].markdown-body h6 .octicon-link {
+        color: #E0E0E0;
+      }
+
+      body[theme="dark"].markdown-body h1 {
+        border-color: #444;
+      }
+
+      body[theme="dark"].markdown-body h2 {
+        border-color: #444;
+      }
+
+      body[theme="dark"].markdown-body table tr {
+        background-color: #1e1e1e;
+        border-color: #444;
+      }
+      body[theme="dark"].markdown-body table tr:nth-child(2n) {
+        background-color: #2a2a2a;
+      }
+
+      body[theme="dark"].markdown-body img {
+        background-color: #1e1e1e;
+      }
+
+      body[theme="dark"].markdown-body code {
+        background-color: rgba(255,255,255,0.1);
+      }
+
+      body[theme="dark"].markdown-body pre>code {
+        background-color: transparent;
+      }
+
+      body[theme="dark"].markdown-body :checked+.radio-label {
+        border-color: #444;
+      }
+
     </style>
     <style id='font'>
       ${buildFontStyle(this.props.fontSize, this.props.fontFamily, this.props.codeBlockFontFamily)}
@@ -77,7 +141,7 @@ class MarkdownPreview extends React.Component {
   componentDidUpdate (prevProps) {
     // TODO: Rebounce render
     // TODO: Use web worker
-    if (prevProps.content !== this.props.content || prevProps.codeBlockTheme !== this.props.codeBlockTheme) {
+    if (prevProps.content !== this.props.content || prevProps.theme !== this.props.theme || prevProps.codeBlockTheme !== this.props.codeBlockTheme) {
       this.unmountContent()
       this.mountContent()
     }
@@ -103,13 +167,14 @@ class MarkdownPreview extends React.Component {
   }
 
   mountContent () {
-    const { content } = this.props
+    const { content, theme } = this.props
     console.time('mount')
     // Render markdown
 
     console.time('parse md')
     this.iframe.contentWindow.document.body.innerHTML = markdown.quickRender(content)
     console.timeEnd('parse md')
+    this.iframe.contentWindow.document.body.setAttribute('theme', theme)
 
     console.time('load theme')
     if (this.props.codeBlockTheme !== 'default') {

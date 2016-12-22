@@ -29,6 +29,7 @@ const Root = styled.div`
   padding: 4px 10px 0;
   font-size: 12px;
   cursor: pointer;
+  color: ${p => p.theme.color};
   &:hover {
     background-color: ${p => p.theme.buttonHoverColor};
   }
@@ -43,11 +44,11 @@ const Root = styled.div`
       ? p.theme.activeColor
       : p.theme.buttonActiveColor};
     color: ${p => p.isFocused
-      ? p.theme.inverseColor
+      ? p.theme.activeInverseColor
       : p.theme.color};
     .Octicon {
       fill: ${p => p.isFocused
-        ? p.theme.inverseColor
+        ? p.theme.activeInverseColor
         : p.theme.inactiveColor};
     }
     .empty {
@@ -109,7 +110,7 @@ const Root = styled.div`
     margin: 0 2px;
     border: ${p => p.theme.border};
     border-radius: 3px;
-    background-color: white;
+    background-color: ${p => p.theme.buttonBackgroundColor};
     color: ${p => p.theme.color};
   }
   .tags .count {
@@ -133,7 +134,7 @@ const Root = styled.div`
   }
   &.active .tags .count {
     color: ${p => p.isFocused
-      ? p.theme.inverseColor
+      ? p.theme.activeInverseColor
       : p.theme.inactiveColor};
     background-color: ${p => p.isFocused
       ? p.theme.activeColor

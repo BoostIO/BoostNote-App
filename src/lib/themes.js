@@ -4,8 +4,6 @@ const defaultUIInverseColor = '#FFF'
 const defaultUIActiveColor = '#5FACFF'
 const defaultBorderColor = '#DDD'
 const defaultUIBackgroundColor = '#F8F8F8'
-const defaultUIFontSize = '12px'
-const defaultUIFontFamily = 'Helvetica, Arial, sans-serif'
 const defaultBackgroundColor = '#FFF'
 
 // Button Color
@@ -16,23 +14,18 @@ const defaultTheme = {
   // Color
   color: defaultUIColor,
   inactiveColor: defaultUIInactiveColor,
-  inverseColor: defaultUIInverseColor,
   activeColor: defaultUIActiveColor,
+  activeInverseColor: defaultUIInverseColor,
   borderColor: defaultBorderColor,
   backgroundColor: defaultBackgroundColor,
-  navBackgroundColor: defaultUIBackgroundColor,
-  titleBarBackgroundColor: defaultUIBackgroundColor,
-
+  uiBackgroundColor: defaultUIBackgroundColor,
+  buttonBackgroundColor: defaultUIBackgroundColor,
   buttonHoverColor: defaultUIButtonHoverColor,
   buttonActiveColor: defaultUIButtonActiveColor,
 
   border: 'solid 1px ' + defaultBorderColor,
   activeBorderColor: defaultUIActiveColor,
   activeBorder: 'solid 1px ' + defaultUIActiveColor,
-
-  // Typo
-  fontSize: defaultUIFontSize,
-  fontFamily: defaultUIFontFamily,
 
   // UI
   input: `
@@ -41,8 +34,6 @@ const defaultTheme = {
     border-radius: 4px;
     background-color: #FCFCFC;
     color: ${defaultUIColor};
-    font-size: ${defaultUIFontSize};
-    font-family: ${defaultUIFontFamily};
     &:focus {
       border-color: ${defaultUIActiveColor};
     }
@@ -54,8 +45,6 @@ const defaultTheme = {
     border-radius: 4px;
     background-color: #FCFCFC;
     color: ${defaultUIColor};
-    font-size: ${defaultUIFontSize};
-    font-family: ${defaultUIFontFamily};
     &:hover {
       background-color: ${defaultUIButtonHoverColor};
     }
@@ -72,6 +61,70 @@ const defaultTheme = {
   `
 }
 
+const darkUIColor = '#EEE'
+const darkUIInactiveColor = '#999'
+const darkUIInverseColor = '#FFF'
+const darkUIActiveColor = '#5FACFF'
+const darkBorderColor = '#444'
+const darkUIBackgroundColor = '#2A2D2E'
+const darkBackgroundColor = '#1E1E1E'
+
+// Button Color
+const darkUIButtonHoverColor = '#444'
+const darkUIButtonActiveColor = '#555'
+
+const darkTheme = {
+  // Color
+  color: darkUIColor,
+  inactiveColor: darkUIInactiveColor,
+  activeColor: darkUIActiveColor,
+  activeInverseColor: darkUIInverseColor,
+  borderColor: darkBorderColor,
+  backgroundColor: darkBackgroundColor,
+  uiBackgroundColor: darkUIBackgroundColor,
+  buttonBackgroundColor: darkUIBackgroundColor,
+  buttonHoverColor: darkUIButtonHoverColor,
+  buttonActiveColor: darkUIButtonActiveColor,
+
+  border: 'solid 1px ' + darkBorderColor,
+  activeBorderColor: darkUIActiveColor,
+  activeBorder: 'solid 1px ' + darkUIActiveColor,
+
+  // UI
+  input: `
+    border: solid 1px ${darkBorderColor};
+    outline: none;
+    border-radius: 4px;
+    background-color: ${darkUIBackgroundColor};
+    color: ${darkUIColor};
+    &:focus {
+      border-color: ${darkUIActiveColor};
+    }
+  `,
+  button: `
+    border: solid 1px
+    ${darkBorderColor};
+    outline: none;
+    border-radius: 4px;
+    background-color: ${darkUIBackgroundColor};
+    color: ${darkUIColor};
+    &:hover {
+      background-color: ${darkUIButtonHoverColor};
+    }
+    &:active {
+      background-color: ${darkUIButtonActiveColor};
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .Octicon {
+      fill: ${darkUIColor};
+    }
+  `
+}
+
 export default {
-  default: defaultTheme
+  default: defaultTheme,
+  dark: darkTheme
 }

@@ -13,7 +13,7 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   min-width: ${NAV_MIN_WIDTH}px;
-  background-color: ${p => p.theme.navBackgroundColor};
+  background-color: ${p => p.theme.uiBackgroundColor};
   &:focus {
     outline: none;
   }
@@ -32,15 +32,17 @@ const BottomButton = styled.button`
   line-height: 30px;
   margin: 0;
   padding: 0 10px;
-  background-color: transparent;
+  background-color: ${p => p.theme.buttonBackgroundColor};
   border: none;
   outline: none;
   cursor: pointer;
   color: ${p => p.theme.color};
   text-decoration: none;
   text-align: left;
-  font-size: ${p => p.theme.fontSize};
-  font-family: ${p => p.theme.fontFamily};
+  font-size: 12px;
+  .Octicon {
+    fill: ${p => p.theme.color};
+  }
   &:hover {
     background-color: ${p => p.theme.buttonHoverColor};
   }

@@ -21,6 +21,7 @@ const Root = styled.div`
   right: 0;
   top: 0;
   bottom: 0;
+  background-color: ${p => p.theme.backgroundColor};
 `
 
 const Left = styled.div`
@@ -41,6 +42,7 @@ const LeftMenuSortSelect = styled.div`
   display: flex;
   line-height: 20px;
   color: ${p => p.theme.inactiveColor};
+  background: ${p => p.theme.buttonBackgroundColor};
   select {
     width: 100%;
     font-size: 10px;

@@ -24,6 +24,7 @@ const Root = styled.div`
     padding: 0 6px;
     border-radius: 4px;
     cursor: default;
+    color: ${p => p.theme.color};
     &:hover {
       background-color: ${p => p.theme.buttonHoverColor};
     }
@@ -36,8 +37,10 @@ const Root = styled.div`
     width: 100px;
     border: none;
     border-bottom: ${p => p.theme.border};
+    color: ${p => p.theme.color};
     outline: none;
     font-size: 12px;
+    background-color: transparent;
     &:focus {
       border-bottom: ${p => p.theme.activeBorder};
     }

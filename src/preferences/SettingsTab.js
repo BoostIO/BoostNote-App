@@ -17,6 +17,8 @@ const Root = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: ${p => p.theme.backgroundColor};
+  color: ${p => p.theme.color};
   &>.body {
     overflow-y: auto;
     flex: 1;
@@ -52,6 +54,7 @@ const Root = styled.div`
     }
     .input select, .input input {
       border: ${p => p.theme.border};
+      color: ${p => p.theme.color};
       border-radius: 4px;
       height: 24px;
       width: 60%;
@@ -68,6 +71,7 @@ const Root = styled.div`
     height: 40px;
     padding: 5px;
     border-top: ${p => p.theme.border};
+    background-color: ${p => p.theme.uiBackgroundColor};
     box-sizing: border-box;
     display: flex;
     .message {
@@ -90,12 +94,12 @@ const Root = styled.div`
       min-width: 80px;
       &.submit {
         background-color: ${p => p.theme.activeColor};
-        color: ${p => p.theme.inverseColor};
+        color: ${p => p.theme.activeInverseColor};
         border: none;
         border-radius: 4px;
         outline: none;
         .Octicon {
-          fill: ${p => p.theme.inverseColor};
+          fill: currentColor;
         }
       }
     }

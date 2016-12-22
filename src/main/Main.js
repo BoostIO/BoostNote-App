@@ -127,6 +127,12 @@ class Main extends React.Component {
     ipc.unmount()
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.config.get('theme') !== this.props.config.get('theme')) {
+      this.forceUpdate()
+    }
+  }
+
   getChildContext () {
     return {
       status: this.props.status,
@@ -148,9 +154,9 @@ class Main extends React.Component {
   }
 
   render () {
-    let { storageMap } = this.props
+    const { storageMap, config } = this.props
     return (
-      <ThemeProvider theme={themes.default}>
+      <ThemeProvider theme={config.get('theme') === 'dark' ? themes.dark : themes.default}>
         <Root>
 
           <TitleBar />

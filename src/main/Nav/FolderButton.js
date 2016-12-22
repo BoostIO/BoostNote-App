@@ -21,15 +21,17 @@ const Button = styled(LinkButton)`
   line-height: 24px;
   margin: 0;
   padding: 0 10px;
-  background-color: transparent;
+  background-color: ${p => p.theme.buttonBackgroundColor};
   border: none;
   outline: none;
   cursor: pointer;
   color: ${p => p.theme.color};
   text-decoration: none;
   text-align: left;
-  font-size: ${p => p.theme.fontSize};
-  font-family: ${p => p.theme.fontFamily};
+  font-size: 12px;
+  .Octicon {
+    fill: ${p => p.theme.color};
+  }
   &:hover {
     background-color: ${p => p.theme.buttonHoverColor};
   }
@@ -42,11 +44,11 @@ const Button = styled(LinkButton)`
       ? p.theme.activeColor
       : p.theme.buttonActiveColor};
     color: ${p => p.isFocused
-      ? p.theme.inverseColor
+      ? p.theme.activeInverseColor
       : p.theme.color};
     .Octicon {
       fill: ${p => p.isFocused
-        ? p.theme.inverseColor
+        ? p.theme.activeInverseColor
         : p.theme.color};
     }
   }

@@ -8,7 +8,7 @@ const Root = styled.div`
   justify-content: center;
   height: 60px;
   border-bottom: ${p => p.theme.border};
-  background-color: ${p => p.theme.navBackgroundColor};
+  background-color: ${p => p.theme.uiBackgroundColor};
   .tab {
     display: block;
     width: 90px;
@@ -25,10 +25,12 @@ const Root = styled.div`
     border: none;
     outline: none;
     background-color: transparent;
+    color: ${p => p.theme.color};
     .Octicon {
       margin: 0 auto;
       font-size: 30px;
       width: 100%;
+      fill: ${p => p.theme.color};
     }
     .label {
       width: 100%;
@@ -41,9 +43,9 @@ const Root = styled.div`
     }
     &.active {
       background-color: ${p => p.theme.activeColor};
-      color: ${p => p.theme.inverseColor};
+      color: ${p => p.theme.activeInverseColor};
       .Octicon {
-        fill: ${p => p.theme.inverseColor};
+        fill: ${p => p.theme.activeInverseColor};
       }
     }
   }
