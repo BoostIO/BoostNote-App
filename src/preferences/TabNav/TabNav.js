@@ -57,11 +57,11 @@ const tabs = [
     path: 'settings',
     icon: 'settings'
   },
-  {
-    label: 'Keybindings',
-    path: 'keybindings',
-    icon: 'keyboard'
-  },
+  // {
+  //   label: 'Keybindings',
+  //   path: 'keybindings',
+  //   icon: 'keyboard'
+  // },
   {
     label: 'About',
     path: 'about',

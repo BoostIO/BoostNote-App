@@ -21,13 +21,15 @@ const Root = styled.div`
 class Main extends React.Component {
   getTab () {
     const { router } = this.context
-    const { config } = this.props
+    const { config, keymap } = this.props
 
     switch (router.params.tab) {
       case 'about':
         return <AboutTab />
       case 'keybindings':
-        return <KeybindingsTab />
+        return <KeybindingsTab
+          keymap={keymap}
+        />
       case 'settings':
       default:
         return <SettingsTab
