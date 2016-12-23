@@ -5,24 +5,14 @@ import { TitleBar as MacTitleBar } from 'react-desktop/macOs'
 import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
-import StorageManager from './lib/StorageManager'
+import StorageManager from '../lib/StorageManager'
+import SearchInput from './SearchInput'
 
 const { remote } = require('electron')
 
 const OSX = global.process.platform === 'darwin'
 const WIN = global.process.platform === 'win32'
 // const LINUX = global.process.platform === 'linux'
-
-const SearchInput = styled.input`
-  ${p => p.theme.input}
-  -webkit-app-region: no-drag;
-  -webkit-user-select: none;
-  margin: 0 2.5px;
-  height: 26px;
-  padding: 0 10px;
-  box-sizing: border-box;
-  margin-left: auto;
-`
 
 const Button = styled.button`
   ${p => p.theme.button}
@@ -43,6 +33,9 @@ const ToolBar = styled.div`
   justify-content: center;
   padding-right: ${OSX ? 0 : 10}px;
   padding-left: 140px;
+  .left {
+    flex: 1;
+  }
 `
 
 const BordedTitleBar = styled(OSX ? MacTitleBar : WindowsTitleBar)`
@@ -75,12 +68,6 @@ class TitleBar extends React.Component {
     this.state = {
       isFullscreen: false,
       search: ''
-    }
-
-    this.handleChange = e => {
-      this.setState({
-        search: e.target.value
-      })
     }
 
     this.handleCloseClick = e => {
@@ -166,17 +153,6 @@ class TitleBar extends React.Component {
     e.preventDefault()
   }
 
-  handleSearchInputMouseDown = e => {
-    e.stopPropagation()
-  }
-
-  handleSearchInputKeyDown = e => {
-    switch (e.keyCode) {
-      case 27:
-        window.dispatchEvent(new window.CustomEvent('main:focus-list'))
-    }
-  }
-
   handlePreferencesButtonClick = e => {
     this.openPreferences()
   }
@@ -247,6 +223,8 @@ class TitleBar extends React.Component {
   }
 
   render () {
+    const { search, onSearchChange } = this.props
+
     return (
       <Root
         onMouseDown={this.handleMouseDown}
@@ -265,30 +243,30 @@ class TitleBar extends React.Component {
           <ToolBar
             innerRef={c => (this.toolbar = c)}
           >
-            <Button onClick={this.handleDeleteButtonClick}
-              title='Delete'>
-              <Octicon icon='trashcan' />
-            </Button>
-            <Button onClick={this.handleNewButtonClick}
-              title='Create a note'
-            >
-              <Octicon icon='plus' />
-            </Button>
-            <SearchInput
-              innerRef={c => (this.search = c)}
-              placeholder='Search...'
-              value={this.state.search}
-              onChange={this.handleChange}
-              title='Quickly find notes'
-              onMouseDown={this.handleSearchInputMouseDown}
-              onKeyDown={this.handleSearchInputKeyDown}
-            />
-            <Button
-              title='Preferences'
-              onClick={this.handlePreferencesButtonClick}
-            >
-              <Octicon icon='settings' />
-            </Button>
+            <div className='left'>
+              <Button onClick={this.handleDeleteButtonClick}
+                title='Delete'>
+                <Octicon icon='trashcan' />
+              </Button>
+              <Button onClick={this.handleNewButtonClick}
+                title='Create a note'
+              >
+                <Octicon icon='plus' />
+              </Button>
+            </div>
+            <div className='right'>
+              <SearchInput
+                ref={c => (this.search = c)}
+                onChange={onSearchChange}
+                value={search}
+              />
+              <Button
+                title='Preferences'
+                onClick={this.handlePreferencesButtonClick}
+              >
+                <Octicon icon='settings' />
+              </Button>
+            </div>
           </ToolBar>
         </AttributedTitleBar>
       </Root>

@@ -8,6 +8,7 @@ import Nav from './Nav/Nav'
 import StorageManager from './lib/StorageManager'
 import { NAV_MIN_WIDTH } from 'lib/consts'
 import ipc from './lib/ipc'
+import NoteList from './NoteList'
 
 const { remote } = require('electron')
 
@@ -57,6 +58,7 @@ class Main extends React.Component {
 
     this.state = {
       navWidth: props.status.get('navWidth'),
+      search: '',
       isSliderActive: false
     }
 
@@ -153,13 +155,24 @@ class Main extends React.Component {
     remote.getCurrentWindow().reload()
   }
 
+  handleSearchChange = newValue => {
+    this.setState({
+      search: newValue
+    })
+  }
+
   render () {
-    const { storageMap, config } = this.props
+    const { storageMap, config, status } = this.props
     return (
       <ThemeProvider theme={config.get('theme') === 'dark' ? themes.dark : themes.default}>
         <Root>
 
-          <TitleBar />
+          <TitleBar
+            storageMap={storageMap}
+            status={status}
+            onSearchChange={this.handleSearchChange}
+            search={this.state.search}
+          />
 
           <Body>
             <Nav storageMap={storageMap} width={this.state.navWidth} />
@@ -174,7 +187,10 @@ class Main extends React.Component {
             </Slider>
 
             <Content>
-              {this.props.children}
+              <NoteList
+                {...this.props}
+                search={this.state.search}
+              />
             </Content>
           </Body>
 

@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import styled from 'styled-components'
 import { Map } from 'immutable'
@@ -363,7 +362,7 @@ class NoteList extends React.Component {
   }
 
   getNotes () {
-    const { storageMap, params } = this.props
+    const { storageMap, params, search } = this.props
     let notes = new Map()
 
     if (params.folderName != null) {
@@ -394,7 +393,14 @@ class NoteList extends React.Component {
       notes = new Map()
     }
 
-    return notes.sort(this.getSortMethod())
+    return search.split(' ')
+      .map(keyword => new RegExp(_.escapeRegExp(keyword), 'i'))
+      .reduce((_notes, keyword) => {
+        return _notes.filter(note => {
+          return note.get('content').match(keyword)
+        })
+      }, notes)
+      .sort(this.getSortMethod())
   }
 
   move (offset = 1) {
@@ -542,4 +548,4 @@ NoteList.contextTypes = {
   })
 }
 
-export default connect(x => x)(NoteList)
+export default NoteList
