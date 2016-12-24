@@ -74,12 +74,15 @@ class CodeEditor extends React.Component {
 
     this.codemirror.on('blur', this.handleBlur)
     this.codemirror.on('change', this.handleChange)
+    this.codemirror.on('keyHandled', this.handleKeyHandled)
+
     docMap = docMap.set(docKey, this.codemirror.getDoc())
   }
 
   componentWillUnmount () {
     this.codemirror.off('blur', this.handleBlur)
     this.codemirror.off('change', this.handleChange)
+    this.codemirror.off('keyHandled', this.handleKeyHandled)
 
     // Unlink document by force
     this.codemirror.swapDoc(new CodeMirror.Doc(''))
@@ -146,6 +149,13 @@ class CodeEditor extends React.Component {
   handleChange = e => {
     this.value = this.codemirror.getValue()
     if (this.props.onChange != null) this.props.onChange()
+  }
+
+  handleKeyHandled = (cm, name, e) => {
+    if (e.keyCode === 27 && cm.state.overlays.length > 0) {
+      e.stopPropagation()
+      cm.execCommand('clearSearch')
+    }
   }
 
   focus () {

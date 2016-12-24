@@ -15,7 +15,7 @@ macOS               | Windows/Linux        | Command via ipc or Action
 **Cmd - N**         | **Ctrl - N**         | `title:new-note` (ipc `new-note`)
 **Cmd - Shift - N** | **Ctrl - Shift - N** | `nav:new-folder` (ipc `new-folder`)
 **Backspace**       | **Delete**           | `nav:delete` and `detail:delete` (ipc `delete`)
-**Cmd - Alt - F**   | **Ctrl - Alt - F**   | `title:focus-search` (ipc `focus-search`)
+**Cmd - Shift - F** | **Ctrl - Shift - F** | `title:focus-search` (ipc `focus-search`)
 **Cmd - F**         | **Ctrl - F**         | `detail:find` (ipc `find`)
 **Cmd - W**         | **Ctrl - W**         | Hide window
 **Cmd - Q**         | **Ctrl - Q**         | Quit app

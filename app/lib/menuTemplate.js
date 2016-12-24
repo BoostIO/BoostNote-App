@@ -83,7 +83,7 @@ const template = [
         submenu: [
           {
             label: 'Note List Search...',
-            accelerator: 'CmdOrCtrl + Alt + F',
+            accelerator: 'CmdOrCtrl + Shift + F',
             click: e => {
               if (global.windows.main) {
                 global.windows.main.webContents.send('focus-search')
