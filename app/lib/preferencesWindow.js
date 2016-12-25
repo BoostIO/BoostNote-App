@@ -21,6 +21,10 @@ preferencesWindow.on('close', e => {
   preferencesWindow.hide()
 })
 
+preferencesWindow.on('blur', e => {
+  preferencesWindow.hide()
+})
+
 app.on('before-quit', e => {
   preferencesWindow.removeAllListeners()
 })
