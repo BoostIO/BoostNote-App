@@ -16,7 +16,7 @@ Open another terminal and Run test runner
 npm test:run
 ```
 
-Then, runner will track changes from `**.spec.js` files in `src` directory and its dependencies and run the needed test.
+Then, runner will track changes from `**.spec.js` files in `specs` directory and its dependencies and run the needed test.
 
 ## `**.spec.js`
 
@@ -24,7 +24,7 @@ Spec file should export test method to `default`.
 
 ```js
 import assert from 'assert'
-import StorageManager from './StorageManager'
+import StorageManager from 'main/lib/StorageManager'
 
 export default t => {
   assert.ok(true)

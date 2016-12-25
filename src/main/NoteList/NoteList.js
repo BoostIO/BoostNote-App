@@ -94,6 +94,28 @@ const Right = styled.div`
   position: relative;
   outline: none;
   ${p => p.ignore ? 'pointer-events: none;' : ''}
+  &>.empty {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .Octicon {
+      fill: currentColor;
+    }
+    &>.message {
+      color: ${p => p.theme.inactiveColor};
+      font-size: 36px;
+      text-align: center;
+      padding: 0 15px 15px;
+    }
+    &>.control button {
+      ${p => p.theme.button}
+      height: 40px;
+      padding: 0 15px;
+      font-size: 24px;
+    }
+  }
 `
 
 class NoteList extends React.Component {
@@ -330,6 +352,10 @@ class NoteList extends React.Component {
     }
   }
 
+  handleCreateNoteClick = e => {
+    window.dispatchEvent(new window.CustomEvent('title:new-note'))
+  }
+
   setRefreshTimer () {
     this.invalidateRefreshTimer()
     this.refreshTimer = window.setTimeout(() => {
@@ -523,7 +549,17 @@ class NoteList extends React.Component {
               config={config}
             />
             // TODO: set some styles to Empty page
-            : <div>No note.</div>
+            : <div className='empty'>
+              <div className='message'>
+                <Octicon icon='telescope' /><br />
+                No notes found!
+              </div>
+              <div className='control'>
+                <button onClick={this.handleCreateNoteClick}>
+                  <Octicon icon='plus' /> Create a new note
+                </button>
+              </div>
+            </div>
           }
         </Right>
 
