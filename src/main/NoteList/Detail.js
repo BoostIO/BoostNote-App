@@ -165,7 +165,7 @@ class Detail extends React.Component {
   }
 
   render () {
-    const { note, noteKey, config } = this.props
+    const { note, noteKey, config, status } = this.props
     const { router } = this.context
 
     return (
@@ -185,6 +185,7 @@ class Detail extends React.Component {
           value={this.state.content}
           onChange={this.handleContentChange}
           docKey={`${router.params.storageName}/${noteKey}`}
+          mode={status.get('editorMode')}
           theme={config.get('theme')}
           fontSize={config.get('previewFontSize')}
           fontFamily={config.get('previewFontFamily')}

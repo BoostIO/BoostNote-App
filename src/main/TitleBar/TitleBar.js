@@ -22,6 +22,13 @@ const Button = styled.button`
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
   margin: 0 2.5px;
+  ${p => p.active
+    ? 'color: ' + p.theme.activeColor + ';'
+    : ''
+  }
+  .Octicon {
+    fill: currentColor;
+  }
 `
 
 const ToolBar = styled.div`
@@ -157,6 +164,18 @@ class TitleBar extends React.Component {
     this.openPreferences()
   }
 
+  handleToggleEditorModeButtonClick = e => {
+    const { store } = this.context
+    const { status } = this.props
+
+    store.dispatch({
+      type: 'UPDATE_STATUS',
+      payload: {
+        status: status.set('editorMode', status.get('editorMode') === 'SINGLE' ? 'TWO_PANE' : 'SINGLE')
+      }
+    })
+  }
+
   openPreferences () {
     if (remote.getGlobal('windows').preferences.isVisible()) {
       remote.getGlobal('windows').preferences.hide()
@@ -223,7 +242,7 @@ class TitleBar extends React.Component {
   }
 
   render () {
-    const { search, onSearchChange } = this.props
+    const { search, onSearchChange, status } = this.props
 
     return (
       <Root
@@ -255,6 +274,13 @@ class TitleBar extends React.Component {
               </Button>
             </div>
             <div className='right'>
+              <Button
+                title='Toggle Editor Mode'
+                active={status.get('editorMode') === 'TWO_PANE'}
+                onClick={this.handleToggleEditorModeButtonClick}
+              >
+                <Octicon icon='book' />
+              </Button>
               <SearchInput
                 ref={c => (this.search = c)}
                 onChange={onSearchChange}

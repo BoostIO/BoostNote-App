@@ -74,6 +74,7 @@ class CodeEditor extends React.Component {
     this.codemirror.on('blur', this.handleBlur)
     this.codemirror.on('change', this.handleChange)
     this.codemirror.on('keyHandled', this.handleKeyHandled)
+    this.codemirror.on('scroll', this.handleScroll)
 
     docMap = docMap.set(docKey, this.codemirror.getDoc())
   }
@@ -82,6 +83,7 @@ class CodeEditor extends React.Component {
     this.codemirror.off('blur', this.handleBlur)
     this.codemirror.off('change', this.handleChange)
     this.codemirror.off('keyHandled', this.handleKeyHandled)
+    this.codemirror.off('scroll', this.handleScroll)
 
     // Unlink document by force
     this.codemirror.swapDoc(new CodeMirror.Doc(''))
@@ -157,6 +159,22 @@ class CodeEditor extends React.Component {
     }
   }
 
+  handleScroll = cm => {
+    const { onScroll } = this.props
+
+    if (this.shouldIgnoreScroll) {
+      this.shouldIgnoreScroll = false
+      return
+    }
+
+    if (onScroll != null) {
+      const top = cm.getScrollInfo().top
+      const line = cm.coordsChar({left: 0, top}, 'local').line
+
+      this.props.onScroll(line)
+    }
+  }
+
   focus () {
     this.codemirror.focus()
   }
@@ -167,6 +185,11 @@ class CodeEditor extends React.Component {
 
     this.codemirror.setOption('mode', syntax.mime)
     CodeMirror.autoLoadMode(this.codemirror, syntax.mode)
+  }
+
+  scrollTo (line) {
+    this.shouldIgnoreScroll = true
+    this.codemirror.scrollTo(null, this.codemirror.charCoords({line: line - 1, ch: 0}, 'local').top - 30)
   }
 
   render () {

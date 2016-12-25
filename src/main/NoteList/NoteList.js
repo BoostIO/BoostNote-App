@@ -160,7 +160,8 @@ class NoteList extends React.Component {
       isSliderActive: false,
       listWidth: width
     }, () => {
-      const { store, status } = this.context
+      const { store } = this.context
+      const { status } = this.props
 
       store.dispatch({
         type: 'UPDATE_STATUS',
@@ -206,7 +207,7 @@ class NoteList extends React.Component {
 
   handleLeftKeyDown = e => {
     const keyName = CodeMirror.keyName(e)
-    const { keymap } = this.context
+    const { keymap } = this.props
 
     if (keymap.hasIn(['list', keyName])) {
       e.preventDefault()
@@ -299,7 +300,8 @@ class NoteList extends React.Component {
     this.setState({
       listSort
     }, () => {
-      const { store, status } = this.context
+      const { store } = this.context
+      const { status } = this.props
 
       store.dispatch({
         type: 'UPDATE_STATUS',
@@ -315,7 +317,8 @@ class NoteList extends React.Component {
     this.setState({
       listStyle
     }, () => {
-      const { store, status } = this.context
+      const { store } = this.context
+      const { status } = this.props
 
       store.dispatch({
         type: 'UPDATE_STATUS',
@@ -331,7 +334,8 @@ class NoteList extends React.Component {
     this.setState({
       listStyle
     }, () => {
-      const { store, status } = this.context
+      const { store } = this.context
+      const { status } = this.props
 
       store.dispatch({
         type: 'UPDATE_STATUS',
@@ -344,7 +348,7 @@ class NoteList extends React.Component {
 
   handleRightKeyDown = e => {
     const keyName = CodeMirror.keyName(e)
-    const { keymap } = this.context
+    const { keymap } = this.props
 
     if (keymap.hasIn(['detail', keyName])) {
       e.preventDefault()
@@ -462,7 +466,7 @@ class NoteList extends React.Component {
   }
 
   render () {
-    const { location, config } = this.props
+    const { location, config, status } = this.props
     const noteListMap = this.noteListMap = this.getNotes()
 
     const noteList = noteListMap
@@ -547,6 +551,7 @@ class NoteList extends React.Component {
               noteKey={location.query.key}
               note={activeNote}
               config={config}
+              status={status}
             />
             : <div className='empty'>
               <div className='message'>
@@ -576,10 +581,6 @@ NoteList.contextTypes = {
   }),
   store: PropTypes.shape({
     dispatch: PropTypes.func
-  }),
-  status: PropTypes.instanceOf(Map),
-  keymap: ImmutablePropTypes.mapContains({
-    list: ImmutablePropTypes.map
   })
 }
 

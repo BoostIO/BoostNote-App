@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import styled, { ThemeProvider } from 'styled-components'
 import TitleBar from './TitleBar'
@@ -135,14 +134,6 @@ class Main extends React.Component {
     }
   }
 
-  getChildContext () {
-    return {
-      status: this.props.status,
-      keymap: this.props.keymap,
-      config: this.props.config
-    }
-  }
-
   handleHide = e => {
     remote.getCurrentWindow().hide()
   }
@@ -207,12 +198,6 @@ Main.contextTypes = {
   store: PropTypes.shape({
     dispatch: PropTypes.func
   })
-}
-
-Main.childContextTypes = {
-  status: ImmutablePropTypes.map,
-  keymap: ImmutablePropTypes.map,
-  config: ImmutablePropTypes.map
 }
 
 export default connect(x => x)(Main)

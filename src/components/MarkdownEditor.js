@@ -3,25 +3,32 @@ import styled from 'styled-components'
 import CodeEditor from './CodeEditor'
 import MarkdownPreview from './MarkdownPreview'
 
+const SCROLL_DISPATCH_DELAY = 500
+
 const WrappedCodeEditor = styled(CodeEditor)`
   position: absolute;
-  overflow-y: auto;
+  overflow: hidden;
   top: 0;
   left: 0;
-  right: 0;
+  ${p => p.editorMode === 'TWO_PANE'
+    ? 'width: 50%;'
+    : 'right: 0;'
+  }
   bottom: 0;
 `
 
 const WrappedMarkdownPreview = styled(MarkdownPreview)`
   position: absolute;
-  overflow-y: auto;
+  overflow: hidden;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
   border: none;
   height: 100%;
-  width: 100%;
+  ${p => p.editorMode === 'TWO_PANE'
+    ? 'left: 50%; width: 50%;'
+    : 'left: 0; width: 100%;'
+  }
   min-height: 100%;
   background-color: white;
 `
@@ -43,6 +50,16 @@ class MarkdownEditor extends React.Component {
     this.value = this.props.value
   }
 
+  componentWillUnmount () {
+    window.clearTimeout(this.scrollQueue)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.docKey !== nextProps.docKey) {
+      window.clearTimeout(this.scrollQueue)
+    }
+  }
+
   handlePreviewMouseDown = e => {
     this.lastPreviewMouseDown = Date.now()
   }
@@ -53,6 +70,11 @@ class MarkdownEditor extends React.Component {
     if (Date.now() - this.lastPreviewMouseDown < 500) {
       this.focus()
     }
+  }
+
+  handlePreviewScroll = line => {
+    console.log('preview scroll detected')
+    this.queueEditorScrolling(line)
   }
 
   handleEditorBlur = e => {
@@ -66,6 +88,40 @@ class MarkdownEditor extends React.Component {
     if (this.props.onChange != null) this.props.onChange(e)
   }
 
+  handleEditorScroll = line => {
+    console.log('editor scroll detected')
+    this.queuePreviewScrolling(line)
+  }
+
+  scrollTo (line) {
+    this.scrollEditorTo(line)
+    this.scrollPreviewTo(line)
+  }
+
+  queueEditorScrolling (line) {
+    window.clearTimeout(this.scrollQueue)
+    this.scrollQueue = window.setTimeout(() => {
+      this.scrollEditorTo(line)
+    }, SCROLL_DISPATCH_DELAY)
+  }
+
+  queuePreviewScrolling (line) {
+    window.clearTimeout(this.scrollQueue)
+    this.scrollQueue = window.setTimeout(() => {
+      this.scrollPreviewTo(line)
+    }, SCROLL_DISPATCH_DELAY)
+  }
+
+  scrollEditorTo (line) {
+    console.log('done: scroll editor to ', line)
+    this.editor.scrollTo(line)
+  }
+
+  scrollPreviewTo (line) {
+    console.log('done: scroll preview to ', line)
+    this.preview.scrollTo(line)
+  }
+
   focus () {
     this.setState({
       mode: EDIT_MODE
@@ -75,7 +131,7 @@ class MarkdownEditor extends React.Component {
   }
 
   render () {
-    const { className, style, value, docKey,
+    const { className, style, value, docKey, mode,
       theme, fontSize, fontFamily, codeBlockTheme, codeBlockFontFamily,
       editorFontSize, editorFontFamily, editorTheme, indentStyle, indentSize } = this.props
 
@@ -89,8 +145,10 @@ class MarkdownEditor extends React.Component {
           style={{
             zIndex: this.state.mode === PREVIEW_MODE ? 2 : 1
           }}
+          editorMode={mode}
           onMouseUp={this.handlePreviewMouseUp}
           onMouseDown={this.handlePreviewMouseDown}
+          onScroll={this.handlePreviewScroll}
           content={value}
           theme={theme}
           fontSize={fontSize}
@@ -103,8 +161,10 @@ class MarkdownEditor extends React.Component {
           style={{
             zIndex: this.state.mode === EDIT_MODE ? 2 : 1
           }}
+          editorMode={mode}
           onBlur={this.handleEditorBlur}
           onChange={this.handleEditorChange}
+          onScroll={this.handleEditorScroll}
           value={value}
           docKey={docKey}
           mode={'GitHub Flavored Markdown'}

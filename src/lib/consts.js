@@ -37,7 +37,9 @@ export const DEFAULT_STATUS = Map({
   // NORMAL, COMPACT
   noteListStyle: 'NORMAL',
   // UPDATED_AT, CREATED_AT, ALPHABET
-  noteListSort: 'UPDATED_AT'
+  noteListSort: 'UPDATED_AT',
+  // SINGLE, TWO_PANE
+  editorMode: 'SINGLE'
 })
 
 export const DEFAULT_KEYMAP = Immutable.fromJS({

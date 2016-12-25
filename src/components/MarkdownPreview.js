@@ -48,23 +48,35 @@ class MarkdownPreview extends React.Component {
     <link rel="stylesheet" type="text/css" id="codeMirrorTheme">
     <link rel="stylesheet" type="text/css" href="../../node_modules/katex/dist/katex.min.css">
     <style>
+      body {
+        height: 100%;
+      }
+
+      // Code Block
       .CodeMirror {
         height: inherit;
       }
+
+      // Katex
       .katex {
         text-align: center;
       }
+
       .katex .frac-line {
         top: 0.9em;
         position: relative;
       }
+
       .katex .reset-textstyle.scriptstyle {
         top: 0.4em;
         position: relative;
       }
+
+      // Dark Theme
       body[theme="dark"].markdown-body {
         background-color: #1E1E1E;
       }
+
       body[theme="dark"].markdown-body {
         color: #EEE;
       }
@@ -125,7 +137,6 @@ class MarkdownPreview extends React.Component {
       body[theme="dark"].markdown-body :checked+.radio-label {
         border-color: #444;
       }
-
     </style>
     <style id='font'>
       ${buildFontStyle(this.props.fontSize, this.props.fontFamily, this.props.codeBlockFontFamily)}
@@ -133,10 +144,15 @@ class MarkdownPreview extends React.Component {
     `
     this.iframe.contentWindow.document.body.className = 'markdown-body'
 
+
+    this.iframe.contentWindow.document.addEventListener('scroll', this.handleContentScroll)
+
     this.mountContent()
   }
 
   componentWillUnmount () {
+    this.iframe.contentWindow.document.removeEventListener('scroll', this.handleContentScroll)
+
     this.unmountContent()
   }
 
@@ -162,6 +178,25 @@ class MarkdownPreview extends React.Component {
 
   handleContentMouseDown = e => {
     this.props.onMouseDown != null && this.props.onMouseDown()
+  }
+
+  handleContentScroll = e => {
+    const { onScroll } = this.props
+
+    if (this.shouldIgnoreScroll) {
+      this.shouldIgnoreScroll = false
+      return
+    }
+
+    if (onScroll != null) {
+      _.some(this.iframe.contentWindow.document.body.children, child => {
+        if (this.iframe.contentWindow.document.body.scrollTop < child.offsetTop) {
+          onScroll(parseInt(child.getAttribute('line'), 10))
+          return true
+        }
+        return false
+      })
+    }
   }
 
   handleAnchorClick = e => {
@@ -300,6 +335,22 @@ class MarkdownPreview extends React.Component {
       target = target.parentNode
     }
     return null
+  }
+
+  scrollTo (line) {
+    this.shouldIgnoreScroll = true
+    const shouldScrollToBottom = !_.some(this.iframe.contentWindow.document.body.children, child => {
+      const currentLine = parseInt(child.getAttribute('line'), 10)
+      if (line < currentLine) {
+        this.iframe.contentWindow.document.body.scrollTop = (child.offsetTop - 30)
+        return true
+      }
+      return false
+    })
+    if (shouldScrollToBottom) {
+      console.log('nothing matched')
+      this.iframe.contentWindow.document.body.scrollTop = this.iframe.contentWindow.document.body.scrollHeight - this.iframe.contentWindow.document.body.offsetHeight
+    }
   }
 
   render () {

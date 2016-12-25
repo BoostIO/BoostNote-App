@@ -33,7 +33,7 @@ module.exports = processor => {
     file.data.title = stripNode(node.children[targetIndex])
     file.data.preview = stripNode(node.children[targetIndex + 1])
 
-    // If preview content empty, try to use next block.
+    // If preview content is still empty, try to use next block.
     let count = targetIndex + 1
     while ((file.data.preview === '' || file.data.preview === '\n') && count < node.children.length) {
       file.data.preview = stripNode(node.children[count + 1])
