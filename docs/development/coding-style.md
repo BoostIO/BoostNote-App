@@ -21,7 +21,7 @@ If the element is wrapped by styled components, it is needed to use `innerRef`.
 Also, expressions of the callbacks should be like `c => (this.someName = c)` to prevent the error of eslint. `c` stands for `component`
 
 ```jsx
-
+import { MarkdownEditor } from 'components'
 const Root = styled.div`
   ...
 `

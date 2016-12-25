@@ -35,14 +35,15 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 
 ## Development
 
-- [Build](./docs/build.md)
-- [Coding Conventions](./docs/coding-conventions.md)
-- [App Context](./docs/context.md)
-- [Config](./docs/context.md)
-- [Database](./docs/database.md)
-- [Redux Store](./docs/redux-store.md)
-- [Keymap and Commands](./docs/keymap-and-commands.md)
-- [Testing](./docs/testing.md)
+- [Build](./docs/development/build.md)
+- [Coding Style](./docs/development/coding-style.md)
+- [Modules](./docs/development/modules.md)
+- [Database](./docs/development/database.md)
+- [Redux Store](./docs/development/redux-store.md)
+- [Config](./docs/development/config.md)
+- [Ipc](./docs/development/ipc.md)
+- [Keymap and Commands](./docs/development/keymap-and-commands.md)
+- [Testing](./docs/development/testing.md)
 
 ## License
 

@@ -29,6 +29,4 @@ update-config | Config Object | Apply the updated config
 
 ### Preferences
 
-Name      | Payload       | Action
-----------|---------------|------------------------
-open      |               | Open Preferences window
+Preferences window doesn't take any ipc event for now.
