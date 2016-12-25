@@ -11,9 +11,10 @@ const WrappedCodeEditor = styled(CodeEditor)`
   top: 0;
   left: 0;
   ${p => p.editorMode === 'TWO_PANE'
-    ? 'width: 50%;'
+    ? 'width: 50%;border-right: ' + p.theme.border + ';'
     : 'right: 0;'
   }
+  box-sizing:border-box;
   bottom: 0;
 `
 
@@ -26,7 +27,7 @@ const WrappedMarkdownPreview = styled(MarkdownPreview)`
   border: none;
   height: 100%;
   ${p => p.editorMode === 'TWO_PANE'
-    ? 'left: 50%; width: 50%;'
+    ? 'left: 50%; width: 50%;border-top: ' + p.theme.border + ';'
     : 'left: 0; width: 100%;'
   }
   min-height: 100%;

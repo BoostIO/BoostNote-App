@@ -37,7 +37,7 @@ const StatusBarRight = styled.div`
 const BodyEditor = styled(MarkdownEditor)`
   position: relative;
   flex: 1;
-  .CodeMirror {
+  .CodeEditor {
     border-top: ${p => p.theme.border};
   }
 `
