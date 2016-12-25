@@ -20,7 +20,6 @@ CODEMIRROR_THEMES.forEach(theme => {
   linkEl.href = '../../node_modules/codemirror/theme/' + theme.value + '.css'
 })
 
-
 let docMap = new Map()
 
 const Root = styled.div`

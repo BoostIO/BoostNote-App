@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { routerShape } from 'react-router'
 import styled, { ThemeProvider } from 'styled-components'
 import TabNav from './TabNav'
@@ -57,7 +58,8 @@ class Main extends React.Component {
 }
 
 Main.propTypes = {
-
+  config: ImmutablePropTypes.map,
+  keymap: ImmutablePropTypes.map
 }
 
 Main.contextTypes = {

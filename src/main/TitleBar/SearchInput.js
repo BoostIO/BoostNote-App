@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
-import { isFinallyBlurred } from 'lib/util'
-import _ from 'lodash'
 
 const Root = styled.div`
   height: 26px;
@@ -66,6 +64,8 @@ class SearchInput extends React.Component {
 }
 
 SearchInput.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func
 }
 
 export default SearchInput
