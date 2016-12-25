@@ -548,7 +548,6 @@ class NoteList extends React.Component {
               note={activeNote}
               config={config}
             />
-            // TODO: set some styles to Empty page
             : <div className='empty'>
               <div className='message'>
                 <Octicon icon='telescope' /><br />
