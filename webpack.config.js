@@ -52,7 +52,9 @@ const config = {
     })
   ],
   externals: [
+    // Electron
     'electron',
+    // CommonJS2
     'styled-components',
     'sander',
     'electron-devtools-installer',
@@ -65,10 +67,12 @@ const config = {
     'remark-html',
     'remark-emoji',
     'remark-slug',
-    'lodash',
     'strip-markdown',
+    'lodash',
     'katex',
+    'react-immutable-proptypes',
     {
+      // Global
       react: 'var React',
       'react-dom': 'var ReactDOM',
       'react-redux': 'var ReactRedux',
