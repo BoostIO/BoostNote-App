@@ -64,6 +64,7 @@
     "remark-emoji": "^1.1.1",
     "remark-html": "^5.1.0",
     "remark-lint": "^5.2.0",
+    "remark-slug": "^4.2.2",
     "sander": "^0.5.1",
     "strip-markdown": "^3.0.0",
     "styled-components": "^1.0.10"

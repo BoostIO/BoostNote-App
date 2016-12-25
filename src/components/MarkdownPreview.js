@@ -4,6 +4,8 @@ import CodeMirror from 'codemirror'
 import _ from 'lodash'
 import katex from 'katex'
 
+const { shell } = require('electron')
+
 CodeMirror.modeURL = '../../node_modules/codemirror/mode/%N/%N.js'
 
 // TODO: should override whole meta.js
@@ -154,18 +156,57 @@ class MarkdownPreview extends React.Component {
     }
   }
 
-  handleContentClick = e => {
-    this.props.onClick != null && this.props.onClick()
-  }
-
   handleContentMouseUp = e => {
     this.props.onMouseUp != null && this.props.onMouseUp()
   }
 
+  /**
+   * This doesn't do anything for now because `this.props.onMouseDown` is null.
+   * But I'll keep this for the further implements. - Sarah Seo
+   */
   handleContentMouseDown = e => {
     this.props.onMouseDown != null && this.props.onMouseDown()
   }
 
+  handleAnchorClick = e => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const href = e.target.getAttribute('href')
+
+    // Check if the link is internal
+    if (/^#(.+)/.test(href)) {
+      // If it is, scroll the target element of anchor.
+      this.iframe.contentWindow.document.body.scrollTop = this.iframe.contentWindow.document.body.querySelector(href).offsetTop - 10
+    } else {
+      // Or, open in user's default browser.
+      shell.openExternal(e.target.href)
+    }
+  }
+
+  handleAnchorMouseUp = e => {
+    // This will prevent focusing.
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  /**
+   * Mount Content
+   *
+   * 1. Parse markdown
+   * 2. Load theme
+   * 3. Queue rewriting tags
+   *   - Rewrite math block and inline by katex
+   *   - Rewrite codeblock by runmode of codemirror
+   * 4. Bind event handlers
+   *   - Bind anchor handlers(open the link from user's default browser)
+   *     - `click` event : replace default behavior with custom one
+   *     - `mouseup` event : block `mouseup` event of content
+   *   - Bind content handler
+   *     - `mouseup` event : Fire `handlePreviewMouseDown` of MarkdownEditor
+   *
+   * @memberOf MarkdownPreview
+   */
   mountContent () {
     const { content, theme } = this.props
     console.time('mount')
@@ -174,15 +215,15 @@ class MarkdownPreview extends React.Component {
     console.time('parse md')
     this.iframe.contentWindow.document.body.innerHTML = markdown.quickRender(content)
     console.timeEnd('parse md')
-    this.iframe.contentWindow.document.body.setAttribute('theme', theme)
 
     console.time('load theme')
+    this.iframe.contentWindow.document.body.setAttribute('theme', theme)
     if (this.props.codeBlockTheme !== 'default') {
       this.iframe.contentWindow.document.getElementById('codeMirrorTheme').href = '../../node_modules/codemirror/theme/' + this.props.codeBlockTheme + '.css'
     }
     console.timeEnd('load theme')
 
-    console.time('queue override')
+    console.time('queue rewriting')
     // Re-render codeblokcs by CodeMirror run mode and Katex
     let codeBlocks = this.iframe.contentWindow.document.body.querySelectorAll('pre code')
     _.forEach(codeBlocks, block => {
@@ -216,25 +257,52 @@ class MarkdownPreview extends React.Component {
       rendered.title = value.trim()
       rendered.innerHTML = katex.renderToString(value)
     })
-    console.timeEnd('queue override')
+    console.timeEnd('queue rewriting')
 
-    console.time('event init')
+    console.time('bind event handler')
     // Apply click handler for switching mode
     this.iframe.contentWindow.document.addEventListener('mouseup', this.handleContentMouseUp)
     this.iframe.contentWindow.document.addEventListener('mousedown', this.handleContentMouseDown)
-    console.timeEnd('event init')
+    _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('a'), anchor => {
+      anchor.addEventListener('mouseup', this.handleAnchorMouseUp)
+      anchor.addEventListener('click', this.handleAnchorClick)
+    })
+    console.timeEnd('bind event handler')
 
     console.timeEnd('mount')
   }
 
+  /**
+   * Unmount Content
+   *
+   * Unbind event handlers
+   * - Unbind anchor handlers
+   * - Unbind content handler
+   *
+   * @memberOf MarkdownPreview
+   */
   unmountContent () {
     // Remove click handler before rewriting.
     this.iframe.contentWindow.document.removeEventListener('mouseup', this.handleContentMouseUp)
     this.iframe.contentWindow.document.removeEventListener('mousedown', this.handleContentMouseDown)
+    _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('a'), anchor => {
+      anchor.removeEventListener('mouseup', this.handleAnchorMouseUp)
+      anchor.removeEventListener('click', this.handleAnchorClick)
+    })
   }
 
   applyFont () {
     this.iframe.contentWindow.document.getElementById('font').innerHTML = buildFontStyle(this.props.fontSize, this.props.fontFamily, this.props.codeBlockFontFamily)
+  }
+
+  findAnchor (target) {
+    while (target) {
+      if (target.nodeName === 'A') {
+        return target
+      }
+      target = target.parentNode
+    }
+    return null
   }
 
   render () {

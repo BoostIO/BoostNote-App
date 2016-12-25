@@ -27,7 +27,7 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 - Redux
 - Webpack
 - PouchDB / LevelDB
-- Remark
+- wooorm/Remark
 - Katex
 - Codemirror
 - Octicon

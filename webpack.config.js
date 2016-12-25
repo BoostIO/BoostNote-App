@@ -64,6 +64,7 @@ const config = {
     'remark-lint',
     'remark-html',
     'remark-emoji',
+    'remark-slug',
     'lodash',
     'strip-markdown',
     'katex',
