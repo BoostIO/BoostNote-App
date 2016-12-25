@@ -118,12 +118,24 @@ class TitleBar extends React.Component {
     window.addEventListener('title:new-note', this.handleNewButtonClick)
     window.addEventListener('title:focus-search', this.handleWindowFocusSearch)
     window.addEventListener('title:open-preferences', this.handleOpenPreferences)
+    window.addEventListener('resize', this.handleWindowResize)
+
+    const { status } = this.props
+
+    const currentWindow = remote.getCurrentWindow()
+    const [, windowHeight] = currentWindow.getSize()
+    const nextEditorWidth = status.get('editorMode') === 'SINGLE'
+      ? status.get('editorSingleWidth')
+      : status.get('editorDoubleWidth')
+    const nextWidth = status.get('navWidth') + status.get('noteListWidth') + nextEditorWidth + 2
+    currentWindow.setSize(nextWidth, windowHeight)
   }
 
   componentWillUnmount () {
     window.removeEventListener('title:new-note', this.handleNewButtonClick)
     window.removeEventListener('title:focus-search', this.handleWindowFocusSearch)
     window.removeEventListener('title:open-preferences', this.handleOpenPreferences)
+    window.removeEventListener('resize', this.handleWindowResize)
   }
 
   handleNewButtonClick = e => {
@@ -132,6 +144,13 @@ class TitleBar extends React.Component {
 
   handleWindowFocusSearch = e => {
     this.search.focus()
+  }
+
+  handleWindowResize = e => {
+    const currentWindow = remote.getCurrentWindow()
+    const [windowWidth] = currentWindow.getSize()
+
+    this.queueResolveEditorWidth(windowWidth)
   }
 
   handleOpenPreferences = e => {
@@ -168,10 +187,46 @@ class TitleBar extends React.Component {
     const { store } = this.context
     const { status } = this.props
 
+    const nextMode = status.get('editorMode') === 'SINGLE'
+      ? 'TWO_PANE'
+      : 'SINGLE'
+
+    const currentWindow = remote.getCurrentWindow()
+    const [, windowHeight] = currentWindow.getSize()
+    const nextEditorWidth = status.get('editorMode') === 'SINGLE'
+      ? status.get('editorDoubleWidth')
+      : status.get('editorSingleWidth')
+    const nextWidth = status.get('navWidth') + status.get('noteListWidth') + nextEditorWidth + 2
+    currentWindow.setSize(nextWidth, windowHeight)
+
     store.dispatch({
       type: 'UPDATE_STATUS',
       payload: {
-        status: status.set('editorMode', status.get('editorMode') === 'SINGLE' ? 'TWO_PANE' : 'SINGLE')
+        status: status.set('editorMode', nextMode)
+      }
+    })
+  }
+
+  queueResolveEditorWidth (windowWidth) {
+    window.clearTimeout(this.resizeTimer)
+    this.resizeTimer = window.setTimeout(() => {
+      this.resolveAndDispatchEditorWidth(windowWidth)
+    }, 500)
+  }
+
+  resolveAndDispatchEditorWidth (windowWidth) {
+    const { store } = this.context
+    const { status } = this.props
+
+    const nextEditorWidth = windowWidth - status.get('navWidth') - status.get('noteListWidth') - 2
+    const targetStatusKey = status.get('editorMode') === 'SINGLE'
+      ? 'editorSingleWidth'
+      : 'editorDoubleWidth'
+
+    store.dispatch({
+      type: 'UPDATE_STATUS',
+      payload: {
+        status: status.set(targetStatusKey, nextEditorWidth)
       }
     })
   }

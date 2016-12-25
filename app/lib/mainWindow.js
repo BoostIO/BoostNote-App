@@ -7,7 +7,7 @@ const WIN = process.platform === 'win32'
 
 const mainWindow = new BrowserWindow({
   frame: !WIN,
-  width: 800,
+  width: 792,
   height: 600,
   titleBarStyle: 'hidden-inset',
   webPreferences: {
