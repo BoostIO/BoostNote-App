@@ -52,12 +52,6 @@ class MarkdownPreview extends React.Component {
         height: 100%;
       }
 
-      // Code Block
-      .CodeMirror {
-        height: inherit;
-      }
-
-      // Katex
       .katex {
         text-align: center;
       }
@@ -72,7 +66,23 @@ class MarkdownPreview extends React.Component {
         position: relative;
       }
 
-      // Dark Theme
+      .katex-error {
+        background-color: #EB1119;
+        color: white;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 4px;
+      }
+
+      .CodeMirror {
+        height: initial;
+      }
+      body.markdown-body {
+        max-width: 600px;
+        padding: 15px;
+        margin: 0 auto;
+      }
+
       body[theme="dark"].markdown-body {
         background-color: #1E1E1E;
       }
@@ -241,8 +251,9 @@ class MarkdownPreview extends React.Component {
    */
   mountContent () {
     const { content, theme } = this.props
-    console.time('mount')
+
     // Render markdown
+    console.time('mount')
 
     console.time('parse md')
     this.iframe.contentWindow.document.body.innerHTML = markdown.quickRender(content)
@@ -263,9 +274,14 @@ class MarkdownPreview extends React.Component {
         let value = _.unescape(block.innerHTML)
         let rendered = document.createElement('div')
         block.parentNode.parentNode.replaceChild(rendered, block.parentNode)
-        rendered.className = 'katex'
+        try {
+          rendered.innerHTML = katex.renderToString(value)
+          rendered.className = 'katex'
+        } catch (e) {
+          rendered.innerHTML = e.message
+          rendered.className = 'katex-error'
+        }
         rendered.title = value.trim()
-        rendered.innerHTML = katex.renderToString(value)
         return
       }
       let syntax = parseMode(block.className.substring(9))
@@ -273,7 +289,7 @@ class MarkdownPreview extends React.Component {
       CodeMirror.requireMode(syntax.mode, () => {
         let value = _.unescape(block.innerHTML)
         block.innerHTML = ''
-        block.parentNode.className = ` cm-s-${this.props.codeBlockTheme} CodeMirror`
+        block.parentNode.className = `cm-s-${this.props.codeBlockTheme} CodeMirror`
         CodeMirror.runMode(value, syntax.mime, block, {
           tabSize: 2
         })
@@ -285,9 +301,13 @@ class MarkdownPreview extends React.Component {
       let value = _.unescape(inline.innerHTML)
       let rendered = document.createElement('span')
       inline.parentNode.replaceChild(rendered, inline)
-      rendered.className = 'katex'
-      rendered.title = value.trim()
-      rendered.innerHTML = katex.renderToString(value)
+      try {
+        rendered.innerHTML = katex.renderToString(value)
+        rendered.className = 'katex'
+      } catch (e) {
+        rendered.innerHTML = e.message
+        rendered.className = 'katex-error'
+      }
     })
     console.timeEnd('queue rewriting')
 
