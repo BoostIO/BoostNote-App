@@ -47,4 +47,4 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 
 ## License
 
-[MIT © 2016 Sarah Seo](./LICENSE.md)
+[MIT © 2016-2017 Sarah Seo](./LICENSE.md)
