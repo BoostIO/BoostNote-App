@@ -153,7 +153,7 @@ class Main extends React.Component {
   }
 
   render () {
-    const { storageMap, config, status } = this.props
+    const { storageMap, config, status, keymap } = this.props
     return (
       <ThemeProvider theme={config.get('theme') === 'dark' ? themes.dark : themes.default}>
         <Root>
@@ -166,7 +166,10 @@ class Main extends React.Component {
           />
 
           <Body>
-            <Nav storageMap={storageMap} width={this.state.navWidth} />
+            <Nav storageMap={storageMap}
+              width={this.state.navWidth}
+              keymap={keymap}
+            />
 
             <Slider
               onMouseDown={this.handleSliderMouseDown}

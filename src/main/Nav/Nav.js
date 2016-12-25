@@ -78,7 +78,7 @@ class Nav extends React.Component {
 
   handleKeyDown = e => {
     const keyName = CodeMirror.keyName(e)
-    const { keymap } = this.context
+    const { keymap } = this.props
 
     if (keymap.hasIn(['nav', keyName])) {
       e.preventDefault()
@@ -207,9 +207,6 @@ Nav.contextTypes = {
     push: PropTypes.func,
     isActive: PropTypes.func,
     params: PropTypes.object
-  }),
-  keymap: ImmutablePropTypes.mapContains({
-    nav: ImmutablePropTypes.map
   })
 }
 
