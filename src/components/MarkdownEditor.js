@@ -74,7 +74,6 @@ class MarkdownEditor extends React.Component {
   }
 
   handlePreviewScroll = line => {
-    console.log('preview scroll detected')
     this.queueEditorScrolling(line)
   }
 
@@ -90,7 +89,6 @@ class MarkdownEditor extends React.Component {
   }
 
   handleEditorScroll = line => {
-    console.log('editor scroll detected')
     this.queuePreviewScrolling(line)
   }
 
@@ -114,12 +112,10 @@ class MarkdownEditor extends React.Component {
   }
 
   scrollEditorTo (line) {
-    console.log('done: scroll editor to ', line)
     this.editor.scrollTo(line)
   }
 
   scrollPreviewTo (line) {
-    console.log('done: scroll preview to ', line)
     this.preview.scrollTo(line)
   }
 

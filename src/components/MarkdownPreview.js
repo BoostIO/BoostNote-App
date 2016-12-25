@@ -159,14 +159,17 @@ class MarkdownPreview extends React.Component {
     `
     this.iframe.contentWindow.document.body.className = 'markdown-body'
 
-
     this.iframe.contentWindow.document.addEventListener('scroll', this.handleContentScroll)
+    this.iframe.contentWindow.document.addEventListener('mouseup', this.handleContentMouseUp)
+    this.iframe.contentWindow.document.addEventListener('mousedown', this.handleContentMouseDown)
 
     this.mountContent()
   }
 
   componentWillUnmount () {
     this.iframe.contentWindow.document.removeEventListener('scroll', this.handleContentScroll)
+    this.iframe.contentWindow.document.removeEventListener('mouseup', this.handleContentMouseUp)
+    this.iframe.contentWindow.document.removeEventListener('mousedown', this.handleContentMouseDown)
 
     this.unmountContent()
   }
@@ -248,9 +251,6 @@ class MarkdownPreview extends React.Component {
    *   - Bind anchor handlers(open the link from user's default browser)
    *     - `click` event : replace default behavior with custom one
    *     - `mouseup` event : block `mouseup` event of content
-   *   - Bind content handler
-   *     - `mouseup` event : Fire `handlePreviewMouseDown` of MarkdownEditor
-   *     - `mouseup` event : Fire `handlePreviewMouseUp` of MarkdownEditor
    *
    * @memberOf MarkdownPreview
    */
@@ -318,8 +318,6 @@ class MarkdownPreview extends React.Component {
 
     console.time('bind event handler')
     // Apply click handler for switching mode
-    this.iframe.contentWindow.document.addEventListener('mouseup', this.handleContentMouseUp)
-    this.iframe.contentWindow.document.addEventListener('mousedown', this.handleContentMouseDown)
     _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('a'), anchor => {
       anchor.addEventListener('mouseup', this.handleAnchorMouseUp)
       anchor.addEventListener('click', this.handleAnchorClick)
@@ -340,8 +338,6 @@ class MarkdownPreview extends React.Component {
    */
   unmountContent () {
     // Remove click handler before rewriting.
-    this.iframe.contentWindow.document.removeEventListener('mouseup', this.handleContentMouseUp)
-    this.iframe.contentWindow.document.removeEventListener('mousedown', this.handleContentMouseDown)
     _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('a'), anchor => {
       anchor.removeEventListener('mouseup', this.handleAnchorMouseUp)
       anchor.removeEventListener('click', this.handleAnchorClick)
