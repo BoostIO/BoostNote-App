@@ -77,10 +77,15 @@ class MarkdownPreview extends React.Component {
       .CodeMirror {
         height: initial;
       }
+
       body.markdown-body {
         max-width: 600px;
         padding: 15px;
         margin: 0 auto;
+      }
+
+      body.markdown-body>*:last-child {
+        margin-bottom: 25px !important;
       }
 
       body[theme="dark"].markdown-body {
