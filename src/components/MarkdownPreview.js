@@ -160,10 +160,6 @@ class MarkdownPreview extends React.Component {
     this.props.onMouseUp != null && this.props.onMouseUp()
   }
 
-  /**
-   * This doesn't do anything for now because `this.props.onMouseDown` is null.
-   * But I'll keep this for the further implements. - Sarah Seo
-   */
   handleContentMouseDown = e => {
     this.props.onMouseDown != null && this.props.onMouseDown()
   }
@@ -204,6 +200,7 @@ class MarkdownPreview extends React.Component {
    *     - `mouseup` event : block `mouseup` event of content
    *   - Bind content handler
    *     - `mouseup` event : Fire `handlePreviewMouseDown` of MarkdownEditor
+   *     - `mouseup` event : Fire `handlePreviewMouseUp` of MarkdownEditor
    *
    * @memberOf MarkdownPreview
    */

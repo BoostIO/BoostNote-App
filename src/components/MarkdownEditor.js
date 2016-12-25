@@ -43,8 +43,16 @@ class MarkdownEditor extends React.Component {
     this.value = this.props.value
   }
 
+  handlePreviewMouseDown = e => {
+    this.lastPreviewMouseDown = Date.now()
+  }
+
+  // If mouse up is fired after 500 secs from the last mouse down,
+  // Don't switch edit mode and let user to select contents from MarkdownPreview.
   handlePreviewMouseUp = e => {
-    this.focus()
+    if (Date.now() - this.lastPreviewMouseDown < 500) {
+      this.focus()
+    }
   }
 
   handleEditorBlur = e => {
