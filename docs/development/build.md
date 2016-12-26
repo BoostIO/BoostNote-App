@@ -1,6 +1,6 @@
 # Build
 
-We only supports stable version of Node.js. Current stable version is `v6.*.*`.
+We only support the stable version of Node.js. Current stable version is `v6.*.*`.
 
 ## Development
 
@@ -8,12 +8,6 @@ Install dependencies
 
 ```sh
 npm install
-```
-
-Rebuild native modules for electron
-
-```sh
-npm run rebuild
 ```
 
 Run `webpack-dev-server`
@@ -25,9 +19,25 @@ npm run webpack
 Open another terminal session and start the app
 
 ```sh
-npm start
+npm start-dev
 ```
 
 ## Production
 
-Under Construction
+Install dependencies
+
+```sh
+npm install
+```
+
+Compile scripts
+
+```sh
+npm run compile
+```
+
+Pack the app
+
+```sh
+npm run pack
+```
