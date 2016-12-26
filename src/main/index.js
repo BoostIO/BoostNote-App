@@ -16,7 +16,7 @@ if (isDev) {
   window.remote = window.electron.remote
 
   const installExtension = require('electron-devtools-installer')
-  installExtension(installExtension.REACT_DEVELOPER_TOOLS)
+  installExtension.default(installExtension.REACT_DEVELOPER_TOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err))
 }
