@@ -45,7 +45,6 @@ const config = {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new NodeTargetPlugin(),
     new webpack.DefinePlugin({
@@ -119,5 +118,13 @@ const config = {
   }
 }
 
-module.exports = config
+if (PRO) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin())
+  config.plugins.push(new webpack.LoaderOptionsPlugin({
+    minimize: true
+  }))
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin())
+}
 
+module.exports = config
