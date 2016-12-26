@@ -2,6 +2,8 @@ const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
 const menuTemplate = require('./menuTemplate')
 
+const DEV = process.env.NODE_ENV === 'development'
+
 const OSX = process.platform === 'darwin'
 const WIN = process.platform === 'win32'
 
@@ -15,7 +17,10 @@ const mainWindow = new BrowserWindow({
   }
 })
 
-mainWindow.loadURL('file://' + path.join(__dirname, '/main.html'))
+mainWindow.loadURL('file://' + path.join(__dirname, DEV
+  ? '/main.html'
+  : '/main.production.html'
+))
 
 if (OSX) {
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))

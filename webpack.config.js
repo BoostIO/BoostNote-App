@@ -5,24 +5,26 @@ const webpack = require('webpack')
 const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
 const util = require('./tools/util')
 
+const PRO = process.env.NODE_ENV === 'production'
+
 const port = process.env.NODE_ENV !== 'test'
   ? 8080
   : 8081
+let mainEntry = ['./src/main/index.js']
+let preferencesEntry = ['./src/preferences/index.js']
+
+if (!PRO) {
+  const devEntry = ['react-hot-loader/patch',
+  'webpack-dev-server/client?http://localhost:' + port,
+  'webpack/hot/only-dev-server']
+  mainEntry = devEntry.concat(mainEntry)
+  preferencesEntry = devEntry.concat(preferencesEntry)
+}
 
 const entry = process.env.NODE_ENV !== 'test'
   ? {
-    main: [
-      'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:' + port,
-      'webpack/hot/only-dev-server',
-      './src/main/index.js'
-    ],
-    preferences: [
-      'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:' + port,
-      'webpack/hot/only-dev-server',
-      './src/preferences/index.js'
-    ]
+    main: mainEntry,
+    preferences: preferencesEntry
   }
   : {
     test: [

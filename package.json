@@ -1,12 +1,15 @@
 {
   "name": "inpad",
+  "productName": "Inpad",
   "version": "0.1.0",
   "description": "A Polished Notes App with Github Flavored Markdown",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
-    "start": "NODE_ENV=development electron app/index.js",
-    "pack": "build --dir",
-    "dist": "build",
+    "start": "electron app/index.js",
+    "start-dev": "NODE_ENV=development electron app/index.js",
+    "compile": "NODE_ENV=production webpack --config webpack.config.js",
+    "pack": "env-cmd ./.env build --dir",
+    "dist": "env-cmd ./.env build",
     "lint": "standard",
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
     "test:run": "NODE_ENV=test electron ./tools/webpack-test.js",
@@ -30,9 +33,10 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
     "electron": "^1.4.12",
-    "electron-builder": "^7.15.2",
+    "electron-builder": "^10.12.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.3.0",
+    "env-cmd": "^4.0.0",
     "json-loader": "^0.5.4",
     "react-desktop": "^0.2.14",
     "react-hot-loader": "^3.0.0-beta.6",
@@ -46,6 +50,7 @@
   "dependencies": {
     "codemirror": "^5.20.2",
     "color": "^0.11.4",
+    "electron-auto-updater": "^0.8.3",
     "electron-positioner": "^3.0.0",
     "filenamify": "^1.2.1",
     "github-markdown-css": "^2.4.1",
@@ -72,5 +77,43 @@
   },
   "standard": {
     "parser": "babel-eslint"
+  },
+  "build": {
+    "appId": "com.electron.Inpad",
+    "copyright": "Copyright © 2016-2017 Sarah Seo",
+    "category": "public.app-category.productivity",
+    "files": [
+      "app",
+      "compiled",
+      "resources",
+      "node_modules"
+    ],
+    "asar": false,
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "default",
+      "icon": "resources/icon.icns"
+    },
+    "dmg": {
+      "background": "resources/dmg.png",
+      "contents": [
+        {
+          "x": 192,
+          "y": 344
+        },
+        {
+          "x": 448,
+          "y": 344,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "x": 0,
+        "y": 0,
+        "width": 640,
+        "height": 480
+      }
+    }
   }
 }

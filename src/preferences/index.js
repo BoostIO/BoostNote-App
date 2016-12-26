@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import store from './lib/redux/store'
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 import App from './App'
 import history from './history'
 
@@ -16,7 +15,8 @@ if (isDev) {
   window.electron = require('electron')
   window.remote = window.electron.remote
 
-  installExtension(REACT_DEVELOPER_TOOLS)
+  const installExtension = require('electron-devtools-installer')
+  installExtension(installExtension.REACT_DEVELOPER_TOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err))
 }

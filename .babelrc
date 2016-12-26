@@ -1,16 +1,35 @@
 {
-  "presets": [
-    [
-      "es2015",
-      {
-        "modules": false
-      }
-    ],
-    "stage-2",
-    "react"
-  ],
-  "plugins": [
-    "react-hot-loader/babel",
-    "transform-class-properties"
-  ]
+  "env": {
+    "production": {
+      "presets": [
+        [
+          "es2015",
+          {
+            "modules": false
+          }
+        ],
+        "stage-2",
+        "react"
+      ],
+      "plugins": [
+        "transform-class-properties"
+      ]
+    },
+    "development": {
+      "presets": [
+        [
+          "es2015",
+          {
+            "modules": false
+          }
+        ],
+        "stage-2",
+        "react"
+      ],
+      "plugins": [
+        "react-hot-loader/babel",
+        "transform-class-properties"
+      ]
+    }
+  }
 }
