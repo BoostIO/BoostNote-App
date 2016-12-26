@@ -113,7 +113,7 @@ const Right = styled.div`
       ${p => p.theme.button}
       height: 40px;
       padding: 0 15px;
-      font-size: 24px;
+      font-size: 14px;
     }
   }
 `
