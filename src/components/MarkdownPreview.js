@@ -239,6 +239,19 @@ class MarkdownPreview extends React.Component {
     e.stopPropagation()
   }
 
+  handleCheckboxMouseUp = e => {
+    // This will prevent focusing.
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  handleCheckboxClick = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    const lineNumber = parseInt(e.target.parentNode.getAttribute('line'), 10)
+    this.props.onTaskClick != null && this.props.onTaskClick(lineNumber)
+  }
+
   /**
    * Mount Content
    *
@@ -322,6 +335,11 @@ class MarkdownPreview extends React.Component {
       anchor.addEventListener('mouseup', this.handleAnchorMouseUp)
       anchor.addEventListener('click', this.handleAnchorClick)
     })
+    _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('input[type=checkbox]'), checkbox => {
+      checkbox.removeAttribute('disabled')
+      checkbox.addEventListener('click', this.handleCheckboxClick)
+      checkbox.addEventListener('mouseup', this.handleCheckboxClick)
+    })
     console.timeEnd('bind event handler')
 
     console.timeEnd('mount')
@@ -341,6 +359,10 @@ class MarkdownPreview extends React.Component {
     _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('a'), anchor => {
       anchor.removeEventListener('mouseup', this.handleAnchorMouseUp)
       anchor.removeEventListener('click', this.handleAnchorClick)
+    })
+    _.forEach(this.iframe.contentWindow.document.body.querySelectorAll('input[type=checkbox]'), checkbox => {
+      checkbox.removeEventListener('click', this.handleCheckboxClick)
+      checkbox.removeEventListener('mouseup', this.handleCheckboxClick)
     })
   }
 

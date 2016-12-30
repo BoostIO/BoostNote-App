@@ -92,6 +92,10 @@ class MarkdownEditor extends React.Component {
     this.queuePreviewScrolling(line)
   }
 
+  handleTaskClick = line => {
+    this.editor.checkTaskItem(line)
+  }
+
   scrollTo (line) {
     this.scrollEditorTo(line)
     this.scrollPreviewTo(line)
@@ -152,6 +156,7 @@ class MarkdownEditor extends React.Component {
           fontFamily={fontFamily}
           codeBlockTheme={codeBlockTheme}
           codeBlockFontFamily={codeBlockFontFamily}
+          onTaskClick={this.handleTaskClick}
         />
         <WrappedCodeEditor
           innerRef={c => (this.editor = c)}

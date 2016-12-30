@@ -192,6 +192,21 @@ class CodeEditor extends React.Component {
     this.codemirror.scrollTo(null, this.codemirror.charCoords({line: line - 1, ch: 0}, 'local').top - 30)
   }
 
+  checkTaskItem (line) {
+    const splitted = this.codemirror.getValue().split('\n')
+    const match = /- \[(x| )\]/.exec(splitted[line - 1])
+
+    if (!match) return
+
+    if (match[1] === 'x') {
+      splitted[line - 1] = splitted[line - 1].replace(/- \[x\]/, '- [ ]')
+    } else {
+      splitted[line - 1] = splitted[line - 1].replace(/- \[ \]/, '- [x]')
+    }
+
+    this.codemirror.setValue(splitted.join('\n'))
+  }
+
   render () {
     const { className, style, fontSize, fontFamily } = this.props
     return (

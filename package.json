@@ -73,7 +73,8 @@
     "remark-slug": "^4.2.2",
     "sander": "^0.5.1",
     "strip-markdown": "^3.0.0",
-    "styled-components": "^1.0.10"
+    "styled-components": "^1.0.10",
+    "unist-util-visit": "^1.1.1"
   },
   "standard": {
     "parser": "babel-eslint"

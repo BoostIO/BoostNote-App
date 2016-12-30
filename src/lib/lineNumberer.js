@@ -1,3 +1,5 @@
+const visit = require('unist-util-visit')
+
 function patch (context, key, value) {
   if (!context[key]) {
     context[key] = value
@@ -16,6 +18,20 @@ function lineNumberer () {
       // if (child.children != null) {
       //   child.children.unshift({type: 'inlineCode', value: child.position.start.line})
       // }
+
+      /* Non-html */
+      patch(data, 'line', line)
+      /* Legacy remark-html */
+      patch(data, 'htmlAttributes', {})
+      /* Current remark-html */
+      patch(data, 'hProperties', {})
+      patch(data.htmlAttributes, 'line', line)
+      patch(data.hProperties, 'line', line)
+    })
+
+    visit(node, 'listItem', function (listItem) {
+      const line = listItem.position.start.line
+      const data = patch(listItem, 'data', {})
 
       /* Non-html */
       patch(data, 'line', line)
