@@ -189,7 +189,7 @@ class CodeEditor extends React.Component {
 
   scrollTo (line) {
     this.shouldIgnoreScroll = true
-    this.codemirror.scrollTo(null, this.codemirror.charCoords({line: line - 1, ch: 0}, 'local').top - 30)
+    this.codemirror.scrollTo(null, this.codemirror.charCoords({line: line - 1, ch: 0}, 'local').top - 20)
   }
 
   checkTaskItem (line) {

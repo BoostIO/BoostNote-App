@@ -206,14 +206,19 @@ class MarkdownPreview extends React.Component {
       return
     }
 
+    const seekElement = child => {
+      if (this.iframe.contentWindow.document.body.scrollTop < child.offsetTop) {
+        onScroll(parseInt(child.getAttribute('line'), 10))
+        return true
+      }
+      if (child.nodeName === 'UL') {
+        return _.some(child.children, seekElement)
+      }
+      return false
+    }
+
     if (onScroll != null) {
-      _.some(this.iframe.contentWindow.document.body.children, child => {
-        if (this.iframe.contentWindow.document.body.scrollTop < child.offsetTop) {
-          onScroll(parseInt(child.getAttribute('line'), 10))
-          return true
-        }
-        return false
-      })
+      _.some(this.iframe.contentWindow.document.body.children, seekElement)
     }
   }
 
@@ -382,14 +387,20 @@ class MarkdownPreview extends React.Component {
 
   scrollTo (line) {
     this.shouldIgnoreScroll = true
-    const shouldScrollToBottom = !_.some(this.iframe.contentWindow.document.body.children, child => {
+
+    const seekElement = child => {
       const currentLine = parseInt(child.getAttribute('line'), 10)
       if (line < currentLine) {
-        this.iframe.contentWindow.document.body.scrollTop = (child.offsetTop - 30)
+        this.iframe.contentWindow.document.body.scrollTop = (child.offsetTop - 10)
         return true
       }
+      if (child.nodeName === 'UL') {
+        return _.some(child.children, seekElement)
+      }
       return false
-    })
+    }
+
+    const shouldScrollToBottom = !_.some(this.iframe.contentWindow.document.body.children, seekElement)
     if (shouldScrollToBottom) {
       console.log('nothing matched')
       this.iframe.contentWindow.document.body.scrollTop = this.iframe.contentWindow.document.body.scrollHeight - this.iframe.contentWindow.document.body.offsetHeight
