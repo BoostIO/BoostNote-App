@@ -110,6 +110,8 @@ class FolderButton extends React.Component {
     }
 
     this.handleInputKeyDown = e => {
+      e.stopPropagation()
+
       switch (e.keyCode) {
         case 13:
           this.finishRenaming()
