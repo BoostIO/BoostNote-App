@@ -1,5 +1,5 @@
 # Dependencies
-markdown:         redcarpet
+markdown:         kramdown
 highlighter:      pygments
 
 # Gems
@@ -12,8 +12,8 @@ permalink:        pretty
 title:            Inpad
 tagline:          'Inpad app'
 description:      'A Notes App with Github Flavored Markdown'
-url:              http://sarah-seo.github.io/inpad
-baseurl:          /Inpad/
+url:              http://sarah-seo.github.io/Inpad
+baseurl:          /Inpad
 
 author:
   name:           'Sarah Seo'
@@ -25,4 +25,4 @@ paginate:         5
 version:          0.1.0
 
 github:
-  repo:           https://github.com/sarah-seo/inpad
+  repo:           https://github.com/sarah-seo/Inpad

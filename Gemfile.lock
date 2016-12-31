@@ -25,7 +25,6 @@ GEM
     rb-fsevent (0.9.8)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
-    redcarpet (3.4.0)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
       faraday (~> 0.8, < 1.0)
@@ -39,7 +38,6 @@ DEPENDENCIES
   jekyll-watch
   kramdown
   pygments.rb
-  redcarpet
 
 BUNDLED WITH
    1.13.7
