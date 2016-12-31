@@ -1,0 +1,3 @@
+[submodule "gh-pages"]
+	path = gh-pages
+	url = https://github.com/Sarah-Seo/Inpad.git
