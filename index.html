@@ -1,0 +1,59 @@
+---
+layout: default
+title: Home
+---
+
+<main class="main">
+  <div class="main-hero">
+    <h1>
+      <img alt='Inpad' height='160' src="{{site.baseurl}}public/logo-with-title.png">
+    </h1>
+    <h2 align='center'>A Polished Notes App with Github Flavored Markdown</h2>
+    <h3 align="center">for macOS, Windows and Linux</h5>
+  </div>
+
+  <div class="main-screenshot">
+    <img src="{{ site.baseurl }}public/screenshot.png">
+  </div>
+
+  <h2>Features</h2>
+  <ul>
+    <li>More organize option</li>
+    <li>Github Flavored Markdown(with Latex)</li>
+    <li>Using PouchDB(competible CouchDB and  any LevelDB adapter)</li>
+  </ul>
+</main>
+
+<div class="posts">
+  <h2>Recent posts</h2>
+  {% for post in paginator.posts %}
+  <div class="post">
+    <h1 class="post-title">
+      <a href="{{ post.url }}">
+        {{ post.title }}
+      </a>
+    </h1>
+
+    <span class="post-date">{{ post.date | date_to_string }}</span>
+
+    {{ post.content }}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+  {% if paginator.next_page %}
+    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">Older</a>
+  {% else %}
+    <span class="pagination-item older">Older</span>
+  {% endif %}
+  {% if paginator.previous_page %}
+    {% if paginator.page == 2 %}
+      <a class="pagination-item newer" href="{{ site.baseurl }}">Newer</a>
+    {% else %}
+      <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">Newer</a>
+    {% endif %}
+  {% else %}
+    <span class="pagination-item newer">Newer</span>
+  {% endif %}
+</div>
