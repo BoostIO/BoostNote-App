@@ -149,7 +149,6 @@ class StorageSection extends React.Component {
 
     const newName = this.resolveNewName(this.state.newName)
 
-
     store
       .dispatch(dispatch => {
         return dataAPI
@@ -190,7 +189,7 @@ class StorageSection extends React.Component {
   }
 
   render () {
-    const { storageName, folderMap, isFocused } = this.props
+    const { storageName, folderMap, isFocused, deleteFolder } = this.props
 
     const folderList = folderMap
       .map((meta, folderName) => {
@@ -204,6 +203,7 @@ class StorageSection extends React.Component {
           folderName={folderName}
           createNewButton={this.createNewFolder}
           isFocused={isFocused}
+          deleteFolder={deleteFolder}
         >
           {folderName}
         </FolderButton>
@@ -243,7 +243,8 @@ class StorageSection extends React.Component {
 StorageSection.propTypes = {
   storageName: PropTypes.string,
   folderMap: PropTypes.instanceOf(Map),
-  isFocused: PropTypes.bool
+  isFocused: PropTypes.bool,
+  deleteFolder: PropTypes.func
 }
 
 StorageSection.contextTypes = {

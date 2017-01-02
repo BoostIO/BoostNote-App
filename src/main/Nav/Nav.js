@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { Octicon } from 'components'
 import StorageSection from './StorageSection'
 import { isFinallyBlurred } from 'lib/util'
-import commander from 'main/lib/commander'
 import { NAV_MIN_WIDTH } from 'lib/consts'
 import CodeMirror from 'codemirror'
-import ImmutablePropTypes from 'react-immutable-proptypes'
+import Dialog from 'main/lib/Dialog'
+import dataAPI from 'main/lib/dataAPI'
+import { routerShape } from 'react-router'
 
 const Root = styled.div`
   position: relative;
@@ -66,6 +68,8 @@ class Nav extends React.Component {
     window.addEventListener('nav:up', this.handleWindowUp)
     window.addEventListener('nav:down', this.handleWindowDown)
     window.addEventListener('nav:delete', this.handleWindowDelete)
+
+    this.focus()
   }
 
   componentWillUnmount () {
@@ -119,13 +123,10 @@ class Nav extends React.Component {
   }
 
   handleWindowDelete = e => {
-    if (this.state.isFocused) {
-      const { router } = this.context
-      const { storageName, folderName } = router.params
-
-      if (folderName != null) {
-        commander.deleteFolder(storageName, folderName)
-      }
+    const { router } = this.context
+    const { storageName, folderName } = router.params
+    if (this.state.isFocused && folderName != null && folderName !== 'Notes') {
+      this.deleteFolder(storageName, folderName)
     }
   }
 
@@ -144,11 +145,44 @@ class Nav extends React.Component {
         .replace(/\//, '/folders/')
 
       router.push('storages/' + nextLink)
+      return true
     }
+    return false
   }
 
   focus () {
     this.root.focus()
+  }
+
+  deleteFolder = (storageName, folderName) => {
+    const { store, router } = this.context
+
+    Dialog.showMessageBox({
+      message: `Are you sure you want to delete "${folderName}"?`,
+      detail: 'All notes and any subfolders will be deleted.',
+      buttons: ['Confirm', 'Cancel']
+    }, (index) => {
+      if (index === 0) {
+        const isCurrentFolder = (storageName === router.params.storageName) && (folderName === router.params.folderName)
+        if (isCurrentFolder && !this.move(1)) {
+          this.move(-1)
+        }
+        store
+          .dispatch(dispatch => {
+            return dataAPI.deleteFolder(storageName, folderName)
+              .then(res => {
+                dispatch({
+                  type: 'DELETE_FOLDER',
+                  payload: {
+                    storageName,
+                    folderName
+                  }
+                })
+                this.focus()
+              })
+          })
+      }
+    })
   }
 
   render () {
@@ -174,6 +208,7 @@ class Nav extends React.Component {
           storageName={storageName}
           folderMap={folderMap}
           isFocused={this.state.isFocused}
+          deleteFolder={this.deleteFolder}
         />
       })
       .toArray()
@@ -200,14 +235,14 @@ class Nav extends React.Component {
 }
 
 Nav.propTypes = {
+  storageMap: ImmutablePropTypes.orderedMap
 }
 
 Nav.contextTypes = {
-  router: PropTypes.shape({
-    push: PropTypes.func,
-    isActive: PropTypes.func,
-    params: PropTypes.object
-  })
+  store: PropTypes.shape({
+    dispatch: PropTypes.func
+  }),
+  router: routerShape
 }
 
 export default Nav

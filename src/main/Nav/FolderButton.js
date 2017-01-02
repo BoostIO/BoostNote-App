@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import styled from 'styled-components'
 import { LinkButton } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
-import commander from 'main/lib/commander'
 import dataAPI from 'main/lib/dataAPI'
 import { routerShape } from 'react-router'
 
@@ -185,8 +184,8 @@ class FolderButton extends React.Component {
   }
 
   delete () {
-    const { storageName, folderName } = this.props
-    commander.deleteFolder(storageName, folderName)
+    const { storageName, folderName, deleteFolder } = this.props
+    deleteFolder(storageName, folderName)
   }
 
   cancelRenaming () {
@@ -266,7 +265,8 @@ FolderButton.propTypes = {
   folderURL: PropTypes.string,
   folderName: PropTypes.string,
   storageName: PropTypes.string,
-  resolveNewName: PropTypes.func
+  resolveNewName: PropTypes.func,
+  deleteFolder: PropTypes.func
 }
 
 FolderButton.contextTypes = {
