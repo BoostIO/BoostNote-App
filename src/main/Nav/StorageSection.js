@@ -6,6 +6,7 @@ import ContextMenu from 'main/lib/ContextMenu'
 import dataAPI from 'main/lib/dataAPI'
 import filenamify from 'filenamify'
 import { Map, Set } from 'immutable'
+import { routerShape } from 'react-router'
 
 const NavButton = styled(LinkButton)`
   display: block;
@@ -144,23 +145,32 @@ class StorageSection extends React.Component {
 
   confirmCreating () {
     const { storageName } = this.props
-    const { store } = this.context
+    const { store, router } = this.context
 
     const newName = this.resolveNewName(this.state.newName)
 
-    dataAPI
-      .upsertFolder(storageName, newName)
-      .then(res => {
-        store.dispatch({
-          type: 'UPDATE_FOLDER',
-          payload: {
-            storageName,
-            folderName: res.id,
-            folder: new Map([
-              ['notes', new Set()]
-            ])
-          }
-        })
+
+    store
+      .dispatch(dispatch => {
+        return dataAPI
+          .upsertFolder(storageName, newName)
+          .then(res => {
+            const folderName = res.id
+            dispatch({
+              type: 'UPDATE_FOLDER',
+              payload: {
+                storageName,
+                folderName: folderName,
+                folder: new Map([
+                  ['notes', new Set()]
+                ])
+              }
+            })
+            return folderName
+          })
+      })
+      .then(folderName => {
+        router.push('/storages/' + storageName + '/folders/' + folderName)
       })
 
     this.setState({
@@ -239,7 +249,8 @@ StorageSection.propTypes = {
 StorageSection.contextTypes = {
   store: PropTypes.shape({
     dispatch: PropTypes.func
-  })
+  }),
+  router: routerShape
 }
 
 export default StorageSection

@@ -14,7 +14,7 @@ const WrappedCodeEditor = styled(CodeEditor)`
     ? 'width: 50%;border-right: ' + p.theme.border + ';'
     : 'right: 0;'
   }
-  box-sizing:border-box;
+  box-sizing: border-box;
   bottom: 0;
 `
 
