@@ -5,37 +5,13 @@ const webpack = require('webpack')
 const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
 const util = require('./tools/util')
 
-const PRO = process.env.NODE_ENV === 'production'
+const port = 8080
 
-const port = process.env.NODE_ENV !== 'test'
-  ? 8080
-  : 8081
-let mainEntry = ['./src/main/index.js']
-let preferencesEntry = ['./src/preferences/index.js']
-
-if (!PRO) {
-  const devEntry = ['react-hot-loader/patch',
-  'webpack-dev-server/client?http://localhost:' + port,
-  'webpack/hot/only-dev-server']
-  mainEntry = devEntry.concat(mainEntry)
-  preferencesEntry = devEntry.concat(preferencesEntry)
-}
-
-const entry = process.env.NODE_ENV !== 'test'
-  ? {
-    main: mainEntry,
-    preferences: preferencesEntry
-  }
-  : {
-    test: [
-      'webpack-dev-server/client?http://localhost:' + port,
-      'webpack/hot/only-dev-server',
-      './tools/webpack-test-entry.js'
-    ]
-  }
-
-const config = {
-  entry,
+let config = {
+  entry: {
+    main: ['./src/main/index.js'],
+    preferences: ['./src/preferences/index.js']
+  },
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
@@ -111,6 +87,8 @@ const config = {
     libraryTarget: 'commonjs2',
     publicPath: 'http://localhost:' + port + '/assets/'
   },
+  performance: { hints: false },
+  node: {},
   devtool: 'eval',
   devServer: {
     hot: true,
@@ -118,13 +96,42 @@ const config = {
   }
 }
 
-if (PRO) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin())
-  config.plugins.push(new webpack.LoaderOptionsPlugin({
-    minimize: true
-  }))
-} else {
-  config.plugins.push(new webpack.HotModuleReplacementPlugin())
+switch (process.env.NODE_ENV) {
+  case 'production':
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin())
+    config.plugins.push(new webpack.LoaderOptionsPlugin({
+      minimize: true
+    }))
+
+    config.performance.hints = true
+    break
+  case 'development':
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+
+    const devEntry = [
+      'react-hot-loader/patch',
+      'webpack-dev-server/client?http://localhost:' + port,
+      'webpack/hot/only-dev-server'
+    ]
+    config.entry.main = devEntry.concat(config.entry.main)
+    config.entry.preferences = devEntry.concat(config.entry.preferences)
+    break
+  case 'test':
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+
+    config.entry = {
+      test: [
+        'webpack-dev-server/client?http://localhost:' + 8081,
+        'webpack/hot/only-dev-server',
+        './tools/webpack-test-entry.js'
+      ]
+    }
+
+    config.output.publicPath = 'http://localhost:' + 8081 + '/assets/'
+    config.devServer.port = 8081
+    config.node.__filename = true
+    config.node.__dirname = true
+    config.resolve.alias.specs = path.join(__dirname, 'specs')
 }
 
 module.exports = config

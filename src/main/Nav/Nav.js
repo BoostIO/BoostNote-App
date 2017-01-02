@@ -159,7 +159,7 @@ class Nav extends React.Component {
     const storageList = this.storageList = storageMap
       .map((storageData, storageName) => {
         this.linkList.push(storageName)
-        const folderMap = storageData.get('folders')
+        const folderMap = storageData.get('folderMap')
           // Sort by localeCompare except 'Notes'. 'Notes' folder should be came first.
           .sortBy((v, key) => key.toLowerCase(), (a, b) => {
             if (a === 'notes') return -1

@@ -133,7 +133,7 @@ class MarkdownEditor extends React.Component {
 
   render () {
     const { className, style, value, docKey, mode,
-      theme, fontSize, fontFamily, codeBlockTheme, codeBlockFontFamily,
+      previewTheme, fontSize, fontFamily, codeBlockTheme, codeBlockFontFamily,
       editorFontSize, editorFontFamily, editorTheme, indentStyle, indentSize } = this.props
 
     return (
@@ -151,7 +151,7 @@ class MarkdownEditor extends React.Component {
           onMouseDown={this.handlePreviewMouseDown}
           onScroll={this.handlePreviewScroll}
           content={value}
-          theme={theme}
+          previewTheme={previewTheme}
           fontSize={fontSize}
           fontFamily={fontFamily}
           codeBlockTheme={codeBlockTheme}
@@ -172,7 +172,7 @@ class MarkdownEditor extends React.Component {
           mode={'GitHub Flavored Markdown'}
           fontSize={editorFontSize}
           fontFamily={editorFontFamily}
-          theme={editorTheme}
+          editorTheme={editorTheme}
           indentStyle={indentStyle}
           indentSize={indentSize}
         />

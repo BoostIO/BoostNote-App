@@ -46,7 +46,7 @@ class CodeEditor extends React.Component {
       value: new CodeMirror.Doc(_.isString(value) ? value : ''),
       lineNumbers: true,
       lineWrapping: true,
-      theme: this.props.theme,
+      theme: this.props.editorTheme,
       indentUnit: this.props.indentSize,
       tabSize: this.props.indentSize,
       keyMap: 'sublime',
@@ -128,8 +128,8 @@ class CodeEditor extends React.Component {
       this.codemirror.setOption('indentWithTabs', this.props.indentStyle === 'tab')
     }
 
-    if (this.props.theme !== prevProps.theme) {
-      this.codemirror.setOption('theme', this.props.theme)
+    if (this.props.editorTheme !== prevProps.editorTheme) {
+      this.codemirror.setOption('theme', this.props.editorTheme)
       this.codemirror.refresh()
     }
   }

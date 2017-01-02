@@ -5,7 +5,7 @@ import { TitleBar as MacTitleBar } from 'react-desktop/macOs'
 import { TitleBar as WindowsTitleBar } from 'react-desktop/windows'
 import Octicon from 'components/Octicon'
 import _ from 'lodash'
-import StorageManager from '../lib/StorageManager'
+import dataAPI from '../lib/dataAPI'
 import SearchInput from './SearchInput'
 
 const { remote } = require('electron')
@@ -268,14 +268,15 @@ class TitleBar extends React.Component {
     }
 
     // TODO: this should be moved to redux saga
-    StorageManager
+    dataAPI
       .createNote(storageName, {
         folder: folderName,
-        meta: {},
+        meta: {
+          title: '',
+          preview: ''
+        },
         content: '',
-        tags: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
+        tags: []
       })
       .then(res => {
         store.dispatch({

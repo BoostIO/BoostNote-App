@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Octicon, LinkButton } from 'components'
 import FolderButton from './FolderButton'
 import ContextMenu from 'main/lib/ContextMenu'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 import filenamify from 'filenamify'
 import { Map, Set } from 'immutable'
 
@@ -148,7 +148,7 @@ class StorageSection extends React.Component {
 
     const newName = this.resolveNewName(this.state.newName)
 
-    StorageManager
+    dataAPI
       .upsertFolder(storageName, newName)
       .then(res => {
         store.dispatch({

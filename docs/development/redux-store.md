@@ -18,14 +18,14 @@ Core part of data.
 
 ```
 storageMap: OrderedMap <storageName, V>
-  |- storageData: Map
-      |- notes: Map <noteId, V>
-          |- noteId: Map
-      |- folders: Map <folderName, V>
-          |- folderName: Map
+  |- storage: Map
+      |- noteMap: Map <noteId, V>
+          |- note: Map
+      |- folderMap: Map <folderName, V>
+          |- folder: Map
             |- notes: Set // map for fast indexing by folder
-      |- tags: Map: Map <tagName, V>
-          |- folderName: Map
+      |- tagMap: Map: Map <tagName, V>
+          |- tag: Map
             |- notes: Set // map for fast indexing by folder
 ```
 

@@ -33,4 +33,13 @@ export default t => {
 
 ## Mocking
 
-This feature is not implemented yet. But, it would be easily solved by using `import-loader`.
+On test environment, `babel-plugin-rewire` is enabled.
+
+You can replace any dependencies of a module by `__Rewire__` method.
+
+```js
+import loadAllStorages from 'main/lib/data/loadAllStorages'
+
+const storageMock = require('storageMock')
+loadAllStorages.__Rewire__('localStorage', storageMock)
+```

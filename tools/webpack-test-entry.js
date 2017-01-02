@@ -3,10 +3,7 @@
  *
  * Grab `*.spec.js` files
  *
- * ## TODO
- *
- * - [ ] Render result as a react
- * - [ ] Before/After hook
+ * TODO: Render result as a react
  *
  */
 
@@ -15,17 +12,42 @@ const assert = require('assert')
 const t = assert
 
 function runTest (key, spec, isReloaded) {
-  if (!_.isFunction(spec.default)) return Promise.reject(new Error('It cannot be excuted. : ' + key))
   return Promise.resolve()
-    .then(() => {
-      return spec.default(t)
+    .then(function doBefore () {
+      if (_.isFunction(spec.before)) {
+        return spec.before(t)
+      }
     })
-    .then(v => {
-      console.info(`%c${key} ${(isReloaded ? 're-' : '')}tested successfully.`, 'color: green;')
+    .catch(function handleBeforeError (err) {
+      console.warn('Test(Before) failed: ' + key)
+      console.error(err.stack || err)
+      throw new Error('NO_TEST')
     })
-    .catch(e => {
-      console.warn('Test failed: ' + key)
-      throw e
+    .then(function doTest () {
+      if (_.isFunction(spec.default)) {
+        return Promise.resolve(spec.default(t))
+          .then(function showResult (v) {
+            console.info(`%c${key} ${(isReloaded ? 're-' : '')}tested successfully.`, 'color: green;')
+          })
+      } else {
+        console.warn(`${key} has no test`)
+      }
+    })
+    .catch(function handleTestError (err) {
+      // Skip if the error already caught.
+      if (err.message !== 'NO_TEST') {
+        console.warn('Test failed: ' + key)
+        console.error(err.stack || err)
+      }
+    })
+    .then(function doAfter () {
+      if (_.isFunction(spec.before)) {
+        return spec.before(t)
+      }
+    })
+    .catch(function handleAfterError (err) {
+      console.warn('Test(After) failed: ' + key)
+      console.error(err.stack || err)
     })
 }
 

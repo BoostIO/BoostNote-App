@@ -6,7 +6,7 @@ import Octicon from 'components/Octicon'
 import Detail from './Detail'
 import { isFinallyBlurred } from 'lib/util'
 import Dialog from 'main/lib/Dialog'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 import moment from 'moment'
 import NoteItem from './NoteItem'
 import { LIST_MIN_WIDTH } from 'lib/consts'
@@ -236,7 +236,7 @@ class NoteList extends React.Component {
         buttons: ['Delete Note', 'Cancel']
       }, (index) => {
         if (index === 0) {
-          StorageManager.deleteNote(storageName, key)
+          dataAPI.deleteNote(storageName, key)
             .then(() => {
               router.push({
                 pathname: router.location.pathname,
@@ -399,7 +399,7 @@ class NoteList extends React.Component {
       let noteSet = storageMap
         .getIn([
           params.storageName,
-          'folders',
+          'folderMap',
           params.folderName,
           'notes'
         ])
@@ -411,13 +411,13 @@ class NoteList extends React.Component {
           return [
             noteId,
             storageMap
-              .getIn([params.storageName, 'notes', noteId])
+              .getIn([params.storageName, 'noteMap', noteId])
           ]
         })
         .toArray()
       notes = new Map(notes)
     } else if (params.storageName != null) {
-      notes = storageMap.getIn([params.storageName, 'notes'])
+      notes = storageMap.getIn([params.storageName, 'noteMap'])
       if (notes == null) return new Map()
     } else {
       notes = new Map()
@@ -573,6 +573,11 @@ class NoteList extends React.Component {
 }
 
 NoteList.propTypes = {
+  storageMap: ImmutablePropTypes.orderedMapOf(ImmutablePropTypes.mapContains({
+    folderMap: ImmutablePropTypes.map.isRequired,
+    noteMap: ImmutablePropTypes.map.isRequired,
+    tagMap: ImmutablePropTypes.map.isRequired
+  }))
 }
 
 NoteList.contextTypes = {

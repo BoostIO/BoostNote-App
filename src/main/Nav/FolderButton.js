@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { LinkButton } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
 import commander from 'main/lib/commander'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 import { routerShape } from 'react-router'
 
 const DEFAULT_FOLDER_NAME = 'Notes'
@@ -159,10 +159,8 @@ class FolderButton extends React.Component {
       case 'MOVE_NOTE':
         const noteId = data.payload.noteKey
 
-        StorageManager
-          .updateNote(storageName, noteId, {
-            folder: folderName
-          })
+        dataAPI
+          .updateNote(storageName, noteId, {folder: folderName})
           .then(res => {
             store.dispatch({
               type: 'UPDATE_NOTE',
@@ -208,7 +206,7 @@ class FolderButton extends React.Component {
 
       const newFolderName = resolveNewName(this.state.newName)
 
-      StorageManager
+      dataAPI
         .renameFolder(storageName, folderName, newFolderName)
         .then(res => {
           if (router.params.folderName === folderName) {

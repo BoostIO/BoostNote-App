@@ -41,7 +41,7 @@ This string should be a valid path. When creating a folder, the app will convert
 
 ### `$TAG$`
 
-Tag is a lowcased alphanumeric string.
+Tag is a lowcased alphanumeric string. Spaces will be replaced with `_`.
 
 ## Schemes
 

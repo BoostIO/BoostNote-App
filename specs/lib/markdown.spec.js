@@ -56,6 +56,6 @@ export default t => {
   t.equal(parsed4.data.title, 'Awesome Electron Awesome\n')
   t.equal(parsed4.data.preview, 'Useful resources for creating apps with Electron\n')
 
-  let parsedMath = markdown.parse(mathString)
-  console.log(parsedMath.toString())
+  // let parsedMath = markdown.parse(mathString)
+  // console.log(parsedMath.toString())
 }

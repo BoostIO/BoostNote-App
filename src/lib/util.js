@@ -40,5 +40,3 @@ const util = {
 }
 
 export default util
-
-module.exports = util

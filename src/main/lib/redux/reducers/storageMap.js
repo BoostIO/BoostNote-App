@@ -12,7 +12,7 @@ function storageMap (state = defaultStorageMap, action) {
 
         return state.setIn([
           storageName,
-          'folders',
+          'folderMap',
           folderName
         ],
         folder)
@@ -24,7 +24,7 @@ function storageMap (state = defaultStorageMap, action) {
         // Delete notes
         const noteSet = state.getIn([
           storageName,
-          'folders',
+          'folderMap',
           folderName,
           'notes'
         ])
@@ -39,7 +39,7 @@ function storageMap (state = defaultStorageMap, action) {
 
         return state.deleteIn([
           storageName,
-          'folders',
+          'folderMap',
           folderName
         ])
       }
@@ -50,7 +50,7 @@ function storageMap (state = defaultStorageMap, action) {
         // Update note.folder attribute
         const noteSet = state.getIn([
           storageName,
-          'folders',
+          'folderMap',
           folderName,
           'notes'
         ])
@@ -58,7 +58,7 @@ function storageMap (state = defaultStorageMap, action) {
           .reduce((state, noteId) => {
             return state.updateIn([
               storageName,
-              'notes',
+              'noteMap',
               noteId
             ], note => note.set('folder', newFolderName))
           }, state)
@@ -66,14 +66,14 @@ function storageMap (state = defaultStorageMap, action) {
         // Remove original folder
         state = state.deleteIn([
           storageName,
-          'folders',
+          'folderMap',
           folderName
         ])
 
         // Create new folder
         return state.setIn([
           storageName,
-          'folders',
+          'folderMap',
           newFolderName
         ], new Map([['notes', noteSet]]))
       }
@@ -83,13 +83,13 @@ function storageMap (state = defaultStorageMap, action) {
         const { storageName, noteId, note } = action.payload
         state = state.setIn([
           storageName,
-          'notes',
+          'noteMap',
           noteId
         ], note)
 
         state = state.updateIn([
           storageName,
-          'folders',
+          'folderMap',
           note.get('folder'),
           'notes'
         ], noteSet => noteSet.add(noteId))
@@ -102,13 +102,13 @@ function storageMap (state = defaultStorageMap, action) {
 
         let oldNote = state.getIn([
           storageName,
-          'notes',
+          'noteMap',
           noteId
         ])
 
         state = state.setIn([
           storageName,
-          'notes',
+          'noteMap',
           noteId
         ], note)
 
@@ -116,14 +116,14 @@ function storageMap (state = defaultStorageMap, action) {
         if (oldNote.get('folder') !== note.get('folder')) {
           state = state.updateIn([
             storageName,
-            'folders',
+            'folderMap',
             oldNote.get('folder'),
             'notes'
           ], noteSet => noteSet.delete(noteId))
 
           state = state.updateIn([
             storageName,
-            'folders',
+            'folderMap',
             note.get('folder'),
             'notes'
           ], noteSet => noteSet.add(noteId))
@@ -136,19 +136,19 @@ function storageMap (state = defaultStorageMap, action) {
 
         let oldNote = state.getIn([
           storageName,
-          'notes',
+          'noteMap',
           noteId
         ])
 
         state = state.deleteIn([
           storageName,
-          'notes',
+          'noteMap',
           noteId
         ])
 
         state = state.updateIn([
           storageName,
-          'folders',
+          'folderMap',
           oldNote.get('folder'),
           'notes'
         ], noteSet => noteSet.delete(noteId))

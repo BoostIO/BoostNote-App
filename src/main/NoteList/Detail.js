@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import TagSelect from './TagSelect'
 import moment from 'moment'
 import MarkdownEditor from 'components/MarkdownEditor'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 import { Set } from 'immutable'
 import markdown from 'lib/markdown'
 
@@ -134,7 +134,7 @@ class Detail extends React.Component {
       content: this.state.content
     }
 
-    StorageManager
+    dataAPI
       .updateNote(router.params.storageName, noteKey, input)
       .then(res => {
         store.dispatch({
@@ -186,7 +186,7 @@ class Detail extends React.Component {
           onChange={this.handleContentChange}
           docKey={`${router.params.storageName}/${noteKey}`}
           mode={status.get('editorMode')}
-          theme={config.get('theme')}
+          previewTheme={config.get('theme')}
           fontSize={config.get('previewFontSize')}
           fontFamily={config.get('previewFontFamily')}
           codeBlockTheme={config.get('previewCodeBlockTheme')}

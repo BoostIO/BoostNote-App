@@ -1,6 +1,6 @@
 import store from 'main/lib/redux/store'
 import Dialog from 'main/lib/Dialog'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 import history from 'main/history'
 
 const DEFAULT_FOLDER_NAME = 'Notes'
@@ -14,7 +14,7 @@ export function deleteFolder (storageName, folderName) {
     buttons: ['Confirm', 'Cancel']
   }, (index) => {
     if (index === 0) {
-      StorageManager.deleteFolder(storageName, folderName)
+      dataAPI.deleteFolder(storageName, folderName)
         .then(() => {
           history.push({
             pathname: '/storages/' + storageName + '/folders/Notes'

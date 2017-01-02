@@ -6,7 +6,7 @@ import Octicon from 'components/Octicon'
 import _ from 'lodash'
 import ContextMenu from 'main/lib/ContextMenu'
 import Dialog from 'main/lib/Dialog'
-import StorageManager from 'main/lib/StorageManager'
+import dataAPI from 'main/lib/dataAPI'
 
 /**
  * Check the title is empty.
@@ -219,7 +219,6 @@ class NoteItem extends React.Component {
   }
 
   delete () {
-    console.log()
     Dialog.showMessageBox({
       message: `Are you sure you want to delete the selected note?`,
       buttons: ['Delete Note', 'Cancel']
@@ -229,7 +228,8 @@ class NoteItem extends React.Component {
       const { noteKey, getNextKey } = this.props
 
       if (index === 0) {
-        StorageManager.deleteNote(storageName, noteKey)
+        dataAPI
+          .deleteNote(storageName, noteKey)
           .then(() => {
             if (router.location.query.key === noteKey) {
               router.push({

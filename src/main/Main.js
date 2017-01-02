@@ -4,7 +4,7 @@ import styled, { ThemeProvider } from 'styled-components'
 import TitleBar from './TitleBar'
 import themes from 'lib/themes'
 import Nav from './Nav/Nav'
-import StorageManager from './lib/StorageManager'
+import dataAPI from './lib/dataAPI'
 import { NAV_MIN_WIDTH } from 'lib/consts'
 import ipc from './lib/ipc'
 import NoteList from './NoteList'
@@ -106,12 +106,12 @@ class Main extends React.Component {
 
     const { dispatch } = this.props
 
-    StorageManager.loadAll()
-      .then((data) => {
+    dataAPI.loadAllStorages()
+      .then(storageMap => {
         dispatch({
           type: 'LOAD_ALL_STORAGES',
           payload: {
-            storageMap: data
+            storageMap
           }
         })
       })

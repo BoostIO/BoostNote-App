@@ -30,6 +30,23 @@
         "react-hot-loader/babel",
         "transform-class-properties"
       ]
+    },
+    "test": {
+      "presets": [
+        [
+          "es2015",
+          {
+            "modules": false
+          }
+        ],
+        "stage-2",
+        "react"
+      ],
+      "plugins": [
+        "react-hot-loader/babel",
+        "transform-class-properties",
+        "rewire"
+      ]
     }
   }
 }

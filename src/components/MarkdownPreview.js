@@ -177,7 +177,7 @@ class MarkdownPreview extends React.Component {
   componentDidUpdate (prevProps) {
     // TODO: Rebounce render
     // TODO: Use web worker
-    if (prevProps.content !== this.props.content || prevProps.theme !== this.props.theme || prevProps.codeBlockTheme !== this.props.codeBlockTheme) {
+    if (prevProps.content !== this.props.content || prevProps.previewTheme !== this.props.previewTheme || prevProps.codeBlockTheme !== this.props.codeBlockTheme) {
       this.unmountContent()
       this.mountContent()
     }
@@ -273,7 +273,7 @@ class MarkdownPreview extends React.Component {
    * @memberOf MarkdownPreview
    */
   mountContent () {
-    const { content, theme } = this.props
+    const { content, previewTheme } = this.props
 
     // Render markdown
     console.time('mount')
@@ -283,7 +283,7 @@ class MarkdownPreview extends React.Component {
     console.timeEnd('parse md')
 
     console.time('load theme')
-    this.iframe.contentWindow.document.body.setAttribute('theme', theme)
+    this.iframe.contentWindow.document.body.setAttribute('theme', previewTheme)
     if (this.props.codeBlockTheme !== 'default') {
       this.iframe.contentWindow.document.getElementById('codeMirrorTheme').href = '../../node_modules/codemirror/theme/' + this.props.codeBlockTheme + '.css'
     }
