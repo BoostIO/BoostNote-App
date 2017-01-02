@@ -58,6 +58,7 @@ class MarkdownEditor extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (this.props.docKey !== nextProps.docKey) {
       window.clearTimeout(this.scrollQueue)
+      this.scrollTo(0)
     }
   }
 
