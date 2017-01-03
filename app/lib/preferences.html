@@ -6,7 +6,6 @@
 
   <title>Preferences - Inpad</title>
 
-  <link rel="stylesheet" type="text/css" href="../../node_modules/octicons/build/octicons.css">
   <link rel="stylesheet" type="text/css" href="../../node_modules/codemirror/lib/codemirror.css">
   <style>
     #content {
@@ -36,6 +35,16 @@
 <script type="text/javascript" src="../../node_modules/immutable/dist/immutable.js"></script>
 
 <script type="text/javascript" src="http://localhost:8080/assets/preferences.js"></script>
+
+<script>
+window.electron = require('electron')
+window.remote = window.electron.remote
+
+const installExtension = require('electron-devtools-installer')
+installExtension.default(installExtension.REACT_DEVELOPER_TOOLS)
+  .then((name) => console.log(`Added Extension:  ${name}`))
+  .catch((err) => console.log('An error occurred: ', err))
+</script>
 
 </body>
 </html>

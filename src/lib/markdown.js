@@ -1,5 +1,4 @@
 const remark = require('remark')
-const lint = require('remark-lint')
 const html = require('remark-html')
 const emoji = require('remark-emoji')
 const meta = require('./metaMapper')
@@ -24,7 +23,6 @@ const parser = remark()
   .use(slug)
   .use(emoji)
   .use(meta)
-  .use(lint)
   .use(line)
   .use(html)
 

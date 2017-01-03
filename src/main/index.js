@@ -5,21 +5,11 @@ import store from './lib/redux/store'
 import App from './App'
 import history from './history'
 
+require('octicons/build/octicons.css')
+
 // Disable Pinch Zoom
 const {webFrame} = require('electron')
 webFrame.setZoomLevelLimits(1, 1)
-
-const isDev = process.env.NODE_ENV !== 'production'
-
-if (isDev) {
-  window.electron = require('electron')
-  window.remote = window.electron.remote
-
-  const installExtension = require('electron-devtools-installer')
-  installExtension.default(installExtension.REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err))
-}
 
 // Ignore drag & drop event
 document.addEventListener('drop', function (e) {
@@ -31,8 +21,8 @@ document.addEventListener('dragover', function (e) {
   e.stopPropagation()
 })
 
-if (isDev) {
-  history.listen((location) => {
+if (process.env.NODE_ENV !== 'production') {
+  history.listen(location => {
     if (location.action === 'PUSH') {
       console.info('PUSHING...', location.pathname + location.search)
     }

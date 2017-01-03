@@ -3,6 +3,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const util = require('./tools/util')
 
 const port = 8080
@@ -13,7 +14,7 @@ let config = {
     preferences: ['./src/preferences/index.js']
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.json'],
     alias: {
       'components': path.join(__dirname, 'src/components'),
       'lib': path.join(__dirname, 'src/lib'),
@@ -26,7 +27,8 @@ let config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`,
       'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
-    })
+    }),
+    new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true })
   ],
   externals: [
     // Electron
@@ -55,8 +57,7 @@ let config = {
       'react-redux': 'var ReactRedux',
       'redux': 'var Redux',
       'immutable': 'var Immutable',
-      'codemirror': 'var CodeMirror',
-      'pouchdb': 'var PouchDB'
+      'codemirror': 'var CodeMirror'
     }
   ],
   module: {
@@ -77,6 +78,12 @@ let config = {
             loader: 'json-loader'
           }
         ]
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+          loader: 'css-loader'
+        })
       }
     ]
   },
@@ -98,12 +105,19 @@ let config = {
 
 switch (process.env.NODE_ENV) {
   case 'production':
+    config.plugins.push(new webpack.optimize.DedupePlugin())
     config.plugins.push(new webpack.optimize.UglifyJsPlugin())
     config.plugins.push(new webpack.LoaderOptionsPlugin({
       minimize: true
     }))
+    config.externals = [
+      'electron',
+      {
+        'codemirror': 'var CodeMirror'
+      }
+    ]
 
-    config.performance.hints = true
+    config.performance = false
     break
   case 'development':
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
