@@ -8,8 +8,6 @@
 
 # Inpad
 
-🚧🚧🚧 This app is still UNDER CONSTRUCTION! 🚧🚧🚧
-
 You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inpad-app/Lobby](https://badges.gitter.im/inpad-app/Lobby.svg)](https://gitter.im/inpad-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Features
@@ -17,6 +15,19 @@ You can contact me directly by Gitter! [![Join the chat at https://gitter.im/inp
 - More organize option
 - Github Flavored Markdown(with Latex)
 - Using PouchDB(competible CouchDB and  any LevelDB adapter)
+
+## Install
+
+I support only macOS for now. You can install by [Homebrew](http://brew.sh/).</a></p>
+
+```
+$ brew update
+$ brew cask install inpad
+```
+
+If you don't have Homebrew? [Homebrew](http://brew.sh/)</p>
+
+Windows and Linux will be supported before the March, 2017.</p>
 
 ## Stack
 
