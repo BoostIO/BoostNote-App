@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron app/index.js",
     "start-dev": "NODE_ENV=development electron app/index.js",
-    "compile": "NODE_ENV=production webpack --config webpack.config.js",
+    "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
     "pack": "env-cmd ./.env build --dir",
     "lint": "standard",
@@ -94,7 +94,7 @@
       "resources",
       "node_modules"
     ],
-    "asar": false,
+    "asar": true,
     "mac": {
       "category": "public.app-category.productivity",
       "target": "default",

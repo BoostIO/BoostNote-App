@@ -105,7 +105,6 @@ let config = {
 
 switch (process.env.NODE_ENV) {
   case 'production':
-    config.plugins.push(new webpack.optimize.DedupePlugin())
     config.plugins.push(new webpack.optimize.UglifyJsPlugin())
     config.plugins.push(new webpack.LoaderOptionsPlugin({
       minimize: true
