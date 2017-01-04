@@ -37,6 +37,7 @@ title: Home
 <div class="posts">
   <h2>Recent posts</h2>
   {% for post in paginator.posts %}
+  <hr/>
   <div class="post">
     <h1 class="post-title">
       <a href="{{ site.baseurl }}{{ post.url }}">
