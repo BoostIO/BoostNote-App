@@ -194,14 +194,14 @@ class CodeEditor extends React.Component {
 
   checkTaskItem (line) {
     const splitted = this.codemirror.getValue().split('\n')
-    const match = /- \[(x| )\]/.exec(splitted[line - 1])
+    const match = /- \[(x| )]/.exec(splitted[line - 1])
 
     if (!match) return
 
     if (match[1] === 'x') {
-      splitted[line - 1] = splitted[line - 1].replace(/- \[x\]/, '- [ ]')
+      splitted[line - 1] = splitted[line - 1].replace(/- \[x]/, '- [ ]')
     } else {
-      splitted[line - 1] = splitted[line - 1].replace(/- \[ \]/, '- [x]')
+      splitted[line - 1] = splitted[line - 1].replace(/- \[ ]/, '- [x]')
     }
 
     this.codemirror.setValue(splitted.join('\n'))
