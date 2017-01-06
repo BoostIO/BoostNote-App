@@ -20,14 +20,14 @@ export const DEFAULT_CONFIG = new Map({
 
   editorFontSize: 14,
   editorFontFamily: 'Consolas, "Liberation Mono", Menlo, Courier',
-  editorTheme: 'default',
+  editorTheme: 'dracula',
   // space, tab
   editorIndentStyle: 'space',
   editorIndentSize: 2,
 
   previewFontSize: 14,
   previewFontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial',
-  previewCodeBlockTheme: 'default',
+  previewCodeBlockTheme: 'dracula',
   previewCodeBlockFontFamily: 'Consolas, "Liberation Mono", Menlo, Courier'
 })
 
