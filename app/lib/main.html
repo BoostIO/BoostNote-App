@@ -10,6 +10,9 @@
   <link rel="stylesheet" type="text/css" href="../../node_modules/codemirror/lib/codemirror.css">
   <link rel="stylesheet" type="text/css" href="../../node_modules/codemirror/addon/dialog/dialog.css">
   <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+    }
     #content {
       position: absolute;
       top: 0;
@@ -18,12 +21,43 @@
       bottom: 0;
       overflow: hidden;
     }
-    body {
-      font-family: Helvetica, Arial, sans-serif;
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(0.95);
+      }
+    }
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: white;
+    }
+    #loading img {
+      animation: pulse 1s ease-in-out infinite;
+    }
+    #loading p {
+      font-size: 24px;
     }
   </style>
 </head>
 <body>
+<div id="loading">
+  <img width="300" src="../../resources/icon.svg" />
+  <p>Loading...</p>
+</div>
 <div id="content"></div>
 
 <!-- Codemirror stuff -->

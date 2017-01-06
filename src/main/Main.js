@@ -9,6 +9,10 @@ import { NAV_MIN_WIDTH } from 'lib/consts'
 import ipc from './lib/ipc'
 import NoteList from './NoteList'
 
+function hideLoadingScreen () {
+  document.body.removeChild(document.getElementById('loading'))
+}
+
 const { remote } = require('electron')
 
 const Root = styled.div`
@@ -108,13 +112,16 @@ class Main extends React.Component {
 
     dataAPI.loadAllStorages()
       .then(storageMap => {
-        dispatch({
-          type: 'LOAD_ALL_STORAGES',
-          payload: {
-            storageMap
-          }
+        return dispatch(disaptch => {
+          dispatch({
+            type: 'LOAD_ALL_STORAGES',
+            payload: {
+              storageMap
+            }
+          })
         })
       })
+      .then(hideLoadingScreen)
   }
 
   componentWillUnmount () {
