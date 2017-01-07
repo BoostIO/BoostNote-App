@@ -41,20 +41,20 @@ $$$
 
 export default t => {
   let parsed1 = markdown.parse(rawString1)
-  t.equal(parsed1.data.title, '😄 This is a title\n')
-  t.equal(parsed1.data.preview, 'Preview line\n')
+  t.equal(parsed1.data.title, '😄 This is a title')
+  t.equal(parsed1.data.preview, 'Preview line')
 
   let parsed2 = markdown.parse(rawString2)
-  t.equal(parsed2.data.title, 'This should be title\n')
-  t.equal(parsed2.data.preview, 'this should be a previewed content\n')
+  t.equal(parsed2.data.title, 'This should be title')
+  t.equal(parsed2.data.preview, 'this should be a previewed content')
 
   let parsed3 = markdown.parse('')
   t.equal(parsed3.data.title, '')
   t.equal(parsed3.data.preview, '')
 
   let parsed4 = markdown.parse(rawString4)
-  t.equal(parsed4.data.title, 'Awesome Electron Awesome\n')
-  t.equal(parsed4.data.preview, 'Useful resources for creating apps with Electron\n')
+  t.equal(parsed4.data.title, 'Awesome Electron Awesome')
+  t.equal(parsed4.data.preview, 'Useful resources for creating apps with Electron')
 
   // let parsedMath = markdown.parse(mathString)
   // console.log(parsedMath.toString())
