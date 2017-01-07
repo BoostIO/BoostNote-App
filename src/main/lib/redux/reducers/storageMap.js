@@ -112,7 +112,7 @@ function storageMap (state = defaultStorageMap, action) {
           noteId
         ], note)
 
-        // note is moved to another folder
+        // move note if folder changed
         if (oldNote.get('folder') !== note.get('folder')) {
           state = state.updateIn([
             storageName,

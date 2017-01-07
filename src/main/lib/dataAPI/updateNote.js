@@ -9,7 +9,7 @@ export default function updateNote (storageName, noteId, payload) {
   const db = getDB(storageName)
 
   return db.get(NOTE_ID_PREFIX + noteId)
-    .then((doc) => {
+    .then(doc => {
       payload = Object.assign({}, doc,
         _.pick(payload, ['meta', 'content', 'tags', 'folder']),
         {

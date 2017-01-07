@@ -11,7 +11,7 @@ export default function createNote (storageName, payload) {
   function genNoteId () {
     let id = util.randomBytes()
     return db.get(NOTE_ID_PREFIX + id)
-      .then((doc) => {
+      .then(doc => {
         if (doc == null) return id
         return genNoteId()
       })
@@ -24,7 +24,7 @@ export default function createNote (storageName, payload) {
   const now = new Date().toJSON()
 
   return genNoteId()
-    .then((noteId) => {
+    .then(noteId => {
       return db
         .put(Object.assign({}, payload, {
           _id: NOTE_ID_PREFIX + noteId,

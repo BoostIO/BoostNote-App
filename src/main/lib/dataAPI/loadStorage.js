@@ -19,7 +19,7 @@ import {
 export default function loadStorage (name) {
   return getDB(name)
     .allDocs({include_docs: true})
-    .then((data) => {
+    .then(data => {
       let { noteMap, folderMap, tagMap } = data.rows.reduce((sum, row) => {
         if (isNoteId.test(row.id)) {
           let noteId = row.id.substring(NOTE_ID_PREFIX.length)

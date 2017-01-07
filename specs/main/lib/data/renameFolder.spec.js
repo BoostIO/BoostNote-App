@@ -53,7 +53,7 @@ export default t => {
     })
     .then(fetchFolder)
     .then(res => {
-      t.fail('The folder should not exist.')
+      t.fail('The folder must not exist.')
     })
     .catch(err => {
       if (err.name !== 'not_found') {

@@ -27,7 +27,7 @@ type   | conventions
 -------|--------------------
 Note   | `note:$RANDOM_HASH$`
 Folder | `folder:$PATH_OF_FOLDER$`
-Tag    | `tag:$TAG$`
+Tag    | `tag:$TAG_NAME$`
 
 ### `$RANDOM_HASH$`
 
@@ -37,11 +37,13 @@ This is a string of 10 Random bytes. It can be issued easily by `main/lib/util.r
 
 ### `$PATH_OF_FOLDERS$`
 
-This string should be a valid path. When creating a folder, the app will convert it into a valid path if it is invalid.
+This string should be a valid path for Unix. `/` character will be used for seperating directory components.
 
-### `$TAG$`
+When creating a folder, the app will convert it into a valid path if it is invalid.
 
-Tag is a lowcased alphanumeric string. Spaces will be replaced with `_`.
+### `$TAG_NAME$`
+
+Any character can be used for tag name.
 
 ## Schemes
 

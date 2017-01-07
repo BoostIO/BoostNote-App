@@ -8,7 +8,7 @@ export default function upsertFolder (storageName, folderName) {
   const db = getDB(storageName)
   return db
     .get(FOLDER_ID_PREFIX + folderName)
-    .catch((err) => {
+    .catch(err => {
       if (err.name === 'not_found') return {}
       throw err
     })

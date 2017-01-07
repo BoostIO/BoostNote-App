@@ -59,7 +59,7 @@ class Detail extends React.Component {
     const nextNoteKey = nextProps.noteKey
     const { noteKey } = this.props
 
-    // Note changed
+    // If note switched, save current note and refresh inputs
     if (nextNoteKey !== noteKey) {
       if (noteKey != null) {
         this.dispatchUpdate()

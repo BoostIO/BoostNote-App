@@ -24,7 +24,7 @@ export default function renameFolder (name, folderName, newFolderName) {
         _id: FOLDER_ID_PREFIX + newFolderName
       }, doc))
     })
-    .then(() => {
+    .then(res => {
       return db.put(noteView)
         .catch(err => {
           if (err.name !== 'conflict') throw err
@@ -43,7 +43,7 @@ export default function renameFolder (name, folderName, newFolderName) {
           return db.bulkDocs(docs)
         })
     })
-    .then((res) => {
+    .then(res => {
       return {
         id: folderName
       }
