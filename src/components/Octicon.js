@@ -21,6 +21,7 @@ const Root = styled.svg`
   width: 1em;
   height: 1em;
   vertical-align: middle;
+  fill: currentColor;
   ${p => p.pulse ? pulseStyle : ''}
 `
 
