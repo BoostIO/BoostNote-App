@@ -13,6 +13,15 @@ export const noteView = {
       map: `function mapFun(doc) {
         emit(doc.folder);
       }`
+    },
+    by_tag: {
+      map: `function mapFun(doc) {
+        if (Array.isArray(doc.tags)) {
+          doc.tags.forEach(tag => {
+            emit(tag)
+          })
+        }
+      }`
     }
   }
 }

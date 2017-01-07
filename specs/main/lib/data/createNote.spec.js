@@ -7,11 +7,13 @@ import {
 const dbName = __filename
 const db = new DummyDB(dbName)
 
+const folderName = 'Test Folder'
+const tagName = 'test_tag'
 const note = {
   meta: {},
   content: 'test',
-  tags: ['test_tag'],
-  folder: 'Notes',
+  tags: [tagName],
+  folder: folderName,
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -23,14 +25,15 @@ function fetchNote (noteId) {
 export default t => {
   return createNote(dbName, note)
     .then(res => {
-      t.equal(res.note.get('content'), 'test')
+      t.equal(res.note.get('content'), note.content)
       return res.id
     })
     .then(fetchNote)
     .then(res => {
       t.ok(res != null)
-      t.equal(res.content, 'test')
-      t.equal(res.tags[0], 'test_tag')
+      t.equal(res.content, note.content)
+      t.equal(res.folder, folderName)
+      t.equal(res.tags[0], tagName)
     })
 }
 
