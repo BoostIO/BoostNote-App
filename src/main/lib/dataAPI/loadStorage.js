@@ -6,7 +6,8 @@ import {
   TAG_ID_PREFIX,
   isNoteId,
   isFolderId,
-  isTagId
+  isTagId,
+  notesView
 } from './consts'
 
 /**
@@ -17,8 +18,18 @@ import {
  * including `notes` and `folders` field
  */
 export default function loadStorage (name) {
-  return getDB(name)
-    .allDocs({include_docs: true})
+  const db = getDB(name)
+  return db
+    .get(notesView._id)
+    .catch(err => {
+      if (err.name === 'not_found') return notesView
+    })
+    .then(doc => {
+      return db.put(Object.assign(doc, notesView))
+    })
+    .then(res => {
+      return db.allDocs({include_docs: true})
+    })
     .then(data => {
       let { noteMap, folderMap, tagMap } = data.rows.reduce((sum, row) => {
         if (isNoteId.test(row.id)) {
@@ -38,7 +49,7 @@ export default function loadStorage (name) {
           }))
         } else if (isTagId.test(row.id)) {
           let tagName = row.id.substring(TAG_ID_PREFIX.length)
-          sum.folderMap = sum.tagMap.set(tagName, new Map({
+          sum.tagMap = sum.tagMap.set(tagName, new Map({
             notes: new Set()
           }))
         }

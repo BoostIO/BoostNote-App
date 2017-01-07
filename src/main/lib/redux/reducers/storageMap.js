@@ -1,4 +1,4 @@
-import { Map, OrderedMap } from 'immutable'
+import { Map, OrderedMap, Set } from 'immutable'
 
 const defaultStorageMap = OrderedMap()
 
@@ -17,6 +17,17 @@ function storageMap (state = defaultStorageMap, action) {
         ],
         folder)
       }
+    case 'UPDATE_TAG':
+      {
+        const { storageName, tagName, tag } = action.payload
+
+        return state.setIn([
+          storageName,
+          'tagMap',
+          tagName
+        ],
+        tag)
+      }
     case 'DELETE_FOLDER':
       {
         const { storageName, folderName } = action.payload
@@ -32,7 +43,7 @@ function storageMap (state = defaultStorageMap, action) {
           .reduce((state, noteId) => {
             return state.deleteIn([
               storageName,
-              'notes',
+              'noteMap',
               noteId
             ])
           }, state)
@@ -41,6 +52,33 @@ function storageMap (state = defaultStorageMap, action) {
           storageName,
           'folderMap',
           folderName
+        ])
+      }
+    case 'DELETE_TAG':
+      {
+        const { storageName, tagName } = action.payload
+
+        // Untag notes
+        const noteSet = state.getIn([
+          storageName,
+          'tagMap',
+          tagName,
+          'notes'
+        ])
+        state = noteSet
+          .reduce((state, noteId) => {
+            return state.updateIn([
+              storageName,
+              'noteMap',
+              noteId,
+              'tags'
+            ], tags => tags.delete(tagName))
+          }, state)
+
+        return state.deleteIn([
+          storageName,
+          'tagMap',
+          tagName
         ])
       }
     case 'MOVE_FOLDER':
@@ -77,7 +115,39 @@ function storageMap (state = defaultStorageMap, action) {
           newFolderName
         ], new Map([['notes', noteSet]]))
       }
-    // TODO: Need tag reducers
+    case 'RENAME_TAG':
+      {
+        const { storageName, tagName, newTagName } = action.payload
+
+        // Update note.tags attribute
+        const noteSet = state.getIn([
+          storageName,
+          'tagMap',
+          tagName,
+          'notes'
+        ])
+        state = noteSet
+          .reduce((state, noteId) => {
+            return state.updateIn([
+              storageName,
+              'noteMap',
+              noteId
+            ], note => note.update('tags', tags => tags.delete(tagName).add(newTagName)))
+          }, state)
+
+        state = state.deleteIn([
+          storageName,
+          'tagMap',
+          tagName
+        ])
+
+        // Create new tag
+        return state.setIn([
+          storageName,
+          'tagMap',
+          newTagName
+        ], new Map([['notes', noteSet]]))
+      }
     case 'CREATE_NOTE':
       {
         const { storageName, noteId, note } = action.payload
@@ -93,6 +163,19 @@ function storageMap (state = defaultStorageMap, action) {
           note.get('folder'),
           'notes'
         ], noteSet => noteSet.add(noteId))
+
+        state = note.get('tags')
+          .reduce((sum, tag) => {
+            return sum.updateIn([
+              storageName,
+              'tagMap',
+              tag,
+              'notes'
+            ], noteSet => {
+              if (noteSet == null) noteSet = new Set()
+              return noteSet.add(noteId)
+            })
+          }, state)
 
         return state
       }
@@ -128,6 +211,33 @@ function storageMap (state = defaultStorageMap, action) {
             'notes'
           ], noteSet => noteSet.add(noteId))
         }
+
+        state = oldNote.get('tags')
+          .reduce((sum, tag) => {
+            return sum.updateIn([
+              storageName,
+              'tagMap',
+              tag,
+              'notes'
+            ], noteSet => {
+              if (noteSet == null) noteSet = new Set()
+              return noteSet.delete(noteId)
+            })
+          }, state)
+
+        state = note.get('tags')
+          .reduce((sum, tag) => {
+            return sum.updateIn([
+              storageName,
+              'tagMap',
+              tag,
+              'notes'
+            ], noteSet => {
+              if (noteSet == null) noteSet = new Set()
+              return noteSet.add(noteId)
+            })
+          }, state)
+
         return state
       }
     case 'DELETE_NOTE':

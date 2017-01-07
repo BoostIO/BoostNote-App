@@ -1,7 +1,7 @@
 import { getDB } from './context'
 import {
   FOLDER_ID_PREFIX,
-  noteView
+  notesView
 } from './consts'
 
 export default function deleteFolder (storageName, folderName) {
@@ -12,8 +12,11 @@ export default function deleteFolder (storageName, folderName) {
       doc._deleted = true
       return db.put(doc)
     })
+    .catch(err => {
+      if (err.name !== 'not_found') throw err
+    })
     .then(res => {
-      return db.put(noteView)
+      return db.put(notesView)
         .catch(err => {
           if (err.name !== 'conflict') throw err
         })

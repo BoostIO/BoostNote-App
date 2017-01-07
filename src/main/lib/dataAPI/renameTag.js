@@ -9,7 +9,7 @@
 import { getDB } from './context'
 import {
   TAG_ID_PREFIX,
-  noteView
+  notesView
 } from './consts'
 
 export default function renameTag (name, tagName, newTagName) {
@@ -33,7 +33,7 @@ export default function renameTag (name, tagName, newTagName) {
       }, doc))
     })
     .then(res => {
-      return db.put(noteView)
+      return db.put(notesView)
         .catch(err => {
           if (err.name !== 'conflict') throw err
         })

@@ -66,6 +66,7 @@ Right     | Right         | `list:focus`
 Up        | Up            | `nav:up`
 Down      | Down          | `nav:down`
 D         | D             | `nav:delete`
+Tab       | Tab           | `nav:toggle-tab`
 
 ### Commands
 

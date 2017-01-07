@@ -1,7 +1,8 @@
 import createNote from 'main/lib/dataAPI/createNote'
 import DummyDB from 'specs/utils/DummyDB'
 import {
-  NOTE_ID_PREFIX
+  NOTE_ID_PREFIX,
+  TAG_ID_PREFIX
 } from 'main/lib/dataAPI/consts'
 
 const dbName = __filename
@@ -22,6 +23,10 @@ function fetchNote (noteId) {
   return db.get(NOTE_ID_PREFIX + noteId)
 }
 
+function fetchTag () {
+  return db.get(TAG_ID_PREFIX + tagName)
+}
+
 export default t => {
   return createNote(dbName, note)
     .then(res => {
@@ -34,6 +39,10 @@ export default t => {
       t.equal(res.content, note.content)
       t.equal(res.folder, folderName)
       t.equal(res.tags[0], tagName)
+    })
+    .then(fetchTag)
+    .then(doc => {
+      t.equal(doc._id, TAG_ID_PREFIX + tagName)
     })
 }
 

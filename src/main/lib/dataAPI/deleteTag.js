@@ -1,7 +1,7 @@
 import { getDB } from './context'
 import {
   TAG_ID_PREFIX,
-  noteView
+  notesView
 } from './consts'
 
 export default function deleteTag (storageName, tagName) {
@@ -12,10 +12,16 @@ export default function deleteTag (storageName, tagName) {
       doc._deleted = true
       return db.put(doc)
     })
+    .catch(err => {
+      if (err.name !== 'not_found') throw err
+    })
     .then(res => {
-      return db.put(noteView)
+      return db.put(notesView)
         .catch(err => {
-          if (err.name !== 'conflict') throw err
+          if (err.name === 'conflict') {
+            return
+          }
+          throw err
         })
         .then(res => {
           return db.query('notes/by_tag', {
@@ -33,7 +39,7 @@ export default function deleteTag (storageName, tagName) {
           return db.bulkDocs(docs)
         })
     })
-    .then((res) => {
+    .then(res => {
       return {
         id: tagName
       }

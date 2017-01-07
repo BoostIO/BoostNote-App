@@ -1,7 +1,7 @@
 import { getDB } from './context'
 import {
   FOLDER_ID_PREFIX,
-  noteView
+  notesView
 } from './consts'
 
 export default function renameFolder (name, folderName, newFolderName) {
@@ -25,7 +25,7 @@ export default function renameFolder (name, folderName, newFolderName) {
       }, doc))
     })
     .then(res => {
-      return db.put(noteView)
+      return db.put(notesView)
         .catch(err => {
           if (err.name !== 'conflict') throw err
         })

@@ -54,7 +54,8 @@ export const DEFAULT_KEYMAP = Immutable.fromJS({
     Right: 'list:focus',
     Up: 'nav:up',
     Down: 'nav:down',
-    D: 'nav:delete'
+    D: 'nav:delete',
+    Tab: 'nav:toggle-tab'
   },
   list: {
     Enter: 'detail:focus',

@@ -1,6 +1,7 @@
 import { getDB } from './context'
 import {
-  NOTE_ID_PREFIX
+  NOTE_ID_PREFIX,
+  TAG_ID_PREFIX
 } from './consts'
 import { Map, Set } from 'immutable'
 import util from 'lib/util'
@@ -25,12 +26,25 @@ export default function createNote (storageName, payload) {
 
   return genNoteId()
     .then(noteId => {
-      return db
-        .put(Object.assign({}, payload, {
-          _id: NOTE_ID_PREFIX + noteId,
-          createdAt: now,
-          updatedAt: now
+      return Promise
+        .all(payload.tags.map(tag => {
+          return db.get(TAG_ID_PREFIX + tag)
+            .catch(err => {
+              if (err.name === 'not_found') {
+                return db.put({
+                  _id: TAG_ID_PREFIX + tag
+                })
+              }
+              throw err
+            })
         }))
+        .then(res => {
+          return db.put(Object.assign({}, payload, {
+            _id: NOTE_ID_PREFIX + noteId,
+            createdAt: now,
+            updatedAt: now
+          }))
+        })
         .then(res => {
           return {
             id: noteId,

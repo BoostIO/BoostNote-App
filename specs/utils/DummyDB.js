@@ -76,6 +76,10 @@ class DummyDB {
     return this.db.get(...args)
   }
 
+  put (...args) {
+    return this.db.put(...args)
+  }
+
   destroy (...args) {
     return this.db.destroy(...args)
   }

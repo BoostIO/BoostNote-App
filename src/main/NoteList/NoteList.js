@@ -416,6 +416,27 @@ class NoteList extends React.Component {
         })
         .toArray()
       notes = new Map(notes)
+    } else if (params.tagName != null) {
+      let noteSet = storageMap
+        .getIn([
+          params.storageName,
+          'tagMap',
+          params.tagName,
+          'notes'
+        ])
+
+      if (noteSet == null) return new Map()
+
+      notes = noteSet
+        .map(noteId => {
+          return [
+            noteId,
+            storageMap
+              .getIn([params.storageName, 'noteMap', noteId])
+          ]
+        })
+        .toArray()
+      notes = new Map(notes)
     } else if (params.storageName != null) {
       notes = storageMap.getIn([params.storageName, 'noteMap'])
       if (notes == null) return new Map()

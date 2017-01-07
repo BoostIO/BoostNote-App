@@ -267,6 +267,11 @@ class TitleBar extends React.Component {
       folderName = 'Notes'
     }
 
+    let tags = []
+    if (_.isString(router.params.tagName)) {
+      tags.push(router.params.tagName)
+    }
+
     // TODO: this should be moved to redux saga
     dataAPI
       .createNote(storageName, {
@@ -276,7 +281,7 @@ class TitleBar extends React.Component {
           preview: ''
         },
         content: '',
-        tags: []
+        tags
       })
       .then(res => {
         store.dispatch({
