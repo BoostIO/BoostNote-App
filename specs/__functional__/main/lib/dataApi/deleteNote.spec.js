@@ -24,26 +24,26 @@ function fetchNote (noteId) {
   return db.get(NOTE_ID_PREFIX + noteId)
 }
 
-export const before = t => {
-  return createdDummyNote()
-}
+describe('dataAPI.deleteNote', () => {
+  beforeAll(() => {
+    return createdDummyNote()
+  })
 
-export default t => {
-  return deleteNote(dbName, noteId)
-    .then(res => {
-      return res.id
-    })
-    .then(fetchNote)
-    .then(res => {
-      t.fail('The note should not exist.')
-    })
-    .catch(err => {
-      if (err.name !== 'not_found') {
-        throw err
-      }
-    })
-}
+  it('should delete a note', () => {
+    return deleteNote(dbName, noteId)
+      .then(res => {
+        return res.id
+      })
+      .then(fetchNote)
+      .then(res => {
+        throw new Error('should not fired')
+      })
+      .catch(err => {
+        expect(err.message).toEqual('missing')
+      })
+  })
 
-export const after = t => {
-  return db.destory()
-}
+  afterAll(() => {
+    return db.destory()
+  })
+})

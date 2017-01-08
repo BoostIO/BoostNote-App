@@ -43,9 +43,8 @@
         "react"
       ],
       "plugins": [
-        "react-hot-loader/babel",
-        "transform-class-properties",
-        "rewire"
+        "transform-es2015-modules-commonjs",
+        "transform-class-properties"
       ]
     }
   }

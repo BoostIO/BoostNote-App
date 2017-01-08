@@ -129,22 +129,6 @@ switch (process.env.NODE_ENV) {
     config.entry.main = devEntry.concat(config.entry.main)
     config.entry.preferences = devEntry.concat(config.entry.preferences)
     break
-  case 'test':
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-    config.entry = {
-      test: [
-        'webpack-dev-server/client?http://localhost:' + 8081,
-        'webpack/hot/only-dev-server',
-        './tools/webpack-test-entry.js'
-      ]
-    }
-
-    config.output.publicPath = 'http://localhost:' + 8081 + '/assets/'
-    config.devServer.port = 8081
-    config.node.__filename = true
-    config.node.__dirname = true
-    config.resolve.alias.specs = path.join(__dirname, 'specs')
 }
 
 module.exports = config

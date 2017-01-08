@@ -57,42 +57,42 @@ function fetchAnotherNote () {
     .get(NOTE_ID_PREFIX + anotherNoteId)
 }
 
-export const before = t => {
-  return createDummyTag()
-    .then(createDummyNote)
-    .then(createAnotherDummyNote)
-}
+describe('dataAPI.renameFolder', () => {
+  beforeAll(() => {
+    return createDummyTag()
+      .then(createDummyNote)
+      .then(createAnotherDummyNote)
+  })
 
-export default t => {
-  return renameTag(dbName, tagName, newTagName)
-    .then(tag => {
-      t.equal(tag.id, tagName)
-    })
-    .then(fetchTag)
-    .then(res => {
-      t.fail('The tag must be deleted.')
-    })
-    .catch(err => {
-      if (err.name !== 'not_found') {
-        throw err
-      }
-    })
-    .then(fetchNote)
-    .then(res => {
-      t.ok(res.tags.indexOf(tagName) === -1)
-      t.ok(res.tags.indexOf(newTagName) > -1)
-    })
-    .then(fetchAnotherNote)
-    .then(res => {
-      t.ok(res.tags.indexOf(tagName) === -1)
-      t.ok(res.tags.indexOf(newTagName) > -1)
-    })
-    .then(fetchRenamedTag)
-    .then(res => {
-      t.equal(res._id, TAG_ID_PREFIX + newTagName)
-    })
-}
+  it('should delete old tag and create a new tag and update all notes', () => {
+    return renameTag(dbName, tagName, newTagName)
+      .then(tag => {
+        expect(tag.id).toEqual(tagName)
+      })
+      .then(fetchTag)
+      .then(res => {
+        throw new Error('should not fired')
+      })
+      .catch(err => {
+        expect(err.message).toEqual('missing')
+      })
+      .then(fetchNote)
+      .then(res => {
+        expect(res.tags.indexOf(tagName) === -1).toBeTruthy()
+        expect(res.tags.indexOf(newTagName) > -1).toBeTruthy()
+      })
+      .then(fetchAnotherNote)
+      .then(res => {
+        expect(res.tags.indexOf(tagName) === -1).toBeTruthy()
+        expect(res.tags.indexOf(newTagName) > -1).toBeTruthy()
+      })
+      .then(fetchRenamedTag)
+      .then(res => {
+        expect(res._id).toEqual(TAG_ID_PREFIX + newTagName)
+      })
+  })
 
-export const after = t => {
-  return db.destory()
-}
+  afterAll(() => {
+    return db.destory()
+  })
+})

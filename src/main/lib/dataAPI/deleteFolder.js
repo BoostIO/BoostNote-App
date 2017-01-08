@@ -26,6 +26,21 @@ export default function deleteFolder (storageName, folderName) {
             include_docs: true
           })
         })
+        .catch(err => {
+          if (err.message === 'ddoc notes has no view named by_folder') {
+            return db.get(notesView._id)
+              .then(ddoc => {
+                return db.put(Object.assign(ddoc, notesView))
+              })
+              .then(res => {
+                return db.query('notes/by_folder', {
+                  key: folderName,
+                  include_docs: true
+                })
+              })
+          }
+          throw err
+        })
         .then(function (result) {
           let docs = result.rows.map(row => {
             row.doc._deleted = true

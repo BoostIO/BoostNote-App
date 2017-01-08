@@ -46,32 +46,32 @@ function createWrongView () {
     })
 }
 
-export const before = t => {
-  return createDummyTag()
-    .then(createDummyNote)
-    .then(createWrongView)
-}
+describe('dataAPI.deleteTag', () => {
+  beforeAll(() => {
+    return createDummyTag()
+      .then(createDummyNote)
+      .then(createWrongView)
+  })
 
-export default t => {
-  return deleteTag(dbName, tagName)
-    .then(tag => {
-      t.equal(tag.id, tagName)
-    })
-    .then(fetchNote)
-    .then(res => {
-      t.equal(res.tags.length, 0)
-    })
-    .then(fetchTag)
-    .then(res => {
-      t.fail('The tag should not exist.')
-    })
-    .catch(err => {
-      if (err.name !== 'not_found') {
-        throw err
-      }
-    })
-}
+  it('should delete a tag and untag its notes', () => {
+    return deleteTag(dbName, tagName)
+      .then(tag => {
+        expect(tag.id).toEqual(tagName)
+      })
+      .then(fetchNote)
+      .then(res => {
+        expect(res.tags.length).toEqual(0)
+      })
+      .then(fetchTag)
+      .then(res => {
+        throw new Error('should not fired')
+      })
+      .catch(err => {
+        expect(err.message).toEqual('missing')
+      })
+  })
 
-export const after = t => {
-  return db.destory()
-}
+  afterAll(() => {
+    return db.destory()
+  })
+})
