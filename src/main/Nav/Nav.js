@@ -143,13 +143,7 @@ class Nav extends React.Component {
 
   handleBlur = e => {
     if (isFinallyBlurred(e, this.root)) {
-      const { tagName } = this.context.router.params
-      const nextTab = tagName != null
-        ? 'tags'
-        : 'folders'
-
       this.setState({
-        tab: nextTab,
         isFocused: false
       })
     }
@@ -332,7 +326,6 @@ class Nav extends React.Component {
         this.linkList = this.state.tab !== 'tags'
           ? this.linkList.concat(folderMap.map((folder, key) => storageName + '/' + key).toArray())
           : this.linkList.concat(tagMap.map((tag, key) => storageName + '/' + key).toArray())
-
 
         return <StorageSection
           ref={'storage-' + storageName}

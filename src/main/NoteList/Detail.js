@@ -70,6 +70,12 @@ class Detail extends React.Component {
         tags: new Set(nextProps.note.get('tags')),
         content: nextProps.note.get('content')
       })
+    } else {
+      if (!nextProps.note.get('tags').equals(this.props.note.get('tags'))) {
+        this.setState({
+          tags: new Set(nextProps.note.get('tags'))
+        })
+      }
     }
   }
 

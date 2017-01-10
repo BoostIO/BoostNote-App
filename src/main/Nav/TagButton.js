@@ -118,6 +118,51 @@ class TagButton extends React.Component {
     }
   }
 
+  handleDragEnter = e => {
+    this.setState({
+      isDragEntered: true
+    })
+  }
+
+  handleDragLeave = e => {
+    this.setState({
+      isDragEntered: false
+    })
+  }
+
+  handleDrop = e => {
+    const data = JSON.parse(e.dataTransfer.getData('application/json'))
+
+    this.setState({
+      isDragEntered: false
+    }, () => {
+      this.parseDropData(data)
+    })
+  }
+
+  parseDropData (data) {
+    const { storageName, tagName } = this.props
+    const { store } = this.context
+
+    switch (data.type) {
+      case 'MOVE_NOTE':
+        const noteId = data.payload.noteKey
+
+        dataAPI
+          .updateNote(storageName, noteId, {tags: data.payload.note.tags.concat([tagName])})
+          .then(res => {
+            store.dispatch({
+              type: 'UPDATE_NOTE',
+              payload: {
+                storageName,
+                noteId: res.id,
+                note: res.note
+              }
+            })
+          })
+    }
+  }
+
   rename () {
     this.setState({
       isRenaming: true,
@@ -170,9 +215,13 @@ class TagButton extends React.Component {
 
   render () {
     const { tagURL, tagName, tagMeta, isFocused } = this.props
-
+    // TODO: Drag & drop to tag note
     return (
-      <Root>
+      <Root
+        onDragEnter={this.handleDragEnter}
+        onDragLeave={this.handleDragLeave}
+        onDrop={this.handleDrop}
+      >
         {this.state.isRenaming
           ? <RenameInput
             innerRef={c => (this.input = c)}

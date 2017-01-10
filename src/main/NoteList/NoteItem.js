@@ -187,14 +187,15 @@ class NoteItem extends React.Component {
   }
 
   handleDragStart = e => {
-    const { noteKey } = this.props
+    const { noteKey, note } = this.props
 
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.dropEffect = 'move'
     e.dataTransfer.setData('application/json', JSON.stringify({
       type: 'MOVE_NOTE',
       payload: {
-        noteKey
+        noteKey,
+        note
       }
     }))
 
