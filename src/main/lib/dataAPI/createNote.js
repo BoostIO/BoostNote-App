@@ -1,6 +1,7 @@
 import { getDB } from './context'
 import {
   NOTE_ID_PREFIX,
+  FOLDER_ID_PREFIX,
   TAG_ID_PREFIX
 } from './consts'
 import { Map, Set } from 'immutable'
@@ -38,6 +39,17 @@ export default function createNote (storageName, payload) {
               throw err
             })
         }))
+        .then(res => {
+          return db.get(FOLDER_ID_PREFIX + payload.folder)
+            .catch(err => {
+              if (err.name === 'not_found') {
+                return db.put({
+                  _id: FOLDER_ID_PREFIX + payload.folder
+                })
+              }
+              throw err
+            })
+        })
         .then(res => {
           return db.put(Object.assign({}, payload, {
             _id: NOTE_ID_PREFIX + noteId,

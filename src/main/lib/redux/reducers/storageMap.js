@@ -132,7 +132,9 @@ function storageMap (state = defaultStorageMap, action) {
               storageName,
               'noteMap',
               noteId
-            ], note => note.update('tags', tags => tags.delete(tagName).add(newTagName)))
+            ], note => note.update('tags', tags => {
+              return tags.delete(tagName).add(newTagName)
+            }))
           }, state)
 
         state = state.deleteIn([
@@ -162,7 +164,10 @@ function storageMap (state = defaultStorageMap, action) {
           'folderMap',
           note.get('folder'),
           'notes'
-        ], noteSet => noteSet.add(noteId))
+        ], noteSet => {
+          if (noteSet == null) return new Set([noteId])
+          return noteSet.add(noteId)
+        })
 
         state = note.get('tags')
           .reduce((sum, tag) => {
@@ -172,7 +177,7 @@ function storageMap (state = defaultStorageMap, action) {
               tag,
               'notes'
             ], noteSet => {
-              if (noteSet == null) noteSet = new Set()
+              if (noteSet == null) return new Set([noteId])
               return noteSet.add(noteId)
             })
           }, state)

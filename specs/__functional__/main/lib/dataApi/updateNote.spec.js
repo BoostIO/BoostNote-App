@@ -2,6 +2,7 @@ import updateNote from 'main/lib/dataAPI/updateNote'
 import DummyDB from 'specs/utils/DummyDB'
 import {
   NOTE_ID_PREFIX,
+  FOLDER_ID_PREFIX,
   TAG_ID_PREFIX
 } from 'main/lib/dataAPI/consts'
 
@@ -21,6 +22,7 @@ const newNote = {
     title: 'changed'
   },
   content: 'changed',
+  folder: 'Other Folder',
   tags: ['changed']
 }
 
@@ -34,6 +36,10 @@ function fetchNote (noteId) {
 
 function fetchNewTag () {
   return db.get(TAG_ID_PREFIX + newNote.tags[0])
+}
+
+function fetchNewFolder () {
+  return db.get(FOLDER_ID_PREFIX + newNote.folder)
 }
 
 describe('dataAPI.updateNote', () => {
@@ -52,6 +58,10 @@ describe('dataAPI.updateNote', () => {
         expect(res).not.toBeNull()
         expect(res.content).toEqual('changed')
         expect(res.tags[0]).toEqual('changed')
+      })
+      .then(fetchNewFolder)
+      .then(res => {
+        expect(res._id).toEqual(FOLDER_ID_PREFIX + newNote.folder)
       })
       .then(fetchNewTag)
       .then(res => {

@@ -2,6 +2,7 @@ import createNote from 'main/lib/dataAPI/createNote'
 import DummyDB from 'specs/utils/DummyDB'
 import {
   NOTE_ID_PREFIX,
+  FOLDER_ID_PREFIX,
   TAG_ID_PREFIX
 } from 'main/lib/dataAPI/consts'
 
@@ -10,6 +11,10 @@ const db = new DummyDB(dbName)
 
 function fetchNote (noteId) {
   return db.get(NOTE_ID_PREFIX + noteId)
+}
+
+function fetchFolder () {
+  return db.get(FOLDER_ID_PREFIX + folderName)
 }
 
 function fetchTag () {
@@ -40,6 +45,10 @@ describe('dataApi.createNote', () => {
         expect(res.content).toEqual(note.content)
         expect(res.folder).toEqual(folderName)
         expect(res.tags[0]).toEqual(tagName)
+      })
+      .then(fetchFolder)
+      .then(doc => {
+        expect(doc._id).toEqual(FOLDER_ID_PREFIX + folderName)
       })
       .then(fetchTag)
       .then(doc => {
