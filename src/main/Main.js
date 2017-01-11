@@ -173,20 +173,23 @@ class Main extends React.Component {
           />
 
           <Body>
-            <Nav storageMap={storageMap}
-              status={status}
-              width={this.state.navWidth}
-              keymap={keymap}
-            />
-
-            <Slider
-              onMouseDown={this.handleSliderMouseDown}
-              onMouseUp={this.handleSliderMouseUp}
-            >
-              <SliderLine
-                active={this.state.isSliderActive}
+            {!status.get('navHidden') &&
+              <Nav storageMap={storageMap}
+                status={status}
+                width={this.state.navWidth}
+                keymap={keymap}
               />
-            </Slider>
+            }
+            {!status.get('navHidden') &&
+              <Slider
+                onMouseDown={this.handleSliderMouseDown}
+                onMouseUp={this.handleSliderMouseUp}
+              >
+                <SliderLine
+                  active={this.state.isSliderActive}
+                />
+              </Slider>
+            }
 
             <Content>
               <NoteList

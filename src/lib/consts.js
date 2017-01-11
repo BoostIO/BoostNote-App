@@ -32,6 +32,7 @@ export const DEFAULT_CONFIG = new Map({
 })
 
 export const DEFAULT_STATUS = Map({
+  navHidden: false,
   // folders, tags
   navTab: 'folders',
   navWidth: 150,

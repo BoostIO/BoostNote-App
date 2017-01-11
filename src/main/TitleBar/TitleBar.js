@@ -138,6 +138,25 @@ class TitleBar extends React.Component {
     window.removeEventListener('resize', this.handleWindowResize)
   }
 
+  handleNavToggleButtonClick = e => {
+    const { status } = this.props
+    const { store } = this.context
+
+    store
+      .dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: {
+            navHidden: !status.get('navHidden')
+          }
+        }
+      })
+
+    if (!status.get('navHidden')) {
+      window.dispatchEvent(new window.CustomEvent('list:focus'))
+    }
+  }
+
   handleNewButtonClick = e => {
     this.createNote()
   }
@@ -324,6 +343,12 @@ class TitleBar extends React.Component {
             innerRef={c => (this.toolbar = c)}
           >
             <div className='left'>
+              <Button onClick={this.handleNavToggleButtonClick}
+                title='Toggle Nav'
+                active={!status.get('navHidden')}
+              >
+                <Octicon icon='repo' />
+              </Button>
               <Button onClick={this.handleDeleteButtonClick}
                 title='Delete'>
                 <Octicon icon='trashcan' />
