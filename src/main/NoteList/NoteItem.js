@@ -112,6 +112,7 @@ const Root = styled.div`
     border-radius: 3px;
     background-color: ${p => p.theme.buttonBackgroundColor};
     color: ${p => p.theme.color};
+    white-space: nowrap;
   }
   .tags .count {
     position: absolute;

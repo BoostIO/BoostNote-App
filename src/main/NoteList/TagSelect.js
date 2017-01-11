@@ -5,34 +5,46 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 
 const Root = styled.div`
   height: 30px;
-  display: flex;
+  position: relative;
   align-items: center;
   .Octicon {
     fill: ${p => p.theme.inactiveColor};
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    width: 16px;
   }
   .list {
+    position: absolute;
+    left: 10px;
+    top: 4px;
+    right: 0;
     display: flex;
     align-items: center;
+    padding: 0 10px;
+    overflow: auto;
   }
   .item {
     -webkit-user-select: none;
     margin: 0 2px;
-    height: 20px;
+    height: 22px;
     font-size: 13px;
     border: ${p => p.theme.border};
-    line-height: 20px;
+    line-height: 22px;
     padding: 0 6px;
     border-radius: 4px;
     cursor: default;
     color: ${p => p.theme.color};
+    box-sizing: border-box;
     &:hover {
       background-color: ${p => p.theme.buttonHoverColor};
     }
   }
   input {
+    box-sizing: border-box;
     margin: 0 2px;
-    height: 20px;
-    line-height: 20px;
+    height: 22px;
+    line-height: 22px;
     padding: 0;
     width: 100px;
     border: none;
@@ -138,14 +150,14 @@ class TagSelect extends React.Component {
         <Octicon className='Octicon' icon='tag' />
         <div className='list'>
           {tagList}
+          <input
+            ref={c => (this.input = c)}
+            value={this.state.newTag}
+            onChange={this.handleInputChange}
+            onKeyDown={this.handleInputKeyDown}
+            placeholder='Add Tags...'
+          />
         </div>
-        <input
-          ref={c => (this.input = c)}
-          value={this.state.newTag}
-          onChange={this.handleInputChange}
-          onKeyDown={this.handleInputKeyDown}
-          placeholder='Add Tags...'
-        />
       </Root>
     )
   }
