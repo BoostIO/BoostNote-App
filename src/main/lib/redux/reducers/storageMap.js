@@ -9,24 +9,28 @@ function storageMap (state = defaultStorageMap, action) {
     case 'UPDATE_FOLDER':
       {
         const { storageName, folderName, folder } = action.payload
-
-        return state.setIn([
+        const keys = [
           storageName,
           'folderMap',
           folderName
-        ],
-        folder)
+        ]
+        if (state.hasIn(keys)) {
+          return state.mergeIn(keys, folder)
+        }
+        return state.setIn(keys, folder.set('notes', new Set()))
       }
     case 'UPDATE_TAG':
       {
         const { storageName, tagName, tag } = action.payload
-
-        return state.setIn([
+        const keys = [
           storageName,
           'tagMap',
           tagName
-        ],
-        tag)
+        ]
+        if (state.hasIn(keys)) {
+          return state.mergeIn(keys, tag)
+        }
+        return state.setIn(keys, tag.set('notes', new Set()))
       }
     case 'DELETE_FOLDER':
       {

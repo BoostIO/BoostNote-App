@@ -1,4 +1,4 @@
-import { Map, OrderedMap, Set } from 'immutable'
+import { Map, Set } from 'immutable'
 import storageMap from 'main/lib/redux/reducers/storageMap'
 import DummyStorageMap from 'specs/utils/DummyStorageMap'
 

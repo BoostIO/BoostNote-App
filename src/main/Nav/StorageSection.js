@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
-import { Map, Set } from 'immutable'
+import { Map } from 'immutable'
 import { routerShape } from 'react-router'
 import filenamify from 'filenamify'
 import ContextMenu from 'main/lib/ContextMenu'
@@ -139,13 +139,29 @@ class StorageSection extends React.Component {
   }
 
   resolveNewName = newName => {
-    const { folderMap } = this.props
+    const { folderMap, tagMap, tab } = this.props
 
     let count = 0
-    let originalName = filenamify(newName, {replacement: '_'})
-    let resolvedName = originalName
-    while (folderMap.has(resolvedName)) {
-      resolvedName = `${originalName} (${++count})`
+    let resolvedName
+    if (tab === 'folders') {
+      let originalName = filenamify(newName, {replacement: '_'})
+        .trim()
+      resolvedName = originalName
+      if (resolvedName.length === 0) {
+        originalName = 'New Folder'
+      }
+      while (folderMap.has(resolvedName)) {
+        resolvedName = `${originalName} (${++count})`
+      }
+    } else {
+      let originalName = newName.trim()
+      resolvedName = originalName
+      if (resolvedName.length === 0) {
+        originalName = 'New Tag'
+      }
+      while (tagMap.has(resolvedName)) {
+        resolvedName = `${originalName} (${++count})`
+      }
     }
 
     return resolvedName
@@ -156,7 +172,6 @@ class StorageSection extends React.Component {
     const { store, router } = this.context
 
     const newName = this.resolveNewName(this.state.newName)
-
     if (tab === 'folders') {
       store
         .dispatch(dispatch => {
@@ -169,9 +184,7 @@ class StorageSection extends React.Component {
                 payload: {
                   storageName,
                   folderName: folderName,
-                  folder: new Map([
-                    ['notes', new Set()]
-                  ])
+                  folder: new Map()
                 }
               })
               return folderName
@@ -181,28 +194,28 @@ class StorageSection extends React.Component {
           router.push('/storages/' + storageName + '/folders/' + folderName)
         })
     } else {
-      store
-        .dispatch(dispatch => {
-          return dataAPI
-            .upsertTag(storageName, newName)
-            .then(res => {
-              const tagName = res.id
-              dispatch({
-                type: 'UPDATE_TAG',
-                payload: {
-                  storageName,
-                  tagName: tagName,
-                  tag: new Map([
-                    ['notes', new Set()]
-                  ])
-                }
+      if (newName.length > 0) {
+        store
+          .dispatch(dispatch => {
+            return dataAPI
+              .upsertTag(storageName, newName)
+              .then(res => {
+                const tagName = res.id
+                dispatch({
+                  type: 'UPDATE_TAG',
+                  payload: {
+                    storageName,
+                    tagName: tagName,
+                    tag: new Map()
+                  }
+                })
+                return tagName
               })
-              return tagName
-            })
-        })
-        .then(tagName => {
-          router.push('/storages/' + storageName + '/tags/' + tagName)
-        })
+          })
+          .then(tagName => {
+            router.push('/storages/' + storageName + '/tags/' + tagName)
+          })
+      }
     }
 
     this.setState({

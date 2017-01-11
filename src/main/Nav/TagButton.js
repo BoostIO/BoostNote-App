@@ -215,7 +215,7 @@ class TagButton extends React.Component {
 
   render () {
     const { tagURL, tagName, tagMeta, isFocused } = this.props
-    // TODO: Drag & drop to tag note
+
     return (
       <Root
         onDragEnter={this.handleDragEnter}
