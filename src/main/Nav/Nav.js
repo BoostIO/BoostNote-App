@@ -78,8 +78,7 @@ class Nav extends React.Component {
 
     this.state = {
       isFocused: false,
-      // folders, tags
-      tab: 'folders'
+      tab: props.status.get('navTab', 'folders')
     }
   }
 
@@ -163,9 +162,12 @@ class Nav extends React.Component {
 
   handleNavDelete = e => {
     const { router } = this.context
-    const { storageName, folderName } = router.params
-    if (this.state.isFocused && folderName != null && folderName !== 'Notes') {
+    const { storageName, folderName, tagName } = router.params
+    if (this.state.isFocused && folderName != null && folderName !== 'Notes' && this.state.tab === 'folders') {
       this.deleteFolder(storageName, folderName)
+    }
+    if (this.state.isFocused && tagName != null && this.state.tab === 'tags') {
+      this.deleteTag(storageName, tagName)
     }
   }
 
@@ -226,7 +228,7 @@ class Nav extends React.Component {
     const { store, router } = this.context
 
     Dialog.showMessageBox({
-      message: `Are you sure you want to delete "${folderName}"?`,
+      message: `Are you sure you want to delete "${folderName}" folder?`,
       detail: 'All notes and any subfolders will be deleted.',
       buttons: ['Confirm', 'Cancel']
     }, (index) => {
@@ -257,7 +259,7 @@ class Nav extends React.Component {
     const { store, router } = this.context
 
     Dialog.showMessageBox({
-      message: `Are you sure you want to delete "${tagName}"?`,
+      message: `Are you sure you want to delete "${tagName}" tag?`,
       detail: 'All Notes will be untagged.',
       buttons: ['Confirm', 'Cancel']
     }, (index) => {
@@ -285,6 +287,17 @@ class Nav extends React.Component {
   }
 
   switchTab = (nextTab, shouldKeepFocus = true) => {
+    const { store } = this.context
+
+    store.dispatch({
+      type: 'UPDATE_STATUS',
+      payload: {
+        status: {
+          navTab: nextTab
+        }
+      }
+    })
+
     this.setState({
       tab: nextTab
     }, () => {

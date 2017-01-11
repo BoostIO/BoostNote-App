@@ -32,6 +32,8 @@ export const DEFAULT_CONFIG = new Map({
 })
 
 export const DEFAULT_STATUS = Map({
+  // folders, tags
+  navTab: 'folders',
   navWidth: 150,
   noteListWidth: 200,
   // NORMAL, COMPACT

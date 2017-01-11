@@ -174,6 +174,7 @@ class Main extends React.Component {
 
           <Body>
             <Nav storageMap={storageMap}
+              status={status}
               width={this.state.navWidth}
               keymap={keymap}
             />
