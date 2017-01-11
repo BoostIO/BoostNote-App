@@ -1,3 +1,8 @@
+> # :construction: v0.2.0 is on development now!
+> Check this. https://github.com/Sarah-Seo/Inpad/pull/22
+
+> It will be shipped in February.
+
 <h1 align='center'>
   <img alt='Inpad' height='160' src='./resources/logo.png'><br/>
 </h1>
