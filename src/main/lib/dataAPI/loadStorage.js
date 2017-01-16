@@ -25,7 +25,7 @@ export default function loadStorage (name) {
     .info()
     .then(function (details) {
       const isNewDB = details.doc_count === 0 && details.update_seq === 0
-      if (isNewDB) {
+      if (isNewDB && process.env.NODE_ENV !== 'test') {
         // NOTE: This feature should be removed after v1.0
         const legacyDB = new PouchDB(name, {adapter: 'websql'})
         return legacyDB.info()
