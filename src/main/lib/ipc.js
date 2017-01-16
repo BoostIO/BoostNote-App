@@ -40,26 +40,36 @@ function handleUpdateConfig (e, config) {
   })
 }
 
+function handleSetSingleLayout (e) {
+  window.dispatchEvent(new window.CustomEvent('detail:set-single-layout'))
+}
+function handleSetTwoPaneLayout (e) {
+  window.dispatchEvent(new window.CustomEvent('detail:set-two-pane-layout'))
+}
+
+const eventMap = [
+  ['new-note', handleNewNote],
+  ['new-folder', handleNewFolder],
+  ['delete', handleDelete],
+  ['focus-search', handleFocusSearch],
+  ['find', handleFind],
+  ['print', handlePrint],
+  ['set-single-layout', handleSetSingleLayout],
+  ['set-two-pane-layout', handleSetTwoPaneLayout],
+  ['open-preferences', handleOpenPreferences],
+  ['update-config', handleUpdateConfig]
+]
+
 export function mount () {
-  ipcRenderer.addListener('new-note', handleNewNote)
-  ipcRenderer.addListener('new-folder', handleNewFolder)
-  ipcRenderer.addListener('delete', handleDelete)
-  ipcRenderer.addListener('focus-search', handleFocusSearch)
-  ipcRenderer.addListener('find', handleFind)
-  ipcRenderer.addListener('print', handlePrint)
-  ipcRenderer.addListener('open-preferences', handleOpenPreferences)
-  ipcRenderer.addListener('update-config', handleUpdateConfig)
+  eventMap.forEach(([name, handler]) => {
+    ipcRenderer.addListener(name, handler)
+  })
 }
 
 export function unmount () {
-  ipcRenderer.removeListener('new-note', handleNewNote)
-  ipcRenderer.removeListener('new-folder', handleNewFolder)
-  ipcRenderer.removeListener('delete', handleDelete)
-  ipcRenderer.removeListener('focus-search', handleFocusSearch)
-  ipcRenderer.removeListener('find', handleFind)
-  ipcRenderer.removeListener('print', handlePrint)
-  ipcRenderer.removeListener('open-preferences', handleOpenPreferences)
-  ipcRenderer.removeListener('update-config', handleUpdateConfig)
+  eventMap.forEach(([name, handler]) => {
+    ipcRenderer.removeListener(name, handler)
+  })
 }
 
 export default {

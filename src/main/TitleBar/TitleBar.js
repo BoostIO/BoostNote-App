@@ -203,27 +203,7 @@ class TitleBar extends React.Component {
   }
 
   handleToggleEditorModeButtonClick = e => {
-    const { store } = this.context
-    const { status } = this.props
-
-    const nextMode = status.get('editorMode') === 'SINGLE'
-      ? 'TWO_PANE'
-      : 'SINGLE'
-
-    const currentWindow = remote.getCurrentWindow()
-    const [, windowHeight] = currentWindow.getSize()
-    const nextEditorWidth = status.get('editorMode') === 'SINGLE'
-      ? status.get('editorDoubleWidth')
-      : status.get('editorSingleWidth')
-    const nextWidth = status.get('navWidth') + status.get('noteListWidth') + nextEditorWidth + 2
-    currentWindow.setSize(nextWidth, windowHeight)
-
-    store.dispatch({
-      type: 'UPDATE_STATUS',
-      payload: {
-        status: status.set('editorMode', nextMode)
-      }
-    })
+    window.dispatchEvent(new window.CustomEvent('detail:toggle-layout'))
   }
 
   queueResolveEditorWidth (windowWidth) {
