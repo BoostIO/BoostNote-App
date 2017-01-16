@@ -1,5 +1,6 @@
 import { getDB } from './context'
 import { Map, Set } from 'immutable'
+import PouchDB from 'lib/PouchDB'
 import {
   NOTE_ID_PREFIX,
   FOLDER_ID_PREFIX,
@@ -19,8 +20,30 @@ import {
  */
 export default function loadStorage (name) {
   const db = getDB(name)
+
   return db
-    .get(notesView._id)
+    .info()
+    .then(function (details) {
+      const isNewDB = details.doc_count === 0 && details.update_seq === 0
+      if (isNewDB) {
+        // NOTE: This feature should be removed after v1.0
+        const legacyDB = new PouchDB(name, {adapter: 'websql'})
+        return legacyDB.info()
+          .then(legacyDetails => {
+            const isLegacyAlsoNewDB = legacyDetails.doc_count === 0 && legacyDetails.update_seq === 0
+            if (!isLegacyAlsoNewDB) {
+              return legacyDB.replicate.to(db)
+            }
+          })
+      }
+    })
+    .catch(function (err) {
+      console.log('error: ' + err)
+      return
+    })
+    .then(() => {
+      return db.get(notesView._id)
+    })
     .catch(err => {
       if (err.name === 'not_found') return notesView
     })

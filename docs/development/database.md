@@ -1,6 +1,12 @@
 # Database
 
-Inpad uses pouchDB as a storage and the pouchDB uses WebSQL as a default.
+Inpad uses pouchDB as a storage and the pouchDB uses IndexedDB as a default.
+
+## Apis
+
+- Create/Update apis can take partial data. (Default values will be applied to any missing attributes.)
+- Create/Update apis must return whole data and its id. (Redux store will use it without any further processing.)
+- Delete api should return id.
 
 ## Default Storage
 
