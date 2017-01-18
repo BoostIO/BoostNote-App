@@ -19,7 +19,7 @@ npm run webpack
 Open another terminal session and start the app
 
 ```sh
-npm start-dev
+npm run start-dev
 ```
 
 ## Production
