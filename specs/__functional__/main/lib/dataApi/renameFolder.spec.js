@@ -41,35 +41,35 @@ function fetchNote () {
     .get(NOTE_ID_PREFIX + noteId)
 }
 
-export const before = t => {
-  return createDummyFolder()
-    .then(createDummyNote)
-}
+describe('dataAPI.renameFolder', () => {
+  beforeAll(() => {
+    return createDummyFolder()
+      .then(createDummyNote)
+  })
 
-export default t => {
-  return renameFolder(dbName, folderName, newFolderName)
-    .then(folder => {
-      t.equal(folder.id, folderName)
-    })
-    .then(fetchFolder)
-    .then(res => {
-      t.fail('The folder should not exist.')
-    })
-    .catch(err => {
-      if (err.name !== 'not_found') {
-        throw err
-      }
-    })
-    .then(fetchNote)
-    .then(res => {
-      t.equal(res.folder, newFolderName)
-    })
-    .then(fetchRenamedFolder)
-    .then(res => {
-      t.equal(res._id, FOLDER_ID_PREFIX + newFolderName)
-    })
-}
+  it('should delete old folder and create a new folder and move all notes to the new folder', () => {
+    return renameFolder(dbName, folderName, newFolderName)
+      .then(folder => {
+        expect(folder.id).toEqual(folderName)
+      })
+      .then(fetchFolder)
+      .then(res => {
+        throw new Error('should not fired')
+      })
+      .catch(err => {
+        expect(err.message).toEqual('missing')
+      })
+      .then(fetchNote)
+      .then(res => {
+        expect(res.folder).toEqual(newFolderName)
+      })
+      .then(fetchRenamedFolder)
+      .then(res => {
+        expect(res._id).toEqual(FOLDER_ID_PREFIX + newFolderName)
+      })
+  })
 
-export const after = t => {
-  return db.destory()
-}
+  afterAll(() => {
+    return db.destory()
+  })
+})

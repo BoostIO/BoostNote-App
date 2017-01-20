@@ -20,18 +20,21 @@ export const DEFAULT_CONFIG = new Map({
 
   editorFontSize: 14,
   editorFontFamily: 'Consolas, "Liberation Mono", Menlo, Courier',
-  editorTheme: 'default',
+  editorTheme: 'dracula',
   // space, tab
   editorIndentStyle: 'space',
   editorIndentSize: 2,
 
   previewFontSize: 14,
   previewFontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial',
-  previewCodeBlockTheme: 'default',
+  previewCodeBlockTheme: 'dracula',
   previewCodeBlockFontFamily: 'Consolas, "Liberation Mono", Menlo, Courier'
 })
 
 export const DEFAULT_STATUS = Map({
+  navHidden: false,
+  // folders, tags
+  navTab: 'folders',
   navWidth: 150,
   noteListWidth: 200,
   // NORMAL, COMPACT
@@ -54,7 +57,8 @@ export const DEFAULT_KEYMAP = Immutable.fromJS({
     Right: 'list:focus',
     Up: 'nav:up',
     Down: 'nav:down',
-    D: 'nav:delete'
+    D: 'nav:delete',
+    Tab: 'nav:toggle-tab'
   },
   list: {
     Enter: 'detail:focus',

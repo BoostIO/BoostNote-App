@@ -6,6 +6,9 @@ import renameFolder from './renameFolder'
 import createNote from './createNote'
 import updateNote from './updateNote'
 import deleteNote from './deleteNote'
+import upsertTag from './upsertTag'
+import renameTag from './renameTag'
+import deleteTag from './deleteTag'
 
 export default {
   loadStorage,
@@ -15,5 +18,8 @@ export default {
   renameFolder,
   createNote,
   updateNote,
-  deleteNote
+  deleteNote,
+  upsertTag,
+  renameTag,
+  deleteTag
 }

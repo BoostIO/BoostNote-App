@@ -1,12 +1,12 @@
 {
   "name": "inpad",
   "productName": "Inpad",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Sarah-Seo/Inpad.git"
+    "type": "git",
+    "url": "https://github.com/Sarah-Seo/Inpad.git"
   },
   "scripts": {
     "start": "electron app/index.js",
@@ -18,8 +18,9 @@
     "shasum": "shasum -a 256 dist/mac/Inpad-$npm_package_version.dmg",
     "lint": "standard",
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
-    "test:run": "NODE_ENV=test electron ./tools/webpack-test.js",
-    "test:serve": "NODE_ENV=test webpack-dev-server --config webpack.config.js",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "todo": "fixme -i 'compiled/**' -i 'dist/**' -i 'resources/**' -i 'node_modules/**'",
     "rebuild": "electron-rebuild"
   },
   "keywords": [
@@ -33,9 +34,10 @@
   "devDependencies": {
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.7",
-    "babel-plugin-rewire": "^1.0.0",
     "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
@@ -46,10 +48,13 @@
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.3.0",
     "env-cmd": "^4.0.0",
+    "eslint-plugin-jest": "^1.0.2",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
     "filenamify": "^1.2.1",
+    "fixme": "^0.4.2",
     "immutable": "^3.8.1",
+    "jest": "^18.1.0",
     "json-loader": "^0.5.4",
     "lodash": "^4.16.6",
     "moment": "^2.17.0",
@@ -88,7 +93,37 @@
     "katex": "^0.6.0"
   },
   "standard": {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "plugins": [
+      "jest"
+    ],
+    "envs": [
+      "jest"
+    ]
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/specs/utils/setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "moduleNameMapper": {
+      "^main(.*)$": "<rootDir>/src/main$1",
+      "^lib(.*)$": "<rootDir>/src/lib$1",
+      "^components(.*)$": "<rootDir>/src/components$1",
+      "^specs(.*)$": "<rootDir>/specs$1",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/specs/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/specs/__mocks__/styleMock.js"
+    }
   },
   "build": {
     "appId": "com.electron.Inpad",

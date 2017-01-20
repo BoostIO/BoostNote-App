@@ -56,6 +56,10 @@ class MarkdownPreview extends React.Component {
         text-align: center;
       }
 
+      div.katex {
+        margin-bottom: 16px;
+      }
+
       .katex .frac-line {
         top: 0.9em;
         position: relative;

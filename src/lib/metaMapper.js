@@ -9,7 +9,7 @@ function stripNode (node) {
     return ''
   }
 
-  return parser.process(parser.stringify(JSON.parse(JSON.stringify(node)))).toString()
+  return parser.process(parser.stringify(JSON.parse(JSON.stringify(node)))).toString().trim()
 }
 
 /**

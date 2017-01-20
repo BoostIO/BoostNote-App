@@ -13,6 +13,7 @@ const routes = (
       <Route path='all-notes' />
       <Route path='settings' />
       <Route path='folders/:folderName' />
+      <Route path='tags/:tagName' />
     </Route>
 
     <Route path='new-storage' />

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import styled from 'styled-components'
-import { Map } from 'immutable'
+import { Map, Set } from 'immutable'
 import Octicon from 'components/Octicon'
 import Detail from './Detail'
 import { isFinallyBlurred } from 'lib/util'
@@ -402,7 +402,28 @@ class NoteList extends React.Component {
           'folderMap',
           params.folderName,
           'notes'
-        ])
+        ], new Set())
+
+      if (noteSet == null) return new Map()
+
+      notes = noteSet
+        .map(noteId => {
+          return [
+            noteId,
+            storageMap
+              .getIn([params.storageName, 'noteMap', noteId])
+          ]
+        })
+        .toArray()
+      notes = new Map(notes)
+    } else if (params.tagName != null) {
+      let noteSet = storageMap
+        .getIn([
+          params.storageName,
+          'tagMap',
+          params.tagName,
+          'notes'
+        ], new Set())
 
       if (noteSet == null) return new Map()
 

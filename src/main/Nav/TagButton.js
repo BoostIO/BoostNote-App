@@ -1,11 +1,9 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
-import { LinkButton } from 'components'
+import { LinkButton, Octicon } from 'components'
 import ContextMenu from 'main/lib/ContextMenu'
 import dataAPI from 'main/lib/dataAPI'
 import { routerShape } from 'react-router'
-
-const DEFAULT_FOLDER_NAME = 'Notes'
 
 const Root = styled.div`
   display: flex;
@@ -67,40 +65,30 @@ const RenameInput = styled.input`
   flex: 1;
 `
 
-class FolderButton extends React.Component {
+class TagButton extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
       isRenaming: false,
-      newName: props.folderName,
-      isDragEntered: false
+      newName: props.tagName
     }
 
     this.handleContextMenu = e => {
-      const { folderName } = this.props
-
-      const isDefaultFolder = folderName === DEFAULT_FOLDER_NAME
-
       ContextMenu.open([
         {
-          label: 'Rename Folder...',
-          click: e => this.rename(),
-          enabled: !isDefaultFolder
+          label: 'Rename Tag...',
+          click: e => this.rename()
         },
         {
-          label: 'Delete Folder...',
-          click: e => this.delete(),
-          enabled: !isDefaultFolder
+          label: 'Delete Tag...',
+          click: e => this.delete()
         },
-        // {
-        //   label: 'New Sub Folder...'
-        // },
         {
           type: 'separator'
         },
         {
-          label: 'New Folder...',
+          label: 'New Tag...',
           click: e => this.props.createNewButton()
         }
       ])
@@ -153,7 +141,7 @@ class FolderButton extends React.Component {
   }
 
   parseDropData (data) {
-    const { storageName, folderName } = this.props
+    const { storageName, tagName } = this.props
     const { store } = this.context
 
     switch (data.type) {
@@ -161,7 +149,7 @@ class FolderButton extends React.Component {
         const noteId = data.payload.noteKey
 
         dataAPI
-          .updateNote(storageName, noteId, {folder: folderName})
+          .updateNote(storageName, noteId, {tags: data.payload.note.tags.concat([tagName])})
           .then(res => {
             store.dispatch({
               type: 'UPDATE_NOTE',
@@ -178,7 +166,7 @@ class FolderButton extends React.Component {
   rename () {
     this.setState({
       isRenaming: true,
-      newName: this.props.folderName
+      newName: this.props.tagName
     }, () => {
       this.input.focus()
       this.input.select()
@@ -186,8 +174,8 @@ class FolderButton extends React.Component {
   }
 
   delete () {
-    const { storageName, folderName, deleteFolder } = this.props
-    deleteFolder(storageName, folderName)
+    const { storageName, tagName, deleteTag } = this.props
+    deleteTag(storageName, tagName)
   }
 
   cancelRenaming () {
@@ -202,23 +190,23 @@ class FolderButton extends React.Component {
     this.setState({
       isRenaming: false
     }, () => {
-      const { storageName, resolveNewName, folderName } = this.props
+      const { storageName, resolveNewName, tagName } = this.props
       const { store, router } = this.context
 
-      const newFolderName = resolveNewName(this.state.newName)
+      const newTagName = resolveNewName(this.state.newName)
 
       dataAPI
-        .renameFolder(storageName, folderName, newFolderName)
+        .renameTag(storageName, tagName, newTagName)
         .then(res => {
-          if (router.params.folderName === folderName) {
-            router.push(`/storages/${storageName}/folders/${newFolderName}`)
+          if (router.params.tagName === tagName) {
+            router.push(`/storages/${storageName}/tags/${newTagName}`)
           }
           store.dispatch({
-            type: 'MOVE_FOLDER',
+            type: 'RENAME_TAG',
             payload: {
               storageName,
-              folderName,
-              newFolderName
+              tagName,
+              newTagName
             }
           })
         })
@@ -226,7 +214,7 @@ class FolderButton extends React.Component {
   }
 
   render () {
-    const { folderURL, folderName, folderMeta, isFocused } = this.props
+    const { tagURL, tagName, tagMeta, isFocused } = this.props
 
     return (
       <Root
@@ -243,7 +231,7 @@ class FolderButton extends React.Component {
             onChange={this.handleInputChange}
           />
           : <Button
-            to={folderURL}
+            to={tagURL}
             innerRef={c => (this.button = c)}
             onContextMenu={this.handleContextMenu}
             className={this.state.isDragEntered
@@ -252,8 +240,8 @@ class FolderButton extends React.Component {
             }
             isFocused={isFocused}
           >
-            <span className='label'>{folderName}</span>
-            <span className='count'>{folderMeta.get('notes').size}</span>
+            <span className='label'><Octicon icon='tag' /> {tagName}</span>
+            <span className='count'>{tagMeta.get('notes').size}</span>
           </Button>
         }
       </Root>
@@ -261,19 +249,18 @@ class FolderButton extends React.Component {
   }
 }
 
-FolderButton.propTypes = {
-  folderURL: PropTypes.string,
-  folderName: PropTypes.string,
+TagButton.propTypes = {
+  tagURL: PropTypes.string,
+  tag: PropTypes.string,
   storageName: PropTypes.string,
-  resolveNewName: PropTypes.func,
-  deleteFolder: PropTypes.func
+  deleteTag: PropTypes.func
 }
 
-FolderButton.contextTypes = {
+TagButton.contextTypes = {
   store: PropTypes.shape({
     dispatch: PropTypes.func
   }),
   router: routerShape
 }
 
-export default FolderButton
+export default TagButton
