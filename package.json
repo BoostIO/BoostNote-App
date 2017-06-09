@@ -5,8 +5,8 @@
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Sarah-Seo/Inpad.git"
+    "type": "git",
+    "url": "https://github.com/CarbonStack/Inpad.git"
   },
   "scripts": {
     "start": "electron app/index.js",
@@ -29,6 +29,13 @@
     "gfm"
   ],
   "author": "Sarah Seo <sarah.seo.0311@gmail.com>",
+  "contributors": [
+    {
+      "name": "Junyoung Choi",
+      "email": "fluke8259@gmail.com",
+      "url": "http://rokt33r.github.io/"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.18.0",
@@ -41,7 +48,7 @@
     "babel-preset-stage-2": "^6.18.0",
     "color": "^0.11.4",
     "css-loader": "^0.26.1",
-    "electron": "^1.4.12",
+    "electron": "^1.6.10",
     "electron-builder": "^10.12.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.3.0",
