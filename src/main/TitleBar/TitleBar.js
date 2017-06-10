@@ -138,6 +138,25 @@ class TitleBar extends React.Component {
     window.removeEventListener('resize', this.handleWindowResize)
   }
 
+  handleNavToggleButtonClick = e => {
+    const { status } = this.props
+    const { store } = this.context
+
+    store
+      .dispatch({
+        type: 'UPDATE_STATUS',
+        payload: {
+          status: {
+            navHidden: !status.get('navHidden')
+          }
+        }
+      })
+
+    if (!status.get('navHidden')) {
+      window.dispatchEvent(new window.CustomEvent('list:focus'))
+    }
+  }
+
   handleNewButtonClick = e => {
     this.createNote()
   }
@@ -184,27 +203,7 @@ class TitleBar extends React.Component {
   }
 
   handleToggleEditorModeButtonClick = e => {
-    const { store } = this.context
-    const { status } = this.props
-
-    const nextMode = status.get('editorMode') === 'SINGLE'
-      ? 'TWO_PANE'
-      : 'SINGLE'
-
-    const currentWindow = remote.getCurrentWindow()
-    const [, windowHeight] = currentWindow.getSize()
-    const nextEditorWidth = status.get('editorMode') === 'SINGLE'
-      ? status.get('editorDoubleWidth')
-      : status.get('editorSingleWidth')
-    const nextWidth = status.get('navWidth') + status.get('noteListWidth') + nextEditorWidth + 2
-    currentWindow.setSize(nextWidth, windowHeight)
-
-    store.dispatch({
-      type: 'UPDATE_STATUS',
-      payload: {
-        status: status.set('editorMode', nextMode)
-      }
-    })
+    window.dispatchEvent(new window.CustomEvent('detail:toggle-layout'))
   }
 
   queueResolveEditorWidth (windowWidth) {
@@ -267,6 +266,11 @@ class TitleBar extends React.Component {
       folderName = 'Notes'
     }
 
+    let tags = []
+    if (_.isString(router.params.tagName)) {
+      tags.push(router.params.tagName)
+    }
+
     // TODO: this should be moved to redux saga
     dataAPI
       .createNote(storageName, {
@@ -276,7 +280,7 @@ class TitleBar extends React.Component {
           preview: ''
         },
         content: '',
-        tags: []
+        tags
       })
       .then(res => {
         store.dispatch({
@@ -319,6 +323,12 @@ class TitleBar extends React.Component {
             innerRef={c => (this.toolbar = c)}
           >
             <div className='left'>
+              <Button onClick={this.handleNavToggleButtonClick}
+                title='Toggle Nav'
+                active={!status.get('navHidden')}
+              >
+                <Octicon icon='repo' />
+              </Button>
               <Button onClick={this.handleDeleteButtonClick}
                 title='Delete'>
                 <Octicon icon='trashcan' />

@@ -129,6 +129,24 @@ const template = [
       },
       {
         role: 'togglefullscreen'
+      },
+      {
+        label: 'Single Layout',
+        accelerator: 'CmdOrCtrl + 1',
+        click: e => {
+          if (global.windows.main) {
+            global.windows.main.webContents.send('set-single-layout')
+          }
+        }
+      },
+      {
+        label: 'Two Pane Layout',
+        accelerator: 'CmdOrCtrl + 2',
+        click: e => {
+          if (global.windows.main) {
+            global.windows.main.webContents.send('set-two-pane-layout')
+          }
+        }
       }
     ]
   },

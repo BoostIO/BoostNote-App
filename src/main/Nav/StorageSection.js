@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import styled from 'styled-components'
-import { Octicon, LinkButton } from 'components'
-import FolderButton from './FolderButton'
+import { Map } from 'immutable'
+import { routerShape } from 'react-router'
+import filenamify from 'filenamify'
 import ContextMenu from 'main/lib/ContextMenu'
 import dataAPI from 'main/lib/dataAPI'
-import filenamify from 'filenamify'
-import { Map, Set } from 'immutable'
-import { routerShape } from 'react-router'
+import { Octicon, LinkButton } from 'components'
+import FolderButton from './FolderButton'
+import TagButton from './TagButton'
 
 const NavButton = styled(LinkButton)`
   display: block;
@@ -23,9 +24,6 @@ const NavButton = styled(LinkButton)`
   text-decoration: none;
   text-align: left;
   font-size: 12px;
-  .Octicon {
-    fill: ${p => p.theme.color};
-  }
   &:hover {
     background-color: ${p => p.theme.buttonHoverColor};
   }
@@ -40,11 +38,6 @@ const NavButton = styled(LinkButton)`
     color: ${p => p.isFocused
       ? p.theme.activeInverseColor
       : p.theme.color};
-    .Octicon {
-      fill: ${p => p.isFocused
-        ? p.theme.activeInverseColor
-        : p.theme.color};
-    }
   }
 `
 
@@ -74,55 +67,70 @@ class StorageSection extends React.Component {
     super(props)
 
     this.state = {
-      isCreatingFolder: false,
-      newName: ''
-    }
-
-    this.createNewFolder = this.createNewFolder.bind(this)
-
-    this.handleNavButtonContextMenu = e => {
-      ContextMenu.open([
-        {
-          label: 'New Folder...',
-          click: () => this.createNewFolder()
-        }
-      ])
-    }
-
-    this.handleNewNameInputChange = e => {
-      this.setState({
-        newName: e.target.value
-      })
-    }
-
-    this.handleNewNameInputKeyDown = e => {
-      e.stopPropagation()
-      switch (e.keyCode) {
-        case 13:
-          this.confirmCreating()
-          break
-        case 27:
-          this.cancelCreating()
-          break
-      }
-    }
-
-    this.handleNewNameInputBlur = e => {
-      this.confirmCreating()
+      isCreating: false,
+      newName: '',
+      mode: 'folders'
     }
   }
 
-  createNewFolder () {
-    const { folderMap } = this.props
+  handleNavButtonContextMenu = e => {
+    ContextMenu.open([
+      {
+        label: 'New Folder...',
+        click: () => this.createNew()
+      }
+    ])
+  }
+
+  handleNewNameInputChange = e => {
+    this.setState({
+      newName: e.target.value
+    })
+  }
+
+  handleNewNameInputKeyDown = e => {
+    e.stopPropagation()
+    switch (e.keyCode) {
+      case 13:
+        this.confirmCreating()
+        break
+      case 27:
+        this.cancelCreating()
+        break
+    }
+  }
+
+  handleNewNameInputBlur = e => {
+    this.confirmCreating()
+  }
+
+  createNewFolder = () => {
+    this.createNew('folders')
+  }
+
+  createNewTag = () => {
+    this.createNew('tags')
+  }
+
+  createNew = (tab = 'folders') => {
+    const { switchTab, folderMap, tagMap } = this.props
+    switchTab(tab, false)
 
     let count = 0
     let newName = 'New Folder'
-    while (folderMap.has(newName)) {
-      newName = `New Folder (${++count})`
+    if (tab === 'folders') {
+      while (folderMap.has(newName)) {
+        newName = `New Folder (${++count})`
+      }
+    } else {
+      newName = 'New Tag'
+      while (tagMap.has(newName)) {
+        newName = `New Tag (${++count})`
+      }
     }
 
     this.setState({
-      isCreatingFolder: true,
+      isCreating: true,
       newName
     }, () => {
       this.newNameInput.focus()
@@ -131,49 +139,87 @@ class StorageSection extends React.Component {
   }
 
   resolveNewName = newName => {
-    const { folderMap } = this.props
+    const { folderMap, tagMap, tab } = this.props
 
     let count = 0
-    let originalName = filenamify(newName, {replacement: '_'})
-    let resolvedName = originalName
-    while (folderMap.has(resolvedName)) {
-      resolvedName = `${originalName} (${++count})`
+    let resolvedName
+    if (tab === 'folders') {
+      let originalName = filenamify(newName, {replacement: '_'})
+        .trim()
+      resolvedName = originalName
+      if (resolvedName.length === 0) {
+        originalName = 'New Folder'
+      }
+      while (folderMap.has(resolvedName)) {
+        resolvedName = `${originalName} (${++count})`
+      }
+    } else {
+      let originalName = newName.trim()
+      resolvedName = originalName
+      if (resolvedName.length === 0) {
+        originalName = 'New Tag'
+      }
+      while (tagMap.has(resolvedName)) {
+        resolvedName = `${originalName} (${++count})`
+      }
     }
 
     return resolvedName
   }
 
   confirmCreating () {
-    const { storageName } = this.props
+    const { storageName, tab } = this.props
     const { store, router } = this.context
 
     const newName = this.resolveNewName(this.state.newName)
-
-    store
-      .dispatch(dispatch => {
-        return dataAPI
-          .upsertFolder(storageName, newName)
-          .then(res => {
-            const folderName = res.id
-            dispatch({
-              type: 'UPDATE_FOLDER',
-              payload: {
-                storageName,
-                folderName: folderName,
-                folder: new Map([
-                  ['notes', new Set()]
-                ])
-              }
+    if (tab === 'folders') {
+      store
+        .dispatch(dispatch => {
+          return dataAPI
+            .upsertFolder(storageName, newName)
+            .then(res => {
+              const folderName = res.id
+              dispatch({
+                type: 'UPDATE_FOLDER',
+                payload: {
+                  storageName,
+                  folderName: folderName,
+                  folder: new Map()
+                }
+              })
+              return folderName
             })
-            return folderName
+        })
+        .then(folderName => {
+          router.push('/storages/' + storageName + '/folders/' + folderName)
+        })
+    } else {
+      if (newName.length > 0) {
+        store
+          .dispatch(dispatch => {
+            return dataAPI
+              .upsertTag(storageName, newName)
+              .then(res => {
+                const tagName = res.id
+                dispatch({
+                  type: 'UPDATE_TAG',
+                  payload: {
+                    storageName,
+                    tagName: tagName,
+                    tag: new Map()
+                  }
+                })
+                return tagName
+              })
           })
-      })
-      .then(folderName => {
-        router.push('/storages/' + storageName + '/folders/' + folderName)
-      })
+          .then(tagName => {
+            router.push('/storages/' + storageName + '/tags/' + tagName)
+          })
+      }
+    }
 
     this.setState({
-      isCreatingFolder: false
+      isCreating: false
     }, () => {
       this.storageButton.focus()
     })
@@ -181,34 +227,61 @@ class StorageSection extends React.Component {
 
   cancelCreating () {
     this.setState({
-      isCreatingFolder: false,
+      isCreating: false,
       newName: 'New Folder'
     }, () => {
       this.storageButton.focus()
     })
   }
 
+  renderList () {
+    const { tab, storageName, folderMap, tagMap, isFocused, deleteFolder, deleteTag } = this.props
+
+    if (tab === 'folders') {
+      return folderMap
+        .map((meta, folderName) => {
+          const folderURL = `/storages/${storageName}/folders/${folderName}`
+
+          return <FolderButton
+            key={folderName}
+            storageName={storageName}
+            resolveNewName={this.resolveNewName}
+            folderURL={folderURL}
+            folderName={folderName}
+            folderMeta={meta}
+            createNewButton={this.createNew}
+            isFocused={isFocused}
+            deleteFolder={deleteFolder}
+          >
+            {folderName}
+          </FolderButton>
+        })
+        .toArray()
+    } else {
+      return tagMap
+        .map((meta, tagName) => {
+          const tagURL = `/storages/${storageName}/tags/${tagName}`
+
+          return <TagButton
+            key={tagName}
+            storageName={storageName}
+            resolveNewName={this.resolveNewName}
+            tagURL={tagURL}
+            tagName={tagName}
+            tagMeta={meta}
+            createNewButton={this.createNew}
+            isFocused={isFocused}
+            deleteTag={deleteTag}
+          />
+        })
+        .toArray()
+    }
+  }
+
   render () {
-    const { storageName, folderMap, isFocused, deleteFolder } = this.props
+    const { storageName, isFocused } = this.props
 
-    const folderList = folderMap
-      .map((meta, folderName) => {
-        const folderURL = `/storages/${storageName}/folders/${folderName}`
-
-        return <FolderButton
-          key={folderName}
-          storageName={storageName}
-          resolveNewName={this.resolveNewName}
-          folderURL={folderURL}
-          folderName={folderName}
-          createNewButton={this.createNewFolder}
-          isFocused={isFocused}
-          deleteFolder={deleteFolder}
-        >
-          {folderName}
-        </FolderButton>
-      })
-      .toArray()
+    const list = this.renderList()
 
     const storageURL = `/storages/${storageName}/all-notes`
 
@@ -223,8 +296,8 @@ class StorageSection extends React.Component {
         >
           <Octicon icon='repo' /> {storageName}
         </NavButton>
-        {folderList}
-        {this.state.isCreatingFolder &&
+        {list}
+        {this.state.isCreating &&
           <NewFolder>
             <NewFolderNameInput
               innerRef={c => (this.newNameInput = c)}

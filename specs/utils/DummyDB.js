@@ -1,5 +1,6 @@
 import {
   FOLDER_ID_PREFIX,
+  TAG_ID_PREFIX,
   NOTE_ID_PREFIX
 } from 'main/lib/dataAPI/consts'
 import PouchDB from 'lib/PouchDB'
@@ -17,13 +18,27 @@ class DummyDB {
   createFolder (folderName, overrides) {
     return this.db
       .get(FOLDER_ID_PREFIX + folderName)
-      .catch((err) => {
+      .catch(err => {
         if (err.name === 'not_found') return {}
         throw err
       })
       .then(doc => {
         return this.db.put(Object.assign({}, doc, overrides, {
           _id: FOLDER_ID_PREFIX + folderName
+        }))
+      })
+  }
+
+  createTag (tagName, overrides) {
+    return this.db
+      .get(TAG_ID_PREFIX + tagName)
+      .catch(err => {
+        if (err.name === 'not_found') return {}
+        throw err
+      })
+      .then(doc => {
+        return this.db.put(Object.assign({}, doc, overrides, {
+          _id: TAG_ID_PREFIX + tagName
         }))
       })
   }
@@ -46,7 +61,7 @@ class DummyDB {
 
     return this.db
       .get(NOTE_ID_PREFIX + noteId)
-      .catch((err) => {
+      .catch(err => {
         if (err.name === 'not_found') return {}
         throw err
       })
@@ -59,6 +74,10 @@ class DummyDB {
 
   get (...args) {
     return this.db.get(...args)
+  }
+
+  put (...args) {
+    return this.db.put(...args)
   }
 
   destroy (...args) {

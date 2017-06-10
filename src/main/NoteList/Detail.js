@@ -8,6 +8,8 @@ import dataAPI from 'main/lib/dataAPI'
 import { Set } from 'immutable'
 import markdown from 'lib/markdown'
 
+const { remote } = require('electron')
+
 const Root = styled.div`
   height: 100%;
   width: 100%;
@@ -23,8 +25,7 @@ const StatusBar = styled.div`
 
 const StatusBarLeft = styled.div`
   flex: 1;
-  padding: 0 10px;
-  overflow-x: auto;
+  padding: 0 5px;
 `
 
 const StatusBarRight = styled.div`
@@ -59,7 +60,7 @@ class Detail extends React.Component {
     const nextNoteKey = nextProps.noteKey
     const { noteKey } = this.props
 
-    // Note changed
+    // If note switched, save current note and refresh inputs
     if (nextNoteKey !== noteKey) {
       if (noteKey != null) {
         this.dispatchUpdate()
@@ -70,12 +71,21 @@ class Detail extends React.Component {
         tags: new Set(nextProps.note.get('tags')),
         content: nextProps.note.get('content')
       })
+    } else {
+      if (!nextProps.note.get('tags').equals(this.props.note.get('tags'))) {
+        this.setState({
+          tags: new Set(nextProps.note.get('tags'))
+        })
+      }
     }
   }
 
   componentDidMount () {
-    window.addEventListener('detail:focus', this.handleWindowFocus)
-    window.addEventListener('detail:focus-tag-select', this.handleWindowFocusTagSelect)
+    window.addEventListener('detail:focus', this.handleDetailFocus)
+    window.addEventListener('detail:focus-tag-select', this.handleDetailFocusTagSelect)
+    window.addEventListener('detail:set-single-layout', this.handleDetailSetSingleLayout)
+    window.addEventListener('detail:set-two-pane-layout', this.handleDetailSetTwoPaneLayout)
+    window.addEventListener('detail:toggle-layout', this.handleDetailToggleLayout)
   }
 
   componentWillUnmount () {
@@ -83,8 +93,11 @@ class Detail extends React.Component {
       this.dispatchUpdate()
     }
 
-    window.removeEventListener('detail:focus', this.handleWindowFocus)
-    window.removeEventListener('detail:focus-tag-select', this.handleWindowFocusTagSelect)
+    window.removeEventListener('detail:focus', this.handleDetailFocus)
+    window.removeEventListener('detail:focus-tag-select', this.handleDetailFocusTagSelect)
+    window.removeEventListener('detail:set-single-layout', this.handleDetailSetSingleLayout)
+    window.removeEventListener('detail:set-two-pane-layout', this.handleDetailSetTwoPaneLayout)
+    window.removeEventListener('detail:toggle-layout', this.handleDetailToggleLayout)
   }
 
   handleContentChange = e => {
@@ -103,12 +116,53 @@ class Detail extends React.Component {
     })
   }
 
-  handleWindowFocus = e => {
+  handleDetailFocus = e => {
     this.focusEditor()
   }
 
-  handleWindowFocusTagSelect = e => {
+  handleDetailFocusTagSelect = e => {
     this.tagSelect.focus()
+  }
+
+  handleDetailSetSingleLayout = e => {
+    this.setLayout('SINGLE')
+  }
+
+  handleDetailSetTwoPaneLayout = e => {
+    this.setLayout('TWO_PANE')
+  }
+
+  handleDetailToggleLayout = e => {
+    const { status } = this.props
+
+    const nextLayout = status.get('editorMode') === 'SINGLE'
+      ? 'TWO_PANE'
+      : 'SINGLE'
+
+    this.setLayout(nextLayout)
+  }
+
+  setLayout (nextLayout) {
+    const { store } = this.context
+    const { status } = this.props
+    if (nextLayout === status.get('editorMode')) {
+      return
+    }
+
+    const currentWindow = remote.getCurrentWindow()
+    const [, windowHeight] = currentWindow.getSize()
+    const nextEditorWidth = nextLayout === 'SINGLE'
+      ? status.get('editorSingleWidth')
+      : status.get('editorDoubleWidth')
+    const nextWidth = status.get('navWidth') + status.get('noteListWidth') + nextEditorWidth + 2
+    currentWindow.setSize(nextWidth, windowHeight)
+
+    store.dispatch({
+      type: 'UPDATE_STATUS',
+      payload: {
+        status: status.set('editorMode', nextLayout)
+      }
+    })
   }
 
   dispatchUpdate () {

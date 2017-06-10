@@ -22,6 +22,8 @@ macOS               | Windows/Linux        | Command via ipc or Action
 **Cmd - R**         | **Ctrl - R, F5**     | Refresh
 **Cmd - ,**         | **Ctrl - ,**         | `title:preferences`
 **Cmd - P**         | **Ctrl - P**         | `detail:print` (ipc `print`)
+**Cmd - 1**         | **Ctrl - 1**         | `detail:set-single-layout`
+**Cmd - 2**         | **Ctrl - 2**         | `detail:set-two-pane-layout`
 
 ## Main
 
@@ -66,6 +68,7 @@ Right     | Right         | `list:focus`
 Up        | Up            | `nav:up`
 Down      | Down          | `nav:down`
 D         | D             | `nav:delete`
+Tab       | Tab           | `nav:toggle-tab`
 
 ### Commands
 
@@ -112,9 +115,12 @@ Cmd - '  | Ctrl - '      | `detail:focus-tag-select`
 
 ### Commands
 
-Command                 | Action
-------------------------|----------------------------
-detail:focus-tag-select | Focus tag select
-detail:focus            | Focus Detail
-detail:find             | Start finding
-detail:print            | Print
+Command                    | Action
+---------------------------|----------------------------
+detail:focus-tag-select    | Focus tag select
+detail:focus               | Focus Detail
+detail:find                | Start finding
+detail:print               | Print
+detail:set-single-layout   | Set single layout
+detail:set-two-pane-layout | Set two pane layout
+detail:toggle-layout       | Toggle layout

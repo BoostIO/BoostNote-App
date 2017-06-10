@@ -1,19 +1,27 @@
+/**
+ * TODO: Rename tag
+ * 1. find all notes with target tag
+ * 2. delete old tag
+ * 3. create new tag
+ * 4. apply to notes
+ */
+
 import { getDB } from './context'
 import {
-  FOLDER_ID_PREFIX,
+  TAG_ID_PREFIX,
   notesView
 } from './consts'
 
-export default function renameFolder (name, folderName, newFolderName) {
+export default function renameTag (name, tagName, newTagName) {
   const db = getDB(name)
   return db
-    .get(FOLDER_ID_PREFIX + folderName)
+    .get(TAG_ID_PREFIX + tagName)
     .then(doc => {
       doc._deleted = true
       return db.put(doc)
     })
     .then(res => {
-      return db.get(FOLDER_ID_PREFIX + newFolderName)
+      return db.get(TAG_ID_PREFIX + newTagName)
     })
     .catch(err => {
       if (err.name === 'not_found') return {}
@@ -21,7 +29,7 @@ export default function renameFolder (name, folderName, newFolderName) {
     })
     .then(doc => {
       return db.put(Object.assign({
-        _id: FOLDER_ID_PREFIX + newFolderName
+        _id: TAG_ID_PREFIX + newTagName
       }, doc))
     })
     .then(res => {
@@ -30,14 +38,17 @@ export default function renameFolder (name, folderName, newFolderName) {
           if (err.name !== 'conflict') throw err
         })
         .then(() => {
-          return db.query('notes/by_folder', {
-            key: folderName,
+          return db.query('notes/by_tag', {
+            key: tagName,
             include_docs: true
           })
         })
         .then(function (result) {
           let docs = result.rows.map(row => {
-            row.doc.folder = newFolderName
+            row.doc.tags = row.doc.tags
+              .filter(tag => tag !== tagName && tag !== newTagName)
+              .concat([newTagName])
+
             return row.doc
           })
           return db.bulkDocs(docs)
@@ -45,7 +56,7 @@ export default function renameFolder (name, folderName, newFolderName) {
     })
     .then(res => {
       return {
-        id: folderName
+        id: tagName
       }
     })
 }

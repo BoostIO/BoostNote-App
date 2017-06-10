@@ -1,26 +1,26 @@
 import { Map } from 'immutable'
 import { getDB } from './context'
 import {
-  FOLDER_ID_PREFIX
+  TAG_ID_PREFIX
 } from './consts'
 
-export default function upsertFolder (storageName, folderName) {
+export default function upsertTag (storageName, tagName) {
   const db = getDB(storageName)
   return db
-    .get(FOLDER_ID_PREFIX + folderName)
+    .get(TAG_ID_PREFIX + tagName)
     .catch(err => {
       if (err.name === 'not_found') return {}
       throw err
     })
     .then(doc => {
       return db.put(Object.assign({
-        _id: FOLDER_ID_PREFIX + folderName
+        _id: TAG_ID_PREFIX + tagName
       }, doc))
     })
     .then(res => {
       return {
-        id: folderName,
-        folder: new Map({rev: res.rev})
+        id: tagName,
+        tag: new Map({rev: res.rev})
       }
     })
 }

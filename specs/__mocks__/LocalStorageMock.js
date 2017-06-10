@@ -1,4 +1,4 @@
-class LocalStorage {
+class LocalStorageMock {
   constructor () {
     this.data = {}
 
@@ -28,4 +28,4 @@ class LocalStorage {
   }
 }
 
-export default LocalStorage
+export default LocalStorageMock

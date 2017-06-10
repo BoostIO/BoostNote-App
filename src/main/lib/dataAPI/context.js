@@ -4,7 +4,7 @@ const dbMap = new Map()
 
 function constructDB (name) {
   return process.env.NODE_ENV !== 'test'
-    ? new PouchDB(name, {adapter: 'websql'})
+    ? new PouchDB(name, {adapter: 'idb'})
     : new PouchDB(name, {adapter: 'memory'})
 }
 

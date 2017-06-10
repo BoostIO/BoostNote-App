@@ -55,9 +55,6 @@ const defaultTheme = {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    .Octicon {
-      fill: ${defaultUIColor};
-    }
   `
 }
 
