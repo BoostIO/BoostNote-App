@@ -1,18 +1,18 @@
-'use strict'
-
 const path = require('path')
 const webpack = require('webpack')
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const util = require('./tools/util')
 
 const port = 8080
 
-let config = {
-  entry: {
-    main: ['./src/main/index.js'],
-    preferences: ['./src/preferences/index.js']
-  },
+const config = {
+  entry: [
+    'react-hot-loader/patch',
+    'webpack-dev-server/client?http://localhost:' + port + '/',
+    'webpack/hot/only-dev-server',
+    path.join(__dirname, 'src/main/index.js')
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     alias: {
@@ -23,45 +23,22 @@ let config = {
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
-    new NodeTargetPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`,
-      'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
-    }),
-    new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true })
-  ],
-  externals: [
-    // Electron
-    'electron',
-    // CommonJS2
-    'styled-components',
-    'sander',
-    'electron-devtools-installer',
-    'octicons',
-    'filenamify',
-    'color',
-    'moment',
-    'remark',
-    'remark-lint',
-    'remark-html',
-    'remark-emoji',
-    'remark-slug',
-    'strip-markdown',
-    'lodash',
-    'katex',
-    'react-immutable-proptypes',
-    {
-      // Global
-      react: 'var React',
-      'react-dom': 'var ReactDOM',
-      'react-redux': 'var ReactRedux',
-      'redux': 'var Redux',
-      'immutable': 'var Immutable',
-      'codemirror': 'var CodeMirror'
-    }
+    new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true }),
+    new HtmlWebpackPlugin(),
+    // new webpack.DefinePlugin({
+    //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    //   'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
+    // }),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre'
+      },
       {
         test: /\.js?$/,
         use: [
@@ -81,7 +58,7 @@ let config = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
+        use: ExtractTextPlugin.extract({
           loader: 'css-loader'
         })
       }
@@ -91,44 +68,15 @@ let config = {
     path: path.join(__dirname, 'compiled'),
     filename: '[name].js',
     sourceMapFilename: '[name].map',
-    libraryTarget: 'commonjs2',
-    publicPath: 'http://localhost:' + port + '/assets/'
+    publicPath: 'http://localhost:' + port + '/'
   },
   performance: { hints: false },
   node: {},
-  devtool: 'eval',
+  devtool: 'source-map',
   devServer: {
     hot: true,
     port
   }
-}
-
-switch (process.env.NODE_ENV) {
-  case 'production':
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin())
-    config.plugins.push(new webpack.LoaderOptionsPlugin({
-      minimize: true
-    }))
-    config.externals = [
-      'electron',
-      {
-        'codemirror': 'var CodeMirror'
-      }
-    ]
-
-    config.performance = false
-    break
-  case 'development':
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-    const devEntry = [
-      'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:' + port,
-      'webpack/hot/only-dev-server'
-    ]
-    config.entry.main = devEntry.concat(config.entry.main)
-    config.entry.preferences = devEntry.concat(config.entry.preferences)
-    break
 }
 
 module.exports = config

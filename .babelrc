@@ -1,50 +1,19 @@
 {
+  "presets": [
+    "react",
+    "stage-2"
+  ],
   "env": {
     "production": {
-      "presets": [
-        [
-          "es2015",
-          {
-            "modules": false
-          }
-        ],
-        "stage-2",
-        "react"
-      ],
-      "plugins": [
-        "transform-class-properties"
-      ]
     },
     "development": {
-      "presets": [
-        [
-          "es2015",
-          {
-            "modules": false
-          }
-        ],
-        "stage-2",
-        "react"
-      ],
       "plugins": [
-        "react-hot-loader/babel",
-        "transform-class-properties"
+        "react-hot-loader/babel"
       ]
     },
     "test": {
-      "presets": [
-        [
-          "es2015",
-          {
-            "modules": false
-          }
-        ],
-        "stage-2",
-        "react"
-      ],
       "plugins": [
-        "transform-es2015-modules-commonjs",
-        "transform-class-properties"
+        "transform-es2015-modules-commonjs"
       ]
     }
   }
