@@ -2,34 +2,33 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const util = require('./tools/util')
+// const util = require('./tools/util')
 
 const port = 8080
 
 const config = {
   entry: [
-    'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:' + port + '/',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'src/main/index.js')
+    path.join(__dirname, 'build/client/index.js')
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      'components': path.join(__dirname, 'src/components'),
-      'lib': path.join(__dirname, 'src/lib'),
-      'main': path.join(__dirname, 'src/main')
+      'client': path.join(__dirname, 'build/client'),
+      'style': path.join(__dirname, 'build/style'),
+      'lib': path.join(__dirname, 'build/lib'),
     }
   },
   plugins: [
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true }),
-    new HtmlWebpackPlugin(),
     // new webpack.DefinePlugin({
     //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     //   'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
     // }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new ExtractTextPlugin({ filename: '[name].[hash].css' }),
+    new HtmlWebpackPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
@@ -38,15 +37,6 @@ const config = {
         test: /\.js$/,
         use: ['source-map-loader'],
         enforce: 'pre'
-      },
-      {
-        test: /\.js?$/,
-        use: [
-          {
-            loader: 'babel-loader'
-          }
-        ],
-        exclude: /(node_modules|bower_components)/
       },
       {
         test: /\.json?$/,
@@ -66,8 +56,8 @@ const config = {
   },
   output: {
     path: path.join(__dirname, 'compiled'),
-    filename: '[name].js',
-    sourceMapFilename: '[name].map',
+    filename: '[name].[hash].js',
+    sourceMapFilename: '[name].[hash].map',
     publicPath: 'http://localhost:' + port + '/'
   },
   performance: { hints: false },
@@ -75,7 +65,8 @@ const config = {
   devtool: 'source-map',
   devServer: {
     hot: true,
-    port
+    port,
+    historyApiFallback: true
   }
 }
 

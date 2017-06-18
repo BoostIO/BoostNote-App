@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "allowJs": false,
+    "jsx": "react",
+    "baseUrl": "./src",
+    "outDir":"build",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "inlineSourceMap": true,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "plugins": [
+			{
+        "name": "tslint-language-service",
+        "ignoreDefinitionFiles": true
+      }
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

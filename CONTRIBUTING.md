@@ -1,25 +1,18 @@
+> We've copied [one from electron](https://github.com/electron/electron/blob/master/CONTRIBUTING.md)
+
 # Contributing to Inpad
 
 This project adheres to the Contributor Covenant [code of conduct](./CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable
-behavior to sarah.seo.0311@gmail.com.
+behavior to fluke8259@gmail.com.
 
 The following is a set of guidelines for contributing to Inpad.
 These are just guidelines, not rules, use your best judgment and feel free to
 propose changes to this document in a pull request.
 
-## Issue Labels
-
-Name               | Description
--------------------|------------------------------
-stage-0: Proposal  | On Estimating its own needs
-stage-1: Draft     | On Designing how to implement
-stage-2: Candidate | Work in progress
-stage-3: Finished  | Ready to ship
-
 ## Submitting Issues
 
-* You can create an issue [here](https://github.com/sarah-seo/inpad/issues/new),
+* You can create an issue [here](https://github.com/ManoCurry/inpad/issues/new),
 but before doing that please read the notes below and include as many details as
 possible with your report. If you can, please include:
   * The version of App you are using

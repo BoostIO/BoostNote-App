@@ -6,3 +6,5 @@ Thumbs.db
 *.log
 compiled/*
 dist/*
+build/*
+legacy-dump/*
