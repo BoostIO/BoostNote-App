@@ -54,7 +54,9 @@ export const Main = connect(stateToProps, dispatchToProps)((props: MainProps) =>
           toggleNav={props.actions.toggleNav}
         />
         <Styled.Body>
-          <Nav />
+          <Nav
+            isNavOpen={props.ui.isNavOpen}
+          />
           <PageView />
         </Styled.Body>
       </Styled.Main>

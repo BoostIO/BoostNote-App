@@ -1,7 +1,7 @@
 export interface State {
-  toggleNav: boolean
+  isNavOpen: boolean
 }
 
 export const initialState: State = {
-  toggleNav: false,
+  isNavOpen: true,
 }

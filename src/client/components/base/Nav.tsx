@@ -2,19 +2,27 @@ import g from 'glamorous'
 import React from 'react'
 import { Themes } from 'style'
 
+const TEMP_NAV_WIDTH = 150
+
 const Styled = {
   Root: g.nav({
-    width: 150,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-  }, (props: any, theme: Themes.Theme) => ({
+    overflow: 'hidden',
+    transition: 'width 0.3s',
+  }, (props: NavProps, theme: Themes.Theme) => ({
+    width: props.isNavOpen
+      ? TEMP_NAV_WIDTH
+      : 0,
     borderRight: theme.ui.border,
   })),
   Body: g.div({
+    width: TEMP_NAV_WIDTH,
     flex: 1,
   }),
   Bottom: g.div({
+    width: TEMP_NAV_WIDTH,
     height: 36,
     display: 'flex',
   }),
@@ -29,8 +37,12 @@ const Styled = {
   })),
 }
 
-export const Nav = () => (
-  <Styled.Root>
+interface NavProps {
+  isNavOpen: boolean
+}
+
+export const Nav = (props: NavProps) => (
+  <Styled.Root isNavOpen={props.isNavOpen} >
     <Styled.Body>
       Nav
     </Styled.Body>

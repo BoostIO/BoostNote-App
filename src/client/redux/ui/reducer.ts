@@ -12,7 +12,7 @@ export const reducer = (state: State = initialState, action: Action) => {
     case ActionType.TOGGLE_NAV:
       return {
         ...state,
-        toggleNav: !state.toggleNav,
+        isNavOpen: !state.isNavOpen,
       }
   }
   return state
