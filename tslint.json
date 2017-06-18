@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "tslint:recommended"
+  ],"rules": {
+    "indent": [true, "spaces", 2],
+    "semicolon": [true, "never"],
+    "quotemark": [true, "single"],
+    "object-literal-sort-keys": false,
+    "max-line-length": false,
+    "interface-name": false,
+    "no-namespace": false
+  }
+}

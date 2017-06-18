@@ -1,75 +1,42 @@
-'use strict'
-
 const path = require('path')
 const webpack = require('webpack')
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const util = require('./tools/util')
+// const util = require('./tools/util')
 
 const port = 8080
 
-let config = {
-  entry: {
-    main: ['./src/main/index.js'],
-    preferences: ['./src/preferences/index.js']
-  },
+const config = {
+  entry: [
+    'webpack-dev-server/client?http://localhost:' + port + '/',
+    'webpack/hot/only-dev-server',
+    path.join(__dirname, 'build/client/index.js')
+  ],
   resolve: {
-    extensions: ['.js', '.jsx', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      'components': path.join(__dirname, 'src/components'),
-      'lib': path.join(__dirname, 'src/lib'),
-      'main': path.join(__dirname, 'src/main')
+      'client': path.join(__dirname, 'build/client'),
+      'style': path.join(__dirname, 'build/style'),
+      'lib': path.join(__dirname, 'build/lib'),
     }
   },
   plugins: [
+    // new webpack.DefinePlugin({
+    //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    //   'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
+    // }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new NodeTargetPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`,
-      'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
-    }),
-    new ExtractTextPlugin({ filename: '[name].css', disable: false, allChunks: true })
-  ],
-  externals: [
-    // Electron
-    'electron',
-    // CommonJS2
-    'styled-components',
-    'sander',
-    'electron-devtools-installer',
-    'octicons',
-    'filenamify',
-    'color',
-    'moment',
-    'remark',
-    'remark-lint',
-    'remark-html',
-    'remark-emoji',
-    'remark-slug',
-    'strip-markdown',
-    'lodash',
-    'katex',
-    'react-immutable-proptypes',
-    {
-      // Global
-      react: 'var React',
-      'react-dom': 'var ReactDOM',
-      'react-redux': 'var ReactRedux',
-      'redux': 'var Redux',
-      'immutable': 'var Immutable',
-      'codemirror': 'var CodeMirror'
-    }
+    new ExtractTextPlugin({ filename: '[name].[hash].css' }),
+    new HtmlWebpackPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     rules: [
       {
-        test: /\.js?$/,
-        use: [
-          {
-            loader: 'babel-loader'
-          }
-        ],
-        exclude: /(node_modules|bower_components)/
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre'
       },
       {
         test: /\.json?$/,
@@ -81,7 +48,7 @@ let config = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
+        use: ExtractTextPlugin.extract({
           loader: 'css-loader'
         })
       }
@@ -89,62 +56,18 @@ let config = {
   },
   output: {
     path: path.join(__dirname, 'compiled'),
-    filename: '[name].js',
-    sourceMapFilename: '[name].map',
-    libraryTarget: 'commonjs2',
-    publicPath: 'http://localhost:' + port + '/assets/'
+    filename: '[name].[hash].js',
+    sourceMapFilename: '[name].[hash].map',
+    publicPath: 'http://localhost:' + port + '/'
   },
   performance: { hints: false },
   node: {},
-  devtool: 'eval',
+  devtool: 'source-map',
   devServer: {
     hot: true,
-    port
+    port,
+    historyApiFallback: true
   }
-}
-
-switch (process.env.NODE_ENV) {
-  case 'production':
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin())
-    config.plugins.push(new webpack.LoaderOptionsPlugin({
-      minimize: true
-    }))
-    config.externals = [
-      'electron',
-      {
-        'codemirror': 'var CodeMirror'
-      }
-    ]
-
-    config.performance = false
-    break
-  case 'development':
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-    const devEntry = [
-      'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:' + port,
-      'webpack/hot/only-dev-server'
-    ]
-    config.entry.main = devEntry.concat(config.entry.main)
-    config.entry.preferences = devEntry.concat(config.entry.preferences)
-    break
-  case 'test':
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-    config.entry = {
-      test: [
-        'webpack-dev-server/client?http://localhost:' + 8081,
-        'webpack/hot/only-dev-server',
-        './tools/webpack-test-entry.js'
-      ]
-    }
-
-    config.output.publicPath = 'http://localhost:' + 8081 + '/assets/'
-    config.devServer.port = 8081
-    config.node.__filename = true
-    config.node.__dirname = true
-    config.resolve.alias.specs = path.join(__dirname, 'specs')
 }
 
 module.exports = config
