@@ -1,9 +1,7 @@
-import { RootAction } from '../../reduxTypes'
-
 export interface PreferencesState {
 
 }
 
-const reducer = (state: PreferencesState, action: RootAction) => {
+const reducer = (state: PreferencesState, action: any) => {
   return state
 }

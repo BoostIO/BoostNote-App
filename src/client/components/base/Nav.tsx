@@ -1,3 +1,4 @@
+import { history } from 'client/lib'
 import g from 'glamorous'
 import React from 'react'
 import { Themes } from 'style'
@@ -35,19 +36,41 @@ const Styled = {
   }, (props: any, theme: Themes.Theme) => ({
     borderLeft: theme.ui.border,
   })),
+  Repos: g.div({
+
+  }),
+  ReposHeaderButton: g.button({
+    width: '100%',
+  }),
 }
 
 interface NavProps {
   isNavOpen: boolean
 }
 
+const onReposClick = () => {
+  history.push('/')
+}
+
+const onAddButtonClick = () => {
+  history.push('/new-repo')
+}
+
 export const Nav = (props: NavProps) => (
   <Styled.Root isNavOpen={props.isNavOpen} >
     <Styled.Body>
-      Nav
+      <Styled.Repos>
+        <Styled.ReposHeaderButton
+          onClick={onReposClick}
+        >
+          Repos
+        </Styled.ReposHeaderButton>
+      </Styled.Repos>
     </Styled.Body>
     <Styled.Bottom>
-      <Styled.BottomPlusButton>
+      <Styled.BottomPlusButton
+        onClick={onAddButtonClick}
+      >
         + Add Repo/Folder
       </Styled.BottomPlusButton>
       <Styled.BottomMoreButton>

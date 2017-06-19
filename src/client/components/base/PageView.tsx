@@ -1,7 +1,16 @@
+import {
+  Location,
+} from 'client/redux'
 import g from 'glamorous'
 import React from 'react'
 import Nav from './Nav'
 
-export const PageView = () => {
-  return <div>Page</div>
+interface PageViewProps {
+  location: Location.State
+}
+
+export const PageView = (props: PageViewProps) => {
+  return <div>
+  {props.location.pathname}
+  </div>
 }

@@ -1,4 +1,8 @@
-import { State, UI } from 'client/redux'
+import {
+  Location,
+  State,
+  UI,
+} from 'client/redux'
 import g, { ThemeProvider } from 'glamorous'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -29,10 +33,12 @@ const Styled = {
 }
 
 interface StateProps {
+  location: Location.State
   ui: UI.State
 }
 
 const stateToProps = (state: State): StateProps => ({
+  location: state.location,
   ui: state.ui,
 })
 
@@ -57,7 +63,9 @@ export const Main = connect(stateToProps, dispatchToProps)((props: MainProps) =>
           <Nav
             isNavOpen={props.ui.isNavOpen}
           />
-          <PageView />
+          <PageView
+            location={props.location}
+          />
         </Styled.Body>
       </Styled.Main>
     </ThemeProvider>

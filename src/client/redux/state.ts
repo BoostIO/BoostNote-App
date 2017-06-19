@@ -1,8 +1,11 @@
-import { UI } from './'
+import {
+  Location,
+  UI,
+} from './'
 import * as Pages from './pages'
 
 export interface State {
-  // location = Location
+  location: Location.State
   pages: Pages.State
   ui: UI.State
 }

@@ -1,9 +1,7 @@
-import { RootAction } from '../../../reduxTypes'
-
 export interface ReposCreateState {
 
 }
 
-const reducer = (state: ReposCreateState, action: RootAction) => {
+const reducer = (state: ReposCreateState, action: any) => {
   return state
 }
