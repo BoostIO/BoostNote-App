@@ -11,9 +11,9 @@ import {
   Dispatch,
 } from 'redux'
 import { Themes } from 'style'
-import { Nav } from './Nav'
-import { PageView } from './PageView'
-import { TitleBar } from './TitleBar'
+import Nav from './Nav'
+import PageRouter from './PageRouter'
+import TitleBar from './TitleBar'
 
 const Styled = {
   Main: g.div({
@@ -52,7 +52,7 @@ const dispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 
 type MainProps = StateProps & DispatchProps & {}
 
-export const Main = connect(stateToProps, dispatchToProps)((props: MainProps) => {
+const Main = connect(stateToProps, dispatchToProps)((props: MainProps) => {
   return (
     <ThemeProvider theme={Themes.defaultTheme}>
       <Styled.Main>
@@ -63,7 +63,7 @@ export const Main = connect(stateToProps, dispatchToProps)((props: MainProps) =>
           <Nav
             isNavOpen={props.ui.isNavOpen}
           />
-          <PageView
+          <PageRouter
             location={props.location}
           />
         </Styled.Body>
@@ -71,3 +71,5 @@ export const Main = connect(stateToProps, dispatchToProps)((props: MainProps) =>
     </ThemeProvider>
   )
 })
+
+export default Main

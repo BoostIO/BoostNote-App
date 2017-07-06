@@ -16,10 +16,12 @@ interface TitleBarProps {
   toggleNav: () => void
 }
 
-export const TitleBar = (props: TitleBarProps) => {
+const TitleBar = (props: TitleBarProps) => {
   return <Styled.Root>
     <button onClick={props.toggleNav}>ToggleNav</button>
     <button>Delete</button>
     <button>New Post</button>
   </Styled.Root>
 }
+
+export default TitleBar

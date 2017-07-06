@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "es6",
     "allowJs": false,
     "jsx": "react",
@@ -10,13 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "inlineSourceMap": true,
     "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "plugins": [
-			{
-        "name": "tslint-language-service",
-        "ignoreDefinitionFiles": true
-      }
-    ]
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*"

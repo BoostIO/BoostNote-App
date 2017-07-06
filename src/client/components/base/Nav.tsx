@@ -56,7 +56,7 @@ const onAddButtonClick = () => {
   history.push('/new-repo')
 }
 
-export const Nav = (props: NavProps) => (
+const Nav = (props: NavProps) => (
   <Styled.Root isNavOpen={props.isNavOpen} >
     <Styled.Body>
       <Styled.Repos>
@@ -79,3 +79,5 @@ export const Nav = (props: NavProps) => (
     </Styled.Bottom>
   </Styled.Root>
 )
+
+export default Nav

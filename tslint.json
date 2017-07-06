@@ -6,8 +6,18 @@
     "semicolon": [true, "never"],
     "quotemark": [true, "single"],
     "object-literal-sort-keys": false,
-    "max-line-length": false,
-    "interface-name": false,
-    "no-namespace": false
+    "max-line-length": [false],
+    "interface-name": [false],
+    "no-namespace": false,
+    "curly": false,
+    "array-type": [false],
+    "max-classes-per-file": [false],
+    "ordered-imports": [false],
+    "trailing-comma": [true, "never"],
+    "no-empty-interface": false,
+    "no-reference": false,
+    "interface-over-type-literal": false,
+    "member-ordering": [false],
+    "arrow-parens": false
   }
 }

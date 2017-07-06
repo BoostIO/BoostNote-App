@@ -39,6 +39,10 @@ const config = {
         enforce: 'pre'
       },
       {
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader'
+      },
+      {
         test: /\.json?$/,
         use: [
           {

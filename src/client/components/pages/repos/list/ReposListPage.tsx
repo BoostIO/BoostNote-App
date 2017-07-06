@@ -1,7 +1,9 @@
 import * as React from 'react'
 
-const ReposCreatePage = () => (
+const ReposListPage = () => (
   <div>
     List of repos
   </div>
 )
+
+export default ReposListPage

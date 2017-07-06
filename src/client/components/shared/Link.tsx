@@ -8,9 +8,11 @@ const onClickCreator = (props: LinkProps) => (event: React.MouseEvent<HTMLAnchor
   history.push(props.href)
 }
 
-export const Link = (props: LinkProps) => (
+const Link = (props: LinkProps) => (
   <a
     onClick={onClickCreator(props)}
     {...props}
   />
 )
+
+export default Link

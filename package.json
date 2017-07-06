@@ -104,6 +104,7 @@
     "remark-math": "^1.0.0",
     "remark-slug": "^4.2.2",
     "strip-markdown": "^3.0.0",
+    "typed-redux-kit": "^0.1.2",
     "unist-util-visit": "^1.1.1"
   },
   "standard": {
