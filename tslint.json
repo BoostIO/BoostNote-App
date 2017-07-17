@@ -18,6 +18,7 @@
     "no-reference": false,
     "interface-over-type-literal": false,
     "member-ordering": [false],
-    "arrow-parens": false
+    "arrow-parens": false,
+    "space-before-function-paren": true
   }
 }
