@@ -45,9 +45,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/history": "^4.5.2",
-    "@types/react": "^15.0.29",
+    "@types/pouchdb-browser": "^6.1.1",
+    "@types/react": "^15.0.38",
     "@types/react-dom": "^15.5.0",
-    "@types/react-redux": "^4.4.43",
+    "@types/react-redux": "^4.4.46",
     "@types/redux-logger": "^3.0.0",
     "@types/webpack-env": "^1.13.0",
     "babel-core": "^6.18.0",
@@ -64,7 +65,7 @@
     "env-cmd": "^4.0.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
-    "filenamify": "^1.2.1",
+    "filenamify": "^2.0.0",
     "fixme": "^0.4.3",
     "history": "^4.6.2",
     "html-webpack-plugin": "^2.28.0",
@@ -82,8 +83,8 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "@types/redux": "^3.6.0",
     "codemirror": "^5.26.0",
-    "electron-positioner": "^3.0.0",
     "github-markdown-css": "^2.4.1",
     "glamor": "^2.20.25",
     "glamorous": "^3.23.2",
@@ -106,39 +107,6 @@
     "strip-markdown": "^3.0.0",
     "typed-redux-kit": "^0.1.2",
     "unist-util-visit": "^1.1.1"
-  },
-  "standard": {
-    "parser": "babel-eslint",
-    "plugins": [
-      "jest"
-    ],
-    "envs": [
-      "jest"
-    ]
-  },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/specs/utils/setup.js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "^main(.*)$": "<rootDir>/src/main$1",
-      "^lib(.*)$": "<rootDir>/src/lib$1",
-      "^components(.*)$": "<rootDir>/src/components$1",
-      "^specs(.*)$": "<rootDir>/specs$1",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/specs/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/specs/__mocks__/styleMock.js"
-    }
   },
   "build": {
     "appId": "com.electron.Inpad",
