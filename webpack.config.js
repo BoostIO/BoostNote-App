@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-// const util = require('./tools/util')
 
 const port = 8080
 
@@ -21,10 +20,6 @@ const config = {
     }
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    //   'process.env.CODEMIRROR_THEMES': JSON.stringify(util.getCodeMirrorThemes())
-    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new ExtractTextPlugin({ filename: '[name].[hash].css' }),
@@ -37,10 +32,6 @@ const config = {
         test: /\.js$/,
         use: ['source-map-loader'],
         enforce: 'pre'
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        use: 'ts-loader'
       },
       {
         test: /\.json?$/,
@@ -71,6 +62,9 @@ const config = {
     hot: true,
     port,
     historyApiFallback: true
+  },
+  watchOptions: {
+    ignored: /src/
   }
 }
 
