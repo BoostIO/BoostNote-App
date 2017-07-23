@@ -8,17 +8,15 @@ function generateRandomId (size = 6) {
 const serializedRepositoryMapKey = 'SERIALIZED_REPOSITORY_MAP'
 
 type SerializedRepositoryMap = {
-  [slug: string]: RepositoryParams
+  [name: string]: RepositoryParams
 }
 
 const defaultSerializedRepositoryMap: SerializedRepositoryMap = {
-  'my-notes': {
-    name: 'My Notes'
+  'My Notes': {
   }
 }
 
 type RepositoryParams = {
-  name: string
 }
 
 type NoteParams = {
@@ -30,56 +28,56 @@ type NoteParams = {
 export class Repository {
   private static repositoryMap = new Map<string, Repository>()
 
-  public static async create (slug: string, params: RepositoryParams) {
-    const repository = new this(slug, params)
-    this.repositoryMap.set(slug, repository)
-    await this.saveRepositoryMap()
+  public static async create (name: string, params: RepositoryParams) {
+    const repository = new this(name, params)
+    Repository.repositoryMap.set(name, repository)
+    await Repository.saveRepositoryMap()
     return repository
   }
 
-  public static async remove (slug: string) {
-    if (!this.repositoryMap.has(slug)) throw new Error('Repository doesnt exist')
-    this.repositoryMap.delete(slug)
-    await this.saveRepositoryMap()
+  public static async remove (name: string) {
+    if (!Repository.repositoryMap.has(name)) throw new Error('Repository doesnt exist')
+    Repository.repositoryMap.delete(name)
+    await Repository.saveRepositoryMap()
   }
 
   public static async loadRepositoryMap () {
-    this.repositoryMap.clear()
+    Repository.repositoryMap.clear()
     const serializedRepositoryMap: SerializedRepositoryMap = JSON.parse(localStorage.getItem(serializedRepositoryMapKey))
-    const promises = Object.entries(serializedRepositoryMap)
-      .filter(([slug, params]) => {
-        if (typeof params.name !== 'string') return false
-        return true
-      })
-      .map(([slug, params]) =>
-        this
-          .create(slug, params)
-          .then(repository => this.repositoryMap.set(slug, repository))
+    const promises = Repository.convertMapToEntries(serializedRepositoryMap)
+      .map(([name, params]) =>
+        Repository
+          .create(name, params)
+          .then(repository => Repository.repositoryMap.set(name, repository))
       )
     await Promise.all(promises)
   }
 
+  public static convertMapToEntries (serializedMap: SerializedRepositoryMap): Array<[string, RepositoryParams]> {
+    if (!serializedMap) {
+      return Object.entries(defaultSerializedRepositoryMap)
+    }
+    return Object.entries(serializedMap)
+  }
+
   public static async saveRepositoryMap () {
-    const entries = Array.from(this.repositoryMap.entries())
+    const entries = Array.from(Repository.repositoryMap.entries())
     const serializedMap = entries
-      .reduce((acc, [slug, repository]) => {
-        acc[slug] = repository.serialize()
+      .reduce((acc, [name, repository]) => {
+        acc[name] = repository.serialize()
         return acc
       }, {} as SerializedRepositoryMap)
     localStorage.setItem(serializedRepositoryMapKey, JSON.stringify(serializedMap))
   }
 
-  constructor (slug: string, params: RepositoryParams) {
-    this.name = params.name
-    this.db = new PouchDB(slug)
+  constructor (name: string, params: RepositoryParams) {
+    this.db = new PouchDB(name)
   }
 
-  public name: string
   private db: PouchDB.Database
 
   private serialize () {
     return {
-      name: this.name
     }
   }
 
