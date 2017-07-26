@@ -1,5 +1,5 @@
 import * as React from 'react'
-import ReposCreateForm from './ReposCreateForm'
+import CreateFormContainer from './CreateFormContainer'
 
 import { bindActionCreators } from 'redux'
 import {
@@ -14,7 +14,7 @@ import {
 const ReposCreatePage = () => (
   <div>
     <div>Create a new repo</div>
-    <ReposCreateForm />
+    <CreateFormContainer />
   </div>
 )
 

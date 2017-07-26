@@ -12,10 +12,12 @@ import { reducer } from './reducer'
 import { saga } from './saga'
 
 const sagaMiddleWare = createSagaMiddleware()
-const logger = createLogger()
+const logger = createLogger({
+  collapsed: true
+})
 
 export const store = createStore(
-  reducer,
+  reducer.reduce,
   applyMiddleware(sagaMiddleWare, logger),
 )
 

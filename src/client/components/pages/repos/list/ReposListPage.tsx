@@ -1,6 +1,12 @@
 import * as React from 'react'
 
-const ReposListPage = () => (
+interface ReposListPageStateProps {
+  repositoryMap: {
+    [name: string]: {}
+  }
+}
+
+const ReposListPage = (props: ReposListPageStateProps) => (
   <div>
     List of repos
   </div>

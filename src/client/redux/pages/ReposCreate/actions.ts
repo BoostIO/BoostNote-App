@@ -13,7 +13,7 @@ export namespace Actions {
   export interface SubmitFormAction extends Typed.PureAction<ActionTypes.SubmitForm> {}
 }
 
-export type Actions = Actions.UpdateFormAction
+export type Actions = Actions.UpdateFormAction | Actions.SubmitFormAction
 
 export const ActionCreators = {
   updateForm: Typed.createActionCreator<Actions.UpdateFormAction>(ActionTypes.UpdateForm),

@@ -1,17 +1,17 @@
 import {
-  ActionType,
+  ActionTypes,
 } from './actions'
 import {
-  AllAction,
+  AllActions,
 } from '../actions'
 import {
   initialState,
   State,
 } from './state'
 
-export const reducer = (state: State = initialState, action: AllAction) => {
+export const reducer = (state: State = initialState, action: AllActions) => {
   switch (action.type) {
-    case ActionType.CHANGE_LOCATION:
+    case ActionTypes.CHANGE_LOCATION:
       return {
         ...action.payload,
       }

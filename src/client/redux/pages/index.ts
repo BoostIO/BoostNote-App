@@ -1,22 +1,30 @@
-import {
-  combineReducers
-} from 'redux'
-import * as ReposCreatePage from './repos/create'
+import * as TypedRedux from 'typed-redux-kit'
+import { combineReducers } from 'redux'
+import { SagaIterator } from 'redux-saga'
+import { fork } from 'redux-saga/effects'
+import * as ReposCreatePage from './ReposCreate'
 
 export interface State {
   preferences: any
-  repos: {
-    create: ReposCreatePage.State
-  }
+  ReposCreate: ReposCreatePage.State
 }
-
+export type ActionTypes = ReposCreatePage.ActionTypes
+export const ActionTypes = ReposCreatePage.ActionTypes
 export type Actions = ReposCreatePage.Actions
 
-export const reducer = combineReducers({
-  repos: combineReducers({
-    create: ReposCreatePage.reducer
-  })
-})
+export const reducer = new TypedRedux.MappedReducer<State, ActionTypes, Actions>({})
+
+reducer.set(Object.values(ReposCreatePage.ActionTypes), (state: State, action: ReposCreatePage.Actions): State => ({
+  ...state,
+  ReposCreate: {
+    ...state.ReposCreate,
+    ...ReposCreatePage.reducer(state.ReposCreate, action)
+  }
+}))
+
+export function * saga (): SagaIterator {
+  yield fork(ReposCreatePage.saga)
+}
 
 export {
   ReposCreatePage

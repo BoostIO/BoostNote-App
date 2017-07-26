@@ -3,13 +3,13 @@ import {
   initialState
 } from './state'
 import {
-  AllAction
-} from '../../../actions'
+  AllActions
+} from '../../actions'
 import {
   ActionTypes
 } from './actions'
 
-export const reducer = (state: State = initialState, action: AllAction) => {
+export const reducer = (state: State = initialState, action: AllActions) => {
   switch (action.type) {
     case ActionTypes.UpdateForm:
       return {

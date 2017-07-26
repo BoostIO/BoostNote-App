@@ -29,7 +29,7 @@ export class Repository {
   private static repositoryMap = new Map<string, Repository>()
 
   public static async create (name: string, params: RepositoryParams) {
-    const repository = new this(name, params)
+    const repository = new Repository(name, params)
     Repository.repositoryMap.set(name, repository)
     await Repository.saveRepositoryMap()
     return repository

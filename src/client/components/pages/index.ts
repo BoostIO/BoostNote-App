@@ -1,2 +1,2 @@
-export { default as ReposCreatePage } from './repos/create/ReposCreatePage'
-export { default as ReposListPage } from './repos/list/ReposListPage'
+export { default as ReposCreatePageContainer } from './repos/create/ReposCreatePage'
+export { default as ReposListPageContainer } from './repos/list/ReposListPageContainer'
