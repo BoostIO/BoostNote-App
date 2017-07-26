@@ -95,7 +95,7 @@
     "react-redux": "^5.0.5",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.6",
-    "redux-saga": "^0.15.3",
+    "redux-saga": "^0.15.5",
     "remark": "^7.0.1",
     "remark-emoji": "^2.0.0",
     "remark-html": "^6.0.0",
@@ -103,7 +103,7 @@
     "remark-math": "^1.0.0",
     "remark-slug": "^4.2.2",
     "strip-markdown": "^3.0.0",
-    "typed-redux-kit": "^0.1.2",
+    "typed-redux-kit": "^0.2.0",
     "unist-util-visit": "^1.1.1"
   },
   "build": {
