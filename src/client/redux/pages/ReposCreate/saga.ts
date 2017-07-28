@@ -19,7 +19,7 @@ import { history } from 'client/lib/history'
 export function * saga (): SagaIterator {
   while (true) {
     yield take(ActionTypes.SubmitForm)
-    const form: FormState = yield select((state: State): FormState => state.pages.ReposCreate.form)
+    const form: FormState = yield select((state: State): FormState => state.ReposCreatePage.form)
     yield call(Repository.create, form.name, {})
     yield put(RepositoryMap.ActionCreators.addRepository({
       name: form.name

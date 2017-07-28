@@ -1,30 +1,35 @@
-import { combineReducers } from 'redux'
+import * as TypedRedux from 'typed-redux-kit'
 import * as Location from './location'
 import * as UI from './ui'
-import * as Pages from './pages'
+import * as ReposCreatePage from './pages/ReposCreate'
 import * as RepositoryMap from './RepositoryMap'
-import { State } from './state'
-import { AllActions } from './actions'
-import * as TypedRedux from 'typed-redux-kit'
+import {
+  State,
+  initialState
+} from './state'
 
-export const reducer = new TypedRedux.MappedReducer<State, string, AllActions>()
+export type AllActions = UI.Actions | Location.Actions | ReposCreatePage.Actions | RepositoryMap.Actions
+
+export const reducer = new TypedRedux.MappedReducer<State, string, AllActions>({
+  initialState
+})
 
 reducer.set(Object.values(RepositoryMap.ActionTypes), (state, action: RepositoryMap.Actions) => ({
   ...state,
   RepositoryMap: RepositoryMap.reducer.reduce(state.RepositoryMap, action)
 }))
 
-reducer.set(Object.values(UI.ActionTypes), (state, action: RepositoryMap.Actions) => ({
+reducer.set(Object.values(UI.ActionTypes), (state, action: UI.Actions) => ({
   ...state,
   ui: UI.reducer(state.ui, action)
 }))
 
-reducer.set(Object.values(Pages.ActionTypes), (state, action: Pages.Actions) => ({
-  ...state,
-  pages: Pages.reducer.reduce(state.pages, action)
-}))
-
-reducer.set(Object.values(Location.ActionTypes), (state, action: RepositoryMap.Actions) => ({
+reducer.set(Object.values(Location.ActionTypes), (state, action: Location.Actions) => ({
   ...state,
   location: Location.reducer(state.location, action)
+}))
+
+reducer.set(Object.values(ReposCreatePage.ActionTypes), (state, action: ReposCreatePage.Actions): State => ({
+  ...state,
+  ReposCreatePage: ReposCreatePage.reducer(state.ReposCreatePage, action)
 }))

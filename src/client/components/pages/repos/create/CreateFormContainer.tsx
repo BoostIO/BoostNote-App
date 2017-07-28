@@ -28,7 +28,7 @@ const CreateFormContainer = ({
 )
 
 const mapStateToProps = (state: State) => ({
-  form: state.pages.ReposCreate.form
+  form: state.ReposCreatePage.form
 })
 
 const mapDispatchToProps = {

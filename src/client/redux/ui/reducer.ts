@@ -1,15 +1,13 @@
 import {
   ActionTypes,
+  Actions,
 } from './actions'
-import {
-  AllActions,
-} from '../actions'
 import {
   initialState,
   State,
 } from './state'
 
-export const reducer = (state: State = initialState, action: AllActions) => {
+export const reducer = (state: State = initialState, action: Actions) => {
   switch (action.type) {
     case ActionTypes.TOGGLE_NAV:
       return {

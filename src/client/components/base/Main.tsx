@@ -46,18 +46,18 @@ interface DispatchProps {
   actions: UI.ActionCreators
 }
 
-const dispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  actions: bindActionCreators(UI.ActionCreators, dispatch),
-})
+const dispatchToProps = {
+  toggleNav: UI.ActionCreators.toggleNav
+}
 
-type MainProps = StateProps & DispatchProps & {}
+type MainProps = StateProps & typeof dispatchToProps
 
 const Main = connect(stateToProps, dispatchToProps)((props: MainProps) => {
   return (
     <ThemeProvider theme={Themes.defaultTheme}>
       <Styled.Main>
         <TitleBar
-          toggleNav={props.actions.toggleNav}
+          toggleNav={props.toggleNav}
         />
         <Styled.Body>
           <Nav

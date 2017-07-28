@@ -1,13 +1,18 @@
-import {
-  Location,
-  UI,
-  RepositoryMap,
-} from './'
-import * as Pages from './pages'
+import * as Location from './location'
+import * as UI from './ui'
+import * as ReposCreatePage from './pages/ReposCreate'
+import * as RepositoryMap from './RepositoryMap'
 
 export interface State {
   location: Location.State
-  pages: Pages.State
   ui: UI.State
-  RepositoryMap: RepositoryMap.State
+  RepositoryMap: RepositoryMap.State,
+  ReposCreatePage: ReposCreatePage.State
+}
+
+export const initialState = {
+  location: Location.initialState,
+  ui: UI.initialState,
+  RepositoryMap: RepositoryMap.initialState,
+  ReposCreatePage: ReposCreatePage.initialState,
 }

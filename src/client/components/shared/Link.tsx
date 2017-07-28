@@ -3,16 +3,18 @@ import * as React from 'react'
 
 type LinkProps = React.HTMLAttributes<HTMLAnchorElement>
 
-const onClickCreator = (props: LinkProps) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-  event.preventDefault()
-  history.push(props.href)
-}
+const Link = (props: LinkProps) => {
+  const goToHref = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    history.push(props.href)
+  }
 
-const Link = (props: LinkProps) => (
-  <a
-    onClick={onClickCreator(props)}
-    {...props}
-  />
-)
+  return (
+    <a
+      onClick={goToHref}
+      {...props}
+    />
+  )
+}
 
 export default Link
