@@ -7,7 +7,7 @@ import {
 } from 'redux'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
-import * as Location from './location'
+import * as Location from './Location'
 import { reducer } from './reducer'
 import { saga } from './saga'
 

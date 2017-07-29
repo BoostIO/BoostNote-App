@@ -1,6 +1,6 @@
-import * as Location from './location'
-import * as UI from './ui'
-import * as ReposCreatePage from './pages/ReposCreate'
+import * as Location from './Location'
+import * as UI from './UI'
+import * as ReposCreatePage from './Pages/ReposCreate'
 import * as RepositoryMap from './RepositoryMap'
 
 export interface State {

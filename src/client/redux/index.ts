@@ -1,7 +1,7 @@
 export * from './state'
-import * as UI from './ui'
-import * as Location from './location'
-import * as Pages from './pages'
+import * as UI from './UI'
+import * as Location from './Location'
+import * as Pages from './Pages'
 import * as RepositoryMap from './RepositoryMap'
 
 export {
