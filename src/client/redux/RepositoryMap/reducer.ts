@@ -12,7 +12,11 @@ export const reducer = new TypedRedux.MappedReducer<State, ActionTypes, Actions>
   initialState
 })
 
-reducer.set(ActionTypes.AddRepository, (state, action) => ({
+reducer.set(ActionTypes.InitializeRepositoryMap, (state, action: Actions.InitializeRepositoryMap) => ({
+  ...action.payload.repositoryMap
+}))
+
+reducer.set(ActionTypes.AddRepository, (state, action: Actions.AddRepository) => ({
   ...state,
   [action.payload.name]: {
     noteMap: {}
