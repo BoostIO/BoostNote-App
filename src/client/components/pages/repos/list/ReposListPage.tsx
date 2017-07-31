@@ -6,9 +6,19 @@ interface ReposListPageStateProps {
   }
 }
 
-const ReposListPage = (props: ReposListPageStateProps) => (
+const ReposListPage = ({
+  repositoryMap
+}: ReposListPageStateProps) => (
   <div>
     List of repos
+    <ul>
+      {
+        Object.entries(repositoryMap)
+          .map(([name, repository]) => (
+            <li key={name}>{name}</li>
+          ))
+      }
+    </ul>
   </div>
 )
 

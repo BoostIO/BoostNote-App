@@ -19,14 +19,26 @@ const defaultSerializedRepositoryMap: SerializedRepositoryMap = {
 type RepositoryParams = {
 }
 
-type NoteParams = {
+type Note = {
   content: string
   createdAt: Date
   updatedAt: Date
 }
 
+type SerializedRepositoryWithNoteMap = {
+  noteMap: {
+    [id: string]: Note
+  }
+}
+
+type SerializedRepositoryMapWithNoteMap = {
+  [name: string]: SerializedRepositoryWithNoteMap
+}
+
+export type RepositoryMap = Map<string, Repository>
+
 export class Repository {
-  private static repositoryMap = new Map<string, Repository>()
+  private static repositoryMap: RepositoryMap = new Map()
 
   public static async create (name: string, params: RepositoryParams) {
     const repository = new Repository(name, params)
@@ -43,8 +55,7 @@ export class Repository {
 
   public static async loadRepositoryMap () {
     Repository.repositoryMap.clear()
-    const serializedRepositoryMap: SerializedRepositoryMap = JSON.parse(localStorage.getItem(serializedRepositoryMapKey))
-    const promises = Repository.convertMapToEntries(serializedRepositoryMap)
+    const promises = Repository.getSerializedEntriesFromLocalStorage()
       .map(([name, params]) =>
         Repository
           .create(name, params)
@@ -53,11 +64,33 @@ export class Repository {
     await Promise.all(promises)
   }
 
-  public static convertMapToEntries (serializedMap: SerializedRepositoryMap): Array<[string, RepositoryParams]> {
-    if (!serializedMap) {
+  public static async initialize (): Promise<RepositoryMap> {
+    await Repository.loadRepositoryMap()
+    return Repository.repositoryMap
+  }
+
+  private static getSerializedEntriesFromLocalStorage (): Array<[string, RepositoryParams]> {
+    const serializedRepositoryMap: SerializedRepositoryMap = JSON.parse(localStorage.getItem(serializedRepositoryMapKey))
+    if (!serializedRepositoryMap) {
       return Object.entries(defaultSerializedRepositoryMap)
     }
-    return Object.entries(serializedMap)
+    return Object.entries(serializedRepositoryMap)
+  }
+
+  public static async getSerializedRepositoryMapWithNoteMap (): Promise<SerializedRepositoryMapWithNoteMap> {
+    const serializedEntries = await Promise.all(Array.from(Repository.repositoryMap.entries())
+      .map(([name, repository]) => repository
+        .serializeWithNoteMap()
+        .then((serializedRepositoryWithNoteMap) => ({
+          name, serializedRepositoryWithNoteMap
+        }))
+      ))
+
+    return serializedEntries
+      .reduce((partialMap, {name, serializedRepositoryWithNoteMap}) => {
+        partialMap[name] = serializedRepositoryWithNoteMap
+        return partialMap
+      }, {} as SerializedRepositoryMapWithNoteMap)
   }
 
   public static async saveRepositoryMap () {
@@ -71,21 +104,37 @@ export class Repository {
   }
 
   constructor (name: string, params: RepositoryParams) {
-    this.db = new PouchDB(name)
+    this.db = new PouchDB<Note>(name)
   }
 
-  private db: PouchDB.Database
+  private db: PouchDB.Database<Note>
 
   private serialize () {
     return {
     }
   }
 
-  public async getNotes () {
-    return this.db.allDocs()
+  public async serializeWithNoteMap () {
+    return {
+      ...(await this.serialize()),
+      noteMap: await this.getNoteMap()
+    }
   }
 
-  public async createNote (noteParams: NoteParams) {
+  public async getNoteMap () {
+    return (await this.db.allDocs()).rows.reduce((noteMap, row) => {
+      noteMap[row.id] = {
+        createdAt: row.doc.createdAt,
+        updatedAt: row.doc.updatedAt,
+        content: row.doc.content,
+      }
+      return noteMap
+    }, {} as {
+      [id: string]: Note
+    })
+  }
+
+  public async createNote (noteParams: Note) {
     let noteId
     while (true) {
       noteId = generateRandomId()
@@ -100,12 +149,12 @@ export class Repository {
     return this.db.put({
       _id: noteId,
       content: '',
+      createdAt: new Date(),
       updatedAt: new Date(),
-      deletedAt: new Date()
     })
   }
 
-  public async updateNote (noteId: string, noteParams: NoteParams) {
+  public async updateNote (noteId: string, noteParams: Note) {
     const note = await this.db.get(noteId)
 
     return await this.db.put({
