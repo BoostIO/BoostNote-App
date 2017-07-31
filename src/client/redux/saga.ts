@@ -21,7 +21,10 @@ function * loadData (): SagaIterator {
 }
 
 export function * saga (): SagaIterator {
-  yield fork(loadData)
+  // Bootstrap
+  yield call(loadData)
+
+  // Run
   yield fork(UI.saga)
   yield fork(Pages.ReposCreatePage.saga)
 }
