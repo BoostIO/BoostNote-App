@@ -7,6 +7,9 @@ export interface Note {
 export interface Repository {
   noteMap: {
     [noteId: string]: Note
+  },
+  folderMap: {
+    [folder: string]: string[]
   }
 }
 

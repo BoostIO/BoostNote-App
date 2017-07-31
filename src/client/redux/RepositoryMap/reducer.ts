@@ -19,7 +19,8 @@ reducer.set(ActionTypes.InitializeRepositoryMap, (state, action: Actions.Initial
 reducer.set(ActionTypes.AddRepository, (state, action: Actions.AddRepository) => ({
   ...state,
   [action.payload.name]: {
-    noteMap: {}
+    noteMap: {},
+    folderMap: {}
   }
 }))
 

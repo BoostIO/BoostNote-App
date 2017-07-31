@@ -21,6 +21,7 @@ type RepositoryParams = {
 
 type Note = {
   content: string
+  folder: string
   createdAt: Date
   updatedAt: Date
 }
@@ -127,6 +128,7 @@ export class Repository {
         createdAt: row.doc.createdAt,
         updatedAt: row.doc.updatedAt,
         content: row.doc.content,
+        folder: row.doc.folder,
       }
       return noteMap
     }, {} as {
@@ -148,6 +150,7 @@ export class Repository {
 
     return this.db.put({
       _id: noteId,
+      folder: noteParams.folder,
       content: '',
       createdAt: new Date(),
       updatedAt: new Date(),
