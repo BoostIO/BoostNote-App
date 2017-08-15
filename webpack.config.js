@@ -9,14 +9,14 @@ const config = {
   entry: [
     'webpack-dev-server/client?http://localhost:' + port + '/',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'build/client/index.js')
+    path.join(__dirname, 'src/client/index.tsx')
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      'client': path.join(__dirname, 'build/client'),
-      'style': path.join(__dirname, 'build/style'),
-      'lib': path.join(__dirname, 'build/lib'),
+      'client': path.join(__dirname, 'src/client'),
+      'style': path.join(__dirname, 'src/style'),
+      'lib': path.join(__dirname, 'src/lib'),
     }
   },
   plugins: [
@@ -28,6 +28,15 @@ const config = {
   ],
   module: {
     rules: [
+      {
+        test: /\.tsx?$/, loader: 'ts-loader', options: {
+          transpileOnly: true,
+          compilerOptions: {
+            sourceMap: true,
+            inlineSourceMap: false,
+          }
+        }
+      },
       {
         test: /\.js$/,
         use: ['source-map-loader'],
@@ -63,9 +72,6 @@ const config = {
     port,
     historyApiFallback: true
   },
-  watchOptions: {
-    ignored: /src/
-  }
 }
 
 module.exports = config
