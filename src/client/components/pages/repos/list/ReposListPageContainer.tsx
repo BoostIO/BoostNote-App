@@ -1,29 +1,26 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import ReposListPage from './ReposListPage'
-import {
-  State,
-  RepositoryMap
-} from 'client/redux'
+import { State } from 'client/redux'
 
 interface ReposListPageContainerStateProps {
-  repositoryMap: {
-    [name: string]: {}
-  }
+  repositories: string[]
 }
 
 type ReposListPageContainerProps = ReposListPageContainerStateProps
 
 const ReposListPageContainer = ({
-  repositoryMap
+  repositories
 }: ReposListPageContainerProps) => (
   <ReposListPage
-    repositoryMap={repositoryMap}
+    repositories={repositories}
   />
 )
 
-const stateToProps = (state: State): ReposListPageContainerStateProps => ({
-  repositoryMap: state.RepositoryMap
-})
+const stateToProps = (state: State): ReposListPageContainerStateProps => {
+  return ({
+    repositories: Array.from(state.RepositoryMap.keys())
+  })
+}
 
 export default connect(stateToProps)(ReposListPageContainer)

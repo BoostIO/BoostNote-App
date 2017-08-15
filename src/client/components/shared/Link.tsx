@@ -1,7 +1,9 @@
 import { history } from 'client/lib/history'
 import * as React from 'react'
 
-type LinkProps = React.HTMLAttributes<HTMLAnchorElement>
+type LinkProps = React.HTMLAttributes<HTMLAnchorElement> & {
+  href: string
+}
 
 const Link = (props: LinkProps) => {
   const goToHref = (event: React.MouseEvent<HTMLAnchorElement>) => {

@@ -1,8 +1,5 @@
-import {
-  Location,
-  State,
-  UI,
-} from 'client/redux'
+import { State } from 'client/redux/state'
+import * as Actions from 'client/redux/actions'
 import g, { ThemeProvider } from 'glamorous'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -33,26 +30,26 @@ const Styled = {
 }
 
 interface StateProps {
-  location: Location.State
-  ui: UI.State
+  location: {
+    pathname: string
+    search: string
+    hash: string
+  }
+  isNavOpen: boolean
 }
 
 const stateToProps = (state: State): StateProps => ({
-  location: state.location,
-  ui: state.ui,
+  location: state.Location,
+  isNavOpen: state.UI.isNavOpen,
 })
 
-interface DispatchProps {
-  actions: UI.ActionCreators
+const dispatchProps = {
+  toggleNav: Actions.UI.ActionCreators.toggleNav
 }
 
-const dispatchToProps = {
-  toggleNav: UI.ActionCreators.toggleNav
-}
+type MainProps = StateProps & typeof dispatchProps
 
-type MainProps = StateProps & typeof dispatchToProps
-
-const Main = connect(stateToProps, dispatchToProps)((props: MainProps) => {
+const Main = connect(stateToProps, dispatchProps)((props: MainProps) => {
   return (
     <ThemeProvider theme={Themes.defaultTheme}>
       <Styled.Main>
@@ -61,7 +58,7 @@ const Main = connect(stateToProps, dispatchToProps)((props: MainProps) => {
         />
         <Styled.Body>
           <Nav
-            isNavOpen={props.ui.isNavOpen}
+            isNavOpen={props.isNavOpen}
           />
           <PageRouter
             location={props.location}

@@ -1,18 +1,17 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import {
-  State,
-  Pages
-} from 'client/redux'
+import { State } from 'client/redux'
 
 interface Form {
   name: string
 }
 
 interface CreateFormProps {
-  form: Pages.ReposCreatePage.FormState
+  form: {
+    name: string
+  }
   updateForm: (form: Form) => void
-  submitForm: typeof Pages.ReposCreatePage.ActionCreators.submitForm
+  submitForm: () => void
 }
 
 class CreateForm extends React.PureComponent<CreateFormProps, {}> {

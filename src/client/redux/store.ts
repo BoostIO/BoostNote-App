@@ -4,11 +4,16 @@ import {
 import {
   applyMiddleware,
   createStore,
+  compose,
+  Store,
+  StoreEnhancerStoreCreator,
 } from 'redux'
 import { createLogger } from 'redux-logger'
+import { trackEnhancer } from 'typed-redux-kit'
 import createSagaMiddleware from 'redux-saga'
-import * as Location from './Location'
-import { reducer } from './reducer'
+import { State } from './state'
+import * as Actions from './actions'
+import { reducer } from './reducers'
 import { saga } from './saga'
 
 const sagaMiddleWare = createSagaMiddleware()
@@ -18,11 +23,14 @@ const logger = createLogger({
 
 export const store = createStore(
   reducer.reduce,
-  applyMiddleware(sagaMiddleWare, logger),
+  compose<StoreEnhancerStoreCreator<State>>(
+    trackEnhancer,
+    applyMiddleware(sagaMiddleWare, logger),
+  ),
 )
 
 const unlisten = history.listen((location) => {
-  store.dispatch(Location.ActionCreators.changeLocation({
+  store.dispatch(Actions.Location.ActionCreators.changeLocation({
     pathname: location.pathname,
     search: location.search,
     hash: location.hash,

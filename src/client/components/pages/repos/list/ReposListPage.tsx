@@ -1,22 +1,19 @@
 import * as React from 'react'
 
 interface ReposListPageStateProps {
-  repositoryMap: {
-    [name: string]: {}
-  }
+  repositories: string[]
 }
 
 const ReposListPage = ({
-  repositoryMap
+  repositories
 }: ReposListPageStateProps) => (
   <div>
     List of repos
     <ul>
-      {
-        Object.entries(repositoryMap)
-          .map(([name, repository]) => (
-            <li key={name}>{name}</li>
-          ))
+      {repositories
+        .map(name => (
+          <li key={name}>{name}</li>
+        ))
       }
     </ul>
   </div>

@@ -4,18 +4,15 @@ import {
   call,
   put,
 } from 'redux-saga/effects'
-import {
-  UI,
-  Pages,
-  RepositoryMap,
-} from './'
+import * as Actions from '../actions'
+import * as Pages from './Pages'
 import { Repository } from 'client/lib/Repository'
 
 function * loadData (): SagaIterator {
   yield call(Repository.initialize)
   const repositoryMap = yield call(Repository.getSerializedRepositoryMapWithNoteMap)
 
-  yield put(RepositoryMap.ActionCreators.initializeRepositoryMap({
+  yield put(Actions.RepositoryMap.ActionCreators.initializeRepositoryMap({
     repositoryMap
   }))
 }
@@ -25,6 +22,5 @@ export function * saga (): SagaIterator {
   yield call(loadData)
 
   // Run
-  yield fork(UI.saga)
-  yield fork(Pages.ReposCreatePage.saga)
+  yield fork(Pages.ReposCreate.saga)
 }

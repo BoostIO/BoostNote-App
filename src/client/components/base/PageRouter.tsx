@@ -1,6 +1,3 @@
-import {
-  Location,
-} from 'client/redux'
 import g from 'glamorous'
 import React from 'react'
 import {
@@ -10,7 +7,9 @@ import {
 import Nav from './Nav'
 
 interface PageViewProps {
-  location: Location.State
+  location: {
+    pathname: string
+  }
 }
 
 const Styled = {

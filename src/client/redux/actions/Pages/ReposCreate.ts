@@ -1,15 +1,14 @@
 import * as Typed from 'typed-redux-kit'
-import {
-  FormState
-} from './state'
 
 export enum ActionTypes {
   UpdateForm = 'UPDATE_FORM',
-  SubmitForm = 'SUBMIT_FORM'
+  SubmitForm = 'SUBMIT_FORM',
 }
 
 export namespace Actions {
-  export interface UpdateFormAction extends Typed.PayloadAction<ActionTypes.UpdateForm, FormState> {}
+  export interface UpdateFormAction extends Typed.PayloadAction<ActionTypes.UpdateForm, {
+    name: string
+  }> {}
   export interface SubmitFormAction extends Typed.PureAction<ActionTypes.SubmitForm> {}
 }
 

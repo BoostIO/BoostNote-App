@@ -1,17 +1,13 @@
 import * as React from 'react'
-import {
-  State,
-  Pages
-} from 'client/redux'
-import {
-  bindActionCreators,
-  Dispatch
-} from 'redux'
+import { State, Actions } from 'client/redux'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import CreateForm from './CreateForm'
 
 interface CreateFormContainerStateProps {
-  form: Pages.ReposCreatePage.FormState
+  form: {
+    name: string
+  }
 }
 
 type CreateFormContainerProps = CreateFormContainerStateProps & typeof mapDispatchToProps
@@ -28,12 +24,14 @@ const CreateFormContainer = ({
 )
 
 const mapStateToProps = (state: State) => ({
-  form: state.ReposCreatePage.form
+  form: {
+    name: state.Pages.ReposCreate.name
+  }
 })
 
 const mapDispatchToProps = {
-  updateForm: Pages.ReposCreatePage.ActionCreators.updateForm,
-  submitForm: Pages.ReposCreatePage.ActionCreators.submitForm
+  updateForm: Actions.Pages.ReposCreate.ActionCreators.updateForm,
+  submitForm: Actions.Pages.ReposCreate.ActionCreators.submitForm
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateFormContainer)

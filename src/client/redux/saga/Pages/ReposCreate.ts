@@ -1,27 +1,24 @@
 import { SagaIterator } from 'redux-saga'
 import {
   ActionTypes
-} from './actions'
+} from '../../actions/Pages/ReposCreate'
 import {
   take,
   select,
   call,
   put
 } from 'redux-saga/effects'
-import {
-  FormState
-} from './state'
 import { Repository } from 'client/lib/Repository'
 import { State } from 'client/redux'
-import * as RepositoryMap from 'client/redux/RepositoryMap'
+import { ActionCreators as RepositoryMapActionCreators } from 'client/redux/actions/RepositoryMap'
 import { history } from 'client/lib/history'
 
 export function * saga (): SagaIterator {
   while (true) {
     yield take(ActionTypes.SubmitForm)
-    const form: FormState = yield select((state: State): FormState => state.ReposCreatePage.form)
+    const form: {name: string} = yield select((state: State): {name: string} => state.Pages.ReposCreate)
     yield call(Repository.create, form.name, {})
-    yield put(RepositoryMap.ActionCreators.addRepository({
+    yield put(RepositoryMapActionCreators.addRepository({
       name: form.name
     }))
     yield call(history.push, {

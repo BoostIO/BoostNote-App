@@ -1,5 +1,5 @@
 import * as TypedReduxKit from 'typed-redux-kit'
-import { Repository } from './state'
+import { Repository } from '../state/RepositoryMap'
 
 export enum ActionTypes {
   InitializeRepositoryMap = 'repository_map_InitializeRepositoryMap',
