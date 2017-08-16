@@ -1,6 +1,8 @@
 import * as PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
 
+const DefaultFolderName = 'Notes'
+
 function generateRandomId (size = 6) {
   return randomBytes(size).toString('base64')
 }
@@ -12,7 +14,7 @@ type SerializedRepositoryMap = {
 }
 
 const defaultSerializedRepositoryMap: SerializedRepositoryMap = {
-  'My Notes': {
+  [DefaultFolderName]: {
   }
 }
 
@@ -26,15 +28,22 @@ type Note = {
   updatedAt: Date
 }
 
-type SerializedRepositoryWithNoteMap = {
+type NoteMap = Map<string, Note>
+
+type Folder = {
+
+}
+
+type SerializedRepositoryBundle = {
   noteMap: {
     [id: string]: Note
   }
+  folderMap: {
+    [path: string]: Folder
+  }
 }
 
-type SerializedRepositoryMapWithNoteMap = {
-  [name: string]: SerializedRepositoryWithNoteMap
-}
+type SerializedRepositoryMapWithNoteMap = Map<string, SerializedRepositoryBundle>
 
 export type RepositoryMap = Map<string, Repository>
 
@@ -81,17 +90,18 @@ export class Repository {
   public static async getSerializedRepositoryMapWithNoteMap (): Promise<SerializedRepositoryMapWithNoteMap> {
     const serializedEntries = await Promise.all(Array.from(Repository.repositoryMap.entries())
       .map(([name, repository]) => repository
-        .serializeWithNoteMap()
-        .then((serializedRepositoryWithNoteMap) => ({
-          name, serializedRepositoryWithNoteMap
+        .serializeBundle()
+        .then((serializedRepositoryBundle) => ({
+          name,
+          serializedRepositoryBundle
         }))
       ))
 
     return serializedEntries
-      .reduce((partialMap, {name, serializedRepositoryWithNoteMap}) => {
-        partialMap[name] = serializedRepositoryWithNoteMap
+      .reduce((partialMap, {name, serializedRepositoryBundle}) => {
+        partialMap.set(name, serializedRepositoryBundle)
         return partialMap
-      }, {} as SerializedRepositoryMapWithNoteMap)
+      }, new Map())
   }
 
   public static async saveRepositoryMap () {
@@ -115,25 +125,34 @@ export class Repository {
     }
   }
 
-  public async serializeWithNoteMap () {
+  public async serializeBundle () {
+    const noteMap = await this.getNoteMap()
+    const folderMap = new Map()
+    for (const [id, note] of noteMap) {
+      if (!folderMap.has(note.folder)) {
+        folderMap.set(note.folder, {})
+      }
+    }
+    if (!folderMap.has(DefaultFolderName)) {
+      folderMap.set(DefaultFolderName, {})
+    }
     return {
       ...(await this.serialize()),
-      noteMap: await this.getNoteMap()
+      noteMap,
+      folderMap,
     }
   }
 
   public async getNoteMap () {
     return (await this.db.allDocs()).rows.reduce((noteMap, row) => {
-      noteMap[row.id] = {
+      noteMap.set(row.id, {
         createdAt: row.doc.createdAt,
         updatedAt: row.doc.updatedAt,
         content: row.doc.content,
         folder: row.doc.folder,
-      }
+      })
       return noteMap
-    }, {} as {
-      [id: string]: Note
-    })
+    }, new Map() as NoteMap)
   }
 
   public async createNote (noteParams: Note) {
