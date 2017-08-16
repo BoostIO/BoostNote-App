@@ -3,7 +3,7 @@ import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import Main from './components/base/Main'
+import Main from './base/Main'
 import { store } from './redux/store'
 
 let mainElement: HTMLElement | null = document.getElementById('main')
@@ -26,5 +26,5 @@ render()
 
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./components/base/Main', render)
+  module.hot.accept('./base/Main', render)
 }

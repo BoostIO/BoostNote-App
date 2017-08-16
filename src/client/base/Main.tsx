@@ -8,7 +8,7 @@ import {
   Dispatch,
 } from 'redux'
 import { Themes } from 'style'
-import Nav from './Nav'
+import Nav from './Nav/Nav'
 import PageRouter from './PageRouter'
 import TitleBar from './TitleBar'
 
