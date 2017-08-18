@@ -9,9 +9,7 @@ export enum ActionTypes {
 
 export namespace Actions {
   export interface InitializeRepositoryMap extends TypedReduxKit.PayloadAction<ActionTypes.InitializeRepositoryMap, {
-    repositoryMap: {
-      [name: string]: Repository
-    }
+    repositoryMap: TypedReduxKit.TrackableMap<string, Repository>
   }> {}
 
   export interface AddRepository extends TypedReduxKit.PayloadAction<ActionTypes.AddRepository, {

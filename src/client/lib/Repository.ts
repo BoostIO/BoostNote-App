@@ -34,21 +34,21 @@ type Folder = {
 
 }
 
+type FolderMap = Map<string, Folder>
+
 type SerializedRepositoryBundle = {
-  noteMap: {
-    [id: string]: Note
-  }
-  folderMap: {
-    [path: string]: Folder
-  }
+  noteMap: NoteMap
+  folderMap: FolderMap
 }
 
-type SerializedRepositoryMapWithNoteMap = Map<string, SerializedRepositoryBundle>
+export type SerializedRepositoryBundleMap = Map<string, SerializedRepositoryBundle>
 
 export type RepositoryMap = Map<string, Repository>
 
 export class Repository {
   private static repositoryMap: RepositoryMap = new Map()
+  public localStorage: Storage
+  public PouchDB: PouchDB.Static
 
   public static async create (name: string, params: RepositoryParams) {
     const repository = new Repository(name, params)
@@ -80,14 +80,14 @@ export class Repository {
   }
 
   private static getSerializedEntriesFromLocalStorage (): Array<[string, RepositoryParams]> {
-    const serializedRepositoryMap: SerializedRepositoryMap = JSON.parse(localStorage.getItem(serializedRepositoryMapKey))
+    const serializedRepositoryMap: SerializedRepositoryMap = JSON.parse(this.prototype.localStorage.getItem(serializedRepositoryMapKey))
     if (!serializedRepositoryMap) {
       return Object.entries(defaultSerializedRepositoryMap)
     }
     return Object.entries(serializedRepositoryMap)
   }
 
-  public static async getSerializedRepositoryMapWithNoteMap (): Promise<SerializedRepositoryMapWithNoteMap> {
+  public static async getSerializedRepositoryBundleMap (): Promise<SerializedRepositoryBundleMap> {
     const serializedEntries = await Promise.all(Array.from(Repository.repositoryMap.entries())
       .map(([name, repository]) => repository
         .serializeBundle()
@@ -111,11 +111,11 @@ export class Repository {
         acc[name] = repository.serialize()
         return acc
       }, {} as SerializedRepositoryMap)
-    localStorage.setItem(serializedRepositoryMapKey, JSON.stringify(serializedMap))
+    this.prototype.localStorage.setItem(serializedRepositoryMapKey, JSON.stringify(serializedMap))
   }
 
   constructor (name: string, params: RepositoryParams) {
-    this.db = new PouchDB<Note>(name)
+    this.db = new this.PouchDB<Note>(name)
   }
 
   private db: PouchDB.Database<Note>
@@ -133,9 +133,11 @@ export class Repository {
         folderMap.set(note.folder, {})
       }
     }
+
     if (!folderMap.has(DefaultFolderName)) {
       folderMap.set(DefaultFolderName, {})
     }
+
     return {
       ...(await this.serialize()),
       noteMap,
@@ -195,3 +197,6 @@ export class Repository {
     })
   }
 }
+
+Repository.prototype.localStorage = window.localStorage
+Repository.prototype.PouchDB = PouchDB
