@@ -8,7 +8,7 @@ import {
   Dispatch,
 } from 'redux'
 import { Themes } from 'style'
-import Nav from './Nav/Nav'
+import Nav from './Nav'
 import PageRouter from './PageRouter'
 import TitleBar from './TitleBar'
 
@@ -57,9 +57,7 @@ const Main = connect(stateToProps, dispatchProps)((props: MainProps) => {
           toggleNav={props.toggleNav}
         />
         <Styled.Body>
-          <Nav
-            isNavOpen={props.isNavOpen}
-          />
+          <Nav/>
           <PageRouter
             location={props.location}
           />

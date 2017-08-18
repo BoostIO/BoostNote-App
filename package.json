@@ -103,6 +103,7 @@
     "remark-lint": "^6.0.0",
     "remark-math": "^1.0.0",
     "remark-slug": "^4.2.2",
+    "reselect": "^3.0.1",
     "strip-markdown": "^3.0.0",
     "typed-redux-kit": "^0.5.1",
     "unist-util-visit": "^1.1.1"

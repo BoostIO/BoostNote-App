@@ -2,6 +2,8 @@ import { history } from 'client/lib'
 import g from 'glamorous'
 import React from 'react'
 import { Themes } from 'style'
+import { TrackableMap } from 'typed-redux-kit'
+import { Link } from 'client/shared'
 
 const TEMP_NAV_WIDTH = 150
 
@@ -12,7 +14,7 @@ const Styled = {
     flexDirection: 'column',
     overflow: 'hidden',
     transition: 'width 0.3s',
-  }, (props: NavProps, theme: Themes.Theme) => ({
+  }, (props: {isNavOpen: boolean}, theme: Themes.Theme) => ({
     width: props.isNavOpen
       ? TEMP_NAV_WIDTH
       : 0,
@@ -46,13 +48,17 @@ const Styled = {
 
 interface NavProps {
   isNavOpen: boolean
+  repositories: [string, {
+    noteMap: TrackableMap<string, {}>
+    folderMap: TrackableMap<string, {}>
+  }][]
 }
 
-const onReposClick = () => {
+const goToRootPage = () => {
   history.push('/')
 }
 
-const onAddButtonClick = () => {
+const goToNewRepoPage = () => {
   history.push('/new-repo')
 }
 
@@ -61,15 +67,28 @@ const Nav = (props: NavProps) => (
     <Styled.Body>
       <Styled.Repos>
         <Styled.ReposHeaderButton
-          onClick={onReposClick}
+          onClick={goToRootPage}
         >
           Repos
         </Styled.ReposHeaderButton>
+        {props.repositories.map(([repositoryName, repository]) => {
+          return (
+          <div key={repositoryName}>
+            <div>
+              <Link href={`/${repositoryName}`}>{repositoryName}</Link>
+            </div>
+            <div>
+              {Array.from(repository.folderMap.entries()).map((  [folderName]) => (
+                <div key={folderName}>{folderName}</div>)
+              )}
+            </div>
+          </div>
+        )})}
       </Styled.Repos>
     </Styled.Body>
     <Styled.Bottom>
       <Styled.BottomPlusButton
-        onClick={onAddButtonClick}
+        onClick={goToNewRepoPage}
       >
         + Add Repo/Folder
       </Styled.BottomPlusButton>
