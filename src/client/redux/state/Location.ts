@@ -2,11 +2,9 @@ import {
   TrackableRecord
 } from 'typed-redux-kit'
 import { history } from 'client/lib/history'
+import Types from 'client/types'
 
-export interface LocationStateBase {
-  pathname: string
-  search: string
-  hash: string
+export interface LocationStateBase extends Types.Location {
 }
 
 export type LocationState = TrackableRecord<LocationStateBase>

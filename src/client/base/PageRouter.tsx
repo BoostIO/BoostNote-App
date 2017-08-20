@@ -6,11 +6,10 @@ import {
   ReposShowPage,
 } from '../pages'
 import Nav from './Nav'
+import Types from 'client/types'
 
 interface PageViewProps {
-  location: {
-    pathname: string
-  }
+  location: Types.Location
 }
 
 const Styled = {

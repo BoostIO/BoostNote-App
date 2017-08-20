@@ -10,7 +10,7 @@ export const reducer = new TypedRedux.MappedPipeReducer<State>({
   initialState: State()
 })
 
-reducer.set(Object.values(Actions.UI.ActionTypes), UIReducer)
-reducer.set(Object.values(Actions.Location.ActionTypes), LocationReducer)
-reducer.set(Object.values(Actions.RepositoryMap.ActionTypes), RepositoryMapReducer.reduce)
-reducer.set(Object.values(Actions.Pages.ReposCreate.ActionTypes), ReposCreateReducer)
+reducer.set(Actions.UI.ActionTypes, UIReducer)
+reducer.set(Actions.Location.ActionTypes, LocationReducer)
+reducer.set(Actions.RepositoryMap.ActionTypes, RepositoryMapReducer.reduce)
+reducer.set(Actions.Pages.ReposCreate.ActionTypes, ReposCreateReducer)

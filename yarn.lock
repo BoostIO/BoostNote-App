@@ -6499,9 +6499,9 @@ type-is@~1.6.15:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-typed-redux-kit@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/typed-redux-kit/-/typed-redux-kit-0.6.0.tgz#a014fc906a16cedc1a5554c6508938349c3c701d"
+typed-redux-kit@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/typed-redux-kit/-/typed-redux-kit-0.7.1.tgz#4d9c2d343b52d8aab3b393a67ce928d1281282a5"
 
 typedarray@^0.0.6:
   version "0.0.6"

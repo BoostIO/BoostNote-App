@@ -105,7 +105,7 @@
     "remark-slug": "^4.2.2",
     "reselect": "^3.0.1",
     "strip-markdown": "^3.0.0",
-    "typed-redux-kit": "^0.6.0",
+    "typed-redux-kit": "^0.7.1",
     "unist-util-visit": "^1.1.1"
   },
   "build": {
