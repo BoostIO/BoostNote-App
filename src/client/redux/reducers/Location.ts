@@ -14,7 +14,7 @@ export const reducer = (state: State, action: Actions) => {
         search,
         hash,
       } = action.payload
-      state.Location.merge(action.payload)
+      state.location.merge(action.payload)
   }
   return state
 }

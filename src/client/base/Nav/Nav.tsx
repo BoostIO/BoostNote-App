@@ -75,10 +75,10 @@ const Nav = (props: NavProps) => (
           return (
           <div key={repositoryName}>
             <div>
-              <Link href={`/${repositoryName}`}>{repositoryName}</Link>
+              <Link href={`/repos/${repositoryName}`}>{repositoryName}</Link>
             </div>
             <div>
-              {Array.from(repository.folderMap.entries()).map((  [folderName]) => (
+              {Array.from(repository.folderMap.entries()).map(([folderName]) => (
                 <div key={folderName}>{folderName}</div>)
               )}
             </div>

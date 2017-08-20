@@ -19,7 +19,7 @@ const ReposListPageContainer = ({
 
 const stateToProps = (state: State): ReposListPageContainerStateProps => {
   return ({
-    repositories: Array.from(state.RepositoryMap.keys())
+    repositories: Array.from(state.repositoryMap.keys())
   })
 }
 

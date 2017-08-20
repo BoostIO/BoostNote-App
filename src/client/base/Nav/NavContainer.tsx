@@ -20,12 +20,12 @@ const NavContainer = (props: NavContainerProps) => (
 )
 
 const repositoryEntriesSelector = createSelector(
-  (state: State) => state.RepositoryMap,
+  (state: State) => state.repositoryMap,
   (repositoryMap) => Array.from(repositoryMap.entries())
 )
 
 const stateToProps = (state: State): NavContainerStateProps => ({
-  isNavOpen: state.UI.isNavOpen,
+  isNavOpen: state.ui.isNavOpen,
   repositories: repositoryEntriesSelector(state),
 })
 

@@ -9,7 +9,9 @@ import {
 export const reducer = (state: State, action: Actions) => {
   switch (action.type) {
     case ActionTypes.ToggleNav:
-      state.UI.isNavOpen = !state.UI.isNavOpen
+      state.ui.isNavOpen = !state.ui.isNavOpen
+    case ActionTypes.DismissLoading:
+      state.ui.isLoading = false
   }
   return state
 }

@@ -9,7 +9,7 @@ import {
   StoreEnhancerStoreCreator,
 } from 'redux'
 import { createLogger } from 'redux-logger'
-import { trackEnhancer } from 'typed-redux-kit'
+import { trackEnhancer, batchEnhancer } from 'typed-redux-kit'
 import createSagaMiddleware from 'redux-saga'
 import { State } from './state'
 import * as Actions from './actions'
@@ -25,7 +25,8 @@ export const store = createStore(
   reducer.reduce,
   compose<StoreEnhancerStoreCreator<State>>(
     trackEnhancer,
-    applyMiddleware(sagaMiddleWare, logger),
+    applyMiddleware(logger),
+    batchEnhancer(sagaMiddleWare),
   ),
 )
 

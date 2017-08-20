@@ -37,4 +37,3 @@ export const Repository = TrackableRecord<RepositoryBase>({
 })
 
 export type RepositoryMap = TrackableMap<string, Repository>
-export const RepositoryMap: RepositoryMap = new TrackableMap()

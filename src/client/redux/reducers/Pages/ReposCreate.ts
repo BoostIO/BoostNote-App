@@ -9,7 +9,7 @@ import {
 export const reducer = (state: State, action: Actions) => {
   switch (action.type) {
     case ActionTypes.UpdateForm:
-      state.Pages.ReposCreate.name = action.payload.name
+      state.pages.ReposCreate.name = action.payload.name
   }
   return state
 }

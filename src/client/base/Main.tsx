@@ -36,11 +36,13 @@ interface StateProps {
     hash: string
   }
   isNavOpen: boolean
+  isLoading: boolean
 }
 
 const stateToProps = (state: State): StateProps => ({
-  location: state.Location,
-  isNavOpen: state.UI.isNavOpen,
+  location: state.location,
+  isNavOpen: state.ui.isNavOpen,
+  isLoading: state.ui.isLoading,
 })
 
 const dispatchProps = {
@@ -49,22 +51,26 @@ const dispatchProps = {
 
 type MainProps = StateProps & typeof dispatchProps
 
-const Main = connect(stateToProps, dispatchProps)((props: MainProps) => {
+const Main = (props: MainProps) => {
   return (
     <ThemeProvider theme={Themes.defaultTheme}>
-      <Styled.Main>
-        <TitleBar
-          toggleNav={props.toggleNav}
-        />
-        <Styled.Body>
-          <Nav/>
-          <PageRouter
-            location={props.location}
+      {props.isLoading
+        ? <div>Loading...</div>
+        : <Styled.Main>
+          <TitleBar
+            toggleNav={props.toggleNav}
           />
-        </Styled.Body>
-      </Styled.Main>
+          <Styled.Body>
+            <Nav/>
+            <PageRouter
+              location={props.location}
+            />
+          </Styled.Body>
+        </Styled.Main>
+      }
+
     </ThemeProvider>
   )
-})
+}
 
-export default Main
+export default connect(stateToProps, dispatchProps)(Main)

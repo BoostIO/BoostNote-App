@@ -1,8 +1,9 @@
 import g from 'glamorous'
 import React from 'react'
 import {
-  ReposCreatePageContainer,
-  ReposListPageContainer,
+  ReposCreatePage,
+  ReposListPage,
+  ReposShowPage,
 } from '../pages'
 import Nav from './Nav'
 
@@ -21,9 +22,11 @@ const Styled = {
 class PageRouter extends React.PureComponent<PageViewProps, any> {
   public getPage () {
     const { location } = this.props
-    return location.pathname === '/' ? <ReposListPageContainer />
-      : location.pathname === '/new-repo' ? <ReposCreatePageContainer />
+    return location.pathname === '/' ? <ReposListPage/>
+      : location.pathname === '/new-repo' ? <ReposCreatePage/>
       // TODO: 404 page
+      : location.pathname.match(/^\/repos/)
+      ? <ReposShowPage/>
       : '404'
   }
 

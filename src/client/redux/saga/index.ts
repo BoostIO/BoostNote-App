@@ -25,10 +25,12 @@ function * loadData (): SagaIterator {
     }))
   }
 
-
-  yield put(Actions.RepositoryMap.ActionCreators.initializeRepositoryMap({
-    repositoryMap
-  }))
+  yield put([
+    Actions.RepositoryMap.ActionCreators.initializeRepositoryMap({
+      repositoryMap
+    }),
+    Actions.UI.ActionCreators.dismissLoading(),
+  ])
 }
 
 export function * saga (): SagaIterator {

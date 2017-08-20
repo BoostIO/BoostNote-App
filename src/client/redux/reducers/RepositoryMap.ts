@@ -10,7 +10,7 @@ export const reducer = new TypedRedux.MappedReducer<State>()
 
 reducer.set(ActionTypes.InitializeRepositoryMap, (state, action: Actions.InitializeRepositoryMap) => {
   const { repositoryMap } = action.payload
-  state.RepositoryMap = new TypedRedux.TrackableMap(repositoryMap)
+  state.repositoryMap = new TypedRedux.TrackableMap(repositoryMap)
   return state
 })
 
@@ -18,7 +18,7 @@ reducer.set(ActionTypes.AddRepository, (state, action: Actions.AddRepository) =>
   const {
     name
   } = action.payload
-  state.RepositoryMap.set(name, Repository({}))
+  state.repositoryMap.set(name, Repository({}))
   return state
 })
 
@@ -26,6 +26,6 @@ reducer.set(ActionTypes.RemoveRepository, (state, action: Actions.RemoveReposito
   const {
     name
   } = action.payload
-  state.RepositoryMap.delete(name)
+  state.repositoryMap.delete(name)
   return state
 })

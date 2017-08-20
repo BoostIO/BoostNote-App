@@ -14,7 +14,7 @@ type CreateFormContainerProps = CreateFormContainerStateProps & typeof mapDispat
 const CreateFormContainer = ({
   form,
   updateForm,
-  submitForm
+  submitForm,
 }: CreateFormContainerProps) => (
   <CreateForm
     form={form}
@@ -25,7 +25,7 @@ const CreateFormContainer = ({
 
 const mapStateToProps = (state: State) => ({
   form: {
-    name: state.Pages.ReposCreate.name
+    name: state.pages.ReposCreate.name
   }
 })
 
