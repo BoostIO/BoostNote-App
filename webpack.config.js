@@ -66,7 +66,7 @@ const config = {
   },
   performance: { hints: false },
   node: {},
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   devServer: {
     hot: true,
     port,
