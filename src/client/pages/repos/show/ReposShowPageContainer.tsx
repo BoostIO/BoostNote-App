@@ -3,36 +3,39 @@ import { connect } from 'react-redux'
 import { State } from 'client/redux'
 import ReposShowPage from './ReposShowPage'
 import { TrackableMap } from 'typed-redux-kit'
-import Types from 'client/Types'
+import { getRepositoryName, getNoteId } from './selectors'
 
 interface ReposShowPageContainerStateProps {
-  location: Types.Location
   repositoryName: string
   repository: {
     noteMap: TrackableMap<string, {
       content: string
     }>
   }
+  noteId: string
 }
 
 const ReposShowPageContainer = (props: ReposShowPageContainerStateProps) => (
   <div>
-    {props.repositoryName}
+    <div>RepoName: {props.repositoryName}</div>
+    <div>NoteId: {String(props.noteId)}</div>
     <div>
-      <div>{JSON.stringify(props.repository.noteMap.entries())}</div>
+      <div>{JSON.stringify(props.repository.noteMap.mapToArray((note) => note))}</div>
+      <div>
+      </div>
     </div>
   </div>
 )
 
 const stateToProps = (state: State): ReposShowPageContainerStateProps => {
-  const repositoryName = state.location.pathname.match(/\/repos\/(.+)/)[1]
+  const repositoryName = getRepositoryName(state)
   const repository = state.repositoryMap.get(repositoryName)
-  const location = state.location
+  const noteId = getNoteId(state)
 
   return {
-    location,
     repositoryName,
     repository,
+    noteId,
   }
 }
 
