@@ -1,6 +1,7 @@
 import * as PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
 
+const DefaultRepositoryName = 'Local'
 const DefaultFolderName = 'Notes'
 
 function generateRandomId (size = 6) {
@@ -14,7 +15,7 @@ type SerializedRepositoryMap = {
 }
 
 const defaultSerializedRepositoryMap: SerializedRepositoryMap = {
-  [DefaultFolderName]: {
+  [DefaultRepositoryName]: {
   }
 }
 

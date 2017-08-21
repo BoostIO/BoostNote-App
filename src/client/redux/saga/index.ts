@@ -7,18 +7,23 @@ import {
 import * as Actions from '../actions'
 import * as Pages from './Pages'
 import { TrackableMap } from 'typed-redux-kit'
-import { RepositoryMap, Repository as RepositoryRecord, FolderMap, NoteMap } from '../state/RepositoryMap'
+import { RepositoryMap, Repository as RepositoryRecord, FolderMap, NoteMap, Folder, Note } from '../state/RepositoryMap'
 import { Repository, SerializedRepositoryBundleMap } from 'client/lib/Repository'
 
 function * loadData (): SagaIterator {
   yield call(Repository.initialize)
   const serializedRepositoryMap: SerializedRepositoryBundleMap = yield call(Repository.getSerializedRepositoryBundleMap)
   const repositoryMap: RepositoryMap = new TrackableMap()
-  for (const [name, serializedRepository] of serializedRepositoryMap.entries()) {
-    const folderMap = serializedRepository
-    repositoryMap.set(name, RepositoryRecord({
-      folderMap: new TrackableMap(serializedRepository.folderMap),
-      noteMap: new TrackableMap(serializedRepository.folderMap)
+  for (const [repositoryName, serializedRepository] of serializedRepositoryMap.entries()) {
+    // TODO: So redundant iteration
+    const folderEntries = Array.from(serializedRepository.folderMap.entries()).map(([folderName, folder]) => [folderName, Folder(folder)] as [string, Folder])
+    const noteEntries = Array.from(serializedRepository.noteMap.entries()).map(([noteId, note]) => [noteId, Note(note)] as [string, Note])
+    const folderMap = new TrackableMap(folderEntries)
+    const noteMap = new TrackableMap(noteEntries)
+
+    repositoryMap.set(repositoryName, RepositoryRecord({
+      folderMap,
+      noteMap,
     } as {
       folderMap: FolderMap
       noteMap: NoteMap
