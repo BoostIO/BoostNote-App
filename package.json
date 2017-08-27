@@ -93,7 +93,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-redux": "^5.0.5",
+    "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.6",
@@ -105,7 +105,7 @@
     "remark-slug": "^4.2.2",
     "reselect": "^3.0.1",
     "strip-markdown": "^3.0.0",
-    "typed-redux-kit": "^0.7.1",
+    "typed-redux-kit": "^0.7.2",
     "unist-util-visit": "^1.1.1"
   },
   "build": {
