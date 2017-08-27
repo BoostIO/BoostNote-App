@@ -2,9 +2,9 @@
   "version": "0.2.0",
   "configurations": [
     {
-        "name": "Attach",
+        "name": "Launch",
         "type": "chrome",
-        "request": "attach",
+        "request": "launch",
         "port": 9222,
         "url": "http://localhost:8080",
         "webRoot": "${workspaceRoot}"
