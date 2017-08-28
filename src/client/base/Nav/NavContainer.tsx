@@ -4,6 +4,7 @@ import { State } from 'client/redux'
 import Nav from './Nav'
 import { TrackableMap, TrackableRecord } from 'typed-redux-kit'
 import { createSelector } from 'reselect'
+import { Actions } from 'client/redux'
 
 interface NavContainerStateProps {
   isNavOpen: boolean
@@ -21,7 +22,7 @@ const NavContainer = (props: NavContainerProps) => (
 
 const repositoryEntriesSelector = createSelector(
   (state: State) => state.repositoryMap,
-  (repositoryMap) => Array.from(repositoryMap.entries())
+  (repositoryMap) => repositoryMap.toEntryArray(),
 )
 
 const stateToProps = (state: State): NavContainerStateProps => ({

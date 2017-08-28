@@ -6,6 +6,7 @@ import {
 } from 'redux-saga/effects'
 import * as Actions from '../actions'
 import * as Pages from './Pages'
+import { saga as uiSaga} from './UI'
 import { TrackableMap } from 'typed-redux-kit'
 import { RepositoryMap, Repository as RepositoryRecord, FolderMap, NoteMap, Folder, Note } from '../state/RepositoryMap'
 import { Repository, SerializedRepositoryBundleMap } from 'client/lib/Repository'
@@ -44,4 +45,6 @@ export function * saga (): SagaIterator {
 
   // Run
   yield fork(Pages.ReposCreate.saga)
+  yield fork(Pages.ReposShow.saga)
+  yield fork(uiSaga)
 }

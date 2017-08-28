@@ -46,7 +46,8 @@ const stateToProps = (state: State): StateProps => ({
 })
 
 const dispatchProps = {
-  toggleNav: Actions.UI.ActionCreators.toggleNav
+  toggleNav: Actions.UI.ActionCreators.toggleNav,
+  requestCreateNote: Actions.UI.ActionCreators.requestCreateNote,
 }
 
 type MainProps = StateProps & typeof dispatchProps
@@ -59,6 +60,7 @@ const Main = (props: MainProps) => {
         : <Styled.Main>
           <TitleBar
             toggleNav={props.toggleNav}
+            requestCreateNote={props.requestCreateNote}
           />
           <Styled.Body>
             <Nav/>

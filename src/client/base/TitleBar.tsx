@@ -14,13 +14,14 @@ const Styled = {
 
 interface TitleBarProps {
   toggleNav: () => void
+  requestCreateNote: () => void
 }
 
 const TitleBar = (props: TitleBarProps) => {
   return <Styled.Root>
     <button onClick={props.toggleNav}>ToggleNav</button>
     <button>Delete</button>
-    <button>New Post</button>
+    <button onClick={props.requestCreateNote}>New Post</button>
   </Styled.Root>
 }
 

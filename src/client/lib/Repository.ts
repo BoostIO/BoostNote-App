@@ -1,5 +1,6 @@
 import * as PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
+import Types from 'client/Types'
 
 const DefaultRepositoryName = 'Local'
 const DefaultFolderName = 'Notes'
@@ -91,7 +92,7 @@ export class Repository {
   public static async getSerializedRepositoryBundleMap (): Promise<SerializedRepositoryBundleMap> {
     const serializedEntries = await Promise.all(Array.from(Repository.repositoryMap.entries())
       .map(([name, repository]) => repository
-        .serializeBundle()
+        .getBundle()
         .then((serializedRepositoryBundle) => ({
           name,
           serializedRepositoryBundle
@@ -115,18 +116,22 @@ export class Repository {
     this.prototype.localStorage.setItem(serializedRepositoryMapKey, JSON.stringify(serializedMap))
   }
 
+  public static get (repositoryName: string): Repository {
+    return Repository.repositoryMap.get(repositoryName)
+  }
+
   constructor (name: string, params: RepositoryParams) {
     this.db = new this.PouchDB<Note>(name)
   }
 
   private db: PouchDB.Database<Note>
 
-  private serialize () {
+  private serialize (): Types.Repository {
     return {
     }
   }
 
-  public async serializeBundle () {
+  public async getBundle () {
     const noteMap = await this.getNoteMap()
     const folderMap = new Map()
     for (const [id, note] of noteMap) {
@@ -147,7 +152,9 @@ export class Repository {
   }
 
   public async getNoteMap () {
-    return (await this.db.allDocs()).rows.reduce((noteMap, row) => {
+    return (await this.db.allDocs({
+      include_docs: true
+    })).rows.reduce((noteMap, row) => {
       noteMap.set(row.id, {
         createdAt: row.doc.createdAt,
         updatedAt: row.doc.updatedAt,
@@ -179,17 +186,26 @@ export class Repository {
     })
   }
 
-  public async updateNote (noteId: string, noteParams: Note) {
+  public async updateNote (noteId: string, noteParams: Partial<Note>): Promise<Note> {
     const note = await this.db.get(noteId)
-
-    return await this.db.put({
-      _id: note._id,
-      _rev: note._rev,
+    const mergedNote: Note = {
+      content: note.content,
+      folder: note.folder,
+      updatedAt: note.updatedAt,
+      createdAt: note.createdAt,
       ...noteParams
-    })
+    }
+
+    return await this.db
+      .put({
+        _id: note._id,
+        _rev: note._rev,
+        ...mergedNote
+      })
+      .then(() => mergedNote)
   }
 
-  public async  removeNote (noteId: string) {
+  public async removeNote (noteId: string) {
     const note = await this.db.get(noteId)
 
     return await this.db.remove({

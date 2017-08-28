@@ -2,24 +2,20 @@ import {
   TrackableMap,
   TrackableRecord,
 } from 'typed-redux-kit'
+import Types from 'client/types'
 
-export interface NoteBase {
-  content: string
-  createdAt: Date
-  updatedAt: Date
-}
+export interface NoteBase extends Types.Note {}
 
 export type Note = TrackableRecord<NoteBase>
 export const Note = TrackableRecord<NoteBase>({
-  content: '',
+  content: undefined,
+  folder: undefined,
   createdAt: undefined,
   updatedAt: undefined,
 })
 export type NoteMap = TrackableMap<string, Note>
 
-export interface FolderBase {
-
-}
+export interface FolderBase extends Types.Folder {}
 
 export type Folder = TrackableRecord<FolderBase>
 export const Folder = TrackableRecord<FolderBase>({})

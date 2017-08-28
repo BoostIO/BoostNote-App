@@ -29,3 +29,13 @@ reducer.set(ActionTypes.RemoveRepository, (state, action: Actions.RemoveReposito
   state.repositoryMap.delete(name)
   return state
 })
+
+reducer.set(ActionTypes.UpdateNote, (state, action: Actions.UpdateNote) => {
+  const {
+    repositoryName,
+    noteId,
+    note,
+  } = action.payload
+  state.repositoryMap.get(repositoryName).noteMap.get(noteId).merge(note)
+  return state
+})
