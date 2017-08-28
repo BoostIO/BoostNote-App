@@ -1,24 +1,20 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { State } from 'client/redux'
-import Nav from './Nav'
 import { TrackableMap, TrackableRecord } from 'typed-redux-kit'
 import { createSelector } from 'reselect'
 import { Actions } from 'client/redux'
+import Types from 'client/Types'
 
 interface NavContainerStateProps {
   isNavOpen: boolean
   repositories: [string, {
-    noteMap: TrackableMap<string, {}>
-    folderMap: TrackableMap<string, {}>
+    noteMap: TrackableMap<string, Types.Note>
+    folderMap: TrackableMap<string, Types.Folder>
   }][]
 }
 
 type NavContainerProps = NavContainerStateProps
-
-const NavContainer = (props: NavContainerProps) => (
-  <Nav {...props} />
-)
 
 const repositoryEntriesSelector = createSelector(
   (state: State) => state.repositoryMap,
@@ -30,4 +26,4 @@ const stateToProps = (state: State): NavContainerStateProps => ({
   repositories: repositoryEntriesSelector(state),
 })
 
-export default connect(stateToProps)(NavContainer)
+export default connect(stateToProps)
