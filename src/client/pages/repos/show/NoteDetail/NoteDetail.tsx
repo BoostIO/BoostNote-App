@@ -1,18 +1,19 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
-import { Actions, State } from 'client/redux'
-import { getRepositoryName, getNoteId } from './selectors'
+import { getRepositoryName, getNoteId } from '../selectors'
 import Types from 'client/Types'
 import { throttle } from 'lodash-es'
 import { branch, renderNothing } from 'recompose'
 
-interface NoteDetailStateProps {
+interface NoteDetailProps {
   note: Types.Note
   repositoryName: string
   noteId: string
+  updateNote: (payload: {
+    repositoryName: string
+    noteId: string
+    content: string
+  }) => void
 }
-
-type NoteDetailProps = NoteDetailStateProps & typeof mapDispatchToProps
 
 interface NoteDetailState {
   content: string
@@ -75,23 +76,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   }
 }
 
-const mapDispatchToProps = {
-  updateNote: Actions.Pages.ReposShow.ActionCreators.updateNote
-}
-
-const mapStateToProps = (state: State): NoteDetailStateProps => {
-  const repositoryName = getRepositoryName(state)
-  const repository = state.repositoryMap.get(repositoryName)
-  const noteId = getNoteId(state)
-  const note = repository.noteMap.get(noteId)
-
-  return {
-    repositoryName,
-    noteId,
-    note,
-  }
-}
-
 const renderNothingIfNoteDoesExist = branch((props: NoteDetailProps) => !props.note, renderNothing)
 
-export default connect(mapStateToProps, mapDispatchToProps)(renderNothingIfNoteDoesExist(NoteDetail))
+export default renderNothingIfNoteDoesExist(NoteDetail)

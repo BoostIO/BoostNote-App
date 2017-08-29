@@ -1,1 +1,1 @@
-export { default } from './ReposShowPageContainer'
+export { default } from './ReposShowPage'
