@@ -1,4 +1,4 @@
-import * as PouchDB from 'pouchdb-browser'
+import PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
 import Types from 'client/Types'
 
