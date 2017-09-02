@@ -16,7 +16,7 @@ if (mainElement == null) {
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <Main />
+      <Main/>
     </Provider>,
     mainElement,
   )
