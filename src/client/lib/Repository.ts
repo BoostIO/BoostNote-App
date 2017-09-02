@@ -1,6 +1,7 @@
 import PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
 import Types from 'client/Types'
+import Client from './db/Client'
 
 const DefaultRepositoryName = 'Local'
 const DefaultFolderName = 'Notes'
@@ -121,10 +122,10 @@ export class Repository {
   }
 
   constructor (name: string, params: RepositoryParams) {
-    this.db = new this.PouchDB<Note>(name)
+    this.db = new Client<Note>(name)
   }
 
-  private db: PouchDB.Database<Note>
+  private db: Client<Note>
 
   private serialize (): Types.Repository {
     return {
@@ -151,18 +152,8 @@ export class Repository {
     }
   }
 
-  public async getNoteMap () {
-    return (await this.db.allDocs({
-      include_docs: true
-    })).rows.reduce((noteMap, row) => {
-      noteMap.set(row.id, {
-        createdAt: row.doc.createdAt,
-        updatedAt: row.doc.updatedAt,
-        content: row.doc.content,
-        folder: row.doc.folder,
-      })
-      return noteMap
-    }, new Map() as NoteMap)
+  public async getNoteMap (): Promise<NoteMap> {
+    return this.db.getAlldocs()
   }
 
   public async createNote (noteParams: Note) {
@@ -177,8 +168,7 @@ export class Repository {
       }
     }
 
-    return this.db.put({
-      _id: noteId,
+    return this.db.put(noteId, {
       folder: noteParams.folder,
       content: '',
       createdAt: new Date(),
@@ -197,22 +187,20 @@ export class Repository {
     }
 
     return await this.db
-      .put({
-        _id: note._id,
-        _rev: note._rev,
+      .put(noteId, {
         ...mergedNote
       })
       .then(() => mergedNote)
   }
 
-  public async removeNote (noteId: string) {
-    const note = await this.db.get(noteId)
+  // public async removeNote (noteId: string) {
+  //   const note = await this.db.get(noteId)
 
-    return await this.db.remove({
-      _id: note._id,
-      _rev: note._rev
-    })
-  }
+  //   return await this.db.remove({
+  //     _id: note._id,
+  //     _rev: note._rev
+  //   })
+  // }
 }
 
 Repository.prototype.localStorage = window.localStorage
