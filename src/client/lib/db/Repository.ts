@@ -1,7 +1,7 @@
 import PouchDB from 'pouchdb-browser'
 import { randomBytes } from 'crypto'
 import Types from 'client/Types'
-import Client from './db/Client'
+import Client from './Client'
 
 const DefaultRepositoryName = 'Local'
 const DefaultFolderName = 'Notes'
@@ -24,11 +24,8 @@ const defaultSerializedRepositoryMap: SerializedRepositoryMap = {
 type RepositoryParams = {
 }
 
-type Note = {
-  content: string
-  folder: string
-  createdAt: Date
-  updatedAt: Date
+interface Note extends Types.Note {
+  isDeleted?: Date
 }
 
 type NoteMap = Map<string, Note>

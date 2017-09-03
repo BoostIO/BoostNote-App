@@ -8,7 +8,7 @@ import {
   call,
   put
 } from 'redux-saga/effects'
-import { Repository } from 'client/lib/Repository'
+import { Repository } from 'client/lib/db/Repository'
 import { State } from 'client/redux'
 import { ActionCreators as RepositoryMapActionCreators } from 'client/redux/actions/RepositoryMap'
 import { history } from 'client/lib/history'

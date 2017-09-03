@@ -8,7 +8,7 @@ import {
   apply,
 } from 'redux-saga/effects'
 import * as Actions from '../actions'
-import { Repository } from 'client/lib/Repository'
+import { Repository } from 'client/lib/db/Repository'
 import { State } from '../state'
 import Types from 'client/Types'
 

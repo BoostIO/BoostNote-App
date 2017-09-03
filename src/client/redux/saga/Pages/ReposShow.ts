@@ -1,6 +1,6 @@
 import { take, apply, put } from 'redux-saga/effects'
 import { Actions } from 'client/redux'
-import { Repository } from 'client/lib/Repository'
+import { Repository } from 'client/lib/db/Repository'
 import Types from 'client/types'
 
 export function * saga () {

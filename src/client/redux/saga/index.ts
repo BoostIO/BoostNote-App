@@ -9,7 +9,7 @@ import * as Pages from './Pages'
 import { saga as uiSaga} from './UI'
 import { TrackableMap } from 'typed-redux-kit'
 import { RepositoryMap, Repository as RepositoryRecord, FolderMap, NoteMap, Folder, Note } from '../state/RepositoryMap'
-import { Repository, SerializedRepositoryBundleMap } from 'client/lib/Repository'
+import { Repository, SerializedRepositoryBundleMap } from 'client/lib/db/Repository'
 
 function * loadData (): SagaIterator {
   yield call(Repository.initialize)
