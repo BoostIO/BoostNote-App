@@ -190,14 +190,14 @@ export class Repository {
       .then(() => mergedNote)
   }
 
-  // public async removeNote (noteId: string) {
-  //   const note = await this.db.get(noteId)
+  public async removeNote (noteId: string) {
+    const note = await this.db.get(noteId)
 
-  //   return await this.db.remove({
-  //     _id: note._id,
-  //     _rev: note._rev
-  //   })
-  // }
+    return await this.db.put(noteId, {
+      ...note,
+      isDeleted: new Date(),
+    })
+  }
 }
 
 Repository.prototype.localStorage = window.localStorage
