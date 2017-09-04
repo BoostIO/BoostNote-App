@@ -58,19 +58,13 @@ class Client <V = {}> {
       const readStream: NodeJS.ReadableStream = this.db.createReadStream()
       readStream
         .on('data', (data: {key: string, value: any}) => {
-          console.log('data', data)
           map.set(data.key, JSON.parse(data.value) as V)
         })
         .on('error', (error: Error) => {
-          console.log('err')
           reject(error)
         })
         .on('end', () => {
-          console.log('end')
           resolve(map)
-        })
-        .on('close', () => {
-          console.log('close')
         })
     })
   }
