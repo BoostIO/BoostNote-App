@@ -14,7 +14,7 @@ export function * saga () {
 
     const repository = Repository.get(action.payload.repositoryName)
     const note: Types.Note = yield apply(
-      repository, repository.updateNote, [noteId, {
+      repository, repository.putNote, [noteId, {
       content,
       updatedAt: new Date(),
     }])

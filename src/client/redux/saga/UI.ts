@@ -11,6 +11,7 @@ import * as Actions from '../actions'
 import { Repository } from 'client/lib/db/Repository'
 import { State } from '../state'
 import Types from 'client/Types'
+import { generateRandomId } from 'client/lib/utils'
 
 /**
  * Create Note
@@ -42,12 +43,30 @@ function * createNoteSaga () {
     const folderName = 'Notes'
 
     const repository = Repository.get(repositoryName)
-    const note: Types.Note = yield apply(repository, repository.createNote, [{
+    let noteId
+    while (true) {
+      noteId = generateRandomId()
+      const hasNote = yield call([repository, repository.hasNote], noteId)
+      if (!hasNote) {
+        break
+      }
+    }
+    const note: Types.Note = {
       content: '',
       folder: folderName,
       createdAt: new Date(),
       updatedAt: new Date(),
-    }])
+    }
+    yield call([repository, repository.putNote],
+      noteId,
+      note,
+    )
+
+    yield put(Actions.RepositoryMap.ActionCreators.updateNote({
+      repositoryName,
+      noteId,
+      note,
+    }))
   }
 }
 

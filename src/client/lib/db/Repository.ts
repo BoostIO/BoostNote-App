@@ -1,14 +1,9 @@
 import PouchDB from 'pouchdb-browser'
-import { randomBytes } from 'crypto'
 import Types from 'client/Types'
 import Client from './Client'
 
 const DefaultRepositoryName = 'Local'
 const DefaultFolderName = 'Notes'
-
-function generateRandomId (size = 6) {
-  return randomBytes(size).toString('base64')
-}
 
 const serializedRepositoryMapKey = 'SERIALIZED_REPOSITORY_MAP'
 
@@ -89,13 +84,14 @@ export class Repository {
 
   public static async getSerializedRepositoryBundleMap (): Promise<SerializedRepositoryBundleMap> {
     const serializedEntries = await Promise.all(Array.from(Repository.repositoryMap.entries())
-      .map(([name, repository]) => repository
-        .getBundle()
-        .then((serializedRepositoryBundle) => ({
-          name,
-          serializedRepositoryBundle
+      .map(([name, repository]) => {
+        return repository
+          .getBundle()
+          .then((serializedRepositoryBundle) => ({
+            name,
+            serializedRepositoryBundle
         }))
-      ))
+      }))
 
     return serializedEntries
       .reduce((partialMap, {name, serializedRepositoryBundle}) => {
@@ -153,34 +149,17 @@ export class Repository {
     return this.db.getAlldocs()
   }
 
-  public async createNote (noteParams: Note) {
-    let noteId
-    while (true) {
-      noteId = generateRandomId()
-      // `get` throws error if document doesn't exist.
-      try {
-        await this.db.get(noteId)
-      } catch (err) {
-        break
-      }
-    }
-
-    return this.db.put(noteId, {
-      folder: noteParams.folder,
-      content: '',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })
+  public async hasNote (noteId: string) {
+    const note = await this.db.get(noteId)
+    if (note == null) return false
+    return true
   }
 
-  public async updateNote (noteId: string, noteParams: Partial<Note>): Promise<Note> {
+  public async putNote (noteId: string, noteParams: Partial<Note>): Promise<Note> {
     const note = await this.db.get(noteId)
     const mergedNote: Note = {
-      content: note.content,
-      folder: note.folder,
-      updatedAt: note.updatedAt,
-      createdAt: note.createdAt,
-      ...noteParams
+      ...note,
+      ...noteParams,
     }
 
     return await this.db

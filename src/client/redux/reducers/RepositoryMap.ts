@@ -1,6 +1,6 @@
 import * as TypedRedux from 'typed-redux-kit'
 import { State } from '../state'
-import { Repository } from '../state/RepositoryMap'
+import { Repository, Note } from '../state/RepositoryMap'
 import {
   ActionTypes,
   Actions
@@ -36,6 +36,11 @@ reducer.set(ActionTypes.UpdateNote, (state, action: Actions.UpdateNote) => {
     noteId,
     note,
   } = action.payload
-  state.repositoryMap.get(repositoryName).noteMap.get(noteId).merge(note)
+  const noteMap = state.repositoryMap.get(repositoryName).noteMap
+  if (noteMap.has(noteId)) {
+    noteMap.get(noteId).merge(note)
+  } else {
+    noteMap.set(noteId, Note(note))
+  }
   return state
 })

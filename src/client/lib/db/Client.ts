@@ -21,8 +21,15 @@ class Client <V = {}> {
   public async get (key: string): Promise<V> {
     return new Promise<V>((resolve, reject) => {
       this.db.get(key, (error, value) => {
-        if (error) return reject(error)
-        resolve(JSON.parse(value))
+        if (error) {
+          if (error.name === 'NotFoundError') {
+            resolve(undefined)
+          } else {
+            reject(error)
+          }
+        } else {
+          resolve(JSON.parse(value))
+        }
       })
     })
   }
@@ -51,13 +58,19 @@ class Client <V = {}> {
       const readStream: NodeJS.ReadableStream = this.db.createReadStream()
       readStream
         .on('data', (data: {key: string, value: any}) => {
+          console.log('data', data)
           map.set(data.key, JSON.parse(data.value) as V)
         })
         .on('error', (error: Error) => {
+          console.log('err')
           reject(error)
         })
         .on('end', () => {
+          console.log('end')
           resolve(map)
+        })
+        .on('close', () => {
+          console.log('close')
         })
     })
   }
