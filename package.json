@@ -9,7 +9,7 @@
     "url": "https://github.com/CarbonStack/Inpad.git"
   },
   "scripts": {
-    "start": "parcel src/main/index.html --port 1234 --open --experimental-scope-hoisting",
+    "start": "parcel src/main/index.html --port 1234 --open",
     "start-dev": "NODE_ENV=development electron app/index.js",
     "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
@@ -18,8 +18,8 @@
     "shasum": "shasum -a 256 dist/mac/Inpad-$npm_package_version.dmg",
     "lint": "standard",
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
-    "test:run": "NODE_ENV=test electron ./tools/webpack-test.js",
-    "test:serve": "NODE_ENV=test webpack-dev-server --config webpack.config.js",
+    "test": "jest -c jest.json",
+    "test:watch": "jest -c jest.json --watch",
     "rebuild": "electron-rebuild"
   },
   "keywords": [
@@ -38,16 +38,29 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^23.1.5",
+    "@types/pouchdb-adapter-http": "^6.1.2",
+    "@types/pouchdb-adapter-idb": "^6.1.2",
+    "@types/pouchdb-adapter-memory": "^6.1.2",
+    "@types/pouchdb-core": "^6.4.1",
+    "@types/pouchdb-replication": "^6.4.0",
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
     "@types/react-router-dom": "^4.2.7",
+    "jest": "^23.4.1",
     "parcel-bundler": "^1.9.4",
+    "ts-jest": "^23.0.0",
     "ts-lint": "^4.5.1",
     "tslint": "^5.10.0",
     "tslint-config-standard": "^7.1.0",
     "typescript": "^2.9.2"
   },
   "dependencies": {
+    "pouchdb-adapter-http": "^7.0.0",
+    "pouchdb-adapter-idb": "^7.0.0",
+    "pouchdb-adapter-memory": "^7.0.0",
+    "pouchdb-core": "^7.0.0",
+    "pouchdb-replication": "^7.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
