@@ -6,3 +6,4 @@ Thumbs.db
 *.log
 compiled/*
 dist/*
+.cache
