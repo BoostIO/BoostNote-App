@@ -38,6 +38,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/filenamify": "^2.0.1",
     "@types/jest": "^23.1.5",
     "@types/pouchdb-adapter-http": "^6.1.2",
     "@types/pouchdb-adapter-idb": "^6.1.2",
@@ -56,6 +57,7 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
+    "filenamify": "^2.1.0",
     "pouchdb-adapter-http": "^7.0.0",
     "pouchdb-adapter-idb": "^7.0.0",
     "pouchdb-adapter-memory": "^7.0.0",
