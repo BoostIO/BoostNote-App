@@ -8,15 +8,6 @@ The following is a set of guidelines for contributing to Inpad.
 These are just guidelines, not rules, use your best judgment and feel free to
 propose changes to this document in a pull request.
 
-## Issue Labels
-
-Name               | Description
--------------------|------------------------------
-stage-0: Proposal  | On Estimating its own needs
-stage-1: Draft     | On Designing how to implement
-stage-2: Candidate | Work in progress
-stage-3: Finished  | Ready to ship
-
 ## Submitting Issues
 
 * You can create an issue [here](https://github.com/sarah-seo/inpad/issues/new),
