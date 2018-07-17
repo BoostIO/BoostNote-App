@@ -14,8 +14,9 @@ interface ClientOptions {
 export default class Client {
   private db: PouchDB.Database
   public initialized: boolean
+  public readonly name: string
 
-  constructor (dbName: string, options?: ClientOptions) {
+  constructor (name: string, options?: ClientOptions) {
     const pouchDBOptions: PouchDB.Configuration.DatabaseConfiguration = {}
     if (options != null) {
       if (options.adapter != null) {
@@ -23,8 +24,9 @@ export default class Client {
       }
     }
 
-    this.db = new PouchDB(dbName, pouchDBOptions)
+    this.db = new PouchDB(name, pouchDBOptions)
     this.initialized = false
+    this.name = name
   }
 
   async init () {
