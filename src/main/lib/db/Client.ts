@@ -11,18 +11,24 @@ interface ClientOptions {
   adapter: 'memory' | 'indexeddb'
 }
 
+const defaultClientOptions: ClientOptions = {
+  adapter: 'indexeddb'
+}
+
 export default class Client {
   private db: PouchDB.Database
   public initialized: boolean
   public readonly name: string
 
   constructor (name: string, options?: ClientOptions) {
-    const pouchDBOptions: PouchDB.Configuration.DatabaseConfiguration = {}
-    if (options != null) {
-      if (options.adapter != null) {
-        pouchDBOptions.adapter = options.adapter
-      }
+    options = {
+      ...defaultClientOptions,
+      ...options
     }
+    const pouchDBOptions: PouchDB.Configuration.DatabaseConfiguration = {}
+    pouchDBOptions.adapter = options.adapter == null
+      ? 'indexeddb'
+      : options.adapter
 
     this.db = new PouchDB(name, pouchDBOptions)
     this.initialized = false
