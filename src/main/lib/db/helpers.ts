@@ -1,11 +1,15 @@
 import filenamify from 'filenamify'
+import {
+  FOLDER_ID_PREFIX,
+  NOTE_ID_PREFIX
+} from '../../../lib/consts'
 
 export function getFolderId (path: string): string {
-  return `folder:${path}`
+  return `${FOLDER_ID_PREFIX}${path}`
 }
 
 export function getNoteId (id: string): string {
-  return `note:${id}`
+  return `${NOTE_ID_PREFIX}${id}`
 }
 
 export function getParentFolderPath (path: string): string {

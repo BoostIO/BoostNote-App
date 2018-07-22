@@ -43,7 +43,7 @@ describe('Client', () => {
 
       const revivedFolder = await newClient.getFolder('/test')
       expect(revivedFolder).toEqual({
-        _id: 'folder:/test',
+        _id: 'boost:folder:/test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -58,7 +58,7 @@ describe('Client', () => {
       })
 
       expect(folder).toEqual({
-        _id: 'folder:/',
+        _id: 'boost:folder:/',
         color: 'red',
         _rev: expect.any(String),
         createdAt: expect.any(String),
@@ -76,7 +76,7 @@ describe('Client', () => {
       })
 
       expect(folder).toEqual({
-        _id: 'folder:/',
+        _id: 'boost:folder:/',
         color: 'red',
         _rev: expect.any(String),
         createdAt: expect.any(String),
@@ -92,7 +92,7 @@ describe('Client', () => {
       })
 
       expect(folder).toEqual({
-        _id: 'folder:/test/test',
+        _id: 'boost:folder:/test/test',
         color: 'red',
         _rev: expect.any(String),
         createdAt: expect.any(String),
@@ -116,7 +116,7 @@ describe('Client', () => {
       const folder = await client.getFolder('/')
 
       expect(folder).toEqual({
-        _id: 'folder:/',
+        _id: 'boost:folder:/',
         color: 'red',
         _rev: expect.any(String),
         createdAt: expect.any(String),
@@ -171,7 +171,7 @@ describe('Client', () => {
 
       const folder = await client.getFolder('/test2')
       expect(folder).toEqual({
-        _id: 'folder:/test2',
+        _id: 'boost:folder:/test2',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -195,7 +195,7 @@ describe('Client', () => {
         content: 'tangotango',
         tags: ['tango'],
         folder: '/test',
-        _id: 'note:test',
+        _id: 'boost:note:test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -206,7 +206,7 @@ describe('Client', () => {
         content: 'tangotango',
         tags: ['tango'],
         folder: '/test',
-        _id: 'note:test',
+        _id: 'boost:note:test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -235,7 +235,7 @@ describe('Client', () => {
         content: 'changed content',
         folder: '/test',
         tags: ['tango', 'foxtrot'],
-        _id: 'note:test',
+        _id: 'boost:note:test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -246,7 +246,7 @@ describe('Client', () => {
         content: 'changed content',
         folder: '/test',
         tags: ['tango', 'foxtrot'],
-        _id: 'note:test',
+        _id: 'boost:note:test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -279,7 +279,7 @@ describe('Client', () => {
         content: 'tangotango',
         folder: '/',
         tags: ['tango'],
-        _id: 'note:test',
+        _id: 'boost:note:test',
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)

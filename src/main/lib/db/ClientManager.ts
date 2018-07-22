@@ -1,7 +1,12 @@
 import Client from './Client'
 
 export interface ClientManagerOptions {
-  storage: Storage
+  storage?: Storage
+  adapter?: 'memory' | 'indexeddb'
+}
+
+const defaultOptions: ClientManagerOptions = {
+  adapter: 'indexeddb'
 }
 
 const BOOST_DB_NAMES = 'BOOST_DB_NAMES'
@@ -10,18 +15,26 @@ const defaultDBNames = ['default']
 export default class ClientManager {
   private storage: Storage
   private clientMap: Map<string, Client>
+  private adapter: 'memory' | 'indexeddb'
 
   constructor (options?: ClientManagerOptions) {
-    if (options != null) {
-      this.storage = options.storage == null
-       ? window.localStorage
-       : options.storage
+    options = {
+      ...defaultOptions,
+      ...options
+    }
+    if (options.storage != null) {
+      this.storage = options.storage
+    }
+    if (options.adapter != null) {
+      this.adapter = options.adapter
     }
     this.clientMap = new Map()
   }
 
   addClient (clientName: string) {
-    const newClient = new Client(clientName)
+    const newClient = new Client(clientName, {
+      adapter: this.adapter
+    })
     this.clientMap.set(clientName, newClient)
 
     const clientNameSet = new Set(this.getAllClientNames())

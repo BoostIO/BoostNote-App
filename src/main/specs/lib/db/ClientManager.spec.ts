@@ -6,7 +6,8 @@ describe('ClientManager', () => {
   let manager: ClientManager
   beforeEach(() => {
     manager = new ClientManager({
-      storage: new MemoryStorage()
+      storage: new MemoryStorage(),
+      adapter: 'memory'
     })
   })
 

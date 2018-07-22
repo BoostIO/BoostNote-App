@@ -1,4 +1,8 @@
 import PouchDB from './PouchDB'
+import {
+  FOLDER_ID_PREFIX,
+  NOTE_ID_PREFIX
+} from '../../../lib/consts'
 import { Folder, FolderDocument, Note, NoteDocument } from './dataTypes'
 import {
   getFolderId,
@@ -39,8 +43,8 @@ export default class Client {
     await this.putFolder('/')
     const allNotes = await this.db.allDocs<Note>({
       include_docs: true,
-      startkey: 'note:',
-      endkey: 'note:\ufff0'
+      startkey: NOTE_ID_PREFIX,
+      endkey: `${NOTE_ID_PREFIX}\ufff0`
     })
     const folderSet = allNotes.rows.reduce((set, row) => {
       const note = row.doc as NoteDocument
@@ -153,8 +157,8 @@ export default class Client {
   async removeNotesInFolder (path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Note>({
       include_docs: true,
-      startkey: 'note:',
-      endkey: 'note:\ufff0'
+      startkey: NOTE_ID_PREFIX,
+      endkey: `${NOTE_ID_PREFIX}\ufff0`
     })
 
     const rowsToDelete = rows.filter(row => (row.doc as NoteDocument).folder === path)
@@ -164,12 +168,12 @@ export default class Client {
 
   async removeSubFolders (path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Note>({
-      startkey: `folder:${path}/`,
-      endkey: `folder:${path}/\ufff0`
+      startkey: `${FOLDER_ID_PREFIX}${path}/`,
+      endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
     })
 
     await Promise.all(rows.map(row => {
-      const [, ...pathArray] = row.id.split('folder:')
+      const [, ...pathArray] = row.id.split('boost:folder:')
       return this.removeFolder(pathArray.join(''))
     }))
   }
@@ -177,11 +181,5 @@ export default class Client {
   async removeNote (path: string): Promise<void> {
     const note = await this.getNote(path)
     if (note != null) await this.db.remove(note)
-  }
-
-  async getAllDocs () {
-    return this.db.allDocs({
-      include_docs: true
-    })
   }
 }
