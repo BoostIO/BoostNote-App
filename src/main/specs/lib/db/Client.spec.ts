@@ -308,4 +308,47 @@ describe('Client', () => {
       expect(note).toEqual(null)
     })
   })
+
+  describe('#getAllData', () => {
+    it('returns all folders and notes', async () => {
+      await client.putFolder('/test')
+      await client.putNote('test', {
+        title: 'tango',
+        content: 'tangotango',
+        folder: '/test',
+        tags: ['tango']
+      })
+
+      const data = await client.getAllData()
+
+      expect(data).toEqual({
+        folders: [
+          {
+            _id: 'boost:folder:/',
+            _rev: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String)
+          },
+          {
+            _id: 'boost:folder:/test',
+            _rev: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String)
+          }
+        ],
+        notes: [
+          {
+            _id: 'boost:note:test',
+            title: 'tango',
+            content: 'tangotango',
+            folder: '/test',
+            tags: ['tango'],
+            _rev: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String)
+          }
+        ]
+      })
+    })
+  })
 })

@@ -182,4 +182,31 @@ export default class Client {
     const note = await this.getNote(path)
     if (note != null) await this.db.remove(note)
   }
+
+  async getAllData (): Promise<{
+    folders: FolderDocument[],
+    notes: NoteDocument[]
+  }> {
+    const { rows } = await this.db.allDocs({
+      include_docs: true
+    })
+
+    const folders: FolderDocument[] = []
+    const notes: NoteDocument[] = []
+    rows.forEach(row => {
+      if (row.id.startsWith(FOLDER_ID_PREFIX)) {
+        folders.push(row.doc as FolderDocument)
+        return
+      }
+      if (row.id.startsWith(NOTE_ID_PREFIX)) {
+        notes.push(row.doc as NoteDocument)
+        return
+      }
+    })
+
+    return {
+      folders,
+      notes
+    }
+  }
 }
