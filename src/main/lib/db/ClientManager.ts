@@ -44,8 +44,9 @@ export default class ClientManager {
     return newClient
   }
 
-  getClient (clientName: string) {
-    return this.clientMap.get(clientName)
+  getClient (clientName: string): Client {
+    if (!this.clientMap.has(clientName)) throw new Error(`The client, "${clientName}", is not added yet.`)
+    return this.clientMap.get(clientName) as Client
   }
 
   getAllClientNames () {

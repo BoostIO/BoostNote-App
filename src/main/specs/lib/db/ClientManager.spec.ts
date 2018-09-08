@@ -56,10 +56,10 @@ describe('ClientManager', () => {
       expect(client.name).toEqual('test')
     })
 
-    it('returns undefined if the client does not exist', () => {
-      const client = manager.getClient('test')
-
-      expect(client).toBeUndefined()
+    it('throws an error if the client does not exist', () => {
+      expect(() => {
+        manager.getClient('test')
+      }).toThrowError('The client, "test", is not added yet.')
     })
   })
 
@@ -72,8 +72,9 @@ describe('ClientManager', () => {
       manager.removeClient('test')
 
       // Then
-      const client = manager.getClient('test')
-      expect(client).toBe(undefined)
+      expect(() => {
+        manager.getClient('test')
+      }).toThrowError('The client, "test", is not added yet.')
       const noteNames = manager.getAllClientNames()
       expect(noteNames).toEqual(['default'])
     })
