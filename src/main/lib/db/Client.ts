@@ -173,7 +173,7 @@ export default class Client {
     })
 
     await Promise.all(rows.map(row => {
-      const [, ...pathArray] = row.id.split('boost:folder:')
+      const [, ...pathArray] = row.id.split(FOLDER_ID_PREFIX)
       return this.removeFolder(pathArray.join(''))
     }))
   }
