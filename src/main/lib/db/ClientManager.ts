@@ -31,7 +31,7 @@ export default class ClientManager {
     this.clientMap = new Map()
   }
 
-  addClient (clientName: string) {
+  async addClient (clientName: string) {
     const newClient = new Client(clientName, {
       adapter: this.adapter
     })
@@ -40,6 +40,8 @@ export default class ClientManager {
     const clientNameSet = new Set(this.getAllClientNames())
     clientNameSet.add(clientName)
     this.setAllClientNames(clientNameSet)
+
+    await newClient.init()
 
     return newClient
   }
@@ -64,11 +66,11 @@ export default class ClientManager {
     this.storage.setItem(BOOST_DB_NAMES, JSON.stringify(names))
   }
 
-  init () {
+  async init () {
     const names = this.getAllClientNames()
-    names.forEach(name => {
+    await Promise.all(names.map(name => {
       this.addClient(name)
-    })
+    }))
   }
 
   removeClient (clientName: string) {

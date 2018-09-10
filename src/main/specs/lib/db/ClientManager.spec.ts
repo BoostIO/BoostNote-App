@@ -1,5 +1,5 @@
 import ClientManager from '../../../lib/db/ClientManager'
-import MemoryStorage from './MemoryStorage'
+import MemoryStorage from '../../utils/MemoryStorage'
 import Client from '../../../lib/db/Client'
 
 describe('ClientManager', () => {
@@ -12,9 +12,9 @@ describe('ClientManager', () => {
   })
 
   describe('#getAllClientNames', () => {
-    it('returns all names of clients', () => {
+    it('returns all names of clients', async () => {
       // Given
-      manager.addClient('test')
+      await manager.addClient('test')
 
       // When
       const names = manager.getAllClientNames()
@@ -36,9 +36,9 @@ describe('ClientManager', () => {
   })
 
   describe('#addClient', () => {
-    it('creates new client', () => {
+    it('creates new client', async () => {
       // When
-      const client = manager.addClient('test')
+      const client = await manager.addClient('test')
 
       // Then
       expect(client.name).toEqual('test')
@@ -48,8 +48,8 @@ describe('ClientManager', () => {
   })
 
   describe('#getClient', () => {
-    it('returns a client', () => {
-      manager.addClient('test')
+    it('returns a client', async () => {
+      await manager.addClient('test')
 
       const client = manager.getClient('test') as Client
 
@@ -64,9 +64,9 @@ describe('ClientManager', () => {
   })
 
   describe('#removeClient', () => {
-    it('removes a client', () => {
+    it('removes a client', async () => {
       // Given
-      manager.addClient('test')
+      await manager.addClient('test')
 
       // When
       manager.removeClient('test')
@@ -81,9 +81,9 @@ describe('ClientManager', () => {
   })
 
   describe('#init', () => {
-    it('register all repository', () => {
+    it('register all repository', async () => {
       // When
-      manager.init()
+      await manager.init()
 
       // Then
       const client = manager.getClient('default')
