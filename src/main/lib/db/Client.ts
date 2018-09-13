@@ -178,8 +178,8 @@ export default class Client {
     }))
   }
 
-  async removeNote (path: string): Promise<void> {
-    const note = await this.getNote(path)
+  async removeNote (id: string): Promise<void> {
+    const note = await this.getNote(id)
     if (note != null) await this.db.remove(note)
   }
 
