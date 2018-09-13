@@ -1,9 +1,6 @@
 import DataStore from '../../stores/DataStore'
 import ClientManager from '../../lib/db/ClientManager'
-import {
-  createMockClientManager,
-  MemoryStorage
-} from '../utils'
+import { createMockClientManager } from '../utils'
 import Storage from '../../stores/Storage'
 
 describe('DataStore', () => {
@@ -51,6 +48,47 @@ describe('DataStore', () => {
         _id: 'boost:note:test-note',
         title: 'test',
         content: 'test'
+      })
+    })
+  })
+
+  describe('putNote', () => {
+    it('sets a note', async () => {
+      const manager = await createMockClientManager()
+      await manager.addClient('test')
+      const data = new DataStore({
+        manager
+      })
+      await data.init()
+
+      await data.putNote('test', 'test-note', {
+        title: 'test',
+        content: 'test'
+      })
+
+      expect(data.storageMap.get('test')).not.toBeUndefined()
+      expect((data.storageMap.get('test') as Storage).noteMap.get('boost:note:test-note')).toMatchObject({
+        _id: 'boost:note:test-note',
+        title: 'test',
+        content: 'test'
+      })
+    })
+  })
+
+  describe('putFolder', () => {
+    it('sets a folder', async () => {
+      const manager = await createMockClientManager()
+      await manager.addClient('test')
+      const data = new DataStore({
+        manager
+      })
+      await data.init()
+
+      await data.putFolder('test', '/test', {})
+
+      expect(data.storageMap.get('test')).not.toBeUndefined()
+      expect((data.storageMap.get('test') as Storage).folderMap.get('boost:folder:/test')).toMatchObject({
+        _id: 'boost:folder:/test'
       })
     })
   })
