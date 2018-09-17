@@ -29,7 +29,7 @@ describe('Client', () => {
     })
 
     it('creates missing folders', async () => {
-      const folder = await client.putFolder('/test')
+      const folder = await client.updateFolder('/test')
       await client.putNote('test', {
         folder: '/test'
       })
@@ -51,9 +51,29 @@ describe('Client', () => {
     })
   })
 
+  describe('#createFolder', () => {
+    it('creates a folder', async () => {
+      // When
+      const folder = await client.createFolder('/hello')
+
+      // Then
+      expect(folder).toEqual({
+        path: '/hello'
+      })
+      const updatedFolder = await client.getFolder('/hello')
+      expect(updatedFolder).toEqual({
+        path: '/hello'
+      })
+    })
+
+    // it('throws error if the parent folder does not exist', () => {
+
+    // })
+  })
+
   describe('#putFolder', () => {
     it('creates a folder', async () => {
-      const folder = await client.putFolder('/', {
+      const folder = await client.updateFolder('/', {
         color: 'red'
       })
 
@@ -67,11 +87,11 @@ describe('Client', () => {
     })
 
     it('update an exsisting folder', async () => {
-      await client.putFolder('/', {
+      await client.updateFolder('/', {
         color: 'green'
       })
 
-      const folder = await client.putFolder('/', {
+      const folder = await client.updateFolder('/', {
         color: 'red'
       })
 
@@ -85,9 +105,9 @@ describe('Client', () => {
     })
 
     it('creates a sub folder', async () => {
-      await client.putFolder('/test')
+      await client.updateFolder('/test')
 
-      const folder = await client.putFolder('/test/test', {
+      const folder = await client.updateFolder('/test/test', {
         color: 'red'
       })
 
@@ -101,7 +121,7 @@ describe('Client', () => {
     })
 
     it('throws an error if its parent folder does not exist', async () => {
-      await expect(client.putFolder('/test/test', {
+      await expect(client.updateFolder('/test/test', {
         color: 'red'
       })).rejects.toThrowError()
     })
@@ -109,7 +129,7 @@ describe('Client', () => {
 
   describe('#getFolder', () => {
     it('gets a folder', async () => {
-      await client.putFolder('/', {
+      await client.updateFolder('/', {
         color: 'red'
       })
 
@@ -133,7 +153,7 @@ describe('Client', () => {
 
   describe('#removeFolder', () => {
     it('removes a folder', async () => {
-      await client.putFolder('/')
+      await client.updateFolder('/')
 
       await client.removeFolder('/')
 
@@ -142,7 +162,7 @@ describe('Client', () => {
     })
 
     it('removes all notes in the folder', async () => {
-      await client.putFolder('/')
+      await client.updateFolder('/')
       await client.putNote('tango', {
         folder: '/'
       })
@@ -154,8 +174,8 @@ describe('Client', () => {
     })
 
     it('removes all sub folders', async () => {
-      await client.putFolder('/test')
-      await client.putFolder('/test/tango')
+      await client.updateFolder('/test')
+      await client.updateFolder('/test/tango')
 
       await client.removeFolder('/test')
 
@@ -164,8 +184,8 @@ describe('Client', () => {
     })
 
     it('does not remove other folder', async () => {
-      await client.putFolder('/test')
-      await client.putFolder('/test2')
+      await client.updateFolder('/test')
+      await client.updateFolder('/test2')
 
       await client.removeFolder('/test')
 
@@ -181,7 +201,7 @@ describe('Client', () => {
 
   describe('#putNote', () => {
     it('creates a note', async () => {
-      await client.putFolder('/test')
+      await client.updateFolder('/test')
 
       const note = await client.putNote('test', {
         title: 'tango',
@@ -214,7 +234,7 @@ describe('Client', () => {
     })
 
     it('updates a note', async () => {
-      await client.putFolder('/test')
+      await client.updateFolder('/test')
 
       await client.putNote('test', {
         title: 'tango',
@@ -311,7 +331,7 @@ describe('Client', () => {
 
   describe('#getAllData', () => {
     it('returns all folders and notes', async () => {
-      await client.putFolder('/test')
+      await client.updateFolder('/test')
       await client.putNote('test', {
         title: 'tango',
         content: 'tangotango',

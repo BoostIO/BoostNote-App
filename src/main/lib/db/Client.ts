@@ -3,7 +3,7 @@ import {
   FOLDER_ID_PREFIX,
   NOTE_ID_PREFIX
 } from '../../../lib/consts'
-import { Folder, FolderDocument, Note, NoteDocument } from './dataTypes'
+import { FolderProps, Folder, NoteProps, Note } from './dataTypes'
 import {
   getFolderId,
   getNoteId,
@@ -40,20 +40,20 @@ export default class Client {
   }
 
   async init () {
-    await this.putFolder('/')
-    const allNotes = await this.db.allDocs<Note>({
+    await this.updateFolder('/')
+    const allNotes = await this.db.allDocs<NoteProps>({
       include_docs: true,
       startkey: NOTE_ID_PREFIX,
       endkey: `${NOTE_ID_PREFIX}\ufff0`
     })
     const folderSet = allNotes.rows.reduce((set, row) => {
-      const note = row.doc as NoteDocument
+      const note = row.doc as Note
       if (!set.has(note.folder)) set.add(note.folder)
       return set
     }, new Set())
 
     await Promise.all([...folderSet].map(async folderPath => {
-      return this.putFolder(folderPath)
+      return this.updateFolder(folderPath)
     }))
   }
 
@@ -65,7 +65,28 @@ export default class Client {
     if (folder == null) throw new Error('The parent folder does not exist.')
   }
 
-  async putFolder (path: string, folder?: Partial<Folder>): Promise<FolderDocument> {
+  async createFolder (path: string): Promise<Folder> {
+    path = normalizeFolderPath(path)
+    const folder: FolderProps = {
+      path,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    const doc = await this.db.put({
+      createdAt: new Date(),
+      _id: getFolderId(path),
+      updatedAt: new Date(),
+      ...folder
+    })
+
+    return {
+      _id: doc.id,
+      ...folder
+    }
+  }
+
+  async updateFolder (path: string, folder?: Partial<FolderProps>): Promise<Folder> {
     path = normalizeFolderPath(path)
     const prevFolder = await this.getFolder(path)
     if (path !== '/') {
@@ -83,13 +104,13 @@ export default class Client {
       ...folder
     })
 
-    return this.getFolder(path) as Promise<FolderDocument>
+    return this.getFolder(path) as Promise<Folder>
   }
 
-  async getFolder (path: string): Promise<FolderDocument | null> {
-    let folder: FolderDocument
+  async getFolder (path: string): Promise<Folder | null> {
+    let folder: Folder
     try {
-      folder = await this.db.get<Folder>(getFolderId(path))
+      folder = await this.db.FolderPropslder > (getFolderId(path))
     } catch (error) {
       switch (error.status) {
         case 404:
@@ -101,18 +122,18 @@ export default class Client {
     return folder
   }
 
-  async removeFolder (path: string): Promise<void> {
+  async removeFolder (path: string): Promise< void> {
     const folder = await this.getFolder(path)
     if (folder != null) await this.db.remove(folder)
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
   }
 
-  async destroyDB (): Promise<void> {
+  async destroyDB (): Promise< void > {
     return this.db.destroy()
   }
 
-  async putNote (id: string, note?: Partial<Note>): Promise<NoteDocument> {
+  async putNote (id: string, note?: Partial<NoteProps>): Promise <NoteDocument> {
     const currentNote = await this.getNote(id)
 
     if (note != null) {
@@ -133,7 +154,7 @@ export default class Client {
       updatedAt: new Date(),
       ...note
     })
-    const newNote = await this.getNote(id) as NoteDocument
+    const newNote = await this.getNote(id) as Note
 
     return newNote
   }
@@ -141,7 +162,7 @@ export default class Client {
   async getNote (id: string): Promise<NoteDocument | null> {
     let note: NoteDocument
     try {
-      note = await this.db.get<Note>(getNoteId(id))
+      note = await this.db.get<NoteProps>(getNoteId(id))
     } catch (error) {
       switch (error.status) {
         case 404:
@@ -154,20 +175,20 @@ export default class Client {
     return note
   }
 
-  async removeNotesInFolder (path: string): Promise<void> {
-    const { rows } = await this.db.allDocs<Note>({
+  async removeNotesInFolder (path: string): Promise<void > {
+    const { rows } = await this.db.allDocs<NoteProps>({
       include_docs: true,
       startkey: NOTE_ID_PREFIX,
       endkey: `${NOTE_ID_PREFIX}\ufff0`
     })
 
-    const rowsToDelete = rows.filter(row => (row.doc as NoteDocument).folder === path)
+    const rowsToDelete = rows.filter(row => (row.doc as Note).folder === path)
 
-    await Promise.all(rowsToDelete.map(row => this.db.remove((row.doc as NoteDocument))))
+    await Promise.all(rowsToDelete.map(row => this.db.remove((row.doc as Note))))
   }
 
-  async removeSubFolders (path: string): Promise<void> {
-    const { rows } = await this.db.allDocs<Note>({
+  async removeSubFolders (path: string): Promise<void > {
+    const { rows } = await this.db.allDocs<NoteProps>({
       startkey: `${FOLDER_ID_PREFIX}${path}/`,
       endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
     })
@@ -178,15 +199,15 @@ export default class Client {
     }))
   }
 
-  async removeNote (id: string): Promise<void> {
+  async removeNote (id: string): Promise<void > {
     const note = await this.getNote(id)
     if (note != null) await this.db.remove(note)
   }
 
-  async getAllData (): Promise<{
+  async getAllData (): Promise < {
     folders: FolderDocument[],
     notes: NoteDocument[]
-  }> {
+  } > {
     const { rows } = await this.db.allDocs({
       include_docs: true
     })
@@ -195,11 +216,11 @@ export default class Client {
     const notes: NoteDocument[] = []
     rows.forEach(row => {
       if (row.id.startsWith(FOLDER_ID_PREFIX)) {
-        folders.push(row.doc as FolderDocument)
+        folders.push(row.doc as Folder)
         return
       }
       if (row.id.startsWith(NOTE_ID_PREFIX)) {
-        notes.push(row.doc as NoteDocument)
+        notes.push(row.doc as Note)
         return
       }
     })

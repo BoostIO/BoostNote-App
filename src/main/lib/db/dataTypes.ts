@@ -1,12 +1,22 @@
-export interface Folder {
+export interface FolderMeta {
+  _id: string
+}
+
+export interface FolderProps {
+  path: string
   color?: string
   createdAt: Date
   updatedAt: Date
 }
 
-export type FolderDocument = Folder & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+export type Folder = FolderProps & FolderMeta
 
-export interface Note {
+export interface NoteMeta {
+  _id: string
+  _rev: string
+}
+
+export interface NoteProps {
   title: string
   content: string
   folder: string
@@ -15,4 +25,4 @@ export interface Note {
   updatedAt: Date
 }
 
-export type NoteDocument = Note & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta
+export type Note = NoteProps & NoteMeta
