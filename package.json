@@ -20,6 +20,7 @@
     "webpack": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
+    "tsc": "tsc --watch --noEmit",
     "rebuild": "electron-rebuild"
   },
   "keywords": [
@@ -39,34 +40,35 @@
   "license": "MIT",
   "devDependencies": {
     "@types/filenamify": "^2.0.1",
-    "@types/jest": "^23.1.5",
+    "@types/jest": "^23.3.2",
     "@types/pouchdb-adapter-http": "^6.1.2",
     "@types/pouchdb-adapter-idb": "^6.1.2",
     "@types/pouchdb-adapter-memory": "^6.1.2",
-    "@types/pouchdb-core": "^6.4.1",
+    "@types/pouchdb-core": "^6.4.2",
     "@types/pouchdb-replication": "^6.4.0",
-    "@types/react": "^16.4.6",
-    "@types/react-dom": "^16.0.6",
-    "@types/react-router-dom": "^4.2.7",
-    "jest": "^23.4.1",
-    "parcel-bundler": "^1.9.4",
-    "ts-jest": "^23.0.0",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.8",
+    "@types/react-router-dom": "^4.3.1",
+    "jest": "^23.6.0",
+    "parcel-bundler": "^1.10.1",
+    "ts-jest": "^23.10.3",
     "ts-lint": "^4.5.1",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "tslint-config-standard": "^7.1.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.1.1"
   },
   "dependencies": {
     "filenamify": "^2.1.0",
+    "mobx": "^5.5.0",
     "pouchdb-adapter-http": "^7.0.0",
     "pouchdb-adapter-idb": "^7.0.0",
     "pouchdb-adapter-memory": "^7.0.0",
     "pouchdb-core": "^7.0.0",
     "pouchdb-replication": "^7.0.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-router-dom": "^4.3.1",
-    "styled-components": "^3.3.3"
+    "styled-components": "^3.4.9"
   },
   "build": {
     "appId": "com.electron.Boost",
