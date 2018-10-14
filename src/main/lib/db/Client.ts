@@ -1,4 +1,3 @@
-import PouchDB from './PouchDB'
 import {
   FOLDER_ID_PREFIX,
   NOTE_ID_PREFIX
@@ -11,36 +10,35 @@ import {
   getParentFolderPath
 } from './helpers'
 
-interface ClientOptions {
-  adapter: 'memory' | 'indexeddb'
-}
-
-const defaultClientOptions: ClientOptions = {
-  adapter: 'indexeddb'
-}
-
 export default class Client {
-  private db: PouchDB.Database
   public initialized: boolean
-  public readonly name: string
 
-  constructor (name: string, options?: ClientOptions) {
-    options = {
-      ...defaultClientOptions,
-      ...options
+  constructor (
+    private db: PouchDB.Database
+  ) {
+  }
+
+  getDb () {
+    return this.db
+  }
+
+  async createRootFolderIfNotExist () {
+    const rootFolderId = getFolderId('/')
+    try {
+      return await this.db.get<FolderProps>(rootFolderId)
+    } catch (error) {
+      if (error.status === 404) {
+        return this.db.put({
+          _id: rootFolderId,
+          path: '/'
+        })
+      }
+      throw error
     }
-    const pouchDBOptions: PouchDB.Configuration.DatabaseConfiguration = {}
-    pouchDBOptions.adapter = options.adapter == null
-      ? 'indexeddb'
-      : options.adapter
-
-    this.db = new PouchDB(name, pouchDBOptions)
-    this.initialized = false
-    this.name = name
   }
 
   async init () {
-    await this.updateFolder('/')
+    await this.createRootFolderIfNotExist()
     const allNotes = await this.db.allDocs<NoteProps>({
       include_docs: true,
       startkey: NOTE_ID_PREFIX,
@@ -107,23 +105,12 @@ export default class Client {
     return this.getFolder(path) as Promise<Folder>
   }
 
-  async getFolder (path: string): Promise<Folder | null> {
-    let folder: Folder
-    try {
-      folder = await this.db.FolderPropslder > (getFolderId(path))
-    } catch (error) {
-      switch (error.status) {
-        case 404:
-          return null
-        default:
-          throw error
-      }
-    }
-    return folder
+  async getFolder (path: string): Promise<Folder> {
+    return this.db.get<FolderProps>(getFolderId(path))
   }
 
-  async removeFolder (path: string): Promise< void> {
-    const folder = await this.getFolder(path)
+  async removeFolder (path: string): Promise<void> {
+    const folder = await this.db.get<FolderProps>(getFolderId(path))
     if (folder != null) await this.db.remove(folder)
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
@@ -133,7 +120,7 @@ export default class Client {
     return this.db.destroy()
   }
 
-  async putNote (id: string, note?: Partial<NoteProps>): Promise <NoteDocument> {
+  async putNote (id: string, note?: Partial<NoteProps>): Promise <Note> {
     const currentNote = await this.getNote(id)
 
     if (note != null) {
@@ -159,19 +146,9 @@ export default class Client {
     return newNote
   }
 
-  async getNote (id: string): Promise<NoteDocument | null> {
-    let note: NoteDocument
-    try {
-      note = await this.db.get<NoteProps>(getNoteId(id))
-    } catch (error) {
-      switch (error.status) {
-        case 404:
-          return null
-          break
-        default:
-          throw error
-      }
-    }
+  async getNote (id: string): Promise<Note> {
+    const note: Note = await this.db.get<NoteProps>(getNoteId(id))
+
     return note
   }
 
@@ -204,23 +181,32 @@ export default class Client {
     if (note != null) await this.db.remove(note)
   }
 
-  async getAllData (): Promise < {
-    folders: FolderDocument[],
-    notes: NoteDocument[]
-  } > {
-    const { rows } = await this.db.allDocs({
+  isFolder (doc: PouchDB.Core.IdMeta): doc is Folder {
+    return doc._id.startsWith(FOLDER_ID_PREFIX)
+  }
+
+  isNote (doc: PouchDB.Core.IdMeta): doc is Note {
+    return doc._id.startsWith(NOTE_ID_PREFIX)
+  }
+
+  async getAllData (): Promise <{
+    folders: Folder[],
+    notes: Note[]
+  }> {
+    const { rows } = await this.db.allDocs<NoteProps | FolderProps>({
       include_docs: true
     })
 
-    const folders: FolderDocument[] = []
-    const notes: NoteDocument[] = []
+    const folders: Folder[] = []
+    const notes: Note[] = []
     rows.forEach(row => {
-      if (row.id.startsWith(FOLDER_ID_PREFIX)) {
-        folders.push(row.doc as Folder)
+      const doc = row.doc as PouchDB.Core.IdMeta
+      if (this.isFolder(doc)) {
+        folders.push(doc)
         return
       }
-      if (row.id.startsWith(NOTE_ID_PREFIX)) {
-        notes.push(row.doc as Note)
+      if (this.isNote(doc)) {
+        notes.push(doc)
         return
       }
     })

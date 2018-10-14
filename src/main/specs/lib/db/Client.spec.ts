@@ -1,374 +1,215 @@
 import Client from '../../../lib/db/Client'
-import PouchDB from '../../../lib/db/PouchDB'
+import {
+  getFolderId
+} from '../../../lib/db/helpers'
+import PouchDBCore from 'pouchdb-core'
+import PouchDBMemoryAdapter from 'pouchdb-adapter-memory'
+
+const PouchDB = PouchDBCore
+  .plugin(PouchDBMemoryAdapter)
+
+let clientCount = 0
+async function createClient (shouldInit: boolean = true): Promise<Client> {
+  const db = new PouchDB(`dummy${++clientCount}`, {
+    adapter: 'memory'
+  })
+  const client = new Client(db)
+
+  if (shouldInit) {
+    await client.init()
+  }
+
+  return client
+}
 
 describe('Client', () => {
-  let client: Client
+  describe('#createRootFolderIfNotExist', () => {
+    it('creates a root directory if it does not exist', async () => {
+      // Given
+      const client = await createClient(false)
 
-  beforeEach(async () => {
-    client = new Client('db', {
-      adapter: 'memory'
+      // When
+      await client.createRootFolderIfNotExist()
+
+      // Then
+      const db = client.getDb()
+      const rootFolder = await db.get(getFolderId('/'))
+      expect(rootFolder).toBeDefined()
     })
-    await client.init()
-  })
 
-  afterEach(async (done) => {
-    await client.destroyDB()
-    done()
+    it('does not do anything if there is already a root direcotry', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      await client.createRootFolderIfNotExist()
+
+      // Then
+      const db = client.getDb()
+      const rootFolder = await db.get(getFolderId('/'))
+      expect(rootFolder).toBeDefined()
+    })
   })
 
   describe('#init', () => {
     it('creates a root directory', async () => {
-      const client = new Client('init', {
-        adapter: 'memory'
-      })
+      // Given
+      const client = await createClient(false)
 
+      // When
       await client.init()
 
+      // Then
       const rootFolder = client.getFolder('/')
       expect(rootFolder).not.toBeNull()
-    })
-
-    it('creates missing folders', async () => {
-      const folder = await client.updateFolder('/test')
-      await client.putNote('test', {
-        folder: '/test'
-      })
-      const rawClient = new PouchDB('db', { adapter: 'memory' })
-      await rawClient.remove(folder)
-      const newClient = new Client('db', {
-        adapter: 'memory'
-      })
-
-      await newClient.init()
-
-      const revivedFolder = await newClient.getFolder('/test')
-      expect(revivedFolder).toEqual({
-        _id: 'boost:folder:/test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
     })
   })
 
   describe('#createFolder', () => {
     it('creates a folder', async () => {
+      // Given
+      const client = await createClient()
+
       // When
       const folder = await client.createFolder('/hello')
 
       // Then
-      expect(folder).toEqual({
+      expect(folder).toMatchObject({
         path: '/hello'
       })
       const updatedFolder = await client.getFolder('/hello')
-      expect(updatedFolder).toEqual({
+      expect(updatedFolder).toMatchObject({
         path: '/hello'
-      })
-    })
-
-    // it('throws error if the parent folder does not exist', () => {
-
-    // })
-  })
-
-  describe('#putFolder', () => {
-    it('creates a folder', async () => {
-      const folder = await client.updateFolder('/', {
-        color: 'red'
-      })
-
-      expect(folder).toEqual({
-        _id: 'boost:folder:/',
-        color: 'red',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
-    })
-
-    it('update an exsisting folder', async () => {
-      await client.updateFolder('/', {
-        color: 'green'
-      })
-
-      const folder = await client.updateFolder('/', {
-        color: 'red'
-      })
-
-      expect(folder).toEqual({
-        _id: 'boost:folder:/',
-        color: 'red',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
       })
     })
 
     it('creates a sub folder', async () => {
-      await client.updateFolder('/test')
-
-      const folder = await client.updateFolder('/test/test', {
-        color: 'red'
-      })
-
-      expect(folder).toEqual({
-        _id: 'boost:folder:/test/test',
-        color: 'red',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
     })
 
-    it('throws an error if its parent folder does not exist', async () => {
-      await expect(client.updateFolder('/test/test', {
-        color: 'red'
-      })).rejects.toThrowError()
+    it('throws if the parent folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.createFolder('/hello')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: 'conflict'
+        })
+      }
+    })
+
+    it('throws if the parent folder does not exist', () => {
+      // Given
+
     })
   })
 
   describe('#getFolder', () => {
     it('gets a folder', async () => {
-      await client.updateFolder('/', {
-        color: 'red'
-      })
 
-      const folder = await client.getFolder('/')
-
-      expect(folder).toEqual({
-        _id: 'boost:folder:/',
-        color: 'red',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
     })
 
-    it('returns null if the folder does not exist', async () => {
-      const folder = await client.getFolder('/test')
+    it('throws when the folder does not exist', async () => {
 
-      expect(folder).toEqual(null)
+    })
+  })
+
+  describe('#updateFolder', () => {
+    it('updates folder', async () => {
+
+    })
+
+    it('throws when the folder does not exist', async () => {
+
+    })
+  })
+
+  describe('#moveFolder', () => {
+    it('moves a folder', () => {
+
+    })
+
+    it('moves its notes', () => {
+
     })
   })
 
   describe('#removeFolder', () => {
-    it('removes a folder', async () => {
-      await client.updateFolder('/')
+    it('deletes a folder', () => {
 
-      await client.removeFolder('/')
-
-      const folder = await client.getFolder('/')
-      expect(folder).toEqual(null)
     })
 
-    it('removes all notes in the folder', async () => {
-      await client.updateFolder('/')
-      await client.putNote('tango', {
-        folder: '/'
-      })
+    it('deletes its sub folders', () => {
 
-      await client.removeFolder('/')
-
-      const note = await client.getNote('tango')
-      expect(note).toEqual(null)
     })
 
-    it('removes all sub folders', async () => {
-      await client.updateFolder('/test')
-      await client.updateFolder('/test/tango')
+    it('deletes all notes in the folder', () => {
 
-      await client.removeFolder('/test')
-
-      const folder = await client.getFolder('/test/tango')
-      expect(folder).toEqual(null)
     })
 
-    it('does not remove other folder', async () => {
-      await client.updateFolder('/test')
-      await client.updateFolder('/test2')
+    it('throws if the folder does not exist', () => {
 
-      await client.removeFolder('/test')
+    })
 
-      const folder = await client.getFolder('/test2')
-      expect(folder).toEqual({
-        _id: 'boost:folder:/test2',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
+    it('throws if the folder has any sub folders', () => {
+
+    })
+
+    it('throws if the folder has any notes', () => {
+
     })
   })
 
-  describe('#putNote', () => {
-    it('creates a note', async () => {
-      await client.updateFolder('/test')
+  describe('#removeAllSubFolders', () => {
+    it('removes all sub folders', () => {
 
-      const note = await client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/test',
-        tags: ['tango']
-      })
-
-      expect(note).toEqual({
-        title: 'tango',
-        content: 'tangotango',
-        tags: ['tango'],
-        folder: '/test',
-        _id: 'boost:note:test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
-      const storedNote = await client.getNote('test')
-      expect(storedNote).toEqual({
-        title: 'tango',
-        content: 'tangotango',
-        tags: ['tango'],
-        folder: '/test',
-        _id: 'boost:note:test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
     })
+  })
 
-    it('updates a note', async () => {
-      await client.updateFolder('/test')
+  describe('#createNote', () => {
 
-      await client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/test',
-        tags: ['tango']
-      })
-
-      const note = await client.putNote('test', {
-        title: 'changed title',
-        content: 'changed content',
-        folder: '/test',
-        tags: ['tango', 'foxtrot']
-      })
-
-      expect(note).toEqual({
-        title: 'changed title',
-        content: 'changed content',
-        folder: '/test',
-        tags: ['tango', 'foxtrot'],
-        _id: 'boost:note:test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
-      const storedNote = await client.getNote('test')
-      expect(storedNote).toEqual({
-        title: 'changed title',
-        content: 'changed content',
-        folder: '/test',
-        tags: ['tango', 'foxtrot'],
-        _id: 'boost:note:test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
-    })
-
-    it('throws when the target folder does not exist', async () => {
-      await expect(client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/test',
-        tags: ['tango']
-      })).rejects.toThrowError()
-    })
   })
 
   describe('#getNote', () => {
-    it('gets a note', async () => {
-      await client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/',
-        tags: ['tango']
-      })
 
-      const note = await client.getNote('test')
+  })
 
-      expect(note).toEqual({
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/',
-        tags: ['tango'],
-        _id: 'boost:note:test',
-        _rev: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
+  describe('#updateNote', () => {
+
+  })
+
+  describe('#moveNote', () => {
+    it('moves a note', () => {
+
     })
 
-    it('returns null when the note does not exist', async () => {
-      const note = await client.getNote('test')
+    it('throws if the note does not exist', () => {
 
-      expect(note).toEqual(null)
+    })
+
+    it('throws if the destination folder does not exist', () => {
+
     })
   })
 
   describe('#removeNote', () => {
-    it('removes a note', async () => {
-      await client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/',
-        tags: ['tango']
-      })
+    it('removes a note', () => {
 
-      await client.removeNote('test')
+    })
 
-      const note = await client.getNote('test')
-      expect(note).toEqual(null)
+    it('throws if the note does not exist', () => {
+
     })
   })
 
-  describe('#getAllData', () => {
-    it('returns all folders and notes', async () => {
-      await client.updateFolder('/test')
-      await client.putNote('test', {
-        title: 'tango',
-        content: 'tangotango',
-        folder: '/test',
-        tags: ['tango']
-      })
+  describe('#removeAllNoteInFolder', () => {
+    it('removes all note', () => {
 
-      const data = await client.getAllData()
-
-      expect(data).toEqual({
-        folders: [
-          {
-            _id: 'boost:folder:/',
-            _rev: expect.any(String),
-            createdAt: expect.any(String),
-            updatedAt: expect.any(String)
-          },
-          {
-            _id: 'boost:folder:/test',
-            _rev: expect.any(String),
-            createdAt: expect.any(String),
-            updatedAt: expect.any(String)
-          }
-        ],
-        notes: [
-          {
-            _id: 'boost:note:test',
-            title: 'tango',
-            content: 'tangotango',
-            folder: '/test',
-            tags: ['tango'],
-            _rev: expect.any(String),
-            createdAt: expect.any(String),
-            updatedAt: expect.any(String)
-          }
-        ]
-      })
     })
   })
 })
