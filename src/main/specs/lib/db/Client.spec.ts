@@ -52,6 +52,7 @@ describe('Client', () => {
   })
 
   describe('#init', () => {
+    // TODO: add more test cases
     it('creates a root directory', async () => {
       // Given
       const client = await createClient(false)
