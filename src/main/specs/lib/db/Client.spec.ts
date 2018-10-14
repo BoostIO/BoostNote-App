@@ -23,6 +23,72 @@ async function createClient (shouldInit: boolean = true): Promise<Client> {
 }
 
 describe('Client', () => {
+  describe('validateFolderPath', () => {
+    it('returns true if the given path is valid', async () => {
+      // Given
+      const client = await createClient(false)
+      const input = '/test'
+
+      // When
+      const result = client.validateFolderPath(input)
+
+      // Then
+      expect(result).toBe(true)
+    })
+
+    it('returns false if the given path is empty string', async () => {
+      // Given
+      const client = await createClient(false)
+      const input = ''
+
+      // When
+      const result = client.validateFolderPath(input)
+
+      // Then
+      expect(result).toBe(false)
+    })
+
+    it('returns false if the given path does not start with `/`', async () => {
+      // Given
+      const client = await createClient(false)
+      const input = 'test/'
+
+      // When
+      const result = client.validateFolderPath(input)
+
+      // Then
+      expect(result).toBe(false)
+    })
+
+    it('returns false if there are any elements include any reserved characters', async () => {
+      // Given
+      const client = await createClient(false)
+      const input = '/test\\test/'
+
+      // When
+      const result = client.validateFolderPath(input)
+
+      // Then
+      expect(result).toBe(false)
+    })
+
+    it('returns false if there are any elements has zero length', async () => {
+      // Given
+      const client = await createClient(false)
+      const input = '/test//test'
+
+      // When
+      const result = client.validateFolderPath(input)
+
+      // Then
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('assertFolderPath', () => {
+
+  })
+
   describe('#createRootFolderIfNotExist', () => {
     it('creates a root directory if it does not exist', async () => {
       // Given
@@ -102,6 +168,10 @@ describe('Client', () => {
       })
     })
 
+    it('throws if the given path is not valid', () => {
+
+    })
+
     it('throws if the parent folder does not exist', async () => {
       // Given
       const client = await createClient()
@@ -119,7 +189,24 @@ describe('Client', () => {
       }
     })
 
-    describe('#getFolder', () => {
+    it('throws if the parent folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.createFolder('/hello/world')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: 'conflict'
+        })
+      }
+    })
+  })
+
+  describe('#getFolder', () => {
     it('gets a folder', async () => {
 
     })
@@ -129,7 +216,7 @@ describe('Client', () => {
     })
   })
 
-    describe('#updateFolder', () => {
+  describe('#updateFolder', () => {
     it('updates folder', async () => {
 
     })
@@ -139,7 +226,7 @@ describe('Client', () => {
     })
   })
 
-    describe('#moveFolder', () => {
+  describe('#moveFolder', () => {
     it('moves a folder', () => {
 
     })
@@ -149,7 +236,7 @@ describe('Client', () => {
     })
   })
 
-    describe('#removeFolder', () => {
+  describe('#removeFolder', () => {
     it('deletes a folder', () => {
 
     })
@@ -175,51 +262,51 @@ describe('Client', () => {
     })
   })
 
-    describe('#removeAllSubFolders', () => {
+  describe('#removeAllSubFolders', () => {
     it('removes all sub folders', () => {
 
     })
   })
 
-    describe('#createNote', () => {
+  describe('#createNote', () => {
 
   })
 
-    describe('#getNote', () => {
+  describe('#getNote', () => {
+
+  })
+
+  describe('#updateNote', () => {
+
+  })
+
+  describe('#moveNote', () => {
+    it('moves a note', () => {
 
     })
 
-    describe('#updateNote', () => {
+    it('throws if the note does not exist', () => {
 
     })
 
-    describe('#moveNote', () => {
-      it('moves a note', () => {
+    it('throws if the destination folder does not exist', () => {
 
-      })
-
-      it('throws if the note does not exist', () => {
-
-      })
-
-      it('throws if the destination folder does not exist', () => {
-
-      })
-    })
-
-    describe('#removeNote', () => {
-      it('removes a note', () => {
-
-      })
-
-      it('throws if the note does not exist', () => {
-
-      })
-    })
-
-    describe('#removeAllNoteInFolder', () => {
-      it('removes all note', () => {
-
-      })
     })
   })
+
+  describe('#removeNote', () => {
+    it('removes a note', () => {
+
+    })
+
+    it('throws if the note does not exist', () => {
+
+    })
+  })
+
+  describe('#removeAllNoteInFolder', () => {
+    it('removes all note', () => {
+
+    })
+  })
+})

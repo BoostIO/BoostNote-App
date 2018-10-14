@@ -10,6 +10,14 @@ import {
   getParentFolderPath
 } from './helpers'
 
+export enum ClientErrorTypes {
+  FolderDoesNotExist = 'FolderDoesNotExist',
+  ParentFolderDoesNotExist = 'ParentFolderDoesNotExist',
+  InvalidFolderPath = 'InvalidFolderPath'
+}
+
+export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
+
 export default class Client {
   public initialized: boolean
 
@@ -20,6 +28,24 @@ export default class Client {
 
   getDb () {
     return this.db
+  }
+
+  validateFolderPath (input: string): boolean {
+    if (input.length === 0) return false
+
+    const elements = input.split('/')
+
+    // The first element must be empty string because the valid folder path starts with `/`
+    const firstElement = elements.shift()
+    if (firstElement == null || firstElement.length > 0) return false
+
+    // Each element
+    const hasInvalidElement = elements.some(element => {
+      return element.length === 0 || reservedPathNameRegex.test(element)
+    })
+    if (hasInvalidElement) return false
+
+    return true
   }
 
   async createRootFolderIfNotExist () {
