@@ -78,13 +78,28 @@ describe('Client', () => {
       expect(folder).toMatchObject({
         path: '/hello'
       })
-      const updatedFolder = await client.getFolder('/hello')
-      expect(updatedFolder).toMatchObject({
+      const createdFolder = await client.getFolder('/hello')
+      expect(createdFolder).toMatchObject({
         path: '/hello'
       })
     })
 
     it('creates a sub folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+
+      // When
+      const subFolder = await client.createFolder('/hello/world')
+
+      // Then
+      expect(subFolder).toMatchObject({
+        path: '/hello/world'
+      })
+      const createdFolder = await client.getFolder('/hello/world')
+      expect(createdFolder).toMatchObject({
+        path: '/hello/world'
+      })
     })
 
     it('throws if the parent folder does not exist', async () => {
@@ -104,13 +119,7 @@ describe('Client', () => {
       }
     })
 
-    it('throws if the parent folder does not exist', () => {
-      // Given
-
-    })
-  })
-
-  describe('#getFolder', () => {
+    describe('#getFolder', () => {
     it('gets a folder', async () => {
 
     })
@@ -120,7 +129,7 @@ describe('Client', () => {
     })
   })
 
-  describe('#updateFolder', () => {
+    describe('#updateFolder', () => {
     it('updates folder', async () => {
 
     })
@@ -130,7 +139,7 @@ describe('Client', () => {
     })
   })
 
-  describe('#moveFolder', () => {
+    describe('#moveFolder', () => {
     it('moves a folder', () => {
 
     })
@@ -140,7 +149,7 @@ describe('Client', () => {
     })
   })
 
-  describe('#removeFolder', () => {
+    describe('#removeFolder', () => {
     it('deletes a folder', () => {
 
     })
@@ -166,51 +175,51 @@ describe('Client', () => {
     })
   })
 
-  describe('#removeAllSubFolders', () => {
+    describe('#removeAllSubFolders', () => {
     it('removes all sub folders', () => {
 
     })
   })
 
-  describe('#createNote', () => {
+    describe('#createNote', () => {
 
   })
 
-  describe('#getNote', () => {
+    describe('#getNote', () => {
 
+    })
+
+    describe('#updateNote', () => {
+
+    })
+
+    describe('#moveNote', () => {
+      it('moves a note', () => {
+
+      })
+
+      it('throws if the note does not exist', () => {
+
+      })
+
+      it('throws if the destination folder does not exist', () => {
+
+      })
+    })
+
+    describe('#removeNote', () => {
+      it('removes a note', () => {
+
+      })
+
+      it('throws if the note does not exist', () => {
+
+      })
+    })
+
+    describe('#removeAllNoteInFolder', () => {
+      it('removes all note', () => {
+
+      })
+    })
   })
-
-  describe('#updateNote', () => {
-
-  })
-
-  describe('#moveNote', () => {
-    it('moves a note', () => {
-
-    })
-
-    it('throws if the note does not exist', () => {
-
-    })
-
-    it('throws if the destination folder does not exist', () => {
-
-    })
-  })
-
-  describe('#removeNote', () => {
-    it('removes a note', () => {
-
-    })
-
-    it('throws if the note does not exist', () => {
-
-    })
-  })
-
-  describe('#removeAllNoteInFolder', () => {
-    it('removes all note', () => {
-
-    })
-  })
-})
