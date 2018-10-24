@@ -19,6 +19,9 @@ export enum ClientErrorTypes {
 export class InvalidFolderPathError extends Error {
   readonly name: string = ClientErrorTypes.InvalidFolderPathError
 }
+export class ParentFolderDoesNotExistError extends Error {
+  readonly name: string = ClientErrorTypes.ParentFolderDoesNotExistError
+}
 
 export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
 
@@ -92,13 +95,20 @@ export default class Client {
   async assertIfParentFolderExists (path: string) {
     if (path === '/') throw new Error('The given path is root path')
     const parentPath = getParentFolderPath(path)
-    const folder = await this.getFolder(parentPath)
-
-    if (folder == null) throw new Error('The parent folder does not exist.')
+    try {
+      await this.db.get(getFolderId(parentPath))
+    } catch (error) {
+      if (error.name === 'not_found') {
+        throw new ParentFolderDoesNotExistError('The parent folder does not exist.')
+      } else {
+        throw error
+      }
+    }
   }
 
   async createFolder (path: string): Promise<Types.Folder> {
-    path = normalizeFolderPath(path)
+    await this.assertIfParentFolderExists(path)
+
     const folder: Types.FolderProps = {
       path,
       createdAt: new Date(),

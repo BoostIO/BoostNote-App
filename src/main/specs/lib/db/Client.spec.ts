@@ -176,12 +176,11 @@ describe('Client', () => {
     it('throws if the parent folder does not exist', async () => {
       // Given
       const client = await createClient()
-      await client.createFolder('/hello')
-      expect.assertions(1)
 
       // When
       try {
-        await client.createFolder('/hello')
+        await client.createFolder('/hello/hello')
+        throw new Error('must throw')
       } catch (error) {
         // Then
         expect(error).toMatchObject({
@@ -201,7 +200,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: 'conflict'
+          name: ClientErrorTypes.ParentFolderDoesNotExistError
         })
       }
     })
