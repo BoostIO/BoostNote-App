@@ -16,9 +16,14 @@ export enum ClientErrorTypes {
   InvalidFolderPathError = 'InvalidFolderPathError'
 }
 
+export class FolderDoesNotExistError extends Error {
+  readonly name: string = ClientErrorTypes.FolderDoesNotExistError
+}
+
 export class InvalidFolderPathError extends Error {
   readonly name: string = ClientErrorTypes.InvalidFolderPathError
 }
+
 export class ParentFolderDoesNotExistError extends Error {
   readonly name: string = ClientErrorTypes.ParentFolderDoesNotExistError
 }
@@ -160,7 +165,17 @@ export default class Client {
   }
 
   async getFolder (path: string): Promise<Types.Folder> {
-    const folder = await this.db.get<Types.SerializedFolderProps>(getFolderId(path))
+    let folder: Types.SerializedFolder
+    try {
+      folder = await this.db.get<Types.SerializedFolderProps>(getFolderId(path))
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          throw new FolderDoesNotExistError('The folder does not exist.')
+        default:
+          throw error
+      }
+    }
 
     return this.deserializeFolder(folder)
   }

@@ -252,7 +252,18 @@ describe('Client', () => {
     })
 
     it('throws when the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
 
+      // When
+      try {
+        await client.getFolder('/hello')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.FolderDoesNotExistError
+        })
+      }
     })
   })
 
