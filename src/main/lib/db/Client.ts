@@ -107,6 +107,7 @@ export default class Client {
   }
 
   async createFolder (path: string): Promise<Types.Folder> {
+    await this.assertFolderPath(path)
     await this.assertIfParentFolderExists(path)
 
     const folder: Types.FolderProps = {

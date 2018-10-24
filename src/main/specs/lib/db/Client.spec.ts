@@ -183,8 +183,20 @@ describe('Client', () => {
       })
     })
 
-    it('throws if the given path is not valid', () => {
+    it('throws if the given path is not valid', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.createFolder('')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.InvalidFolderPathError
+        })
+      }
     })
 
     it('throws if the parent folder does not exist', async () => {
