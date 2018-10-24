@@ -1,4 +1,4 @@
-import Client from '../../../lib/db/Client'
+import Client, { ClientErrorTypes } from '../../../lib/db/Client'
 import {
   getFolderId
 } from '../../../lib/db/helpers'
@@ -86,7 +86,8 @@ describe('Client', () => {
   })
 
   describe('assertFolderPath', () => {
-
+    it('throws if the folder path is not valid', () => {
+    })
   })
 
   describe('#createRootFolderIfNotExist', () => {
@@ -184,7 +185,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: 'conflict'
+          name: ClientErrorTypes.ParentFolderDoesNotExistError
         })
       }
     })
@@ -208,7 +209,21 @@ describe('Client', () => {
 
   describe('#getFolder', () => {
     it('gets a folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
 
+      // When
+      const folder = await client.getFolder('/hello')
+
+      // Then
+      expect(folder).toMatchObject({
+        _id: 'boost:folder:/hello',
+        _rev: expect.any(String),
+        path: '/hello',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
     })
 
     it('throws when the folder does not exist', async () => {
