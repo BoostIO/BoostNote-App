@@ -183,6 +183,27 @@ describe('Client', () => {
       })
     })
 
+    it('creates a folder with props', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const folder = await client.createFolder('/hello', {
+        color: 'red'
+      })
+
+      // Then
+      expect(folder).toMatchObject({
+        path: '/hello',
+        color: 'red'
+      })
+      const createdFolder = await client.getFolder('/hello')
+      expect(createdFolder).toMatchObject({
+        path: '/hello',
+        color: 'red'
+      })
+    })
+
     it('throws if the given path is not valid', async () => {
       // Given
       const client = await createClient()
@@ -269,11 +290,45 @@ describe('Client', () => {
 
   describe('#updateFolder', () => {
     it('updates folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello', {
+        color: 'red'
+      })
 
+      // When
+      const updatedFolder = await client.updateFolder('/hello', {
+        color: 'blue'
+      })
+
+      // Then
+      expect(updatedFolder).toEqual(expect.objectContaining({
+        path: '/hello',
+        color: 'blue'
+      }))
+      const folder = await client.getFolder('/hello')
+      expect(folder).toEqual(expect.objectContaining({
+        path: '/hello',
+        color: 'blue'
+      }))
     })
 
     it('throws when the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.updateFolder('/hello', {
+          color: 'blue'
+        })
+      } catch (error) {
+        // Then
+        expect(error).toEqual(expect.objectContaining({
+          name: ClientErrorTypes.FolderDoesNotExistError
+        }))
+      }
     })
   })
 
