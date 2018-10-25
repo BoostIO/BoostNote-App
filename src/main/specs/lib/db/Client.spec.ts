@@ -340,6 +340,26 @@ describe('Client', () => {
     it('moves its notes', () => {
 
     })
+
+    it('moves its sub folders', () => {
+
+    })
+
+    it('throws if the path is invalid', () => {
+
+    })
+
+    it('throws if the next path is invalid', () => {
+
+    })
+
+    it('throws if the path and the next path is same', () => {
+
+    })
+
+    it('throws if the next path is a child path of the current path', () => {
+
+    })
   })
 
   describe('#removeFolder', () => {
