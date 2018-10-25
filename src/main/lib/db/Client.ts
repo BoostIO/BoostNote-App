@@ -181,6 +181,19 @@ export default class Client {
     return this.deserializeFolder(folder)
   }
 
+  /**
+   * TODO:
+   * - move notes
+   * - move sub folders
+   */
+  async moveFolder (path: string, nextPath: string) {
+    await this.assertFolderPath(path)
+    await this.assertFolderPath(nextPath)
+
+    await this.createFolder(nextPath)
+    await this.removeFolder(path)
+  }
+
   async removeFolder (path: string): Promise<void> {
     const folder = await this.db.get<Types.FolderProps>(getFolderId(path))
     if (folder != null) await this.db.remove(folder)
