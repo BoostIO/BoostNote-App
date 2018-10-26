@@ -288,6 +288,31 @@ describe('Client', () => {
     })
   })
 
+  describe('#hasFolder', () => {
+    it('returns true if the folder exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+
+      // When
+      const result = await client.hasFolder('/hello')
+
+      // Then
+      expect(result).toBe(true)
+    })
+
+    it('returns false if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.hasFolder('/hello')
+
+      // Then
+      expect(result).toBe(false)
+    })
+  })
+
   describe('#updateFolder', () => {
     it('updates folder', async () => {
       // Given
@@ -363,15 +388,32 @@ describe('Client', () => {
   })
 
   describe('#removeFolder', () => {
-    it('deletes a folder', () => {
+    it('deletes a folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
 
+      // When
+      await client.removeFolder('/hello')
+
+      // Then
+      expect(await client.hasFolder('/hello')).toBe(false)
     })
 
-    it('deletes its sub folders', () => {
+    it('deletes its sub folders', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/hello/kimmy')
 
+      // When
+      await client.removeFolder('/hello')
+
+      // Then
+      expect(await client.hasFolder('/hello/kimmy')).toBe(false)
     })
 
-    it('deletes all notes in the folder', () => {
+    it('deletes all notes in the folder', async () => {
 
     })
 
@@ -389,21 +431,93 @@ describe('Client', () => {
   })
 
   describe('#removeAllSubFolders', () => {
-    it('removes all sub folders', () => {
+    it('removes all sub folders', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/hello/kimmy')
 
+      // When
+      await client.removeSubFolders('/hello')
+
+      // Then
+      expect(await client.hasFolder('/hello/kimmy')).toBe(false)
+    })
+
+    it('throws if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/hello/kimmy')
+
+      // When
+      await client.removeSubFolders('/hello')
+
+      // Then
+      expect(await client.hasFolder('/hello/kimmy')).toBe(false)
     })
   })
 
   describe('#createNote', () => {
+    it('creates a note', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
 
+      // When
+      const createdNote = await client.createNote('/hello', {
+        content: 'hello'
+      })
+
+      // Given
+      expect(createdNote).toEqual({
+        _id: expect.any(String),
+        _rev: expect.any(String),
+        folder: '/hello',
+        title: '',
+        tags: [],
+        content: 'hello',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
+    })
+
+    it('throws if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.createNote('/hello', {
+          content: 'hello'
+        })
+      } catch (error) {
+        expect(error).toEqual(expect.objectContaining({
+          name: ClientErrorTypes.FolderDoesNotExistError
+        }))
+      }
+    })
   })
 
   describe('#getNote', () => {
+    it('returns a note', () => {
 
+    })
+
+    it('throws if the note does not exist', () => {
+
+    })
   })
 
   describe('#updateNote', () => {
+    it('updates a note', () => {
 
+    })
+
+    it('throw if the note does not exist', () => {
+
+    })
   })
 
   describe('#moveNote', () => {

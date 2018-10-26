@@ -1,6 +1,9 @@
-export interface FolderProps {
-  path: string
+export interface EditableFolderProps {
   color?: string
+}
+
+export interface FolderProps extends EditableFolderProps {
+  path: string
   createdAt: Date
   updatedAt: Date
 }
@@ -17,6 +20,10 @@ export type PouchDBMeta = PouchDB.Core.GetMeta & PouchDB.Core.IdMeta
 export type SerializedFolder = SerializedFolderProps & PouchDBMeta
 
 export type Folder = FolderProps & PouchDBMeta
+
+export interface EditableNoteProps {
+  content: string
+}
 
 export interface NoteProps {
   title: string

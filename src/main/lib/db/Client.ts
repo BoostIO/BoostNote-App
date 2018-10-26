@@ -9,6 +9,7 @@ import {
   normalizeFolderPath,
   getParentFolderPath
 } from './helpers'
+import uuid from 'uuid/v1'
 
 export enum ClientErrorTypes {
   FolderDoesNotExistError = 'FolderDoesNotExistError',
@@ -44,6 +45,7 @@ export default class Client {
 
   validateFolderPath (input: string): boolean {
     if (input.length === 0) return false
+    if (input === '/') return true
 
     const elements = input.split('/')
 
@@ -181,6 +183,25 @@ export default class Client {
     return this.deserializeFolder(folder)
   }
 
+  async hasFolder (path: string): Promise<boolean> {
+    try {
+      await this.db.get<Types.SerializedFolderProps>(getFolderId(path))
+      return true
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          return false
+        default:
+          throw error
+      }
+    }
+  }
+
+  async assertIfClientHasFolder (path: string): Promise<void> {
+    const clientHasFolder = await this.hasFolder(path)
+    if (!clientHasFolder) throw new FolderDoesNotExistError('The folder does not exist.')
+  }
+
   /**
    * TODO:
    * - move notes
@@ -205,7 +226,32 @@ export default class Client {
     return this.db.destroy()
   }
 
-  async putNote (id: string, note?: Partial<Types.NoteProps>): Promise <Types.Note> {
+  async createNote (path: string, note: Types.EditableNoteProps): Promise<Types.Note> {
+    this.assertFolderPath(path)
+    await this.assertIfClientHasFolder(path)
+
+    const id = uuid()
+    const props = {
+      title: '',
+      folder: path,
+      tags: [],
+      content: note.content,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    const doc = await this.db.put<Types.NoteProps>({
+      _id: id,
+      ...props
+    })
+
+    return {
+      _id: id,
+      _rev: doc.rev,
+      ...props
+    }
+  }
+
+  async putNote (id: string, note: Partial<Types.NoteProps>): Promise <Types.Note> {
     const currentNote = await this.getNote(id)
 
     if (note != null) {
@@ -237,7 +283,8 @@ export default class Client {
     return note
   }
 
-  async removeNotesInFolder (path: string): Promise<void > {
+  // TODO: Map notes by a folder
+  async removeNotesInFolder (path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Types.NoteProps>({
       include_docs: true,
       startkey: NOTE_ID_PREFIX,
@@ -249,7 +296,7 @@ export default class Client {
     await Promise.all(rowsToDelete.map(row => this.db.remove((row.doc as Types.Note))))
   }
 
-  async removeSubFolders (path: string): Promise<void > {
+  async removeSubFolders (path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Types.NoteProps>({
       startkey: `${FOLDER_ID_PREFIX}${path}/`,
       endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
@@ -261,7 +308,7 @@ export default class Client {
     }))
   }
 
-  async removeNote (id: string): Promise<void > {
+  async removeNote (id: string): Promise<void> {
     const note = await this.getNote(id)
     if (note != null) await this.db.remove(note)
   }
