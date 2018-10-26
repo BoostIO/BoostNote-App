@@ -12,21 +12,16 @@ import {
 import uuid from 'uuid/v1'
 
 export enum ClientErrorTypes {
-  FolderDoesNotExistError = 'FolderDoesNotExistError',
-  ParentFolderDoesNotExistError = 'ParentFolderDoesNotExistError',
+  NotFoundError = 'NotFoundError',
   InvalidFolderPathError = 'InvalidFolderPathError'
 }
 
-export class FolderDoesNotExistError extends Error {
-  readonly name: string = ClientErrorTypes.FolderDoesNotExistError
+export class NotFoundError extends Error {
+  readonly name: string = ClientErrorTypes.NotFoundError
 }
 
 export class InvalidFolderPathError extends Error {
   readonly name: string = ClientErrorTypes.InvalidFolderPathError
-}
-
-export class ParentFolderDoesNotExistError extends Error {
-  readonly name: string = ClientErrorTypes.ParentFolderDoesNotExistError
 }
 
 export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
@@ -106,7 +101,7 @@ export default class Client {
       await this.db.get(getFolderId(parentPath))
     } catch (error) {
       if (error.name === 'not_found') {
-        throw new ParentFolderDoesNotExistError('The parent folder does not exist.')
+        throw new NotFoundError('The parent folder does not exist.')
       } else {
         throw error
       }
@@ -174,7 +169,7 @@ export default class Client {
     } catch (error) {
       switch (error.name) {
         case 'not_found':
-          throw new FolderDoesNotExistError('The folder does not exist.')
+          throw new NotFoundError('The folder does not exist.')
         default:
           throw error
       }
@@ -199,7 +194,7 @@ export default class Client {
 
   async assertIfClientHasFolder (path: string): Promise<void> {
     const clientHasFolder = await this.hasFolder(path)
-    if (!clientHasFolder) throw new FolderDoesNotExistError('The folder does not exist.')
+    if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
   }
 
   /**

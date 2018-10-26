@@ -231,7 +231,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: ClientErrorTypes.ParentFolderDoesNotExistError
+          name: ClientErrorTypes.NotFoundError
         })
       }
     })
@@ -247,7 +247,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: ClientErrorTypes.ParentFolderDoesNotExistError
+          name: ClientErrorTypes.NotFoundError
         })
       }
     })
@@ -282,7 +282,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: ClientErrorTypes.FolderDoesNotExistError
+          name: ClientErrorTypes.NotFoundError
         })
       }
     })
@@ -351,7 +351,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toEqual(expect.objectContaining({
-          name: ClientErrorTypes.FolderDoesNotExistError
+          name: ClientErrorTypes.NotFoundError
         }))
       }
     })
@@ -494,15 +494,34 @@ describe('Client', () => {
         })
       } catch (error) {
         expect(error).toEqual(expect.objectContaining({
-          name: ClientErrorTypes.FolderDoesNotExistError
+          name: ClientErrorTypes.NotFoundError
         }))
       }
     })
   })
 
   describe('#getNote', () => {
-    it('returns a note', () => {
+    it('returns a note', async () => {
+      // Given
+      const client = await createClient()
+      const note = await client.createNote('/', {
+        content: 'hello'
+      })
 
+      // When
+      const fetchedNote = await client.getNote(note._id)
+
+      // Then
+      expect(fetchedNote).toEqual({
+        _id: note._id,
+        _rev: note._rev,
+        folder: '/',
+        title: '',
+        tags: [],
+        content: 'hello',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
     })
 
     it('throws if the note does not exist', () => {
