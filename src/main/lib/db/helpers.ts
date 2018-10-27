@@ -4,11 +4,11 @@ import {
   NOTE_ID_PREFIX
 } from '../../../lib/consts'
 
-export function getFolderId (path: string): string {
+export function prependFolderIdPrefix (path: string): string {
   return `${FOLDER_ID_PREFIX}${path}`
 }
 
-export function getNoteId (id: string): string {
+export function prependNoteIdPrefix (id: string): string {
   return `${NOTE_ID_PREFIX}${id}`
 }
 

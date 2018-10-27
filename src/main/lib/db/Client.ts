@@ -4,8 +4,8 @@ import {
 } from '../../../lib/consts'
 import * as Types from './dataTypes'
 import {
-  getFolderId,
-  getNoteId,
+  prependFolderIdPrefix,
+  prependNoteIdPrefix,
   normalizeFolderPath,
   getParentFolderPath
 } from './helpers'
@@ -62,7 +62,7 @@ export default class Client {
   }
 
   async createRootFolderIfNotExist () {
-    const rootFolderId = getFolderId('/')
+    const rootFolderId = prependFolderIdPrefix('/')
     try {
       return await this.db.get<Types.SerializedFolderProps>(rootFolderId)
     } catch (error) {
@@ -98,7 +98,7 @@ export default class Client {
     if (path === '/') throw new Error('The given path is root path')
     const parentPath = getParentFolderPath(path)
     try {
-      await this.db.get(getFolderId(parentPath))
+      await this.db.get(prependFolderIdPrefix(parentPath))
     } catch (error) {
       if (error.name === 'not_found') {
         throw new NotFoundError('The parent folder does not exist.')
@@ -121,7 +121,7 @@ export default class Client {
 
     const doc = await this.db.put({
       createdAt: new Date(),
-      _id: getFolderId(path),
+      _id: prependFolderIdPrefix(path),
       updatedAt: new Date(),
       ...folder
     })
@@ -146,7 +146,7 @@ export default class Client {
     await this.db.put({
       createdAt: new Date(),
       ...prevFolder,
-      _id: getFolderId(path),
+      _id: prependFolderIdPrefix(path),
       updatedAt: new Date(),
       ...folder
     })
@@ -165,7 +165,7 @@ export default class Client {
   async getFolder (path: string): Promise<Types.Folder> {
     let folder: Types.SerializedFolder
     try {
-      folder = await this.db.get<Types.SerializedFolderProps>(getFolderId(path))
+      folder = await this.db.get<Types.SerializedFolderProps>(prependFolderIdPrefix(path))
     } catch (error) {
       switch (error.name) {
         case 'not_found':
@@ -180,7 +180,7 @@ export default class Client {
 
   async hasFolder (path: string): Promise<boolean> {
     try {
-      await this.db.get<Types.SerializedFolderProps>(getFolderId(path))
+      await this.db.get<Types.SerializedFolderProps>(prependFolderIdPrefix(path))
       return true
     } catch (error) {
       switch (error.name) {
@@ -211,7 +211,7 @@ export default class Client {
   }
 
   async removeFolder (path: string): Promise<void> {
-    const folder = await this.db.get<Types.FolderProps>(getFolderId(path))
+    const folder = await this.db.get<Types.FolderProps>(prependFolderIdPrefix(path))
     if (folder != null) await this.db.remove(folder)
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
@@ -225,7 +225,7 @@ export default class Client {
     this.assertFolderPath(path)
     await this.assertIfClientHasFolder(path)
 
-    const id = uuid()
+    const id = prependNoteIdPrefix(uuid())
     const props = {
       title: '',
       folder: path,
@@ -246,34 +246,28 @@ export default class Client {
     }
   }
 
-  async putNote (id: string, note: Partial<Types.NoteProps>): Promise <Types.Note> {
-    const currentNote = await this.getNote(id)
-
-    if (note != null) {
-      if (note.folder != null) {
-        const folder = await this.getFolder(note.folder)
-        if (folder == null) throw new Error('folder does not exist.')
-      }
+  deserializeNote (note: Types.SerializedNote): Types.Note {
+    return {
+      ...note,
+      createdAt: new Date(note.createdAt),
+      updatedAt: new Date(note.updatedAt)
     }
-
-    await this.db.put({
-      createdAt: new Date(),
-      title: '',
-      content: '',
-      folder: '/',
-      tags: [],
-      ...currentNote,
-      _id: getNoteId(id),
-      updatedAt: new Date(),
-      ...note
-    })
-    const newNote = await this.getNote(id) as Types.Note
-
-    return newNote
   }
 
   async getNote (id: string): Promise<Types.Note> {
-    const note: Types.Note = await this.db.get<Types.NoteProps>(getNoteId(id))
+    let serializedNote: Types.SerializedNote
+    let note: Types.Note
+    try {
+      serializedNote = await this.db.get<Types.SerializedNoteProps>(id)
+      note = this.deserializeNote(serializedNote)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          throw new NotFoundError('The note does not exist.')
+        default:
+          throw error
+      }
+    }
 
     return note
   }

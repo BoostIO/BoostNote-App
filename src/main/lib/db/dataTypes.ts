@@ -2,8 +2,9 @@ export interface EditableFolderProps {
   color?: string
 }
 
-export interface FolderProps extends EditableFolderProps {
+export interface FolderProps {
   path: string
+  color?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -25,6 +26,15 @@ export interface EditableNoteProps {
   content: string
 }
 
+export interface SerializedNoteProps {
+  title: string
+  content: string
+  folder: string
+  tags: string[]
+  createdAt: string
+  updatedAt: string
+}
+
 export interface NoteProps {
   title: string
   content: string
@@ -33,5 +43,7 @@ export interface NoteProps {
   createdAt: Date
   updatedAt: Date
 }
+
+export type SerializedNote = SerializedNoteProps & PouchDBMeta
 
 export type Note = NoteProps & PouchDBMeta

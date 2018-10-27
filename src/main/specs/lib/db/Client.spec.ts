@@ -1,6 +1,6 @@
 import Client, { ClientErrorTypes } from '../../../lib/db/Client'
 import {
-  getFolderId
+  prependFolderIdPrefix
 } from '../../../lib/db/helpers'
 import PouchDBCore from 'pouchdb-core'
 import PouchDBMemoryAdapter from 'pouchdb-adapter-memory'
@@ -114,7 +114,7 @@ describe('Client', () => {
 
       // Then
       const db = client.getDb()
-      const rootFolder = await db.get(getFolderId('/'))
+      const rootFolder = await db.get(prependFolderIdPrefix('/'))
       expect(rootFolder).toBeDefined()
     })
 
@@ -127,7 +127,7 @@ describe('Client', () => {
 
       // Then
       const db = client.getDb()
-      const rootFolder = await db.get(getFolderId('/'))
+      const rootFolder = await db.get(prependFolderIdPrefix('/'))
       expect(rootFolder).toBeDefined()
     })
   })
@@ -507,6 +507,7 @@ describe('Client', () => {
       const note = await client.createNote('/', {
         content: 'hello'
       })
+      console.log(note)
 
       // When
       const fetchedNote = await client.getNote(note._id)
@@ -524,8 +525,20 @@ describe('Client', () => {
       })
     })
 
-    it('throws if the note does not exist', () => {
+    it('throws if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.getNote('wrong id')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError
+        })
+      }
     })
   })
 
