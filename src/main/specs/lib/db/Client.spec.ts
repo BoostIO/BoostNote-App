@@ -605,21 +605,72 @@ describe('Client', () => {
   })
 
   describe('#moveNote', () => {
-    it('moves a note', () => {
+    it('moves a note', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/world')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
 
+      // When
+      const movedNote = await client.moveNote(note._id, '/world')
+
+      // Given
+      expect(movedNote).toEqual({
+        _id: expect.any(String),
+        _rev: expect.any(String),
+        folder: '/world',
+        title: '',
+        tags: [],
+        content: 'hello',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
     })
 
-    it('throws if the note does not exist', () => {
+    it('throws if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/world')
 
+      // When
+      try {
+        await client.moveNote('wrong id', '/world')
+      } catch (error) {
+        // Given
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError,
+          message: 'The note does not exist.'
+        })
+      }
     })
 
-    it('throws if the destination folder does not exist', () => {
+    it('throws if the destination folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
 
+      // When
+      try {
+        await client.moveNote(note._id, '/world')
+      } catch (error) {
+        // Given
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError,
+          message: 'The folder does not exist.'
+        })
+      }
     })
   })
 
   describe('#removeNote', () => {
-    it('removes a note', () => {
+    it('removes a note', async () => {
 
     })
 

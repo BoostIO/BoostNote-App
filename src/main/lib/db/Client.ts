@@ -68,7 +68,7 @@ export default class Client {
   }
 
   assertFolderPath (input: string) {
-    if (!this.validateFolderPath(input)) throw new UnprocessableEntityError(`\`${input}\` is not a valid folder path`)
+    if (!this.validateFolderPath(input)) throw new UnprocessableEntityError(`\`${input}\` is not a valid folder path.`)
   }
 
   async createRootFolderIfNotExist () {
@@ -105,7 +105,7 @@ export default class Client {
   }
 
   async assertIfParentFolderExists (path: string) {
-    if (path === '/') throw new Error('The given path is root path')
+    if (path === '/') throw new UnprocessableEntityError('The given path is a root path.')
     const parentPath = this.getParentFolderPath(path)
     try {
       await this.db.get(this.prependFolderIdPrefix(parentPath))
@@ -263,7 +263,7 @@ export default class Client {
     } catch (error) {
       switch (error.name) {
         case 'not_found':
-          throw new NotFoundError('The note does not exist')
+          throw new NotFoundError('The note does not exist.')
         default:
           throw error
       }
@@ -310,6 +310,38 @@ export default class Client {
     }
 
     return note
+  }
+
+  async moveNote (noteId: string, nextPath: string): Promise<Types.Note> {
+    this.validateFolderPath(nextPath)
+    await this.hasFolder(nextPath)
+    let serializedNote: Types.SerializedNote
+    try {
+      serializedNote = await this.db.get<Types.SerializedNoteProps>(noteId)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          throw new NotFoundError('The note does not exist.')
+        default:
+          throw error
+      }
+    }
+
+    const deserializedNote = this.deserializeNote(serializedNote)
+    const props = {
+      ...deserializedNote,
+      folder: nextPath,
+      updatedAt: new Date()
+    }
+    const doc = await this.db.put({
+      ...props
+    })
+
+    return {
+      _id: noteId,
+      _rev: doc.rev,
+      ...props
+    }
   }
 
   // TODO: Map notes by a folder
