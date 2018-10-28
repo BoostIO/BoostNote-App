@@ -1,7 +1,4 @@
 import Client, { ClientErrorTypes } from '../../../lib/db/Client'
-import {
-  prependFolderIdPrefix
-} from '../../../lib/db/helpers'
 import PouchDBCore from 'pouchdb-core'
 import PouchDBMemoryAdapter from 'pouchdb-adapter-memory'
 
@@ -23,6 +20,27 @@ async function createClient (shouldInit: boolean = true): Promise<Client> {
 }
 
 describe('Client', () => {
+  describe('getParentPath', () => {
+    it('returns the parent path', async () => {
+      const client = await createClient()
+      expect(client.getParentFolderPath('/test')).toEqual('/')
+      expect(client.getParentFolderPath('/test/test')).toEqual('/test')
+    })
+
+    it('throws when the given path is root path', async () => {
+      const client = await createClient()
+      expect.assertions(1)
+
+      try {
+        client.getParentFolderPath('/')
+      } catch (error) {
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.UnprocessableEntityError
+        })
+      }
+    })
+  })
+
   describe('validateFolderPath', () => {
     it('returns true if the given path is valid', async () => {
       // Given
@@ -98,7 +116,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: ClientErrorTypes.InvalidFolderPathError
+          name: ClientErrorTypes.UnprocessableEntityError
         })
       }
     })
@@ -114,7 +132,7 @@ describe('Client', () => {
 
       // Then
       const db = client.getDb()
-      const rootFolder = await db.get(prependFolderIdPrefix('/'))
+      const rootFolder = await db.get(client.prependFolderIdPrefix('/'))
       expect(rootFolder).toBeDefined()
     })
 
@@ -127,7 +145,7 @@ describe('Client', () => {
 
       // Then
       const db = client.getDb()
-      const rootFolder = await db.get(prependFolderIdPrefix('/'))
+      const rootFolder = await db.get(client.prependFolderIdPrefix('/'))
       expect(rootFolder).toBeDefined()
     })
   })
@@ -215,7 +233,7 @@ describe('Client', () => {
       } catch (error) {
         // Then
         expect(error).toMatchObject({
-          name: ClientErrorTypes.InvalidFolderPathError
+          name: ClientErrorTypes.UnprocessableEntityError
         })
       }
     })
@@ -507,7 +525,6 @@ describe('Client', () => {
       const note = await client.createNote('/', {
         content: 'hello'
       })
-      console.log(note)
 
       // When
       const fetchedNote = await client.getNote(note._id)

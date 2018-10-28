@@ -3,25 +3,19 @@ import {
   NOTE_ID_PREFIX
 } from '../../../lib/consts'
 import * as Types from './dataTypes'
-import {
-  prependFolderIdPrefix,
-  prependNoteIdPrefix,
-  normalizeFolderPath,
-  getParentFolderPath
-} from './helpers'
 import uuid from 'uuid/v1'
 
 export enum ClientErrorTypes {
   NotFoundError = 'NotFoundError',
-  InvalidFolderPathError = 'InvalidFolderPathError'
+  UnprocessableEntityError = 'UnprocessableEntityError'
 }
 
 export class NotFoundError extends Error {
   readonly name: string = ClientErrorTypes.NotFoundError
 }
 
-export class InvalidFolderPathError extends Error {
-  readonly name: string = ClientErrorTypes.InvalidFolderPathError
+export class UnprocessableEntityError extends Error {
+  readonly name: string = ClientErrorTypes.UnprocessableEntityError
 }
 
 export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
@@ -36,6 +30,22 @@ export default class Client {
 
   getDb () {
     return this.db
+  }
+
+  prependFolderIdPrefix (path: string): string {
+    return `${FOLDER_ID_PREFIX}${path}`
+  }
+
+  prependNoteIdPrefix (id: string): string {
+    return `${NOTE_ID_PREFIX}${id}`
+  }
+
+  getParentFolderPath (path: string): string {
+    if (path === '/') throw new UnprocessableEntityError('The given path is root path.')
+    const splitted = path.split('/')
+    splitted.shift()
+    splitted.pop()
+    return '/' + splitted.join('/')
   }
 
   validateFolderPath (input: string): boolean {
@@ -58,11 +68,11 @@ export default class Client {
   }
 
   assertFolderPath (input: string) {
-    if (!this.validateFolderPath(input)) throw new InvalidFolderPathError(`\`${input}\` is not a valid folder path`)
+    if (!this.validateFolderPath(input)) throw new UnprocessableEntityError(`\`${input}\` is not a valid folder path`)
   }
 
   async createRootFolderIfNotExist () {
-    const rootFolderId = prependFolderIdPrefix('/')
+    const rootFolderId = this.prependFolderIdPrefix('/')
     try {
       return await this.db.get<Types.SerializedFolderProps>(rootFolderId)
     } catch (error) {
@@ -96,9 +106,9 @@ export default class Client {
 
   async assertIfParentFolderExists (path: string) {
     if (path === '/') throw new Error('The given path is root path')
-    const parentPath = getParentFolderPath(path)
+    const parentPath = this.getParentFolderPath(path)
     try {
-      await this.db.get(prependFolderIdPrefix(parentPath))
+      await this.db.get(this.prependFolderIdPrefix(parentPath))
     } catch (error) {
       if (error.name === 'not_found') {
         throw new NotFoundError('The parent folder does not exist.')
@@ -121,7 +131,7 @@ export default class Client {
 
     const doc = await this.db.put({
       createdAt: new Date(),
-      _id: prependFolderIdPrefix(path),
+      _id: this.prependFolderIdPrefix(path),
       updatedAt: new Date(),
       ...folder
     })
@@ -134,7 +144,7 @@ export default class Client {
   }
 
   async updateFolder (path: string, folder?: Partial<Types.FolderProps>): Promise<Types.Folder> {
-    path = normalizeFolderPath(path)
+    await this.assertFolderPath(path)
     const prevFolder = await this.getFolder(path)
     if (path !== '/') {
       await this.assertIfParentFolderExists(path)
@@ -146,7 +156,7 @@ export default class Client {
     await this.db.put({
       createdAt: new Date(),
       ...prevFolder,
-      _id: prependFolderIdPrefix(path),
+      _id: this.prependFolderIdPrefix(path),
       updatedAt: new Date(),
       ...folder
     })
@@ -165,7 +175,7 @@ export default class Client {
   async getFolder (path: string): Promise<Types.Folder> {
     let folder: Types.SerializedFolder
     try {
-      folder = await this.db.get<Types.SerializedFolderProps>(prependFolderIdPrefix(path))
+      folder = await this.db.get<Types.SerializedFolderProps>(this.prependFolderIdPrefix(path))
     } catch (error) {
       switch (error.name) {
         case 'not_found':
@@ -180,7 +190,7 @@ export default class Client {
 
   async hasFolder (path: string): Promise<boolean> {
     try {
-      await this.db.get<Types.SerializedFolderProps>(prependFolderIdPrefix(path))
+      await this.db.get<Types.SerializedFolderProps>(this.prependFolderIdPrefix(path))
       return true
     } catch (error) {
       switch (error.name) {
@@ -211,7 +221,7 @@ export default class Client {
   }
 
   async removeFolder (path: string): Promise<void> {
-    const folder = await this.db.get<Types.FolderProps>(prependFolderIdPrefix(path))
+    const folder = await this.db.get<Types.FolderProps>(this.prependFolderIdPrefix(path))
     if (folder != null) await this.db.remove(folder)
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
@@ -225,7 +235,7 @@ export default class Client {
     this.assertFolderPath(path)
     await this.assertIfClientHasFolder(path)
 
-    const id = prependNoteIdPrefix(uuid())
+    const id = this.prependNoteIdPrefix(uuid())
     const props = {
       title: '',
       folder: path,
