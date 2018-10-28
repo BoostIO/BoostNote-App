@@ -344,6 +344,20 @@ export default class Client {
     }
   }
 
+  async hasNote (noteId: string): Promise<boolean> {
+    try {
+      await this.db.get(noteId)
+      return true
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          return false
+        default:
+          throw error
+      }
+    }
+  }
+
   // TODO: Map notes by a folder
   async removeNotesInFolder (path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Types.NoteProps>({

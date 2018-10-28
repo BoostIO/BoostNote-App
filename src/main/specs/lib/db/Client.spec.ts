@@ -669,13 +669,67 @@ describe('Client', () => {
     })
   })
 
-  describe('#removeNote', () => {
-    it('removes a note', async () => {
+  describe('#hasNote', () => {
+    it('returns true if the note exists', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
 
+      // When
+      const result = await client.hasNote(note._id)
+
+      // Then
+      expect(result).toBe(true)
     })
 
-    it('throws if the note does not exist', () => {
+    it('returns false if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
 
+      // When
+      const result = await client.hasNote('wrong id')
+
+      // Then
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('#removeNote', () => {
+    it('removes a note', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
+
+      // When
+      await client.removeNote(note._id)
+
+      // Given
+      expect(await client.hasNote(note._id)).toBe(false)
+    })
+
+    it('throws if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
+
+      // When
+      try {
+        await client.removeNote(note._id)
+      } catch (error) {
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError,
+          message: 'The note does not exist.'
+        })
+      }
     })
   })
 
