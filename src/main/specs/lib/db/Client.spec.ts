@@ -434,19 +434,34 @@ describe('Client', () => {
     })
 
     it('deletes all notes in the folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'yolo'
+      })
 
+      // When
+      await client.removeFolder('/hello')
+
+      // Then
+      expect(await client.hasNote(note._id)).toBe(false)
     })
 
-    it('throws if the folder does not exist', () => {
+    it('throws if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
-    })
-
-    it('throws if the folder has any sub folders', () => {
-
-    })
-
-    it('throws if the folder has any notes', () => {
-
+      // When
+      try {
+        await client.removeFolder('/hello')
+      } catch (error) {
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError,
+          message: 'The folder does not exist.'
+        })
+      }
     })
   })
 
