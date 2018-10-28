@@ -23,6 +23,7 @@ describe('Client', () => {
   describe('getParentPath', () => {
     it('returns the parent path', async () => {
       const client = await createClient()
+
       expect(client.getParentFolderPath('/test')).toEqual('/')
       expect(client.getParentFolderPath('/test/test')).toEqual('/test')
     })
@@ -293,6 +294,7 @@ describe('Client', () => {
     it('throws when the folder does not exist', async () => {
       // Given
       const client = await createClient()
+      expect.assertions(1)
 
       // When
       try {
@@ -635,6 +637,7 @@ describe('Client', () => {
       const client = await createClient()
       await client.createFolder('/hello')
       await client.createFolder('/world')
+      expect.assertions(1)
 
       // When
       try {
@@ -655,6 +658,7 @@ describe('Client', () => {
       const note = await client.createNote('/hello', {
         content: 'hello'
       })
+      expect.assertions(1)
 
       // When
       try {
@@ -717,13 +721,11 @@ describe('Client', () => {
       // Given
       const client = await createClient()
       await client.createFolder('/hello')
-      const note = await client.createNote('/hello', {
-        content: 'hello'
-      })
+      expect.assertions(1)
 
       // When
       try {
-        await client.removeNote(note._id)
+        await client.removeNote('wrong id')
       } catch (error) {
         // Then
         expect(error).toMatchObject({

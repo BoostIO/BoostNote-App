@@ -314,7 +314,9 @@ export default class Client {
 
   async moveNote (noteId: string, nextPath: string): Promise<Types.Note> {
     this.validateFolderPath(nextPath)
-    await this.hasFolder(nextPath)
+    const clientHasFolder = await this.hasFolder(nextPath)
+    if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
+
     let serializedNote: Types.SerializedNote
     try {
       serializedNote = await this.db.get<Types.SerializedNoteProps>(noteId)
@@ -386,9 +388,19 @@ export default class Client {
     }))
   }
 
-  async removeNote (id: string): Promise<void> {
-    const note = await this.getNote(id)
-    if (note != null) await this.db.remove(note)
+  async removeNote (noteId: string): Promise<void> {
+    let note: Types.SerializedNote
+    try {
+      note = await this.db.get<Types.SerializedNoteProps>(noteId)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          throw new NotFoundError('The note does not exist.')
+        default:
+          throw error
+      }
+    }
+    await this.db.remove(note)
   }
 
   isFolder (doc: PouchDB.Core.IdMeta): doc is Types.Folder {
