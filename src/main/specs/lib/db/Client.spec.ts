@@ -725,6 +725,7 @@ describe('Client', () => {
       try {
         await client.removeNote(note._id)
       } catch (error) {
+        // Then
         expect(error).toMatchObject({
           name: ClientErrorTypes.NotFoundError,
           message: 'The note does not exist.'
@@ -733,9 +734,37 @@ describe('Client', () => {
     })
   })
 
-  describe('#removeAllNoteInFolder', () => {
-    it('removes all note', () => {
+  describe('#removeNotesInFolder', () => {
+    it('removes all notes', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
 
+      // When
+      await client.removeNotesInFolder('/hello')
+
+      // Then
+      expect(await client.hasNote(note._id)).toBe(false)
+    })
+
+    it('throws if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.removeNotesInFolder('/hello')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError,
+          message: 'The folder does not exist.'
+        })
+      }
     })
   })
 })

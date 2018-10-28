@@ -221,10 +221,10 @@ export default class Client {
   }
 
   async removeFolder (path: string): Promise<void> {
-    const folder = await this.db.get<Types.FolderProps>(this.prependFolderIdPrefix(path))
-    if (folder != null) await this.db.remove(folder)
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
+    const folder = await this.db.get<Types.FolderProps>(this.prependFolderIdPrefix(path))
+    if (folder != null) await this.db.remove(folder)
   }
 
   async destroyDB (): Promise< void > {
@@ -360,6 +360,9 @@ export default class Client {
 
   // TODO: Map notes by a folder
   async removeNotesInFolder (path: string): Promise<void> {
+    const clientHasFolder = await this.hasFolder(path)
+    if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
+
     const { rows } = await this.db.allDocs<Types.NoteProps>({
       include_docs: true,
       startkey: NOTE_ID_PREFIX,
