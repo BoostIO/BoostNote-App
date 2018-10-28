@@ -560,12 +560,47 @@ describe('Client', () => {
   })
 
   describe('#updateNote', () => {
-    it('updates a note', () => {
+    it('updates a note', async () => {
+      // Given
+      const client = await createClient()
+      const note = await client.createNote('/', {
+        content: 'hello'
+      })
 
+      // When
+      const updatedNote = await client.updateNote(note._id, {
+        content: 'hello, kimmy'
+      })
+
+      // Then
+      expect(updatedNote).toEqual({
+        _id: note._id,
+        _rev: expect.any(String),
+        folder: '/',
+        title: '',
+        tags: [],
+        content: 'hello, kimmy',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
     })
 
-    it('throw if the note does not exist', () => {
+    it('throw if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.updateNote('wrong id', {
+          content: 'yolo'
+        })
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.NotFoundError
+        })
+      }
     })
   })
 

@@ -256,6 +256,36 @@ export default class Client {
     }
   }
 
+  async updateNote (noteId: string, note: Partial<Types.EditableNoteProps>): Promise<Types.Note> {
+    let serializedNote: Types.SerializedNote
+    try {
+      serializedNote = await this.db.get<Types.SerializedNoteProps>(noteId)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          throw new NotFoundError('The note does not exist')
+        default:
+          throw error
+      }
+    }
+
+    const deserializedNote = this.deserializeNote(serializedNote)
+    const props = {
+      ...deserializedNote,
+      ...note,
+      updatedAt: new Date()
+    }
+    const doc = await this.db.put({
+      ...props
+    })
+
+    return {
+      _id: noteId,
+      _rev: doc.rev,
+      ...props
+    }
+  }
+
   deserializeNote (note: Types.SerializedNote): Types.Note {
     return {
       ...note,
