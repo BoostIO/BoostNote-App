@@ -377,17 +377,107 @@ describe('Client', () => {
     })
   })
 
+  describe('#getSubFolderPaths', () => {
+    it('returns sub folder paths', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/hello/kimmy')
+      await client.createFolder('/hello/kimmy/schmidt')
+
+      // When
+      const paths = await client.getSubFolderPaths('/hello')
+
+      // Then
+      expect(paths).toEqual([
+        '/hello/kimmy',
+        '/hello/kimmy/schmidt'
+      ])
+    })
+  })
+
+  describe('#moveNotesInFolder', () => {
+    it('moves all notes in the folder', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
+      await client.createFolder('/world')
+
+      // When
+      await client.moveNotesInFolder('/hello', '/world')
+
+      // Then
+      const movedNote = await client.getNote(note._id)
+      expect(movedNote).toEqual({
+        _id: note._id,
+        _rev: expect.any(String),
+        folder: '/world',
+        title: '',
+        content: 'hello',
+        tags: [],
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
+    })
+  })
+
   describe('#moveFolder', () => {
-    it('moves a folder', () => {
+    it('moves a folder', async () => {
+      // Given
+      const client = await createClient()
+      const originalFolder = await client.createFolder('/hello')
 
+      // When
+      await client.moveFolder('/hello', '/world')
+
+      // Then
+      const movedFolder = await client.getFolder('/world')
+      expect(movedFolder).toEqual({
+        _id: 'boost:folder:/world',
+        _rev: expect.any(String),
+        path: '/world',
+        createdAt: originalFolder.createdAt,
+        updatedAt: expect.any(Date)
+      })
+      expect(await client.hasFolder('/hello')).toBe(false)
+      expect(await client.hasFolder('/world')).toBe(true)
     })
 
-    it('moves its notes', () => {
+    it('moves its notes', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
 
+      // When
+      await client.moveFolder('/hello', '/world')
+
+      // Then
+      const movedNote = await client.getNote(note._id)
+      expect(movedNote).toEqual({
+        ...note,
+        _rev: expect.any(String),
+        folder: '/world'
+      })
     })
 
-    it('moves its sub folders', () => {
+    it('moves its sub folders', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      await client.createFolder('/hello/kimmy')
 
+      // When
+      await client.moveFolder('/hello', '/world')
+
+      // Then
+      const subFolderMoved = await client.hasFolder('/world/kimmy')
+      expect(subFolderMoved).toBe(true)
     })
 
     it('throws if the path is invalid', () => {

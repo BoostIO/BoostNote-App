@@ -6,8 +6,13 @@ import * as Types from './dataTypes'
 import uuid from 'uuid/v1'
 
 export enum ClientErrorTypes {
+  ConflictError = 'ConflictError',
   NotFoundError = 'NotFoundError',
   UnprocessableEntityError = 'UnprocessableEntityError'
+}
+
+export class ConflictError extends Error {
+  readonly name: string = ClientErrorTypes.ConflictError
 }
 
 export class NotFoundError extends Error {
@@ -207,17 +212,83 @@ export default class Client {
     if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
   }
 
-  /**
-   * TODO:
-   * - move notes
-   * - move sub folders
-   */
-  async moveFolder (path: string, nextPath: string) {
-    await this.assertFolderPath(path)
-    await this.assertFolderPath(nextPath)
+  async getSubFolderPaths (path: string): Promise<string[]> {
+    const { rows } = await this.db.allDocs<Types.NoteProps>({
+      startkey: `${FOLDER_ID_PREFIX}${path}/`,
+      endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
+    })
 
-    await this.createFolder(nextPath)
-    await this.removeFolder(path)
+    return rows.map(row => row.id.slice(FOLDER_ID_PREFIX.length))
+  }
+
+  // TODO: Use mapping
+  async getNotesInFolder (path: string): Promise<Types.Note[]> {
+    const { rows } = await this.db.allDocs<Types.NoteProps>({
+      include_docs: true,
+      startkey: NOTE_ID_PREFIX,
+      endkey: `${NOTE_ID_PREFIX}\ufff0`
+    })
+
+    return rows
+      .filter(row => (row.doc as Types.Note).folder === path)
+      .map(row => {
+        const doc = row.doc as Types.Note
+        return {
+          ...doc
+        }
+      })
+  }
+
+  async moveNotesInFolder (path: string, nextPath: string) {
+    const notes = await this.getNotesInFolder(path)
+
+    await Promise.all(notes.map(note => {
+      return this.db.put({
+        ...note,
+        folder: nextPath
+      })
+    }))
+  }
+
+  async moveFolder (path: string, nextPath: string) {
+    this.assertFolderPath(path)
+    this.assertFolderPath(nextPath)
+    const clientHasCurrentFolder = await this.hasFolder(path)
+    if (!clientHasCurrentFolder) throw new NotFoundError('The folder does not exist.')
+    const clientHasNextFolder = await this.hasFolder(nextPath)
+    if (clientHasNextFolder) throw new ConflictError('There is already a folder in the next path.')
+    const parentFolderPathForNextPath = this.getParentFolderPath(nextPath)
+    const clientHasParentFolderForNextFolder = await this.hasFolder(parentFolderPathForNextPath)
+    if (!clientHasParentFolderForNextFolder) throw new NotFoundError('The parent folder of the next path does not exist.')
+
+    const subFolderPaths = await this.getSubFolderPaths(path)
+
+    const client = this
+
+    async function moveFolder (prevPath: string, nextPath: string) {
+      const currentFolder = await client.getFolder(prevPath)
+      const nextFolderProps = {
+        path: nextPath,
+        color: currentFolder.color,
+        createdAt: currentFolder.createdAt,
+        updatedAt: new Date()
+      }
+      await client.db.put<Types.FolderProps>({
+        _id: client.prependFolderIdPrefix(nextPath),
+        ...nextFolderProps
+      })
+
+      await client.moveNotesInFolder(prevPath, nextPath)
+    }
+
+    for (const aPath of [path, ...subFolderPaths]) {
+      await moveFolder(aPath, aPath.replace(path, nextPath))
+    }
+
+    // TODO: Use raw api of pouchdb
+    for (const aPath of [...subFolderPaths.reverse(), path]) {
+      await client.removeFolder(aPath)
+    }
   }
 
   async removeFolder (path: string): Promise<void> {
