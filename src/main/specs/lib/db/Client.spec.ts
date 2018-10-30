@@ -151,6 +151,69 @@ describe('Client', () => {
     })
   })
 
+  describe('#createNoteIndexDesignDocument', () => {
+    it('creates a note index design doc', async () => {
+      // Given
+      const client = await createClient(false)
+
+      // When
+      await client.createNoteIndexDesignDocument()
+
+      // Then
+      const view = await client.getDb().get('_design/note_index')
+      expect(view).toEqual({
+        _id: '_design/note_index',
+        _rev: expect.any(String),
+        views: {
+          by_folder: {
+            map: 'function (doc) { emit(doc.folder) }'
+          }
+        }
+      })
+    })
+
+    it('renew the previous note index design doc if there are any changes', async () => {
+      // Given
+      const client = await createClient(false)
+      await client.getDb().put<any>({
+        _id: '_design/note_index',
+        views: {
+          by_folder: {
+            map: 'function (doc) {}'
+          }
+        }
+      })
+
+      // When
+      await client.createNoteIndexDesignDocument()
+
+      // Then
+      const designDoc = await client.getDb().get('_design/note_index')
+      expect(designDoc).toEqual({
+        _id: '_design/note_index',
+        _rev: expect.any(String),
+        views: {
+          by_folder: {
+            map: 'function (doc) { emit(doc.folder) }'
+          }
+        }
+      })
+    })
+
+    it('does not do anything if there are no changes to the design document', async () => {
+      // Given
+      const client = await createClient()
+      const designDoc = await client.getDb().get('_design/note_index')
+
+      // When
+      await client.createNoteIndexDesignDocument()
+
+      // Then
+      const updatedDoc = await client.getDb().get('_design/note_index')
+      expect(updatedDoc).toEqual(designDoc)
+    })
+  })
+
   describe('#init', () => {
     // TODO: add more test cases
     it('creates a root directory', async () => {

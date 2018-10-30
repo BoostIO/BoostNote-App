@@ -91,7 +91,41 @@ export default class Client {
     }
   }
 
+  async createNoteIndexDesignDocument () {
+    const _id = '_design/note_index'
+    const byFolderMap = 'function (doc) { emit(doc.folder) }'
+    let designDoc
+    let designDocShouldBeRenewed = false
+    try {
+      designDoc = await this.db.get<any>(_id)
+      if (designDoc!.views!.by_folder.map !== byFolderMap) {
+        designDocShouldBeRenewed = true
+      }
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          designDocShouldBeRenewed = true
+          break
+        default:
+          throw error
+      }
+    }
+
+    if (designDocShouldBeRenewed) {
+      await this.db.put<any>({
+        ...designDoc,
+        _id,
+        views: {
+          by_folder: {
+            map: byFolderMap
+          }
+        }
+      })
+    }
+  }
+
   async init () {
+    await this.createNoteIndexDesignDocument()
     await this.createRootFolderIfNotExist()
     const allNotes = await this.db.allDocs<Types.NoteProps>({
       include_docs: true,
@@ -123,7 +157,7 @@ export default class Client {
     }
   }
 
-  async createFolder (path: string, folderProps?: Partial<Types.FolderProps>): Promise<Types.Folder> {
+  async createFolder (path: string, folderProps?: Partial<Types.FolderProps>): Promise < Types.Folder > {
     await this.assertFolderPath(path)
     await this.assertIfParentFolderExists(path)
 
@@ -148,7 +182,7 @@ export default class Client {
     }
   }
 
-  async updateFolder (path: string, folder?: Partial<Types.FolderProps>): Promise<Types.Folder> {
+  async updateFolder (path: string, folder ?: Partial<Types.FolderProps>): Promise < Types.Folder > {
     await this.assertFolderPath(path)
     const prevFolder = await this.getFolder(path)
     if (path !== '/') {
