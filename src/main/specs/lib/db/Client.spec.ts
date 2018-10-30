@@ -1,9 +1,8 @@
 import Client, { ClientErrorTypes } from '../../../lib/db/Client'
-import PouchDBCore from 'pouchdb-core'
-import PouchDBMemoryAdapter from 'pouchdb-adapter-memory'
-
-const PouchDB = PouchDBCore
-  .plugin(PouchDBMemoryAdapter)
+import PouchDB from '../../../lib/db/PouchDB'
+import {
+  FOLDER_ID_PREFIX
+} from '../../../../lib/consts'
 
 let clientCount = 0
 async function createClient (shouldInit: boolean = true): Promise<Client> {
@@ -166,7 +165,7 @@ describe('Client', () => {
         _rev: expect.any(String),
         views: {
           by_folder: {
-            map: 'function (doc) { emit(doc.folder) }'
+            map: `function (doc) { if (!doc._id.startsWith('${FOLDER_ID_PREFIX}')) emit(doc.folder) }`
           }
         }
       })
@@ -194,7 +193,7 @@ describe('Client', () => {
         _rev: expect.any(String),
         views: {
           by_folder: {
-            map: 'function (doc) { emit(doc.folder) }'
+            map: `function (doc) { if (!doc._id.startsWith('${FOLDER_ID_PREFIX}')) emit(doc.folder) }`
           }
         }
       })
@@ -456,6 +455,33 @@ describe('Client', () => {
         '/hello/kimmy',
         '/hello/kimmy/schmidt'
       ])
+    })
+  })
+
+  describe('#getNotesInFolder', () => {
+    it('returns all notes in the folder', async () => {
+
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      const note = await client.createNote('/hello', {
+        content: 'hello'
+      })
+
+      // When
+      const notes = await client.getNotesInFolder('/hello')
+
+      // Then
+      expect(notes).toEqual([{
+        _id: note._id,
+        _rev: expect.any(String),
+        folder: '/hello',
+        title: '',
+        content: 'hello',
+        tags: [],
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      }])
     })
   })
 

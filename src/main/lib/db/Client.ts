@@ -84,7 +84,9 @@ export default class Client {
       if (error.status === 404) {
         return this.db.put({
           _id: rootFolderId,
-          path: '/'
+          path: '/',
+          createdAt: new Date(),
+          updatedAt: new Date()
         })
       }
       throw error
@@ -93,7 +95,7 @@ export default class Client {
 
   async createNoteIndexDesignDocument () {
     const _id = '_design/note_index'
-    const byFolderMap = 'function (doc) { emit(doc.folder) }'
+    const byFolderMap = `function (doc) { if (!doc._id.startsWith('${FOLDER_ID_PREFIX}')) emit(doc.folder) }`
     let designDoc
     let designDocShouldBeRenewed = false
     try {
@@ -255,18 +257,14 @@ export default class Client {
     return rows.map(row => row.id.slice(FOLDER_ID_PREFIX.length))
   }
 
-  // TODO: Use mapping
   async getNotesInFolder (path: string): Promise<Types.Note[]> {
-    const { rows } = await this.db.allDocs<Types.NoteProps>({
-      include_docs: true,
-      startkey: NOTE_ID_PREFIX,
-      endkey: `${NOTE_ID_PREFIX}\ufff0`
+    const { rows } = await this.db.query<Types.SerializedNoteProps>('note_index/by_folder', {
+      include_docs: true
     })
 
     return rows
-      .filter(row => (row.doc as Types.Note).folder === path)
       .map(row => {
-        const doc = row.doc as Types.Note
+        const doc = this.deserializeNote(row.doc as Types.SerializedNote)
         return {
           ...doc
         }
@@ -301,14 +299,16 @@ export default class Client {
     const subFolderPaths = await this.getSubFolderPaths(path)
 
     const client = this
+    const oldFolders: Types.Folder[] = []
 
     async function moveFolder (prevPath: string, nextPath: string) {
-      const currentFolder = await client.getFolder(prevPath)
+      const oldFolder = await client.getFolder(prevPath)
+      oldFolders.push(oldFolder)
       const nextFolderProps = {
         path: nextPath,
-        color: currentFolder.color,
-        createdAt: currentFolder.createdAt,
-        updatedAt: new Date()
+        color: oldFolder.color,
+        createdAt: oldFolder.createdAt,
+        updatedAt: oldFolder.updatedAt
       }
       await client.db.put<Types.FolderProps>({
         _id: client.prependFolderIdPrefix(nextPath),
@@ -322,9 +322,8 @@ export default class Client {
       await moveFolder(aPath, aPath.replace(path, nextPath))
     }
 
-    // TODO: Use raw api of pouchdb
-    for (const aPath of [...subFolderPaths.reverse(), path]) {
-      await client.removeFolder(aPath)
+    for (const oldFolder of oldFolders.reverse()) {
+      await client.db.remove(oldFolder)
     }
   }
 
