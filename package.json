@@ -29,14 +29,7 @@
     "notes",
     "gfm"
   ],
-  "author": "Sarah Seo <sarah.seo.0311@gmail.com>",
-  "contributors": [
-    {
-      "name": "Junyoung Choi",
-      "email": "fluke8259@gmail.com",
-      "url": "http://rokt33r.github.io/"
-    }
-  ],
+  "author": "Junyoung Choi <fluke8259@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/filenamify": "^2.0.1",
