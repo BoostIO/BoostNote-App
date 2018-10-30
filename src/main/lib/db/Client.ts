@@ -433,20 +433,12 @@ export default class Client {
     }
   }
 
-  // TODO: Map notes by a folder
   async removeNotesInFolder (path: string): Promise<void> {
     const clientHasFolder = await this.hasFolder(path)
     if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
 
-    const { rows } = await this.db.allDocs<Types.NoteProps>({
-      include_docs: true,
-      startkey: NOTE_ID_PREFIX,
-      endkey: `${NOTE_ID_PREFIX}\ufff0`
-    })
-
-    const rowsToDelete = rows.filter(row => (row.doc as Types.Note).folder === path)
-
-    await Promise.all(rowsToDelete.map(row => this.db.remove((row.doc as Types.Note))))
+    const notes = await this.getNotesInFolder(path)
+    await Promise.all(notes.map(note => this.db.remove(note)))
   }
 
   async removeSubFolders (path: string): Promise<void> {
