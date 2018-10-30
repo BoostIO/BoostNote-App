@@ -732,8 +732,8 @@ describe('Client', () => {
         title: '',
         tags: [],
         content: 'hello',
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date)
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt
       })
     })
 

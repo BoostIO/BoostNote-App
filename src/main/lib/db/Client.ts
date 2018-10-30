@@ -403,8 +403,7 @@ export default class Client {
     const deserializedNote = this.deserializeNote(serializedNote)
     const props = {
       ...deserializedNote,
-      folder: nextPath,
-      updatedAt: new Date()
+      folder: nextPath
     }
     const doc = await this.db.put({
       ...props
