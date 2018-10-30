@@ -480,20 +480,73 @@ describe('Client', () => {
       expect(subFolderMoved).toBe(true)
     })
 
-    it('throws if the path is invalid', () => {
+    it('throws if the path is invalid', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.moveFolder('hello', '/world')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.UnprocessableEntityError
+        })
+      }
     })
 
-    it('throws if the next path is invalid', () => {
+    it('throws if the next path is invalid', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.moveFolder('/hello', 'world')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.UnprocessableEntityError
+        })
+      }
     })
 
-    it('throws if the path and the next path is same', () => {
+    it('throws if the path and the next path is same', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.moveFolder('/hello', '/hello')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.UnprocessableEntityError,
+          message: 'The path and the next path are same.'
+        })
+      }
     })
 
-    it('throws if the next path is a child path of the current path', () => {
+    it('throws if the next path is a child path of the current path', async () => {
+      // Given
+      const client = await createClient()
+      await client.createFolder('/hello')
+      expect.assertions(1)
 
+      // When
+      try {
+        await client.moveFolder('/hello', '/hello/world')
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.UnprocessableEntityError,
+          message: 'The next path is a child path of the current path.'
+        })
+      }
     })
   })
 

@@ -253,6 +253,9 @@ export default class Client {
   async moveFolder (path: string, nextPath: string) {
     this.assertFolderPath(path)
     this.assertFolderPath(nextPath)
+    if (path === nextPath) throw new UnprocessableEntityError('The path and the next path are same.')
+    const nextPathIsChildPathOfCurrentPath = `${path}/` === nextPath.slice(0, nextPath.length - path.length + 1)
+    if (nextPathIsChildPathOfCurrentPath) throw new UnprocessableEntityError('The next path is a child path of the current path.')
     const clientHasCurrentFolder = await this.hasFolder(path)
     if (!clientHasCurrentFolder) throw new NotFoundError('The folder does not exist.')
     const clientHasNextFolder = await this.hasFolder(nextPath)
