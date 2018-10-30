@@ -1,4 +1,5 @@
 import Client from './Client'
+import PouchDB from './PouchDB'
 
 export interface ClientManagerOptions {
   storage?: Storage
@@ -32,9 +33,10 @@ export default class ClientManager {
   }
 
   async addClient (clientName: string) {
-    const newClient = new Client(clientName, {
+    const db = new PouchDB(clientName, {
       adapter: this.adapter
     })
+    const newClient = new Client(db)
     this.clientMap.set(clientName, newClient)
 
     const clientNameSet = new Set(this.getAllClientNames())
@@ -69,7 +71,7 @@ export default class ClientManager {
   async init () {
     const names = this.getAllClientNames()
     await Promise.all(names.map(name => {
-      this.addClient(name)
+      return this.addClient(name)
     }))
   }
 

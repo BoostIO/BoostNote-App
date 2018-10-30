@@ -41,7 +41,7 @@ describe('ClientManager', () => {
       const client = await manager.addClient('test')
 
       // Then
-      expect(client.name).toEqual('test')
+      expect(client).toBeInstanceOf(Client)
       const names = manager.getAllClientNames()
       expect(names).toEqual(['default', 'test'])
     })
@@ -53,7 +53,7 @@ describe('ClientManager', () => {
 
       const client = manager.getClient('test') as Client
 
-      expect(client.name).toEqual('test')
+      expect(client).toBeInstanceOf(Client)
     })
 
     it('throws an error if the client does not exist', () => {
