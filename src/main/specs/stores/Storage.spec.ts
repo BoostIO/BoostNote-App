@@ -9,16 +9,17 @@ describe('Storage', () => {
 
       // When
       storage.addFolder({
-        _id: 'folder:/test',
+        _id: 'boost:folder:/test',
+        path: '/test',
         createdAt: now,
         updatedAt: now,
         _rev: ''
       })
 
       // Then
-      const data = storage.folderMap.get('folder:/test')
-      expect(data).toEqual({
-        _id: 'folder:/test',
+      const data = storage.folderMap.get('boost:folder:/test')
+      expect(data).toMatchObject({
+        _id: 'boost:folder:/test',
         createdAt: now,
         updatedAt: now,
         _rev: ''
@@ -30,13 +31,15 @@ describe('Storage', () => {
       const storage = new Storage()
       const now = new Date()
       const folder1 = {
-        _id: 'folder:/test',
+        _id: 'boost:folder:/test',
+        path: '/test',
         createdAt: now,
         updatedAt: now,
         _rev: ''
       }
       const folder2 = {
-        _id: 'folder:/test2',
+        _id: 'boost:folder:/test2',
+        path: '/test2',
         createdAt: now,
         updatedAt: now,
         _rev: ''
@@ -46,16 +49,16 @@ describe('Storage', () => {
       storage.addFolder(folder1, folder2)
 
       // Then
-      const data1 = storage.folderMap.get('folder:/test')
-      expect(data1).toEqual({
-        _id: 'folder:/test',
+      const data1 = storage.folderMap.get('boost:folder:/test')
+      expect(data1).toMatchObject({
+        _id: 'boost:folder:/test',
         createdAt: now,
         updatedAt: now,
         _rev: ''
       })
-      const data2 = storage.folderMap.get('folder:/test2')
-      expect(data2).toEqual({
-        _id: 'folder:/test2',
+      const data2 = storage.folderMap.get('boost:folder:/test2')
+      expect(data2).toMatchObject({
+        _id: 'boost:folder:/test2',
         createdAt: now,
         updatedAt: now,
         _rev: ''

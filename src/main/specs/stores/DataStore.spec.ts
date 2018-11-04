@@ -31,11 +31,8 @@ describe('DataStore', () => {
     it('sets notes and folders to the storage instance', async () => {
       const manager = await createMockClientManager()
       const client = await manager.addClient('test')
-      await client.putNote('test-note', {
-        title: 'test',
-        content: 'test',
-        folder: '/',
-        tags: []
+      const note = await client.createNote('/', {
+        content: 'test'
       })
       const data = new DataStore({
         manager
@@ -44,16 +41,15 @@ describe('DataStore', () => {
       await data.init()
 
       expect(data.storageMap.get('test')).not.toBeUndefined()
-      expect((data.storageMap.get('test') as Storage).noteMap.get('boost:note:test-note')).toMatchObject({
-        _id: 'boost:note:test-note',
-        title: 'test',
+      expect((data.storageMap.get('test') as Storage).noteMap.get(note._id)).toMatchObject({
         content: 'test'
       })
     })
   })
 
-  describe('putNote', () => {
-    it('sets a note', async () => {
+  describe('createNote', () => {
+    it('creates a note', async () => {
+      // Given
       const manager = await createMockClientManager()
       await manager.addClient('test')
       const data = new DataStore({
@@ -61,31 +57,33 @@ describe('DataStore', () => {
       })
       await data.init()
 
-      await data.putNote('test', 'test-note', {
-        title: 'test',
+      // When
+      const note = await data.createNote('test', '/', {
         content: 'test'
       })
 
       expect(data.storageMap.get('test')).not.toBeUndefined()
-      expect((data.storageMap.get('test') as Storage).noteMap.get('boost:note:test-note')).toMatchObject({
-        _id: 'boost:note:test-note',
-        title: 'test',
+      expect((data.storageMap.get('test') as Storage).noteMap.get(note._id)).toMatchObject({
         content: 'test'
       })
     })
   })
 
-  describe('putFolder', () => {
+  describe('updateFolder', () => {
     it('sets a folder', async () => {
+      // Given
       const manager = await createMockClientManager()
       await manager.addClient('test')
       const data = new DataStore({
         manager
       })
       await data.init()
+      await data.createFolder('test', '/test', {})
 
-      await data.putFolder('test', '/test', {})
+      // When
+      await data.updateFolder('test', '/test', {})
 
+      // THen
       expect(data.storageMap.get('test')).not.toBeUndefined()
       expect((data.storageMap.get('test') as Storage).folderMap.get('boost:folder:/test')).toMatchObject({
         _id: 'boost:folder:/test'

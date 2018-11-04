@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx'
 import ClientManager from '../lib/db/ClientManager'
 import Storage from './Storage'
-import { NoteDocument, FolderDocument } from '../lib/db/dataTypes'
+import * as Types from '../lib/db/dataTypes'
 
 export interface DataStoreOptions {
   manager?: ClientManager
@@ -45,26 +45,48 @@ export default class DataStore {
     return storage
   }
 
-  async putNote (name: string, id: string, note: Partial<NoteDocument>): Promise<NoteDocument> {
+  async createFolder (name: string, path: string, folder: Types.EditableFolderProps): Promise<Types.Folder> {
     const client = this.manager.getClient(name)
-    const updatedNote = await client.putNote(id, note)
+    const createdFolder = await client.createFolder(path, folder)
 
     this.assertStorageExists(name)
     const storage = this.storageMap.get(name) as Storage
-    storage.addNote(updatedNote)
+    storage.addFolder(createdFolder)
 
-    return updatedNote
+    return createdFolder
   }
 
-  async putFolder (name: string, id: string, folder: Partial<FolderDocument>): Promise<FolderDocument> {
+  async updateFolder (name: string, path: string, folder: Partial<Types.EditableFolderProps>): Promise<Types.Folder> {
     const client = this.manager.getClient(name)
-    const updatedFolder = await client.putFolder(id, folder)
+    const updatedFolder = await client.updateFolder(path, folder)
 
     this.assertStorageExists(name)
     const storage = this.storageMap.get(name) as Storage
     storage.addFolder(updatedFolder)
 
     return updatedFolder
+  }
+
+  async createNote (name: string, path: string, note: Types.EditableNoteProps): Promise<Types.Note> {
+    const client = this.manager.getClient(name)
+    const createdNote = await client.createNote(path, note)
+
+    this.assertStorageExists(name)
+    const storage = this.storageMap.get(name) as Storage
+    storage.addNote(createdNote)
+
+    return createdNote
+  }
+
+  async updateNote (name: string, id: string, note: Partial<Types.EditableNoteProps>): Promise<Types.Note> {
+    const client = this.manager.getClient(name)
+    const updatedNote = await client.updateNote(id, note)
+
+    this.assertStorageExists(name)
+    const storage = this.storageMap.get(name) as Storage
+    storage.addNote(updatedNote)
+
+    return updatedNote
   }
 
   assertStorageExists (name: string) {
