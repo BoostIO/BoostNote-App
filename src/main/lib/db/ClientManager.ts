@@ -14,9 +14,10 @@ const BOOST_DB_NAMES = 'BOOST_DB_NAMES'
 const defaultDBNames = ['default']
 
 export default class ClientManager {
-  private storage: Storage
+  private storage: Storage = localStorage
   private clientMap: Map<string, Client>
   private adapter: 'memory' | 'indexeddb'
+   = 'indexeddb'
 
   constructor (options?: ClientManagerOptions) {
     options = {

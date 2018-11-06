@@ -4,7 +4,7 @@
     "src/**/*.tsx"
   ],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "target": "esnext",
     "downlevelIteration": true,
     "importHelpers": true,
@@ -30,6 +30,7 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "esModuleInterop": true
   }
 }

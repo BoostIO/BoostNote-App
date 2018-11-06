@@ -259,6 +259,7 @@ export default class Client {
 
   async getNotesInFolder (path: string): Promise<Types.Note[]> {
     const { rows } = await this.db.query<Types.SerializedNoteProps>('note_index/by_folder', {
+      key: path,
       include_docs: true
     })
 
@@ -346,7 +347,7 @@ export default class Client {
     const props = {
       title: '',
       folder: path,
-      tags: [],
+      tags: [] as string[],
       content: note.content,
       createdAt: new Date(),
       updatedAt: new Date()
