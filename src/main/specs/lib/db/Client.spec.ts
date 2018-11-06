@@ -459,13 +459,15 @@ describe('Client', () => {
   })
 
   describe('#getNotesInFolder', () => {
-    it('returns all notes in the folder', async () => {
-
+    it('returns all notes in the folder only', async () => {
       // Given
       const client = await createClient()
       await client.createFolder('/hello')
       const note = await client.createNote('/hello', {
         content: 'hello'
+      })
+      await client.createNote('/', {
+        content: 'another note'
       })
 
       // When
