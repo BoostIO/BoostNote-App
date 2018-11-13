@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import DataStore from './stores/DataStore'
 
 type SideNavigatorProps = {
@@ -7,18 +7,19 @@ type SideNavigatorProps = {
 }
 
 @inject('data')
+@observer
 export default class SideNavigator extends React.Component<SideNavigatorProps> {
   render () {
     const storageEntries = [...this.props.data.storageMap.entries()]
-    return <div>SideNav
+    return <nav>SideNav
       <ul>
         {storageEntries.map(([name]) => (
-          <li>{name}</li>
+          <li key={name}>{name}</li>
         ))}
       </ul>
       {storageEntries.length === 0 &&
         <p>No storages</p>
       }
-    </div>
+    </nav>
   }
 }
