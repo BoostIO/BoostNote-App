@@ -21,6 +21,7 @@ export default class DataStore {
   }
 
   async init () {
+    await this.manager.init()
     const clientNames = this.manager.getAllClientNames()
     await Promise.all(
       clientNames.map(async name => {
