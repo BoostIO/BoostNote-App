@@ -3,11 +3,11 @@ import PouchDB from './PouchDB'
 
 export interface ClientManagerOptions {
   storage?: Storage
-  adapter?: 'memory' | 'indexeddb'
+  adapter?: 'memory' | 'idb'
 }
 
 const defaultOptions: ClientManagerOptions = {
-  adapter: 'indexeddb'
+  adapter: 'idb'
 }
 
 const BOOST_DB_NAMES = 'BOOST_DB_NAMES'
@@ -16,8 +16,8 @@ const defaultDBNames = ['default']
 export default class ClientManager {
   private storage: Storage = localStorage
   private clientMap: Map<string, Client>
-  private adapter: 'memory' | 'indexeddb'
-   = 'indexeddb'
+  private adapter: 'memory' | 'idb'
+   = 'idb'
 
   constructor (options?: ClientManagerOptions) {
     options = {
