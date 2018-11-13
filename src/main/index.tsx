@@ -4,12 +4,21 @@ import { Provider } from 'mobx-react'
 import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import DataStore from './stores/DataStore'
+import AppStore from './stores/AppStore'
 
 const data = new DataStore()
+const app = new AppStore({
+  data
+})
+
+const providerProps = {
+  data,
+  app
+}
 
 function render (Component: typeof App) {
   ReactDOM.render(
-      <Provider data={data}>
+      <Provider {...providerProps}>
         <BrowserRouter>
           <Component />
         </BrowserRouter>
