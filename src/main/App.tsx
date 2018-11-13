@@ -1,6 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
+import { inject, observer } from 'mobx-react'
+import AppStore from './stores/AppStore'
 
 const Root = styled.div`
   display: flex;
@@ -15,15 +17,36 @@ const Root = styled.div`
   }
 `
 
-class App extends React.Component {
+type AppProps = {
+  app?: AppStore
+}
+
+@inject('app')
+@observer
+class App extends React.Component<AppProps> {
+  componentDidMount () {
+    const app = this.props.app!
+    if (!app.dataIsInitialized) {
+      app.initializeData()
+    }
+  }
+
   render () {
+    const app = this.props.app!
     return (
       <Root>
-        <div className='nav'>
-          <SideNavigator/>
-        </div>
-        <div className='panel'>Note List</div>
-        <div className='panel'>Note Detail</div>
+        {app.dataIsInitialized
+          ? <>
+            <div className='nav'>
+                <SideNavigator/>
+            </div>
+            <div className='panel'>Note List</div>
+            <div className='panel'>Note Detail</div>
+          </>
+          : <div>
+            Loading data
+          </div>
+        }
       </Root>
     )
   }
