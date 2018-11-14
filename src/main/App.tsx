@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
 import { inject, observer } from 'mobx-react'
