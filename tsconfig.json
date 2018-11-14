@@ -1,8 +1,5 @@
 {
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "target": "esnext",
@@ -14,13 +11,7 @@
     "jsx": "react",
     "allowJs": false,
     "checkJs": false,
-    "lib": [
-      "dom",
-      "es2015",
-      "es2016",
-      "es2017",
-      "esnext"
-    ],
+    "lib": ["dom", "es2015", "es2016", "es2017", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
@@ -29,7 +20,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true
   }
