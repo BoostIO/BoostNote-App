@@ -1,6 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DataStore from '../stores/DataStore'
+import StorageItem from './StorageItem'
 
 type SideNavigatorProps = {
   data?: DataStore
@@ -22,23 +23,33 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
 
   addStorage = async () => {
     const { newStorageName } = this.state
+    const { data } = this.props
 
-    const dataStore = this.props.data as DataStore
-
-    await dataStore.createStorage(newStorageName)
+    await data!.createStorage(newStorageName)
     this.setState({
       newStorageName: ''
     })
   }
 
+  removeStorage = async (storageName: string) => {
+    const { data } = this.props
+    await data!.removeStorage(storageName)
+  }
+
   render() {
-    const storageEntries = [...this.props.data!.storageMap.entries()]
+    const { data } = this.props
+    const storageEntries = [...data!.storageMap.entries()]
     return (
       <nav>
         <div>SideNav</div>
         <ul>
-          {storageEntries.map(([name]) => (
-            <li key={name}>{name}</li>
+          {storageEntries.map(([name, storage]) => (
+            <StorageItem
+              key={name}
+              name={name}
+              storage={storage}
+              removeStorage={this.removeStorage}
+            />
           ))}
         </ul>
         {storageEntries.length === 0 && <p>No storages</p>}
