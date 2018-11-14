@@ -25,7 +25,7 @@ export default class DataStore {
     await Promise.all(
       clientNames.map(async name => {
         const storage = await this.initStorage(name)
-        this.addStorage(name, storage)
+        this.addStorageToMap(name, storage)
       })
     )
   }
@@ -51,7 +51,13 @@ export default class DataStore {
     storage.addNote(...notes)
     storage.addFolder(...folders)
 
-    this.addStorage(name, storage)
+    this.addStorageToMap(name, storage)
+  }
+
+  async removeStorage(name: string) {
+    await this.manager.removeClient(name)
+
+    this.removeStorageFromMap(name)
   }
 
   async createFolder(
@@ -121,7 +127,12 @@ export default class DataStore {
   }
 
   @action
-  addStorage(name: string, storage: Storage) {
+  addStorageToMap(name: string, storage: Storage) {
     this.storageMap.set(name, storage)
+  }
+
+  @action
+  removeStorageFromMap(name: string) {
+    this.storageMap.delete(name)
   }
 }

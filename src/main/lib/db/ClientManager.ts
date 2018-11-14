@@ -86,7 +86,10 @@ export default class ClientManager {
     )
   }
 
-  removeClient(clientName: string) {
+  async removeClient(clientName: string) {
+    const client = this.getClient(name)
+    await client.destroyDB()
+
     const clientNameSet = new Set(this.getAllClientNames())
     clientNameSet.delete(clientName)
     this.setAllClientNames(clientNameSet)
