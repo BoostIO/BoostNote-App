@@ -12,17 +12,17 @@ const app = new AppStore({
 })
 
 const providerProps = {
-  data,
-  app
+  app,
+  data
 }
 
-function render (Component: typeof App) {
+function render(Component: typeof App) {
   ReactDOM.render(
-      <Provider {...providerProps}>
-        <BrowserRouter>
-          <Component />
-        </BrowserRouter>
-      </Provider>,
+    <Provider {...providerProps}>
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
   )
 }

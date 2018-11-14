@@ -12,15 +12,14 @@ export default class DataStore {
   @observable storageMap: Map<string, Storage>
   errors: Error[]
 
-  constructor (options: DataStoreOptions = {}) {
-    this.manager = options.manager == null
-      ? new ClientManager()
-      : options.manager
+  constructor(options: DataStoreOptions = {}) {
+    this.manager =
+      options.manager == null ? new ClientManager() : options.manager
     this.storageMap = new Map()
     this.errors = []
   }
 
-  async init () {
+  async init() {
     await this.manager.init()
     const clientNames = this.manager.getAllClientNames()
     await Promise.all(
@@ -31,13 +30,10 @@ export default class DataStore {
     )
   }
 
-  async initStorage (name: string): Promise<Storage> {
+  async initStorage(name: string): Promise<Storage> {
     const client = this.manager.getClient(name)
 
-    const {
-      folders,
-      notes
-    } = await client.getAllData()
+    const { folders, notes } = await client.getAllData()
 
     const storage = new Storage()
     storage.addNote(...notes)
@@ -46,7 +42,17 @@ export default class DataStore {
     return storage
   }
 
-  async createFolder (name: string, path: string, folder: Types.EditableFolderProps): Promise<Types.Folder> {
+  async createStorage(name: string) {
+    await this.manager.addClient(name)
+
+    this.addStorage(name, new Storage())
+  }
+
+  async createFolder(
+    name: string,
+    path: string,
+    folder: Types.EditableFolderProps
+  ): Promise<Types.Folder> {
     const client = this.manager.getClient(name)
     const createdFolder = await client.createFolder(path, folder)
 
@@ -57,7 +63,11 @@ export default class DataStore {
     return createdFolder
   }
 
-  async updateFolder (name: string, path: string, folder: Partial<Types.EditableFolderProps>): Promise<Types.Folder> {
+  async updateFolder(
+    name: string,
+    path: string,
+    folder: Partial<Types.EditableFolderProps>
+  ): Promise<Types.Folder> {
     const client = this.manager.getClient(name)
     const updatedFolder = await client.updateFolder(path, folder)
 
@@ -68,7 +78,11 @@ export default class DataStore {
     return updatedFolder
   }
 
-  async createNote (name: string, path: string, note: Types.EditableNoteProps): Promise<Types.Note> {
+  async createNote(
+    name: string,
+    path: string,
+    note: Types.EditableNoteProps
+  ): Promise<Types.Note> {
     const client = this.manager.getClient(name)
     const createdNote = await client.createNote(path, note)
 
@@ -79,7 +93,11 @@ export default class DataStore {
     return createdNote
   }
 
-  async updateNote (name: string, id: string, note: Partial<Types.EditableNoteProps>): Promise<Types.Note> {
+  async updateNote(
+    name: string,
+    id: string,
+    note: Partial<Types.EditableNoteProps>
+  ): Promise<Types.Note> {
     const client = this.manager.getClient(name)
     const updatedNote = await client.updateNote(id, note)
 
@@ -90,11 +108,14 @@ export default class DataStore {
     return updatedNote
   }
 
-  assertStorageExists (name: string) {
-    if (!this.storageMap.has(name)) throw new Error('The storage does not exist in DataStore')
+  assertStorageExists(name: string) {
+    if (!this.storageMap.has(name)) {
+      throw new Error('The storage does not exist in DataStore')
+    }
   }
 
-  @action addStorage (name: string, storage: Storage) {
+  @action
+  addStorage(name: string, storage: Storage) {
     this.storageMap.set(name, storage)
   }
 }

@@ -1,13 +1,18 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
 
+export enum DBAdapter {
+  memory = 'memory',
+  idb = 'idb'
+}
+
 export interface ClientManagerOptions {
   storage?: Storage
-  adapter?: 'memory' | 'idb'
+  adapter?: DBAdapter
 }
 
 const defaultOptions: ClientManagerOptions = {
-  adapter: 'idb'
+  adapter: DBAdapter.idb
 }
 
 const BOOST_DB_NAMES = 'BOOST_DB_NAMES'
@@ -16,10 +21,9 @@ const defaultDBNames = ['default']
 export default class ClientManager {
   private storage: Storage = localStorage
   private clientMap: Map<string, Client>
-  private adapter: 'memory' | 'idb'
-   = 'idb'
+  private adapter: DBAdapter = DBAdapter.idb
 
-  constructor (options?: ClientManagerOptions) {
+  constructor(options?: ClientManagerOptions) {
     options = {
       ...defaultOptions,
       ...options
@@ -33,7 +37,7 @@ export default class ClientManager {
     this.clientMap = new Map()
   }
 
-  async addClient (clientName: string) {
+  async addClient(clientName: string) {
     const db = new PouchDB(clientName, {
       adapter: this.adapter
     })
@@ -49,34 +53,40 @@ export default class ClientManager {
     return newClient
   }
 
-  getClient (clientName: string): Client {
-    if (!this.clientMap.has(clientName)) throw new Error(`The client, "${clientName}", is not added yet.`)
+  getClient(clientName: string): Client {
+    if (!this.clientMap.has(clientName)) {
+      throw new Error(`The client, "${clientName}", is not added yet.`)
+    }
     return this.clientMap.get(clientName) as Client
   }
 
-  getAllClientNames () {
+  getAllClientNames() {
     try {
       const rawData = this.storage.getItem(BOOST_DB_NAMES)
-      if (rawData == null) return defaultDBNames
+      if (rawData == null) {
+        return defaultDBNames
+      }
       return [...JSON.parse(rawData)].filter(key => typeof key === 'string')
     } catch (error) {
       return defaultDBNames
     }
   }
 
-  setAllClientNames (names: string[] | Set<string>) {
+  setAllClientNames(names: string[] | Set<string>) {
     names = [...names]
     this.storage.setItem(BOOST_DB_NAMES, JSON.stringify(names))
   }
 
-  async init () {
+  async init() {
     const names = this.getAllClientNames()
-    await Promise.all(names.map(name => {
-      return this.addClient(name)
-    }))
+    await Promise.all(
+      names.map(name => {
+        return this.addClient(name)
+      })
+    )
   }
 
-  removeClient (clientName: string) {
+  removeClient(clientName: string) {
     const clientNameSet = new Set(this.getAllClientNames())
     clientNameSet.delete(clientName)
     this.setAllClientNames(clientNameSet)

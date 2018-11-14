@@ -7,7 +7,7 @@ import AppStore from './stores/AppStore'
 const Root = styled.div`
   display: flex;
   .nav {
-    width: 100px
+    width: 100px;
   }
   .list {
     width: 100px;
@@ -24,29 +24,28 @@ type AppProps = {
 @inject('app')
 @observer
 class App extends React.Component<AppProps> {
-  componentDidMount () {
+  componentDidMount() {
     const app = this.props.app!
     if (!app.dataIsInitialized) {
       app.initializeData()
     }
   }
 
-  render () {
+  render() {
     const app = this.props.app!
     return (
       <Root>
-        {app.dataIsInitialized
-          ? <>
-            <div className='nav'>
-                <SideNavigator/>
+        {app.dataIsInitialized ? (
+          <>
+            <div className="nav">
+              <SideNavigator />
             </div>
-            <div className='panel'>Note List</div>
-            <div className='panel'>Note Detail</div>
+            <div className="panel">Note List</div>
+            <div className="panel">Note Detail</div>
           </>
-          : <div>
-            Loading data
-          </div>
-        }
+        ) : (
+          <div>Loading data</div>
+        )}
       </Root>
     )
   }

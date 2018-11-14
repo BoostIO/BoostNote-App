@@ -41,7 +41,9 @@ describe('DataStore', () => {
       await data.init()
 
       expect(data.storageMap.get('test')).not.toBeUndefined()
-      expect((data.storageMap.get('test') as Storage).noteMap.get(note._id)).toMatchObject({
+      expect(
+        (data.storageMap.get('test') as Storage).noteMap.get(note._id)
+      ).toMatchObject({
         content: 'test'
       })
     })
@@ -63,7 +65,9 @@ describe('DataStore', () => {
       })
 
       expect(data.storageMap.get('test')).not.toBeUndefined()
-      expect((data.storageMap.get('test') as Storage).noteMap.get(note._id)).toMatchObject({
+      expect(
+        (data.storageMap.get('test') as Storage).noteMap.get(note._id)
+      ).toMatchObject({
         content: 'test'
       })
     })
@@ -85,7 +89,11 @@ describe('DataStore', () => {
 
       // THen
       expect(data.storageMap.get('test')).not.toBeUndefined()
-      expect((data.storageMap.get('test') as Storage).folderMap.get('boost:folder:/test')).toMatchObject({
+      expect(
+        (data.storageMap.get('test') as Storage).folderMap.get(
+          'boost:folder:/test'
+        )
+      ).toMatchObject({
         _id: 'boost:folder:/test'
       })
     })

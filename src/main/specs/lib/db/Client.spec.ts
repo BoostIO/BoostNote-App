@@ -1,11 +1,9 @@
 import Client, { ClientErrorTypes } from '../../../lib/db/Client'
 import PouchDB from '../../../lib/db/PouchDB'
-import {
-  FOLDER_ID_PREFIX
-} from '../../../../lib/consts'
+import { FOLDER_ID_PREFIX } from '../../../../lib/consts'
 
 let clientCount = 0
-async function createClient (shouldInit: boolean = true): Promise<Client> {
+async function createClient(shouldInit: boolean = true): Promise<Client> {
   const db = new PouchDB(`dummy${++clientCount}`, {
     adapter: 'memory'
   })
@@ -409,15 +407,19 @@ describe('Client', () => {
       })
 
       // Then
-      expect(updatedFolder).toEqual(expect.objectContaining({
-        path: '/hello',
-        color: 'blue'
-      }))
+      expect(updatedFolder).toEqual(
+        expect.objectContaining({
+          path: '/hello',
+          color: 'blue'
+        })
+      )
       const folder = await client.getFolder('/hello')
-      expect(folder).toEqual(expect.objectContaining({
-        path: '/hello',
-        color: 'blue'
-      }))
+      expect(folder).toEqual(
+        expect.objectContaining({
+          path: '/hello',
+          color: 'blue'
+        })
+      )
     })
 
     it('throws when the folder does not exist', async () => {
@@ -432,9 +434,11 @@ describe('Client', () => {
         })
       } catch (error) {
         // Then
-        expect(error).toEqual(expect.objectContaining({
-          name: ClientErrorTypes.NotFoundError
-        }))
+        expect(error).toEqual(
+          expect.objectContaining({
+            name: ClientErrorTypes.NotFoundError
+          })
+        )
       }
     })
   })
@@ -451,10 +455,7 @@ describe('Client', () => {
       const paths = await client.getSubFolderPaths('/hello')
 
       // Then
-      expect(paths).toEqual([
-        '/hello/kimmy',
-        '/hello/kimmy/schmidt'
-      ])
+      expect(paths).toEqual(['/hello/kimmy', '/hello/kimmy/schmidt'])
     })
   })
 
@@ -474,16 +475,18 @@ describe('Client', () => {
       const notes = await client.getNotesInFolder('/hello')
 
       // Then
-      expect(notes).toEqual([{
-        _id: note._id,
-        _rev: expect.any(String),
-        folder: '/hello',
-        title: '',
-        content: 'hello',
-        tags: [],
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date)
-      }])
+      expect(notes).toEqual([
+        {
+          _id: note._id,
+          _rev: expect.any(String),
+          folder: '/hello',
+          title: '',
+          content: 'hello',
+          tags: [],
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date)
+        }
+      ])
     })
   })
 
@@ -762,9 +765,11 @@ describe('Client', () => {
           content: 'hello'
         })
       } catch (error) {
-        expect(error).toEqual(expect.objectContaining({
-          name: ClientErrorTypes.NotFoundError
-        }))
+        expect(error).toEqual(
+          expect.objectContaining({
+            name: ClientErrorTypes.NotFoundError
+          })
+        )
       }
     })
   })

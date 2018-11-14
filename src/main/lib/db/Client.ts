@@ -1,7 +1,4 @@
-import {
-  FOLDER_ID_PREFIX,
-  NOTE_ID_PREFIX
-} from '../../../lib/consts'
+import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../../../lib/consts'
 import * as Types from './dataTypes'
 import uuid from 'uuid/v1'
 
@@ -28,32 +25,31 @@ export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
 export default class Client {
   public initialized: boolean
 
-  constructor (
-    private db: PouchDB.Database
-  ) {
-  }
+  constructor(private db: PouchDB.Database) {}
 
-  getDb () {
+  getDb() {
     return this.db
   }
 
-  prependFolderIdPrefix (path: string): string {
+  prependFolderIdPrefix(path: string): string {
     return `${FOLDER_ID_PREFIX}${path}`
   }
 
-  prependNoteIdPrefix (id: string): string {
+  prependNoteIdPrefix(id: string): string {
     return `${NOTE_ID_PREFIX}${id}`
   }
 
-  getParentFolderPath (path: string): string {
-    if (path === '/') throw new UnprocessableEntityError('The given path is root path.')
+  getParentFolderPath(path: string): string {
+    if (path === '/') {
+      throw new UnprocessableEntityError('The given path is root path.')
+    }
     const splitted = path.split('/')
     splitted.shift()
     splitted.pop()
     return '/' + splitted.join('/')
   }
 
-  validateFolderPath (input: string): boolean {
+  validateFolderPath(input: string): boolean {
     if (input.length === 0) return false
     if (input === '/') return true
 
@@ -72,11 +68,14 @@ export default class Client {
     return true
   }
 
-  assertFolderPath (input: string) {
-    if (!this.validateFolderPath(input)) throw new UnprocessableEntityError(`\`${input}\` is not a valid folder path.`)
+  assertFolderPath(input: string) {
+    if (!this.validateFolderPath(input))
+      throw new UnprocessableEntityError(
+        `\`${input}\` is not a valid folder path.`
+      )
   }
 
-  async createRootFolderIfNotExist () {
+  async createRootFolderIfNotExist() {
     const rootFolderId = this.prependFolderIdPrefix('/')
     try {
       return await this.db.get<Types.SerializedFolderProps>(rootFolderId)
@@ -93,7 +92,7 @@ export default class Client {
     }
   }
 
-  async createNoteIndexDesignDocument () {
+  async createNoteIndexDesignDocument() {
     const _id = '_design/note_index'
     const byFolderMap = `function (doc) { if (!doc._id.startsWith('${FOLDER_ID_PREFIX}')) emit(doc.folder) }`
     let designDoc
@@ -126,7 +125,7 @@ export default class Client {
     }
   }
 
-  async init () {
+  async init() {
     await this.createNoteIndexDesignDocument()
     await this.createRootFolderIfNotExist()
     const allNotes = await this.db.allDocs<Types.NoteProps>({
@@ -140,13 +139,16 @@ export default class Client {
       return set
     }, new Set())
 
-    await Promise.all([...folderSet].map(async folderPath => {
-      return this.updateFolder(folderPath)
-    }))
+    await Promise.all(
+      [...folderSet].map(async folderPath => {
+        return this.updateFolder(folderPath)
+      })
+    )
   }
 
-  async assertIfParentFolderExists (path: string) {
-    if (path === '/') throw new UnprocessableEntityError('The given path is a root path.')
+  async assertIfParentFolderExists(path: string) {
+    if (path === '/')
+      throw new UnprocessableEntityError('The given path is a root path.')
     const parentPath = this.getParentFolderPath(path)
     try {
       await this.db.get(this.prependFolderIdPrefix(parentPath))
@@ -159,7 +161,10 @@ export default class Client {
     }
   }
 
-  async createFolder (path: string, folderProps?: Partial<Types.FolderProps>): Promise < Types.Folder > {
+  async createFolder(
+    path: string,
+    folderProps?: Partial<Types.FolderProps>
+  ): Promise<Types.Folder> {
     await this.assertFolderPath(path)
     await this.assertIfParentFolderExists(path)
 
@@ -184,7 +189,10 @@ export default class Client {
     }
   }
 
-  async updateFolder (path: string, folder ?: Partial<Types.FolderProps>): Promise < Types.Folder > {
+  async updateFolder(
+    path: string,
+    folder?: Partial<Types.FolderProps>
+  ): Promise<Types.Folder> {
     await this.assertFolderPath(path)
     const prevFolder = await this.getFolder(path)
     if (path !== '/') {
@@ -205,7 +213,7 @@ export default class Client {
     return this.getFolder(path) as Promise<Types.Folder>
   }
 
-  deserializeFolder (folder: Types.SerializedFolder): Types.Folder {
+  deserializeFolder(folder: Types.SerializedFolder): Types.Folder {
     return {
       ...folder,
       createdAt: new Date(folder.createdAt),
@@ -213,10 +221,12 @@ export default class Client {
     }
   }
 
-  async getFolder (path: string): Promise<Types.Folder> {
+  async getFolder(path: string): Promise<Types.Folder> {
     let folder: Types.SerializedFolder
     try {
-      folder = await this.db.get<Types.SerializedFolderProps>(this.prependFolderIdPrefix(path))
+      folder = await this.db.get<Types.SerializedFolderProps>(
+        this.prependFolderIdPrefix(path)
+      )
     } catch (error) {
       switch (error.name) {
         case 'not_found':
@@ -229,9 +239,11 @@ export default class Client {
     return this.deserializeFolder(folder)
   }
 
-  async hasFolder (path: string): Promise<boolean> {
+  async hasFolder(path: string): Promise<boolean> {
     try {
-      await this.db.get<Types.SerializedFolderProps>(this.prependFolderIdPrefix(path))
+      await this.db.get<Types.SerializedFolderProps>(
+        this.prependFolderIdPrefix(path)
+      )
       return true
     } catch (error) {
       switch (error.name) {
@@ -243,12 +255,12 @@ export default class Client {
     }
   }
 
-  async assertIfClientHasFolder (path: string): Promise<void> {
+  async assertIfClientHasFolder(path: string): Promise<void> {
     const clientHasFolder = await this.hasFolder(path)
     if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
   }
 
-  async getSubFolderPaths (path: string): Promise<string[]> {
+  async getSubFolderPaths(path: string): Promise<string[]> {
     const { rows } = await this.db.allDocs<Types.NoteProps>({
       startkey: `${FOLDER_ID_PREFIX}${path}/`,
       endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
@@ -257,70 +269,87 @@ export default class Client {
     return rows.map(row => row.id.slice(FOLDER_ID_PREFIX.length))
   }
 
-  async getNotesInFolder (path: string): Promise<Types.Note[]> {
-    const { rows } = await this.db.query<Types.SerializedNoteProps>('note_index/by_folder', {
-      key: path,
-      include_docs: true
-    })
+  async getNotesInFolder(path: string): Promise<Types.Note[]> {
+    const { rows } = await this.db.query<Types.SerializedNoteProps>(
+      'note_index/by_folder',
+      {
+        key: path,
+        include_docs: true
+      }
+    )
 
-    return rows
-      .map(row => {
-        const doc = this.deserializeNote(row.doc as Types.SerializedNote)
-        return {
-          ...doc
-        }
-      })
+    return rows.map(row => {
+      const doc = this.deserializeNote(row.doc as Types.SerializedNote)
+      return {
+        ...doc
+      }
+    })
   }
 
-  async moveNotesInFolder (path: string, nextPath: string) {
+  async moveNotesInFolder(path: string, nextPath: string) {
     const notes = await this.getNotesInFolder(path)
 
-    await Promise.all(notes.map(note => {
-      return this.db.put({
-        ...note,
-        folder: nextPath
+    await Promise.all(
+      notes.map(note => {
+        return this.db.put({
+          ...note,
+          folder: nextPath
+        })
       })
-    }))
+    )
   }
 
-  async moveFolder (path: string, nextPath: string) {
+  // TODO: Refactor the below method
+  async moveFolder(path: string, nextPath: string) {
     this.assertFolderPath(path)
     this.assertFolderPath(nextPath)
-    if (path === nextPath) throw new UnprocessableEntityError('The path and the next path are same.')
-    const nextPathIsChildPathOfCurrentPath = `${path}/` === nextPath.slice(0, nextPath.length - path.length + 1)
-    if (nextPathIsChildPathOfCurrentPath) throw new UnprocessableEntityError('The next path is a child path of the current path.')
+    if (path === nextPath)
+      throw new UnprocessableEntityError('The path and the next path are same.')
+    const nextPathIsChildPathOfCurrentPath =
+      `${path}/` === nextPath.slice(0, nextPath.length - path.length + 1)
+    if (nextPathIsChildPathOfCurrentPath)
+      throw new UnprocessableEntityError(
+        'The next path is a child path of the current path.'
+      )
     const clientHasCurrentFolder = await this.hasFolder(path)
-    if (!clientHasCurrentFolder) throw new NotFoundError('The folder does not exist.')
+    if (!clientHasCurrentFolder)
+      throw new NotFoundError('The folder does not exist.')
     const clientHasNextFolder = await this.hasFolder(nextPath)
-    if (clientHasNextFolder) throw new ConflictError('There is already a folder in the next path.')
+    if (clientHasNextFolder)
+      throw new ConflictError('There is already a folder in the next path.')
     const parentFolderPathForNextPath = this.getParentFolderPath(nextPath)
-    const clientHasParentFolderForNextFolder = await this.hasFolder(parentFolderPathForNextPath)
-    if (!clientHasParentFolderForNextFolder) throw new NotFoundError('The parent folder of the next path does not exist.')
+    const clientHasParentFolderForNextFolder = await this.hasFolder(
+      parentFolderPathForNextPath
+    )
+    if (!clientHasParentFolderForNextFolder)
+      throw new NotFoundError(
+        'The parent folder of the next path does not exist.'
+      )
 
     const subFolderPaths = await this.getSubFolderPaths(path)
 
     const client = this
     const oldFolders: Types.Folder[] = []
 
-    async function moveFolder (prevPath: string, nextPath: string) {
-      const oldFolder = await client.getFolder(prevPath)
+    async function createNextFolder(aPrevPath: string, aNextPath: string) {
+      const oldFolder = await client.getFolder(aPrevPath)
       oldFolders.push(oldFolder)
       const nextFolderProps = {
-        path: nextPath,
+        path: aNextPath,
         color: oldFolder.color,
         createdAt: oldFolder.createdAt,
         updatedAt: oldFolder.updatedAt
       }
       await client.db.put<Types.FolderProps>({
-        _id: client.prependFolderIdPrefix(nextPath),
+        _id: client.prependFolderIdPrefix(aNextPath),
         ...nextFolderProps
       })
 
-      await client.moveNotesInFolder(prevPath, nextPath)
+      await client.moveNotesInFolder(aPrevPath, aNextPath)
     }
 
     for (const aPath of [path, ...subFolderPaths]) {
-      await moveFolder(aPath, aPath.replace(path, nextPath))
+      await createNextFolder(aPath, aPath.replace(path, nextPath))
     }
 
     for (const oldFolder of oldFolders.reverse()) {
@@ -328,18 +357,23 @@ export default class Client {
     }
   }
 
-  async removeFolder (path: string): Promise<void> {
+  async removeFolder(path: string): Promise<void> {
     await this.removeNotesInFolder(path)
     await this.removeSubFolders(path)
-    const folder = await this.db.get<Types.FolderProps>(this.prependFolderIdPrefix(path))
+    const folder = await this.db.get<Types.FolderProps>(
+      this.prependFolderIdPrefix(path)
+    )
     if (folder != null) await this.db.remove(folder)
   }
 
-  async destroyDB (): Promise< void > {
+  async destroyDB(): Promise<void> {
     return this.db.destroy()
   }
 
-  async createNote (path: string, note: Types.EditableNoteProps): Promise<Types.Note> {
+  async createNote(
+    path: string,
+    note: Types.EditableNoteProps
+  ): Promise<Types.Note> {
     this.assertFolderPath(path)
     await this.assertIfClientHasFolder(path)
 
@@ -364,7 +398,10 @@ export default class Client {
     }
   }
 
-  async updateNote (noteId: string, note: Partial<Types.EditableNoteProps>): Promise<Types.Note> {
+  async updateNote(
+    noteId: string,
+    note: Partial<Types.EditableNoteProps>
+  ): Promise<Types.Note> {
     let serializedNote: Types.SerializedNote
     try {
       serializedNote = await this.db.get<Types.SerializedNoteProps>(noteId)
@@ -394,7 +431,7 @@ export default class Client {
     }
   }
 
-  deserializeNote (note: Types.SerializedNote): Types.Note {
+  deserializeNote(note: Types.SerializedNote): Types.Note {
     return {
       ...note,
       createdAt: new Date(note.createdAt),
@@ -402,7 +439,7 @@ export default class Client {
     }
   }
 
-  async getNote (id: string): Promise<Types.Note> {
+  async getNote(id: string): Promise<Types.Note> {
     let serializedNote: Types.SerializedNote
     let note: Types.Note
     try {
@@ -420,7 +457,7 @@ export default class Client {
     return note
   }
 
-  async moveNote (noteId: string, nextPath: string): Promise<Types.Note> {
+  async moveNote(noteId: string, nextPath: string): Promise<Types.Note> {
     this.validateFolderPath(nextPath)
     const clientHasFolder = await this.hasFolder(nextPath)
     if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
@@ -453,7 +490,7 @@ export default class Client {
     }
   }
 
-  async hasNote (noteId: string): Promise<boolean> {
+  async hasNote(noteId: string): Promise<boolean> {
     try {
       await this.db.get(noteId)
       return true
@@ -467,7 +504,7 @@ export default class Client {
     }
   }
 
-  async removeNotesInFolder (path: string): Promise<void> {
+  async removeNotesInFolder(path: string): Promise<void> {
     const clientHasFolder = await this.hasFolder(path)
     if (!clientHasFolder) throw new NotFoundError('The folder does not exist.')
 
@@ -475,19 +512,21 @@ export default class Client {
     await Promise.all(notes.map(note => this.db.remove(note)))
   }
 
-  async removeSubFolders (path: string): Promise<void> {
+  async removeSubFolders(path: string): Promise<void> {
     const { rows } = await this.db.allDocs<Types.NoteProps>({
       startkey: `${FOLDER_ID_PREFIX}${path}/`,
       endkey: `${FOLDER_ID_PREFIX}${path}/\ufff0`
     })
 
-    await Promise.all(rows.map(row => {
-      const [, ...pathArray] = row.id.split(FOLDER_ID_PREFIX)
-      return this.removeFolder(pathArray.join(''))
-    }))
+    await Promise.all(
+      rows.map(row => {
+        const [, ...pathArray] = row.id.split(FOLDER_ID_PREFIX)
+        return this.removeFolder(pathArray.join(''))
+      })
+    )
   }
 
-  async removeNote (noteId: string): Promise<void> {
+  async removeNote(noteId: string): Promise<void> {
     let note: Types.SerializedNote
     try {
       note = await this.db.get<Types.SerializedNoteProps>(noteId)
@@ -502,21 +541,23 @@ export default class Client {
     await this.db.remove(note)
   }
 
-  isFolder (doc: PouchDB.Core.IdMeta): doc is Types.Folder {
+  isFolder(doc: PouchDB.Core.IdMeta): doc is Types.Folder {
     return doc._id.startsWith(FOLDER_ID_PREFIX)
   }
 
-  isNote (doc: PouchDB.Core.IdMeta): doc is Types.Note {
+  isNote(doc: PouchDB.Core.IdMeta): doc is Types.Note {
     return doc._id.startsWith(NOTE_ID_PREFIX)
   }
 
-  async getAllData (): Promise <{
-    folders: Types.Folder[],
+  async getAllData(): Promise<{
+    folders: Types.Folder[]
     notes: Types.Note[]
   }> {
-    const { rows } = await this.db.allDocs<Types.NoteProps | Types.FolderProps>({
-      include_docs: true
-    })
+    const { rows } = await this.db.allDocs<Types.NoteProps | Types.FolderProps>(
+      {
+        include_docs: true
+      }
+    )
 
     const folders: Types.Folder[] = []
     const notes: Types.Note[] = []

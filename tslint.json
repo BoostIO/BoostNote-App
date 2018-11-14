@@ -4,6 +4,11 @@
     "member-access": false,
     "interface-over-type-literal": false,
     "ordered-imports": false,
-    "interface-name": false
+    "interface-name": false,
+    "max-classes-per-file": false,
+    "curly": false,
+    "member-ordering": false,
+    "object-literal-sort-keys": false,
+    "variable-name": false
   }
 }

@@ -1,4 +1,4 @@
-import ClientManager from '../../../lib/db/ClientManager'
+import ClientManager, { DBAdapter } from '../../../lib/db/ClientManager'
 import MemoryStorage from '../../utils/MemoryStorage'
 import Client from '../../../lib/db/Client'
 
@@ -7,7 +7,7 @@ describe('ClientManager', () => {
   beforeEach(() => {
     manager = new ClientManager({
       storage: new MemoryStorage(),
-      adapter: 'memory'
+      adapter: DBAdapter.memory
     })
   })
 

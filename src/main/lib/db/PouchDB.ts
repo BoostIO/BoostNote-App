@@ -5,8 +5,7 @@ import PouchDBMapReduce from 'pouchdb-mapreduce'
 import PouchDBHttpAdapter from 'pouchdb-adapter-http'
 import PouchDBReplication from 'pouchdb-replication'
 
-const PouchDB = PouchDBCore
-  .plugin(PouchDBIDBAdapter)
+const PouchDB = PouchDBCore.plugin(PouchDBIDBAdapter)
   .plugin(PouchDBMemoryAdapter)
   .plugin(PouchDBHttpAdapter)
   .plugin(PouchDBMapReduce)

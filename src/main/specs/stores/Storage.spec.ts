@@ -2,7 +2,7 @@ import Storage from '../../stores/Storage'
 
 describe('Storage', () => {
   describe('addFolder', () => {
-    it('adds a folder' , () => {
+    it('adds a folder', () => {
       // Given
       const storage = new Storage()
       const now = new Date()
@@ -26,7 +26,7 @@ describe('Storage', () => {
       })
     })
 
-    it('adds folders' , () => {
+    it('adds folders', () => {
       // Given
       const storage = new Storage()
       const now = new Date()
@@ -67,7 +67,7 @@ describe('Storage', () => {
   })
 
   describe('addNote', () => {
-    it('adds a note' , () => {
+    it('adds a note', () => {
       // Given
       const storage = new Storage()
       const now = new Date()
@@ -98,7 +98,7 @@ describe('Storage', () => {
       })
     })
 
-    it('adds notes' , () => {
+    it('adds notes', () => {
       // Given
       const storage = new Storage()
       const now = new Date()
