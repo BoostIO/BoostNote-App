@@ -43,9 +43,15 @@ export default class DataStore {
   }
 
   async createStorage(name: string) {
-    await this.manager.addClient(name)
+    const client = await this.manager.addClient(name)
 
-    this.addStorage(name, new Storage())
+    const { folders, notes } = await client.getAllData()
+
+    const storage = new Storage()
+    storage.addNote(...notes)
+    storage.addFolder(...folders)
+
+    this.addStorage(name, storage)
   }
 
   async createFolder(
