@@ -6,7 +6,7 @@
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CarbonStack/Inpad.git"
+    "url": "https://github.com/BoostIO/boost.git"
   },
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
