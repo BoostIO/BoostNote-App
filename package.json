@@ -9,7 +9,7 @@
     "url": "https://github.com/CarbonStack/Inpad.git"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "webpack-dev-server --mode development --open",
     "start-dev": "NODE_ENV=development electron app/index.js",
     "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
