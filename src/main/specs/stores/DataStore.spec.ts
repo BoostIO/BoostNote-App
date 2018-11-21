@@ -1,9 +1,28 @@
 import DataStore from '../../stores/DataStore'
-import ClientManager from '../../lib/db/ClientManager'
-import { createMockClientManager } from '../utils'
 import Storage from '../../stores/Storage'
+import ClientManager, { DBAdapter } from '../../lib/db/ClientManager'
+import MemoryStorage from '../utils/MemoryStorage'
+import PouchDB from '../../lib/db/PouchDB'
+
+export async function prepare(): Promise<ClientManager> {
+  const manager = new ClientManager({
+    storage: new MemoryStorage(),
+    adapter: DBAdapter.memory
+  })
+
+  await manager.init()
+  await manager.addClient('test')
+
+  return manager
+}
 
 describe('DataStore', () => {
+  afterEach(async () => {
+    const db = new PouchDB('test', {
+      adapter: 'memory'
+    })
+    await db.destroy()
+  })
   describe('constructor', () => {
     it('uses optional manager', () => {
       const manager = new ClientManager()
@@ -17,8 +36,7 @@ describe('DataStore', () => {
 
   describe('initStorage', () => {
     it('initializes a storage instance', async () => {
-      const manager = await createMockClientManager()
-      await manager.addClient('test')
+      const manager = await prepare()
       const data = new DataStore({
         manager
       })
@@ -29,8 +47,8 @@ describe('DataStore', () => {
     })
 
     it('sets notes and folders to the storage instance', async () => {
-      const manager = await createMockClientManager()
-      const client = await manager.addClient('test')
+      const manager = await prepare()
+      const client = await manager.getClient('test')
       const note = await client.createNote('/', {
         content: 'test'
       })
@@ -52,8 +70,7 @@ describe('DataStore', () => {
   describe('createNote', () => {
     it('creates a note', async () => {
       // Given
-      const manager = await createMockClientManager()
-      await manager.addClient('test')
+      const manager = await prepare()
       const data = new DataStore({
         manager
       })
@@ -76,8 +93,7 @@ describe('DataStore', () => {
   describe('updateFolder', () => {
     it('sets a folder', async () => {
       // Given
-      const manager = await createMockClientManager()
-      await manager.addClient('test')
+      const manager = await prepare()
       const data = new DataStore({
         manager
       })
@@ -96,6 +112,28 @@ describe('DataStore', () => {
       ).toMatchObject({
         _id: 'boost:folder:/test'
       })
+    })
+  })
+
+  describe('removeFolder', () => {
+    it('removes a folder', async () => {
+      // Given
+      const manager = await prepare()
+      const data = new DataStore({
+        manager
+      })
+      await data.init()
+      await data.createFolder('test', '/test', {})
+
+      // When
+      await data.removeFolder('test', '/test')
+
+      // Then
+      expect(
+        (data.storageMap.get('test') as Storage).folderMap.has(
+          'boost:folder:/test'
+        )
+      ).toBe(false)
     })
   })
 })

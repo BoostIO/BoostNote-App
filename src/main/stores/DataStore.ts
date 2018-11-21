@@ -90,6 +90,15 @@ export default class DataStore {
     return updatedFolder
   }
 
+  async removeFolder(name: string, path: string): Promise<void> {
+    const client = this.manager.getClient(name)
+    await client.removeFolder(path)
+
+    this.assertStorageExists(name)
+    const storage = this.storageMap.get(name) as Storage
+    storage.removeFolder(path)
+  }
+
   async createNote(
     name: string,
     path: string,
