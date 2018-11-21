@@ -1,5 +1,6 @@
 import React from 'react'
 import Storage from '../stores/Storage'
+import FolderItem from './FolderItem'
 
 type StorageItemProps = {
   name: string
@@ -24,11 +25,13 @@ class StorageItem extends React.Component<StorageItemProps> {
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => (
-              <li>{folder.path}</li>
+              <FolderItem folder={folder} />
             ))}
           </ul>
           <div>
-            <div>New folder</div>
+            <label>New folder</label>
+            <input />
+            <button>Add</button>
           </div>
         </div>
       </li>
