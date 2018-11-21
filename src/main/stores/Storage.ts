@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx'
-import { Note, Folder } from '../lib/db/dataTypes'
-import { FOLDER_ID_PREFIX } from '../../lib/consts'
+import { Note, Folder } from '../types'
+import { FOLDER_ID_PREFIX } from '../consts'
 
 export default class Storage {
   @observable folderMap: Map<string, Folder> = new Map()

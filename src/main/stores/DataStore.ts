@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx'
-import ClientManager from '../lib/db/ClientManager'
+import ClientManager from '../db/ClientManager'
 import Storage from './Storage'
-import * as Types from '../lib/db/dataTypes'
+import * as Types from '../types'
 
 export interface DataStoreOptions {
   manager?: ClientManager

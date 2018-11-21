@@ -1,6 +1,6 @@
-import ClientManager, { DBAdapter } from '../../../lib/db/ClientManager'
-import MemoryStorage from '../../utils/MemoryStorage'
-import Client from '../../../lib/db/Client'
+import ClientManager, { DBAdapter } from '../../db/ClientManager'
+import MemoryStorage from '../utils/MemoryStorage'
+import Client from '../../db/Client'
 
 describe('ClientManager', () => {
   let manager: ClientManager

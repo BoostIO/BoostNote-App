@@ -1,5 +1,5 @@
-import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../../../lib/consts'
-import * as Types from './dataTypes'
+import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../consts'
+import * as Types from '../types'
 import uuid from 'uuid/v1'
 
 export enum ClientErrorTypes {

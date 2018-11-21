@@ -1,5 +1,5 @@
 import React from 'react'
-import { Folder } from '../lib/db/dataTypes'
+import { Folder } from '../types'
 
 type FolderItemProps = {
   folder: Folder

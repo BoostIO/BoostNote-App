@@ -1,4 +1,4 @@
-import ClientManager, { DBAdapter } from '../../lib/db/ClientManager'
+import ClientManager, { DBAdapter } from '../../db/ClientManager'
 import MemoryStorage from './MemoryStorage'
 
 export async function createMockClientManager(): Promise<ClientManager> {
