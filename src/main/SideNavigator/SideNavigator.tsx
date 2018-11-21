@@ -36,9 +36,15 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
     await data!.removeStorage(storageName)
   }
 
+  createFolder = async (storageName: string, folderPath: string) => {
+    const { data } = this.props
+    await data!.createFolder(storageName, folderPath)
+  }
+
   render() {
     const { data } = this.props
     const storageEntries = [...data!.storageMap.entries()]
+
     return (
       <nav>
         <div>SideNav</div>
@@ -49,6 +55,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
               name={name}
               storage={storage}
               removeStorage={this.removeStorage}
+              createFolder={this.createFolder}
             />
           ))}
         </ul>

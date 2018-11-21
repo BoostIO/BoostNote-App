@@ -63,7 +63,7 @@ export default class DataStore {
   async createFolder(
     name: string,
     path: string,
-    folder: Types.EditableFolderProps
+    folder: Types.EditableFolderProps = {}
   ): Promise<Types.Folder> {
     const client = this.manager.getClient(name)
     const createdFolder = await client.createFolder(path, folder)
