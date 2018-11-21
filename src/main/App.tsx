@@ -7,10 +7,8 @@ import AppStore from './stores/AppStore'
 const Root = styled.div`
   display: flex;
   .nav {
-    width: 100px;
   }
   .list {
-    width: 100px;
   }
   .detail {
     flex: 1;
