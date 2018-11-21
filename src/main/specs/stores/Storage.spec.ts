@@ -1,4 +1,5 @@
 import Storage from '../../stores/Storage'
+import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../../../lib/consts'
 
 describe('Storage', () => {
   describe('addFolder', () => {
@@ -63,6 +64,162 @@ describe('Storage', () => {
         updatedAt: now,
         _rev: ''
       })
+    })
+  })
+
+  describe('removeFolder', () => {
+    it('removes a folder', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+      storage.addFolder(
+        {
+          _id: `${FOLDER_ID_PREFIX}/`,
+          path: '/',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test`,
+          path: '/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        }
+      )
+
+      // When
+      storage.removeFolder('/test')
+
+      // Then
+      expect(storage.folderMap.has(`${FOLDER_ID_PREFIX}/test`)).toBe(false)
+    })
+
+    it('removes all sub folders', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+      storage.addFolder(
+        {
+          _id: `${FOLDER_ID_PREFIX}/`,
+          path: '/',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test`,
+          path: '/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test/test`,
+          path: '/test/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test2`,
+          path: '/test2',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        }
+      )
+
+      // When
+      storage.removeFolder('/test')
+
+      // Then
+      expect(storage.folderMap.has(`${FOLDER_ID_PREFIX}/test/test`)).toBe(false)
+      expect(storage.folderMap.has(`${FOLDER_ID_PREFIX}/test2`)).toBe(true)
+    })
+
+    it('removes all notes in folder', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+      storage.addFolder(
+        {
+          _id: `${FOLDER_ID_PREFIX}/`,
+          path: '/',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test`,
+          path: '/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        }
+      )
+      storage.addNote({
+        _id: `${NOTE_ID_PREFIX}:test`,
+        folder: '/test',
+        title: '',
+        content: '',
+        tags: [],
+        createdAt: now,
+        updatedAt: now,
+        _rev: ''
+      })
+
+      // When
+      storage.removeFolder('/test')
+
+      // Then
+      expect(storage.noteMap.has(`${NOTE_ID_PREFIX}:test`)).toBe(false)
+    })
+
+    it('removes all notes in sub folders', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+      storage.addFolder(
+        {
+          _id: `${FOLDER_ID_PREFIX}/`,
+          path: '/',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test`,
+          path: '/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        },
+        {
+          _id: `${FOLDER_ID_PREFIX}/test/test`,
+          path: '/test/test',
+          createdAt: now,
+          updatedAt: now,
+          _rev: ''
+        }
+      )
+      storage.addNote({
+        _id: `${NOTE_ID_PREFIX}:test`,
+        folder: '/test/test',
+        title: '',
+        content: '',
+        tags: [],
+        createdAt: now,
+        updatedAt: now,
+        _rev: ''
+      })
+
+      // When
+      storage.removeFolder('/test')
+
+      // Then
+      expect(storage.noteMap.has(`${NOTE_ID_PREFIX}:test`)).toBe(false)
     })
   })
 
