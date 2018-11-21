@@ -9,6 +9,7 @@ type StorageItemProps = {
   storage: Storage
   removeStorage: (storageName: string) => Promise<void>
   createFolder: (storageName: string, folderPath: string) => Promise<void>
+  removeFolder: (storageName: string, folderPath: string) => Promise<void>
 }
 
 @observer
@@ -23,6 +24,11 @@ class StorageItem extends React.Component<StorageItemProps> {
     await createFolder(name, folderPath)
   }
 
+  removeFolder = async (folderPath: string) => {
+    const { name, removeFolder } = this.props
+    await removeFolder(name, folderPath)
+  }
+
   render() {
     const { name, storage } = this.props
     const folderEntries = [...storage.folderMap.entries()]
@@ -34,7 +40,11 @@ class StorageItem extends React.Component<StorageItemProps> {
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => (
-              <FolderItem key={folder.path} folder={folder} />
+              <FolderItem
+                key={folder.path}
+                folder={folder}
+                removeFolder={this.removeFolder}
+              />
             ))}
           </ul>
           <FolderCreateForm createFolder={this.createFolder} />
