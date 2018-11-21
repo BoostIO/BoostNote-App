@@ -1,6 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import DataStore from '../stores/DataStore'
+import DataStore from '../../stores/DataStore'
 import StorageItem from './StorageItem'
 
 type SideNavigatorProps = {

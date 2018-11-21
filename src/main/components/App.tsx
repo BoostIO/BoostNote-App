@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
 import { inject, observer } from 'mobx-react'
-import AppStore from './stores/AppStore'
+import AppStore from '../stores/AppStore'
 
 const Root = styled.div`
   display: flex;

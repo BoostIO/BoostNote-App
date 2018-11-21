@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
-import App from './App'
+import App from './components/App'
 import { BrowserRouter } from 'react-router-dom'
 import DataStore from './stores/DataStore'
 import AppStore from './stores/AppStore'
@@ -28,7 +28,7 @@ function render(Component: typeof App) {
 }
 
 if (module.hot != null) {
-  module.hot.accept('./App', () => {
+  module.hot.accept('./components/App', () => {
     render(App)
   })
 }

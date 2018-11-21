@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import Storage from '../stores/Storage'
+import Storage from '../../stores/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
 
