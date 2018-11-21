@@ -15,7 +15,7 @@ const route = new RouteStore({
   hash: window.location.hash,
   state: undefined
 })
-history.listen((location, action) => {
+history.listen(location => {
   route.update(location)
 })
 
