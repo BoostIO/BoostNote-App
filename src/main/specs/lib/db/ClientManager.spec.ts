@@ -69,7 +69,7 @@ describe('ClientManager', () => {
       await manager.addClient('test')
 
       // When
-      manager.removeClient('test')
+      await manager.removeClient('test')
 
       // Then
       expect(() => {
