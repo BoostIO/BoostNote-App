@@ -2,9 +2,22 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import App from './components/App'
-import { BrowserRouter } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import DataStore from './stores/DataStore'
 import AppStore from './stores/AppStore'
+import RouteStore from './stores/RouteStore'
+import { createBrowserHistory } from 'history'
+
+const history = createBrowserHistory()
+const route = new RouteStore({
+  pathname: window.location.pathname,
+  search: window.location.search,
+  hash: window.location.hash,
+  state: undefined
+})
+history.listen((location, action) => {
+  route.update(location)
+})
 
 const data = new DataStore()
 const app = new AppStore({
@@ -13,15 +26,16 @@ const app = new AppStore({
 
 const providerProps = {
   app,
-  data
+  data,
+  route
 }
 
 function render(Component: typeof App) {
   ReactDOM.render(
     <Provider {...providerProps}>
-      <BrowserRouter>
+      <Router history={history}>
         <Component />
-      </BrowserRouter>
+      </Router>
     </Provider>,
     document.getElementById('root')
   )

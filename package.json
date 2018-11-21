@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "filenamify": "^2.1.0",
+    "history": "^4.7.2",
     "mobx": "^5.5.2",
     "mobx-react": "^5.3.6",
     "pouchdb-adapter-http": "^7.0.0",

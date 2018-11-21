@@ -2,12 +2,14 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DataStore from '../../stores/DataStore'
 import StorageItem from './StorageItem'
+import RouteStore from '../../stores/RouteStore'
 
 type SideNavigatorProps = {
   data?: DataStore
+  route?: RouteStore
 }
 
-@inject('data')
+@inject('data', 'route')
 @observer
 export default class SideNavigator extends React.Component<SideNavigatorProps> {
   state = {
@@ -47,7 +49,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
   }
 
   render() {
-    const { data } = this.props
+    const { data, route } = this.props
     const storageEntries = [...data!.storageMap.entries()]
 
     return (
@@ -62,6 +64,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
               removeStorage={this.removeStorage}
               createFolder={this.createFolder}
               removeFolder={this.removeFolder}
+              pathname={route!.pathname}
             />
           ))}
         </ul>

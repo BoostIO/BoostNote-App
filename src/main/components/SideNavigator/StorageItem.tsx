@@ -3,6 +3,15 @@ import { observer } from 'mobx-react'
 import Storage from '../../stores/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+
+const StorageNavLink = styled(Link)`
+  &.active {
+    color: white;
+    background-color: blue;
+  }
+`
 
 type StorageItemProps = {
   name: string
@@ -10,6 +19,7 @@ type StorageItemProps = {
   removeStorage: (storageName: string) => Promise<void>
   createFolder: (storageName: string, folderPath: string) => Promise<void>
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
+  pathname: string
 }
 
 @observer
@@ -30,13 +40,19 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   render() {
-    const { name, storage } = this.props
+    const { name, storage, pathname } = this.props
     const folderEntries = [...storage.folderMap.entries()]
+    const storageLinkIsActive = pathname === `/storages/${name}`
 
     return (
       <li>
         <div>
-          {name}
+          <StorageNavLink
+            className={storageLinkIsActive ? 'active' : ''}
+            to={`/storages/${name}`}
+          >
+            {name}
+          </StorageNavLink>
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => (
