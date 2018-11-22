@@ -1,8 +1,9 @@
 import React from 'react'
+import { inject, observer } from 'mobx-react'
 import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
 import NoteList from './NoteList'
-import { inject, observer } from 'mobx-react'
+import NoteDetail from './NoteDetail'
 import AppStore from '../stores/AppStore'
 
 const Root = styled.div`
@@ -42,7 +43,9 @@ class App extends React.Component<AppProps> {
             <div className="panel">
               <NoteList />
             </div>
-            <div className="panel">Note Detail</div>
+            <div className="panel">
+              <NoteDetail />
+            </div>
           </>
         ) : (
           <div>Loading data</div>
