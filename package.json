@@ -74,6 +74,7 @@
     "history": "^4.7.2",
     "mobx": "^5.5.2",
     "mobx-react": "^5.3.6",
+    "path-to-regexp": "^2.4.0",
     "pouchdb-adapter-http": "^7.0.0",
     "pouchdb-adapter-idb": "^7.0.0",
     "pouchdb-adapter-memory": "^7.0.0",
