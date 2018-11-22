@@ -93,6 +93,17 @@ export default class NoteDetail extends React.Component<
     return state
   }
 
+  componentDidUpdate(prevProps: NoteDetailProps, prevState: NoteDetailState) {
+    const { route } = this.props
+    const { hash } = route!
+    const noteId = hash.slice(1)
+    if (noteId !== prevState.prevNoteId && this.queued) {
+      const { content } = prevState
+      const storageName = this.getCurrentStorageName()
+      this.saveNote(storageName, prevState.prevNoteId, { content })
+    }
+  }
+
   updateContent = () => {
     this.setState(
       {
@@ -113,20 +124,25 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      this.saveNote()
+      const { content } = this.state
+      const { route } = this.props
+      const { hash } = route!
+      const noteId = hash.slice(1)
+      const storageName = this.getCurrentStorageName()
+      this.saveNote(storageName, noteId, { content })
     }, 3000)
     console.log('queued')
   }
 
-  async saveNote() {
+  async saveNote(
+    storageName: string,
+    noteId: string,
+    { content }: { content: string }
+  ) {
     clearTimeout(this.timer)
     this.queued = false
 
-    const { data, route } = this.props
-    const { content } = this.state
-    const { hash } = route!
-    const noteId = hash.slice(1)
-    const storageName = this.getCurrentStorageName()
+    const { data } = this.props
     await data!.updateNote(storageName, noteId, {
       content
     })
