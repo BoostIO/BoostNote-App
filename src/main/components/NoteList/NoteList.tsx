@@ -3,12 +3,12 @@ import { inject, observer } from 'mobx-react'
 import DataStore from '../../stores/DataStore'
 import RouteStore from '../../stores/RouteStore'
 import pathToRegexp from 'path-to-regexp'
-import { Link } from 'react-router-dom'
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom'
 
 type NoteListProps = {
   data?: DataStore
   route?: RouteStore
-}
+} & RouteComponentProps
 
 type NoteListState = {}
 
@@ -18,10 +18,7 @@ const storageRegexp = pathToRegexp('/storages/:storageName/:rest*', undefined, {
 
 @inject('data', 'route')
 @observer
-export default class NoteList extends React.Component<
-  NoteListProps,
-  NoteListState
-> {
+class NoteList extends React.Component<NoteListProps, NoteListState> {
   getCurrentStorageName() {
     const { route } = this.props
     const { pathname } = route!
@@ -43,13 +40,15 @@ export default class NoteList extends React.Component<
     return [...storage.noteMap.values()]
   }
 
-  createNote = () => {
-    const { data } = this.props
+  createNote = async () => {
+    const { data, history } = this.props
     const storageName = this.getCurrentStorageName()
 
-    data!.createNote(storageName, '/', {
+    const createdNote = await data!.createNote(storageName, '/', {
       content: ''
     })
+
+    history.push(`#${createdNote._id}`)
   }
 
   render() {
@@ -72,3 +71,5 @@ export default class NoteList extends React.Component<
     )
   }
 }
+
+export default withRouter(NoteList)
