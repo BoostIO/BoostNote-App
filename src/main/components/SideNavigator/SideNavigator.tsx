@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react'
 import DataStore from '../../stores/DataStore'
 import StorageItem from './StorageItem'
 import RouteStore from '../../stores/RouteStore'
+import SotrageCreateForm from './StorageCreateForm'
 
 type SideNavigatorProps = {
   data?: DataStore
@@ -12,25 +13,9 @@ type SideNavigatorProps = {
 @inject('data', 'route')
 @observer
 export default class SideNavigator extends React.Component<SideNavigatorProps> {
-  state = {
-    newStorageName: ''
-  }
-  newStorageNameInputRef = React.createRef<HTMLInputElement>()
-
-  updateStorageName = () => {
-    this.setState({
-      newStorageName: this.newStorageNameInputRef.current!.value
-    })
-  }
-
-  addStorage = async () => {
-    const { newStorageName } = this.state
+  createStorage = async (storageName: string) => {
     const { data } = this.props
-
-    await data!.createStorage(newStorageName)
-    this.setState({
-      newStorageName: ''
-    })
+    await data!.createStorage(storageName)
   }
 
   removeStorage = async (storageName: string) => {
@@ -69,18 +54,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
           ))}
         </ul>
         {storageEntries.length === 0 && <p>No storages</p>}
-        <div>
-          <label>New storage</label>
-          <input
-            type="text"
-            ref={this.newStorageNameInputRef}
-            value={this.state.newStorageName}
-            onChange={this.updateStorageName}
-          />
-          <button type="submit" onClick={this.addStorage}>
-            Add
-          </button>
-        </div>
+        <SotrageCreateForm createStorage={this.createStorage} />
       </nav>
     )
   }
