@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import DataStore from '../../stores/DataStore'
-import RouteStore from '../../stores/RouteStore'
+import DataStore from '../../../stores/DataStore'
+import RouteStore from '../../../stores/RouteStore'
 import pathToRegexp from 'path-to-regexp'
 
 type NoteDetailProps = {

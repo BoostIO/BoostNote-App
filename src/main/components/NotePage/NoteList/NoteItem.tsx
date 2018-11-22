@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, LinkProps } from 'react-router-dom'
 import styled from 'styled-components'
-import { Note } from '../../types'
+import { Note } from '../../../types'
 
 type NoteLinkProps = LinkProps & { active: boolean }
 

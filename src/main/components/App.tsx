@@ -2,19 +2,11 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
-import NoteList from './NoteList'
-import NoteDetail from './NoteDetail'
+import NotePage from './NotePage'
 import AppStore from '../stores/AppStore'
 
 const Root = styled.div`
   display: flex;
-  .nav {
-  }
-  .list {
-  }
-  .detail {
-    flex: 1;
-  }
 `
 
 type AppProps = {
@@ -37,15 +29,8 @@ class App extends React.Component<AppProps> {
       <Root>
         {app.dataIsInitialized ? (
           <>
-            <div className="nav">
-              <SideNavigator />
-            </div>
-            <div className="panel">
-              <NoteList />
-            </div>
-            <div className="panel">
-              <NoteDetail />
-            </div>
+            <SideNavigator />
+            <NotePage />
           </>
         ) : (
           <div>Loading data</div>
