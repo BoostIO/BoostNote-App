@@ -1,5 +1,15 @@
 import { observable, action } from 'mobx'
 import { Location } from 'history'
+import path from 'path'
+
+function normalize(pathname: string): string {
+  const normalizedPathname = path.normalize(pathname)
+  const normalizedLength = normalizedPathname.length
+  if (normalizedPathname[normalizedLength - 1] === '/') {
+    return normalizedPathname.slice(0, normalizedLength - 1)
+  }
+  return normalizedPathname
+}
 
 export default class RouteStore {
   @observable
@@ -12,7 +22,7 @@ export default class RouteStore {
   public state?: any
 
   constructor(location: Location) {
-    this.pathname = location.pathname
+    this.pathname = normalize(location.pathname)
     this.search = location.search
     this.hash = location.hash
     this.state = location.state
@@ -20,7 +30,7 @@ export default class RouteStore {
 
   @action
   update(location: Location) {
-    this.pathname = location.pathname
+    this.pathname = normalize(location.pathname)
     this.search = location.search
     this.hash = location.hash
     this.state = location.state
