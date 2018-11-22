@@ -3,15 +3,7 @@ import { observer } from 'mobx-react'
 import Storage from '../../stores/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-
-const StorageNavLink = styled(Link)`
-  &.active {
-    color: white;
-    background-color: blue;
-  }
-`
+import NavLink from './NavLink'
 
 type StorageItemProps = {
   name: string
@@ -47,12 +39,9 @@ class StorageItem extends React.Component<StorageItemProps> {
     return (
       <li>
         <div>
-          <StorageNavLink
-            className={storageLinkIsActive ? 'active' : ''}
-            to={`/storages/${name}`}
-          >
+          <NavLink active={storageLinkIsActive} to={`/storages/${name}`}>
             {name}
-          </StorageNavLink>
+          </NavLink>
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => (
