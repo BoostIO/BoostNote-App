@@ -93,7 +93,7 @@ export default class NoteDetail extends React.Component<
     return state
   }
 
-  componentDidUpdate(prevProps: NoteDetailProps, prevState: NoteDetailState) {
+  componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { route } = this.props
     const { hash } = route!
     const noteId = hash.slice(1)
@@ -131,7 +131,6 @@ export default class NoteDetail extends React.Component<
       const storageName = this.getCurrentStorageName()
       this.saveNote(storageName, noteId, { content })
     }, 3000)
-    console.log('queued')
   }
 
   async saveNote(
@@ -146,7 +145,6 @@ export default class NoteDetail extends React.Component<
     await data!.updateNote(storageName, noteId, {
       content
     })
-    console.log('saved')
   }
 
   render() {
