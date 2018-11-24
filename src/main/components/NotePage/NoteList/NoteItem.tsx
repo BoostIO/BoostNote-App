@@ -15,17 +15,16 @@ const NoteLink = styled<NoteLinkProps>(({ active, ...props }) => (
 `
 
 type NoteItemProps = {
-  hash: string
   note: Note
+  active: boolean
 }
 
-const NoteItem = ({ note, hash }: NoteItemProps) => {
+const NoteItem = ({ note, active }: NoteItemProps) => {
   const noteHash = `#${note._id}`
-  const noteIsActive = hash === noteHash
 
   return (
     <li>
-      <NoteLink active={noteIsActive} to={noteHash}>
+      <NoteLink active={active} to={noteHash}>
         {note._id}
       </NoteLink>
     </li>
