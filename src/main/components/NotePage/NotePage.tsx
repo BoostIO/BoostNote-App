@@ -57,8 +57,30 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     history.push(`#${createdNote._id}`)
   }
 
+  updateNote = async (
+    storageName: string,
+    noteId: string,
+    { content }: { content: string }
+  ) => {
+    const { data } = this.props
+    await data!.updateNote(storageName, noteId, {
+      content
+    })
+  }
+
+  getNote() {
+    const { route } = this.props
+    const { hash } = route!
+    const storage = this.getCurrentStorage()
+    if (storage == null) return null
+    const id = hash.slice(1)
+    return storage.noteMap.get(id)
+  }
+
   render() {
+    const storageName = this.getCurrentStorageName()
     const notes = this.getNotes()
+    const note = this.getNote()
     const currentNoteId = this.getCurrentNoteId()
     return (
       <>
@@ -67,7 +89,15 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
           currentNoteId={currentNoteId}
           createNote={this.createNote}
         />
-        <NoteDetail />
+        {note == null ? (
+          <div>No note selected</div>
+        ) : (
+          <NoteDetail
+            storageName={storageName}
+            note={note}
+            updateNote={this.updateNote}
+          />
+        )}
       </>
     )
   }
