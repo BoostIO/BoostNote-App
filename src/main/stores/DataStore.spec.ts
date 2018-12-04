@@ -1,8 +1,8 @@
-import DataStore from '../../stores/DataStore'
-import Storage from '../../stores/Storage'
-import ClientManager, { DBAdapter } from '../../db/ClientManager'
-import MemoryStorage from '../utils/MemoryStorage'
-import PouchDB from '../../db/PouchDB'
+import DataStore from './DataStore'
+import Storage from './Storage'
+import ClientManager, { DBAdapter } from '../db/ClientManager'
+import MemoryStorage from '../specs/utils/MemoryStorage'
+import PouchDB from '../db/PouchDB'
 
 export async function prepare(): Promise<ClientManager> {
   const manager = new ClientManager({

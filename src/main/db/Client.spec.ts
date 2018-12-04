@@ -1,6 +1,6 @@
-import Client, { ClientErrorTypes } from '../../db/Client'
-import PouchDB from '../../db/PouchDB'
-import { FOLDER_ID_PREFIX } from '../../consts'
+import Client, { ClientErrorTypes } from './Client'
+import PouchDB from './PouchDB'
+import { FOLDER_ID_PREFIX } from '../consts'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {

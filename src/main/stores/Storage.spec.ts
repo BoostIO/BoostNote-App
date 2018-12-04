@@ -1,5 +1,5 @@
-import Storage from '../../stores/Storage'
-import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../../consts'
+import Storage from './Storage'
+import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../consts'
 
 describe('Storage', () => {
   describe('addFolder', () => {
