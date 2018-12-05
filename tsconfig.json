@@ -1,6 +1,10 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"],
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./typings/*"]
+    },
     "allowSyntheticDefaultImports": true,
     "target": "esnext",
     "downlevelIteration": true,

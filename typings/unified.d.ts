@@ -1,0 +1,6 @@
+declare module 'unified'
+declare module 'unified-*'
+declare module 'unist-util-*'
+declare module 'remark'
+declare module 'remark-*'
+declare module 'mdast-util-*'
