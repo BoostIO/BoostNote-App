@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 type NavLinkProps = LinkProps & { active: boolean }
 
-const NavLink = styled<NavLinkProps>(({ active, ...props }) => (
+const NavLink = styled(({ active, ...props }: NavLinkProps) => (
   <Link {...props} />
 ))`
   ${props =>
