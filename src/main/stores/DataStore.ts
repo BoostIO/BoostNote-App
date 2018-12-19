@@ -2,6 +2,7 @@ import { observable, action } from 'mobx'
 import ClientManager from '../db/ClientManager'
 import Storage from './Storage'
 import * as Types from '../types'
+import { getTitle } from '../lib/markdown'
 
 export interface DataStoreOptions {
   manager?: ClientManager
@@ -102,7 +103,7 @@ export default class DataStore {
   async createNote(
     name: string,
     path: string,
-    note: Types.EditableNoteProps
+    note: Partial<Types.EditableNoteProps>
   ): Promise<Types.Note> {
     const client = this.manager.getClient(name)
     const createdNote = await client.createNote(path, note)
@@ -120,6 +121,12 @@ export default class DataStore {
     note: Partial<Types.EditableNoteProps>
   ): Promise<Types.Note> {
     const client = this.manager.getClient(name)
+    if (note.content != null) {
+      note = {
+        title: getTitle(note.content),
+        ...note
+      }
+    }
     const updatedNote = await client.updateNote(id, note)
 
     this.assertStorageExists(name)

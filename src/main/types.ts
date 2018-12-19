@@ -23,7 +23,9 @@ export type SerializedFolder = SerializedFolderProps & PouchDBMeta
 export type Folder = FolderProps & PouchDBMeta
 
 export interface EditableNoteProps {
+  title: string
   content: string
+  tags: string[]
 }
 
 export interface SerializedNoteProps {

@@ -11,17 +11,18 @@ const processor = unified()
   .use(parseYaml)
 
 function hasYamlNode(node: any) {
-  return node.children[0]!.type === 'yaml'
+  if (node.children[0] == null) return false
+  return node.children[0].type === 'yaml'
 }
 function hasYamlTitle(node: any) {
   return node.children[0]!.data.parsedValue.title != null
 }
 
-export function getTitle(value: string) {
+export function getTitle(value: string): string {
   const parsedNode = processor.parse(value)
   const transformedNode = processor.runSync(parsedNode)
 
-  if ((hasYamlNode(transformedNode), hasYamlTitle(transformedNode))) {
+  if (hasYamlNode(transformedNode) && hasYamlTitle(transformedNode)) {
     return transformedNode.children[0]!.data.parsedValue.title
   }
 

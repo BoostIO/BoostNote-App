@@ -372,7 +372,7 @@ export default class Client {
 
   async createNote(
     path: string,
-    note: Types.EditableNoteProps
+    note: Partial<Types.EditableNoteProps>
   ): Promise<Types.Note> {
     this.assertFolderPath(path)
     await this.assertIfClientHasFolder(path)
@@ -382,7 +382,7 @@ export default class Client {
       title: '',
       folder: path,
       tags: [] as string[],
-      content: note.content,
+      content: note.content == null ? '' : note.content,
       createdAt: new Date(),
       updatedAt: new Date()
     }
