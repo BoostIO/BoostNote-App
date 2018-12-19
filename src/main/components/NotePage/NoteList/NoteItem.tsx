@@ -1,17 +1,13 @@
 import React from 'react'
-import { Link, LinkProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Note } from '../../../types'
 
-type NoteLinkProps = LinkProps & { active: boolean }
-
-const NoteLink = styled<NoteLinkProps>(({ active, ...props }) => (
-  <Link {...props} />
-))`
-  ${props =>
-    props.active &&
-    `color: white;
-    background-color: blue;`}
+const StyledNoteListItem = styled.div<{ active: boolean }>`
+  ${props => props.active && `background-color: #006FCC;`}
+  .untitled {
+    color: grey;
+  }
 `
 
 type NoteItemProps = {
@@ -23,11 +19,15 @@ const NoteItem = ({ note, active }: NoteItemProps) => {
   const noteHash = `#${note._id}`
 
   return (
-    <li>
-      <NoteLink active={active} to={noteHash}>
-        {note._id}
-      </NoteLink>
-    </li>
+    <StyledNoteListItem active={active}>
+      <Link to={noteHash}>
+        {note.title.length > 0 ? (
+          <div>{note.title}</div>
+        ) : (
+          <div className="untitled">Untitled</div>
+        )}
+      </Link>
+    </StyledNoteListItem>
   )
 }
 
