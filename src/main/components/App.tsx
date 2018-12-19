@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
 import NotePage from './NotePage'
 import AppStore from '../stores/AppStore'
+import GlobalStyle from './GlobalStyle'
 
 const Root = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ class App extends React.Component<AppProps> {
         ) : (
           <div>Loading data</div>
         )}
+        <GlobalStyle />
       </Root>
     )
   }
