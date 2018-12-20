@@ -136,6 +136,16 @@ export default class DataStore {
     return updatedNote
   }
 
+  async removeNote(name: string, id: string): Promise<void> {
+    const client = this.manager.getClient(name)
+
+    await client.removeNote(id)
+
+    this.assertStorageExists(name)
+    const storage = this.storageMap.get(name) as Storage
+    storage.removeNote(id)
+  }
+
   assertStorageExists(name: string) {
     if (!this.storageMap.has(name)) {
       throw new Error('The storage does not exist in DataStore')

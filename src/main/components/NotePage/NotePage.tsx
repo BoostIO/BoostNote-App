@@ -68,6 +68,12 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     })
   }
 
+  // TODO: Redirect to the next note after deleting selected note
+  removeNote = async (storageName: string, noteId: string) => {
+    const { data } = this.props
+    await data!.removeNote(storageName, noteId)
+  }
+
   getNote() {
     const { route } = this.props
     const { hash } = route!
@@ -96,6 +102,7 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
             storageName={storageName}
             note={note}
             updateNote={this.updateNote}
+            removeNote={this.removeNote}
           />
         )}
       </>

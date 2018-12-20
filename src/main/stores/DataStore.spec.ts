@@ -16,6 +16,7 @@ export async function prepare(): Promise<ClientManager> {
   return manager
 }
 
+// TODO: Implement tests for all apis
 describe('DataStore', () => {
   afterEach(async () => {
     const db = new PouchDB('test', {
