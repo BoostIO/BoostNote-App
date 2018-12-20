@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/boost
+    docker:
+      - image: circleci/node:10.14.0
+    steps:
+      - checkout
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
