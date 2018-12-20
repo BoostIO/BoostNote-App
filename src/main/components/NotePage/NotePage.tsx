@@ -68,6 +68,7 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     })
   }
 
+  // TODO: Redirect to the next note after deleting selected note
   removeNote = async (storageName: string, noteId: string) => {
     const { data } = this.props
     await data!.removeNote(storageName, noteId)
