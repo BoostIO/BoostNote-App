@@ -10,6 +10,7 @@ type NoteDetailProps = {
     noteId: string,
     { content }: { content: string }
   ) => Promise<void>
+  removeNote: (storageName: string, noteId: string) => Promise<void>
 }
 
 type NoteDetailState = {
@@ -109,6 +110,12 @@ export default class NoteDetail extends React.Component<
     })
   }
 
+  removeNote = async () => {
+    const { storageName, note, removeNote } = this.props
+
+    await removeNote(storageName, note._id)
+  }
+
   render() {
     const { note } = this.props
 
@@ -119,7 +126,9 @@ export default class NoteDetail extends React.Component<
           <p>No note is selected</p>
         ) : (
           <>
-            <div>{note._id}</div>
+            <div>
+              {note._id} <button onClick={this.removeNote}>Delete</button>
+            </div>
             <div>
               <textarea
                 ref={this.contentTextareaRef}
