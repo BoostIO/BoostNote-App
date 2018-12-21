@@ -92,7 +92,7 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
       currentStorageName,
       targetFolderPath,
       {
-        content: ''
+        content: ['---', 'title: ', 'tags: ', '---', ''].join('\n')
       }
     )
 
