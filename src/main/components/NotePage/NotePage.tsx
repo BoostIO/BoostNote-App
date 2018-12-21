@@ -70,7 +70,7 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     const { pathname } = route!
 
     const result = storageRegexp.exec(pathname)
-    if (result == null) return ''
+    if (result == null) return null
 
     const [, , rest] = result
     return `/${rest
@@ -81,11 +81,16 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
 
   createNote = async () => {
     const { data, history } = this.props
-    const { currentStorageName } = this
+    const { currentStorageName, currentFolderPath } = this
+    const targetFolderPath = currentFolderPath == null ? '/' : currentFolderPath
 
-    const createdNote = await data!.createNote(currentStorageName, '/', {
-      content: ''
-    })
+    const createdNote = await data!.createNote(
+      currentStorageName,
+      targetFolderPath,
+      {
+        content: ''
+      }
+    )
 
     history.push(`#${createdNote._id}`)
   }
