@@ -17,6 +17,13 @@ type NotePageState = {}
 const storageRegexp = pathToRegexp('/storages/:storageName/:rest*', undefined, {
   sensitive: true
 })
+const folderRegexp = pathToRegexp(
+  '/storages/:storageName/notes/:rest*',
+  undefined,
+  {
+    sensitive: true
+  }
+)
 
 @inject('data', 'route')
 @observer
@@ -47,7 +54,6 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
   @computed
   get notes() {
     const { currentStorage, currentFolderPath } = this
-
     if (currentStorage == null) return []
     return [...currentStorage.noteMap.values()].filter(
       note => note.folder === currentFolderPath
@@ -69,14 +75,12 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     const { route } = this.props
     const { pathname } = route!
 
-    const result = storageRegexp.exec(pathname)
-    if (result == null) return null
+    const result = folderRegexp.exec(pathname)
+    if (result == null) return '/'
 
     const [, , rest] = result
-    return `/${rest
-      .split('/')
-      .slice(1)
-      .join('/')}`
+    if (rest == null) return '/'
+    return `/${rest}`
   }
 
   createNote = async () => {
