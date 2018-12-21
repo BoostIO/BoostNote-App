@@ -46,10 +46,12 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
 
   @computed
   get notes() {
-    const { currentStorage } = this
+    const { currentStorage, currentFolderPath } = this
 
     if (currentStorage == null) return []
-    return [...currentStorage.noteMap.values()]
+    return [...currentStorage.noteMap.values()].filter(
+      note => note.folder === currentFolderPath
+    )
   }
 
   @computed
@@ -60,6 +62,21 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     if (currentStorage == null) return null
     const id = hash.slice(1)
     return currentStorage.noteMap.get(id)
+  }
+
+  @computed
+  get currentFolderPath() {
+    const { route } = this.props
+    const { pathname } = route!
+
+    const result = storageRegexp.exec(pathname)
+    if (result == null) return ''
+
+    const [, , rest] = result
+    return `/${rest
+      .split('/')
+      .slice(1)
+      .join('/')}`
   }
 
   createNote = async () => {
