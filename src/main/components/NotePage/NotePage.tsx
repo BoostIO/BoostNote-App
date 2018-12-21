@@ -5,6 +5,7 @@ import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
 import { DataStore, RouteStore } from '../../stores'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { computed } from 'mobx'
 
 type NotePageProps = {
   data?: DataStore
@@ -16,17 +17,26 @@ type NotePageState = {}
 const storageRegexp = pathToRegexp('/storages/:storageName/:rest*', undefined, {
   sensitive: true
 })
+const folderRegexp = pathToRegexp(
+  '/storages/:storageName/notes/:rest*',
+  undefined,
+  {
+    sensitive: true
+  }
+)
 
 @inject('data', 'route')
 @observer
 class NotePage extends React.Component<NotePageProps, NotePageState> {
-  getCurrentStorage() {
+  @computed
+  get currentStorage() {
     const { data } = this.props
-    const storageName = this.getCurrentStorageName()
-    return data!.storageMap.get(storageName)
+    const { currentStorageName } = this
+    return data!.storageMap.get(currentStorageName)
   }
 
-  getCurrentStorageName() {
+  @computed
+  get currentStorageName() {
     const { route } = this.props
     const { pathname } = route!
     const result = storageRegexp.exec(pathname)
@@ -35,24 +45,56 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     return storageName
   }
 
-  getCurrentNoteId() {
+  @computed
+  get currentNoteId() {
     const { route } = this.props
     return route!.hash.slice(1)
   }
 
-  getNotes() {
-    const storage = this.getCurrentStorage()
-    if (storage == null) return []
-    return [...storage.noteMap.values()]
+  @computed
+  get notes() {
+    const { currentStorage, currentFolderPath } = this
+    if (currentStorage == null) return []
+    return [...currentStorage.noteMap.values()].filter(
+      note => note.folder === currentFolderPath
+    )
+  }
+
+  @computed
+  get currentNote() {
+    const { route } = this.props
+    const { hash } = route!
+    const { currentStorage } = this
+    if (currentStorage == null) return null
+    const id = hash.slice(1)
+    return currentStorage.noteMap.get(id)
+  }
+
+  @computed
+  get currentFolderPath() {
+    const { route } = this.props
+    const { pathname } = route!
+
+    const result = folderRegexp.exec(pathname)
+    if (result == null) return '/'
+
+    const [, , rest] = result
+    if (rest == null) return '/'
+    return `/${rest}`
   }
 
   createNote = async () => {
     const { data, history } = this.props
-    const storageName = this.getCurrentStorageName()
+    const { currentStorageName, currentFolderPath } = this
+    const targetFolderPath = currentFolderPath == null ? '/' : currentFolderPath
 
-    const createdNote = await data!.createNote(storageName, '/', {
-      content: ''
-    })
+    const createdNote = await data!.createNote(
+      currentStorageName,
+      targetFolderPath,
+      {
+        content: ''
+      }
+    )
 
     history.push(`#${createdNote._id}`)
   }
@@ -74,20 +116,8 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     await data!.removeNote(storageName, noteId)
   }
 
-  getNote() {
-    const { route } = this.props
-    const { hash } = route!
-    const storage = this.getCurrentStorage()
-    if (storage == null) return null
-    const id = hash.slice(1)
-    return storage.noteMap.get(id)
-  }
-
   render() {
-    const storageName = this.getCurrentStorageName()
-    const notes = this.getNotes()
-    const note = this.getNote()
-    const currentNoteId = this.getCurrentNoteId()
+    const { currentStorageName, notes, currentNote, currentNoteId } = this
     return (
       <>
         <NoteList
@@ -95,12 +125,12 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
           currentNoteId={currentNoteId}
           createNote={this.createNote}
         />
-        {note == null ? (
+        {currentNote == null ? (
           <div>No note selected</div>
         ) : (
           <NoteDetail
-            storageName={storageName}
-            note={note}
+            storageName={currentStorageName}
+            note={currentNote}
             updateNote={this.updateNote}
             removeNote={this.removeNote}
           />
