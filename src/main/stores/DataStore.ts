@@ -2,7 +2,7 @@ import { observable, action } from 'mobx'
 import ClientManager from '../db/ClientManager'
 import Storage from './Storage'
 import * as Types from '../types'
-import { getTitle } from '../lib/markdown'
+import { getMetaData } from '../lib/markdown'
 
 export interface DataStoreOptions {
   manager?: ClientManager
@@ -122,8 +122,10 @@ export default class DataStore {
   ): Promise<Types.Note> {
     const client = this.manager.getClient(name)
     if (note.content != null) {
+      const { title, tags } = getMetaData(note.content)
       note = {
-        title: getTitle(note.content),
+        title,
+        tags,
         ...note
       }
     }
