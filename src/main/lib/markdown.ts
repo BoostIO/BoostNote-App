@@ -3,7 +3,8 @@ import parse from 'remark-parse'
 import frontmatter from 'remark-frontmatter'
 import parseYaml from 'remark-parse-yaml'
 import visit from 'unist-util-visit'
-import toString from 'mdast-util-to-string'
+import convertMdastToString from 'mdast-util-to-string'
+import { pipe, filter, map, uniq } from 'ramda'
 
 const processor = unified()
   .use(parse)
@@ -49,7 +50,7 @@ export function getTitleFromNode(node: any): string {
 
   let title: string = ''
   visit(node, 'heading', (headingNode: any) => {
-    title = toString(headingNode)
+    title = convertMdastToString(headingNode)
     if (title.length > 0) {
       return visit.EXIT
     } else {
@@ -59,7 +60,7 @@ export function getTitleFromNode(node: any): string {
   if (title.length > 0) return title
 
   visit(node, 'text', (literalNode: any) => {
-    title = toString(literalNode)
+    title = convertMdastToString(literalNode)
     if (title.length > 0) {
       return visit.EXIT
     } else {
@@ -74,8 +75,19 @@ export function getTagsFromNode(node: any): string[] {
   if (!hasYamlTags(node)) return []
 
   const unknownTags: unknown = node.children[0].data.parsedValue.tags
-  if (typeof unknownTags === 'string') return [unknownTags]
-  if (Array.isArray(unknownTags))
-    return unknownTags.filter(unknownTag => typeof unknownTag === 'string')
+  if (isStringOrNumber(unknownTags)) return [unknownTags.toString()]
+  if (Array.isArray(unknownTags)) {
+    return filterTags(unknownTags)
+  }
   return []
+}
+
+const filterTags = pipe(
+  filter(isStringOrNumber),
+  map(value => value.toString()),
+  uniq
+)
+
+function isStringOrNumber(value: any): value is string | number {
+  return typeof value === 'string' || typeof value === 'number'
 }

@@ -2,7 +2,7 @@ import unified from 'unified'
 import parse from 'remark-parse'
 import frontmatter from 'remark-frontmatter'
 import parseYaml from 'remark-parse-yaml'
-import { getMetaData, getTitleFromNode } from './markdown'
+import { getMetaData, getTitleFromNode, getTagsFromNode } from './markdown'
 
 const processor = unified()
   .use(parse)
@@ -80,6 +80,76 @@ describe('markdown', () => {
 
       // Then
       expect(title).toBe('no title')
+    })
+  })
+
+  describe('getTagsFromNode', () => {
+    it('parses tags as string', () => {
+      // Given
+      // prettier-ignore
+      const node = parseAndTransform([
+        '---',
+        'tags: test',
+        '---',
+        ''
+      ].join('\n'))
+
+      // When
+      const tags = getTagsFromNode(node)
+
+      // Then
+      expect(tags).toEqual(['test'])
+    })
+
+    it('parses tags as string array', () => {
+      // Given
+      // prettier-ignore
+      const node = parseAndTransform([
+        '---',
+        'tags: [test, tags, 123]',
+        '---',
+        ''
+      ].join('\n'))
+
+      // When
+      const tags = getTagsFromNode(node)
+
+      // Then
+      expect(tags).toEqual(['test', 'tags', '123'])
+    })
+
+    it('ignores non string value in array', () => {
+      // Given
+      // prettier-ignore
+      const node = parseAndTransform([
+        '---',
+        'tags: [test, [123]]',
+        '---',
+        ''
+      ].join('\n'))
+
+      // When
+      const tags = getTagsFromNode(node)
+
+      // Then
+      expect(tags).toEqual(['test'])
+    })
+
+    it('ignores duplicated entity', () => {
+      // Given
+      // prettier-ignore
+      const node = parseAndTransform([
+        '---',
+        'tags: [test, test]',
+        '---',
+        ''
+      ].join('\n'))
+
+      // When
+      const tags = getTagsFromNode(node)
+
+      // Then
+      expect(tags).toEqual(['test'])
     })
   })
 })
