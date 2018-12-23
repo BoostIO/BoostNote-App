@@ -307,5 +307,69 @@ describe('Storage', () => {
         _rev: ''
       })
     })
+
+    it('binds note id to tags', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+
+      // When
+      storage.addNote({
+        _id: 'note:test',
+        title: 'title',
+        content: 'content',
+        tags: ['test1', 'test2'],
+        folder: '/test',
+        createdAt: now,
+        updatedAt: now,
+        _rev: ''
+      })
+
+      // Then
+      const test1TagNoteIdSet = storage.tagNoteIdSetMap.get('test1')!
+      expect(getValuesFromSet(test1TagNoteIdSet)).toEqual(['note:test'])
+      const test2TagNoteIdSet = storage.tagNoteIdSetMap.get('test2')!
+      expect(getValuesFromSet(test2TagNoteIdSet)).toEqual(['note:test'])
+    })
+
+    it('updates biding after tags changed', () => {
+      // Given
+      const storage = new Storage()
+      const now = new Date()
+      storage.addNote({
+        _id: 'note:test',
+        title: 'title',
+        content: 'content',
+        tags: ['test1', 'test2'],
+        folder: '/test',
+        createdAt: now,
+        updatedAt: now,
+        _rev: ''
+      })
+
+      // When
+      storage.addNote({
+        _id: 'note:test',
+        title: 'title',
+        content: 'content',
+        tags: ['test2', 'test3'],
+        folder: '/test',
+        createdAt: now,
+        updatedAt: now,
+        _rev: ''
+      })
+
+      // Then
+      const test1TagNoteIdSet = storage.tagNoteIdSetMap.get('test1')
+      expect(test1TagNoteIdSet).toBeUndefined()
+      const test2TagNoteIdSet = storage.tagNoteIdSetMap.get('test2')!
+      expect(getValuesFromSet(test2TagNoteIdSet)).toEqual(['note:test'])
+      const test3TagNoteIdSet = storage.tagNoteIdSetMap.get('test3')!
+      expect(getValuesFromSet(test3TagNoteIdSet)).toEqual(['note:test'])
+    })
   })
 })
+
+function getValuesFromSet(set: Map<string, string>): string[] {
+  return [...set.values()]
+}

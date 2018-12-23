@@ -70,7 +70,7 @@ export default class DataStore {
     const createdFolder = await client.createFolder(path, folder)
 
     this.assertStorageExists(name)
-    const storage = this.storageMap.get(name) as Storage
+    const storage = this.storageMap.get(name)!
     storage.addFolder(createdFolder)
 
     return createdFolder
@@ -85,7 +85,7 @@ export default class DataStore {
     const updatedFolder = await client.updateFolder(path, folder)
 
     this.assertStorageExists(name)
-    const storage = this.storageMap.get(name) as Storage
+    const storage = this.storageMap.get(name)!
     storage.addFolder(updatedFolder)
 
     return updatedFolder
@@ -96,7 +96,7 @@ export default class DataStore {
     await client.removeFolder(path)
 
     this.assertStorageExists(name)
-    const storage = this.storageMap.get(name) as Storage
+    const storage = this.storageMap.get(name)!
     storage.removeFolder(path)
   }
 
