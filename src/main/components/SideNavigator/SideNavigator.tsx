@@ -41,17 +41,22 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
       <nav>
         <div>SideNav</div>
         <ul>
-          {storageEntries.map(([name, storage]) => (
-            <StorageItem
-              key={name}
-              name={name}
-              storage={storage}
-              removeStorage={this.removeStorage}
-              createFolder={this.createFolder}
-              removeFolder={this.removeFolder}
-              pathname={route!.pathname}
-            />
-          ))}
+          {storageEntries.map(([name, storage]) => {
+            const pathname = route!.pathname
+            const active = `/storages/${name}` === pathname
+            return (
+              <StorageItem
+                key={name}
+                name={name}
+                storage={storage}
+                removeStorage={this.removeStorage}
+                createFolder={this.createFolder}
+                removeFolder={this.removeFolder}
+                pathname={pathname}
+                active={active}
+              />
+            )
+          })}
         </ul>
         {storageEntries.length === 0 && <p>No storages</p>}
         <SotrageCreateForm createStorage={this.createStorage} />

@@ -12,6 +12,7 @@ type StorageItemProps = {
   createFolder: (storageName: string, folderPath: string) => Promise<void>
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
   pathname: string
+  active: boolean
 }
 
 @observer
@@ -32,27 +33,27 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   render() {
-    const { name, storage, pathname } = this.props
+    const { name, storage, pathname, active } = this.props
     const folderEntries = [...storage.folderMap.entries()]
-    const storagePathname = `/storages/${name}`
-    const storageLinkIsActive = pathname === storagePathname
 
     return (
       <li>
         <div>
-          <NavLink active={storageLinkIsActive} to={storagePathname}>
+          <NavLink active={active} to={`/storages/${name}`}>
             {name}
           </NavLink>
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => {
+              const folderIsActive =
+                `/storages/${name}/notes${folder.path}` === pathname
               return (
                 <FolderItem
                   key={folder.path}
-                  pathname={pathname}
                   storageName={name}
                   folder={folder}
                   removeFolder={this.removeFolder}
+                  active={folderIsActive}
                 />
               )
             })}
