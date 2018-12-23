@@ -3,23 +3,24 @@ import { Folder } from '../../types'
 import NavLink from './NavLink'
 
 type FolderItemProps = {
-  pathname: string
   storageName: string
   folder: Folder
   removeFolder: (folderPath: string) => Promise<void>
+  active: boolean
 }
 
 const FolderItem = ({
-  pathname,
   storageName,
   folder,
-  removeFolder
+  removeFolder,
+  active
 }: FolderItemProps) => {
-  const folderPathname = `/storages/${storageName}/notes${folder.path}`
-  const folderLinkIsActive = pathname === folderPathname
   return (
     <li>
-      <NavLink active={folderLinkIsActive} to={folderPathname}>
+      <NavLink
+        active={active}
+        to={`/storages/${storageName}/notes${folder.path}`}
+      >
         {folder.path}
       </NavLink>
       <button onClick={() => removeFolder(folder.path)}>x</button>

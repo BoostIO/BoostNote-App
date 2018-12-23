@@ -45,13 +45,15 @@ class StorageItem extends React.Component<StorageItemProps> {
           <button onClick={this.removeStorage}>x</button>
           <ul>
             {folderEntries.map(([, folder]) => {
+              const folderIsActive =
+                `/storages/${name}/notes${folder.path}` === pathname
               return (
                 <FolderItem
                   key={folder.path}
-                  pathname={pathname}
                   storageName={name}
                   folder={folder}
                   removeFolder={this.removeFolder}
+                  active={folderIsActive}
                 />
               )
             })}
