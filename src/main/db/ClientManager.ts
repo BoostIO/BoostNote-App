@@ -1,6 +1,8 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
 
+export const reservedStorageNameRegex = /[\/?#<>:"\\|?*\x00-\x1F]/
+
 export enum DBAdapter {
   memory = 'memory',
   idb = 'idb'
@@ -38,6 +40,7 @@ export default class ClientManager {
   }
 
   async addClient(clientName: string) {
+    this.assertClientName(clientName)
     const db = new PouchDB(clientName, {
       adapter: this.adapter
     })
@@ -94,5 +97,10 @@ export default class ClientManager {
     clientNameSet.delete(clientName)
     this.setAllClientNames(clientNameSet)
     return this.clientMap.delete(clientName)
+  }
+
+  assertClientName(name: string) {
+    if (reservedStorageNameRegex.test(name))
+      throw new Error('The given client name is invalid.')
   }
 }
