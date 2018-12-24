@@ -20,7 +20,7 @@ export class UnprocessableEntityError extends Error {
   readonly name: string = ClientErrorTypes.UnprocessableEntityError
 }
 
-export const reservedPathNameRegex = /[<>:"\\|?*\x00-\x1F]/
+export const reservedPathNameRegex = /[#<>:"\\|?*\x00-\x1F]/
 
 export default class Client {
   public initialized: boolean
