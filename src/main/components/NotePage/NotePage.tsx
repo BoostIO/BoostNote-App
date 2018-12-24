@@ -24,6 +24,9 @@ const folderRegexp = pathToRegexp(
     sensitive: true
   }
 )
+const tagRegexp = pathToRegexp('/storages/:storageName/tags/:tag', undefined, {
+  sensitive: true
+})
 
 @inject('data', 'route')
 @observer
@@ -52,12 +55,34 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
   }
 
   @computed
-  get notes() {
-    const { currentStorage, currentFolderPath } = this
+  get pathname() {
+    return this.props.route!.pathname
+  }
+
+  @computed
+  get allNotes() {
+    const { currentStorage } = this
     if (currentStorage == null) return []
-    return [...currentStorage.noteMap.values()].filter(
-      note => note.folder === currentFolderPath
-    )
+    return [...currentStorage.noteMap.values()]
+  }
+
+  @computed
+  get filteredNotes() {
+    const { pathname, allNotes, currentStorage } = this
+    if (currentStorage == null) return []
+    const folderRegexpResult = folderRegexp.exec(pathname)
+    if (folderRegexpResult != null) {
+      const folderPath =
+        folderRegexpResult[2] == null ? '/' : `/${folderRegexpResult[2]}`
+      return allNotes.filter(note => note.folder === folderPath)
+    }
+    const tagRegexpResult = tagRegexp.exec(pathname)
+    if (tagRegexpResult != null) {
+      const tag = tagRegexpResult[2]
+      const noteIds = [...currentStorage.tagNoteIdSetMap.get(tag)!.values()]
+      return noteIds.map(noteId => currentStorage.noteMap.get(noteId)!)
+    }
+    return []
   }
 
   @computed
@@ -117,11 +142,16 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
   }
 
   render() {
-    const { currentStorageName, notes, currentNote, currentNoteId } = this
+    const {
+      currentStorageName,
+      filteredNotes,
+      currentNote,
+      currentNoteId
+    } = this
     return (
       <>
         <NoteList
-          notes={notes}
+          notes={filteredNotes}
           currentNoteId={currentNoteId}
           createNote={this.createNote}
         />
