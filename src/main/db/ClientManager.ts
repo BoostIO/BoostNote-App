@@ -45,13 +45,16 @@ export default class ClientManager {
       adapter: this.adapter
     })
     const newClient = new Client(db)
+
+    await newClient.init()
+
     this.clientMap.set(clientName, newClient)
 
     const clientNameSet = new Set(this.getAllClientNames())
-    clientNameSet.add(clientName)
-    this.setAllClientNames(clientNameSet)
-
-    await newClient.init()
+    if (!clientNameSet.has(clientName)) {
+      clientNameSet.add(clientName)
+      this.setAllClientNames(clientNameSet)
+    }
 
     return newClient
   }
@@ -83,10 +86,31 @@ export default class ClientManager {
   async init() {
     const names = this.getAllClientNames()
     await Promise.all(
-      names.map(name => {
-        return this.addClient(name)
+      names.map(async name => {
+        const client = await this.initClient(name)
+        if (client != null) {
+          this.clientMap.set(name, client)
+        }
       })
     )
+  }
+
+  async initClient(clientName: string) {
+    this.assertClientName(clientName)
+    const db = new PouchDB(clientName, {
+      adapter: this.adapter
+    })
+    const newClient = new Client(db)
+
+    try {
+      await newClient.init()
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.error(error)
+      return null
+    }
+
+    return newClient
   }
 
   async removeClient(clientName: string) {

@@ -1,6 +1,7 @@
 import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../consts'
 import * as Types from '../types'
 import uuid from 'uuid/v1'
+import semver from 'semver'
 
 export enum ClientErrorTypes {
   ConflictError = 'ConflictError',
@@ -21,6 +22,13 @@ export class UnprocessableEntityError extends Error {
 }
 
 export const reservedPathNameRegex = /[#<>:"\\|?*\x00-\x1F]/
+
+export interface MetaData {
+  app: string
+  version: string
+}
+
+export const metaDataId = 'meta'
 
 export default class Client {
   public initialized: boolean
@@ -126,6 +134,7 @@ export default class Client {
   }
 
   async init() {
+    await this.initMetaData()
     await this.createNoteIndexDesignDocument()
     await this.createRootFolderIfNotExist()
     const allNotes = await this.db.allDocs<Types.NoteProps>({
@@ -144,6 +153,41 @@ export default class Client {
         return this.updateFolder(folderPath)
       })
     )
+  }
+
+  async initMetaData() {
+    const meta = await this.getMetaData()
+    if (meta == null) {
+      await this.db.put({
+        _id: metaDataId,
+        app: 'boost',
+        version: '0.0.0'
+      })
+      return
+    }
+
+    if (meta.app !== 'boost')
+      throw new ConflictError('The db has been initialized by other app.')
+
+    if (semver.gte(meta.version, '1.0.0'))
+      throw new ConflictError(
+        `No migrations are available. support: v0.0.0, target: v${meta.version}`
+      )
+  }
+
+  async getMetaData(): Promise<MetaData | null> {
+    let meta
+    try {
+      meta = await this.db.get<MetaData>(metaDataId)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          return null
+        default:
+          throw error
+      }
+    }
+    return meta
   }
 
   async assertIfParentFolderExists(path: string) {

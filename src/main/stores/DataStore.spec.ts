@@ -107,11 +107,9 @@ describe('DataStore', () => {
       // THen
       expect(data.storageMap.get('test')).not.toBeUndefined()
       expect(
-        (data.storageMap.get('test') as Storage).folderMap.get(
-          'boost:folder:/test'
-        )
+        (data.storageMap.get('test') as Storage).folderMap.get('folder:/test')
       ).toMatchObject({
-        _id: 'boost:folder:/test'
+        _id: 'folder:/test'
       })
     })
   })
@@ -131,9 +129,7 @@ describe('DataStore', () => {
 
       // Then
       expect(
-        (data.storageMap.get('test') as Storage).folderMap.has(
-          'boost:folder:/test'
-        )
+        (data.storageMap.get('test') as Storage).folderMap.has('folder:/test')
       ).toBe(false)
     })
   })
