@@ -1,4 +1,5 @@
 import React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Storage from '../../stores/Storage'
 import FolderItem from './FolderItem'
@@ -16,6 +17,12 @@ type StorageItemProps = {
 
 @observer
 class StorageItem extends React.Component<StorageItemProps> {
+  @computed
+  get tags(): string[] {
+    const { storage } = this.props
+    return [...storage.tagNoteIdSetMap.keys()]
+  }
+
   removeStorage = () => {
     const { name, removeStorage } = this.props
     removeStorage(name)
@@ -58,6 +65,21 @@ class StorageItem extends React.Component<StorageItemProps> {
             })}
           </ul>
           <FolderCreateForm createFolder={this.createFolder} />
+          <ul>
+            {this.tags.map(tag => {
+              const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
+              return (
+                <li key={tag}>
+                  <NavLink
+                    active={tagIsActive}
+                    to={`/storages/${name}/tags/${tag}`}
+                  >
+                    {tag}
+                  </NavLink>
+                </li>
+              )
+            })}
+          </ul>
         </div>
       </li>
     )
