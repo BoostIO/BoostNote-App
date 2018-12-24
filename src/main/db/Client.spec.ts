@@ -1,4 +1,4 @@
-import Client, { ClientErrorTypes } from './Client'
+import Client, { ClientErrorTypes, metaDataId } from './Client'
 import PouchDB from './PouchDB'
 import { FOLDER_ID_PREFIX } from '../consts'
 
@@ -223,6 +223,63 @@ describe('Client', () => {
       // Then
       const rootFolder = client.getFolder('/')
       expect(rootFolder).not.toBeNull()
+    })
+  })
+
+  describe('#initMetaData', () => {
+    it('creates meta data if not exists', async () => {
+      // Given
+      const client = await createClient(false)
+
+      // When
+      await client.initMetaData()
+
+      // Then
+      const meta = client.getMetaData()
+      expect(meta).not.toBeNull()
+    })
+
+    it('throws if the app is different', async () => {
+      // Given
+      const client = await createClient(false)
+      client.getDb().put({
+        _id: metaDataId,
+        app: 'wrong',
+        version: '0.0.0'
+      })
+
+      // When
+      try {
+        await client.initMetaData()
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.ConflictError,
+          message: 'The db has been initialized by other app.'
+        })
+      }
+    })
+    it('throws if there is no migration support to target db', async () => {
+      // Given
+      const client = await createClient(false)
+      client.getDb().put({
+        _id: metaDataId,
+        app: 'boost',
+        version: '10.0.0'
+      })
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.initMetaData()
+      } catch (error) {
+        // Then
+        expect(error).toMatchObject({
+          name: ClientErrorTypes.ConflictError,
+          message:
+            'No migrations are available. support: v0.0.0, target: v10.0.0'
+        })
+      }
     })
   })
 
