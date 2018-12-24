@@ -343,7 +343,7 @@ describe('Client', () => {
 
       // Then
       expect(folder).toMatchObject({
-        _id: 'boost:folder:/hello',
+        _id: 'folder:/hello',
         _rev: expect.any(String),
         path: '/hello',
         createdAt: expect.any(Date),
@@ -530,7 +530,7 @@ describe('Client', () => {
       // Then
       const movedFolder = await client.getFolder('/world')
       expect(movedFolder).toEqual({
-        _id: 'boost:folder:/world',
+        _id: 'folder:/world',
         _rev: expect.any(String),
         path: '/world',
         createdAt: originalFolder.createdAt,
