@@ -1,9 +1,10 @@
 import { createGlobalStyle } from 'styled-components'
+import { textColor, backgroundColor } from '../styles/colors'
 
 const GlobalStyle = createGlobalStyle`
   body {
-    color: #DDD;
-    background-color: #252525;
+    color: ${textColor};
+    background-color: ${backgroundColor};
   }
   a {
     color: inherit;
