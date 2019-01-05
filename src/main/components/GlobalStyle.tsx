@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     color: ${textColor};
     background-color: ${backgroundColor};
+    margin: 0;
   }
   a {
     color: inherit;
