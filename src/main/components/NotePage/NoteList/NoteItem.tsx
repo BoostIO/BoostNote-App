@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styled from '../../styled'
+import styled from '../../../styled'
 import { Note } from '../../../types'
 
 const StyledNoteListItem = styled.div<{ active: boolean }>`

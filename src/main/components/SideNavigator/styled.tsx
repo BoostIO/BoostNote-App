@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../styled'
+import styled from '../../styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 export const StyledStorageList = styled.ul`
