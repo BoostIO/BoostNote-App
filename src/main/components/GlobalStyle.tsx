@@ -1,15 +1,17 @@
-import { createGlobalStyle } from 'styled-components'
-import { textColor, backgroundColor } from '../styles/colors'
+import React from 'react'
+import { Global, css } from '@emotion/core'
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    color: ${textColor};
-    background-color: ${backgroundColor};
-    margin: 0;
-  }
-  a {
-    color: inherit;
-  }
-`
+const GlobalStyle = () => (
+  <Global
+    styles={css`
+      body {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+      }
+    `}
+  />
+)
 
 export default GlobalStyle
