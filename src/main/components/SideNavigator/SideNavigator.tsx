@@ -4,6 +4,7 @@ import DataStore from '../../stores/DataStore'
 import StorageItem from './StorageItem'
 import RouteStore from '../../stores/RouteStore'
 import SotrageCreateForm from './StorageCreateForm'
+import { StyledStorageList } from './styled'
 
 type SideNavigatorProps = {
   data?: DataStore
@@ -38,9 +39,8 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
     const storageEntries = [...data!.storageMap.entries()]
 
     return (
-      <nav>
-        <div>SideNav</div>
-        <ul>
+      <nav style={{ width: 250 }}>
+        <StyledStorageList>
           {storageEntries.map(([name, storage]) => {
             const pathname = route!.pathname
             const active = `/storages/${name}` === pathname
@@ -57,7 +57,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
               />
             )
           })}
-        </ul>
+        </StyledStorageList>
         {storageEntries.length === 0 && <p>No storages</p>}
         <SotrageCreateForm createStorage={this.createStorage} />
       </nav>

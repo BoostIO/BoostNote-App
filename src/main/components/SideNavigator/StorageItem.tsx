@@ -5,6 +5,7 @@ import Storage from '../../stores/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
 import NavLink from './NavLink'
+import { StyledStorageItem, StyledStorageItemHeader } from './styled'
 
 type StorageItemProps = {
   name: string
@@ -44,45 +45,45 @@ class StorageItem extends React.Component<StorageItemProps> {
     const folderEntries = [...storage.folderMap.entries()]
 
     return (
-      <li>
-        <div>
+      <StyledStorageItem>
+        <StyledStorageItemHeader>
           <NavLink active={active} to={`/storages/${name}`}>
             {name}
           </NavLink>
           <button onClick={this.removeStorage}>x</button>
-          <ul>
-            {folderEntries.map(([, folder]) => {
-              const folderIsActive =
-                `/storages/${name}/notes${folder.path}` === pathname
-              return (
-                <FolderItem
-                  key={folder.path}
-                  storageName={name}
-                  folder={folder}
-                  removeFolder={this.removeFolder}
-                  active={folderIsActive}
-                />
-              )
-            })}
-          </ul>
-          <FolderCreateForm createFolder={this.createFolder} />
-          <ul>
-            {this.tags.map(tag => {
-              const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
-              return (
-                <li key={tag}>
-                  <NavLink
-                    active={tagIsActive}
-                    to={`/storages/${name}/tags/${tag}`}
-                  >
-                    {tag}
-                  </NavLink>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      </li>
+        </StyledStorageItemHeader>
+        <ul>
+          {folderEntries.map(([, folder]) => {
+            const folderIsActive =
+              `/storages/${name}/notes${folder.path}` === pathname
+            return (
+              <FolderItem
+                key={folder.path}
+                storageName={name}
+                folder={folder}
+                removeFolder={this.removeFolder}
+                active={folderIsActive}
+              />
+            )
+          })}
+        </ul>
+        <FolderCreateForm createFolder={this.createFolder} />
+        <ul>
+          {this.tags.map(tag => {
+            const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
+            return (
+              <li key={tag}>
+                <NavLink
+                  active={tagIsActive}
+                  to={`/storages/${name}/tags/${tag}`}
+                >
+                  {tag}
+                </NavLink>
+              </li>
+            )
+          })}
+        </ul>
+      </StyledStorageItem>
     )
   }
 }

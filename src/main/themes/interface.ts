@@ -4,6 +4,6 @@ export interface Theme {
     backgroundColor: string
   }
   sideNav: {
-    linkActiveColor: string
+    linkActiveBackgroundColor: string
   }
 }
