@@ -1,5 +1,5 @@
 export interface Theme {
-  global: {
+  app: {
     textColor: string
     backgroundColor: string
   }

@@ -6,7 +6,7 @@ const backgroundColor = colors.gray[9]
 const activeColor = colors.blue[5]
 
 export const defaultTheme: Theme = {
-  global: {
+  app: {
     textColor,
     backgroundColor
   },

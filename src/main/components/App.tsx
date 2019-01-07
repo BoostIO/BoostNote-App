@@ -1,16 +1,12 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import styled from './styled'
 import SideNavigator from './SideNavigator'
 import NotePage from './NotePage'
 import AppStore from '../stores/AppStore'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'emotion-theming'
 import { defaultTheme } from '../themes/default'
-
-const Root = styled.div`
-  display: flex;
-`
+import { StyledAppContainer } from './styled'
 
 type AppProps = {
   app?: AppStore
@@ -30,7 +26,7 @@ class App extends React.Component<AppProps> {
     const app = this.props.app!
     return (
       <ThemeProvider theme={defaultTheme}>
-        <Root>
+        <StyledAppContainer>
           {app.dataIsInitialized ? (
             <>
               <SideNavigator />
@@ -40,7 +36,7 @@ class App extends React.Component<AppProps> {
             <div>Loading data</div>
           )}
           <GlobalStyle />
-        </Root>
+        </StyledAppContainer>
       </ThemeProvider>
     )
   }
