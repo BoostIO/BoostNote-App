@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, LinkProps } from 'react-router-dom'
-import styled from '../../styled'
+import styled from '../../../styled'
 
 type NavLinkProps = LinkProps & { active: boolean }
 

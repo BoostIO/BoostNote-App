@@ -1,10 +1,10 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DataStore from '../../stores/DataStore'
-import StorageItem from './StorageItem'
+import StorageItem from './StorageItem/StorageItem'
 import RouteStore from '../../stores/RouteStore'
-import SotrageCreateForm from './StorageCreateForm'
-import { StyledStorageList } from './styled'
+import SotrageCreateForm from './StorageItem/StorageCreateForm'
+import { StyledSideNavContainer, StyledStorageList } from './styled'
 
 type SideNavigatorProps = {
   data?: DataStore
@@ -39,7 +39,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
     const storageEntries = [...data!.storageMap.entries()]
 
     return (
-      <nav style={{ width: 250 }}>
+      <StyledSideNavContainer style={{ width: 160 }}>
         <StyledStorageList>
           {storageEntries.map(([name, storage]) => {
             const pathname = route!.pathname
@@ -60,7 +60,7 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
         </StyledStorageList>
         {storageEntries.length === 0 && <p>No storages</p>}
         <SotrageCreateForm createStorage={this.createStorage} />
-      </nav>
+      </StyledSideNavContainer>
     )
   }
 }

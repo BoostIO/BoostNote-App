@@ -1,11 +1,15 @@
 import React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import Storage from '../../stores/Storage'
+import Storage from '../../../stores/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
-import NavLink from './NavLink'
-import { StyledStorageItem, StyledStorageItemHeader } from './styled'
+import {
+  StyledStorageItem,
+  StyledStorageItemHeader,
+  StyledNavLink,
+  StyledStorageItemFolderList
+} from './styled'
 
 type StorageItemProps = {
   name: string
@@ -47,15 +51,19 @@ class StorageItem extends React.Component<StorageItemProps> {
     return (
       <StyledStorageItem>
         <StyledStorageItemHeader>
-          <NavLink active={active} to={`/storages/${name}`}>
+          <StyledNavLink active={active} to={`/storages/${name}`}>
             {name}
-          </NavLink>
+          </StyledNavLink>
           <button onClick={this.removeStorage}>x</button>
         </StyledStorageItemHeader>
-        <ul>
+        <StyledStorageItemFolderList>
           {folderEntries.map(([, folder]) => {
-            const folderIsActive =
-              `/storages/${name}/notes${folder.path}` === pathname
+            const folderPathname =
+              folder.path === '/'
+                ? `/storages/${name}/notes`
+                : `/storages/${name}/notes${folder.path}`
+            const folderIsActive = folderPathname === pathname
+
             return (
               <FolderItem
                 key={folder.path}
@@ -66,19 +74,19 @@ class StorageItem extends React.Component<StorageItemProps> {
               />
             )
           })}
-        </ul>
+        </StyledStorageItemFolderList>
         <FolderCreateForm createFolder={this.createFolder} />
         <ul>
           {this.tags.map(tag => {
             const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
             return (
               <li key={tag}>
-                <NavLink
+                <StyledNavLink
                   active={tagIsActive}
                   to={`/storages/${name}/tags/${tag}`}
                 >
                   {tag}
-                </NavLink>
+                </StyledNavLink>
               </li>
             )
           })}

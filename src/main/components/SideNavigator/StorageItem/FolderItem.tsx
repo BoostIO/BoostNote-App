@@ -1,6 +1,6 @@
 import React from 'react'
-import { Folder } from '../../types'
-import NavLink from './NavLink'
+import { Folder } from '../../../types'
+import { StyledStorageItemFolderItem, StyledNavLink } from './styled'
 
 type FolderItemProps = {
   storageName: string
@@ -16,15 +16,15 @@ const FolderItem = ({
   active
 }: FolderItemProps) => {
   return (
-    <li>
-      <NavLink
+    <StyledStorageItemFolderItem>
+      <StyledNavLink
         active={active}
         to={`/storages/${storageName}/notes${folder.path}`}
       >
         {folder.path}
-      </NavLink>
+      </StyledNavLink>
       <button onClick={() => removeFolder(folder.path)}>x</button>
-    </li>
+    </StyledStorageItemFolderItem>
   )
 }
 
