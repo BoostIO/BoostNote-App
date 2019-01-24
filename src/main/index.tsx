@@ -6,6 +6,7 @@ import { Router } from 'react-router-dom'
 import DataStore from './stores/DataStore'
 import AppStore from './stores/AppStore'
 import RouteStore from './stores/RouteStore'
+import ContextMenuStore from './stores/ContextMenuStore'
 import { createBrowserHistory } from 'history'
 
 const history = createBrowserHistory()
@@ -23,11 +24,13 @@ const data = new DataStore()
 const app = new AppStore({
   data
 })
+const contextMenu = new ContextMenuStore()
 
 const providerProps = {
   app,
   data,
-  route
+  route,
+  contextMenu
 }
 
 function render(Component: typeof App) {
