@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import DataStore from '../../stores/DataStore'
 import StorageItem from './StorageItem/StorageItem'
 import RouteStore from '../../stores/RouteStore'
-import SotrageCreateForm from './StorageItem/StorageCreateForm'
+import SotrageCreateForm from './StorageCreateForm'
 import { StyledSideNavContainer, StyledStorageList } from './styled'
 
 type SideNavigatorProps = {
