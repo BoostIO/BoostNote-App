@@ -37,8 +37,8 @@ class App extends React.Component<AppProps> {
             <div>Loading data</div>
           )}
           <GlobalStyle />
+          <ContextMenu />
         </StyledAppContainer>
-        <ContextMenu />
       </ThemeProvider>
     )
   }

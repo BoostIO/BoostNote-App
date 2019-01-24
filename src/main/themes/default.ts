@@ -14,5 +14,9 @@ export const defaultTheme: Theme = {
   sideNav: {
     linkActiveBackgroundColor: activeColor,
     borderColor
+  },
+  contextMenu: {
+    backgroundColor,
+    borderColor
   }
 }

@@ -1,1 +1,1 @@
-export const menuHeight = 40
+export const menuHeight = 19

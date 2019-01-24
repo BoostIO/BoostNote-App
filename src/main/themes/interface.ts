@@ -7,4 +7,8 @@ export interface Theme {
     linkActiveBackgroundColor: string
     borderColor: string
   }
+  contextMenu: {
+    backgroundColor: string
+    borderColor: string
+  }
 }
