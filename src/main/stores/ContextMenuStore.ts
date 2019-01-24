@@ -6,11 +6,16 @@ export default class ContextMenuStore {
   @observable xPosition: number = 0
   @observable yPosition: number = 0
   @observable menuItems: MenuItem[] = []
+  @observable id: number = 0
 
   @action
   open(event: React.MouseEvent<unknown>, menuItems: MenuItem[]) {
     this.isOpen = true
-    console.log(event, menuItems)
+    this.xPosition = event.clientX
+    this.yPosition = event.clientY
+    this.menuItems = menuItems
+    this.id++
+    console.log(event.clientX, event.clientY)
     // TODO: Adjust x and y position based on event and height of menu
     // 1. Calculate menu height
     // 2. Get x and y position of mouse cursor
@@ -20,7 +25,7 @@ export default class ContextMenuStore {
   }
 
   @action
-  close(event: React.FocusEvent<unknown>) {
+  close() {
     this.isOpen = false
   }
 }

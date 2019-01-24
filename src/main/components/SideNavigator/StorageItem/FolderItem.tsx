@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { Folder } from '../../../types'
 import { StyledStorageItemFolderItem, StyledNavLink } from './styled'
 import ContextMenuStore from '../../../stores/ContextMenuStore'
+import { MenuTypes } from '../../../lib/contextMenu/interfaces'
 
 type FolderItemProps = {
   storageName: string
@@ -12,32 +13,39 @@ type FolderItemProps = {
   contextMenu?: ContextMenuStore
 }
 
-const FolderItem = inject('contextMenu')(
-  observer(
-    ({
-      storageName,
-      folder,
-      removeFolder,
-      active,
-      contextMenu
-    }: FolderItemProps) => {
-      return (
-        <StyledStorageItemFolderItem>
-          <StyledNavLink
-            active={active}
-            to={`/storages/${storageName}/notes${folder.path}`}
-            onContextMenu={event => {
-              event.preventDefault()
-              contextMenu!.open(event, [])
-            }}
-          >
-            {folder.path}
-          </StyledNavLink>
-          <button onClick={() => removeFolder(folder.path)}>x</button>
-        </StyledStorageItemFolderItem>
-      )
-    }
-  )
-)
+@inject('contextMenu')
+@observer
+class FolderItem extends React.Component<FolderItemProps> {
+  openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const { contextMenu, folder, removeFolder } = this.props
+
+    event.preventDefault()
+    contextMenu!.open(event, [
+      {
+        type: MenuTypes.Normal,
+        label: 'Remove Folder',
+        onClick: () => {
+          removeFolder(folder.path)
+        }
+      }
+    ])
+  }
+
+  render() {
+    const { storageName, folder, active } = this.props
+
+    return (
+      <StyledStorageItemFolderItem>
+        <StyledNavLink
+          active={active}
+          to={`/storages/${storageName}/notes${folder.path}`}
+          onContextMenu={this.openContextMenu}
+        >
+          {folder.path}
+        </StyledNavLink>
+      </StyledStorageItemFolderItem>
+    )
+  }
+}
 
 export default FolderItem

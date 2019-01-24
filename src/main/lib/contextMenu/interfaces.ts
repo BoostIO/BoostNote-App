@@ -1,4 +1,4 @@
-enum MenuTypes {
+export enum MenuTypes {
   Normal = 'Normal',
   Separator = 'Separator',
   Submenu = 'Submenu',
@@ -9,18 +9,18 @@ enum MenuTypes {
 
 interface MenuItemBase {
   type: MenuTypes
-  enabled: boolean
-  visible: boolean
+  enabled?: boolean
+  visible?: boolean
 }
 
-interface NormalMenuItem extends MenuItemBase {
+export interface NormalMenuItem extends MenuItemBase {
   type: MenuTypes.Normal
-  icon: string
+  icon?: string
   label: string
   onClick: () => void
 }
 
-interface SeparatorMenuItem extends MenuItemBase {
+export interface SeparatorMenuItem extends MenuItemBase {
   type: MenuTypes.Separator
 }
 
