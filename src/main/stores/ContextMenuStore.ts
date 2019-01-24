@@ -1,5 +1,10 @@
 import { observable, action } from 'mobx'
 import { MenuItem } from '../lib/contextMenu/interfaces'
+import {
+  menuHeight,
+  menuMargin,
+  menuVerticalPadding
+} from '../lib/contextMenu/consts'
 
 export default class ContextMenuStore {
   @observable isOpen: boolean = false
@@ -11,17 +16,18 @@ export default class ContextMenuStore {
   @action
   open(event: React.MouseEvent<unknown>, menuItems: MenuItem[]) {
     this.isOpen = true
-    this.xPosition = event.clientX
-    this.yPosition = event.clientY
-    this.menuItems = menuItems
     this.id++
-    console.log(event.clientX, event.clientY)
-    // TODO: Adjust x and y position based on event and height of menu
-    // 1. Calculate menu height
-    // 2. Get x and y position of mouse cursor
-    // 3. Determine where to put menu
-    //   - If there is enough space, show menu at the cursor
-    //   - If there is not enough space, shrink menu and make it scrollable.
+    this.menuItems = menuItems
+
+    // TODO: Limit xPosition
+    this.xPosition = event.clientX
+
+    const yPositionLimit =
+      window.innerHeight - menuHeight - menuMargin - menuVerticalPadding * 2
+    const clientYIsLowerThanYPositionLimit = event.clientY > yPositionLimit
+    this.yPosition = clientYIsLowerThanYPositionLimit
+      ? yPositionLimit
+      : event.clientY
   }
 
   @action
