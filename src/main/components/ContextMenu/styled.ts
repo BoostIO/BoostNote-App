@@ -14,6 +14,7 @@ export const StyledContextMenu = styled.div`
   box-sizing: content-box;
   border-radius: 5px;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.35);
+  outline: none;
 `
 
 export const StyledContextMenuItem = styled.div`

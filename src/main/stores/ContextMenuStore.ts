@@ -8,7 +8,7 @@ export default class ContextMenuStore {
   @observable menuItems: MenuItem[] = []
 
   @action
-  open(event: React.MouseEvent<any>, menuItems: MenuItem[]) {
+  open(event: React.MouseEvent<unknown>, menuItems: MenuItem[]) {
     this.isOpen = true
     console.log(event, menuItems)
     // TODO: Adjust x and y position based on event and height of menu
@@ -17,5 +17,10 @@ export default class ContextMenuStore {
     // 3. Determine where to put menu
     //   - If there is enough space, show menu at the cursor
     //   - If there is not enough space, shrink menu and make it scrollable.
+  }
+
+  @action
+  close(event: React.FocusEvent<unknown>) {
+    this.isOpen = false
   }
 }
