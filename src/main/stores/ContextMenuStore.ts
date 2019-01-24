@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx'
-import { MenuItem } from '../components/ContextMenu/interfaces'
+import { MenuItem } from '../lib/contextMenu/interfaces'
 
 export default class ContextMenuStore {
   @observable isOpen: boolean = false

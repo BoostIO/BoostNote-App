@@ -7,6 +7,7 @@ import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'emotion-theming'
 import { defaultTheme } from '../themes/default'
 import { StyledAppContainer } from './styled'
+import ContextMenu from './ContextMenu'
 
 type AppProps = {
   app?: AppStore
@@ -37,6 +38,7 @@ class App extends React.Component<AppProps> {
           )}
           <GlobalStyle />
         </StyledAppContainer>
+        <ContextMenu />
       </ThemeProvider>
     )
   }
