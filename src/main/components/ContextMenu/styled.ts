@@ -11,14 +11,25 @@ export const StyledContextMenu = styled.div`
   border-width: 1px;
   padding: 4px 0;
   font-size: 14px;
-  box-sizing: content-box;
+  box-sizing: border-box;
   border-radius: 5px;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.35);
   outline: none;
 `
 
-export const StyledContextMenuItem = styled.div`
+export const StyledContextMenuItem = styled.button`
   height: ${menuHeight}px;
   padding: 0 20px;
-  box-sizing: content-box;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: ${({ theme }) => theme.contextMenu.menuTextColor};
+  &:hover {
+    background-color: ${({ theme }) =>
+      theme.contextMenu.menuActiveBackgroundColor};
+    color: ${({ theme }) => theme.contextMenu.menuActiveTextColor};
+  }
 `

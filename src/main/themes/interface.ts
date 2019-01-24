@@ -10,5 +10,8 @@ export interface Theme {
   contextMenu: {
     backgroundColor: string
     borderColor: string
+    menuTextColor: string
+    menuActiveBackgroundColor: string
+    menuActiveTextColor: string
   }
 }
