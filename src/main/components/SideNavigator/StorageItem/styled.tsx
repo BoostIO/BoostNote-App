@@ -8,7 +8,7 @@ export const StyledStorageItem = styled.li`
 `
 
 export const StyledStorageItemHeader = styled.header`
-  height: 30px;
+  height: 26px;
   display: flex;
 `
 
@@ -19,16 +19,17 @@ export const StyledStorageItemFolderList = styled.ul`
 
 export const StyledStorageItemFolderItem = styled.li`
   display: flex;
-  height: 30px;
+  height: 26px;
 `
 
 export const StyledNavLink = styled(
   ({ active, ...props }: LinkProps & { active: boolean }) => <Link {...props} />
 )<{ active: boolean }>`
-  line-height: 30px;
+  line-height: 26px;
   padding: 0 5px;
   text-decoration: none;
   width: 100%;
+  user-select: none;
   ${({ active, theme }) =>
     active && `background-color: ${theme.sideNav.linkActiveBackgroundColor};`}
 `

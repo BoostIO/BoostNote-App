@@ -9,6 +9,7 @@ export const StyledAppContainer = styled.div`
   display: flex;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: ${({ theme }) => theme.app.fontSize}px;
   background-color: ${({ theme }) => theme.app.backgroundColor};
   color: ${({ theme }) => theme.app.textColor};
 `

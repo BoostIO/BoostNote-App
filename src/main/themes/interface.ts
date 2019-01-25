@@ -2,6 +2,7 @@ export interface Theme {
   app: {
     textColor: string
     backgroundColor: string
+    fontSize: number
   }
   sideNav: {
     linkActiveBackgroundColor: string
