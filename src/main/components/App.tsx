@@ -5,7 +5,7 @@ import NotePage from './NotePage'
 import AppStore from '../stores/AppStore'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'emotion-theming'
-import { defaultTheme } from '../themes/default'
+import { defaultTheme } from '../lib/styled/themes/default'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 

@@ -1,4 +1,4 @@
-import styled from '../../styled'
+import styled from '../../lib/styled'
 import { menuHeight, menuVerticalPadding } from '../../lib/contextMenu/consts'
 
 export const StyledContextMenu = styled.div`

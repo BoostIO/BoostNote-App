@@ -1,4 +1,4 @@
-import styled from '../../styled'
+import styled from '../../lib/styled'
 
 export const StyledStorageList = styled.ul`
   list-style: none;

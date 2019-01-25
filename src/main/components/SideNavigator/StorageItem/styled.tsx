@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../../styled'
+import styled from '../../../lib/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 export const StyledStorageItem = styled.li`
