@@ -23,7 +23,10 @@ export default class ContextMenuStore {
     this.xPosition = event.clientX
 
     const yPositionLimit =
-      window.innerHeight - menuHeight - menuMargin - menuVerticalPadding * 2
+      window.innerHeight -
+      menuHeight * menuItems.length -
+      menuMargin -
+      menuVerticalPadding * 2
     const clientYIsLowerThanYPositionLimit = event.clientY > yPositionLimit
     this.yPosition = clientYIsLowerThanYPositionLimit
       ? yPositionLimit
