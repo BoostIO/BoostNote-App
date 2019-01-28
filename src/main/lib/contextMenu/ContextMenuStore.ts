@@ -1,10 +1,6 @@
 import { observable, action } from 'mobx'
-import { MenuItem } from '../lib/contextMenu/interfaces'
-import {
-  menuHeight,
-  menuMargin,
-  menuVerticalPadding
-} from '../lib/contextMenu/consts'
+import { MenuItem } from './interfaces'
+import { menuHeight, menuMargin, menuVerticalPadding } from './consts'
 
 export default class ContextMenuStore {
   @observable isOpen: boolean = false

@@ -1,6 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import ContextMenuStore from '../../stores/ContextMenuStore'
+import ContextMenuStore from '../../lib/contextMenu/ContextMenuStore'
 import { StyledContextMenu, StyledContextMenuItem } from './styled'
 import { MenuTypes } from '../../lib/contextMenu/interfaces'
 

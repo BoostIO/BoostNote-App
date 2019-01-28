@@ -2,7 +2,7 @@ import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Folder } from '../../../types'
 import { StyledStorageItemFolderItem, StyledNavLink } from './styled'
-import ContextMenuStore from '../../../stores/ContextMenuStore'
+import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
 import { MenuTypes } from '../../../lib/contextMenu/interfaces'
 
 type FolderItemProps = {

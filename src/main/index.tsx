@@ -6,7 +6,7 @@ import { Router } from 'react-router-dom'
 import DataStore from './stores/DataStore'
 import AppStore from './stores/AppStore'
 import RouteStore from './stores/RouteStore'
-import ContextMenuStore from './stores/ContextMenuStore'
+import ContextMenuStore from './lib/contextMenu/ContextMenuStore'
 import { createBrowserHistory } from 'history'
 
 const history = createBrowserHistory()
