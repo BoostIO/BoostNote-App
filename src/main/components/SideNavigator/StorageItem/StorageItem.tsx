@@ -69,6 +69,7 @@ class StorageItem extends React.Component<StorageItemProps> {
                 key={folder.path}
                 storageName={name}
                 folder={folder}
+                createFolder={this.createFolder}
                 removeFolder={this.removeFolder}
                 active={folderIsActive}
               />

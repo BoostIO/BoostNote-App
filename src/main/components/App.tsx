@@ -8,6 +8,7 @@ import { ThemeProvider } from 'emotion-theming'
 import { defaultTheme } from '../lib/styled/themes/default'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
+import Dialog from './Dialog/Dialog'
 
 type AppProps = {
   app?: AppStore
@@ -38,6 +39,7 @@ class App extends React.Component<AppProps> {
           )}
           <GlobalStyle />
           <ContextMenu />
+          <Dialog />
         </StyledAppContainer>
       </ThemeProvider>
     )
