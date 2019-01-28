@@ -1,7 +1,7 @@
 import React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import Storage from '../../../stores/Storage'
+import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
 import FolderCreateForm from './FolderCreateForm'
 import {

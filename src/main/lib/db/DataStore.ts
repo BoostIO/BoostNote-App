@@ -1,14 +1,14 @@
 import { observable, action } from 'mobx'
 import ClientManager from '../db/ClientManager'
 import Storage from './Storage'
-import * as Types from '../types'
-import { getMetaData } from '../lib/markdown'
+import * as Types from '../../types'
+import { getMetaData } from '../markdown'
 
 export interface DataStoreOptions {
   manager?: ClientManager
 }
 
-export default class DataStore {
+export class DataStore {
   manager: ClientManager
   @observable storageMap: Map<string, Storage>
   errors: Error[]

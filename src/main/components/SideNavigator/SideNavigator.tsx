@@ -1,8 +1,8 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import DataStore from '../../stores/DataStore'
+import { DataStore } from '../../lib/db/DataStore'
 import StorageItem from './StorageItem/StorageItem'
-import RouteStore from '../../stores/RouteStore'
+import { RouteStore } from '../../lib/RouteStore'
 import SotrageCreateForm from './StorageCreateForm'
 import { StyledSideNavContainer, StyledStorageList } from './styled'
 
