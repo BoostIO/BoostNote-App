@@ -1,10 +1,14 @@
 import styled from '../../lib/styled'
-import { menuHeight, menuVerticalPadding } from '../../lib/contextMenu/consts'
+import {
+  menuHeight,
+  menuVerticalPadding,
+  menuZIndex
+} from '../../lib/contextMenu/consts'
 
 export const StyledContextMenu = styled.div`
   min-width: 130px;
   position: fixed;
-  z-index: 9999;
+  z-index: ${menuZIndex};
   background-color: ${({ theme }) => theme.contextMenu.backgroundColor};
   border-color: ${({ theme }) => theme.contextMenu.borderColor};
   border-style: solid;
