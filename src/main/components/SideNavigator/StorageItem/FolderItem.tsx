@@ -36,8 +36,8 @@ class FolderItem extends React.Component<FolderItemProps> {
         label: 'New Folder',
         onClick: async () => {
           dialog!.prompt({
-            title: 'hello',
-            message: 'yolo',
+            title: 'Create a Folder',
+            message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
             defaultValue: folder.path === '/' ? '/' : `${folder.path}/`,
             onClose: (value: string | null) => {
