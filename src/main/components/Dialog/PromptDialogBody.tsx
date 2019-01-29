@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react'
+import React, { ChangeEventHandler, KeyboardEventHandler } from 'react'
 import { PromptDialogOptions } from '../../lib/dialog/interfaces'
 import {
   StyledDialogBody,
@@ -40,34 +40,49 @@ export default class PromptDialog extends React.Component<
     })
   }
 
-  render() {
+  handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = event => {
+    switch (event.key) {
+      case 'Escape':
+        this.cancel()
+        return
+    }
+  }
+
+  handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = event => {
+    switch (event.key) {
+      case 'Enter':
+        this.submit()
+        return
+    }
+  }
+
+  submit = () => {
     const { dialog: options, closeDialog } = this.props
+    closeDialog()
+    options.onClose(this.state.value)
+  }
+
+  cancel = () => {
+    const { dialog: options, closeDialog } = this.props
+    closeDialog()
+    options.onClose(null)
+  }
+
+  render() {
+    const { dialog: options } = this.props
     return (
-      <StyledDialogBody>
+      <StyledDialogBody onKeyDown={this.handleBodyKeyDown}>
         <StyledDialogTitle>{options.title}</StyledDialogTitle>
         <StyledDialogMessage>{options.message}</StyledDialogMessage>
         <StyledDialogPromptInput
           ref={this.inputRef}
           value={this.state.value}
           onChange={this.updateValue}
+          onKeyDown={this.handleInputKeyDown}
         />
         <StyledDialogButtonGroup>
-          <StyledDialogButton
-            onClick={() => {
-              closeDialog()
-              options.onClose(this.state.value)
-            }}
-          >
-            Ok
-          </StyledDialogButton>
-          <StyledDialogButton
-            onClick={() => {
-              closeDialog()
-              options.onClose(null)
-            }}
-          >
-            Cancel
-          </StyledDialogButton>
+          <StyledDialogButton onClick={this.submit}>Ok</StyledDialogButton>
+          <StyledDialogButton onClick={this.cancel}>Cancel</StyledDialogButton>
         </StyledDialogButtonGroup>
       </StyledDialogBody>
     )
