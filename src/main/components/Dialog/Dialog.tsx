@@ -1,20 +1,16 @@
-import React, { ChangeEventHandler } from 'react'
+import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DialogStore from '../../lib/dialog/DialogStore'
-import { DialogTypes, PromptDialogOptions } from '../../lib/dialog/interfaces'
+import DialogIcon from './DialogIcon'
+import PromptDialog from './PromptDialogBody'
 import {
-  StyledDialog,
-  StyledDialogBackground,
-  StyledIcon,
-  StyledDialogBody,
-  StyledDialogTitle,
-  StyledDialogMessage,
-  StyledDialogPromptInput,
-  StyledDialogButtonGroup,
-  StyledDialogButton
-} from './styled'
+  DialogTypes,
+  PromptDialogData,
+  DialogData
+} from '../../lib/dialog/interfaces'
+import { StyledDialog, StyledDialogBackground } from './styled'
 
-interface DialogProps {
+type DialogProps = {
   dialog?: DialogStore
 }
 
@@ -25,96 +21,33 @@ export default class Dialog extends React.Component<DialogProps> {
     this.props.dialog!.closeDialog()
   }
 
-  render() {
-    const { current: currentDialog } = this.props.dialog!
-    if (currentDialog == null) return null
+  renderBody(currentDialog: DialogData) {
     switch (currentDialog.type) {
       case DialogTypes.MessageBox:
         return null
-
       case DialogTypes.Prompt:
-        const promptDialog = currentDialog as PromptDialogOptions
+        const promptDialog = currentDialog as PromptDialogData
         return (
-          <StyledDialogBackground>
-            <StyledDialog>
-              <StyledIcon>⚠️</StyledIcon>
-              <StyledDialogBody>
-                <PromptDialog
-                  key={currentDialog.id}
-                  options={promptDialog}
-                  closeDialog={this.closeDialog}
-                />
-              </StyledDialogBody>
-            </StyledDialog>
-          </StyledDialogBackground>
+          <PromptDialog
+            key={currentDialog.id}
+            dialog={promptDialog}
+            closeDialog={this.closeDialog}
+          />
         )
     }
-    return null
-  }
-}
-
-interface PromptDialogProps {
-  options: PromptDialogOptions
-  closeDialog: () => void
-}
-
-interface PromptDialogState {
-  value: string
-}
-
-class PromptDialog extends React.Component<
-  PromptDialogProps,
-  PromptDialogState
-> {
-  state = {
-    value:
-      this.props.options.defaultValue == null
-        ? ''
-        : this.props.options.defaultValue
-  }
-  inputRef = React.createRef<HTMLInputElement>()
-
-  componentDidMount() {
-    this.inputRef.current!.focus()
-  }
-
-  updateValue: ChangeEventHandler<HTMLInputElement> = event => {
-    this.setState({
-      value: event.target.value
-    })
+    throw new Error('Invalid dialog type.')
   }
 
   render() {
-    const { options, closeDialog } = this.props
+    const { currentData: currentDialogData } = this.props.dialog!
+    if (currentDialogData == null) return null
     return (
-      <>
-        <StyledDialogTitle>{options.title}</StyledDialogTitle>
-        <StyledDialogMessage>{options.message}</StyledDialogMessage>
-        <StyledDialogPromptInput
-          ref={this.inputRef}
-          value={this.state.value}
-          onChange={this.updateValue}
-        />
-
-        <StyledDialogButtonGroup>
-          <StyledDialogButton
-            onClick={() => {
-              closeDialog()
-              options.onClose(this.state.value)
-            }}
-          >
-            Ok
-          </StyledDialogButton>
-          <StyledDialogButton
-            onClick={() => {
-              closeDialog()
-              options.onClose(null)
-            }}
-          >
-            Cancel
-          </StyledDialogButton>
-        </StyledDialogButtonGroup>
-      </>
+      <StyledDialogBackground>
+        <StyledDialog>
+          <DialogIcon icon={currentDialogData.iconType} />
+          {this.renderBody(currentDialogData)}
+        </StyledDialog>
+      </StyledDialogBackground>
     )
   }
 }

@@ -1,13 +1,13 @@
 import { observable, action } from 'mobx'
-import { DialogProps, PromptDialogOptions, DialogTypes } from './interfaces'
+import { DialogData, PromptDialogOptions, DialogTypes } from './interfaces'
 
 let id = 0
 export default class DialogStore {
-  @observable current?: DialogProps
+  @observable currentData?: DialogData
 
   @action
-  setOptions(props?: DialogProps) {
-    this.current = props
+  setOptions(data?: DialogData) {
+    this.currentData = data
   }
 
   prompt(options: PromptDialogOptions) {

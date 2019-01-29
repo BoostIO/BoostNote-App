@@ -77,6 +77,7 @@ export const StyledDialogButton = styled.button`
   border-radius: 4px;
   outline: none;
   margin-left: 16px;
+  user-select: none;
   &:active {
     background-color: ${({ theme }) => theme.button.activeBackgroundColor};
   }

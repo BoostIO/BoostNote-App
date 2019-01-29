@@ -5,7 +5,9 @@ export enum DialogTypes {
 
 export enum DialogIconTypes {
   Question = 'Question',
-  Info = 'Info'
+  Info = 'Info',
+  Error = 'Error',
+  Warning = 'Warning'
 }
 
 export interface MessageBoxDialogOptions {
@@ -26,7 +28,7 @@ export interface PromptDialogOptions {
   onClose: (value: string | null) => void
 }
 
-export interface BaseDialogProps {
+export interface BaseDialogData {
   id: number
   type: DialogTypes
   title: string
@@ -34,7 +36,7 @@ export interface BaseDialogProps {
   iconType: DialogIconTypes
 }
 
-export type MessageBoxDialogProps = BaseDialogProps & MessageBoxDialogOptions
-export type PromptDialogProps = BaseDialogProps & PromptDialogOptions
+export type MessageBoxDialogData = BaseDialogData & MessageBoxDialogOptions
+export type PromptDialogData = BaseDialogData & PromptDialogOptions
 
-export type DialogProps = MessageBoxDialogProps | PromptDialogProps
+export type DialogData = MessageBoxDialogData | PromptDialogData
