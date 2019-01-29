@@ -3,6 +3,7 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
+import { Folder } from '../../../types'
 import {
   StyledStorageItem,
   StyledStorageItemHeader,
@@ -25,7 +26,16 @@ class StorageItem extends React.Component<StorageItemProps> {
   @computed
   get tags(): string[] {
     const { storage } = this.props
-    return [...storage.tagNoteIdSetMap.keys()]
+    return [...storage.tagNoteIdSetMap.keys()].sort()
+  }
+
+  @computed
+  get folders(): Folder[] {
+    const { storage } = this.props
+    const folderEntries = [...storage.folderMap.entries()]
+    return folderEntries
+      .map(([, folder]) => folder)
+      .sort((folderA, folderB) => folderA.path.localeCompare(folderB.path))
   }
 
   removeStorage = () => {
@@ -44,8 +54,7 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   render() {
-    const { name, storage, pathname, active } = this.props
-    const folderEntries = [...storage.folderMap.entries()]
+    const { name, pathname, active } = this.props
 
     return (
       <StyledStorageItem>
@@ -56,7 +65,7 @@ class StorageItem extends React.Component<StorageItemProps> {
           <button onClick={this.removeStorage}>x</button>
         </StyledStorageItemHeader>
         <StyledStorageItemFolderList>
-          {folderEntries.map(([, folder]) => {
+          {this.folders.map(folder => {
             const folderPathname =
               folder.path === '/'
                 ? `/storages/${name}/notes`
