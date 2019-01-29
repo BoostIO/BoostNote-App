@@ -36,4 +36,8 @@ export const StyledContextMenuItem = styled.button`
       theme.contextMenu.menuActiveBackgroundColor};
     color: ${({ theme }) => theme.contextMenu.menuActiveTextColor};
   }
+  &:disabled {
+    background-color: transparent;
+    color: ${({ theme }) => theme.contextMenu.menuDisabledTextColor};
+  }
 `

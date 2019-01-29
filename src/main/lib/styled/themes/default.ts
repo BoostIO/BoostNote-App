@@ -23,7 +23,8 @@ export const defaultTheme: Theme = {
     borderColor,
     menuTextColor: textColor,
     menuActiveBackgroundColor: activeColor,
-    menuActiveTextColor: activeTextColor
+    menuActiveTextColor: activeTextColor,
+    menuDisabledTextColor: colors.gray[6]
   },
   button: {
     backgroundColor: colors.gray[7],

@@ -14,6 +14,7 @@ export interface Theme {
     menuTextColor: string
     menuActiveBackgroundColor: string
     menuActiveTextColor: string
+    menuDisabledTextColor: string
   }
   button: {
     backgroundColor: string

@@ -67,6 +67,7 @@ export default class ContextMenu extends React.Component<ContextMenuProps> {
                     this.closeContextMenu()
                     menu.onClick()
                   }}
+                  disabled={menu.enabled == null ? false : !menu.enabled}
                 >
                   {menu.label}
                 </StyledContextMenuItem>

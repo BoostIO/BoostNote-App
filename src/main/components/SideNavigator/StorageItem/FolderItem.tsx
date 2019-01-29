@@ -29,17 +29,20 @@ class FolderItem extends React.Component<FolderItemProps> {
       createFolder
     } = this.props
 
+    const folderIsRootFolder = folder.path === '/'
+
     event.preventDefault()
     contextMenu!.open(event, [
       {
         type: MenuTypes.Normal,
         label: 'New Folder',
+        enabled: !folderIsRootFolder,
         onClick: async () => {
           dialog!.prompt({
             title: 'Create a Folder',
             message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
-            defaultValue: folder.path === '/' ? '/' : `${folder.path}/`,
+            defaultValue: folderIsRootFolder ? '/' : `${folder.path}/`,
             onClose: (value: string | null) => {
               if (value == null) return
               createFolder(value)
