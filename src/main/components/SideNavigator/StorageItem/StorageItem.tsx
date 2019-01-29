@@ -3,7 +3,6 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
-import FolderCreateForm from './FolderCreateForm'
 import {
   StyledStorageItem,
   StyledStorageItemHeader,
@@ -76,7 +75,6 @@ class StorageItem extends React.Component<StorageItemProps> {
             )
           })}
         </StyledStorageItemFolderList>
-        <FolderCreateForm createFolder={this.createFolder} />
         <ul>
           {this.tags.map(tag => {
             const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
