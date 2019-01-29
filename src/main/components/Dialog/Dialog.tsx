@@ -1,8 +1,18 @@
 import React, { ChangeEventHandler } from 'react'
 import { inject, observer } from 'mobx-react'
 import DialogStore from '../../lib/dialog/DialogStore'
-import { StyledDialog } from './styled'
 import { DialogTypes, PromptDialogOptions } from '../../lib/dialog/interfaces'
+import {
+  StyledDialog,
+  StyledDialogBackground,
+  StyledIcon,
+  StyledDialogBody,
+  StyledDialogTitle,
+  StyledDialogMessage,
+  StyledDialogPromptInput,
+  StyledDialogButtonGroup,
+  StyledDialogButton
+} from './styled'
 
 interface DialogProps {
   dialog?: DialogStore
@@ -25,13 +35,18 @@ export default class Dialog extends React.Component<DialogProps> {
       case DialogTypes.Prompt:
         const promptOptions = options as PromptDialogOptions
         return (
-          <StyledDialog>
-            <PromptDialog
-              key={options.id}
-              options={promptOptions}
-              closeDialog={this.closeDialog}
-            />
-          </StyledDialog>
+          <StyledDialogBackground>
+            <StyledDialog>
+              <StyledIcon>⚠️</StyledIcon>
+              <StyledDialogBody>
+                <PromptDialog
+                  key={options.id}
+                  options={promptOptions}
+                  closeDialog={this.closeDialog}
+                />
+              </StyledDialogBody>
+            </StyledDialog>
+          </StyledDialogBackground>
         )
     }
     return null
@@ -73,30 +88,32 @@ class PromptDialog extends React.Component<
     const { options, closeDialog } = this.props
     return (
       <>
-        <h1>{options.title}</h1>
-        <p>{options.message}</p>
-        <input
+        <StyledDialogTitle>{options.title}</StyledDialogTitle>
+        <StyledDialogMessage>{options.message}</StyledDialogMessage>
+        <StyledDialogPromptInput
           ref={this.inputRef}
           value={this.state.value}
           onChange={this.updateValue}
         />
 
-        <button
-          onClick={() => {
-            closeDialog()
-            options.onClose(this.state.value)
-          }}
-        >
-          Ok
-        </button>
-        <button
-          onClick={() => {
-            closeDialog()
-            options.onClose(null)
-          }}
-        >
-          Cancel
-        </button>
+        <StyledDialogButtonGroup>
+          <StyledDialogButton
+            onClick={() => {
+              closeDialog()
+              options.onClose(this.state.value)
+            }}
+          >
+            Ok
+          </StyledDialogButton>
+          <StyledDialogButton
+            onClick={() => {
+              closeDialog()
+              options.onClose(null)
+            }}
+          >
+            Cancel
+          </StyledDialogButton>
+        </StyledDialogButtonGroup>
       </>
     )
   }

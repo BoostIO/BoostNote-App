@@ -15,4 +15,10 @@ export interface Theme {
     menuActiveBackgroundColor: string
     menuActiveTextColor: string
   }
+  button: {
+    backgroundColor: string
+    textColor: string
+    fontSize: number
+    activeBackgroundColor: string
+  }
 }

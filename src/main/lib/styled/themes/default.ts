@@ -24,5 +24,11 @@ export const defaultTheme: Theme = {
     menuTextColor: textColor,
     menuActiveBackgroundColor: activeColor,
     menuActiveTextColor: activeTextColor
+  },
+  button: {
+    backgroundColor: colors.gray[7],
+    textColor,
+    fontSize,
+    activeBackgroundColor: activeColor
   }
 }

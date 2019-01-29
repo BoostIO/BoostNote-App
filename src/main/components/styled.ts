@@ -12,4 +12,13 @@ export const StyledAppContainer = styled.div`
   font-size: ${({ theme }) => theme.app.fontSize}px;
   background-color: ${({ theme }) => theme.app.backgroundColor};
   color: ${({ theme }) => theme.app.textColor};
+
+  button,
+  input {
+    outline: none;
+    &:focus {
+      box-shadow: 0px 0px 0px 2px
+        ${({ theme }) => theme.button.activeBackgroundColor};
+    }
+  }
 `
