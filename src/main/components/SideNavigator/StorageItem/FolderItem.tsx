@@ -36,7 +36,6 @@ class FolderItem extends React.Component<FolderItemProps> {
       {
         type: MenuTypes.Normal,
         label: 'New Folder',
-        enabled: !folderIsRootFolder,
         onClick: async () => {
           dialog!.prompt({
             title: 'Create a Folder',
@@ -53,6 +52,7 @@ class FolderItem extends React.Component<FolderItemProps> {
       {
         type: MenuTypes.Normal,
         label: 'Remove Folder',
+        enabled: !folderIsRootFolder,
         onClick: () => {
           removeFolder(folder.path)
         }
