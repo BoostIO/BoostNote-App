@@ -26,22 +26,22 @@ export default class Dialog extends React.Component<DialogProps> {
   }
 
   render() {
-    const options = this.props.dialog!.options
-    if (options == null) return null
-    switch (options.type) {
+    const { current: currentDialog } = this.props.dialog!
+    if (currentDialog == null) return null
+    switch (currentDialog.type) {
       case DialogTypes.MessageBox:
         return null
 
       case DialogTypes.Prompt:
-        const promptOptions = options as PromptDialogOptions
+        const promptDialog = currentDialog as PromptDialogOptions
         return (
           <StyledDialogBackground>
             <StyledDialog>
               <StyledIcon>⚠️</StyledIcon>
               <StyledDialogBody>
                 <PromptDialog
-                  key={options.id}
-                  options={promptOptions}
+                  key={currentDialog.id}
+                  options={promptDialog}
                   closeDialog={this.closeDialog}
                 />
               </StyledDialogBody>
