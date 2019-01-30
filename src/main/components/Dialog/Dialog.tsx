@@ -2,12 +2,12 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DialogStore from '../../lib/dialog/DialogStore'
 import DialogIcon from './DialogIcon'
-import PromptDialog from './PromptDialogBody'
 import {
   DialogTypes,
   PromptDialogData,
   DialogData
 } from '../../lib/dialog/interfaces'
+import PromptDialogBody from './PromptDialogBody'
 import { StyledDialog, StyledDialogBackground } from './styled'
 
 type DialogProps = {
@@ -27,7 +27,7 @@ export default class Dialog extends React.Component<DialogProps> {
         return null
       case DialogTypes.Prompt:
         return (
-          <PromptDialog
+          <PromptDialogBody
             key={currentDialog.id}
             dialog={currentDialog}
             closeDialog={this.closeDialog}

@@ -18,7 +18,7 @@ type PromptDialogState = {
   value: string
 }
 
-export default class PromptDialog extends React.Component<
+export default class PromptDialogBody extends React.Component<
   PromptDialogProps,
   PromptDialogState
 > {
