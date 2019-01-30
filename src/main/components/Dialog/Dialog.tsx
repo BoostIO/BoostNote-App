@@ -26,11 +26,10 @@ export default class Dialog extends React.Component<DialogProps> {
       case DialogTypes.MessageBox:
         return null
       case DialogTypes.Prompt:
-        const promptDialog = currentDialog as PromptDialogData
         return (
           <PromptDialog
             key={currentDialog.id}
-            dialog={promptDialog}
+            dialog={currentDialog}
             closeDialog={this.closeDialog}
           />
         )
