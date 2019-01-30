@@ -42,6 +42,7 @@ class FolderItem extends React.Component<FolderItemProps> {
             message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
             defaultValue: folderIsRootFolder ? '/' : `${folder.path}/`,
+            submitButtonLabel: 'Create Folder',
             onClose: (value: string | null) => {
               if (value == null) return
               createFolder(value)

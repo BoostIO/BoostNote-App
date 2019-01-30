@@ -25,6 +25,8 @@ export interface PromptDialogOptions {
   message: string
   iconType: DialogIconTypes
   defaultValue?: string
+  submitButtonLabel?: string
+  cancelButtonLabel?: string
   onClose: (value: string | null) => void
 }
 

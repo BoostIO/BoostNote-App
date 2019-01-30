@@ -79,8 +79,12 @@ export default class PromptDialogBody extends React.Component<
           onKeyDown={this.handleInputKeyDown}
         />
         <StyledDialogButtonGroup>
-          <StyledDialogButton onClick={this.submit}>Ok</StyledDialogButton>
-          <StyledDialogButton onClick={this.cancel}>Cancel</StyledDialogButton>
+          <StyledDialogButton onClick={this.submit}>
+            {data.submitButtonLabel == null ? 'Submit' : data.submitButtonLabel}
+          </StyledDialogButton>
+          <StyledDialogButton onClick={this.cancel}>
+            {data.cancelButtonLabel == null ? 'Cancel' : data.cancelButtonLabel}
+          </StyledDialogButton>
         </StyledDialogButtonGroup>
       </StyledDialogBody>
     )
