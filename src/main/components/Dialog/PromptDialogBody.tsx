@@ -10,7 +10,7 @@ import {
 } from './styled'
 
 type PromptDialogProps = {
-  dialog: PromptDialogOptions
+  data: PromptDialogOptions
   closeDialog: () => void
 }
 
@@ -18,15 +18,13 @@ type PromptDialogState = {
   value: string
 }
 
-export default class PromptDialog extends React.Component<
+export default class PromptDialogBody extends React.Component<
   PromptDialogProps,
   PromptDialogState
 > {
   state = {
     value:
-      this.props.dialog.defaultValue == null
-        ? ''
-        : this.props.dialog.defaultValue
+      this.props.data.defaultValue == null ? '' : this.props.data.defaultValue
   }
   inputRef = React.createRef<HTMLInputElement>()
 
@@ -57,23 +55,23 @@ export default class PromptDialog extends React.Component<
   }
 
   submit = () => {
-    const { dialog: options, closeDialog } = this.props
+    const { data, closeDialog } = this.props
     closeDialog()
-    options.onClose(this.state.value)
+    data.onClose(this.state.value)
   }
 
   cancel = () => {
-    const { dialog: options, closeDialog } = this.props
+    const { data, closeDialog } = this.props
     closeDialog()
-    options.onClose(null)
+    data.onClose(null)
   }
 
   render() {
-    const { dialog: options } = this.props
+    const { data } = this.props
     return (
       <StyledDialogBody onKeyDown={this.handleBodyKeyDown}>
-        <StyledDialogTitle>{options.title}</StyledDialogTitle>
-        <StyledDialogMessage>{options.message}</StyledDialogMessage>
+        <StyledDialogTitle>{data.title}</StyledDialogTitle>
+        <StyledDialogMessage>{data.message}</StyledDialogMessage>
         <StyledDialogPromptInput
           ref={this.inputRef}
           value={this.state.value}
@@ -81,8 +79,12 @@ export default class PromptDialog extends React.Component<
           onKeyDown={this.handleInputKeyDown}
         />
         <StyledDialogButtonGroup>
-          <StyledDialogButton onClick={this.submit}>Ok</StyledDialogButton>
-          <StyledDialogButton onClick={this.cancel}>Cancel</StyledDialogButton>
+          <StyledDialogButton onClick={this.submit}>
+            {data.submitButtonLabel == null ? 'Submit' : data.submitButtonLabel}
+          </StyledDialogButton>
+          <StyledDialogButton onClick={this.cancel}>
+            {data.cancelButtonLabel == null ? 'Cancel' : data.cancelButtonLabel}
+          </StyledDialogButton>
         </StyledDialogButtonGroup>
       </StyledDialogBody>
     )

@@ -42,6 +42,7 @@ class FolderItem extends React.Component<FolderItemProps> {
             message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
             defaultValue: folderIsRootFolder ? '/' : `${folder.path}/`,
+            submitButtonLabel: 'Create Folder',
             onClose: (value: string | null) => {
               if (value == null) return
               createFolder(value)
@@ -54,7 +55,19 @@ class FolderItem extends React.Component<FolderItemProps> {
         label: 'Remove Folder',
         enabled: !folderIsRootFolder,
         onClick: () => {
-          removeFolder(folder.path)
+          dialog!.messageBox({
+            title: `Remove "${folder.path}" folder`,
+            message: 'All notes and subfolders will be deleted.',
+            iconType: DialogIconTypes.Warning,
+            buttons: ['Remove Folder', 'Cancel'],
+            defaultButtonIndex: 0,
+            cancelButtonIndex: 1,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                removeFolder(folder.path)
+              }
+            }
+          })
         }
       }
     ])

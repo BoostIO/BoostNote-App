@@ -15,8 +15,8 @@ export interface MessageBoxDialogOptions {
   message: string
   iconType: DialogIconTypes
   buttons: string[]
-  defaultId: number
-  cancelId: number
+  defaultButtonIndex?: number
+  cancelButtonIndex?: number
   onClose: (value: number | null) => void
 }
 
@@ -25,6 +25,8 @@ export interface PromptDialogOptions {
   message: string
   iconType: DialogIconTypes
   defaultValue?: string
+  submitButtonLabel?: string
+  cancelButtonLabel?: string
   onClose: (value: string | null) => void
 }
 
@@ -36,7 +38,13 @@ export interface BaseDialogData {
   iconType: DialogIconTypes
 }
 
-export type MessageBoxDialogData = BaseDialogData & MessageBoxDialogOptions
-export type PromptDialogData = BaseDialogData & PromptDialogOptions
+export type MessageBoxDialogData = BaseDialogData &
+  MessageBoxDialogOptions & {
+    type: DialogTypes.MessageBox
+  }
+export type PromptDialogData = BaseDialogData &
+  PromptDialogOptions & {
+    type: DialogTypes.Prompt
+  }
 
 export type DialogData = MessageBoxDialogData | PromptDialogData
