@@ -9,7 +9,7 @@ import {
 } from './styled'
 
 type MessageBoxDialogProps = {
-  dialog: MessageBoxDialogData
+  data: MessageBoxDialogData
   closeDialog: () => void
 }
 
@@ -29,35 +29,35 @@ export default class MessageBoxDialogBody extends React.Component<
   }
 
   handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = event => {
-    const { dialog: options } = this.props
+    const { data } = this.props
     switch (event.key) {
       case 'Escape':
-        if (options.cancelButtonIndex != null) {
-          this.close(options.cancelButtonIndex)
+        if (data.cancelButtonIndex != null) {
+          this.close(data.cancelButtonIndex)
         }
         return
     }
   }
 
   close = (value: number) => () => {
-    const { dialog: options, closeDialog } = this.props
+    const { data, closeDialog } = this.props
     closeDialog()
-    options.onClose(value)
+    data.onClose(value)
   }
 
   render() {
-    const { dialog: options } = this.props
+    const { data } = this.props
     return (
       <StyledDialogBody onKeyDown={this.handleBodyKeyDown}>
-        <StyledDialogTitle>{options.title}</StyledDialogTitle>
-        <StyledDialogMessage>{options.message}</StyledDialogMessage>
+        <StyledDialogTitle>{data.title}</StyledDialogTitle>
+        <StyledDialogMessage>{data.message}</StyledDialogMessage>
         <StyledDialogButtonGroup>
-          {options.buttons.map((button, index) => (
+          {data.buttons.map((button, index) => (
             <StyledDialogButton
-              key={`${options.id}-${index}`}
+              key={`${data.id}-${index}`}
               onClick={this.close(index)}
               ref={
-                index === options.defaultButtonIndex
+                index === data.defaultButtonIndex
                   ? this.defaultButtonRef
                   : undefined
               }
