@@ -2,13 +2,10 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import DialogStore from '../../lib/dialog/DialogStore'
 import DialogIcon from './DialogIcon'
-import {
-  DialogTypes,
-  PromptDialogData,
-  DialogData
-} from '../../lib/dialog/interfaces'
 import PromptDialogBody from './PromptDialogBody'
+import { DialogTypes, DialogData } from '../../lib/dialog/interfaces'
 import { StyledDialog, StyledDialogBackground } from './styled'
+import MessageBoxDialogBody from './MessageBoxDialogBody'
 
 type DialogProps = {
   dialog?: DialogStore
@@ -24,7 +21,13 @@ export default class Dialog extends React.Component<DialogProps> {
   renderBody(currentDialog: DialogData) {
     switch (currentDialog.type) {
       case DialogTypes.MessageBox:
-        return null
+        return (
+          <MessageBoxDialogBody
+            key={currentDialog.id}
+            dialog={currentDialog}
+            closeDialog={this.closeDialog}
+          />
+        )
       case DialogTypes.Prompt:
         return (
           <PromptDialogBody

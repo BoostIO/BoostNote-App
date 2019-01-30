@@ -1,5 +1,10 @@
 import { observable, action } from 'mobx'
-import { DialogData, PromptDialogOptions, DialogTypes } from './interfaces'
+import {
+  DialogData,
+  PromptDialogOptions,
+  DialogTypes,
+  MessageBoxDialogOptions
+} from './interfaces'
 
 let id = 0
 export default class DialogStore {
@@ -14,6 +19,14 @@ export default class DialogStore {
     this.setOptions({
       id: id++,
       type: DialogTypes.Prompt,
+      ...options
+    })
+  }
+
+  messageBox(options: MessageBoxDialogOptions) {
+    this.setOptions({
+      id: id++,
+      type: DialogTypes.MessageBox,
       ...options
     })
   }
