@@ -11,12 +11,12 @@ export default class DialogStore {
   @observable currentData?: DialogData
 
   @action
-  setOptions(data?: DialogData) {
+  setData(data?: DialogData) {
     this.currentData = data
   }
 
   prompt(options: PromptDialogOptions) {
-    this.setOptions({
+    this.setData({
       id: id++,
       type: DialogTypes.Prompt,
       ...options
@@ -24,7 +24,7 @@ export default class DialogStore {
   }
 
   messageBox(options: MessageBoxDialogOptions) {
-    this.setOptions({
+    this.setData({
       id: id++,
       type: DialogTypes.MessageBox,
       ...options
@@ -32,6 +32,6 @@ export default class DialogStore {
   }
 
   closeDialog() {
-    this.setOptions()
+    this.setData()
   }
 }
