@@ -15,8 +15,8 @@ export interface MessageBoxDialogOptions {
   message: string
   iconType: DialogIconTypes
   buttons: string[]
-  defaultId: number
-  cancelId: number
+  defaultButtonIndex?: number
+  cancelButtonIndex?: number
   onClose: (value: number | null) => void
 }
 
