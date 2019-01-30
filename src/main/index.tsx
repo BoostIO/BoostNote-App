@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import App from './components/App'
 import { Router } from 'react-router-dom'
-import DataStore from './stores/DataStore'
-import AppStore from './stores/AppStore'
-import RouteStore from './stores/RouteStore'
+import { DataStore } from './lib/db/DataStore'
+import AppStore from './lib/AppStore'
+import { RouteStore } from './lib/RouteStore'
+import ContextMenuStore from './lib/contextMenu/ContextMenuStore'
 import { createBrowserHistory } from 'history'
+import DialogStore from './lib/dialog/DialogStore'
 
 const history = createBrowserHistory()
 const route = new RouteStore({
@@ -23,11 +25,15 @@ const data = new DataStore()
 const app = new AppStore({
   data
 })
+const contextMenu = new ContextMenuStore()
+const dialog = new DialogStore()
 
 const providerProps = {
   app,
   data,
-  route
+  route,
+  contextMenu,
+  dialog
 }
 
 function render(Component: typeof App) {

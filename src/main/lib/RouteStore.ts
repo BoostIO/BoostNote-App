@@ -11,7 +11,7 @@ function normalize(pathname: string): string {
   return normalizedPathname
 }
 
-export default class RouteStore {
+export class RouteStore {
   @observable
   public pathname: string
   @observable

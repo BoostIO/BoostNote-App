@@ -1,5 +1,5 @@
 import ClientManager, { DBAdapter } from './ClientManager'
-import MemoryStorage from '../specs/utils/MemoryStorage'
+import MemoryStorage from '../../specs/utils/MemoryStorage'
 import Client from './Client'
 
 describe('ClientManager', () => {

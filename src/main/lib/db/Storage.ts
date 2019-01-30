@@ -1,6 +1,6 @@
 import { observable, action, ObservableMap } from 'mobx'
-import { Note, Folder } from '../types'
-import { FOLDER_ID_PREFIX } from '../consts'
+import { Note, Folder } from '../../types'
+import { FOLDER_ID_PREFIX } from '../../consts'
 import { difference } from 'ramda'
 
 export default class Storage {

@@ -1,14 +1,14 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import styled from 'styled-components'
 import SideNavigator from './SideNavigator'
 import NotePage from './NotePage'
-import AppStore from '../stores/AppStore'
+import AppStore from '../lib/AppStore'
 import GlobalStyle from './GlobalStyle'
-
-const Root = styled.div`
-  display: flex;
-`
+import { ThemeProvider } from 'emotion-theming'
+import { defaultTheme } from '../lib/styled/themes/default'
+import { StyledAppContainer } from './styled'
+import ContextMenu from './ContextMenu'
+import Dialog from './Dialog/Dialog'
 
 type AppProps = {
   app?: AppStore
@@ -27,17 +27,21 @@ class App extends React.Component<AppProps> {
   render() {
     const app = this.props.app!
     return (
-      <Root>
-        {app.dataIsInitialized ? (
-          <>
-            <SideNavigator />
-            <NotePage />
-          </>
-        ) : (
-          <div>Loading data</div>
-        )}
-        <GlobalStyle />
-      </Root>
+      <ThemeProvider theme={defaultTheme}>
+        <StyledAppContainer>
+          {app.dataIsInitialized ? (
+            <>
+              <SideNavigator />
+              <NotePage />
+            </>
+          ) : (
+            <div>Loading data</div>
+          )}
+          <GlobalStyle />
+          <ContextMenu />
+          <Dialog />
+        </StyledAppContainer>
+      </ThemeProvider>
     )
   }
 }

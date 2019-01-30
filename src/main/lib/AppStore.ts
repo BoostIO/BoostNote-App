@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx'
-import DataStore from './DataStore'
+import { DataStore } from './db/DataStore'
 
 interface AppStatusProps {
   data: DataStore
