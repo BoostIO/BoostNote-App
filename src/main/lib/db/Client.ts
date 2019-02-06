@@ -1,7 +1,7 @@
+import semver from 'semver'
 import { FOLDER_ID_PREFIX, NOTE_ID_PREFIX } from '../../consts'
 import * as Types from '../../types'
-import uuid from 'uuid/v1'
-import semver from 'semver'
+import uuid from './uuid'
 
 export enum ClientErrorTypes {
   ConflictError = 'ConflictError',
