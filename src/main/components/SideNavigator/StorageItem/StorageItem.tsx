@@ -1,6 +1,10 @@
 import React from 'react'
 import { computed } from 'mobx'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
+import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
+import { MenuTypes } from '../../../lib/contextMenu/interfaces'
+import DialogStore from '../../../lib/dialog/DialogStore'
+import { DialogIconTypes } from '../../../lib/dialog/interfaces'
 import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
 import { Folder } from '../../../types'
@@ -19,8 +23,11 @@ type StorageItemProps = {
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
   pathname: string
   active: boolean
+  contextMenu?: ContextMenuStore
+  dialog?: DialogStore
 }
 
+@inject('contextMenu', 'dialog')
 @observer
 class StorageItem extends React.Component<StorageItemProps> {
   @computed
@@ -53,16 +60,59 @@ class StorageItem extends React.Component<StorageItemProps> {
     await removeFolder(name, folderPath)
   }
 
+  openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    const { contextMenu, dialog, name } = this.props
+
+    contextMenu!.open(event, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Folder',
+        onClick: async () => {
+          dialog!.prompt({
+            title: 'Create a Folder',
+            message: 'Enter the path where do you want to create a folder',
+            iconType: DialogIconTypes.Question,
+            defaultValue: '/',
+            submitButtonLabel: 'Create Folder',
+            onClose: (value: string | null) => {
+              if (value == null) return
+              this.createFolder(value)
+            }
+          })
+        }
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'Remove Storage',
+        onClick: async () => {
+          dialog!.messageBox({
+            title: `Remove "${name}" storage`,
+            message: 'All notes and folders will be deleted.',
+            iconType: DialogIconTypes.Warning,
+            buttons: ['Remove Storage', 'Cancel'],
+            defaultButtonIndex: 0,
+            cancelButtonIndex: 1,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                this.removeStorage()
+              }
+            }
+          })
+        }
+      }
+    ])
+  }
+
   render() {
     const { name, pathname, active } = this.props
 
     return (
       <StyledStorageItem>
-        <StyledStorageItemHeader>
+        <StyledStorageItemHeader onContextMenu={this.openContextMenu}>
           <StyledNavLink active={active} to={`/storages/${name}`}>
             {name}
           </StyledNavLink>
-          <button onClick={this.removeStorage}>x</button>
         </StyledStorageItemHeader>
         <StyledStorageItemFolderList>
           {this.folders.map(folder => {
