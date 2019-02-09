@@ -16,7 +16,7 @@ import {
 } from './styled'
 
 type StorageItemProps = {
-  name: string
+  id: string
   storage: Storage
   removeStorage: (storageName: string) => Promise<void>
   createFolder: (storageName: string, folderPath: string) => Promise<void>
@@ -46,23 +46,24 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   removeStorage = () => {
-    const { name, removeStorage } = this.props
-    removeStorage(name)
+    const { id, removeStorage } = this.props
+    removeStorage(id)
   }
 
   createFolder = async (folderPath: string) => {
-    const { name, createFolder } = this.props
-    await createFolder(name, folderPath)
+    const { id, createFolder } = this.props
+    await createFolder(id, folderPath)
   }
 
   removeFolder = async (folderPath: string) => {
-    const { name, removeFolder } = this.props
-    await removeFolder(name, folderPath)
+    const { id, removeFolder } = this.props
+    await removeFolder(id, folderPath)
   }
 
   openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
-    const { contextMenu, dialog, name } = this.props
+    const { contextMenu, dialog, storage } = this.props
+    const storageName = storage.name
 
     contextMenu!.open(event, [
       {
@@ -87,7 +88,7 @@ class StorageItem extends React.Component<StorageItemProps> {
         label: 'Remove Storage',
         onClick: async () => {
           dialog!.messageBox({
-            title: `Remove "${name}" storage`,
+            title: `Remove "${storageName}" storage`,
             message: 'All notes and folders will be deleted.',
             iconType: DialogIconTypes.Warning,
             buttons: ['Remove Storage', 'Cancel'],
@@ -105,27 +106,28 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   render() {
-    const { name, pathname, active } = this.props
+    const { storage, pathname, active } = this.props
+    const storageName = storage.name
 
     return (
       <StyledStorageItem>
         <StyledStorageItemHeader onContextMenu={this.openContextMenu}>
-          <StyledNavLink active={active} to={`/storages/${name}`}>
-            {name}
+          <StyledNavLink active={active} to={`/storages/${storageName}`}>
+            {storageName}
           </StyledNavLink>
         </StyledStorageItemHeader>
         <StyledStorageItemFolderList>
           {this.folders.map(folder => {
             const folderPathname =
               folder.path === '/'
-                ? `/storages/${name}/notes`
-                : `/storages/${name}/notes${folder.path}`
+                ? `/storages/${storageName}/notes`
+                : `/storages/${storageName}/notes${folder.path}`
             const folderIsActive = folderPathname === pathname
 
             return (
               <FolderItem
                 key={folder.path}
-                storageName={name}
+                storageName={storageName}
                 folder={folder}
                 createFolder={this.createFolder}
                 removeFolder={this.removeFolder}
@@ -136,12 +138,13 @@ class StorageItem extends React.Component<StorageItemProps> {
         </StyledStorageItemFolderList>
         <ul>
           {this.tags.map(tag => {
-            const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
+            const tagIsActive =
+              pathname === `/storages/${storageName}/tags/${tag}`
             return (
               <li key={tag}>
                 <StyledNavLink
                   active={tagIsActive}
-                  to={`/storages/${name}/tags/${tag}`}
+                  to={`/storages/${storageName}/tags/${tag}`}
                 >
                   {tag}
                 </StyledNavLink>
