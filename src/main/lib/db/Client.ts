@@ -33,7 +33,11 @@ export const metaDataId = 'meta'
 export default class Client {
   public initialized: boolean
 
-  constructor(private db: PouchDB.Database) {}
+  constructor(
+    private db: PouchDB.Database,
+    public id: string,
+    public name: string
+  ) {}
 
   getDb() {
     return this.db

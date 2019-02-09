@@ -11,83 +11,39 @@ describe('ClientManager', () => {
     })
   })
 
-  describe('#getAllClientNames', () => {
-    it('returns all names of clients', async () => {
+  describe('#getStorageId', () => {
+    it('returns storage id for name', async () => {
       // Given
-      await manager.addClient('test')
+      const { id } = await manager.addClient('test')
 
       // When
-      const names = manager.getAllClientNames()
+      const result = manager.getStorageId('test')
 
       // Then
-      expect(names).toEqual(['default', 'test'])
+      expect(result).toBe(id)
     })
-  })
 
-  describe('#setAllClientNames', () => {
-    it('sets all names of clients', () => {
+    it('throws if the storage is not registered', () => {
       // When
-      manager.setAllClientNames(['test'])
+      const run = () => {
+        manager.getStorageId('test')
+      }
 
       // Then
-      const names = manager.getAllClientNames()
-      expect(names).toEqual(['test'])
-    })
-  })
-
-  describe('#addClient', () => {
-    it('creates new client', async () => {
-      // When
-      const client = await manager.addClient('test')
-
-      // Then
-      expect(client).toBeInstanceOf(Client)
-      const names = manager.getAllClientNames()
-      expect(names).toEqual(['default', 'test'])
+      expect(run).toThrow()
     })
   })
 
   describe('#getClient', () => {
-    it('returns a client', async () => {
-      await manager.addClient('test')
-
-      const client = manager.getClient('test') as Client
-
-      expect(client).toBeInstanceOf(Client)
-    })
-
-    it('throws an error if the client does not exist', () => {
-      expect(() => {
-        manager.getClient('test')
-      }).toThrowError('The client, "test", is not added yet.')
-    })
-  })
-
-  describe('#removeClient', () => {
-    it('removes a client', async () => {
+    it('returns storage client', async () => {
       // Given
-      await manager.addClient('test')
+      const { id } = await manager.addClient('test')
 
       // When
-      await manager.removeClient('test')
+      const client = manager.getClient(id)
 
       // Then
-      expect(() => {
-        manager.getClient('test')
-      }).toThrowError('The client, "test", is not added yet.')
-      const noteNames = manager.getAllClientNames()
-      expect(noteNames).toEqual(['default'])
-    })
-  })
-
-  describe('#init', () => {
-    it('register all repository', async () => {
-      // When
-      await manager.init()
-
-      // Then
-      const client = manager.getClient('default')
-      expect(client).toBeDefined()
+      expect(client).toBeInstanceOf(Client)
     })
   })
 })

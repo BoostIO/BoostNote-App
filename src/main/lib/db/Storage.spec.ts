@@ -334,7 +334,7 @@ describe('Storage', () => {
 
     it('updates biding after tags changed', () => {
       // Given
-      const storage = new Storage()
+      const storage = new Storage('')
       const now = new Date()
       storage.addNote({
         _id: 'note:test',

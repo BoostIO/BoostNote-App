@@ -1,55 +1,49 @@
 import { DataStore } from './DataStore'
-import Storage from './Storage'
 import ClientManager, { DBAdapter } from '../db/ClientManager'
 import MemoryStorage from '../../specs/utils/MemoryStorage'
-import PouchDB from '../db/PouchDB'
 
-export async function prepare(): Promise<ClientManager> {
-  const manager = new ClientManager({
-    storage: new MemoryStorage(),
-    adapter: DBAdapter.memory
-  })
-
-  await manager.init()
-  await manager.addClient('test')
-
-  return manager
-}
-
-// TODO: Implement tests for all apis
 describe('DataStore', () => {
-  afterEach(async () => {
-    const db = new PouchDB('test', {
-      adapter: 'memory'
+  let manager: ClientManager
+  beforeEach(async () => {
+    manager = new ClientManager({
+      storage: new MemoryStorage(),
+      adapter: DBAdapter.memory
     })
-    await db.destroy()
   })
+  afterEach(async () => {
+    await manager.destroyAllDB()
+  })
+
   describe('constructor', () => {
     it('uses optional manager', () => {
-      const manager = new ClientManager()
+      // When
       const data = new DataStore({
         manager
       })
 
+      // Then
       expect(data.manager).toBe(manager)
     })
   })
 
   describe('initStorage', () => {
-    it('initializes a storage instance', async () => {
-      const manager = await prepare()
+    it('inits manager', async () => {
+      // Given
       const data = new DataStore({
         manager
       })
+      manager.init = jest.fn()
 
+      // When
       await data.init()
 
-      expect(data.storageMap.get('test')).not.toBeUndefined()
+      // Then
+      expect(manager.init).toBeCalled()
     })
 
     it('sets notes and folders to the storage instance', async () => {
-      const manager = await prepare()
-      const client = await manager.getClient('test')
+      // Given
+      const client = await manager.addClient('test')
       const note = await client.createNote('/', {
         content: 'test'
       })
@@ -57,11 +51,11 @@ describe('DataStore', () => {
         manager
       })
 
+      // When
       await data.init()
 
-      expect(data.storageMap.get('test')).not.toBeUndefined()
       expect(
-        (data.storageMap.get('test') as Storage).noteMap.get(note._id)
+        data.storageMap.get(client.id)!.noteMap.get(note._id)
       ).toMatchObject({
         content: 'test'
       })
@@ -71,20 +65,16 @@ describe('DataStore', () => {
   describe('createNote', () => {
     it('creates a note', async () => {
       // Given
-      const manager = await prepare()
-      const data = new DataStore({
-        manager
-      })
+      const { data, storageId } = await prepare(manager)
       await data.init()
 
       // When
-      const note = await data.createNote('test', '/', {
+      const note = await data.createNote(storageId, '/', {
         content: 'test'
       })
 
-      expect(data.storageMap.get('test')).not.toBeUndefined()
       expect(
-        (data.storageMap.get('test') as Storage).noteMap.get(note._id)
+        data.storageMap.get(storageId)!.noteMap.get(note._id)
       ).toMatchObject({
         content: 'test'
       })
@@ -94,20 +84,15 @@ describe('DataStore', () => {
   describe('updateFolder', () => {
     it('sets a folder', async () => {
       // Given
-      const manager = await prepare()
-      const data = new DataStore({
-        manager
-      })
-      await data.init()
-      await data.createFolder('test', '/test', {})
+      const { data, storageId } = await prepare(manager)
+      await data.createFolder(storageId, '/test', {})
 
       // When
-      await data.updateFolder('test', '/test', {})
+      await data.updateFolder(storageId, '/test', {})
 
       // THen
-      expect(data.storageMap.get('test')).not.toBeUndefined()
       expect(
-        (data.storageMap.get('test') as Storage).folderMap.get('folder:/test')
+        data.storageMap.get(storageId)!.folderMap.get('folder:/test')
       ).toMatchObject({
         _id: 'folder:/test'
       })
@@ -117,20 +102,30 @@ describe('DataStore', () => {
   describe('removeFolder', () => {
     it('removes a folder', async () => {
       // Given
-      const manager = await prepare()
-      const data = new DataStore({
-        manager
-      })
-      await data.init()
-      await data.createFolder('test', '/test', {})
+      const { data, storageId } = await prepare(manager)
+      await data.createFolder(storageId, '/test', {})
 
       // When
-      await data.removeFolder('test', '/test')
+      await data.removeFolder(storageId, '/test')
 
       // Then
       expect(
-        (data.storageMap.get('test') as Storage).folderMap.has('folder:/test')
+        data.storageMap.get(storageId)!.folderMap.has('folder:/test')
       ).toBe(false)
     })
   })
 })
+
+async function prepare(manager: ClientManager) {
+  const data = new DataStore({
+    manager
+  })
+  const client = await manager.addClient('test')
+  const storageId = client.id
+  await data.init()
+
+  return {
+    data,
+    storageId
+  }
+}

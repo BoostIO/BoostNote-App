@@ -22,21 +22,21 @@ export class DataStore {
 
   async init() {
     await this.manager.init()
-    const clientNames = this.manager.getAllClientNames()
+    const storageMetaList = this.manager.getStorageMetaList()
     await Promise.all(
-      clientNames.map(async name => {
-        const storage = await this.initStorage(name)
-        this.addStorageToMap(name, storage)
+      storageMetaList.map(async ({ id, name }) => {
+        const storage = await this.initStorage(id, name)
+        this.addStorageToMap(id, storage)
       })
     )
   }
 
-  async initStorage(name: string): Promise<Storage> {
-    const client = this.manager.getClient(name)
+  async initStorage(storageId: string, name: string): Promise<Storage> {
+    const client = this.manager.getClient(storageId)
 
     const { folders, notes } = await client.getAllData()
 
-    const storage = new Storage()
+    const storage = new Storage(name)
     storage.addNote(...notes)
     storage.addFolder(...folders)
 
@@ -45,82 +45,82 @@ export class DataStore {
 
   async createStorage(name: string) {
     const client = await this.manager.addClient(name)
-
+    const { id } = client
     const { folders, notes } = await client.getAllData()
 
-    const storage = new Storage()
+    const storage = new Storage(name)
     storage.addNote(...notes)
     storage.addFolder(...folders)
 
-    this.addStorageToMap(name, storage)
+    this.addStorageToMap(id, storage)
   }
 
-  async removeStorage(name: string) {
-    await this.manager.removeClient(name)
+  async removeStorage(id: string) {
+    await this.manager.removeClient(id)
 
-    this.removeStorageFromMap(name)
+    this.removeStorageFromMap(id)
   }
 
   async createFolder(
-    name: string,
+    id: string,
     path: string,
     folder: Types.EditableFolderProps = {}
   ): Promise<Types.Folder> {
-    const client = this.manager.getClient(name)
+    const client = this.manager.getClient(id)
     const createdFolder = await client.createFolder(path, folder)
 
-    this.assertStorageExists(name)
-    const storage = this.storageMap.get(name)!
+    this.assertStorageExists(id)
+    const storage = this.storageMap.get(id)!
     storage.addFolder(createdFolder)
 
     return createdFolder
   }
 
   async updateFolder(
-    name: string,
+    id: string,
     path: string,
     folder: Partial<Types.EditableFolderProps>
   ): Promise<Types.Folder> {
-    const client = this.manager.getClient(name)
+    const client = this.manager.getClient(id)
     const updatedFolder = await client.updateFolder(path, folder)
 
-    this.assertStorageExists(name)
-    const storage = this.storageMap.get(name)!
+    this.assertStorageExists(id)
+    const storage = this.storageMap.get(id)!
     storage.addFolder(updatedFolder)
 
     return updatedFolder
   }
 
-  async removeFolder(name: string, path: string): Promise<void> {
-    const client = this.manager.getClient(name)
+  async removeFolder(id: string, path: string): Promise<void> {
+    const client = this.manager.getClient(id)
     await client.removeFolder(path)
 
-    this.assertStorageExists(name)
-    const storage = this.storageMap.get(name)!
+    this.assertStorageExists(id)
+    const storage = this.storageMap.get(id)!
     storage.removeFolder(path)
   }
 
   async createNote(
-    name: string,
+    storageId: string,
     path: string,
     note: Partial<Types.EditableNoteProps>
   ): Promise<Types.Note> {
-    const client = this.manager.getClient(name)
+    const client = this.manager.getClient(storageId)
     const createdNote = await client.createNote(path, note)
 
-    this.assertStorageExists(name)
-    const storage = this.storageMap.get(name) as Storage
+    this.assertStorageExists(storageId)
+    const storage = this.storageMap.get(storageId) as Storage
     storage.addNote(createdNote)
 
     return createdNote
   }
 
   async updateNote(
-    name: string,
-    id: string,
+    storageId: string,
+    noteId: string,
     note: Partial<Types.EditableNoteProps>
   ): Promise<Types.Note> {
-    const client = this.manager.getClient(name)
+    const client = this.manager.getClient(storageId)
     if (note.content != null) {
       const { title, tags } = getMetaData(note.content)
       note = {
@@ -129,10 +129,10 @@ export class DataStore {
         ...note
       }
     }
-    const updatedNote = await client.updateNote(id, note)
+    const updatedNote = await client.updateNote(noteId, note)
 
-    this.assertStorageExists(name)
-    const storage = this.storageMap.get(name) as Storage
+    this.assertStorageExists(storageId)
+    const storage = this.storageMap.get(storageId) as Storage
     storage.addNote(updatedNote)
 
     return updatedNote
