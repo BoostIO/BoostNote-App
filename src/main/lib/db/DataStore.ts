@@ -61,6 +61,10 @@ export class DataStore {
     this.removeStorageFromMap(id)
   }
 
+  getStorageId(name: string) {
+    return this.manager.getStorageId(name)
+  }
+
   async createFolder(
     id: string,
     path: string,

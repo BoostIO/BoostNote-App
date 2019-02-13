@@ -35,8 +35,8 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
   @computed
   get currentStorage() {
     const { data } = this.props
-    const { currentStorageName } = this
-    return data!.storageMap.get(currentStorageName)
+    const { currentStorageId } = this
+    return data!.storageMap.get(currentStorageId)
   }
 
   @computed
@@ -47,6 +47,12 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
     if (result == null) return ''
     const [, storageName] = result
     return storageName
+  }
+
+  @computed
+  get currentStorageId() {
+    const { data } = this.props
+    return data!.getStorageId(this.currentStorageName)
   }
 
   @computed
@@ -111,11 +117,11 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
 
   createNote = async () => {
     const { data, history } = this.props
-    const { currentStorageName, currentFolderPath } = this
+    const { currentStorageId, currentFolderPath } = this
     const targetFolderPath = currentFolderPath == null ? '/' : currentFolderPath
 
     const createdNote = await data!.createNote(
-      currentStorageName,
+      currentStorageId,
       targetFolderPath,
       {
         content: ['---', 'title: ', 'tags: ', '---', ''].join('\n')
@@ -126,29 +132,24 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
   }
 
   updateNote = async (
-    storageName: string,
+    storageId: string,
     noteId: string,
     { content }: { content: string }
   ) => {
     const { data } = this.props
-    await data!.updateNote(storageName, noteId, {
+    await data!.updateNote(storageId, noteId, {
       content
     })
   }
 
   // TODO: Redirect to the next note after deleting selected note
-  removeNote = async (storageName: string, noteId: string) => {
+  removeNote = async (storageId: string, noteId: string) => {
     const { data } = this.props
-    await data!.removeNote(storageName, noteId)
+    await data!.removeNote(storageId, noteId)
   }
 
   render() {
-    const {
-      currentStorageName,
-      filteredNotes,
-      currentNote,
-      currentNoteId
-    } = this
+    const { currentStorageId, filteredNotes, currentNote, currentNoteId } = this
     return (
       <>
         <NoteList
@@ -160,7 +161,7 @@ class NotePage extends React.Component<NotePageProps, NotePageState> {
           <div>No note selected</div>
         ) : (
           <NoteDetail
-            storageName={currentStorageName}
+            storageId={currentStorageId}
             note={currentNote}
             updateNote={this.updateNote}
             removeNote={this.removeNote}
