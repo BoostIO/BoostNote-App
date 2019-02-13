@@ -19,19 +19,19 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
     await data!.createStorage(storageName)
   }
 
-  removeStorage = async (storageName: string) => {
+  removeStorage = async (storageId: string) => {
     const { data } = this.props
-    await data!.removeStorage(storageName)
+    await data!.removeStorage(storageId)
   }
 
-  createFolder = async (storageName: string, folderPath: string) => {
+  createFolder = async (storageId: string, folderPath: string) => {
     const { data } = this.props
-    await data!.createFolder(storageName, folderPath)
+    await data!.createFolder(storageId, folderPath)
   }
 
-  removeFolder = async (storageName: string, folderPath: string) => {
+  removeFolder = async (storageId: string, folderPath: string) => {
     const { data } = this.props
-    await data!.removeFolder(storageName, folderPath)
+    await data!.removeFolder(storageId, folderPath)
   }
 
   render() {
@@ -41,13 +41,13 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
     return (
       <StyledSideNavContainer style={{ width: 160 }}>
         <StyledStorageList>
-          {storageEntries.map(([name, storage]) => {
+          {storageEntries.map(([id, storage]) => {
             const pathname = route!.pathname
-            const active = `/storages/${name}` === pathname
+            const active = `/storages/${storage.name}` === pathname
             return (
               <StorageItem
-                key={name}
-                name={name}
+                key={id}
+                id={id}
                 storage={storage}
                 removeStorage={this.removeStorage}
                 createFolder={this.createFolder}

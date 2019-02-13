@@ -3,18 +3,18 @@ import { inject, observer } from 'mobx-react'
 import { Note } from '../../../types'
 
 type NoteDetailProps = {
-  storageName: string
+  storageId: string
   note: Note
   updateNote: (
-    storageName: string,
+    storageId: string,
     noteId: string,
     { content }: { content: string }
   ) => Promise<void>
-  removeNote: (storageName: string, noteId: string) => Promise<void>
+  removeNote: (storageId: string, noteId: string) => Promise<void>
 }
 
 type NoteDetailState = {
-  prevStorageName: string
+  prevStorageId: string
   prevNoteId: string
   content: string
 }
@@ -26,7 +26,7 @@ export default class NoteDetail extends React.Component<
   NoteDetailState
 > {
   state = {
-    prevStorageName: '',
+    prevStorageId: '',
     prevNoteId: '',
     content: ''
   }
@@ -36,13 +36,10 @@ export default class NoteDetail extends React.Component<
     props: NoteDetailProps,
     state: NoteDetailState
   ): NoteDetailState {
-    const { note, storageName } = props
-    if (
-      storageName !== state.prevStorageName ||
-      note._id !== state.prevNoteId
-    ) {
+    const { note, storageId } = props
+    if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
       return {
-        prevStorageName: storageName,
+        prevStorageId: storageId,
         prevNoteId: note._id,
         content: note.content
       }
@@ -54,7 +51,7 @@ export default class NoteDetail extends React.Component<
     const { note } = this.props
     if (note._id !== prevState.prevNoteId && this.queued) {
       const { content } = prevState
-      this.saveNote(prevState.prevStorageName, prevState.prevNoteId, {
+      this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
         content
       })
     }
@@ -62,8 +59,8 @@ export default class NoteDetail extends React.Component<
 
   componentWillUnmount() {
     if (this.queued) {
-      const { content, prevStorageName, prevNoteId } = this.state
-      this.saveNote(prevStorageName, prevNoteId, {
+      const { content, prevStorageId, prevNoteId } = this.state
+      this.saveNote(prevStorageId, prevNoteId, {
         content
       })
     }
@@ -89,15 +86,15 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      const { storageName, note } = this.props
+      const { storageId, note } = this.props
       const { content } = this.state
       const {} = this.state
-      this.saveNote(storageName, note._id, { content })
+      this.saveNote(storageId, note._id, { content })
     }, 3000)
   }
 
   async saveNote(
-    storageName: string,
+    storageId: string,
     noteId: string,
     { content }: { content: string }
   ) {
@@ -105,15 +102,15 @@ export default class NoteDetail extends React.Component<
     this.queued = false
 
     const { updateNote } = this.props
-    await updateNote(storageName, noteId, {
+    await updateNote(storageId, noteId, {
       content
     })
   }
 
   removeNote = async () => {
-    const { storageName, note, removeNote } = this.props
+    const { storageId, note, removeNote } = this.props
 
-    await removeNote(storageName, note._id)
+    await removeNote(storageId, note._id)
   }
 
   render() {

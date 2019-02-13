@@ -1,6 +1,10 @@
 import React from 'react'
 import { computed } from 'mobx'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
+import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
+import { MenuTypes } from '../../../lib/contextMenu/interfaces'
+import DialogStore from '../../../lib/dialog/DialogStore'
+import { DialogIconTypes } from '../../../lib/dialog/interfaces'
 import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
 import { Folder } from '../../../types'
@@ -12,15 +16,18 @@ import {
 } from './styled'
 
 type StorageItemProps = {
-  name: string
+  id: string
   storage: Storage
   removeStorage: (storageName: string) => Promise<void>
   createFolder: (storageName: string, folderPath: string) => Promise<void>
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
   pathname: string
   active: boolean
+  contextMenu?: ContextMenuStore
+  dialog?: DialogStore
 }
 
+@inject('contextMenu', 'dialog')
 @observer
 class StorageItem extends React.Component<StorageItemProps> {
   @computed
@@ -39,43 +46,88 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 
   removeStorage = () => {
-    const { name, removeStorage } = this.props
-    removeStorage(name)
+    const { id, removeStorage } = this.props
+    removeStorage(id)
   }
 
   createFolder = async (folderPath: string) => {
-    const { name, createFolder } = this.props
-    await createFolder(name, folderPath)
+    const { id, createFolder } = this.props
+    await createFolder(id, folderPath)
   }
 
   removeFolder = async (folderPath: string) => {
-    const { name, removeFolder } = this.props
-    await removeFolder(name, folderPath)
+    const { id, removeFolder } = this.props
+    await removeFolder(id, folderPath)
+  }
+
+  openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    const { contextMenu, dialog, storage } = this.props
+    const storageName = storage.name
+
+    contextMenu!.open(event, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Folder',
+        onClick: async () => {
+          dialog!.prompt({
+            title: 'Create a Folder',
+            message: 'Enter the path where do you want to create a folder',
+            iconType: DialogIconTypes.Question,
+            defaultValue: '/',
+            submitButtonLabel: 'Create Folder',
+            onClose: (value: string | null) => {
+              if (value == null) return
+              this.createFolder(value)
+            }
+          })
+        }
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'Remove Storage',
+        onClick: async () => {
+          dialog!.messageBox({
+            title: `Remove "${storageName}" storage`,
+            message: 'All notes and folders will be deleted.',
+            iconType: DialogIconTypes.Warning,
+            buttons: ['Remove Storage', 'Cancel'],
+            defaultButtonIndex: 0,
+            cancelButtonIndex: 1,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                this.removeStorage()
+              }
+            }
+          })
+        }
+      }
+    ])
   }
 
   render() {
-    const { name, pathname, active } = this.props
+    const { storage, pathname, active } = this.props
+    const storageName = storage.name
 
     return (
       <StyledStorageItem>
-        <StyledStorageItemHeader>
-          <StyledNavLink active={active} to={`/storages/${name}`}>
-            {name}
+        <StyledStorageItemHeader onContextMenu={this.openContextMenu}>
+          <StyledNavLink active={active} to={`/storages/${storageName}`}>
+            {storageName}
           </StyledNavLink>
-          <button onClick={this.removeStorage}>x</button>
         </StyledStorageItemHeader>
         <StyledStorageItemFolderList>
           {this.folders.map(folder => {
             const folderPathname =
               folder.path === '/'
-                ? `/storages/${name}/notes`
-                : `/storages/${name}/notes${folder.path}`
+                ? `/storages/${storageName}/notes`
+                : `/storages/${storageName}/notes${folder.path}`
             const folderIsActive = folderPathname === pathname
 
             return (
               <FolderItem
                 key={folder.path}
-                storageName={name}
+                storageName={storageName}
                 folder={folder}
                 createFolder={this.createFolder}
                 removeFolder={this.removeFolder}
@@ -86,12 +138,13 @@ class StorageItem extends React.Component<StorageItemProps> {
         </StyledStorageItemFolderList>
         <ul>
           {this.tags.map(tag => {
-            const tagIsActive = pathname === `/storages/${name}/tags/${tag}`
+            const tagIsActive =
+              pathname === `/storages/${storageName}/tags/${tag}`
             return (
               <li key={tag}>
                 <StyledNavLink
                   active={tagIsActive}
-                  to={`/storages/${name}/tags/${tag}`}
+                  to={`/storages/${storageName}/tags/${tag}`}
                 >
                   {tag}
                 </StyledNavLink>

@@ -4,8 +4,13 @@ import { FOLDER_ID_PREFIX } from '../../consts'
 import { difference } from 'ramda'
 
 export default class Storage {
+  @observable name: string
   @observable folderMap: Map<string, Folder> = new Map()
   @observable noteMap: Map<string, Note> = new Map()
+
+  constructor(name?: string) {
+    this.name = name == null ? '' : name
+  }
 
   /**
    * FIXME: We should use ObservableSet here. But it is not available yet.

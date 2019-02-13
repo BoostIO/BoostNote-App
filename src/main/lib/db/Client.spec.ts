@@ -4,10 +4,11 @@ import { FOLDER_ID_PREFIX } from '../../consts'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {
-  const db = new PouchDB(`dummy${++clientCount}`, {
+  const id = `dummy${++clientCount}`
+  const db = new PouchDB(id, {
     adapter: 'memory'
   })
-  const client = new Client(db)
+  const client = new Client(db, id, id)
 
   if (shouldInit) {
     await client.init()

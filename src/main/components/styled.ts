@@ -22,3 +22,7 @@ export const StyledAppContainer = styled.div`
     }
   }
 `
+
+export const StyledNotFoundPage = styled.div`
+  padding: 15px 25px;
+`

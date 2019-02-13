@@ -1,5 +1,6 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
+import uuid from './uuid'
 
 export const reservedStorageNameRegex = /[\/?#<>:"\\|?*\x00-\x1F]/
 
@@ -13,94 +14,102 @@ export interface ClientManagerOptions {
   adapter?: DBAdapter
 }
 
-const defaultOptions: ClientManagerOptions = {
-  adapter: DBAdapter.idb
+const BOOST_STORAGE_META = 'BOOST_STORAGE_META'
+
+interface SerializedStorageMeta {
+  id: string
+  name: string
 }
 
-const BOOST_DB_NAMES = 'BOOST_DB_NAMES'
-const defaultDBNames = ['default']
-
 export default class ClientManager {
-  private storage: Storage = localStorage
-  private clientMap: Map<string, Client>
+  private webStorage: Storage = localStorage
+  private storageNameIdMap: Map<string, string>
+  private storageIdClientMap: Map<string, Client>
   private adapter: DBAdapter = DBAdapter.idb
 
   constructor(options?: ClientManagerOptions) {
     options = {
-      ...defaultOptions,
       ...options
     }
     if (options.storage != null) {
-      this.storage = options.storage
+      this.webStorage = options.storage
     }
     if (options.adapter != null) {
       this.adapter = options.adapter
     }
-    this.clientMap = new Map()
+    this.storageIdClientMap = new Map()
+    this.storageNameIdMap = new Map()
   }
 
-  async addClient(clientName: string) {
-    this.assertClientName(clientName)
-    const db = new PouchDB(clientName, {
-      adapter: this.adapter
-    })
-    const newClient = new Client(db)
-
-    await newClient.init()
-
-    this.clientMap.set(clientName, newClient)
-
-    const clientNameSet = new Set(this.getAllClientNames())
-    if (!clientNameSet.has(clientName)) {
-      clientNameSet.add(clientName)
-      this.setAllClientNames(clientNameSet)
+  getStorageId(name: string): string {
+    if (this.storageNameIdMap.has(name)) {
+      return this.storageNameIdMap.get(name)!
     }
-
-    return newClient
+    throw new Error(`${name} is not registered yet.`)
   }
 
-  getClient(clientName: string): Client {
-    if (!this.clientMap.has(clientName)) {
-      throw new Error(`The client, "${clientName}", is not added yet.`)
+  getClient(clientId: string): Client {
+    if (clientId == null || !this.storageIdClientMap.has(clientId)) {
+      throw new Error(`The client id, "${clientId}", is not added yet.`)
     }
-    return this.clientMap.get(clientName) as Client
+    return this.storageIdClientMap.get(clientId) as Client
   }
 
-  getAllClientNames() {
-    try {
-      const rawData = this.storage.getItem(BOOST_DB_NAMES)
-      if (rawData == null) {
-        return defaultDBNames
-      }
-      return [...JSON.parse(rawData)].filter(key => typeof key === 'string')
-    } catch (error) {
-      return defaultDBNames
-    }
+  save() {
+    const storageNameIdEntries = [...this.storageNameIdMap.entries()]
+    const storageMetaList: SerializedStorageMeta[] = storageNameIdEntries.map(
+      ([name, id]) => ({
+        id,
+        name
+      })
+    )
+    const stringifiedStorageMetaList = JSON.stringify(storageMetaList)
+
+    this.webStorage.setItem(BOOST_STORAGE_META, stringifiedStorageMetaList)
   }
 
-  setAllClientNames(names: string[] | Set<string>) {
-    names = [...names]
-    this.storage.setItem(BOOST_DB_NAMES, JSON.stringify(names))
+  getStorageMetaList() {
+    const storageNameIdEntries = [...this.storageNameIdMap.entries()]
+    const storageMetaList: SerializedStorageMeta[] = storageNameIdEntries.map(
+      ([name, id]) => ({
+        id,
+        name
+      })
+    )
+
+    return storageMetaList
+  }
+
+  load() {
+    let stringifiedStorageMetaList = this.webStorage.getItem(BOOST_STORAGE_META)
+    if (stringifiedStorageMetaList == null) stringifiedStorageMetaList = '[]'
+    const storageMetaList: SerializedStorageMeta[] = JSON.parse(
+      stringifiedStorageMetaList
+    )
+    const storageNameIdEntries = storageMetaList.map(
+      ({ id, name }) => [name, id] as [string, string]
+    )
+    this.storageNameIdMap = new Map(storageNameIdEntries)
   }
 
   async init() {
-    const names = this.getAllClientNames()
+    this.load()
+    const storageNameIdEntries = [...this.storageNameIdMap.entries()]
     await Promise.all(
-      names.map(async name => {
-        const client = await this.initClient(name)
+      storageNameIdEntries.map(async ([name, id]) => {
+        const client = await this.initClient(id, name)
         if (client != null) {
-          this.clientMap.set(name, client)
+          this.storageIdClientMap.set(id, client)
         }
       })
     )
   }
 
-  async initClient(clientName: string) {
-    this.assertClientName(clientName)
-    const db = new PouchDB(clientName, {
+  async initClient(clientId: string, clientName: string) {
+    const db = new PouchDB(clientId, {
       adapter: this.adapter
     })
-    const newClient = new Client(db)
+    const newClient = new Client(db, clientId, clientName)
 
     try {
       await newClient.init()
@@ -113,18 +122,45 @@ export default class ClientManager {
     return newClient
   }
 
-  async removeClient(clientName: string) {
-    const client = this.getClient(clientName)
+  async removeClient(clientId: string) {
+    const client = this.getClient(clientId)
+    const clientName = client.name
     await client.destroyDB()
 
-    const clientNameSet = new Set(this.getAllClientNames())
-    clientNameSet.delete(clientName)
-    this.setAllClientNames(clientNameSet)
-    return this.clientMap.delete(clientName)
+    this.storageNameIdMap.delete(clientName)
+    this.storageIdClientMap.delete(clientId)
+  }
+
+  async addClient(name: string): Promise<Client> {
+    this.assertClientName(name)
+    if (this.storageNameIdMap.has(name))
+      throw new Error(`${name} is already taken.`)
+    const storageId = uuid()
+    const newClient = await this.initClient(storageId, name)
+
+    if (newClient == null) throw new Error('Failed to init new storage client.')
+
+    this.storageIdClientMap.set(storageId, newClient)
+    this.storageNameIdMap.set(name, storageId)
+    this.save()
+
+    await newClient.init()
+
+    return newClient
   }
 
   assertClientName(name: string) {
     if (reservedStorageNameRegex.test(name))
       throw new Error('The given client name is invalid.')
+  }
+
+  async destroyAllDB() {
+    const clientEntries = [...this.storageIdClientMap.entries()]
+
+    await Promise.all(
+      clientEntries.map(async ([, client]) => {
+        await client.destroyDB()
+      })
+    )
   }
 }
