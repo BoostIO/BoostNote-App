@@ -1,12 +1,12 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import pathToRegexp from 'path-to-regexp'
 import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
 import { RouteStore } from '../../lib/RouteStore'
 import { DataStore } from '../../lib/db/DataStore'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { computed } from 'mobx'
+import { storageRegexp, folderRegexp, tagRegexp } from '../../lib/routes'
 
 type NotePageProps = {
   data?: DataStore
@@ -14,20 +14,6 @@ type NotePageProps = {
 } & RouteComponentProps
 
 type NotePageState = {}
-
-const storageRegexp = pathToRegexp('/storages/:storageName/:rest*', undefined, {
-  sensitive: true
-})
-const folderRegexp = pathToRegexp(
-  '/storages/:storageName/notes/:rest*',
-  undefined,
-  {
-    sensitive: true
-  }
-)
-const tagRegexp = pathToRegexp('/storages/:storageName/tags/:tag', undefined, {
-  sensitive: true
-})
 
 @inject('data', 'route')
 @observer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import SideNavigator from './SideNavigator'
-import NotePage from './NotePage'
+import Router from './Router'
 import AppStore from '../lib/AppStore'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'emotion-theming'
@@ -32,7 +32,7 @@ class App extends React.Component<AppProps> {
           {app.dataIsInitialized ? (
             <>
               <SideNavigator />
-              <NotePage />
+              <Router />
             </>
           ) : (
             <div>Loading data</div>
