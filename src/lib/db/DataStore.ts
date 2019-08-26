@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx'
-import ClientManager from '../db/ClientManager'
+import ClientManager from './ClientManager'
 import Storage from './Storage'
 import * as Types from '../../types'
 import { getMetaData } from '../markdown'

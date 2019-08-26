@@ -1,5 +1,5 @@
 import { DataStore } from './DataStore'
-import ClientManager, { DBAdapter } from '../db/ClientManager'
+import ClientManager, { DBAdapter } from './ClientManager'
 import MemoryStorage from '../../specs/utils/MemoryStorage'
 
 describe('DataStore', () => {

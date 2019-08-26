@@ -16,7 +16,7 @@ module.exports = {
     // bundle the client for hot reloading
     // only- means to only hot reload for successful updates
 
-    './src/main/index.tsx'
+    './src/index.tsx'
     // the entry point of our app
   ],
 
