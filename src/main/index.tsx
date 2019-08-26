@@ -37,6 +37,12 @@ const providerProps = {
 }
 
 function render(Component: typeof App) {
+  let rootDiv = document.getElementById('root')
+  if (rootDiv == null) {
+    rootDiv = document.createElement('div', {})
+    rootDiv.setAttribute('id', 'root')
+    document.body.appendChild(rootDiv)
+  }
   ReactDOM.render(
     <Provider {...providerProps}>
       <Router history={history}>

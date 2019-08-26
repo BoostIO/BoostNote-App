@@ -1,0 +1,14 @@
+{
+  "name": "note.boostio.co",
+  "alias": "note.boostio.co",
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: [
@@ -35,9 +36,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: [
-          { loader: 'ts-loader', options: { happyPackMode: true } }
-        ],
+        use: [{ loader: 'ts-loader', options: { happyPackMode: true } }],
         exclude: /node_modules/
       }
     ]
@@ -57,7 +56,8 @@ module.exports = {
       tslint: true,
       checkSyntacticErrors: true,
       watch: ['./src'] // optional but improves performance (fewer stat calls)
-    })
+    }),
+    new HtmlWebpackPlugin()
   ],
 
   devServer: {
