@@ -3,7 +3,7 @@ import {
   menuHeight,
   menuVerticalPadding,
   menuZIndex
-} from '../../lib/contextMenu/consts'
+} from '../../lib/contextMenu'
 
 export const StyledContextMenu = styled.div`
   min-width: 130px;

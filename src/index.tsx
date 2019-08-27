@@ -6,9 +6,10 @@ import { Router } from 'react-router-dom'
 import { DataStore } from './lib/db/DataStore'
 import AppStore from './lib/AppStore'
 import { RouteStore } from './lib/RouteStore'
-import ContextMenuStore from './lib/contextMenu/ContextMenuStore'
+import { ContextMenuProvider } from './lib/contextMenu'
 import { createBrowserHistory } from 'history'
 import { DialogProvider } from './lib/dialog'
+import { combineProviders } from './lib/utils/context'
 
 const history = createBrowserHistory()
 const route = new RouteStore({
@@ -25,14 +26,14 @@ const data = new DataStore()
 const app = new AppStore({
   data
 })
-const contextMenu = new ContextMenuStore()
 
 const providerProps = {
   app,
   data,
-  route,
-  contextMenu
+  route
 }
+
+const CombinedProvider = combineProviders(DialogProvider, ContextMenuProvider)
 
 function render(Component: typeof App) {
   let rootDiv = document.getElementById('root')
@@ -43,11 +44,11 @@ function render(Component: typeof App) {
   }
   ReactDOM.render(
     <Provider {...providerProps}>
-      <DialogProvider>
+      <CombinedProvider>
         <Router history={history}>
           <Component />
         </Router>
-      </DialogProvider>
+      </CombinedProvider>
     </Provider>,
     document.getElementById('root')
   )

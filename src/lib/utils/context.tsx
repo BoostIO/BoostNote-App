@@ -23,3 +23,26 @@ export function createStoreContext<R>(
     useStore
   }
 }
+
+/**
+ * Combine providers into a single FC
+ *
+ * @param providers Provider component list
+ *
+ * ```
+ * combineProviders(A, B, C)
+ * // Same to
+ * ({ children }) => (<C><B><A>{children}</A></B></C>)
+ * ```
+ *
+ */
+export function combineProviders(
+  ...providers: React.ComponentType<any>[]
+): React.FC {
+  return ({ children }) => {
+    return providers.reduce(
+      (combined, Provider) => <Provider>{combined}</Provider>,
+      children
+    ) as React.ReactElement
+  }
+}

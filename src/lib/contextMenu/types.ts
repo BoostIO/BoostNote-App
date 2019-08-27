@@ -30,3 +30,14 @@ export interface SubmenuMenuItem extends MenuItemBase {
 }
 
 export type MenuItem = NormalMenuItem | SeparatorMenuItem
+
+export type Position = { x: number; y: number }
+
+export interface ContextMenuContext {
+  closed: boolean
+  position: Position
+  menuItems: MenuItem[]
+  id: number
+  popup(event: React.MouseEvent<unknown>, menuItems: MenuItem[]): void
+  close(): void
+}

@@ -1,8 +1,7 @@
 import React from 'react'
 import { computed } from 'mobx'
-import { observer, inject } from 'mobx-react'
-import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
-import { MenuTypes } from '../../../lib/contextMenu/interfaces'
+import { useContextMenu, ContextMenuContext } from '../../../lib/contextMenu'
+import { MenuTypes } from '../../../lib/contextMenu/types'
 import { DialogContext, useDialog } from '../../../lib/dialog'
 import { DialogIconTypes } from '../../../lib/dialog/types'
 import Storage from '../../../lib/db/Storage'
@@ -14,6 +13,7 @@ import {
   StyledNavLink,
   StyledStorageItemFolderList
 } from './styled'
+import { Except } from 'type-fest'
 
 type StorageItemProps = {
   id: string
@@ -23,12 +23,10 @@ type StorageItemProps = {
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
   pathname: string
   active: boolean
-  contextMenu?: ContextMenuStore
-  dialog?: DialogContext
+  contextMenu: ContextMenuContext
+  dialog: DialogContext
 }
 
-@inject('contextMenu')
-@observer
 class StorageItem extends React.Component<StorageItemProps> {
   @computed
   get tags(): string[] {
@@ -65,12 +63,12 @@ class StorageItem extends React.Component<StorageItemProps> {
     const { contextMenu, dialog, storage } = this.props
     const storageName = storage.name
 
-    contextMenu!.open(event, [
+    contextMenu.popup(event, [
       {
         type: MenuTypes.Normal,
         label: 'New Folder',
         onClick: async () => {
-          dialog!.prompt({
+          dialog.prompt({
             title: 'Create a Folder',
             message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
@@ -87,7 +85,7 @@ class StorageItem extends React.Component<StorageItemProps> {
         type: MenuTypes.Normal,
         label: 'Remove Storage',
         onClick: async () => {
-          dialog!.messageBox({
+          dialog.messageBox({
             title: `Remove "${storageName}" storage`,
             message: 'All notes and folders will be deleted.',
             iconType: DialogIconTypes.Warning,
@@ -157,7 +155,8 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 }
 
-export default (props: StorageItemProps) => {
-  const dialogStore = useDialog()
-  return <StorageItem {...props} dialog={dialogStore} />
+export default (props: Except<StorageItemProps, 'dialog' | 'contextMenu'>) => {
+  const dialog = useDialog()
+  const contextMenu = useContextMenu()
+  return <StorageItem {...props} dialog={dialog} contextMenu={contextMenu} />
 }

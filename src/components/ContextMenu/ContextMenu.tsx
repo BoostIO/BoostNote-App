@@ -1,20 +1,20 @@
 import React from 'react'
-import { inject, observer } from 'mobx-react'
-import ContextMenuStore from '../../lib/contextMenu/ContextMenuStore'
 import { StyledContextMenu, StyledContextMenuItem } from './styled'
-import { MenuTypes } from '../../lib/contextMenu/interfaces'
+import {
+  useContextMenu,
+  MenuTypes,
+  ContextMenuContext
+} from '../../lib/contextMenu'
 
 interface ContextMenuProps {
-  contextMenu?: ContextMenuStore
+  contextMenu: ContextMenuContext
 }
 
-@inject('contextMenu')
-@observer
-export default class ContextMenu extends React.Component<ContextMenuProps> {
+class ContextMenu extends React.Component<ContextMenuProps> {
   menuRef: React.RefObject<HTMLDivElement> = React.createRef()
 
   componentDidUpdate() {
-    if (this.props.contextMenu!.isOpen) this.menuRef.current!.focus()
+    if (!this.props.contextMenu.closed) this.menuRef.current!.focus()
   }
 
   closeContextMenu() {
@@ -38,22 +38,16 @@ export default class ContextMenu extends React.Component<ContextMenuProps> {
   }
 
   render() {
-    const {
-      isOpen: contextMenuIsOpen,
-      menuItems,
-      xPosition,
-      yPosition,
-      id
-    } = this.props.contextMenu!
-    if (!contextMenuIsOpen) return null
+    const { closed, menuItems, position, id } = this.props.contextMenu
+    if (closed) return null
     return (
       <StyledContextMenu
         tabIndex={-1}
         ref={this.menuRef}
         onBlur={this.closeContextMenuIfMenuBlurred}
         style={{
-          left: xPosition,
-          top: yPosition
+          left: position.x,
+          top: position.y
         }}
       >
         {menuItems.map((menu, index) => {
@@ -83,4 +77,8 @@ export default class ContextMenu extends React.Component<ContextMenuProps> {
       </StyledContextMenu>
     )
   }
+}
+export default () => {
+  const contextMenu = useContextMenu()
+  return <ContextMenu contextMenu={contextMenu} />
 }

@@ -1,11 +1,11 @@
 import React from 'react'
-import { observer, inject } from 'mobx-react'
 import { Folder } from '../../../types'
 import { StyledStorageItemFolderItem, StyledNavLink } from './styled'
-import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
-import { MenuTypes } from '../../../lib/contextMenu/interfaces'
+import { useContextMenu, ContextMenuContext } from '../../../lib/contextMenu'
+import { MenuTypes } from '../../../lib/contextMenu/types'
 import { DialogContext, useDialog } from '../../../lib/dialog'
 import { DialogIconTypes } from '../../../lib/dialog/types'
+import { Except } from 'type-fest'
 
 type FolderItemProps = {
   storageName: string
@@ -13,12 +13,10 @@ type FolderItemProps = {
   createFolder: (folderPath: string) => Promise<void>
   removeFolder: (folderPath: string) => Promise<void>
   active: boolean
-  contextMenu?: ContextMenuStore
-  dialog?: DialogContext
+  contextMenu: ContextMenuContext
+  dialog: DialogContext
 }
 
-@inject('contextMenu')
-@observer
 class FolderItem extends React.Component<FolderItemProps> {
   openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const {
@@ -32,12 +30,12 @@ class FolderItem extends React.Component<FolderItemProps> {
     const folderIsRootFolder = folder.path === '/'
 
     event.preventDefault()
-    contextMenu!.open(event, [
+    contextMenu.popup(event, [
       {
         type: MenuTypes.Normal,
         label: 'New Folder',
         onClick: async () => {
-          dialog!.prompt({
+          dialog.prompt({
             title: 'Create a Folder',
             message: 'Enter the path where do you want to create a folder',
             iconType: DialogIconTypes.Question,
@@ -55,7 +53,7 @@ class FolderItem extends React.Component<FolderItemProps> {
         label: 'Remove Folder',
         enabled: !folderIsRootFolder,
         onClick: () => {
-          dialog!.messageBox({
+          dialog.messageBox({
             title: `Remove "${folder.path}" folder`,
             message: 'All notes and subfolders will be deleted.',
             iconType: DialogIconTypes.Warning,
@@ -90,7 +88,8 @@ class FolderItem extends React.Component<FolderItemProps> {
   }
 }
 
-export default (props: FolderItemProps) => {
+export default (props: Except<FolderItemProps, 'dialog' | 'contextMenu'>) => {
   const dialog = useDialog()
-  return <FolderItem {...props} dialog={dialog} />
+  const contextMenu = useContextMenu()
+  return <FolderItem {...props} dialog={dialog} contextMenu={contextMenu} />
 }
