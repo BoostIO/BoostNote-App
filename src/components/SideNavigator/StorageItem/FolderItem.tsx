@@ -4,8 +4,8 @@ import { Folder } from '../../../types'
 import { StyledStorageItemFolderItem, StyledNavLink } from './styled'
 import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
 import { MenuTypes } from '../../../lib/contextMenu/interfaces'
-import DialogStore from '../../../lib/dialog/DialogStore'
-import { DialogIconTypes } from '../../../lib/dialog/interfaces'
+import { DialogContext, useDialog } from '../../../lib/dialog'
+import { DialogIconTypes } from '../../../lib/dialog/types'
 
 type FolderItemProps = {
   storageName: string
@@ -14,10 +14,10 @@ type FolderItemProps = {
   removeFolder: (folderPath: string) => Promise<void>
   active: boolean
   contextMenu?: ContextMenuStore
-  dialog?: DialogStore
+  dialog?: DialogContext
 }
 
-@inject('contextMenu', 'dialog')
+@inject('contextMenu')
 @observer
 class FolderItem extends React.Component<FolderItemProps> {
   openContextMenu = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -90,4 +90,7 @@ class FolderItem extends React.Component<FolderItemProps> {
   }
 }
 
-export default FolderItem
+export default (props: FolderItemProps) => {
+  const dialog = useDialog()
+  return <FolderItem {...props} dialog={dialog} />
+}

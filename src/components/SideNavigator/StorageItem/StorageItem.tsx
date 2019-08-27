@@ -3,8 +3,8 @@ import { computed } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import ContextMenuStore from '../../../lib/contextMenu/ContextMenuStore'
 import { MenuTypes } from '../../../lib/contextMenu/interfaces'
-import DialogStore from '../../../lib/dialog/DialogStore'
-import { DialogIconTypes } from '../../../lib/dialog/interfaces'
+import { DialogContext, useDialog } from '../../../lib/dialog'
+import { DialogIconTypes } from '../../../lib/dialog/types'
 import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
 import { Folder } from '../../../types'
@@ -24,10 +24,10 @@ type StorageItemProps = {
   pathname: string
   active: boolean
   contextMenu?: ContextMenuStore
-  dialog?: DialogStore
+  dialog?: DialogContext
 }
 
-@inject('contextMenu', 'dialog')
+@inject('contextMenu')
 @observer
 class StorageItem extends React.Component<StorageItemProps> {
   @computed
@@ -157,4 +157,7 @@ class StorageItem extends React.Component<StorageItemProps> {
   }
 }
 
-export default StorageItem
+export default (props: StorageItemProps) => {
+  const dialogStore = useDialog()
+  return <StorageItem {...props} dialog={dialogStore} />
+}

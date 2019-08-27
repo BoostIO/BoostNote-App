@@ -1,31 +1,24 @@
 import React from 'react'
-import { inject, observer } from 'mobx-react'
-import DialogStore from '../../lib/dialog/DialogStore'
+import { useDialog } from '../../lib/dialog'
 import DialogIcon from './DialogIcon'
 import PromptDialogBody from './PromptDialogBody'
-import { DialogTypes, DialogData } from '../../lib/dialog/interfaces'
+import { DialogTypes, DialogData } from '../../lib/dialog/types'
 import { StyledDialog, StyledDialogBackground } from './styled'
 import MessageBoxDialogBody from './MessageBoxDialogBody'
 
-type DialogProps = {
-  dialog?: DialogStore
-}
+export default () => {
+  const { data, closeDialog } = useDialog()
 
-@inject('dialog')
-@observer
-export default class Dialog extends React.Component<DialogProps> {
-  closeDialog = () => {
-    this.props.dialog!.closeDialog()
-  }
+  if (data == null) return null
 
-  renderBody(dialogData: DialogData) {
+  function renderBody(dialogData: DialogData) {
     switch (dialogData.type) {
       case DialogTypes.MessageBox:
         return (
           <MessageBoxDialogBody
             key={dialogData.id}
             data={dialogData}
-            closeDialog={this.closeDialog}
+            closeDialog={closeDialog}
           />
         )
       case DialogTypes.Prompt:
@@ -33,23 +26,20 @@ export default class Dialog extends React.Component<DialogProps> {
           <PromptDialogBody
             key={dialogData.id}
             data={dialogData}
-            closeDialog={this.closeDialog}
+            closeDialog={closeDialog}
           />
         )
     }
     throw new Error('Invalid dialog type.')
   }
 
-  render() {
-    const { currentData: currentDialogData } = this.props.dialog!
-    if (currentDialogData == null) return null
-    return (
-      <StyledDialogBackground>
-        <StyledDialog>
-          <DialogIcon icon={currentDialogData.iconType} />
-          {this.renderBody(currentDialogData)}
-        </StyledDialog>
-      </StyledDialogBackground>
-    )
-  }
+  return (
+    <StyledDialogBackground>
+      <StyledDialog>
+        <DialogIcon icon={data.iconType} />
+
+        {renderBody(data)}
+      </StyledDialog>
+    </StyledDialogBackground>
+  )
 }

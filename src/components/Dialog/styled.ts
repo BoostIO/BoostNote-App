@@ -1,5 +1,6 @@
 import styled from '../../lib/styled'
-import { dialogZIndex } from '../../lib/dialog/consts'
+
+const dialogZIndex = 8000
 
 export const StyledDialogBackground = styled.div`
   position: fixed;

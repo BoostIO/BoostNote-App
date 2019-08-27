@@ -8,7 +8,7 @@ import AppStore from './lib/AppStore'
 import { RouteStore } from './lib/RouteStore'
 import ContextMenuStore from './lib/contextMenu/ContextMenuStore'
 import { createBrowserHistory } from 'history'
-import DialogStore from './lib/dialog/DialogStore'
+import { DialogProvider } from './lib/dialog'
 
 const history = createBrowserHistory()
 const route = new RouteStore({
@@ -26,14 +26,12 @@ const app = new AppStore({
   data
 })
 const contextMenu = new ContextMenuStore()
-const dialog = new DialogStore()
 
 const providerProps = {
   app,
   data,
   route,
-  contextMenu,
-  dialog
+  contextMenu
 }
 
 function render(Component: typeof App) {
@@ -45,9 +43,11 @@ function render(Component: typeof App) {
   }
   ReactDOM.render(
     <Provider {...providerProps}>
-      <Router history={history}>
-        <Component />
-      </Router>
+      <DialogProvider>
+        <Router history={history}>
+          <Component />
+        </Router>
+      </DialogProvider>
     </Provider>,
     document.getElementById('root')
   )

@@ -48,3 +48,10 @@ export type PromptDialogData = BaseDialogData &
   }
 
 export type DialogData = MessageBoxDialogData | PromptDialogData
+
+export interface DialogContext {
+  data: DialogData | null
+  prompt(options: PromptDialogOptions): void
+  messageBox(options: MessageBoxDialogOptions): void
+  closeDialog(): void
+}
