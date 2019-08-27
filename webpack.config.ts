@@ -53,7 +53,6 @@ module.exports = {
     // do not emit compiled assets that include errors
 
     new ForkTsCheckerWebpackPlugin({
-      tslint: true,
       checkSyntacticErrors: true,
       watch: ['./src'] // optional but improves performance (fewer stat calls)
     }),
