@@ -42,4 +42,4 @@ function createDialog(): DialogContext {
 export const {
   StoreProvider: DialogProvider,
   useStore: useDialog
-} = createStoreContext(createDialog)
+} = createStoreContext(createDialog, 'dialog')

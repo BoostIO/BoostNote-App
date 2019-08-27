@@ -1,6 +1,9 @@
 import React, { createContext, useContext } from 'react'
 
-export function createStoreContext<R>(storeCreator: () => R) {
+export function createStoreContext<R>(
+  storeCreator: () => R,
+  storeName?: string
+) {
   const context = createContext<R | null>(null)
 
   const StoreProvider: React.FC = ({ children }) => (
@@ -10,7 +13,7 @@ export function createStoreContext<R>(storeCreator: () => R) {
   const useStore = () => {
     const store = useContext(context)
     if (store == null) {
-      throw new Error('You have forgot to use StoreProvider, shame on you.')
+      throw new Error(`You have forgot to use '${storeName}' provider.`)
     }
     return store
   }
