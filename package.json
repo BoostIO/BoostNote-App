@@ -52,6 +52,7 @@
     "@types/react-hot-loader": "^4.1.0",
     "@types/react-router-dom": "^4.3.1",
     "@types/semver": "^5.5.0",
+    "@types/styled-components": "^4.1.18",
     "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.17",
     "@types/webpack-dev-server": "^3.1.1",
@@ -69,9 +70,6 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.5",
-    "@emotion/styled": "^10.0.5",
-    "emotion-theming": "^10.0.5",
     "filenamify": "^2.1.0",
     "history": "^4.7.2",
     "mdast-util-to-string": "^1.0.5",
@@ -94,6 +92,7 @@
     "remark-parse-yaml": "0.0.1",
     "remark-stringify": "^6.0.4",
     "semver": "^5.6.0",
+    "styled-components": "^4.3.2",
     "unified": "^7.0.2",
     "unist-util-visit": "^1.4.0",
     "uuid": "^3.3.2"

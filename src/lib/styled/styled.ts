@@ -1,4 +1,4 @@
-import styled, { CreateStyled } from '@emotion/styled'
+import styled, { ThemedBaseStyledInterface } from 'styled-components'
 import { Theme } from './themes'
 
-export default styled as CreateStyled<Theme>
+export default styled as ThemedBaseStyledInterface<Theme>
