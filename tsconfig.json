@@ -1,7 +1,6 @@
 {
   "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"],
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
       "*": ["./typings/*"]
     },
