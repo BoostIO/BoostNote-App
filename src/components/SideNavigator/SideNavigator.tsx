@@ -1,42 +1,42 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import { DataStore } from '../../lib/db/DataStore'
 import StorageItem from './StorageItem/StorageItem'
 import { RouteStore } from '../../lib/RouteStore'
 import SotrageCreateForm from './StorageCreateForm'
 import { StyledSideNavContainer, StyledStorageList } from './styled'
+import { useDb, DbContext } from '../../lib/db'
 
 type SideNavigatorProps = {
-  data?: DataStore
+  db: DbContext
   route?: RouteStore
 }
 
-@inject('data', 'route')
+@inject('route')
 @observer
-export default class SideNavigator extends React.Component<SideNavigatorProps> {
+class SideNavigator extends React.Component<SideNavigatorProps> {
   createStorage = async (storageName: string) => {
-    const { data } = this.props
-    await data!.createStorage(storageName)
+    const { db } = this.props
+    await db.createStorage(storageName)
   }
 
   removeStorage = async (storageId: string) => {
-    const { data } = this.props
-    await data!.removeStorage(storageId)
+    const { db } = this.props
+    await db!.removeStorage(storageId)
   }
 
-  createFolder = async (storageId: string, folderPath: string) => {
-    const { data } = this.props
-    await data!.createFolder(storageId, folderPath)
-  }
+  // createFolder = async (storageId: string, folderPath: string) => {
+  //   const { data } = this.props
+  //   await data!.createFolder(storageId, folderPath)
+  // }
 
-  removeFolder = async (storageId: string, folderPath: string) => {
-    const { data } = this.props
-    await data!.removeFolder(storageId, folderPath)
-  }
+  // removeFolder = async (storageId: string, folderPath: string) => {
+  //   const { data } = this.props
+  //   await data!.removeFolder(storageId, folderPath)
+  // }
 
   render() {
-    const { data, route } = this.props
-    const storageEntries = [...data!.storageMap.entries()]
+    const { db, route } = this.props
+    const storageEntries = Object.entries(db.storageMap)
 
     return (
       <StyledSideNavContainer style={{ width: 160 }}>
@@ -50,8 +50,10 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
                 id={id}
                 storage={storage}
                 removeStorage={this.removeStorage}
-                createFolder={this.createFolder}
-                removeFolder={this.removeFolder}
+                // createFolder={this.createFolder}
+                // removeFolder={this.removeFolder}
+                createFolder={async () => {}}
+                removeFolder={async () => {}}
                 pathname={pathname}
                 active={active}
               />
@@ -63,4 +65,9 @@ export default class SideNavigator extends React.Component<SideNavigatorProps> {
       </StyledSideNavContainer>
     )
   }
+}
+
+export default () => {
+  const db = useDb()
+  return <SideNavigator db={db} />
 }

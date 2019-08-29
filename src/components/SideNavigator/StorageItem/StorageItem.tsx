@@ -4,7 +4,6 @@ import { useContextMenu, ContextMenuContext } from '../../../lib/contextMenu'
 import { MenuTypes } from '../../../lib/contextMenu/types'
 import { DialogContext, useDialog } from '../../../lib/dialog'
 import { DialogIconTypes } from '../../../lib/dialog/types'
-import Storage from '../../../lib/db/Storage'
 import FolderItem from './FolderItem'
 import { Folder } from '../../../types'
 import {
@@ -14,10 +13,11 @@ import {
   StyledStorageItemFolderList
 } from './styled'
 import { Except } from 'type-fest'
+import { NoteStorage } from '../../../lib/db/types'
 
 type StorageItemProps = {
   id: string
-  storage: Storage
+  storage: NoteStorage
   removeStorage: (storageName: string) => Promise<void>
   createFolder: (storageName: string, folderPath: string) => Promise<void>
   removeFolder: (storageName: string, folderPath: string) => Promise<void>
@@ -30,17 +30,12 @@ type StorageItemProps = {
 class StorageItem extends React.Component<StorageItemProps> {
   @computed
   get tags(): string[] {
-    const { storage } = this.props
-    return [...storage.tagNoteIdSetMap.keys()].sort()
+    return []
   }
 
   @computed
   get folders(): Folder[] {
-    const { storage } = this.props
-    const folderEntries = [...storage.folderMap.entries()]
-    return folderEntries
-      .map(([, folder]) => folder)
-      .sort((folderA, folderB) => folderA.path.localeCompare(folderB.path))
+    return []
   }
 
   removeStorage = () => {
