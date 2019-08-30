@@ -2,7 +2,10 @@
   "preset": "ts-jest",
   "globals": {
     "ts-jest": {
-      "isolatedModules": false
+      "isolatedModules": false,
+      "global": {
+        "baseUrl": "./src"
+      }
     }
   }
 }
