@@ -82,6 +82,7 @@
     "pouchdb-adapter-idb": "^7.0.0",
     "pouchdb-adapter-memory": "^7.0.0",
     "pouchdb-core": "^7.0.0",
+    "pouchdb-find": "^7.1.1",
     "pouchdb-mapreduce": "^7.0.0",
     "pouchdb-replication": "^7.0.0",
     "ramda": "^0.26.1",
