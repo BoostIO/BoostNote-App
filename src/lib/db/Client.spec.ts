@@ -1,7 +1,6 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
 import { getFolderId, getTagId } from './utils'
-// import { getFolderId } from './utils'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {
@@ -118,7 +117,7 @@ describe('Client', () => {
       })
     })
 
-    it('updates folder prop', async () => {
+    it('updates folder props', async () => {
       // Given
       const client = await createClient()
       await client.upsertFolder('/test')
@@ -147,7 +146,7 @@ describe('Client', () => {
       })
     })
 
-    it('does NOT update folder prop if nothing to change', async () => {
+    it('does NOT update folder props if nothing to change', async () => {
       // Given
       const client = await createClient()
       const { createdAt, updatedAt, _rev } = await client.upsertFolder(
@@ -212,6 +211,124 @@ describe('Client', () => {
 
       // Then
       expect(result).toEqual(null)
+    })
+  })
+
+  describe('#upsertTag', () => {
+    it('creates a tag if it does not exist yet', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.upsertTag('test', {
+        data: { message: 'yolo' }
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: getTagId('test'),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        _rev: expect.any(String),
+        data: {
+          message: 'yolo'
+        }
+      })
+
+      const doc = await client.getTag('test')
+      expect(doc).toEqual({
+        _id: getTagId('test'),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        _rev: expect.any(String),
+        data: {
+          message: 'yolo'
+        }
+      })
+    })
+
+    it('udpates tag props', async () => {
+      // Given
+      const client = await createClient()
+      await client.upsertTag('test', {
+        data: {}
+      })
+
+      // When
+      const result = await client.upsertTag('test', {
+        data: { message: 'yolo' }
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: getTagId('test'),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        _rev: expect.any(String),
+        data: {
+          message: 'yolo'
+        }
+      })
+
+      const doc = await client.getTag('test')
+      expect(doc).toEqual({
+        _id: getTagId('test'),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        _rev: expect.any(String),
+        data: {
+          message: 'yolo'
+        }
+      })
+    })
+
+    it('does NOT update tag props if nothing to change', async () => {
+      // Given
+      const client = await createClient()
+      const { createdAt, updatedAt, _rev } = await client.upsertTag('test', {
+        data: {
+          message: 'yolo'
+        }
+      })
+
+      // When
+      const result = await client.upsertTag('test')
+
+      // Then
+      expect(result).toEqual({
+        _id: getTagId('test'),
+        createdAt,
+        updatedAt,
+        _rev,
+        data: {
+          message: 'yolo'
+        }
+      })
+
+      const doc = await client.getTag('test')
+      expect(doc).toEqual({
+        _id: getTagId('test'),
+        createdAt,
+        updatedAt,
+        _rev,
+        data: {
+          message: 'yolo'
+        }
+      })
+    })
+
+    it('throws when tag name is invalid', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.upsertTag('invalid tag')
+      } catch (error) {
+        // Then
+        expect(error.message).toEqual('tag name is invalid, got `invalid tag`')
+      }
     })
   })
 })

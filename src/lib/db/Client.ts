@@ -2,6 +2,7 @@ import {
   NoteStorageDocMap,
   FolderData,
   FolderDataEditibleProps,
+  TagDataEditibleProps,
   TagData
 } from './types'
 import {
@@ -9,7 +10,8 @@ import {
   createUnprocessableEntityError,
   isFolderPathnameValid,
   getParentFolderPathname,
-  getTagId
+  getTagId,
+  isTagNameValid
 } from './utils'
 
 export default class Client {
@@ -115,10 +117,42 @@ export default class Client {
     }
   }
 
+  async upsertTag(tagName: string, props?: Partial<TagDataEditibleProps>) {
+    if (!isTagNameValid(tagName)) {
+      throw createUnprocessableEntityError(
+        `tag name is invalid, got \`${tagName}\``
+      )
+    }
+
+    const tag = await this.getTag(tagName)
+    if (tag != null && props == null) {
+      return tag
+    }
+
+    const now = new Date().toISOString()
+    const tagDocProps = {
+      ...(tag || {
+        _id: getTagId(tagName),
+        createdAt: now,
+        data: {}
+      }),
+      ...props,
+      updatedAt: now
+    }
+    const { rev } = await this.db.put(tagDocProps)
+
+    return {
+      _id: tagDocProps._id,
+      createdAt: tagDocProps.createdAt,
+      updatedAt: tagDocProps.updatedAt,
+      data: tagDocProps.data,
+      _rev: rev
+    }
+  }
+
   /**
    * WIP
    *
-   * upsertTag
    * upsertNote
    * findNotesByTag
    * findNotesByPathname
