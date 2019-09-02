@@ -1,18 +1,17 @@
-import { NoteStorage, MapObject, NoteStorageData } from './types'
+import { NoteStorage, NoteStorageData } from './types'
 import { useState, useCallback, useEffect } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import Client from './Client'
-import uuid from './uuid'
+import { generateUuid } from './utils'
 import PouchDB from './PouchDB'
-import { omit } from 'ramda'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
 export interface DbContext {
   initialized: boolean
-  storageMap: MapObject<NoteStorage>
+  storageMap: Map<string, NoteStorage>
   initialize: () => Promise<void>
   createStorage: (name: string) => Promise<void>
   removeStorage: (id: string) => Promise<void>
@@ -21,7 +20,9 @@ export interface DbContext {
 function createDbStoreCreator(browserStorage: Storage) {
   return (): DbContext => {
     const [initialized, setInitialized] = useState(false)
-    const [storageMap, setStorageMap] = useState<MapObject<NoteStorage>>({})
+    const [storageMap, setStorageMap] = useState<Map<string, NoteStorage>>(
+      new Map()
+    )
 
     const initialize = useCallback(async () => {
       const storageDataList = loadStorageDataList(browserStorage)
@@ -31,14 +32,14 @@ function createDbStoreCreator(browserStorage: Storage) {
       setInitialized(true)
       setStorageMap(
         storages.reduce((map, storage) => {
-          map[storage.id] = storage
+          map.set(storage.id, storage)
           return map
-        }, {})
+        }, new Map())
       )
     }, [])
 
     const createStorage = useCallback(async (name: string) => {
-      const id = uuid()
+      const id = generateUuid()
       const storage = await prepareStorage({
         id,
         name
@@ -51,7 +52,11 @@ function createDbStoreCreator(browserStorage: Storage) {
     }, [])
 
     const removeStorage = useCallback(async (id: string) => {
-      setStorageMap(prevStorageMap => omit([id], prevStorageMap))
+      setStorageMap(prevStorageMap => {
+        const newMap = new Map(prevStorageMap)
+        newMap.delete(id)
+        return newMap
+      })
     }, [])
 
     useEffect(
@@ -119,9 +124,9 @@ async function prepareStorage({
   return {
     id,
     name,
-    noteMap: {},
-    folderMap: {},
-    tagMap: {},
+    noteMap: new Map(),
+    folderMap: new Map(),
+    tagMap: new Map(),
     client
   }
 }
