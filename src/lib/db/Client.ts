@@ -224,6 +224,15 @@ export default class Client {
     return rows.map(row => row.doc!)
   }
 
+  async findNotesByTag(tagName: string): Promise<NoteData[]> {
+    const { rows } = await this.db.query<NoteData>('notes/by_tag', {
+      key: tagName,
+      include_docs: true
+    })
+
+    return rows.map(row => row.doc!)
+  }
+
   async upsertNoteListViews() {
     const ddoc = await this.getDoc<
       {
