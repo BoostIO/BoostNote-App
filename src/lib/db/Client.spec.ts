@@ -1,6 +1,6 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
-import { getFolderId, getTagId } from './utils'
+import { getFolderId, getTagId, generateNoteId } from './utils'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {
@@ -218,7 +218,7 @@ describe('Client', () => {
       })
     })
 
-    it('returns null if the folder does not exist', async () => {
+    it('returns null if the tag does not exist', async () => {
       // Given
       const client = await createClient()
 
@@ -345,6 +345,54 @@ describe('Client', () => {
         // Then
         expect(error.message).toBe('tag name is invalid, got `invalid tag`')
       }
+    })
+  })
+
+  describe('#getNote', () => {
+    it('returns a note', async () => {
+      // Given
+      const client = await createClient()
+      const noteId = generateNoteId()
+      const now = new Date().toISOString()
+      await client.db.put({
+        _id: noteId,
+        folderPathname: '/',
+        tags: [],
+        createdAt: now,
+        updatedAt: now,
+        movedToTrash: false,
+        title: 'test title',
+        content: 'test content',
+        data: {}
+      })
+
+      // When
+      const result = await client.getNote(noteId)
+
+      // Then
+      expect(result).toEqual({
+        _id: noteId,
+        _rev: expect.any(String),
+        folderPathname: '/',
+        tags: [],
+        createdAt: now,
+        updatedAt: now,
+        movedToTrash: false,
+        title: 'test title',
+        content: 'test content',
+        data: {}
+      })
+    })
+
+    it('returns null if the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.getNote('test')
+
+      // Then
+      expect(result).toEqual(null)
     })
   })
 })

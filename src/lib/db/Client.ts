@@ -3,7 +3,8 @@ import {
   FolderData,
   FolderDataEditibleProps,
   TagDataEditibleProps,
-  TagData
+  TagData,
+  NoteData
 } from './types'
 import {
   getFolderId,
@@ -148,6 +149,10 @@ export default class Client {
       data: tagDocProps.data,
       _rev: rev
     }
+  }
+
+  async getNote(noteId: string): Promise<NoteData | null> {
+    return this.getDoc<NoteData>(noteId)
   }
 
   /**
