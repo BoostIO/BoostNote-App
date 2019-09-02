@@ -6,6 +6,10 @@ export function generateUuid(): string {
   return uuidV1()
 }
 
+export function getNow(): string {
+  return new Date().toISOString()
+}
+
 export function generateNoteId(): string {
   return `${NOTE_ID_PREFIX}${generateUuid()}`
 }
