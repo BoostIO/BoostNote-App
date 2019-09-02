@@ -569,4 +569,57 @@ describe('Client', () => {
       }
     })
   })
+
+  describe('findNotesByFolder', () => {
+    it('returns notes in folders', async () => {
+      // Given
+      const client = await createClient()
+      await client.init()
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test'
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/test'
+      })
+      await client.createNote({
+        title: 'test title3',
+        content: 'test content3',
+        folderPathname: '/another folder'
+      })
+
+      // When
+      const result = await client.findNotesByFolder('/test')
+
+      expect(result).toEqual([
+        {
+          _id: note1._id,
+          _rev: note1._rev,
+          title: 'test title1',
+          content: 'test content1',
+          folderPathname: '/test',
+          tags: [],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        },
+        {
+          _id: note2._id,
+          _rev: note2._rev,
+          title: 'test title2',
+          content: 'test content2',
+          folderPathname: '/test',
+          tags: [],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        }
+      ])
+    })
+  })
 })

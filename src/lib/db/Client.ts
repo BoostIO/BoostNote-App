@@ -31,6 +31,7 @@ export default class Client {
 
   // WIP
   async init() {
+    await this.upsertNoteListViews()
     // Check root directory does exist
     await this.upsertFolder('/')
     // Load all docs and classify into maps(noteMap, folderMap, tagMap)
@@ -212,6 +213,56 @@ export default class Client {
       ...noteDocProps,
       _rev: rev
     }
+  }
+
+  async findNotesByFolder(folderPathname: string): Promise<NoteData[]> {
+    const { rows } = await this.db.query<NoteData>('notes/by_folder', {
+      key: folderPathname,
+      include_docs: true
+    })
+
+    return rows.map(row => row.doc!)
+  }
+
+  async upsertNoteListViews() {
+    const ddoc = await this.getDoc<
+      {
+        views: { [key: string]: { map: string } }
+      } & PouchDB.Core.GetMeta &
+        PouchDB.Core.IdMeta
+    >('_design/notes')
+    const byFolderMap = `function(doc) {
+      if (doc._id.startsWith('note:')) {
+        emit(doc.folderPathname)
+      }
+    }`
+    const byTagMap = `function(doc) {
+      if (doc._id.startsWith('note:')) {
+        doc.tags.forEach(tag => emit(tag))
+      }
+    }`
+    if (ddoc != null) {
+      if (
+        ddoc.views.by_folder.map === byFolderMap &&
+        ddoc.views.by_tag.map === byTagMap
+      ) {
+        return ddoc
+      }
+    }
+
+    return this.db.put({
+      ...(ddoc || {
+        _id: '_design/notes'
+      }),
+      views: {
+        by_folder: {
+          map: byFolderMap
+        },
+        by_tag: {
+          map: byTagMap
+        }
+      }
+    })
   }
 
   /**
