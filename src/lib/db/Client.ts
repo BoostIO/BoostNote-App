@@ -4,7 +4,8 @@ import {
   FolderDataEditibleProps,
   TagDataEditibleProps,
   TagData,
-  NoteData
+  NoteData,
+  NoteDataEditibleProps
 } from './types'
 import {
   getFolderId,
@@ -12,8 +13,12 @@ import {
   isFolderPathnameValid,
   getParentFolderPathname,
   getTagId,
-  isTagNameValid
+  isTagNameValid,
+  generateNoteId,
+  getNow,
+  createNotFoundError
 } from './utils'
+import { Except } from 'type-fest'
 
 export default class Client {
   public initialized: boolean
@@ -59,7 +64,7 @@ export default class Client {
     if (folder != null && props == null) {
       return folder
     }
-    const now = new Date().toISOString()
+    const now = getNow()
     const folderDocProps = {
       ...(folder || {
         _id: getFolderId(pathname),
@@ -130,7 +135,7 @@ export default class Client {
       return tag
     }
 
-    const now = new Date().toISOString()
+    const now = getNow()
     const tagDocProps = {
       ...(tag || {
         _id: getTagId(tagName),
@@ -155,10 +160,63 @@ export default class Client {
     return this.getDoc<NoteData>(noteId)
   }
 
+  async createNote(
+    noteProps: Partial<NoteDataEditibleProps> = {}
+  ): Promise<NoteData> {
+    const now = getNow()
+    const noteDocProps: Except<NoteData, '_rev'> = {
+      _id: generateNoteId(),
+      title: 'Untitled',
+      content: '',
+      tags: [],
+      folderPathname: '/',
+      data: {},
+      ...noteProps,
+      createdAt: now,
+      updatedAt: now,
+      trashed: false
+    }
+
+    await this.upsertFolder(noteDocProps.folderPathname)
+    await Promise.all(noteDocProps.tags.map(tagName => this.upsertTag(tagName)))
+
+    const { rev } = await this.db.put(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev
+    }
+  }
+
+  async updateNote(noteId: string, noteProps: Partial<NoteDataEditibleProps>) {
+    const note = await this.getNote(noteId)
+    if (note == null)
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+
+    if (noteProps.folderPathname) {
+      await this.upsertFolder(noteProps.folderPathname)
+    }
+    if (noteProps.tags) {
+      await Promise.all(noteProps.tags.map(tagName => this.upsertTag(tagName)))
+    }
+
+    const now = getNow()
+    const noteDocProps = {
+      ...note,
+      ...noteProps,
+      updatedAt: now
+    }
+    const { rev } = await this.db.put<NoteData>(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev
+    }
+  }
+
   /**
    * WIP
    *
-   * upsertNote
    * findNotesByTag
    * findNotesByPathname
    * removeTag

@@ -397,14 +397,176 @@ describe('Client', () => {
   })
 
   describe('#createNote', () => {
-    it('creates a note', async () => {})
-    it('creates missing tags', async () => {})
-    it('creates a missing folder', async () => {})
+    it('creates a note', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.createNote({
+        title: 'test title',
+        content: 'test content'
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: expect.any(String),
+        title: 'test title',
+        content: 'test content',
+        tags: [],
+        folderPathname: '/',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+
+      const doc = await client.getNote(result._id)
+      expect(doc).toEqual({
+        _id: expect.any(String),
+        title: 'test title',
+        content: 'test content',
+        tags: [],
+        folderPathname: '/',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+    })
+
+    it('creates missing tags and folder', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.createNote({
+        title: 'test title',
+        content: 'test content',
+        tags: ['test'],
+        folderPathname: '/test'
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: expect.any(String),
+        title: 'test title',
+        content: 'test content',
+        tags: ['test'],
+        folderPathname: '/test',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+
+      const folder = await client.getFolder('/test')
+      expect(folder).not.toBe(null)
+
+      const tag = await client.getTag('test')
+      expect(tag).not.toBe(null)
+    })
   })
 
   describe('#updateNote', () => {
-    it('updates a note', async () => {})
-    it('creates missing tags ', async () => {})
-    it('creates a missing folder', async () => {})
+    it('updates a note', async () => {
+      // Given
+      const client = await createClient()
+      const { _id } = await client.createNote({
+        title: 'test title',
+        content: 'test content'
+      })
+
+      // When
+      const result = await client.updateNote(_id, {
+        title: 'changed title',
+        content: 'changed content'
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: expect.any(String),
+        title: 'changed title',
+        content: 'changed content',
+        tags: [],
+        folderPathname: '/',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+
+      const doc = await client.getNote(_id)
+      expect(doc).toEqual({
+        _id: expect.any(String),
+        title: 'changed title',
+        content: 'changed content',
+        tags: [],
+        folderPathname: '/',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+    })
+
+    it('creates missing tags and missing folder', async () => {
+      // Given
+      const client = await createClient()
+      const { _id } = await client.createNote({
+        title: 'test title',
+        content: 'test content',
+        tags: ['old']
+      })
+
+      // When
+      const result = await client.updateNote(_id, {
+        title: 'changed title',
+        content: 'changed content',
+        folderPathname: '/new folder',
+        tags: ['new']
+      })
+
+      // Then
+      expect(result).toEqual({
+        _id: expect.any(String),
+        title: 'changed title',
+        content: 'changed content',
+        tags: ['new'],
+        folderPathname: '/new folder',
+        data: {},
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        trashed: false,
+        _rev: expect.any(String)
+      })
+
+      const tag = await client.getTag('new')
+      expect(tag).not.toBe(null)
+
+      const folder = await client.getFolder('/new folder')
+      expect(folder).not.toBe(null)
+    })
+
+    it('throws when the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.updateNote('note:missing', {
+          title: 'changed title',
+          content: 'changed content'
+        })
+      } catch (error) {
+        // Then
+        expect(error.message).toBe('The note `note:missing` does not exist')
+      }
+    })
   })
 })
