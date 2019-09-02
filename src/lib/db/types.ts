@@ -16,16 +16,16 @@ export type NoteStorage = NoteStorageData &
 export type NoteDataEditibleProps = {
   title: string
   content: string
+  folderPathname: string
+  tags: string[]
   data: JsonObject
 }
 
 export type NoteData = {
   _id: string
-  folderPathname: string
-  tags: string[]
   createdAt: string
   updatedAt: string
-  movedToTrash: boolean
+  trashed: boolean
   _rev: string
 } & NoteDataEditibleProps
 
