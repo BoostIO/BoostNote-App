@@ -1,9 +1,15 @@
-import { NoteStorageDocMap, FolderData, FolderDataEditibleProps } from './types'
+import {
+  NoteStorageDocMap,
+  FolderData,
+  FolderDataEditibleProps,
+  TagData
+} from './types'
 import {
   getFolderId,
   createUnprocessableEntityError,
   isFolderPathnameValid,
-  getParentFolderPathname
+  getParentFolderPathname,
+  getTagId
 } from './utils'
 
 export default class Client {
@@ -31,19 +37,7 @@ export default class Client {
   }
 
   async getFolder(path: string): Promise<FolderData | null> {
-    let folder: FolderData
-    try {
-      folder = await this.db.get<FolderData>(getFolderId(path))
-    } catch (error) {
-      switch (error.name) {
-        case 'not_found':
-          return null
-        default:
-          throw error
-      }
-    }
-
-    return folder
+    return this.getDoc<FolderData>(getFolderId(path))
   }
 
   async upsertFolder(
@@ -102,10 +96,29 @@ export default class Client {
     }, map)
   }
 
+  async getTag(tagName: string): Promise<TagData | null> {
+    return this.getDoc<TagData>(getTagId(tagName))
+  }
+
+  async getDoc<T extends PouchDB.Core.GetMeta & PouchDB.Core.IdMeta>(
+    docId: string
+  ): Promise<T | null> {
+    try {
+      return await this.db.get<T>(docId)
+    } catch (error) {
+      switch (error.name) {
+        case 'not_found':
+          return null
+        default:
+          throw error
+      }
+    }
+  }
+
   /**
    * WIP
    *
-   * createTag
+   * upsertTag
    * upsertNote
    * findNotesByTag
    * findNotesByPathname

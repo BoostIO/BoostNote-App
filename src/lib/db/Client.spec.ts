@@ -1,6 +1,6 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
-import { getFolderId } from './utils'
+import { getFolderId, getTagId } from './utils'
 // import { getFolderId } from './utils'
 
 let clientCount = 0
@@ -175,6 +175,43 @@ describe('Client', () => {
         updatedAt,
         data: { message: 'yolo' }
       })
+    })
+  })
+
+  describe('#getTag', () => {
+    it('returns a tag', async () => {
+      // Given
+      const client = await createClient()
+      const now = new Date().toISOString()
+      await client.db.put({
+        _id: getTagId('test'),
+        createdAt: now,
+        updatedAt: now,
+        data: {}
+      })
+
+      // When
+      const result = await client.getTag('test')
+
+      // Then
+      expect(result).toEqual({
+        _id: getTagId('test'),
+        _rev: expect.any(String),
+        createdAt: now,
+        updatedAt: now,
+        data: {}
+      })
+    })
+
+    it('returns null if the folder does not exist', async () => {
+      // Given
+      const client = await createClient()
+
+      // When
+      const result = await client.getTag('test')
+
+      // Then
+      expect(result).toEqual(null)
     })
   })
 })
