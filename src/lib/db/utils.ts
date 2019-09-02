@@ -1,5 +1,6 @@
 import uuidV1 from 'uuid/v1'
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
+import { join } from 'path'
 
 export function generateUuid(): string {
   return uuidV1()
@@ -17,6 +18,10 @@ export function getFolderPathname(id: string): string {
   return id.substring(FOLDER_ID_PREFIX.length)
 }
 
+export function getParentFolderPathname(pathname: string): string {
+  return join(pathname, '..')
+}
+
 export function getTagId(name: string): string {
   return `${TAG_ID_PREFIX}${name}`
 }
@@ -31,6 +36,7 @@ export function isFolderNameValid(name: string): boolean {
 }
 
 export function isFolderPathnameValid(pathname: string): boolean {
+  if (pathname === '/') return true
   if (!pathname.startsWith('/')) return false
   const [, ...folderNames] = pathname.split('/')
   return folderNames.every(isFolderNameValid)
