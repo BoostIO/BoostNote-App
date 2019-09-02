@@ -395,4 +395,16 @@ describe('Client', () => {
       expect(result).toEqual(null)
     })
   })
+
+  describe('#createNote', () => {
+    it('creates a note', async () => {})
+    it('creates missing tags', async () => {})
+    it('creates a missing folder', async () => {})
+  })
+
+  describe('#updateNote', () => {
+    it('updates a note', async () => {})
+    it('creates missing tags ', async () => {})
+    it('creates a missing folder', async () => {})
+  })
 })
