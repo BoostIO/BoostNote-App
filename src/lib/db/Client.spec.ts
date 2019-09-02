@@ -175,6 +175,22 @@ describe('Client', () => {
         data: { message: 'yolo' }
       })
     })
+
+    it('throws when pathname is invalid', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      // When
+      try {
+        await client.upsertFolder('/invalid?pathname')
+      } catch (error) {
+        // Then
+        expect(error.message).toBe(
+          'pathname is invalid, got `/invalid?pathname`'
+        )
+      }
+    })
   })
 
   describe('#getTag', () => {
@@ -327,7 +343,7 @@ describe('Client', () => {
         await client.upsertTag('invalid tag')
       } catch (error) {
         // Then
-        expect(error.message).toEqual('tag name is invalid, got `invalid tag`')
+        expect(error.message).toBe('tag name is invalid, got `invalid tag`')
       }
     })
   })

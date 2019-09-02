@@ -48,7 +48,7 @@ export default class Client {
   ): Promise<FolderData> {
     if (!isFolderPathnameValid(pathname)) {
       throw createUnprocessableEntityError(
-        `pathname is invalid, got ${pathname}`
+        `pathname is invalid, got \`${pathname}\``
       )
     }
     if (pathname !== '/') {
