@@ -751,6 +751,46 @@ describe('Client', () => {
     })
   })
 
+  describe('untrashNote', () => {
+    it('untrashes a note', async () => {
+      // Given
+      const client = await createClient()
+      const note = await client.createNote({
+        title: 'test title',
+        content: 'test content'
+      })
+
+      // When
+      const result = await client.untrashNote(note._id)
+
+      // Then
+      expect(result).toMatchObject({
+        _id: note._id,
+        trashed: false
+      })
+
+      const doc = await client.db.get(note._id)
+      expect(doc).toMatchObject({
+        _id: note._id,
+        trashed: false
+      })
+    })
+
+    it('throws when the note does not exist', async () => {
+      // Given
+      const client = await createClient()
+      expect.assertions(1)
+
+      try {
+        // When
+        await client.untrashNote('note:missing')
+      } catch (error) {
+        // Then
+        expect(error.message).toBe('The note `note:missing` does not exist')
+      }
+    })
+  })
+
   describe('purgeNote', () => {
     it('delete a note', async () => {
       // Given

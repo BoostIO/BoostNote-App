@@ -291,6 +291,23 @@ export default class Client {
     }
   }
 
+  async untrashNote(noteId: string): Promise<NoteData> {
+    const note = await this.getNote(noteId)
+    if (note == null)
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+
+    const noteDocProps = {
+      ...note,
+      trashed: false
+    }
+    const { rev } = await this.db.put<NoteData>(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev
+    }
+  }
+
   async purgeNote(noteId: string): Promise<void> {
     const note = await this.getNote(noteId)
     if (note == null)
@@ -305,7 +322,5 @@ export default class Client {
    * removeTag
    * removeFolder
    * trashNotesInFolder
-   * restoreNote
-   * purgeTrashedNote
    */
 }
