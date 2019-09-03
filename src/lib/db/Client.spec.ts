@@ -622,4 +622,92 @@ describe('Client', () => {
       ])
     })
   })
+
+  describe('findNotesByTag', () => {
+    it('returns notes in folders', async () => {
+      // Given
+      const client = await createClient()
+      await client.init()
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/',
+        tags: ['tag1']
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/',
+        tags: ['tag1', 'tag2']
+      })
+      const note3 = await client.createNote({
+        title: 'test title3',
+        content: 'test content3',
+        folderPathname: '/',
+        tags: ['tag2']
+      })
+
+      // When
+      const result1 = await client.findNotesByTag('tag1')
+
+      // Then
+      expect(result1).toEqual([
+        {
+          _id: note1._id,
+          _rev: note1._rev,
+          title: 'test title1',
+          content: 'test content1',
+          folderPathname: '/',
+          tags: ['tag1'],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        },
+        {
+          _id: note2._id,
+          _rev: note2._rev,
+          title: 'test title2',
+          content: 'test content2',
+          folderPathname: '/',
+          tags: ['tag1', 'tag2'],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        }
+      ])
+
+      // When
+      const result2 = await client.findNotesByTag('tag2')
+
+      // Then
+      expect(result2).toEqual([
+        {
+          _id: note2._id,
+          _rev: note2._rev,
+          title: 'test title2',
+          content: 'test content2',
+          folderPathname: '/',
+          tags: ['tag1', 'tag2'],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        },
+        {
+          _id: note3._id,
+          _rev: note3._rev,
+          title: 'test title3',
+          content: 'test content3',
+          folderPathname: '/',
+          tags: ['tag2'],
+          data: {},
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          trashed: false
+        }
+      ])
+    })
+  })
 })

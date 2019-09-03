@@ -277,8 +277,6 @@ export default class Client {
   /**
    * WIP
    *
-   * findNotesByTag
-   * findNotesByPathname
    * removeTag
    * removeFolder
    * trashNotesInFolder
