@@ -1,8 +1,7 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
 import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
-import { NoteData } from './types'
-import { Except } from 'type-fest'
+import { NoteData, FolderData, ExceptRev } from './types'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {
@@ -25,7 +24,7 @@ describe('Client', () => {
       // Given
       const client = await createClient()
       const now = new Date().toISOString()
-      await client.db.put({
+      await client.db.put<ExceptRev<FolderData>>({
         _id: getFolderId('/test'),
         createdAt: now,
         updatedAt: now,
@@ -783,7 +782,7 @@ describe('Client', () => {
       const client = await createClient()
       const noteId = generateNoteId()
       const now = getNow()
-      await client.db.put<Except<NoteData, '_rev'>>({
+      await client.db.put<ExceptRev<NoteData>>({
         _id: noteId,
         folderPathname: '/missing folder',
         tags: [],

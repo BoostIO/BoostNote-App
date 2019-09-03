@@ -5,7 +5,8 @@ import {
   TagDataEditibleProps,
   TagData,
   NoteData,
-  NoteDataEditibleProps
+  NoteDataEditibleProps,
+  ExceptRev
 } from './types'
 import {
   getFolderId,
@@ -19,7 +20,6 @@ import {
   createNotFoundError,
   getFolderPathname
 } from './utils'
-import { Except } from 'type-fest'
 
 export default class Client {
   public initialized: boolean
@@ -166,7 +166,7 @@ export default class Client {
     noteProps: Partial<NoteDataEditibleProps> = {}
   ): Promise<NoteData> {
     const now = getNow()
-    const noteDocProps: Except<NoteData, '_rev'> = {
+    const noteDocProps: ExceptRev<NoteData> = {
       _id: generateNoteId(),
       title: 'Untitled',
       content: '',

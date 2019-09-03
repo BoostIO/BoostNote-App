@@ -1,5 +1,7 @@
 import Client from './Client'
-import { JsonObject } from 'type-fest'
+import { JsonObject, Except } from 'type-fest'
+
+export type ExceptRev<D extends PouchDB.Core.RevisionIdMeta> = Except<D, '_rev'>
 
 export type NoteIdSet = Set<string>
 
