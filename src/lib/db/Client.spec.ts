@@ -13,7 +13,7 @@ async function createClient(shouldInit: boolean = true): Promise<Client> {
   const client = new Client(db, id, id)
 
   if (shouldInit) {
-    // await client.init()
+    await client.init()
   }
 
   return client
@@ -891,6 +891,128 @@ describe('Client', () => {
       const storedNote2 = await client.getNote(note2._id)
       expect(storedNote2).toMatchObject({
         tags: ['tag2']
+      })
+    })
+  })
+
+  describe('removeFolder', () => {
+    it('removes a folder and its notes', async () => {
+      // Given
+      const client = await createClient()
+      await client.init()
+      const note = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test'
+      })
+
+      // When
+      await client.removeFolder('/test')
+
+      // Then
+      const storedFolder = await client.getFolder('/test')
+      expect(storedFolder).toBe(null)
+
+      const storedNote = await client.getNote(note._id)
+      expect(storedNote).toMatchObject({
+        trashed: true
+      })
+    })
+
+    it('removes child folders and their notes too', async () => {
+      // Given
+      const client = await createClient(true)
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test'
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/test/child folder'
+      })
+
+      // When
+      await client.removeFolder('/test')
+
+      // Then
+      const storedFolder = await client.getFolder('/test')
+      expect(storedFolder).toBe(null)
+
+      const storedChildFolder = await client.getFolder('/test/child folder')
+      expect(storedChildFolder).toBe(null)
+
+      const storedNote1 = await client.getNote(note1._id)
+      expect(storedNote1).toMatchObject({
+        trashed: true
+      })
+
+      const storedNote2 = await client.getNote(note2._id)
+      expect(storedNote2).toMatchObject({
+        trashed: true
+      })
+    })
+  })
+
+  describe('getAllFolderUnderPathname', () => {
+    it('returns list of a folder and its child folders', async () => {
+      // Given
+      const client = await createClient(true)
+      await client.upsertFolder('/test/child folder')
+      await client.upsertFolder('/test2')
+
+      // When
+      const result = await client.getAllFolderUnderPathname('/test')
+
+      // Then
+      expect(result).toEqual([
+        expect.objectContaining({
+          _id: getFolderId('/test')
+        }),
+        expect.objectContaining({
+          _id: getFolderId('/test/child folder')
+        })
+      ])
+    })
+  })
+
+  describe('trashAllNotesInFolder', () => {
+    it('trashes all notes in the folder', async () => {
+      // Given
+      const client = await createClient(true)
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test'
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/test'
+      })
+      const note3 = await client.createNote({
+        title: 'test title3',
+        content: 'test content3',
+        folderPathname: '/test2'
+      })
+
+      // When
+      await client.trashAllNotesInFolder('/test')
+
+      // Then
+      const storedNote1 = await client.getNote(note1._id)
+      expect(storedNote1).toMatchObject({
+        trashed: true
+      })
+      const storedNote2 = await client.getNote(note2._id)
+      expect(storedNote2).toMatchObject({
+        trashed: true
+      })
+
+      const storedNote3 = await client.getNote(note3._id)
+      expect(storedNote3).toMatchObject({
+        trashed: false
       })
     })
   })

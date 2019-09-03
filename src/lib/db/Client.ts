@@ -16,7 +16,8 @@ import {
   isTagNameValid,
   generateNoteId,
   getNow,
-  createNotFoundError
+  createNotFoundError,
+  getFolderPathname
 } from './utils'
 import { Except } from 'type-fest'
 
@@ -334,10 +335,40 @@ export default class Client {
     }
   }
 
-  /**
-   * WIP
-   *
-   * removeFolder
-   * trashNotesInFolder
-   */
+  async removeFolder(folderPathname: string): Promise<void> {
+    const foldersToDelete = await this.getAllFolderUnderPathname(folderPathname)
+
+    await Promise.all(
+      foldersToDelete.map(folder =>
+        this.trashAllNotesInFolder(getFolderPathname(folder._id))
+      )
+    )
+
+    await Promise.all(foldersToDelete.map(folder => this.db.remove(folder)))
+  }
+
+  async getAllFolderUnderPathname(
+    folderPathname: string
+  ): Promise<FolderData[]> {
+    const [folder, { rows }] = await Promise.all([
+      this.getFolder(folderPathname),
+      this.db.allDocs<FolderData>({
+        startkey: `${getFolderId(folderPathname)}/`,
+        endkey: `${getFolderId(folderPathname)}/\ufff0`,
+        include_docs: true
+      })
+    ])
+    const folderList = rows.map(row => row.doc!)
+    if (folder != null) {
+      folderList.unshift(folder)
+    }
+
+    return folderList
+  }
+
+  async trashAllNotesInFolder(folderPathname: string): Promise<void> {
+    const notes = await this.findNotesByFolder(folderPathname)
+
+    await Promise.all(notes.map(note => this.trashNote(note._id)))
+  }
 }
