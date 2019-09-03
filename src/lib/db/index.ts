@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
-import Client from './Client'
+import NoteDb from './NoteDb'
 import { generateUuid } from './utils'
 import PouchDB from './PouchDB'
 
@@ -120,13 +120,13 @@ async function prepareStorage({
   name
 }: NoteStorageData): Promise<NoteStorage> {
   const pouchdb = new PouchDB(id, { adapter: 'idb' })
-  const client = new Client(pouchdb, id, name)
+  const client = new NoteDb(pouchdb, id, name)
   return {
     id,
     name,
     noteMap: new Map(),
     folderMap: new Map(),
     tagMap: new Map(),
-    client
+    db: client
   }
 }

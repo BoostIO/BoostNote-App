@@ -21,11 +21,11 @@ import {
   getFolderPathname
 } from './utils'
 
-export default class Client {
+export default class NoteDb {
   public initialized: boolean
 
   constructor(
-    public db: PouchDB.Database,
+    public pouchDb: PouchDB.Database,
     public id: string,
     public name: string
   ) {}
@@ -76,7 +76,7 @@ export default class Client {
       ...props,
       updatedAt: now
     }
-    const { rev } = await this.db.put(folderDocProps)
+    const { rev } = await this.pouchDb.put(folderDocProps)
 
     return {
       _id: folderDocProps._id,
@@ -98,7 +98,7 @@ export default class Client {
       folderMap: new Map(),
       tagMap: new Map()
     }
-    const allDocsResponse = await this.db.allDocs({})
+    const allDocsResponse = await this.pouchDb.allDocs({})
 
     return allDocsResponse.rows.reduce((map, doc) => {
       doc
@@ -114,7 +114,7 @@ export default class Client {
     docId: string
   ): Promise<T | null> {
     try {
-      return await this.db.get<T>(docId)
+      return await this.pouchDb.get<T>(docId)
     } catch (error) {
       switch (error.name) {
         case 'not_found':
@@ -147,7 +147,7 @@ export default class Client {
       ...props,
       updatedAt: now
     }
-    const { rev } = await this.db.put(tagDocProps)
+    const { rev } = await this.pouchDb.put(tagDocProps)
 
     return {
       _id: tagDocProps._id,
@@ -182,7 +182,7 @@ export default class Client {
     await this.upsertFolder(noteDocProps.folderPathname)
     await Promise.all(noteDocProps.tags.map(tagName => this.upsertTag(tagName)))
 
-    const { rev } = await this.db.put(noteDocProps)
+    const { rev } = await this.pouchDb.put(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -208,7 +208,7 @@ export default class Client {
       ...noteProps,
       updatedAt: now
     }
-    const { rev } = await this.db.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -217,7 +217,7 @@ export default class Client {
   }
 
   async findNotesByFolder(folderPathname: string): Promise<NoteData[]> {
-    const { rows } = await this.db.query<NoteData>('notes/by_folder', {
+    const { rows } = await this.pouchDb.query<NoteData>('notes/by_folder', {
       key: folderPathname,
       include_docs: true
     })
@@ -226,7 +226,7 @@ export default class Client {
   }
 
   async findNotesByTag(tagName: string): Promise<NoteData[]> {
-    const { rows } = await this.db.query<NoteData>('notes/by_tag', {
+    const { rows } = await this.pouchDb.query<NoteData>('notes/by_tag', {
       key: tagName,
       include_docs: true
     })
@@ -260,7 +260,7 @@ export default class Client {
       }
     }
 
-    return this.db.put({
+    return this.pouchDb.put({
       ...(ddoc || {
         _id: '_design/notes'
       }),
@@ -284,7 +284,7 @@ export default class Client {
       ...note,
       trashed: true
     }
-    const { rev } = await this.db.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -303,7 +303,7 @@ export default class Client {
       ...note,
       trashed: false
     }
-    const { rev } = await this.db.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -316,7 +316,7 @@ export default class Client {
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
 
-    await this.db.remove(note)
+    await this.pouchDb.remove(note)
   }
 
   async removeTag(tagName: string): Promise<void> {
@@ -331,7 +331,7 @@ export default class Client {
 
     const tag = await this.getTag(tagName)
     if (tag != null) {
-      this.db.remove(tag)
+      this.pouchDb.remove(tag)
     }
   }
 
@@ -344,7 +344,9 @@ export default class Client {
       )
     )
 
-    await Promise.all(foldersToDelete.map(folder => this.db.remove(folder)))
+    await Promise.all(
+      foldersToDelete.map(folder => this.pouchDb.remove(folder))
+    )
   }
 
   async getAllFolderUnderPathname(
@@ -352,7 +354,7 @@ export default class Client {
   ): Promise<FolderData[]> {
     const [folder, { rows }] = await Promise.all([
       this.getFolder(folderPathname),
-      this.db.allDocs<FolderData>({
+      this.pouchDb.allDocs<FolderData>({
         startkey: `${getFolderId(folderPathname)}/`,
         endkey: `${getFolderId(folderPathname)}/\ufff0`,
         include_docs: true

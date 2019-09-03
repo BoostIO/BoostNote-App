@@ -1,30 +1,30 @@
-import Client from './Client'
+import NoteDb from './NoteDb'
 import PouchDB from './PouchDB'
 import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
 import { NoteData, FolderData, ExceptRev } from './types'
 
-let clientCount = 0
-async function createClient(shouldInit: boolean = true): Promise<Client> {
-  const id = `dummy${++clientCount}`
-  const db = new PouchDB(id, {
+let noteDbCount = 0
+async function prepareNoteDb(shouldInit: boolean = true): Promise<NoteDb> {
+  const id = `dummy${++noteDbCount}`
+  const pouchDb = new PouchDB(id, {
     adapter: 'memory'
   })
-  const client = new Client(db, id, id)
+  const noteDb = new NoteDb(pouchDb, id, id)
 
   if (shouldInit) {
-    await client.init()
+    await noteDb.init()
   }
 
-  return client
+  return noteDb
 }
 
-describe('Client', () => {
+describe('NoteDb', () => {
   describe('#getFolder', () => {
     it('returns a folder', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       const now = new Date().toISOString()
-      await client.db.put<ExceptRev<FolderData>>({
+      await noteDb.pouchDb.put<ExceptRev<FolderData>>({
         _id: getFolderId('/test'),
         createdAt: now,
         updatedAt: now,
@@ -32,7 +32,7 @@ describe('Client', () => {
       })
 
       // When
-      const result = await client.getFolder('/test')
+      const result = await noteDb.getFolder('/test')
 
       // Then
       expect(result).toEqual({
@@ -46,10 +46,10 @@ describe('Client', () => {
 
     it('returns null if the folder does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.getFolder('/test')
+      const result = await noteDb.getFolder('/test')
 
       // Then
       expect(result).toEqual(null)
@@ -59,10 +59,10 @@ describe('Client', () => {
   describe('#upsertFolder', () => {
     it('creates a folder if it does not exist yet', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.upsertFolder('/test')
+      const result = await noteDb.upsertFolder('/test')
 
       // Then
       expect(result).toEqual({
@@ -73,7 +73,7 @@ describe('Client', () => {
         data: {}
       })
 
-      const doc = await client.db.get(getFolderId('/test'))
+      const doc = await noteDb.pouchDb.get(getFolderId('/test'))
       expect(doc).toEqual({
         _id: getFolderId('/test'),
         _rev: expect.any(String),
@@ -85,10 +85,10 @@ describe('Client', () => {
 
     it('creates parent folder if it does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.upsertFolder('/parent/test')
+      const result = await noteDb.upsertFolder('/parent/test')
 
       // Then
       expect(result).toEqual({
@@ -99,7 +99,7 @@ describe('Client', () => {
         data: {}
       })
 
-      const doc = await client.db.get(getFolderId('/parent/test'))
+      const doc = await noteDb.pouchDb.get(getFolderId('/parent/test'))
       expect(doc).toEqual({
         _id: getFolderId('/parent/test'),
         _rev: expect.any(String),
@@ -108,7 +108,7 @@ describe('Client', () => {
         data: {}
       })
 
-      const parentDoc = await client.db.get(getFolderId('/parent'))
+      const parentDoc = await noteDb.pouchDb.get(getFolderId('/parent'))
       expect(parentDoc).toEqual({
         _id: getFolderId('/parent'),
         _rev: expect.any(String),
@@ -120,11 +120,11 @@ describe('Client', () => {
 
     it('updates folder props', async () => {
       // Given
-      const client = await createClient()
-      await client.upsertFolder('/test')
+      const noteDb = await prepareNoteDb()
+      await noteDb.upsertFolder('/test')
 
       // When
-      const result = await client.upsertFolder('/test', {
+      const result = await noteDb.upsertFolder('/test', {
         data: { message: 'yolo' }
       })
 
@@ -137,7 +137,7 @@ describe('Client', () => {
         data: { message: 'yolo' }
       })
 
-      const doc = await client.db.get(getFolderId('/test'))
+      const doc = await noteDb.pouchDb.get(getFolderId('/test'))
       expect(doc).toEqual({
         _id: getFolderId('/test'),
         _rev: expect.any(String),
@@ -149,14 +149,14 @@ describe('Client', () => {
 
     it('does NOT update folder props if nothing to change', async () => {
       // Given
-      const client = await createClient()
-      const { createdAt, updatedAt, _rev } = await client.upsertFolder(
+      const noteDb = await prepareNoteDb()
+      const { createdAt, updatedAt, _rev } = await noteDb.upsertFolder(
         '/test',
         { data: { message: 'yolo' } }
       )
 
       // When
-      const result = await client.upsertFolder('/test')
+      const result = await noteDb.upsertFolder('/test')
 
       // Then
       expect(result).toEqual({
@@ -167,7 +167,7 @@ describe('Client', () => {
         data: { message: 'yolo' }
       })
 
-      const doc = await client.db.get(getFolderId('/test'))
+      const doc = await noteDb.pouchDb.get(getFolderId('/test'))
       expect(doc).toEqual({
         _id: getFolderId('/test'),
         _rev,
@@ -179,12 +179,12 @@ describe('Client', () => {
 
     it('throws when pathname is invalid', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       // When
       try {
-        await client.upsertFolder('/invalid?pathname')
+        await noteDb.upsertFolder('/invalid?pathname')
       } catch (error) {
         // Then
         expect(error.message).toBe(
@@ -197,9 +197,9 @@ describe('Client', () => {
   describe('#getTag', () => {
     it('returns a tag', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       const now = new Date().toISOString()
-      await client.db.put({
+      await noteDb.pouchDb.put({
         _id: getTagId('test'),
         createdAt: now,
         updatedAt: now,
@@ -207,7 +207,7 @@ describe('Client', () => {
       })
 
       // When
-      const result = await client.getTag('test')
+      const result = await noteDb.getTag('test')
 
       // Then
       expect(result).toEqual({
@@ -221,10 +221,10 @@ describe('Client', () => {
 
     it('returns null if the tag does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.getTag('test')
+      const result = await noteDb.getTag('test')
 
       // Then
       expect(result).toEqual(null)
@@ -234,10 +234,10 @@ describe('Client', () => {
   describe('#upsertTag', () => {
     it('creates a tag if it does not exist yet', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.upsertTag('test', {
+      const result = await noteDb.upsertTag('test', {
         data: { message: 'yolo' }
       })
 
@@ -252,7 +252,7 @@ describe('Client', () => {
         }
       })
 
-      const doc = await client.getTag('test')
+      const doc = await noteDb.getTag('test')
       expect(doc).toEqual({
         _id: getTagId('test'),
         createdAt: expect.any(String),
@@ -266,13 +266,13 @@ describe('Client', () => {
 
     it('udpates tag props', async () => {
       // Given
-      const client = await createClient()
-      await client.upsertTag('test', {
+      const noteDb = await prepareNoteDb()
+      await noteDb.upsertTag('test', {
         data: {}
       })
 
       // When
-      const result = await client.upsertTag('test', {
+      const result = await noteDb.upsertTag('test', {
         data: { message: 'yolo' }
       })
 
@@ -287,7 +287,7 @@ describe('Client', () => {
         }
       })
 
-      const doc = await client.getTag('test')
+      const doc = await noteDb.getTag('test')
       expect(doc).toEqual({
         _id: getTagId('test'),
         createdAt: expect.any(String),
@@ -301,15 +301,15 @@ describe('Client', () => {
 
     it('does NOT update tag props if nothing to change', async () => {
       // Given
-      const client = await createClient()
-      const { createdAt, updatedAt, _rev } = await client.upsertTag('test', {
+      const noteDb = await prepareNoteDb()
+      const { createdAt, updatedAt, _rev } = await noteDb.upsertTag('test', {
         data: {
           message: 'yolo'
         }
       })
 
       // When
-      const result = await client.upsertTag('test')
+      const result = await noteDb.upsertTag('test')
 
       // Then
       expect(result).toEqual({
@@ -322,7 +322,7 @@ describe('Client', () => {
         }
       })
 
-      const doc = await client.getTag('test')
+      const doc = await noteDb.getTag('test')
       expect(doc).toEqual({
         _id: getTagId('test'),
         createdAt,
@@ -336,12 +336,12 @@ describe('Client', () => {
 
     it('throws when tag name is invalid', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       // When
       try {
-        await client.upsertTag('invalid tag')
+        await noteDb.upsertTag('invalid tag')
       } catch (error) {
         // Then
         expect(error.message).toBe('tag name is invalid, got `invalid tag`')
@@ -352,10 +352,10 @@ describe('Client', () => {
   describe('#getNote', () => {
     it('returns a note', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       const noteId = generateNoteId()
       const now = new Date().toISOString()
-      await client.db.put({
+      await noteDb.pouchDb.put({
         _id: noteId,
         folderPathname: '/',
         tags: [],
@@ -368,7 +368,7 @@ describe('Client', () => {
       })
 
       // When
-      const result = await client.getNote(noteId)
+      const result = await noteDb.getNote(noteId)
 
       // Then
       expect(result).toEqual({
@@ -387,10 +387,10 @@ describe('Client', () => {
 
     it('returns null if the note does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.getNote('test')
+      const result = await noteDb.getNote('test')
 
       // Then
       expect(result).toEqual(null)
@@ -400,10 +400,10 @@ describe('Client', () => {
   describe('#createNote', () => {
     it('creates a note', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.createNote({
+      const result = await noteDb.createNote({
         title: 'test title',
         content: 'test content'
       })
@@ -422,7 +422,7 @@ describe('Client', () => {
         _rev: expect.any(String)
       })
 
-      const doc = await client.getNote(result._id)
+      const doc = await noteDb.getNote(result._id)
       expect(doc).toEqual({
         _id: expect.any(String),
         title: 'test title',
@@ -439,10 +439,10 @@ describe('Client', () => {
 
     it('creates missing tags and folder', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
 
       // When
-      const result = await client.createNote({
+      const result = await noteDb.createNote({
         title: 'test title',
         content: 'test content',
         tags: ['test'],
@@ -463,10 +463,10 @@ describe('Client', () => {
         _rev: expect.any(String)
       })
 
-      const folder = await client.getFolder('/test')
+      const folder = await noteDb.getFolder('/test')
       expect(folder).not.toBe(null)
 
-      const tag = await client.getTag('test')
+      const tag = await noteDb.getTag('test')
       expect(tag).not.toBe(null)
     })
   })
@@ -474,14 +474,14 @@ describe('Client', () => {
   describe('#updateNote', () => {
     it('updates a note', async () => {
       // Given
-      const client = await createClient()
-      const { _id } = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      const { _id } = await noteDb.createNote({
         title: 'test title',
         content: 'test content'
       })
 
       // When
-      const result = await client.updateNote(_id, {
+      const result = await noteDb.updateNote(_id, {
         title: 'changed title',
         content: 'changed content'
       })
@@ -500,7 +500,7 @@ describe('Client', () => {
         _rev: expect.any(String)
       })
 
-      const doc = await client.getNote(_id)
+      const doc = await noteDb.getNote(_id)
       expect(doc).toEqual({
         _id: expect.any(String),
         title: 'changed title',
@@ -517,15 +517,15 @@ describe('Client', () => {
 
     it('creates missing tags and missing folder', async () => {
       // Given
-      const client = await createClient()
-      const { _id } = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      const { _id } = await noteDb.createNote({
         title: 'test title',
         content: 'test content',
         tags: ['old']
       })
 
       // When
-      const result = await client.updateNote(_id, {
+      const result = await noteDb.updateNote(_id, {
         title: 'changed title',
         content: 'changed content',
         folderPathname: '/new folder',
@@ -546,21 +546,21 @@ describe('Client', () => {
         _rev: expect.any(String)
       })
 
-      const tag = await client.getTag('new')
+      const tag = await noteDb.getTag('new')
       expect(tag).not.toBe(null)
 
-      const folder = await client.getFolder('/new folder')
+      const folder = await noteDb.getFolder('/new folder')
       expect(folder).not.toBe(null)
     })
 
     it('throws when the note does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       // When
       try {
-        await client.updateNote('note:missing', {
+        await noteDb.updateNote('note:missing', {
           title: 'changed title',
           content: 'changed content'
         })
@@ -574,26 +574,26 @@ describe('Client', () => {
   describe('findNotesByFolder', () => {
     it('returns notes in folders', async () => {
       // Given
-      const client = await createClient()
-      await client.init()
-      const note1 = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/test'
       })
-      const note2 = await client.createNote({
+      const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/test'
       })
-      await client.createNote({
+      await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
         folderPathname: '/another folder'
       })
 
       // When
-      const result = await client.findNotesByFolder('/test')
+      const result = await noteDb.findNotesByFolder('/test')
 
       expect(result).toEqual([
         {
@@ -627,21 +627,21 @@ describe('Client', () => {
   describe('findNotesByTag', () => {
     it('returns notes in folders', async () => {
       // Given
-      const client = await createClient()
-      await client.init()
-      const note1 = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/',
         tags: ['tag1']
       })
-      const note2 = await client.createNote({
+      const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/',
         tags: ['tag1', 'tag2']
       })
-      const note3 = await client.createNote({
+      const note3 = await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
         folderPathname: '/',
@@ -649,7 +649,7 @@ describe('Client', () => {
       })
 
       // When
-      const result1 = await client.findNotesByTag('tag1')
+      const result1 = await noteDb.findNotesByTag('tag1')
 
       // Then
       expect(result1).toEqual([
@@ -680,7 +680,7 @@ describe('Client', () => {
       ])
 
       // When
-      const result2 = await client.findNotesByTag('tag2')
+      const result2 = await noteDb.findNotesByTag('tag2')
 
       // Then
       expect(result2).toEqual([
@@ -715,14 +715,14 @@ describe('Client', () => {
   describe('trashNote', () => {
     it('trashes a note', async () => {
       // Given
-      const client = await createClient()
-      const note = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      const note = await noteDb.createNote({
         title: 'test title',
         content: 'test content'
       })
 
       // When
-      const result = await client.trashNote(note._id)
+      const result = await noteDb.trashNote(note._id)
 
       // Then
       expect(result).toMatchObject({
@@ -730,7 +730,7 @@ describe('Client', () => {
         trashed: true
       })
 
-      const doc = await client.db.get(note._id)
+      const doc = await noteDb.pouchDb.get(note._id)
       expect(doc).toMatchObject({
         _id: note._id,
         trashed: true
@@ -739,12 +739,12 @@ describe('Client', () => {
 
     it('throws when the note does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       try {
         // When
-        await client.trashNote('note:missing')
+        await noteDb.trashNote('note:missing')
       } catch (error) {
         // Then
         expect(error.message).toBe('The note `note:missing` does not exist')
@@ -755,14 +755,14 @@ describe('Client', () => {
   describe('untrashNote', () => {
     it('untrashes a note', async () => {
       // Given
-      const client = await createClient()
-      const note = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      const note = await noteDb.createNote({
         title: 'test title',
         content: 'test content'
       })
 
       // When
-      const result = await client.untrashNote(note._id)
+      const result = await noteDb.untrashNote(note._id)
 
       // Then
       expect(result).toMatchObject({
@@ -770,7 +770,7 @@ describe('Client', () => {
         trashed: false
       })
 
-      const doc = await client.db.get(note._id)
+      const doc = await noteDb.pouchDb.get(note._id)
       expect(doc).toMatchObject({
         _id: note._id,
         trashed: false
@@ -779,10 +779,10 @@ describe('Client', () => {
 
     it('restores missing folder of the note', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       const noteId = generateNoteId()
       const now = getNow()
-      await client.db.put<ExceptRev<NoteData>>({
+      await noteDb.pouchDb.put<ExceptRev<NoteData>>({
         _id: noteId,
         folderPathname: '/missing folder',
         tags: [],
@@ -795,7 +795,7 @@ describe('Client', () => {
       })
 
       // When
-      const result = await client.untrashNote(noteId)
+      const result = await noteDb.untrashNote(noteId)
 
       // Then
       expect(result).toMatchObject({
@@ -803,24 +803,24 @@ describe('Client', () => {
         trashed: false
       })
 
-      const doc = await client.db.get(noteId)
+      const doc = await noteDb.pouchDb.get(noteId)
       expect(doc).toMatchObject({
         _id: noteId,
         trashed: false
       })
 
-      const folderDoc = await client.getFolder('/missing folder')
+      const folderDoc = await noteDb.getFolder('/missing folder')
       expect(folderDoc).not.toBe(null)
     })
 
     it('throws when the note does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       try {
         // When
-        await client.untrashNote('note:missing')
+        await noteDb.untrashNote('note:missing')
       } catch (error) {
         // Then
         expect(error.message).toBe('The note `note:missing` does not exist')
@@ -831,28 +831,28 @@ describe('Client', () => {
   describe('purgeNote', () => {
     it('delete a note', async () => {
       // Given
-      const client = await createClient()
-      const note = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      const note = await noteDb.createNote({
         title: 'test title',
         content: 'test content'
       })
 
       // When
-      await client.purgeNote(note._id)
+      await noteDb.purgeNote(note._id)
 
       // Then
-      const doc = await client.getNote(note._id)
+      const doc = await noteDb.getNote(note._id)
       expect(doc).toBe(null)
     })
 
     it('throws when the note does not exist', async () => {
       // Given
-      const client = await createClient()
+      const noteDb = await prepareNoteDb()
       expect.assertions(1)
 
       try {
         // When
-        await client.purgeNote('note:missing')
+        await noteDb.purgeNote('note:missing')
       } catch (error) {
         // Then
         expect(error.message).toBe('The note `note:missing` does not exist')
@@ -863,15 +863,15 @@ describe('Client', () => {
   describe('removeTag', () => {
     it('removes tag and updates notes with the tag', async () => {
       // Given
-      const client = await createClient()
-      await client.init()
-      const note1 = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/',
         tags: ['tag1']
       })
-      const note2 = await client.createNote({
+      const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/',
@@ -879,15 +879,15 @@ describe('Client', () => {
       })
 
       // When
-      await client.removeTag('tag1')
+      await noteDb.removeTag('tag1')
 
       // Then
-      const storedNote1 = await client.getNote(note1._id)
+      const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
         tags: []
       })
 
-      const storedNote2 = await client.getNote(note2._id)
+      const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
         tags: ['tag2']
       })
@@ -897,22 +897,22 @@ describe('Client', () => {
   describe('removeFolder', () => {
     it('removes a folder and its notes', async () => {
       // Given
-      const client = await createClient()
-      await client.init()
-      const note = await client.createNote({
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      const note = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/test'
       })
 
       // When
-      await client.removeFolder('/test')
+      await noteDb.removeFolder('/test')
 
       // Then
-      const storedFolder = await client.getFolder('/test')
+      const storedFolder = await noteDb.getFolder('/test')
       expect(storedFolder).toBe(null)
 
-      const storedNote = await client.getNote(note._id)
+      const storedNote = await noteDb.getNote(note._id)
       expect(storedNote).toMatchObject({
         trashed: true
       })
@@ -920,34 +920,34 @@ describe('Client', () => {
 
     it('removes child folders and their notes too', async () => {
       // Given
-      const client = await createClient(true)
-      const note1 = await client.createNote({
+      const noteDb = await prepareNoteDb(true)
+      const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/test'
       })
-      const note2 = await client.createNote({
+      const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/test/child folder'
       })
 
       // When
-      await client.removeFolder('/test')
+      await noteDb.removeFolder('/test')
 
       // Then
-      const storedFolder = await client.getFolder('/test')
+      const storedFolder = await noteDb.getFolder('/test')
       expect(storedFolder).toBe(null)
 
-      const storedChildFolder = await client.getFolder('/test/child folder')
+      const storedChildFolder = await noteDb.getFolder('/test/child folder')
       expect(storedChildFolder).toBe(null)
 
-      const storedNote1 = await client.getNote(note1._id)
+      const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
         trashed: true
       })
 
-      const storedNote2 = await client.getNote(note2._id)
+      const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
         trashed: true
       })
@@ -957,12 +957,12 @@ describe('Client', () => {
   describe('getAllFolderUnderPathname', () => {
     it('returns list of a folder and its child folders', async () => {
       // Given
-      const client = await createClient(true)
-      await client.upsertFolder('/test/child folder')
-      await client.upsertFolder('/test2')
+      const noteDb = await prepareNoteDb(true)
+      await noteDb.upsertFolder('/test/child folder')
+      await noteDb.upsertFolder('/test2')
 
       // When
-      const result = await client.getAllFolderUnderPathname('/test')
+      const result = await noteDb.getAllFolderUnderPathname('/test')
 
       // Then
       expect(result).toEqual([
@@ -979,37 +979,37 @@ describe('Client', () => {
   describe('trashAllNotesInFolder', () => {
     it('trashes all notes in the folder', async () => {
       // Given
-      const client = await createClient(true)
-      const note1 = await client.createNote({
+      const noteDb = await prepareNoteDb(true)
+      const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/test'
       })
-      const note2 = await client.createNote({
+      const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/test'
       })
-      const note3 = await client.createNote({
+      const note3 = await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
         folderPathname: '/test2'
       })
 
       // When
-      await client.trashAllNotesInFolder('/test')
+      await noteDb.trashAllNotesInFolder('/test')
 
       // Then
-      const storedNote1 = await client.getNote(note1._id)
+      const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
         trashed: true
       })
-      const storedNote2 = await client.getNote(note2._id)
+      const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
         trashed: true
       })
 
-      const storedNote3 = await client.getNote(note3._id)
+      const storedNote3 = await noteDb.getNote(note3._id)
       expect(storedNote3).toMatchObject({
         trashed: false
       })

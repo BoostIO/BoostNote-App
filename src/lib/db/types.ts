@@ -1,4 +1,4 @@
-import Client from './Client'
+import NoteDb from './NoteDb'
 import { JsonObject, Except } from 'type-fest'
 
 export type ExceptRev<D extends PouchDB.Core.RevisionIdMeta> = Except<D, '_rev'>
@@ -12,7 +12,7 @@ export interface NoteStorageData {
 
 export type NoteStorage = NoteStorageData &
   NoteStorageDocMap & {
-    client: Client
+    db: NoteDb
   }
 
 export type NoteDataEditibleProps = {
