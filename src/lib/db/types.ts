@@ -15,7 +15,7 @@ export type NoteStorage = NoteStorageData &
     db: NoteDb
   }
 
-export type NoteDataEditibleProps = {
+export type NoteDocEditibleProps = {
   title: string
   content: string
   folderPathname: string
@@ -23,49 +23,49 @@ export type NoteDataEditibleProps = {
   data: JsonObject
 }
 
-export type NoteData = {
+export type NoteDoc = {
   _id: string
   createdAt: string
   updatedAt: string
   trashed: boolean
   _rev: string
-} & NoteDataEditibleProps
+} & NoteDocEditibleProps
 
-export type FolderData = {
+export type FolderDoc = {
   _id: string // folder:${FOLDER_PATHNAME}
   createdAt: string
   updatedAt: string
   _rev: string
-} & FolderDataEditibleProps
+} & FolderDocEditibleProps
 
-export type FolderDataEditibleProps = {
+export type FolderDocEditibleProps = {
   data: JsonObject
 }
 
-export type TagData = {
+export type TagDoc = {
   _id: string // tag:${TAG_NAME}
   createdAt: string
   updatedAt: string
   data: JsonObject
   _rev: string
-} & TagDataEditibleProps
+} & TagDocEditibleProps
 
-export type TagDataEditibleProps = {
+export type TagDocEditibleProps = {
   data: JsonObject
 }
 
 export interface NoteStorageDocMap {
-  noteMap: Map<string, NoteData>
+  noteMap: Map<string, NoteDoc>
   folderMap: Map<
     string,
-    FolderData & {
+    FolderDoc & {
       pathname: string
       noteIdSet: NoteIdSet
     }
   >
   tagMap: Map<
     string,
-    TagData & {
+    TagDoc & {
       name: string
       noteIdSet: NoteIdSet
     }

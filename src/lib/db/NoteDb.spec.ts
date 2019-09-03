@@ -1,7 +1,7 @@
 import NoteDb from './NoteDb'
 import PouchDB from './PouchDB'
 import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
-import { NoteData, FolderData, ExceptRev } from './types'
+import { NoteDoc, FolderDoc, ExceptRev } from './types'
 
 let noteDbCount = 0
 async function prepareNoteDb(shouldInit: boolean = true): Promise<NoteDb> {
@@ -24,7 +24,7 @@ describe('NoteDb', () => {
       // Given
       const noteDb = await prepareNoteDb()
       const now = new Date().toISOString()
-      await noteDb.pouchDb.put<ExceptRev<FolderData>>({
+      await noteDb.pouchDb.put<ExceptRev<FolderDoc>>({
         _id: getFolderId('/test'),
         createdAt: now,
         updatedAt: now,
@@ -782,7 +782,7 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const noteId = generateNoteId()
       const now = getNow()
-      await noteDb.pouchDb.put<ExceptRev<NoteData>>({
+      await noteDb.pouchDb.put<ExceptRev<NoteDoc>>({
         _id: noteId,
         folderPathname: '/missing folder',
         tags: [],

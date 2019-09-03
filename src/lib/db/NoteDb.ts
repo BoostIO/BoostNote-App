@@ -1,11 +1,11 @@
 import {
   NoteStorageDocMap,
-  FolderData,
-  FolderDataEditibleProps,
-  TagDataEditibleProps,
-  TagData,
-  NoteData,
-  NoteDataEditibleProps,
+  FolderDoc,
+  FolderDocEditibleProps,
+  TagDocEditibleProps,
+  TagDoc,
+  NoteDoc,
+  NoteDocEditibleProps,
   ExceptRev
 } from './types'
 import {
@@ -46,14 +46,14 @@ export default class NoteDb {
     // Done.
   }
 
-  async getFolder(path: string): Promise<FolderData | null> {
-    return this.getDoc<FolderData>(getFolderId(path))
+  async getFolder(path: string): Promise<FolderDoc | null> {
+    return this.getDoc<FolderDoc>(getFolderId(path))
   }
 
   async upsertFolder(
     pathname: string,
-    props?: Partial<FolderDataEditibleProps>
-  ): Promise<FolderData> {
+    props?: Partial<FolderDocEditibleProps>
+  ): Promise<FolderDoc> {
     if (!isFolderPathnameValid(pathname)) {
       throw createUnprocessableEntityError(
         `pathname is invalid, got \`${pathname}\``
@@ -106,8 +106,8 @@ export default class NoteDb {
     }, map)
   }
 
-  async getTag(tagName: string): Promise<TagData | null> {
-    return this.getDoc<TagData>(getTagId(tagName))
+  async getTag(tagName: string): Promise<TagDoc | null> {
+    return this.getDoc<TagDoc>(getTagId(tagName))
   }
 
   async getDoc<T extends PouchDB.Core.GetMeta & PouchDB.Core.IdMeta>(
@@ -125,7 +125,7 @@ export default class NoteDb {
     }
   }
 
-  async upsertTag(tagName: string, props?: Partial<TagDataEditibleProps>) {
+  async upsertTag(tagName: string, props?: Partial<TagDocEditibleProps>) {
     if (!isTagNameValid(tagName)) {
       throw createUnprocessableEntityError(
         `tag name is invalid, got \`${tagName}\``
@@ -158,15 +158,15 @@ export default class NoteDb {
     }
   }
 
-  async getNote(noteId: string): Promise<NoteData | null> {
-    return this.getDoc<NoteData>(noteId)
+  async getNote(noteId: string): Promise<NoteDoc | null> {
+    return this.getDoc<NoteDoc>(noteId)
   }
 
   async createNote(
-    noteProps: Partial<NoteDataEditibleProps> = {}
-  ): Promise<NoteData> {
+    noteProps: Partial<NoteDocEditibleProps> = {}
+  ): Promise<NoteDoc> {
     const now = getNow()
-    const noteDocProps: ExceptRev<NoteData> = {
+    const noteDocProps: ExceptRev<NoteDoc> = {
       _id: generateNoteId(),
       title: 'Untitled',
       content: '',
@@ -190,7 +190,7 @@ export default class NoteDb {
     }
   }
 
-  async updateNote(noteId: string, noteProps: Partial<NoteDataEditibleProps>) {
+  async updateNote(noteId: string, noteProps: Partial<NoteDocEditibleProps>) {
     const note = await this.getNote(noteId)
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
@@ -208,7 +208,7 @@ export default class NoteDb {
       ...noteProps,
       updatedAt: now
     }
-    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -216,8 +216,8 @@ export default class NoteDb {
     }
   }
 
-  async findNotesByFolder(folderPathname: string): Promise<NoteData[]> {
-    const { rows } = await this.pouchDb.query<NoteData>('notes/by_folder', {
+  async findNotesByFolder(folderPathname: string): Promise<NoteDoc[]> {
+    const { rows } = await this.pouchDb.query<NoteDoc>('notes/by_folder', {
       key: folderPathname,
       include_docs: true
     })
@@ -225,8 +225,8 @@ export default class NoteDb {
     return rows.map(row => row.doc!)
   }
 
-  async findNotesByTag(tagName: string): Promise<NoteData[]> {
-    const { rows } = await this.pouchDb.query<NoteData>('notes/by_tag', {
+  async findNotesByTag(tagName: string): Promise<NoteDoc[]> {
+    const { rows } = await this.pouchDb.query<NoteDoc>('notes/by_tag', {
       key: tagName,
       include_docs: true
     })
@@ -275,7 +275,7 @@ export default class NoteDb {
     })
   }
 
-  async trashNote(noteId: string): Promise<NoteData> {
+  async trashNote(noteId: string): Promise<NoteDoc> {
     const note = await this.getNote(noteId)
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
@@ -284,7 +284,7 @@ export default class NoteDb {
       ...note,
       trashed: true
     }
-    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -292,7 +292,7 @@ export default class NoteDb {
     }
   }
 
-  async untrashNote(noteId: string): Promise<NoteData> {
+  async untrashNote(noteId: string): Promise<NoteDoc> {
     const note = await this.getNote(noteId)
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
@@ -303,7 +303,7 @@ export default class NoteDb {
       ...note,
       trashed: false
     }
-    const { rev } = await this.pouchDb.put<NoteData>(noteDocProps)
+    const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
@@ -351,10 +351,10 @@ export default class NoteDb {
 
   async getAllFolderUnderPathname(
     folderPathname: string
-  ): Promise<FolderData[]> {
+  ): Promise<FolderDoc[]> {
     const [folder, { rows }] = await Promise.all([
       this.getFolder(folderPathname),
-      this.pouchDb.allDocs<FolderData>({
+      this.pouchDb.allDocs<FolderDoc>({
         startkey: `${getFolderId(folderPathname)}/`,
         endkey: `${getFolderId(folderPathname)}/\ufff0`,
         include_docs: true
