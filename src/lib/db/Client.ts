@@ -316,10 +316,25 @@ export default class Client {
     await this.db.remove(note)
   }
 
+  async removeTag(tagName: string): Promise<void> {
+    const notes = await this.findNotesByTag(tagName)
+    await Promise.all(
+      notes.map(note => {
+        return this.updateNote(note._id, {
+          tags: note.tags.filter(tag => tag !== tagName)
+        })
+      })
+    )
+
+    const tag = await this.getTag(tagName)
+    if (tag != null) {
+      this.db.remove(tag)
+    }
+  }
+
   /**
    * WIP
    *
-   * removeTag
    * removeFolder
    * trashNotesInFolder
    */

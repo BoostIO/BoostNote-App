@@ -822,4 +822,37 @@ describe('Client', () => {
       }
     })
   })
+  describe('removeTag', () => {
+    it('removes tag and updates notes with the tag', async () => {
+      // Given
+      const client = await createClient()
+      await client.init()
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/',
+        tags: ['tag1']
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/',
+        tags: ['tag1', 'tag2']
+      })
+
+      // When
+      await client.removeTag('tag1')
+
+      // Then
+      const storedNote1 = await client.getNote(note1._id)
+      expect(storedNote1).toMatchObject({
+        tags: []
+      })
+
+      const storedNote2 = await client.getNote(note2._id)
+      expect(storedNote2).toMatchObject({
+        tags: ['tag2']
+      })
+    })
+  })
 })
