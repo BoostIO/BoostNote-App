@@ -296,6 +296,8 @@ export default class Client {
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
 
+    await this.upsertFolder(note.folderPathname)
+
     const noteDocProps = {
       ...note,
       trashed: false

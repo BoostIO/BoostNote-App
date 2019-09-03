@@ -1,6 +1,8 @@
 import Client from './Client'
 import PouchDB from './PouchDB'
-import { getFolderId, getTagId, generateNoteId } from './utils'
+import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
+import { NoteData } from './types'
+import { Except } from 'type-fest'
 
 let clientCount = 0
 async function createClient(shouldInit: boolean = true): Promise<Client> {
@@ -776,6 +778,42 @@ describe('Client', () => {
       })
     })
 
+    it('restores missing folder of the note', async () => {
+      // Given
+      const client = await createClient()
+      const noteId = generateNoteId()
+      const now = getNow()
+      await client.db.put<Except<NoteData, '_rev'>>({
+        _id: noteId,
+        folderPathname: '/missing folder',
+        tags: [],
+        createdAt: now,
+        updatedAt: now,
+        trashed: true,
+        title: 'test title',
+        content: 'test content',
+        data: {}
+      })
+
+      // When
+      const result = await client.untrashNote(noteId)
+
+      // Then
+      expect(result).toMatchObject({
+        _id: noteId,
+        trashed: false
+      })
+
+      const doc = await client.db.get(noteId)
+      expect(doc).toMatchObject({
+        _id: noteId,
+        trashed: false
+      })
+
+      const folderDoc = await client.getFolder('/missing folder')
+      expect(folderDoc).not.toBe(null)
+    })
+
     it('throws when the note does not exist', async () => {
       // Given
       const client = await createClient()
@@ -822,6 +860,7 @@ describe('Client', () => {
       }
     })
   })
+
   describe('removeTag', () => {
     it('removes tag and updates notes with the tag', async () => {
       // Given
