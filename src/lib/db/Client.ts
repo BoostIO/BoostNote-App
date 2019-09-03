@@ -274,6 +274,31 @@ export default class Client {
     })
   }
 
+  async trashNote(noteId: string): Promise<NoteData> {
+    const note = await this.getNote(noteId)
+    if (note == null)
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+
+    const noteDocProps = {
+      ...note,
+      trashed: true
+    }
+    const { rev } = await this.db.put<NoteData>(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev
+    }
+  }
+
+  async purgeNote(noteId: string): Promise<void> {
+    const note = await this.getNote(noteId)
+    if (note == null)
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+
+    await this.db.remove(note)
+  }
+
   /**
    * WIP
    *
