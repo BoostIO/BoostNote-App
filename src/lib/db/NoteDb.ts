@@ -21,7 +21,8 @@ import {
   getFolderPathname,
   isNoteDoc,
   isFolderDoc,
-  isTagDoc
+  isTagDoc,
+  getTagName
 } from './utils'
 
 export default class NoteDb {
@@ -44,11 +45,11 @@ export default class NoteDb {
       missingTagNameSet: Set<string>
     }>(
       (obj, noteDoc) => {
-        if (!folderMap.has(getFolderId(noteDoc.folderPathname))) {
+        if (!folderMap.has(noteDoc.folderPathname)) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
         noteDoc.tags.forEach(tagName => {
-          if (!tagMap.has(getTagId(tagName))) {
+          if (!tagMap.has(tagName)) {
             obj.missingTagNameSet.add(tagName)
           }
         })
@@ -125,9 +126,9 @@ export default class NoteDb {
       if (isNoteDoc(doc)) {
         map.noteMap.set(doc._id, doc)
       } else if (isFolderDoc(doc)) {
-        map.folderMap.set(doc._id, doc)
+        map.folderMap.set(getFolderPathname(doc._id), doc)
       } else if (isTagDoc(doc)) {
-        map.tagMap.set(doc._id, doc)
+        map.tagMap.set(getTagName(doc._id), doc)
       }
       return map
     }, map)
