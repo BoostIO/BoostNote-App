@@ -11,7 +11,7 @@ export interface NoteStorageData {
 }
 
 export type NoteStorage = NoteStorageData &
-  NoteStorageDocMap & {
+  AllDocsMap & {
     db: NoteDb
   }
 
@@ -54,20 +54,8 @@ export type TagDocEditibleProps = {
   data: JsonObject
 }
 
-export interface NoteStorageDocMap {
+export interface AllDocsMap {
   noteMap: Map<string, NoteDoc>
-  folderMap: Map<
-    string,
-    FolderDoc & {
-      pathname: string
-      noteIdSet: NoteIdSet
-    }
-  >
-  tagMap: Map<
-    string,
-    TagDoc & {
-      name: string
-      noteIdSet: NoteIdSet
-    }
-  >
+  folderMap: Map<string, FolderDoc>
+  tagMap: Map<string, TagDoc>
 }

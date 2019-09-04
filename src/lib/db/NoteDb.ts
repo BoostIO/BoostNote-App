@@ -1,5 +1,5 @@
 import {
-  NoteStorageDocMap,
+  AllDocsMap,
   FolderDoc,
   FolderDocEditibleProps,
   TagDocEditibleProps,
@@ -18,7 +18,10 @@ import {
   generateNoteId,
   getNow,
   createNotFoundError,
-  getFolderPathname
+  getFolderPathname,
+  isNoteDoc,
+  isFolderDoc,
+  isTagDoc
 } from './utils'
 
 export default class NoteDb {
@@ -92,16 +95,26 @@ export default class NoteDb {
     await this.upsertFolder(parentPathname)
   }
 
-  async getAllDataMap(): Promise<NoteStorageDocMap> {
-    const map = {
+  async getAllDocsMap(): Promise<AllDocsMap> {
+    const allDocsResponse = await this.pouchDb.allDocs({
+      include_docs: true
+    })
+
+    const map: AllDocsMap = {
       noteMap: new Map(),
       folderMap: new Map(),
       tagMap: new Map()
     }
-    const allDocsResponse = await this.pouchDb.allDocs({})
 
-    return allDocsResponse.rows.reduce((map, doc) => {
-      doc
+    return allDocsResponse.rows.reduce((map, row) => {
+      const { doc } = row
+      if (isNoteDoc(doc)) {
+        map.noteMap.set(doc._id, doc)
+      } else if (isFolderDoc(doc)) {
+        map.folderMap.set(doc._id, doc)
+      } else if (isTagDoc(doc)) {
+        map.tagMap.set(doc._id, doc)
+      }
       return map
     }, map)
   }

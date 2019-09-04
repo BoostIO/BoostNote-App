@@ -1015,4 +1015,56 @@ describe('NoteDb', () => {
       })
     })
   })
+
+  describe('getAllDocsMap', () => {
+    it('returns all docs map', async () => {
+      // Given
+      const client = await prepareNoteDb()
+      const note1 = await client.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test/child folder',
+        tags: ['tag1', 'tag2']
+      })
+      const note2 = await client.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/test/child folder2',
+        tags: ['tag2', 'tag3']
+      })
+
+      // When
+      const result = await client.getAllDocsMap()
+
+      // Then
+      expect([...result.noteMap.values()]).toEqual([note1, note2])
+
+      expect([...result.folderMap.values()]).toEqual([
+        expect.objectContaining({
+          _id: getFolderId('/')
+        }),
+        expect.objectContaining({
+          _id: getFolderId('/test')
+        }),
+        expect.objectContaining({
+          _id: getFolderId('/test/child folder')
+        }),
+        expect.objectContaining({
+          _id: getFolderId('/test/child folder2')
+        })
+      ])
+
+      expect([...result.tagMap.values()]).toEqual([
+        expect.objectContaining({
+          _id: getTagId('tag1')
+        }),
+        expect.objectContaining({
+          _id: getTagId('tag2')
+        }),
+        expect.objectContaining({
+          _id: getTagId('tag3')
+        })
+      ])
+    })
+  })
 })
