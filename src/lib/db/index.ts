@@ -120,13 +120,39 @@ async function prepareStorage({
   name
 }: NoteStorageData): Promise<NoteStorage> {
   const pouchdb = new PouchDB(id, { adapter: 'idb' })
-  const client = new NoteDb(pouchdb, id, name)
-  return {
+  const db = new NoteDb(pouchdb, id, name)
+  await db.init()
+
+  const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
+  const storage: NoteStorage = {
     id,
     name,
-    noteMap: new Map(),
-    folderMap: new Map(),
-    tagMap: new Map(),
-    db: client
+    noteMap,
+    folderMap: new Map(
+      [...folderMap.entries()].map(([pathname, folderDoc]) => [
+        pathname,
+        {
+          ...folderDoc,
+          pathname,
+          noteIdSet: new Set()
+        }
+      ])
+    ),
+    tagMap: new Map(
+      [...tagMap.entries()].map(([name, tagDoc]) => [
+        name,
+        { ...tagDoc, name, noteIdSet: new Set() }
+      ])
+    ),
+    db
   }
+
+  for (const noteDoc of noteMap.values()) {
+    storage.folderMap.get(noteDoc.folderPathname)!.noteIdSet.add(noteDoc._id)
+    noteDoc.tags.forEach(tagName => {
+      storage.tagMap.get(tagName)!.noteIdSet.add(noteDoc._id)
+    })
+  }
+
+  return storage
 }
