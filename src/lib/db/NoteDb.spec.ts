@@ -1066,5 +1066,37 @@ describe('NoteDb', () => {
         })
       ])
     })
+
+    describe('init', () => {
+      it('restore missing folders and tags', async () => {
+        // Given
+        const client = await prepareNoteDb()
+        await client.createNote({
+          title: 'test title1',
+          content: 'test content1',
+          folderPathname: '/test/child folder',
+          tags: ['tag1', 'tag2']
+        })
+        await client.createNote({
+          title: 'test title2',
+          content: 'test content2',
+          folderPathname: '/test/child folder2',
+          tags: ['tag2', 'tag3']
+        })
+        await client.pouchDb.remove(
+          (await client.getFolder('/test/child folder'))!
+        )
+        await client.pouchDb.remove((await client.getTag('tag1'))!)
+        expect(await client.getFolder('/test/child folder')).toBe(null)
+        expect(await client.getTag('tag1')).toBe(null)
+
+        // When
+        await client.init()
+
+        // Then
+        expect(await client.getFolder('/test/child folder')).not.toBe(null)
+        expect(await client.getTag('tag1')).not.toBe(null)
+      })
+    })
   })
 })

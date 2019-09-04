@@ -33,20 +33,34 @@ export default class NoteDb {
     public name: string
   ) {}
 
-  // WIP
   async init() {
     await this.upsertNoteListViews()
-    // Check root directory does exist
-    await this.upsertFolder('/')
-    // Load all docs and classify into maps(noteMap, folderMap, tagMap)
-    // const {noteMap, folderMap, tagMap} = await this.getAllDataMap()
-    // Check all note(except trashed)
-    // - Check folder does exist
-    // - Check its parent folder does exist
-    // - Check tag does exist
-    // Check pathname of all folders
-    // Generate missing folders and tags at once.
-    // Done.
+
+    const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
+    const { missingPathnameSet, missingTagNameSet } = [
+      ...noteMap.values()
+    ].reduce<{
+      missingPathnameSet: Set<string>
+      missingTagNameSet: Set<string>
+    }>(
+      (obj, noteDoc) => {
+        if (!folderMap.has(getFolderId(noteDoc.folderPathname))) {
+          obj.missingPathnameSet.add(noteDoc.folderPathname)
+        }
+        noteDoc.tags.forEach(tagName => {
+          if (!tagMap.has(getTagId(tagName))) {
+            obj.missingTagNameSet.add(tagName)
+          }
+        })
+        return obj
+      },
+      { missingPathnameSet: new Set(), missingTagNameSet: new Set() }
+    )
+
+    await Promise.all([
+      ...[...missingPathnameSet].map(pathname => this.upsertFolder(pathname)),
+      ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName))
+    ])
   }
 
   async getFolder(path: string): Promise<FolderDoc | null> {
@@ -384,6 +398,8 @@ export default class NoteDb {
   async trashAllNotesInFolder(folderPathname: string): Promise<void> {
     const notes = await this.findNotesByFolder(folderPathname)
 
-    await Promise.all(notes.map(note => this.trashNote(note._id)))
+    await Promise.all(
+      notes.filter(note => !note.trashed).map(note => this.trashNote(note._id))
+    )
   }
 }
