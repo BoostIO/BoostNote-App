@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import { Router } from 'react-router-dom'
-import { RouteProvider, history } from './lib/route'
+import { RouterProvider } from './lib/router'
 import { ContextMenuProvider } from './lib/contextMenu'
 import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/utils/context'
@@ -12,7 +11,7 @@ const CombinedProvider = combineProviders(
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
-  RouteProvider
+  RouterProvider
 )
 
 function render(Component: typeof App) {
@@ -24,9 +23,7 @@ function render(Component: typeof App) {
   }
   ReactDOM.render(
     <CombinedProvider>
-      <Router history={history}>
-        <Component />
-      </Router>
+      <Component />
     </CombinedProvider>,
     document.getElementById('root')
   )

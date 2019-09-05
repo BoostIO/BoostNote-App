@@ -1,8 +1,12 @@
-import { Location, createBrowserHistory } from 'history'
+import {
+  Location,
+  createBrowserHistory,
+  LocationDescriptorObject
+} from 'history'
 import path from 'path'
 import pathToRegexp from 'path-to-regexp'
 import { createStoreContext } from '../utils/context'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export const history = createBrowserHistory()
 
@@ -46,16 +50,20 @@ function normalizeLocation({ pathname, key, ...otherProps }: Location) {
   }
 }
 
-export interface RouteContext {
+export interface RouterStore {
   pathname: string
   search: string
   hash: string
-  state: any
+  push: (path: string | LocationDescriptorObject<any>) => void
+  replace: (path: string | LocationDescriptorObject<any>) => void
+  go: (count: number) => void
+  goBack: () => void
+  goForward: () => void
 }
 
 const initialLocation = normalizeLocation(history.location)
 
-function createRouteStore(): RouteContext {
+function createRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
   useEffect(() => {
@@ -65,15 +73,32 @@ function createRouteStore(): RouteContext {
     return unlisten
   }, [])
 
+  const push = useCallback(history.push, [])
+  const replace = useCallback(
+    (path: string | LocationDescriptorObject<any>) => {
+      history.replace(path as string)
+    },
+    []
+  )
+  const go = useCallback((count: number) => {
+    history.go(count)
+  }, [])
+  const goBack = useCallback(() => go(-1), [])
+  const goForward = useCallback(() => go(1), [])
+
   return {
     pathname: location.pathname,
     search: location.search,
     hash: location.hash,
-    state: location.state
+    push,
+    replace,
+    go,
+    goBack,
+    goForward
   }
 }
 
 export const {
-  StoreProvider: RouteProvider,
-  useStore: useRoute
+  StoreProvider: RouterProvider,
+  useStore: useRouter
 } = createStoreContext(createRouteStore)
