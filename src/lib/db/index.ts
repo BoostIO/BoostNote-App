@@ -26,7 +26,6 @@ function createDbStoreCreator(browserStorage: Storage) {
 
     const initialize = useCallback(async () => {
       const storageDataList = loadStorageDataList(browserStorage)
-
       const storages = await Promise.all(storageDataList.map(prepareStorage))
 
       setInitialized(true)
@@ -45,10 +44,11 @@ function createDbStoreCreator(browserStorage: Storage) {
         name
       })
 
-      setStorageMap(prevStorageMap => ({
-        ...prevStorageMap,
-        [storage.id]: storage
-      }))
+      setStorageMap(prevStorageMap => {
+        const newMap = new Map(prevStorageMap)
+        newMap.set(id, storage)
+        return newMap
+      })
     }, [])
 
     const removeStorage = useCallback(async (id: string) => {
@@ -61,14 +61,16 @@ function createDbStoreCreator(browserStorage: Storage) {
 
     useEffect(
       () => {
-        browserStorage.setItem(
-          storageDataListKey,
-          JSON.stringify(
-            Object.values(storageMap).map(({ id, name }) => ({ id, name }))
+        if (initialized) {
+          browserStorage.setItem(
+            storageDataListKey,
+            JSON.stringify(
+              [...storageMap.values()].map(({ id, name }) => ({ id, name }))
+            )
           )
-        )
+        }
       },
-      [storageMap]
+      [storageMap, initialized]
     )
 
     return {
