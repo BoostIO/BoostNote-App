@@ -7,7 +7,7 @@ describe('schema(ow predicate)', () => {
       stringProp: ow.string
     })
 
-    const result = ow.isValid({}, predicate)
+    const result = ow.isValid({} as unknown, predicate)
 
     expect(result).toBe(false)
   })
@@ -18,7 +18,7 @@ describe('schema(ow predicate)', () => {
       })
     })
 
-    const result = ow.isValid({ parent: {} }, predicate)
+    const result = ow.isValid({ parent: {} } as unknown, predicate)
 
     expect(result).toBe(false)
   })
