@@ -105,7 +105,7 @@ export const {
 
 export interface LinkProps {
   href: string
-  children: React.ReactChildren
+  children: React.ReactNode
 }
 
 export const Link: FC<LinkProps> = ({ children, href }) => {
