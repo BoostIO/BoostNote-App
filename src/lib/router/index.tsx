@@ -6,7 +6,7 @@ import {
 import path from 'path'
 import pathToRegexp from 'path-to-regexp'
 import { createStoreContext } from '../utils/context'
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, FC } from 'react'
 
 export const history = createBrowserHistory()
 
@@ -102,3 +102,26 @@ export const {
   StoreProvider: RouterProvider,
   useStore: useRouter
 } = createStoreContext(createRouteStore)
+
+export interface LinkProps {
+  href: string
+  children: React.ReactChildren
+}
+
+export const Link: FC<LinkProps> = ({ children, href }) => {
+  const router = useRouter()
+
+  const push = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      router.push(href)
+    },
+    [href, router]
+  )
+
+  return (
+    <a onClick={push} href={href}>
+      {children}
+    </a>
+  )
+}
