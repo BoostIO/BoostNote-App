@@ -23,7 +23,13 @@ export const StyledStorageItemFolderItem = styled.li`
 `
 
 export const StyledNavLink = styled(
-  ({ active, ...props }: LinkProps & { active: boolean }) => <Link {...props} />
+  ({
+    active,
+    ...props
+  }: LinkProps & {
+    active: boolean
+    onContextMenu?: React.MouseEventHandler<HTMLAnchorElement>
+  }) => <Link {...props} />
 )<{ active: boolean }>`
   line-height: 26px;
   padding: 0 5px;

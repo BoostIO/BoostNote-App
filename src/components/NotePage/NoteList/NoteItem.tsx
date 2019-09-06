@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from '../../../lib/styled/styled'
-import { Note } from '../../../types'
+import { NoteDoc } from '../../../lib/db/types'
 
 const StyledNoteListItem = styled.div<{ active: boolean }>`
   ${props => props.active && `background-color: #006FCC;`}
@@ -11,11 +11,11 @@ const StyledNoteListItem = styled.div<{ active: boolean }>`
 `
 
 type NoteItemProps = {
-  note: Note
+  note: NoteDoc
   active: boolean
 }
 
-const NoteItem = ({ note, active }: NoteItemProps) => {
+export default ({ note, active }: NoteItemProps) => {
   const noteHash = `#${note._id}`
 
   return (
@@ -24,11 +24,9 @@ const NoteItem = ({ note, active }: NoteItemProps) => {
         {note.title.length > 0 ? (
           <div>{note.title}</div>
         ) : (
-          <div className="untitled">Untitled</div>
+          <div className='untitled'>Untitled</div>
         )}
       </Link>
     </StyledNoteListItem>
   )
 }
-
-export default NoteItem
