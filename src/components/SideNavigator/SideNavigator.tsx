@@ -25,7 +25,7 @@ export default () => {
 
   const removeStorage = useCallback(
     async (storageId: string) => {
-      await db!.removeStorage(storageId)
+      await db.removeStorage(storageId)
     },
     [db]
   )
