@@ -25,7 +25,7 @@ export default () => {
 
   const currentStorage = useMemo(
     () => {
-      return db.storageMap.get(currentStorageId)
+      return db.storageMap[currentStorageId]
     },
     [db.storageMap, currentStorageId]
   )
@@ -38,16 +38,14 @@ export default () => {
       if (folderRegexpResult != null) {
         const folderPath =
           folderRegexpResult[2] == null ? '/' : `/${folderRegexpResult[2]}`
-        const noteIds = [
-          ...currentStorage.folderMap.get(folderPath)!.noteIdSet.values()
-        ]
-        return noteIds.map(noteId => currentStorage.noteMap.get(noteId)!)
+        const noteIds = [...currentStorage.folderMap[folderPath]!.noteIdSet]
+        return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
       }
       const tagRegexpResult = tagRegexp.exec(pathname)
       if (tagRegexpResult != null) {
         const tag = tagRegexpResult[2]
-        const noteIds = [...currentStorage.tagMap.get(tag)!.noteIdSet.values()]
-        return noteIds.map(noteId => currentStorage.noteMap.get(noteId)!)
+        const noteIds = [...currentStorage.tagMap[tag]!.noteIdSet]
+        return noteIds.map(noteId => currentStorage.noteMap[noteId])
       }
       return []
     },

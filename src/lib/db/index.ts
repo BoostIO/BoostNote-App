@@ -1,4 +1,4 @@
-import { NoteStorage, NoteStorageData } from './types'
+import { NoteStorage, NoteStorageData, ObjectMap } from './types'
 import { useState, useCallback, useEffect } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
@@ -6,12 +6,13 @@ import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
 import { generateUuid } from './utils'
 import PouchDB from './PouchDB'
+import omit from 'ramda/es/omit'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
 export interface DbContext {
   initialized: boolean
-  storageMap: Map<string, NoteStorage>
+  storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
   createStorage: (name: string) => Promise<void>
   removeStorage: (id: string) => Promise<void>
@@ -20,9 +21,7 @@ export interface DbContext {
 function createDbStoreCreator(browserStorage: Storage) {
   return (): DbContext => {
     const [initialized, setInitialized] = useState(false)
-    const [storageMap, setStorageMap] = useState<Map<string, NoteStorage>>(
-      new Map()
-    )
+    const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
     const initialize = useCallback(async () => {
       const storageDataList = loadStorageDataList(browserStorage)
@@ -30,10 +29,13 @@ function createDbStoreCreator(browserStorage: Storage) {
 
       setInitialized(true)
       setStorageMap(
-        storages.reduce((map, storage) => {
-          map.set(storage.id, storage)
-          return map
-        }, new Map())
+        storages.reduce(
+          (map, storage) => {
+            map[storage.id] = storage
+            return map
+          },
+          {} as ObjectMap<NoteStorage>
+        )
       )
     }, [])
 
@@ -45,19 +47,22 @@ function createDbStoreCreator(browserStorage: Storage) {
       })
 
       setStorageMap(prevStorageMap => {
-        const newMap = new Map(prevStorageMap)
-        newMap.set(id, storage)
-        return newMap
+        return {
+          ...prevStorageMap,
+          [id]: storage
+        }
       })
     }, [])
 
-    const removeStorage = useCallback(async (id: string) => {
-      setStorageMap(prevStorageMap => {
-        const newMap = new Map(prevStorageMap)
-        newMap.delete(id)
-        return newMap
-      })
-    }, [])
+    const removeStorage = useCallback(
+      async (id: string) => {
+        await storageMap[id].db.pouchDb.destroy()
+        setStorageMap(prevStorageMap => {
+          return omit([id], prevStorageMap)
+        })
+      },
+      [storageMap]
+    )
 
     useEffect(
       () => {
@@ -65,7 +70,7 @@ function createDbStoreCreator(browserStorage: Storage) {
           browserStorage.setItem(
             storageDataListKey,
             JSON.stringify(
-              [...storageMap.values()].map(({ id, name }) => ({ id, name }))
+              Object.values(storageMap).map(({ id, name }) => ({ id, name }))
             )
           )
         }
@@ -130,29 +135,29 @@ async function prepareStorage({
     id,
     name,
     noteMap,
-    folderMap: new Map(
-      [...folderMap.entries()].map(([pathname, folderDoc]) => [
-        pathname,
-        {
+    folderMap: Object.entries(folderMap).reduce(
+      (map, [pathname, folderDoc]) => {
+        map[pathname] = {
           ...folderDoc,
           pathname,
           noteIdSet: new Set()
         }
-      ])
+
+        return map
+      },
+      {}
     ),
-    tagMap: new Map(
-      [...tagMap.entries()].map(([name, tagDoc]) => [
-        name,
-        { ...tagDoc, name, noteIdSet: new Set() }
-      ])
-    ),
+    tagMap: Object.entries(tagMap).reduce((map, [name, tagDoc]) => {
+      map[name] = { ...tagDoc, name, noteIdSet: new Set() }
+      return map
+    }, {}),
     db
   }
 
-  for (const noteDoc of noteMap.values()) {
-    storage.folderMap.get(noteDoc.folderPathname)!.noteIdSet.add(noteDoc._id)
+  for (const noteDoc of Object.values(noteMap)) {
+    storage.folderMap[noteDoc.folderPathname].noteIdSet.add(noteDoc._id)
     noteDoc.tags.forEach(tagName => {
-      storage.tagMap.get(tagName)!.noteIdSet.add(noteDoc._id)
+      storage.tagMap[tagName].noteIdSet.add(noteDoc._id)
     })
   }
 

@@ -26,7 +26,7 @@ type StorageItemProps = {
 export default (props: StorageItemProps) => {
   const dialog = useDialog()
   const contextMenu = useContextMenu()
-  const { storage, createFolder, removeStorage, active } = props
+  const { id, storage, createFolder, removeStorage, active } = props
   const storageName = storage.name
   const { pathname } = useRouter()
 
@@ -34,13 +34,13 @@ export default (props: StorageItemProps) => {
 
   const tags = useMemo(
     () => {
-      return [...tagMap.keys()]
+      return Object.keys(tagMap)
     },
     [tagMap]
   )
   const folders = useMemo(
     () => {
-      return [...folderMap.values()]
+      return Object.values(folderMap)
     },
     [folderMap]
   )
@@ -62,7 +62,7 @@ export default (props: StorageItemProps) => {
               submitButtonLabel: 'Create Folder',
               onClose: (value: string | null) => {
                 if (value == null) return
-                createFolder(storageName, value)
+                createFolder(id, value)
               }
             })
           }
@@ -80,7 +80,7 @@ export default (props: StorageItemProps) => {
               cancelButtonIndex: 1,
               onClose: (value: number | null) => {
                 if (value === 0) {
-                  removeStorage(storageName)
+                  removeStorage(id)
                 }
               }
             })
@@ -88,7 +88,7 @@ export default (props: StorageItemProps) => {
         }
       ])
     },
-    [contextMenu.popup, dialog.prompt, dialog.messageBox, storageName]
+    [contextMenu.popup, dialog.prompt, dialog.messageBox, storageName, id]
   )
 
   return (

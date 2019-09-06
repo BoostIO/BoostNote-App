@@ -1,6 +1,10 @@
 import NoteDb from './NoteDb'
 import { JsonObject, Except } from 'type-fest'
 
+export type ObjectMap<T> = {
+  [key: string]: T
+}
+
 /**
  * DB Types
  */
@@ -52,9 +56,9 @@ export type TagDocEditibleProps = {
 }
 
 export interface AllDocsMap {
-  noteMap: Map<string, NoteDoc>
-  folderMap: Map<string, FolderDoc>
-  tagMap: Map<string, TagDoc>
+  noteMap: ObjectMap<NoteDoc>
+  folderMap: ObjectMap<FolderDoc>
+  tagMap: ObjectMap<TagDoc>
 }
 
 /**
@@ -78,7 +82,7 @@ export type PopulatedTagDoc = TagDoc & {
 }
 
 export interface AllPopulatedDocsMap {
-  noteMap: Map<string, NoteDoc>
-  folderMap: Map<string, PopulatedFolderDoc>
-  tagMap: Map<string, PopulatedTagDoc>
+  noteMap: ObjectMap<NoteDoc>
+  folderMap: ObjectMap<PopulatedFolderDoc>
+  tagMap: ObjectMap<PopulatedTagDoc>
 }

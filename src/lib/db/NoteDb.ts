@@ -38,18 +38,18 @@ export default class NoteDb {
     await this.upsertNoteListViews()
 
     const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
-    const { missingPathnameSet, missingTagNameSet } = [
-      ...noteMap.values()
-    ].reduce<{
+    const { missingPathnameSet, missingTagNameSet } = Object.values(
+      noteMap
+    ).reduce<{
       missingPathnameSet: Set<string>
       missingTagNameSet: Set<string>
     }>(
       (obj, noteDoc) => {
-        if (!folderMap.has(noteDoc.folderPathname)) {
+        if (folderMap[noteDoc.folderPathname] == null) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
         noteDoc.tags.forEach(tagName => {
-          if (!tagMap.has(tagName)) {
+          if (tagMap[tagName] == null) {
             obj.missingTagNameSet.add(tagName)
           }
         })
@@ -116,19 +116,19 @@ export default class NoteDb {
     })
 
     const map: AllDocsMap = {
-      noteMap: new Map(),
-      folderMap: new Map(),
-      tagMap: new Map()
+      noteMap: {},
+      folderMap: {},
+      tagMap: {}
     }
 
     return allDocsResponse.rows.reduce((map, row) => {
       const { doc } = row
       if (isNoteDoc(doc)) {
-        map.noteMap.set(doc._id, doc)
+        map.noteMap[doc._id] = doc
       } else if (isFolderDoc(doc)) {
-        map.folderMap.set(getFolderPathname(doc._id), doc)
+        map.folderMap[getFolderPathname(doc._id)] = doc
       } else if (isTagDoc(doc)) {
-        map.tagMap.set(getTagName(doc._id), doc)
+        map.tagMap[getTagName(doc._id)] = doc
       }
       return map
     }, map)

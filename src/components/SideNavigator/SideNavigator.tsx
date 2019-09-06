@@ -11,7 +11,7 @@ export default () => {
 
   const storageEntries = useMemo(
     () => {
-      return [...db.storageMap.entries()]
+      return Object.entries(db.storageMap)
     },
     [db.storageMap]
   )

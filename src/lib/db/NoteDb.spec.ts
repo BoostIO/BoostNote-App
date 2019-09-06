@@ -1037,34 +1037,23 @@ describe('NoteDb', () => {
       const result = await client.getAllDocsMap()
 
       // Then
-      expect([...result.noteMap.values()]).toEqual([note1, note2])
+      expect(result.noteMap).toEqual({
+        [note1._id]: note1,
+        [note2._id]: note2
+      })
 
-      expect([...result.folderMap.values()]).toEqual([
-        expect.objectContaining({
-          _id: getFolderId('/')
-        }),
-        expect.objectContaining({
-          _id: getFolderId('/test')
-        }),
-        expect.objectContaining({
-          _id: getFolderId('/test/child folder')
-        }),
-        expect.objectContaining({
-          _id: getFolderId('/test/child folder2')
-        })
-      ])
+      expect(result.folderMap).toEqual({
+        '/': expect.anything(),
+        '/test': expect.anything(),
+        '/test/child folder': expect.anything(),
+        '/test/child folder2': expect.anything()
+      })
 
-      expect([...result.tagMap.values()]).toEqual([
-        expect.objectContaining({
-          _id: getTagId('tag1')
-        }),
-        expect.objectContaining({
-          _id: getTagId('tag2')
-        }),
-        expect.objectContaining({
-          _id: getTagId('tag3')
-        })
-      ])
+      expect(result.tagMap).toEqual({
+        tag1: expect.anything(),
+        tag2: expect.anything(),
+        tag3: expect.anything()
+      })
     })
 
     describe('init', () => {
