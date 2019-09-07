@@ -6,7 +6,8 @@ import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
 import { generateUuid } from './utils'
 import PouchDB from './PouchDB'
-import omit from 'ramda/es/omit'
+import { omit } from 'ramda'
+import { LiteStorage, localLiteStorage } from 'ltstrg'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
@@ -14,12 +15,12 @@ export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
-  createStorage: (name: string) => Promise<void>
+  createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
 }
 
-function createDbStoreCreator(
-  browserStorage: Storage,
+export function createDbStoreCreator(
+  simpleStorage: LiteStorage,
   adapter: 'idb' | 'memory'
 ) {
   return (): DbStore => {
@@ -27,7 +28,7 @@ function createDbStoreCreator(
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
     const initialize = useCallback(async () => {
-      const storageDataList = loadStorageDataList(browserStorage)
+      const storageDataList = loadStorageDataList(simpleStorage)
       const storages = await Promise.all(
         storageDataList.map(storageData => prepareStorage(storageData, adapter))
       )
@@ -60,6 +61,7 @@ function createDbStoreCreator(
           [id]: storage
         }
       })
+      return storage
     }, [])
 
     const removeStorage = useCallback(
@@ -75,7 +77,7 @@ function createDbStoreCreator(
     useEffect(
       () => {
         if (initialized) {
-          browserStorage.setItem(
+          simpleStorage.setItem(
             storageDataListKey,
             JSON.stringify(
               Object.values(storageMap).map(({ id, name }) => ({ id, name }))
@@ -104,10 +106,10 @@ const storageDataPredicate = schema({
 export const {
   StoreProvider: DbProvider,
   useStore: useDb
-} = createStoreContext(createDbStoreCreator(localStorage, 'idb'))
+} = createStoreContext(createDbStoreCreator(localLiteStorage, 'idb'))
 
-function loadStorageDataList(browserStorage: Storage): NoteStorageData[] {
-  const serializedStorageDataList = browserStorage.getItem(storageDataListKey)
+function loadStorageDataList(simpleStorage: LiteStorage): NoteStorageData[] {
+  const serializedStorageDataList = simpleStorage.getItem(storageDataListKey)
 
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
@@ -125,7 +127,7 @@ function loadStorageDataList(browserStorage: Storage): NoteStorageData[] {
     )
   } catch (error) {
     console.warn(error)
-    browserStorage.setItem(storageDataListKey, '[]')
+    simpleStorage.setItem(storageDataListKey, '[]')
     return []
   }
 }
