@@ -10,7 +10,7 @@ import omit from 'ramda/es/omit'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
-export interface DbContext {
+export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
@@ -22,7 +22,7 @@ function createDbStoreCreator(
   browserStorage: Storage,
   adapter: 'idb' | 'memory'
 ) {
-  return (): DbContext => {
+  return (): DbStore => {
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
