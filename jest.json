@@ -1,11 +1,5 @@
 {
-  "preset": "ts-jest",
-  "globals": {
-    "ts-jest": {
-      "isolatedModules": false,
-      "global": {
-        "baseUrl": "./src"
-      }
-    }
+  "transform": {
+    "^.+\\.[t|j]sx?$": "babel-jest"
   }
 }
