@@ -20,14 +20,21 @@ export default () => {
     async (storageName: string) => {
       await db.createStorage(storageName)
     },
-    [db]
+    [db.createStorage]
+  )
+
+  const renameStorage = useCallback(
+    async (storageId: string, name: string) => {
+      await db.renameStorage(storageId, name)
+    },
+    [db.renameStorage]
   )
 
   const removeStorage = useCallback(
     async (storageId: string) => {
       await db.removeStorage(storageId)
     },
-    [db]
+    [db.removeStorage]
   )
 
   return (
@@ -42,8 +49,7 @@ export default () => {
               id={id}
               storage={storage}
               removeStorage={removeStorage}
-              // createFolder={this.createFolder}
-              // removeFolder={this.removeFolder}
+              renameStorage={renameStorage}
               createFolder={async () => {}}
               removeFolder={async () => {}}
               pathname={pathname}

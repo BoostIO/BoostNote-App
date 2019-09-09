@@ -16,9 +16,10 @@ import { useRouter } from '../../../lib/router'
 type StorageItemProps = {
   id: string
   storage: NoteStorage
-  removeStorage: (storageName: string) => Promise<void>
-  createFolder: (storageName: string, folderPath: string) => Promise<void>
-  removeFolder: (storageName: string, folderPath: string) => Promise<void>
+  renameStorage: (storageId: string, name: string) => Promise<void>
+  removeStorage: (storageId: string) => Promise<void>
+  createFolder: (storageId: string, folderPath: string) => Promise<void>
+  removeFolder: (storageId: string, folderPath: string) => Promise<void>
   pathname: string
   active: boolean
 }
@@ -26,7 +27,14 @@ type StorageItemProps = {
 export default (props: StorageItemProps) => {
   const dialog = useDialog()
   const contextMenu = useContextMenu()
-  const { id, storage, createFolder, removeStorage, active } = props
+  const {
+    id,
+    storage,
+    createFolder,
+    renameStorage,
+    removeStorage,
+    active
+  } = props
   const storageName = storage.name
   const { pathname } = useRouter()
 
@@ -63,6 +71,23 @@ export default (props: StorageItemProps) => {
               onClose: (value: string | null) => {
                 if (value == null) return
                 createFolder(id, value)
+              }
+            })
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Rename Storage',
+          onClick: async () => {
+            dialog.prompt({
+              title: `Rename "${storageName}" storage`,
+              message: 'Enter new name for the storage',
+              iconType: DialogIconTypes.Question,
+              defaultValue: storageName,
+              submitButtonLabel: 'Rename Folder',
+              onClose: (value: string | null) => {
+                if (value == null) return
+                renameStorage(id, value)
               }
             })
           }
