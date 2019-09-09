@@ -17,6 +17,7 @@ export interface DbStore {
   initialize: () => Promise<void>
   createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
+  renameStorage: (id: string, name: string) => Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -74,6 +75,18 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const renameStorage = useCallback(async (id: string, name: string) => {
+      setStorageMap(prevStorageMap => {
+        return {
+          ...prevStorageMap,
+          [id]: {
+            ...prevStorageMap[id],
+            name
+          }
+        }
+      })
+    }, [])
+
     useEffect(
       () => {
         if (initialized) {
@@ -93,7 +106,8 @@ export function createDbStoreCreator(
       storageMap,
       initialize,
       createStorage,
-      removeStorage
+      removeStorage,
+      renameStorage
     }
   }
 }

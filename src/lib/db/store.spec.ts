@@ -48,4 +48,29 @@ describe('DbStore', () => {
       expect(result.current.storageMap).toEqual({})
     })
   })
+
+  describe('#renameStorage', () => {
+    it('renames a storage', async () => {
+      // Given
+      const { result } = renderHook(() =>
+        createDbStoreCreator(new MemoryLiteStorage(), 'memory')()
+      )
+
+      let storage: NoteStorage | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+
+        // When
+        await result.current.renameStorage(storage.id, 'changed')
+      })
+
+      // Then
+      expect(result.current.storageMap).toEqual({
+        [storage!.id]: expect.objectContaining({
+          name: 'changed'
+        })
+      })
+    })
+  })
 })
