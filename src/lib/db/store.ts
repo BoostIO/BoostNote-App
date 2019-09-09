@@ -4,14 +4,13 @@ import {
   ObjectMap,
   PopulatedFolderDoc
 } from './types'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
 import { generateUuid, getFolderPathname } from './utils'
 import PouchDB from './PouchDB'
-import { omit } from 'ramda'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
 
@@ -64,21 +63,32 @@ export function createDbStoreCreator(
         adapter
       )
 
+      let newStorageMap: ObjectMap<NoteStorage>
       setStorageMap(prevStorageMap => {
-        return {
-          ...prevStorageMap,
-          [id]: storage
-        }
+        newStorageMap = produce(prevStorageMap, draft => {
+          draft[id] = storage
+        })
+
+        return newStorageMap
       })
+
+      saveStorageDataList(liteStorage, newStorageMap!)
       return storage
     }, [])
 
     const removeStorage = useCallback(
       async (id: string) => {
         await storageMap[id].db.pouchDb.destroy()
+        let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
-          return omit([id], prevStorageMap)
+          newStorageMap = produce(prevStorageMap, draft => {
+            delete draft[id]
+          })
+
+          return newStorageMap
         })
+
+        saveStorageDataList(liteStorage, newStorageMap!)
       },
       // FIXME: The callback regenerates every storageMap change.
       // We should move the method to NoteStorage so the method instantiate only once.
@@ -86,30 +96,17 @@ export function createDbStoreCreator(
     )
 
     const renameStorage = useCallback(async (id: string, name: string) => {
+      let newStorageMap: ObjectMap<NoteStorage>
       setStorageMap(prevStorageMap => {
-        return {
-          ...prevStorageMap,
-          [id]: {
-            ...prevStorageMap[id],
-            name
-          }
-        }
-      })
-    }, [])
+        newStorageMap = produce(prevStorageMap, draft => {
+          draft[id].name = name
+        })
 
-    useEffect(
-      () => {
-        if (initialized) {
-          liteStorage.setItem(
-            storageDataListKey,
-            JSON.stringify(
-              Object.values(storageMap).map(({ id, name }) => ({ id, name }))
-            )
-          )
-        }
-      },
-      [storageMap, initialized]
-    )
+        return newStorageMap
+      })
+
+      saveStorageDataList(liteStorage, newStorageMap!)
+    }, [])
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
@@ -214,6 +211,18 @@ function getStorageDataListOrFix(liteStorage: LiteStorage): NoteStorageData[] {
     liteStorage.setItem(storageDataListKey, '[]')
   }
   return storageDataList
+}
+
+function saveStorageDataList(
+  liteStorage: LiteStorage,
+  storageMap: ObjectMap<NoteStorage>
+) {
+  liteStorage.setItem(
+    storageDataListKey,
+    JSON.stringify(
+      Object.values(storageMap).map(({ id, name }) => ({ id, name }))
+    )
+  )
 }
 
 async function prepareStorage(
