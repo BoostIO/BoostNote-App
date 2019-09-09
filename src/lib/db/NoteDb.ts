@@ -24,6 +24,7 @@ import {
   isTagDoc,
   getTagName
 } from './utils'
+import { FOLDER_ID_PREFIX } from './consts'
 
 export default class NoteDb {
   public initialized: boolean
@@ -59,7 +60,9 @@ export default class NoteDb {
     )
 
     await Promise.all([
-      ...[...missingPathnameSet].map(pathname => this.upsertFolder(pathname)),
+      ...[...missingPathnameSet, '/'].map(pathname =>
+        this.upsertFolder(pathname)
+      ),
       ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName))
     ])
   }
@@ -402,5 +405,14 @@ export default class NoteDb {
     await Promise.all(
       notes.filter(note => !note.trashed).map(note => this.trashNote(note._id))
     )
+  }
+
+  async getAllFolders(): Promise<FolderDoc[]> {
+    const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
+      startkey: `${FOLDER_ID_PREFIX}/`,
+      endkey: `${FOLDER_ID_PREFIX}/\ufff0`,
+      include_docs: true
+    })
+    return allDocsResponse.rows.map(row => row.doc!)
   }
 }
