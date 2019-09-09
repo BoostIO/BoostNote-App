@@ -18,6 +18,7 @@ export interface DbStore {
   createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
+  createFolder: (storageName: string, pathname: string) => Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -72,6 +73,8 @@ export function createDbStoreCreator(
           return omit([id], prevStorageMap)
         })
       },
+      // FIXME: The callback regenerates every storageMap change.
+      // We should move the method to NoteStorage so the method instantiate only once.
       [storageMap]
     )
 
@@ -101,13 +104,37 @@ export function createDbStoreCreator(
       [storageMap, initialized]
     )
 
+    const createFolder = useCallback(
+      async (id: string, pathname: string) => {
+        const folderDoc = await storageMap[id].db.upsertFolder(pathname)
+        setStorageMap(prevStorageMap => {
+          return {
+            ...prevStorageMap,
+            [id]: {
+              ...prevStorageMap[id],
+              folderMap: {
+                ...prevStorageMap[id].folderMap,
+                [pathname]: {
+                  ...folderDoc,
+                  pathname,
+                  noteIdSet: new Set()
+                }
+              }
+            }
+          }
+        })
+      },
+      [storageMap]
+    )
+
     return {
       initialized,
       storageMap,
       initialize,
       createStorage,
       removeStorage,
-      renameStorage
+      renameStorage,
+      createFolder
     }
   }
 }
