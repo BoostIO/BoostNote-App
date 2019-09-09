@@ -20,10 +20,7 @@ describe('DbStore', () => {
   describe('#createStorage', () => {
     it('creates a storage', async () => {
       // Given
-      const memoryStorage = new MemoryLiteStorage()
-      const { result } = renderHook(() =>
-        createDbStoreCreator(memoryStorage, 'memory')()
-      )
+      const { result, memoryStorage } = prepareDbStore()
 
       let storage: NoteStorage
       await act(async () => {
@@ -52,10 +49,7 @@ describe('DbStore', () => {
   describe('#removeStorage', () => {
     it('remove a storage', async () => {
       // Given
-      const memoryStorage = new MemoryLiteStorage()
-      const { result } = renderHook(() =>
-        createDbStoreCreator(memoryStorage, 'memory')()
-      )
+      const { result, memoryStorage } = prepareDbStore()
 
       let storage: NoteStorage
       await act(async () => {
@@ -76,10 +70,7 @@ describe('DbStore', () => {
   describe('#renameStorage', () => {
     it('renames a storage', async () => {
       // Given
-      const memoryStorage = new MemoryLiteStorage()
-      const { result } = renderHook(() =>
-        createDbStoreCreator(memoryStorage, 'memory')()
-      )
+      const { result, memoryStorage } = prepareDbStore()
 
       let storage: NoteStorage
       await act(async () => {
