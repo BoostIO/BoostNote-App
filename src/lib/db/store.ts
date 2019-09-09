@@ -21,7 +21,7 @@ export interface DbStore {
 }
 
 export function createDbStoreCreator(
-  simpleStorage: LiteStorage,
+  liteStorage: LiteStorage,
   adapter: 'idb' | 'memory'
 ) {
   return (): DbStore => {
@@ -29,7 +29,7 @@ export function createDbStoreCreator(
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
     const initialize = useCallback(async () => {
-      const storageDataList = loadStorageDataList(simpleStorage)
+      const storageDataList = getStorageDataListOrFix(liteStorage)
       const storages = await Promise.all(
         storageDataList.map(storageData => prepareStorage(storageData, adapter))
       )
@@ -90,7 +90,7 @@ export function createDbStoreCreator(
     useEffect(
       () => {
         if (initialized) {
-          simpleStorage.setItem(
+          liteStorage.setItem(
             storageDataListKey,
             JSON.stringify(
               Object.values(storageMap).map(({ id, name }) => ({ id, name }))
@@ -122,8 +122,10 @@ export const {
   useStore: useDb
 } = createStoreContext(createDbStoreCreator(localLiteStorage, 'idb'))
 
-function loadStorageDataList(simpleStorage: LiteStorage): NoteStorageData[] {
-  const serializedStorageDataList = simpleStorage.getItem(storageDataListKey)
+export function getStorageDataList(
+  liteStorage: LiteStorage
+): NoteStorageData[] | null {
+  const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
 
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
@@ -141,9 +143,17 @@ function loadStorageDataList(simpleStorage: LiteStorage): NoteStorageData[] {
     )
   } catch (error) {
     console.warn(error)
-    simpleStorage.setItem(storageDataListKey, '[]')
-    return []
+    return null
   }
+}
+
+function getStorageDataListOrFix(liteStorage: LiteStorage): NoteStorageData[] {
+  let storageDataList = getStorageDataList(liteStorage)
+  if (storageDataList == null) {
+    storageDataList = []
+    liteStorage.setItem(storageDataListKey, '[]')
+  }
+  return storageDataList
 }
 
 async function prepareStorage(

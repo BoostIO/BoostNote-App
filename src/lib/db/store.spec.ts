@@ -1,4 +1,4 @@
-import { createDbStoreCreator } from './store'
+import { createDbStoreCreator, getStorageDataList } from './store'
 import { MemoryLiteStorage } from 'ltstrg'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage } from './types'
@@ -7,11 +7,12 @@ describe('DbStore', () => {
   describe('#createStorage', () => {
     it('creates a storage', async () => {
       // Given
+      const memoryStorage = new MemoryLiteStorage()
       const { result } = renderHook(() =>
-        createDbStoreCreator(new MemoryLiteStorage(), 'memory')()
+        createDbStoreCreator(memoryStorage, 'memory')()
       )
 
-      let storage: NoteStorage | undefined
+      let storage: NoteStorage
       await act(async () => {
         await result.current.initialize()
 
@@ -25,17 +26,25 @@ describe('DbStore', () => {
           name: 'test'
         })
       })
+
+      expect(getStorageDataList(memoryStorage)).toEqual([
+        {
+          id: storage!.id,
+          name: 'test'
+        }
+      ])
     })
   })
 
   describe('#removeStorage', () => {
     it('remove a storage', async () => {
       // Given
+      const memoryStorage = new MemoryLiteStorage()
       const { result } = renderHook(() =>
-        createDbStoreCreator(new MemoryLiteStorage(), 'memory')()
+        createDbStoreCreator(memoryStorage, 'memory')()
       )
 
-      let storage: NoteStorage | undefined
+      let storage: NoteStorage
       await act(async () => {
         await result.current.initialize()
         storage = await result.current.createStorage('test')
@@ -46,17 +55,20 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap).toEqual({})
+
+      expect(getStorageDataList(memoryStorage)).toEqual([])
     })
   })
 
   describe('#renameStorage', () => {
     it('renames a storage', async () => {
       // Given
+      const memoryStorage = new MemoryLiteStorage()
       const { result } = renderHook(() =>
-        createDbStoreCreator(new MemoryLiteStorage(), 'memory')()
+        createDbStoreCreator(memoryStorage, 'memory')()
       )
 
-      let storage: NoteStorage | undefined
+      let storage: NoteStorage
       await act(async () => {
         await result.current.initialize()
         storage = await result.current.createStorage('test')
@@ -71,6 +83,13 @@ describe('DbStore', () => {
           name: 'changed'
         })
       })
+
+      expect(getStorageDataList(memoryStorage)).toEqual([
+        {
+          id: storage!.id,
+          name: 'changed'
+        }
+      ])
     })
   })
 })
