@@ -1,13 +1,19 @@
-import { NoteStorage, NoteStorageData, ObjectMap } from './types'
+import {
+  NoteStorage,
+  NoteStorageData,
+  ObjectMap,
+  PopulatedFolderDoc
+} from './types'
 import { useState, useCallback, useEffect } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
-import { generateUuid } from './utils'
+import { generateUuid, getFolderPathname } from './utils'
 import PouchDB from './PouchDB'
 import { omit } from 'ramda'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
+import { produce } from 'immer'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
@@ -106,23 +112,24 @@ export function createDbStoreCreator(
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
-        const folderDoc = await storageMap[id].db.upsertFolder(pathname)
-        setStorageMap(prevStorageMap => {
-          return {
-            ...prevStorageMap,
-            [id]: {
-              ...prevStorageMap[id],
-              folderMap: {
-                ...prevStorageMap[id].folderMap,
-                [pathname]: {
-                  ...folderDoc,
-                  pathname,
-                  noteIdSet: new Set()
-                }
+        await storageMap[id].db.upsertFolder(pathname)
+        const allFolders = await storageMap[id].db.getAllFolders()
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[id].folderMap = allFolders.reduce<
+              ObjectMap<PopulatedFolderDoc>
+            >((map, folderDoc) => {
+              const currentPathname = getFolderPathname(folderDoc._id)
+              map[currentPathname] = {
+                ...folderDoc,
+                pathname: currentPathname,
+                noteIdSet: new Set()
               }
-            }
-          }
-        })
+              return map
+            }, {})
+          })
+        )
       },
       [storageMap]
     )
