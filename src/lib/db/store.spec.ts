@@ -3,11 +3,15 @@ import { MemoryLiteStorage } from 'ltstrg'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage } from './types'
 import { getFolderId } from './utils'
+import { RouterProvider } from '../router'
 
 function prepareDbStore() {
   const memoryStorage = new MemoryLiteStorage()
-  const { result } = renderHook(() =>
-    createDbStoreCreator(memoryStorage, 'memory')()
+  const { result } = renderHook(
+    () => createDbStoreCreator(memoryStorage, 'memory')(),
+    {
+      wrapper: RouterProvider
+    }
   )
 
   return {
@@ -194,5 +198,7 @@ describe('DbStore', () => {
         '/': expect.objectContaining({ pathname: '/' })
       })
     })
+
+    // TODO: routing test when current folder or current folder's parent folder is deleted.
   })
 })

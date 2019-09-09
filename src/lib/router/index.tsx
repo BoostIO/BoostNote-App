@@ -67,8 +67,8 @@ function createRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
   useEffect(() => {
-    const unlisten = history.listen(location => {
-      setLocation(normalizeLocation(location))
+    const unlisten = history.listen(newLocation => {
+      setLocation(normalizeLocation(newLocation))
     })
     return unlisten
   }, [])

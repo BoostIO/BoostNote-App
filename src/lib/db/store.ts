@@ -9,10 +9,15 @@ import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
-import { generateUuid, getFolderPathname } from './utils'
+import {
+  generateUuid,
+  getFolderPathname,
+  getParentFolderPathname
+} from './utils'
 import PouchDB from './PouchDB'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
+import { useRouter } from '../router'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
@@ -32,6 +37,7 @@ export function createDbStoreCreator(
   adapter: 'idb' | 'memory'
 ) {
   return (): DbStore => {
+    const router = useRouter()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
@@ -137,6 +143,12 @@ export function createDbStoreCreator(
         await storageMap[id].db.removeFolder(pathname)
         const allFolders = await storageMap[id].db.getAllFolders()
 
+        if (router.pathname.startsWith(`/storages/${id}/notes${pathname}`)) {
+          router.push(
+            `/storages/${id}/notes${getParentFolderPathname(pathname)}`
+          )
+        }
+
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[id].folderMap = allFolders.reduce<
@@ -153,7 +165,7 @@ export function createDbStoreCreator(
           })
         )
       },
-      [storageMap]
+      [storageMap, router.pathname]
     )
 
     return {
