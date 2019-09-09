@@ -154,4 +154,45 @@ describe('DbStore', () => {
       })
     })
   })
+
+  describe('#removeFolder', () => {
+    it('removes a folder and its notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+        '/': expect.objectContaining({ pathname: '/' })
+      })
+      // TODO: check note deletion too.
+    })
+
+    it('removes its child folders', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test/child folder')
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+        '/': expect.objectContaining({ pathname: '/' })
+      })
+    })
+  })
 })

@@ -25,6 +25,7 @@ export interface DbStore {
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
+  removeFolder: (storageName: string, pathname: string) => Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -134,6 +135,30 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const removeFolder = useCallback(
+      async (id: string, pathname: string) => {
+        await storageMap[id].db.removeFolder(pathname)
+        const allFolders = await storageMap[id].db.getAllFolders()
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[id].folderMap = allFolders.reduce<
+              ObjectMap<PopulatedFolderDoc>
+            >((map, folderDoc) => {
+              const currentPathname = getFolderPathname(folderDoc._id)
+              map[currentPathname] = {
+                ...folderDoc,
+                pathname: currentPathname,
+                noteIdSet: new Set()
+              }
+              return map
+            }, {})
+          })
+        )
+      },
+      [storageMap]
+    )
+
     return {
       initialized,
       storageMap,
@@ -141,7 +166,8 @@ export function createDbStoreCreator(
       createStorage,
       removeStorage,
       renameStorage,
-      createFolder
+      createFolder,
+      removeFolder
     }
   }
 }
