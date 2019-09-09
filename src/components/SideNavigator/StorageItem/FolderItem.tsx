@@ -17,11 +17,9 @@ type FolderItemProps = {
 export default (props: FolderItemProps) => {
   const dialog = useDialog()
   const contextMenu = useContextMenu()
-  const { storageId, folder, active } = props
+  const { storageId, folder, active, removeFolder, createFolder } = props
   const openContextMenu = useCallback(
     (event: React.MouseEvent<HTMLLIElement>) => {
-      const { folder, removeFolder, createFolder } = props
-
       const folderIsRootFolder = folder.pathname === '/'
 
       event.preventDefault()
@@ -65,7 +63,7 @@ export default (props: FolderItemProps) => {
         }
       ])
     },
-    [dialog.messageBox, contextMenu.popup]
+    [dialog.messageBox, contextMenu.popup, createFolder, removeFolder]
   )
 
   return (
