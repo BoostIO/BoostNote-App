@@ -7,19 +7,19 @@ import { DialogIconTypes } from '../../../lib/dialog/types'
 import { PopulatedFolderDoc } from '../../../lib/db/types'
 
 type FolderItemProps = {
-  storageName: string
+  storageId: string
   folder: PopulatedFolderDoc
-  createFolder: (folderPath: string) => Promise<void>
-  removeFolder: (folderPath: string) => Promise<void>
+  createFolder: (storageId: string, folderPath: string) => Promise<void>
+  removeFolder: (storageId: string, folderPath: string) => Promise<void>
   active: boolean
 }
 
 export default (props: FolderItemProps) => {
   const dialog = useDialog()
   const contextMenu = useContextMenu()
-  const { storageName, folder, active } = props
+  const { storageId, folder, active } = props
   const openContextMenu = useCallback(
-    (event: React.MouseEvent<HTMLAnchorElement>) => {
+    (event: React.MouseEvent<HTMLLIElement>) => {
       const { folder, removeFolder, createFolder } = props
 
       const folderIsRootFolder = folder.pathname === '/'
@@ -38,7 +38,7 @@ export default (props: FolderItemProps) => {
               submitButtonLabel: 'Create Folder',
               onClose: (value: string | null) => {
                 if (value == null) return
-                createFolder(value)
+                createFolder(storageId, value)
               }
             })
           }
@@ -57,7 +57,7 @@ export default (props: FolderItemProps) => {
               cancelButtonIndex: 1,
               onClose: (value: number | null) => {
                 if (value === 0) {
-                  removeFolder(folder.pathname)
+                  removeFolder(storageId, folder.pathname)
                 }
               }
             })
@@ -69,11 +69,10 @@ export default (props: FolderItemProps) => {
   )
 
   return (
-    <StyledStorageItemFolderItem>
+    <StyledStorageItemFolderItem onContextMenu={openContextMenu}>
       <StyledNavLink
         active={active}
-        href={`/storages/${storageName}/notes${folder.pathname}`}
-        onContextMenu={openContextMenu}
+        href={`/storages/${storageId}/notes${folder.pathname}`}
       >
         {folder.pathname}
       </StyledNavLink>

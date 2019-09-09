@@ -33,6 +33,7 @@ export default (props: StorageItemProps) => {
     createFolder,
     renameStorage,
     removeStorage,
+    removeFolder,
     active
   } = props
   const storageName = storage.name
@@ -119,7 +120,7 @@ export default (props: StorageItemProps) => {
   return (
     <StyledStorageItem>
       <StyledStorageItemHeader onContextMenu={openContextMenu}>
-        <StyledNavLink active={active} href={`/storages/${storageName}`}>
+        <StyledNavLink active={active} href={`/storages/${id}`}>
           {storageName}
         </StyledNavLink>
       </StyledStorageItemHeader>
@@ -127,17 +128,17 @@ export default (props: StorageItemProps) => {
         {folders.map(folder => {
           const folderPathname =
             folder._id === '/'
-              ? `/storages/${storageName}/notes`
-              : `/storages/${storageName}/notes${folder._id}`
+              ? `/storages/${id}/notes`
+              : `/storages/${id}/notes${folder._id}`
           const folderIsActive = folderPathname === pathname
 
           return (
             <FolderItem
               key={folder._id}
-              storageName={storageName}
+              storageId={id}
               folder={folder}
-              createFolder={async () => {}}
-              removeFolder={async () => {}}
+              createFolder={createFolder}
+              removeFolder={removeFolder}
               active={folderIsActive}
             />
           )

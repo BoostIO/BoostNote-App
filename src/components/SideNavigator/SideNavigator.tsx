@@ -44,6 +44,13 @@ export default () => {
     [db.createFolder]
   )
 
+  const removeFolder = useCallback(
+    async (storageId: string, pathname: string) => {
+      await db.removeFolder(storageId, pathname)
+    },
+    [db.removeFolder]
+  )
+
   return (
     <StyledSideNavContainer style={{ width: 160 }}>
       <StyledStorageList>
@@ -58,7 +65,7 @@ export default () => {
               removeStorage={removeStorage}
               renameStorage={renameStorage}
               createFolder={createFolder}
-              removeFolder={async () => {}}
+              removeFolder={removeFolder}
               pathname={pathname}
               active={active}
             />
