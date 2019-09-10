@@ -7,6 +7,7 @@ import path from 'path'
 import pathToRegexp from 'path-to-regexp'
 import { createStoreContext } from '../utils/context'
 import React, { useState, useEffect, useCallback, FC } from 'react'
+import { omit } from 'ramda'
 
 export const history = createBrowserHistory()
 
@@ -43,10 +44,10 @@ function normalizePathname(pathname: string): string {
   return normalizedPathname
 }
 
-function normalizeLocation({ pathname, key, ...otherProps }: Location) {
+function normalizeLocation({ pathname, ...otherProps }: Location) {
   return {
     pathname: normalizePathname(pathname),
-    ...otherProps
+    ...omit(['key'], otherProps)
   }
 }
 
@@ -63,7 +64,7 @@ export interface RouterStore {
 
 const initialLocation = normalizeLocation(history.location)
 
-function createRouteStore(): RouterStore {
+function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
   useEffect(() => {
@@ -83,8 +84,8 @@ function createRouteStore(): RouterStore {
   const go = useCallback((count: number) => {
     history.go(count)
   }, [])
-  const goBack = useCallback(() => go(-1), [])
-  const goForward = useCallback(() => go(1), [])
+  const goBack = useCallback(() => go(-1), [go])
+  const goForward = useCallback(() => go(1), [go])
 
   return {
     pathname: location.pathname,
@@ -101,7 +102,7 @@ function createRouteStore(): RouterStore {
 export const {
   StoreProvider: RouterProvider,
   useStore: useRouter
-} = createStoreContext(createRouteStore)
+} = createStoreContext(useRouteStore)
 
 export interface LinkProps {
   href: string

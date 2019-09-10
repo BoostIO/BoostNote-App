@@ -1,7 +1,7 @@
 import React from 'react'
 
 type SotrageCreateFormProps = {
-  createStorage: (storageName: string) => Promise<void>
+  createStorage: (storageName: string) => Promise<any>
 }
 
 type SotrageCreateFormState = {
@@ -36,12 +36,12 @@ export default class SotrageCreateForm extends React.Component<
       <div>
         <label>New storage</label>
         <input
-          type="text"
+          type='text'
           ref={this.nameInputRef}
           value={this.state.name}
           onChange={this.updateName}
         />
-        <button type="submit" onClick={this.createStorage}>
+        <button type='submit' onClick={this.createStorage}>
           Add
         </button>
       </div>

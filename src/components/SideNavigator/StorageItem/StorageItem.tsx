@@ -25,7 +25,7 @@ type StorageItemProps = {
 }
 
 export default (props: StorageItemProps) => {
-  const dialog = useDialog()
+  const { prompt, messageBox } = useDialog()
   const contextMenu = useContextMenu()
   const {
     id,
@@ -63,7 +63,7 @@ export default (props: StorageItemProps) => {
           type: MenuTypes.Normal,
           label: 'New Folder',
           onClick: async () => {
-            dialog.prompt({
+            prompt({
               title: 'Create a Folder',
               message: 'Enter the path where do you want to create a folder',
               iconType: DialogIconTypes.Question,
@@ -80,7 +80,7 @@ export default (props: StorageItemProps) => {
           type: MenuTypes.Normal,
           label: 'Rename Storage',
           onClick: async () => {
-            dialog.prompt({
+            prompt({
               title: `Rename "${storageName}" storage`,
               message: 'Enter new name for the storage',
               iconType: DialogIconTypes.Question,
@@ -97,7 +97,7 @@ export default (props: StorageItemProps) => {
           type: MenuTypes.Normal,
           label: 'Remove Storage',
           onClick: async () => {
-            dialog.messageBox({
+            messageBox({
               title: `Remove "${storageName}" storage`,
               message: 'All notes and folders will be deleted.',
               iconType: DialogIconTypes.Warning,
@@ -114,7 +114,16 @@ export default (props: StorageItemProps) => {
         }
       ])
     },
-    [contextMenu.popup, dialog.prompt, dialog.messageBox, storageName, id]
+    [
+      contextMenu,
+      prompt,
+      messageBox,
+      createFolder,
+      id,
+      storageName,
+      renameStorage,
+      removeStorage
+    ]
   )
 
   return (

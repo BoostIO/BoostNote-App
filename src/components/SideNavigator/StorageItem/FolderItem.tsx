@@ -15,7 +15,7 @@ type FolderItemProps = {
 }
 
 export default (props: FolderItemProps) => {
-  const dialog = useDialog()
+  const { prompt, messageBox } = useDialog()
   const contextMenu = useContextMenu()
   const { storageId, folder, active, removeFolder, createFolder } = props
   const openContextMenu = useCallback(
@@ -28,7 +28,7 @@ export default (props: FolderItemProps) => {
           type: MenuTypes.Normal,
           label: 'New Folder',
           onClick: async () => {
-            dialog.prompt({
+            prompt({
               title: 'Create a Folder',
               message: 'Enter the path where do you want to create a folder',
               iconType: DialogIconTypes.Question,
@@ -46,7 +46,7 @@ export default (props: FolderItemProps) => {
           label: 'Remove Folder',
           enabled: !folderIsRootFolder,
           onClick: () => {
-            dialog.messageBox({
+            messageBox({
               title: `Remove "${folder.pathname}" folder`,
               message: 'All notes and subfolders will be deleted.',
               iconType: DialogIconTypes.Warning,
@@ -63,7 +63,15 @@ export default (props: FolderItemProps) => {
         }
       ])
     },
-    [dialog.messageBox, contextMenu.popup, createFolder, removeFolder]
+    [
+      folder.pathname,
+      prompt,
+      messageBox,
+      contextMenu,
+      createFolder,
+      storageId,
+      removeFolder
+    ]
   )
 
   return (

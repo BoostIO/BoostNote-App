@@ -11,7 +11,7 @@ export * from './types'
 
 let id = 0
 
-function createDialog(): DialogContext {
+function useDialogStore(): DialogContext {
   const [data, setData] = useState<DialogData | null>(null)
   const prompt = useCallback((options: PromptDialogOptions) => {
     setData({
@@ -42,4 +42,4 @@ function createDialog(): DialogContext {
 export const {
   StoreProvider: DialogProvider,
   useStore: useDialog
-} = createStoreContext(createDialog, 'dialog')
+} = createStoreContext(useDialogStore, 'dialog')

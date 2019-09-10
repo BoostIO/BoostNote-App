@@ -8,7 +8,7 @@ export const menuMargin = 5
 export const menuVerticalPadding = 4
 export const menuZIndex = 9000
 
-function createContextMenuStore(): ContextMenuContext {
+function useContextMenuStore(): ContextMenuContext {
   const [closed, setClosed] = useState(true)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -55,4 +55,4 @@ function createContextMenuStore(): ContextMenuContext {
 export const {
   StoreProvider: ContextMenuProvider,
   useStore: useContextMenu
-} = createStoreContext(createContextMenuStore, 'context menu')
+} = createStoreContext(useContextMenuStore, 'context menu')

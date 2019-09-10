@@ -9,11 +9,14 @@ import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
 import { useDb } from '../lib/db'
 
-export default () => {
+const App = () => {
   const db = useDb()
-  useEffect(() => {
-    db.initialize()
-  }, [])
+  useEffect(
+    () => {
+      db.initialize()
+    },
+    [db]
+  )
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledAppContainer>
@@ -32,3 +35,5 @@ export default () => {
     </ThemeProvider>
   )
 }
+
+export default App

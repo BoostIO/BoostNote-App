@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import StorageItem from './StorageItem/StorageItem'
 import { useRouter } from '../../lib/router'
 import SotrageCreateForm from './StorageCreateForm'
@@ -6,49 +6,21 @@ import { StyledSideNavContainer, StyledStorageList } from './styled'
 import { useDb } from '../../lib/db'
 
 export default () => {
-  const db = useDb()
+  const {
+    createStorage,
+    renameStorage,
+    removeStorage,
+    createFolder,
+    removeFolder,
+    storageMap
+  } = useDb()
   const router = useRouter()
 
   const storageEntries = useMemo(
     () => {
-      return Object.entries(db.storageMap)
+      return Object.entries(storageMap)
     },
-    [db.storageMap]
-  )
-
-  const createStorage = useCallback(
-    async (storageName: string) => {
-      await db.createStorage(storageName)
-    },
-    [db.createStorage]
-  )
-
-  const renameStorage = useCallback(
-    async (storageId: string, name: string) => {
-      await db.renameStorage(storageId, name)
-    },
-    [db.renameStorage]
-  )
-
-  const removeStorage = useCallback(
-    async (storageId: string) => {
-      await db.removeStorage(storageId)
-    },
-    [db.removeStorage]
-  )
-
-  const createFolder = useCallback(
-    async (storageId: string, pathname: string) => {
-      await db.createFolder(storageId, pathname)
-    },
-    [db.createFolder]
-  )
-
-  const removeFolder = useCallback(
-    async (storageId: string, pathname: string) => {
-      await db.removeFolder(storageId, pathname)
-    },
-    [db.removeFolder]
+    [storageMap]
   )
 
   return (

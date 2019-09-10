@@ -165,7 +165,7 @@ export function createDbStoreCreator(
           })
         )
       },
-      [storageMap, router.pathname]
+      [storageMap, router]
     )
 
     return {

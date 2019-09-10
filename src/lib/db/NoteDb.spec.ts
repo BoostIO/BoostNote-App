@@ -4,7 +4,7 @@ import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
 import { NoteDoc, FolderDoc, ExceptRev } from './types'
 
 let noteDbCount = 0
-async function prepareNoteDb(shouldInit: boolean = true): Promise<NoteDb> {
+async function prepareNoteDb(shouldInit = true): Promise<NoteDb> {
   const id = `dummy${++noteDbCount}`
   const pouchDb = new PouchDB(id, {
     adapter: 'memory'
