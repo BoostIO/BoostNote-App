@@ -38,7 +38,6 @@ export default (props: StorageItemProps) => {
   } = props
   const storageName = storage.name
   const { pathname } = useRouter()
-
   const { folderMap, tagMap } = storage
 
   const tags = useMemo(

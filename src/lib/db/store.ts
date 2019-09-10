@@ -142,13 +142,11 @@ export function createDbStoreCreator(
       async (id: string, pathname: string) => {
         await storageMap[id].db.removeFolder(pathname)
         const allFolders = await storageMap[id].db.getAllFolders()
-
         if (router.pathname.startsWith(`/storages/${id}/notes${pathname}`)) {
-          router.push(
+          router.replace(
             `/storages/${id}/notes${getParentFolderPathname(pathname)}`
           )
         }
-
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[id].folderMap = allFolders.reduce<
