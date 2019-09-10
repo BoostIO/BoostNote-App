@@ -10,17 +10,17 @@ import Dialog from './Dialog/Dialog'
 import { useDb } from '../lib/db'
 
 const App = () => {
-  const db = useDb()
+  const { initialize, initialized } = useDb()
   useEffect(
     () => {
-      db.initialize()
+      initialize()
     },
-    [db]
+    [initialize]
   )
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledAppContainer>
-        {db.initialized ? (
+        {initialized ? (
           <>
             <SideNavigator />
             <Router />
