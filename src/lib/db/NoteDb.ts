@@ -414,4 +414,12 @@ export default class NoteDb {
     })
     return allDocsResponse.rows.map(row => row.doc!)
   }
+
+  async getFoldersByPathnames(pathnames: string[]): Promise<FolderDoc[]> {
+    const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
+      keys: pathnames.map(pathname => getFolderId(pathname)),
+      include_docs: true
+    })
+    return allDocsResponse.rows.map(row => row.doc!)
+  }
 }

@@ -5,7 +5,8 @@ import {
   getFolderPathname,
   getTagId,
   getTagName,
-  isTagNameValid
+  isTagNameValid,
+  getAllParentFolderPathnames
 } from './utils'
 
 describe('getFolderId', () => {
@@ -109,5 +110,22 @@ describe('isTagNameValid', () => {
     const result = isTagNameValid('valid')
 
     expect(result).toBe(true)
+  })
+})
+
+describe('getAllParentFolderPathnames', () => {
+  it('returns array of all parent pathnames', () => {
+    const input = '/a/b/c/d/e/f'
+
+    const result = getAllParentFolderPathnames(input)
+
+    expect(result).toEqual([
+      '/a/b/c/d/e',
+      '/a/b/c/d',
+      '/a/b/c',
+      '/a/b',
+      '/a',
+      '/'
+    ])
   })
 })

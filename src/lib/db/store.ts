@@ -1,10 +1,4 @@
-import {
-  NoteStorage,
-  NoteStorageData,
-  ObjectMap,
-  PopulatedFolderDoc,
-  NoteDoc
-} from './types'
+import { NoteStorage, NoteStorageData, ObjectMap, NoteDoc } from './types'
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
@@ -13,7 +7,8 @@ import NoteDb from './NoteDb'
 import {
   generateUuid,
   getFolderPathname,
-  getParentFolderPathname
+  getParentFolderPathname,
+  getAllParentFolderPathnames
 } from './utils'
 import PouchDB from './PouchDB'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
@@ -128,22 +123,24 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        await storage.db.upsertFolder(pathname)
-        const allFolders = await storage.db.getAllFolders()
+        const folder = await storage.db.upsertFolder(pathname)
+        const parentFolders = await storage.db.getFoldersByPathnames(
+          getAllParentFolderPathnames(pathname)
+        )
+        const createdFolders = [folder, ...parentFolders].reverse()
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[id]!.folderMap = allFolders.reduce<
-              ObjectMap<PopulatedFolderDoc>
-            >((map, folderDoc) => {
-              const currentPathname = getFolderPathname(folderDoc._id)
-              map[currentPathname] = {
-                ...folderDoc,
-                pathname: currentPathname,
-                noteIdSet: new Set()
+            createdFolders.forEach(aFolder => {
+              const aPathname = getFolderPathname(aFolder._id)
+              if (storage.folderMap[aPathname] == null) {
+                draft[id]!.folderMap[aPathname] = {
+                  ...aFolder,
+                  pathname: aPathname,
+                  noteIdSet: new Set()
+                }
               }
-              return map
-            }, {})
+            })
           })
         )
       },
@@ -157,25 +154,23 @@ export function createDbStoreCreator(
           return
         }
         await storage.db.removeFolder(pathname)
-        const allFolders = await storage.db.getAllFolders()
         if (router.pathname.startsWith(`/storages/${id}/notes${pathname}`)) {
           router.replace(
             `/storages/${id}/notes${getParentFolderPathname(pathname)}`
           )
         }
+
+        const deletedFolderPathnames = [
+          pathname,
+          ...Object.keys(storage.folderMap).filter(aPathname =>
+            aPathname.startsWith(`${pathname}/`)
+          )
+        ]
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[id]!.folderMap = allFolders.reduce<
-              ObjectMap<PopulatedFolderDoc>
-            >((map, folderDoc) => {
-              const currentPathname = getFolderPathname(folderDoc._id)
-              map[currentPathname] = {
-                ...folderDoc,
-                pathname: currentPathname,
-                noteIdSet: new Set()
-              }
-              return map
-            }, {})
+            deletedFolderPathnames.forEach(aPathname => {
+              delete draft[id]!.folderMap[aPathname]
+            })
           })
         )
       },

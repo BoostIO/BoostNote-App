@@ -119,3 +119,13 @@ export function isTagDoc(
 ): doc is TagDoc {
   return doc._id.startsWith(TAG_ID_PREFIX)
 }
+
+export function getAllParentFolderPathnames(pathname: string) {
+  const pathnames = []
+  let currentPathname = pathname
+  do {
+    currentPathname = getParentFolderPathname(currentPathname)
+    pathnames.push(currentPathname)
+  } while (currentPathname !== '/')
+  return pathnames
+}
