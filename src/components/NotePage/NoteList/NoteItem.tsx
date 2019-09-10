@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
 import { NoteDoc } from '../../../lib/db/types'
 
@@ -20,7 +20,7 @@ export default ({ note, active }: NoteItemProps) => {
 
   return (
     <StyledNoteListItem active={active}>
-      <Link to={noteHash}>
+      <Link href={noteHash}>
         {note.title.length > 0 ? (
           <div>{note.title}</div>
         ) : (
