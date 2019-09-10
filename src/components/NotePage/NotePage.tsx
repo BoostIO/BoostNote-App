@@ -38,14 +38,16 @@ export default () => {
       if (folderRegexpResult != null) {
         const folderPath =
           folderRegexpResult[2] == null ? '/' : `/${folderRegexpResult[2]}`
-        const noteIds = [...currentStorage.folderMap[folderPath]!.noteIdSet]
+        const folder = currentStorage.folderMap[folderPath]
+        if (folder == null) return []
+        const noteIds = [...folder.noteIdSet]
         return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
       }
       const tagRegexpResult = tagRegexp.exec(pathname)
       if (tagRegexpResult != null) {
         const tag = tagRegexpResult[2]
         const noteIds = [...currentStorage.tagMap[tag]!.noteIdSet]
-        return noteIds.map(noteId => currentStorage.noteMap[noteId])
+        return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
       }
       return []
     },

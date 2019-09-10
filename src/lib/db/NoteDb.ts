@@ -22,7 +22,8 @@ import {
   isNoteDoc,
   isFolderDoc,
   isTagDoc,
-  getTagName
+  getTagName,
+  values
 } from './utils'
 import { FOLDER_ID_PREFIX } from './consts'
 
@@ -39,9 +40,7 @@ export default class NoteDb {
     await this.upsertNoteListViews()
 
     const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
-    const { missingPathnameSet, missingTagNameSet } = Object.values(
-      noteMap
-    ).reduce<{
+    const { missingPathnameSet, missingTagNameSet } = values(noteMap).reduce<{
       missingPathnameSet: Set<string>
       missingTagNameSet: Set<string>
     }>(

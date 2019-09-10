@@ -115,7 +115,7 @@ describe('DbStore', () => {
       })
 
       // Then
-      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' }),
         '/test': expect.objectContaining({ pathname: '/test' })
       })
@@ -139,7 +139,7 @@ describe('DbStore', () => {
       })
 
       // Then
-      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' }),
         '/test': expect.objectContaining({ pathname: '/test' }),
         '/test/child folder': expect.objectContaining({
@@ -174,7 +174,7 @@ describe('DbStore', () => {
       })
 
       // Then
-      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' })
       })
       // TODO: check note deletion too.
@@ -194,7 +194,7 @@ describe('DbStore', () => {
       })
 
       // Then
-      expect(result.current.storageMap[storage!.id].folderMap).toEqual({
+      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' })
       })
     })

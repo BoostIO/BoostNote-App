@@ -1,7 +1,15 @@
 import uuidV1 from 'uuid/v1'
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
 import { join } from 'path'
-import { NoteDoc, FolderDoc, TagDoc } from './types'
+import { ObjectMap, NoteDoc, FolderDoc, TagDoc } from './types'
+
+export function values<T>(objectMap: ObjectMap<T>): T[] {
+  return Object.values(objectMap) as T[]
+}
+
+export function entries<T>(objectMap: ObjectMap<T>): [string, T][] {
+  return Object.entries(objectMap) as [string, T][]
+}
 
 export function generateUuid(): string {
   return uuidV1()

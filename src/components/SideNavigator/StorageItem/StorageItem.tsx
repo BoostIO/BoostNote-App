@@ -12,6 +12,7 @@ import {
 } from './styled'
 import { NoteStorage } from '../../../lib/db/types'
 import { useRouter } from '../../../lib/router'
+import { values } from '../../../lib/db/utils'
 
 type StorageItemProps = {
   id: string
@@ -48,7 +49,7 @@ export default (props: StorageItemProps) => {
   )
   const folders = useMemo(
     () => {
-      return Object.values(folderMap)
+      return values(folderMap)
     },
     [folderMap]
   )

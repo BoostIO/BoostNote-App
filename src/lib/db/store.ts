@@ -2,7 +2,8 @@ import {
   NoteStorage,
   NoteStorageData,
   ObjectMap,
-  PopulatedFolderDoc
+  PopulatedFolderDoc,
+  NoteDoc
 } from './types'
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../utils/context'
@@ -18,6 +19,7 @@ import PouchDB from './PouchDB'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
 import { useRouter } from '../router'
+import { values } from '../db/utils'
 
 const storageDataListKey = 'note.boostio.co:storageDataList'
 
@@ -84,7 +86,11 @@ export function createDbStoreCreator(
 
     const removeStorage = useCallback(
       async (id: string) => {
-        await storageMap[id].db.pouchDb.destroy()
+        const storage = storageMap[id]
+        if (storage == null) {
+          return
+        }
+        await storage.db.pouchDb.destroy()
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
           newStorageMap = produce(prevStorageMap, draft => {
@@ -105,7 +111,9 @@ export function createDbStoreCreator(
       let newStorageMap: ObjectMap<NoteStorage>
       setStorageMap(prevStorageMap => {
         newStorageMap = produce(prevStorageMap, draft => {
-          draft[id].name = name
+          if (prevStorageMap[id] != null) {
+            draft[id]!.name = name
+          }
         })
 
         return newStorageMap
@@ -116,12 +124,16 @@ export function createDbStoreCreator(
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
-        await storageMap[id].db.upsertFolder(pathname)
-        const allFolders = await storageMap[id].db.getAllFolders()
+        const storage = storageMap[id]
+        if (storage == null) {
+          return
+        }
+        await storage.db.upsertFolder(pathname)
+        const allFolders = await storage.db.getAllFolders()
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[id].folderMap = allFolders.reduce<
+            draft[id]!.folderMap = allFolders.reduce<
               ObjectMap<PopulatedFolderDoc>
             >((map, folderDoc) => {
               const currentPathname = getFolderPathname(folderDoc._id)
@@ -140,8 +152,12 @@ export function createDbStoreCreator(
 
     const removeFolder = useCallback(
       async (id: string, pathname: string) => {
-        await storageMap[id].db.removeFolder(pathname)
-        const allFolders = await storageMap[id].db.getAllFolders()
+        const storage = storageMap[id]
+        if (storage == null) {
+          return
+        }
+        await storage.db.removeFolder(pathname)
+        const allFolders = await storage.db.getAllFolders()
         if (router.pathname.startsWith(`/storages/${id}/notes${pathname}`)) {
           router.replace(
             `/storages/${id}/notes${getParentFolderPathname(pathname)}`
@@ -149,7 +165,7 @@ export function createDbStoreCreator(
         }
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[id].folderMap = allFolders.reduce<
+            draft[id]!.folderMap = allFolders.reduce<
               ObjectMap<PopulatedFolderDoc>
             >((map, folderDoc) => {
               const currentPathname = getFolderPathname(folderDoc._id)
@@ -229,9 +245,7 @@ function saveStorageDataList(
 ) {
   liteStorage.setItem(
     storageDataListKey,
-    JSON.stringify(
-      Object.values(storageMap).map(({ id, name }) => ({ id, name }))
-    )
+    JSON.stringify(values(storageMap).map(({ id, name }) => ({ id, name })))
   )
 }
 
@@ -267,10 +281,10 @@ async function prepareStorage(
     db
   }
 
-  for (const noteDoc of Object.values(noteMap)) {
-    storage.folderMap[noteDoc.folderPathname].noteIdSet.add(noteDoc._id)
+  for (const noteDoc of Object.values(noteMap) as NoteDoc[]) {
+    storage.folderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
     noteDoc.tags.forEach(tagName => {
-      storage.tagMap[tagName].noteIdSet.add(noteDoc._id)
+      storage.tagMap[tagName]!.noteIdSet.add(noteDoc._id)
     })
   }
 

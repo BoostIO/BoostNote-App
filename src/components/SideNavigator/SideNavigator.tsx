@@ -4,6 +4,7 @@ import { useRouter } from '../../lib/router'
 import SotrageCreateForm from './StorageCreateForm'
 import { StyledSideNavContainer, StyledStorageList } from './styled'
 import { useDb } from '../../lib/db'
+import { entries } from '../../lib/db/utils'
 
 export default () => {
   const {
@@ -18,7 +19,7 @@ export default () => {
 
   const storageEntries = useMemo(
     () => {
-      return Object.entries(storageMap)
+      return entries(storageMap)
     },
     [storageMap]
   )

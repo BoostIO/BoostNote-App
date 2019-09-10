@@ -2,7 +2,7 @@ import NoteDb from './NoteDb'
 import { JsonObject, Except } from 'type-fest'
 
 export type ObjectMap<T> = {
-  [key: string]: T
+  [key: string]: T | undefined
 }
 
 /**
