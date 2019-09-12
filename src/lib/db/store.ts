@@ -12,7 +12,7 @@ import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
 import {
-  generateUuid,
+  generateId,
   getFolderPathname,
   getParentFolderPathname,
   getAllParentFolderPathnames
@@ -68,7 +68,7 @@ export function createDbStoreCreator(
     }, [])
 
     const createStorage = useCallback(async (name: string) => {
-      const id = generateUuid()
+      const id = generateId()
       const storage = await prepareStorage(
         {
           id,

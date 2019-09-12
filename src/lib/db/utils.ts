@@ -1,4 +1,4 @@
-import uuidV1 from 'uuid/v1'
+import shortid from 'shortid'
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
 import { join } from 'path'
 import { ObjectMap, NoteDoc, FolderDoc, TagDoc } from './types'
@@ -11,8 +11,8 @@ export function entries<T>(objectMap: ObjectMap<T>): [string, T][] {
   return Object.entries(objectMap) as [string, T][]
 }
 
-export function generateUuid(): string {
-  return uuidV1()
+export function generateId(): string {
+  return shortid.generate()
 }
 
 export function getNow(): string {
@@ -20,7 +20,7 @@ export function getNow(): string {
 }
 
 export function generateNoteId(): string {
-  return `${NOTE_ID_PREFIX}${generateUuid()}`
+  return `${NOTE_ID_PREFIX}${generateId()}`
 }
 
 export function getFolderId(pathname: string): string {

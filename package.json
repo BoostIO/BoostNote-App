@@ -48,8 +48,8 @@
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
     "@types/react-hot-loader": "^4.1.0",
+    "@types/shortid": "0.0.29",
     "@types/styled-components": "^4.1.18",
-    "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.17",
     "@types/webpack-dev-server": "^3.1.1",
     "@types/webpack-env": "^1.13.6",
@@ -101,11 +101,11 @@
     "remark-parse": "^6.0.3",
     "remark-parse-yaml": "0.0.1",
     "remark-stringify": "^6.0.4",
+    "shortid": "^2.2.15",
     "styled-components": "^4.3.2",
     "typescript": "^3.6.2",
     "unified": "^7.0.2",
-    "unist-util-visit": "^1.4.0",
-    "uuid": "^3.3.2"
+    "unist-util-visit": "^1.4.0"
   },
   "build": {
     "appId": "com.electron.Boost",
