@@ -30,15 +30,29 @@ export default () => {
     [db.storageMap, currentStorageId]
   )
 
-  const currentFolderPathname = useMemo(
+  const [currentFolderPathname, currentNoteId] = useMemo(
     () => {
       const folderRegexpResult = folderRegexp.exec(pathname)
       if (folderRegexpResult != null) {
-        const folderPath =
-          folderRegexpResult[2] == null ? '/' : `/${folderRegexpResult[2]}`
-        return folderPath
+        const restPathname =
+          folderRegexpResult[2] == null ? '' : `${folderRegexpResult[2]}`
+
+        let noteId = ''
+        const restNames = restPathname.split('/')
+        const folderNames = []
+        for (const index in restNames) {
+          const name = restNames[index]
+          if (/^note:/.test(name)) {
+            noteId = name
+            break
+          } else {
+            folderNames.push(name)
+          }
+        }
+
+        return ['/' + folderNames.join('/'), noteId]
       }
-      return null
+      return [null, '']
     },
     [pathname]
   )
@@ -63,7 +77,6 @@ export default () => {
     [currentStorage, currentFolderPathname, pathname]
   )
 
-  const currentNoteId = ''
   const currentNote = null
 
   const createNote = useCallback(
@@ -82,6 +95,7 @@ export default () => {
   return (
     <>
       <NoteList
+        storageId={currentStorageId}
         notes={notes}
         currentNoteId={currentNoteId}
         createNote={createNote}

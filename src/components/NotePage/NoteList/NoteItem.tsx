@@ -13,10 +13,13 @@ const StyledNoteListItem = styled.div<{ active: boolean }>`
 type NoteItemProps = {
   note: NoteDoc
   active: boolean
+  storageId: string
 }
 
-export default ({ note, active }: NoteItemProps) => {
-  const noteHash = `#${note._id}`
+export default ({ note, active, storageId }: NoteItemProps) => {
+  const noteHash = `/storages/${storageId}/notes${note.folderPathname}/${
+    note._id
+  }`
 
   return (
     <StyledNoteListItem active={active}>
