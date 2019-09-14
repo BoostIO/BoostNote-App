@@ -77,7 +77,14 @@ export default () => {
     [currentStorage, currentFolderPathname, pathname]
   )
 
-  const currentNote = null
+  const currentNote = useMemo(
+    () => {
+      if (currentStorage == null) return null
+      if (currentNoteId === '') return null
+      return currentStorage.noteMap[currentNoteId]
+    },
+    [currentNoteId, currentStorage]
+  )
 
   const createNote = useCallback(
     async () => {
