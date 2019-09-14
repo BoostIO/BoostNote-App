@@ -88,15 +88,14 @@ export default () => {
 
   const createNote = useCallback(
     async () => {
-      const noteDoc = await db.createNote(currentStorageId, {
+      await db.createNote(currentStorageId, {
         folderPathname:
           currentFolderPathname == null ? '/' : currentFolderPathname
       })
-      console.log(noteDoc)
     },
     [db, currentFolderPathname, currentStorageId]
   )
-  const updateNote = async () => {}
+
   const removeNote = async () => {}
 
   return (
@@ -113,7 +112,7 @@ export default () => {
         <NoteDetail
           storageId={currentStorageId}
           note={currentNote}
-          updateNote={updateNote}
+          updateNote={db.updateNote}
           removeNote={removeNote}
         />
       )}

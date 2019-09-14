@@ -1,6 +1,4 @@
-import React, { useState, useRef } from 'react'
-// import { useDb } from '../../../lib/db'
-// import { useRouter } from '../../../lib/router'
+import React from 'react'
 import { NoteDoc } from '../../../lib/db/types'
 
 type NoteDetailProps = {
@@ -10,52 +8,131 @@ type NoteDetailProps = {
     storageId: string,
     noteId: string,
     { content }: { content: string }
-  ) => Promise<void>
+  ) => Promise<void | NoteDoc>
   removeNote: (storageId: string, noteId: string) => Promise<void>
 }
 
-export default ({
-  storageId,
-  note,
-  // updateNote,
-  removeNote
-}: NoteDetailProps) => {
-  // const db = useDb()
-  // const router = useRouter()
+type NoteDetailState = {
+  prevStorageId: string
+  prevNoteId: string
+  content: string
+}
 
-  const [content, setContent] = useState('')
-  const [prevNoteId, setPrevNoteId] = useState('')
-  const [prevStorageId, setPrevStorageId] = useState('')
-  const contentTextareaRef = useRef(null)
+export default class NoteDetail extends React.Component<
+  NoteDetailProps,
+  NoteDetailState
+> {
+  state = {
+    prevStorageId: '',
+    prevNoteId: '',
+    content: ''
+  }
+  contentTextareaRef = React.createRef<HTMLTextAreaElement>()
 
-  if (storageId !== prevStorageId || note._id !== prevNoteId) {
-    setContent(note.content)
-    setPrevNoteId(note._id)
-    setPrevStorageId(storageId)
+  static getDerivedStateFromProps(
+    props: NoteDetailProps,
+    state: NoteDetailState
+  ): NoteDetailState {
+    const { note, storageId } = props
+    if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
+      return {
+        prevStorageId: storageId,
+        prevNoteId: note._id,
+        content: note.content
+      }
+    }
+    return state
   }
 
-  return (
-    <div>
-      <div>Note Detail</div>
-      {note == null ? (
-        <p>No note is selected</p>
-      ) : (
-        <>
-          <div>
-            {note._id}{' '}
-            <button onClick={() => removeNote(storageId, note._id)}>
-              Delete
-            </button>
-          </div>
-          <div>
-            <textarea
-              ref={contentTextareaRef}
-              value={content}
-              onChange={() => {}}
-            />
-          </div>
-        </>
-      )}
-    </div>
-  )
+  componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
+    const { note } = this.props
+    if (note._id !== prevState.prevNoteId && this.queued) {
+      const { content } = prevState
+      this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
+        content
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.queued) {
+      const { content, prevStorageId, prevNoteId } = this.state
+      this.saveNote(prevStorageId, prevNoteId, {
+        content
+      })
+    }
+  }
+
+  updateContent = () => {
+    this.setState(
+      {
+        content: this.contentTextareaRef.current!.value
+      },
+      () => {
+        this.queueToSave()
+      }
+    )
+  }
+
+  queued = false
+  timer: number
+
+  queueToSave = () => {
+    this.queued = true
+    if (this.timer != null) {
+      clearTimeout(this.timer)
+    }
+    this.timer = setTimeout(() => {
+      const { storageId, note } = this.props
+      const { content } = this.state
+      const {} = this.state
+      this.saveNote(storageId, note._id, { content })
+    }, 3000)
+  }
+
+  async saveNote(
+    storageId: string,
+    noteId: string,
+    { content }: { content: string }
+  ) {
+    clearTimeout(this.timer)
+    this.queued = false
+
+    const { updateNote } = this.props
+    await updateNote(storageId, noteId, {
+      content
+    })
+  }
+
+  removeNote = async () => {
+    const { storageId, note, removeNote } = this.props
+
+    await removeNote(storageId, note._id)
+  }
+
+  render() {
+    const { note } = this.props
+
+    return (
+      <div>
+        <div>Note Detail</div>
+        {note == null ? (
+          <p>No note is selected</p>
+        ) : (
+          <>
+            <div>
+              {note._id} <button onClick={this.removeNote}>Delete</button>
+            </div>
+            <div>
+              <textarea
+                ref={this.contentTextareaRef}
+                value={this.state.content}
+                onChange={this.updateContent}
+              />
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
 }
