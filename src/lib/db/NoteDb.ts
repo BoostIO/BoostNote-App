@@ -28,7 +28,7 @@ import {
 import { FOLDER_ID_PREFIX } from './consts'
 
 export default class NoteDb {
-  public initialized: boolean
+  public initialized = false
 
   constructor(
     public pouchDb: PouchDB.Database,

@@ -14,14 +14,12 @@
     "lib": ["dom", "es2015", "es2016", "es2017", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
+    "strict": true,
     "esModuleInterop": true
   }
 }

@@ -4,8 +4,8 @@ import { useState, useCallback, useEffect } from 'react'
 import { Location } from './types'
 
 export interface RouterStore extends Location {
-  push: (path: string | Location) => void
-  replace: (path: string | Location) => void
+  push: (path: string) => void
+  replace: (path: string) => void
   go: (count: number) => void
   goBack: () => void
   goForward: () => void

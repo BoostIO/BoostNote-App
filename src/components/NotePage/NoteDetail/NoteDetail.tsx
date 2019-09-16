@@ -75,7 +75,7 @@ export default class NoteDetail extends React.Component<
   }
 
   queued = false
-  timer: number
+  timer?: number
 
   queueToSave = () => {
     this.queued = true
