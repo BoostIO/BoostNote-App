@@ -1,7 +1,9 @@
+import { useMemo } from 'react'
 import path from 'path'
 import pathToRegexp from 'path-to-regexp'
 import { Location } from './types'
 import { parse as _parseUrl } from 'url'
+import { useRouter } from './store'
 
 export function normalizePathname(pathname: string): string {
   const normalizedPathname = path.normalize(pathname)
@@ -19,22 +21,6 @@ export function normalizeLocation({ pathname, ...otherProps }: Location) {
   }
 }
 
-export const storageRegexp = pathToRegexp(
-  '/storages/:storageName/:rest*',
-  undefined,
-  {
-    sensitive: true
-  }
-)
-
-export const folderRegexp = pathToRegexp(
-  '/storages/:storageName/notes/:rest*',
-  undefined,
-  {
-    sensitive: true
-  }
-)
-
 export const tagRegexp = pathToRegexp(
   '/storages/:storageName/tags/:tag',
   undefined,
@@ -50,4 +36,41 @@ export function parseUrl(urlStr: string): Location {
     hash: url.hash || '',
     query: url.query
   }
+}
+
+export const useNotesPathname = () => {
+  const { pathname } = useRouter()
+  return useMemo(
+    (): [null | string, null | string, null | string] => {
+      const names = pathname.slice(1).split('/')
+      if (names[0] !== 'storages' || names[1] == null) {
+        return [null, null, null]
+      }
+      const storageId = names[1]
+
+      if (names[2] !== 'notes') {
+        return [storageId, null, null]
+      }
+
+      const restNames = names.slice(3)
+      if (restNames[0] == null || restNames[0] === '') {
+        return [storageId, '/', null]
+      }
+
+      const folderNames = []
+      let noteId: string | null = null
+      for (const index in restNames) {
+        const name = restNames[index]
+        if (/^note:/.test(name)) {
+          noteId = name
+          break
+        } else {
+          folderNames.push(name)
+        }
+      }
+
+      return [storageId, '/' + folderNames.join('/'), noteId]
+    },
+    [pathname]
+  )
 }

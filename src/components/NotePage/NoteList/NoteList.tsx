@@ -11,7 +11,7 @@ const NoteList = styled.ul`
 type NoteListProps = {
   storageId: string
   notes: NoteDoc[]
-  currentNoteId: string
+  currentNoteId: string | null
   createNote: () => Promise<void>
 }
 

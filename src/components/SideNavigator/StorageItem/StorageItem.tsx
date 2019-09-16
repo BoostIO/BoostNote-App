@@ -11,7 +11,7 @@ import {
   StyledStorageItemFolderList
 } from './styled'
 import { NoteStorage } from '../../../lib/db/types'
-import { useRouter } from '../../../lib/router'
+import { useRouter, useNotesPathname } from '../../../lib/router'
 import { values } from '../../../lib/db/utils'
 
 type StorageItemProps = {
@@ -126,6 +126,8 @@ export default (props: StorageItemProps) => {
     ]
   )
 
+  const [currentStorageId, currentFolderPathname] = useNotesPathname()
+
   return (
     <StyledStorageItem>
       <StyledStorageItemHeader onContextMenu={openContextMenu}>
@@ -136,7 +138,7 @@ export default (props: StorageItemProps) => {
       <StyledStorageItemFolderList>
         {folders.map(folder => {
           const folderIsActive =
-            `/storages/${id}/notes${folder.pathname}` === pathname
+            id === currentStorageId && folder.pathname === currentFolderPathname
 
           return (
             <FolderItem

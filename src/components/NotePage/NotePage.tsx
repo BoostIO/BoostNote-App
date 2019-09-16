@@ -1,12 +1,7 @@
 import React, { useMemo, useCallback } from 'react'
 import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
-import {
-  useRouter,
-  storageRegexp,
-  folderRegexp,
-  tagRegexp
-} from '../../lib/router'
+import { useRouter, tagRegexp, useNotesPathname } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from './TwoPaneLayout'
 
@@ -14,48 +9,18 @@ export default () => {
   const db = useDb()
   const { pathname } = useRouter()
 
-  const currentStorageId = useMemo(
-    () => {
-      const result = storageRegexp.exec(pathname)
-      if (result == null) return ''
-      const [, storageId] = result
-      return storageId
-    },
-    [pathname]
-  )
+  const [
+    currentStorageId,
+    currentFolderPathname,
+    currentNoteId
+  ] = useNotesPathname()
 
   const currentStorage = useMemo(
     () => {
+      if (currentStorageId == null) return undefined
       return db.storageMap[currentStorageId]
     },
     [db.storageMap, currentStorageId]
-  )
-
-  const [currentFolderPathname, currentNoteId] = useMemo(
-    () => {
-      const folderRegexpResult = folderRegexp.exec(pathname)
-      if (folderRegexpResult != null) {
-        const restPathname =
-          folderRegexpResult[2] == null ? '' : `${folderRegexpResult[2]}`
-
-        let noteId = ''
-        const restNames = restPathname.split('/')
-        const folderNames = []
-        for (const index in restNames) {
-          const name = restNames[index]
-          if (/^note:/.test(name)) {
-            noteId = name
-            break
-          } else {
-            folderNames.push(name)
-          }
-        }
-
-        return ['/' + folderNames.join('/'), noteId]
-      }
-      return [null, '']
-    },
-    [pathname]
   )
 
   const notes = useMemo(
@@ -81,7 +46,7 @@ export default () => {
   const currentNote = useMemo(
     () => {
       if (currentStorage == null) return null
-      if (currentNoteId === '') return null
+      if (currentNoteId == null) return null
       return currentStorage.noteMap[currentNoteId]
     },
     [currentNoteId, currentStorage]
@@ -89,6 +54,9 @@ export default () => {
 
   const createNote = useCallback(
     async () => {
+      if (currentStorageId == null) {
+        return
+      }
       await db.createNote(currentStorageId, {
         folderPathname:
           currentFolderPathname == null ? '/' : currentFolderPathname
@@ -99,7 +67,7 @@ export default () => {
 
   const removeNote = async () => {}
 
-  return (
+  return currentStorageId != null ? (
     <TwoPaneLayout
       left={
         <NoteList
@@ -122,5 +90,7 @@ export default () => {
         )
       }
     />
+  ) : (
+    <div>Storage does not exist</div>
   )
 }
