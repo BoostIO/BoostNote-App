@@ -7,5 +7,5 @@ export const StyledStorageList = styled.ul`
 `
 
 export const StyledSideNavContainer = styled.nav`
-  border-right: solid 1px ${({ theme }) => theme.sideNav.borderColor};
+  border-right: solid 1px ${({ theme }) => theme.colors.border};
 `

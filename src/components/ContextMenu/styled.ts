@@ -9,8 +9,8 @@ export const StyledContextMenu = styled.div`
   min-width: 130px;
   position: fixed;
   z-index: ${menuZIndex};
-  background-color: ${({ theme }) => theme.contextMenu.backgroundColor};
-  border-color: ${({ theme }) => theme.contextMenu.borderColor};
+  background-color: ${({ theme }) => theme.colors.background};
+  border-color: ${({ theme }) => theme.colors.border};
   border-style: solid;
   border-width: 1px;
   padding: ${menuVerticalPadding}px 0;
@@ -30,14 +30,13 @@ export const StyledContextMenuItem = styled.button`
   display: block;
   width: 100%;
   text-align: left;
-  color: ${({ theme }) => theme.contextMenu.menuTextColor};
+  color: ${({ theme }) => theme.colors.text};
   &:hover {
-    background-color: ${({ theme }) =>
-      theme.contextMenu.menuActiveBackgroundColor};
-    color: ${({ theme }) => theme.contextMenu.menuActiveTextColor};
+    background-color: ${({ theme }) => theme.colors.active};
+    color: ${({ theme }) => theme.colors.inverseText};
   }
   &:disabled {
     background-color: transparent;
-    color: ${({ theme }) => theme.contextMenu.menuDisabledTextColor};
+    color: ${({ theme }) => theme.colors.deemedText};
   }
 `

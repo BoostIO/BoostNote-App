@@ -4,9 +4,10 @@ import { useRouter } from './store'
 export interface LinkProps {
   href: string
   children: React.ReactNode
+  className?: string
 }
 
-export const Link: FC<LinkProps> = ({ children, href }) => {
+export const Link: FC<LinkProps> = ({ children, href, className }) => {
   const router = useRouter()
 
   const push = useCallback(
@@ -18,7 +19,7 @@ export const Link: FC<LinkProps> = ({ children, href }) => {
   )
 
   return (
-    <a onClick={push} href={href}>
+    <a onClick={push} href={href} className={className}>
       {children}
     </a>
   )

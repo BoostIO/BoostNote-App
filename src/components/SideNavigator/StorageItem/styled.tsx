@@ -37,5 +37,7 @@ export const StyledNavLink = styled(
   width: 100%;
   user-select: none;
   ${({ active, theme }) =>
-    active && `background-color: ${theme.sideNav.linkActiveBackgroundColor};`}
+    active &&
+    `background-color: ${theme.colors.active};
+    color: ${theme.colors.inverseText};`}
 `

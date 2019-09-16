@@ -7,18 +7,16 @@ export const StyledAppContainer = styled.div`
   bottom: 0;
   right: 0;
   display: flex;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: ${({ theme }) => theme.app.fontSize}px;
-  background-color: ${({ theme }) => theme.app.backgroundColor};
-  color: ${({ theme }) => theme.app.textColor};
+  font-family: ${({ theme }) => theme.fontFamily};
+  font-size: ${({ theme }) => theme.fontSize}px;
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 
   button,
   input {
     outline: none;
     &:focus {
-      box-shadow: 0px 0px 0px 2px
-        ${({ theme }) => theme.button.activeBackgroundColor};
+      box-shadow: 0px 0px 0px 2px ${({ theme }) => theme.colors.active};
     }
   }
 `

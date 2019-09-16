@@ -135,11 +135,8 @@ export default (props: StorageItemProps) => {
       </StyledStorageItemHeader>
       <StyledStorageItemFolderList>
         {folders.map(folder => {
-          const folderPathname =
-            folder._id === '/'
-              ? `/storages/${id}/notes`
-              : `/storages/${id}/notes${folder._id}`
-          const folderIsActive = folderPathname === pathname
+          const folderIsActive =
+            `/storages/${id}/notes${folder.pathname}` === pathname
 
           return (
             <FolderItem

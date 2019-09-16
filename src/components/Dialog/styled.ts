@@ -18,8 +18,8 @@ export const StyledDialogBackground = styled.div`
 export const StyledDialog = styled.div`
   width: 100%;
   max-width: 450px;
-  background-color: ${({ theme }) => theme.contextMenu.backgroundColor};
-  border-color: ${({ theme }) => theme.contextMenu.borderColor};
+  background-color: ${({ theme }) => theme.colors.background};
+  border-color: ${({ theme }) => theme.colors.border};
   border-style: solid;
   padding: 20px;
   border-width: 0 1px 1px 1px;
@@ -71,8 +71,8 @@ export const StyledDialogButtonGroup = styled.div`
 `
 
 export const StyledDialogButton = styled.button`
-  background-color: ${({ theme }) => theme.button.backgroundColor};
-  color: ${({ theme }) => theme.button.textColor};
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
   padding: 5px 20px;
   border: none;
   border-radius: 4px;
@@ -80,6 +80,7 @@ export const StyledDialogButton = styled.button`
   margin-left: 16px;
   user-select: none;
   &:active {
-    background-color: ${({ theme }) => theme.button.activeBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.active};
+    color: ${({ theme }) => theme.colors.inverseText};
   }
 `
