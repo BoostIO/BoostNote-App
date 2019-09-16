@@ -40,6 +40,7 @@ const DividerGraple = styled.div`
   margin: -3px;
   z-index: 100;
   user-select: none;
+  cursor: col-resize;
 `
 
 interface DividerProps {
