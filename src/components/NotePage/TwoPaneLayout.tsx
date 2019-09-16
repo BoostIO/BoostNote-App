@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import styled, { defaultTheme } from '../../lib/styled'
 import throttle from 'lodash/throttle'
+import { clamp } from 'ramda'
 
 interface TwoPaneLayoutProps {
   left: React.ReactNode
@@ -8,18 +9,32 @@ interface TwoPaneLayoutProps {
 }
 
 const defaultLeftWidth = 250
+const minLeftWidth = 100
+const maxLeftWidth = 500
 
 const Container = styled.div`
-  display: flex;
+  flex: 1px;
+  position: relative;
+  overflow: hidden;
 `
 
 const Pane = styled.div`
-  flex: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
 `
 
-const Divider = styled.div`
+const DividerBorder = styled.div`
   width: 1px;
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.border};
+`
+
+const DividerGraple = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
   border: 3px solid;
   box-sizing: content-box;
   margin: -3px;
@@ -27,17 +42,40 @@ const Divider = styled.div`
   user-select: none;
 `
 
+interface DividerProps {
+  onMouseDown: React.MouseEventHandler
+  dragging: boolean
+  leftWidth: number
+}
+
+const Divider = ({ onMouseDown, dragging, leftWidth }: DividerProps) => (
+  <DividerGraple
+    onMouseDown={onMouseDown}
+    style={{
+      left: `${leftWidth}px`,
+      borderColor: dragging ? defaultTheme.colors.active : 'transparent'
+    }}
+  >
+    <DividerBorder />
+  </DividerGraple>
+)
+
 const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
   const [leftWidth, setLeftWidth] = useState(defaultLeftWidth)
   const [dragging, setDragging] = useState(false)
   const mouseupListenerIsSetRef = useRef(false)
   const dragStartXPositionRef = useRef(0)
+  const previousLeftWidthRef = useRef(leftWidth)
 
-  const startDragging = useCallback((event: React.MouseEvent) => {
-    event.preventDefault()
-    dragStartXPositionRef.current = event.clientX
-    setDragging(true)
-  }, [])
+  const startDragging = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      dragStartXPositionRef.current = event.clientX
+      previousLeftWidthRef.current = leftWidth
+      setDragging(true)
+    },
+    [leftWidth]
+  )
 
   const endDragging = useCallback((event: MouseEvent) => {
     event.preventDefault()
@@ -47,7 +85,10 @@ const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
   const moveDragging = useCallback(
     throttle((event: MouseEvent) => {
       event.preventDefault()
-      console.log(event.clientX - dragStartXPositionRef.current)
+      const diff = event.clientX - dragStartXPositionRef.current
+      setLeftWidth(
+        clamp(minLeftWidth, maxLeftWidth, previousLeftWidthRef.current + diff)
+      )
     }, 1000 / 30),
     []
   )
@@ -80,14 +121,13 @@ const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
 
   return (
     <Container>
-      <Pane style={{ width: leftWidth }}>{left}</Pane>
+      <Pane style={{ width: `${leftWidth}px`, left: 0 }}>{left}</Pane>
       <Divider
         onMouseDown={startDragging}
-        style={{
-          borderColor: dragging ? defaultTheme.colors.active : 'transparent'
-        }}
+        leftWidth={leftWidth}
+        dragging={dragging}
       />
-      <Pane>{right}</Pane>
+      <Pane style={{ left: `${leftWidth + 1}px`, right: 0 }}>{right}</Pane>
     </Container>
   )
 }
