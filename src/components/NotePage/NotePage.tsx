@@ -8,6 +8,7 @@ import {
   tagRegexp
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
+import TwoPaneLayout from './TwoPaneLayout'
 
 export default () => {
   const db = useDb()
@@ -99,23 +100,27 @@ export default () => {
   const removeNote = async () => {}
 
   return (
-    <>
-      <NoteList
-        storageId={currentStorageId}
-        notes={notes}
-        currentNoteId={currentNoteId}
-        createNote={createNote}
-      />
-      {currentNote == null ? (
-        <div>No note selected</div>
-      ) : (
-        <NoteDetail
+    <TwoPaneLayout
+      left={
+        <NoteList
           storageId={currentStorageId}
-          note={currentNote}
-          updateNote={db.updateNote}
-          removeNote={removeNote}
+          notes={notes}
+          currentNoteId={currentNoteId}
+          createNote={createNote}
         />
-      )}
-    </>
+      }
+      right={
+        currentNote == null ? (
+          <div>No note selected</div>
+        ) : (
+          <NoteDetail
+            storageId={currentStorageId}
+            note={currentNote}
+            updateNote={db.updateNote}
+            removeNote={removeNote}
+          />
+        )
+      }
+    />
   )
 }
