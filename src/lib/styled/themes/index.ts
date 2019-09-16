@@ -4,7 +4,7 @@ const inverseTextColor = '#FFF'
 const backgroundColor = '#FFF'
 const alternativeBackgroundColor = '#F8F8F8'
 const activeColor = '#63AEFC'
-const borderColor = '#F5F5F5'
+const borderColor = '#E5E5E5'
 
 export const defaultTheme = {
   colors: {
