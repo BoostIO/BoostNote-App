@@ -51,11 +51,6 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
-
-    new ForkTsCheckerWebpackPlugin({
-      checkSyntacticErrors: true,
-      watch: ['./src'] // optional but improves performance (fewer stat calls)
-    }),
     new HtmlWebpackPlugin()
   ],
 
