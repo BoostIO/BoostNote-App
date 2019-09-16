@@ -1,6 +1,12 @@
 import React from 'react'
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
+import styled from '../../../lib/styled'
+
+const NoteList = styled.ul`
+  margin: 0;
+  padding: 0;
+`
 
 type NoteListProps = {
   storageId: string
@@ -17,8 +23,7 @@ export default ({
 }: NoteListProps) => {
   return (
     <div>
-      <div>Note List</div>
-      <ul>
+      <NoteList>
         {notes.map(note => {
           const noteIsCurrentNote = note._id === currentNoteId
           return (
@@ -30,7 +35,7 @@ export default ({
             />
           )
         })}
-      </ul>
+      </NoteList>
       {notes.length === 0 && <p>No notes</p>}
       <div>
         <button onClick={createNote}>New note</button>
