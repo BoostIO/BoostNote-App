@@ -1,5 +1,6 @@
 import React from 'react'
 import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
+import { isTagNameValid } from '../../../lib/db/utils'
 
 type NoteDetailProps = {
   storageId: string
@@ -18,6 +19,7 @@ type NoteDetailState = {
   title: string
   content: string
   tags: string[]
+  newTagName: string
 }
 
 export default class NoteDetail extends React.Component<
@@ -29,9 +31,11 @@ export default class NoteDetail extends React.Component<
     prevNoteId: '',
     title: '',
     content: '',
-    tags: []
+    tags: [],
+    newTagName: ''
   }
   titleInputRef = React.createRef<HTMLInputElement>()
+  newTagNameInputRef = React.createRef<HTMLInputElement>()
   contentTextareaRef = React.createRef<HTMLTextAreaElement>()
 
   static getDerivedStateFromProps(
@@ -45,7 +49,8 @@ export default class NoteDetail extends React.Component<
         prevNoteId: note._id,
         title: note.title,
         content: note.content,
-        tags: note.tags
+        tags: note.tags,
+        newTagName: ''
       }
     }
     return state
@@ -94,6 +99,35 @@ export default class NoteDetail extends React.Component<
         this.queueToSave()
       }
     )
+  }
+
+  updateNewTagName = () => {
+    this.setState({
+      newTagName: this.newTagNameInputRef.current!.value
+    })
+  }
+
+  handleNewTagNameInputKeyDown: React.KeyboardEventHandler = event => {
+    switch (event.key) {
+      case 'Enter':
+        event.preventDefault()
+        this.appendNewTag()
+        return
+    }
+  }
+
+  appendNewTag = () => {
+    if (isTagNameValid(this.state.newTagName)) {
+      this.setState(
+        prevState => ({
+          newTagName: '',
+          tags: [...prevState.tags, prevState.newTagName]
+        }),
+        () => {
+          this.queueToSave()
+        }
+      )
+    }
   }
 
   queued = false
@@ -149,16 +183,21 @@ export default class NoteDetail extends React.Component<
             <div>
               <div>
                 <input
+                  ref={this.titleInputRef}
                   value={this.state.title}
                   onChange={this.updateTitle}
-                  ref={this.titleInputRef}
                 />
               </div>
               <div>
                 {this.state.tags.map(tag => (
                   <div key={tag}>{tag}</div>
                 ))}
-                <input />
+                <input
+                  ref={this.newTagNameInputRef}
+                  value={this.state.newTagName}
+                  onChange={this.updateNewTagName}
+                  onKeyDown={this.handleNewTagNameInputKeyDown}
+                />
               </div>
               <textarea
                 ref={this.contentTextareaRef}
