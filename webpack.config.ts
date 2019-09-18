@@ -1,6 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import express from 'express'
 
 module.exports = {
   entry: [
@@ -34,6 +35,17 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        loader: 'url-loader',
+        options: {
+          limit: 8192
+        }
+      },
+      {
         test: /\.tsx?$/,
         use: [{ loader: 'ts-loader', options: { happyPackMode: true } }],
         exclude: /node_modules/
@@ -60,8 +72,19 @@ module.exports = {
     historyApiFallback: true,
     // respond to 404s with index.html
 
-    hot: true
+    hot: true,
     // enable HMR on the server
+
+    before: function(app, server) {
+      app.use(
+        '/codemirror/mode',
+        express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
+      )
+      app.use(
+        '/codemirror/addon',
+        express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
+      )
+    }
   },
 
   resolve: {

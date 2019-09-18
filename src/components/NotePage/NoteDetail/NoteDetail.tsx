@@ -5,6 +5,7 @@ import TagList from './TagList'
 import styled from '../../../lib/styled'
 import Icon from '../../atoms/Icon'
 import { mdiTrashCan } from '@mdi/js'
+import CodeEditor from '../../atoms/CodeEditor'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -38,7 +39,8 @@ const StyledNoteDetailContainer = styled.div`
     flex: 1;
     margin: 2px;
     position: relative;
-    textarea {
+    border-top: solid 1px ${({ theme }) => theme.colors.border};
+    & > textarea {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -47,6 +49,13 @@ const StyledNoteDetailContainer = styled.div`
       width: 100%;
       border: none;
       box-sizing: border-box;
+    }
+    .CodeMirror {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 `
@@ -139,10 +148,10 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  updateContent = () => {
+  updateContent = (newValue: string) => {
     this.setState(
       {
-        content: this.contentTextareaRef.current!.value
+        content: newValue
       },
       () => {
         this.queueToSave()
@@ -264,8 +273,8 @@ export default class NoteDetail extends React.Component<
               />
             </div>
             <div className='contentSection'>
-              <textarea
-                ref={this.contentTextareaRef}
+              <CodeEditor
+                key={note._id}
                 value={this.state.content}
                 onChange={this.updateContent}
               />
