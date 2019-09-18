@@ -9,7 +9,7 @@
     "url": "https://github.com/BoostIO/boost.git"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open",
     "start-dev": "NODE_ENV=development electron app/index.js",
     "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
@@ -44,6 +44,7 @@
     "@types/html-webpack-plugin": "^3.2.0",
     "@types/jest": "^23.3.9",
     "@types/lodash": "^4.14.138",
+    "@types/node": "^12.7.5",
     "@types/prettier": "^1.15.1",
     "@types/ramda": "^0.25.45",
     "@types/react": "^16.9.2",
@@ -57,6 +58,7 @@
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
     "babel-jest": "^24.9.0",
+    "cross-env": "^6.0.0",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.2.0",
     "eslint-plugin-prettier": "^3.1.0",
@@ -68,6 +70,7 @@
     "react-hot-loader": "^4.12.11",
     "react-test-renderer": "^16.9.0",
     "ts-loader": "^5.3.0",
+    "ts-node": "^8.4.1",
     "type-fest": "^0.7.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",

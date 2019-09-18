@@ -1,6 +1,6 @@
-import path = require('path')
-import webpack = require('webpack')
-import HtmlWebpackPlugin = require('html-webpack-plugin')
+import path from 'path'
+import webpack from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 module.exports = {
   entry: [
