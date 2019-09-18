@@ -1,6 +1,7 @@
 import React from 'react'
 import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
+import TagList from './TagList'
 
 type NoteDetailProps = {
   storageId: string
@@ -130,6 +131,17 @@ export default class NoteDetail extends React.Component<
     }
   }
 
+  removeTagByName = (tagName: string) => {
+    this.setState(
+      prevState => ({
+        tags: prevState.tags.filter(aTagName => aTagName !== tagName)
+      }),
+      () => {
+        this.queueToSave()
+      }
+    )
+  }
+
   queued = false
   timer?: number
 
@@ -189,12 +201,14 @@ export default class NoteDetail extends React.Component<
                 />
               </div>
               <div>
-                {this.state.tags.map(tag => (
-                  <div key={tag}>{tag}</div>
-                ))}
+                <TagList
+                  tags={this.state.tags}
+                  removeTagByName={this.removeTagByName}
+                />
                 <input
                   ref={this.newTagNameInputRef}
                   value={this.state.newTagName}
+                  placeholder='New Tag...'
                   onChange={this.updateNewTagName}
                   onKeyDown={this.handleNewTagNameInputKeyDown}
                 />
