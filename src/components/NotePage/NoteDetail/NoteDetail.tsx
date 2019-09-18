@@ -1,5 +1,5 @@
 import React from 'react'
-import { NoteDoc } from '../../../lib/db/types'
+import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 
 type NoteDetailProps = {
   storageId: string
@@ -7,7 +7,7 @@ type NoteDetailProps = {
   updateNote: (
     storageId: string,
     noteId: string,
-    { content }: { content: string }
+    props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
   removeNote: (storageId: string, noteId: string) => Promise<void>
 }
@@ -15,7 +15,9 @@ type NoteDetailProps = {
 type NoteDetailState = {
   prevStorageId: string
   prevNoteId: string
+  title: string
   content: string
+  tags: string[]
 }
 
 export default class NoteDetail extends React.Component<
@@ -25,8 +27,11 @@ export default class NoteDetail extends React.Component<
   state = {
     prevStorageId: '',
     prevNoteId: '',
-    content: ''
+    title: '',
+    content: '',
+    tags: []
   }
+  titleInputRef = React.createRef<HTMLInputElement>()
   contentTextareaRef = React.createRef<HTMLTextAreaElement>()
 
   static getDerivedStateFromProps(
@@ -38,7 +43,9 @@ export default class NoteDetail extends React.Component<
       return {
         prevStorageId: storageId,
         prevNoteId: note._id,
-        content: note.content
+        title: note.title,
+        content: note.content,
+        tags: note.tags
       }
     }
     return state
@@ -47,20 +54,35 @@ export default class NoteDetail extends React.Component<
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { note } = this.props
     if (note._id !== prevState.prevNoteId && this.queued) {
-      const { content } = prevState
+      const { title, content, tags } = prevState
       this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
-        content
+        title,
+        content,
+        tags
       })
     }
   }
 
   componentWillUnmount() {
     if (this.queued) {
-      const { content, prevStorageId, prevNoteId } = this.state
+      const { title, content, tags, prevStorageId, prevNoteId } = this.state
       this.saveNote(prevStorageId, prevNoteId, {
-        content
+        title,
+        content,
+        tags
       })
     }
+  }
+
+  updateTitle = () => {
+    this.setState(
+      {
+        title: this.titleInputRef.current!.value
+      },
+      () => {
+        this.queueToSave()
+      }
+    )
   }
 
   updateContent = () => {
@@ -84,23 +106,25 @@ export default class NoteDetail extends React.Component<
     }
     this.timer = setTimeout(() => {
       const { storageId, note } = this.props
-      const { content } = this.state
-      const {} = this.state
-      this.saveNote(storageId, note._id, { content })
+      const { title, content, tags } = this.state
+
+      this.saveNote(storageId, note._id, { title, content, tags })
     }, 3000)
   }
 
   async saveNote(
     storageId: string,
     noteId: string,
-    { content }: { content: string }
+    { title, content, tags }: { title: string; content: string; tags: string[] }
   ) {
     clearTimeout(this.timer)
     this.queued = false
 
     const { updateNote } = this.props
     await updateNote(storageId, noteId, {
-      content
+      title,
+      content,
+      tags
     })
   }
 
@@ -115,7 +139,6 @@ export default class NoteDetail extends React.Component<
 
     return (
       <div>
-        <div>Note Detail</div>
         {note == null ? (
           <p>No note is selected</p>
         ) : (
@@ -124,6 +147,19 @@ export default class NoteDetail extends React.Component<
               {note._id} <button onClick={this.removeNote}>Delete</button>
             </div>
             <div>
+              <div>
+                <input
+                  value={this.state.title}
+                  onChange={this.updateTitle}
+                  ref={this.titleInputRef}
+                />
+              </div>
+              <div>
+                {this.state.tags.map(tag => (
+                  <div key={tag}>{tag}</div>
+                ))}
+                <input />
+              </div>
               <textarea
                 ref={this.contentTextareaRef}
                 value={this.state.content}
