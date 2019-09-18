@@ -2,6 +2,54 @@ import React from 'react'
 import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
+import styled from '../../../lib/styled'
+import Icon from '../../atoms/Icon'
+import { mdiTrashCan } from '@mdi/js'
+
+const StyledNoteDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .titleSection {
+    display: flex;
+    margin-bottom: 2px;
+    input {
+      margin: 2px;
+      font-size: 24px;
+      border: none;
+      height: 40px;
+      padding: 0 4px;
+      flex: 1;
+    }
+  }
+
+  .tagSection {
+    display: flex;
+    margin-bottom: 2px;
+
+    input {
+      border: none;
+      margin-left: 2px;
+      padding: 0 2px;
+    }
+  }
+
+  .contentSection {
+    flex: 1;
+    margin: 2px;
+    position: relative;
+    textarea {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      resize: none;
+      padding: 4px;
+      width: 100%;
+      border: none;
+      box-sizing: border-box;
+    }
+  }
+`
 
 type NoteDetailProps = {
   storageId: string
@@ -184,35 +232,38 @@ export default class NoteDetail extends React.Component<
     const { note } = this.props
 
     return (
-      <div>
+      <StyledNoteDetailContainer>
         {note == null ? (
           <p>No note is selected</p>
         ) : (
           <>
             <div>
-              {note._id} <button onClick={this.removeNote}>Delete</button>
+              {note._id}{' '}
+              <button onClick={this.removeNote}>
+                <Icon path={mdiTrashCan} />
+              </button>
             </div>
-            <div>
-              <div>
-                <input
-                  ref={this.titleInputRef}
-                  value={this.state.title}
-                  onChange={this.updateTitle}
-                />
-              </div>
-              <div>
-                <TagList
-                  tags={this.state.tags}
-                  removeTagByName={this.removeTagByName}
-                />
-                <input
-                  ref={this.newTagNameInputRef}
-                  value={this.state.newTagName}
-                  placeholder='New Tag...'
-                  onChange={this.updateNewTagName}
-                  onKeyDown={this.handleNewTagNameInputKeyDown}
-                />
-              </div>
+            <div className='titleSection'>
+              <input
+                ref={this.titleInputRef}
+                value={this.state.title}
+                onChange={this.updateTitle}
+              />
+            </div>
+            <div className='tagSection'>
+              <TagList
+                tags={this.state.tags}
+                removeTagByName={this.removeTagByName}
+              />
+              <input
+                ref={this.newTagNameInputRef}
+                value={this.state.newTagName}
+                placeholder='New Tag...'
+                onChange={this.updateNewTagName}
+                onKeyDown={this.handleNewTagNameInputKeyDown}
+              />
+            </div>
+            <div className='contentSection'>
               <textarea
                 ref={this.contentTextareaRef}
                 value={this.state.content}
@@ -221,7 +272,7 @@ export default class NoteDetail extends React.Component<
             </div>
           </>
         )}
-      </div>
+      </StyledNoteDetailContainer>
     )
   }
 }
