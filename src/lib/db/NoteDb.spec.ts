@@ -1,6 +1,12 @@
 import NoteDb from './NoteDb'
 import PouchDB from './PouchDB'
-import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
+import {
+  getFolderId,
+  getTagId,
+  generateNoteId,
+  getNow,
+  sortByTitle
+} from './utils'
 import { NoteDoc, FolderDoc, ExceptRev } from './types'
 
 let noteDbCount = 0
@@ -652,7 +658,7 @@ describe('NoteDb', () => {
       const result1 = await noteDb.findNotesByTag('tag1')
 
       // Then
-      expect(result1).toEqual([
+      expect(sortByTitle(result1)).toEqual([
         {
           _id: note1._id,
           _rev: note1._rev,
@@ -683,7 +689,7 @@ describe('NoteDb', () => {
       const result2 = await noteDb.findNotesByTag('tag2')
 
       // Then
-      expect(result2).toEqual([
+      expect(sortByTitle(result2)).toEqual([
         {
           _id: note2._id,
           _rev: note2._rev,
