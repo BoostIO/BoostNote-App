@@ -1,6 +1,5 @@
 import React from 'react'
-import CodeMirror from 'codemirror'
-import 'codemirror/mode/markdown/markdown'
+import CodeMirror from '../../lib/CodeMirror'
 
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
@@ -26,6 +25,13 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       defaultCodeMirrorOptions
     )
     this.codeMirror.on('change', this.handleCodeMirrorChange)
+    window.addEventListener('codemirror-mode-load', this.reloadOptions)
+  }
+
+  reloadOptions = () => {
+    if (this.codeMirror != null) {
+      this.codeMirror.setOption('mode', this.codeMirror.getOption('mode'))
+    }
   }
 
   componentDidUpdate() {
@@ -41,6 +47,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
     }
+    window.removeEventListener('codemirror-mode-load', this.reloadOptions)
   }
 
   handleCodeMirrorChange = (
