@@ -36,7 +36,7 @@ function loadMode(_CodeMirror: any) {
   }
 
   async function requireMode(mode: string) {
-    await import(`codemirror/mode/${mode}/${mode}`)
+    await import(`codemirror/mode/${mode}/${mode}.js`)
     window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
   }
 
