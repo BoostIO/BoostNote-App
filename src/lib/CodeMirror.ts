@@ -1,6 +1,8 @@
 import CodeMirror from 'codemirror'
+import 'codemirror/addon/runmode/runmode'
 import 'codemirror/addon/mode/overlay'
 import 'codemirror/mode/markdown/markdown'
+import debounce from 'lodash/debounce'
 
 window.CodeMirror = CodeMirror
 
@@ -22,6 +24,23 @@ declare module 'codemirror' {
   }
 
   function findModeByMIME(mime: string): ModeInfo | undefined
+  function findModeByName(name: string): ModeInfo | undefined
+
+  function runMode(
+    text: string,
+    modespec: any,
+    callback: HTMLElement | ((text: string, style: string | null) => void),
+    options?: { tabSize?: number; state?: any }
+  ): void
+}
+
+const dispatchModeLoad = debounce(() => {
+  window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
+}, 300)
+
+export async function requireMode(mode: string) {
+  await import(`codemirror/mode/${mode}/${mode}.js`)
+  dispatchModeLoad()
 }
 
 function loadMode(_CodeMirror: any) {
@@ -35,15 +54,10 @@ function loadMode(_CodeMirror: any) {
     return result
   }
 
-  async function requireMode(mode: string) {
-    await import(`codemirror/mode/${mode}/${mode}.js`)
-    window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
-  }
-
   const originalGetMode = CodeMirror.getMode
   _CodeMirror.getMode = (config: CodeMirror.EditorConfiguration, mime: any) => {
     const modeObj = originalGetMode(config, mime)
-    if (modeObj.name === 'null') {
+    if (modeObj.name === 'null' && typeof mime === 'string') {
       const mode = findModeByMIME(mime)
       if (mode != null) {
         requireMode(mode.mode)
