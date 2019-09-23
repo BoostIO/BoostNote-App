@@ -6,6 +6,7 @@ import styled from '../../../lib/styled'
 import Icon from '../../atoms/Icon'
 import { mdiTrashCan } from '@mdi/js'
 import CodeEditor from '../../atoms/CodeEditor'
+import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -78,19 +79,21 @@ type NoteDetailState = {
   content: string
   tags: string[]
   newTagName: string
+  mode: 'edit' | 'preview' | 'split'
 }
 
 export default class NoteDetail extends React.Component<
   NoteDetailProps,
   NoteDetailState
 > {
-  state = {
+  state: NoteDetailState = {
     prevStorageId: '',
     prevNoteId: '',
     title: '',
     content: '',
     tags: [],
-    newTagName: ''
+    newTagName: '',
+    mode: 'edit'
   }
   titleInputRef = React.createRef<HTMLInputElement>()
   newTagNameInputRef = React.createRef<HTMLInputElement>()
@@ -108,7 +111,8 @@ export default class NoteDetail extends React.Component<
         title: note.title,
         content: note.content,
         tags: note.tags,
-        newTagName: ''
+        newTagName: '',
+        mode: state.mode
       }
     }
     return state
@@ -237,6 +241,18 @@ export default class NoteDetail extends React.Component<
     await removeNote(storageId, note._id)
   }
 
+  selectEditMode = () => {
+    this.setState({ mode: 'edit' })
+  }
+
+  selectPreviewMode = () => {
+    this.setState({ mode: 'preview' })
+  }
+
+  selectSplitMode = () => {
+    this.setState({ mode: 'split' })
+  }
+
   render() {
     const { note } = this.props
 
@@ -248,6 +264,11 @@ export default class NoteDetail extends React.Component<
           <>
             <div>
               {note._id}{' '}
+              <div>
+                <button onClick={this.selectEditMode}>Edit</button>
+                <button onClick={this.selectPreviewMode}>Preview</button>
+                <button onClick={this.selectSplitMode}>Split</button>
+              </div>
               <button onClick={this.removeNote}>
                 <Icon path={mdiTrashCan} />
               </button>
@@ -273,11 +294,15 @@ export default class NoteDetail extends React.Component<
               />
             </div>
             <div className='contentSection'>
-              <CodeEditor
-                key={note._id}
-                value={this.state.content}
-                onChange={this.updateContent}
-              />
+              {this.state.mode === 'edit' ? (
+                <CodeEditor
+                  key={note._id}
+                  value={this.state.content}
+                  onChange={this.updateContent}
+                />
+              ) : (
+                <MarkdownPreviewer content={this.state.content} />
+              )}
             </div>
           </>
         )}
