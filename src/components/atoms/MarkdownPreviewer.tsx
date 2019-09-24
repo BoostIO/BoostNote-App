@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import unified from 'unified'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
+import unified, { Plugin } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
@@ -16,7 +16,7 @@ import useForceUpdate from 'use-force-update'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
-interface Element extends Node {
+interface Element extends Parent {
   type: 'element'
   properties: { [key: string]: any }
 }
@@ -27,115 +27,117 @@ function getMime(name: string) {
   return modeInfo.mime || modeInfo.mimes![0]
 }
 
+interface RehypeCodeMirrorOptions {
+  ignoreMissing: boolean
+  plainText: string[]
+  theme: string
+}
+
+function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
+  const settings = options || {}
+  const ignoreMissing = settings.ignoreMissing || false
+  const theme = settings.theme || 'default'
+  const plainText = settings.plainText || []
+  return function(tree: Node) {
+    visit<Element>(tree, 'element', visitor)
+
+    return tree
+
+    function visitor(node: Element, _index: number, parent: Node) {
+      const props = node.properties
+
+      if (!parent || parent.tagName !== 'pre' || node.tagName !== 'code') {
+        return
+      }
+
+      const lang = language(node)
+
+      if (lang === false || plainText.indexOf(lang) !== -1) {
+        return
+      }
+
+      if (!props.className) {
+        props.className = []
+      }
+
+      if (props.className.indexOf(name) === -1) {
+        props.className.unshift(name)
+      }
+
+      const text = toText(parent)
+      const cmResult = [] as Node[]
+      if (lang != null) {
+        const mime = getMime(lang)
+        if (mime != null) {
+          CodeMirror.runMode(text, mime, (text, style) => {
+            cmResult.push(
+              h(
+                'span',
+                {
+                  className: style
+                    ? 'cm-' + style.replace(/ +/g, ' cm-')
+                    : undefined
+                },
+                text
+              )
+            )
+          })
+        } else if (!ignoreMissing) {
+          throw new Error(`Unknown language: \`${lang}\` is not registered`)
+        }
+      }
+      const result = {
+        language: lang,
+        value: cmResult
+      }
+
+      props.className.push(`cm-s-${theme}`)
+      if (!lang && result.language) {
+        props.className.push('language-' + result.language)
+      }
+
+      node.children = result.value
+    }
+
+    // Get the programming language of `node`.
+    function language(node: Element) {
+      const className = node.properties.className || []
+      const length = className.length
+      let index = -1
+      let value
+
+      while (++index < length) {
+        value = className[index]
+
+        if (value === 'no-highlight' || value === 'nohighlight') {
+          return false
+        }
+
+        if (value.slice(0, 5) === 'lang-') {
+          return value.slice(5)
+        }
+
+        if (value.slice(0, 9) === 'language-') {
+          return value.slice(9)
+        }
+      }
+
+      return null
+    }
+  }
+}
+const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
+  [
+    {
+      ignoreMissing?: boolean
+      plainText?: string[]
+    }?
+  ]
+>
 const markdownProcessor = unified()
   .use(remarkParse)
   .use(remarkRehype, { allowDangerousHTML: false })
-  .use((options: any) => {
-    const settings = options || {}
-    const detect = settings.subset !== false
-    const ignoreMissing = settings.ignoreMissing
-    const plainText = settings.plainText || []
-    return function(tree: Parent) {
-      visit<Element>(tree, 'element', visitor)
-
-      function visitor(node: Element, _index: number, parent: Node) {
-        const props = node.properties
-        let result
-
-        if (!parent || parent.tagName !== 'pre' || node.tagName !== 'code') {
-          return
-        }
-
-        const lang = language(node)
-
-        if (
-          lang === false ||
-          (!lang && !detect) ||
-          plainText.indexOf(lang) !== -1
-        ) {
-          return
-        }
-
-        if (!props.className) {
-          props.className = []
-        }
-
-        if (props.className.indexOf(name) === -1) {
-          props.className.unshift(name)
-        }
-
-        try {
-          const text = toText(parent)
-          const cmResult = [] as Node[]
-          if (lang != null) {
-            const mime = getMime(lang)
-            if (mime != null) {
-              CodeMirror.runMode(text, mime, (text, style) => {
-                cmResult.push(
-                  h(
-                    'span',
-                    {
-                      className: style
-                        ? 'cm-' + style.replace(/ +/g, ' cm-')
-                        : undefined
-                    },
-                    text
-                  )
-                )
-              })
-            }
-          }
-          result = {
-            language: lang,
-            value: cmResult
-          }
-        } catch (error) {
-          if (
-            error &&
-            ignoreMissing &&
-            /Unknown language/.test(error.message)
-          ) {
-            return
-          }
-
-          throw error
-        }
-
-        props.className.push('cm-s-default')
-        if (!lang && result.language) {
-          props.className.push('language-' + result.language)
-        }
-
-        node.children = result.value
-      }
-
-      // Get the programming language of `node`.
-      function language(node: Element) {
-        const className = node.properties.className || []
-        const length = className.length
-        let index = -1
-        let value
-
-        while (++index < length) {
-          value = className[index]
-
-          if (value === 'no-highlight' || value === 'nohighlight') {
-            return false
-          }
-
-          if (value.slice(0, 5) === 'lang-') {
-            return value.slice(5)
-          }
-
-          if (value.slice(0, 9) === 'language-') {
-            return value.slice(9)
-          }
-        }
-
-        return null
-      }
-    }
-  })
+  .use(rehypeCodeMirror, { ignoreMissing: true })
   .use(rehypeRaw)
   .use(rehypeSanitize, schema)
   .use(rehypeReact, { createElement: React.createElement })
@@ -182,8 +184,6 @@ const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
       {renderedContent}
     </div>
   )
-
-  return <div>{markdownProcessor.processSync(content).contents}</div>
 }
 
 export default MarkdownPreviewer
