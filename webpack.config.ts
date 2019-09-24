@@ -47,7 +47,7 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: [{ loader: 'ts-loader', options: { happyPackMode: true } }],
+        use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
         exclude: /node_modules/
       }
     ]
