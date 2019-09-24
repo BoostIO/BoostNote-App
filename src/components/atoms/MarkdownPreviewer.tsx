@@ -146,15 +146,41 @@ interface MarkdownPreviewerProps {
 
 const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
+  const [rendering, setRendering] = useState(false)
+  const previousContentRef = useRef('')
+  const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
-  useEffect(
-    () => {
-      window.addEventListener('codemirror-mode-load', forceUpdate)
-      return () => {
-        window.removeEventListener('codemirror-mode-load', forceUpdate)
-      }
-    },
-    [forceUpdate]
+  const renderContent = useCallback(async (content: string) => {
+    previousContentRef.current = content
+    setRendering(true)
+
+    console.time('render')
+    const result = await markdownProcessor.process(content)
+    console.timeEnd('render')
+
+    setRendering(false)
+    setRenderedContent(result.contents)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('codemirror-mode-load', forceUpdate)
+    return () => {
+      window.removeEventListener('codemirror-mode-load', forceUpdate)
+    }
+  }, [forceUpdate])
+
+  useEffect(() => {
+    if (previousContentRef.current === content || rendering) {
+      return
+    }
+    renderContent(content)
+  }, [content, rendering, renderContent, renderedContent])
+
+  return (
+    <div>
+      {rendering && 'rendering...'}
+      {renderedContent}
+    </div>
   )
 
   return <div>{markdownProcessor.processSync(content).contents}</div>
