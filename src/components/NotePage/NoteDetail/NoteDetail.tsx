@@ -3,10 +3,9 @@ import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
 import styled from '../../../lib/styled'
-import Icon from '../../atoms/Icon'
-import { mdiTrashCan } from '@mdi/js'
 import CodeEditor from '../../atoms/CodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
+import NoteDetailToolbar from './NoteDetailToolbar'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -241,16 +240,8 @@ export default class NoteDetail extends React.Component<
     await removeNote(storageId, note._id)
   }
 
-  selectEditMode = () => {
-    this.setState({ mode: 'edit' })
-  }
-
-  selectPreviewMode = () => {
-    this.setState({ mode: 'preview' })
-  }
-
-  selectSplitMode = () => {
-    this.setState({ mode: 'split' })
+  selectMode = (mode: 'edit' | 'preview' | 'split') => {
+    this.setState({ mode })
   }
 
   render() {
@@ -262,17 +253,12 @@ export default class NoteDetail extends React.Component<
           <p>No note is selected</p>
         ) : (
           <>
-            <div>
-              {note._id}{' '}
-              <div>
-                <button onClick={this.selectEditMode}>Edit</button>
-                <button onClick={this.selectPreviewMode}>Preview</button>
-                <button onClick={this.selectSplitMode}>Split</button>
-              </div>
-              <button onClick={this.removeNote}>
-                <Icon path={mdiTrashCan} />
-              </button>
-            </div>
+            <NoteDetailToolbar
+              mode={this.state.mode}
+              note={note}
+              selectMode={this.selectMode}
+              removeNote={this.removeNote}
+            />
             <div className='titleSection'>
               <input
                 ref={this.titleInputRef}
