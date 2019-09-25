@@ -1,11 +1,6 @@
 import React, { useCallback } from 'react'
 import { NoteDoc } from '../../../lib/db/types'
-import {
-  mdiTrashCan,
-  mdiViewSplitVertical,
-  mdiNoteText,
-  mdiPencil
-} from '@mdi/js'
+import { mdiTrashCan, mdiViewSplitVertical, mdiNoteText, mdiXml } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
@@ -20,7 +15,6 @@ interface NoteDetailToolbarProps {
 
 const NoteDetailToolbar = ({
   mode,
-  note,
   selectMode,
   removeNote
 }: NoteDetailToolbarProps) => {
@@ -42,7 +36,7 @@ const NoteDetailToolbar = ({
         <ToolbarIconButton
           active={mode === 'edit'}
           onClick={selectEditMode}
-          path={mdiPencil}
+          path={mdiXml}
         />
         <ToolbarIconButton
           active={mode === 'preview'}

@@ -2,6 +2,9 @@ import React from 'react'
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
+import Toolbar from '../../atoms/Toolbar'
+import ToolbarIconButton from '../../atoms/ToolbarIconButton'
+import { mdiSquareEditOutline } from '@mdi/js'
 
 const NoteList = styled.ul`
   margin: 0;
@@ -23,6 +26,9 @@ export default ({
 }: NoteListProps) => {
   return (
     <div>
+      <Toolbar>
+        <ToolbarIconButton path={mdiSquareEditOutline} onClick={createNote} />
+      </Toolbar>
       <NoteList>
         {notes.map(note => {
           const noteIsCurrentNote = note._id === currentNoteId
@@ -37,9 +43,6 @@ export default ({
         })}
       </NoteList>
       {notes.length === 0 && <p>No notes</p>}
-      <div>
-        <button onClick={createNote}>New note</button>
-      </div>
     </div>
   )
 }
