@@ -7,6 +7,9 @@ import {
   mdiPencil
 } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
+import Toolbar from '../../atoms/Toolbar'
+import ToolbarSeparator from '../../atoms/ToolbarSeparator'
+import ToolbarButtonGroup from '../../atoms/ToolbarButtonGroup'
 
 interface NoteDetailToolbarProps {
   note: NoteDoc
@@ -34,25 +37,28 @@ const NoteDetailToolbar = ({
   }, [selectMode])
 
   return (
-    <div>
-      <ToolbarIconButton
-        active={mode === 'edit'}
-        onClick={selectEditMode}
-        path={mdiPencil}
-      />
-      <ToolbarIconButton
-        active={mode === 'preview'}
-        onClick={selectPreviewMode}
-        path={mdiNoteText}
-      />
-      <ToolbarIconButton
-        active={mode === 'split'}
-        onClick={selectSplitMode}
-        path={mdiViewSplitVertical}
-      />
+    <Toolbar>
+      <ToolbarButtonGroup>
+        <ToolbarIconButton
+          active={mode === 'edit'}
+          onClick={selectEditMode}
+          path={mdiPencil}
+        />
+        <ToolbarIconButton
+          active={mode === 'preview'}
+          onClick={selectPreviewMode}
+          path={mdiNoteText}
+        />
+        <ToolbarIconButton
+          active={mode === 'split'}
+          onClick={selectSplitMode}
+          path={mdiViewSplitVertical}
+        />
+      </ToolbarButtonGroup>
 
+      <ToolbarSeparator />
       <ToolbarIconButton onClick={removeNote} path={mdiTrashCan} />
-    </div>
+    </Toolbar>
   )
 }
 
