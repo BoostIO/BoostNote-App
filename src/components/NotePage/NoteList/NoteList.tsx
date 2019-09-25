@@ -6,9 +6,18 @@ import Toolbar from '../../atoms/Toolbar'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import { mdiSquareEditOutline } from '@mdi/js'
 
-const NoteList = styled.ul`
-  margin: 0;
-  padding: 0;
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  & > ul {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: auto;
+  }
 `
 
 type NoteListProps = {
@@ -18,31 +27,34 @@ type NoteListProps = {
   createNote: () => Promise<void>
 }
 
-export default ({
+const NoteList = ({
   notes,
   currentNoteId,
   createNote,
   storageId
 }: NoteListProps) => {
   return (
-    <div>
+    <StyledContainer>
       <Toolbar>
         <ToolbarIconButton path={mdiSquareEditOutline} onClick={createNote} />
       </Toolbar>
-      <NoteList>
+      <ul>
         {notes.map(note => {
           const noteIsCurrentNote = note._id === currentNoteId
           return (
-            <NoteItem
-              key={note._id}
-              active={noteIsCurrentNote}
-              note={note}
-              storageId={storageId}
-            />
+            <li key={note._id}>
+              <NoteItem
+                active={noteIsCurrentNote}
+                note={note}
+                storageId={storageId}
+              />
+            </li>
           )
         })}
-      </NoteList>
+      </ul>
       {notes.length === 0 && <p>No notes</p>}
-    </div>
+    </StyledContainer>
   )
 }
+
+export default NoteList
