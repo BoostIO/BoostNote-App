@@ -37,6 +37,7 @@ const StyledNoteDetailContainer = styled.div`
 
   .contentSection {
     flex: 1;
+    overflow: hidden;
     margin: 2px;
     position: relative;
     border-top: solid 1px ${({ theme }) => theme.colors.border};
@@ -56,6 +57,15 @@ const StyledNoteDetailContainer = styled.div`
       bottom: 0;
       width: 100%;
       height: 100%;
+    }
+    .MarkdownPreviewer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 0 10px;
     }
   }
 `

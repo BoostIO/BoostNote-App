@@ -179,7 +179,7 @@ const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
   }, [content, rendering, renderContent, renderedContent])
 
   return (
-    <div>
+    <div className='MarkdownPreviewer'>
       {rendering && 'rendering...'}
       {renderedContent}
     </div>
