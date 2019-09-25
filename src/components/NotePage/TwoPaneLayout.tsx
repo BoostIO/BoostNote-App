@@ -94,31 +94,28 @@ const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
     []
   )
 
-  useEffect(
-    () => {
-      if (dragging && !mouseupListenerIsSetRef.current) {
-        window.addEventListener('mouseup', endDragging)
-        window.addEventListener('mousemove', moveDragging)
-        mouseupListenerIsSetRef.current = true
-        return
-      }
+  useEffect(() => {
+    if (dragging && !mouseupListenerIsSetRef.current) {
+      window.addEventListener('mouseup', endDragging)
+      window.addEventListener('mousemove', moveDragging)
+      mouseupListenerIsSetRef.current = true
+      return
+    }
 
-      if (!dragging && mouseupListenerIsSetRef.current) {
+    if (!dragging && mouseupListenerIsSetRef.current) {
+      window.removeEventListener('mouseup', endDragging)
+      window.removeEventListener('mousemove', moveDragging)
+      mouseupListenerIsSetRef.current = false
+      return
+    }
+
+    return () => {
+      if (mouseupListenerIsSetRef.current) {
         window.removeEventListener('mouseup', endDragging)
         window.removeEventListener('mousemove', moveDragging)
-        mouseupListenerIsSetRef.current = false
-        return
       }
-
-      return () => {
-        if (mouseupListenerIsSetRef.current) {
-          window.removeEventListener('mouseup', endDragging)
-          window.removeEventListener('mousemove', moveDragging)
-        }
-      }
-    },
-    [dragging, endDragging, moveDragging]
-  )
+    }
+  }, [dragging, endDragging, moveDragging])
 
   return (
     <Container>

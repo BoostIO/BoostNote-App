@@ -34,22 +34,16 @@ function useRouteStore(): RouterStore {
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
-  const onPop = useCallback(
-    () => {
-      setLocation(normalizeLocation(parseUrl(window.location.href)))
-    },
-    [setLocation]
-  )
+  const onPop = useCallback(() => {
+    setLocation(normalizeLocation(parseUrl(window.location.href)))
+  }, [setLocation])
 
-  useEffect(
-    () => {
-      window.addEventListener('popstate', onPop)
-      return () => {
-        window.removeEventListener('popstate', onPop)
-      }
-    },
-    [onPop]
-  )
+  useEffect(() => {
+    window.addEventListener('popstate', onPop)
+    return () => {
+      window.removeEventListener('popstate', onPop)
+    }
+  }, [onPop])
 
   return {
     ...location,

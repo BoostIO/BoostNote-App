@@ -17,12 +17,9 @@ export default () => {
   } = useDb()
   const router = useRouter()
 
-  const storageEntries = useMemo(
-    () => {
-      return entries(storageMap)
-    },
-    [storageMap]
-  )
+  const storageEntries = useMemo(() => {
+    return entries(storageMap)
+  }, [storageMap])
 
   return (
     <StyledSideNavContainer style={{ width: 160 }}>

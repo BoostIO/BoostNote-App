@@ -41,17 +41,14 @@ export default ({ note, active, storageId }: NoteItemProps) => {
     note.folderPathname === '/' ? '' : note.folderPathname
   }/${note._id}`
 
-  const contentPreview = useMemo(
-    () => {
-      return (
-        note.content
-          .trim()
-          .split('\n')
-          .shift() || 'Empty note'
-      )
-    },
-    [note.content]
-  )
+  const contentPreview = useMemo(() => {
+    return (
+      note.content
+        .trim()
+        .split('\n')
+        .shift() || 'Empty note'
+    )
+  }, [note.content])
 
   return (
     <StyledNoteListItem active={active}>

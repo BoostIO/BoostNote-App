@@ -40,37 +40,34 @@ export function parseUrl(urlStr: string): Location {
 
 export const useNotesPathname = () => {
   const { pathname } = useRouter()
-  return useMemo(
-    (): [null | string, null | string, null | string] => {
-      const names = pathname.slice(1).split('/')
-      if (names[0] !== 'storages' || names[1] == null) {
-        return [null, null, null]
-      }
-      const storageId = names[1]
+  return useMemo((): [null | string, null | string, null | string] => {
+    const names = pathname.slice(1).split('/')
+    if (names[0] !== 'storages' || names[1] == null) {
+      return [null, null, null]
+    }
+    const storageId = names[1]
 
-      if (names[2] !== 'notes') {
-        return [storageId, null, null]
-      }
+    if (names[2] !== 'notes') {
+      return [storageId, null, null]
+    }
 
-      const restNames = names.slice(3)
-      if (restNames[0] == null || restNames[0] === '') {
-        return [storageId, '/', null]
-      }
+    const restNames = names.slice(3)
+    if (restNames[0] == null || restNames[0] === '') {
+      return [storageId, '/', null]
+    }
 
-      const folderNames = []
-      let noteId: string | null = null
-      for (const index in restNames) {
-        const name = restNames[index]
-        if (/^note:/.test(name)) {
-          noteId = name
-          break
-        } else {
-          folderNames.push(name)
-        }
+    const folderNames = []
+    let noteId: string | null = null
+    for (const index in restNames) {
+      const name = restNames[index]
+      if (/^note:/.test(name)) {
+        noteId = name
+        break
+      } else {
+        folderNames.push(name)
       }
+    }
 
-      return [storageId, '/' + folderNames.join('/'), noteId]
-    },
-    [pathname]
-  )
+    return [storageId, '/' + folderNames.join('/'), noteId]
+  }, [pathname])
 }

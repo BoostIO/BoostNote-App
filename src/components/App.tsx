@@ -11,12 +11,10 @@ import { useDb } from '../lib/db'
 
 const App = () => {
   const { initialize, initialized } = useDb()
-  useEffect(
-    () => {
-      initialize()
-    },
-    [initialize]
-  )
+  useEffect(() => {
+    initialize()
+  }, [initialize])
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledAppContainer>

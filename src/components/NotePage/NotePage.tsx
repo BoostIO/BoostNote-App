@@ -15,55 +15,43 @@ export default () => {
     currentNoteId
   ] = useNotesPathname()
 
-  const currentStorage = useMemo(
-    () => {
-      if (currentStorageId == null) return undefined
-      return db.storageMap[currentStorageId]
-    },
-    [db.storageMap, currentStorageId]
-  )
+  const currentStorage = useMemo(() => {
+    if (currentStorageId == null) return undefined
+    return db.storageMap[currentStorageId]
+  }, [db.storageMap, currentStorageId])
 
-  const notes = useMemo(
-    () => {
-      if (currentStorage == null) return []
-      if (currentFolderPathname != null) {
-        const folder = currentStorage.folderMap[currentFolderPathname]
-        if (folder == null) return []
-        const noteIds = [...folder.noteIdSet]
-        return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
-      }
-      const tagRegexpResult = tagRegexp.exec(pathname)
-      if (tagRegexpResult != null) {
-        const tag = tagRegexpResult[2]
-        const noteIds = [...currentStorage.tagMap[tag]!.noteIdSet]
-        return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
-      }
-      return []
-    },
-    [currentStorage, currentFolderPathname, pathname]
-  )
+  const notes = useMemo(() => {
+    if (currentStorage == null) return []
+    if (currentFolderPathname != null) {
+      const folder = currentStorage.folderMap[currentFolderPathname]
+      if (folder == null) return []
+      const noteIds = [...folder.noteIdSet]
+      return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
+    }
+    const tagRegexpResult = tagRegexp.exec(pathname)
+    if (tagRegexpResult != null) {
+      const tag = tagRegexpResult[2]
+      const noteIds = [...currentStorage.tagMap[tag]!.noteIdSet]
+      return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
+    }
+    return []
+  }, [currentStorage, currentFolderPathname, pathname])
 
-  const currentNote = useMemo(
-    () => {
-      if (currentStorage == null) return null
-      if (currentNoteId == null) return null
-      return currentStorage.noteMap[currentNoteId]
-    },
-    [currentNoteId, currentStorage]
-  )
+  const currentNote = useMemo(() => {
+    if (currentStorage == null) return null
+    if (currentNoteId == null) return null
+    return currentStorage.noteMap[currentNoteId]
+  }, [currentNoteId, currentStorage])
 
-  const createNote = useCallback(
-    async () => {
-      if (currentStorageId == null) {
-        return
-      }
-      await db.createNote(currentStorageId, {
-        folderPathname:
-          currentFolderPathname == null ? '/' : currentFolderPathname
-      })
-    },
-    [db, currentFolderPathname, currentStorageId]
-  )
+  const createNote = useCallback(async () => {
+    if (currentStorageId == null) {
+      return
+    }
+    await db.createNote(currentStorageId, {
+      folderPathname:
+        currentFolderPathname == null ? '/' : currentFolderPathname
+    })
+  }, [db, currentFolderPathname, currentStorageId])
 
   const removeNote = async () => {}
 

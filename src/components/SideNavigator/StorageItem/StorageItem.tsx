@@ -41,18 +41,12 @@ export default (props: StorageItemProps) => {
   const { pathname } = useRouter()
   const { folderMap, tagMap } = storage
 
-  const tags = useMemo(
-    () => {
-      return Object.keys(tagMap)
-    },
-    [tagMap]
-  )
-  const folders = useMemo(
-    () => {
-      return values(folderMap)
-    },
-    [folderMap]
-  )
+  const tags = useMemo(() => {
+    return Object.keys(tagMap)
+  }, [tagMap])
+  const folders = useMemo(() => {
+    return values(folderMap)
+  }, [folderMap])
 
   const openContextMenu = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {

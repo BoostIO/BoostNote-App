@@ -9,12 +9,9 @@ interface TagListItemProps {
 }
 
 const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
-  const removeTag = useCallback(
-    () => {
-      removeTagByName(tagName)
-    },
-    [removeTagByName, tagName]
-  )
+  const removeTag = useCallback(() => {
+    removeTagByName(tagName)
+  }, [removeTagByName, tagName])
 
   return (
     <div className='listItem'>
