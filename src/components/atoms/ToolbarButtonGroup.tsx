@@ -8,8 +8,14 @@ export default styled.div`
     border: 0;
     border-right: 1px solid ${({ theme }) => theme.colors.border};
     border-radius: 0;
+    &:first-child {
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+    }
     &:last-child {
       border-right: 0;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
     }
   }
 `
