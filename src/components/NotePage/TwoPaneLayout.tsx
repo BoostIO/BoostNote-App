@@ -6,11 +6,13 @@ import { clamp } from 'ramda'
 interface TwoPaneLayoutProps {
   left: React.ReactNode
   right: React.ReactNode
+  className?: string
+  defaultLeftWidth?: number
+  maxLeftWidth?: number
+  onResizeEnd?: () => void
 }
 
-const defaultLeftWidth = 250
 const minLeftWidth = 100
-const maxLeftWidth = 500
 
 const Container = styled.div`
   flex: 1px;
@@ -61,7 +63,14 @@ const Divider = ({ onMouseDown, dragging, leftWidth }: DividerProps) => (
   </DividerGraple>
 )
 
-const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
+const TwoPaneLayout = ({
+  left,
+  right,
+  className,
+  defaultLeftWidth = 250,
+  maxLeftWidth = 500,
+  onResizeEnd
+}: TwoPaneLayoutProps) => {
   const [leftWidth, setLeftWidth] = useState(defaultLeftWidth)
   const [dragging, setDragging] = useState(false)
   const mouseupListenerIsSetRef = useRef(false)
@@ -117,8 +126,14 @@ const TwoPaneLayout = ({ left, right }: TwoPaneLayoutProps) => {
     }
   }, [dragging, endDragging, moveDragging])
 
+  useEffect(() => {
+    if (onResizeEnd != null && !dragging) {
+      onResizeEnd()
+    }
+  }, [onResizeEnd, leftWidth, dragging])
+
   return (
-    <Container>
+    <Container className={className}>
       <Pane style={{ width: `${leftWidth}px`, left: 0 }}>{left}</Pane>
       <Divider
         onMouseDown={startDragging}
