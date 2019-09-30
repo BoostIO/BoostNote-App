@@ -4,7 +4,8 @@ import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
-import { mdiSquareEditOutline } from '@mdi/js'
+import { mdiMagnify, mdiSquareEditOutline } from '@mdi/js'
+import ToolbarIconInput from '../../atoms/ToolbarIconInput'
 
 const StyledContainer = styled.div`
   display: flex;
@@ -17,6 +18,9 @@ const StyledContainer = styled.div`
     padding: 0;
     list-style: none;
     overflow-y: auto;
+  }
+  .searchInput {
+    flex: 1;
   }
 `
 
@@ -36,6 +40,12 @@ const NoteList = ({
   return (
     <StyledContainer>
       <Toolbar>
+        <ToolbarIconInput
+          className='searchInput'
+          iconPath={mdiMagnify}
+          value={''}
+          onChange={() => {}}
+        />
         <ToolbarIconButton path={mdiSquareEditOutline} onClick={createNote} />
       </Toolbar>
       <ul>
