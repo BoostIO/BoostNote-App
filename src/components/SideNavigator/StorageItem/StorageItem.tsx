@@ -14,6 +14,9 @@ import { NoteStorage } from '../../../lib/db/types'
 import { useRouter, useNotesPathname } from '../../../lib/router'
 import { values } from '../../../lib/db/utils'
 
+import { mdiNotebook } from '@mdi/js'
+import Icon from '../../atoms/Icon'
+
 type StorageItemProps = {
   id: string
   storage: NoteStorage
@@ -126,6 +129,7 @@ export default (props: StorageItemProps) => {
     <StyledStorageItem>
       <StyledStorageItemHeader onContextMenu={openContextMenu}>
         <StyledNavLink active={active} href={`/app/storages/${id}`}>
+          <Icon path={mdiNotebook} className='storageIcon' />
           {storageName}
         </StyledNavLink>
       </StyledStorageItemHeader>
