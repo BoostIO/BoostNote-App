@@ -13,6 +13,7 @@ const StyledNoteListItem = styled.div<{ active: boolean }>`
     color: ${theme.colors.inverseText};`}
   border-bottom: solid 1px ${({ theme }) => theme.colors.border};
   padding: 8px;
+  user-select: none;
 
   a {
     text-decoration: none;
