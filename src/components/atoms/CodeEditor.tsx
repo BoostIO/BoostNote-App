@@ -13,6 +13,7 @@ interface CodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
+  codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -26,6 +27,9 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     )
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadOptions)
+    if (this.props.codeMirrorRef != null) {
+      this.props.codeMirrorRef(this.codeMirror)
+    }
   }
 
   reloadOptions = () => {

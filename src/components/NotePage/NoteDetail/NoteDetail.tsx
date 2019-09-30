@@ -6,6 +6,7 @@ import styled from '../../../lib/styled'
 import CodeEditor from '../../atoms/CodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
+import TwoPaneLayout from '../TwoPaneLayout'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -41,16 +42,6 @@ const StyledNoteDetailContainer = styled.div`
     margin: 2px;
     position: relative;
     border-top: solid 1px ${({ theme }) => theme.colors.border};
-    & > textarea {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      resize: none;
-      padding: 4px;
-      width: 100%;
-      border: none;
-      box-sizing: border-box;
-    }
     .CodeMirror {
       position: absolute;
       top: 0;
@@ -66,6 +57,13 @@ const StyledNoteDetailContainer = styled.div`
       height: 100%;
       overflow: auto;
       padding: 0 10px;
+    }
+    .split {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 `
@@ -106,7 +104,10 @@ export default class NoteDetail extends React.Component<
   }
   titleInputRef = React.createRef<HTMLInputElement>()
   newTagNameInputRef = React.createRef<HTMLInputElement>()
-  contentTextareaRef = React.createRef<HTMLTextAreaElement>()
+  codeMirror?: CodeMirror.EditorFromTextArea
+  codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
+    this.codeMirror = codeMirror
+  }
 
   static getDerivedStateFromProps(
     props: NoteDetailProps,
@@ -254,6 +255,12 @@ export default class NoteDetail extends React.Component<
     this.setState({ mode })
   }
 
+  refreshCodeEditor = () => {
+    if (this.codeMirror != null) {
+      this.codeMirror.refresh()
+    }
+  }
+
   render() {
     const { note } = this.props
 
@@ -293,8 +300,25 @@ export default class NoteDetail extends React.Component<
               {this.state.mode === 'edit' ? (
                 <CodeEditor
                   key={note._id}
+                  codeMirrorRef={this.codeMirrorRef}
                   value={this.state.content}
                   onChange={this.updateContent}
+                />
+              ) : this.state.mode === 'split' ? (
+                <TwoPaneLayout
+                  className='split'
+                  defaultLeftWidth={400}
+                  maxLeftWidth={800}
+                  left={
+                    <CodeEditor
+                      key={note._id}
+                      codeMirrorRef={this.codeMirrorRef}
+                      value={this.state.content}
+                      onChange={this.updateContent}
+                    />
+                  }
+                  right={<MarkdownPreviewer content={this.state.content} />}
+                  onResizeEnd={this.refreshCodeEditor}
                 />
               ) : (
                 <MarkdownPreviewer content={this.state.content} />
