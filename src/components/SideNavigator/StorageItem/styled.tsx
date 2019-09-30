@@ -10,6 +10,7 @@ export const StyledStorageItem = styled.li`
 export const StyledStorageItemHeader = styled.header`
   height: 26px;
   display: flex;
+  align-items: center;
 `
 
 export const StyledStorageItemFolderList = styled.ul`
@@ -31,6 +32,8 @@ export const StyledNavLink = styled(
     onContextMenu?: React.MouseEventHandler<HTMLAnchorElement>
   }) => <Link {...props} />
 )<{ active: boolean }>`
+  display: flex;
+  align-items: center;
   line-height: 26px;
   padding: 0 5px;
   text-decoration: none;
@@ -40,4 +43,8 @@ export const StyledNavLink = styled(
     active &&
     `background-color: ${theme.colors.active};
     color: ${theme.colors.inverseText};`}
+
+  .storageIcon {
+    margin-right: 4px;
+  }
 `
