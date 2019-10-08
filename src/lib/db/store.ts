@@ -43,6 +43,7 @@ export interface DbStore {
     noteId: string,
     noteProps: Partial<NoteDocEditibleProps>
   ): Promise<NoteDoc | undefined>
+  trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
 }
 
 export function createDbStoreCreator(
@@ -307,6 +308,28 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const trashNote = useCallback(
+      async (storageId: string, noteId: string) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+        const noteDoc = await storage.db.trashNote(noteId)
+        if (noteDoc == null) {
+          return
+        }
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+          })
+        )
+
+        return noteDoc
+      },
+      [storageMap]
+    )
+
     return {
       initialized,
       storageMap,
@@ -317,7 +340,8 @@ export function createDbStoreCreator(
       createFolder,
       removeFolder,
       createNote,
-      updateNote
+      updateNote,
+      trashNote
     }
   }
 }
