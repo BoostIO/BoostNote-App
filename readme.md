@@ -10,9 +10,7 @@ Boostnote.next will be renewal of Boostnote app.
 
 The renewal will be released end of Nov, 2019. [To keep updated, subscribe our mailing list!](https://boostnote.io/#subscribe)
 
-## Documents
-
-- [Roadmap](docs/roadmap.md)
+- [Renewal plan](https://github.com/BoostIO/Boostnote.next/issues/67)
 
 ## License
 
