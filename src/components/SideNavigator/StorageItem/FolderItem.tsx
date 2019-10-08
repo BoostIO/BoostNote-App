@@ -78,7 +78,7 @@ export default (props: FolderItemProps) => {
     <StyledStorageItemFolderItem onContextMenu={openContextMenu}>
       <StyledNavLink
         active={active}
-        href={`/storages/${storageId}/notes${folder.pathname}`}
+        href={`/app/storages/${storageId}/notes${folder.pathname}`}
       >
         {folder.pathname}
       </StyledNavLink>

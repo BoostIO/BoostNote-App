@@ -22,7 +22,7 @@ export function normalizeLocation({ pathname, ...otherProps }: Location) {
 }
 
 export const tagRegexp = pathToRegexp(
-  '/storages/:storageName/tags/:tag',
+  '/app/storages/:storageName/tags/:tag',
   undefined,
   {
     sensitive: true
@@ -41,7 +41,7 @@ export function parseUrl(urlStr: string): Location {
 export const useNotesPathname = () => {
   const { pathname } = useRouter()
   return useMemo((): [null | string, null | string, null | string] => {
-    const names = pathname.slice(1).split('/')
+    const names = pathname.slice(1).split('/').slice(1)
     if (names[0] !== 'storages' || names[1] == null) {
       return [null, null, null]
     }
