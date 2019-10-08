@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import StorageItem from './StorageItem/StorageItem'
 import { useRouter } from '../../lib/router'
 import SotrageCreateForm from './StorageCreateForm'
 import { useDb } from '../../lib/db'
@@ -9,6 +8,7 @@ import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import { mdiSettings } from '@mdi/js'
+import StorageNavigatorItem from './StorageNavigatorItem'
 
 const StyledStorageList = styled.ul`
   list-style: none;
@@ -48,20 +48,8 @@ export default () => {
       <StyledStorageList>
         {storageEntries.map(([id, storage]) => {
           const pathname = router.pathname
-          const active = `/app/storages/${storage.name}` === pathname
-          return (
-            <StorageItem
-              key={id}
-              id={id}
-              storage={storage}
-              removeStorage={removeStorage}
-              renameStorage={renameStorage}
-              createFolder={createFolder}
-              removeFolder={removeFolder}
-              pathname={pathname}
-              active={active}
-            />
-          )
+          // const active = `/storages/${storage.name}` === pathname
+          return <StorageNavigatorItem key={id} storage={storage} />
         })}
       </StyledStorageList>
       {storageEntries.length === 0 && <p>No storages</p>}
