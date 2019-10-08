@@ -125,7 +125,7 @@ export default (props: StorageItemProps) => {
   return (
     <StyledStorageItem>
       <StyledStorageItemHeader onContextMenu={openContextMenu}>
-        <StyledNavLink active={active} href={`/storages/${id}`}>
+        <StyledNavLink active={active} href={`/app/storages/${id}`}>
           {storageName}
         </StyledNavLink>
       </StyledStorageItemHeader>
@@ -149,12 +149,12 @@ export default (props: StorageItemProps) => {
       <ul>
         {tags.map(tag => {
           const tagIsActive =
-            pathname === `/storages/${storageName}/tags/${tag}`
+            pathname === `/app/storages/${storageName}/tags/${tag}`
           return (
             <li key={tag}>
               <StyledNavLink
                 active={tagIsActive}
-                href={`/storages/${storageName}/tags/${tag}`}
+                href={`/app/storages/${storageName}/tags/${tag}`}
               >
                 {tag}
               </StyledNavLink>

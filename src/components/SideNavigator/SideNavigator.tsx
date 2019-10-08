@@ -48,7 +48,7 @@ export default () => {
       <StyledStorageList>
         {storageEntries.map(([id, storage]) => {
           const pathname = router.pathname
-          const active = `/storages/${storage.name}` === pathname
+          const active = `/app/storages/${storage.name}` === pathname
           return (
             <StorageItem
               key={id}

@@ -170,9 +170,9 @@ export function createDbStoreCreator(
           return
         }
         await storage.db.removeFolder(pathname)
-        if (router.pathname.startsWith(`/storages/${id}/notes${pathname}`)) {
+        if (router.pathname.startsWith(`/app/storages/${id}/notes${pathname}`)) {
           router.replace(
-            `/storages/${id}/notes${getParentFolderPathname(pathname)}`
+            `/app/storages/${id}/notes${getParentFolderPathname(pathname)}`
           )
         }
 

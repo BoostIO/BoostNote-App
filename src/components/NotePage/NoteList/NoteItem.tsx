@@ -37,7 +37,7 @@ type NoteItemProps = {
 }
 
 export default ({ note, active, storageId }: NoteItemProps) => {
-  const href = `/storages/${storageId}/notes${
+  const href = `/app/storages/${storageId}/notes${
     note.folderPathname === '/' ? '' : note.folderPathname
   }/${note._id}`
 
