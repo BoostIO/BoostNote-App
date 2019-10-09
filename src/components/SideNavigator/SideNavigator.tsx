@@ -49,7 +49,16 @@ export default () => {
         {storageEntries.map(([id, storage]) => {
           const pathname = router.pathname
           // const active = `/storages/${storage.name}` === pathname
-          return <StorageNavigatorItem key={id} storage={storage} />
+          return (
+            <StorageNavigatorItem
+              key={id}
+              storage={storage}
+              renameStorage={renameStorage}
+              removeStorage={removeStorage}
+              createFolder={createFolder}
+              removeFolder={removeFolder}
+            />
+          )
         })}
       </StyledStorageList>
       {storageEntries.length === 0 && <p>No storages</p>}

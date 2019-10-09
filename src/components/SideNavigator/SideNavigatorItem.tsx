@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import { Link } from '../../lib/router'
 import Icon from '../atoms/Icon'
@@ -36,9 +36,9 @@ const StyledContainer = styled.div`
 export interface NavigatorNode {
   iconPath?: string
   name: string
-  key?: string
   href?: string
   children?: NavigatorNode[]
+  onContextMenu?: MouseEventHandler
 }
 
 interface SideNavigatorItemProps {
@@ -52,7 +52,7 @@ const SideNavigatorItem = ({
   openAlways = false,
   depth = 0
 }: SideNavigatorItemProps) => {
-  const { iconPath, name, href, children } = item
+  const { iconPath, name, href, children, onContextMenu } = item
   const [open, setOpen] = useState(true)
   const childrenExists = children != null && children.length > 0
   return (
@@ -71,6 +71,7 @@ const SideNavigatorItem = ({
           href={href}
           className='headerLink'
           style={{ paddingLeft: `${10 * depth + 22}px` }}
+          onContextMenu={onContextMenu}
         >
           {iconPath != null && <Icon className='storageIcon' path={iconPath} />}
           {name}
@@ -78,12 +79,8 @@ const SideNavigatorItem = ({
       </div>
       {open &&
         childrenExists &&
-        children!.map((child, index) => (
-          <SideNavigatorItem
-            key={child.key || `${index}-${child.href}`}
-            node={child}
-            depth={depth + 1}
-          />
+        children!.map(child => (
+          <SideNavigatorItem key={child.href} node={child} depth={depth + 1} />
         ))}
     </StyledContainer>
   )
