@@ -1,4 +1,4 @@
-import React, { useCallback, FC, CSSProperties } from 'react'
+import React, { useCallback, FC, CSSProperties, MouseEventHandler } from 'react'
 import { useRouter } from './store'
 
 export interface LinkProps {
@@ -6,9 +6,16 @@ export interface LinkProps {
   children: React.ReactNode
   className?: string
   style?: CSSProperties
+  onContextMenu?: MouseEventHandler
 }
 
-export const Link: FC<LinkProps> = ({ children, href, className, style }) => {
+export const Link: FC<LinkProps> = ({
+  children,
+  href,
+  className,
+  style,
+  onContextMenu
+}) => {
   const router = useRouter()
 
   const push = useCallback(
@@ -22,7 +29,13 @@ export const Link: FC<LinkProps> = ({ children, href, className, style }) => {
   )
 
   return (
-    <a onClick={push} href={href} className={className} style={style}>
+    <a
+      onClick={push}
+      onContextMenu={onContextMenu}
+      href={href}
+      className={className}
+      style={style}
+    >
       {children}
     </a>
   )
