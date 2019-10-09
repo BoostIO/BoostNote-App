@@ -47,11 +47,10 @@ export default () => {
       </Toolbar>
       <StyledStorageList>
         {storageEntries.map(([id, storage]) => {
-          const pathname = router.pathname
-          // const active = `/storages/${storage.name}` === pathname
           return (
             <StorageNavigatorItem
               key={id}
+              currentPathname={router.pathname}
               storage={storage}
               renameStorage={renameStorage}
               removeStorage={removeStorage}

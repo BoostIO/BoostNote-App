@@ -7,6 +7,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 
 interface StorageNaviagtorItemProps {
   storage: NoteStorage
+  currentPathname: string
   renameStorage: (storageId: string, name: string) => Promise<void>
   removeStorage: (storageId: string) => Promise<void>
   createFolder: (storageId: string, folderPath: string) => Promise<void>
@@ -19,6 +20,7 @@ type FolderTree = {
 
 const StorageNavigatorItem = ({
   storage,
+  currentPathname,
   renameStorage,
   removeStorage,
   createFolder,
@@ -156,23 +158,34 @@ const StorageNavigatorItem = ({
       folderTree,
       storageId,
       '/',
+      currentPathname,
       createFolderContextMenuHandler
     )
-  }, [storageId, storage.folderMap, createFolderContextMenuHandler])
+  }, [
+    storageId,
+    currentPathname,
+    storage.folderMap,
+    createFolderContextMenuHandler
+  ])
   const tagNodes = Object.keys(storage.tagMap).map(tagName => ({
     name: tagName,
     href: `/storages/${storage.id}/tags/${tagName}`
   }))
 
   const node = useMemo(() => {
+    const storagePathname = `/storages/${storage.id}`
     return {
       name: storage.name,
-      href: `/storages/${storage.id}`,
+      href: storagePathname,
+      active: currentPathname === storagePathname,
       onContextMenu: openContextMenu,
       children: [
         {
           name: 'Notes',
-          href: `/storages/${storage.id}/notes`,
+          href: `${storagePathname}/notes`,
+          active: new RegExp(`${storagePathname}/notes(/note:.+)?$`).test(
+            currentPathname
+          ),
           onContextMenu: createFolderContextMenuHandler('/')
         },
         ...folderNodes,
@@ -192,7 +205,8 @@ const StorageNavigatorItem = ({
     folderNodes,
     tagNodes,
     openContextMenu,
-    createFolderContextMenuHandler
+    createFolderContextMenuHandler,
+    currentPathname
   ])
 
   return <SideNavigatorItem node={node} />
@@ -222,6 +236,7 @@ function getNavigatorNodeFromPathnameTree(
   tree: FolderTree,
   storageId: string,
   parentFolderPathname: string,
+  currentPathname: string,
   contextMenuHandlerCreator: (pathname: string) => MouseEventHandler
 ): NavigatorNode[] {
   return Object.entries(tree).map(([folderName, tree]) => {
@@ -233,11 +248,13 @@ function getNavigatorNodeFromPathnameTree(
     return {
       name: folderName,
       href: pathname,
+      active: new RegExp(`${pathname}(/note:.+)?$`).test(currentPathname),
       onContextMenu: contextMenuHandlerCreator(folderPathname),
       children: getNavigatorNodeFromPathnameTree(
         tree,
         storageId,
         folderPathname,
+        currentPathname,
         contextMenuHandlerCreator
       )
     }
