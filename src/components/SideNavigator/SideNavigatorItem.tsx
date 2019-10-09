@@ -3,6 +3,7 @@ import styled from '../../lib/styled'
 import { Link } from '../../lib/router'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import cc from 'classcat'
 
 const StyledContainer = styled.div`
   .header {
@@ -16,6 +17,14 @@ const StyledContainer = styled.div`
     height: 22px;
     display: flex;
     align-items: center;
+    text-decoration: none;
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.alternativeBackground};
+    }
+    &.active {
+      background-color: ${({ theme }) => theme.colors.active};
+      color: ${({ theme }) => theme.colors.inverseText};
+    }
   }
   .toggleButton {
     position: absolute;
@@ -39,6 +48,7 @@ export interface NavigatorNode {
   href?: string
   children?: NavigatorNode[]
   onContextMenu?: MouseEventHandler
+  active?: boolean
 }
 
 interface SideNavigatorItemProps {
@@ -52,7 +62,7 @@ const SideNavigatorItem = ({
   openAlways = false,
   depth = 0
 }: SideNavigatorItemProps) => {
-  const { iconPath, name, href, children, onContextMenu } = item
+  const { iconPath, name, href, children, onContextMenu, active } = item
   const [open, setOpen] = useState(true)
   const childrenExists = children != null && children.length > 0
   return (
@@ -69,7 +79,7 @@ const SideNavigatorItem = ({
         )}
         <Link
           href={href}
-          className='headerLink'
+          className={cc(['headerLink', active && 'active'])}
           style={{ paddingLeft: `${10 * depth + 22}px` }}
           onContextMenu={onContextMenu}
         >
