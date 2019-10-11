@@ -2,6 +2,7 @@ import path from 'path'
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
+import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 
 module.exports = {
   entry: [
@@ -47,7 +48,7 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
+        use: [{ loader: 'ts-loader' }],
         exclude: /node_modules/
       }
     ]
@@ -62,7 +63,8 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin(),
+    new ErrorOverlayPlugin()
   ],
 
   devServer: {
