@@ -9,7 +9,7 @@
     "url": "https://github.com/BoostIO/boost.git"
   },
   "scripts": {
-    "start": "cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open",
+    "start": "cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
     "start-dev": "NODE_ENV=development electron app/index.js",
     "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
