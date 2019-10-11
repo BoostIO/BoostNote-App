@@ -6,6 +6,7 @@ import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import cc from 'classcat'
 
 const StyledContainer = styled.div`
+  user-select: none;
   .header {
     position: relative;
     height: 22px;
