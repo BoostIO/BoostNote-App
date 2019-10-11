@@ -72,7 +72,8 @@ export default () => {
   const currentPathnameWithoutNoteId = useMemo(() => {
     if (storageId == null) return `/`
     if (folderPathname == null) return `/storages/${storageId}`
-    return `/storages/${storageId}/notes${folderPathname}`
+    if (folderPathname === '/') return `/app/storages/${storageId}/notes`
+    return `/app/storages/${storageId}/notes${folderPathname}`
   }, [storageId, folderPathname])
 
   const currentStorage = useMemo(() => {
