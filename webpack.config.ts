@@ -27,7 +27,7 @@ module.exports = {
 
     path: path.resolve(__dirname, 'dist'),
 
-    publicPath: '/app/'
+    publicPath: '/app'
     // necessary for HMR to know where to load the hot update chunks
   },
 
@@ -71,13 +71,15 @@ module.exports = {
     host: 'localhost',
     port: 3000,
 
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/app'
+    },
     // respond to 404s with index.html
 
     hot: true,
     // enable HMR on the server
 
-    before: function (app, server) {
+    before: function(app, server) {
       app.use(
         '/codemirror/mode',
         express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
