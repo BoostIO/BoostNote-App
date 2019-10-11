@@ -44,6 +44,9 @@ const StyledSideNavContainer = styled.nav`
       flex: 1;
       border-right: 1px solid ${({ theme }) => theme.colors.border};
     }
+    .addFolderButtonIcon {
+      margin-right: 4px;
+    }
     .moreButton {
       width: 30px;
       display: flex;
@@ -154,7 +157,8 @@ export default () => {
           disabled={currentStorage == null}
           onClick={addFolder}
         >
-          <Icon path={mdiPlusCircle} /> Add Folder
+          <Icon className='addFolderButtonIcon' path={mdiPlusCircle} /> Add
+          Folder
         </button>
         <button
           className='moreButton'
