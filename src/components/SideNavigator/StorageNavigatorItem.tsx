@@ -169,11 +169,13 @@ const StorageNavigatorItem = ({
   ])
   const tagNodes = Object.keys(storage.tagMap).map(tagName => ({
     name: tagName,
-    href: `/storages/${storage.id}/tags/${tagName}`
+    href: `/app/storages/${storage.id}/tags/${tagName}`
   }))
 
   const node = useMemo(() => {
-    const storagePathname = `/storages/${storage.id}`
+    const storagePathname = `/app/storages/${storage.id}`
+    const notesPathname = `/app/storages/${storage.id}/notes`
+
     return {
       name: storage.name,
       href: storagePathname,
@@ -182,20 +184,20 @@ const StorageNavigatorItem = ({
       children: [
         {
           name: 'Notes',
-          href: `${storagePathname}/notes`,
-          active: new RegExp(`${storagePathname}/notes(/note:.+)?$`).test(
-            currentPathname
-          ),
+          href: notesPathname,
+          active: currentPathname === notesPathname,
           onContextMenu: createFolderContextMenuHandler('/')
         },
         ...folderNodes,
         {
           iconPath: mdiTagMultiple,
           name: 'Tags',
+          href: `${storagePathname}/tags`,
           children: tagNodes
         },
         {
           iconPath: mdiTrashCan,
+          href: `${storagePathname}/trash-can`,
           name: 'Trash Can'
         }
       ]
@@ -244,7 +246,8 @@ function getNavigatorNodeFromPathnameTree(
       parentFolderPathname === '/'
         ? `/${folderName}`
         : `${parentFolderPathname}/${folderName}`
-    const pathname = `/storages/${storageId}/notes${folderPathname}`
+    const pathname = `/app/storages/${storageId}/notes${folderPathname}`
+
     return {
       name: folderName,
       href: pathname,
