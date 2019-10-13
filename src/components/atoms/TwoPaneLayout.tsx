@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  CSSProperties
+} from 'react'
 import styled, { defaultTheme } from '../../lib/styled'
 import throttle from 'lodash/throttle'
 import { clamp } from 'ramda'
@@ -7,6 +13,7 @@ interface TwoPaneLayoutProps {
   left: React.ReactNode
   right: React.ReactNode
   className?: string
+  style?: CSSProperties
   defaultLeftWidth?: number
   maxLeftWidth?: number
   onResizeEnd?: () => void
@@ -67,6 +74,7 @@ const TwoPaneLayout = ({
   left,
   right,
   className,
+  style,
   defaultLeftWidth = 250,
   maxLeftWidth = 500,
   onResizeEnd
@@ -133,7 +141,7 @@ const TwoPaneLayout = ({
   }, [onResizeEnd, leftWidth, dragging])
 
   return (
-    <Container className={className}>
+    <Container className={className} style={style}>
       <Pane style={{ width: `${leftWidth}px`, left: 0 }}>{left}</Pane>
       <Divider
         onMouseDown={startDragging}

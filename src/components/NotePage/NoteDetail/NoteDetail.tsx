@@ -6,7 +6,7 @@ import styled from '../../../lib/styled'
 import CodeEditor from '../../atoms/CodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
-import TwoPaneLayout from '../TwoPaneLayout'
+import TwoPaneLayout from '../../atoms/TwoPaneLayout'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;

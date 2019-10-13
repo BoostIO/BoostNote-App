@@ -3,7 +3,7 @@ import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
 import { useRouter, tagRegexp, useNotesPathname } from '../../lib/router'
 import { useDb } from '../../lib/db'
-import TwoPaneLayout from './TwoPaneLayout'
+import TwoPaneLayout from '../atoms/TwoPaneLayout'
 
 export default () => {
   const db = useDb()
@@ -57,6 +57,7 @@ export default () => {
 
   return currentStorageId != null ? (
     <TwoPaneLayout
+      style={{ height: '100%' }}
       left={
         <NoteList
           storageId={currentStorageId}

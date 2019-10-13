@@ -8,6 +8,7 @@ import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
 import { useDb } from '../lib/db'
+import TwoPaneLayout from './atoms/TwoPaneLayout'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -19,10 +20,11 @@ const App = () => {
     <ThemeProvider theme={defaultTheme}>
       <StyledAppContainer>
         {initialized ? (
-          <>
-            <SideNavigator />
-            <Router />
-          </>
+          <TwoPaneLayout
+            defaultLeftWidth={160}
+            left={<SideNavigator />}
+            right={<Router />}
+          />
         ) : (
           <div>Loading data</div>
         )}
