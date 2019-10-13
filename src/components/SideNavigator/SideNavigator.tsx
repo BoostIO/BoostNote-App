@@ -15,7 +15,7 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 const StyledSideNavContainer = styled.nav`
   display: flex;
   flex-direction: column;
-  border-right: solid 1px ${({ theme }) => theme.colors.border};
+  height: 100%;
 
   .storageList {
     list-style: none;
@@ -128,7 +128,7 @@ export default () => {
   )
 
   return (
-    <StyledSideNavContainer style={{ width: 160 }}>
+    <StyledSideNavContainer>
       <Toolbar>
         <ToolbarSeparator />
         <ToolbarIconButton path={mdiSettings} onClick={() => {}} />
