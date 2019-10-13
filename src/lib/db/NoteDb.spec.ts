@@ -601,7 +601,7 @@ describe('NoteDb', () => {
       // When
       const result = await noteDb.findNotesByFolder('/test')
 
-      expect(result).toEqual([
+      expect(sortByTitle(result)).toEqual([
         {
           _id: note1._id,
           _rev: note1._rev,
