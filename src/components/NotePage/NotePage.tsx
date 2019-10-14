@@ -26,7 +26,9 @@ export default () => {
       const folder = currentStorage.folderMap[currentFolderPathname]
       if (folder == null) return []
       const noteIds = [...folder.noteIdSet]
-      return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
+      return noteIds
+        .map(noteId => currentStorage.noteMap[noteId]!)
+        .filter(note => !note.trashed)
     }
     const tagRegexpResult = tagRegexp.exec(pathname)
     if (tagRegexpResult != null) {
@@ -74,6 +76,7 @@ export default () => {
             storageId={currentStorageId}
             note={currentNote}
             updateNote={db.updateNote}
+            trashNote={db.trashNote}
             removeNote={removeNote}
           />
         )

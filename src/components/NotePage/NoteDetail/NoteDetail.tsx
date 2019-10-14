@@ -76,6 +76,7 @@ type NoteDetailProps = {
     noteId: string,
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
+  trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
   removeNote: (storageId: string, noteId: string) => Promise<void>
 }
 
@@ -213,6 +214,21 @@ export default class NoteDetail extends React.Component<
     )
   }
 
+  trashNote = async () => {
+    const { storageId, note } = this.props
+    const noteId = note._id
+
+    if (this.queued) {
+      const { title, content, tags } = this.state
+      await this.saveNote(storageId, noteId, {
+        title,
+        content,
+        tags
+      })
+    }
+    await this.props.trashNote(storageId, noteId)
+  }
+
   queued = false
   timer?: number
 
@@ -245,12 +261,6 @@ export default class NoteDetail extends React.Component<
     })
   }
 
-  removeNote = async () => {
-    const { storageId, note, removeNote } = this.props
-
-    await removeNote(storageId, note._id)
-  }
-
   selectMode = (mode: 'edit' | 'preview' | 'split') => {
     this.setState({ mode })
   }
@@ -274,7 +284,7 @@ export default class NoteDetail extends React.Component<
               mode={this.state.mode}
               note={note}
               selectMode={this.selectMode}
-              removeNote={this.removeNote}
+              trashNote={this.trashNote}
             />
             <div className='titleSection'>
               <input

@@ -10,13 +10,13 @@ interface NoteDetailToolbarProps {
   note: NoteDoc
   mode: 'edit' | 'preview' | 'split'
   selectMode: (mode: 'edit' | 'preview' | 'split') => void
-  removeNote: () => void | Promise<void>
+  trashNote: () => void | Promise<void>
 }
 
 const NoteDetailToolbar = ({
   mode,
   selectMode,
-  removeNote
+  trashNote
 }: NoteDetailToolbarProps) => {
   const selectEditMode = useCallback(() => {
     selectMode('edit')
@@ -51,7 +51,7 @@ const NoteDetailToolbar = ({
       </ToolbarButtonGroup>
 
       <ToolbarSeparator />
-      <ToolbarIconButton onClick={removeNote} path={mdiTrashCan} />
+      <ToolbarIconButton onClick={trashNote} path={mdiTrashCan} />
     </Toolbar>
   )
 }
