@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
-import { useNotesPathname } from '../../lib/router'
+import { useRouteParams } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
@@ -64,7 +64,7 @@ export default () => {
     removeFolder,
     storageMap
   } = useDb()
-  const [storageId, folderPathname] = useNotesPathname()
+  const routeParams = useRouteParams()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
 
@@ -73,22 +73,29 @@ export default () => {
   }, [storageMap])
 
   const currentPathnameWithoutNoteId = useMemo(() => {
-    if (storageId == null) return `/`
-    if (folderPathname == null) return `/storages/${storageId}`
-    if (folderPathname === '/') return `/app/storages/${storageId}/notes`
-    return `/app/storages/${storageId}/notes${folderPathname}`
-  }, [storageId, folderPathname])
+    switch (routeParams.name) {
+      case 'storages.notes':
+        return `/app/storages/${routeParams.storageId}/notes${routeParams.folderPathname}`
+    }
+    return '/app'
+  }, [routeParams])
 
   const currentStorage = useMemo(() => {
-    if (storageId == null) return null
-    return storageMap[storageId]
-  }, [storageMap, storageId])
+    switch (routeParams.name) {
+      case 'storages.notes':
+        return storageMap[routeParams.storageId]
+    }
+    return null
+  }, [routeParams, storageMap])
 
   const addFolder = useCallback(() => {
     if (currentStorage == null) {
       return
     }
-    const defaultValue = folderPathname == null ? '/' : folderPathname
+
+    const defaultValue =
+      routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
+
     prompt({
       title: 'Create a Folder',
       message: 'Enter the path where do you want to create a folder',
@@ -97,10 +104,10 @@ export default () => {
       submitButtonLabel: 'Create Folder',
       onClose: (value: string | null) => {
         if (value == null) return
-        createFolder(storageId as string, value)
+        createFolder(currentStorage.id, value)
       }
     })
-  }, [prompt, createFolder, storageId, folderPathname, currentStorage])
+  }, [prompt, createFolder, routeParams, currentStorage])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {

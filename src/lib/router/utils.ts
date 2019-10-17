@@ -38,39 +38,87 @@ export function parseUrl(urlStr: string): Location {
   }
 }
 
-export const useNotesPathname = () => {
+export interface BaseRouteParams {
+  name: string
+}
+
+export interface StorageNotesRouteParams extends BaseRouteParams {
+  name: 'storages.notes'
+  storageId: string
+  folderPathname?: string
+  noteId?: string
+}
+
+export interface StorageTrashCanRouteParams extends BaseRouteParams {
+  name: 'storages.trashCan'
+  storageId: string
+  noteId?: string
+}
+
+export interface StorageTagsRouteParams extends BaseRouteParams {
+  name: 'storages.tags.show'
+  storageId: string
+  tagName: string
+  noteId?: string
+}
+
+export interface UnknownRouteparams extends BaseRouteParams {
+  name: 'unknown'
+}
+
+export type AllRouteParams =
+  | StorageNotesRouteParams
+  | StorageTrashCanRouteParams
+  | StorageTagsRouteParams
+  | UnknownRouteparams
+
+export const useRouteParams = () => {
   const { pathname } = useRouter()
-  return useMemo((): [null | string, null | string, null | string] => {
+  return useMemo((): AllRouteParams => {
     const names = pathname
-      .slice(4)
+      .slice('/app'.length)
       .split('/')
       .slice(1)
+
     if (names[0] !== 'storages' || names[1] == null) {
-      return [null, null, null]
+      return {
+        name: 'unknown'
+      }
     }
     const storageId = names[1]
 
-    if (names[2] !== 'notes') {
-      return [storageId, null, null]
-    }
+    if (names[2] === 'notes') {
+      const restNames = names.slice(3)
+      if (restNames[0] == null || restNames[0] === '') {
+        return {
+          name: 'storages.notes',
+          storageId,
+          folderPathname: '/'
+        }
+      }
+      const folderNames = []
 
-    const restNames = names.slice(3)
-    if (restNames[0] == null || restNames[0] === '') {
-      return [storageId, '/', null]
-    }
+      let noteId: string | undefined = undefined
+      for (const index in restNames) {
+        const name = restNames[index]
+        if (/^note:/.test(name)) {
+          noteId = name
+          break
+        } else {
+          folderNames.push(name)
+        }
+      }
 
-    const folderNames = []
-    let noteId: string | null = null
-    for (const index in restNames) {
-      const name = restNames[index]
-      if (/^note:/.test(name)) {
-        noteId = name
-        break
-      } else {
-        folderNames.push(name)
+      return {
+        name: 'storages.notes',
+        storageId,
+        folderPathname: '/' + folderNames.join('/'),
+        noteId
       }
     }
 
-    return [storageId, '/' + folderNames.join('/'), noteId]
+    return {
+      name: 'unknown'
+    }
   }, [pathname])
 }

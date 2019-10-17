@@ -1,70 +1,62 @@
 import React, { useMemo, useCallback } from 'react'
 import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
-import { useRouter, tagRegexp, useNotesPathname } from '../../lib/router'
+import { useRouteParams, StorageNotesRouteParams } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 
 export default () => {
   const db = useDb()
-  const { pathname } = useRouter()
 
-  const [
-    currentStorageId,
-    currentFolderPathname,
-    currentNoteId
-  ] = useNotesPathname()
-
+  const {
+    storageId,
+    folderPathname,
+    noteId
+  } = useRouteParams() as StorageNotesRouteParams
   const currentStorage = useMemo(() => {
-    if (currentStorageId == null) return undefined
-    return db.storageMap[currentStorageId]
-  }, [db.storageMap, currentStorageId])
+    if (storageId == null) return undefined
+    return db.storageMap[storageId]
+  }, [db.storageMap, storageId])
 
   const notes = useMemo(() => {
     if (currentStorage == null) return []
-    if (currentFolderPathname != null) {
-      const folder = currentStorage.folderMap[currentFolderPathname]
+    if (folderPathname != null) {
+      const folder = currentStorage.folderMap[folderPathname]
       if (folder == null) return []
       const noteIds = [...folder.noteIdSet]
       return noteIds
         .map(noteId => currentStorage.noteMap[noteId]!)
         .filter(note => !note.trashed)
     }
-    const tagRegexpResult = tagRegexp.exec(pathname)
-    if (tagRegexpResult != null) {
-      const tag = tagRegexpResult[2]
-      const noteIds = [...currentStorage.tagMap[tag]!.noteIdSet]
-      return noteIds.map(noteId => currentStorage.noteMap[noteId]!)
-    }
+
     return []
-  }, [currentStorage, currentFolderPathname, pathname])
+  }, [currentStorage, folderPathname])
 
   const currentNote = useMemo(() => {
     if (currentStorage == null) return null
-    if (currentNoteId == null) return null
-    return currentStorage.noteMap[currentNoteId]
-  }, [currentNoteId, currentStorage])
+    if (noteId == null) return null
+    return currentStorage.noteMap[noteId]
+  }, [noteId, currentStorage])
 
   const createNote = useCallback(async () => {
-    if (currentStorageId == null) {
+    if (storageId == null) {
       return
     }
-    await db.createNote(currentStorageId, {
-      folderPathname:
-        currentFolderPathname == null ? '/' : currentFolderPathname
+    await db.createNote(storageId, {
+      folderPathname: folderPathname == null ? '/' : folderPathname
     })
-  }, [db, currentFolderPathname, currentStorageId])
+  }, [db, folderPathname, storageId])
 
   const removeNote = async () => {}
 
-  return currentStorageId != null ? (
+  return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
       left={
         <NoteList
-          storageId={currentStorageId}
+          storageId={storageId}
           notes={notes}
-          currentNoteId={currentNoteId}
+          currentNoteId={noteId}
           createNote={createNote}
         />
       }
@@ -73,7 +65,7 @@ export default () => {
           <div>No note selected</div>
         ) : (
           <NoteDetail
-            storageId={currentStorageId}
+            storageId={storageId}
             note={currentNote}
             updateNote={db.updateNote}
             trashNote={db.trashNote}

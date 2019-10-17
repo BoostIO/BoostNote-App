@@ -1,11 +1,14 @@
 import React from 'react'
 import NotePage from './NotePage'
-import { useNotesPathname } from '../lib/router'
+import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
 
 export default () => {
-  const [storageId] = useNotesPathname()
-  if (storageId != null) return <NotePage />
+  const routeParams = useRouteParams()
+  switch (routeParams.name) {
+    case 'storages.notes':
+      return <NotePage />
+  }
   return (
     <StyledNotFoundPage>
       <h1>Page not found</h1>

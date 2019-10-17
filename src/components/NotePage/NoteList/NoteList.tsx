@@ -27,7 +27,7 @@ const StyledContainer = styled.div`
 type NoteListProps = {
   storageId: string
   notes: NoteDoc[]
-  currentNoteId: string | null
+  currentNoteId?: string
   createNote: () => Promise<void>
 }
 
