@@ -1,36 +1,54 @@
 import React, { useMemo, useCallback } from 'react'
 import NoteList from './NoteList'
 import NoteDetail from './NoteDetail'
-import { useRouteParams, StorageNotesRouteParams } from '../../lib/router'
+import {
+  useRouteParams,
+  StorageAllNotes,
+  StorageNotesRouteParams,
+  StorageTrashCanRouteParams,
+  StorageTagsRouteParams
+} from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
+import { NoteDoc } from '../../lib/db/types'
 
 export default () => {
   const db = useDb()
 
-  const {
-    storageId,
-    folderPathname,
-    noteId
-  } = useRouteParams() as StorageNotesRouteParams
+  const routeParams = useRouteParams() as (
+    | StorageAllNotes
+    | StorageNotesRouteParams
+    | StorageTrashCanRouteParams
+    | StorageTagsRouteParams)
+  const { storageId, noteId } = routeParams
   const currentStorage = useMemo(() => {
     if (storageId == null) return undefined
     return db.storageMap[storageId]
   }, [db.storageMap, storageId])
 
-  const notes = useMemo(() => {
+  const notes = useMemo((): NoteDoc[] => {
     if (currentStorage == null) return []
-    if (folderPathname != null) {
-      const folder = currentStorage.folderMap[folderPathname]
-      if (folder == null) return []
-      const noteIds = [...folder.noteIdSet]
-      return noteIds
-        .map(noteId => currentStorage.noteMap[noteId]!)
-        .filter(note => !note.trashed)
+    switch (routeParams.name) {
+      case 'storages.allNotes':
+        return Object.values(currentStorage.noteMap) as NoteDoc[]
+      case 'storages.notes':
+        const { folderPathname } = routeParams
+        const folder = currentStorage.folderMap[folderPathname]
+        if (folder == null) return []
+        return [...folder.noteIdSet]
+          .map(noteId => currentStorage.noteMap[noteId]!)
+          .filter(note => !note.trashed)
+      case 'storages.tags.show':
+        const { tagName } = routeParams
+        const tag = currentStorage.tagMap[tagName]
+        if (tag == null) return []
+        return [...tag.noteIdSet]
+          .map(noteId => currentStorage.noteMap[noteId]!)
+          .filter(note => !note.trashed)
     }
 
     return []
-  }, [currentStorage, folderPathname])
+  }, [currentStorage, routeParams])
 
   const currentNote = useMemo(() => {
     if (currentStorage == null) return null
@@ -42,10 +60,12 @@ export default () => {
     if (storageId == null) {
       return
     }
+    const folderPathname =
+      routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
     await db.createNote(storageId, {
-      folderPathname: folderPathname == null ? '/' : folderPathname
+      folderPathname
     })
-  }, [db, folderPathname, storageId])
+  }, [db, routeParams, storageId])
 
   const removeNote = async () => {}
 
