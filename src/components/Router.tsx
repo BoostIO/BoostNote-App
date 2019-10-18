@@ -6,7 +6,10 @@ import { StyledNotFoundPage } from './styled'
 export default () => {
   const routeParams = useRouteParams()
   switch (routeParams.name) {
+    case 'storages.allNotes':
     case 'storages.notes':
+    case 'storages.trashCan':
+    case 'storages.tags.show':
       return <NotePage />
   }
   return (
