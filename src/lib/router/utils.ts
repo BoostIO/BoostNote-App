@@ -42,10 +42,16 @@ export interface BaseRouteParams {
   name: string
 }
 
+export interface StorageAllNotes extends BaseRouteParams {
+  name: 'storages.allNotes'
+  storageId: string
+  noteId?: string
+}
+
 export interface StorageNotesRouteParams extends BaseRouteParams {
   name: 'storages.notes'
   storageId: string
-  folderPathname?: string
+  folderPathname: string
   noteId?: string
 }
 
@@ -67,6 +73,7 @@ export interface UnknownRouteparams extends BaseRouteParams {
 }
 
 export type AllRouteParams =
+  | StorageAllNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
@@ -114,6 +121,15 @@ export const useRouteParams = () => {
         storageId,
         folderPathname: '/' + folderNames.join('/'),
         noteId
+      }
+    }
+
+    if (names[2] === 'tags') {
+      return {
+        name: 'storages.tags.show',
+        storageId,
+        tagName: names[3],
+        noteId: /^notes:/.test(names[4]) ? names[4] : undefined
       }
     }
 
