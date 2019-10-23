@@ -6,7 +6,8 @@ import {
   StorageAllNotes,
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
-  StorageTagsRouteParams
+  StorageTagsRouteParams,
+  usePathnameWithoutNoteId
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
@@ -25,6 +26,8 @@ export default () => {
     if (storageId == null) return undefined
     return db.storageMap[storageId]
   }, [db.storageMap, storageId])
+
+  const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
 
   const notes = useMemo((): NoteDoc[] => {
     if (currentStorage == null) return []
@@ -78,6 +81,7 @@ export default () => {
           notes={notes}
           currentNoteId={noteId}
           createNote={createNote}
+          basePathname={currentPathnameWithoutNoteId}
         />
       }
       right={

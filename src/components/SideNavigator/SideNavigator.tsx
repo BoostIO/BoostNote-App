@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouteParams } from '../../lib/router'
+import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
@@ -72,15 +72,7 @@ export default () => {
     return entries(storageMap)
   }, [storageMap])
 
-  const currentPathnameWithoutNoteId = useMemo(() => {
-    switch (routeParams.name) {
-      case 'storages.notes':
-        return `/app/storages/${routeParams.storageId}/notes${routeParams.folderPathname}`
-      case 'storages.tags.show':
-        return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
-    }
-    return '/app'
-  }, [routeParams])
+  const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
 
   const currentStorage = useMemo(() => {
     switch (routeParams.name) {

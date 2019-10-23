@@ -35,12 +35,11 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   storageId: string
+  basePathname: string
 }
 
-export default ({ note, active, storageId }: NoteItemProps) => {
-  const href = `/app/storages/${storageId}/notes${
-    note.folderPathname === '/' ? '' : note.folderPathname
-  }/${note._id}`
+export default ({ note, active, basePathname }: NoteItemProps) => {
+  const href = `${basePathname}/${note._id}`
 
   const contentPreview = useMemo(() => {
     return (

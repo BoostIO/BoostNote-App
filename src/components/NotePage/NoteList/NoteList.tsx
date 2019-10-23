@@ -29,13 +29,15 @@ type NoteListProps = {
   notes: NoteDoc[]
   currentNoteId?: string
   createNote: () => Promise<void>
+  basePathname: string
 }
 
 const NoteList = ({
   notes,
   currentNoteId,
   createNote,
-  storageId
+  storageId,
+  basePathname
 }: NoteListProps) => {
   return (
     <StyledContainer>
@@ -57,6 +59,7 @@ const NoteList = ({
                 active={noteIsCurrentNote}
                 note={note}
                 storageId={storageId}
+                basePathname={basePathname}
               />
             </li>
           )

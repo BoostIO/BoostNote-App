@@ -129,7 +129,7 @@ export const useRouteParams = () => {
         name: 'storages.tags.show',
         storageId,
         tagName: names[3],
-        noteId: /^notes:/.test(names[4]) ? names[4] : undefined
+        noteId: /^note:/.test(names[4]) ? names[4] : undefined
       }
     }
 
@@ -137,4 +137,17 @@ export const useRouteParams = () => {
       name: 'unknown'
     }
   }, [pathname])
+}
+
+export const usePathnameWithoutNoteId = () => {
+  const routeParams = useRouteParams()
+  return useMemo(() => {
+    switch (routeParams.name) {
+      case 'storages.notes':
+        return `/app/storages/${routeParams.storageId}/notes${routeParams.folderPathname}`
+      case 'storages.tags.show':
+        return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
+    }
+    return '/app'
+  }, [routeParams])
 }
