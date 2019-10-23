@@ -49,7 +49,6 @@ export default () => {
           .map(noteId => currentStorage.noteMap[noteId]!)
           .filter(note => !note.trashed)
     }
-
     return []
   }, [currentStorage, routeParams])
 
@@ -65,8 +64,12 @@ export default () => {
     }
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
+
+    const tags =
+      routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
     await db.createNote(storageId, {
-      folderPathname
+      folderPathname,
+      tags
     })
   }, [db, routeParams, storageId])
 
