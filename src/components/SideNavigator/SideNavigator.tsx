@@ -76,6 +76,8 @@ export default () => {
     switch (routeParams.name) {
       case 'storages.notes':
         return `/app/storages/${routeParams.storageId}/notes${routeParams.folderPathname}`
+      case 'storages.tags.show':
+        return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
     }
     return '/app'
   }, [routeParams])

@@ -167,10 +167,15 @@ const StorageNavigatorItem = ({
     storage.folderMap,
     createFolderContextMenuHandler
   ])
-  const tagNodes = Object.keys(storage.tagMap).map(tagName => ({
-    name: tagName,
-    href: `/app/storages/${storage.id}/tags/${tagName}`
-  }))
+
+  const tagNodes = Object.keys(storage.tagMap).map(tagName => {
+    const tagPathname = `/app/storages/${storage.id}/tags/${tagName}`
+    return {
+      name: tagName,
+      href: `/app/storages/${storage.id}/tags/${tagName}`,
+      active: currentPathname === tagPathname
+    }
+  })
 
   const node = useMemo(() => {
     const storagePathname = `/app/storages/${storage.id}`
@@ -251,7 +256,7 @@ function getNavigatorNodeFromPathnameTree(
     return {
       name: folderName,
       href: pathname,
-      active: new RegExp(`${pathname}(/note:.+)?$`).test(currentPathname),
+      active: pathname === currentPathname,
       onContextMenu: contextMenuHandlerCreator(folderPathname),
       children: getNavigatorNodeFromPathnameTree(
         tree,
