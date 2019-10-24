@@ -7,7 +7,8 @@ import {
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
-  usePathnameWithoutNoteId
+  usePathnameWithoutNoteId,
+  useRouter
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
@@ -57,6 +58,12 @@ export default () => {
     }
     return []
   }, [currentStorage, routeParams])
+
+  const router = useRouter()
+
+  if (notes.length > 0 && routeParams.noteId == null) {
+    router.replace(currentPathnameWithoutNoteId + `/${notes[0]._id}`)
+  }
 
   const currentNote = useMemo(() => {
     if (currentStorage == null) return null
