@@ -14,6 +14,10 @@ import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
 
+function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
+  return b.updatedAt.localeCompare(a.updatedAt)
+}
+
 export default () => {
   const db = useDb()
 
@@ -44,6 +48,7 @@ export default () => {
         return [...folder.noteIdSet]
           .map(noteId => currentStorage.noteMap[noteId]!)
           .filter(note => !note.trashed)
+          .sort(sortByUpdatedAt)
       case 'storages.tags.show':
         const { tagName } = routeParams
         const tag = currentStorage.tagMap[tagName]
@@ -51,10 +56,11 @@ export default () => {
         return [...tag.noteIdSet]
           .map(noteId => currentStorage.noteMap[noteId]!)
           .filter(note => !note.trashed)
+          .sort(sortByUpdatedAt)
       case 'storages.trashCan':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[]).filter(
-          note => note.trashed
-        )
+        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+          .filter(note => note.trashed)
+          .sort(sortByUpdatedAt)
     }
     return []
   }, [currentStorage, routeParams])
