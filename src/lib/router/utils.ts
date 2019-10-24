@@ -133,6 +133,14 @@ export const useRouteParams = () => {
       }
     }
 
+    if (names[2] === 'trashcan') {
+      return {
+        name: 'storages.trashCan',
+        storageId,
+        noteId: /^note:/.test(names[3]) ? names[3] : undefined
+      }
+    }
+
     return {
       name: 'unknown'
     }
@@ -144,9 +152,13 @@ export const usePathnameWithoutNoteId = () => {
   return useMemo(() => {
     switch (routeParams.name) {
       case 'storages.notes':
-        return `/app/storages/${routeParams.storageId}/notes${routeParams.folderPathname}`
+        return `/app/storages/${routeParams.storageId}/notes${
+          routeParams.folderPathname === '/' ? '' : routeParams.folderPathname
+        }`
       case 'storages.tags.show':
         return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
+      case 'storages.trashCan':
+        return `/app/storages/${routeParams.storageId}/trashcan`
     }
     return '/app'
   }, [routeParams])

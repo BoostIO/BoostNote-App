@@ -180,7 +180,7 @@ const StorageNavigatorItem = ({
   const node = useMemo(() => {
     const storagePathname = `/app/storages/${storage.id}`
     const notesPathname = `/app/storages/${storage.id}/notes`
-
+    console.log(currentPathname)
     return {
       name: storage.name,
       href: storagePathname,
@@ -202,8 +202,9 @@ const StorageNavigatorItem = ({
         },
         {
           iconPath: mdiTrashCan,
-          href: `${storagePathname}/trash-can`,
-          name: 'Trash Can'
+          href: `${storagePathname}/trashcan`,
+          name: 'Trash Can',
+          active: currentPathname === `/app/storages/${storage.id}/trashcan`
         }
       ]
     }

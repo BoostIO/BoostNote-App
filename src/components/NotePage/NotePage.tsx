@@ -33,7 +33,9 @@ export default () => {
     if (currentStorage == null) return []
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return Object.values(currentStorage.noteMap) as NoteDoc[]
+        return (Object.values(currentStorage.noteMap) as NoteDoc[]).filter(
+          note => !note.trashed
+        )
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
@@ -48,6 +50,10 @@ export default () => {
         return [...tag.noteIdSet]
           .map(noteId => currentStorage.noteMap[noteId]!)
           .filter(note => !note.trashed)
+      case 'storages.trashCan':
+        return (Object.values(currentStorage.noteMap) as NoteDoc[]).filter(
+          note => note.trashed
+        )
     }
     return []
   }, [currentStorage, routeParams])
@@ -59,7 +65,7 @@ export default () => {
   }, [noteId, currentStorage])
 
   const createNote = useCallback(async () => {
-    if (storageId == null) {
+    if (storageId == null || routeParams.name === 'storages.trashCan') {
       return
     }
     const folderPathname =
