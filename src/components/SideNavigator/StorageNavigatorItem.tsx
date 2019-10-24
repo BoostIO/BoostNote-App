@@ -180,7 +180,6 @@ const StorageNavigatorItem = ({
   const node = useMemo(() => {
     const storagePathname = `/app/storages/${storage.id}`
     const notesPathname = `/app/storages/${storage.id}/notes`
-    console.log(currentPathname)
     return {
       name: storage.name,
       href: storagePathname,
