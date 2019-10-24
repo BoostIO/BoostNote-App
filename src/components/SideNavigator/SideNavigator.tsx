@@ -11,6 +11,7 @@ import StorageNavigatorItem from './StorageNavigatorItem'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { usePreferences } from '../../lib/preferences'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -128,11 +129,13 @@ export default () => {
     [popup, prompt, createStorage]
   )
 
+  const { toggleClosed } = usePreferences()
+
   return (
     <StyledSideNavContainer>
       <Toolbar>
         <ToolbarSeparator />
-        <ToolbarIconButton path={mdiSettings} onClick={() => {}} />
+        <ToolbarIconButton path={mdiSettings} onClick={toggleClosed} />
       </Toolbar>
       <ul className='storageList'>
         {storageEntries.map(([id, storage]) => {

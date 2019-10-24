@@ -9,6 +9,7 @@ import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
 import { useDb } from '../lib/db'
 import TwoPaneLayout from './atoms/TwoPaneLayout'
+import PreferencesModal from './PreferencesModal/PreferencesModal'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -31,6 +32,7 @@ const App = () => {
         <GlobalStyle />
         <ContextMenu />
         <Dialog />
+        <PreferencesModal />
       </StyledAppContainer>
     </ThemeProvider>
   )
