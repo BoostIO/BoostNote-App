@@ -12,11 +12,14 @@ const StyledNoteListItem = styled.div<{ active: boolean }>`
     `background-color: ${theme.colors.active};
     color: ${theme.colors.inverseText};`}
   border-bottom: solid 1px ${({ theme }) => theme.colors.border};
-  padding: 8px;
   user-select: none;
 
   a {
     text-decoration: none;
+  }
+
+  .container {
+    padding: 8px;
   }
 
   .title {
@@ -53,16 +56,18 @@ export default ({ note, active, basePathname }: NoteItemProps) => {
   return (
     <StyledNoteListItem active={active}>
       <Link href={href}>
-        <div className='title'>{note.title}</div>
-        <div className='preview'>{contentPreview}</div>
-        {note.tags.length > 0 && (
-          <div>
-            <Icon path={mdiTagOutline} />{' '}
-            {note.tags.map(tag => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-        )}
+        <div className='container'>
+          <div className='title'>{note.title}</div>
+          <div className='preview'>{contentPreview}</div>
+          {note.tags.length > 0 && (
+            <div>
+              <Icon path={mdiTagOutline} />{' '}
+              {note.tags.map(tag => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
       </Link>
     </StyledNoteListItem>
   )
