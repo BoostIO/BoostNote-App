@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import { mdiClose } from '@mdi/js'
 import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
+import { useGlobalKeyDownHandler } from '../../lib/keyboard'
 
 const StyledContainer = styled.div`
   z-index: 7000;
@@ -43,17 +44,14 @@ const PreferencesModal = () => {
   const { closed, toggleClosed } = usePreferences()
   const [tab, setTab] = useState('general')
 
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+  const keydownHandler = useMemo(() => {
+    return (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {
         toggleClosed()
       }
     }
-    window.addEventListener('keydown', handler)
-    return () => {
-      window.removeEventListener('keydown', handler)
-    }
-  }, [closed, toggleClosed])
+  }, [closed])
+  useGlobalKeyDownHandler(keydownHandler)
 
   if (closed) {
     return null
