@@ -92,6 +92,31 @@ export default () => {
     })
   }, [db, routeParams, storageId])
 
+  const currentNoteIndex = useMemo(() => {
+    for (let i = 0; i < notes.length; i++) {
+      if (notes[i]._id === noteId) {
+        return i
+      }
+    }
+    return 0
+  }, [notes, noteId])
+
+  const naviagateUp = useCallback(() => {
+    if (currentNoteIndex > 0) {
+      router.push(
+        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex - 1]._id}`
+      )
+    }
+  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
+
+  const naviagateDown = useCallback(() => {
+    if (currentNoteIndex < notes.length - 1) {
+      router.push(
+        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex + 1]._id}`
+      )
+    }
+  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
+
   const removeNote = async () => {}
 
   return storageId != null ? (
@@ -101,9 +126,11 @@ export default () => {
         <NoteList
           storageId={storageId}
           notes={notes}
-          currentNoteId={noteId}
           createNote={createNote}
           basePathname={currentPathnameWithoutNoteId}
+          currentNoteIndex={currentNoteIndex}
+          navigateUp={naviagateUp}
+          navigateDown={naviagateDown}
         />
       }
       right={

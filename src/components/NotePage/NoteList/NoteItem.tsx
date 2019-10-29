@@ -39,9 +39,10 @@ type NoteItemProps = {
   active: boolean
   storageId: string
   basePathname: string
+  focusList: () => void
 }
 
-export default ({ note, active, basePathname }: NoteItemProps) => {
+export default ({ note, active, basePathname, focusList }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
   const contentPreview = useMemo(() => {
@@ -55,7 +56,7 @@ export default ({ note, active, basePathname }: NoteItemProps) => {
 
   return (
     <StyledNoteListItem active={active}>
-      <Link href={href}>
+      <Link href={href} onFocus={focusList}>
         <div className='container'>
           <div className='title'>{note.title}</div>
           <div className='preview'>{contentPreview}</div>
