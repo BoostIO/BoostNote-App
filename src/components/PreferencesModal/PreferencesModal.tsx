@@ -5,6 +5,7 @@ import { mdiClose } from '@mdi/js'
 import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
+import GeneralTab from './GeneralTab'
 
 const StyledContainer = styled.div`
   z-index: 7000;
@@ -53,6 +54,14 @@ const PreferencesModal = () => {
   }, [closed])
   useGlobalKeyDownHandler(keydownHandler)
 
+  const content = useMemo(() => {
+    switch (tab) {
+      case 'general':
+      default:
+        return <GeneralTab />
+    }
+  }, [tab])
+
   if (closed) {
     return null
   }
@@ -91,7 +100,7 @@ const PreferencesModal = () => {
           setTab={setTab}
         />
       </div>
-      <div className='content'>Content</div>
+      <div className='content'>{content}</div>
       <button className='closeButton' onClick={toggleClosed}>
         <Icon path={mdiClose} />
       </button>
