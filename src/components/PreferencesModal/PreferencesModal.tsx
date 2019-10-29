@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import { mdiClose } from '@mdi/js'
 import { usePreferences } from '../../lib/preferences'
-import cc from 'classcat'
+import TabButton from './TabButton'
 
 const StyledContainer = styled.div`
   z-index: 7000;
@@ -43,16 +43,6 @@ const PreferencesModal = () => {
   const { closed, toggleClosed } = usePreferences()
   const [tab, setTab] = useState('general')
 
-  const selectGeneral = useCallback(() => {
-    setTab('general')
-  }, [setTab])
-  const selectMarkdown = useCallback(() => {
-    setTab('markdown')
-  }, [setTab])
-  const selectAbout = useCallback(() => {
-    setTab('about')
-  }, [setTab])
-
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {
@@ -72,24 +62,36 @@ const PreferencesModal = () => {
   return (
     <StyledContainer>
       <div className='nav'>
-        <button
-          className={cc(['navButton', tab === 'general' && 'active'])}
-          onClick={selectGeneral}
-        >
-          General
-        </button>
-        <button
-          className={cc(['navButton', tab === 'markdown' && 'active'])}
-          onClick={selectMarkdown}
-        >
-          Markdown
-        </button>
-        <button
-          className={cc(['navButton', tab === 'about' && 'active'])}
-          onClick={selectAbout}
-        >
-          About
-        </button>
+        <TabButton
+          label='General'
+          tab='general'
+          active={tab === 'general'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='Editor'
+          tab='editor'
+          active={tab === 'editor'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='Markdown'
+          tab='markdown'
+          active={tab === 'markdown'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='Hotkeys'
+          tab='hotkeys'
+          active={tab === 'hotkeys'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='About'
+          tab='about'
+          active={tab === 'about'}
+          setTab={setTab}
+        />
       </div>
       <div className='content'>Content</div>
       <button className='closeButton' onClick={toggleClosed}>
