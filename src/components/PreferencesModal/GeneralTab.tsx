@@ -1,49 +1,52 @@
 import React from 'react'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
+import { Section, SectionHeader, SectionControl } from './styled'
 
 const GeneralTab = () => {
   return (
     <div>
-      <div>
+      <Section>
+        <SectionHeader>Accounts</SectionHeader>
         <div>
-          <h1>Accounts</h1>
+          <ul>
+            <li>Account list</li>
+          </ul>
           <button>
             <Icon path={mdiPlus} />
             Add Another Account
           </button>
         </div>
-        <div>Account list</div>
-      </div>
-      <div>
-        <h1>Interface Language</h1>
-        <div>
+      </Section>
+      <Section>
+        <SectionHeader>Interface Language</SectionHeader>
+        <SectionControl>
           <select>
             <option>English</option>
             <option>Japanese</option>
           </select>
-        </div>
-      </div>
-      <div>
-        <h1>Application Theme</h1>
-        <div>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Application Theme</SectionHeader>
+        <SectionControl>
           <select>
             <option>Light</option>
             <option>Dark</option>
             <option>Solarized Dark</option>
           </select>
-        </div>
-      </div>
-      <div>
-        <h1>Note Sorting</h1>
-        <div>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Note Sorting</SectionHeader>
+        <SectionControl>
           <select>
             <option>Date Updated</option>
             <option>Date Created</option>
             <option>Title</option>
           </select>
-        </div>
-      </div>
+        </SectionControl>
+      </Section>
     </div>
   )
 }

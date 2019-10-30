@@ -64,7 +64,10 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
     new HtmlWebpackPlugin(),
-    new ErrorOverlayPlugin()
+    new ErrorOverlayPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(require('./package.json').version)
+    })
   ],
 
   devServer: {

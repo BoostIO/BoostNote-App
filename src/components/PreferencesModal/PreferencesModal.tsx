@@ -6,6 +6,9 @@ import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
 import GeneralTab from './GeneralTab'
+import EditorTab from './EditorTab'
+import MarkdownTab from './MarkdownTab'
+import AboutTab from './AboutTab'
 
 const StyledContainer = styled.div`
   z-index: 7000;
@@ -56,6 +59,12 @@ const PreferencesModal = () => {
 
   const content = useMemo(() => {
     switch (tab) {
+      case 'editor':
+        return <EditorTab />
+      case 'markdown':
+        return <MarkdownTab />
+      case 'about':
+        return <AboutTab />
       case 'general':
       default:
         return <GeneralTab />
@@ -87,12 +96,12 @@ const PreferencesModal = () => {
           active={tab === 'markdown'}
           setTab={setTab}
         />
-        <TabButton
+        {/* <TabButton
           label='Hotkeys'
           tab='hotkeys'
           active={tab === 'hotkeys'}
           setTab={setTab}
-        />
+        /> */}
         <TabButton
           label='About'
           tab='about'
