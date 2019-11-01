@@ -112,6 +112,7 @@
     "ramda": "^0.26.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-use": "^12.10.0",
     "rehype-raw": "^4.0.1",
     "rehype-react": "^4.0.1",
     "rehype-sanitize": "^3.0.0",

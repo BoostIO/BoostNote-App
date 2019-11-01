@@ -1,0 +1,83 @@
+import { useState, useCallback, useMemo, useEffect } from 'react'
+import { createStoreContext } from '../utils/context'
+import { localLiteStorage } from 'ltstrg'
+import { Preferences } from './types'
+import { useSetState } from 'react-use'
+
+const preferencesKey = 'PREFERENCES'
+
+function loadPreferences() {
+  const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
+  if (stringifiedPreferences == null) return {}
+  try {
+    return JSON.parse(stringifiedPreferences)
+  } catch (error) {
+    console.warn(error.message)
+    return {}
+  }
+}
+
+function savePreferences(preferences: Partial<Preferences>) {
+  localLiteStorage.setItem(preferencesKey, JSON.stringify(preferences))
+}
+
+const initialPreferences = loadPreferences()
+
+const basePreferences: Preferences = {
+  // General
+  'general.accounts': [],
+  'general.language': 'en-US',
+  'general.theme': 'auto',
+  'general.noteSorting': 'date-updated',
+  'general.enableAnalytics': true,
+
+  // Editor
+  'editor.theme': 'default',
+  'editor.fontSize': 14,
+  'editor.fontFamily': 'monospace',
+  'editor.indentType': 'spaces',
+  'editor.indentSize': 4,
+  'editor.keymap': 'default',
+
+  // Markdown
+  'markdown.previewStyle': 'default',
+  'markdown.codeBlockTheme': 'default'
+}
+
+function usePreferencesStore() {
+  const [preferences, setPreferences] = useSetState<Preferences>(
+    initialPreferences
+  )
+  useEffect(() => {
+    savePreferences(preferences)
+  }, [preferences])
+
+  const mergedPreferences = useMemo(() => {
+    return {
+      ...basePreferences,
+      ...preferences
+    }
+  }, [preferences])
+
+  const [closed, setClosed] = useState(true)
+  const toggleClosed = useCallback(() => {
+    if (closed) {
+      setClosed(false)
+    } else {
+      setClosed(true)
+    }
+  }, [closed, setClosed])
+
+  return {
+    closed,
+    setClosed,
+    toggleClosed,
+    preferences: mergedPreferences,
+    setPreferences
+  }
+}
+
+export const {
+  StoreProvider: PreferencesProvider,
+  useStore: usePreferences
+} = createStoreContext(usePreferencesStore, 'preferences')
