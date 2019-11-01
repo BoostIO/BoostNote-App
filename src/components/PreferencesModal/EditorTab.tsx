@@ -25,6 +25,15 @@ const EditorTab = () => {
         </SectionControl>
       </Section>
       <Section>
+        <SectionHeader>Editor Indent Type</SectionHeader>
+        <SectionControl>
+          <select>
+            <option>Tab</option>
+            <option>Spaces</option>
+          </select>
+        </SectionControl>
+      </Section>
+      <Section>
         <SectionHeader>Editor Indent Size</SectionHeader>
         <SectionControl>
           <select>
@@ -35,19 +44,10 @@ const EditorTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Indent Type</SectionHeader>
-        <SectionControl>
-          <select>
-            <option>Tab</option>
-            <option>Spaces</option>
-          </select>
-        </SectionControl>
-      </Section>
-      <Section>
         <SectionHeader>Editor Keymap</SectionHeader>
         <SectionControl>
           <select>
-            <option>Tab</option>
+            <option>VIM</option>
             <option>Spaces</option>
           </select>
         </SectionControl>
