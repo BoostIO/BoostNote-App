@@ -13,6 +13,7 @@ import PreferencesModal from './PreferencesModal/PreferencesModal'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../lib/keyboard'
 import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
+import '../lib/analytics'
 
 const App = () => {
   const { initialize, initialized } = useDb()

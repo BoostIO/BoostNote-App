@@ -3,6 +3,9 @@ import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
+import dotenv from 'dotenv'
+
+const { parsed } = dotenv.config()
 
 module.exports = {
   entry: [
@@ -66,7 +69,19 @@ module.exports = {
     new HtmlWebpackPlugin(),
     new ErrorOverlayPlugin(),
     new webpack.DefinePlugin({
-      'process.env.VERSION': JSON.stringify(require('./package.json').version)
+      'process.env.VERSION': JSON.stringify(require('./package.json').version),
+      'process.env.AMPLIFY_AUTH_IDENTITY_POOL_ID': JSON.stringify(
+        parsed.AMPLIFY_AUTH_IDENTITY_POOL_ID
+      ),
+      'process.env.AMPLIFY_AUTH_REGION': JSON.stringify(
+        parsed.AMPLIFY_AUTH_REGION
+      ),
+      'process.env.AMPLIFY_PINPOINT_APPID': JSON.stringify(
+        parsed.AMPLIFY_PINPOINT_APPID
+      ),
+      'process.env.AMPLIFY_PINPOINT_REGION': JSON.stringify(
+        parsed.AMPLIFY_PINPOINT_REGION
+      )
     })
   ],
 
