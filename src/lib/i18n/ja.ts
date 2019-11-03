@@ -18,6 +18,16 @@ export default {
       'Boost Note collects anonymous data for the sole purpose of improving the application, and strictly does not collect any personal information such the contents of your notes.You can see how it works on GitHub.',
     'preferences.analyticsDescription2':
       'You can choose to enable or disable this option.',
-    'preferences.analyticsLabel': 'Enable analytics to help improve Boostnote'
+    'preferences.analyticsLabel': 'Enable analytics to help improve Boostnote',
+
+    // Preferences EditorTab
+    'preferences.editorTheme': 'エディターテーマ',
+    'preferences.editorFontSize': 'エディターフォントサイズ',
+    'preferences.editorFontFamily': 'エディターフォントファミリー',
+    'preferences.editorIndentType': 'エディターインデントタイプ',
+    'preferences.tab': 'タブ',
+    'preferences.spaces': 'スペース',
+    'preferences.editorIndentSize': 'エディターインデントサイズ',
+    'preferences.editorKeymap': 'エディターキーマップ'
   }
 }

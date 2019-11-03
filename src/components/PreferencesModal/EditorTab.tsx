@@ -1,40 +1,42 @@
 import React from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
+import { useTranslation } from 'react-i18next'
 
 const EditorTab = () => {
+  const { t } = useTranslation()
   return (
     <div>
       <Section>
-        <SectionHeader>Editor Theme</SectionHeader>
+        <SectionHeader>{t('preferences.editorTheme')}</SectionHeader>
         <SectionControl>
           <select>
-            <option>default</option>
+            <option>Default</option>
           </select>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Font Size</SectionHeader>
+        <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
         <SectionControl>
           <input type='number' />
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Font Family</SectionHeader>
+        <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
         <SectionControl>
           <input type='value' />
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Indent Type</SectionHeader>
+        <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
         <SectionControl>
           <select>
-            <option>Tab</option>
-            <option>Spaces</option>
+            <option>{t('preferences.tab')}</option>
+            <option>{t('preferences.spaces')}</option>
           </select>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Indent Size</SectionHeader>
+        <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
         <SectionControl>
           <select>
             <option>2</option>
@@ -44,11 +46,12 @@ const EditorTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Editor Keymap</SectionHeader>
+        <SectionHeader>{t('preferences.editorKeymap')}</SectionHeader>
         <SectionControl>
           <select>
-            <option>VIM</option>
-            <option>Spaces</option>
+            <option>Default</option>
+            <option>vim</option>
+            <option>emacs</option>
           </select>
         </SectionControl>
       </Section>
