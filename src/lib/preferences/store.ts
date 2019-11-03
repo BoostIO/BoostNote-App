@@ -3,6 +3,7 @@ import { createStoreContext } from '../utils/context'
 import { localLiteStorage } from 'ltstrg'
 import { Preferences } from './types'
 import { useSetState } from 'react-use'
+import { useTranslation } from 'react-i18next'
 
 const preferencesKey = 'PREFERENCES'
 
@@ -67,6 +68,12 @@ function usePreferencesStore() {
       setClosed(true)
     }
   }, [closed, setClosed])
+
+  const currentLanguage = mergedPreferences['general.language']
+  const { i18n } = useTranslation('preferences')
+  useEffect(() => {
+    i18n.changeLanguage(currentLanguage)
+  }, [i18n, currentLanguage])
 
   return {
     closed,

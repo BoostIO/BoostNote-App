@@ -8,6 +8,7 @@ import {
   GeneralLanguageOptions,
   GeneralNoteSortingOptions
 } from '../../lib/preferences'
+import { useTranslation } from 'react-i18next'
 
 type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
@@ -38,22 +39,21 @@ const GeneralTab = () => {
     })
   }
 
+  const { t } = useTranslation()
+
   return (
     <div>
       <Section>
-        <SectionHeader>Account</SectionHeader>
+        <SectionHeader>{t('preferences.account')}</SectionHeader>
         <div>
-          <ul>
-            <li>Account list</li>
-          </ul>
           <button>
             <Icon path={mdiPlus} />
-            Add Another Account
+            {t('preferences.addAccount')}
           </button>
         </div>
       </Section>
       <Section>
-        <SectionHeader>Interface Language</SectionHeader>
+        <SectionHeader>{t('preferences.interfaceLanguage')}</SectionHeader>
         <SectionControl>
           <select
             value={preferences['general.language']}
@@ -65,46 +65,44 @@ const GeneralTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Application Theme</SectionHeader>
+        <SectionHeader>{t('preferences.applicationTheme')}</SectionHeader>
         <SectionControl>
           <select value={preferences['general.theme']} onChange={selectTheme}>
-            <option value='auto'>Auto</option>
-            <option value='light'>Light</option>
-            <option value='dark'>Dark</option>
-            <option value='solarized-dark'>Solarized Dark</option>
+            <option value='auto'>{t('preferences.auto')}</option>
+            <option value='light'>{t('preferences.light')}</option>
+            <option value='dark'>{t('preferences.dark')}</option>
+            <option value='solarized-dark'>
+              {t('preferences.solarizedDark')}
+            </option>
           </select>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Note Sorting</SectionHeader>
+        <SectionHeader>{t('preferences.noteSorting')}</SectionHeader>
         <SectionControl>
           <select
             value={preferences['general.noteSorting']}
             onChange={selectNoteSorting}
           >
-            <option value='date-updated'>Date Updated</option>
-            <option value='date-created'>Date Created</option>
-            <option value='title'>Title</option>
+            <option value='date-updated'>{t('preferences.dateUpdated')}</option>
+            <option value='date-created'>{t('preferences.dateCreated')}</option>
+            <option value='title'>{t('preferences.title')}</option>
           </select>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Analytics</SectionHeader>
+        <SectionHeader>{t('preferences.analytics')}</SectionHeader>
         <SectionControl>
-          <p>
-            Boost Note collects anonymous data for the sole purpose of improving
-            the application, and strictly does not collect any personal
-            information such the contents of your notes. You can see how it
-            works on GitHub.
-          </p>
-          <p>You can choose to enable or disable this option.</p>
+          <p>{t('preferences.analyticsDescription1')}</p>
+          <p>{t('preferences.analyticsDescription2')}</p>
           <label>
             <input
               type='checkbox'
               checked={preferences['general.enableAnalytics']}
               onChange={setEnableAnalytics}
             />
-            Enable analytics to help improve Boostnote
+
+            {t('preferences.analyticsLabel')}
           </label>
         </SectionControl>
       </Section>

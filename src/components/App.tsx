@@ -12,6 +12,7 @@ import TwoPaneLayout from './atoms/TwoPaneLayout'
 import PreferencesModal from './PreferencesModal/PreferencesModal'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../lib/keyboard'
 import { usePreferences } from '../lib/preferences'
+import '../lib/i18n'
 
 const App = () => {
   const { initialize, initialized } = useDb()
