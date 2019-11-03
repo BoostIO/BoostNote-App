@@ -54,7 +54,7 @@ const PreferencesModal = () => {
         toggleClosed()
       }
     }
-  }, [closed])
+  }, [closed, toggleClosed])
   useGlobalKeyDownHandler(keydownHandler)
 
   const content = useMemo(() => {

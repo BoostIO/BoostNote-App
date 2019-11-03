@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { osName } from './utils'
 
 export const useGlobalKeyDownHandler = (
   handler: (event: KeyboardEvent) => void
@@ -9,4 +10,13 @@ export const useGlobalKeyDownHandler = (
       window.removeEventListener('keydown', handler)
     }
   }, [handler])
+}
+
+export function isWithGeneralCtrlKey(event: KeyboardEvent) {
+  switch (osName) {
+    case 'macos':
+      return event.metaKey
+    default:
+      return event.ctrlKey
+  }
 }
