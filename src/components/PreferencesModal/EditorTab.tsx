@@ -1,10 +1,20 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePreferences } from '../../lib/preferences'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
+import CodeEditor from '../atoms/CodeEditor'
+
+const defaultPreviewContent = `# hello-world.js
+
+\`\`\`js
+function say() {
+  console.log('Hello, World!')
+}
+\`\`\`
+`
 
 const EditorTab = () => {
   const { preferences, setPreferences } = usePreferences()
@@ -17,6 +27,8 @@ const EditorTab = () => {
     },
     [setPreferences]
   )
+
+  const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
 
   const { t } = useTranslation()
   return (
@@ -76,6 +88,16 @@ const EditorTab = () => {
             <option>vim</option>
             <option>emacs</option>
           </select>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
+        <SectionControl>
+          <CodeEditor
+            value={previewContent}
+            onChange={newValue => setPreviewContent(newValue)}
+            theme={preferences['editor.theme']}
+          />
         </SectionControl>
       </Section>
     </div>

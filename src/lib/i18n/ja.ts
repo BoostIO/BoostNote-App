@@ -28,6 +28,7 @@ export default {
     'preferences.tab': 'タブ',
     'preferences.spaces': 'スペース',
     'preferences.editorIndentSize': 'エディターインデントサイズ',
-    'preferences.editorKeymap': 'エディターキーマップ'
+    'preferences.editorKeymap': 'エディターキーマップ',
+    'preferences.editorPreview': 'エディタープレヴュー'
   }
 }
