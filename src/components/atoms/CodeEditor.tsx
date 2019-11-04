@@ -15,6 +15,7 @@ interface CodeEditorProps {
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   theme?: string
+  fontSize?: number
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -27,13 +28,13 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       theme: this.props.theme == null ? 'default' : this.props.theme
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
-    window.addEventListener('codemirror-mode-load', this.reloadOptions)
+    window.addEventListener('codemirror-mode-load', this.reloadMode)
     if (this.props.codeMirrorRef != null) {
       this.props.codeMirrorRef(this.codeMirror)
     }
   }
 
-  reloadOptions = () => {
+  reloadMode = () => {
     if (this.codeMirror != null) {
       this.codeMirror.setOption('mode', this.codeMirror.getOption('mode'))
     }
@@ -49,13 +50,16 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.props.theme !== prevProps.theme) {
       this.codeMirror.setOption('theme', this.props.theme)
     }
+    if (this.props.fontSize !== prevProps.fontSize) {
+      this.codeMirror.refresh()
+    }
   }
 
   componentWillUnmount() {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
     }
-    window.removeEventListener('codemirror-mode-load', this.reloadOptions)
+    window.removeEventListener('codemirror-mode-load', this.reloadMode)
   }
 
   handleCodeMirrorChange = (
@@ -68,7 +72,16 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   }
 
   render() {
-    return <textarea ref={this.textAreaRef} defaultValue={this.props.value} />
+    return (
+      <div
+        style={{
+          fontSize:
+            this.props.fontSize == null ? 'inherit' : `${this.props.fontSize}px`
+        }}
+      >
+        <textarea ref={this.textAreaRef} defaultValue={this.props.value} />
+      </div>
+    )
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, ChangeEventHandler } from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePreferences } from '../../lib/preferences'
@@ -6,6 +6,7 @@ import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
 import CodeEditor from '../atoms/CodeEditor'
+import { useDebounce } from 'react-use'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -26,6 +27,29 @@ const EditorTab = () => {
       })
     },
     [setPreferences]
+  )
+
+  const [fontSize, setFontSize] = useState(
+    preferences['editor.fontSize'].toString()
+  )
+  const updateFontSize: ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
+      setFontSize(event.target.value)
+    },
+    [setFontSize]
+  )
+
+  useDebounce(
+    () => {
+      const parsedFontSize = parseInt(fontSize, 10)
+      if (!Number.isNaN(parsedFontSize)) {
+        setPreferences({
+          'editor.fontSize': parsedFontSize
+        })
+      }
+    },
+    500,
+    [fontSize, setPreferences]
   )
 
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
@@ -52,7 +76,7 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
         <SectionControl>
-          <input type='number' />
+          <input type='number' value={fontSize} onChange={updateFontSize} /> px
         </SectionControl>
       </Section>
       <Section>
@@ -97,6 +121,7 @@ const EditorTab = () => {
             value={previewContent}
             onChange={newValue => setPreviewContent(newValue)}
             theme={preferences['editor.theme']}
+            fontSize={preferences['editor.fontSize']}
           />
         </SectionControl>
       </Section>

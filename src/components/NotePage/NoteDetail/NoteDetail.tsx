@@ -72,6 +72,7 @@ type NoteDetailProps = {
   storageId: string
   note: NoteDoc
   editorTheme: string
+  editorFontSize: number
   updateNote: (
     storageId: string,
     noteId: string,
@@ -273,8 +274,18 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, editorTheme } = this.props
+    const { note, editorTheme, editorFontSize } = this.props
 
+    const codeEditor = (
+      <CodeEditor
+        key={note._id}
+        codeMirrorRef={this.codeMirrorRef}
+        value={this.state.content}
+        onChange={this.updateContent}
+        theme={editorTheme}
+        fontSize={editorFontSize}
+      />
+    )
     return (
       <StyledNoteDetailContainer>
         {note == null ? (
@@ -309,27 +320,13 @@ export default class NoteDetail extends React.Component<
             </div>
             <div className='contentSection'>
               {this.state.mode === 'edit' ? (
-                <CodeEditor
-                  key={note._id}
-                  codeMirrorRef={this.codeMirrorRef}
-                  value={this.state.content}
-                  onChange={this.updateContent}
-                  theme={editorTheme}
-                />
+                codeEditor
               ) : this.state.mode === 'split' ? (
                 <TwoPaneLayout
                   className='split'
                   defaultLeftWidth={400}
                   maxLeftWidth={800}
-                  left={
-                    <CodeEditor
-                      key={note._id}
-                      codeMirrorRef={this.codeMirrorRef}
-                      value={this.state.content}
-                      onChange={this.updateContent}
-                      theme={editorTheme}
-                    />
-                  }
+                  left={codeEditor}
                   right={<MarkdownPreviewer content={this.state.content} />}
                   onResizeEnd={this.refreshCodeEditor}
                 />
