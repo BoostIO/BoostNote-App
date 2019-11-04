@@ -3,6 +3,7 @@ import 'codemirror/addon/runmode/runmode'
 import 'codemirror/addon/mode/overlay'
 import 'codemirror/mode/markdown/markdown'
 import debounce from 'lodash/debounce'
+import 'codemirror/lib/codemirror.css'
 
 const dispatchModeLoad = debounce(() => {
   window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
@@ -40,3 +41,67 @@ function loadMode(_CodeMirror: any) {
 loadMode(CodeMirror)
 
 export default CodeMirror
+
+export const themes = [
+  '3024-day',
+  'base16-light',
+  'dracula',
+  'gruvbox-dark',
+  'liquibyte',
+  'mbo',
+  'neo',
+  'paraiso-light',
+  'solarized',
+  'twilight',
+  'zenburn',
+  '3024-night',
+  'bespin',
+  'duotone-dark',
+  'hopscotch',
+  'lucario',
+  'mdn-like',
+  'night',
+  'pastel-on-dark',
+  'ssms',
+  'vibrant-ink',
+  'abcdef',
+  'blackboard',
+  'duotone-light',
+  'icecoder',
+  'material',
+  'midnight',
+  'nord',
+  'railscasts',
+  'the-matrix',
+  'xq-dark',
+  'ambiance',
+  'cobalt',
+  'eclipse',
+  'idea',
+  'material-darker',
+  'monokai',
+  'oceanic-next',
+  'rubyblue',
+  'tomorrow-night-bright',
+  'xq-light',
+  'ambiance-mobile',
+  'colorforth',
+  'elegant',
+  'isotope',
+  'material-ocean',
+  'moxer',
+  'panda-syntax',
+  'seti',
+  'tomorrow-night-eighties',
+  'yeti',
+  'base16-dark',
+  'darcula',
+  'erlang-dark',
+  'lesser-dark',
+  'material-palenight',
+  'neat',
+  'paraiso-dark',
+  'shadowfox',
+  'ttcn',
+  'yonce'
+]

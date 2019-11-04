@@ -71,6 +71,7 @@ const StyledNoteDetailContainer = styled.div`
 type NoteDetailProps = {
   storageId: string
   note: NoteDoc
+  editorTheme: string
   updateNote: (
     storageId: string,
     noteId: string,
@@ -272,7 +273,7 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note } = this.props
+    const { note, editorTheme } = this.props
 
     return (
       <StyledNoteDetailContainer>
@@ -313,6 +314,7 @@ export default class NoteDetail extends React.Component<
                   codeMirrorRef={this.codeMirrorRef}
                   value={this.state.content}
                   onChange={this.updateContent}
+                  theme={editorTheme}
                 />
               ) : this.state.mode === 'split' ? (
                 <TwoPaneLayout
@@ -325,6 +327,7 @@ export default class NoteDetail extends React.Component<
                       codeMirrorRef={this.codeMirrorRef}
                       value={this.state.content}
                       onChange={this.updateContent}
+                      theme={editorTheme}
                     />
                   }
                   right={<MarkdownPreviewer content={this.state.content} />}

@@ -14,6 +14,7 @@ interface CodeEditorProps {
     change: CodeMirror.EditorChangeLinkedList
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
+  theme?: string
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -21,10 +22,10 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   codeMirror?: CodeMirror.EditorFromTextArea
 
   componentDidMount() {
-    this.codeMirror = CodeMirror.fromTextArea(
-      this.textAreaRef.current!,
-      defaultCodeMirrorOptions
-    )
+    this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
+      ...defaultCodeMirrorOptions,
+      theme: this.props.theme == null ? 'default' : this.props.theme
+    })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadOptions)
     if (this.props.codeMirrorRef != null) {
@@ -38,12 +39,15 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     }
   }
 
-  componentDidUpdate() {
-    if (
-      this.codeMirror != null &&
-      this.props.value !== this.codeMirror.getValue()
-    ) {
+  componentDidUpdate(prevProps: CodeEditorProps) {
+    if (this.codeMirror == null) {
+      return
+    }
+    if (this.props.value !== this.codeMirror.getValue()) {
       this.codeMirror.setValue(this.props.value)
+    }
+    if (this.props.theme !== prevProps.theme) {
+      this.codeMirror.setOption('theme', this.props.theme)
     }
   }
 

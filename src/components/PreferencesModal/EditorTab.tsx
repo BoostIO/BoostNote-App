@@ -1,16 +1,39 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
+import { usePreferences } from '../../lib/preferences'
+import { SelectChangeEventHandler } from '../../lib/events'
+import { themes } from '../../lib/CodeMirror'
+import { capitalize } from '../../lib/string'
 
 const EditorTab = () => {
+  const { preferences, setPreferences } = usePreferences()
+
+  const selectEditorTheme: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'editor.theme': event.target.value
+      })
+    },
+    [setPreferences]
+  )
+
   const { t } = useTranslation()
   return (
     <div>
       <Section>
         <SectionHeader>{t('preferences.editorTheme')}</SectionHeader>
         <SectionControl>
-          <select>
-            <option>Default</option>
+          <select
+            value={preferences['editor.theme']}
+            onChange={selectEditorTheme}
+          >
+            <option value='default'>Default</option>
+            {themes.map(theme => (
+              <option value={theme} key={theme}>
+                {capitalize(theme)}
+              </option>
+            ))}
           </select>
         </SectionControl>
       </Section>

@@ -7,8 +7,6 @@ import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/material.css'
 
 const CombinedProvider = combineProviders(
   PreferencesProvider,

@@ -14,6 +14,7 @@ import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../lib/keyboard'
 import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import '../lib/analytics'
+import CodeMirrorStyle from './CodeMirrorStyle'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -50,6 +51,7 @@ const App = () => {
         <ContextMenu />
         <Dialog />
         <PreferencesModal />
+        <CodeMirrorStyle />
       </StyledAppContainer>
     </ThemeProvider>
   )
