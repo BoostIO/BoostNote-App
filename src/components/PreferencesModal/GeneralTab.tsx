@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react'
+import React, { useCallback, ChangeEventHandler } from 'react'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { Section, SectionHeader, SectionControl } from './styled'
@@ -9,35 +9,46 @@ import {
   GeneralNoteSortingOptions
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
-
-type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
+import { SelectChangeEventHandler } from '../../lib/events'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
 
-  const selectTheme: SelectChangeEventHandler = event => {
-    setPreferences({
-      'general.theme': event.target.value as GeneralThemeOptions
-    })
-  }
+  const selectTheme: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'general.theme': event.target.value as GeneralThemeOptions
+      })
+    },
+    [setPreferences]
+  )
 
-  const selectLanguage: SelectChangeEventHandler = event => {
-    setPreferences({
-      'general.language': event.target.value as GeneralLanguageOptions
-    })
-  }
+  const selectLanguage: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'general.language': event.target.value as GeneralLanguageOptions
+      })
+    },
+    [setPreferences]
+  )
 
-  const selectNoteSorting: SelectChangeEventHandler = event => {
-    setPreferences({
-      'general.noteSorting': event.target.value as GeneralNoteSortingOptions
-    })
-  }
+  const selectNoteSorting: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'general.noteSorting': event.target.value as GeneralNoteSortingOptions
+      })
+    },
+    [setPreferences]
+  )
 
-  const setEnableAnalytics: ChangeEventHandler<HTMLInputElement> = event => {
-    setPreferences({
-      'general.enableAnalytics': event.target.checked
-    })
-  }
+  const setEnableAnalytics: ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
+      setPreferences({
+        'general.enableAnalytics': event.target.checked
+      })
+    },
+    [setPreferences]
+  )
 
   const { t } = useTranslation()
 
