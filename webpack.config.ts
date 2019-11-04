@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import dotenv from 'dotenv'
+import CopyPlugin from 'copy-webpack-plugin'
 
 const { parsed } = dotenv.config()
 
@@ -82,7 +83,13 @@ module.exports = {
       'process.env.AMPLIFY_PINPOINT_REGION': JSON.stringify(
         parsed.AMPLIFY_PINPOINT_REGION
       )
-    })
+    }),
+    new CopyPlugin([
+      {
+        from: path.join(__dirname, 'node_modules/codemirror/theme'),
+        to: 'codemirror/theme'
+      }
+    ])
   ],
 
   devServer: {
@@ -105,6 +112,10 @@ module.exports = {
       app.use(
         '/codemirror/addon',
         express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
+      )
+      app.use(
+        '/codemirror/theme',
+        express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
       )
     }
   },
