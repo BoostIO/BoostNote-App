@@ -52,6 +52,24 @@ const EditorTab = () => {
     [fontSize, setPreferences]
   )
 
+  const [fontFamily, setFontFamily] = useState(preferences['editor.fontFamily'])
+  const updateFontFamily: ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
+      setFontFamily(event.target.value)
+    },
+    [setFontFamily]
+  )
+
+  useDebounce(
+    () => {
+      setPreferences({
+        'editor.fontFamily': fontFamily
+      })
+    },
+    500,
+    [fontFamily, setPreferences]
+  )
+
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
 
   const { t } = useTranslation()
@@ -82,7 +100,7 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
         <SectionControl>
-          <input type='value' />
+          <input type='value' value={fontFamily} onChange={updateFontFamily} />
         </SectionControl>
       </Section>
       <Section>
@@ -122,6 +140,7 @@ const EditorTab = () => {
             onChange={newValue => setPreviewContent(newValue)}
             theme={preferences['editor.theme']}
             fontSize={preferences['editor.fontSize']}
+            fontFamily={preferences['editor.fontFamily']}
           />
         </SectionControl>
       </Section>

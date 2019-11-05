@@ -35,7 +35,8 @@ const basePreferences: Preferences = {
   // Editor
   'editor.theme': 'default',
   'editor.fontSize': 14,
-  'editor.fontFamily': 'monospace',
+  'editor.fontFamily':
+    'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   'editor.indentType': 'spaces',
   'editor.indentSize': 4,
   'editor.keymap': 'default',

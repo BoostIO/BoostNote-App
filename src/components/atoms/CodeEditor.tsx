@@ -1,5 +1,12 @@
 import React from 'react'
 import CodeMirror from '../../lib/CodeMirror'
+import styled from '../../lib/styled'
+
+const StyledContainer = styled.div`
+  .CodeMirror {
+    font-family: inherit;
+  }
+`
 
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
@@ -16,6 +23,7 @@ interface CodeEditorProps {
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   theme?: string
   fontSize?: number
+  fontFamily?: string
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -50,7 +58,10 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.props.theme !== prevProps.theme) {
       this.codeMirror.setOption('theme', this.props.theme)
     }
-    if (this.props.fontSize !== prevProps.fontSize) {
+    if (
+      this.props.fontSize !== prevProps.fontSize ||
+      this.props.fontFamily !== prevProps.fontFamily
+    ) {
       this.codeMirror.refresh()
     }
   }
@@ -72,15 +83,17 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   }
 
   render() {
+    const { fontSize, fontFamily, value } = this.props
+
     return (
-      <div
+      <StyledContainer
         style={{
-          fontSize:
-            this.props.fontSize == null ? 'inherit' : `${this.props.fontSize}px`
+          fontSize: fontSize == null ? 'inherit' : `${fontSize}px`,
+          fontFamily: fontFamily == null ? 'monospace' : fontFamily
         }}
       >
-        <textarea ref={this.textAreaRef} defaultValue={this.props.value} />
-      </div>
+        <textarea ref={this.textAreaRef} defaultValue={value} />
+      </StyledContainer>
     )
   }
 }

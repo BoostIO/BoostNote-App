@@ -73,6 +73,7 @@ type NoteDetailProps = {
   note: NoteDoc
   editorTheme: string
   editorFontSize: number
+  editorFontFamily: string
   updateNote: (
     storageId: string,
     noteId: string,
@@ -274,7 +275,7 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, editorTheme, editorFontSize } = this.props
+    const { note, editorTheme, editorFontSize, editorFontFamily } = this.props
 
     const codeEditor = (
       <CodeEditor
@@ -284,6 +285,7 @@ export default class NoteDetail extends React.Component<
         onChange={this.updateContent}
         theme={editorTheme}
         fontSize={editorFontSize}
+        fontFamily={editorFontFamily}
       />
     )
     return (

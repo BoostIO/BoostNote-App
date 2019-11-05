@@ -143,6 +143,7 @@ export default () => {
           <NoteDetail
             editorTheme={preferences['editor.theme']}
             editorFontSize={preferences['editor.fontSize']}
+            editorFontFamily={preferences['editor.fontFamily']}
             storageId={storageId}
             note={currentNote}
             updateNote={db.updateNote}
