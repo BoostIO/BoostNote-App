@@ -1,7 +1,7 @@
-import shortid from 'shortid'
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
 import { join } from 'path'
 import { ObjectMap, NoteDoc, FolderDoc, TagDoc } from './types'
+import { generateId } from '../string'
 
 export function values<T>(objectMap: ObjectMap<T>): T[] {
   return Object.values(objectMap) as T[]
@@ -9,10 +9,6 @@ export function values<T>(objectMap: ObjectMap<T>): T[] {
 
 export function entries<T>(objectMap: ObjectMap<T>): [string, T][] {
   return Object.entries(objectMap) as [string, T][]
-}
-
-export function generateId(): string {
-  return shortid.generate()
 }
 
 export function getNow(): string {

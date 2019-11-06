@@ -12,11 +12,11 @@ import ow from 'ow'
 import { schema, isValid } from '../utils/predicates'
 import NoteDb from './NoteDb'
 import {
-  generateId,
   getFolderPathname,
   getParentFolderPathname,
   getAllParentFolderPathnames
 } from './utils'
+import { generateId } from '../string'
 import PouchDB from './PouchDB'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
@@ -171,7 +171,9 @@ export function createDbStoreCreator(
           return
         }
         await storage.db.removeFolder(pathname)
-        if (router.pathname.startsWith(`/app/storages/${id}/notes${pathname}`)) {
+        if (
+          router.pathname.startsWith(`/app/storages/${id}/notes${pathname}`)
+        ) {
           router.replace(
             `/app/storages/${id}/notes${getParentFolderPathname(pathname)}`
           )
