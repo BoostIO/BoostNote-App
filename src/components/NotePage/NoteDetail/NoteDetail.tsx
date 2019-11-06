@@ -7,6 +7,10 @@ import CodeEditor from '../../atoms/CodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
 import TwoPaneLayout from '../../atoms/TwoPaneLayout'
+import {
+  EditorIndentTypeOptions,
+  EditorIndentSizeOptions
+} from '../../../lib/preferences'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -74,6 +78,8 @@ type NoteDetailProps = {
   editorTheme: string
   editorFontSize: number
   editorFontFamily: string
+  editorIndentType?: EditorIndentTypeOptions
+  editorIndentSize?: EditorIndentSizeOptions
   updateNote: (
     storageId: string,
     noteId: string,
@@ -275,7 +281,14 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, editorTheme, editorFontSize, editorFontFamily } = this.props
+    const {
+      note,
+      editorTheme,
+      editorFontSize,
+      editorFontFamily,
+      editorIndentType,
+      editorIndentSize
+    } = this.props
 
     const codeEditor = (
       <CodeEditor
@@ -286,6 +299,8 @@ export default class NoteDetail extends React.Component<
         theme={editorTheme}
         fontSize={editorFontSize}
         fontFamily={editorFontFamily}
+        indentType={editorIndentType}
+        indentSize={editorIndentSize}
       />
     )
     return (
