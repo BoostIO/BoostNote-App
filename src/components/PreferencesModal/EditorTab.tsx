@@ -1,10 +1,17 @@
-import React, { useCallback, useState, ChangeEventHandler } from 'react'
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  ChangeEventHandler,
+  KeyboardEventHandler
+} from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
 import {
   usePreferences,
   EditorIndentTypeOptions,
-  EditorIndentSizeOptions
+  EditorIndentSizeOptions,
+  EditorKeyMapOptions
 } from '../../lib/preferences'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
@@ -93,6 +100,23 @@ const EditorTab = () => {
     [setPreferences]
   )
 
+  const selectEditorKeyMap: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'editor.keyMap': event.target.value as EditorKeyMapOptions
+      })
+    },
+    [setPreferences]
+  )
+
+  const codeEditorKeydownInterceptor = useMemo<KeyboardEventHandler>(() => {
+    return event => {
+      if (event.key === 'Escape') {
+        event.stopPropagation()
+      }
+    }
+  }, [])
+
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
 
   const { t } = useTranslation()
@@ -154,16 +178,19 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorKeymap')}</SectionHeader>
         <SectionControl>
-          <select>
-            <option>Default</option>
-            <option>vim</option>
-            <option>emacs</option>
+          <select
+            value={preferences['editor.keyMap']}
+            onChange={selectEditorKeyMap}
+          >
+            <option value='default'>Default</option>
+            <option value='vim'>vim</option>
+            <option value='emacs'>emacs</option>
           </select>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
-        <SectionControl>
+        <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
           <CodeEditor
             value={previewContent}
             onChange={newValue => setPreviewContent(newValue)}
@@ -172,6 +199,7 @@ const EditorTab = () => {
             fontFamily={preferences['editor.fontFamily']}
             indentType={preferences['editor.indentType']}
             indentSize={preferences['editor.indentSize']}
+            keyMap={preferences['editor.keyMap']}
           />
         </SectionControl>
       </Section>

@@ -7,7 +7,7 @@ export type GeneralNoteSortingOptions =
 
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
-export type EditorKeymapOptions = 'default' | 'vim' | 'emacs'
+export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 
 export interface Preferences {
   // General
@@ -23,7 +23,7 @@ export interface Preferences {
   'editor.fontFamily': string
   'editor.indentType': EditorIndentTypeOptions
   'editor.indentSize': EditorIndentSizeOptions
-  'editor.keymap': EditorKeymapOptions
+  'editor.keyMap': EditorKeyMapOptions
 
   // Markdown
   'markdown.previewStyle': string

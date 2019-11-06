@@ -146,6 +146,7 @@ export default () => {
             editorFontFamily={preferences['editor.fontFamily']}
             editorIndentType={preferences['editor.indentType']}
             editorIndentSize={preferences['editor.indentSize']}
+            editorKeyMap={preferences['editor.keyMap']}
             storageId={storageId}
             note={currentNote}
             updateNote={db.updateNote}

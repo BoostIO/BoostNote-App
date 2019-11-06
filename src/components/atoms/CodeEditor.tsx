@@ -3,7 +3,8 @@ import CodeMirror from '../../lib/CodeMirror'
 import styled from '../../lib/styled'
 import {
   EditorIndentTypeOptions,
-  EditorIndentSizeOptions
+  EditorIndentSizeOptions,
+  EditorKeyMapOptions
 } from '../../lib/preferences'
 
 const StyledContainer = styled.div`
@@ -30,6 +31,7 @@ interface CodeEditorProps {
   fontFamily?: string
   indentType?: EditorIndentTypeOptions
   indentSize?: EditorIndentSizeOptions
+  keyMap?: EditorKeyMapOptions
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -38,12 +40,17 @@ class CodeEditor extends React.Component<CodeEditorProps> {
 
   componentDidMount() {
     const indentSize = this.props.indentSize == null ? 2 : this.props.indentSize
+    const keyMap =
+      this.props.keyMap == null || this.props.keyMap === 'default'
+        ? 'sublime'
+        : this.props.keyMap
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
       theme: this.props.theme == null ? 'default' : this.props.theme,
       indentWithTabs: this.props.indentType === 'tab',
       indentUnit: indentSize,
-      tabSize: indentSize
+      tabSize: indentSize,
+      keyMap
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
@@ -85,6 +92,13 @@ class CodeEditor extends React.Component<CodeEditorProps> {
         this.props.indentSize == null ? 2 : this.props.indentSize
       this.codeMirror.setOption('indentUnit', indentSize)
       this.codeMirror.setOption('tabSize', indentSize)
+    }
+    if (this.props.keyMap !== prevProps.keyMap) {
+      const keyMap =
+        this.props.keyMap == null || this.props.keyMap === 'default'
+          ? 'sublime'
+          : this.props.keyMap
+      this.codeMirror.setOption('keyMap', keyMap)
     }
   }
 

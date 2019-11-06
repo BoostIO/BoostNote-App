@@ -4,6 +4,9 @@ import 'codemirror/addon/mode/overlay'
 import 'codemirror/mode/markdown/markdown'
 import debounce from 'lodash/debounce'
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/keymap/sublime'
+import 'codemirror/keymap/emacs'
+import 'codemirror/keymap/vim'
 
 const dispatchModeLoad = debounce(() => {
   window.dispatchEvent(new CustomEvent('codemirror-mode-load'))

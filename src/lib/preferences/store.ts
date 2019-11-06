@@ -39,7 +39,7 @@ const basePreferences: Preferences = {
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   'editor.indentType': 'spaces',
   'editor.indentSize': 4,
-  'editor.keymap': 'default',
+  'editor.keyMap': 'default',
 
   // Markdown
   'markdown.previewStyle': 'default',

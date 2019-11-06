@@ -9,7 +9,8 @@ import NoteDetailToolbar from './NoteDetailToolbar'
 import TwoPaneLayout from '../../atoms/TwoPaneLayout'
 import {
   EditorIndentTypeOptions,
-  EditorIndentSizeOptions
+  EditorIndentSizeOptions,
+  EditorKeyMapOptions
 } from '../../../lib/preferences'
 
 const StyledNoteDetailContainer = styled.div`
@@ -80,6 +81,7 @@ type NoteDetailProps = {
   editorFontFamily: string
   editorIndentType?: EditorIndentTypeOptions
   editorIndentSize?: EditorIndentSizeOptions
+  editorKeyMap?: EditorKeyMapOptions
   updateNote: (
     storageId: string,
     noteId: string,
@@ -287,7 +289,8 @@ export default class NoteDetail extends React.Component<
       editorFontSize,
       editorFontFamily,
       editorIndentType,
-      editorIndentSize
+      editorIndentSize,
+      editorKeyMap
     } = this.props
 
     const codeEditor = (
@@ -301,6 +304,7 @@ export default class NoteDetail extends React.Component<
         fontFamily={editorFontFamily}
         indentType={editorIndentType}
         indentSize={editorIndentSize}
+        keyMap={editorKeyMap}
       />
     )
     return (
