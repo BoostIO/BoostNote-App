@@ -1,6 +1,10 @@
 import React from 'react'
 import CodeMirror from '../../lib/CodeMirror'
 import styled from '../../lib/styled'
+import {
+  EditorIndentTypeOptions,
+  EditorIndentSizeOptions
+} from '../../lib/preferences'
 
 const StyledContainer = styled.div`
   .CodeMirror {
@@ -24,6 +28,8 @@ interface CodeEditorProps {
   theme?: string
   fontSize?: number
   fontFamily?: string
+  indentType?: EditorIndentTypeOptions
+  indentSize?: EditorIndentSizeOptions
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -31,9 +37,13 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   codeMirror?: CodeMirror.EditorFromTextArea
 
   componentDidMount() {
+    const indentSize = this.props.indentSize == null ? 2 : this.props.indentSize
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
-      theme: this.props.theme == null ? 'default' : this.props.theme
+      theme: this.props.theme == null ? 'default' : this.props.theme,
+      indentWithTabs: this.props.indentType === 'tab',
+      indentUnit: indentSize,
+      tabSize: indentSize
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
@@ -63,6 +73,18 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.props.fontFamily !== prevProps.fontFamily
     ) {
       this.codeMirror.refresh()
+    }
+    if (this.props.indentType !== prevProps.indentType) {
+      this.codeMirror.setOption(
+        'indentWithTabs',
+        this.props.indentType === 'tab'
+      )
+    }
+    if (this.props.indentSize !== prevProps.indentSize) {
+      const indentSize =
+        this.props.indentSize == null ? 2 : this.props.indentSize
+      this.codeMirror.setOption('indentUnit', indentSize)
+      this.codeMirror.setOption('tabSize', indentSize)
     }
   }
 
