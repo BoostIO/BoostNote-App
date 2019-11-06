@@ -52,7 +52,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
       const lang = language(node)
 
-      if (lang === false || plainText.indexOf(lang) !== -1) {
+      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
         return
       }
 
