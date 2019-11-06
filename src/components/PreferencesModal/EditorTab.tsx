@@ -1,7 +1,11 @@
 import React, { useCallback, useState, ChangeEventHandler } from 'react'
 import { Section, SectionHeader, SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
-import { usePreferences } from '../../lib/preferences'
+import {
+  usePreferences,
+  EditorIndentTypeOptions,
+  EditorIndentSizeOptions
+} from '../../lib/preferences'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
@@ -38,7 +42,6 @@ const EditorTab = () => {
     },
     [setFontSize]
   )
-
   useDebounce(
     () => {
       const parsedFontSize = parseInt(fontSize, 10)
@@ -59,7 +62,6 @@ const EditorTab = () => {
     },
     [setFontFamily]
   )
-
   useDebounce(
     () => {
       setPreferences({
@@ -68,6 +70,27 @@ const EditorTab = () => {
     },
     500,
     [fontFamily, setPreferences]
+  )
+
+  const selectEditorIndentType: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'editor.indentType': event.target.value as EditorIndentTypeOptions
+      })
+    },
+    [setPreferences]
+  )
+
+  const selectEditorIndentSize: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'editor.indentSize': parseInt(
+          event.target.value,
+          10
+        ) as EditorIndentSizeOptions
+      })
+    },
+    [setPreferences]
   )
 
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
@@ -106,19 +129,25 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
         <SectionControl>
-          <select>
-            <option>{t('preferences.tab')}</option>
-            <option>{t('preferences.spaces')}</option>
+          <select
+            value={preferences['editor.indentType']}
+            onChange={selectEditorIndentType}
+          >
+            <option value='spaces'>{t('preferences.spaces')}</option>
+            <option value='tab'>{t('preferences.tab')}</option>
           </select>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
         <SectionControl>
-          <select>
-            <option>2</option>
-            <option>4</option>
-            <option>8</option>
+          <select
+            value={preferences['editor.indentSize']}
+            onChange={selectEditorIndentSize}
+          >
+            <option value={2}>2</option>
+            <option value={4}>4</option>
+            <option value={8}>8</option>
           </select>
         </SectionControl>
       </Section>
@@ -141,6 +170,8 @@ const EditorTab = () => {
             theme={preferences['editor.theme']}
             fontSize={preferences['editor.fontSize']}
             fontFamily={preferences['editor.fontFamily']}
+            indentType={preferences['editor.indentType']}
+            indentSize={preferences['editor.indentSize']}
           />
         </SectionControl>
       </Section>
