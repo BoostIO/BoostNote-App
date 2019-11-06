@@ -6,7 +6,6 @@ import styled from '../../../lib/styled'
 import CodeEditor from '../../atoms/CodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
-import TwoPaneLayout from '../../atoms/TwoPaneLayout'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
@@ -62,12 +61,18 @@ const StyledNoteDetailContainer = styled.div`
       height: 100%;
       overflow: auto;
       padding: 0 10px;
+      box-sizing: border-box;
     }
-    .split {
+    .splitLeft {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
+      width: 50%;
+      height: 100%;
+      border-right: solid 1px ${({ theme }) => theme.colors.border};
+    }
+    .splitRight {
+      position: absolute;
+      left: 50%;
+      width: 50%;
       height: 100%;
     }
   }
@@ -307,6 +312,8 @@ export default class NoteDetail extends React.Component<
         keyMap={editorKeyMap}
       />
     )
+    const markdownPreviewer = <MarkdownPreviewer content={this.state.content} />
+
     return (
       <StyledNoteDetailContainer>
         {note == null ? (
@@ -343,16 +350,12 @@ export default class NoteDetail extends React.Component<
               {this.state.mode === 'edit' ? (
                 codeEditor
               ) : this.state.mode === 'split' ? (
-                <TwoPaneLayout
-                  className='split'
-                  defaultLeftWidth={400}
-                  maxLeftWidth={800}
-                  left={codeEditor}
-                  right={<MarkdownPreviewer content={this.state.content} />}
-                  onResizeEnd={this.refreshCodeEditor}
-                />
+                <>
+                  <div className='splitLeft'>{codeEditor}</div>
+                  <div className='splitRight'>{markdownPreviewer}</div>
+                </>
               ) : (
-                <MarkdownPreviewer content={this.state.content} />
+                markdownPreviewer
               )}
             </div>
           </>
