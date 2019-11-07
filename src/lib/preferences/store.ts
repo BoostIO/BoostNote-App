@@ -5,7 +5,7 @@ import { Preferences } from './types'
 import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 
-const preferencesKey = 'PREFERENCES'
+const preferencesKey = 'note.boostio.co:preferences'
 
 function loadPreferences() {
   const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
