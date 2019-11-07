@@ -13,6 +13,8 @@ import CodeMirror from '../../lib/CodeMirror'
 import toText from 'hast-util-to-text'
 import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
+import styled from '../../lib/styled'
+import { githubPreviewStyle } from '../../lib/preview'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
@@ -142,6 +144,10 @@ const markdownProcessor = unified()
   .use(rehypeSanitize, schema)
   .use(rehypeReact, { createElement: React.createElement })
 
+const StyledContainer = styled.div`
+  ${githubPreviewStyle}
+`
+
 interface MarkdownPreviewerProps {
   content: string
 }
@@ -179,10 +185,10 @@ const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
   }, [content, rendering, renderContent, renderedContent])
 
   return (
-    <div className='MarkdownPreviewer'>
+    <StyledContainer className='MarkdownPreviewer'>
       {rendering && 'rendering...'}
       {renderedContent}
-    </div>
+    </StyledContainer>
   )
 }
 
