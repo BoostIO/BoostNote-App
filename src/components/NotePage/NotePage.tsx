@@ -13,7 +13,6 @@ import {
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
-import { usePreferences } from '../../lib/preferences'
 
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
@@ -120,8 +119,6 @@ export default () => {
 
   const removeNote = async () => {}
 
-  const { preferences } = usePreferences()
-
   return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
@@ -141,12 +138,6 @@ export default () => {
           <div>No note selected</div>
         ) : (
           <NoteDetail
-            editorTheme={preferences['editor.theme']}
-            editorFontSize={preferences['editor.fontSize']}
-            editorFontFamily={preferences['editor.fontFamily']}
-            editorIndentType={preferences['editor.indentType']}
-            editorIndentSize={preferences['editor.indentSize']}
-            editorKeyMap={preferences['editor.keyMap']}
             storageId={storageId}
             note={currentNote}
             updateNote={db.updateNote}

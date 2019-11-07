@@ -16,7 +16,7 @@ import {
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
-import CodeEditor from '../atoms/CodeEditor'
+import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
 
 const defaultPreviewContent = `# hello-world.js
@@ -191,15 +191,9 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
         <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
-          <CodeEditor
+          <CustomizedCodeEditor
             value={previewContent}
             onChange={newValue => setPreviewContent(newValue)}
-            theme={preferences['editor.theme']}
-            fontSize={preferences['editor.fontSize']}
-            fontFamily={preferences['editor.fontFamily']}
-            indentType={preferences['editor.indentType']}
-            indentSize={preferences['editor.indentSize']}
-            keyMap={preferences['editor.keyMap']}
           />
         </SectionControl>
       </Section>

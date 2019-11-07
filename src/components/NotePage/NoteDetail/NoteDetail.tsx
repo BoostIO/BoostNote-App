@@ -3,14 +3,9 @@ import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
 import styled from '../../../lib/styled'
-import CodeEditor from '../../atoms/CodeEditor'
+import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
 import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
-import {
-  EditorIndentTypeOptions,
-  EditorIndentSizeOptions,
-  EditorKeyMapOptions
-} from '../../../lib/preferences'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -81,12 +76,6 @@ const StyledNoteDetailContainer = styled.div`
 type NoteDetailProps = {
   storageId: string
   note: NoteDoc
-  editorTheme: string
-  editorFontSize: number
-  editorFontFamily: string
-  editorIndentType?: EditorIndentTypeOptions
-  editorIndentSize?: EditorIndentSizeOptions
-  editorKeyMap?: EditorKeyMapOptions
   updateNote: (
     storageId: string,
     noteId: string,
@@ -288,28 +277,14 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const {
-      note,
-      editorTheme,
-      editorFontSize,
-      editorFontFamily,
-      editorIndentType,
-      editorIndentSize,
-      editorKeyMap
-    } = this.props
+    const { note } = this.props
 
     const codeEditor = (
-      <CodeEditor
+      <CustomizedCodeEditor
         key={note._id}
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}
-        theme={editorTheme}
-        fontSize={editorFontSize}
-        fontFamily={editorFontFamily}
-        indentType={editorIndentType}
-        indentSize={editorIndentSize}
-        keyMap={editorKeyMap}
       />
     )
     const markdownPreviewer = <MarkdownPreviewer content={this.state.content} />
