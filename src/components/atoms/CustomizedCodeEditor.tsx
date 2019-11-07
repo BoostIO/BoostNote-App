@@ -9,12 +9,14 @@ interface CustomizedCodeEditor {
     change: CodeMirror.EditorChangeLinkedList
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
+  className?: string
 }
 
 const CustomizedCodeEditor = ({
   onChange,
   value,
-  codeMirrorRef
+  codeMirrorRef,
+  className
 }: CustomizedCodeEditor) => {
   const { preferences } = usePreferences()
   return (
@@ -22,6 +24,7 @@ const CustomizedCodeEditor = ({
       onChange={onChange}
       value={value}
       codeMirrorRef={codeMirrorRef}
+      className={className}
       theme={preferences['editor.theme']}
       fontSize={preferences['editor.fontSize']}
       fontFamily={preferences['editor.fontFamily']}

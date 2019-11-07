@@ -26,6 +26,7 @@ interface CodeEditorProps {
     change: CodeMirror.EditorChangeLinkedList
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
+  className?: string
   theme?: string
   fontSize?: number
   fontFamily?: string
@@ -119,10 +120,11 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   }
 
   render() {
-    const { fontSize, fontFamily, value } = this.props
+    const { fontSize, fontFamily, value, className } = this.props
 
     return (
       <StyledContainer
+        className={className}
         style={{
           fontSize: fontSize == null ? 'inherit' : `${fontSize}px`,
           fontFamily: fontFamily == null ? 'monospace' : fontFamily
