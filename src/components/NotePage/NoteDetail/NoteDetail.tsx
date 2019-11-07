@@ -4,7 +4,7 @@ import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
-import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
+import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
 
 const StyledNoteDetailContainer = styled.div`
@@ -41,7 +41,7 @@ const StyledNoteDetailContainer = styled.div`
     margin: 2px;
     position: relative;
     border-top: solid 1px ${({ theme }) => theme.colors.border};
-    .CodeMirror {
+    .editor .CodeMirror {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -281,13 +281,16 @@ export default class NoteDetail extends React.Component<
 
     const codeEditor = (
       <CustomizedCodeEditor
+        className='editor'
         key={note._id}
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}
       />
     )
-    const markdownPreviewer = <MarkdownPreviewer content={this.state.content} />
+    const markdownPreviewer = (
+      <CustomizedMarkdownPreviewer content={this.state.content} />
+    )
 
     return (
       <StyledNoteDetailContainer>

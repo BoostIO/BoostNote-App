@@ -29,6 +29,9 @@ export default {
     'preferences.spaces': 'スペース',
     'preferences.editorIndentSize': 'エディターインデントサイズ',
     'preferences.editorKeymap': 'エディターキーマップ',
-    'preferences.editorPreview': 'エディタープレヴュー'
+    'preferences.editorPreview': 'エディタープレヴュー',
+
+    // Preferences MarkdownTab
+    'preferences.markdownCodeBlockTheme': 'コードブロックテーマ'
   }
 }

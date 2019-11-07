@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import unified, { Plugin } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
@@ -10,7 +10,6 @@ import { mergeDeepRight } from 'ramda'
 import visit from 'unist-util-visit'
 import { Node, Parent } from 'unist'
 import CodeMirror from '../../lib/CodeMirror'
-import toText from 'hast-util-to-text'
 import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
@@ -35,6 +34,16 @@ interface RehypeCodeMirrorOptions {
   theme: string
 }
 
+function isElement(node: Node, tagName: string): node is Element {
+  if (node == null) {
+    return false
+  }
+  if (node.tagName !== tagName) {
+    return false
+  }
+  return true
+}
+
 function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
   const settings = options || {}
   const ignoreMissing = settings.ignoreMissing || false
@@ -46,9 +55,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
     return tree
 
     function visitor(node: Element, _index: number, parent: Node) {
-      const props = node.properties
-
-      if (!parent || parent.tagName !== 'pre' || node.tagName !== 'code') {
+      if (!isElement(parent, 'pre') || !isElement(node, 'code')) {
         return
       }
 
@@ -58,20 +65,12 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
         return
       }
 
-      if (!props.className) {
-        props.className = []
-      }
-
-      if (props.className.indexOf(name) === -1) {
-        props.className.unshift(name)
-      }
-
-      const text = toText(parent)
+      const rawContent = node.children[0].value as string
       const cmResult = [] as Node[]
       if (lang != null) {
         const mime = getMime(lang)
         if (mime != null) {
-          CodeMirror.runMode(text, mime, (text, style) => {
+          CodeMirror.runMode(rawContent, mime, (text, style) => {
             cmResult.push(
               h(
                 'span',
@@ -93,10 +92,15 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
         value: cmResult
       }
 
-      props.className.push(`cm-s-${theme}`)
+      const classNames =
+        parent.properties.className != null
+          ? [...parent.properties.className]
+          : []
+      classNames.push(`cm-s-${theme}`, 'CodeMirror')
       if (!lang && result.language) {
-        props.className.push('language-' + result.language)
+        classNames.push('language-' + result.language)
       }
+      parent.properties.className = classNames
 
       node.children = result.value
     }
@@ -129,46 +133,61 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
   }
 }
 const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
-  [
-    {
-      ignoreMissing?: boolean
-      plainText?: string[]
-    }?
-  ]
+  [Partial<RehypeCodeMirrorOptions>?]
 >
-const markdownProcessor = unified()
-  .use(remarkParse)
-  .use(remarkRehype, { allowDangerousHTML: false })
-  .use(rehypeCodeMirror, { ignoreMissing: true })
-  .use(rehypeRaw)
-  .use(rehypeSanitize, schema)
-  .use(rehypeReact, { createElement: React.createElement })
+
+interface MarkdownProcessorOptions {
+  theme?: string
+}
+
+function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
+  return unified()
+    .use(remarkParse)
+    .use(remarkRehype, { allowDangerousHTML: false })
+    .use(rehypeCodeMirror, { ignoreMissing: true, theme: options.theme })
+    .use(rehypeRaw)
+    .use(rehypeSanitize, schema)
+    .use(rehypeReact, { createElement: React.createElement })
+}
 
 const StyledContainer = styled.div`
+  .CodeMirror {
+    height: inherit;
+  }
   ${githubPreviewStyle}
 `
 
 interface MarkdownPreviewerProps {
   content: string
+  theme?: string
 }
 
-const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
+const MarkdownPreviewer = ({ content, theme }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
+  const previousThemeRef = useRef<string | undefined>('')
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
-  const renderContent = useCallback(async (content: string) => {
-    previousContentRef.current = content
-    setRendering(true)
+  const markdownProcessor = useMemo(() => {
+    return createMarkdownProcessor({ theme })
+  }, [theme])
 
-    console.time('render')
-    const result = await markdownProcessor.process(content)
-    console.timeEnd('render')
+  const renderContent = useCallback(
+    async (content: string) => {
+      previousContentRef.current = content
+      previousThemeRef.current = theme
+      setRendering(true)
 
-    setRendering(false)
-    setRenderedContent(result.contents)
-  }, [])
+      console.time('render')
+      const result = await markdownProcessor.process(content)
+      console.timeEnd('render')
+
+      setRendering(false)
+      setRenderedContent(result.contents)
+    },
+    [theme, markdownProcessor]
+  )
 
   useEffect(() => {
     window.addEventListener('codemirror-mode-load', forceUpdate)
@@ -178,11 +197,17 @@ const MarkdownPreviewer = ({ content }: MarkdownPreviewerProps) => {
   }, [forceUpdate])
 
   useEffect(() => {
-    if (previousContentRef.current === content || rendering) {
+    console.log('render requested')
+    if (
+      (previousThemeRef.current === theme &&
+        previousContentRef.current === content) ||
+      rendering
+    ) {
       return
     }
+    console.log('rendering...')
     renderContent(content)
-  }, [content, rendering, renderContent, renderedContent])
+  }, [content, theme, rendering, renderContent, renderedContent])
 
   return (
     <StyledContainer className='MarkdownPreviewer'>

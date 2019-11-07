@@ -29,6 +29,9 @@ export default {
     'preferences.spaces': 'Spaces',
     'preferences.editorIndentSize': 'Editor Indent Size',
     'preferences.editorKeymap': 'Editor Keymap',
-    'preferences.editorPreview': 'Editor Preview'
+    'preferences.editorPreview': 'Editor Preview',
+
+    // Preferences MarkdownTab
+    'preferences.markdownCodeBlockTheme': 'Code Block Theme'
   }
 }
