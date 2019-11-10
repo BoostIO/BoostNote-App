@@ -6,10 +6,10 @@ import { ContextMenuProvider } from './lib/contextMenu'
 import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/material.css'
+import { PreferencesProvider } from './lib/preferences'
 
 const CombinedProvider = combineProviders(
+  PreferencesProvider,
   DialogProvider,
   ContextMenuProvider,
   DbProvider,

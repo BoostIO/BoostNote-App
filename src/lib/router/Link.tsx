@@ -1,4 +1,10 @@
-import React, { useCallback, FC, CSSProperties, MouseEventHandler } from 'react'
+import React, {
+  useCallback,
+  FC,
+  CSSProperties,
+  MouseEventHandler,
+  FocusEventHandler
+} from 'react'
 import { useRouter } from './store'
 
 export interface LinkProps {
@@ -7,6 +13,7 @@ export interface LinkProps {
   className?: string
   style?: CSSProperties
   onContextMenu?: MouseEventHandler
+  onFocus?: FocusEventHandler
 }
 
 export const Link: FC<LinkProps> = ({
@@ -14,7 +21,8 @@ export const Link: FC<LinkProps> = ({
   href,
   className,
   style,
-  onContextMenu
+  onContextMenu,
+  onFocus
 }) => {
   const router = useRouter()
 
@@ -35,6 +43,7 @@ export const Link: FC<LinkProps> = ({
       href={href}
       className={className}
       style={style}
+      onFocus={onFocus}
     >
       {children}
     </a>

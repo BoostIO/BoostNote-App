@@ -3,10 +3,9 @@ import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
 import styled from '../../../lib/styled'
-import CodeEditor from '../../atoms/CodeEditor'
-import MarkdownPreviewer from '../../atoms/MarkdownPreviewer'
+import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
+import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
 import NoteDetailToolbar from './NoteDetailToolbar'
-import TwoPaneLayout from '../../atoms/TwoPaneLayout'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -42,7 +41,7 @@ const StyledNoteDetailContainer = styled.div`
     margin: 2px;
     position: relative;
     border-top: solid 1px ${({ theme }) => theme.colors.border};
-    .CodeMirror {
+    .editor .CodeMirror {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -57,12 +56,18 @@ const StyledNoteDetailContainer = styled.div`
       height: 100%;
       overflow: auto;
       padding: 0 10px;
+      box-sizing: border-box;
     }
-    .split {
+    .splitLeft {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
+      width: 50%;
+      height: 100%;
+      border-right: solid 1px ${({ theme }) => theme.colors.border};
+    }
+    .splitRight {
+      position: absolute;
+      left: 50%;
+      width: 50%;
       height: 100%;
     }
   }
@@ -76,6 +81,7 @@ type NoteDetailProps = {
     noteId: string,
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
+  trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
   removeNote: (storageId: string, noteId: string) => Promise<void>
 }
 
@@ -213,6 +219,21 @@ export default class NoteDetail extends React.Component<
     )
   }
 
+  trashNote = async () => {
+    const { storageId, note } = this.props
+    const noteId = note._id
+
+    if (this.queued) {
+      const { title, content, tags } = this.state
+      await this.saveNote(storageId, noteId, {
+        title,
+        content,
+        tags
+      })
+    }
+    await this.props.trashNote(storageId, noteId)
+  }
+
   queued = false
   timer?: number
 
@@ -245,12 +266,6 @@ export default class NoteDetail extends React.Component<
     })
   }
 
-  removeNote = async () => {
-    const { storageId, note, removeNote } = this.props
-
-    await removeNote(storageId, note._id)
-  }
-
   selectMode = (mode: 'edit' | 'preview' | 'split') => {
     this.setState({ mode })
   }
@@ -264,6 +279,19 @@ export default class NoteDetail extends React.Component<
   render() {
     const { note } = this.props
 
+    const codeEditor = (
+      <CustomizedCodeEditor
+        className='editor'
+        key={note._id}
+        codeMirrorRef={this.codeMirrorRef}
+        value={this.state.content}
+        onChange={this.updateContent}
+      />
+    )
+    const markdownPreviewer = (
+      <CustomizedMarkdownPreviewer content={this.state.content} />
+    )
+
     return (
       <StyledNoteDetailContainer>
         {note == null ? (
@@ -274,7 +302,7 @@ export default class NoteDetail extends React.Component<
               mode={this.state.mode}
               note={note}
               selectMode={this.selectMode}
-              removeNote={this.removeNote}
+              trashNote={this.trashNote}
             />
             <div className='titleSection'>
               <input
@@ -298,30 +326,14 @@ export default class NoteDetail extends React.Component<
             </div>
             <div className='contentSection'>
               {this.state.mode === 'edit' ? (
-                <CodeEditor
-                  key={note._id}
-                  codeMirrorRef={this.codeMirrorRef}
-                  value={this.state.content}
-                  onChange={this.updateContent}
-                />
+                codeEditor
               ) : this.state.mode === 'split' ? (
-                <TwoPaneLayout
-                  className='split'
-                  defaultLeftWidth={400}
-                  maxLeftWidth={800}
-                  left={
-                    <CodeEditor
-                      key={note._id}
-                      codeMirrorRef={this.codeMirrorRef}
-                      value={this.state.content}
-                      onChange={this.updateContent}
-                    />
-                  }
-                  right={<MarkdownPreviewer content={this.state.content} />}
-                  onResizeEnd={this.refreshCodeEditor}
-                />
+                <>
+                  <div className='splitLeft'>{codeEditor}</div>
+                  <div className='splitRight'>{markdownPreviewer}</div>
+                </>
               ) : (
-                <MarkdownPreviewer content={this.state.content} />
+                markdownPreviewer
               )}
             </div>
           </>

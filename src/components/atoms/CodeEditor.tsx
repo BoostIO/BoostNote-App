@@ -1,5 +1,17 @@
 import React from 'react'
 import CodeMirror from '../../lib/CodeMirror'
+import styled from '../../lib/styled'
+import {
+  EditorIndentTypeOptions,
+  EditorIndentSizeOptions,
+  EditorKeyMapOptions
+} from '../../lib/preferences'
+
+const StyledContainer = styled.div`
+  .CodeMirror {
+    font-family: inherit;
+  }
+`
 
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
@@ -14,6 +26,13 @@ interface CodeEditorProps {
     change: CodeMirror.EditorChangeLinkedList
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
+  className?: string
+  theme?: string
+  fontSize?: number
+  fontFamily?: string
+  indentType?: EditorIndentTypeOptions
+  indentSize?: EditorIndentSizeOptions
+  keyMap?: EditorKeyMapOptions
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -21,29 +40,66 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   codeMirror?: CodeMirror.EditorFromTextArea
 
   componentDidMount() {
-    this.codeMirror = CodeMirror.fromTextArea(
-      this.textAreaRef.current!,
-      defaultCodeMirrorOptions
-    )
+    const indentSize = this.props.indentSize == null ? 2 : this.props.indentSize
+    const keyMap =
+      this.props.keyMap == null || this.props.keyMap === 'default'
+        ? 'sublime'
+        : this.props.keyMap
+    this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
+      ...defaultCodeMirrorOptions,
+      theme: this.props.theme == null ? 'default' : this.props.theme,
+      indentWithTabs: this.props.indentType === 'tab',
+      indentUnit: indentSize,
+      tabSize: indentSize,
+      keyMap
+    })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
-    window.addEventListener('codemirror-mode-load', this.reloadOptions)
+    window.addEventListener('codemirror-mode-load', this.reloadMode)
     if (this.props.codeMirrorRef != null) {
       this.props.codeMirrorRef(this.codeMirror)
     }
   }
 
-  reloadOptions = () => {
+  reloadMode = () => {
     if (this.codeMirror != null) {
       this.codeMirror.setOption('mode', this.codeMirror.getOption('mode'))
     }
   }
 
-  componentDidUpdate() {
-    if (
-      this.codeMirror != null &&
-      this.props.value !== this.codeMirror.getValue()
-    ) {
+  componentDidUpdate(prevProps: CodeEditorProps) {
+    if (this.codeMirror == null) {
+      return
+    }
+    if (this.props.value !== this.codeMirror.getValue()) {
       this.codeMirror.setValue(this.props.value)
+    }
+    if (this.props.theme !== prevProps.theme) {
+      this.codeMirror.setOption('theme', this.props.theme)
+    }
+    if (
+      this.props.fontSize !== prevProps.fontSize ||
+      this.props.fontFamily !== prevProps.fontFamily
+    ) {
+      this.codeMirror.refresh()
+    }
+    if (this.props.indentType !== prevProps.indentType) {
+      this.codeMirror.setOption(
+        'indentWithTabs',
+        this.props.indentType === 'tab'
+      )
+    }
+    if (this.props.indentSize !== prevProps.indentSize) {
+      const indentSize =
+        this.props.indentSize == null ? 2 : this.props.indentSize
+      this.codeMirror.setOption('indentUnit', indentSize)
+      this.codeMirror.setOption('tabSize', indentSize)
+    }
+    if (this.props.keyMap !== prevProps.keyMap) {
+      const keyMap =
+        this.props.keyMap == null || this.props.keyMap === 'default'
+          ? 'sublime'
+          : this.props.keyMap
+      this.codeMirror.setOption('keyMap', keyMap)
     }
   }
 
@@ -51,7 +107,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
     }
-    window.removeEventListener('codemirror-mode-load', this.reloadOptions)
+    window.removeEventListener('codemirror-mode-load', this.reloadMode)
   }
 
   handleCodeMirrorChange = (
@@ -64,7 +120,19 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   }
 
   render() {
-    return <textarea ref={this.textAreaRef} defaultValue={this.props.value} />
+    const { fontSize, fontFamily, value, className } = this.props
+
+    return (
+      <StyledContainer
+        className={className}
+        style={{
+          fontSize: fontSize == null ? 'inherit' : `${fontSize}px`,
+          fontFamily: fontFamily == null ? 'monospace' : fontFamily
+        }}
+      >
+        <textarea ref={this.textAreaRef} defaultValue={value} />
+      </StyledContainer>
+    )
   }
 }
 

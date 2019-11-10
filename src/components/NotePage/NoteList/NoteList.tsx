@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, KeyboardEvent, useRef } from 'react'
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
@@ -27,16 +27,42 @@ const StyledContainer = styled.div`
 type NoteListProps = {
   storageId: string
   notes: NoteDoc[]
-  currentNoteId: string | null
   createNote: () => Promise<void>
+  basePathname: string
+  currentNoteIndex: number
+  navigateUp: () => void
+  navigateDown: () => void
 }
 
 const NoteList = ({
   notes,
-  currentNoteId,
+  currentNoteIndex,
   createNote,
-  storageId
+  storageId,
+  basePathname,
+  navigateUp,
+  navigateDown
 }: NoteListProps) => {
+  const handleListKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'ArrowDown':
+          navigateDown()
+          break
+        case 'ArrowUp':
+          navigateUp()
+          break
+      }
+    },
+    [navigateUp, navigateDown]
+  )
+
+  const listRef = useRef<HTMLUListElement>(null)
+
+  const focusList = useCallback(() => {
+    listRef.current!.focus()
+  }, [])
+
   return (
     <StyledContainer>
       <Toolbar>
@@ -48,15 +74,17 @@ const NoteList = ({
         />
         <ToolbarIconButton path={mdiSquareEditOutline} onClick={createNote} />
       </Toolbar>
-      <ul>
-        {notes.map(note => {
-          const noteIsCurrentNote = note._id === currentNoteId
+      <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
+        {notes.map((note, index) => {
+          const noteIsCurrentNote = index === currentNoteIndex
           return (
             <li key={note._id}>
               <NoteItem
                 active={noteIsCurrentNote}
                 note={note}
                 storageId={storageId}
+                basePathname={basePathname}
+                focusList={focusList}
               />
             </li>
           )
