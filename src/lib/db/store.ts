@@ -24,6 +24,9 @@ import { produce } from 'immer'
 import { useRouter } from '../router'
 import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
+import { TAG_ID_PREFIX } from './consts'
+
+const storageDataListKey = 'note.boostio.co:storageDataList'
 
 export interface DbStore {
   initialized: boolean
@@ -230,19 +233,27 @@ export function createDbStoreCreator(
                 ])
               }
 
-        const tagMap = storage.tagMap
-        await Promise.all(
+        const modifiedTags = ((await Promise.all(
           noteDoc.tags.map(async tag => {
-            if (tagMap[tag] == null) {
-              tagMap[tag] = {
+            if (storage.tagMap[tag] == null) {
+              return {
                 ...(await storage.db.getTag(tag)!),
                 noteIdSet: new Set([noteDoc._id])
               } as PopulatedTagDoc
             } else {
-              tagMap[tag]!.noteIdSet.add(noteDoc._id)
+              return {
+                ...storage.tagMap[tag]!,
+                noteIdSet: new Set([
+                  ...storage.tagMap[tag]!.noteIdSet.values(),
+                  noteDoc._id
+                ])
+              }
             }
           })
-        )
+        )) as PopulatedTagDoc[]).reduce((acc, tag) => {
+          acc[tag._id.replace(TAG_ID_PREFIX, '')] = tag
+          return acc
+        }, {})
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
@@ -256,7 +267,10 @@ export function createDbStoreCreator(
               }
             })
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
-            draft[storageId]!.tagMap = tagMap
+            draft[storageId]!.tagMap = {
+              ...storage.tagMap,
+              ...modifiedTags
+            }
           })
         )
         return noteDoc
@@ -303,23 +317,42 @@ export function createDbStoreCreator(
                 ])
               }
 
-        const tagMap = storage.tagMap!
-        const currentTags = Object.keys(tagMap)
-        currentTags.forEach((tag: string) => {
-          tagMap[tag]!.noteIdSet.delete(noteDoc._id)
-        })
-        await Promise.all(
+        const currentTags = Object.keys(storage.tagMap)
+        const previousTags: ObjectMap<PopulatedTagDoc> = {
+          ...currentTags!.reduce((acc, tag) => {
+            acc[tag] = {
+              ...storage.tagMap[tag]!,
+              noteIdSet: new Set(
+                [...storage.tagMap[tag]!.noteIdSet].filter(noteId => {
+                  return noteId !== noteDoc._id
+                })
+              )
+            }
+            return acc
+          }, {})
+        }
+
+        const modifiedTags: ObjectMap<PopulatedTagDoc> = ((await Promise.all(
           noteDoc.tags.map(async tag => {
-            if (tagMap[tag] == null) {
-              tagMap[tag] = {
+            if (storage.tagMap[tag] == null) {
+              return {
                 ...(await storage.db.getTag(tag)!),
                 noteIdSet: new Set([noteDoc._id])
               } as PopulatedTagDoc
             } else {
-              tagMap[tag]!.noteIdSet.add(noteDoc._id)
+              return {
+                ...storage.tagMap[tag]!,
+                noteIdSet: new Set([
+                  ...storage.tagMap[tag]!.noteIdSet.values(),
+                  noteDoc._id
+                ])
+              }
             }
           })
-        )
+        )) as PopulatedTagDoc[]).reduce((acc, tag) => {
+          acc[tag._id.replace(TAG_ID_PREFIX, '')] = tag
+          return acc
+        }, {})
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
@@ -333,7 +366,10 @@ export function createDbStoreCreator(
               }
             })
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
-            draft[storageId]!.tagMap = tagMap
+            draft[storageId]!.tagMap = {
+              ...previousTags,
+              ...modifiedTags
+            }
           })
         )
 
