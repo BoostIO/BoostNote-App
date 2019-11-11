@@ -7,8 +7,10 @@ import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
+import { GeneralStatusProvider } from './lib/generalStatus'
 
 const CombinedProvider = combineProviders(
+  GeneralStatusProvider,
   PreferencesProvider,
   DialogProvider,
   ContextMenuProvider,

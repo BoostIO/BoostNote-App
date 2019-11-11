@@ -13,6 +13,7 @@ import {
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
@@ -119,9 +120,20 @@ export default () => {
 
   const removeNote = async () => {}
 
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const updateNoteListWidth = useCallback(
+    (leftWidth: number) => {
+      setGeneralStatus({
+        noteListWidth: leftWidth
+      })
+    },
+    [setGeneralStatus]
+  )
+
   return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
+      defaultLeftWidth={generalStatus.noteListWidth}
       left={
         <NoteList
           storageId={storageId}
@@ -146,6 +158,7 @@ export default () => {
           />
         )
       }
+      onResizeEnd={updateNoteListWidth}
     />
   ) : (
     <div>Storage does not exist</div>
