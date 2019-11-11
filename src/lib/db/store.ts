@@ -22,8 +22,7 @@ import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
 import { useRouter } from '../router'
 import { values } from '../db/utils'
-
-const storageDataListKey = 'note.boostio.co:storageDataList'
+import { storageDataListKey } from '../localStorageKeys'
 
 export interface DbStore {
   initialized: boolean
