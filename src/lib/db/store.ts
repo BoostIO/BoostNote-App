@@ -25,6 +25,7 @@ import { useRouter } from '../router'
 import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
+import R from 'ramda'
 
 export interface DbStore {
   initialized: boolean
@@ -315,18 +316,18 @@ export function createDbStoreCreator(
                 ])
               }
 
-        const currentTags = Object.keys(storage.tagMap)
-        const previousTags: ObjectMap<PopulatedTagDoc> = {
-          ...currentTags!.reduce((acc, tag) => {
-            const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
-            newNoteIdSet.delete(noteDoc._id)
-            acc[tag] = {
-              ...storage.tagMap[tag]!,
-              noteIdSet: newNoteIdSet
-            }
-            return acc
-          }, {})
-        }
+        const removedTags: ObjectMap<PopulatedTagDoc> = R.difference(
+          storage.noteMap[noteDoc._id]!.tags,
+          noteDoc.tags
+        ).reduce((acc, tag) => {
+          const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
+          newNoteIdSet.delete(noteDoc._id)
+          acc[tag] = {
+            ...storage.tagMap[tag]!,
+            noteIdSet: newNoteIdSet
+          }
+          return acc
+        }, {})
 
         const modifiedTags: ObjectMap<PopulatedTagDoc> = ((await Promise.all(
           noteDoc.tags.map(async tag => {
@@ -363,7 +364,8 @@ export function createDbStoreCreator(
             })
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
             draft[storageId]!.tagMap = {
-              ...previousTags,
+              ...storage.tagMap,
+              ...removedTags,
               ...modifiedTags
             }
           })
