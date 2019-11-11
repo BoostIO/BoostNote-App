@@ -26,8 +26,6 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 
-const storageDataListKey = 'note.boostio.co:storageDataList'
-
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
