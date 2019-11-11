@@ -1,7 +1,7 @@
 import { createDbStoreCreator, getStorageDataList } from './store'
 import { MemoryLiteStorage } from 'ltstrg'
 import { renderHook, act } from '@testing-library/react-hooks'
-import { NoteStorage } from './types'
+import { NoteStorage, NoteDoc } from './types'
 import { getFolderId } from './utils'
 import { RouterProvider } from '../router'
 
@@ -200,5 +200,106 @@ describe('DbStore', () => {
     })
 
     // TODO: routing test when current folder or current folder's parent folder is deleted.
+  })
+
+  describe('#createNote', () => {
+    it('creates a note and registers in the map', async () => {
+      // given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+
+        // When
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote'
+        })
+      })
+      // Then
+      expect(result.current.storageMap[storage!.id]!.noteMap).toEqual({
+        [noteDoc!._id]: expect.objectContaining({ title: 'testNote' })
+      })
+    })
+
+    it('creates a note and register its tag', async () => {
+      // given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+
+        // When
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['testTag']
+        })
+      })
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.tagMap[noteDoc!.tags[0]]!
+          .noteIdSet
+      ).toMatchObject(new Set([noteDoc!._id]))
+    })
+  })
+
+  describe('#updateNote', () => {
+    it('update a Note and handle tag removal', async () => {
+      // given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['tag1', 'tag2']
+        })
+
+        // When
+        noteDoc = await result.current.updateNote(storage.id, noteDoc!._id, {
+          tags: ['tag2']
+        })
+      })
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.tagMap['tag1']!.noteIdSet.size
+      ).toEqual(0)
+    })
+    it('update a Note and handle tag addition', async () => {
+      // given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['tag1']
+        })
+        await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['tag2']
+        })
+
+        // When
+        noteDoc = await result.current.updateNote(storage.id, noteDoc!._id, {
+          tags: ['tag1', 'tag2']
+        })
+      })
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.tagMap['tag2']!.noteIdSet.size
+      ).toEqual(2)
+    })
   })
 })
