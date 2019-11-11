@@ -4,7 +4,8 @@ import {
   ObjectMap,
   NoteDoc,
   NoteDocEditibleProps,
-  PopulatedFolderDoc
+  PopulatedFolderDoc,
+  PopulatedTagDoc
 } from './types'
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../utils/context'
@@ -213,6 +214,7 @@ export function createDbStoreCreator(
                 parentFolderPathnamesToCheck
               )
             : []
+
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
             ? ({
@@ -228,7 +230,20 @@ export function createDbStoreCreator(
                 ])
               }
 
-        // TODO: Reflect tags
+        const tagMap = storage.tagMap
+        await Promise.all(
+          noteDoc.tags.map(async tag => {
+            if (tagMap[tag] == null) {
+              tagMap[tag] = {
+                ...(await storage.db.getTag(tag)!),
+                noteIdSet: new Set([noteDoc._id])
+              } as PopulatedTagDoc
+            } else {
+              tagMap[tag]!.noteIdSet.add(noteDoc._id)
+            }
+          })
+        )
+
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
@@ -241,9 +256,9 @@ export function createDbStoreCreator(
               }
             })
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            draft[storageId]!.tagMap = tagMap
           })
         )
-
         return noteDoc
       },
       [storageMap]
@@ -288,7 +303,24 @@ export function createDbStoreCreator(
                 ])
               }
 
-        // TODO: Reflect tags
+        const tagMap = storage.tagMap!
+        const currentTags = Object.keys(tagMap)
+        currentTags.forEach((tag: string) => {
+          tagMap[tag]!.noteIdSet.delete(noteDoc._id)
+        })
+        await Promise.all(
+          noteDoc.tags.map(async tag => {
+            if (tagMap[tag] == null) {
+              tagMap[tag] = {
+                ...(await storage.db.getTag(tag)!),
+                noteIdSet: new Set([noteDoc._id])
+              } as PopulatedTagDoc
+            } else {
+              tagMap[tag]!.noteIdSet.add(noteDoc._id)
+            }
+          })
+        )
+
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
@@ -301,6 +333,7 @@ export function createDbStoreCreator(
               }
             })
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            draft[storageId]!.tagMap = tagMap
           })
         )
 
