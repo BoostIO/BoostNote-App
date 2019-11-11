@@ -16,7 +16,7 @@ interface TwoPaneLayoutProps {
   style?: CSSProperties
   defaultLeftWidth?: number
   maxLeftWidth?: number
-  onResizeEnd?: () => void
+  onResizeEnd?: (leftWidth: number) => void
 }
 
 const minLeftWidth = 100
@@ -136,7 +136,7 @@ const TwoPaneLayout = ({
 
   useEffect(() => {
     if (onResizeEnd != null && !dragging) {
-      onResizeEnd()
+      onResizeEnd(leftWidth)
     }
   }, [onResizeEnd, leftWidth, dragging])
 

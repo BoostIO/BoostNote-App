@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import SideNavigator from './SideNavigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
@@ -15,6 +15,7 @@ import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
+import { useGeneralStatus } from '../lib/generalStatus'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -35,14 +36,25 @@ const App = () => {
   }, [toggleClosed])
   useGlobalKeyDownHandler(keyboardHandler)
 
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const updateSideBarWidth = useCallback(
+    (leftWidth: number) => {
+      setGeneralStatus({
+        sideBarWidth: leftWidth
+      })
+    },
+    [setGeneralStatus]
+  )
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <StyledAppContainer>
         {initialized ? (
           <TwoPaneLayout
-            defaultLeftWidth={160}
+            defaultLeftWidth={generalStatus.sideBarWidth}
             left={<SideNavigator />}
             right={<Router />}
+            onResizeEnd={updateSideBarWidth}
           />
         ) : (
           <div>Loading data</div>
