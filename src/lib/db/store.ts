@@ -25,7 +25,7 @@ import { useRouter } from '../router'
 import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
-import R from 'ramda'
+import { difference } from 'ramda'
 
 export interface DbStore {
   initialized: boolean
@@ -316,7 +316,7 @@ export function createDbStoreCreator(
                 ])
               }
 
-        const removedTags: ObjectMap<PopulatedTagDoc> = R.difference(
+        const removedTags: ObjectMap<PopulatedTagDoc> = difference(
           storage.noteMap[noteDoc._id]!.tags,
           noteDoc.tags
         ).reduce((acc, tag) => {
