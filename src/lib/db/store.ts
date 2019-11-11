@@ -318,13 +318,11 @@ export function createDbStoreCreator(
         const currentTags = Object.keys(storage.tagMap)
         const previousTags: ObjectMap<PopulatedTagDoc> = {
           ...currentTags!.reduce((acc, tag) => {
+            const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
+            newNoteIdSet.delete(noteDoc._id)
             acc[tag] = {
               ...storage.tagMap[tag]!,
-              noteIdSet: new Set(
-                [...storage.tagMap[tag]!.noteIdSet].filter(noteId => {
-                  return noteId !== noteDoc._id
-                })
-              )
+              noteIdSet: newNoteIdSet
             }
             return acc
           }, {})
