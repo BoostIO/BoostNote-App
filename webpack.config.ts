@@ -6,7 +6,10 @@ import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import dotenv from 'dotenv'
 import CopyPlugin from 'copy-webpack-plugin'
 
-const { parsed } = dotenv.config()
+let { parsed } = dotenv.config()
+if (parsed == null) {
+  parsed = {}
+}
 
 module.exports = {
   entry: [
