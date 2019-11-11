@@ -204,7 +204,7 @@ describe('DbStore', () => {
 
   describe('#createNote', () => {
     it('creates a note and registers in the map', async () => {
-      // given
+      // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
       let noteDoc: NoteDoc | undefined
@@ -218,6 +218,7 @@ describe('DbStore', () => {
           title: 'testNote'
         })
       })
+
       // Then
       expect(result.current.storageMap[storage!.id]!.noteMap).toEqual({
         [noteDoc!._id]: expect.objectContaining({ title: 'testNote' })
@@ -225,7 +226,7 @@ describe('DbStore', () => {
     })
 
     it('creates a note and register its tag', async () => {
-      // given
+      // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
       let noteDoc: NoteDoc | undefined
@@ -240,6 +241,7 @@ describe('DbStore', () => {
           tags: ['testTag']
         })
       })
+
       // Then
       expect(
         result.current.storageMap[storage!.id]!.tagMap[noteDoc!.tags[0]]!
@@ -250,7 +252,7 @@ describe('DbStore', () => {
 
   describe('#updateNote', () => {
     it('update a Note and handle tag removal', async () => {
-      // given
+      // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
       let noteDoc: NoteDoc | undefined
@@ -268,13 +270,15 @@ describe('DbStore', () => {
           tags: ['tag2']
         })
       })
+
       // Then
       expect(
         result.current.storageMap[storage!.id]!.tagMap['tag1']!.noteIdSet.size
       ).toEqual(0)
     })
+
     it('update a Note and handle tag addition', async () => {
-      // given
+      // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
       let noteDoc: NoteDoc | undefined
@@ -296,6 +300,7 @@ describe('DbStore', () => {
           tags: ['tag1', 'tag2']
         })
       })
+
       // Then
       expect(
         result.current.storageMap[storage!.id]!.tagMap['tag2']!.noteIdSet.size
