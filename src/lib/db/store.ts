@@ -189,12 +189,58 @@ export function createDbStoreCreator(
             aPathname.startsWith(`${pathname}/`)
           )
         ]
-        // TODO: Reflect deleted notes
+
+        const noteIds = Object.keys(storage.noteMap)
+        const affectedTagIdAndNotesIdMap = new Map<string, string[]>()
+        const modifiedNotes: ObjectMap<NoteDoc> = noteIds.reduce(
+          (acc, noteId) => {
+            const note = { ...storage.noteMap[noteId]! }
+            if (deletedFolderPathnames.includes(note.folderPathname)) {
+              note.tags.forEach(tag => {
+                if (affectedTagIdAndNotesIdMap.has(tag)) {
+                  affectedTagIdAndNotesIdMap.get(tag)!.push(noteId)
+                } else {
+                  affectedTagIdAndNotesIdMap.set(tag, [noteId])
+                }
+              })
+
+              note.trashed = true
+              acc[noteId] = note
+            }
+            return acc
+          },
+          {}
+        )
+
+        const modifiedTags: ObjectMap<PopulatedTagDoc> = [
+          ...affectedTagIdAndNotesIdMap
+        ].reduce((acc, val) => {
+          const tag = val[0]
+          const noteIds = val[1]
+          const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
+          noteIds.forEach(noteId => {
+            newNoteIdSet.delete(noteId)
+          })
+          acc[tag] = {
+            ...storage.tagMap[tag]!,
+            noteIdSet: newNoteIdSet
+          }
+          return acc
+        }, {})
+
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             deletedFolderPathnames.forEach(aPathname => {
               delete draft[id]!.folderMap[aPathname]
             })
+            draft[id]!.noteMap = {
+              ...draft[id]!.noteMap,
+              ...modifiedNotes
+            }
+            draft[id]!.tagMap = {
+              ...draft[id]!.tagMap,
+              ...modifiedTags
+            }
           })
         )
       },
