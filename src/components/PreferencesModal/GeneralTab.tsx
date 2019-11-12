@@ -71,7 +71,7 @@ const GeneralTab = () => {
             onChange={selectLanguage}
           >
             <option value='en-US'>English (US)</option>
-            <option value='ja'>Japanese</option>
+            <option value='ja'>日本語</option>
           </select>
         </SectionControl>
       </Section>
