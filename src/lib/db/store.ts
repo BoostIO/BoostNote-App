@@ -46,6 +46,7 @@ export interface DbStore {
     noteProps: Partial<NoteDocEditibleProps>
   ): Promise<NoteDoc | undefined>
   trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  untrashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
 }
 
@@ -399,6 +400,70 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const untrashNote = useCallback(
+      async (storageId: string, noteId: string) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+        const noteDoc = await storage.db.untrashNote(noteId)
+        if (noteDoc == null) {
+          return
+        }
+
+        const folder: PopulatedFolderDoc =
+          storage.folderMap[noteDoc.folderPathname] == null
+            ? ({
+                ...(await storage.db.getFolder(noteDoc.folderPathname)!),
+                pathname: noteDoc.folderPathname,
+                noteIdSet: new Set([noteDoc._id])
+              } as PopulatedFolderDoc)
+            : {
+                ...storage.folderMap[noteDoc.folderPathname]!,
+                noteIdSet: new Set([
+                  ...storage.folderMap[noteDoc.folderPathname]!.noteIdSet,
+                  noteDoc._id
+                ])
+              }
+
+        const modifiedTags: ObjectMap<PopulatedTagDoc> = ((await Promise.all(
+          noteDoc.tags.map(async tag => {
+            if (storage.tagMap[tag] == null) {
+              return {
+                ...(await storage.db.getTag(tag)!),
+                noteIdSet: new Set([noteDoc._id])
+              } as PopulatedTagDoc
+            } else {
+              return {
+                ...storage.tagMap[tag]!,
+                noteIdSet: new Set([
+                  ...storage.tagMap[tag]!.noteIdSet.values(),
+                  noteDoc._id
+                ])
+              }
+            }
+          })
+        )) as PopulatedTagDoc[]).reduce((acc, tag) => {
+          acc[tag._id.replace(TAG_ID_PREFIX, '')] = tag
+          return acc
+        }, {})
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+            draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            draft[storageId]!.tagMap = {
+              ...storage.tagMap,
+              ...modifiedTags
+            }
+          })
+        )
+
+        return noteDoc
+      },
+      [storageMap]
+    )
+
     const purgeNote = useCallback(
       async (storageId: string, noteId: string) => {
         const storage = storageMap[storageId]
@@ -463,6 +528,7 @@ export function createDbStoreCreator(
       createNote,
       updateNote,
       trashNote,
+      untrashNote,
       purgeNote
     }
   }
