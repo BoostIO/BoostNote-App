@@ -15,8 +15,7 @@ const StyledContainer = styled.div`
 
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
-  lineNumbers: true,
-  mode: 'markdown'
+  lineNumbers: true
 }
 
 interface CodeEditorProps {
@@ -33,6 +32,7 @@ interface CodeEditorProps {
   indentType?: EditorIndentTypeOptions
   indentSize?: EditorIndentSizeOptions
   keyMap?: EditorKeyMapOptions
+  mode?: string
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -51,7 +51,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       indentWithTabs: this.props.indentType === 'tab',
       indentUnit: indentSize,
       tabSize: indentSize,
-      keyMap
+      keyMap,
+      mode: this.props.mode || 'markdown'
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)

@@ -10,13 +10,15 @@ interface CustomizedCodeEditor {
   ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
+  mode?: string
 }
 
 const CustomizedCodeEditor = ({
   onChange,
   value,
   codeMirrorRef,
-  className
+  className,
+  mode
 }: CustomizedCodeEditor) => {
   const { preferences } = usePreferences()
   return (
@@ -31,6 +33,7 @@ const CustomizedCodeEditor = ({
       indentType={preferences['editor.indentType']}
       indentSize={preferences['editor.indentSize']}
       keyMap={preferences['editor.keyMap']}
+      mode={mode}
     />
   )
 }

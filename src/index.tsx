@@ -8,8 +8,10 @@ import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
+import { PreviewStyleProvider } from './lib/preview'
 
 const CombinedProvider = combineProviders(
+  PreviewStyleProvider,
   GeneralStatusProvider,
   PreferencesProvider,
   DialogProvider,
