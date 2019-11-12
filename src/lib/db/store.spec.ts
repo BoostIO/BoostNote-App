@@ -411,6 +411,7 @@ describe('DbStore', () => {
         ).toEqual(true)
       })
     })
+
     it('adds back linked folder if it was removed', async () => {
       // Given
       const { result } = prepareDbStore()
@@ -436,6 +437,7 @@ describe('DbStore', () => {
         ).toBeDefined()
       })
     })
+
     it('adds note back to tags map', async () => {
       // Given
       const { result } = prepareDbStore()
@@ -460,6 +462,55 @@ describe('DbStore', () => {
             'testTag'
           ]!.noteIdSet.has(noteDoc!._id)
         ).toEqual(true)
+      })
+    })
+  })
+
+  describe('#removeTag', () => {
+    it('removes tag from tag map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        await result.current.createNote(storage.id, {
+          tags: ['tagTest']
+        })
+
+        // When
+        await result.current.removeTag(storage.id, 'tagTest')
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.tagMap['tagTest']
+        ).toBeUndefined()
+      })
+    })
+
+    it('removes tag from tagged notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let note: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        note = await result.current.createNote(storage.id, {
+          tags: ['tagTest']
+        })
+
+        // When
+        await result.current.removeTag(storage.id, 'tagTest')
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.noteMap[
+            note!._id
+          ]!.tags.includes('tagTest')
+        ).toEqual(false)
       })
     })
   })

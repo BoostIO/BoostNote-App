@@ -48,6 +48,7 @@ export interface DbStore {
   trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   untrashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
+  removeTag(storageId: string, tag: string): Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -516,6 +517,47 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const removeTag = useCallback(
+      async (storageId: string, tag: string) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+
+        await storage.db.removeTag(tag)
+
+        const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
+          storageMap[storageId]!.noteMap
+        ).reduce((acc, noteId) => {
+          if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(tag)) {
+            acc[noteId] = {
+              ...storageMap[storageId]!.noteMap[noteId]!,
+              tags: storageMap[storageId]!.noteMap[noteId]!.tags.filter(
+                noteTag => noteTag !== tag
+              )
+            }
+          }
+          return acc
+        }, {})
+
+        const newTagMap = { ...storageMap[storageId]!.tagMap }
+        delete newTagMap[tag]
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.noteMap = {
+              ...draft[storageId]!.noteMap,
+              ...modifiedNotes
+            }
+            draft[storageId]!.tagMap = newTagMap
+          })
+        )
+
+        return
+      },
+      [storageMap]
+    )
+
     return {
       initialized,
       storageMap,
@@ -529,7 +571,8 @@ export function createDbStoreCreator(
       updateNote,
       trashNote,
       untrashNote,
-      purgeNote
+      purgeNote,
+      removeTag
     }
   }
 }
