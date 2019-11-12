@@ -329,6 +329,12 @@ export default class NoteDb {
 
     await this.upsertFolder(note.folderPathname)
 
+    await Promise.all(
+      note.tags.map(tag => {
+        this.upsertTag(tag)
+      })
+    )
+
     const noteDocProps = {
       ...note,
       trashed: false

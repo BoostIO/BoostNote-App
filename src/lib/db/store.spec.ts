@@ -379,8 +379,87 @@ describe('DbStore', () => {
         expect(
           result.current.storageMap[storage!.id]!.tagMap[
             'testTag'
-          ]!!.noteIdSet.has(noteDoc!._id)
+          ]!.noteIdSet.has(noteDoc!._id)
         ).toEqual(false)
+      })
+    })
+  })
+
+  describe('#untrashNote', () => {
+    it('adds note back to folder map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          folderPathname: '/test'
+        })
+        await result.current.trashNote(storage.id, noteDoc!._id)
+
+        // When
+        await result.current.untrashNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.folderMap[
+            noteDoc!.folderPathname
+          ]!.noteIdSet.has(noteDoc!._id)
+        ).toEqual(true)
+      })
+    })
+    it('adds back linked folder if it was removed', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          folderPathname: '/test'
+        })
+        await result.current.removeFolder(storage.id, noteDoc!.folderPathname)
+
+        // When
+        await result.current.untrashNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.folderMap[
+            noteDoc!.folderPathname
+          ]
+        ).toBeDefined()
+      })
+    })
+    it('adds note back to tags map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          folderPathname: '/test',
+          tags: ['testTag']
+        })
+        await result.current.trashNote(storage.id, noteDoc!._id)
+
+        // When
+        await result.current.untrashNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.tagMap[
+            'testTag'
+          ]!.noteIdSet.has(noteDoc!._id)
+        ).toEqual(true)
       })
     })
   })
