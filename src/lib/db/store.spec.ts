@@ -179,7 +179,26 @@ describe('DbStore', () => {
       })
     })
 
-    it('trashes direct notes', async () => {
+    it('removes its sub folders', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test/child folder')
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
+        '/': expect.objectContaining({ pathname: '/' })
+      })
+    })
+
+    it('trashes child notes of target folder', async () => {
       // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
@@ -202,26 +221,7 @@ describe('DbStore', () => {
       ).toEqual(true)
     })
 
-    it('removes its child folders', async () => {
-      // Given
-      const { result } = prepareDbStore()
-      let storage: NoteStorage
-      await act(async () => {
-        await result.current.initialize()
-        storage = await result.current.createStorage('test')
-        await result.current.createFolder(storage.id, '/test/child folder')
-
-        // When
-        await result.current.removeFolder(storage.id, '/test')
-      })
-
-      // Then
-      expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/': expect.objectContaining({ pathname: '/' })
-      })
-    })
-
-    it('trashes its child notes', async () => {
+    it('trashes child notes of sub folders', async () => {
       // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
@@ -244,7 +244,7 @@ describe('DbStore', () => {
       ).toEqual(true)
     })
 
-    it('updates tag map of direct notes', async () => {
+    it('updates tag map from child notes of target folder', async () => {
       // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
@@ -268,7 +268,7 @@ describe('DbStore', () => {
       ).toEqual(0)
     })
 
-    it('updates tag map of child notes', async () => {
+    it('updates tag map from child notes of sub folders', async () => {
       // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
