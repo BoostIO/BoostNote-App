@@ -160,7 +160,7 @@ describe('DbStore', () => {
   })
 
   describe('#removeFolder', () => {
-    it('removes a folder and its notes', async () => {
+    it('removes a folder', async () => {
       // Given
       const { result } = prepareDbStore()
       let storage: NoteStorage
@@ -177,7 +177,29 @@ describe('DbStore', () => {
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' })
       })
-      // TODO: check note deletion too.
+    })
+
+    it('trashes direct notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let note: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        note = await result.current.createNote(storage.id, {
+          folderPathname: '/test'
+        })
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.noteMap[note!._id]!.trashed
+      ).toEqual(true)
     })
 
     it('removes its child folders', async () => {
@@ -199,7 +221,76 @@ describe('DbStore', () => {
       })
     })
 
-    // TODO: routing test when current folder or current folder's parent folder is deleted.
+    it('trashes its child notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let note: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test/childfolder')
+        note = await result.current.createNote(storage.id, {
+          folderPathname: '/test/childfolder'
+        })
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.noteMap[note!._id]!.trashed
+      ).toEqual(true)
+    })
+
+    it('updates tag map of direct notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        await result.current.createNote(storage.id, {
+          folderPathname: '/test',
+          tags: ['tagTest']
+        })
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.tagMap['tagTest']!.noteIdSet
+          .size
+      ).toEqual(0)
+    })
+
+    it('updates tag map of child notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test/childfolder')
+        await result.current.createNote(storage.id, {
+          folderPathname: '/test/childfolder',
+          tags: ['tagTest']
+        })
+
+        // When
+        await result.current.removeFolder(storage.id, '/test')
+      })
+
+      // Then
+      expect(
+        result.current.storageMap[storage!.id]!.tagMap['tagTest']!.noteIdSet
+          .size
+      ).toEqual(0)
+    })
   })
 
   describe('#createNote', () => {
