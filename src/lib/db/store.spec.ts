@@ -307,4 +307,81 @@ describe('DbStore', () => {
       ).toEqual(2)
     })
   })
+
+  describe('#purgeNote', () => {
+    it('removes note from note map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote'
+        })
+
+        // When
+        await result.current.purgeNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.noteMap[noteDoc!._id]
+        ).toBeUndefined()
+      })
+    })
+
+    it('removes note from folder map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          folderPathname: '/test'
+        })
+
+        // When
+        await result.current.purgeNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.folderMap[
+            noteDoc!.folderPathname
+          ]!.noteIdSet.has(noteDoc!._id)
+        ).toEqual(false)
+      })
+    })
+
+    it('removes note tags from tag map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let noteDoc: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        noteDoc = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['testTag']
+        })
+
+        // When
+        await result.current.purgeNote(storage.id, noteDoc!._id)
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.tagMap[
+            'testTag'
+          ]!!.noteIdSet.has(noteDoc!._id)
+        ).toEqual(false)
+      })
+    })
+  })
 })

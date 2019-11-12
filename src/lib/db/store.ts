@@ -46,6 +46,7 @@ export interface DbStore {
     noteProps: Partial<NoteDocEditibleProps>
   ): Promise<NoteDoc | undefined>
   trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  purgeNote(storageId: string, noteId: string): Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -398,6 +399,58 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const purgeNote = useCallback(
+      async (storageId: string, noteId: string) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+
+        await storage.db.purgeNote(noteId)
+
+        const noteDoc = storageMap[storageId]!.noteMap[noteId]!
+
+        const noteMap = { ...storageMap[storageId]!.noteMap }
+        delete noteMap[noteId]
+
+        const newFolderNoteIdSet = new Set(
+          storage.folderMap[noteDoc.folderPathname]!.noteIdSet
+        )
+        newFolderNoteIdSet.delete(noteDoc._id)
+        const folder: PopulatedFolderDoc = {
+          ...storage.folderMap[noteDoc.folderPathname]!,
+          noteIdSet: newFolderNoteIdSet
+        }
+
+        const modifiedTags: ObjectMap<PopulatedTagDoc> = noteDoc.tags.reduce(
+          (acc, tag) => {
+            const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
+            newNoteIdSet.delete(noteDoc._id)
+            acc[tag] = {
+              ...storage.tagMap[tag]!,
+              noteIdSet: newNoteIdSet
+            }
+            return acc
+          },
+          {}
+        )
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.noteMap = noteMap
+            draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            draft[storageId]!.tagMap = {
+              ...storage.tagMap,
+              ...modifiedTags
+            }
+          })
+        )
+
+        return
+      },
+      [storageMap]
+    )
+
     return {
       initialized,
       storageMap,
@@ -409,7 +462,8 @@ export function createDbStoreCreator(
       removeFolder,
       createNote,
       updateNote,
-      trashNote
+      trashNote,
+      purgeNote
     }
   }
 }
