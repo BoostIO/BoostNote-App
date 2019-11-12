@@ -8,6 +8,7 @@ import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
 import { useTranslation } from 'react-i18next'
+import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -26,6 +27,24 @@ const PreviewContainer = styled.div`
 `
 
 const MarkdownTab = () => {
+  const { previewStyle, setPreviewStyle } = usePreviewStyle()
+  const [newPreviewStyle, setNewPreviewStyle] = useState(previewStyle)
+  const updatePreviewStyle = useCallback(
+    (newValue: string) => {
+      setNewPreviewStyle(newValue)
+    },
+    [setNewPreviewStyle]
+  )
+  const savePreviewStyle = useCallback(() => {
+    if (previewStyle !== newPreviewStyle) {
+      setPreviewStyle(newPreviewStyle)
+    }
+  }, [setPreviewStyle, newPreviewStyle, previewStyle])
+
+  const resetNewPreviewStyle = useCallback(() => {
+    setNewPreviewStyle(defaultPreviewStyle)
+  }, [setNewPreviewStyle])
+
   const { preferences, setPreferences } = usePreferences()
 
   const selectCodeFenceTheme: SelectChangeEventHandler = useCallback(
@@ -49,6 +68,18 @@ const MarkdownTab = () => {
 
   return (
     <div>
+      <Section>
+        <SectionHeader>{t('preferences.previewStyle')}</SectionHeader>
+        <SectionControl>
+          <button onClick={savePreviewStyle}>Save</button>
+          <button onClick={resetNewPreviewStyle}>Use default style</button>
+          <CustomizedCodeEditor
+            value={newPreviewStyle}
+            onChange={updatePreviewStyle}
+            mode='css'
+          />
+        </SectionControl>
+      </Section>
       <Section>
         <SectionHeader>{t('preferences.markdownCodeBlockTheme')}</SectionHeader>
         <SectionControl>

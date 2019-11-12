@@ -32,6 +32,7 @@ export default {
     'preferences.editorPreview': 'エディタープレヴュー',
 
     // Preferences MarkdownTab
+    'preferences.previewStyle': 'プレビュースタイル',
     'preferences.markdownCodeBlockTheme': 'コードブロックテーマ'
   }
 }

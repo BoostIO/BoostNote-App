@@ -13,7 +13,6 @@ import CodeMirror from '../../lib/CodeMirror'
 import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
-import { githubPreviewStyle } from '../../lib/preview'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
@@ -150,19 +149,17 @@ function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
     .use(rehypeReact, { createElement: React.createElement })
 }
 
-const StyledContainer = styled.div`
-  .CodeMirror {
-    height: inherit;
-  }
-  ${githubPreviewStyle}
-`
-
 interface MarkdownPreviewerProps {
   content: string
   theme?: string
+  style?: string
 }
 
-const MarkdownPreviewer = ({ content, theme }: MarkdownPreviewerProps) => {
+const MarkdownPreviewer = ({
+  content,
+  theme,
+  style
+}: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
@@ -208,6 +205,15 @@ const MarkdownPreviewer = ({ content, theme }: MarkdownPreviewerProps) => {
     console.log('rendering...')
     renderContent(content)
   }, [content, theme, rendering, renderContent, renderedContent])
+
+  const StyledContainer = useMemo(() => {
+    return styled.div`
+      .CodeMirror {
+        height: inherit;
+      }
+      ${style}
+    `
+  }, [style])
 
   return (
     <StyledContainer className='MarkdownPreviewer'>
