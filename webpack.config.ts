@@ -5,6 +5,7 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import dotenv from 'dotenv'
 import CopyPlugin from 'copy-webpack-plugin'
+import Dotenv from 'dotenv-webpack'
 
 const { parsed } = dotenv.config()
 
@@ -69,21 +70,7 @@ module.exports = {
     // do not emit compiled assets that include errors
     new HtmlWebpackPlugin(),
     new ErrorOverlayPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.VERSION': JSON.stringify(require('./package.json').version),
-      'process.env.AMPLIFY_AUTH_IDENTITY_POOL_ID': JSON.stringify(
-        parsed.AMPLIFY_AUTH_IDENTITY_POOL_ID
-      ),
-      'process.env.AMPLIFY_AUTH_REGION': JSON.stringify(
-        parsed.AMPLIFY_AUTH_REGION
-      ),
-      'process.env.AMPLIFY_PINPOINT_APPID': JSON.stringify(
-        parsed.AMPLIFY_PINPOINT_APPID
-      ),
-      'process.env.AMPLIFY_PINPOINT_REGION': JSON.stringify(
-        parsed.AMPLIFY_PINPOINT_REGION
-      )
-    }),
+    new Dotenv(),
     new CopyPlugin([
       {
         from: path.join(__dirname, 'node_modules/codemirror/theme'),
@@ -104,7 +91,7 @@ module.exports = {
     hot: true,
     // enable HMR on the server
 
-    before: function(app, server) {
+    before: function (app, server) {
       app.use(
         '/codemirror/mode',
         express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
