@@ -1,7 +1,9 @@
-// config | env
-const LOGIN_START = 'http://localhost:3001/api/login/external/requests'
-const LOGIN_CHECK = 'http://localhost:3001/api/login/external'
-const LOGIN_FRONT = 'http://localhost:3001/api/login/external'
+
+const BASE = process.env.BOOST_NOTE_BASE_URL
+
+const LOGIN_START = `${BASE}/api/login/external/requests`
+const LOGIN_CHECK = `${BASE}/api/login/external`
+const LOGIN_FRONT = `${BASE}/api/login/external`
 
 export interface LoginInfo {
   code: string
