@@ -45,6 +45,9 @@ export default class NoteDb {
       missingTagNameSet: Set<string>
     }>(
       (obj, noteDoc) => {
+        if (noteDoc.trashed) {
+          return obj
+        }
         if (folderMap[noteDoc.folderPathname] == null) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
