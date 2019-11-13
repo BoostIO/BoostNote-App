@@ -3,6 +3,7 @@ export default {
     'preferences.general': '一般',
     'preferences.account': 'アカウント',
     'preferences.addAccount': 'アカウント追加',
+    'preferences.loginWorking': 'ログイン中...',
     'preferences.interfaceLanguage': 'インタフェース言語',
     'preferences.applicationTheme': 'アプリケーションテーマ',
     'preferences.auto': '自動',

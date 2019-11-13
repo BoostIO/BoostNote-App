@@ -1,4 +1,3 @@
-
 const BASE = process.env.BOOST_NOTE_BASE_URL
 
 const LOGIN_START = `${BASE}/api/login/external/requests`

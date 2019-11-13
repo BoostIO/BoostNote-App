@@ -1,6 +1,6 @@
 import React, { useCallback, ChangeEventHandler } from 'react'
 import Icon from '../atoms/Icon'
-import { mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiLoading } from '@mdi/js'
 import { Section, SectionHeader, SectionControl } from './styled'
 import {
   usePreferences,
@@ -16,12 +16,14 @@ import UserInfo from '../atoms/UserInfo'
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { addUser, removeUser }] = useUsers()
-  const [, startLogin] = useLogin(u =>
+  const [{ kind }, startLogin] = useLogin(u =>
     addUser({
       token: u.token,
       ...u.user
     })
   )
+
+  const loginWorking = kind === 'request-token' || kind === 'attempt-login'
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -67,11 +69,20 @@ const GeneralTab = () => {
         <SectionHeader>{t('preferences.account')}</SectionHeader>
         <div>
           {users.map(user => (
-            <UserInfo user={user} signout={removeUser} />
+            <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
           <button onClick={startLogin}>
-            <Icon path={mdiPlus} />
-            {t('preferences.addAccount')}
+            {!loginWorking ? (
+              <>
+                <Icon path={mdiPlus} />
+                {t('preferences.addAccount')}
+              </>
+            ) : (
+              <>
+                <Icon path={mdiLoading} />
+                {t('preferences.loginWorking')}
+              </>
+            )}
           </button>
         </div>
       </Section>

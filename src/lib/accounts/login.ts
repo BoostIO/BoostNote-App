@@ -11,20 +11,11 @@ import {
 } from './api'
 import { openNew } from '../utils/platform'
 
-// start login Promise based
-// flow to allow for displaying steps
-// ping login - backoff algo / timeout
-// utils
-// -- sleep
-// -- generateSecret
-// -- isElectron
-// -- openNew (tab or browser)
-
 type LoginState =
   | { kind: 'idle' }
   | { kind: 'request-token' }
   | { kind: 'attempt-login'; state: LoginInfo }
-  | { kind: 'logged-in'; state: string }
+  | { kind: 'logged-in'; state: LoginCompleteResponse }
   | { kind: 'error'; message: string }
 
 type CompleteCallback = (data: LoginCompleteResponse) => void
@@ -50,7 +41,7 @@ export function useLogin(
     if (state.kind === 'attempt-login') {
       pingLogin(state.state)
         .then(data => {
-          setState({ kind: 'logged-in', state: data.token })
+          setState({ kind: 'logged-in', state: data })
           if (completeCallback != null) {
             completeCallback(data)
           }
