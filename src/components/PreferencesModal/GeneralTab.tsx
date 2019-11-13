@@ -10,9 +10,18 @@ import {
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
+import { useLogin, useUsers } from '../../lib/accounts'
+import UserInfo from '../atoms/UserInfo'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
+  const [users, { addUser, removeUser }] = useUsers()
+  const [, startLogin] = useLogin(u =>
+    addUser({
+      token: u.token,
+      ...u.user
+    })
+  )
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -57,7 +66,10 @@ const GeneralTab = () => {
       <Section>
         <SectionHeader>{t('preferences.account')}</SectionHeader>
         <div>
-          <button>
+          {users.map(user => (
+            <UserInfo user={user} signout={removeUser} />
+          ))}
+          <button onClick={startLogin}>
             <Icon path={mdiPlus} />
             {t('preferences.addAccount')}
           </button>

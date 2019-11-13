@@ -7,8 +7,12 @@ import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
+<<<<<<< HEAD
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
+=======
+import { UserProvider } from './lib/accounts'
+>>>>>>> initial connection to prefernces.general
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -17,7 +21,8 @@ const CombinedProvider = combineProviders(
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
-  RouterProvider
+  RouterProvider,
+  UserProvider
 )
 
 function render(Component: typeof App) {
