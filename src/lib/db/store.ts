@@ -436,9 +436,45 @@ export function createDbStoreCreator(
           return
         }
 
+        let folder: PopulatedFolderDoc | undefined
+        if (storage.folderMap[noteDoc.folderPathname] == null) {
+          folder = {
+            ...(await storage.db.getFolder(noteDoc.folderPathname)!),
+            pathname: noteDoc.folderPathname,
+            noteIdSet: new Set()
+          } as PopulatedFolderDoc
+        } else {
+          const newFolderNoteIdSet = new Set(
+            storage.folderMap[noteDoc.folderPathname]!.noteIdSet
+          )
+          newFolderNoteIdSet.delete(noteDoc._id)
+          folder = {
+            ...storage.folderMap[noteDoc.folderPathname]!,
+            noteIdSet: newFolderNoteIdSet
+          }
+        }
+
+        const modifiedTags: ObjectMap<PopulatedTagDoc> = noteDoc.tags.reduce(
+          (acc, tag) => {
+            const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
+            newNoteIdSet.delete(noteDoc._id)
+            acc[tag] = {
+              ...storage.tagMap[tag]!,
+              noteIdSet: newNoteIdSet
+            }
+            return acc
+          },
+          {}
+        )
+
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+            draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            draft[storageId]!.tagMap = {
+              ...storage.tagMap,
+              ...modifiedTags
+            }
           })
         )
 
