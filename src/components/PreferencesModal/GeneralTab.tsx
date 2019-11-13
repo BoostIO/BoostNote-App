@@ -24,6 +24,7 @@ const GeneralTab = () => {
   )
 
   if (loginState.kind === 'error') {
+    // TODP: implement toast here
     console.error(`Login Error: ${loginState.message}`)
   }
 
