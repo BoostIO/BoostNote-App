@@ -5,7 +5,10 @@ import TagList from './TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
-import NoteDetailToolbar from './NoteDetailToolbar'
+import { mdiTrashCan } from '@mdi/js'
+import ToolbarIconButton from '../../atoms/ToolbarIconButton'
+import Toolbar from '../../atoms/Toolbar'
+import ToolbarSeparator from '../../atoms/ToolbarSeparator'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -298,30 +301,11 @@ export default class NoteDetail extends React.Component<
           <p>No note is selected</p>
         ) : (
           <>
-            <NoteDetailToolbar
-              mode={this.state.mode}
-              note={note}
-              selectMode={this.selectMode}
-              trashNote={this.trashNote}
-            />
             <div className='titleSection'>
               <input
                 ref={this.titleInputRef}
                 value={this.state.title}
                 onChange={this.updateTitle}
-              />
-            </div>
-            <div className='tagSection'>
-              <TagList
-                tags={this.state.tags}
-                removeTagByName={this.removeTagByName}
-              />
-              <input
-                ref={this.newTagNameInputRef}
-                value={this.state.newTagName}
-                placeholder='New Tag...'
-                onChange={this.updateNewTagName}
-                onKeyDown={this.handleNewTagNameInputKeyDown}
               />
             </div>
             <div className='contentSection'>
@@ -336,6 +320,21 @@ export default class NoteDetail extends React.Component<
                 markdownPreviewer
               )}
             </div>
+            <Toolbar>
+              <TagList
+                tags={this.state.tags}
+                removeTagByName={this.removeTagByName}
+              />
+              <input
+                ref={this.newTagNameInputRef}
+                value={this.state.newTagName}
+                placeholder='New Tag...'
+                onChange={this.updateNewTagName}
+                onKeyDown={this.handleNewTagNameInputKeyDown}
+              />
+              <ToolbarSeparator />
+              <ToolbarIconButton onClick={this.trashNote} path={mdiTrashCan} />
+            </Toolbar>
           </>
         )}
       </StyledNoteDetailContainer>
