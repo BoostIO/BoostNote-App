@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react'
-import { createStoreContext } from '../utils/context'
-import { localLiteStorage } from 'ltstrg'
+import { usePreferences } from '../preferences'
 
 export interface User {
   token: string
@@ -15,12 +13,15 @@ interface UserRepo {
   getActiveUser: () => User | undefined
 }
 
-const useUsersStore = (): [User[], UserRepo] => {
-  const [users, setUsers] = useState(getUsers)
+export const useUsers = (): [User[], UserRepo] => {
+  const { preferences, setPreferences } = usePreferences()
+  const users = preferences['general.accounts']
 
-  useEffect(() => {
-    localLiteStorage.setItem('users', JSON.stringify(users))
-  }, [users])
+  const setUsers = (users: User[]) => {
+    setPreferences({
+      'general.accounts': users
+    })
+  }
 
   const repo: UserRepo = {
     removeUser: user => setUsers(removeUser(user, users)),
@@ -30,10 +31,6 @@ const useUsersStore = (): [User[], UserRepo] => {
   }
 
   return [users, repo]
-}
-
-const getUsers = (): User[] => {
-  return JSON.parse(localStorage.getItem('users') || '[]')
 }
 
 const removeUser = (user: User, users: User[]) => {
@@ -49,8 +46,3 @@ const setActiveUser = (user: User, users: User[]) => {
     return a.id === user.id ? -1 : b.id === user.id ? 1 : 0
   })
 }
-
-export const {
-  StoreProvider: UserProvider,
-  useStore: useUsers
-} = createStoreContext(useUsersStore)

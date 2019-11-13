@@ -1,3 +1,5 @@
+import { User } from '../accounts'
+
 export type GeneralThemeOptions = 'auto' | 'light' | 'dark' | 'solarized-dark'
 export type GeneralLanguageOptions = 'en-US' | 'ja'
 export type GeneralNoteSortingOptions =
@@ -11,7 +13,7 @@ export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 
 export interface Preferences {
   // General
-  'general.accounts': []
+  'general.accounts': User[]
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
