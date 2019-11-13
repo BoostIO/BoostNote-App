@@ -13,9 +13,9 @@ import { openNew } from '../utils/platform'
 
 type LoginState =
   | { kind: 'idle' }
-  | { kind: 'request-token' }
-  | { kind: 'attempt-login'; state: LoginInfo }
-  | { kind: 'logged-in'; state: LoginCompleteResponse }
+  | { kind: 'requesting-token' }
+  | { kind: 'attempting-login'; state: LoginInfo }
+  | { kind: 'login-success'; state: LoginCompleteResponse }
   | { kind: 'error'; message: string }
 
 type CompleteCallback = (data: LoginCompleteResponse) => void
@@ -26,11 +26,11 @@ export function useLogin(
   const [state, setState] = useState<LoginState>({ kind: 'idle' })
 
   useEffect(() => {
-    if (state.kind === 'request-token') {
+    if (state.kind === 'requesting-token') {
       initiateLogin(generateSecret())
         .then(info => {
           setState({
-            kind: 'attempt-login',
+            kind: 'attempting-login',
             state: info
           })
           openNew(getLoginPage(info))
@@ -38,10 +38,10 @@ export function useLogin(
         .catch(() => setState({ kind: 'error', message: 'An error occured' }))
     }
 
-    if (state.kind === 'attempt-login') {
+    if (state.kind === 'attempting-login') {
       pingLogin(state.state)
         .then(data => {
-          setState({ kind: 'logged-in', state: data })
+          setState({ kind: 'login-success', state: data })
           if (completeCallback != null) {
             completeCallback(data)
           }
@@ -51,8 +51,8 @@ export function useLogin(
   }, [state.kind])
 
   const startLogin = () => {
-    if (state.kind === 'idle' || state.kind === 'logged-in') {
-      setState({ kind: 'request-token' })
+    if (state.kind === 'idle' || state.kind === 'login-success') {
+      setState({ kind: 'requesting-token' })
     }
   }
 

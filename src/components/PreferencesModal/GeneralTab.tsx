@@ -16,14 +16,20 @@ import UserInfo from '../atoms/UserInfo'
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { addUser, removeUser }] = useUsers()
-  const [{ kind }, startLogin] = useLogin(u =>
+  const [loginState, startLogin] = useLogin(u =>
     addUser({
       token: u.token,
       ...u.user
     })
   )
 
-  const loginWorking = kind === 'request-token' || kind === 'attempt-login'
+  if (loginState.kind === 'error') {
+    console.error(`Login Error: ${loginState.message}`)
+  }
+
+  const loginWorking =
+    loginState.kind === 'requesting-token' ||
+    loginState.kind === 'attempting-login'
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
