@@ -6,7 +6,7 @@ import {
   checkLogin,
   isLoginComplete,
   initiateLogin,
-  getLoginPage,
+  getLoginPageUrl,
   LoginCompleteResponse
 } from './api'
 import { openNew } from '../utils/platform'
@@ -33,7 +33,7 @@ export function useLogin(
             kind: 'attempting-login',
             state: info
           })
-          openNew(getLoginPage(info))
+          openNew(getLoginPageUrl(info))
         })
         .catch(() => setState({ kind: 'error', message: 'An error occured' }))
     }

@@ -48,5 +48,5 @@ export const isLoginComplete = (
   check: CheckResponse
 ): check is LoginCompleteResponse => typeof check !== 'string'
 
-export const getLoginPage = (info: LoginInfo) =>
+export const getLoginPageUrl = (info: LoginInfo) =>
   `${LOGIN_FRONT}?state=${info.state}&requestId=${info.id}`
