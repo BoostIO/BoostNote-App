@@ -3,14 +3,7 @@ import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
-import dotenv from 'dotenv'
 import CopyPlugin from 'copy-webpack-plugin'
-import Dotenv from 'dotenv-webpack'
-
-let { parsed } = dotenv.config()
-if (parsed == null) {
-  parsed = {}
-}
 
 module.exports = {
   entry: [
@@ -73,7 +66,14 @@ module.exports = {
     // do not emit compiled assets that include errors
     new HtmlWebpackPlugin(),
     new ErrorOverlayPlugin(),
-    new Dotenv(),
+    new webpack.EnvironmentPlugin([
+      'NODE_ENV',
+      'AMPLIFY_AUTH_IDENTITY_POOL_ID',
+      'AMPLIFY_AUTH_REGION',
+      'AMPLIFY_PINPOINT_APPID',
+      'AMPLIFY_PINPOINT_REGION',
+      'BOOST_NOTE_BASE_URL'
+    ]),
     new CopyPlugin([
       {
         from: path.join(__dirname, 'node_modules/codemirror/theme'),
