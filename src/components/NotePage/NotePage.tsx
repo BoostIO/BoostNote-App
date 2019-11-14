@@ -68,15 +68,17 @@ export default () => {
 
   const router = useRouter()
 
-  if (notes.length > 0 && routeParams.noteId == null) {
-    router.replace(currentPathnameWithoutNoteId + `/${notes[0]._id}`)
-  }
-
   const currentNote = useMemo(() => {
     if (currentStorage == null) return null
-    if (noteId == null) return null
+    if (noteId == null) {
+      if (notes.length > 0) {
+        return currentStorage.noteMap[notes[0]._id]
+      } else {
+        return null
+      }
+    }
     return currentStorage.noteMap[noteId]
-  }, [noteId, currentStorage])
+  }, [noteId, currentStorage, notes])
 
   const createNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
