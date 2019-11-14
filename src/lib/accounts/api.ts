@@ -4,7 +4,7 @@ const LOGIN_START = `${BASE}/api/login/external/requests`
 const LOGIN_CHECK = `${BASE}/api/login/external`
 const LOGIN_FRONT = `${BASE}/api/login/external`
 
-export interface LoginInfo {
+interface LoginInfo {
   code: string
   id: number
   state: string
@@ -18,34 +18,60 @@ export interface LoginCompleteResponse {
   }
 }
 
-export type CheckResponse = 'not_ready' | LoginCompleteResponse
+type CheckLoginError = 'NotFound' | 'Expired' | 'Forbidden' | 'Consumed'
+type CheckLoginOk = 'NotReady' | LoginCompleteResponse
+export type CheckLoginResponse = CheckLoginError | CheckLoginOk
 
 const headers = [
   ['accept', 'application/json'],
   ['Content-Type', 'application/json']
 ]
 
-export const initiateLogin = (state: string): Promise<LoginInfo> =>
-  fetch(LOGIN_START, {
+export const initiateLogin = async (state: string): Promise<LoginInfo> => {
+  const response = await fetch(LOGIN_START, {
     method: 'POST',
     body: JSON.stringify({ state }),
     headers
   })
-    .then(res => res.json())
-    .then(info => ({ state, ...info }))
 
-export const checkLogin = ({
+  if (!response.ok) {
+    throw Error('Network Error')
+  }
+
+  const info = await response.json()
+  return { state, ...info }
+}
+
+export const checkLogin = async ({
   code,
   state
-}: LoginInfo): Promise<CheckResponse> =>
-  fetch(LOGIN_CHECK, {
+}: LoginInfo): Promise<CheckLoginResponse> => {
+  const response = await fetch(LOGIN_CHECK, {
     method: 'POST',
     body: JSON.stringify({ state, code }),
     headers
-  }).then(r => (r.status === 200 ? 'not_ready' : r.json()))
+  })
+
+  switch (response.status) {
+    case 404:
+      return 'NotFound'
+    case 422:
+      return 'Expired'
+    case 403:
+      return 'Forbidden'
+    case 409:
+      return 'Consumed'
+    case 200:
+      return 'NotReady'
+    case 201:
+      return response.json()
+    default:
+      throw Error('Network Error')
+  }
+}
 
 export const isLoginComplete = (
-  check: CheckResponse
+  check: CheckLoginResponse
 ): check is LoginCompleteResponse => typeof check !== 'string'
 
 export const getLoginPageUrl = (info: LoginInfo) =>
