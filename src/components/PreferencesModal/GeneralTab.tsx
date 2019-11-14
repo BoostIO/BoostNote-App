@@ -21,7 +21,7 @@ const GeneralTab = () => {
   )
 
   if (loginState.kind === 'error') {
-    // TODP: implement toast here
+    // TODO: implement toast here
     console.error(`Login Error: ${loginState.message}`)
   }
 
@@ -75,7 +75,7 @@ const GeneralTab = () => {
             {loginState.kind !== 'logging-in' ? (
               <>
                 <Icon path={mdiPlus} />
-                {t('preferences.addAccount')}
+                {t(users.length === 0 ? 'preferences.addAccount' : 'preferences.switchAccount')}
               </>
             ) : (
               <>

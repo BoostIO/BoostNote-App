@@ -37,8 +37,8 @@ const removeUser = (user: User, users: User[]) => {
   return users.filter(u => u.id !== user.id)
 }
 
-const addUser = (user: User, users: User[]) => {
-  return [...removeUser(user, users), user]
+const addUser = (user: User, _users: User[]) => {
+  return [user]
 }
 
 const setActiveUser = (user: User, users: User[]) => {
