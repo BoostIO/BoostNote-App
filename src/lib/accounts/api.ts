@@ -1,8 +1,8 @@
-const BASE = process.env.BOOST_NOTE_BASE_URL
+const baseUrl = process.env.BOOST_NOTE_BASE_URL
 
-const LOGIN_START = `${BASE}/api/login/external/requests`
-const LOGIN_CHECK = `${BASE}/api/login/external`
-const LOGIN_FRONT = `${BASE}/api/login/external`
+const loginStartUrl = `${baseUrl}/api/login/external/requests`
+const loginCheckUrl = `${baseUrl}/api/login/external`
+const loginFrontUrl = `${baseUrl}/api/login/external`
 
 interface LoginInfo {
   code: string
@@ -28,7 +28,7 @@ const headers = [
 ]
 
 export const initiateLogin = async (state: string): Promise<LoginInfo> => {
-  const response = await fetch(LOGIN_START, {
+  const response = await fetch(loginStartUrl, {
     method: 'POST',
     body: JSON.stringify({ state }),
     headers
@@ -46,7 +46,7 @@ export const checkLogin = async ({
   code,
   state
 }: LoginInfo): Promise<CheckLoginResponse> => {
-  const response = await fetch(LOGIN_CHECK, {
+  const response = await fetch(loginCheckUrl, {
     method: 'POST',
     body: JSON.stringify({ state, code }),
     headers
@@ -75,4 +75,4 @@ export const isLoginComplete = (
 ): check is LoginCompleteResponse => typeof check !== 'string'
 
 export const getLoginPageUrl = (info: LoginInfo) =>
-  `${LOGIN_FRONT}?state=${info.state}&requestId=${info.id}`
+  `${loginFrontUrl}?state=${info.state}&requestId=${info.id}`
