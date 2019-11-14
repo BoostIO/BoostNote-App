@@ -8,9 +8,7 @@ export interface User {
 
 interface UserRepo {
   removeUser: (user: User) => void
-  addUser: (user: User) => void
-  setActiveUser: (user: User) => void
-  getActiveUser: () => User | undefined
+  setUser: (user: User) => void
 }
 
 export const useUsers = (): [User[], UserRepo] => {
@@ -25,9 +23,7 @@ export const useUsers = (): [User[], UserRepo] => {
 
   const repo: UserRepo = {
     removeUser: user => setUsers(removeUser(user, users)),
-    addUser: user => setUsers(addUser(user, users)),
-    setActiveUser: (user: User) => setUsers(setActiveUser(user, users)),
-    getActiveUser: () => users[0]
+    setUser: user => setUsers([user]),
   }
 
   return [users, repo]
@@ -35,14 +31,4 @@ export const useUsers = (): [User[], UserRepo] => {
 
 const removeUser = (user: User, users: User[]) => {
   return users.filter(u => u.id !== user.id)
-}
-
-const addUser = (user: User, _users: User[]) => {
-  return [user]
-}
-
-const setActiveUser = (user: User, users: User[]) => {
-  return users.sort((a, b) => {
-    return a.id === user.id ? -1 : b.id === user.id ? 1 : 0
-  })
 }
