@@ -130,6 +130,15 @@ export default () => {
     [setGeneralStatus]
   )
 
+  const selectEditMode = useCallback(
+    (editMode: 'edit' | 'split' | 'preview') => {
+      setGeneralStatus({
+        noteEditMode: editMode
+      })
+    },
+    [setGeneralStatus]
+  )
+
   return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
@@ -155,6 +164,8 @@ export default () => {
             updateNote={db.updateNote}
             trashNote={db.trashNote}
             removeNote={removeNote}
+            editMode={generalStatus.noteEditMode}
+            selectEditMode={selectEditMode}
           />
         )
       }
