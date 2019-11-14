@@ -9,6 +9,7 @@ import { mdiTrashCan } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
+import { GeneralNoteEditModeOptions } from '../../../lib/generalStatus'
 
 const StyledNoteDetailContainer = styled.div`
   display: flex;
@@ -86,6 +87,8 @@ type NoteDetailProps = {
   ) => Promise<void | NoteDoc>
   trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
   removeNote: (storageId: string, noteId: string) => Promise<void>
+  editMode: GeneralNoteEditModeOptions
+  selectEditMode: (editMode: GeneralNoteEditModeOptions) => void
 }
 
 type NoteDetailState = {
@@ -95,7 +98,6 @@ type NoteDetailState = {
   content: string
   tags: string[]
   newTagName: string
-  mode: 'edit' | 'preview' | 'split'
 }
 
 export default class NoteDetail extends React.Component<
@@ -108,8 +110,7 @@ export default class NoteDetail extends React.Component<
     title: '',
     content: '',
     tags: [],
-    newTagName: '',
-    mode: 'edit'
+    newTagName: ''
   }
   titleInputRef = React.createRef<HTMLInputElement>()
   newTagNameInputRef = React.createRef<HTMLInputElement>()
@@ -130,8 +131,7 @@ export default class NoteDetail extends React.Component<
         title: note.title,
         content: note.content,
         tags: note.tags,
-        newTagName: '',
-        mode: state.mode
+        newTagName: ''
       }
     }
     return state
@@ -269,10 +269,6 @@ export default class NoteDetail extends React.Component<
     })
   }
 
-  selectMode = (mode: 'edit' | 'preview' | 'split') => {
-    this.setState({ mode })
-  }
-
   refreshCodeEditor = () => {
     if (this.codeMirror != null) {
       this.codeMirror.refresh()
@@ -280,7 +276,7 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note } = this.props
+    const { note, editMode, selectEditMode } = this.props
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -309,9 +305,9 @@ export default class NoteDetail extends React.Component<
               />
             </div>
             <div className='contentSection'>
-              {this.state.mode === 'edit' ? (
+              {editMode === 'edit' ? (
                 codeEditor
-              ) : this.state.mode === 'split' ? (
+              ) : editMode === 'split' ? (
                 <>
                   <div className='splitLeft'>{codeEditor}</div>
                   <div className='splitRight'>{markdownPreviewer}</div>
@@ -333,6 +329,18 @@ export default class NoteDetail extends React.Component<
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />
               <ToolbarSeparator />
+              <ToolbarIconButton
+                onClick={() => selectEditMode('edit')}
+                path={mdiTrashCan}
+              />
+              <ToolbarIconButton
+                onClick={() => selectEditMode('split')}
+                path={mdiTrashCan}
+              />
+              <ToolbarIconButton
+                onClick={() => selectEditMode('preview')}
+                path={mdiTrashCan}
+              />
               <ToolbarIconButton onClick={this.trashNote} path={mdiTrashCan} />
             </Toolbar>
           </>
