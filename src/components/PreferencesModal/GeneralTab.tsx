@@ -15,9 +15,9 @@ import UserInfo from '../atoms/UserInfo'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
-  const [users, { addUser, removeUser }] = useUsers()
+  const [users, { setUser, removeUser }] = useUsers()
   const [loginState, startLogin] = useLogin(
-    ({ token, user }) => addUser({ token, ...user }),
+    ({ token, user }) => setUser({ token, ...user }),
     err => console.error(err) //TODO: toast errors
   )
 
