@@ -21,14 +21,14 @@ type ErrorCallback = (data: CheckLoginError | 'NetworkError') => void
 type LoginDispatch = React.Dispatch<React.SetStateAction<LoginState>>
 
 export function useLogin(
-  completeCallback: CompleteCallback,
+  onSuccess: CompleteCallback,
   onErr: ErrorCallback
 ): [LoginState, () => void] {
   const [state, setState] = useState<LoginState>('idle')
 
   const startLogin = () => {
     if (state !== 'logging-in') {
-      loginStart(setState, completeCallback, onErr)
+      loginStart(setState, onSuccess, onErr)
     }
   }
 
