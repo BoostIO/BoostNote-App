@@ -5,7 +5,12 @@ import TagList from './TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
-import { mdiTrashCan } from '@mdi/js'
+import {
+  mdiTrashCan,
+  mdiEyeOutline,
+  mdiArrowSplitVertical,
+  mdiFormatText
+} from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
@@ -331,15 +336,15 @@ export default class NoteDetail extends React.Component<
               <ToolbarSeparator />
               <ToolbarIconButton
                 onClick={() => selectEditMode('edit')}
-                path={mdiTrashCan}
+                path={mdiFormatText}
               />
               <ToolbarIconButton
                 onClick={() => selectEditMode('split')}
-                path={mdiTrashCan}
+                path={mdiArrowSplitVertical}
               />
               <ToolbarIconButton
                 onClick={() => selectEditMode('preview')}
-                path={mdiTrashCan}
+                path={mdiEyeOutline}
               />
               <ToolbarIconButton onClick={this.trashNote} path={mdiTrashCan} />
             </Toolbar>
