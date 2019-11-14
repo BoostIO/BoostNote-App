@@ -3,6 +3,8 @@ export default {
     // Preferences GeneralTab
     'preferences.account': 'Account',
     'preferences.addAccount': 'Add Account',
+    'preferences.switchAccount': 'Switch Account',
+    'preferences.loginWorking': 'Loggin in...',
     'preferences.interfaceLanguage': 'Interface Language',
     'preferences.applicationTheme': 'Application Theme',
     'preferences.auto': 'Auto',

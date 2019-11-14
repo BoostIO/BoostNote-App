@@ -1,6 +1,6 @@
 import React, { useCallback, ChangeEventHandler } from 'react'
 import Icon from '../atoms/Icon'
-import { mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiLoading } from '@mdi/js'
 import { Section, SectionHeader, SectionControl } from './styled'
 import {
   usePreferences,
@@ -10,9 +10,16 @@ import {
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
+import { useLogin, useUsers } from '../../lib/accounts'
+import UserInfo from '../atoms/UserInfo'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
+  const [users, { setUser, removeUser }] = useUsers()
+  const [loginState, startLogin] = useLogin(
+    ({ token, user }) => setUser({ token, ...user }),
+    err => console.error(err) //TODO: toast errors
+  )
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -57,9 +64,21 @@ const GeneralTab = () => {
       <Section>
         <SectionHeader>{t('preferences.account')}</SectionHeader>
         <div>
-          <button>
-            <Icon path={mdiPlus} />
-            {t('preferences.addAccount')}
+          {users.map(user => (
+            <UserInfo key={user.id} user={user} signout={removeUser} />
+          ))}
+          <button onClick={startLogin}>
+            {loginState !== 'logging-in' ? (
+              <>
+                <Icon path={mdiPlus} />
+                {t(users.length === 0 ? 'preferences.addAccount' : 'preferences.switchAccount')}
+              </>
+            ) : (
+              <>
+                <Icon path={mdiLoading} />
+                {t('preferences.loginWorking')}
+              </>
+            )}
           </button>
         </div>
       </Section>
