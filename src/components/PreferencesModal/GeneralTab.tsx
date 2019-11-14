@@ -16,14 +16,10 @@ import UserInfo from '../atoms/UserInfo'
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { addUser, removeUser }] = useUsers()
-  const [loginState, startLogin] = useLogin(({ token, user }) =>
-    addUser({ token, ...user })
+  const [loginState, startLogin] = useLogin(
+    ({ token, user }) => addUser({ token, ...user }),
+    err => console.error(err) //TODO: toast errors
   )
-
-  if (loginState.kind === 'error') {
-    // TODO: implement toast here
-    console.error(`Login Error: ${loginState.message}`)
-  }
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -72,7 +68,7 @@ const GeneralTab = () => {
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
           <button onClick={startLogin}>
-            {loginState.kind !== 'logging-in' ? (
+            {loginState !== 'logging-in' ? (
               <>
                 <Icon path={mdiPlus} />
                 {t(users.length === 0 ? 'preferences.addAccount' : 'preferences.switchAccount')}

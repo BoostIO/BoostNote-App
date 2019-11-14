@@ -18,8 +18,8 @@ export interface LoginCompleteResponse {
   }
 }
 
-type CheckLoginError = 'NotFound' | 'Expired' | 'Forbidden' | 'Consumed'
-type CheckLoginOk = 'NotReady' | LoginCompleteResponse
+export type CheckLoginError = 'NotFound' | 'Expired' | 'Forbidden' | 'Consumed'
+export type CheckLoginOk = 'NotReady' | LoginCompleteResponse
 export type CheckLoginResponse = CheckLoginError | CheckLoginOk
 
 const headers = [

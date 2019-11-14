@@ -6,28 +6,29 @@ import {
   isLoginComplete,
   initiateLogin,
   getLoginPageUrl,
-  LoginCompleteResponse
+  LoginCompleteResponse,
+  CheckLoginError
 } from './api'
 import { openNew } from '../utils/platform'
 
 type LoginState =
-  | { kind: 'idle' }
-  | { kind: 'logging-in' }
-  | { kind: 'login-complete' }
-  | { kind: 'error'; message: string }
+  'idle' |
+  'logging-in'
 
 type CompleteCallback = (data: LoginCompleteResponse) => void
+type ErrorCallback = (data: CheckLoginError | 'NetworkError') => void
 
 type LoginDispatch = React.Dispatch<React.SetStateAction<LoginState>>
 
 export function useLogin(
-  completeCallback?: CompleteCallback
+  completeCallback: CompleteCallback,
+  onErr: ErrorCallback
 ): [LoginState, () => void] {
-  const [state, setState] = useState<LoginState>({ kind: 'idle' })
+  const [state, setState] = useState<LoginState>('idle')
 
   const startLogin = () => {
-    if (state.kind !== 'logging-in') {
-      loginStart(setState, completeCallback)
+    if (state !== 'logging-in') {
+      loginStart(setState, completeCallback, onErr)
     }
   }
 
@@ -36,10 +37,11 @@ export function useLogin(
 
 const loginStart = async (
   setState: LoginDispatch,
-  callback?: CompleteCallback
+  onSuccess: CompleteCallback,
+  onErr: ErrorCallback
 ) => {
   try {
-    setState({ kind: 'logging-in' })
+    setState('logging-in')
 
     const info = await initiateLogin(generateSecret())
     openNew(getLoginPageUrl(info))
@@ -47,15 +49,14 @@ const loginStart = async (
     const response = await pingLogin(info)
 
     if (isLoginComplete(response)) {
-      setState({ kind: 'login-complete' })
-      if (callback != null) {
-        callback(response)
-      }
+      onSuccess(response)
     } else {
-      setState({ kind: 'error', message: response })
+      onErr(response as CheckLoginError)
     }
   } catch (error) {
-    setState({ kind: 'error', message: 'NetworkError' })
+    onErr('NetworkError')
+  } finally {
+    setState('idle')
   }
 }
 
