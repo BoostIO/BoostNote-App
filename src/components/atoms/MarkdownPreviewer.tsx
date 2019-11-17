@@ -151,13 +151,13 @@ function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
 
 interface MarkdownPreviewerProps {
   content: string
-  theme?: string
+  codeBlockTheme?: string
   style?: string
 }
 
 const MarkdownPreviewer = ({
   content,
-  theme,
+  codeBlockTheme: theme,
   style
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
