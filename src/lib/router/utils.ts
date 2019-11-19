@@ -42,6 +42,10 @@ export interface BaseRouteParams {
   name: string
 }
 
+export interface StorageCreate extends BaseRouteParams {
+  name: 'storages.create'
+}
+
 export interface StorageAllNotes extends BaseRouteParams {
   name: 'storages.allNotes'
   storageId: string
@@ -73,6 +77,7 @@ export interface UnknownRouteparams extends BaseRouteParams {
 }
 
 export type AllRouteParams =
+  | StorageCreate
   | StorageAllNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
@@ -86,6 +91,12 @@ export const useRouteParams = () => {
       .slice('/app'.length)
       .split('/')
       .slice(1)
+
+    if (names[0] === 'storages' && names[1] == null) {
+      return {
+        name: 'storages.create'
+      }
+    }
 
     if (names[0] !== 'storages' || names[1] == null) {
       return {
