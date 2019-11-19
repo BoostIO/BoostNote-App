@@ -34,6 +34,7 @@ export interface DbStore {
   createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
+  addCloudLink: (id: string, cloudId: number) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
   removeFolder: (storageName: string, pathname: string) => Promise<void>
   createNote(
@@ -133,6 +134,20 @@ export function createDbStoreCreator(
           }
         })
 
+        return newStorageMap
+      })
+
+      saveStorageDataList(liteStorage, newStorageMap!)
+    }, [])
+
+    const addCloudLink = useCallback(async (id: string, cloudId: number) => {
+      let newStorageMap: ObjectMap<NoteStorage>
+      setStorageMap(prevStorageMap => {
+        newStorageMap = produce(prevStorageMap, draft => {
+          if (prevStorageMap[id] != null) {
+            draft[id]!.cloudStorageId = cloudId
+          }
+        })
         return newStorageMap
       })
 
@@ -647,6 +662,7 @@ export function createDbStoreCreator(
       createStorage,
       removeStorage,
       renameStorage,
+      addCloudLink,
       createFolder,
       removeFolder,
       createNote,
@@ -709,7 +725,13 @@ function saveStorageDataList(
 ) {
   liteStorage.setItem(
     storageDataListKey,
-    JSON.stringify(values(storageMap).map(({ id, name }) => ({ id, name })))
+    JSON.stringify(
+      values(storageMap).map(({ id, name, cloudStorageId }) => ({
+        id,
+        name,
+        cloudStorageId
+      }))
+    )
   )
 }
 

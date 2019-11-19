@@ -69,6 +69,8 @@ export type NoteIdSet = Set<string>
 export type NoteStorage = NoteStorageData &
   AllPopulatedDocsMap & {
     db: NoteDb
+  } & {
+    cloudStorageId?: number
   }
 
 export type PopulatedFolderDoc = FolderDoc & {
