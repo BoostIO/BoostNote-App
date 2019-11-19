@@ -18,6 +18,7 @@ import {
   CloudStorage,
   createStorage
 } from '../../lib/accounts'
+import LoginButton from '../atoms/LoginButton'
 
 interface UserCloudInfo {
   storages: CloudStorage[]
@@ -122,7 +123,7 @@ export default () => {
         {!isLoggedIn && storageType === 'cloud' && (
           <>
             <p>You need to sign in to add a cloud folder</p>
-            <button>Sign In</button>
+            <LoginButton />
           </>
         )}
         {isLoggedIn && storageType === 'cloud' && !canCreateCloudStorages && (

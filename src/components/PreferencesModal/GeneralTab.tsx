@@ -10,16 +10,13 @@ import {
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
-import { useLogin, useUsers } from '../../lib/accounts'
+import { useUsers } from '../../lib/accounts'
 import UserInfo from '../atoms/UserInfo'
+import LoginButton from '../atoms/LoginButton'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
-  const [users, { setUser, removeUser }] = useUsers()
-  const [loginState, startLogin] = useLogin(
-    ({ token, user }) => setUser({ token, ...user }),
-    err => console.error(err) //TODO: toast errors
-  )
+  const [users, { removeUser }] = useUsers()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -67,23 +64,25 @@ const GeneralTab = () => {
           {users.map(user => (
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
-          <button onClick={startLogin}>
-            {loginState !== 'logging-in' ? (
-              <>
-                <Icon path={mdiPlus} />
-                {t(
-                  users.length === 0
-                    ? 'preferences.addAccount'
-                    : 'preferences.switchAccount'
-                )}
-              </>
-            ) : (
-              <>
-                <Icon path={mdiLoading} />
-                {t('preferences.loginWorking')}
-              </>
-            )}
-          </button>
+          <LoginButton onErr={console.error /* TODO: Toast error */}>
+            {loginState =>
+              loginState !== 'logging-in' ? (
+                <>
+                  <Icon path={mdiPlus} />
+                  {t(
+                    users.length === 0
+                      ? 'preferences.addAccount'
+                      : 'preferences.switchAccount'
+                  )}
+                </>
+              ) : (
+                <>
+                  <Icon path={mdiLoading} />
+                  {t('preferences.loginWorking')}
+                </>
+              )
+            }
+          </LoginButton>
         </div>
       </Section>
       <Section>
