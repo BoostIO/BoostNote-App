@@ -8,12 +8,10 @@ import {
   getLoginPageUrl,
   LoginCompleteResponse,
   CheckLoginError
-} from './api'
+} from './api/login'
 import { openNew } from '../utils/platform'
 
-type LoginState =
-  'idle' |
-  'logging-in'
+type LoginState = 'idle' | 'logging-in'
 
 type CompleteCallback = (data: LoginCompleteResponse) => void
 type ErrorCallback = (data: CheckLoginError | 'NetworkError') => void
