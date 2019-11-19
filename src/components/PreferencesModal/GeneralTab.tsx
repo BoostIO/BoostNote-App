@@ -71,7 +71,11 @@ const GeneralTab = () => {
             {loginState !== 'logging-in' ? (
               <>
                 <Icon path={mdiPlus} />
-                {t(users.length === 0 ? 'preferences.addAccount' : 'preferences.switchAccount')}
+                {t(
+                  users.length === 0
+                    ? 'preferences.addAccount'
+                    : 'preferences.switchAccount'
+                )}
               </>
             ) : (
               <>
