@@ -27,13 +27,13 @@ const basePreferences: Preferences = {
   // General
   'general.accounts': [],
   'general.language': 'en-US',
-  'general.theme': 'auto',
+  'general.theme': 'dark',
   'general.noteSorting': 'date-updated',
   'general.enableAnalytics': true,
 
   // Editor
   'editor.theme': 'default',
-  'editor.fontSize': 14,
+  'editor.fontSize': 15,
   'editor.fontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   'editor.indentType': 'spaces',

@@ -3,20 +3,34 @@ import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import Toolbar from '../atoms/Toolbar'
-import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import ToolbarIconButton from '../atoms/ToolbarIconButton'
-import { mdiSettings, mdiPlusCircle, mdiDotsHorizontal } from '@mdi/js'
+import { mdiTuneVertical, mdiPlusCircle, mdiDotsHorizontal } from '@mdi/js'
 import StorageNavigatorItem from './StorageNavigatorItem'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
+import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
   flex-direction: column;
   height: 100%;
+  ${backgroundColor}
+  .topControl {
+    height: 50px;
+    display: flex;
+    .spacer {
+      flex: 1;
+    }
+    .button {
+      width: 50px;
+      height: 50px;
+      background-color: transparent;
+      border: none;
+      ${iconColor}
+      font-size: 24px;
+    }
+  }
 
   .storageList {
     list-style: none;
@@ -133,10 +147,12 @@ export default () => {
 
   return (
     <StyledSideNavContainer>
-      <Toolbar>
-        <ToolbarSeparator />
-        <ToolbarIconButton path={mdiSettings} onClick={toggleClosed} />
-      </Toolbar>
+      <div className='topControl'>
+        <div className='spacer' />
+        <button className='button' onClick={toggleClosed}>
+          <Icon path={mdiTuneVertical} />
+        </button>
+      </div>
       <ul className='storageList'>
         {storageEntries.map(([id, storage]) => {
           return (

@@ -1,22 +1,17 @@
 import React from 'react'
 import Icon from './Icon'
 import styled from '../../lib/styled'
+import { iconColor } from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;
-  border: solid 1px ${({ theme }) => theme.colors.border};
-  width: 38px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   box-sizing: border-box;
   font-size: 16px;
-  margin: 0 3px;
-  border-radius: 2px;
-  ${({ active, theme }) => active && `color: ${theme.colors.active};`}
   outline: none;
-  &:focus,
-  &:active {
-    background-color: ${({ theme }) => theme.colors.alternativeBackground};
-  }
+  border: none;
+  ${iconColor}
   &:first-child {
     margin-left: 0;
   }

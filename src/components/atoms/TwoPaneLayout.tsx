@@ -5,7 +5,7 @@ import React, {
   useRef,
   CSSProperties
 } from 'react'
-import styled, { defaultTheme } from '../../lib/styled'
+import styled from '../../lib/styled'
 import throttle from 'lodash/throttle'
 import { clamp } from 'ramda'
 
@@ -37,7 +37,7 @@ const Pane = styled.div`
 const DividerBorder = styled.div`
   width: 1px;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme }) => theme.borderColor};
 `
 
 const DividerGraple = styled.div`
@@ -45,11 +45,15 @@ const DividerGraple = styled.div`
   top: 0;
   bottom: 0;
   border: 3px solid;
+  border-color: transparent;
   box-sizing: content-box;
   margin: -3px;
   z-index: 100;
   user-select: none;
   cursor: col-resize;
+  &.active {
+    border-color: ${({ theme }) => theme.primaryColor};
+  }
 `
 
 interface DividerProps {
@@ -60,10 +64,10 @@ interface DividerProps {
 
 const Divider = ({ onMouseDown, dragging, leftWidth }: DividerProps) => (
   <DividerGraple
+    className={dragging ? 'active' : ''}
     onMouseDown={onMouseDown}
     style={{
-      left: `${leftWidth}px`,
-      borderColor: dragging ? defaultTheme.colors.active : 'transparent'
+      left: `${leftWidth}px`
     }}
   >
     <DividerBorder />

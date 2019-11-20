@@ -1,11 +1,12 @@
 import styled from '../../lib/styled'
+import { borderTop } from '../../lib/styled/styleFunctions'
 
 const Toolbar = styled.div`
-  height: 38px;
+  height: 32px;
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  ${borderTop}
+  padding: 0 5px;
 `
 
 export default Toolbar

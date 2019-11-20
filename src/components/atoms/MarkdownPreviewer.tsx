@@ -13,6 +13,7 @@ import CodeMirror from '../../lib/CodeMirror'
 import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
+import cc from 'classcat'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
@@ -60,6 +61,16 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
       const lang = language(node)
 
+      const classNames =
+        parent.properties.className != null
+          ? [...parent.properties.className]
+          : []
+      classNames.push(`cm-s-${theme}`, 'CodeMirror')
+      if (lang != null) {
+        classNames.push('language-' + lang)
+      }
+      parent.properties.className = classNames
+
       if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
         return
       }
@@ -86,22 +97,8 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
           throw new Error(`Unknown language: \`${lang}\` is not registered`)
         }
       }
-      const result = {
-        language: lang,
-        value: cmResult
-      }
 
-      const classNames =
-        parent.properties.className != null
-          ? [...parent.properties.className]
-          : []
-      classNames.push(`cm-s-${theme}`, 'CodeMirror')
-      if (!lang && result.language) {
-        classNames.push('language-' + result.language)
-      }
-      parent.properties.className = classNames
-
-      node.children = result.value
+      node.children = cmResult
     }
 
     // Get the programming language of `node`.
@@ -136,14 +133,17 @@ const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
 >
 
 interface MarkdownProcessorOptions {
-  theme?: string
+  codeBlockTheme?: string
 }
 
 function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
   return unified()
     .use(remarkParse)
     .use(remarkRehype, { allowDangerousHTML: false })
-    .use(rehypeCodeMirror, { ignoreMissing: true, theme: options.theme })
+    .use(rehypeCodeMirror, {
+      ignoreMissing: true,
+      theme: options.codeBlockTheme
+    })
     .use(rehypeRaw)
     .use(rehypeSanitize, schema)
     .use(rehypeReact, { createElement: React.createElement })
@@ -153,12 +153,14 @@ interface MarkdownPreviewerProps {
   content: string
   codeBlockTheme?: string
   style?: string
+  theme?: string
 }
 
 const MarkdownPreviewer = ({
   content,
-  codeBlockTheme: theme,
-  style
+  codeBlockTheme,
+  style,
+  theme
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
@@ -167,13 +169,13 @@ const MarkdownPreviewer = ({
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
   const markdownProcessor = useMemo(() => {
-    return createMarkdownProcessor({ theme })
-  }, [theme])
+    return createMarkdownProcessor({ codeBlockTheme })
+  }, [codeBlockTheme])
 
   const renderContent = useCallback(
     async (content: string) => {
       previousContentRef.current = content
-      previousThemeRef.current = theme
+      previousThemeRef.current = codeBlockTheme
       setRendering(true)
 
       console.time('render')
@@ -183,7 +185,7 @@ const MarkdownPreviewer = ({
       setRendering(false)
       setRenderedContent(result.contents)
     },
-    [theme, markdownProcessor]
+    [codeBlockTheme, markdownProcessor]
   )
 
   useEffect(() => {
@@ -196,7 +198,7 @@ const MarkdownPreviewer = ({
   useEffect(() => {
     console.log('render requested')
     if (
-      (previousThemeRef.current === theme &&
+      (previousThemeRef.current === codeBlockTheme &&
         previousContentRef.current === content) ||
       rendering
     ) {
@@ -204,7 +206,7 @@ const MarkdownPreviewer = ({
     }
     console.log('rendering...')
     renderContent(content)
-  }, [content, theme, rendering, renderContent, renderedContent])
+  }, [content, codeBlockTheme, rendering, renderContent, renderedContent])
 
   const StyledContainer = useMemo(() => {
     return styled.div`
@@ -217,8 +219,10 @@ const MarkdownPreviewer = ({
 
   return (
     <StyledContainer className='MarkdownPreviewer'>
-      {rendering && 'rendering...'}
-      {renderedContent}
+      <div className={cc([theme])}>
+        {rendering && 'rendering...'}
+        {renderedContent}
+      </div>
     </StyledContainer>
   )
 }

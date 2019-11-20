@@ -44,6 +44,10 @@ font-size: 16px;
 line-height: 1.5;
 word-wrap: break-word;
 
+.dark {
+  color: white;
+}
+
 details {
   display: block;
 }
