@@ -4,39 +4,50 @@ import { Link } from '../../lib/router'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import cc from 'classcat'
+import {
+  uiTextColor,
+  activeBackgroundColor
+} from '../../lib/styled/styleFunctions'
 
 const StyledContainer = styled.div`
   user-select: none;
   .header {
     position: relative;
-    height: 22px;
+    height: 30px;
     display: flex;
     align-items: center;
   }
   .headerLink {
     width: 100%;
-    height: 22px;
+    height: 30px;
     display: flex;
     align-items: center;
     text-decoration: none;
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.alternativeBackground};
-    }
+    ${uiTextColor}
+
+    transition: 200ms background-color;
+
+    &:hover,
+    &:focus,
+    &:active,
     &.active {
-      background-color: ${({ theme }) => theme.colors.active};
-      color: ${({ theme }) => theme.colors.inverseText};
+      ${activeBackgroundColor}
     }
   }
   .toggleButton {
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 26px;
+    height: 26px;
     padding: 0;
     border: none;
     background-color: transparent;
     margin-right: 3px;
     border-radius: 2px;
     top: 2px;
+    ${uiTextColor}
+    &:focus {
+      box-shadow: none;
+    }
   }
   .storageIcon {
     margin-right: 4px;
@@ -81,7 +92,7 @@ const SideNavigatorItem = ({
         <Link
           href={href}
           className={cc(['headerLink', active && 'active'])}
-          style={{ paddingLeft: `${10 * depth + 22}px` }}
+          style={{ paddingLeft: `${10 * depth + 26}px` }}
           onContextMenu={onContextMenu}
         >
           {iconPath != null && <Icon className='storageIcon' path={iconPath} />}

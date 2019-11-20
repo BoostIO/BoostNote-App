@@ -1,7 +1,14 @@
 import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import SideNavigatorItem, { NavigatorNode } from './SideNavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
-import { mdiTagMultiple, mdiTrashCan } from '@mdi/js'
+import {
+  mdiTagMultiple,
+  mdiDeleteOutline,
+  mdiFolderOutline,
+  mdiFolderOpenOutline,
+  mdiTag,
+  mdiTagOutline
+} from '@mdi/js'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 
@@ -168,18 +175,23 @@ const StorageNavigatorItem = ({
     createFolderContextMenuHandler
   ])
 
-  const tagNodes = Object.keys(storage.tagMap).map(tagName => {
-    const tagPathname = `/app/storages/${storage.id}/tags/${tagName}`
-    return {
-      name: tagName,
-      href: `/app/storages/${storage.id}/tags/${tagName}`,
-      active: currentPathname === tagPathname
-    }
-  })
+  const tagNodes = useMemo(() => {
+    return Object.keys(storage.tagMap).map(tagName => {
+      const tagPathname = `/app/storages/${storage.id}/tags/${tagName}`
+      const tagIsActive = currentPathname === tagPathname
+      return {
+        name: tagName,
+        iconPath: tagIsActive ? mdiTag : mdiTagOutline,
+        href: `/app/storages/${storage.id}/tags/${tagName}`,
+        active: tagIsActive
+      }
+    })
+  }, [storage, currentPathname])
 
   const node = useMemo(() => {
     const storagePathname = `/app/storages/${storage.id}`
     const notesPathname = `/app/storages/${storage.id}/notes`
+    const notesIsActive = currentPathname === notesPathname
     return {
       name: storage.name,
       href: storagePathname,
@@ -188,8 +200,9 @@ const StorageNavigatorItem = ({
       children: [
         {
           name: 'Notes',
+          iconPath: notesIsActive ? mdiFolderOpenOutline : mdiFolderOutline,
           href: notesPathname,
-          active: currentPathname === notesPathname,
+          active: notesIsActive,
           onContextMenu: createFolderContextMenuHandler('/')
         },
         ...folderNodes,
@@ -200,7 +213,7 @@ const StorageNavigatorItem = ({
           children: tagNodes
         },
         {
-          iconPath: mdiTrashCan,
+          iconPath: mdiDeleteOutline,
           href: `${storagePathname}/trashcan`,
           name: 'Trash Can',
           active: currentPathname === `/app/storages/${storage.id}/trashcan`
@@ -252,11 +265,13 @@ function getNavigatorNodeFromPathnameTree(
         ? `/${folderName}`
         : `${parentFolderPathname}/${folderName}`
     const pathname = `/app/storages/${storageId}/notes${folderPathname}`
+    const folderIsActive = pathname === currentPathname
 
     return {
       name: folderName,
+      iconPath: folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline,
       href: pathname,
-      active: pathname === currentPathname,
+      active: folderIsActive,
       onContextMenu: contextMenuHandlerCreator(folderPathname),
       children: getNavigatorNodeFromPathnameTree(
         tree,

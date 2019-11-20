@@ -4,15 +4,30 @@ import styled from '../../../lib/styled/styled'
 import { NoteDoc } from '../../../lib/db/types'
 import Icon from '../../atoms/Icon'
 import { mdiTagOutline } from '@mdi/js'
+import {
+  borderBottom,
+  uiTextColor,
+  secondaryBackgroundColor
+} from '../../../lib/styled/styleFunctions'
+import cc from 'classcat'
 
-const StyledNoteListItem = styled.div<{ active: boolean }>`
+const StyledNoteListItem = styled.div`
   margin: 0;
-  ${({ active, theme }) =>
-    active &&
-    `background-color: ${theme.colors.active};
-    color: ${theme.colors.inverseText};`}
-  border-bottom: solid 1px ${({ theme }) => theme.colors.border};
+  border-left: 2px solid transparent;
+  ${uiTextColor}
+  &.active,
+  &:active,
+  &:focus,
+  &:hover {
+    ${secondaryBackgroundColor}
+  }
+  &.active {
+    border-left: 2px solid ${({ theme }) => theme.primaryColor};
+  }
   user-select: none;
+  ${borderBottom}
+
+  transition: 200ms background-color;
 
   a {
     text-decoration: none;
@@ -24,13 +39,11 @@ const StyledNoteListItem = styled.div<{ active: boolean }>`
 
   .title {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 4px;
   }
 
   .preview {
-    color: ${({ active, theme }) =>
-      active ? theme.colors.inverseText : theme.colors.deemedText};
   }
 `
 
@@ -55,7 +68,7 @@ export default ({ note, active, basePathname, focusList }: NoteItemProps) => {
   }, [note.content])
 
   return (
-    <StyledNoteListItem active={active}>
+    <StyledNoteListItem className={cc([active && 'active'])}>
       <Link href={href} onFocus={focusList}>
         <div className='container'>
           <div className='title'>{note.title}</div>

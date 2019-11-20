@@ -1,4 +1,10 @@
 import styled from '../../lib/styled'
+import {
+  border,
+  backgroundColor,
+  inputStyle,
+  secondaryButtonStyle
+} from '../../lib/styled/styleFunctions'
 
 const dialogZIndex = 8000
 
@@ -18,8 +24,8 @@ export const StyledDialogBackground = styled.div`
 export const StyledDialog = styled.div`
   width: 100%;
   max-width: 450px;
-  background-color: ${({ theme }) => theme.colors.background};
-  border-color: ${({ theme }) => theme.colors.border};
+  ${backgroundColor}
+  ${border}
   border-style: solid;
   padding: 20px;
   border-width: 0 1px 1px 1px;
@@ -57,11 +63,10 @@ export const StyledDialogMessage = styled.p`
 export const StyledDialogPromptInput = styled.input`
   width: 100%;
   margin-bottom: 15px;
-  box-sizing: border-box;
-  border: none;
-  height: 20px;
+  height: 32px;
   outline: none;
-  padding: 0 5px;
+  padding: 0 8px;
+  ${inputStyle}
 `
 
 export const StyledDialogButtonGroup = styled.div`
@@ -71,16 +76,9 @@ export const StyledDialogButtonGroup = styled.div`
 `
 
 export const StyledDialogButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
   padding: 5px 20px;
-  border: none;
   border-radius: 4px;
-  outline: none;
   margin-left: 16px;
   user-select: none;
-  &:active {
-    background-color: ${({ theme }) => theme.colors.active};
-    color: ${({ theme }) => theme.colors.inverseText};
-  }
+  ${secondaryButtonStyle}
 `

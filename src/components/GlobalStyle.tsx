@@ -1,10 +1,31 @@
 import { createGlobalStyle } from 'styled-components'
+import { backgroundColor, textColor } from '../lib/styled/styleFunctions'
 
 export default createGlobalStyle`
   body {
     margin: 0;
-    
+    ${backgroundColor}
+    ${textColor}
+    font-family: ${({ theme }) => theme.fontFamily};
+    font-size: ${({ theme }) => theme.fontSize}px;
   }
+
+  * {
+    box-sizing: border-box;
+  }
+  *:focus {
+    outline: none;
+  }
+
+  input {
+    font-size: ${({ theme }) => theme.fontSize}px;
+  }
+
+  button,
+  input {
+    outline: none;
+  }
+
   a {
     color: inherit;
   }
@@ -17,12 +38,12 @@ export default createGlobalStyle`
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {
-    background-color: transparent;
+    background-color: ${({ theme }) => theme.scrollBarTrackColor};
   }
 
   /* scrollbar itself */
   ::-webkit-scrollbar-thumb {
-    background-color: #babac0;
+    background-color: ${({ theme }) => theme.scrollBarThumbColor};
   }
 
   /* set button(top and bottom of the scrollbar) */

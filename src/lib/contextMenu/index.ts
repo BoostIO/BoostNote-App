@@ -3,8 +3,8 @@ import { createStoreContext } from '../utils/context'
 import { ContextMenuContext, MenuItem } from './types'
 export * from './types'
 
-export const menuHeight = 19
-export const menuMargin = 5
+export const menuHeight = 26
+export const menuMargin = 10
 export const menuVerticalPadding = 4
 export const menuZIndex = 9000
 

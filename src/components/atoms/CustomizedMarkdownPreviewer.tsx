@@ -17,6 +17,7 @@ const CustomizedMarkdownPreviewer = ({
     <MarkdownPreviewer
       content={content}
       codeBlockTheme={preferences['markdown.codeBlockTheme']}
+      theme={preferences['general.theme']}
       style={previewStyle}
     />
   )

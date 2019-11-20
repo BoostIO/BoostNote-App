@@ -4,20 +4,27 @@ import {
   menuVerticalPadding,
   menuZIndex
 } from '../../lib/contextMenu'
+import {
+  uiTextColor,
+  contextMenuShadow,
+  borderColor,
+  backgroundColor,
+  activeBackgroundColor
+} from '../../lib/styled/styleFunctions'
 
 export const StyledContextMenu = styled.div`
   min-width: 130px;
   position: fixed;
   z-index: ${menuZIndex};
-  background-color: ${({ theme }) => theme.colors.background};
-  border-color: ${({ theme }) => theme.colors.border};
+  ${backgroundColor}
+  ${borderColor}
   border-style: solid;
   border-width: 1px;
   padding: ${menuVerticalPadding}px 0;
   font-size: 14px;
   box-sizing: border-box;
-  border-radius: 5px;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  ${contextMenuShadow}
   outline: none;
 `
 
@@ -30,13 +37,11 @@ export const StyledContextMenuItem = styled.button`
   display: block;
   width: 100%;
   text-align: left;
-  color: ${({ theme }) => theme.colors.text};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.active};
-    color: ${({ theme }) => theme.colors.inverseText};
-  }
-  &:disabled {
-    background-color: transparent;
-    color: ${({ theme }) => theme.colors.deemedText};
+  ${uiTextColor};
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    ${activeBackgroundColor}
   }
 `

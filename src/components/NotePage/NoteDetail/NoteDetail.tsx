@@ -15,41 +15,39 @@ import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
 import { GeneralNoteEditModeOptions } from '../../../lib/generalStatus'
+import {
+  secondaryBackgroundColor,
+  textColor,
+  borderBottom,
+  borderRight
+} from '../../../lib/styled/styleFunctions'
 
 const StyledNoteDetailContainer = styled.div`
+  ${secondaryBackgroundColor}
   display: flex;
   flex-direction: column;
   height: 100%;
   .titleSection {
     display: flex;
-    margin-bottom: 2px;
+    height: 50px;
+    border-width: 0 0 1px;
+    ${borderBottom}
+
     input {
-      margin: 2px;
       font-size: 24px;
       border: none;
-      height: 40px;
-      padding: 0 4px;
+      height: 100%;
+      padding: 0 12px;
       flex: 1;
-    }
-  }
-
-  .tagSection {
-    display: flex;
-    margin-bottom: 2px;
-
-    input {
-      border: none;
-      margin-left: 2px;
-      padding: 0 2px;
+      background-color: transparent;
+      ${textColor}
     }
   }
 
   .contentSection {
     flex: 1;
     overflow: hidden;
-    margin: 2px;
     position: relative;
-    border-top: solid 1px ${({ theme }) => theme.colors.border};
     .editor .CodeMirror {
       position: absolute;
       top: 0;
@@ -71,7 +69,7 @@ const StyledNoteDetailContainer = styled.div`
       position: absolute;
       width: 50%;
       height: 100%;
-      border-right: solid 1px ${({ theme }) => theme.colors.border};
+      ${borderRight}
     }
     .splitRight {
       position: absolute;
@@ -79,6 +77,13 @@ const StyledNoteDetailContainer = styled.div`
       width: 50%;
       height: 100%;
     }
+  }
+
+  .tagInput {
+    background-color: transparent;
+    border: none;
+    ${textColor}
+    margin-left: 4px;
   }
 `
 
@@ -327,9 +332,10 @@ export default class NoteDetail extends React.Component<
                 removeTagByName={this.removeTagByName}
               />
               <input
+                className='tagInput'
                 ref={this.newTagNameInputRef}
                 value={this.state.newTagName}
-                placeholder='New Tag...'
+                placeholder='Set Tags for the note...'
                 onChange={this.updateNewTagName}
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />

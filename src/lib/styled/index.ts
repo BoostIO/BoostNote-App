@@ -1,4 +1,4 @@
 import styled from './styled'
 
 export default styled
-export * from './themes'
+export * from './themes/default'
