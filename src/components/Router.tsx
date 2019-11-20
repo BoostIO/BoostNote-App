@@ -2,6 +2,7 @@ import React from 'react'
 import NotePage from './NotePage'
 import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
+import StorageCreate from './Storage/StorageCreate'
 
 export default () => {
   const routeParams = useRouteParams()
@@ -11,6 +12,8 @@ export default () => {
     case 'storages.trashCan':
     case 'storages.tags.show':
       return <NotePage />
+    case 'storages.create':
+      return <StorageCreate />
   }
   return (
     <StyledNotFoundPage>

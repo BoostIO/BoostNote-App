@@ -23,7 +23,7 @@ export const useUsers = (): [User[], UserRepo] => {
 
   const repo: UserRepo = {
     removeUser: user => setUsers(removeUser(user, users)),
-    setUser: user => setUsers([user]),
+    setUser: user => setUsers([user])
   }
 
   return [users, repo]
