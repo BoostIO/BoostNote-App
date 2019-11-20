@@ -82,6 +82,7 @@ export default () => {
       }
       if (cloudLink !== 0) {
         await db.addCloudLink(newStorage.id, cloudLink)
+        // TODO: sync db after adding
       }
     }
     setLoading(false)
