@@ -24,17 +24,17 @@ export default ({ storage }: StorageEditProps) => {
       db.setCloudLink(storage.id, cloudStorage)
       // TODO: sync
     },
-    [storage]
+    [storage, db]
   )
 
   const unlinkCallback = useCallback(() => {
     db.setCloudLink(storage.id, null)
-  }, [storage])
+  }, [storage, db])
 
   const removeCallback = useCallback(() => {
     db.removeStorage(storage.id)
     router.push('/app')
-  }, [storage])
+  }, [storage, db, router])
 
   useDebounce(
     () => {
