@@ -60,6 +60,7 @@
     "babel-jest": "^24.9.0",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
+    "electron": "^7.1.2",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
     "eslint": "^6.4.0",
