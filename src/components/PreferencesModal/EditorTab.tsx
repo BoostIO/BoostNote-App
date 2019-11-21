@@ -5,7 +5,13 @@ import React, {
   ChangeEventHandler,
   KeyboardEventHandler
 } from 'react'
-import { Section, SectionHeader, SectionControl } from './styled'
+import {
+  Section,
+  SectionHeader,
+  SectionControl,
+  SectionSelect,
+  SectionInput
+} from './styled'
 import { useTranslation } from 'react-i18next'
 import {
   usePreferences,
@@ -125,7 +131,7 @@ const EditorTab = () => {
       <Section>
         <SectionHeader>{t('preferences.editorTheme')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['editor.theme']}
             onChange={selectEditorTheme}
           >
@@ -135,57 +141,66 @@ const EditorTab = () => {
                 {capitalize(theme)}
               </option>
             ))}
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
         <SectionControl>
-          <input type='number' value={fontSize} onChange={updateFontSize} /> px
+          <SectionInput
+            type='number'
+            value={fontSize}
+            onChange={updateFontSize}
+          />{' '}
+          px
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
         <SectionControl>
-          <input type='value' value={fontFamily} onChange={updateFontFamily} />
+          <SectionInput
+            type='value'
+            value={fontFamily}
+            onChange={updateFontFamily}
+          />
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['editor.indentType']}
             onChange={selectEditorIndentType}
           >
             <option value='spaces'>{t('preferences.spaces')}</option>
             <option value='tab'>{t('preferences.tab')}</option>
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['editor.indentSize']}
             onChange={selectEditorIndentSize}
           >
             <option value={2}>2</option>
             <option value={4}>4</option>
             <option value={8}>8</option>
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.editorKeymap')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['editor.keyMap']}
             onChange={selectEditorKeyMap}
           >
             <option value='default'>Default</option>
             <option value='vim'>vim</option>
             <option value='emacs'>emacs</option>
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>

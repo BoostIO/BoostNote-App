@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useLogin, User, useUsers } from '../../lib/accounts'
+import { StyledComponent } from 'styled-components'
 
 type RenderFunction<T> = (state: T) => React.ReactNode
 
@@ -8,13 +9,15 @@ interface LoginButtonProps {
   onLoginStart?: () => void
   onLoginComplete?: (user: User) => void
   onErr?: (err: string) => void
+  ButtonComponent?: StyledComponent<'button', any, any, any>
 }
 
 export default ({
   children,
   onLoginStart,
   onLoginComplete,
-  onErr
+  onErr,
+  ButtonComponent
 }: LoginButtonProps) => {
   const [, { setUser }] = useUsers()
   const [loginState, initiateLogin] = useLogin(
@@ -39,9 +42,12 @@ export default ({
     initiateLogin()
   }, [onLoginStart, initiateLogin])
 
-  return (
-    <button onClick={startCallback}>
-      {typeof children === 'function' ? children(loginState) : children}
-    </button>
-  )
+  const content =
+    typeof children === 'function' ? children(loginState) : children
+
+  if (ButtonComponent == null) {
+    return <button onClick={startCallback}>{content}</button>
+  }
+
+  return <ButtonComponent onClick={startCallback}>{content}</ButtonComponent>
 }

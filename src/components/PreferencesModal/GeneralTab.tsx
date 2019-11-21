@@ -1,7 +1,13 @@
-import React, { useCallback, ChangeEventHandler } from 'react'
+import React, { useCallback } from 'react'
 import Icon from '../atoms/Icon'
 import { mdiPlus, mdiLoading } from '@mdi/js'
-import { Section, SectionHeader, SectionControl } from './styled'
+import {
+  Section,
+  SectionHeader,
+  SectionControl,
+  SectionSelect,
+  SectionPrimaryButton
+} from './styled'
 import {
   usePreferences,
   GeneralThemeOptions,
@@ -45,15 +51,6 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
-  const setEnableAnalytics: ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      setPreferences({
-        'general.enableAnalytics': event.target.checked
-      })
-    },
-    [setPreferences]
-  )
-
   const { t } = useTranslation()
 
   return (
@@ -64,7 +61,10 @@ const GeneralTab = () => {
           {users.map(user => (
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
-          <LoginButton onErr={console.error /* TODO: Toast error */}>
+          <LoginButton
+            onErr={console.error /* TODO: Toast error */}
+            ButtonComponent={SectionPrimaryButton}
+          >
             {loginState =>
               loginState !== 'logging-in' ? (
                 <>
@@ -88,55 +88,42 @@ const GeneralTab = () => {
       <Section>
         <SectionHeader>{t('preferences.interfaceLanguage')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['general.language']}
             onChange={selectLanguage}
           >
             <option value='en-US'>English (US)</option>
             <option value='ja'>日本語</option>
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.applicationTheme')}</SectionHeader>
         <SectionControl>
-          <select value={preferences['general.theme']} onChange={selectTheme}>
+          <SectionSelect
+            value={preferences['general.theme']}
+            onChange={selectTheme}
+          >
             <option value='auto'>{t('preferences.auto')}</option>
             <option value='light'>{t('preferences.light')}</option>
             <option value='dark'>{t('preferences.dark')}</option>
             <option value='solarized-dark'>
               {t('preferences.solarizedDark')}
             </option>
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.noteSorting')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['general.noteSorting']}
             onChange={selectNoteSorting}
           >
             <option value='date-updated'>{t('preferences.dateUpdated')}</option>
             <option value='date-created'>{t('preferences.dateCreated')}</option>
             <option value='title'>{t('preferences.title')}</option>
-          </select>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.analytics')}</SectionHeader>
-        <SectionControl>
-          <p>{t('preferences.analyticsDescription1')}</p>
-          <p>{t('preferences.analyticsDescription2')}</p>
-          <label>
-            <input
-              type='checkbox'
-              checked={preferences['general.enableAnalytics']}
-              onChange={setEnableAnalytics}
-            />
-
-            {t('preferences.analyticsLabel')}
-          </label>
+          </SectionSelect>
         </SectionControl>
       </Section>
     </div>

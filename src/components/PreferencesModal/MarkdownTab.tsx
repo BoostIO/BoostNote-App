@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import { Section, SectionHeader, SectionControl } from './styled'
+import {
+  Section,
+  SectionHeader,
+  SectionControl,
+  SectionPrimaryButton,
+  SectionSecondaryButton,
+  SectionSelect
+} from './styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
 import { usePreferences } from '../../lib/preferences'
@@ -9,6 +16,11 @@ import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
 import { useTranslation } from 'react-i18next'
 import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
+import { borderRight, border } from '../../lib/styled/styleFunctions'
+
+const EditorContainer = styled.div`
+  ${border}
+`
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -21,8 +33,12 @@ function say() {
 const PreviewContainer = styled.div`
   display: flex;
   flex-direction: row;
+  ${border}
   .panel {
     width: 50%;
+    &:first-child {
+      ${borderRight}
+    }
   }
 `
 
@@ -71,19 +87,25 @@ const MarkdownTab = () => {
       <Section>
         <SectionHeader>{t('preferences.previewStyle')}</SectionHeader>
         <SectionControl>
-          <button onClick={savePreviewStyle}>Save</button>
-          <button onClick={resetNewPreviewStyle}>Use default style</button>
+          <SectionPrimaryButton onClick={savePreviewStyle}>
+            Save
+          </SectionPrimaryButton>
+          <SectionSecondaryButton onClick={resetNewPreviewStyle}>
+            Use default style
+          </SectionSecondaryButton>
+        </SectionControl>
+        <EditorContainer>
           <CustomizedCodeEditor
             value={newPreviewStyle}
             onChange={updatePreviewStyle}
             mode='css'
           />
-        </SectionControl>
+        </EditorContainer>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.markdownCodeBlockTheme')}</SectionHeader>
         <SectionControl>
-          <select
+          <SectionSelect
             value={preferences['markdown.codeBlockTheme']}
             onChange={selectCodeFenceTheme}
           >
@@ -93,7 +115,7 @@ const MarkdownTab = () => {
                 {capitalize(theme)}
               </option>
             ))}
-          </select>
+          </SectionSelect>
         </SectionControl>
       </Section>
       <Section>

@@ -9,11 +9,34 @@ interface TabButtonProps {
 }
 
 const StyledButton = styled.button`
-  display: block;
   width: 100%;
-  height: 30px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  .border {
+    width: 2px;
+    height: 16px;
+  }
+  .label {
+    margin-left: 18px;
+    flex: 1;
+    color: ${({ theme }) => theme.uiTextColor};
+    text-align: left;
+    font-size: 14px;
+  }
   &.active {
-    background-color: ${({ theme }) => theme.colors.active};
+    color: ${({ theme }) => theme.textColor};
+
+    .border {
+      background-color: ${({ theme }) => theme.primaryColor};
+    }
+
+    .label {
+      color: ${({ theme }) => theme.textColor};
+    }
   }
 `
 
@@ -23,7 +46,8 @@ const TabButton = ({ label, tab, setTab, active }: TabButtonProps) => {
   }, [tab, setTab])
   return (
     <StyledButton onClick={selectTab} className={active ? 'active' : ''}>
-      {label}
+      <div className='border' />
+      <div className='label'>{label}</div>
     </StyledButton>
   )
 }

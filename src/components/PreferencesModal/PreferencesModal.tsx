@@ -9,40 +9,48 @@ import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
-import { backgroundColor } from '../../lib/styled/styleFunctions'
+import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
 
-const StyledContainer = styled.div`
+const Container = styled.div`
   z-index: 7000;
-  display: flex;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 30px;
   ${backgroundColor}
-  .nav {
-    width: 200px;
-    margin-right: 10px;
-  }
-  .navButton {
-    display: block;
-    width: 100%;
-    height: 30px;
-    &.active {
-      background-color: ${({ theme }) => theme.colors.active};
-    }
-  }
-  .content {
-    flex: 1;
-  }
-  .closeButton {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-  }
+  display: flex;
+  overflow: hidden;
+`
+
+const Header = styled.h1`
+  margin: 0;
+  padding: 1em 0;
+`
+
+const TabNav = styled.nav`
+  width: 200px;
+  margin-left: 30px;
+`
+
+const TabContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding-left: 4px;
+  padding-top: 4em;
+  padding-right: 30px;
+`
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  ${iconColor}
 `
 
 const PreferencesModal = () => {
@@ -77,8 +85,9 @@ const PreferencesModal = () => {
   }
 
   return (
-    <StyledContainer>
-      <div className='nav'>
+    <Container>
+      <TabNav>
+        <Header>Preferences</Header>
         <TabButton
           label='General'
           tab='general'
@@ -109,12 +118,12 @@ const PreferencesModal = () => {
           active={tab === 'about'}
           setTab={setTab}
         />
-      </div>
-      <div className='content'>{content}</div>
-      <button className='closeButton' onClick={toggleClosed}>
+      </TabNav>
+      <TabContent>{content}</TabContent>
+      <CloseButton onClick={toggleClosed}>
         <Icon path={mdiClose} />
-      </button>
-    </StyledContainer>
+      </CloseButton>
+    </Container>
   )
 }
 
