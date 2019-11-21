@@ -66,11 +66,19 @@ color: ${theme.textColor};
 }
 `
 
-export const secondaryButtonStyle = ({
-  theme
-}: StyledProps) => `border: ${theme.borderColor};
+export const primaryButtonStyle = ({ theme }: StyledProps) => `border: none;
+background-color: ${theme.primaryColor};
+color: ${theme.textColor};
+font-size: 13px;
+&:focus {
+  box-shadow: 0 0 0 2px ${theme.primaryColor};
+}
+`
+
+export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
 color: ${theme.textColor};
+font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
@@ -78,4 +86,13 @@ color: ${theme.textColor};
 &.active {
   background-color: ${theme.primaryColor};
 }
+`
+
+export const selectStyle = ({ theme }: StyledProps) => `
+  border: ${theme.borderColor};
+  background-color: ${theme.inputBackground};
+  color: ${theme.textColor};
+  &:focus {
+    box-shadow: 0 0 0 2px ${theme.primaryColor};
+  }
 `
