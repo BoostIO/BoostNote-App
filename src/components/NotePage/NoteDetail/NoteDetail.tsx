@@ -14,7 +14,6 @@ import {
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
-import { GeneralNoteEditModeOptions } from '../../../lib/generalStatus'
 import {
   secondaryBackgroundColor,
   textColor,
@@ -97,8 +96,10 @@ type NoteDetailProps = {
   ) => Promise<void | NoteDoc>
   trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
   removeNote: (storageId: string, noteId: string) => Promise<void>
-  editMode: GeneralNoteEditModeOptions
-  selectEditMode: (editMode: GeneralNoteEditModeOptions) => void
+  splitMode: boolean
+  previewMode: boolean
+  toggleSplitMode: () => void
+  togglePreviewMode: () => void
 }
 
 type NoteDetailState = {
@@ -286,7 +287,13 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, editMode, selectEditMode } = this.props
+    const {
+      note,
+      splitMode,
+      previewMode,
+      toggleSplitMode,
+      togglePreviewMode
+    } = this.props
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -315,15 +322,15 @@ export default class NoteDetail extends React.Component<
               />
             </div>
             <div className='contentSection'>
-              {editMode === 'edit' ? (
-                codeEditor
-              ) : editMode === 'split' ? (
+              {previewMode ? (
+                markdownPreviewer
+              ) : splitMode ? (
                 <>
                   <div className='splitLeft'>{codeEditor}</div>
                   <div className='splitRight'>{markdownPreviewer}</div>
                 </>
               ) : (
-                markdownPreviewer
+                codeEditor
               )}
             </div>
             <Toolbar>
@@ -340,16 +347,15 @@ export default class NoteDetail extends React.Component<
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />
               <ToolbarSeparator />
+              <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
               <ToolbarIconButton
-                onClick={() => selectEditMode('edit')}
-                path={mdiFormatText}
-              />
-              <ToolbarIconButton
-                onClick={() => selectEditMode('split')}
+                className={splitMode ? 'active' : ''}
+                onClick={toggleSplitMode}
                 path={mdiArrowSplitVertical}
               />
               <ToolbarIconButton
-                onClick={() => selectEditMode('preview')}
+                className={previewMode ? 'active' : ''}
+                onClick={togglePreviewMode}
                 path={mdiEyeOutline}
               />
               <ToolbarIconButton onClick={this.trashNote} path={mdiTrashCan} />

@@ -23,15 +23,17 @@ const StyledButton = styled.button<{ active: boolean }>`
 interface ToolbarButtonProps {
   active?: boolean
   path: string
+  className?: string
   onClick: React.MouseEventHandler
 }
 
 const ToolbarButton = ({
   path,
   onClick,
-  active = false
+  active = false,
+  className
 }: ToolbarButtonProps) => (
-  <StyledButton onClick={onClick} active={active}>
+  <StyledButton onClick={onClick} active={active} className={className}>
     <Icon path={path} />
   </StyledButton>
 )

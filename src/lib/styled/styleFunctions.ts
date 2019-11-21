@@ -15,10 +15,12 @@ export const activeBackgroundColor = ({ theme }: StyledProps) =>
 
 export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
 &:hover,
-&:focus,
+&:focus {
+  color: ${theme.activeIconColor};
+}
 &:active,
 &.active {
-  color: ${theme.activeIconColor};
+  color: ${theme.primaryColor};
 }`
 
 export const textColor = ({ theme }: StyledProps) =>

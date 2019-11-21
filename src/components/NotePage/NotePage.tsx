@@ -132,14 +132,17 @@ export default () => {
     [setGeneralStatus]
   )
 
-  const selectEditMode = useCallback(
-    (editMode: 'edit' | 'split' | 'preview') => {
-      setGeneralStatus({
-        noteEditMode: editMode
-      })
-    },
-    [setGeneralStatus]
-  )
+  const toggleSplitMode = useCallback(() => {
+    setGeneralStatus(prevState => ({
+      noteSplitMode: !prevState.noteSplitMode
+    }))
+  }, [setGeneralStatus])
+
+  const togglePreviewMode = useCallback(() => {
+    setGeneralStatus(prevState => ({
+      notePreviewMode: !prevState.notePreviewMode
+    }))
+  }, [setGeneralStatus])
 
   return storageId != null ? (
     <TwoPaneLayout
@@ -166,8 +169,10 @@ export default () => {
             updateNote={db.updateNote}
             trashNote={db.trashNote}
             removeNote={removeNote}
-            editMode={generalStatus.noteEditMode}
-            selectEditMode={selectEditMode}
+            splitMode={generalStatus.noteSplitMode}
+            previewMode={generalStatus.notePreviewMode}
+            toggleSplitMode={toggleSplitMode}
+            togglePreviewMode={togglePreviewMode}
           />
         )
       }
