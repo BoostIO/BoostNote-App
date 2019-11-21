@@ -9,6 +9,7 @@ import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
+import { backgroundColor } from '../../lib/styled/styleFunctions'
 
 const StyledContainer = styled.div`
   z-index: 7000;
@@ -19,7 +20,7 @@ const StyledContainer = styled.div`
   right: 0;
   bottom: 0;
   padding: 30px;
-  background-color: white;
+  ${backgroundColor}
   .nav {
     width: 200px;
     margin-right: 10px;
