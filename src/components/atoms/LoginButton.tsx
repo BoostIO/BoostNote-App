@@ -37,7 +37,7 @@ export default ({
       onLoginStart()
     }
     initiateLogin()
-  }, [onLoginStart])
+  }, [onLoginStart, initiateLogin])
 
   return (
     <button onClick={startCallback}>
