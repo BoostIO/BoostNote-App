@@ -14,6 +14,10 @@ export type ExceptRev<D extends PouchDB.Core.RevisionIdMeta> = Except<D, '_rev'>
 export interface NoteStorageData {
   id: string
   name: string
+  cloudStorage?: {
+    id: number
+    name: string
+  }
 }
 
 export type NoteDocEditibleProps = {

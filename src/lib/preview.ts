@@ -3,36 +3,6 @@ import { localLiteStorage } from 'ltstrg'
 import { previewStyleKey } from './localStorageKeys'
 import { createStoreContext } from './utils/context'
 
-function loadPreviewStyle() {
-  const previewStyle = localLiteStorage.getItem(previewStyleKey)
-  if (previewStyle == null) return defaultPreviewStyle
-  return previewStyle
-}
-
-function savePreviewStyle(style: string) {
-  return localLiteStorage.setItem(previewStyleKey, style)
-}
-
-const initialPreviewStyle = loadPreviewStyle()
-
-function usePreviewStyleStore() {
-  const [previewStyle, setPreviewStyle] = useState(initialPreviewStyle)
-
-  useEffect(() => {
-    savePreviewStyle(previewStyle)
-  }, [previewStyle])
-
-  return {
-    previewStyle,
-    setPreviewStyle
-  }
-}
-
-export const {
-  StoreProvider: PreviewStyleProvider,
-  useStore: usePreviewStyle
-} = createStoreContext(usePreviewStyleStore, 'previewStyle')
-
 export const defaultPreviewStyle = `
 -ms-text-size-adjust: 100%;
 -webkit-text-size-adjust: 100%;
@@ -549,3 +519,33 @@ hr {
   border-bottom-color: #eee;
 }
 `
+
+function loadPreviewStyle() {
+  const previewStyle = localLiteStorage.getItem(previewStyleKey)
+  if (previewStyle == null) return defaultPreviewStyle
+  return previewStyle
+}
+
+function savePreviewStyle(style: string) {
+  return localLiteStorage.setItem(previewStyleKey, style)
+}
+
+const initialPreviewStyle = loadPreviewStyle()
+
+function usePreviewStyleStore() {
+  const [previewStyle, setPreviewStyle] = useState(initialPreviewStyle)
+
+  useEffect(() => {
+    savePreviewStyle(previewStyle)
+  }, [previewStyle])
+
+  return {
+    previewStyle,
+    setPreviewStyle
+  }
+}
+
+export const {
+  StoreProvider: PreviewStyleProvider,
+  useStore: usePreviewStyle
+} = createStoreContext(usePreviewStyleStore, 'previewStyle')

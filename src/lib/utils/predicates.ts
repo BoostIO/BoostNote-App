@@ -28,6 +28,22 @@ export const schema = <T extends PredicateSchema>(
     return true
   })
 
+export const optional = <T extends PredicateSchema>(
+  predicateSchema: T
+): BasePredicate<ValidatedObject<T>> =>
+  ow.optional.object.is(value => {
+    const predicateEntries = Object.entries(predicateSchema)
+    for (const [key, predicate] of predicateEntries) {
+      try {
+        ow(value[key], predicate)
+      } catch (error) {
+        return false
+      }
+    }
+
+    return true
+  })
+
 export function isValid<T>(
   value: any,
   predicate: BasePredicate<T>
