@@ -10,10 +10,10 @@ propose changes to this document in a pull request.
 
 ## Submitting Issues
 
-- You can create an issue [here](https://github.com/Boostnote.next
-  /Boost/issues/new),
-  but before doing that please read the notes below and include as many details as
-  possible with your report. If you can, please include:
+- Before creating an issue please read the notes below and include as many details as
+  possible with your report. You can create an issue [here](https://github.com/Boostnote.next
+  /Boost/issues/new).
+  If you can, please include:
   - The version of App you are using
   - The operating system you are using
   - If applicable, what you were doing when the issue arose and what you
