@@ -9,7 +9,9 @@ import {
   mdiTrashCan,
   mdiEyeOutline,
   mdiArrowSplitVertical,
-  mdiFormatText
+  mdiFormatText,
+  mdiDeleteEmpty,
+  mdiRestore
 } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
@@ -95,7 +97,11 @@ type NoteDetailProps = {
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
   trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
-  removeNote: (storageId: string, noteId: string) => Promise<void>
+  untrashNote: (
+    storageId: string,
+    noteId: string
+  ) => Promise<NoteDoc | undefined>
+  purgeNote: (storageId: string, noteId: string) => void
   splitMode: boolean
   previewMode: boolean
   toggleSplitMode: () => void
@@ -248,6 +254,36 @@ export default class NoteDetail extends React.Component<
     await this.props.trashNote(storageId, noteId)
   }
 
+  untrashNote = async () => {
+    const { storageId, note } = this.props
+    const noteId = note._id
+
+    if (this.queued) {
+      const { title, content, tags } = this.state
+      await this.saveNote(storageId, noteId, {
+        title,
+        content,
+        tags
+      })
+    }
+    await this.props.untrashNote(storageId, noteId)
+  }
+
+  purgeNote = async () => {
+    const { storageId, note } = this.props
+    const noteId = note._id
+
+    if (this.queued) {
+      const { title, content, tags } = this.state
+      await this.saveNote(storageId, noteId, {
+        title,
+        content,
+        tags
+      })
+    }
+    await this.props.purgeNote(storageId, noteId)
+  }
+
   queued = false
   timer?: number
 
@@ -358,7 +394,23 @@ export default class NoteDetail extends React.Component<
                 onClick={togglePreviewMode}
                 path={mdiEyeOutline}
               />
-              <ToolbarIconButton onClick={this.trashNote} path={mdiTrashCan} />
+              {note.trashed ? (
+                <>
+                  <ToolbarIconButton
+                    onClick={this.untrashNote}
+                    path={mdiRestore}
+                  />
+                  <ToolbarIconButton
+                    onClick={this.purgeNote}
+                    path={mdiDeleteEmpty}
+                  />
+                </>
+              ) : (
+                <ToolbarIconButton
+                  onClick={this.trashNote}
+                  path={mdiTrashCan}
+                />
+              )}
             </Toolbar>
           </>
         )}

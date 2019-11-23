@@ -462,13 +462,7 @@ export function createDbStoreCreator(
         }
 
         let folder: PopulatedFolderDoc | undefined
-        if (storage.folderMap[noteDoc.folderPathname] == null) {
-          folder = {
-            ...(await storage.db.getFolder(noteDoc.folderPathname)!),
-            pathname: noteDoc.folderPathname,
-            noteIdSet: new Set()
-          } as PopulatedFolderDoc
-        } else {
+        if (storage.folderMap[noteDoc.folderPathname] != null) {
           const newFolderNoteIdSet = new Set(
             storage.folderMap[noteDoc.folderPathname]!.noteIdSet
           )
@@ -481,6 +475,9 @@ export function createDbStoreCreator(
 
         const modifiedTags: ObjectMap<PopulatedTagDoc> = noteDoc.tags.reduce(
           (acc, tag) => {
+            if (storage.tagMap[tag] == null) {
+              return acc
+            }
             const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
             newNoteIdSet.delete(noteDoc._id)
             acc[tag] = {
@@ -515,9 +512,6 @@ export function createDbStoreCreator(
           return
         }
         const noteDoc = await storage.db.untrashNote(noteId)
-        if (noteDoc == null) {
-          return
-        }
 
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
@@ -780,6 +774,9 @@ async function prepareStorage(
   }
 
   for (const noteDoc of Object.values(noteMap) as NoteDoc[]) {
+    if (noteDoc.trashed) {
+      continue
+    }
     storage.folderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
     noteDoc.tags.forEach(tagName => {
       storage.tagMap[tagName]!.noteIdSet.add(noteDoc._id)

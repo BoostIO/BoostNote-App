@@ -344,6 +344,7 @@ export default class NoteDb {
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
+    console.log(noteDocProps)
     return {
       ...noteDocProps,
       _rev: rev
