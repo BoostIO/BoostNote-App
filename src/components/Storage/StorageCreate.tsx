@@ -11,10 +11,12 @@ import { useDb } from '../../lib/db'
 import { CloudStorage } from '../../lib/accounts'
 import LoginButton from '../atoms/LoginButton'
 import CloudStorageSelector from './CloudStorageSelector'
+import { useToast } from '../../lib/toast'
 
 export default () => {
   const db = useDb()
   const { preferences } = usePreferences()
+  const { pushMessage } = useToast()
   const { t } = useTranslation()
   const [localName, setLocalName] = useState('')
   const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
@@ -29,8 +31,10 @@ export default () => {
     if (cloudStorage != null) {
       const success = db.setCloudLink(newStorage.id, cloudStorage, user)
       if (!success) {
-        console.error('sync failed')
-        // TODO: toast sync failure
+        pushMessage({
+          title: 'Sync Error',
+          description: 'The storage was unable to be synced with the cloud'
+        })
       }
     }
   }
