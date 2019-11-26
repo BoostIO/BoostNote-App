@@ -26,6 +26,9 @@ import {
   values
 } from './utils'
 import { FOLDER_ID_PREFIX } from './consts'
+import PouchDB from './PouchDB'
+import { buildCloudSyncUrl, User } from '../accounts'
+import { setHeader } from '../utils/http'
 
 export default class NoteDb {
   public initialized = false
@@ -276,12 +279,14 @@ export default class NoteDb {
     >('_design/notes')
     const byFolderMap = `function(doc) {
       if (doc._id.startsWith('note:')) {
-        emit(doc.folderPathname)
+        emit(doc.folderPathname);
       }
     }`
     const byTagMap = `function(doc) {
       if (doc._id.startsWith('note:')) {
-        doc.tags.forEach(tag => emit(tag))
+        doc.tags.forEach(function(tag){
+          emit(tag);
+        });
       }
     }`
     if (ddoc != null) {
@@ -430,5 +435,36 @@ export default class NoteDb {
       include_docs: true
     })
     return allDocsResponse.rows.map(row => row.doc!)
+  }
+
+  async sync(
+    user: User,
+    cloudStorage: { id: number }
+  ): Promise<PouchDB.Replication.SyncResultComplete<any>> {
+    const cloudPouch = new PouchDB(
+      buildCloudSyncUrl(cloudStorage.id, user.id),
+      {
+        fetch: (url, opts = {}) => {
+          if (opts.headers == null) {
+            opts.headers = new Headers()
+          }
+
+          opts.headers = setHeader(
+            'Authorization',
+            `Bearer ${user.token}`,
+            opts.headers
+          )
+
+          return PouchDB.fetch(url, opts)
+        }
+      }
+    )
+
+    return new Promise((resolve, reject) => {
+      this.pouchDb
+        .sync(cloudPouch, { live: false })
+        .on('error', reject)
+        .on('complete', resolve)
+    })
   }
 }
