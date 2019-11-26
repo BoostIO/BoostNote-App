@@ -1,11 +1,3 @@
-/**
- * Necessary data
- *  - Subscription Plan
- *  - Cloud storages
- *  name on creation
- * default create new
- * dont limit to non-linked for now
- */
 import React, { useState } from 'react'
 import { usePreferences } from '../../lib/preferences'
 import { Section, SectionHeader } from '../PreferencesModal/styled'
@@ -30,7 +22,11 @@ export default () => {
     const newStorage = await db.createStorage(localName)
 
     if (cloudStorage != null) {
-      db.setCloudLink(newStorage.id, cloudStorage)
+      const success = db.setCloudLink(newStorage.id, cloudStorage, user)
+      if (!success) {
+        console.error('sync failed')
+        // TODO: toast sync failure
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Section, SectionHeader } from '../PreferencesModal/styled'
 import CloudStorageSelector from './CloudStorageSelector'
 import { usePreferences } from '../../lib/preferences'
@@ -19,22 +19,30 @@ export default ({ storage }: StorageEditProps) => {
   const { preferences } = usePreferences()
   const [name, setName] = useState(storage.name)
 
+  useEffect(() => {
+    setName(storage.name)
+  }, [storage])
+
+  const user = preferences['general.accounts'][0]
+
   const linkCallback = useCallback(
-    (cloudStorage: CloudStorage) => {
-      db.setCloudLink(storage.id, cloudStorage)
-      // TODO: sync
+    async (cloudStorage: CloudStorage) => {
+      const success = await db.setCloudLink(storage.id, cloudStorage, user)
+      if (!success) {
+        //TODO: toast syncing failed
+      }
     },
-    [storage, db]
+    [storage.id, db, user]
   )
 
   const unlinkCallback = useCallback(() => {
-    db.setCloudLink(storage.id, null)
-  }, [storage, db])
+    db.removeCloudLink(storage.id)
+  }, [storage.id, db])
 
   const removeCallback = useCallback(() => {
     db.removeStorage(storage.id)
     router.push('/app')
-  }, [storage, db, router])
+  }, [storage.id, db, router])
 
   useDebounce(
     () => {
@@ -43,8 +51,6 @@ export default ({ storage }: StorageEditProps) => {
     1000,
     [name]
   )
-
-  const user = preferences['general.accounts'][0]
 
   return (
     <div>

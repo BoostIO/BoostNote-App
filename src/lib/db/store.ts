@@ -26,7 +26,7 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { CloudStorage } from '../accounts'
+import { CloudStorage, User } from '../accounts'
 
 export interface DbStore {
   initialized: boolean
@@ -35,7 +35,12 @@ export interface DbStore {
   createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
-  setCloudLink: (id: string, cloudStorage: CloudStorage | null) => Promise<void>
+  setCloudLink: (
+    id: string,
+    cloudStorage: CloudStorage,
+    user: User
+  ) => Promise<boolean>
+  removeCloudLink: (id: string) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
   removeFolder: (storageName: string, pathname: string) => Promise<void>
   createNote(
@@ -142,27 +147,61 @@ export function createDbStoreCreator(
     }, [])
 
     const setCloudLink = useCallback(
-      async (id: string, cloudStorage: CloudStorage | null) => {
-        let newStorageMap: ObjectMap<NoteStorage>
-        setStorageMap(prevStorageMap => {
-          newStorageMap = produce(prevStorageMap, draft => {
-            if (prevStorageMap[id] != null) {
-              if (cloudStorage == null) {
-                delete draft[id]!.cloudStorage
-              } else {
-                draft[id]!.cloudStorage = {
-                  id: cloudStorage.id,
-                  name: cloudStorage.name
-                }
-              }
+      async (
+        id: string,
+        cloudStorage: CloudStorage,
+        user: User
+      ): Promise<boolean> => {
+        let storage = storageMap[id]
+
+        if (storage == null) {
+          return false
+        }
+
+        storage = { ...storage, cloudStorage }
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            if (draft[id] != null) {
+              draft[id]!.cloudStorage = cloudStorage
             }
           })
-          saveStorageDataList(liteStorage, newStorageMap!)
-          return newStorageMap
-        })
+        )
+
+        try {
+          await storage.db.sync(user, cloudStorage)
+          storage = await prepareStorage(storage, 'idb')
+
+          setStorageMap(prevStorageMap => {
+            const newStorageMap = produce(prevStorageMap, draft => {
+              if (prevStorageMap[id] == null) {
+                return
+              }
+              draft[id] = storage
+            })
+            saveStorageDataList(liteStorage, newStorageMap!)
+            return newStorageMap
+          })
+
+          return true
+        } catch {
+          return false
+        }
       },
-      []
+      [storageMap]
     )
+
+    const removeCloudLink = useCallback(async (id: string) => {
+      setStorageMap(prevStorageMap => {
+        const newStorageMap = produce(prevStorageMap, draft => {
+          if (prevStorageMap[id] != null) {
+            delete draft[id]!.cloudStorage
+          }
+        })
+        saveStorageDataList(liteStorage, newStorageMap)
+        return newStorageMap
+      })
+    }, [])
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
@@ -673,6 +712,7 @@ export function createDbStoreCreator(
       removeStorage,
       renameStorage,
       setCloudLink,
+      removeCloudLink,
       createFolder,
       removeFolder,
       createNote,
