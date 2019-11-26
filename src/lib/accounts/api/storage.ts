@@ -1,20 +1,5 @@
 import { apiPost, apiGet } from './utils'
 
-/**
- * Create storage -> local storage
- * Create storage with cloud -> cloud storage -> local storage -> persist link
- * Link storage -> cloud storage -> persist link
- *
- * Not signed in, can only create 1 storage not linked
- * Signed in, can only create 1 storage and link
- * Signed in with subs, can create ∞ and link
- *
- * NOTE: Storage delete needs to be implemented
- * !! Storage list handler
- * !! Storage create handler should be 401 & 403
- * ?? Storage routes should be flatter /api/storage
- */
-
 export interface CloudStorage {
   id: number
   active: boolean

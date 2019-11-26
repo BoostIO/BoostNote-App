@@ -40,3 +40,6 @@ export const apiPut = wrapMethod('PUT')
 export const apiPost = wrapMethod('POST')
 
 export const apiDelete = wrapMethod('DELETE')
+
+export const buildCloudSyncUrl = (storageId: number, userId: number) =>
+  `${BASE_URL}/api/users/${userId}/storages/${storageId}/db`
