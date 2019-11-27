@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CloudStorage,
   createStorage,
   User,
   useUserCloudInfo
 } from '../../lib/accounts'
+import Icon from '@mdi/react'
+import { mdiRefresh, mdiLoading } from '@mdi/js'
 
 interface CloudStorageSelectProps {
   name?: string
@@ -24,7 +26,7 @@ export default ({
   const [storageName, setStorageName] = useState(name)
   const [isLoading, setIsLoading] = useState(false)
   const [active, setActive] = useState(0)
-  const [userInfo, updateUserInfo] = useUserCloudInfo(user)
+  const [userInfo, updateUserInfo, isGettingInfo] = useUserCloudInfo(user)
 
   if (userInfo === 'loading') {
     return <div>Loading...</div>
@@ -48,6 +50,12 @@ export default ({
     }
     setIsLoading(false)
   }
+
+  const reloadStorageInfo = useCallback(() => {
+    if (!isGettingInfo) {
+      updateUserInfo()
+    }
+  }, [updateUserInfo, isGettingInfo])
 
   return (
     <div>
@@ -77,6 +85,12 @@ export default ({
                 </option>
               ))}
             </select>
+            <span onClick={reloadStorageInfo}>
+              <Icon
+                path={isGettingInfo ? mdiLoading : mdiRefresh}
+                size='20px'
+              />
+            </span>
           </div>
           {active === 0 && (
             <div>
