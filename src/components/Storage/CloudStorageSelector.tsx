@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   CloudStorage,
   createStorage,
   User,
   useUserCloudInfo
 } from '../../lib/accounts'
+import Icon from '@mdi/react'
+import { mdiRefresh, mdiLoading } from '@mdi/js'
 
 interface CloudStorageSelectProps {
   name?: string
@@ -22,9 +24,9 @@ export default ({
   buttonText
 }: CloudStorageSelectProps) => {
   const [storageName, setStorageName] = useState(name)
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [active, setActive] = useState(0)
-  const [userInfo, updateUserInfo] = useUserCloudInfo(user)
+  const [userInfo, updateUserInfo, gettingInfo] = useUserCloudInfo(user)
 
   if (userInfo === 'loading') {
     return <div>Loading...</div>
@@ -34,7 +36,7 @@ export default ({
   const canCreateCloudStorages = subscription != null || storages.length < 1
 
   const createStorageCallback = async () => {
-    setIsLoading(true)
+    setLoading(true)
     const cloudStorage =
       active > 0
         ? storages.filter(storage => storage.id === active)[0]
@@ -46,8 +48,14 @@ export default ({
       updateUserInfo()
       onLink(cloudStorage)
     }
-    setIsLoading(false)
+    setLoading(false)
   }
+
+  const reloadStorageInfo = useCallback(() => {
+    if (!gettingInfo) {
+      updateUserInfo()
+    }
+  }, [updateUserInfo, gettingInfo])
 
   return (
     <div>
@@ -77,6 +85,12 @@ export default ({
                 </option>
               ))}
             </select>
+            <span onClick={reloadStorageInfo}>
+              <Icon
+                path={gettingInfo ? mdiLoading : mdiRefresh}
+                size='20px'
+              />
+            </span>
           </div>
           {active === 0 && (
             <div>
@@ -90,7 +104,7 @@ export default ({
           )}
           <div>
             <button onClick={createStorageCallback}>
-              {!isLoading ? buttonText || 'Link Storage' : 'Creating...'}
+              {!loading ? buttonText || 'Link Storage' : 'Creating...'}
             </button>
           </div>
         </>
