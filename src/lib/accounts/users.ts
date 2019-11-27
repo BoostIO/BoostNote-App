@@ -45,24 +45,24 @@ export const useUserCloudInfo = (
     return cache[user.id] != undefined ? cache[user.id] : 'loading'
   })
   const [forceFlag, setForceFlag] = useState(true)
-  const [isRunning, setRunning] = useState(false)
+  const [running, setRunning] = useState(false)
 
   useEffect(() => {
-    let isSubscribed = true
+    let subscribed = true
     setRunning(true)
     getUserCloudInfo(user).then(info => {
       cache[user.id] = info
       setRunning(false)
-      if (isSubscribed) {
+      if (subscribed) {
         setInfo(info)
       }
     })
     return () => {
-      isSubscribed = false
+      subscribed = false
     }
   }, [user, forceFlag])
 
-  return [info, () => setForceFlag(!forceFlag), isRunning]
+  return [info, () => setForceFlag(!forceFlag), running]
 }
 
 const getUserCloudInfo = (user: User): Promise<UserCloudInfo> => {

@@ -24,9 +24,9 @@ export default ({
   buttonText
 }: CloudStorageSelectProps) => {
   const [storageName, setStorageName] = useState(name)
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [active, setActive] = useState(0)
-  const [userInfo, updateUserInfo, isGettingInfo] = useUserCloudInfo(user)
+  const [userInfo, updateUserInfo, gettingInfo] = useUserCloudInfo(user)
 
   if (userInfo === 'loading') {
     return <div>Loading...</div>
@@ -36,7 +36,7 @@ export default ({
   const canCreateCloudStorages = subscription != null || storages.length < 1
 
   const createStorageCallback = async () => {
-    setIsLoading(true)
+    setLoading(true)
     const cloudStorage =
       active > 0
         ? storages.filter(storage => storage.id === active)[0]
@@ -48,14 +48,14 @@ export default ({
       updateUserInfo()
       onLink(cloudStorage)
     }
-    setIsLoading(false)
+    setLoading(false)
   }
 
   const reloadStorageInfo = useCallback(() => {
-    if (!isGettingInfo) {
+    if (!gettingInfo) {
       updateUserInfo()
     }
-  }, [updateUserInfo, isGettingInfo])
+  }, [updateUserInfo, gettingInfo])
 
   return (
     <div>
@@ -87,7 +87,7 @@ export default ({
             </select>
             <span onClick={reloadStorageInfo}>
               <Icon
-                path={isGettingInfo ? mdiLoading : mdiRefresh}
+                path={gettingInfo ? mdiLoading : mdiRefresh}
                 size='20px'
               />
             </span>
@@ -104,7 +104,7 @@ export default ({
           )}
           <div>
             <button onClick={createStorageCallback}>
-              {!isLoading ? buttonText || 'Link Storage' : 'Creating...'}
+              {!loading ? buttonText || 'Link Storage' : 'Creating...'}
             </button>
           </div>
         </>
