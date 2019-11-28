@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import {
   CloudStorage,
   createStorage,
@@ -28,14 +28,14 @@ export default ({
   const [active, setActive] = useState(0)
   const [userInfo, updateUserInfo, gettingInfo] = useUserCloudInfo(user)
 
-  if (userInfo === 'loading') {
-    return <div>Loading...</div>
-  }
-
-  const { subscription, storages } = userInfo
-  const canCreateCloudStorages = subscription != null || storages.length < 1
+  const { subscription, storages, usage } = userInfo
+  const canCreateCloudStorages =
+    subscription == null ? usage < 100 : usage < subscription.quantity
 
   const createStorageCallback = async () => {
+    if (loading || gettingInfo) {
+      return
+    }
     setLoading(true)
     const cloudStorage =
       active > 0
@@ -51,11 +51,11 @@ export default ({
     setLoading(false)
   }
 
-  const reloadStorageInfo = useCallback(() => {
+  const reloadStorageInfo = () => {
     if (!gettingInfo) {
       updateUserInfo()
     }
-  }, [updateUserInfo, gettingInfo])
+  }
 
   return (
     <div>
@@ -86,10 +86,7 @@ export default ({
               ))}
             </select>
             <span onClick={reloadStorageInfo}>
-              <Icon
-                path={gettingInfo ? mdiLoading : mdiRefresh}
-                size='20px'
-              />
+              <Icon path={gettingInfo ? mdiLoading : mdiRefresh} size='20px' />
             </span>
           </div>
           {active === 0 && (
@@ -104,7 +101,9 @@ export default ({
           )}
           <div>
             <button onClick={createStorageCallback}>
-              {!loading ? buttonText || 'Link Storage' : 'Creating...'}
+              {!(loading || gettingInfo)
+                ? buttonText || 'Link Storage'
+                : 'Working...'}
             </button>
           </div>
         </>

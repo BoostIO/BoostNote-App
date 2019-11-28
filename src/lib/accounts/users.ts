@@ -12,6 +12,7 @@ export interface User {
 export interface UserCloudInfo {
   storages: CloudStorage[]
   subscription: Subscription | undefined
+  usage: number
 }
 
 interface UserRepo {
@@ -40,9 +41,11 @@ export const useUsers = (): [User[], UserRepo] => {
 const cache: { [key: number]: UserCloudInfo } = {}
 export const useUserCloudInfo = (
   user: User
-): ['loading' | UserCloudInfo, () => void, boolean] => {
-  const [info, setInfo] = useState<'loading' | UserCloudInfo>(() => {
-    return cache[user.id] != undefined ? cache[user.id] : 'loading'
+): [UserCloudInfo, () => void, boolean] => {
+  const [info, setInfo] = useState<UserCloudInfo>(() => {
+    return cache[user.id] != undefined
+      ? cache[user.id]
+      : { storages: [] as CloudStorage[], usage: 1, subscription: undefined }
   })
   const [forceFlag, setForceFlag] = useState(true)
   const [running, setRunning] = useState(false)
@@ -65,10 +68,17 @@ export const useUserCloudInfo = (
   return [info, () => setForceFlag(!forceFlag), running]
 }
 
-const getUserCloudInfo = (user: User): Promise<UserCloudInfo> => {
-  return Promise.all([getStorages(user), getSubscription(user)]).then(
-    ([storages, subscription]) => ({ storages, subscription })
-  )
+const getUserCloudInfo = async (user: User): Promise<UserCloudInfo> => {
+  const [storages, subscription] = await Promise.all([
+    getStorages(user),
+    getSubscription(user)
+  ])
+
+  return {
+    storages,
+    subscription,
+    usage: storages.reduce((sum, storage) => sum + storage.size, 0)
+  }
 }
 
 const removeUser = (user: User, users: User[]) => {
