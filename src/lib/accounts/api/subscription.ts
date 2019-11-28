@@ -2,6 +2,7 @@ import { apiGet } from './utils'
 
 export interface Subscription {
   id: number
+  quantity: number
   status: 'active' | 'past_due' | 'incomplete'
 }
 

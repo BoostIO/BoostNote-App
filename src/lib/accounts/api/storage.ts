@@ -2,8 +2,8 @@ import { apiPost, apiGet } from './utils'
 
 export interface CloudStorage {
   id: number
-  active: boolean
   name: string
+  size: number
 }
 
 interface User {
