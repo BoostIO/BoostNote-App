@@ -86,10 +86,7 @@ export default ({
               ))}
             </select>
             <span onClick={reloadStorageInfo}>
-              <Icon
-                path={gettingInfo ? mdiLoading : mdiRefresh}
-                size='20px'
-              />
+              <Icon path={gettingInfo ? mdiLoading : mdiRefresh} size='20px'/>
             </span>
           </div>
           {active === 0 && (
