@@ -1,5 +1,6 @@
 {
   "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"],
+  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "target": "esnext",

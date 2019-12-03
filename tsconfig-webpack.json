@@ -3,5 +3,6 @@
     "module": "commonjs",
     "target": "es5",
     "esModuleInterop": true
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"]
 }
