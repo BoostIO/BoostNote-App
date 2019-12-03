@@ -20,6 +20,7 @@ import {
   borderBottom,
   borderRight
 } from '../../../lib/styled/styleFunctions'
+import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 
 const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -347,6 +348,7 @@ export default class NoteDetail extends React.Component<
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />
               <ToolbarSeparator />
+              <ToolbarExportButton note={this.props.note} />
               <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
               <ToolbarIconButton
                 className={splitMode ? 'active' : ''}

@@ -128,7 +128,8 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
     }
   }
 }
-const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
+
+export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
   [Partial<RehypeCodeMirrorOptions>?]
 >
 
