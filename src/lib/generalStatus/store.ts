@@ -27,7 +27,8 @@ const baseGeneralStatus: GeneralStatus = {
   sideBarWidth: 160,
   noteListWidth: 250,
   noteSplitMode: true,
-  notePreviewMode: false
+  notePreviewMode: false,
+  sideNavOpenedItemList: []
 }
 
 function useGeneralStatusStore() {
