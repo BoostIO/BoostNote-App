@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
 import { generalStatusKey } from '../localStorageKeys'
@@ -43,13 +43,35 @@ function useGeneralStatusStore() {
     }
   }, [generalStatus])
 
+  const { sideNavOpenedItemList } = mergedGeneralStatus
+  const sideNavOpenedItemSet = useMemo(() => {
+    return new Set(sideNavOpenedItemList)
+  }, [sideNavOpenedItemList])
+
+  const toggleSideNavOpenedItem = useCallback(
+    (itemId: string) => {
+      const newSet = new Set(sideNavOpenedItemSet)
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId)
+      } else {
+        newSet.add(itemId)
+      }
+      setGeneralStatus({
+        sideNavOpenedItemList: [...newSet]
+      })
+    },
+    [setGeneralStatus, sideNavOpenedItemSet]
+  )
+
   useEffect(() => {
     saveGeneralStatus(generalStatus)
   }, [generalStatus])
 
   return {
     generalStatus: mergedGeneralStatus,
-    setGeneralStatus
+    setGeneralStatus,
+    sideNavOpenedItemSet,
+    toggleSideNavOpenedItem
   }
 }
 
