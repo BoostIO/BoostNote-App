@@ -94,7 +94,7 @@ module.exports = {
     hot: true,
     // enable HMR on the server
 
-    before: function (app, server) {
+    before: function(app, server) {
       app.use(
         '/codemirror/mode',
         express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
