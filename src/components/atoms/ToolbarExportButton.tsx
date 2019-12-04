@@ -105,7 +105,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
         }
 
         downloadFile(
-          String(file),
+          file.toString(),
           `${note.title.toLowerCase().replace(/\s+/g, '-')}.html`,
           'text/html'
         )
@@ -130,7 +130,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
             `title: "${note.title}"`,
             `tags: "${note.tags.join()}"`,
             '---',
-            String(file)
+            file.toString()
           ].join('\n'),
           `${note.title.toLowerCase().replace(/\s+/g, '-')}.md`,
           'text/markdown'
