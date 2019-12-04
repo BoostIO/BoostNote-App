@@ -19,4 +19,4 @@ The renewal will be released end of Nov, 2019. [To keep updated, subscribe our m
 
 ## License
 
-[MIT © 2018 BoostIO](./LICENSE.md)
+[GPL-3.0 © 2019 BoostIO](./LICENSE.md)
