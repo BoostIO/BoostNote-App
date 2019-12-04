@@ -51,7 +51,6 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-hot-loader": "^4.1.0",
     "@types/shortid": "0.0.29",
-    "@types/styled-components": "^4.1.19",
     "@types/webpack": "^4.39.1",
     "@types/webpack-dev-server": "^3.1.7",
     "@types/webpack-env": "^1.14.0",

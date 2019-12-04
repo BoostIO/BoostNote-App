@@ -23,19 +23,19 @@ const StyledButton = styled.button`
   .label {
     margin-left: 18px;
     flex: 1;
-    color: ${({ theme }) => theme.uiTextColor};
+    color: ${({ theme }: any) => theme.uiTextColor};
     text-align: left;
     font-size: 14px;
   }
   &.active {
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
 
     .border {
-      background-color: ${({ theme }) => theme.primaryColor};
+      background-color: ${({ theme }: any) => theme.primaryColor};
     }
 
     .label {
-      color: ${({ theme }) => theme.textColor};
+      color: ${({ theme }: any) => theme.textColor};
     }
   }
 `

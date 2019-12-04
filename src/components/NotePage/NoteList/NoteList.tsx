@@ -24,7 +24,7 @@ const StyledContainer = styled.div`
     overflow-y: auto;
 
     li.empty {
-      color: ${({ theme }) => theme.uiTextColor};
+      color: ${({ theme }: any) => theme.uiTextColor};
     }
   }
 

@@ -6,8 +6,8 @@ export default createGlobalStyle`
     margin: 0;
     ${backgroundColor}
     ${textColor}
-    font-family: ${({ theme }) => theme.fontFamily};
-    font-size: ${({ theme }) => theme.fontSize}px;
+    font-family: ${({ theme }: any) => theme.fontFamily};
+    font-size: ${({ theme }: any) => theme.fontSize}px;
   }
 
   * {
@@ -18,7 +18,7 @@ export default createGlobalStyle`
   }
 
   input {
-    font-size: ${({ theme }) => theme.fontSize}px;
+    font-size: ${({ theme }: any) => theme.fontSize}px;
   }
 
   button,
@@ -38,12 +38,12 @@ export default createGlobalStyle`
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.scrollBarTrackColor};
+    background-color: ${({ theme }: any) => theme.scrollBarTrackColor};
   }
 
   /* scrollbar itself */
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.scrollBarThumbColor};
+    background-color: ${({ theme }: any) => theme.scrollBarThumbColor};
   }
 
   /* set button(top and bottom of the scrollbar) */
