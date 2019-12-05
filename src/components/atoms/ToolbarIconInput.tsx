@@ -16,7 +16,7 @@ const StyledContainer = styled.div`
     position: relative;
     width: 100%;
     background-color: transparent;
-    border: solid 1px ${({ theme }: any) => theme.colors.border};
+    border: solid 1px ${({ theme }) => theme.colors.border};
     height: 22px;
     padding-left: 18px;
     border-radius: 2px;

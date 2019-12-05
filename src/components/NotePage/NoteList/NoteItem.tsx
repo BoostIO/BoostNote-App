@@ -22,7 +22,7 @@ const StyledNoteListItem = styled.div`
     ${secondaryBackgroundColor}
   }
   &.active {
-    border-left: 2px solid ${({ theme }: any) => theme.primaryColor};
+    border-left: 2px solid ${({ theme }) => theme.primaryColor};
   }
   ${borderBottom}
 
