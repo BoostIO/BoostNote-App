@@ -37,7 +37,7 @@ transition: 200ms color;
   color: ${theme.activeUiTextColor};
 }
 &:disabled {
-  color: ${theme.uiTextColor};
+  color: ${theme.disabledUiTextColor};
 }`
 
 export const borderColor = ({ theme }: StyledProps) =>
