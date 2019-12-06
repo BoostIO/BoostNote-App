@@ -21,7 +21,7 @@ import { generateId } from '../string'
 import PouchDB from './PouchDB'
 import { LiteStorage, localLiteStorage } from 'ltstrg'
 import { produce } from 'immer'
-import { useRouter } from '../router'
+import { useRouter, usePathnameWithoutNoteId } from '../router'
 import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
@@ -59,6 +59,7 @@ export function createDbStoreCreator(
 ) {
   return (): DbStore => {
     const router = useRouter()
+    const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
 
@@ -202,7 +203,9 @@ export function createDbStoreCreator(
         }
         await storage.db.removeFolder(pathname)
         if (
-          router.pathname.startsWith(`/app/storages/${id}/notes${pathname}`)
+          `${currentPathnameWithoutNoteId}/`.startsWith(
+            `/app/storages/${id}/notes${pathname}/`
+          )
         ) {
           router.replace(
             `/app/storages/${id}/notes${getParentFolderPathname(pathname)}`
@@ -270,7 +273,7 @@ export function createDbStoreCreator(
           })
         )
       },
-      [storageMap, router]
+      [storageMap, router, currentPathnameWithoutNoteId]
     )
 
     const createNote = useCallback(

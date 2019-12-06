@@ -1,15 +1,19 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/router'
+import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import { mdiTuneVertical, mdiPlusCircle, mdiDotsHorizontal } from '@mdi/js'
-import StorageNavigatorItem from './StorageNavigatorItem'
+import { mdiTuneVertical, mdiPlusCircleOutline } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
+import SideNavigatorItem from './SideNavigatorItem'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import ControlButton from './ControlButton'
+import FolderListFragment from './FolderListFragment'
+import TagListFragment from './TagListFragment'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -38,6 +42,8 @@ const StyledSideNavContainer = styled.nav`
     margin: 0;
     flex: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
   }
   .empty {
     padding: 4px;
@@ -70,56 +76,30 @@ const StyledSideNavContainer = styled.nav`
   }
 `
 
+const Spacer = styled.div`
+  flex: 1;
+`
+
 export default () => {
   const {
     createStorage,
-    renameStorage,
-    removeStorage,
     createFolder,
-    removeFolder,
+    // renameStorage,
+    // removeStorage,
+    // removeFolder,
+    // updateNote,
     storageMap
   } = useDb()
-  const routeParams = useRouteParams()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
+  const { push } = useRouter()
 
   const storageEntries = useMemo(() => {
     return entries(storageMap)
   }, [storageMap])
 
-  const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
-
-  const currentStorage = useMemo(() => {
-    switch (routeParams.name) {
-      case 'storages.notes':
-        return storageMap[routeParams.storageId]
-    }
-    return null
-  }, [routeParams, storageMap])
-
-  const addFolder = useCallback(() => {
-    if (currentStorage == null) {
-      return
-    }
-
-    const defaultValue =
-      routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
-
-    prompt({
-      title: 'Create a Folder',
-      message: 'Enter the path where do you want to create a folder',
-      iconType: DialogIconTypes.Question,
-      defaultValue,
-      submitButtonLabel: 'Create Folder',
-      onClose: (value: string | null) => {
-        if (value == null) return
-        createFolder(currentStorage.id, value)
-      }
-    })
-  }, [prompt, createFolder, routeParams, currentStorage])
-
   const openSideNavContextMenu = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (event: React.MouseEvent) => {
       event.preventDefault()
       popup(event, [
         {
@@ -144,6 +124,11 @@ export default () => {
   )
 
   const { toggleClosed } = usePreferences()
+  const {
+    toggleSideNavOpenedItem,
+    sideNavOpenedItemSet,
+    openSideNavFolderItemRecursively
+  } = useGeneralStatus()
 
   return (
     <StyledSideNavContainer>
@@ -153,41 +138,74 @@ export default () => {
           <Icon path={mdiTuneVertical} />
         </button>
       </div>
-      <ul className='storageList'>
-        {storageEntries.map(([id, storage]) => {
+      <div className='storageList'>
+        {storageEntries.map(([, storage]) => {
+          const itemId = `storage:${storage.id}`
+          const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
+          const showPromptToCreateFolder = (folderPathname: string) => {
+            prompt({
+              title: 'Create a Folder',
+              message: 'Enter the path where do you want to create a folder',
+              iconType: DialogIconTypes.Question,
+              defaultValue: folderPathname === '/' ? '/' : `${folderPathname}/`,
+              submitButtonLabel: 'Create Folder',
+              onClose: async (value: string | null) => {
+                if (value == null) {
+                  return
+                }
+                if (value.endsWith('/')) {
+                  value = value.slice(0, value.length - 1)
+                }
+                await createFolder(storage.id, value)
+
+                push(`/app/storages/${storage.id}/notes${value}`)
+
+                // Open folder item
+                openSideNavFolderItemRecursively(storage.id, value)
+              }
+            })
+          }
           return (
-            <StorageNavigatorItem
-              key={id}
-              currentPathname={currentPathnameWithoutNoteId}
-              storage={storage}
-              renameStorage={renameStorage}
-              removeStorage={removeStorage}
-              createFolder={createFolder}
-              removeFolder={removeFolder}
-            />
+            <React.Fragment key={itemId}>
+              <SideNavigatorItem
+                folded={storageIsFolded}
+                onClick={() => push(`/app/storages/${storage.id}`)}
+                onFoldButtonClick={() => {
+                  toggleSideNavOpenedItem(itemId)
+                }}
+                label={storage.name}
+                depth={0}
+                controlComponents={[
+                  <ControlButton
+                    key='addFolderButton'
+                    onClick={() => showPromptToCreateFolder('/')}
+                    iconPath={mdiPlusCircleOutline}
+                  />
+                ]}
+              />
+              {!storageIsFolded && (
+                <>
+                  <FolderListFragment
+                    storage={storage}
+                    showPromptToCreateFolder={showPromptToCreateFolder}
+                  />
+                  <TagListFragment storage={storage} />
+                </>
+              )}
+            </React.Fragment>
           )
         })}
         {storageEntries.length === 0 && (
           <div className='empty'>No storages</div>
         )}
-      </ul>
-      <div className='bottomControl'>
-        <button
-          className='addFolderButton'
-          disabled={currentStorage == null}
-          onClick={addFolder}
-        >
-          <Icon className='addFolderButtonIcon' path={mdiPlusCircle} /> Add
-          Folder
-        </button>
-        <button
-          className='moreButton'
-          onClick={openSideNavContextMenu}
-          onContextMenu={openSideNavContextMenu}
-        >
-          <Icon path={mdiDotsHorizontal} />
-        </button>
+        <Spacer onContextMenu={openSideNavContextMenu} />
       </div>
+      <SideNavigatorItem
+        depth={0}
+        iconPath={mdiPlusCircleOutline}
+        label='Add Storage'
+        onClick={() => push('/app/storages')}
+      />
     </StyledSideNavContainer>
   )
 }

@@ -4,6 +4,7 @@ import { useSetState } from 'react-use'
 import { generalStatusKey } from '../localStorageKeys'
 import { createStoreContext } from '../utils/context'
 import { GeneralStatus } from './types'
+import { getFolderItemId } from '../nav'
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
   const stringifiedGeneralStatus = localLiteStorage.getItem(generalStatusKey)
@@ -63,6 +64,36 @@ function useGeneralStatusStore() {
     [setGeneralStatus, sideNavOpenedItemSet]
   )
 
+  const addSideNavOpenedItem = useCallback(
+    (...itemIdList: string[]) => {
+      const newSet = new Set(sideNavOpenedItemSet)
+
+      for (const itemId of itemIdList) {
+        newSet.add(itemId)
+      }
+
+      setGeneralStatus({
+        sideNavOpenedItemList: [...newSet]
+      })
+    },
+    [setGeneralStatus, sideNavOpenedItemSet]
+  )
+
+  const openSideNavFolderItemRecursively = useCallback(
+    (storageId: string, folderPathname: string) => {
+      const folderPathElements = folderPathname.slice(1).split('/')
+      const itemIdListToOpen = []
+      let currentPathname = ''
+      for (const element of folderPathElements) {
+        currentPathname = `${currentPathname}/${element}`
+        itemIdListToOpen.push(getFolderItemId(storageId, currentPathname))
+      }
+
+      addSideNavOpenedItem(...itemIdListToOpen)
+    },
+    [addSideNavOpenedItem]
+  )
+
   useEffect(() => {
     saveGeneralStatus(generalStatus)
   }, [generalStatus])
@@ -71,7 +102,9 @@ function useGeneralStatusStore() {
     generalStatus: mergedGeneralStatus,
     setGeneralStatus,
     sideNavOpenedItemSet,
-    toggleSideNavOpenedItem
+    toggleSideNavOpenedItem,
+    addSideNavOpenedItem,
+    openSideNavFolderItemRecursively
   }
 }
 
