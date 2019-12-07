@@ -4,5 +4,6 @@
     "target": "es5",
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

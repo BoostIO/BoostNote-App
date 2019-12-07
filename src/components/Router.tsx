@@ -4,6 +4,7 @@ import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
+import TutorialsPage from './Tutorials/TutorialsPage'
 
 export default () => {
   const routeParams = useRouteParams()
@@ -23,6 +24,9 @@ export default () => {
       } else {
         break
       }
+    case 'tutorials.show':
+      return <TutorialsPage pathname={routeParams.path} />
+      break
   }
   return (
     <StyledNotFoundPage>

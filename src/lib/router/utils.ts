@@ -4,6 +4,8 @@ import pathToRegexp from 'path-to-regexp'
 import { Location } from './types'
 import { parse as _parseUrl } from 'url'
 import { useRouter } from './store'
+import { usePreferences } from '../preferences'
+import { useDb } from '../db'
 
 export function normalizePathname(pathname: string): string {
   const normalizedPathname = path.normalize(pathname)
@@ -77,6 +79,11 @@ export interface StorageTagsRouteParams extends BaseRouteParams {
   noteId?: string
 }
 
+export interface TutorialsRouteParams extends BaseRouteParams {
+  name: 'tutorials.show'
+  path: string
+}
+
 export interface UnknownRouteparams extends BaseRouteParams {
   name: 'unknown'
 }
@@ -89,14 +96,25 @@ export type AllRouteParams =
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
   | UnknownRouteparams
+  | TutorialsRouteParams
 
 export const useRouteParams = () => {
   const { pathname } = useRouter()
+  const { preferences } = usePreferences()
+  const db = useDb()
+
   return useMemo((): AllRouteParams => {
     const names = pathname
       .slice('/app'.length)
       .split('/')
       .slice(1)
+
+    if (names[0] === 'tutorials') {
+      return {
+        name: 'tutorials.show',
+        path: pathname
+      }
+    }
 
     if (names[0] === 'storages' && names[1] == null) {
       return {
@@ -105,10 +123,21 @@ export const useRouteParams = () => {
     }
 
     if (names[0] !== 'storages' || names[1] == null) {
+      if (
+        preferences['general.displayTutorials'] &&
+        (db.storageMap == null || Object.keys(db.storageMap).length === 0)
+      ) {
+        return {
+          name: 'tutorials.show',
+          path: '/app/tutorials/welcome-pack/guides/notes/note:storage-guide'
+        }
+      }
+
       return {
         name: 'unknown'
       }
     }
+
     const storageId = names[1]
 
     if (names[2] == null) {

@@ -51,6 +51,14 @@ module.exports = {
         test: /\.tsx?$/,
         use: [{ loader: 'ts-loader' }],
         exclude: /node_modules/
+      },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: 'raw-loader'
+          }
+        ]
       }
     ]
   },
@@ -94,7 +102,7 @@ module.exports = {
     hot: true,
     // enable HMR on the server
 
-    before: function (app, server) {
+    before: function(app, server) {
       app.use(
         '/codemirror/mode',
         express.static(path.join(__dirname, 'node_modules/codemirror/mode'))

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import Icon from '../atoms/Icon'
 import { mdiPlus, mdiLoading } from '@mdi/js'
 import {
@@ -6,7 +6,8 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionPrimaryButton
+  SectionPrimaryButton,
+  SectionCheckbox
 } from './styled'
 import {
   usePreferences,
@@ -15,7 +16,10 @@ import {
   GeneralNoteSortingOptions
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
-import { SelectChangeEventHandler } from '../../lib/events'
+import {
+  SelectChangeEventHandler,
+  InputChangeEventHandler
+} from '../../lib/events'
 import { useUsers } from '../../lib/accounts'
 import UserInfo from '../atoms/UserInfo'
 import LoginButton from '../atoms/LoginButton'
@@ -23,6 +27,10 @@ import LoginButton from '../atoms/LoginButton'
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
+
+  const [displayTutorials, setDisplayTutorials] = useState<boolean>(
+    preferences['general.displayTutorials']
+  )
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
@@ -50,6 +58,13 @@ const GeneralTab = () => {
     },
     [setPreferences]
   )
+
+  const toggleDisplayTutorials: InputChangeEventHandler = useCallback(() => {
+    setPreferences({
+      'general.displayTutorials': !displayTutorials
+    })
+    setDisplayTutorials(!displayTutorials)
+  }, [setPreferences, setDisplayTutorials, displayTutorials])
 
   const { t } = useTranslation()
 
@@ -125,6 +140,16 @@ const GeneralTab = () => {
             <option value='title'>{t('preferences.title')}</option>
           </SectionSelect>
         </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>
+          {t('preferences.displayTutorialsLabel')}
+
+          <SectionCheckbox
+            checked={displayTutorials}
+            onChange={toggleDisplayTutorials}
+          />
+        </SectionHeader>
       </Section>
     </div>
   )

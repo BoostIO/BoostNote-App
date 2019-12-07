@@ -33,6 +33,7 @@ interface CodeEditorProps {
   indentSize?: EditorIndentSizeOptions
   keyMap?: EditorKeyMapOptions
   mode?: string
+  readonly?: boolean
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -52,7 +53,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       indentUnit: indentSize,
       tabSize: indentSize,
       keyMap,
-      mode: this.props.mode || 'markdown'
+      mode: this.props.mode || 'markdown',
+      readOnly: this.props.readonly === true
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)

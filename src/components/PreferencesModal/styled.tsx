@@ -60,3 +60,12 @@ export const SectionInput = styled.input`
   height: 40px;
   border-radius: 2px;
 `
+
+export const SectionCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  ${inputStyle}
+  padding: 0 16px;
+  border-radius: 2px;
+  height: auto;
+  vertical-align: middle;
+  margin-left: 10px;
+`

@@ -10,6 +10,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
+import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -143,7 +144,7 @@ export default () => {
     [popup, prompt, createStorage]
   )
 
-  const { toggleClosed } = usePreferences()
+  const { toggleClosed, preferences } = usePreferences()
 
   return (
     <StyledSideNavContainer>
@@ -170,6 +171,7 @@ export default () => {
         {storageEntries.length === 0 && (
           <div className='empty'>No storages</div>
         )}
+        {preferences['general.displayTutorials'] && <TutorialsNavigator />}
       </ul>
       <div className='bottomControl'>
         <button

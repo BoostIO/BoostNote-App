@@ -21,6 +21,7 @@ export default {
     'preferences.analyticsDescription2':
       'You can choose to enable or disable this option.',
     'preferences.analyticsLabel': 'Enable analytics to help improve Boostnote',
+    'preferences.displayTutorialsLabel': 'Display tutorials',
 
     // Preferences EditorTab
     'preferences.editorTheme': 'Editor Theme',

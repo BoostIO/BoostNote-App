@@ -18,6 +18,7 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
+  'general.displayTutorials': boolean
 
   // Editor
   'editor.theme': string
