@@ -233,7 +233,7 @@ export default ({ pathname }: TutorialsPageProps) => {
       }
     }
 
-    if (currentNoteIndex + 1 >= 0) {
+    if (currentNoteIndex + 1 >= 0 && currentNoteIndex + 1 < notes.length) {
       router.push(
         currentFolderPathname +
           '/notes/note:' +
