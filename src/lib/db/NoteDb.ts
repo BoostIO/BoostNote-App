@@ -201,7 +201,7 @@ export default class NoteDb {
     const now = getNow()
     const noteDocProps: ExceptRev<NoteDoc> = {
       _id: generateNoteId(),
-      title: 'Untitled',
+      title: '',
       content: '',
       tags: [],
       folderPathname: '/',

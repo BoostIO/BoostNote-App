@@ -13,6 +13,7 @@ import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
+import { getTransferrableNoteData } from '../../lib/dnd'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -23,7 +24,12 @@ const FolderListFragment = ({
   storage,
   showPromptToCreateFolder
 }: FolderListFragmentProps) => {
-  const { removeFolder, updateNote } = useDb()
+  const {
+    removeFolder,
+    updateNote,
+    createNote,
+    moveNoteToOtherStorage
+  } = useDb()
   const { push } = useRouter()
   const { messageBox } = useDialog()
   const { popup } = useContextMenu()
@@ -160,21 +166,51 @@ const FolderListFragment = ({
               event.preventDefault()
             }}
             onDrop={async event => {
-              const {
-                storageId: targetNoteStorageId,
-                note: targetNote
-              } = JSON.parse(
-                event.dataTransfer.getData('application/x-note-json')
-              )
+              const transferrableNoteData = getTransferrableNoteData(event)
+              if (transferrableNoteData == null) {
+                return
+              }
 
-              if (storageId === targetNoteStorageId) {
-                await updateNote(storageId, targetNote._id, {
+              const {
+                storageId: originalNoteStorageId,
+                note: originalNote
+              } = transferrableNoteData
+
+              if (storageId === originalNoteStorageId) {
+                await updateNote(storageId, originalNote._id, {
                   folderPathname
                 })
               } else {
-                // Ask copy or move
-                // If move, create new one and remove original
-                // If copy, just create new one
+                messageBox({
+                  title: 'Move Note to Other storage',
+                  message:
+                    'You are trying to move a note to different storage.',
+                  iconType: DialogIconTypes.Info,
+                  buttons: ['Move Note', 'Copy Note', 'Cancel'],
+                  defaultButtonIndex: 0,
+                  cancelButtonIndex: 2,
+                  onClose: async (value: number | null) => {
+                    switch (value) {
+                      case 0:
+                        await moveNoteToOtherStorage(
+                          originalNoteStorageId,
+                          originalNote._id,
+                          storageId,
+                          folderPathname
+                        )
+                        return
+                      case 1:
+                        await createNote(storageId, {
+                          title: originalNote.title,
+                          content: originalNote.content,
+                          folderPathname,
+                          tags: originalNote.tags,
+                          data: originalNote.data
+                        })
+                        return
+                    }
+                  }
+                })
               }
             }}
           />

@@ -51,6 +51,12 @@ export interface DbStore {
   untrashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
   removeTag(storageId: string, tag: string): Promise<void>
+  moveNoteToOtherStorage(
+    originalStorageId: string,
+    noteId: string,
+    targetStorageId: string,
+    targetFolderPathname: string
+  ): Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -287,12 +293,9 @@ export function createDbStoreCreator(
         const parentFolderPathnamesToCheck = [
           ...getAllParentFolderPathnames(noteDoc.folderPathname)
         ].filter(aPathname => storage.folderMap[aPathname] == null)
-        const parentFoldersToRefresh =
-          parentFolderPathnamesToCheck.length > 0
-            ? await storage.db.getFoldersByPathnames(
-                parentFolderPathnamesToCheck
-              )
-            : []
+        const parentFoldersToRefresh = await storage.db.getFoldersByPathnames(
+          parentFolderPathnamesToCheck
+        )
 
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
@@ -472,6 +475,146 @@ export function createDbStoreCreator(
         )
 
         return noteDoc
+      },
+      [storageMap]
+    )
+
+    const moveNoteToOtherStorage = useCallback(
+      async (
+        originalStorageId: string,
+        noteId: string,
+        targetStorageId: string,
+        targetFolderPathname: string
+      ) => {
+        const originalStorage = storageMap[originalStorageId]
+        const targetStorage = storageMap[targetStorageId]
+        if (originalStorage == null) {
+          throw new Error(
+            'Original storage does not exist. Please refresh the app and try again.'
+          )
+        }
+        if (targetStorage == null) {
+          throw new Error(
+            'Target storage does not exist. Please refresh the app and try again.'
+          )
+        }
+        const originalNote = await originalStorage.db.getNote(noteId)
+        if (originalNote == null) {
+          throw new Error(
+            'Target note does not exist. Please refresh the app and try again.'
+          )
+        }
+
+        const newNote = await targetStorage.db.createNote({
+          title: originalNote.title,
+          content: originalNote.content,
+          tags: originalNote.tags,
+          data: originalNote.data,
+          folderPathname: targetFolderPathname
+        })
+        await originalStorage.db.purgeNote(originalNote._id)
+
+        const modifiedTagsInOriginalStorage = originalNote.tags
+          .map(tagName => originalStorage.tagMap[tagName])
+          .filter(tagDoc => tagDoc != null)
+          .map(tagDoc => {
+            const newNoteIdSet = new Set(tagDoc!.noteIdSet)
+            newNoteIdSet.delete(originalNote._id)
+            return {
+              ...tagDoc!,
+              noteIdSet: newNoteIdSet
+            }
+          })
+        let modifiedFolderInOriginalStorage =
+          originalStorage.folderMap[originalNote.folderPathname]
+        if (modifiedFolderInOriginalStorage != null) {
+          const newNoteIdSet = new Set(
+            modifiedFolderInOriginalStorage.noteIdSet
+          )
+          newNoteIdSet.delete(originalNote._id)
+          modifiedFolderInOriginalStorage = {
+            ...modifiedFolderInOriginalStorage,
+            noteIdSet: newNoteIdSet
+          }
+        }
+
+        const modifiedFoldersInTargetStorage: PopulatedFolderDoc[] = []
+        const targetFolder =
+          targetStorage.folderMap[targetFolderPathname] == null
+            ? {
+                ...(await targetStorage.db.getFolder(targetFolderPathname))!,
+                noteIdSet: new Set<string>(),
+                pathname: targetFolderPathname
+              }
+            : targetStorage.folderMap[targetFolderPathname]!
+        const newNoteIdSetForTargetFolder = new Set([
+          ...targetFolder.noteIdSet,
+          newNote._id
+        ])
+        modifiedFoldersInTargetStorage.push({
+          ...targetFolder,
+          noteIdSet: newNoteIdSetForTargetFolder
+        })
+
+        const parentFolderPathnamesToCheck = [
+          ...getAllParentFolderPathnames(targetFolderPathname)
+        ].filter(aPathname => targetStorage.folderMap[aPathname] == null)
+        const parentFoldersToRefresh = await targetStorage.db.getFoldersByPathnames(
+          parentFolderPathnamesToCheck
+        )
+        modifiedFoldersInTargetStorage.push(
+          ...parentFoldersToRefresh.map(folderDoc => {
+            return {
+              ...folderDoc,
+              pathname: getFolderPathname(folderDoc._id),
+              noteIdSet: new Set<string>()
+            }
+          })
+        )
+
+        const modifiedTagsInTargetStorage = await Promise.all(
+          newNote.tags.map(async tagName => {
+            const tagDoc = targetStorage.tagMap[tagName]
+            if (tagDoc == null) {
+              return {
+                ...(await targetStorage.db.getTag(tagName))!,
+                name: tagName,
+                noteIdSet: new Set([newNote._id])
+              }
+            }
+            return {
+              ...tagDoc,
+              noteIdSet: new Set([...tagDoc.noteIdSet, newNote._id])
+            }
+          })
+        )
+
+        const modifiedNoteMapOfOriginalStorage = {
+          ...originalStorage.noteMap
+        }
+        delete modifiedNoteMapOfOriginalStorage[originalNote._id]
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[originalStorageId]!.noteMap = modifiedNoteMapOfOriginalStorage
+            if (modifiedFolderInOriginalStorage != null) {
+              draft[originalStorageId]!.folderMap[
+                modifiedFolderInOriginalStorage.pathname
+              ] = modifiedFolderInOriginalStorage
+            }
+            modifiedTagsInOriginalStorage.forEach(tagDoc => {
+              draft[originalStorageId]!.tagMap[tagDoc.name] = tagDoc
+            })
+
+            draft[targetStorageId]!.noteMap[newNote._id] = newNote
+            modifiedFoldersInTargetStorage.forEach(folderDoc => {
+              draft[targetStorageId]!.folderMap[folderDoc.pathname] = folderDoc
+            })
+            modifiedTagsInTargetStorage.forEach(tagDoc => {
+              draft[targetStorageId]!.tagMap[tagDoc.name] = tagDoc
+            })
+          })
+        )
       },
       [storageMap]
     )
@@ -700,6 +843,7 @@ export function createDbStoreCreator(
       trashNote,
       untrashNote,
       purgeNote,
+      moveNoteToOtherStorage,
       removeTag
     }
   }

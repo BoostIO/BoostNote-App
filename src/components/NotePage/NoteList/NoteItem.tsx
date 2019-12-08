@@ -10,6 +10,7 @@ import {
   secondaryBackgroundColor
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
+import { setTransferrableNoteData } from '../../../lib/dnd'
 
 const StyledNoteListItem = styled.div`
   margin: 0;
@@ -68,13 +69,7 @@ export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
-      event.dataTransfer.setData(
-        'application/x-note-json',
-        JSON.stringify({
-          note,
-          storageId
-        })
-      )
+      setTransferrableNoteData(event, storageId, note)
     },
     [note, storageId]
   )
