@@ -77,6 +77,11 @@ export interface StorageTagsRouteParams extends BaseRouteParams {
   noteId?: string
 }
 
+export interface StorageAttachmentsRouteParams extends BaseRouteParams {
+  name: 'storages.attachments'
+  storageId: string
+}
+
 export interface UnknownRouteparams extends BaseRouteParams {
   name: 'unknown'
 }
@@ -88,6 +93,7 @@ export type AllRouteParams =
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
+  | StorageAttachmentsRouteParams
   | UnknownRouteparams
 
 export const useRouteParams = () => {
@@ -162,6 +168,13 @@ export const useRouteParams = () => {
         name: 'storages.trashCan',
         storageId,
         noteId: /^note:/.test(names[3]) ? names[3] : undefined
+      }
+    }
+
+    if (names[2] === 'attachments') {
+      return {
+        name: 'storages.attachments',
+        storageId
       }
     }
 
