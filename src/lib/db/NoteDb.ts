@@ -426,6 +426,9 @@ export default class NoteDb {
   }
 
   async getFoldersByPathnames(pathnames: string[]): Promise<FolderDoc[]> {
+    if (pathnames.length === 0) {
+      return []
+    }
     const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
       keys: pathnames.map(pathname => getFolderId(pathname)),
       include_docs: true

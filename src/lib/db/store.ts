@@ -364,20 +364,48 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
+        let previousNoteDoc = await storage.db.getNote(noteId)
         const noteDoc = await storage.db.updateNote(noteId, noteProps)
         if (noteDoc == null) {
           return
         }
+        if (previousNoteDoc == null) {
+          previousNoteDoc = noteDoc
+        }
 
+        const folderPathnameIsChanged =
+          previousNoteDoc.folderPathname !== noteDoc.folderPathname
+        const folderListToRefresh: PopulatedFolderDoc[] = []
+
+        if (folderPathnameIsChanged) {
+          const previousFolder =
+            storage.folderMap[previousNoteDoc.folderPathname]
+          if (previousFolder != null) {
+            const newNoteIdSetForPreviousFolder = new Set(
+              previousFolder.noteIdSet
+            )
+            newNoteIdSetForPreviousFolder.delete(noteId)
+            folderListToRefresh.push({
+              ...previousFolder,
+              noteIdSet: newNoteIdSetForPreviousFolder
+            })
+          }
+        }
         const parentFolderPathnamesToCheck = [
           ...getAllParentFolderPathnames(noteDoc.folderPathname)
         ].filter(aPathname => storage.folderMap[aPathname] == null)
-        const parentFoldersToRefresh =
-          parentFolderPathnamesToCheck.length > 0
-            ? await storage.db.getFoldersByPathnames(
-                parentFolderPathnamesToCheck
-              )
-            : []
+        folderListToRefresh.push(
+          ...(await storage.db.getFoldersByPathnames(
+            parentFolderPathnamesToCheck
+          )).map(folderDoc => {
+            return {
+              ...folderDoc,
+              pathname: getFolderPathname(folderDoc._id),
+              noteIdSet: new Set<string>()
+            }
+          })
+        )
+
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
             ? ({
@@ -392,6 +420,7 @@ export function createDbStoreCreator(
                   noteDoc._id
                 ])
               }
+        folderListToRefresh.push(folder)
 
         const removedTags: ObjectMap<PopulatedTagDoc> = difference(
           storage.noteMap[noteDoc._id]!.tags,
@@ -431,15 +460,9 @@ export function createDbStoreCreator(
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
-            parentFoldersToRefresh.forEach(folder => {
-              const aPathname = getFolderPathname(folder._id)
-              draft[storageId]!.folderMap[aPathname] = {
-                ...folder,
-                pathname: aPathname,
-                noteIdSet: new Set()
-              }
+            folderListToRefresh.forEach(folderDoc => {
+              draft[storageId]!.folderMap[folderDoc.pathname] = folderDoc
             })
-            draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
             draft[storageId]!.tagMap = {
               ...storage.tagMap,
               ...removedTags,
