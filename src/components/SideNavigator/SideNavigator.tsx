@@ -89,14 +89,12 @@ export default () => {
   const {
     createStorage,
     createFolder,
-    // renameStorage,
-    // removeStorage,
-    // removeFolder,
-    // updateNote,
+    renameStorage,
+    removeStorage,
     storageMap
   } = useDb()
   const { popup } = useContextMenu()
-  const { prompt } = useDialog()
+  const { prompt, messageBox } = useDialog()
   const { push } = useRouter()
 
   const storageEntries = useMemo(() => {
@@ -179,13 +177,55 @@ export default () => {
           return (
             <React.Fragment key={itemId}>
               <SideNavigatorItem
+                depth={0}
+                label={storage.name}
                 folded={storageIsFolded}
                 onClick={() => push(`/app/storages/${storage.id}`)}
                 onFoldButtonClick={() => {
                   toggleSideNavOpenedItem(itemId)
                 }}
-                label={storage.name}
-                depth={0}
+                onContextMenu={event => {
+                  event.preventDefault()
+                  popup(event, [
+                    {
+                      type: MenuTypes.Normal,
+                      label: 'Rename Storage',
+                      onClick: async () => {
+                        prompt({
+                          title: `Rename "${storage.name}" storage`,
+                          message: 'Enter new storage name',
+                          iconType: DialogIconTypes.Question,
+                          defaultValue: storage.name,
+                          submitButtonLabel: 'Rename Storage',
+                          onClose: async (value: string | null) => {
+                            if (value == null) return
+                            await renameStorage(storage.id, value)
+                          }
+                        })
+                      }
+                    },
+                    {
+                      type: MenuTypes.Normal,
+                      label: 'Remove Storage',
+                      onClick: async () => {
+                        messageBox({
+                          title: `Remove "${storage.name}" storage`,
+                          message:
+                            'The storage will be unlinked from this app.',
+                          iconType: DialogIconTypes.Warning,
+                          buttons: ['Remove Storage', 'Cancel'],
+                          defaultButtonIndex: 0,
+                          cancelButtonIndex: 1,
+                          onClose: (value: number | null) => {
+                            if (value === 0) {
+                              removeStorage(storage.id)
+                            }
+                          }
+                        })
+                      }
+                    }
+                  ])
+                }}
                 controlComponents={[
                   <ControlButton
                     key='addFolderButton'
