@@ -23,10 +23,7 @@ const FolderListFragment = ({
   storage,
   showPromptToCreateFolder
 }: FolderListFragmentProps) => {
-  const {
-    removeFolder
-    // updateNote
-  } = useDb()
+  const { removeFolder, updateNote } = useDb()
   const { push } = useRouter()
   const { messageBox } = useDialog()
   const { popup } = useContextMenu()
@@ -138,7 +135,6 @@ const FolderListFragment = ({
         const folderIsActive =
           currentPathnameWithoutNoteId ===
           `/app/storages/${storageId}/notes${folderPathname}`
-
         return (
           <SideNavigatorItem
             key={itemId}
@@ -160,6 +156,27 @@ const FolderListFragment = ({
                 iconPath={mdiPlusCircleOutline}
               />
             ]}
+            onDragOver={event => {
+              event.preventDefault()
+            }}
+            onDrop={async event => {
+              const {
+                storageId: targetNoteStorageId,
+                note: targetNote
+              } = JSON.parse(
+                event.dataTransfer.getData('application/x-note-json')
+              )
+
+              if (storageId === targetNoteStorageId) {
+                await updateNote(storageId, targetNote._id, {
+                  folderPathname
+                })
+              } else {
+                // Ask copy or move
+                // If move, create new one and remove original
+                // If copy, just create new one
+              }
+            }}
           />
         )
       })}
