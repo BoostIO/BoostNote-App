@@ -1,4 +1,4 @@
 import styled, { ThemedBaseStyledInterface } from 'styled-components'
-import { defaultTheme } from './themes/default'
+import { BaseTheme } from './themes/types'
 
-export default styled as ThemedBaseStyledInterface<typeof defaultTheme>
+export default styled as ThemedBaseStyledInterface<BaseTheme>

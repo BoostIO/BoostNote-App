@@ -36,8 +36,9 @@ export const defaultTheme: BaseTheme = {
 
   // General
   textColor: light100Color,
-  uiTextColor: light30Color,
-  activeUiTextColor: light70Color,
+  uiTextColor: light70Color,
+  activeUiTextColor: light100Color,
+  disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
   borderColor: light12Color,

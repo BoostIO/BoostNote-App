@@ -3,7 +3,8 @@ import React, {
   FC,
   CSSProperties,
   MouseEventHandler,
-  FocusEventHandler
+  FocusEventHandler,
+  DragEventHandler
 } from 'react'
 import { useRouter } from './store'
 
@@ -14,6 +15,10 @@ export interface LinkProps {
   style?: CSSProperties
   onContextMenu?: MouseEventHandler
   onFocus?: FocusEventHandler
+  draggable?: boolean
+  onDragStart?: DragEventHandler
+  onDrop?: DragEventHandler
+  onDragOver?: DragEventHandler
 }
 
 export const Link: FC<LinkProps> = ({
@@ -22,7 +27,10 @@ export const Link: FC<LinkProps> = ({
   className,
   style,
   onContextMenu,
-  onFocus
+  onFocus,
+  onDragStart,
+  onDragOver,
+  onDrop
 }) => {
   const router = useRouter()
 
@@ -44,6 +52,10 @@ export const Link: FC<LinkProps> = ({
       className={className}
       style={style}
       onFocus={onFocus}
+      draggable={true}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
       {children}
     </a>

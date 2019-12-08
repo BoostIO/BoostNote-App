@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
 import { NoteDoc } from '../../../lib/db/types'
@@ -10,6 +10,7 @@ import {
   secondaryBackgroundColor
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
+import { setTransferrableNoteData } from '../../../lib/dnd'
 
 const StyledNoteListItem = styled.div`
   margin: 0;
@@ -24,7 +25,6 @@ const StyledNoteListItem = styled.div`
   &.active {
     border-left: 2px solid ${({ theme }) => theme.primaryColor};
   }
-  user-select: none;
   ${borderBottom}
 
   transition: 200ms background-color;
@@ -55,7 +55,7 @@ type NoteItemProps = {
   focusList: () => void
 }
 
-export default ({ note, active, basePathname, focusList }: NoteItemProps) => {
+export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
   const contentPreview = useMemo(() => {
@@ -67,9 +67,20 @@ export default ({ note, active, basePathname, focusList }: NoteItemProps) => {
     )
   }, [note.content])
 
+  const handleDragStart = useCallback(
+    (event: React.DragEvent) => {
+      setTransferrableNoteData(event, storageId, note)
+    },
+    [note, storageId]
+  )
+
   return (
-    <StyledNoteListItem className={cc([active && 'active'])}>
-      <Link href={href} onFocus={focusList}>
+    <StyledNoteListItem
+      className={cc([active && 'active'])}
+      onDragStart={handleDragStart}
+      draggable={true}
+    >
+      <Link href={href}>
         <div className='container'>
           <div className='title'>{note.title}</div>
           <div className='preview'>{contentPreview}</div>

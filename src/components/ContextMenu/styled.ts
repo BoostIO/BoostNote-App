@@ -44,4 +44,7 @@ export const StyledContextMenuItem = styled.button`
   &.active {
     ${activeBackgroundColor}
   }
+  &:disabled {
+    background-color: transparent;
+  }
 `

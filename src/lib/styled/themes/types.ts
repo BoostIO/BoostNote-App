@@ -7,6 +7,7 @@ export interface BaseTheme {
   textColor: string
   uiTextColor: string
   activeUiTextColor: string
+  disabledUiTextColor: string
 
   primaryColor: string
   borderColor: string

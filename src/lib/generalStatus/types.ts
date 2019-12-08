@@ -3,4 +3,5 @@ export interface GeneralStatus {
   noteListWidth: number
   noteSplitMode: boolean
   notePreviewMode: boolean
+  sideNavOpenedItemList: string[]
 }

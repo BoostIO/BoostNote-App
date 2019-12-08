@@ -204,7 +204,7 @@ export default class NoteDb {
     const now = getNow()
     const noteDocProps: ExceptRev<NoteDoc> = {
       _id: generateNoteId(),
-      title: 'Untitled',
+      title: '',
       content: '',
       tags: [],
       folderPathname: '/',
@@ -349,6 +349,7 @@ export default class NoteDb {
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
+    console.log(noteDocProps)
     return {
       ...noteDocProps,
       _rev: rev
@@ -430,6 +431,9 @@ export default class NoteDb {
   }
 
   async getFoldersByPathnames(pathnames: string[]): Promise<FolderDoc[]> {
+    if (pathnames.length === 0) {
+      return []
+    }
     const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
       keys: pathnames.map(pathname => getFolderId(pathname)),
       include_docs: true

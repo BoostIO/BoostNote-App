@@ -14,6 +14,7 @@ import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
 
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
@@ -68,17 +69,18 @@ export default () => {
 
   const router = useRouter()
 
-  const currentNote = useMemo(() => {
-    if (currentStorage == null) return null
-    if (noteId == null) {
-      if (notes.length > 0) {
-        return currentStorage.noteMap[notes[0]._id]
-      } else {
-        return null
+  const currentNoteIndex = useMemo(() => {
+    for (let i = 0; i < notes.length; i++) {
+      if (notes[i]._id === noteId) {
+        return i
       }
     }
-    return currentStorage.noteMap[noteId]
-  }, [noteId, currentStorage, notes])
+    return 0
+  }, [notes, noteId])
+
+  const currentNote = useMemo(() => {
+    return notes[currentNoteIndex]
+  }, [notes, currentNoteIndex])
 
   const createNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
@@ -95,15 +97,6 @@ export default () => {
     })
   }, [db, routeParams, storageId])
 
-  const currentNoteIndex = useMemo(() => {
-    for (let i = 0; i < notes.length; i++) {
-      if (notes[i]._id === noteId) {
-        return i
-      }
-    }
-    return 0
-  }, [notes, noteId])
-
   const naviagateUp = useCallback(() => {
     if (currentNoteIndex > 0) {
       router.push(
@@ -119,8 +112,6 @@ export default () => {
       )
     }
   }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
-
-  const removeNote = async () => {}
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
@@ -143,6 +134,27 @@ export default () => {
       notePreviewMode: !prevState.notePreviewMode
     }))
   }, [setGeneralStatus])
+
+  const { messageBox } = useDialog()
+  const purgeNoteFromDb = db.purgeNote
+  const purgeNote = useCallback(
+    (storageId: string, noteId: string) => {
+      messageBox({
+        title: 'Delete a Note',
+        message: 'The note will be deleted permanently',
+        iconType: DialogIconTypes.Warning,
+        buttons: ['Delete Note', 'Cancel'],
+        defaultButtonIndex: 0,
+        cancelButtonIndex: 1,
+        onClose: (value: number | null) => {
+          if (value === 0) {
+            purgeNoteFromDb(storageId, noteId)
+          }
+        }
+      })
+    },
+    [messageBox, purgeNoteFromDb]
+  )
 
   return storageId != null ? (
     <TwoPaneLayout
@@ -168,7 +180,8 @@ export default () => {
             note={currentNote}
             updateNote={db.updateNote}
             trashNote={db.trashNote}
-            removeNote={removeNote}
+            untrashNote={db.untrashNote}
+            purgeNote={purgeNote}
             splitMode={generalStatus.noteSplitMode}
             previewMode={generalStatus.notePreviewMode}
             toggleSplitMode={toggleSplitMode}
