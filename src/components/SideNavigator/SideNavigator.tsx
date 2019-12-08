@@ -1,9 +1,14 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouter } from '../../lib/router'
+import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import { mdiTuneVertical, mdiPlusCircleOutline } from '@mdi/js'
+import {
+  mdiTuneVertical,
+  mdiPlusCircleOutline,
+  mdiDeleteOutline,
+  mdiDelete
+} from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
@@ -130,6 +135,8 @@ export default () => {
     openSideNavFolderItemRecursively
   } = useGeneralStatus()
 
+  const currentPathname = usePathnameWithoutNoteId()
+
   return (
     <StyledSideNavContainer>
       <div className='topControl'>
@@ -165,6 +172,10 @@ export default () => {
               }
             })
           }
+
+          const trashcanPathname = `/app/storages/${storage.id}/trashcan`
+          const trashcanIsActive = currentPathname === trashcanPathname
+
           return (
             <React.Fragment key={itemId}>
               <SideNavigatorItem
@@ -190,6 +201,13 @@ export default () => {
                     showPromptToCreateFolder={showPromptToCreateFolder}
                   />
                   <TagListFragment storage={storage} />
+                  <SideNavigatorItem
+                    depth={1}
+                    label='Trash Can'
+                    iconPath={trashcanIsActive ? mdiDelete : mdiDeleteOutline}
+                    onClick={() => push(trashcanPathname)}
+                    active={trashcanIsActive}
+                  />
                 </>
               )}
             </React.Fragment>
