@@ -796,6 +796,13 @@ export function createDbStoreCreator(
 
         await storage.db.removeTag(tag)
 
+        if (
+          currentPathnameWithoutNoteId ===
+          `/app/storages/${storageId}/tags/${tag}`
+        ) {
+          router.replace(`/app/storages/${storageId}/notes`)
+        }
+
         const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
@@ -825,7 +832,7 @@ export function createDbStoreCreator(
 
         return
       },
-      [storageMap]
+      [storageMap, currentPathnameWithoutNoteId, router]
     )
 
     return {
