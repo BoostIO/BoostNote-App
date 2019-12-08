@@ -205,8 +205,12 @@ export default () => {
                     depth={1}
                     label='Trash Can'
                     iconPath={trashcanIsActive ? mdiDelete : mdiDeleteOutline}
-                    onClick={() => push(trashcanPathname)}
                     active={trashcanIsActive}
+                    onClick={() => push(trashcanPathname)}
+                    onContextMenu={event => {
+                      event.preventDefault()
+                      // TODO: Implement context menu(restore all notes)
+                    }}
                   />
                 </>
               )}
