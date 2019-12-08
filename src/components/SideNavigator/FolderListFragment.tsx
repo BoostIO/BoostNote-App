@@ -119,6 +119,55 @@ const FolderListFragment = ({
   const rootFolderIsActive =
     currentPathnameWithoutNoteId === `/app/storages/${storageId}/notes`
 
+  const createDropHandler = (folderPathname: string) => {
+    return async (event: React.DragEvent) => {
+      const transferrableNoteData = getTransferrableNoteData(event)
+      if (transferrableNoteData == null) {
+        return
+      }
+
+      const {
+        storageId: originalNoteStorageId,
+        note: originalNote
+      } = transferrableNoteData
+
+      if (storageId === originalNoteStorageId) {
+        await updateNote(storageId, originalNote._id, {
+          folderPathname
+        })
+      } else {
+        messageBox({
+          title: 'Move Note to Other storage',
+          message: 'You are trying to move a note to different storage.',
+          iconType: DialogIconTypes.Info,
+          buttons: ['Move Note', 'Copy Note', 'Cancel'],
+          defaultButtonIndex: 0,
+          cancelButtonIndex: 2,
+          onClose: async (value: number | null) => {
+            switch (value) {
+              case 0:
+                await moveNoteToOtherStorage(
+                  originalNoteStorageId,
+                  originalNote._id,
+                  storageId,
+                  folderPathname
+                )
+                return
+              case 1:
+                await createNote(storageId, {
+                  title: originalNote.title,
+                  content: originalNote.content,
+                  folderPathname,
+                  tags: originalNote.tags,
+                  data: originalNote.data
+                })
+                return
+            }
+          }
+        })
+      }
+    }
+  }
   return (
     <>
       <SideNavigatorItem
@@ -128,6 +177,10 @@ const FolderListFragment = ({
         label='Notes'
         onClick={createOnFolderItemClickHandler('/')}
         onContextMenu={createOnContextMenuHandler(storageId, '/')}
+        onDragOver={event => {
+          event.preventDefault()
+        }}
+        onDrop={createDropHandler('/')}
       />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
@@ -165,54 +218,7 @@ const FolderListFragment = ({
             onDragOver={event => {
               event.preventDefault()
             }}
-            onDrop={async event => {
-              const transferrableNoteData = getTransferrableNoteData(event)
-              if (transferrableNoteData == null) {
-                return
-              }
-
-              const {
-                storageId: originalNoteStorageId,
-                note: originalNote
-              } = transferrableNoteData
-
-              if (storageId === originalNoteStorageId) {
-                await updateNote(storageId, originalNote._id, {
-                  folderPathname
-                })
-              } else {
-                messageBox({
-                  title: 'Move Note to Other storage',
-                  message:
-                    'You are trying to move a note to different storage.',
-                  iconType: DialogIconTypes.Info,
-                  buttons: ['Move Note', 'Copy Note', 'Cancel'],
-                  defaultButtonIndex: 0,
-                  cancelButtonIndex: 2,
-                  onClose: async (value: number | null) => {
-                    switch (value) {
-                      case 0:
-                        await moveNoteToOtherStorage(
-                          originalNoteStorageId,
-                          originalNote._id,
-                          storageId,
-                          folderPathname
-                        )
-                        return
-                      case 1:
-                        await createNote(storageId, {
-                          title: originalNote.title,
-                          content: originalNote.content,
-                          folderPathname,
-                          tags: originalNote.tags,
-                          data: originalNote.data
-                        })
-                        return
-                    }
-                  }
-                })
-              }
-            }}
+            onDrop={createDropHandler(folderPathname)}
           />
         )
       })}
