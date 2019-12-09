@@ -1,26 +1,7 @@
 import React, { useCallback, KeyboardEvent, useRef } from 'react'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-import styled from '../../lib/styled'
 import TutorialsNoteItem from './TutorialsNoteItem'
-
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  height: 100%;
-  outline: none;
-  & > ul {
-    flex: 1;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow-y: auto;
-
-    li.empty {
-      color: ${({ theme }) => theme.uiTextColor};
-    }
-  }
-`
+import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
 
 type TutorialsNoteListProps = {
   currentTree: TutorialsNavigatorTreeItem
@@ -67,7 +48,7 @@ const TutorialsNoteList = ({
       : parentTree.children.filter(child => child.type === 'note')
 
   return (
-    <StyledContainer>
+    <StyledNoteListContainer>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
         {notes.map(note => {
           const noteIsCurrentNote =
@@ -86,7 +67,7 @@ const TutorialsNoteList = ({
         })}
         {notes.length === 0 && <li className='empty'>No notes</li>}
       </ul>
-    </StyledContainer>
+    </StyledNoteListContainer>
   )
 }
 

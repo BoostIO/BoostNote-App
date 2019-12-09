@@ -1,76 +1,12 @@
 import React from 'react'
-import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
 import { mdiEyeOutline, mdiArrowSplitVertical } from '@mdi/js'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import {
-  secondaryBackgroundColor,
-  textColor,
-  borderBottom,
-  borderRight
-} from '../../lib/styled/styleFunctions'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-
-const StyledTutorialsNoteDetailContainer = styled.div`
-  ${secondaryBackgroundColor}
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .titleSection {
-    display: flex;
-    height: 50px;
-    border-width: 0 0 1px;
-    ${borderBottom}
-
-    input {
-      font-size: 24px;
-      border: none;
-      height: 100%;
-      padding: 0 12px;
-      flex: 1;
-      background-color: transparent;
-      ${textColor}
-    }
-  }
-
-  .contentSection {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-    .editor .CodeMirror {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .MarkdownPreviewer {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
-    .splitLeft {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      ${borderRight}
-    }
-    .splitRight {
-      position: absolute;
-      left: 50%;
-      width: 50%;
-      height: 100%;
-    }
-  }
-`
+import { StyledNoteDetailContainer } from '../NotePage/NoteDetail/NoteDetail'
 
 type TutorialsNoteDetailProps = {
   note: TutorialsNavigatorTreeItem
@@ -151,7 +87,7 @@ export default class TutorialsNoteDetail extends React.Component<
     )
 
     return (
-      <StyledTutorialsNoteDetailContainer>
+      <StyledNoteDetailContainer>
         {note == null ? (
           <p>No note is selected</p>
         ) : (
@@ -186,7 +122,7 @@ export default class TutorialsNoteDetail extends React.Component<
             </Toolbar>
           </>
         )}
-      </StyledTutorialsNoteDetailContainer>
+      </StyledNoteDetailContainer>
     )
   }
 }

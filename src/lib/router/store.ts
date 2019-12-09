@@ -22,15 +22,18 @@ function useRouteStore(): RouterStore {
     setLocation(location)
     history.pushState(null, document.title, urlStr)
   }, [])
+
   const replace = useCallback((urlStr: string) => {
     const location = parseUrl(urlStr)
 
     setLocation(location)
     history.pushState(null, document.title, urlStr)
   }, [])
+
   const go = useCallback((count: number) => {
     history.go(count)
   }, [])
+
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
