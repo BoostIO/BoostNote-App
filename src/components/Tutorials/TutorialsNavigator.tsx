@@ -48,10 +48,8 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
     const nodeHref = `${parentNode != null ? parentNode.href : '/app'}/${
       tree.slug
     }`
-    const folderIsActive =
-      currentHref == null
-        ? false
-        : currentHref.split('/notes/note:')[0] === nodeHref
+
+    const folderIsActive = currentHref.split('/notes/note:')[0] === nodeHref
 
     const notesUnderCurrentNode = tree.children.filter(
       child => child.type === 'note'
