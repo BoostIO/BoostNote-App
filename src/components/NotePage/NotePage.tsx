@@ -155,7 +155,8 @@ export default () => {
         }
       })
     },
-    [messageBox, purgeNoteFromDb]
+    [messageBox, purgeNoteFromDb])
+    
   const importDrop = useCallback(
     (files: File[]) => {
       files.forEach(async file => {
