@@ -6,6 +6,7 @@ export type GeneralNoteSortingOptions =
   | 'date-updated'
   | 'date-created'
   | 'title'
+export type GeneralTutorialsOptions = 'display' | 'hide'
 
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
@@ -18,6 +19,7 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
+  'general.tutorials': GeneralTutorialsOptions
 
   // Editor
   'editor.theme': string

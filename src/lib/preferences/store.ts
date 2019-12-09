@@ -30,6 +30,7 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'date-updated',
   'general.enableAnalytics': true,
+  'general.tutorials': 'display',
 
   // Editor
   'editor.theme': 'default',
