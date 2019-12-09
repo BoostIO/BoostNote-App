@@ -20,7 +20,7 @@ interface NavigatorNode {
   opened: boolean
   name: string
   href: string
-  children?: NavigatorNode[]
+  children: NavigatorNode[]
   active?: boolean
 }
 interface TutorialsNavigatorProps {}
@@ -72,7 +72,8 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
       href: nodeHref,
       active: folderIsActive,
       depth: currentDepth,
-      opened: sideNavOpenedItemSet.has(nodeId)
+      opened: sideNavOpenedItemSet.has(nodeId),
+      children: []
     }
 
     const childrenNodes =
@@ -120,14 +121,9 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
           active={node.active}
           onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}
-          folded={
-            node.children == null || node.children.length === 0
-              ? undefined
-              : !node.opened
-          }
+          folded={node.children.length === 0 ? undefined : !node.opened}
         />
-        {node.children != null &&
-          node.children.map(child => renderNode(child, node.opened))}
+        {node.children.map(child => renderNode(child, node.opened))}
       </React.Fragment>
     )
   }
