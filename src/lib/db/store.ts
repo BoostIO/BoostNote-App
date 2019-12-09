@@ -80,7 +80,6 @@ export function createDbStoreCreator(
         storageDataList.map(storageData => prepareStorage(storageData, adapter))
       )
 
-      setInitialized(true)
       setStorageMap(
         storages.reduce(
           (map, storage) => {
@@ -90,6 +89,7 @@ export function createDbStoreCreator(
           {} as ObjectMap<NoteStorage>
         )
       )
+      setInitialized(true)
     }, [])
 
     const createStorage = useCallback(async (name: string) => {
