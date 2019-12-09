@@ -15,6 +15,8 @@ import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import FileDropZone from '../atoms/FileDropZone'
+import { convertCSONFileToNote } from '../../lib/legacy-import'
 
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
@@ -154,6 +156,19 @@ export default () => {
       })
     },
     [messageBox, purgeNoteFromDb]
+  const importDrop = useCallback(
+    (files: File[]) => {
+      files.forEach(async file => {
+        const result = await convertCSONFileToNote(file)
+        if (!result.err) {
+          db.createNote(storageId, result.data)
+        } else {
+          // TODO: Toast Message Error
+          console.error(result.data)
+        }
+      })
+    },
+    [storageId, db]
   )
 
   return storageId != null ? (
@@ -161,15 +176,17 @@ export default () => {
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
       left={
-        <NoteList
-          storageId={storageId}
-          notes={notes}
-          createNote={createNote}
-          basePathname={currentPathnameWithoutNoteId}
-          currentNoteIndex={currentNoteIndex}
-          navigateUp={naviagateUp}
-          navigateDown={naviagateDown}
-        />
+        <FileDropZone style={{ height: '100%' }} onDrop={importDrop}>
+          <NoteList
+            storageId={storageId}
+            notes={notes}
+            createNote={createNote}
+            basePathname={currentPathnameWithoutNoteId}
+            currentNoteIndex={currentNoteIndex}
+            navigateUp={naviagateUp}
+            navigateDown={naviagateDown}
+          />
+        </FileDropZone>
       }
       right={
         currentNote == null ? (
