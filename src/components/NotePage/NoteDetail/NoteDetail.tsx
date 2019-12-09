@@ -24,7 +24,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 
-const StyledNoteDetailContainer = styled.div`
+export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
   display: flex;
   flex-direction: column;

@@ -4,10 +4,14 @@ import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
+import TutorialsPage from './Tutorials/TutorialsPage'
+import useRedirectHandler from '../lib/router/redirect'
 
 export default () => {
   const routeParams = useRouteParams()
   const db = useDb()
+  useRedirectHandler()
+
   switch (routeParams.name) {
     case 'storages.allNotes':
     case 'storages.notes':
@@ -16,6 +20,9 @@ export default () => {
       return <NotePage />
     case 'storages.create':
       return <StorageCreate />
+    case 'tutorials.show':
+      return <TutorialsPage pathname={routeParams.path} />
+      break
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {

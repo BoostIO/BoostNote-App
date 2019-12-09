@@ -77,6 +77,11 @@ export interface StorageTagsRouteParams extends BaseRouteParams {
   noteId?: string
 }
 
+export interface TutorialsRouteParams extends BaseRouteParams {
+  name: 'tutorials.show'
+  path: string
+}
+
 export interface UnknownRouteparams extends BaseRouteParams {
   name: 'unknown'
 }
@@ -89,6 +94,7 @@ export type AllRouteParams =
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
   | UnknownRouteparams
+  | TutorialsRouteParams
 
 export const useRouteParams = () => {
   const { pathname } = useRouter()
@@ -101,6 +107,13 @@ export const useRouteParams = () => {
     if (names[0] === 'storages' && names[1] == null) {
       return {
         name: 'storages.create'
+      }
+    }
+
+    if (names[0] === 'tutorials') {
+      return {
+        name: 'tutorials.show',
+        path: pathname
       }
     }
 
@@ -183,6 +196,17 @@ export const usePathnameWithoutNoteId = () => {
         return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
       case 'storages.trashCan':
         return `/app/storages/${routeParams.storageId}/trashcan`
+    }
+    return '/app'
+  }, [routeParams])
+}
+
+export const currentTutorialPathname = () => {
+  const routeParams = useRouteParams()
+  return useMemo(() => {
+    switch (routeParams.name) {
+      case 'tutorials.show':
+        return routeParams.path
     }
     return '/app'
   }, [routeParams])

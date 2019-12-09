@@ -1,46 +1,8 @@
 import React from 'react'
 import { Link } from '../../lib/router'
-import styled from '../../lib/styled/styled'
-import {
-  borderBottom,
-  uiTextColor,
-  secondaryBackgroundColor
-} from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-
-const StyledNoteListItem = styled.div`
-  margin: 0;
-  border-left: 2px solid transparent;
-  ${uiTextColor}
-  &.active,
-  &:active,
-  &:focus,
-  &:hover {
-    ${secondaryBackgroundColor}
-  }
-  &.active {
-    border-left: 2px solid ${({ theme }) => theme.primaryColor};
-  }
-  user-select: none;
-  ${borderBottom}
-
-  transition: 200ms background-color;
-
-  a {
-    text-decoration: none;
-  }
-
-  .container {
-    padding: 8px;
-  }
-
-  .title {
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-`
+import { StyledNoteListItem } from '../NotePage/NoteList/NoteItem'
 
 type TutorialsNoteItemProps = {
   note: TutorialsNavigatorTreeItem
