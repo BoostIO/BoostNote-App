@@ -112,7 +112,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
       return null
     }
     return (
-      <React.Fragment key={node.name}>
+      <React.Fragment key={node.id}>
         <SideNavigatorItem
           label={node.name}
           depth={node.depth}
