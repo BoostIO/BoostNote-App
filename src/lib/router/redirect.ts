@@ -9,10 +9,13 @@ export default function useRedirectHandler() {
   const { push, pathname } = useRouter()
 
   useEffect(() => {
+    if (!db.initialized || db.storageMap == null) {
+      return
+    }
     if (
       pathname === '/app' &&
       preferences['general.tutorials'] === 'display' &&
-      (db.storageMap == null || Object.keys(db.storageMap).length === 0)
+      Object.keys(db.storageMap).length === 0
     ) {
       push('/app/tutorials/welcome-pack/guides/notes/note:storage-guide')
     }
