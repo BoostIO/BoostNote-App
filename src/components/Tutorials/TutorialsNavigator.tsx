@@ -102,7 +102,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
       .filter(node => node != null) as NavigatorNode[]
   }, [routeParams, tutorials, toggleSideNavOpenedItem])
 
-  const redirectToTutorial = (node: NavigatorNode) => {
+  const redirectToTutorialNode = (node: NavigatorNode) => {
     push(node.href)
   }
 
@@ -120,7 +120,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
           depth={node.depth}
           iconPath={node.iconPath}
           active={node.active}
-          onClick={() => redirectToTutorial(node)}
+          onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}
           folded={
             node.children == null || node.children.length === 0
