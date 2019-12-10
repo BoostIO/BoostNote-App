@@ -94,6 +94,7 @@
     "classcat": "^4.0.2",
     "codemirror": "^5.49.0",
     "copy-webpack-plugin": "^5.0.4",
+    "cson-parser": "git+https://github.com/ButteryCrumpet/cson-parser.git",
     "dotenv": "^8.2.0",
     "filenamify": "^2.1.0",
     "hast-util-sanitize": "^2.0.1",
