@@ -5,7 +5,8 @@ import {
   NoteDoc,
   NoteDocEditibleProps,
   PopulatedFolderDoc,
-  PopulatedTagDoc
+  PopulatedTagDoc,
+  Attachment
 } from './types'
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../utils/context'
@@ -62,6 +63,8 @@ export interface DbStore {
     targetStorageId: string,
     targetFolderPathname: string
   ): Promise<void>
+  addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
+  removeAttachment(storageId: string, fileName: string): Promise<void>
 }
 
 export function createDbStoreCreator(
@@ -874,6 +877,41 @@ export function createDbStoreCreator(
       [storageMap, currentPathnameWithoutNoteId, router]
     )
 
+    const addAttachments = async (
+      storageId: string,
+      files: File[]
+    ): Promise<Attachment[]> => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return []
+      }
+      const attachments = await storage.db.upsertAttachments(files)
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          attachments.forEach(attachment => {
+            draft[storageId]!.attachmentMap[attachment.name] = attachment
+          })
+        })
+      )
+
+      return attachments
+    }
+
+    const removeAttachment = async (storageId: string, fileName: string) => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return
+      }
+      await storage.db.removeAttachment(fileName)
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          delete draft[storageId]!.attachmentMap[fileName]
+        })
+      )
+    }
+
     return {
       initialized,
       storageMap,
@@ -891,7 +929,9 @@ export function createDbStoreCreator(
       untrashNote,
       purgeNote,
       moveNoteToOtherStorage,
-      removeTag
+      removeTag,
+      addAttachments,
+      removeAttachment
     }
   }
 }
@@ -966,6 +1006,7 @@ async function prepareStorage(
   await db.init()
 
   const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
+  const attachmentMap = await db.getAttachmentMap()
   const storage: NoteStorage = {
     id,
     name,
@@ -987,6 +1028,7 @@ async function prepareStorage(
       map[name] = { ...tagDoc, name, noteIdSet: new Set() }
       return map
     }, {}),
+    attachmentMap,
     db
   }
 

@@ -14,6 +14,7 @@ import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
+import { useDb } from '../../lib/db'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
@@ -135,6 +136,19 @@ export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
 
 interface MarkdownProcessorOptions {
   codeBlockTheme?: string
+  storageId?: string
+}
+
+const BlobImage = ({ blob, ...props }: any) => {
+  const url = useMemo(() => {
+    return URL.createObjectURL(blob)
+  }, [blob])
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(url)
+    }
+  }, [blob])
+  return <img src={url} {...props} />
 }
 
 function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
@@ -147,7 +161,23 @@ function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
     })
     .use(rehypeRaw)
     .use(rehypeSanitize, schema)
-    .use(rehypeReact, { createElement: React.createElement })
+    .use(rehypeReact, {
+      createElement: React.createElement,
+      components: {
+        img: ({ src, ...props }: any) => {
+          const { storageMap } = useDb()
+          const storage = storageMap[options.storageId!]
+          if (storage != null && !src.match('/')) {
+            const attachment = storage.attachmentMap[src]
+            if (attachment != null) {
+              return <BlobImage blob={attachment.blob} />
+            }
+          }
+
+          return <img {...props} src={src} />
+        }
+      }
+    })
 }
 
 interface MarkdownPreviewerProps {
@@ -155,13 +185,15 @@ interface MarkdownPreviewerProps {
   codeBlockTheme?: string
   style?: string
   theme?: string
+  storageId?: string
 }
 
 const MarkdownPreviewer = ({
   content,
   codeBlockTheme,
   style,
-  theme
+  theme,
+  storageId
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
@@ -170,7 +202,7 @@ const MarkdownPreviewer = ({
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
   const markdownProcessor = useMemo(() => {
-    return createMarkdownProcessor({ codeBlockTheme })
+    return createMarkdownProcessor({ codeBlockTheme, storageId })
   }, [codeBlockTheme])
 
   const renderContent = useCallback(

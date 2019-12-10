@@ -36,3 +36,15 @@ export function setTransferrableNoteData(
     })
   )
 }
+
+export function getFileList(event: React.DragEvent): File[] {
+  if (event.dataTransfer == null) return []
+
+  const files: File[] = []
+  for (let i = 0; i < event.dataTransfer!.files.length; i++) {
+    const file = event.dataTransfer!.files[i]
+    files.push(file)
+  }
+
+  return files
+}

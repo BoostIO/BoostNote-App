@@ -48,7 +48,11 @@ const App = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <StyledAppContainer>
+      <StyledAppContainer
+        onDrop={(event: React.DragEvent) => {
+          event.preventDefault()
+        }}
+      >
         {initialized ? (
           <TwoPaneLayout
             defaultLeftWidth={generalStatus.sideBarWidth}

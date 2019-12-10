@@ -6,7 +6,9 @@ import {
   TagDoc,
   NoteDoc,
   NoteDocEditibleProps,
-  ExceptRev
+  ExceptRev,
+  ObjectMap,
+  Attachment
 } from './types'
 import {
   getFolderId,
@@ -25,7 +27,7 @@ import {
   getTagName,
   values
 } from './utils'
-import { FOLDER_ID_PREFIX } from './consts'
+import { FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
 import PouchDB from './PouchDB'
 import { buildCloudSyncUrl, User } from '../accounts'
 import { setHeader } from '../utils/http'
@@ -349,7 +351,6 @@ export default class NoteDb {
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
-    console.log(noteDocProps)
     return {
       ...noteDocProps,
       _rev: rev
@@ -470,5 +471,69 @@ export default class NoteDb {
         .on('error', reject)
         .on('complete', resolve)
     })
+  }
+
+  async upsertAttachments(files: File[]): Promise<Attachment[]> {
+    const { _rev } = await this.pouchDb.get(ATTACHMENTS_ID)
+    let currentRev = _rev
+    const attachments: Attachment[] = []
+    for (const file of files) {
+      const response = await this.pouchDb.putAttachment(
+        ATTACHMENTS_ID,
+        file.name,
+        currentRev,
+        file,
+        file.type
+      )
+      currentRev = response.rev
+      const data = await this.pouchDb.getAttachment(ATTACHMENTS_ID, file.name)
+      attachments.push({
+        name: file.name,
+        type: file.type,
+        blob: data as Blob
+      })
+    }
+
+    return attachments
+  }
+
+  async removeAttachment(fileName: string): Promise<void> {
+    const { _rev } = await this.pouchDb.get(ATTACHMENTS_ID)
+    await this.pouchDb.removeAttachment(ATTACHMENTS_ID, fileName, _rev)
+  }
+
+  async getAttachmentMap(): Promise<ObjectMap<Attachment>> {
+    let attachmentDoc
+    try {
+      attachmentDoc = await this.pouchDb.get(ATTACHMENTS_ID, {
+        attachments: true,
+        binary: true
+      })
+    } catch (error) {
+      if (error.name !== 'not_found') {
+        throw error
+      }
+      await this.pouchDb.put({ _id: ATTACHMENTS_ID })
+      attachmentDoc = await this.pouchDb.get(ATTACHMENTS_ID, {
+        attachments: true,
+        binary: true
+      })
+    }
+
+    const { _attachments } = attachmentDoc
+    if (_attachments == null) {
+      return {}
+    }
+    return Object.entries(_attachments).reduce(
+      (map, [key, attachment]) => {
+        map[key] = {
+          name: key,
+          type: attachment.content_type,
+          blob: (attachment as PouchDB.Core.FullAttachment).data as Blob
+        }
+        return map
+      },
+      {} as ObjectMap<Attachment>
+    )
   }
 }

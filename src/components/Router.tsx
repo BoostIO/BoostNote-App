@@ -4,6 +4,7 @@ import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
+import AttachmentsPage from './AttachmentsPage/AttachmentsPage'
 
 export default () => {
   const routeParams = useRouteParams()
@@ -14,6 +15,8 @@ export default () => {
     case 'storages.trashCan':
     case 'storages.tags.show':
       return <NotePage />
+    case 'storages.attachments':
+      return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreate />
     case 'storages.edit':
