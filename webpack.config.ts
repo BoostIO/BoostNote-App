@@ -5,123 +5,124 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 
-module.exports = {
-  entry: [
-    'react-hot-loader/patch',
-    // activate HMR for React
+module.exports = (env, argv) => {
+  const config = {
+    entry: [
+      './src/index.tsx'
+      // the entry point of our app
+    ],
 
-    'webpack-dev-server/client?http://localhost:3000',
-    // bundle the client for webpack-dev-server
-    // and connect to the provided endpoint
+    output: {
+      filename: 'bundle.js',
+      // the output bundle
 
-    'webpack/hot/only-dev-server',
-    // bundle the client for hot reloading
-    // only- means to only hot reload for successful updates
-
-    './src/index.tsx'
-    // the entry point of our app
-  ],
-
-  output: {
-    filename: 'bundle.js',
-    // the output bundle
-
-    path: path.resolve(__dirname, 'dist'),
-
-    publicPath: '/app'
-    // necessary for HMR to know where to load the hot update chunks
-  },
-
-  devtool: 'inline-source-map',
-
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
-        loader: 'url-loader',
-        options: {
-          limit: 8192
-        }
-      },
-      {
-        test: /\.tsx?$/,
-        use: [{ loader: 'ts-loader' }],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.md$/,
-        use: [
-          {
-            loader: 'raw-loader'
-          }
-        ]
-      }
-    ]
-  },
-
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    // enable HMR globally
-
-    new webpack.NamedModulesPlugin(),
-    // prints more readable module names in the browser console on HMR updates
-
-    new webpack.NoEmitOnErrorsPlugin(),
-    // do not emit compiled assets that include errors
-    new HtmlWebpackPlugin(),
-    new ErrorOverlayPlugin(),
-    new webpack.EnvironmentPlugin([
-      'NODE_ENV',
-      'AMPLIFY_AUTH_IDENTITY_POOL_ID',
-      'AMPLIFY_AUTH_REGION',
-      'AMPLIFY_PINPOINT_APPID',
-      'AMPLIFY_PINPOINT_REGION',
-      'BOOST_NOTE_BASE_URL'
-    ]),
-    new CopyPlugin([
-      {
-        from: path.join(__dirname, 'node_modules/codemirror/theme'),
-        to: 'codemirror/theme'
-      }
-    ])
-  ],
-
-  devServer: {
-    host: 'localhost',
-    port: 3000,
-
-    historyApiFallback: {
-      index: '/app'
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: ''
     },
-    // respond to 404s with index.html
 
-    hot: true,
-    // enable HMR on the server
+    devtool: 'inline-source-map',
 
-    before: function(app, server) {
-      app.use(
-        '/codemirror/mode',
-        express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
-      )
-      app.use(
-        '/codemirror/addon',
-        express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
-      )
-      app.use(
-        '/codemirror/theme',
-        express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
-      )
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+          loader: 'url-loader',
+          options: {
+            limit: 8192
+          }
+        },
+        {
+          test: /\.tsx?$/,
+          use: [{ loader: 'ts-loader' }],
+          exclude: /node_modules/
+        },
+        {
+          test: /\.md$/,
+          use: [
+            {
+              loader: 'raw-loader'
+            }
+          ]
+        }
+      ]
+    },
+
+    plugins: [
+      new webpack.NamedModulesPlugin(),
+      // prints more readable module names in the browser console on HMR updates
+
+      new webpack.NoEmitOnErrorsPlugin(),
+      // do not emit compiled assets that include errors
+      new HtmlWebpackPlugin({
+        template: 'index.html'
+      }),
+      new ErrorOverlayPlugin(),
+      new webpack.EnvironmentPlugin([
+        'NODE_ENV',
+        'AMPLIFY_AUTH_IDENTITY_POOL_ID',
+        'AMPLIFY_AUTH_REGION',
+        'AMPLIFY_PINPOINT_APPID',
+        'AMPLIFY_PINPOINT_REGION',
+        'BOOST_NOTE_BASE_URL'
+      ]),
+      new CopyPlugin([
+        {
+          from: path.join(__dirname, 'node_modules/codemirror/theme'),
+          to: 'codemirror/theme'
+        }
+      ])
+    ],
+
+    devServer: {
+      host: 'localhost',
+      port: 3000,
+
+      historyApiFallback: {
+        index: '/app'
+      },
+      // respond to 404s with index.html
+
+      hot: true,
+      // enable HMR on the server
+
+      before: function(app, server) {
+        app.use(
+          '/codemirror/mode',
+          express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
+        )
+        app.use(
+          '/codemirror/addon',
+          express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
+        )
+        app.use(
+          '/codemirror/theme',
+          express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
+        )
+      }
+    },
+
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js']
+    },
+    node: {
+      fs: 'empty'
     }
-  },
-
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
-  node: {
-    fs: 'empty'
   }
+
+  if (argv.mode === 'development') {
+    config.plugins.unshift(new webpack.HotModuleReplacementPlugin())
+
+    config.entry.unshift(
+      'react-hot-loader/patch',
+      'webpack-dev-server/client?http://localhost:3000',
+      'webpack/hot/only-dev-server'
+    )
+    config.output.publicPath = '/app'
+  }
+
+  return config
 }

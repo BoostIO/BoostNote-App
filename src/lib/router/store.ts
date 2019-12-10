@@ -1,7 +1,12 @@
 import { createStoreContext } from '../utils/context'
-import { parseUrl, normalizeLocation } from './utils'
+import { normalizeLocation } from './utils'
 import { useState, useCallback, useEffect } from 'react'
 import { Location } from './types'
+import { createBrowserHistory, createHashHistory } from 'history'
+import { parse as parseQuery } from 'querystring'
+import isElectron from 'is-electron'
+
+const bhistory = isElectron() ? createHashHistory() : createBrowserHistory()
 
 export interface RouterStore extends Location {
   push: (path: string) => void
@@ -11,42 +16,39 @@ export interface RouterStore extends Location {
   goForward: () => void
 }
 
-const initialLocation = normalizeLocation(parseUrl(window.location.href))
+const initialLocation = normalizeLocation({
+  pathname: bhistory.location.pathname,
+  hash: bhistory.location.hash,
+  query: parseQuery(bhistory.location.search)
+})
 
 function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
   const push = useCallback((urlStr: string) => {
-    const location = parseUrl(urlStr)
-
-    setLocation(location)
-    history.pushState(null, document.title, urlStr)
+    bhistory.push(urlStr)
   }, [])
 
   const replace = useCallback((urlStr: string) => {
-    const location = parseUrl(urlStr)
-
-    setLocation(location)
-    history.pushState(null, document.title, urlStr)
+    bhistory.replace(urlStr)
   }, [])
 
   const go = useCallback((count: number) => {
-    history.go(count)
+    bhistory.go(count)
   }, [])
 
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
-  const onPop = useCallback(() => {
-    setLocation(normalizeLocation(parseUrl(window.location.href)))
-  }, [setLocation])
-
   useEffect(() => {
-    window.addEventListener('popstate', onPop)
-    return () => {
-      window.removeEventListener('popstate', onPop)
-    }
-  }, [onPop])
+    return bhistory.listen(blocation => {
+      setLocation({
+        pathname: blocation.pathname,
+        hash: blocation.hash,
+        query: parseQuery(blocation.search)
+      })
+    })
+  }, [])
 
   return {
     ...location,

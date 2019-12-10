@@ -8,3 +8,4 @@ Thumbs.db
 compiled/*
 dist/*
 .cache
+electron-dist/*

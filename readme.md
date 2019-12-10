@@ -17,6 +17,34 @@ The renewal will be released end of Nov, 2019. [To keep updated, subscribe our m
 - File attachments(Image, Video and any kind of files) - the end of 2020.2
 - MDX (TBA)
 
+## Build
+
+### Web app
+
+```sh
+# Install deps
+npm i
+
+# Compile script
+npm run build
+
+# Deploy to now.sh
+now
+```
+
+### Electron app
+
+```sh
+# Install deps
+npm i
+
+# Compile script
+npm run build
+
+# Package app
+npm run pack
+```
+
 ## License
 
 [GPL-3.0 © 2019 BoostIO](./LICENSE.md)
