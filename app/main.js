@@ -13,7 +13,7 @@ function createMainWindow() {
     webPreferences: { nodeIntegration: true }
   })
 
-  window.loadFile(path.join(__dirname, '../dist/index.html'))
+  window.loadFile(path.join(__dirname, '../compiled/index.html'))
 
   // if (isDevelopment) {
   // } else {

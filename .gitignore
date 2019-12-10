@@ -8,4 +8,5 @@ Thumbs.db
 compiled/*
 dist/*
 .cache
-electron-dist/*
+app/package.json
+app/package-lock.json

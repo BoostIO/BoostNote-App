@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
       filename: 'bundle.js',
       // the output bundle
 
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'compiled'),
       publicPath: ''
     },
 
@@ -72,7 +72,7 @@ module.exports = (env, argv) => {
       new CopyPlugin([
         {
           from: path.join(__dirname, 'node_modules/codemirror/theme'),
-          to: 'codemirror/theme'
+          to: 'app/codemirror/theme'
         }
       ])
     ],
@@ -91,15 +91,15 @@ module.exports = (env, argv) => {
 
       before: function(app, server) {
         app.use(
-          '/codemirror/mode',
+          '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
         )
         app.use(
-          '/codemirror/addon',
+          '/app/codemirror/addon',
           express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
         )
         app.use(
-          '/codemirror/theme',
+          '/app/codemirror/theme',
           express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
         )
       }
