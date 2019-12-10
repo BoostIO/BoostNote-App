@@ -29,7 +29,7 @@ import {
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
 
-const StyledNoteDetailContainer = styled.div`
+export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
   display: flex;
   flex-direction: column;

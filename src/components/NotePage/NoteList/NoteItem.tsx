@@ -12,7 +12,7 @@ import {
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
 
-const StyledNoteListItem = styled.div`
+export const StyledNoteListItem = styled.div`
   margin: 0;
   border-left: 2px solid transparent;
   ${uiTextColor}

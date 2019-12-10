@@ -114,6 +114,7 @@
     "pouchdb-mapreduce": "^7.1.1",
     "pouchdb-replication": "^7.1.1",
     "ramda": "^0.26.1",
+    "raw-loader": "^4.0.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-i18next": "^11.0.1",

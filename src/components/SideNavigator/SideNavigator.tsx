@@ -21,6 +21,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
+import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -128,7 +129,7 @@ export default () => {
     [popup, prompt, createStorage]
   )
 
-  const { toggleClosed } = usePreferences()
+  const { toggleClosed, preferences } = usePreferences()
   const {
     toggleSideNavOpenedItem,
     sideNavOpenedItemSet,
@@ -279,6 +280,9 @@ export default () => {
         })}
         {storageEntries.length === 0 && (
           <div className='empty'>No storages</div>
+        )}
+        {preferences['general.tutorials'] === 'display' && (
+          <TutorialsNavigator />
         )}
         <Spacer onContextMenu={openSideNavContextMenu} />
       </div>

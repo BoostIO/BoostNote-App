@@ -12,7 +12,8 @@ import {
   usePreferences,
   GeneralThemeOptions,
   GeneralLanguageOptions,
-  GeneralNoteSortingOptions
+  GeneralNoteSortingOptions,
+  GeneralTutorialsOptions
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -46,6 +47,15 @@ const GeneralTab = () => {
     event => {
       setPreferences({
         'general.noteSorting': event.target.value as GeneralNoteSortingOptions
+      })
+    },
+    [setPreferences]
+  )
+
+  const selectTutorialsDisplay: SelectChangeEventHandler = useCallback(
+    event => {
+      setPreferences({
+        'general.tutorials': event.target.value as GeneralTutorialsOptions
       })
     },
     [setPreferences]
@@ -123,6 +133,18 @@ const GeneralTab = () => {
             <option value='date-updated'>{t('preferences.dateUpdated')}</option>
             <option value='date-created'>{t('preferences.dateCreated')}</option>
             <option value='title'>{t('preferences.title')}</option>
+          </SectionSelect>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>{t('preferences.displayTutorialsLabel')}</SectionHeader>
+        <SectionControl>
+          <SectionSelect
+            value={preferences['general.tutorials']}
+            onChange={selectTutorialsDisplay}
+          >
+            <option value='display'>Display</option>
+            <option value='hide'>Hide</option>
           </SectionSelect>
         </SectionControl>
       </Section>

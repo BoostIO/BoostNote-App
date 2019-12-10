@@ -10,7 +10,7 @@ import {
   uiTextColor
 } from '../../../lib/styled/styleFunctions'
 
-const StyledContainer = styled.div`
+export const StyledNoteListContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -107,7 +107,7 @@ const NoteList = ({
   }, [])
 
   return (
-    <StyledContainer>
+    <StyledNoteListContainer>
       <div className='control'>
         <div className='searchInput'>
           <input
@@ -139,7 +139,7 @@ const NoteList = ({
         })}
         {notes.length === 0 && <li className='empty'>No notes</li>}
       </ul>
-    </StyledContainer>
+    </StyledNoteListContainer>
   )
 }
 

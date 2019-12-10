@@ -11,6 +11,7 @@ interface CustomizedCodeEditor {
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   mode?: string
+  readonly?: boolean
 }
 
 const CustomizedCodeEditor = ({
@@ -18,7 +19,8 @@ const CustomizedCodeEditor = ({
   value,
   codeMirrorRef,
   className,
-  mode
+  mode,
+  readonly
 }: CustomizedCodeEditor) => {
   const { preferences } = usePreferences()
   return (
@@ -34,6 +36,7 @@ const CustomizedCodeEditor = ({
       indentSize={preferences['editor.indentSize']}
       keyMap={preferences['editor.keyMap']}
       mode={mode}
+      readonly={readonly}
     />
   )
 }
