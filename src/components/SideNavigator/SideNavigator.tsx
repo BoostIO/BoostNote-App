@@ -67,8 +67,11 @@ const StyledSideNavContainer = styled.nav`
     display: flex;
     flex-direction: column;
   }
+
   .empty {
     padding: 4px;
+    padding-left: 26px;
+    margin-bottom: 4px;
     user-select: none;
   }
 
