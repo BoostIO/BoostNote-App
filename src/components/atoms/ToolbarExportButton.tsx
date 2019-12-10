@@ -16,6 +16,7 @@ import gh from 'hast-util-sanitize/lib/github.json'
 import { usePreferences } from '../../lib/preferences'
 import { rehypeCodeMirror } from './MarkdownPreviewer'
 import { usePreviewStyle } from '../../lib/preview'
+import { downloadString } from '../../lib/download'
 
 const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] }
@@ -66,21 +67,6 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
     [popup]
   )
 
-  const downloadFile = (
-    content: string,
-    fileName: string,
-    type: string = 'text/plain'
-  ) => {
-    const anchor = document.createElement('a')
-    anchor.style.display = 'none'
-    document.body.appendChild(anchor)
-    anchor.href = window.URL.createObjectURL(new Blob([content], { type }))
-    anchor.setAttribute('download', fileName)
-    anchor.click()
-    window.URL.revokeObjectURL(anchor.href)
-    document.body.removeChild(anchor)
-  }
-
   const exportToHtml = async () => {
     await unified()
       .use(remarkParse)
@@ -104,7 +90,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
           return
         }
 
-        downloadFile(
+        downloadString(
           file.toString(),
           `${note.title.toLowerCase().replace(/\s+/g, '-')}.html`,
           'text/html'
@@ -124,7 +110,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
           console.error(err)
           return
         }
-        downloadFile(
+        downloadString(
           [
             '---',
             `title: "${note.title}"`,
