@@ -12,6 +12,9 @@ import {
   currentTutorialPathname
 } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
+import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import { usePreferences } from '../../lib/preferences'
 
 interface NavigatorNode {
   id: string
@@ -29,7 +32,10 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
   const routeParams = useRouteParams()
   const { push } = useRouter()
   const currentHref = currentTutorialPathname()
+  const { popup } = useContextMenu()
+  const { messageBox } = useDialog()
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
+  const { setPreferences } = usePreferences()
 
   const tutorials = tutorialsTree
 
@@ -95,6 +101,33 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
     }
   }
 
+  const createOnContextMenuHandler = (depth: number) => {
+    return (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Remove folder',
+          enabled: depth === 0,
+          onClick: () => {
+            messageBox({
+              title: `Hide tutorials`,
+              message:
+                'You can choose to display them again in your preferences.',
+              iconType: DialogIconTypes.Warning,
+              buttons: ['Hide', 'Cancel'],
+              defaultButtonIndex: 0,
+              cancelButtonIndex: 1,
+              onClose: () => {
+                setPreferences({ 'general.tutorials': 'hide' })
+              }
+            })
+          }
+        }
+      ])
+    }
+  }
+
   const nodes = useMemo(() => {
     return tutorials
       .map(tutorial => getNavigatorNodesFromTreeItem(tutorial, 0))
@@ -122,6 +155,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
           onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}
           folded={node.children.length === 0 ? undefined : !node.opened}
+          onContextMenu={createOnContextMenuHandler(node.depth)}
         />
         {node.children.map(child => renderNode(child, node.opened))}
       </React.Fragment>
