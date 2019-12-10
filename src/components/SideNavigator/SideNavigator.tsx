@@ -19,7 +19,8 @@ import { usePreferences } from '../../lib/preferences'
 import {
   backgroundColor,
   iconColor,
-  textColor
+  textColor,
+  uiTextColor
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -72,6 +73,7 @@ const StyledSideNavContainer = styled.nav`
     padding: 4px;
     padding-left: 26px;
     margin-bottom: 4px;
+    ${uiTextColor}
     user-select: none;
   }
 
