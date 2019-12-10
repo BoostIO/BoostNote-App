@@ -1,6 +1,6 @@
 {
-  "name": "boost",
-  "productName": "Boost",
+  "name": "boostnote",
+  "productName": "Boost Note",
   "version": "0.1.0-0",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/main.js",
@@ -10,11 +10,12 @@
   },
   "scripts": {
     "dev": "env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
-    "start": "electron electron/main.js",
-    "pack": "electron-builder",
+    "start": "electron app/main.js",
     "lint": "eslint src/**/*.ts{,x}",
     "format": "prettier --write \"src/**/*\"",
-    "build": "env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
+    "build": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
+    "meta": "node scripts/meta.js",
+    "pack": "rimraf dist && npm run meta && electron-builder",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit"
@@ -71,6 +72,7 @@
     "prettier": "^1.18.2",
     "react-hot-loader": "^4.12.13",
     "react-test-renderer": "^16.9.0",
+    "rimraf": "^3.0.0",
     "style-loader": "^1.0.0",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
@@ -143,11 +145,8 @@
       "**/*"
     ],
     "extraResources": [
-      "dist/**/*"
+      "compiled/**/*"
     ],
-    "directories": {
-      "output": "electron-dist"
-    },
     "asar": false,
     "linux": {
       "target": "deb"
