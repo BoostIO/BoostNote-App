@@ -77,6 +77,11 @@ export interface StorageTagsRouteParams extends BaseRouteParams {
   noteId?: string
 }
 
+export interface StorageAttachmentsRouteParams extends BaseRouteParams {
+  name: 'storages.attachments'
+  storageId: string
+}
+
 export interface TutorialsRouteParams extends BaseRouteParams {
   name: 'tutorials.show'
   path: string
@@ -93,6 +98,7 @@ export type AllRouteParams =
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
+  | StorageAttachmentsRouteParams
   | UnknownRouteparams
   | TutorialsRouteParams
 
@@ -178,6 +184,13 @@ export const useRouteParams = () => {
       }
     }
 
+    if (names[2] === 'attachments') {
+      return {
+        name: 'storages.attachments',
+        storageId
+      }
+    }
+
     return {
       name: 'unknown'
     }
@@ -185,6 +198,7 @@ export const useRouteParams = () => {
 }
 
 export const usePathnameWithoutNoteId = () => {
+  const { pathname } = useRouter()
   const routeParams = useRouteParams()
   return useMemo(() => {
     switch (routeParams.name) {
@@ -197,8 +211,8 @@ export const usePathnameWithoutNoteId = () => {
       case 'storages.trashCan':
         return `/app/storages/${routeParams.storageId}/trashcan`
     }
-    return '/app'
-  }, [routeParams])
+    return pathname
+  }, [routeParams, pathname])
 }
 
 export const currentTutorialPathname = () => {

@@ -7,7 +7,9 @@ import {
   mdiTuneVertical,
   mdiPlusCircleOutline,
   mdiDeleteOutline,
-  mdiDelete
+  mdiDelete,
+  mdiImage,
+  mdiImageOutline
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -172,8 +174,12 @@ export default () => {
             })
           }
 
-          const trashcanPathname = `/app/storages/${storage.id}/trashcan`
-          const trashcanIsActive = currentPathname === trashcanPathname
+          const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
+          const trashcanPageIsActive = currentPathname === trashcanPagePathname
+
+          const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
+          const attachmentsPageIsActive =
+            currentPathname === attachmentsPagePathname
 
           return (
             <React.Fragment key={itemId}>
@@ -244,10 +250,24 @@ export default () => {
                   <TagListFragment storage={storage} />
                   <SideNavigatorItem
                     depth={1}
+                    label='Attachments'
+                    iconPath={
+                      attachmentsPageIsActive ? mdiImage : mdiImageOutline
+                    }
+                    active={attachmentsPageIsActive}
+                    onClick={() => push(attachmentsPagePathname)}
+                    onContextMenu={event => {
+                      event.preventDefault()
+                    }}
+                  />
+                  <SideNavigatorItem
+                    depth={1}
                     label='Trash Can'
-                    iconPath={trashcanIsActive ? mdiDelete : mdiDeleteOutline}
-                    active={trashcanIsActive}
-                    onClick={() => push(trashcanPathname)}
+                    iconPath={
+                      trashcanPageIsActive ? mdiDelete : mdiDeleteOutline
+                    }
+                    active={trashcanPageIsActive}
+                    onClick={() => push(trashcanPagePathname)}
                     onContextMenu={event => {
                       event.preventDefault()
                       // TODO: Implement context menu(restore all notes)

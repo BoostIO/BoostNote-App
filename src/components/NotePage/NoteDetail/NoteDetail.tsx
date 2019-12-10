@@ -1,5 +1,9 @@
 import React from 'react'
-import { NoteDoc, NoteDocEditibleProps } from '../../../lib/db/types'
+import {
+  NoteDoc,
+  NoteDocEditibleProps,
+  Attachment
+} from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
 import styled from '../../../lib/styled'
@@ -23,6 +27,7 @@ import {
   borderRight
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
+import { getFileList } from '../../../lib/dnd'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -107,6 +112,7 @@ type NoteDetailProps = {
   previewMode: boolean
   toggleSplitMode: () => void
   togglePreviewMode: () => void
+  addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
 }
 
 type NoteDetailState = {
@@ -323,13 +329,43 @@ export default class NoteDetail extends React.Component<
     }
   }
 
+  handleDrop = async (event: React.DragEvent) => {
+    event.preventDefault()
+
+    const { storageId, addAttachments: addAttachment } = this.props
+
+    const files = getFileList(event).filter(file =>
+      file.type.startsWith('image/')
+    )
+
+    const attachments = await addAttachment(storageId, files)
+
+    this.setState(
+      prevState => {
+        return {
+          content:
+            prevState.content +
+            `\n` +
+            attachments
+              .map(attachment => `![](${attachment.name})`)
+              .join('\n') +
+            `\n`
+        }
+      },
+      () => {
+        this.queueToSave()
+      }
+    )
+  }
+
   render() {
     const {
       note,
       splitMode,
       previewMode,
       toggleSplitMode,
-      togglePreviewMode
+      togglePreviewMode,
+      storageId
     } = this.props
 
     const codeEditor = (
@@ -342,11 +378,19 @@ export default class NoteDetail extends React.Component<
       />
     )
     const markdownPreviewer = (
-      <CustomizedMarkdownPreviewer content={this.state.content} />
+      <CustomizedMarkdownPreviewer
+        content={this.state.content}
+        storageId={storageId}
+      />
     )
 
     return (
-      <StyledNoteDetailContainer>
+      <StyledNoteDetailContainer
+        onDragEnd={(event: React.DragEvent) => {
+          event.preventDefault()
+        }}
+        onDrop={this.handleDrop}
+      >
         {note == null ? (
           <p>No note is selected</p>
         ) : (

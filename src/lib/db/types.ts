@@ -51,12 +51,17 @@ export type TagDoc = {
   _id: string // tag:${TAG_NAME}
   createdAt: string
   updatedAt: string
-  data: JsonObject
   _rev: string
 } & TagDocEditibleProps
 
 export type TagDocEditibleProps = {
   data: JsonObject
+}
+
+export type Attachment = {
+  name: string
+  type: string
+  blob: Blob
 }
 
 export interface AllDocsMap {
@@ -89,4 +94,5 @@ export interface AllPopulatedDocsMap {
   noteMap: ObjectMap<NoteDoc>
   folderMap: ObjectMap<PopulatedFolderDoc>
   tagMap: ObjectMap<PopulatedTagDoc>
+  attachmentMap: ObjectMap<Attachment>
 }

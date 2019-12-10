@@ -4,6 +4,7 @@ import { useRouteParams } from '../lib/router'
 import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
+import AttachmentsPage from './AttachmentsPage/AttachmentsPage'
 import TutorialsPage from './Tutorials/TutorialsPage'
 import useRedirectHandler from '../lib/router/redirect'
 
@@ -18,6 +19,8 @@ export default () => {
     case 'storages.trashCan':
     case 'storages.tags.show':
       return <NotePage />
+    case 'storages.attachments':
+      return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreate />
     case 'tutorials.show':

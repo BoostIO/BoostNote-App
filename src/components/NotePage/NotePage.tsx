@@ -181,6 +181,7 @@ export default () => {
             updateNote={db.updateNote}
             trashNote={db.trashNote}
             untrashNote={db.untrashNote}
+            addAttachments={db.addAttachments}
             purgeNote={purgeNote}
             splitMode={generalStatus.noteSplitMode}
             previewMode={generalStatus.notePreviewMode}
