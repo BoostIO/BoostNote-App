@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -16,20 +16,89 @@ type TutoriasPagePicker = {
 }
 
 export default ({ pathname }: TutorialsPageProps) => {
-  const [
-    currentTutorialBranch,
-    setCurrentTutorialBranch
-  ] = useState<TutoriasPagePicker | null>(getCurrentNodeFromTutorialTrees)
-
-  const [currentFolderPathname, setCurrentFolderPathname] = useState<string>(
-    getCurrentFolderPathname
-  )
-  const [selectedNote, setSelectedNote] = useState<
-    TutorialsNavigatorTreeItem | undefined
-  >()
-
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const router = useRouter()
+
+  const searchThroughTreeForIdenticalNode = useCallback(
+    (
+      pathToSearch: string,
+      parentDepthPath: string,
+      parentAbsolutePath: string,
+      tree: TutorialsNavigatorTreeItem,
+      parentTree?: TutorialsNavigatorTreeItem
+    ): TutoriasPagePicker | null => {
+      let match = null
+      const currentDepthPath = `${parentDepthPath}/${
+        tree.type === 'note' ? 'notes/note:' : ''
+      }${tree.slug}`
+
+      const currentAbsolutePath = parentAbsolutePath + '/' + tree.absolutePath
+      if (currentDepthPath === pathToSearch) {
+        const currentTreeWithDepthAbsolutePath = {
+          ...tree,
+          absolutePath: currentAbsolutePath,
+          children: Object.entries(tree.children).map(obj => {
+            return {
+              ...obj[1],
+              absolutePath: currentAbsolutePath + '/' + obj[1].absolutePath
+            }
+          }) as TutorialsNavigatorTreeItem[]
+        }
+
+        const parentTreeWithDepthAbsolutePath =
+          parentTree != null
+            ? {
+                ...parentTree,
+                absolutePath: parentAbsolutePath,
+                children: Object.entries(parentTree.children).map(obj => {
+                  return {
+                    ...obj[1],
+                    absolutePath: parentAbsolutePath + '/' + obj[1].absolutePath
+                  }
+                })
+              }
+            : undefined
+
+        return {
+          currentTree: currentTreeWithDepthAbsolutePath,
+          parentTree: parentTreeWithDepthAbsolutePath
+        }
+      }
+
+      for (let i = 0; i < tree.children.length; i++) {
+        match = searchThroughTreeForIdenticalNode(
+          pathToSearch,
+          currentDepthPath,
+          currentAbsolutePath,
+          tree.children[i],
+          tree
+        )
+        if (match != null) {
+          break
+        }
+      }
+
+      return match
+    },
+    []
+  )
+
+  const currentTutorialBranch = useMemo(() => {
+    let match = null
+    for (let i = 0; i < tutorialsTree.length; i++) {
+      match = searchThroughTreeForIdenticalNode(
+        pathname,
+        '/app',
+        '',
+        tutorialsTree[i]
+      )
+      if (match != null) {
+        break
+      }
+    }
+    return match
+  }, [pathname, searchThroughTreeForIdenticalNode])
+
   const updateNoteListWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
@@ -51,16 +120,7 @@ export default ({ pathname }: TutorialsPageProps) => {
     }))
   }, [setGeneralStatus])
 
-  useEffect(() => {
-    setCurrentTutorialBranch(getCurrentNodeFromTutorialTrees)
-    setCurrentFolderPathname(getCurrentFolderPathname)
-  }, [pathname, tutorialsTree])
-
-  useEffect(() => {
-    setSelectedNote(getCurrentNote)
-  }, [currentTutorialBranch])
-
-  function getCurrentNote(): TutorialsNavigatorTreeItem | undefined {
+  const selectedNote = useMemo((): TutorialsNavigatorTreeItem | undefined => {
     if (currentTutorialBranch == null) {
       return undefined
     }
@@ -76,88 +136,11 @@ export default ({ pathname }: TutorialsPageProps) => {
       return notesChildren[0]
     }
     return undefined
-  }
+  }, [currentTutorialBranch])
 
-  function getCurrentFolderPathname() {
+  const currentFolderPathname = useMemo(() => {
     return pathname.split('/notes')[0]
-  }
-
-  function getCurrentNodeFromTutorialTrees() {
-    let match = null
-    for (let i = 0; i < tutorialsTree.length; i++) {
-      match = searchThroughTreeForIdenticalNode(
-        pathname,
-        '/app',
-        '',
-        tutorialsTree[i]
-      )
-      if (match != null) {
-        break
-      }
-    }
-    return match
-  }
-
-  function searchThroughTreeForIdenticalNode(
-    pathToSearch: string,
-    parentDepthPath: string,
-    parentAbsolutePath: string,
-    tree: TutorialsNavigatorTreeItem,
-    parentTree?: TutorialsNavigatorTreeItem
-  ): TutoriasPagePicker | null {
-    let match = null
-    const currentDepthPath = `${parentDepthPath}/${
-      tree.type === 'note' ? 'notes/note:' : ''
-    }${tree.slug}`
-
-    const currentAbsolutePath = parentAbsolutePath + '/' + tree.absolutePath
-    if (currentDepthPath === pathToSearch) {
-      const currentTreeWithDepthAbsolutePath = {
-        ...tree,
-        absolutePath: currentAbsolutePath,
-        children: Object.entries(tree.children).map(obj => {
-          return {
-            ...obj[1],
-            absolutePath: currentAbsolutePath + '/' + obj[1].absolutePath
-          }
-        }) as TutorialsNavigatorTreeItem[]
-      }
-
-      const parentTreeWithDepthAbsolutePath =
-        parentTree != null
-          ? {
-              ...parentTree,
-              absolutePath: parentAbsolutePath,
-              children: Object.entries(parentTree.children).map(obj => {
-                return {
-                  ...obj[1],
-                  absolutePath: parentAbsolutePath + '/' + obj[1].absolutePath
-                }
-              })
-            }
-          : undefined
-
-      return {
-        currentTree: currentTreeWithDepthAbsolutePath,
-        parentTree: parentTreeWithDepthAbsolutePath
-      }
-    }
-
-    for (let i = 0; i < tree.children.length; i++) {
-      match = searchThroughTreeForIdenticalNode(
-        pathToSearch,
-        currentDepthPath,
-        currentAbsolutePath,
-        tree.children[i],
-        tree
-      )
-      if (match != null) {
-        break
-      }
-    }
-
-    return match
-  }
+  }, [pathname])
 
   const navigateUp = useCallback(() => {
     if (currentTutorialBranch == null) {
@@ -199,7 +182,7 @@ export default ({ pathname }: TutorialsPageProps) => {
       )
     }
     return
-  }, [selectedNote])
+  }, [selectedNote, currentTutorialBranch, router, currentFolderPathname])
 
   const navigateDown = useCallback(() => {
     if (currentTutorialBranch == null) {
@@ -241,7 +224,7 @@ export default ({ pathname }: TutorialsPageProps) => {
       )
     }
     return
-  }, [selectedNote])
+  }, [selectedNote, currentFolderPathname, currentTutorialBranch, router])
 
   return (
     <TwoPaneLayout

@@ -1,7 +1,7 @@
 export function downloadString(
   content: string,
   fileName: string,
-  type: string = 'text/plain'
+  type = 'text/plain'
 ) {
   const anchor = document.createElement('a')
   anchor.style.display = 'none'
