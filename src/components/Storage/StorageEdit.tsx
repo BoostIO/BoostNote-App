@@ -70,11 +70,17 @@ export default ({ storage }: StorageEditProps) => {
         <div>
           <h2>Cloud Storage</h2>
           {storage.cloudStorage != null ? (
-            <p>
-              Linked Storage: {storage.cloudStorage.name} (ID:
-              {storage.cloudStorage.id}){' '}
-              <span onClick={unlinkCallback}>Unlink</span>
-            </p>
+            <div>
+              <p>
+                Linked Storage: {storage.cloudStorage.name} (ID:
+                {storage.cloudStorage.id}){' '}
+                <span onClick={unlinkCallback}>Unlink</span>
+              </p>
+              <p>
+                Last synced at{' '}
+                {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
+              </p>
+            </div>
           ) : (
             <div>
               {user == null && (
