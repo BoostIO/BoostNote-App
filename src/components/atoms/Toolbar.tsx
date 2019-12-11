@@ -7,6 +7,13 @@ const Toolbar = styled.div`
   align-items: center;
   ${borderTop}
   padding: 0 5px;
+
+  .icons {
+    flex: 1 0 0;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+  }
 `
 
 export default Toolbar

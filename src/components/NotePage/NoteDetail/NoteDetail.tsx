@@ -15,7 +15,8 @@ import {
   mdiArrowSplitVertical,
   mdiFormatText,
   mdiDeleteEmpty,
-  mdiRestore
+  mdiRestore,
+  mdiTagOutline
 } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
@@ -28,6 +29,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
+import Icon from '../../atoms/Icon'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -415,10 +417,7 @@ export default class NoteDetail extends React.Component<
               )}
             </div>
             <Toolbar>
-              <TagList
-                tags={this.state.tags}
-                removeTagByName={this.removeTagByName}
-              />
+              <Icon className='icon' path={mdiTagOutline} />
               <input
                 className='tagInput'
                 ref={this.newTagNameInputRef}
@@ -427,36 +426,43 @@ export default class NoteDetail extends React.Component<
                 onChange={this.updateNewTagName}
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />
+
+              <TagList
+                tags={this.state.tags}
+                removeTagByName={this.removeTagByName}
+              />
               <ToolbarSeparator />
-              <ToolbarExportButton note={this.props.note} />
-              <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
-              <ToolbarIconButton
-                className={splitMode ? 'active' : ''}
-                onClick={toggleSplitMode}
-                path={mdiArrowSplitVertical}
-              />
-              <ToolbarIconButton
-                className={previewMode ? 'active' : ''}
-                onClick={togglePreviewMode}
-                path={mdiEyeOutline}
-              />
-              {note.trashed ? (
-                <>
-                  <ToolbarIconButton
-                    onClick={this.untrashNote}
-                    path={mdiRestore}
-                  />
-                  <ToolbarIconButton
-                    onClick={this.purgeNote}
-                    path={mdiDeleteEmpty}
-                  />
-                </>
-              ) : (
+              <div className='icons'>
+                <ToolbarExportButton note={this.props.note} />
+                <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
                 <ToolbarIconButton
-                  onClick={this.trashNote}
-                  path={mdiTrashCan}
+                  className={splitMode ? 'active' : ''}
+                  onClick={toggleSplitMode}
+                  path={mdiArrowSplitVertical}
                 />
-              )}
+                <ToolbarIconButton
+                  className={previewMode ? 'active' : ''}
+                  onClick={togglePreviewMode}
+                  path={mdiEyeOutline}
+                />
+                {note.trashed ? (
+                  <>
+                    <ToolbarIconButton
+                      onClick={this.untrashNote}
+                      path={mdiRestore}
+                    />
+                    <ToolbarIconButton
+                      onClick={this.purgeNote}
+                      path={mdiDeleteEmpty}
+                    />
+                  </>
+                ) : (
+                  <ToolbarIconButton
+                    onClick={this.trashNote}
+                    path={mdiTrashCan}
+                  />
+                )}
+              </div>
             </Toolbar>
           </>
         )}

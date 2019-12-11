@@ -17,6 +17,8 @@ import { usePreferences } from '../../lib/preferences'
 import { rehypeCodeMirror } from './MarkdownPreviewer'
 import { usePreviewStyle } from '../../lib/preview'
 import { downloadString } from '../../lib/download'
+import { mdiFileExport } from '@mdi/js'
+import Icon from './Icon'
 
 const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] }
@@ -132,7 +134,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
       onClick={openExportButtonContextMenu}
       className={className}
     >
-      <span>Export</span>
+      <Icon path={mdiFileExport} />
     </StyledButton>
   )
 }

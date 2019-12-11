@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import Icon from '../../atoms/Icon'
-import { mdiClose, mdiTagOutline } from '@mdi/js'
+import { mdiClose } from '@mdi/js'
 import styled from '../../../lib/styled'
 import { iconColor } from '../../../lib/styled/styleFunctions'
 
@@ -24,11 +24,23 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
   )
 }
 
+const StyledParentContainer = styled.div`
+  flex: 0 1 auto;
+  height: 100%;
+  overflow: hidden;
+`
+
 const StyledContainer = styled.div`
   display: flex;
+  overflow: auto;
+  padding-bottom: 17px;
+  padding-rigth: 4%;
+
   .listItem {
     margin: 0 2px;
+    height: 32px;
     display: flex;
+    align-items: center;
   }
 
   .icon {
@@ -60,16 +72,17 @@ interface TagListProps {
 
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
-    <StyledContainer>
-      <Icon className='icon' path={mdiTagOutline} />
-      {tags.map(tag => (
-        <TagListItem
-          key={tag}
-          tagName={tag}
-          removeTagByName={removeTagByName}
-        />
-      ))}
-    </StyledContainer>
+    <StyledParentContainer>
+      <StyledContainer>
+        {tags.map(tag => (
+          <TagListItem
+            key={tag}
+            tagName={tag}
+            removeTagByName={removeTagByName}
+          />
+        ))}
+      </StyledContainer>
+    </StyledParentContainer>
   )
 }
 
