@@ -22,10 +22,6 @@ export const StyledNoteListContainer = styled.div`
     padding: 0;
     list-style: none;
     overflow-y: auto;
-
-    li.empty {
-      color: ${({ theme }) => theme.uiTextColor};
-    }
   }
 
   .control {
@@ -137,7 +133,7 @@ const NoteList = ({
             </li>
           )
         })}
-        {notes.length === 0 && <li className='empty'>No notes</li>}
+        {notes.length === 0 && ''}
       </ul>
     </StyledNoteListContainer>
   )

@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import NoteList from './NoteList'
+import styled from '../../lib/styled'
 import NoteDetail from './NoteDetail'
 import {
   useRouteParams,
@@ -17,6 +18,11 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import FileDropZone from '../atoms/FileDropZone'
 import { convertCSONFileToNote } from '../../lib/legacy-import'
+
+export const StyledNoteDetailNoNote = styled.div`
+  text-align: center;
+  margin-top: 300px;
+`
 
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
@@ -155,8 +161,9 @@ export default () => {
         }
       })
     },
-    [messageBox, purgeNoteFromDb])
-    
+    [messageBox, purgeNoteFromDb]
+  )
+
   const importDrop = useCallback(
     (files: File[]) => {
       files.forEach(async file => {
@@ -191,7 +198,12 @@ export default () => {
       }
       right={
         currentNote == null ? (
-          <div>No note selected</div>
+          <StyledNoteDetailNoNote>
+            <div>
+              <h1>Command(⌘) + N</h1>
+              <h2>to create a new note</h2>
+            </div>
+          </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
             storageId={storageId}
