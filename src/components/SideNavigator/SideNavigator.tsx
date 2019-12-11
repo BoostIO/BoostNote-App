@@ -185,7 +185,7 @@ export default () => {
           const attachmentsPageIsActive =
             currentPathname === attachmentsPagePathname
 
-          let controlComponents = [
+          const controlComponents = [
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
@@ -205,14 +205,13 @@ export default () => {
               })
             }
 
-            controlComponents = [
+            controlComponents.unshift(
               <ControlButton
                 key='syncButton'
                 onClick={cloudSync}
                 iconPath={mdiSync}
-              />,
-              ...controlComponents
-            ]
+              />
+            )
           }
 
           return (
