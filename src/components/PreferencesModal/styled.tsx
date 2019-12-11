@@ -3,7 +3,8 @@ import {
   selectStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
-  inputStyle
+  inputStyle,
+  tableStyle
 } from '../../lib/styled/styleFunctions'
 
 export const Section = styled.section`
@@ -59,4 +60,8 @@ export const SectionInput = styled.input`
   padding: 0 16px;
   height: 40px;
   border-radius: 2px;
+`
+
+export const SectionTable = styled.table`
+  ${tableStyle}
 `
