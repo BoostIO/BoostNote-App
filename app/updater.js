@@ -10,6 +10,9 @@
 const { dialog } = require('electron')
 const { autoUpdater } = require('electron-updater')
 
+autoUpdater.logger = require('electron-log')
+autoUpdater.logger.transports.file.level = 'info'
+
 let updater
 autoUpdater.autoDownload = false
 

@@ -7,7 +7,8 @@ const packageJson = require('../package.json')
 const filteredJson = {
   ...pick(['name', 'productName', 'version', 'author'], packageJson),
   dependencies: {
-    'electron-updater': '^4.2.0'
+    'electron-updater': '^4.2.0',
+    'electron-log': '^4.0.0'
   }
 }
 
