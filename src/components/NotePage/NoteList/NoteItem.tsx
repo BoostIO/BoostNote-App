@@ -2,8 +2,6 @@ import React, { useMemo, useCallback } from 'react'
 import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
 import { NoteDoc } from '../../../lib/db/types'
-import Icon from '../../atoms/Icon'
-import { mdiTagOutline } from '@mdi/js'
 import {
   borderBottom,
   uiTextColor,
@@ -34,16 +32,43 @@ export const StyledNoteListItem = styled.div`
   }
 
   .container {
-    padding: 8px;
+    padding: 10px 12px;
   }
 
   .title {
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 4px;
+    font-size: 18px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .date {
+    font-size: 12px;
+    margin-bottom: 6px;
   }
 
   .preview {
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .tag-area {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tag {
+    font-size: 12px;
+    background-color: rgba(153, 153, 153, 0.4);
+    margin-right: 5px;
+    padding: 2px 8px;
+    border-radius: 13px;
+    display: inline-block;
   }
 `
 
@@ -83,12 +108,15 @@ export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
       <Link href={href}>
         <div className='container'>
           <div className='title'>{note.title}</div>
+          {note.title.length === 0 && <div className='title'>No title</div>}
+          <div className='date'>DD days ago</div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
-            <div>
-              <Icon path={mdiTagOutline} />{' '}
+            <div className='tag-area'>
               {note.tags.map(tag => (
-                <span key={tag}>{tag}</span>
+                <span className='tag' key={tag}>
+                  {tag}
+                </span>
               ))}
             </div>
           )}
