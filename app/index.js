@@ -1,6 +1,6 @@
 const electron = require('electron')
 const path = require('path')
-// import { format as formatUrl } from 'url'
+require('./menu')
 
 const { app, BrowserWindow } = electron
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -14,18 +14,6 @@ function createMainWindow() {
   })
 
   window.loadFile(path.join(__dirname, '../compiled/index.html'))
-
-  // if (isDevelopment) {
-  // } else {
-  //   window.loadURL(`http://localhost:3000/app`)
-  //   // window.loadURL(
-  //   //   formatUrl({
-  //   //     pathname: path.join(__dirname, 'index.html'),
-  //   //     protocol: 'file',
-  //   //     slashes: true
-  //   //   })
-  //   // )
-  // }
 
   window.on('closed', () => {
     mainWindow = null
