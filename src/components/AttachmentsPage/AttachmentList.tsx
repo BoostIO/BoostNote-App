@@ -85,7 +85,7 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
             )
           }
         )
-      }, [attachmentMap])}
+      }, [attachmentMap, messageBox, popup, removeAttachment, storage])}
     </ListContainer>
   )
 }
