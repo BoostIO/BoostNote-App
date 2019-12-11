@@ -30,7 +30,7 @@ export const StyledModalsContainer = styled.div`
   bottom: 0;
   margin: auto;
   width: 50vw;
-  height: 60vh;
+  height: 70vh;
   ${border}
   ${backgroundColor}
   ${contextMenuShadow}
@@ -47,8 +47,8 @@ export const StyledModalsHeader = styled.h1`
 export const StyledModalsSkipButton = styled.button`
   position: absolute;
   bottom: 0;
-  right: 30px;
-  width: 40px;
+  right: 2%;
+  width: auto;
   height: 40px;
   background-color: transparent;
   border: none;
@@ -57,8 +57,12 @@ export const StyledModalsSkipButton = styled.button`
   cursor: pointer;
   ${iconColor}
 
+  span {
+    line-height: 20px;
+    vertical-align: middle;
+  }
+
   .icon {
-    display: inline-block;
     vertical-align: middle;
   }
 `

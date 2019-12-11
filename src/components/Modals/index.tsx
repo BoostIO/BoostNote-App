@@ -8,6 +8,8 @@ import {
 } from './styled'
 import Icon from '../atoms/Icon'
 import { mdiChevronRightCircleOutline } from '@mdi/js'
+import { usePreferences } from '../../lib/preferences'
+import DownloadOurAppModal from './contents/DownloadOurAppModal'
 
 interface ModalsRenderingOptions {
   closable: boolean
@@ -17,36 +19,41 @@ interface ModalsRenderingOptions {
 
 export default () => {
   const { modalsContent, closeModals } = useModals()
-
-  if (modalsContent == null) return null
+  const { setPreferences } = usePreferences()
 
   const content = useMemo((): ModalsRenderingOptions => {
-    let basicModal: ModalsRenderingOptions = {
+    const basicModal: ModalsRenderingOptions = {
       closable: true,
       body: <></>
     }
 
     switch (modalsContent) {
       case 'download-app':
-        basicModal.body = <span>hey</span>
+        basicModal.body = <DownloadOurAppModal />
+        basicModal.onSkip = () => {
+          setPreferences({
+            'general.enableDownloadAppModal': false
+          })
+          closeModals()
+        }
         break
       default:
         break
     }
 
     return basicModal
-  }, [modalsContent])
+  }, [modalsContent, setPreferences, closeModals])
 
   const closeHandler = useCallback(() => {
     if (content.onSkip != null) {
       return content.onSkip()
     }
     return closeModals()
-  }, [content])
+  }, [closeModals, content])
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      if (!closed && event.key === 'Escape' && content.closable) {
+      if (event.key === 'Escape') {
         closeHandler()
       }
     }
@@ -54,23 +61,30 @@ export default () => {
   useGlobalKeyDownHandler(keydownHandler)
 
   const backgroundClickHandler = useMemo(() => {
-    if (!content.closable) {
-      return null
+    return (event: MouseEvent) => {
+      event.preventDefault()
+      closeHandler()
     }
-    return closeHandler()
   }, [closeHandler])
 
+  if (modalsContent == null) return null
+
   return (
-    <StyledModalsBackground onClick={backgroundClickHandler}>
+    <>
+      <StyledModalsBackground
+        onClick={backgroundClickHandler}
+      ></StyledModalsBackground>
       <StyledModalsContainer>
         {content.body}
 
         {content.closable && (
           <StyledModalsSkipButton onClick={closeHandler}>
-            Skip <Icon className='icon' path={mdiChevronRightCircleOutline} />
+            <span>
+              Skip <Icon className='icon' path={mdiChevronRightCircleOutline} />
+            </span>
           </StyledModalsSkipButton>
         )}
       </StyledModalsContainer>
-    </StyledModalsBackground>
+    </>
   )
 }
