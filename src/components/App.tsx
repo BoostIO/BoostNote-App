@@ -17,7 +17,6 @@ import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
 import Modals from './Modals'
-import useLoadModalsHandler from '../lib/modals/loadModals'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -47,8 +46,6 @@ const App = () => {
     },
     [setGeneralStatus]
   )
-
-  useLoadModalsHandler()
 
   return (
     <ThemeProvider theme={defaultTheme}>

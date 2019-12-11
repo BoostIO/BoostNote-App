@@ -4,22 +4,22 @@ import App from './components/App'
 import { RouterProvider } from './lib/router'
 import { ContextMenuProvider } from './lib/contextMenu'
 import { DialogProvider } from './lib/dialog'
+import { ModalsProvider } from './lib/modals'
 import { combineProviders } from './lib/utils/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
-import { ModalsProvider } from './lib/modals'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
   GeneralStatusProvider,
   PreferencesProvider,
+  ModalsProvider,
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
-  RouterProvider,
-  ModalsProvider
+  RouterProvider
 )
 
 function render(Component: typeof App) {
