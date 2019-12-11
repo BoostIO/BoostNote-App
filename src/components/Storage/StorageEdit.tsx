@@ -26,11 +26,11 @@ export default ({ storage }: StorageEditProps) => {
   const user = preferences['general.accounts'][0]
 
   const linkCallback = useCallback(
-    async (cloudStorage: CloudStorage) => {
-      const success = await db.setCloudLink(storage.id, cloudStorage, user)
-      if (!success) {
+    (cloudStorage: CloudStorage) => {
+      db.setCloudLink(storage.id, cloudStorage, user).catch(() => {
         //TODO: toast syncing failed
-      }
+        console.log('sync error')
+      })
     },
     [storage.id, db, user]
   )
@@ -70,11 +70,17 @@ export default ({ storage }: StorageEditProps) => {
         <div>
           <h2>Cloud Storage</h2>
           {storage.cloudStorage != null ? (
-            <p>
-              Linked Storage: {storage.cloudStorage.name} (ID:
-              {storage.cloudStorage.id}){' '}
-              <span onClick={unlinkCallback}>Unlink</span>
-            </p>
+            <div>
+              <p>
+                Linked Storage: {storage.cloudStorage.name} (ID:
+                {storage.cloudStorage.id}){' '}
+                <span onClick={unlinkCallback}>Unlink</span>
+              </p>
+              <p>
+                Last synced at{' '}
+                {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
+              </p>
+            </div>
           ) : (
             <div>
               {user == null && (
