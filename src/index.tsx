@@ -11,6 +11,7 @@ import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
 import Toast from './components/Toast'
+import { ModalsProvider } from './lib/modals'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -20,7 +21,8 @@ const CombinedProvider = combineProviders(
   ContextMenuProvider,
   DbProvider,
   RouterProvider,
-  ToastProvider
+  ToastProvider,
+  ModalsProvider
 )
 
 function render(Component: typeof App) {
