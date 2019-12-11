@@ -68,7 +68,9 @@ const ClickableContainer = styled.button`
 
 const Label = styled.div``
 
-const ControlContainer = styled.div``
+const ControlContainer = styled.div`
+  display: flex;
+`
 
 interface SideNaviagtorItemProps {
   label: string

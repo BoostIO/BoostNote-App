@@ -9,7 +9,8 @@ import {
   mdiDeleteOutline,
   mdiDelete,
   mdiImage,
-  mdiImageOutline
+  mdiImageOutline,
+  mdiSync
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -22,6 +23,7 @@ import ControlButton from './ControlButton'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
+import { useUsers } from '../../lib/accounts'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -94,11 +96,13 @@ export default () => {
     createFolder,
     renameStorage,
     removeStorage,
-    storageMap
+    storageMap,
+    syncStorage
   } = useDb()
   const { popup } = useContextMenu()
   const { prompt, messageBox } = useDialog()
   const { push } = useRouter()
+  const [[user]] = useUsers()
 
   const storageEntries = useMemo(() => {
     return entries(storageMap)
@@ -181,6 +185,36 @@ export default () => {
           const attachmentsPageIsActive =
             currentPathname === attachmentsPagePathname
 
+          let controlComponents = [
+            <ControlButton
+              key='addFolderButton'
+              onClick={() => showPromptToCreateFolder('/')}
+              iconPath={mdiPlusCircleOutline}
+            />
+          ]
+
+          if (storage.cloudStorage != null && user != null) {
+            const cloudSync = () => {
+              if (user == null) {
+                // TODO: toast login needed
+                console.error('login required')
+              }
+              syncStorage(storage.id, user).catch(e => {
+                // TODO: toast sync failed error
+                console.error(e)
+              })
+            }
+
+            controlComponents = [
+              <ControlButton
+                key='syncButton'
+                onClick={cloudSync}
+                iconPath={mdiSync}
+              />,
+              ...controlComponents
+            ]
+          }
+
           return (
             <React.Fragment key={itemId}>
               <SideNavigatorItem
@@ -233,13 +267,7 @@ export default () => {
                     }
                   ])
                 }}
-                controlComponents={[
-                  <ControlButton
-                    key='addFolderButton'
-                    onClick={() => showPromptToCreateFolder('/')}
-                    iconPath={mdiPlusCircleOutline}
-                  />
-                ]}
+                controlComponents={controlComponents}
               />
               {!storageIsFolded && (
                 <>
