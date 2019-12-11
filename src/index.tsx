@@ -9,6 +9,7 @@ import { DbProvider } from './lib/db'
 import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
+import { ModalsProvider } from './lib/modals'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -17,7 +18,8 @@ const CombinedProvider = combineProviders(
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
-  RouterProvider
+  RouterProvider,
+  ModalsProvider
 )
 
 function render(Component: typeof App) {
