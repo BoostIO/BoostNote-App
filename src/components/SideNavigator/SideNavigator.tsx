@@ -16,7 +16,11 @@ import Icon from '../atoms/Icon'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
-import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
+import {
+  backgroundColor,
+  iconColor,
+  textColor
+} from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
@@ -24,6 +28,14 @@ import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
+import MdiIcon from '@mdi/react'
+
+const Description = styled.nav`
+  margin-left: 5px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: ${textColor};
+`
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -84,6 +96,14 @@ const StyledSideNavContainer = styled.nav`
       justify-content: center;
     }
   }
+`
+
+const CreateStorageButton = styled.button`
+  position: absolute;
+  right: 0px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 `
 
 const Spacer = styled.div`
@@ -150,6 +170,14 @@ export default () => {
           <Icon path={mdiTuneVertical} />
         </button>
       </div>
+
+      <Description>
+        Storages
+        <CreateStorageButton onClick={() => push('/app/storages')}>
+          <MdiIcon path={mdiPlusCircleOutline} size='2em' color='gray' />
+        </CreateStorageButton>
+      </Description>
+
       <div className='storageList'>
         {storageEntries.map(([, storage]) => {
           const itemId = `storage:${storage.id}`
@@ -313,12 +341,6 @@ export default () => {
         )}
         <Spacer onContextMenu={openSideNavContextMenu} />
       </div>
-      <SideNavigatorItem
-        depth={0}
-        iconPath={mdiPlusCircleOutline}
-        label='Add Storage'
-        onClick={() => push('/app/storages')}
-      />
     </StyledSideNavContainer>
   )
 }

@@ -7,6 +7,7 @@ import {
   uiTextColor,
   activeBackgroundColor
 } from '../../lib/styled/styleFunctions'
+import MdiIcon from '@mdi/react'
 
 const Container = styled.div`
   position: relative;
@@ -117,13 +118,18 @@ const SideNaviagtorItem = ({
           onClick={onFoldButtonClick}
           style={{ left: `${10 * depth}px` }}
         >
-          <Icon path={folded ? mdiChevronRight : mdiChevronDown} />
+          <MdiIcon
+            path={folded ? mdiChevronRight : mdiChevronDown}
+            size='2em'
+            color='currentColor'
+          />
         </FoldButton>
       )}
       <ClickableContainer
         style={{
           paddingLeft: `${10 * depth + 26}px`,
-          cursor: onClick ? 'pointer' : 'initial'
+          cursor: onClick ? 'pointer' : 'initial',
+          fontSize: '15px'
         }}
         onClick={onClick}
       >
