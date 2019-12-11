@@ -4,10 +4,12 @@ const { pick } = require('ramda')
 
 const packageJson = require('../package.json')
 
-const filteredJson = pick(
-  ['name', 'productName', 'version', 'author'],
-  packageJson
-)
+const filteredJson = {
+  ...pick(['name', 'productName', 'version', 'author'], packageJson),
+  dependencies: {
+    'electron-updater': '^4.2.0'
+  }
+}
 
 fs.writeFileSync(
   path.join(__dirname, '../app/package.json'),

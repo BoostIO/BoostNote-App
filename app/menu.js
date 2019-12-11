@@ -2,6 +2,7 @@ const { app, Menu } = require('electron')
 const { checkForUpdates } = require('./updater')
 
 const isMac = process.platform === 'darwin'
+const isLinux = process.platform === 'linux'
 
 const template = [
   // { role: 'appMenu' }
@@ -86,10 +87,14 @@ const template = [
   {
     role: 'help',
     submenu: [
-      {
-        label: 'Check For Updates',
-        click: checkForUpdates
-      },
+      ...(isLinux
+        ? []
+        : [
+            {
+              label: 'Check For Updates',
+              click: checkForUpdates
+            }
+          ]),
       {
         label: 'Learn More',
         click: async () => {

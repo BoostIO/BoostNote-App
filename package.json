@@ -17,7 +17,7 @@
     "meta": "node scripts/meta.js",
     "prepack": "rimraf dist && npm run meta && electron-builder --dir",
     "pack": "rimraf dist && env-cmd npm run meta && electron-builder",
-    "publish": "electron-builder --publish",
+    "release": "env-cmd electron-builder -- --publish",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit"
@@ -60,7 +60,6 @@
     "css-loader": "^3.2.0",
     "electron": "^7.1.4",
     "electron-builder": "^21.2.0",
-    "electron-updater": "^4.2.0",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
     "eslint": "^6.4.0",
@@ -99,6 +98,7 @@
     "copy-webpack-plugin": "^5.0.4",
     "cson-parser": "git+https://github.com/ButteryCrumpet/cson-parser.git",
     "dotenv": "^8.2.0",
+    "electron-updater": "^4.2.0",
     "filenamify": "^2.1.0",
     "hast-util-sanitize": "^2.0.1",
     "hast-util-to-text": "^1.0.1",
@@ -143,9 +143,6 @@
   "build": {
     "appId": "com.electron.Boost",
     "copyright": "Copyright © 2016-2017 BoostIO",
-    "files": [
-      "**/*"
-    ],
     "extraResources": [
       "compiled/**/*"
     ],
