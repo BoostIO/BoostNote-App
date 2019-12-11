@@ -9,8 +9,8 @@
  */
 const { dialog } = require('electron')
 const { autoUpdater } = require('electron-updater')
-
-autoUpdater.logger = require('electron-log')
+const logger = require('electron-log')
+autoUpdater.logger = logger
 autoUpdater.logger.transports.file.level = 'info'
 
 let updater
