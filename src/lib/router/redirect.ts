@@ -1,22 +1,29 @@
 import { useDb } from '../db'
 import { useRouter } from './store'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useRef } from 'react'
 import { entries } from '../db/utils'
+import { useModal } from '../modal'
+import { usePreferences } from '../preferences'
 
 export default function useRedirectHandler() {
   const db = useDb()
   const { push, pathname } = useRouter()
+  const { openModal } = useModal()
+  const { preferences } = usePreferences()
 
-  const storageEntries = useMemo(() => {
-    return entries(db.storageMap)
-  }, [db.storageMap])
-
+  const storageMapRef = useRef(db.storageMap)
   useEffect(() => {
-    if (pathname === '/app')
-      if (storageEntries.length === 0) {
-        push('/app/storages')
-      } else {
-        push(`/app/storages/${storageEntries[0][1].id}`)
+    const storageEntries = entries(storageMapRef.current)
+
+    if (pathname !== '/app') return
+
+    if (storageEntries.length === 0) {
+      if (preferences['general.enableDownloadAppModal'] === true) {
+        openModal('download-app')
       }
-  }, [pathname, db.storageMap, push])
+      push('/app/storages')
+    } else {
+      push(`/app/storages/${storageEntries[0][1].id}`)
+    }
+  }, [pathname, push])
 }
