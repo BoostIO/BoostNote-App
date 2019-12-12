@@ -18,6 +18,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import FileDropZone from '../atoms/FileDropZone'
 import { convertCSONFileToNote } from '../../lib/legacy-import'
+import { escapeRegExp } from '../../lib/regex'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -81,7 +82,7 @@ export default () => {
 
   const filteredNotes = useMemo(() => {
     if (search.trim() === '') return notes
-    const regex = new RegExp(search, 'i')
+    const regex = new RegExp(escapeRegExp(search), 'i')
     return notes.filter(
       note =>
         note.tags.join().match(regex) ||
