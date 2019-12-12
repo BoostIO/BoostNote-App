@@ -44,6 +44,9 @@ export const StyledNoteListItem = styled.div`
   }
 
   .preview {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `
 
