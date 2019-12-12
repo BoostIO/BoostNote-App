@@ -1,58 +1,59 @@
 import { BaseTheme } from './types'
 
-const base1Color = '#2c2d30'
-const base2Color = '#1e2022'
+const base1Color = '#ECECEC'
+const base2Color = '#F9F9F9'
 const primaryColor = '#03C588'
 
+const dark87Color = 'rgba(0,0,0,0.87)'
+const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
-const light70Color = 'rgba(255,255,255,0.7)'
-const light30Color = 'rgba(255,255,255,0.3)'
-const light12Color = 'rgba(255,255,255,0.12)'
+const dark12Color = 'rgba(0,0,0,0.12)'
+const dark100Color = '#000'
 const light100Color = '#FFF'
 
-export const darkTheme: BaseTheme = {
+export const lightTheme: BaseTheme = {
   colors: {
-    text: light70Color,
-    deemedText: light30Color,
+    text: dark87Color,
+    deemedText: dark26Color,
     inverseText: light100Color,
-    background: light100Color,
-    alternativeBackground: light12Color,
+    background: base1Color,
+    alternativeBackground: base2Color,
     active: primaryColor,
-    border: dark26Color
+    border: dark12Color
   },
   fontSize: 15,
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
-  textColor: light100Color,
-  uiTextColor: light70Color,
-  activeUiTextColor: light100Color,
-  disabledUiTextColor: light30Color,
+  textColor: dark87Color,
+  uiTextColor: dark54Color,
+  activeUiTextColor: dark100Color,
+  disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,
-  borderColor: dark26Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
+  borderColor: dark12Color,
+  iconColor: dark26Color,
+  activeIconColor: dark54Color,
   backgroundColor: base1Color,
   secondaryBackgroundColor: base2Color,
   activeBackgroundColor: base2Color,
   shadow: '0 3px 5px rgba(0,0,0,0.1)',
 
   scrollBarTrackColor: base2Color,
-  scrollBarThumbColor: light12Color,
+  scrollBarThumbColor: dark12Color,
 
   // SideBar
   sideBarBackgroundColor: base1Color,
-  sideBarTextColor: light70Color,
-  sideBarSecondaryTextColor: light30Color,
+  sideBarTextColor: dark54Color,
+  sideBarSecondaryTextColor: dark26Color,
 
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
-  secondaryButtonLabelColor: light100Color,
+  secondaryButtonLabelColor: dark100Color,
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: light12Color
+  inputBackground: dark12Color
 }

@@ -1,65 +1,64 @@
 import { BaseTheme } from './types'
 
-const textColor = '#333'
-const deemedTextColor = '#999'
-const inverseTextColor = '#FFF'
-const backgroundColor = '#FFF'
-const alternativeBackgroundColor = '#F8F8F8'
-const activeColor = '#63AEFC'
-const borderColor = '#E5E5E5'
-
-const base1Color = '#2c2d30'
-const base2Color = '#1e2022'
+const base1Color = '#ECECEC'
+const base2Color = '#F9F9F9'
+const base3Color = '#2c2d30'
 const primaryColor = '#03C588'
+
 const dark87Color = 'rgba(0,0,0,0.87)'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
-// const dark12Color = 'rgba(0,0,0,0.12'
+const dark12Color = 'rgba(0,0,0,0.12)'
 const dark100Color = '#000'
+
+const light100Color = '#FFF'
+const light70Color = 'rgba(255,255,255,0.7)'
+const light30Color = 'rgba(255,255,255,0.3)'
+const light12Color = 'rgba(255,255,255,0.12)'
 
 export const defaultTheme: BaseTheme = {
   colors: {
-    text: textColor,
-    deemedText: deemedTextColor,
-    inverseText: inverseTextColor,
-    background: backgroundColor,
-    alternativeBackground: alternativeBackgroundColor,
-    active: activeColor,
-    border: borderColor
+    text: dark87Color,
+    deemedText: dark26Color,
+    inverseText: light100Color,
+    background: base1Color,
+    alternativeBackground: base2Color,
+    active: primaryColor,
+    border: dark12Color
   },
   fontSize: 15,
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
-  textColor: dark100Color,
-  uiTextColor: dark87Color,
+  textColor: dark87Color,
+  uiTextColor: dark54Color,
   activeUiTextColor: dark100Color,
-  disabledUiTextColor: dark54Color,
+  disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,
-  borderColor: dark26Color,
-  iconColor: dark54Color,
-  activeIconColor: dark87Color,
+  borderColor: dark12Color,
+  iconColor: dark26Color,
+  activeIconColor: dark54Color,
   backgroundColor: base1Color,
   secondaryBackgroundColor: base2Color,
-  activeBackgroundColor: base2Color,
-  shadow: '0 2px 24px rgba(0,0,0,0.5)',
+  activeBackgroundColor: light12Color,
+  shadow: '0 3px 5px rgba(0,0,0,0.1)',
 
   scrollBarTrackColor: base2Color,
-  scrollBarThumbColor: dark26Color,
+  scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideBarBackgroundColor: base1Color,
-  sideBarTextColor: dark87Color,
-  sideBarSecondaryTextColor: dark54Color,
+  sideBarBackgroundColor: base3Color,
+  sideBarTextColor: light70Color,
+  sideBarSecondaryTextColor: light30Color,
 
   // Button
-  primaryButtonLabelColor: dark100Color,
+  primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
   secondaryButtonLabelColor: dark100Color,
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: dark26Color
+  inputBackground: dark12Color
 }
