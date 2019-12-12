@@ -13,6 +13,9 @@ export const secondaryBackgroundColor = ({ theme }: StyledProps) =>
 export const activeBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.activeBackgroundColor};`
 
+export const sideBarBackgroundColor = ({ theme }: StyledProps) =>
+  `background-color: ${theme.sideBarBackgroundColor};`
+
 export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
 &:hover,
 &:focus {
@@ -39,6 +42,12 @@ transition: 200ms color;
 &:disabled {
   color: ${theme.disabledUiTextColor};
 }`
+
+export const sideBarTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.sideBarTextColor};`
+
+export const sideBarSecondaryTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.sideBarSecondaryTextColor};`
 
 export const borderColor = ({ theme }: StyledProps) =>
   `border-color: ${theme.borderColor};`
@@ -73,7 +82,7 @@ color: ${theme.textColor};
 
 export const primaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.primaryColor};
-color: ${theme.textColor};
+color: ${theme.primaryButtonLabelColor};
 font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
@@ -82,7 +91,7 @@ font-size: 13px;
 
 export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
-color: ${theme.textColor};
+color: ${theme.secondaryButtonLabelColor};
 font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
