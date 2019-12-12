@@ -7,7 +7,7 @@ import { usePreferences } from '../preferences'
 
 export default function useRedirectHandler() {
   const db = useDb()
-  const { push, pathname } = useRouter()
+  const { replace, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences } = usePreferences()
 
@@ -18,12 +18,12 @@ export default function useRedirectHandler() {
     if (pathname !== '/app') return
 
     if (storageEntries.length === 0) {
-      if (preferences['general.enableDownloadAppModal'] === true) {
+      if (preferences['general.enableDownloadAppModal']) {
         openModal('download-app')
       }
-      push('/app/storages')
+      replace('/app/storages')
     } else {
-      push(`/app/storages/${storageEntries[0][1].id}`)
+      replace(`/app/storages/${storageEntries[0][1].id}`)
     }
-  }, [pathname, push])
+  }, [pathname, replace])
 }
