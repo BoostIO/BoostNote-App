@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import styled from '../../lib/styled'
+import { escapeRegExp } from '../../lib/regex'
 
 const HighlightContainer = styled.span`
   .highlighted {
@@ -16,7 +17,7 @@ function HighlightText(props: HighlightTextProps) {
   const { text, search } = props
   return useMemo(() => {
     if (search.trim() === '') return <>{text}</>
-    const searchRegex = new RegExp(`(${search})`, 'gi')
+    const searchRegex = new RegExp(`(${escapeRegExp(search)})`, 'gi')
     const parts = text.split(searchRegex)
 
     return (
