@@ -149,7 +149,10 @@
     ],
     "asar": false,
     "linux": {
-      "target": "deb"
+      "target": [
+        "deb",
+        "AppImage"
+      ]
     },
     "publish": "github"
   }
