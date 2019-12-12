@@ -17,9 +17,9 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import {
-  backgroundColor,
-  iconColor,
-  textColor
+  sideBarBackgroundColor,
+  sideBarTextColor,
+  sideBarSecondaryTextColor
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -34,14 +34,14 @@ const Description = styled.nav`
   margin-left: 5px;
   margin-bottom: 10px;
   font-size: 18px;
-  color: ${textColor};
+  ${sideBarTextColor}
 `
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
   flex-direction: column;
   height: 100%;
-  ${backgroundColor}
+  ${sideBarBackgroundColor}
   .topControl {
     height: 50px;
     display: flex;
@@ -53,7 +53,7 @@ const StyledSideNavContainer = styled.nav`
       height: 50px;
       background-color: transparent;
       border: none;
-      ${iconColor}
+      ${sideBarSecondaryTextColor}
       font-size: 24px;
     }
   }
