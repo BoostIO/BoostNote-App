@@ -69,10 +69,6 @@ export const StyledNoteListContainer = styled.div`
     border: none;
     ${uiTextColor}
   }
-
-  .highlighted {
-    background: rgba(217, 211, 46, 0.6);
-  }
 `
 
 type NoteListProps = {
@@ -104,11 +100,12 @@ const NoteList = ({
 
   const filteredNotes = useMemo(() => {
     if (search === '') return notes
+    const regex = new RegExp(search, 'i')
     return notes.filter(
       note =>
-        note.tags.includes(search) ||
-        note.title.includes(search) ||
-        note.content.includes(search)
+        note.tags.join().match(regex) ||
+        note.title.match(regex) ||
+        note.content.match(regex)
     )
   }, [search, notes])
 
@@ -185,6 +182,7 @@ const NoteList = ({
                 storageId={storageId}
                 basePathname={basePathname}
                 focusList={focusList}
+                search={search}
               />
             </li>
           )
