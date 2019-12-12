@@ -36,6 +36,7 @@ export const SectionControl = styled.div`
 export const SectionSelect = styled.select`
   ${selectStyle}
   padding: 0 16px;
+  width: 200px;
   height: 40px;
   border-radius: 2px;
 
@@ -66,6 +67,7 @@ export const SectionSecondaryButton = styled.button`
 export const SectionInput = styled.input`
   ${inputStyle}
   padding: 0 16px;
+  width: 200px;
   height: 40px;
   border-radius: 2px;
 `
