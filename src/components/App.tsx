@@ -5,6 +5,7 @@ import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '../lib/styled/themes/default'
 import { darkTheme } from '../lib/styled/themes/dark'
+import { lightTheme } from '../lib/styled/themes/light'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
@@ -73,6 +74,8 @@ function selectTheme(theme: string) {
   switch (theme) {
     case 'dark':
       return darkTheme
+    case 'light':
+      return lightTheme
     default:
       return defaultTheme
   }
