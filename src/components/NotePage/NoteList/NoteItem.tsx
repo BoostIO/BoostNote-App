@@ -48,74 +48,27 @@ export const StyledNoteListItem = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
-  .highlighted {
-    background: rgba(217, 211, 46, 0.6);
-  }
 `
 
 type NoteItemProps = {
   note: NoteDoc
   active: boolean
   storageId: string
-  search: string
   basePathname: string
   focusList: () => void
 }
 
-export default ({
-  storageId,
-  note,
-  active,
-  basePathname,
-  search
-}: NoteItemProps) => {
+export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
-  const getHighlightedText = useCallback(
-    (text: string) => {
-      if (search === '') return text
-      const searchRegex = new RegExp(`(${search})`, 'gi')
-      const parts = text.split(searchRegex)
-      return (
-        <span>
-          {parts.map((part, i) =>
-            part.toLowerCase() === search.toLowerCase() ? (
-              <span key={i} className='highlighted'>
-                {part}
-              </span>
-            ) : (
-              <React.Fragment key={i}>{part}</React.Fragment>
-            )
-          )}
-        </span>
-      )
-    },
-    [search]
-  )
-
   const contentPreview = useMemo(() => {
-    const searchFirstIndex = note.content
-      .trim()
-      .toLowerCase()
-      .indexOf(search.toLowerCase())
-    if (search !== '' && searchFirstIndex !== -1) {
-      return getHighlightedText(
-        note.content
-          .trim()
-          .substring(searchFirstIndex)
-          .split('\n')
-          .shift() || 'Empty note'
-      )
-    }
-
     return (
       note.content
         .trim()
         .split('\n')
         .shift() || 'Empty note'
     )
-  }, [note.content, search])
+  }, [note.content])
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
@@ -132,13 +85,13 @@ export default ({
     >
       <Link href={href}>
         <div className='container'>
-          <div className='title'>{getHighlightedText(note.title)}</div>
+          <div className='title'>{note.title}</div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
             <div>
               <Icon path={mdiTagOutline} />{' '}
               {note.tags.map(tag => (
-                <span key={tag}>{getHighlightedText(tag)}</span>
+                <span key={tag}>{tag}</span>
               ))}
             </div>
           )}
