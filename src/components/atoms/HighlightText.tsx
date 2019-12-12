@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from './styled'
+import styled from '../../lib/styled'
 
 const HighlightContainer = styled.span`
   .highlighted {
@@ -7,12 +7,12 @@ const HighlightContainer = styled.span`
   }
 `
 
-interface GetHighlightedTextProps {
+interface HighlightTextProps {
   text: string
   search: string
 }
 
-function GetHighlightedText(props: GetHighlightedTextProps) {
+function HighlightText(props: HighlightTextProps) {
   const { text, search } = props
   if (search.trim() === '') return <>{text}</>
   const searchRegex = new RegExp(`(${search})`, 'gi')
@@ -32,4 +32,4 @@ function GetHighlightedText(props: GetHighlightedTextProps) {
   )
 }
 
-export default GetHighlightedText
+export default HighlightText

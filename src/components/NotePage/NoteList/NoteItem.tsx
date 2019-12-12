@@ -9,7 +9,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
-import GetHighlightedText from '../../../lib/highlight'
+import HighlightText from '../../atoms/HighlightText'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -91,16 +91,6 @@ export default ({
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
-  const noteTitle = useMemo(() => {
-    return <GetHighlightedText text={note.title} search={search} />
-  }, [search, note.title])
-
-  const noteTags = useMemo(() => {
-    return note.tags.map(tag => (
-      <GetHighlightedText key={tag} text={tag} search={search} />
-    ))
-  }, [note.tags, search])
-
   const contentPreview = useMemo(() => {
     const trimmedContent = note.content.trim()
     const searchFirstIndex = trimmedContent
@@ -116,7 +106,7 @@ export default ({
       return contentToHighlight == null ? (
         'Empty note'
       ) : (
-        <GetHighlightedText text={contentToHighlight} search={search} />
+        <HighlightText text={contentToHighlight} search={search} />
       )
     }
 
@@ -138,11 +128,23 @@ export default ({
     >
       <Link href={href}>
         <div className='container'>
-          <div className='title'>{noteTitle}</div>
+          <div className='title'>
+            {useMemo(() => {
+              return <HighlightText text={note.title} search={search} />
+            }, [search, note.title])}
+          </div>
           {note.title.length === 0 && <div className='title'>No title</div>}
           <div className='date'>DD days ago</div>
           <div className='preview'>{contentPreview}</div>
-          {note.tags.length > 0 && <div className='tag-area'>{noteTags}</div>}
+          {note.tags.length > 0 && (
+            <div className='tag-area'>
+              {useMemo(() => {
+                return note.tags.map(tag => (
+                  <HighlightText key={tag} text={tag} search={search} />
+                ))
+              }, [note.tags, search])}
+            </div>
+          )}
         </div>
       </Link>
     </StyledNoteListItem>
