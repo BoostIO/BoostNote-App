@@ -55,19 +55,19 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
         {
           type: MenuTypes.Normal,
           label: 'HTML export',
-          onClick: async () => await exportToHtml()
+          onClick: async () => await exportToHtml(note)
         },
         {
           type: MenuTypes.Normal,
           label: 'Markdown export',
-          onClick: async () => await exportToMarkdown()
+          onClick: async () => await exportToMarkdown(note)
         }
       ])
     },
-    [popup]
+    [popup, note]
   )
 
-  const exportToHtml = async () => {
+  const exportToHtml = async (note: NoteDoc) => {
     await unified()
       .use(remarkParse)
       .use(remarkRehype, { allowDangerousHTML: false })
@@ -99,7 +99,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
       })
   }
 
-  const exportToMarkdown = async () => {
+  const exportToMarkdown = async (note: NoteDoc) => {
     console.log('export markdown')
     await unified()
       .use(remarkParse)
