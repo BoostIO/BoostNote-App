@@ -23,6 +23,5 @@
     "react": {
       "version": "detect"
     }
-  },
-  "exclude": ["dist", "node_modules"]
+  }
 }
