@@ -3,7 +3,9 @@ import {
   selectStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
-  inputStyle
+  inputStyle,
+  disabledUiTextColor,
+  PrimaryTextColor
 } from '../../lib/styled/styleFunctions'
 
 export const Section = styled.section`
@@ -19,7 +21,18 @@ export const SectionHeader1 = styled.h1`
   font-size: 36px;
 `
 
-export const SectionHeader = styled.h3``
+export const SectionHeader = styled.h3`
+  font-size: 18px;
+  font-weight: 500;
+`
+
+export const SectionSubtleText = styled.p`
+  ${disabledUiTextColor}
+`
+
+export const PrimaryText = styled.a`
+  ${PrimaryTextColor}
+`
 
 export const SectionControl = styled.div`
   margin-bottom: 1em;
