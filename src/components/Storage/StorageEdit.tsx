@@ -8,6 +8,7 @@ import { NoteStorage } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { useDebounce } from 'react-use'
 import LoginButton from '../atoms/LoginButton'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -18,6 +19,7 @@ export default ({ storage }: StorageEditProps) => {
   const router = useRouter()
   const { preferences } = usePreferences()
   const [name, setName] = useState(storage.name)
+  const { messageBox } = useDialog()
 
   useEffect(() => {
     setName(storage.name)
@@ -40,8 +42,20 @@ export default ({ storage }: StorageEditProps) => {
   }, [storage.id, db])
 
   const removeCallback = useCallback(() => {
-    db.removeStorage(storage.id)
-    router.push('/app')
+    messageBox({
+      title: `Remove "${storage.name}" storage`,
+      message: 'The storage will be unlinked from this app.',
+      iconType: DialogIconTypes.Warning,
+      buttons: ['Remove Storage', 'Cancel'],
+      defaultButtonIndex: 0,
+      cancelButtonIndex: 1,
+      onClose: (value: number | null) => {
+        if (value === 0) {
+          db.removeStorage(storage.id)
+          router.push('/app')
+        }
+      }
+    })
   }, [storage.id, db, router])
 
   useDebounce(
