@@ -11,6 +11,7 @@ const StyledButton = styled.button`
   background-color: transparent;
   border-radius: 2px;
   top: 2px;
+  font-size: 20px;
   cursor: pointer;
   ${uiTextColor}
   &:focus {

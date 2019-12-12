@@ -21,12 +21,12 @@
   ],
   "routes": [
     {
-      "src": "/app/storages/.*",
-      "dest": "/index.html"
+      "src": "/app/(.*).(js|icon|css)$",
+      "dest": "/$1.$2"
     },
     {
       "src": "/app/?(.*)",
-      "dest": "/$1"
+      "dest": "/index.html"
     }
   ]
 }
