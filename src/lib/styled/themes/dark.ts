@@ -11,13 +11,12 @@ const borderColor = '#E5E5E5'
 const base1Color = '#2c2d30'
 const base2Color = '#1e2022'
 const primaryColor = '#03C588'
-const dark87Color = 'rgba(0,0,0,0.87)'
-const dark54Color = 'rgba(0,0,0,0.54)'
-const dark26Color = 'rgba(0,0,0,0.26)'
-// const dark12Color = 'rgba(0,0,0,0.12'
-const dark100Color = '#000'
+const light70Color = 'rgba(255,255,255,0.7)'
+const light30Color = 'rgba(255,255,255,0.3)'
+const light12Color = 'rgba(255,255,255,0.12)'
+const light100Color = '#FFF'
 
-export const defaultTheme: BaseTheme = {
+export const darkTheme: BaseTheme = {
   colors: {
     text: textColor,
     deemedText: deemedTextColor,
@@ -32,34 +31,34 @@ export const defaultTheme: BaseTheme = {
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
-  textColor: dark100Color,
-  uiTextColor: dark87Color,
-  activeUiTextColor: dark100Color,
-  disabledUiTextColor: dark54Color,
+  textColor: light100Color,
+  uiTextColor: light70Color,
+  activeUiTextColor: light100Color,
+  disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  borderColor: dark26Color,
-  iconColor: dark54Color,
-  activeIconColor: dark87Color,
+  borderColor: light12Color,
+  iconColor: light30Color,
+  activeIconColor: light70Color,
   backgroundColor: base1Color,
   secondaryBackgroundColor: base2Color,
   activeBackgroundColor: base2Color,
   shadow: '0 2px 24px rgba(0,0,0,0.5)',
 
   scrollBarTrackColor: base2Color,
-  scrollBarThumbColor: dark26Color,
+  scrollBarThumbColor: light12Color,
 
   // SideBar
   sideBarBackgroundColor: base1Color,
-  sideBarTextColor: dark87Color,
-  sideBarSecondaryTextColor: dark54Color,
+  sideBarTextColor: light70Color,
+  sideBarSecondaryTextColor: light30Color,
 
   // Button
-  primaryButtonLabelColor: dark100Color,
+  primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
-  secondaryButtonLabelColor: dark100Color,
+  secondaryButtonLabelColor: light100Color,
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: dark26Color
+  inputBackground: light12Color
 }
