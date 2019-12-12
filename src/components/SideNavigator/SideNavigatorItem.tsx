@@ -66,7 +66,11 @@ const ClickableContainer = styled.button`
   }
 `
 
-const Label = styled.div``
+const Label = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
 
 const ControlContainer = styled.div`
   display: flex;
