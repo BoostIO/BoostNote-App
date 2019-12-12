@@ -95,20 +95,26 @@ export default ({
   )
 
   const contentPreview = useMemo(() => {
-    const trimmedContent = note.content.trim()
-    const searchFirstIndex = trimmedContent
+    const searchFirstIndex = note.content
+      .trim()
       .toLowerCase()
       .indexOf(search.toLowerCase())
     if (search !== '' && searchFirstIndex !== -1) {
       return getHighlightedText(
-        trimmedContent
+        note.content
+          .trim()
           .substring(searchFirstIndex)
           .split('\n')
           .shift() || 'Empty note'
       )
     }
 
-    return trimmedContent.split('\n').shift() || 'Empty note'
+    return (
+      note.content
+        .trim()
+        .split('\n')
+        .shift() || 'Empty note'
+    )
   }, [note.content, search])
 
   const handleDragStart = useCallback(
