@@ -129,20 +129,16 @@ export default ({
       <Link href={href}>
         <div className='container'>
           <div className='title'>
-            {useMemo(() => {
-              return <HighlightText text={note.title} search={search} />
-            }, [search, note.title])}
+            <HighlightText text={note.title} search={search} />
           </div>
           {note.title.length === 0 && <div className='title'>No title</div>}
           <div className='date'>DD days ago</div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
             <div className='tag-area'>
-              {useMemo(() => {
-                return note.tags.map(tag => (
-                  <HighlightText key={tag} text={tag} search={search} />
-                ))
-              }, [note.tags, search])}
+              {note.tags.map(tag => (
+                <HighlightText key={tag} text={tag} search={search} />
+              ))}
             </div>
           )}
         </div>

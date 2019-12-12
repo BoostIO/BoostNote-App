@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../lib/styled'
 
 const HighlightContainer = styled.span`
@@ -17,18 +17,21 @@ function HighlightText(props: HighlightTextProps) {
   if (search.trim() === '') return <>{text}</>
   const searchRegex = new RegExp(`(${search})`, 'gi')
   const parts = text.split(searchRegex)
-  return (
-    <HighlightContainer>
-      {parts.map((part, i) =>
-        part.toLowerCase() === search.toLowerCase() ? (
-          <span key={i} className='highlighted'>
-            {part}
-          </span>
-        ) : (
-          <React.Fragment key={i}>{part}</React.Fragment>
-        )
-      )}
-    </HighlightContainer>
+  return useMemo(
+    () => (
+      <HighlightContainer>
+        {parts.map((part, i) =>
+          part.toLowerCase() === search.toLowerCase() ? (
+            <span key={i} className='highlighted'>
+              {part}
+            </span>
+          ) : (
+            <React.Fragment key={i}>{part}</React.Fragment>
+          )
+        )}
+      </HighlightContainer>
+    ),
+    [text, search]
   )
 }
 
