@@ -72,7 +72,7 @@ export const StyledNoteListItem = styled.div`
   }
 
   .highlighted {
-    background: rgba(217, 211, 46, 0.6);
+    background: rgba(3, 197, 136, 0.6);
   }
 `
 
