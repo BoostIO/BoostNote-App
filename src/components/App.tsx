@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '../lib/styled/themes/default'
 import { darkTheme } from '../lib/styled/themes/dark'
 import { lightTheme } from '../lib/styled/themes/light'
+import { sepiaTheme } from '../lib/styled/themes/sepia'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
@@ -79,6 +80,8 @@ function selectTheme(theme: string) {
       return darkTheme
     case 'light':
       return lightTheme
+    case 'sepia':
+      return sepiaTheme
     default:
       return defaultTheme
   }

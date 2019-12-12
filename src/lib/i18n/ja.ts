@@ -10,7 +10,7 @@ export default {
     'preferences.auto': '自動',
     'preferences.light': 'ライト',
     'preferences.dark': 'ダーク',
-    'preferences.solarizedDark': 'Solarized Dark',
+    'preferences.sepia': 'セピア',
     'preferences.noteSorting': 'ノート整列',
     'preferences.dateUpdated': 'アプデート順',
     'preferences.dateCreated': '生成順',
