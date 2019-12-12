@@ -5,7 +5,10 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { NoteDoc } from '../../lib/db/types'
 import { mdiFileExport } from '@mdi/js'
 import Icon from './Icon'
-import { exportToHtml, exportToMarkdown } from '../../lib/exports'
+import {
+  exportNoteAsHtmlFile,
+  exportNoteAsMarkdownFile
+} from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
 
@@ -43,12 +46,12 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
           type: MenuTypes.Normal,
           label: 'HTML export',
           onClick: async () =>
-            await exportToHtml(note, preferences, previewStyle)
+            await exportNoteAsHtmlFile(note, preferences, previewStyle)
         },
         {
           type: MenuTypes.Normal,
           label: 'Markdown export',
-          onClick: async () => await exportToMarkdown(note)
+          onClick: async () => await exportNoteAsMarkdownFile(note)
         }
       ])
     },
