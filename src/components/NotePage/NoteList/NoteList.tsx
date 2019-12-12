@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  KeyboardEvent,
-  useRef,
-  useMemo,
-  useState,
-  ChangeEventHandler
-} from 'react'
+import React, { useCallback, KeyboardEvent, useRef } from 'react'
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
@@ -16,7 +9,6 @@ import {
   inputStyle,
   uiTextColor
 } from '../../../lib/styled/styleFunctions'
-import { useRouter } from '../../../lib/router'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -73,76 +65,27 @@ export const StyledNoteListContainer = styled.div`
     border: none;
     ${uiTextColor}
   }
-
-  .highlighted {
-    background: rgba(217, 211, 46, 0.6);
-  }
 `
 
 type NoteListProps = {
   storageId: string
-  noteId?: string
-  currentPathnameWithoutNoteId: string
   notes: NoteDoc[]
   createNote: () => Promise<void>
   basePathname: string
+  currentNoteIndex: number
+  navigateUp: () => void
+  navigateDown: () => void
 }
 
 const NoteList = ({
   notes,
+  currentNoteIndex,
   createNote,
   storageId,
-  noteId,
   basePathname,
-  currentPathnameWithoutNoteId
+  navigateUp,
+  navigateDown
 }: NoteListProps) => {
-  const router = useRouter()
-  const [search, setSearchInput] = useState<string>('')
-
-  const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      setSearchInput(event.target.value)
-    },
-    [setSearchInput]
-  )
-
-  const filteredNotes = useMemo(() => {
-    if (search === '') return notes
-    return notes.filter(
-      note =>
-        note.tags.includes(search) ||
-        note.title.includes(search) ||
-        note.content.includes(search)
-    )
-  }, [search, notes])
-
-  const currentNoteIndex = useMemo(() => {
-    for (let i = 0; i < filteredNotes.length; i++) {
-      if (filteredNotes[i]._id === noteId) {
-        return i
-      }
-    }
-    return 0
-  }, [filteredNotes, noteId])
-
-  const navigateUp = useCallback(() => {
-    if (currentNoteIndex > 0) {
-      router.push(
-        currentPathnameWithoutNoteId +
-          `/${filteredNotes[currentNoteIndex - 1]._id}`
-      )
-    }
-  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
-
-  const navigateDown = useCallback(() => {
-    if (currentNoteIndex < notes.length - 1) {
-      router.push(
-        currentPathnameWithoutNoteId +
-          `/${filteredNotes[currentNoteIndex + 1]._id}`
-      )
-    }
-  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
-
   const handleListKeyDown = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
@@ -162,14 +105,15 @@ const NoteList = ({
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
+
   return (
     <StyledNoteListContainer>
       <div className='control'>
         <div className='searchInput'>
           <input
             className='input'
-            value={search}
-            onChange={updateSearchInput}
+            value={''}
+            onChange={() => {}}
             placeholder='Search Notes'
           />
           <Icon className='icon' path={mdiMagnify} />
@@ -179,7 +123,7 @@ const NoteList = ({
         </button>
       </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
-        {filteredNotes.map((note, index) => {
+        {notes.map((note, index) => {
           const noteIsCurrentNote = index === currentNoteIndex
           return (
             <li key={note._id}>
@@ -193,13 +137,7 @@ const NoteList = ({
             </li>
           )
         })}
-        {filteredNotes.length === 0 ? (
-          notes.length === 0 ? (
-            <li className='empty'>No notes</li>
-          ) : (
-            <li className='empty'>No notes could be found.</li>
-          )
-        ) : null}
+        {notes.length === 0 && <li className='empty'>No notes</li>}
       </ul>
     </StyledNoteListContainer>
   )
