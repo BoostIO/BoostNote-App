@@ -1,4 +1,9 @@
-import React, { useCallback, KeyboardEvent, useRef } from 'react'
+import React, {
+  useCallback,
+  KeyboardEvent,
+  useRef,
+  ChangeEventHandler
+} from 'react'
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
@@ -65,23 +70,34 @@ export const StyledNoteListContainer = styled.div`
 
 type NoteListProps = {
   storageId: string
+  currentNoteIndex: number
+  search: string
   notes: NoteDoc[]
   createNote: () => Promise<void>
-  basePathname: string
-  currentNoteIndex: number
-  navigateUp: () => void
+  setSearchInput: (input: string) => void
   navigateDown: () => void
+  navigateUp: () => void
+  basePathname: string
 }
 
 const NoteList = ({
   notes,
-  currentNoteIndex,
   createNote,
   storageId,
   basePathname,
-  navigateUp,
-  navigateDown
+  search,
+  currentNoteIndex,
+  setSearchInput,
+  navigateDown,
+  navigateUp
 }: NoteListProps) => {
+  const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
+      setSearchInput(event.target.value)
+    },
+    [setSearchInput]
+  )
+
   const handleListKeyDown = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
@@ -101,15 +117,14 @@ const NoteList = ({
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
-
   return (
     <StyledNoteListContainer>
       <div className='control'>
         <div className='searchInput'>
           <input
             className='input'
-            value={''}
-            onChange={() => {}}
+            value={search}
+            onChange={updateSearchInput}
             placeholder='Search Notes'
           />
           <Icon className='icon' path={mdiMagnify} />
@@ -129,11 +144,18 @@ const NoteList = ({
                 storageId={storageId}
                 basePathname={basePathname}
                 focusList={focusList}
+                search={search}
               />
             </li>
           )
         })}
-        {notes.length === 0 && ''}
+        {notes.length === 0 ? (
+          search.trim() === '' ? (
+            <li className='empty'>No notes</li>
+          ) : (
+            <li className='empty'>No notes could be found.</li>
+          )
+        ) : null}
       </ul>
     </StyledNoteListContainer>
   )

@@ -9,6 +9,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
+import HighlightText from '../../atoms/HighlightText'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -76,21 +77,41 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   storageId: string
+  search: string
   basePathname: string
   focusList: () => void
 }
 
-export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
+export default ({
+  storageId,
+  note,
+  active,
+  basePathname,
+  search
+}: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
   const contentPreview = useMemo(() => {
-    return (
-      note.content
-        .trim()
+    const trimmedContent = note.content.trim()
+    const searchFirstIndex = trimmedContent
+      .toLowerCase()
+      .indexOf(search.toLowerCase())
+
+    if (search !== '' && searchFirstIndex !== -1) {
+      const contentToHighlight = trimmedContent
+        .substring(searchFirstIndex)
         .split('\n')
-        .shift() || 'Empty note'
-    )
-  }, [note.content])
+        .shift()
+
+      return contentToHighlight == null ? (
+        'Empty note'
+      ) : (
+        <HighlightText text={contentToHighlight} search={search} />
+      )
+    }
+
+    return trimmedContent.split('\n').shift() || 'Empty note'
+  }, [note.content, search])
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
@@ -107,16 +128,16 @@ export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
     >
       <Link href={href}>
         <div className='container'>
-          <div className='title'>{note.title}</div>
+          <div className='title'>
+            <HighlightText text={note.title} search={search} />
+          </div>
           {note.title.length === 0 && <div className='title'>No title</div>}
           <div className='date'>DD days ago</div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
             <div className='tag-area'>
               {note.tags.map(tag => (
-                <span className='tag' key={tag}>
-                  {tag}
-                </span>
+                <HighlightText key={tag} text={tag} search={search} />
               ))}
             </div>
           )}

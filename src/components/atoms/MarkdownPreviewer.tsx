@@ -134,11 +134,6 @@ export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
   [Partial<RehypeCodeMirrorOptions>?]
 >
 
-interface MarkdownProcessorOptions {
-  codeBlockTheme?: string
-  storageId?: string
-}
-
 const BlobImage = ({ blob, ...props }: any) => {
   const url = useMemo(() => {
     return URL.createObjectURL(blob)
@@ -147,37 +142,8 @@ const BlobImage = ({ blob, ...props }: any) => {
     return () => {
       URL.revokeObjectURL(url)
     }
-  }, [blob])
+  }, [blob, url])
   return <img src={url} {...props} />
-}
-
-function createMarkdownProcessor(options: MarkdownProcessorOptions = {}) {
-  return unified()
-    .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHTML: false })
-    .use(rehypeCodeMirror, {
-      ignoreMissing: true,
-      theme: options.codeBlockTheme
-    })
-    .use(rehypeRaw)
-    .use(rehypeSanitize, schema)
-    .use(rehypeReact, {
-      createElement: React.createElement,
-      components: {
-        img: ({ src, ...props }: any) => {
-          const { storageMap } = useDb()
-          const storage = storageMap[options.storageId!]
-          if (storage != null && !src.match('/')) {
-            const attachment = storage.attachmentMap[src]
-            if (attachment != null) {
-              return <BlobImage blob={attachment.blob} />
-            }
-          }
-
-          return <img {...props} src={src} />
-        }
-      }
-    })
 }
 
 interface MarkdownPreviewerProps {
@@ -200,10 +166,37 @@ const MarkdownPreviewer = ({
   const previousContentRef = useRef('')
   const previousThemeRef = useRef<string | undefined>('')
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
+  const { storageMap } = useDb()
 
   const markdownProcessor = useMemo(() => {
-    return createMarkdownProcessor({ codeBlockTheme, storageId })
-  }, [codeBlockTheme])
+    const options = { codeBlockTheme, storageId }
+
+    return unified()
+      .use(remarkParse)
+      .use(remarkRehype, { allowDangerousHTML: false })
+      .use(rehypeCodeMirror, {
+        ignoreMissing: true,
+        theme: options.codeBlockTheme
+      })
+      .use(rehypeRaw)
+      .use(rehypeSanitize, schema)
+      .use(rehypeReact, {
+        createElement: React.createElement,
+        components: {
+          img: ({ src, ...props }: any) => {
+            const storage = storageMap[options.storageId!]
+            if (storage != null && !src.match('/')) {
+              const attachment = storage.attachmentMap[src]
+              if (attachment != null) {
+                return <BlobImage blob={attachment.blob} />
+              }
+            }
+
+            return <img {...props} src={src} />
+          }
+        }
+      })
+  }, [codeBlockTheme, storageId, storageMap])
 
   const renderContent = useCallback(
     async (content: string) => {
