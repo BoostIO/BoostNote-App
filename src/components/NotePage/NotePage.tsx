@@ -58,9 +58,8 @@ export default () => {
         return (Object.values(currentStorage.noteMap) as NoteDoc[])
           .filter(
             note =>
-              ('p:' + note.folderPathname + '/').includes(
-                'p:' + folder.pathname + '/'
-              ) && !note.trashed
+              (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
+              !note.trashed
           )
           .sort(sortByUpdatedAt)
       case 'storages.tags.show':
