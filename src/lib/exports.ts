@@ -17,7 +17,7 @@ const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] }
 })
 
-export const exportToHtml = async (
+export const exportNoteAsHtmlFile = async (
   note: NoteDoc,
   preferences: Preferences,
   previewStyle?: string
@@ -53,7 +53,9 @@ export const exportToHtml = async (
     })
 }
 
-export const exportToMarkdown = async (note: NoteDoc): Promise<void> => {
+export const exportNoteAsMarkdownFile = async (
+  note: NoteDoc
+): Promise<void> => {
   await unified()
     .use(remarkParse)
     .use(remarkStringify)
