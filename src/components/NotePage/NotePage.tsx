@@ -49,9 +49,8 @@ export default () => {
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
-        return [...folder.noteIdSet]
-          .map(noteId => currentStorage.noteMap[noteId]!)
-          .filter(note => !note.trashed)
+        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+          .filter(note => note.folderPathname.includes(folder.pathname))
           .sort(sortByUpdatedAt)
       case 'storages.tags.show':
         const { tagName } = routeParams
@@ -155,8 +154,9 @@ export default () => {
         }
       })
     },
-    [messageBox, purgeNoteFromDb])
-    
+    [messageBox, purgeNoteFromDb]
+  )
+
   const importDrop = useCallback(
     (files: File[]) => {
       files.forEach(async file => {
