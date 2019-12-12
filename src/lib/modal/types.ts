@@ -8,7 +8,7 @@ export interface ModalsRenderingOptions {
 }
 
 export interface ModalsContext {
-  modalsContent: ModalsContentOptions | null
-  openModals: (options: ModalsContentOptions) => void
-  closeModals: () => void
+  modalContent: ModalsContentOptions | null
+  openModal: (options: ModalsContentOptions) => void
+  closeModal: () => void
 }
