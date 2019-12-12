@@ -19,6 +19,7 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
+  'general.enableDownloadAppModal': boolean
   'general.tutorials': GeneralTutorialsOptions
 
   // Editor

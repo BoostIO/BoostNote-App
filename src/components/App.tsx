@@ -18,6 +18,8 @@ import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
+import Modal from './Modal'
+
 const App = () => {
   const { initialize, initialized } = useDb()
   useEffect(() => {
@@ -65,6 +67,7 @@ const App = () => {
         <ContextMenu />
         <Dialog />
         <PreferencesModal />
+        <Modal />
         <CodeMirrorStyle />
       </StyledAppContainer>
     </ThemeProvider>

@@ -1,24 +1,29 @@
 import { useDb } from '../db'
 import { useRouter } from './store'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { entries } from '../db/utils'
+import { useModal } from '../modal'
 import { usePreferences } from '../preferences'
 
 export default function useRedirectHandler() {
   const db = useDb()
+  const { replace, pathname } = useRouter()
+  const { openModal } = useModal()
   const { preferences } = usePreferences()
-  const { push, pathname } = useRouter()
 
+  const storageMapRef = useRef(db.storageMap)
   useEffect(() => {
-    if (!db.initialized || db.storageMap == null) {
-      return
+    const storageEntries = entries(storageMapRef.current)
+
+    if (pathname !== '/app') return
+
+    if (storageEntries.length === 0) {
+      if (preferences['general.enableDownloadAppModal']) {
+        openModal('download-app')
+      }
+      replace('/app/storages')
+    } else {
+      replace(`/app/storages/${storageEntries[0][1].id}`)
     }
-    if (
-      pathname === '/app' &&
-      preferences['general.tutorials'] === 'display' &&
-      Object.keys(db.storageMap).length === 0
-    ) {
-      push('/app/tutorials/welcome-pack/guides/notes/note:storage-guide')
-    }
-    return
-  }, [pathname, db.initialized, preferences['general.displayTutorials']])
+  }, [pathname, replace])
 }

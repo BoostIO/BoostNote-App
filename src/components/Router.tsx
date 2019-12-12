@@ -11,6 +11,7 @@ import useRedirectHandler from '../lib/router/redirect'
 export default () => {
   const routeParams = useRouteParams()
   const db = useDb()
+
   useRedirectHandler()
 
   switch (routeParams.name) {

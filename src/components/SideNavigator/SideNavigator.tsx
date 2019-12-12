@@ -19,7 +19,8 @@ import { usePreferences } from '../../lib/preferences'
 import {
   sideBarBackgroundColor,
   sideBarTextColor,
-  sideBarSecondaryTextColor
+  sideBarSecondaryTextColor,
+  uiTextColor
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -67,8 +68,12 @@ const StyledSideNavContainer = styled.nav`
     display: flex;
     flex-direction: column;
   }
+
   .empty {
     padding: 4px;
+    padding-left: 26px;
+    margin-bottom: 4px;
+    ${uiTextColor}
     user-select: none;
   }
 

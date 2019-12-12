@@ -1,13 +1,19 @@
 import { readAsText } from './utils/files'
-import { parse } from 'cson-parser'
+import { parse } from './cson-parser'
 import ow from 'ow'
 
-type ParseErrors = 'read_error' | 'parse_error' | 'not_markdown'
+type ParseErrors =
+  | 'read_error'
+  | 'cson_parse_error'
+  | 'not_markdown'
+  | 'schema_parse_error'
+
 type ParsedNote = {
   content: string
   tags: string[]
   title: string
 }
+
 type ConvertResult =
   | { err: true; data: ParseErrors }
   | { err: false; data: ParsedNote }
@@ -23,13 +29,13 @@ export const convertCSONFileToNote = async (
 
   const parsed = await parseCSON(text)
 
-  if (parsed === 'parse_error') {
+  if (parsed === 'cson_parse_error') {
     return { err: true, data: parsed }
   }
 
   const validated = validateNoteSchema(parsed)
 
-  if (validated === 'parse_error') {
+  if (validated === 'schema_parse_error') {
     return { err: true, data: validated }
   }
 
@@ -47,14 +53,15 @@ const readFile = (file: File) => readAsText(file).catch(() => 'read_error')
 const parseCSON = (text: string) => {
   try {
     return parse(text)
-  } catch {
-    return 'parse_error'
+  } catch (e) {
+    console.error(e)
+    return 'cson_parse_error'
   }
 }
 
 const validateNoteSchema = (
   obj: any
-): ParsedNote & { type: string } | 'parse_error' => {
+): ParsedNote & { type: string } | 'schema_parse_error' => {
   const validator = ow.object.partialShape({
     tags: ow.optional.array.ofType(ow.string),
     content: ow.string,
@@ -66,7 +73,6 @@ const validateNoteSchema = (
     ow(obj, validator)
     return obj
   } catch (e) {
-    console.log(e)
-    return 'parse_error'
+    return 'schema_parse_error'
   }
 }

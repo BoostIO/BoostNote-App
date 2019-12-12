@@ -29,6 +29,12 @@ export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
 export const textColor = ({ theme }: StyledProps) =>
   `color: ${theme.textColor};`
 
+export const disabledUiTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.disabledUiTextColor};`
+
+export const PrimaryTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.primaryColor};`
+
 export const uiTextColor = ({
   theme
 }: StyledProps) => `color: ${theme.uiTextColor};

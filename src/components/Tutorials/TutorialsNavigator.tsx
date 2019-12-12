@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import SideNavigatorItem from '../SideNavigator/SideNavigatorItem'
 import {
@@ -6,12 +6,11 @@ import {
   mdiFolderOutline,
   mdiHelpCircleOutline
 } from '@mdi/js'
-import {
-  useRouteParams,
-  useRouter,
-  currentTutorialPathname
-} from '../../lib/router'
+import { useRouter, useCurrentTutorialPathname } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
+import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import { usePreferences } from '../../lib/preferences'
 
 interface NavigatorNode {
   id: string
@@ -23,75 +22,106 @@ interface NavigatorNode {
   children: NavigatorNode[]
   active?: boolean
 }
-interface TutorialsNavigatorProps {}
 
-const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
-  const routeParams = useRouteParams()
+const TutorialsNavigator = ({}) => {
   const { push } = useRouter()
-  const currentHref = currentTutorialPathname()
+  const currentHref = useCurrentTutorialPathname()
+  const { popup } = useContextMenu()
+  const { messageBox } = useDialog()
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
+  const { setPreferences } = usePreferences()
 
   const tutorials = tutorialsTree
 
-  function getNavigatorNodesFromTreeItem(
-    tree: TutorialsNavigatorTreeItem,
-    currentDepth: number,
-    parentNode?: NavigatorNode,
-    parentComponentPathname?: string
-  ): NavigatorNode | undefined {
-    if (tree.type === 'note') {
-      return
-    }
+  const getNavigatorNodesFromTreeItem = useCallback(
+    (
+      tree: TutorialsNavigatorTreeItem,
+      currentDepth: number,
+      parentNode?: NavigatorNode,
+      parentComponentPathname?: string
+    ): NavigatorNode | undefined => {
+      if (tree.type === 'note') {
+        return
+      }
 
-    const componentPathname = `${parentComponentPathname != null &&
-      parentComponentPathname}/${tree.absolutePath}`
-    const nodeHref = `${parentNode != null ? parentNode.href : '/app'}/${
-      tree.slug
-    }`
+      const componentPathname = `${parentComponentPathname != null &&
+        parentComponentPathname}/${tree.absolutePath}`
+      const nodeHref = `${parentNode != null ? parentNode.href : '/app'}/${
+        tree.slug
+      }`
 
-    const folderIsActive = currentHref.split('/notes/note:')[0] === nodeHref
+      const folderIsActive = currentHref.split('/notes/note:')[0] === nodeHref
 
-    const notesUnderCurrentNode = tree.children.filter(
-      child => child.type === 'note'
-    )
+      const notesUnderCurrentNode = tree.children.filter(
+        child => child.type === 'note'
+      )
 
-    const nodeId = `TF-${nodeHref.split('/app')[1]}`
-    const currentNode = {
-      id: nodeId,
-      name: `${tree.label} ${
-        notesUnderCurrentNode.length > 0
-          ? `(${notesUnderCurrentNode.length})`
-          : ''
-      }`,
-      iconPath:
-        tree.type === 'folder'
-          ? folderIsActive
-            ? mdiFolderOpenOutline
-            : mdiFolderOutline
-          : mdiHelpCircleOutline,
-      href: nodeHref,
-      active: folderIsActive,
-      depth: currentDepth,
-      opened: sideNavOpenedItemSet.has(nodeId),
-      children: []
-    }
+      const nodeId = `TF-${nodeHref.split('/app')[1]}`
+      const currentNode = {
+        id: nodeId,
+        name: `${tree.label} ${
+          notesUnderCurrentNode.length > 0
+            ? `(${notesUnderCurrentNode.length})`
+            : ''
+        }`,
+        iconPath:
+          tree.type === 'folder'
+            ? folderIsActive
+              ? mdiFolderOpenOutline
+              : mdiFolderOutline
+            : mdiHelpCircleOutline,
+        href: nodeHref,
+        active: folderIsActive,
+        depth: currentDepth,
+        opened: sideNavOpenedItemSet.has(nodeId),
+        children: []
+      }
 
-    const childrenNodes =
-      tree.children.length === 0
-        ? []
-        : (tree.children
-            .map(childrenTree =>
-              getNavigatorNodesFromTreeItem(
-                childrenTree,
-                currentDepth + 1,
-                currentNode,
-                componentPathname
+      const childrenNodes =
+        tree.children.length === 0
+          ? []
+          : (tree.children
+              .map(childrenTree =>
+                getNavigatorNodesFromTreeItem(
+                  childrenTree,
+                  currentDepth + 1,
+                  currentNode,
+                  componentPathname
+                )
               )
-            )
-            .filter(node => node != null) as NavigatorNode[])
-    return {
-      ...currentNode,
-      children: childrenNodes
+              .filter(node => node != null) as NavigatorNode[])
+      return {
+        ...currentNode,
+        children: childrenNodes
+      }
+    },
+    [currentHref, sideNavOpenedItemSet]
+  )
+
+  const createOnContextMenuHandler = (depth: number) => {
+    return (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Remove folder',
+          enabled: depth === 0,
+          onClick: () => {
+            messageBox({
+              title: `Hide tutorials`,
+              message:
+                'You can choose to display them again in your preferences.',
+              iconType: DialogIconTypes.Warning,
+              buttons: ['Hide', 'Cancel'],
+              defaultButtonIndex: 0,
+              cancelButtonIndex: 1,
+              onClose: () => {
+                setPreferences({ 'general.tutorials': 'hide' })
+              }
+            })
+          }
+        }
+      ])
     }
   }
 
@@ -99,7 +129,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
     return tutorials
       .map(tutorial => getNavigatorNodesFromTreeItem(tutorial, 0))
       .filter(node => node != null) as NavigatorNode[]
-  }, [routeParams, tutorials, toggleSideNavOpenedItem])
+  }, [tutorials, getNavigatorNodesFromTreeItem])
 
   const redirectToTutorialNode = (node: NavigatorNode) => {
     push(node.href)
@@ -122,6 +152,7 @@ const TutorialsNavigator = ({  }: TutorialsNavigatorProps) => {
           onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}
           folded={node.children.length === 0 ? undefined : !node.opened}
+          onContextMenu={createOnContextMenuHandler(node.depth)}
         />
         {node.children.map(child => renderNode(child, node.opened))}
       </React.Fragment>
