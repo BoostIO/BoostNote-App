@@ -186,7 +186,7 @@ export default () => {
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
   const navigateDown = useCallback(() => {
-    if (currentNoteIndex < notes.length - 1) {
+    if (currentNoteIndex < filteredNotes.length - 1) {
       router.push(
         currentPathnameWithoutNoteId +
           `/${filteredNotes[currentNoteIndex + 1]._id}`
