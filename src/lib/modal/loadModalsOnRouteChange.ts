@@ -1,13 +1,13 @@
 import { useDb } from '../db'
 import { useRouter } from '../router/store'
 import { useEffect, useRef } from 'react'
-import { useModals } from './store'
+import { useModal } from './store'
 import { usePreferences } from '../preferences'
 
 export default function useLoadModalsOnRouteChangeHandler() {
   const { pathname } = useRouter()
   const db = useDb()
-  const { openModals } = useModals()
+  const { openModal } = useModal()
   const { preferences } = usePreferences()
 
   const storageMapRef = useRef(db.storageMap)
@@ -17,7 +17,7 @@ export default function useLoadModalsOnRouteChangeHandler() {
       Object.keys(storageMapRef.current).length === 0 &&
       preferences['general.enableDownloadAppModal'] === true
     ) {
-      openModals('download-app')
+      openModal('download-app')
     }
-  }, [pathname, openModals, preferences])
+  }, [pathname, openModal, preferences])
 }
