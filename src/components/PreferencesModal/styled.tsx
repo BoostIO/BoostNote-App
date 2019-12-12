@@ -10,6 +10,15 @@ export const Section = styled.section`
   margin-bottom: 2em;
 `
 
+export const SectionMargin = styled.section`
+  margin: 100px;
+`
+
+export const SectionHeader1 = styled.h1`
+  font-weight: 300;
+  font-size: 36px;
+`
+
 export const SectionHeader = styled.h3``
 
 export const SectionControl = styled.div`
@@ -59,4 +68,18 @@ export const SectionInput = styled.input`
   padding: 0 16px;
   height: 40px;
   border-radius: 2px;
+`
+
+export const RightMargin = styled.span`
+  margin-right: 20px;
+`
+
+export const DeleteStorageButton = styled.button`
+  ${secondaryButtonStyle}
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 2px;
+  cursor: pointer;
+  vertical-align: middle;
+  align-items: center;
 `

@@ -1,5 +1,11 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { Section, SectionHeader } from '../PreferencesModal/styled'
+import {
+  SectionMargin,
+  SectionHeader1,
+  RightMargin,
+  SectionPrimaryButton,
+  DeleteStorageButton
+} from '../PreferencesModal/styled'
 import CloudStorageSelector from './CloudStorageSelector'
 import { usePreferences } from '../../lib/preferences'
 import { useDb } from '../../lib/db'
@@ -68,18 +74,22 @@ export default ({ storage }: StorageEditProps) => {
 
   return (
     <div>
-      <Section>
-        <SectionHeader>Edit Storage</SectionHeader>
+      <SectionMargin>
+        <SectionHeader1>Edit Storage</SectionHeader1>
         <div>
-          <label>
-            Storage Name{' '}
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              type='text'
-            />
-          </label>
-          <span onClick={removeCallback}>Delete Storage</span>
+          <RightMargin>
+            <label>
+              <RightMargin>Storage Name</RightMargin>
+              <input
+                value={name}
+                onChange={e => setName(e.target.value)}
+                type='text'
+              />
+            </label>
+          </RightMargin>
+          <DeleteStorageButton onClick={removeCallback}>
+            Delete Storage
+          </DeleteStorageButton>
         </div>
         <div>
           <h2>Cloud Storage</h2>
@@ -87,11 +97,11 @@ export default ({ storage }: StorageEditProps) => {
             <div>
               <p>
                 Linked Storage: {storage.cloudStorage.name} (ID:
-                {storage.cloudStorage.id}){' '}
+                {storage.cloudStorage.id})
                 <span onClick={unlinkCallback}>Unlink</span>
               </p>
               <p>
-                Last synced at{' '}
+                Last synced at
                 {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
               </p>
             </div>
@@ -99,8 +109,11 @@ export default ({ storage }: StorageEditProps) => {
             <div>
               {user == null && (
                 <>
-                  <p>You need to sign in to add a cloud folder</p>
-                  <LoginButton />
+                  <p>You need to sign in to add a cloud storage.</p>
+                  <LoginButton
+                    onErr={console.error /* TODO: Toast error */}
+                    ButtonComponent={SectionPrimaryButton}
+                  />
                 </>
               )}
               {user != null && (
@@ -116,7 +129,7 @@ export default ({ storage }: StorageEditProps) => {
             </div>
           )}
         </div>
-      </Section>
+      </SectionMargin>
     </div>
   )
 }

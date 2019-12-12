@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { usePreferences } from '../../lib/preferences'
-import { Section, SectionHeader } from '../PreferencesModal/styled'
+import {
+  SectionMargin,
+  SectionHeader1,
+  RightMargin,
+  SectionPrimaryButton
+} from '../PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
 import { CloudStorage } from '../../lib/accounts'
@@ -32,14 +37,28 @@ export default () => {
 
   return (
     <div>
-      <Section>
-        <SectionHeader>{t('storage.add')}</SectionHeader>
-        <label>Storage Name</label>
-        <input
-          type='text'
-          value={localName}
-          onChange={e => setLocalName(e.target.value)}
-        />
+      <SectionMargin>
+        <SectionHeader1>{t('Create new storage')}</SectionHeader1>
+        <RightMargin>
+          <label>Storage Name</label>
+        </RightMargin>
+        <RightMargin>
+          <input
+            type='text'
+            value={localName}
+            onChange={e => setLocalName(e.target.value)}
+          />
+        </RightMargin>
+        <RightMargin>
+          <label>
+            <input
+              type='radio'
+              checked={storageType === 'cloud'}
+              onChange={() => setStorageType('cloud')}
+            />
+            Cloud
+          </label>
+        </RightMargin>
         <label>
           <input
             type='radio'
@@ -48,25 +67,23 @@ export default () => {
           />
           Local
         </label>
-        <label>
-          <input
-            type='radio'
-            checked={storageType === 'cloud'}
-            onChange={() => setStorageType('cloud')}
-          />
-          Cloud
-        </label>
-      </Section>
-      <Section>
+
         {storageType === 'local' && (
           <>
-            <button onClick={() => createStorageCallback()}>Add Storage</button>
+            <div>
+              <SectionPrimaryButton onClick={() => createStorageCallback()}>
+                Create Storage
+              </SectionPrimaryButton>
+            </div>
           </>
         )}
         {!isLoggedIn && storageType === 'cloud' && (
           <>
-            <p>You need to sign in to add a cloud folder</p>
-            <LoginButton />
+            <p>You need to sign in to create a cloud storage.</p>
+            <LoginButton
+              onErr={console.error /* TODO: Toast error */}
+              ButtonComponent={SectionPrimaryButton}
+            />
           </>
         )}
         {isLoggedIn && storageType === 'cloud' && (
@@ -74,10 +91,10 @@ export default () => {
             user={user}
             name={localName}
             onSelect={createStorageCallback}
-            buttonText='Add Storage'
+            buttonText='Create a storage'
           />
         )}
-      </Section>
+      </SectionMargin>
     </div>
   )
 }
