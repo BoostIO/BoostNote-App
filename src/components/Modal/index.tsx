@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
-import { useModals } from '../../lib/modals/store'
+import { useModal } from '../../lib/modal/store'
 import {
   StyledModalsBackground,
   StyledModalsContainer,
@@ -18,7 +18,7 @@ interface ModalsRenderingOptions {
 }
 
 export default () => {
-  const { modalsContent, closeModals } = useModals()
+  const { modalContent, closeModal } = useModal()
   const { setPreferences } = usePreferences()
 
   const content = useMemo((): ModalsRenderingOptions => {
@@ -27,14 +27,14 @@ export default () => {
       body: <></>
     }
 
-    switch (modalsContent) {
+    switch (modalContent) {
       case 'download-app':
         basicModal.body = <DownloadOurAppModal />
         basicModal.onSkip = () => {
           setPreferences({
             'general.enableDownloadAppModal': false
           })
-          closeModals()
+          closeModal()
         }
         break
       default:
@@ -42,14 +42,14 @@ export default () => {
     }
 
     return basicModal
-  }, [modalsContent, setPreferences, closeModals])
+  }, [modalContent, setPreferences, closeModal])
 
   const closeHandler = useCallback(() => {
     if (content.onSkip != null) {
       return content.onSkip()
     }
-    return closeModals()
-  }, [closeModals, content])
+    return closeModal()
+  }, [closeModal, content])
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -67,7 +67,7 @@ export default () => {
     }
   }, [closeHandler])
 
-  if (modalsContent == null) return null
+  if (modalContent == null) return null
 
   return (
     <>

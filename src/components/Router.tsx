@@ -7,7 +7,7 @@ import { useDb } from '../lib/db'
 import AttachmentsPage from './AttachmentsPage/AttachmentsPage'
 import TutorialsPage from './Tutorials/TutorialsPage'
 import useRedirectHandler from '../lib/router/redirect'
-import useLoadModalsOnRouteChangeHandler from '../lib/modals/loadModalsOnRouteChange'
+import useLoadModalsOnRouteChangeHandler from '../lib/modal/loadModalsOnRouteChange'
 
 export default () => {
   const routeParams = useRouteParams()
