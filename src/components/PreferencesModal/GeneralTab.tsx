@@ -117,9 +117,7 @@ const GeneralTab = () => {
             <option value='auto'>{t('preferences.auto')}</option>
             <option value='light'>{t('preferences.light')}</option>
             <option value='dark'>{t('preferences.dark')}</option>
-            <option value='sepia'>
-              {t('preferences.sepia')}
-            </option>
+            <option value='sepia'>{t('preferences.sepia')}</option>
           </SectionSelect>
         </SectionControl>
       </Section>
