@@ -7,8 +7,7 @@ import {
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
-  usePathnameWithoutNoteId,
-  useRouter
+  usePathnameWithoutNoteId
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
@@ -72,8 +71,6 @@ export default () => {
     return []
   }, [currentStorage, routeParams])
 
-  const router = useRouter()
-
   const currentNoteIndex = useMemo(() => {
     for (let i = 0; i < notes.length; i++) {
       if (notes[i]._id === noteId) {
@@ -101,22 +98,6 @@ export default () => {
       tags
     })
   }, [db, routeParams, storageId])
-
-  const naviagateUp = useCallback(() => {
-    if (currentNoteIndex > 0) {
-      router.push(
-        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex - 1]._id}`
-      )
-    }
-  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
-
-  const naviagateDown = useCallback(() => {
-    if (currentNoteIndex < notes.length - 1) {
-      router.push(
-        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex + 1]._id}`
-      )
-    }
-  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
@@ -187,9 +168,8 @@ export default () => {
             notes={notes}
             createNote={createNote}
             basePathname={currentPathnameWithoutNoteId}
-            currentNoteIndex={currentNoteIndex}
-            navigateUp={naviagateUp}
-            navigateDown={naviagateDown}
+            currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
+            noteId={noteId}
           />
         </FileDropZone>
       }
