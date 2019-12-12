@@ -16,7 +16,7 @@ import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
-import Modals from './Modals'
+import Modal from './Modal'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -68,7 +68,7 @@ const App = () => {
         <ContextMenu />
         <Dialog />
         <PreferencesModal />
-        <Modals />
+        <Modal />
         <CodeMirrorStyle />
       </StyledAppContainer>
     </ThemeProvider>
