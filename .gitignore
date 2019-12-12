@@ -8,3 +8,7 @@ Thumbs.db
 compiled/*
 dist/*
 .cache
+app/package.json
+app/package-lock.json
+app/node_modules/*
+secrets

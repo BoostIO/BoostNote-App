@@ -1,28 +1,26 @@
 {
-  "name": "boost",
-  "productName": "Boost",
-  "version": "0.1.0",
+  "name": "boostnote",
+  "productName": "Boost Note",
+  "version": "0.1.0-6",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BoostIO/boost.git"
+    "url": "https://github.com/BoostIO/Boostnote.next.git"
   },
   "scripts": {
-    "start": "env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
-    "start-dev": "NODE_ENV=development electron app/index.js",
-    "compile": "NODE_ENV=production webpack --config webpack.config.js --progress",
-    "analyze": "NODE_ENV=production webpack --config webpack.config.js --json | webpack-bundle-size-analyzer",
-    "pack": "env-cmd ./.env build --dir",
-    "dist": "env-cmd ./.env build",
-    "shasum": "shasum -a 256 dist/mac/Inpad-$npm_package_version.dmg",
+    "dev": "env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "start": "electron app/index.js",
     "lint": "eslint src/**/*.ts{,x}",
     "format": "prettier --write \"src/**/*\"",
-    "build": "cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
+    "build": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
+    "meta": "node scripts/meta.js",
+    "prepack": "rimraf dist && env-cmd npm run meta && electron-builder --dir",
+    "pack": "rimraf dist && env-cmd npm run meta && electron-builder",
+    "release": "rimraf dist && env-cmd npm run meta && env-cmd electron-builder -- --publish",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
-    "tsc": "tsc --watch --noEmit",
-    "rebuild": "electron-rebuild"
+    "tsc": "tsc --watch --noEmit"
   },
   "keywords": [
     "markdown",
@@ -41,6 +39,7 @@
     "@testing-library/react-hooks": "^2.0.1",
     "@types/codemirror": "0.0.77",
     "@types/filenamify": "^2.0.2",
+    "@types/history": "^4.7.3",
     "@types/html-webpack-plugin": "^3.2.1",
     "@types/jest": "^23.3.14",
     "@types/lodash": "^4.14.138",
@@ -59,6 +58,8 @@
     "babel-jest": "^24.9.0",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
+    "electron": "^6.1.5",
+    "electron-builder": "^21.2.0",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
     "eslint": "^6.4.0",
@@ -72,6 +73,7 @@
     "prettier": "^1.18.2",
     "react-hot-loader": "^4.12.13",
     "react-test-renderer": "^16.9.0",
+    "rimraf": "^3.0.0",
     "style-loader": "^1.0.0",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
@@ -96,12 +98,16 @@
     "copy-webpack-plugin": "^5.0.4",
     "cson-parser": "git+https://github.com/ButteryCrumpet/cson-parser.git",
     "dotenv": "^8.2.0",
+    "electron-log": "^4.0.0",
+    "electron-updater": "^4.2.0",
     "filenamify": "^2.1.0",
     "hast-util-sanitize": "^2.0.1",
     "hast-util-to-text": "^1.0.1",
     "hastscript": "^5.1.0",
+    "history": "^4.10.1",
     "i18next": "^19.0.0",
     "immer": "^3.3.0",
+    "is-electron": "^2.2.0",
     "lodash": "^4.17.15",
     "ltstrg": "^1.0.1",
     "mdast-util-to-string": "^1.0.6",
@@ -138,18 +144,16 @@
   "build": {
     "appId": "com.electron.Boost",
     "copyright": "Copyright © 2016-2017 BoostIO",
-    "category": "public.app-category.productivity",
-    "files": [
-      "app",
-      "compiled",
-      "resources",
-      "node_modules"
+    "extraResources": [
+      "compiled/**/*"
     ],
-    "asar": true,
-    "mac": {
-      "category": "public.app-category.productivity",
-      "target": "dmg",
-      "icon": "resources/icon.icns"
-    }
+    "asar": false,
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    },
+    "publish": "github"
   }
 }
