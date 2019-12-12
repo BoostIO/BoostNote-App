@@ -56,7 +56,9 @@ export default () => {
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
         return (Object.values(currentStorage.noteMap) as NoteDoc[])
-          .filter(note => note.folderPathname.includes(folder.pathname))
+          .filter(note =>
+            (note.folderPathname + '/').includes(folder.pathname + '/')
+          )
           .sort(sortByUpdatedAt)
       case 'storages.tags.show':
         const { tagName } = routeParams

@@ -368,6 +368,8 @@ export default class NoteDetail extends React.Component<
       storageId
     } = this.props
 
+    console.log(this.props.note)
+
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
