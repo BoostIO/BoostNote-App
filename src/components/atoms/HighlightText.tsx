@@ -14,11 +14,12 @@ interface HighlightTextProps {
 
 function HighlightText(props: HighlightTextProps) {
   const { text, search } = props
-  if (search.trim() === '') return <>{text}</>
-  const searchRegex = new RegExp(`(${search})`, 'gi')
-  const parts = text.split(searchRegex)
-  return useMemo(
-    () => (
+  return useMemo(() => {
+    if (search.trim() === '') return <>{text}</>
+    const searchRegex = new RegExp(`(${search})`, 'gi')
+    const parts = text.split(searchRegex)
+
+    return (
       <HighlightContainer>
         {parts.map((part, i) =>
           part.toLowerCase() === search.toLowerCase() ? (
@@ -30,9 +31,8 @@ function HighlightText(props: HighlightTextProps) {
           )
         )}
       </HighlightContainer>
-    ),
-    [text, search]
-  )
+    )
+  }, [text, search])
 }
 
 export default HighlightText
