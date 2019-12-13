@@ -4,6 +4,7 @@ import {
   primaryButtonStyle,
   secondaryButtonStyle,
   inputStyle,
+  tableStyle,
   disabledUiTextColor,
   PrimaryTextColor
 } from '../../lib/styled/styleFunctions'
@@ -83,6 +84,10 @@ export const SectionInput = styled.input`
   width: 200px;
   height: 40px;
   border-radius: 2px;
+`
+
+export const SectionTable = styled.table`
+  ${tableStyle}
 `
 
 export const RightMargin = styled.span`

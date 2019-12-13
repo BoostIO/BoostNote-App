@@ -9,6 +9,7 @@ import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
+import BillingTab from './BillingTab'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
@@ -74,6 +75,8 @@ const PreferencesModal = () => {
         return <MarkdownTab />
       case 'about':
         return <AboutTab />
+      case 'billing':
+        return <BillingTab />
       case 'general':
       default:
         return <GeneralTab />
@@ -116,6 +119,12 @@ const PreferencesModal = () => {
           label='About'
           tab='about'
           active={tab === 'about'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='Billing'
+          tab='billing'
+          active={tab === 'billing'}
           setTab={setTab}
         />
       </TabNav>
