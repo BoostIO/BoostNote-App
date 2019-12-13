@@ -7,6 +7,7 @@ import { defaultTheme } from '../lib/styled/themes/default'
 import { darkTheme } from '../lib/styled/themes/dark'
 import { lightTheme } from '../lib/styled/themes/light'
 import { sepiaTheme } from '../lib/styled/themes/sepia'
+import { solarizedDarkTheme } from '../lib/styled/themes/solarizedDark'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
@@ -84,6 +85,8 @@ function selectTheme(theme: string) {
       return lightTheme
     case 'sepia':
       return sepiaTheme
+    case 'solarizedDark':
+      return solarizedDarkTheme
     default:
       return defaultTheme
   }

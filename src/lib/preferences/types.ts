@@ -1,6 +1,6 @@
 import { User } from '../accounts'
 
-export type GeneralThemeOptions = 'auto' | 'light' | 'dark' | 'sepia'
+export type GeneralThemeOptions = 'auto' | 'light' | 'dark' | 'sepia' | 'solarizedDark'
 export type GeneralLanguageOptions = 'en-US' | 'ja'
 export type GeneralNoteSortingOptions =
   | 'date-updated'

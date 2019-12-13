@@ -11,6 +11,7 @@ export default {
     'preferences.light': 'Light',
     'preferences.dark': 'Dark',
     'preferences.sepia': 'Sepia',
+    'preferences.solarizedDark': 'Solarized Dark',
     'preferences.noteSorting': 'Note Sorting',
     'preferences.dateUpdated': 'Date Updated',
     'preferences.dateCreated': 'Date Created',
