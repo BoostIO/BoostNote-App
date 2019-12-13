@@ -10,6 +10,8 @@ import {
   StyledToastCloseButton,
   StyledToastDescription
 } from './styled'
+import { selectTheme } from '../App'
+import { usePreferences } from '../../lib/preferences/store'
 
 interface ToastItemProps {
   item: ToastMessage
@@ -17,6 +19,10 @@ interface ToastItemProps {
 }
 
 const ToastItem = ({ item, onClose }: ToastItemProps) => {
+
+  const { preferences } = usePreferences()
+  console.log(selectTheme(preferences['general.theme']))
+
   const [relativeTime, setRelativeTime] = useState(
     dateToRelativeString(item.createdAt)
   )

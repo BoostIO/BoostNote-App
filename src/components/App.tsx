@@ -74,7 +74,7 @@ const App = () => {
     </ThemeProvider>
   )
 }
-function selectTheme(theme: string) {
+export function selectTheme(theme: string) {
   switch (theme) {
     case 'dark':
       return darkTheme
