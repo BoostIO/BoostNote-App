@@ -2,19 +2,19 @@ import { readAsText } from './utils/files'
 import { parse } from './cson-parser'
 import ow from 'ow'
 
-type ParseErrors =
+export type ParseErrors =
   | 'read_error'
   | 'cson_parse_error'
   | 'not_markdown'
   | 'schema_parse_error'
 
-type ParsedNote = {
+export type ParsedNote = {
   content: string
   tags: string[]
   title: string
 }
 
-type ConvertResult =
+export type ConvertResult =
   | { err: true; data: ParseErrors }
   | { err: false; data: ParsedNote }
 
@@ -54,7 +54,6 @@ const parseCSON = (text: string) => {
   try {
     return parse(text)
   } catch (e) {
-    console.error(e)
     return 'cson_parse_error'
   }
 }

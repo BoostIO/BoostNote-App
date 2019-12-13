@@ -2,12 +2,19 @@ import React from 'react'
 
 interface FileDropProps {
   onDrop: (files: File[]) => any
-  onDragOver?: () => any
+  onDragEnter?: () => any
+  onDragLeave?: () => any
   children?: React.ReactNode
   style?: React.CSSProperties
 }
 
-export default ({ onDrop, onDragOver, children, style }: FileDropProps) => {
+export default ({
+  onDrop,
+  onDragEnter,
+  onDragLeave,
+  children,
+  style
+}: FileDropProps) => {
   const drop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -18,17 +25,32 @@ export default ({ onDrop, onDragOver, children, style }: FileDropProps) => {
     onDrop(files)
   }
 
-  const dragover = (e: React.DragEvent) => {
+  const dragenter = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (onDragOver == null) {
+    if (onDragEnter == null) {
       return
     }
-    onDragOver()
+    onDragEnter()
+  }
+
+  const dragleave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (onDragLeave == null) {
+      return
+    }
+    onDragLeave()
   }
 
   return (
-    <div style={style} onDrop={drop} onDragOver={dragover}>
+    <div
+      style={style}
+      onDrop={drop}
+      onDragEnter={dragenter}
+      onDragLeave={dragleave}
+      onDragOver={e => e.preventDefault()}
+    >
       {children}
     </div>
   )
