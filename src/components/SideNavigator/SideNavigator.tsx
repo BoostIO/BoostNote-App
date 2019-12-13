@@ -3,16 +3,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import {
-  mdiTuneVertical,
-  mdiPlusCircleOutline,
-  mdiDeleteOutline,
-  mdiDelete,
-  mdiImage,
-  mdiImageOutline,
-  mdiSync
-} from '@mdi/js'
-import Icon from '../atoms/Icon'
+import { mdiDeleteOutline, mdiDelete, mdiImage, mdiImageOutline } from '@mdi/js'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
@@ -29,7 +20,8 @@ import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
-import MdiIcon from '@mdi/react'
+import { IconAddRound, IconAdjustVertical, IconArrowAgain } from '../icons'
+// import { ReactComponent as Logo } from '../../../resources/icons/ArrowAgain.svg'
 
 const Description = styled.nav`
   margin-left: 5px;
@@ -172,14 +164,14 @@ export default () => {
       <div className='topControl'>
         <div className='spacer' />
         <button className='button' onClick={toggleClosed}>
-          <Icon path={mdiTuneVertical} />
+          <IconAdjustVertical size='0.8em' />
         </button>
       </div>
 
       <Description>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
-          <MdiIcon path={mdiPlusCircleOutline} size='2em' color='gray' />
+          <IconAddRound color='gray' size='1.7em' />
         </CreateStorageButton>
       </Description>
 
@@ -222,7 +214,7 @@ export default () => {
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
-              iconPath={mdiPlusCircleOutline}
+              icon={<IconAddRound size='0.6em' />}
             />
           ]
 
@@ -242,7 +234,7 @@ export default () => {
               <ControlButton
                 key='syncButton'
                 onClick={cloudSync}
-                iconPath={mdiSync}
+                icon={<IconArrowAgain size='0.6em' />}
               />
             )
           }

@@ -18,7 +18,7 @@
     "prepack": "rimraf dist && env-cmd npm run meta && electron-builder --dir",
     "pack": "rimraf dist && env-cmd npm run meta && electron-builder",
     "release": "rimraf dist && env-cmd npm run meta && env-cmd electron-builder -- --publish",
-    "convertIcons": "rm ./src/components/icons/*.tsx && npx @svgr/cli --icon -d ./src/components/icons ./resources/icons && node scripts/importIcons.js && rm ./src/components/icons/*.js",
+    "convertIcons": "rm ./src/components/icons/* && npx @svgr/cli --icon -d ./src/components/icons ./resources/icons && node scripts/importIcons.js && rm ./src/components/icons/*.js",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit"

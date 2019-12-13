@@ -1,7 +1,9 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
-import { sideBarTextColor, sideBarSecondaryTextColor } from '../../lib/styled/styleFunctions'
+import {
+  sideBarTextColor,
+  sideBarSecondaryTextColor
+} from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
   width: 30px;
@@ -24,16 +26,12 @@ const StyledButton = styled.button`
 `
 
 interface ControlButtonProps {
-  iconPath: string
+  icon: React.ReactNode
   onClick?: (event: React.MouseEvent) => void
 }
 
-const ControlButton = ({ iconPath, onClick }: ControlButtonProps) => {
-  return (
-    <StyledButton onClick={onClick}>
-      <Icon path={iconPath} />
-    </StyledButton>
-  )
+const ControlButton = ({ icon, onClick }: ControlButtonProps) => {
+  return <StyledButton onClick={onClick}>{icon}</StyledButton>
 }
 
 export default ControlButton
