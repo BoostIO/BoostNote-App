@@ -5,6 +5,7 @@ import styled from '../../lib/styled'
 
 const StyledToastList = styled.ul`
   position: fixed;
+  z-index: 10000;
   display: flex;
   flex-direction: column-reverse;
   right: 0;
