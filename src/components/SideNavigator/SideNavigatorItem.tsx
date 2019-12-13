@@ -4,9 +4,11 @@ import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import {
-  uiTextColor,
+  sideBarTextColor,
+  sideBarSecondaryTextColor,
   activeBackgroundColor
 } from '../../lib/styled/styleFunctions'
+import MdiIcon from '@mdi/react'
 
 const Container = styled.div`
   position: relative;
@@ -39,7 +41,7 @@ const FoldButton = styled.button`
   margin-right: 3px;
   border-radius: 2px;
   top: 2px;
-  ${uiTextColor}
+  ${sideBarSecondaryTextColor}
   &:focus {
     box-shadow: none;
   }
@@ -53,22 +55,27 @@ const ClickableContainer = styled.button`
   align-items: center;
   width: 100%;
 
-  color: ${({ theme }) => theme.uiTextColor};
+  ${sideBarTextColor}
   &:hover,
   &:focus,
   &:active,
   &.active {
-    color: ${({ theme }) => theme.activeUiTextColor};
+    ${sideBarTextColor}
   }
 
   .icon {
     margin-right: 4px;
+    ${sideBarSecondaryTextColor}
   }
 `
 
-const Label = styled.div``
+const Label = styled.div`
+  white-space: nowrap;
+`
 
-const ControlContainer = styled.div``
+const ControlContainer = styled.div`
+  display: flex;
+`
 
 interface SideNaviagtorItemProps {
   label: string
@@ -115,13 +122,18 @@ const SideNaviagtorItem = ({
           onClick={onFoldButtonClick}
           style={{ left: `${10 * depth}px` }}
         >
-          <Icon path={folded ? mdiChevronRight : mdiChevronDown} />
+          <MdiIcon
+            path={folded ? mdiChevronRight : mdiChevronDown}
+            size='2em'
+            color='currentColor'
+          />
         </FoldButton>
       )}
       <ClickableContainer
         style={{
           paddingLeft: `${10 * depth + 26}px`,
-          cursor: onClick ? 'pointer' : 'initial'
+          cursor: onClick ? 'pointer' : 'initial',
+          fontSize: '15px'
         }}
         onClick={onClick}
       >

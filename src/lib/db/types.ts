@@ -17,6 +17,7 @@ export interface NoteStorageData {
   cloudStorage?: {
     id: number
     name: string
+    updatedAt: number
   }
 }
 

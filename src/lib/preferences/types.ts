@@ -1,6 +1,6 @@
 import { User } from '../accounts'
 
-export type GeneralThemeOptions = 'auto' | 'light' | 'dark' | 'solarized-dark'
+export type GeneralThemeOptions = 'auto' | 'light' | 'dark' | 'sepia'
 export type GeneralLanguageOptions = 'en-US' | 'ja'
 export type GeneralNoteSortingOptions =
   | 'date-updated'
@@ -19,6 +19,7 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
+  'general.enableDownloadAppModal': boolean
   'general.tutorials': GeneralTutorialsOptions
 
   // Editor

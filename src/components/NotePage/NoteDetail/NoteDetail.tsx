@@ -400,6 +400,7 @@ export default class NoteDetail extends React.Component<
                 ref={this.titleInputRef}
                 value={this.state.title}
                 onChange={this.updateTitle}
+                placeholder='Title'
               />
             </div>
             <div className='contentSection'>
@@ -423,7 +424,7 @@ export default class NoteDetail extends React.Component<
                 className='tagInput'
                 ref={this.newTagNameInputRef}
                 value={this.state.newTagName}
-                placeholder='Set Tags for the note...'
+                placeholder='Tags'
                 onChange={this.updateNewTagName}
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
-import { uiTextColor } from '../../lib/styled/styleFunctions'
+import { sideBarTextColor, sideBarSecondaryTextColor } from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
   width: 30px;
@@ -11,10 +11,15 @@ const StyledButton = styled.button`
   background-color: transparent;
   border-radius: 2px;
   top: 2px;
+  font-size: 20px;
   cursor: pointer;
-  ${uiTextColor}
-  &:focus {
+  ${sideBarSecondaryTextColor}
+  &:hover, &:active, &:focus {
     box-shadow: none;
+    ${sideBarTextColor}
+  }
+  svg {
+    vertical-align: middle;
   }
 `
 

@@ -2,8 +2,6 @@ import React, { useMemo, useCallback } from 'react'
 import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
 import { NoteDoc } from '../../../lib/db/types'
-import Icon from '../../atoms/Icon'
-import { mdiTagOutline } from '@mdi/js'
 import {
   borderBottom,
   uiTextColor,
@@ -11,6 +9,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
+import HighlightText from '../../atoms/HighlightText'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -34,16 +33,43 @@ export const StyledNoteListItem = styled.div`
   }
 
   .container {
-    padding: 8px;
+    padding: 10px 12px;
   }
 
   .title {
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 4px;
+    font-size: 18px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .date {
+    font-size: 12px;
+    margin-bottom: 6px;
   }
 
   .preview {
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .tag-area {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tag {
+    font-size: 12px;
+    background-color: rgba(153, 153, 153, 0.4);
+    margin-right: 5px;
+    padding: 2px 8px;
+    border-radius: 13px;
+    display: inline-block;
   }
 `
 
@@ -51,21 +77,41 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   storageId: string
+  search: string
   basePathname: string
   focusList: () => void
 }
 
-export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
+export default ({
+  storageId,
+  note,
+  active,
+  basePathname,
+  search
+}: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
   const contentPreview = useMemo(() => {
-    return (
-      note.content
-        .trim()
+    const trimmedContent = note.content.trim()
+    const searchFirstIndex = trimmedContent
+      .toLowerCase()
+      .indexOf(search.toLowerCase())
+
+    if (search !== '' && searchFirstIndex !== -1) {
+      const contentToHighlight = trimmedContent
+        .substring(searchFirstIndex)
         .split('\n')
-        .shift() || 'Empty note'
-    )
-  }, [note.content])
+        .shift()
+
+      return contentToHighlight == null ? (
+        'Empty note'
+      ) : (
+        <HighlightText text={contentToHighlight} search={search} />
+      )
+    }
+
+    return trimmedContent.split('\n').shift() || 'Empty note'
+  }, [note.content, search])
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
@@ -82,13 +128,16 @@ export default ({ storageId, note, active, basePathname }: NoteItemProps) => {
     >
       <Link href={href}>
         <div className='container'>
-          <div className='title'>{note.title}</div>
+          <div className='title'>
+            <HighlightText text={note.title} search={search} />
+          </div>
+          {note.title.length === 0 && <div className='title'>No title</div>}
+          <div className='date'>DD days ago</div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
-            <div>
-              <Icon path={mdiTagOutline} />{' '}
+            <div className='tag-area'>
               {note.tags.map(tag => (
-                <span key={tag}>{tag}</span>
+                <HighlightText key={tag} text={tag} search={search} />
               ))}
             </div>
           )}

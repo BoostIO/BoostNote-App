@@ -152,7 +152,7 @@ const EditorTab = () => {
             value={fontSize}
             onChange={updateFontSize}
           />{' '}
-          px
+          &emsp;px
         </SectionControl>
       </Section>
       <Section>
