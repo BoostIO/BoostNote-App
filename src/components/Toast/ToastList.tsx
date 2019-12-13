@@ -1,7 +1,7 @@
 import React from 'react'
 import { useToast } from '../../lib/toast'
 import ToastItem from './ToastItem'
-import styled from 'styled-components'
+import styled from '../../lib/styled'
 
 const StyledToastList = styled.ul`
   position: fixed;
@@ -9,6 +9,7 @@ const StyledToastList = styled.ul`
   flex-direction: column-reverse;
   right: 0;
   bottom: 0;
+  list-style: none;
 `
 
 export default () => {
