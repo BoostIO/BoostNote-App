@@ -5,8 +5,8 @@ import {
   User,
   useUserCloudInfo
 } from '../../lib/accounts'
-import Icon from '@mdi/react'
-import { mdiRefresh, mdiLoading } from '@mdi/js'
+import Icon from '../atoms/Icon'
+import { IconArrowAgain, IconArrowRotate } from '../icons'
 
 interface CloudStorageSelectProps {
   name?: string
@@ -86,7 +86,9 @@ export default ({
               ))}
             </select>
             <span onClick={reloadStorageInfo}>
-              <Icon path={gettingInfo ? mdiLoading : mdiRefresh} size='20px' />
+              <Icon
+                icon={gettingInfo ? <IconArrowRotate /> : <IconArrowAgain />}
+              />
             </span>
           </div>
           {active === 0 && (

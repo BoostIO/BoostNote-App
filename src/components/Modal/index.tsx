@@ -7,9 +7,9 @@ import {
   StyledModalsSkipButton
 } from './styled'
 import Icon from '../atoms/Icon'
-import { mdiChevronRightCircleOutline } from '@mdi/js'
 import { usePreferences } from '../../lib/preferences'
 import DownloadOurAppModal from './contents/DownloadOurAppModal'
+import { IconArrowSingleRight } from '../icons'
 
 interface ModalsRenderingOptions {
   closable: boolean
@@ -80,7 +80,7 @@ export default () => {
         {content.closable && (
           <StyledModalsSkipButton onClick={closeHandler}>
             <span>
-              Skip <Icon className='icon' path={mdiChevronRightCircleOutline} />
+              Skip <Icon className='icon' icon={<IconArrowSingleRight />} />
             </span>
           </StyledModalsSkipButton>
         )}

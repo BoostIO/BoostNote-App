@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
-import { mdiClose } from '@mdi/js'
 import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
@@ -10,6 +8,7 @@ import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
+import { IconClose } from '../icons'
 
 const Container = styled.div`
   z-index: 7000;
@@ -121,7 +120,7 @@ const PreferencesModal = () => {
       </TabNav>
       <TabContent>{content}</TabContent>
       <CloseButton onClick={toggleClosed}>
-        <Icon path={mdiClose} />
+        <IconClose />
       </CloseButton>
     </Container>
   )

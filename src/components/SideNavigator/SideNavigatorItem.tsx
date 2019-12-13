@@ -2,13 +2,12 @@ import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
-import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
   activeBackgroundColor
 } from '../../lib/styled/styleFunctions'
-import MdiIcon from '@mdi/react'
+import { IconArrowSingleRight, IconArrowSingleDown } from '../icons'
 
 const Container = styled.div`
   position: relative;
@@ -79,7 +78,7 @@ const ControlContainer = styled.div`
 
 interface SideNaviagtorItemProps {
   label: string
-  iconPath?: string
+  icon: React.ReactNode
   depth: number
   controlComponents?: any[]
   className?: string
@@ -95,7 +94,7 @@ interface SideNaviagtorItemProps {
 
 const SideNaviagtorItem = ({
   label,
-  iconPath,
+  icon,
   depth,
   controlComponents,
   className,
@@ -122,10 +121,15 @@ const SideNaviagtorItem = ({
           onClick={onFoldButtonClick}
           style={{ left: `${10 * depth}px` }}
         >
-          <MdiIcon
-            path={folded ? mdiChevronRight : mdiChevronDown}
-            size='2em'
-            color='currentColor'
+          <Icon
+            className='icon'
+            icon={
+              folded ? (
+                <IconArrowSingleRight color='currentColor' />
+              ) : (
+                <IconArrowSingleDown color='currentColor' />
+              )
+            }
           />
         </FoldButton>
       )}
@@ -137,7 +141,7 @@ const SideNaviagtorItem = ({
         }}
         onClick={onClick}
       >
-        {iconPath && <Icon className='icon' path={iconPath} />}
+        {icon && <Icon className='icon' icon={icon} />}
         <Label>{label}</Label>
       </ClickableContainer>
       {controlComponents && (
