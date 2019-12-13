@@ -20,6 +20,7 @@ import {
   border,
   textColor
 } from '../../lib/styled/styleFunctions'
+import { useToast } from '../../lib/toast'
 
 interface Success {
   err: false
@@ -53,6 +54,7 @@ const StyledRemove = styled.span`
 `
 
 export default () => {
+  const { pushMessage } = useToast()
   const { storageMap, createNote } = useDb()
   const storageEntries = useMemo(() => entries(storageMap), [storageMap])
   const [activeStorage, setActiveStorage] = useState(() => {
@@ -108,15 +110,21 @@ export default () => {
     )
 
     const title = `Successfully imported ${created.length} notes`
-    const message = created
+    const description = created
       .map(note => (note == null ? '' : note.title))
       .join('\n')
 
-    // TODO: Toast message import success
-    console.log(title, message)
+    pushMessage({ title, description })
 
     setFileImports(new Map())
-  }, [createNote, activeStorage, activeFolder, importEntries, setFileImports])
+  }, [
+    createNote,
+    activeStorage,
+    activeFolder,
+    importEntries,
+    setFileImports,
+    pushMessage
+  ])
 
   const draggedInCallback = useCallback(() => setDragInside(true), [
     setDragInside
