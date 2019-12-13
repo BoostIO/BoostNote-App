@@ -20,9 +20,13 @@ fs.readdir('src/components/icons', function(err, filenames) {
           return
         }
         const removeFillAttributeSplit = data
-          .replace('const Svg', 'const Icon')
-          .replace('export default Svg', 'export default Icon')
+          .split('export default')[0]
+          .replace('const Svg', 'export const Icon')
           .replace('= props', '= (props: BoostnoteIconProps)')
+          .replace(
+            '{...props}',
+            '{...props} style={props.size != null ? {...props.style, width: props.size, height: props.size} : props.style}'
+          )
           .split(fillRegex)
         const content = [
           `import { BoostnoteIconProps } from '../../lib/icons'`,
@@ -45,7 +49,7 @@ fs.readdir('src/components/icons', function(err, filenames) {
     }
   })
 
-  fs.writeFile('src/components/icons/index.tsx', exports.join('\n'), function(
+  fs.writeFile('src/components/icons/index.ts', exports.join('\n'), function(
     err
   ) {
     if (err) {
