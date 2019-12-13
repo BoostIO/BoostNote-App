@@ -11,7 +11,6 @@ import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
-import Toast from './components/Toast'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -36,7 +35,6 @@ function render(Component: typeof App) {
   ReactDOM.render(
     <CombinedProvider>
       <Component />
-      <Toast />
     </CombinedProvider>,
     document.getElementById('root')
   )
