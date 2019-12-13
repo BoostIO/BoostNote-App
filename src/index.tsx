@@ -22,7 +22,6 @@ const CombinedProvider = combineProviders(
   DbProvider,
   RouterProvider,
   ToastProvider,
-  ModalsProvider
 )
 
 function render(Component: typeof App) {
