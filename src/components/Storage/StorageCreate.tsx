@@ -29,15 +29,6 @@ export default () => {
   const createStorageCallback = async (cloudStorage?: CloudStorage) => {
     const newStorage = await db.createStorage(localName)
 
-    //Toast message button -- start
-    if (newStorage) {
-      pushMessage({
-        title: 'Sync Error',
-        description: 'The storage was unable to be synced with the cloud'
-      })
-    }
-    //Toast message button -- end
-
     if (cloudStorage != null) {
       const success = db.setCloudLink(newStorage.id, cloudStorage, user)
       if (!success) {
