@@ -5,6 +5,7 @@ import {
 } from '../../lib/styled/styleFunctions'
 
 export const StyledToastContainer = styled.div`
+  z-index: 10000;
   width: 350px;
   margin: 40px;
   padding: 10px 30px;
