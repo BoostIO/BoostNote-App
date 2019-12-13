@@ -4,6 +4,7 @@ import {
   SectionMargin,
   SectionHeader1,
   RightMargin,
+  TopMargin,
   SectionPrimaryButton
 } from '../PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
@@ -83,20 +84,22 @@ export default () => {
 
         {storageType === 'local' && (
           <>
-            <div>
+            <TopMargin>
               <SectionPrimaryButton onClick={() => createStorageCallback()}>
                 Create Storage
               </SectionPrimaryButton>
-            </div>
+            </TopMargin>
           </>
         )}
         {!isLoggedIn && storageType === 'cloud' && (
           <>
-            <p>You need to sign in to create a cloud storage.</p>
-            <LoginButton
-              onErr={console.error /* TODO: Toast error */}
-              ButtonComponent={SectionPrimaryButton}
-            />
+            <TopMargin>
+              <p>You need to sign in to create a cloud storage.</p>
+              <LoginButton
+                onErr={console.error /* TODO: Toast error */}
+                ButtonComponent={SectionPrimaryButton}
+              />
+            </TopMargin>
           </>
         )}
         {isLoggedIn && storageType === 'cloud' && (

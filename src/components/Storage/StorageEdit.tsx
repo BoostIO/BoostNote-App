@@ -3,6 +3,7 @@ import {
   SectionMargin,
   SectionHeader1,
   RightMargin,
+  TopMargin,
   SectionPrimaryButton,
   DeleteStorageButton
 } from '../PreferencesModal/styled'
@@ -113,11 +114,13 @@ export default ({ storage }: StorageEditProps) => {
             <div>
               {user == null && (
                 <>
-                  <p>You need to sign in to add a cloud storage.</p>
-                  <LoginButton
-                    onErr={console.error /* TODO: Toast error */}
-                    ButtonComponent={SectionPrimaryButton}
-                  />
+                  <TopMargin>
+                    <p>You need to sign in to add a cloud storage.</p>
+                    <LoginButton
+                      onErr={console.error /* TODO: Toast error */}
+                      ButtonComponent={SectionPrimaryButton}
+                    />
+                  </TopMargin>
                 </>
               )}
               {user != null && (

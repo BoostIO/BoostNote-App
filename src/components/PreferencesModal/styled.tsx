@@ -74,6 +74,10 @@ export const RightMargin = styled.span`
   margin-right: 20px;
 `
 
+export const TopMargin = styled.div`
+  margin-top: 40px;
+`
+
 export const DeleteStorageButton = styled.button`
   ${secondaryButtonStyle}
   padding: 0 16px;
