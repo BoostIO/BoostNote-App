@@ -20,6 +20,7 @@ import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
 import Modal from './Modal'
+import ToastList from './Toast'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -69,6 +70,7 @@ const App = () => {
         <Dialog />
         <PreferencesModal />
         <Modal />
+        <ToastList />
         <CodeMirrorStyle />
       </StyledAppContainer>
     </ThemeProvider>
