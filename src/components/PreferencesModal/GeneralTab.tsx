@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import Icon from '../atoms/Icon'
-import { mdiPlus, mdiLoading } from '@mdi/js'
 import {
   Section,
   SectionHeader,
@@ -20,6 +19,7 @@ import { SelectChangeEventHandler } from '../../lib/events'
 import { useUsers } from '../../lib/accounts'
 import UserInfo from '../atoms/UserInfo'
 import LoginButton from '../atoms/LoginButton'
+import { IconArrowRotate } from '../icons'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
@@ -78,7 +78,6 @@ const GeneralTab = () => {
             {loginState =>
               loginState !== 'logging-in' ? (
                 <>
-                  <Icon path={mdiPlus} />
                   {t(
                     users.length === 0
                       ? 'preferences.addAccount'
@@ -87,7 +86,7 @@ const GeneralTab = () => {
                 </>
               ) : (
                 <>
-                  <Icon path={mdiLoading} />
+                  <Icon icon={<IconArrowRotate />} />
                   {t('preferences.loginWorking')}
                 </>
               )

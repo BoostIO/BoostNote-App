@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { mdiTagMultiple, mdiTag, mdiTagOutline } from '@mdi/js'
 import SideNavigatorItem from './SideNavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -8,6 +7,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
+import { IconHash } from '../icons'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -33,7 +33,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         <SideNavigatorItem
           key={`storage:${storageId}/tags:${tagName}`}
           depth={2}
-          iconPath={tagIsActive ? mdiTag : mdiTagOutline}
+          icon={tagIsActive ? <IconHash /> : <IconHash />}
           label={tagName}
           onClick={() => {
             push(tagPathname)
@@ -72,7 +72,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     <>
       <SideNavigatorItem
         depth={1}
-        iconPath={mdiTagMultiple}
+        icon={<IconHash />}
         label='Tags'
         folded={tagListIsFolded}
         onFoldButtonClick={() => {

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { useDb } from '../../lib/db'
-import { mdiFolderOutline, mdiFolderOpenOutline } from '@mdi/js'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import SideNavigatorItem from './SideNavigatorItem'
@@ -11,6 +10,7 @@ import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { IconAddRound } from '../icons'
+import { IconFile } from '../icons'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -170,7 +170,13 @@ const FolderListFragment = ({
       <SideNavigatorItem
         depth={1}
         active={rootFolderIsActive}
-        iconPath={rootFolderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
+        icon={
+          rootFolderIsActive ? (
+            <IconFile color='currentColor' />
+          ) : (
+            <IconFile color='currentColor' />
+          )
+        }
         label='Notes'
         onClick={createOnFolderItemClickHandler('/')}
         onContextMenu={createOnContextMenuHandler(storageId, '/')}
@@ -197,7 +203,13 @@ const FolderListFragment = ({
             folded={folded}
             depth={depth}
             active={folderIsActive}
-            iconPath={folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
+            icon={
+              folderIsActive ? (
+                <IconFile color='currentColor' />
+              ) : (
+                <IconFile color='currentColor' />
+              )
+            }
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
             onContextMenu={createOnContextMenuHandler(
@@ -209,7 +221,7 @@ const FolderListFragment = ({
               <ControlButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
-                icon={<IconAddRound size='0.6em' />}
+                icon={<IconAddRound />}
               />
             ]}
             onDragOver={event => {
