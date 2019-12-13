@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>radio-active</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop" transform="translate(-538.000000, -29.000000)" fill="#000000" fill-rule="nonzero">
+            <path d="M562,29 C575.254834,29 586,39.745166 586,53 C586,66.254834 575.254834,77 562,77 C548.745166,77 538,66.254834 538,53 C538,39.745166 548.745166,29 562,29 Z M562,33 C550.954305,33 542,41.954305 542,53 C542,64.045695 550.954305,73 562,73 C573.045695,73 582,64.045695 582,53 C582,41.954305 573.045695,33 562,33 Z M562,40 C569.179702,40 575,45.8202983 575,53 C575,60.1797017 569.179702,66 562,66 C554.820298,66 549,60.1797017 549,53 C549,45.8202983 554.820298,40 562,40 Z" id="radio-active"></path>
+        </g>
+    </g>
+</svg>
