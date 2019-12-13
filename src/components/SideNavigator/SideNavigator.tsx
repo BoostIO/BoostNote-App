@@ -3,7 +3,6 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import { mdiDeleteOutline, mdiDelete, mdiImage, mdiImageOutline } from '@mdi/js'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
@@ -20,13 +19,15 @@ import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
-<<<<<<< HEAD
-import MdiIcon from '@mdi/react'
 import { useToast } from '../../lib/toast'
-=======
-import { IconAddRound, IconAdjustVertical, IconArrowAgain } from '../icons'
-// import { ReactComponent as Logo } from '../../../resources/icons/ArrowAgain.svg'
->>>>>>> add icons and sideNavigator implementation
+import {
+  IconAddRound,
+  IconAdjustVertical,
+  IconArrowAgain,
+  IconRadio,
+  IconRadioActive,
+  IconTrash
+} from '../icons'
 
 const Description = styled.nav`
   margin-left: 5px;
@@ -51,6 +52,7 @@ const StyledSideNavContainer = styled.nav`
       height: 50px;
       background-color: transparent;
       border: none;
+      cursor: pointer;
       ${sideBarSecondaryTextColor}
       font-size: 24px;
     }
@@ -179,15 +181,7 @@ export default () => {
       <Description>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
-<<<<<<< HEAD
-          <MdiIcon
-            path={mdiPlusCircleOutline}
-            size='2em'
-            color='rgba(255,255,255,0.3)'
-          />
-=======
           <IconAddRound color='gray' size='1.7em' />
->>>>>>> add icons and sideNavigator implementation
         </CreateStorageButton>
       </Description>
 
@@ -261,7 +255,7 @@ export default () => {
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
-              icon={<IconAddRound size='0.6em' />}
+              icon={<IconAddRound />}
             />
           ]
 
@@ -281,7 +275,7 @@ export default () => {
               <ControlButton
                 key='syncButton'
                 onClick={cloudSync}
-                icon={<IconArrowAgain size='0.6em' />}
+                icon={<IconArrowAgain />}
               />
             )
           }
@@ -290,6 +284,7 @@ export default () => {
             <React.Fragment key={itemId}>
               <SideNavigatorItem
                 depth={0}
+                icon={``}
                 label={storage.name}
                 folded={storageIsFolded}
                 onClick={() => push(`/app/storages/${storage.id}`)}
@@ -351,8 +346,12 @@ export default () => {
                   <SideNavigatorItem
                     depth={1}
                     label='Attachments'
-                    iconPath={
-                      attachmentsPageIsActive ? mdiImage : mdiImageOutline
+                    icon={
+                      attachmentsPageIsActive ? (
+                        <IconRadio />
+                      ) : (
+                        <IconRadioActive />
+                      )
                     }
                     active={attachmentsPageIsActive}
                     onClick={() => push(attachmentsPagePathname)}
@@ -363,9 +362,7 @@ export default () => {
                   <SideNavigatorItem
                     depth={1}
                     label='Trash'
-                    iconPath={
-                      trashcanPageIsActive ? mdiDelete : mdiDeleteOutline
-                    }
+                    icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
                     active={trashcanPageIsActive}
                     onClick={() => push(trashcanPagePathname)}
                     onContextMenu={event => {

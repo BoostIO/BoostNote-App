@@ -7,13 +7,12 @@ import React, {
 import NoteItem from './NoteItem'
 import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
-import { mdiMagnify, mdiSquareEditOutline } from '@mdi/js'
-import Icon from '../../atoms/Icon'
 import {
   borderBottom,
   inputStyle,
   iconColor
 } from '../../../lib/styled/styleFunctions'
+import { IconEdit, IconLoupe } from '../../icons'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -130,10 +129,10 @@ const NoteList = ({
             onChange={updateSearchInput}
             placeholder='Search Notes'
           />
-          <Icon className='icon' path={mdiMagnify} />
+          <IconLoupe />
         </div>
         <button className='newNoteButton' onClick={createNote}>
-          <Icon path={mdiSquareEditOutline} />
+          <IconEdit />
         </button>
       </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>

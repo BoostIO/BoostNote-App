@@ -9,7 +9,7 @@ import {
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
-import { IconFile } from '../icons'
+import { IconInfo } from '../icons'
 
 const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;
@@ -63,7 +63,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
       onClick={openExportButtonContextMenu}
       className={className}
     >
-      <IconFile />
+      <IconInfo />
     </StyledButton>
   )
 }

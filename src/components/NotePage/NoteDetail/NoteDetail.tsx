@@ -9,14 +9,6 @@ import TagList from './TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
-import {
-  mdiTrashCan,
-  mdiEyeOutline,
-  mdiArrowSplitVertical,
-  mdiDeleteEmpty,
-  mdiRestore,
-  mdiPencil
-} from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
@@ -33,6 +25,13 @@ import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../../lib/generalStatus'
 import { BreadCrumbs } from '../NotePage'
 import cc from 'classcat'
+import {
+  IconTrash,
+  IconArrowAgain,
+  IconEye,
+  IconSplit,
+  IconEdit
+} from '../../icons'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -541,33 +540,33 @@ export default class NoteDetail extends React.Component<
                 <ToolbarIconButton
                   className={viewMode === 'edit' ? 'active' : ''}
                   onClick={() => toggleViewMode('edit')}
-                  path={mdiPencil}
+                  icon={<IconEdit />}
                 />
                 <ToolbarIconButton
                   className={viewMode === 'split' ? 'active' : ''}
                   onClick={() => toggleViewMode('split')}
-                  path={mdiArrowSplitVertical}
+                  icon={<IconSplit />}
                 />
                 <ToolbarIconButton
                   className={viewMode === 'preview' ? 'active' : ''}
                   onClick={() => toggleViewMode('preview')}
-                  path={mdiEyeOutline}
+                  icon={<IconEye />}
                 />
                 {note.trashed ? (
                   <>
                     <ToolbarIconButton
                       onClick={this.untrashNote}
-                      path={mdiRestore}
+                      icon={<IconArrowAgain />}
                     />
                     <ToolbarIconButton
                       onClick={this.purgeNote}
-                      path={mdiDeleteEmpty}
+                      icon={<IconTrash />}
                     />
                   </>
                 ) : (
                   <ToolbarIconButton
                     onClick={this.trashNote}
-                    path={mdiTrashCan}
+                    icon={<IconTrash />}
                   />
                 )}
                 <ToolbarExportButton note={this.props.note} />

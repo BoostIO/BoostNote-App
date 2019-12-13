@@ -1,13 +1,13 @@
 import React from 'react'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import { mdiEyeOutline, mdiArrowSplitVertical, mdiPencil } from '@mdi/js'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import { StyledNoteDetailContainer } from '../NotePage/NoteDetail/NoteDetail'
 import { ViewModeType } from '../../lib/generalStatus'
+import { IconEye, IconSplit, IconEdit } from '../icons'
 
 type TutorialsNoteDetailProps = {
   note: TutorialsNavigatorTreeItem
@@ -105,17 +105,18 @@ export default class TutorialsNoteDetail extends React.Component<
               <ToolbarIconButton
                 className={viewMode === 'edit' ? 'active' : ''}
                 onClick={() => toggleViewMode('edit')}
-                path={mdiPencil}
+                icon={<IconEdit />}
               />
               <ToolbarIconButton
                 className={viewMode === 'split' ? 'active' : ''}
                 onClick={() => toggleViewMode('split')}
-                path={mdiArrowSplitVertical}
+                icon={<IconSplit />}
               />
               <ToolbarIconButton
                 className={viewMode === 'preview' ? 'active' : ''}
                 onClick={() => toggleViewMode('preview')}
-                path={mdiEyeOutline}
+                onClick={toggleSplitMode}
+                icon={<IconEye />}
               />
             </Toolbar>
           </>

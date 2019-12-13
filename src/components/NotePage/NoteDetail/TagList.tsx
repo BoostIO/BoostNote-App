@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import Icon from '../../atoms/Icon'
-import { mdiClose, mdiTagOutline } from '@mdi/js'
 import styled from '../../../lib/styled'
 import { iconColor, inputStyle } from '../../../lib/styled/styleFunctions'
+import { IconHash, IconClose } from '../../icons'
 
 interface TagListItemProps {
   tagName: string
@@ -18,7 +18,7 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
     <div className='listItem'>
       <div className='listItem-label'>{tagName}</div>
       <button className='listItem-removeButton' onClick={removeTag}>
-        <Icon path={mdiClose} />
+        <Icon icon={<IconClose />} />
       </button>
     </div>
   )
@@ -63,7 +63,7 @@ interface TagListProps {
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
     <StyledContainer>
-      <Icon className='icon' path={mdiTagOutline} />
+      <Icon className='icon' icon={<IconHash />} />
       {tags.map(tag => (
         <TagListItem
           tagName={tag}

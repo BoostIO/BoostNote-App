@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import Icon from '../atoms/Icon'
-import { mdiLoading } from '@mdi/js'
 import {
   Section,
   SectionHeader,
@@ -21,6 +20,7 @@ import { useUsers } from '../../lib/accounts'
 import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { IconArrowRotate } from '../icons'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
@@ -84,7 +84,7 @@ const GeneralTab = () => {
                   <>{t('preferences.addAccount')}</>
                 ) : (
                   <>
-                    <Icon path={mdiLoading} />
+                    <Icon icon={<IconArrowRotate />} />
                     {t('preferences.loginWorking')}
                   </>
                 )
