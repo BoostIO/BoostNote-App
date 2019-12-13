@@ -4,6 +4,9 @@ import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '../lib/styled/themes/default'
+import { darkTheme } from '../lib/styled/themes/dark'
+import { lightTheme } from '../lib/styled/themes/light'
+import { sepiaTheme } from '../lib/styled/themes/sepia'
 import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
@@ -23,8 +26,7 @@ const App = () => {
   useEffect(() => {
     initialize()
   }, [initialize])
-  const { toggleClosed } = usePreferences()
-
+  const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       switch (event.key) {
@@ -36,7 +38,6 @@ const App = () => {
     }
   }, [toggleClosed])
   useGlobalKeyDownHandler(keyboardHandler)
-
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateSideBarWidth = useCallback(
     (leftWidth: number) => {
@@ -46,9 +47,8 @@ const App = () => {
     },
     [setGeneralStatus]
   )
-
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
       <StyledAppContainer
         onDrop={(event: React.DragEvent) => {
           event.preventDefault()
@@ -74,5 +74,16 @@ const App = () => {
     </ThemeProvider>
   )
 }
-
+function selectTheme(theme: string) {
+  switch (theme) {
+    case 'dark':
+      return darkTheme
+    case 'light':
+      return lightTheme
+    case 'sepia':
+      return sepiaTheme
+    default:
+      return defaultTheme
+  }
+}
 export default App
