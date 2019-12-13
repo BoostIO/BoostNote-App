@@ -1,20 +1,16 @@
 import React, { useMemo, useCallback } from 'react'
 import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import SideNavigatorItem from '../SideNavigator/SideNavigatorItem'
-import {
-  mdiFolderOpenOutline,
-  mdiFolderOutline,
-  mdiHelpCircleOutline
-} from '@mdi/js'
 import { useRouter, useCurrentTutorialPathname } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
+import { IconFile, IconInfo } from '../icons'
 
 interface NavigatorNode {
   id: string
-  iconPath?: string
+  icon: React.ReactNode
   depth: number
   opened: boolean
   name: string
@@ -64,12 +60,16 @@ const TutorialsNavigator = ({}) => {
             ? `(${notesUnderCurrentNode.length})`
             : ''
         }`,
-        iconPath:
-          tree.type === 'folder'
-            ? folderIsActive
-              ? mdiFolderOpenOutline
-              : mdiFolderOutline
-            : mdiHelpCircleOutline,
+        icon:
+          tree.type === 'folder' ? (
+            folderIsActive ? (
+              <IconFile />
+            ) : (
+              <IconFile />
+            )
+          ) : (
+            IconInfo
+          ),
         href: nodeHref,
         active: folderIsActive,
         depth: currentDepth,
@@ -147,7 +147,7 @@ const TutorialsNavigator = ({}) => {
         <SideNavigatorItem
           label={node.name}
           depth={node.depth}
-          iconPath={node.iconPath}
+          icon={node.icon}
           active={node.active}
           onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}
