@@ -18,6 +18,13 @@ export const SectionHeader1 = styled.h1`
   font-size: 36px;
 `
 
+export const SectionHeader2 = styled.h3`
+  font-size: 18px;
+  font-weight: 300;
+  width: 80px;
+  display: inline-flex;
+`
+
 export const SectionHeader = styled.h3`
   font-size: 18px;
   font-weight: 500;
@@ -30,7 +37,7 @@ export const SectionSubtleText = styled.p`
 export const PrimaryText = styled.a`
   ${PrimaryTextColor}
 `
-        
+
 export const SectionMargin = styled.section`
   margin: 100px;
 `

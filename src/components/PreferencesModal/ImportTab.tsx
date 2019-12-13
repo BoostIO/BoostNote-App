@@ -4,7 +4,8 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionPrimaryButton
+  SectionPrimaryButton,
+  SectionHeader2
 } from './styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
@@ -168,7 +169,13 @@ export default () => {
   return (
     <Section>
       <SectionHeader>Import</SectionHeader>
-      <p>Import old note data by dropping in CSON files</p>
+      <p>Import .cson files from old Boostnote.</p>
+      <p>1. Open old Boostnote folder in your PC.</p>
+      <p>2. Drag and drop .cson files to the form below.</p>
+      <p>
+        3. Choose the Storage and Folder that you want to move your old data.
+      </p>
+      <p>4. Upload!</p>
       <SectionControl>
         <StyledDropZone className={dragInside ? 'active' : ''}>
           <FileDropZone
@@ -196,7 +203,7 @@ export default () => {
       </SectionControl>
       <SectionControl>
         <label>
-          Storage:
+          <SectionHeader2>Storage:</SectionHeader2>
           <SectionSelect onChange={setActiveStorageCallback}>
             {storageEntries.map(([id, { name }]) => (
               <option key={id} value={id}>
@@ -208,7 +215,7 @@ export default () => {
       </SectionControl>
       <SectionControl>
         <label>
-          Folder:
+          <SectionHeader2>Folder:</SectionHeader2>
           <SectionSelect onClick={setActiveFolderCallback}>
             {folderEntries.map(([id, { pathname }]) => (
               <option key={id} value={id}>
