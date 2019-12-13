@@ -12,7 +12,7 @@ import Icon from '../../atoms/Icon'
 import {
   borderBottom,
   inputStyle,
-  uiTextColor
+  iconColor
 } from '../../../lib/styled/styleFunctions'
 
 export const StyledNoteListContainer = styled.div`
@@ -48,6 +48,7 @@ export const StyledNoteListContainer = styled.div`
       font-size: 20px;
       z-index: 0;
       pointer-events: none;
+      ${iconColor}
     }
     .input {
       position: relative;
@@ -64,7 +65,7 @@ export const StyledNoteListContainer = styled.div`
     font-size: 24px;
     background: transparent;
     border: none;
-    ${uiTextColor}
+    ${iconColor}
   }
 `
 
