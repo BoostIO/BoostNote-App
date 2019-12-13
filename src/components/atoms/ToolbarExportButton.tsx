@@ -3,14 +3,13 @@ import styled from '../../lib/styled'
 import { iconColor } from '../../lib/styled/styleFunctions'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { NoteDoc } from '../../lib/db/types'
-import { mdiFileExport } from '@mdi/js'
-import Icon from './Icon'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
+import { IconFile } from '../icons'
 
 const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;
@@ -64,7 +63,7 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
       onClick={openExportButtonContextMenu}
       className={className}
     >
-      <Icon path={mdiFileExport} />
+      <IconFile />
     </StyledButton>
   )
 }

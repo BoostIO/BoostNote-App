@@ -16,6 +16,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
+import { IconAddRound } from '../icons'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -224,7 +225,7 @@ const FolderListFragment = ({
               <ControlButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
-                iconPath={mdiPlusCircleOutline}
+                icon={<IconAddRound size='0.6em' />}
               />
             ]}
             onDragOver={event => {

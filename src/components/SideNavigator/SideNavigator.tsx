@@ -3,16 +3,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
-import {
-  mdiTuneVertical,
-  mdiPlusCircleOutline,
-  mdiDeleteOutline,
-  mdiDelete,
-  mdiImage,
-  mdiImageOutline,
-  mdiSync
-} from '@mdi/js'
-import Icon from '../atoms/Icon'
+import { mdiDeleteOutline, mdiDelete, mdiImage, mdiImageOutline } from '@mdi/js'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
@@ -29,8 +20,13 @@ import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
+<<<<<<< HEAD
 import MdiIcon from '@mdi/react'
 import { useToast } from '../../lib/toast'
+=======
+import { IconAddRound, IconAdjustVertical, IconArrowAgain } from '../icons'
+// import { ReactComponent as Logo } from '../../../resources/icons/ArrowAgain.svg'
+>>>>>>> add icons and sideNavigator implementation
 
 const Description = styled.nav`
   margin-left: 5px;
@@ -176,18 +172,22 @@ export default () => {
       <div className='topControl'>
         <div className='spacer' />
         <button className='button' onClick={toggleClosed}>
-          <Icon path={mdiTuneVertical} />
+          <IconAdjustVertical size='0.8em' />
         </button>
       </div>
 
       <Description>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
+<<<<<<< HEAD
           <MdiIcon
             path={mdiPlusCircleOutline}
             size='2em'
             color='rgba(255,255,255,0.3)'
           />
+=======
+          <IconAddRound color='gray' size='1.7em' />
+>>>>>>> add icons and sideNavigator implementation
         </CreateStorageButton>
       </Description>
 
@@ -261,7 +261,7 @@ export default () => {
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
-              iconPath={mdiPlusCircleOutline}
+              icon={<IconAddRound size='0.6em' />}
             />
           ]
 
@@ -281,7 +281,7 @@ export default () => {
               <ControlButton
                 key='syncButton'
                 onClick={cloudSync}
-                iconPath={mdiSync}
+                icon={<IconArrowAgain size='0.6em' />}
               />
             )
           }
