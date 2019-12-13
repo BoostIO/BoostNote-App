@@ -13,10 +13,6 @@ export const Section = styled.section`
   margin-bottom: 2em;
 `
 
-export const SectionMargin = styled.section`
-  margin: 100px;
-`
-
 export const SectionHeader1 = styled.h1`
   font-weight: 300;
   font-size: 36px;
@@ -33,6 +29,10 @@ export const SectionSubtleText = styled.p`
 
 export const PrimaryText = styled.a`
   ${PrimaryTextColor}
+`
+        
+export const SectionMargin = styled.section`
+  margin: 100px;
 `
 
 export const SectionControl = styled.div`
