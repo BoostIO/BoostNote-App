@@ -6,6 +6,10 @@ const StyledButton = styled.button<{ active: boolean }>`
   background-color: transparent;
   border: none;
   cursor: pointer;
+
+  svg {
+    vertical-align: middle;
+  }
 `
 
 interface IconProps {
