@@ -6,7 +6,6 @@ import {
   StyledModalsContainer,
   StyledModalsSkipButton
 } from './styled'
-import Icon from '../atoms/Icon'
 import { usePreferences } from '../../lib/preferences'
 import DownloadOurAppModal from './contents/DownloadOurAppModal'
 import { IconArrowSingleRight } from '../icons'
@@ -80,7 +79,7 @@ export default () => {
         {content.closable && (
           <StyledModalsSkipButton onClick={closeHandler}>
             <span>
-              Skip <Icon className='icon' icon={<IconArrowSingleRight />} />
+              Skip <IconArrowSingleRight />
             </span>
           </StyledModalsSkipButton>
         )}

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import Icon from '../../atoms/Icon'
+import ButtonIcon from '../../atoms/ButtonIcon'
 import styled from '../../../lib/styled'
 import { iconColor } from '../../../lib/styled/styleFunctions'
 import { IconHash, IconClose } from '../../icons'
@@ -18,7 +18,7 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
     <div className='listItem'>
       <div className='listItem-label'>{tagName}</div>
       <button className='listItem-removeButton' onClick={removeTag}>
-        <Icon icon={<IconClose />} />
+        <IconClose />
       </button>
     </div>
   )
@@ -50,6 +50,10 @@ const StyledContainer = styled.div`
     justify-content: center;
     ${iconColor};
     background-color: transparent;
+
+    svg {
+      vertical-align: top;
+    }
   }
 `
 
@@ -61,7 +65,7 @@ interface TagListProps {
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
     <StyledContainer>
-      <Icon className='icon' icon={<IconHash />} />
+      <ButtonIcon className='icon' icon={<IconHash />} />
       {tags.map(tag => (
         <TagListItem
           key={tag}

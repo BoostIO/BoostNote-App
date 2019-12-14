@@ -127,10 +127,10 @@ const NoteList = ({
             onChange={updateSearchInput}
             placeholder='Search Notes'
           />
-          <IconLoupe />
+          <IconLoupe className='icon' size='0.8em' />
         </div>
         <button className='newNoteButton' onClick={createNote}>
-          <IconEdit />
+          <IconEdit size='0.8em' />
         </button>
       </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>

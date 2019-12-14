@@ -68,7 +68,7 @@ const TutorialsNavigator = ({}) => {
               <IconFile />
             )
           ) : (
-            IconInfo
+            <IconInfo />
           ),
         href: nodeHref,
         active: folderIsActive,
