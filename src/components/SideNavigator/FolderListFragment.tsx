@@ -221,7 +221,7 @@ const FolderListFragment = ({
               <ControlButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
-                icon={<IconAddRound />}
+                icon={<IconAddRound size='0.7em' />}
               />
             ]}
             onDragOver={event => {

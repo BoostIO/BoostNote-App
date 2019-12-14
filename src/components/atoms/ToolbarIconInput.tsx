@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import Icon from './Icon'
+import ButtonIcon from './ButtonIcon'
 const StyledContainer = styled.div`
   position: relative;
   height: 22px;
@@ -39,7 +39,7 @@ const ToolbarIconInput = ({
 }: ToolbarIconInputProps) => {
   return (
     <StyledContainer className={className}>
-      <Icon icon={icon} className='icon' />
+      <ButtonIcon icon={icon} className='icon' />
       <input className='input' value={value} onChange={onChange} />
     </StyledContainer>
   )

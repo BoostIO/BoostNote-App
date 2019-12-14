@@ -1,7 +1,6 @@
 import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
@@ -76,9 +75,17 @@ const ControlContainer = styled.div`
   display: flex;
 `
 
+const SideNavigatorItemIconContainer = styled.span`
+  padding-right: 6px;
+  svg {
+    width: 0.7em !important;
+    height: 0.7em !important;
+  }
+`
+
 interface SideNaviagtorItemProps {
   label: string
-  icon: React.ReactNode
+  icon?: React.ReactNode
   depth: number
   controlComponents?: any[]
   className?: string
@@ -121,16 +128,11 @@ const SideNaviagtorItem = ({
           onClick={onFoldButtonClick}
           style={{ left: `${10 * depth}px` }}
         >
-          <Icon
-            className='icon'
-            icon={
-              folded ? (
-                <IconArrowSingleRight color='currentColor' />
-              ) : (
-                <IconArrowSingleDown color='currentColor' />
-              )
-            }
-          />
+          {folded ? (
+            <IconArrowSingleRight color='currentColor' />
+          ) : (
+            <IconArrowSingleDown color='currentColor' />
+          )}
         </FoldButton>
       )}
       <ClickableContainer
@@ -141,7 +143,11 @@ const SideNaviagtorItem = ({
         }}
         onClick={onClick}
       >
-        {icon && <Icon className='icon' icon={icon} />}
+        {icon !== null && (
+          <SideNavigatorItemIconContainer>
+            {icon}
+          </SideNavigatorItemIconContainer>
+        )}
         <Label>{label}</Label>
       </ClickableContainer>
       {controlComponents && (
