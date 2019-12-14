@@ -15,8 +15,8 @@ const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;
   height: 32px;
   box-sizing: border-box;
-  font-size: 14px;
   outline: none;
+  font-size: 16px;
   border: none;
   ${iconColor}
   &:first-child {

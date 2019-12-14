@@ -1,7 +1,6 @@
 import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
@@ -87,9 +86,17 @@ const ControlContainer = styled.div`
   justify-content: flex-end;
 `
 
+const SideNavigatorItemIconContainer = styled.span`
+  padding-right: 6px;
+  svg {
+    width: 0.7em !important;
+    height: 0.7em !important;
+  }
+`
+
 interface SideNaviagtorItemProps {
   label: string
-  icon: React.ReactNode
+  icon?: React.ReactNode
   depth: number
   controlComponents?: any[]
   className?: string
@@ -156,7 +163,11 @@ const SideNaviagtorItem = ({
           onClick={onClick}
           onDoubleClick={onDoubleClick}
         >
-          {icon && <Icon className='icon' icon={icon} />}
+          {icon != null && (
+            <SideNavigatorItemIconContainer>
+              {icon}
+            </SideNavigatorItemIconContainer>
+          )}
           <Label>{label}</Label>
         </ClickableContainer>
       </div>

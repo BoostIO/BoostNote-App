@@ -255,7 +255,7 @@ export default () => {
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
-              icon={<IconAddRound />}
+              icon={<IconAddRound size='0.7em' />}
             />
           ]
 
@@ -284,7 +284,6 @@ export default () => {
             <React.Fragment key={itemId}>
               <SideNavigatorItem
                 depth={0}
-                icon={``}
                 label={storage.name}
                 folded={storageIsFolded}
                 onClick={() => push(`/app/storages/${storage.id}`)}
