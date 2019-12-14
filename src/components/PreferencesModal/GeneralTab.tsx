@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import Icon from '../atoms/Icon'
 import {
   Section,
   SectionHeader,

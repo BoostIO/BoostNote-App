@@ -7,21 +7,18 @@ import {
 
 const StyledButton = styled.button`
   width: 30px;
-  height: 30px;
   padding: 0;
   border: none;
   background-color: transparent;
   border-radius: 2px;
-  top: 2px;
   font-size: 20px;
+  line-height: 20px;
   cursor: pointer;
   ${sideBarTextColor}
+  vertical-align: middle;
   ${sideBarSecondaryTextColor}
   &:hover, &:active, &:focus {
     box-shadow: none;
-  }
-  svg {
-    vertical-align: middle;
   }
 `
 

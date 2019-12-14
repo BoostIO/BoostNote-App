@@ -22,14 +22,17 @@ fs.readdir('src/components/icons', function(err, filenames) {
         const removeFillAttributeSplit = data
           .split('export default')[0]
           .replace('const Svg', 'export const Icon')
+          .replace('<svg ', '<BoostnoteIconStyledContainer><svg ')
           .replace('= props', '= (props: BoostnoteIconProps)')
+          .replace(new RegExp('=1em', 'g'), '=0.9em')
           .replace(
             '{...props}',
             '{...props} style={props.size != null ? {...props.style, width: props.size, height: props.size} : props.style}'
           )
+          .replace('</svg>', '</svg></BoostnoteIconStyledContainer>')
           .split(fillRegex)
         const content = [
-          `import { BoostnoteIconProps } from '../../lib/icons'`,
+          `import { BoostnoteIconProps, BoostnoteIconStyledContainer } from '../../lib/icons'`,
           removeFillAttributeSplit.join('fill="currentColor"')
         ].join(`\n`)
 

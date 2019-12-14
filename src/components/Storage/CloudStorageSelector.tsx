@@ -5,7 +5,7 @@ import {
   User,
   useUserCloudInfo
 } from '../../lib/accounts'
-import Icon from '../atoms/Icon'
+import ButtonIcon from '../atoms/ButtonIcon'
 import { IconArrowAgain, IconArrowRotate } from '../icons'
 
 interface CloudStorageSelectProps {
@@ -85,8 +85,9 @@ export default ({
                 </option>
               ))}
             </select>
-            <span onClick={reloadStorageInfo}>
-              <Icon
+            <span>
+              <ButtonIcon
+                onClick={reloadStorageInfo}
                 icon={gettingInfo ? <IconArrowRotate /> : <IconArrowAgain />}
               />
             </span>
