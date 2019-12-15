@@ -215,7 +215,7 @@ export const usePathnameWithoutNoteId = () => {
   }, [routeParams, pathname])
 }
 
-export const currentTutorialPathname = () => {
+export const useCurrentTutorialPathname = () => {
   const routeParams = useRouteParams()
   return useMemo(() => {
     switch (routeParams.name) {

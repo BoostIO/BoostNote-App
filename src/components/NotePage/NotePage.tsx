@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, useState } from 'react'
 import NoteList from './NoteList'
 import styled from '../../lib/styled'
 import NoteDetail from './NoteDetail'
@@ -16,8 +16,7 @@ import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import FileDropZone from '../atoms/FileDropZone'
-import { convertCSONFileToNote } from '../../lib/legacy-import'
+import { escapeRegExp } from '../../lib/regex'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -41,7 +40,8 @@ export default () => {
     if (storageId == null) return undefined
     return db.storageMap[storageId]
   }, [db.storageMap, storageId])
-
+  const router = useRouter()
+  const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
 
   const notes = useMemo((): NoteDoc[] => {
@@ -78,20 +78,29 @@ export default () => {
     return []
   }, [currentStorage, routeParams])
 
-  const router = useRouter()
+  const filteredNotes = useMemo(() => {
+    if (search.trim() === '') return notes
+    const regex = new RegExp(escapeRegExp(search), 'i')
+    return notes.filter(
+      note =>
+        note.tags.join().match(regex) ||
+        note.title.match(regex) ||
+        note.content.match(regex)
+    )
+  }, [search, notes])
 
   const currentNoteIndex = useMemo(() => {
-    for (let i = 0; i < notes.length; i++) {
-      if (notes[i]._id === noteId) {
+    for (let i = 0; i < filteredNotes.length; i++) {
+      if (filteredNotes[i]._id === noteId) {
         return i
       }
     }
     return 0
-  }, [notes, noteId])
+  }, [filteredNotes, noteId])
 
   const currentNote = useMemo(() => {
-    return notes[currentNoteIndex]
-  }, [notes, currentNoteIndex])
+    return filteredNotes[currentNoteIndex]
+  }, [filteredNotes, currentNoteIndex])
 
   const createNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
@@ -107,22 +116,6 @@ export default () => {
       tags
     })
   }, [db, routeParams, storageId])
-
-  const naviagateUp = useCallback(() => {
-    if (currentNoteIndex > 0) {
-      router.push(
-        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex - 1]._id}`
-      )
-    }
-  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
-
-  const naviagateDown = useCallback(() => {
-    if (currentNoteIndex < notes.length - 1) {
-      router.push(
-        currentPathnameWithoutNoteId + `/${notes[currentNoteIndex + 1]._id}`
-      )
-    }
-  }, [notes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
@@ -167,37 +160,40 @@ export default () => {
     [messageBox, purgeNoteFromDb]
   )
 
-  const importDrop = useCallback(
-    (files: File[]) => {
-      files.forEach(async file => {
-        const result = await convertCSONFileToNote(file)
-        if (!result.err) {
-          db.createNote(storageId, result.data)
-        } else {
-          // TODO: Toast Message Error
-          console.error(result.data)
-        }
-      })
-    },
-    [storageId, db]
-  )
+  const navigateUp = useCallback(() => {
+    if (currentNoteIndex > 0) {
+      router.push(
+        currentPathnameWithoutNoteId +
+          `/${filteredNotes[currentNoteIndex - 1]._id}`
+      )
+    }
+  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
+
+  const navigateDown = useCallback(() => {
+    if (currentNoteIndex < filteredNotes.length - 1) {
+      router.push(
+        currentPathnameWithoutNoteId +
+          `/${filteredNotes[currentNoteIndex + 1]._id}`
+      )
+    }
+  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
   return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
       left={
-        <FileDropZone style={{ height: '100%' }} onDrop={importDrop}>
-          <NoteList
-            storageId={storageId}
-            notes={notes}
-            createNote={createNote}
-            basePathname={currentPathnameWithoutNoteId}
-            currentNoteIndex={currentNoteIndex}
-            navigateUp={naviagateUp}
-            navigateDown={naviagateDown}
-          />
-        </FileDropZone>
+        <NoteList
+          search={search}
+          setSearchInput={setSearchInput}
+          storageId={storageId}
+          notes={filteredNotes}
+          createNote={createNote}
+          basePathname={currentPathnameWithoutNoteId}
+          navigateDown={navigateDown}
+          navigateUp={navigateUp}
+          currentNoteIndex={currentNoteIndex}
+        />
       }
       right={
         currentNote == null ? (

@@ -10,6 +10,7 @@ export default {
     'preferences.auto': 'Auto',
     'preferences.light': 'Light',
     'preferences.dark': 'Dark',
+    'preferences.sepia': 'Sepia',
     'preferences.solarizedDark': 'Solarized Dark',
     'preferences.noteSorting': 'Note Sorting',
     'preferences.dateUpdated': 'Date Updated',
