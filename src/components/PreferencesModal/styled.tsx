@@ -4,6 +4,7 @@ import {
   primaryButtonStyle,
   secondaryButtonStyle,
   inputStyle,
+  tableStyle,
   disabledUiTextColor,
   PrimaryTextColor
 } from '../../lib/styled/styleFunctions'
@@ -15,6 +16,13 @@ export const Section = styled.section`
 export const SectionHeader1 = styled.h1`
   font-weight: 300;
   font-size: 36px;
+`
+
+export const SectionHeader2 = styled.h3`
+  font-size: 18px;
+  font-weight: 300;
+  width: 80px;
+  display: inline-flex;
 `
 
 export const SectionHeader = styled.h3`
@@ -29,7 +37,7 @@ export const SectionSubtleText = styled.p`
 export const PrimaryText = styled.a`
   ${PrimaryTextColor}
 `
-        
+
 export const SectionMargin = styled.section`
   margin: 100px;
 `
@@ -85,8 +93,16 @@ export const SectionInput = styled.input`
   border-radius: 2px;
 `
 
+export const SectionTable = styled.table`
+  ${tableStyle}
+`
+
 export const RightMargin = styled.span`
   margin-right: 20px;
+`
+
+export const TopMargin = styled.div`
+  margin-top: 40px;
 `
 
 export const DeleteStorageButton = styled.button`

@@ -16,8 +16,6 @@ import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import FileDropZone from '../atoms/FileDropZone'
-import { convertCSONFileToNote } from '../../lib/legacy-import'
 import { escapeRegExp } from '../../lib/regex'
 
 export const StyledNoteDetailNoNote = styled.div`
@@ -162,21 +160,6 @@ export default () => {
     [messageBox, purgeNoteFromDb]
   )
 
-  const importDrop = useCallback(
-    (files: File[]) => {
-      files.forEach(async file => {
-        const result = await convertCSONFileToNote(file)
-        if (!result.err) {
-          db.createNote(storageId, result.data)
-        } else {
-          // TODO: Toast Message Error
-          console.error(result.data)
-        }
-      })
-    },
-    [storageId, db]
-  )
-
   const navigateUp = useCallback(() => {
     if (currentNoteIndex > 0) {
       router.push(
@@ -200,19 +183,17 @@ export default () => {
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
       left={
-        <FileDropZone style={{ height: '100%' }} onDrop={importDrop}>
-          <NoteList
-            search={search}
-            setSearchInput={setSearchInput}
-            storageId={storageId}
-            notes={filteredNotes}
-            createNote={createNote}
-            basePathname={currentPathnameWithoutNoteId}
-            navigateDown={navigateDown}
-            navigateUp={navigateUp}
-            currentNoteIndex={currentNoteIndex}
-          />
-        </FileDropZone>
+        <NoteList
+          search={search}
+          setSearchInput={setSearchInput}
+          storageId={storageId}
+          notes={filteredNotes}
+          createNote={createNote}
+          basePathname={currentPathnameWithoutNoteId}
+          navigateDown={navigateDown}
+          navigateUp={navigateUp}
+          currentNoteIndex={currentNoteIndex}
+        />
       }
       right={
         currentNote == null ? (

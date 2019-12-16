@@ -102,6 +102,7 @@
     "codemirror": "^5.49.0",
     "coffeescript": "^2.4.1",
     "copy-webpack-plugin": "^5.0.4",
+    "date-fns": "^2.8.1",
     "dotenv": "^8.2.0",
     "electron-log": "^4.0.0",
     "electron-updater": "^4.2.0",

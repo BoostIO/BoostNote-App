@@ -93,6 +93,10 @@ font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
+&:disabled {
+  opacity: .5;
+  cursor: default;
+}
 `
 
 export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
@@ -106,6 +110,10 @@ font-size: 13px;
 &.active {
   background-color: ${theme.primaryColor};
 }
+&:disabled {
+  opacity: .5;
+  cursor: default;
+}
 `
 
 export const selectStyle = ({ theme }: StyledProps) => `
@@ -114,5 +122,31 @@ export const selectStyle = ({ theme }: StyledProps) => `
   color: ${theme.textColor};
   &:focus {
     box-shadow: 0 0 0 2px ${theme.primaryColor};
+  }
+`
+
+export const tableStyle = ({ theme }: StyledProps) => `
+  border: 1px solid ${theme.borderColor};
+  border-collapse: collapse;
+  color: ${theme.textColor};
+  text-align: left;
+
+  th, td {
+    padding: 16px 24px;
+    border: 1px solid ${theme.borderColor};
+    font-weight: 400;
+  }
+
+  thead th {
+    font-size: 20px;
+    font-weight: 500;
+
+    span {
+      display: block;
+    }
+  }
+
+  tbody td {
+    text-align: center;
   }
 `

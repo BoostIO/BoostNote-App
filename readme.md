@@ -6,15 +6,17 @@
 
 Boost Note will be renewal of Boostnote app.
 
-The renewal will be released end of Nov, 2019. [To keep updated, subscribe our mailing list!](https://boostnote.io/#subscribe)
+The renewal will be released Jan, 2020. [To keep updated, subscribe our mailing list!](https://boostnote.io/#subscribe)
 
 - [Renewal plan](https://github.com/BoostIO/Boostnote.next/issues/67)
 
 ## Roadmap
 
-- Browser app / Desktop app / Cloud storage - the end of 2019.11)
-- Mobile app - the end of 2019.12)
-- File attachments(Image, Video and any kind of files) - the end of 2020.2
+- Browser app
+- Desktop app(Windows, mac and Linux)
+- Mobile app(Android and iOS)
+- Cloud storage
+- File attachments(Image, Video and any kind of files)
 - MDX (TBA)
 
 ## Build
@@ -44,43 +46,6 @@ npm run build
 # Package app
 npm run pack
 ```
-
-### Deploy release
-
-Prepare .env
-
-```sh
-# Usage analytics
-AMPLIFY_AUTH_IDENTITY_POOL_ID=
-AMPLIFY_AUTH_REGION=
-AMPLIFY_PINPOINT_APPID=
-AMPLIFY_PINPOINT_REGION=
-
-# Certificates info for Windows app
-CSC_LINK=
-CSC_KEY_PASSWORD=
-
-# Deploy token
-GH_TOKEN=
-```
-
-Run the below scripts on each OS
-
-```sh
-# Bump version
-npm version *
-
-# Install deps
-npm i
-
-# Compile script
-npm run build
-
-# Pack and Release
-npm run release
-```
-
-Now you will have a release draft with the installer attachemnts. Update its content and click publish. Then the update becomes availble.
 
 ## License
 

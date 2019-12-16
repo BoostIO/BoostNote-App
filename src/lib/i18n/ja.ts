@@ -11,6 +11,7 @@ export default {
     'preferences.light': 'ライト',
     'preferences.dark': 'ダーク',
     'preferences.sepia': 'セピア',
+    'preferences.solarizedDark': 'ソラライズドダーク',
     'preferences.noteSorting': 'ノート整列',
     'preferences.dateUpdated': 'アプデート順',
     'preferences.dateCreated': '生成順',

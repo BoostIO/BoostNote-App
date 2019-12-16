@@ -10,6 +10,7 @@ import {
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
 import HighlightText from '../../atoms/HighlightText'
+import { formatDistanceToNow } from 'date-fns'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -43,7 +44,8 @@ export const StyledNoteListItem = styled.div`
   }
 
   .date {
-    font-size: 12px;
+    font-size: 10px;
+    font-style: italic;
     margin-bottom: 6px;
   }
 
@@ -132,7 +134,9 @@ export default ({
             <HighlightText text={note.title} search={search} />
           </div>
           {note.title.length === 0 && <div className='title'>No title</div>}
-          <div className='date'>DD days ago</div>
+          <div className='date'>
+            {formatDistanceToNow(new Date(note.updatedAt))} ago
+          </div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
             <div className='tag-area'>
