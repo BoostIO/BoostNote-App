@@ -24,7 +24,6 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  IconTrashFill,
   IconImage
 } from '../icons'
 
@@ -321,9 +320,7 @@ export default () => {
                   <SideNavigatorItem
                     depth={1}
                     label='Trash Can'
-                    icon={
-                      trashcanPageIsActive ? <IconTrashFill /> : <IconTrash />
-                    }
+                    icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
                     active={trashcanPageIsActive}
                     onClick={() => push(trashcanPagePathname)}
                     onContextMenu={event => {

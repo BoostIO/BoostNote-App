@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import ButtonIcon from '../../atoms/ButtonIcon'
 import styled from '../../../lib/styled'
 import { iconColor } from '../../../lib/styled/styleFunctions'
-import { IconHash, IconClose } from '../../icons'
+import { IconTag, IconClose } from '../../icons'
 
 interface TagListItemProps {
   tagName: string
@@ -65,7 +65,7 @@ interface TagListProps {
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
     <StyledContainer>
-      <ButtonIcon className='icon' icon={<IconHash />} />
+      <ButtonIcon className='icon' icon={<IconTag />} />
       {tags.map(tag => (
         <TagListItem
           key={tag}
