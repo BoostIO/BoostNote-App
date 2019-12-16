@@ -25,7 +25,6 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  IconTrashFill,
   IconImage
 } from '../icons'
 

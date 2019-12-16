@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const fillRegex = new RegExp(`fill=[\"\']\#[1234567890]*[\"\']`, 'g')
+const fillRegex = new RegExp(`fill=[\"\']\#[a-zA-Z0-9]*[\"\']`, 'g')
 
 fs.readdir('src/components/icons', function(err, filenames) {
   if (err) {
