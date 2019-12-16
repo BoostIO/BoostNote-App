@@ -9,8 +9,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound } from '../icons'
-import { IconFile } from '../icons'
+import { IconAddRound, IconFile, IconFileOpen } from '../icons'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -172,7 +171,7 @@ const FolderListFragment = ({
         active={rootFolderIsActive}
         icon={
           rootFolderIsActive ? (
-            <IconFile color='currentColor' />
+            <IconFileOpen color='currentColor' />
           ) : (
             <IconFile color='currentColor' />
           )
@@ -205,7 +204,7 @@ const FolderListFragment = ({
             active={folderIsActive}
             icon={
               folderIsActive ? (
-                <IconFile color='currentColor' />
+                <IconFileOpen color='currentColor' />
               ) : (
                 <IconFile color='currentColor' />
               )

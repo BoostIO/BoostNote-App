@@ -23,9 +23,9 @@ import {
   IconAddRound,
   IconAdjustVertical,
   IconArrowAgain,
-  IconRadio,
-  IconRadioActive,
-  IconTrash
+  IconTrash,
+  IconTrashFill,
+  IconImage
 } from '../icons'
 
 const Description = styled.nav`
@@ -310,11 +310,7 @@ export default () => {
                     depth={1}
                     label='Attachments'
                     icon={
-                      attachmentsPageIsActive ? (
-                        <IconRadio />
-                      ) : (
-                        <IconRadioActive />
-                      )
+                      attachmentsPageIsActive ? <IconImage /> : <IconImage />
                     }
                     active={attachmentsPageIsActive}
                     onClick={() => push(attachmentsPagePathname)}
@@ -325,7 +321,9 @@ export default () => {
                   <SideNavigatorItem
                     depth={1}
                     label='Trash Can'
-                    icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
+                    icon={
+                      trashcanPageIsActive ? <IconTrashFill /> : <IconTrash />
+                    }
                     active={trashcanPageIsActive}
                     onClick={() => push(trashcanPagePathname)}
                     onContextMenu={event => {

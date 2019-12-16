@@ -7,7 +7,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
-import { IconHash } from '../icons'
+import { IconHash, IconTags } from '../icons'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -72,7 +72,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     <>
       <SideNavigatorItem
         depth={1}
-        icon={<IconHash />}
+        icon={<IconTags />}
         label='Tags'
         folded={tagListIsFolded}
         onFoldButtonClick={() => {
