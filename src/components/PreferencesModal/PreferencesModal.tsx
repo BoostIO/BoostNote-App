@@ -8,6 +8,7 @@ import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
 import BillingTab from './BillingTab'
+import ImportTab from './ImportTab'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
 import { IconClose } from '../icons'
 

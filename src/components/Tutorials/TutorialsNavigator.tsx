@@ -6,7 +6,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
-import { IconFile, IconInfo } from '../icons'
+import { IconFile, IconFileOpen, IconHelpOutline } from '../icons'
 
 interface NavigatorNode {
   id: string
@@ -63,12 +63,12 @@ const TutorialsNavigator = ({}) => {
         icon:
           tree.type === 'folder' ? (
             folderIsActive ? (
-              <IconFile />
+              <IconFileOpen />
             ) : (
               <IconFile />
             )
           ) : (
-            <IconInfo />
+            <IconHelpOutline />
           ),
         href: nodeHref,
         active: folderIsActive,
