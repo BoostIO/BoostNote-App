@@ -17,11 +17,15 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "resources/*",
+      "use": "@now/static"
     }
   ],
   "routes": [
     {
-      "src": "/app/(.*).(js|icon|css)$",
+      "src": "/app/(.*).(js|icon|css|svg|png|gif|jpeg)$",
       "dest": "/$1.$2"
     },
     {
