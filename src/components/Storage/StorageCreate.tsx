@@ -9,9 +9,7 @@ import {
 } from '../PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
-import { CloudStorage } from '../../lib/accounts'
 import LoginButton from '../atoms/LoginButton'
-import CloudStorageSelector from './CloudStorageSelector'
 import { useToast } from '../../lib/toast'
 
 export default () => {
@@ -19,24 +17,24 @@ export default () => {
   const { preferences } = usePreferences()
   const { pushMessage } = useToast()
   const { t } = useTranslation()
-  const [localName, setLocalName] = useState('')
+  const [name, setName] = useState('')
   const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
 
   const user = preferences['general.accounts'][0]
 
   const isLoggedIn = user != null
 
-  const createStorageCallback = async (cloudStorage?: CloudStorage) => {
-    const newStorage = await db.createStorage(localName)
-
-    if (cloudStorage != null) {
-      const success = db.setCloudLink(newStorage.id, cloudStorage, user)
-      if (!success) {
-        pushMessage({
-          title: 'Sync Error',
-          description: 'The storage was unable to be synced with the cloud'
-        })
-      }
+  const createStorageCallback = async () => {
+    // editStoragePage edits cloud storage directly
+    // update local -> update cloud -> on fail -> revert local
+    try {
+      await db.createStorage(name, storageType)
+    } catch {
+      pushMessage({
+        title: 'Cloud Error',
+        description:
+          'An error occured while attempting to create a cloud storage'
+      })
     }
   }
 
@@ -50,8 +48,8 @@ export default () => {
         <RightMargin>
           <input
             type='text'
-            value={localName}
-            onChange={e => setLocalName(e.target.value)}
+            value={name}
+            onChange={e => setName(e.target.value)}
           />
         </RightMargin>
         <RightMargin>
@@ -73,7 +71,7 @@ export default () => {
           Local
         </label>
 
-        {storageType === 'local' && (
+        {(storageType === 'local' || isLoggedIn) && (
           <>
             <TopMargin>
               <SectionPrimaryButton onClick={() => createStorageCallback()}>
@@ -92,14 +90,6 @@ export default () => {
               />
             </TopMargin>
           </>
-        )}
-        {isLoggedIn && storageType === 'cloud' && (
-          <CloudStorageSelector
-            user={user}
-            name={localName}
-            onSelect={createStorageCallback}
-            buttonText='Create a storage'
-          />
         )}
       </SectionMargin>
     </div>

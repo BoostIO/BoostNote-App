@@ -182,7 +182,11 @@ export default () => {
       <Description>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
-          <MdiIcon path={mdiPlusCircleOutline} size='2em' color='rgba(255,255,255,0.3)' />
+          <MdiIcon
+            path={mdiPlusCircleOutline}
+            size='2em'
+            color='rgba(255,255,255,0.3)'
+          />
         </CreateStorageButton>
       </Description>
 

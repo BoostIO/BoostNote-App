@@ -22,12 +22,31 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
 import Modal from './Modal'
 import ToastList from './Toast'
+import { useToast } from '../lib/toast'
+import { useUsers } from '../lib/accounts'
 
 const App = () => {
   const { initialize, initialized } = useDb()
+  const [users, { removeUser }] = useUsers()
+  const { pushMessage } = useToast()
   useEffect(() => {
-    initialize()
-  }, [initialize])
+    initialize(users[0]).catch(e => {
+      if (e.message === 'InvalidUser') {
+        if (users[0] != null) {
+          removeUser(users[0])
+        }
+        pushMessage({
+          title: 'Authentication Error',
+          description: 'Please try logging in again'
+        })
+      } else {
+        pushMessage({
+          title: 'Network Error',
+          description: 'An server error occured'
+        })
+      }
+    })
+  }, [initialize, users])
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {

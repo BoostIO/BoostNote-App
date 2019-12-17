@@ -15,13 +15,13 @@ import { ToastProvider } from './lib/toast'
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
   GeneralStatusProvider,
-  PreferencesProvider,
   ModalProvider,
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
+  PreferencesProvider,
   RouterProvider,
-  ToastProvider,
+  ToastProvider
 )
 
 function render(Component: typeof App) {

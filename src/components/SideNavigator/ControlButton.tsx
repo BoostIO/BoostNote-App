@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
-import { sideBarTextColor, sideBarSecondaryTextColor } from '../../lib/styled/styleFunctions'
+import {
+  sideBarTextColor,
+  sideBarSecondaryTextColor
+} from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
   width: 30px;
