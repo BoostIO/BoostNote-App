@@ -78,6 +78,7 @@ describe('NoteDb', () => {
         folderPathname: '/testok'
       })
     })
+
     it('throws an error if folder already exists', async () => {
       // Given
       const noteDb = await prepareNoteDb()
@@ -99,6 +100,29 @@ describe('NoteDb', () => {
 
       // Then
       expect(promise).rejects.toThrow(`this folder already exists \`/testok\``)
+    })
+
+    it('throws an error if folder depth is different', async () => {
+      // Given
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      await noteDb.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test'
+      })
+
+      await noteDb.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/testok'
+      })
+
+      // When
+      const promise = noteDb.renameFolder('/test', '/test/testok')
+
+      // Then
+      expect(promise).rejects.toThrow(`New name is invalid. \`/test/testok\``)
     })
   })
 })
