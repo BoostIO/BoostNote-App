@@ -91,6 +91,7 @@ interface SideNaviagtorItemProps {
   onDrop?: (event: React.DragEvent) => void
   onDragOver?: (event: React.DragEvent) => void
   onDragEnd?: (event: React.DragEvent) => void
+  onDoubleClick?: (event: React.MouseEvent) => void
 }
 
 const SideNaviagtorItem = ({
@@ -103,6 +104,7 @@ const SideNaviagtorItem = ({
   active,
   onFoldButtonClick,
   onClick,
+  onDoubleClick,
   onContextMenu,
   onDrop,
   onDragOver,
@@ -136,6 +138,7 @@ const SideNaviagtorItem = ({
           fontSize: '15px'
         }}
         onClick={onClick}
+        onDoubleClick={onDoubleClick}
       >
         {iconPath && <Icon className='icon' path={iconPath} />}
         <Label>{label}</Label>
