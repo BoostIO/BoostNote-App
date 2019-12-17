@@ -453,18 +453,18 @@ export default class NoteDetail extends React.Component<
               <div className='wrapper'>
                 {this.props.breadCrumbs != null &&
                   this.props.breadCrumbs
-                    .map(thread => (
+                    .map(breadCrumb => (
                       <div
                         onClick={this.handleBreadCrumbsClick(
-                          thread.folderPathname
+                          breadCrumb.folderPathname
                         )}
                         className={cc([
                           'folderLink',
-                          thread.folderIsActive && 'active'
+                          breadCrumb.folderIsActive && 'active'
                         ])}
-                        key={thread.folderLabel}
+                        key={breadCrumb.folderLabel}
                       >
-                        {thread.folderLabel}
+                        {breadCrumb.folderLabel}
                       </div>
                     ))
                     .reduce((prev, curr) => (
