@@ -11,19 +11,21 @@ import {
 
 interface ToastItemProps {
   item: ToastMessage
-  index: number
+
   onClose: (item: ToastMessage) => void
 }
 
 interface ToastItemState {
   remaining: number
   timer: any
+  id: number
 }
 
 class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   state = {
     remaining: 3000,
-    timer: 0
+    timer: 0,
+    id: new Date().getTime() + Math.random() * 1000
   }
 
   componentDidMount() {
@@ -31,11 +33,11 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   }
 
   componentWillUnmount() {
-    window.clearTimeout(this.props.index)
+    window.clearTimeout(this.state.id)
   }
 
   resumeTimer = () => {
-    window.clearTimeout(this.props.index)
+    window.clearTimeout(this.state.id)
     this.setState({
       timer: setTimeout(this.dismissMessage, this.state.remaining)
     })
