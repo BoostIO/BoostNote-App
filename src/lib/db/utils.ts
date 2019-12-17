@@ -1,6 +1,6 @@
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
 import { join } from 'path'
-import { ObjectMap, NoteDoc, FolderDoc, TagDoc } from './types'
+import { ObjectMap, NoteDoc, FolderDoc, TagDoc, NoteStorageData } from './types'
 import { generateId } from '../string'
 
 export function values<T>(objectMap: ObjectMap<T>): T[] {
@@ -134,4 +134,10 @@ export function sortByTitle(noteDoc: NoteDoc[], descendingOrder = false) {
         ? b.title.localeCompare(a.title)
         : a.title.localeCompare(b.title)
     )
+}
+
+export function isCloudStorageData(
+  data: NoteStorageData
+): data is Required<NoteStorageData> {
+  return data.cloudStorage != null
 }

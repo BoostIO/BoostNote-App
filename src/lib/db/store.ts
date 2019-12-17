@@ -8,7 +8,7 @@ import {
   PopulatedTagDoc,
   Attachment
 } from './types'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { createStoreContext } from '../utils/context'
 import ow from 'ow'
 import { schema, isValid, optional } from '../utils/predicates'
@@ -18,7 +18,9 @@ import {
   getParentFolderPathname,
   getAllParentFolderPathnames,
   isFolderPathnameValid,
-  createUnprocessableEntityError
+  createUnprocessableEntityError,
+  isCloudStorageData,
+  entries
 } from './utils'
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
@@ -29,23 +31,27 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { CloudStorage, User } from '../accounts'
 import { escapeRegExp } from '../regex'
+import {
+  User,
+  useUsers,
+  createStorage as createCloudStorage,
+  deleteStorage as deleteCloudStorage,
+  renameStorage as renameCloudStorage,
+  getStorages
+} from '../accounts'
 
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
-  createStorage: (name: string) => Promise<NoteStorage>
+  createStorage: (
+    name: string,
+    type?: 'local' | 'cloud'
+  ) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
   syncStorage: (id: string, user: User) => Promise<void>
-  setCloudLink: (
-    id: string,
-    cloudStorage: CloudStorage,
-    user: User
-  ) => Promise<void>
-  removeCloudLink: (id: string) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
   renameFolder: (
     storageName: string,
@@ -85,47 +91,137 @@ export function createDbStoreCreator(
     const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
+    const [users] = useUsers()
+    const activeUser = users[0]
+
+    const synced = useRef<Set<string>>(new Set())
+    // effect on user and init change, if inited init cloud stuff
+    // on init only initialize local stuff
+
+    useEffect(() => {
+      entries(storageMap).forEach(([, storage]) => {
+        if (storage.cloudStorage == null || synced.current.has(storage.id)) {
+          return
+        }
+        synced.current.add(storage.id)
+        syncStorage(storage.id)
+      })
+    }, [storageMap])
 
     const initialize = useCallback(async () => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
-      const storages = await Promise.all(
-        storageDataList.map(storageData => prepareStorage(storageData, adapter))
-      )
 
-      setStorageMap(
-        storages.reduce(
-          (map, storage) => {
-            map[storage.id] = storage
-            return map
-          },
-          {} as ObjectMap<NoteStorage>
-        )
-      )
-      setInitialized(true)
-    }, [])
-
-    const createStorage = useCallback(async (name: string) => {
-      const id = generateId()
-      const storage = await prepareStorage(
-        {
-          id,
-          name
+      const [local, cloud] = storageDataList.reduce<
+        [NoteStorageData[], Required<NoteStorageData>[]]
+      >(
+        ([local, cloud], storage) => {
+          if (isCloudStorageData(storage)) {
+            cloud.push(storage)
+          } else {
+            local.push(storage)
+          }
+          return [local, cloud]
         },
-        adapter
+        [[], []]
       )
 
-      let newStorageMap: ObjectMap<NoteStorage>
+      const prepared = await Promise.all(
+        local.map(storage => prepareStorage(storage, adapter))
+      )
+      const storageMap = prepared.reduce(
+        (map, storage) => {
+          ;(map[storage.id] = storage), adapter
+          return map
+        },
+        {} as ObjectMap<NoteStorage>
+      )
+
+      saveStorageDataList(liteStorage, storageMap)
+      setStorageMap(storageMap)
+      setInitialized(true)
+
+      if (activeUser == null) {
+        return
+      }
+
+      const inCloudStorages = await getStorages(activeUser)
+
+      const cloudStorageMap = new Map(
+        cloud.map(storage => [storage.cloudStorage.id, storage])
+      )
+      const userCloudStorage = await Promise.all(
+        inCloudStorages.map(storage => {
+          const current = cloudStorageMap.get(storage.id)
+          const id = current ? current.id : generateId()
+          cloudStorageMap.delete(storage.id)
+          const storageData = {
+            id,
+            name: storage.name,
+            cloudStorage: {
+              id: storage.id,
+              size: storage.size,
+              updatedAt: Date.now()
+            }
+          }
+          return prepareStorage(storageData, adapter)
+        })
+      )
+
+      let newStorageMap: ObjectMap<NoteStorage> = {}
       setStorageMap(prevStorageMap => {
         newStorageMap = produce(prevStorageMap, draft => {
-          draft[id] = storage
+          userCloudStorage.forEach(storage => {
+            draft[storage.id] = storage
+          })
         })
-
         return newStorageMap
       })
 
-      saveStorageDataList(liteStorage, newStorageMap!)
-      return storage
-    }, [])
+      saveStorageDataList(liteStorage, newStorageMap)
+
+      Array.from(cloudStorageMap).forEach(([, storage]) => {
+        new PouchDB(storage.id, { adapter }).destroy()
+      })
+    }, [activeUser])
+
+    const createStorage = useCallback(
+      async (name: string, type: 'local' | 'cloud' = 'local') => {
+        const id = generateId()
+
+        const storageData: NoteStorageData = { id, name }
+
+        if (type === 'cloud') {
+          if (activeUser == null) {
+            throw new Error('NotLoggedIn')
+          }
+
+          const result = await createCloudStorage(name, activeUser)
+          if (result === 'SubscriptionRequired') {
+            throw new Error(result)
+          }
+          storageData.cloudStorage = {
+            id: result.id,
+            size: 0,
+            updatedAt: Date.now()
+          }
+        }
+
+        const storage = await prepareStorage(storageData, adapter)
+
+        let newStorageMap: ObjectMap<NoteStorage>
+        setStorageMap(prevStorageMap => {
+          newStorageMap = produce(prevStorageMap, draft => {
+            draft[id] = storage
+          })
+
+          return newStorageMap
+        })
+
+        saveStorageDataList(liteStorage, newStorageMap!)
+        return storage
+      },
+      [activeUser]
+    )
 
     const removeStorage = useCallback(
       async (id: string) => {
@@ -133,6 +229,11 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
+
+        if (activeUser != null && storage.cloudStorage != null) {
+          await deleteCloudStorage(activeUser, storage.cloudStorage.id)
+        }
+
         await storage.db.pouchDb.destroy()
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
@@ -147,63 +248,38 @@ export function createDbStoreCreator(
       },
       // FIXME: The callback regenerates every storageMap change.
       // We should move the method to NoteStorage so the method instantiate only once.
-      [storageMap]
+      [storageMap, activeUser]
     )
 
-    const renameStorage = useCallback(async (id: string, name: string) => {
-      let newStorageMap: ObjectMap<NoteStorage>
-      setStorageMap(prevStorageMap => {
-        newStorageMap = produce(prevStorageMap, draft => {
-          if (prevStorageMap[id] != null) {
-            draft[id]!.name = name
-          }
-        })
-
-        return newStorageMap
-      })
-
-      saveStorageDataList(liteStorage, newStorageMap!)
-    }, [])
-
-    const setCloudLink = useCallback(
-      async (id: string, cloudStorage: CloudStorage, user: User) => {
-        let storage = storageMap[id]
-
-        if (storage == null) {
-          return
+    const renameStorage = useCallback(
+      async (id: string, name: string) => {
+        const storageData = storageMap[id]
+        if (
+          storageData != null &&
+          storageData.cloudStorage != null &&
+          activeUser != null
+        ) {
+          await renameCloudStorage(
+            activeUser,
+            storageData.cloudStorage.id,
+            name
+          )
         }
 
-        storage = {
-          ...storage,
-          cloudStorage: { ...cloudStorage, updatedAt: Date.now() }
-        }
-
-        setStorageMap(
-          produce((draft: ObjectMap<NoteStorage>) => {
+        let newStorageMap: ObjectMap<NoteStorage> = {}
+        setStorageMap(prevStorageMap => {
+          newStorageMap = produce(prevStorageMap, draft => {
             if (draft[id] != null) {
-              draft[id]!.cloudStorage = {
-                ...cloudStorage,
-                updatedAt: Date.now()
-              }
+              draft[id]!.name = name
             }
           })
-        )
-        return syncStorage(storage.id, user)
-      },
-      [storageMap]
-    )
-
-    const removeCloudLink = useCallback(async (id: string) => {
-      setStorageMap(prevStorageMap => {
-        const newStorageMap = produce(prevStorageMap, draft => {
-          if (prevStorageMap[id] != null) {
-            delete draft[id]!.cloudStorage
-          }
+          return newStorageMap
         })
+
         saveStorageDataList(liteStorage, newStorageMap)
-        return newStorageMap
-      })
-    }, [])
+      },
+      [activeUser, storageMap]
+    )
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
@@ -989,28 +1065,27 @@ export function createDbStoreCreator(
       )
     }
 
-    const syncStorage = async (storageId: string, user: User) => {
+    const syncStorage = async (storageId: string) => {
+      if (activeUser == null) {
+        return
+      }
+
       let storage = storageMap[storageId]
       if (storage == null || storage.cloudStorage == null) {
         return
       }
-      await storage.db.sync(user, storage.cloudStorage)
+      await storage.db.sync(activeUser, storage.cloudStorage)
       storage.cloudStorage.updatedAt = Date.now()
 
       storage = await prepareStorage(storage, adapter)
-      setStorageMap(prevStorageMap => {
-        const newStorageMap = produce(
-          prevStorageMap,
-          (draft: ObjectMap<NoteStorage>) => {
-            if (draft[storageId] == null) {
-              return
-            }
-            draft[storageId] = storage
+      setStorageMap(
+        produce(draft => {
+          if (draft[storageId] == null) {
+            return
           }
-        )
-        saveStorageDataList(liteStorage, newStorageMap)
-        return newStorageMap
-      })
+          draft[storageId] = storage
+        })
+      )
     }
 
     return {
@@ -1021,8 +1096,6 @@ export function createDbStoreCreator(
       removeStorage,
       renameStorage,
       syncStorage,
-      setCloudLink,
-      removeCloudLink,
       createFolder,
       renameFolder,
       removeFolder,
@@ -1044,7 +1117,7 @@ const storageDataPredicate = schema({
   name: ow.string,
   cloudStorage: optional({
     id: ow.number,
-    name: ow.string,
+    size: ow.number,
     updatedAt: ow.number
   })
 })
