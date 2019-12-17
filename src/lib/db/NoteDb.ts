@@ -140,6 +140,7 @@ export default class NoteDb {
         `this folder already exists \`${newPathname}\``
       )
     }
+    console.log(pathname, newPathname)
     if (pathname.split('/').length !== newPathname.split('/').length) {
       throw createUnprocessableEntityError(
         `New name is invalid. \`${newPathname}\``
