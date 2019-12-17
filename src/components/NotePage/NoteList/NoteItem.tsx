@@ -59,7 +59,8 @@ export const StyledNoteListItem = styled.div`
     overflow: hidden;
   }
 
-  .tag-area {
+  .tag-area,
+  .title {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
