@@ -77,10 +77,6 @@ const ControlContainer = styled.div`
 
 const SideNavigatorItemIconContainer = styled.span`
   padding-right: 6px;
-  svg {
-    width: 0.7em !important;
-    height: 0.7em !important;
-  }
 `
 
 interface SideNaviagtorItemProps {

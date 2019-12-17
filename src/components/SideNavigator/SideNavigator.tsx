@@ -219,7 +219,7 @@ export default () => {
             <ControlButton
               key='addFolderButton'
               onClick={() => showPromptToCreateFolder('/')}
-              icon={<IconAddRound size='0.7em' />}
+              icon={<IconAddRound />}
             />
           ]
 
@@ -309,7 +309,11 @@ export default () => {
                     depth={1}
                     label='Attachments'
                     icon={
-                      attachmentsPageIsActive ? <IconImage /> : <IconImage />
+                      attachmentsPageIsActive ? (
+                        <IconImage size='1.5em' />
+                      ) : (
+                        <IconImage size='1.5em' />
+                      )
                     }
                     active={attachmentsPageIsActive}
                     onClick={() => push(attachmentsPagePathname)}
