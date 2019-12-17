@@ -15,13 +15,17 @@
       "src": "package.json",
       "use": "@now/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "compiled"
       }
+    },
+    {
+      "src": "resources/*",
+      "use": "@now/static"
     }
   ],
   "routes": [
     {
-      "src": "/app/(.*).(js|icon|css)$",
+      "src": "/app/(.*).(js|icon|css|svg|png|gif|jpeg)$",
       "dest": "/$1.$2"
     },
     {
