@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
 import LoginButton from '../atoms/LoginButton'
 import { useToast } from '../../lib/toast'
+import { useRouter } from '../../lib/router'
 
 export default () => {
   const db = useDb()
@@ -19,6 +20,7 @@ export default () => {
   const { t } = useTranslation()
   const [name, setName] = useState('')
   const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
+  const { push } = useRouter()
 
   const user = preferences['general.accounts'][0]
 
@@ -28,7 +30,8 @@ export default () => {
     // editStoragePage edits cloud storage directly
     // update local -> update cloud -> on fail -> revert local
     try {
-      await db.createStorage(name, storageType)
+      const storage = await db.createStorage(name, storageType)
+      push(`/app/storages/${storage.id}/notes`)
     } catch {
       pushMessage({
         title: 'Cloud Error',
