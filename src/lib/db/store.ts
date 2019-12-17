@@ -291,16 +291,6 @@ export function createDbStoreCreator(
         await storage.db.removeFolder(pathname)
         const deletedFolderPathnames = [pathname, ...subFolders]
 
-        if (
-          `${currentPathnameWithoutNoteId}/`.startsWith(
-            `/app/storages/${id}/notes${pathname}/`
-          )
-        ) {
-          router.replace(
-            currentPathnameWithoutNoteId.replace(pathname, newPathname)
-          )
-        }
-
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             allChangedNotes.forEach(noteDoc => {
