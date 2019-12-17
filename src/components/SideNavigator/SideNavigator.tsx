@@ -227,8 +227,8 @@ export default () => {
                 folderPathSplit.pop()
                 const newPathname = folderPathSplit.join('/') + '/' + value
                 await renameFolder(storage.id, folderPathname, newPathname)
-
-                // push(`/app/storages/${storage.id}/notes${newPathname}`)
+                push(`/app/storages/${storage.id}/notes${newPathname}`)
+                openSideNavFolderItemRecursively(storage.id, newPathname)
               }
             })
           }
