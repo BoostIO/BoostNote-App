@@ -16,7 +16,9 @@ import NoteDb from './NoteDb'
 import {
   getFolderPathname,
   getParentFolderPathname,
-  getAllParentFolderPathnames
+  getAllParentFolderPathnames,
+  isFolderPathnameValid,
+  createUnprocessableEntityError
 } from './utils'
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
@@ -28,6 +30,7 @@ import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
 import { CloudStorage, User } from '../accounts'
+import { escapeRegExp } from '../regex'
 
 export interface DbStore {
   initialized: boolean
@@ -238,41 +241,78 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
+        if (!isFolderPathnameValid(pathname)) {
+          throw createUnprocessableEntityError(
+            `pathname is invalid, got \`${pathname}\``
+          )
+        }
+        if (!isFolderPathnameValid(newPathname)) {
+          throw createUnprocessableEntityError(
+            `pathname is invalid, got \`${newPathname}\``
+          )
+        }
 
-        const folderRewrite = await storage.db.renameFolder(
-          pathname,
-          newPathname
-        )
+        const folderListToRefresh: PopulatedFolderDoc[] = []
+        const notesListToRefresh: NoteDoc[] = []
+
         const subFolders = Object.keys(storage.folderMap).filter(aPathname =>
           aPathname.startsWith(`${pathname}/`)
         )
+        const allFoldersToRename = [pathname, ...subFolders]
+        console.log(allFoldersToRename)
+        await Promise.all(
+          allFoldersToRename.map(async folderPathname => {
+            const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
+            const newfolderPathname = folderPathname.replace(regex, newPathname)
+            const folder = await storage.db.getFolder(folderPathname)
+            if (folder == null) {
+              throw createUnprocessableEntityError(
+                `this folder does not exist \`${folderPathname}\``
+              )
+            }
+            if ((await storage.db.getFolder(newfolderPathname)) != null) {
+              throw createUnprocessableEntityError(
+                `this folder already exists \`${newfolderPathname}\``
+              )
+            }
+            if (
+              folderPathname.split('/').length !==
+              newfolderPathname.split('/').length
+            ) {
+              throw createUnprocessableEntityError(
+                `New name is invalid. \`${newfolderPathname}\``
+              )
+            }
+            const notes = await storage.db.findNotesByFolder(folderPathname)
+            const newFolder = await storage.db.upsertFolder(newfolderPathname)
+            const rewrittenNotes = await Promise.all(
+              notes.map(note =>
+                storage.db.updateNote(note._id, {
+                  folderPathname: newfolderPathname
+                })
+              )
+            )
 
-        const allChangedNotes = [...folderRewrite.notes]
-
-        const folderListToRefresh: PopulatedFolderDoc[] = []
-        folderRewrite.folders.forEach(folder => {
-          const subFolderPathname = getFolderPathname(folder._id)
-          const noteIdSet = new Set(
-            folderRewrite.notes.map(noteDoc => noteDoc._id)
-          )
-          folderListToRefresh.push({
-            ...folder,
-            pathname: subFolderPathname,
-            noteIdSet
+            folderListToRefresh.push({
+              ...newFolder,
+              pathname: getFolderPathname(newFolder._id),
+              noteIdSet: new Set(rewrittenNotes.map(note => note._id))
+            })
+            notesListToRefresh.push(...rewrittenNotes)
           })
-        })
+        )
 
-        const deletedFolderPathnames = [pathname, ...subFolders]
+        await storage.db.removeFolder(pathname)
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            allChangedNotes.forEach(noteDoc => {
+            notesListToRefresh.forEach(noteDoc => {
               draft[storage.id]!.noteMap[noteDoc._id] = noteDoc
             })
             folderListToRefresh.forEach(folderDoc => {
               draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
             })
-            deletedFolderPathnames.forEach(aPathname => {
+            allFoldersToRename.forEach(aPathname => {
               delete draft[id]!.folderMap[aPathname]
             })
           })
