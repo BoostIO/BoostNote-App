@@ -93,9 +93,6 @@ export function createDbStoreCreator(
     const activeUser = useRef<User | undefined>(undefined)
 
     const synced = useRef<Set<string>>(new Set())
-    // effect on user and init change, if inited init cloud stuff
-    // on init only initialize local stuff
-
     useEffect(() => {
       entries(storageMap).forEach(([, storage]) => {
         if (storage.cloudStorage == null || synced.current.has(storage.id)) {

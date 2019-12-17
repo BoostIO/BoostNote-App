@@ -27,14 +27,24 @@ import { useUsers } from '../lib/accounts'
 
 const App = () => {
   const { initialize, initialized } = useDb()
-  const [users] = useUsers()
+  const [users, { removeUser }] = useUsers()
   const { pushMessage } = useToast()
   useEffect(() => {
-    initialize(users[0]).catch(() => {
-      pushMessage({
-        title: 'Network Error',
-        description: 'An error occured while syncing cloud storage'
-      })
+    initialize(users[0]).catch(e => {
+      if (e.message === 'InvalidUser') {
+        if (users[0] != null) {
+          removeUser(users[0])
+        }
+        pushMessage({
+          title: 'Authentication Error',
+          description: 'Please try logging in again'
+        })
+      } else {
+        pushMessage({
+          title: 'Network Error',
+          description: 'An server error occured'
+        })
+      }
     })
   }, [initialize, users])
   const { toggleClosed, preferences } = usePreferences()
