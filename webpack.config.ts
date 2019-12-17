@@ -22,16 +22,6 @@ module.exports = (env, argv) => {
 
     devtool: 'inline-source-map',
 
-    optimization: {
-      minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/
-          }
-        })
-      ]
-    },
 
     module: {
       rules: [
@@ -100,7 +90,7 @@ module.exports = (env, argv) => {
       hot: true,
       // enable HMR on the server
 
-      before: function(app, server) {
+      before: function (app, server) {
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -132,7 +122,20 @@ module.exports = (env, argv) => {
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     )
-    ;(config.output as any).publicPath = '/app'
+      ; (config.output as any).publicPath = '/app'
+  }
+
+  if (argv.mode === 'production') {
+    (config as any).optimization = {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/
+          }
+        })
+      ]
+    }
   }
 
   return config
