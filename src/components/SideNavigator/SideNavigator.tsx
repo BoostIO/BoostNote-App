@@ -241,7 +241,6 @@ export default () => {
                     title: 'Error',
                     description: 'You could not rename the folder'
                   })
-                  console.log(error)
                 }
               }
             })
