@@ -13,6 +13,9 @@ export const secondaryBackgroundColor = ({ theme }: StyledProps) =>
 export const activeBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.activeBackgroundColor};`
 
+export const activeSideBarSecondaryTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.activeSideBarSecondaryTextColor};`
+
 export const sideBarBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.sideBarBackgroundColor};`
 
@@ -28,6 +31,9 @@ export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
 
 export const textColor = ({ theme }: StyledProps) =>
   `color: ${theme.textColor};`
+
+export const activeUiTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.activeUiTextColor};`
 
 export const disabledUiTextColor = ({ theme }: StyledProps) =>
   `color: ${theme.disabledUiTextColor};`
@@ -49,8 +55,15 @@ transition: 200ms color;
   color: ${theme.disabledUiTextColor};
 }`
 
-export const sideBarTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.sideBarTextColor};`
+export const sideBarTextColor = ({
+  theme
+}: StyledProps) => `color: ${theme.sideBarTextColor};
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    color: ${theme.activeSideBarSecondaryTextColor};
+  }`
 
 export const sideBarSecondaryTextColor = ({ theme }: StyledProps) =>
   `color: ${theme.sideBarSecondaryTextColor};`

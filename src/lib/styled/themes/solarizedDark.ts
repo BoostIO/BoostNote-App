@@ -44,6 +44,7 @@ export const solarizedDarkTheme: BaseTheme = {
 
   // SideBar
   sideBarBackgroundColor: base1Color,
+  activeSideBarSecondaryTextColor: light100Color,
   sideBarTextColor: light70Color,
   sideBarSecondaryTextColor: light30Color,
 

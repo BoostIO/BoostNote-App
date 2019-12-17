@@ -45,6 +45,7 @@ export const lightTheme: BaseTheme = {
 
   // SideBar
   sideBarBackgroundColor: base1Color,
+  activeSideBarSecondaryTextColor: dark87Color,
   sideBarTextColor: dark54Color,
   sideBarSecondaryTextColor: dark26Color,
 

@@ -23,6 +23,7 @@ export interface BaseTheme {
   // SideBar
   sideBarBackgroundColor: string
   sideBarTextColor: string
+  activeSideBarSecondaryTextColor: string
   sideBarSecondaryTextColor: string
 
   // Button
