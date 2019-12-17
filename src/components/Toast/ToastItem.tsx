@@ -1,47 +1,75 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { ToastMessage } from '../../lib/toast'
-import { dateToRelativeString } from '../../lib/utils/time'
 import {
   StyledToastContainer,
   StyledToastTop,
   StyledToastRight,
   StyledToastTitle,
-  StyledToastTime,
   StyledToastCloseButton,
   StyledToastDescription
 } from './styled'
 
 interface ToastItemProps {
   item: ToastMessage
+  index: number
   onClose: (item: ToastMessage) => void
 }
 
-const ToastItem = ({ item, onClose }: ToastItemProps) => {
-  const [relativeTime, setRelativeTime] = useState(
-    dateToRelativeString(item.createdAt)
-  )
+interface ToastItemState {
+  remaining: number
+  timer: any
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRelativeTime(dateToRelativeString(item.createdAt))
-    }, 10000)
+class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
+  state = {
+    remaining: 3000,
+    timer: 0
+  }
 
-    return () => clearInterval(interval)
-  }, [])
+  componentDidMount() {
+    this.resumeTimer()
+  }
 
-  return (
-    <StyledToastContainer>
-      <StyledToastTop>
-        <StyledToastTitle>{item.title}</StyledToastTitle>
-        <StyledToastRight>
-          <StyledToastTime>{relativeTime}</StyledToastTime>
-          <StyledToastCloseButton>
-            <span onClick={() => onClose(item)}>&times;</span>
-          </StyledToastCloseButton>
-        </StyledToastRight>
-      </StyledToastTop>
-      <StyledToastDescription>{item.description}</StyledToastDescription>
-    </StyledToastContainer>
-  )
+  componentWillUnmount() {
+    window.clearTimeout(this.props.index)
+  }
+
+  resumeTimer = () => {
+    window.clearTimeout(this.props.index)
+    this.setState({
+      timer: setTimeout(this.dismissMessage, this.state.remaining)
+    })
+  }
+
+  pauseTimer = () => {
+    clearTimeout(this.state.timer)
+  }
+
+  dismissMessage = () => {
+    this.props.onClose(this.props.item)
+  }
+
+  render() {
+    return (
+      <StyledToastContainer
+        onMouseEnter={this.pauseTimer}
+        onMouseLeave={this.resumeTimer}
+      >
+        <StyledToastTop>
+          <StyledToastTitle>{this.props.item.title}</StyledToastTitle>
+          <StyledToastRight>
+            <StyledToastCloseButton>
+              <span onClick={() => this.props.onClose(this.props.item)}>
+                &times;
+              </span>
+            </StyledToastCloseButton>
+          </StyledToastRight>
+        </StyledToastTop>
+        <StyledToastDescription>
+          {this.props.item.description}
+        </StyledToastDescription>
+      </StyledToastContainer>
+    )
+  }
 }
 export default ToastItem
