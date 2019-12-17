@@ -3,7 +3,7 @@ import { BaseTheme } from './types'
 const base1Color = '#fdf6e4'
 const base2Color = '#efe8d6'
 const base3Color = '#393733'
-const primaryColor = '#03C588'
+const primaryColor = '#F77942'
 
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
