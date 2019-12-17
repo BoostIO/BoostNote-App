@@ -23,18 +23,20 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import Modal from './Modal'
 import ToastList from './Toast'
 import { useToast } from '../lib/toast'
+import { useUsers } from '../lib/accounts'
 
 const App = () => {
   const { initialize, initialized } = useDb()
+  const [users] = useUsers()
   const { pushMessage } = useToast()
   useEffect(() => {
-    initialize().catch(() => {
+    initialize(users[0]).catch(() => {
       pushMessage({
         title: 'Network Error',
         description: 'An error occured while syncing cloud storage'
       })
     })
-  }, [initialize])
+  }, [initialize, users])
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {

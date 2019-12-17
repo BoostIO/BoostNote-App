@@ -34,7 +34,6 @@ import { difference } from 'ramda'
 import { escapeRegExp } from '../regex'
 import {
   User,
-  useUsers,
   createStorage as createCloudStorage,
   deleteStorage as deleteCloudStorage,
   renameStorage as renameCloudStorage,
@@ -44,7 +43,7 @@ import {
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
-  initialize: () => Promise<void>
+  initialize: (user?: User) => Promise<void>
   createStorage: (
     name: string,
     type?: 'local' | 'cloud'
@@ -91,8 +90,7 @@ export function createDbStoreCreator(
     const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
-    const [users] = useUsers()
-    const activeUser = users[0]
+    const activeUser = useRef<User | undefined>(undefined)
 
     const synced = useRef<Set<string>>(new Set())
     // effect on user and init change, if inited init cloud stuff
@@ -108,8 +106,9 @@ export function createDbStoreCreator(
       })
     }, [storageMap])
 
-    const initialize = useCallback(async () => {
+    const initialize = useCallback(async (user?: User) => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
+      activeUser.current = user
 
       const [local, cloud] = storageDataList.reduce<
         [NoteStorageData[], Required<NoteStorageData>[]]
@@ -140,11 +139,11 @@ export function createDbStoreCreator(
       setStorageMap(storageMap)
       setInitialized(true)
 
-      if (activeUser == null) {
+      if (activeUser.current == null) {
         return
       }
 
-      const inCloudStorages = await getStorages(activeUser)
+      const inCloudStorages = await getStorages(activeUser.current)
 
       const cloudStorageMap = new Map(
         cloud.map(storage => [storage.cloudStorage.id, storage])
@@ -182,7 +181,7 @@ export function createDbStoreCreator(
       Array.from(cloudStorageMap).forEach(([, storage]) => {
         new PouchDB(storage.id, { adapter }).destroy()
       })
-    }, [activeUser])
+    }, [])
 
     const createStorage = useCallback(
       async (name: string, type: 'local' | 'cloud' = 'local') => {
@@ -191,11 +190,11 @@ export function createDbStoreCreator(
         const storageData: NoteStorageData = { id, name }
 
         if (type === 'cloud') {
-          if (activeUser == null) {
+          if (activeUser.current == null) {
             throw new Error('NotLoggedIn')
           }
 
-          const result = await createCloudStorage(name, activeUser)
+          const result = await createCloudStorage(name, activeUser.current)
           if (result === 'SubscriptionRequired') {
             throw new Error(result)
           }
@@ -230,8 +229,8 @@ export function createDbStoreCreator(
           return
         }
 
-        if (activeUser != null && storage.cloudStorage != null) {
-          await deleteCloudStorage(activeUser, storage.cloudStorage.id)
+        if (activeUser.current != null && storage.cloudStorage != null) {
+          await deleteCloudStorage(activeUser.current, storage.cloudStorage.id)
         }
 
         await storage.db.pouchDb.destroy()
@@ -248,7 +247,7 @@ export function createDbStoreCreator(
       },
       // FIXME: The callback regenerates every storageMap change.
       // We should move the method to NoteStorage so the method instantiate only once.
-      [storageMap, activeUser]
+      [storageMap]
     )
 
     const renameStorage = useCallback(
@@ -257,10 +256,10 @@ export function createDbStoreCreator(
         if (
           storageData != null &&
           storageData.cloudStorage != null &&
-          activeUser != null
+          activeUser.current != null
         ) {
           await renameCloudStorage(
-            activeUser,
+            activeUser.current,
             storageData.cloudStorage.id,
             name
           )
@@ -278,7 +277,7 @@ export function createDbStoreCreator(
 
         saveStorageDataList(liteStorage, newStorageMap)
       },
-      [activeUser, storageMap]
+      [storageMap]
     )
 
     const createFolder = useCallback(
@@ -1066,7 +1065,7 @@ export function createDbStoreCreator(
     }
 
     const syncStorage = async (storageId: string) => {
-      if (activeUser == null) {
+      if (activeUser.current == null) {
         return
       }
 
@@ -1074,7 +1073,7 @@ export function createDbStoreCreator(
       if (storage == null || storage.cloudStorage == null) {
         return
       }
-      await storage.db.sync(activeUser, storage.cloudStorage)
+      await storage.db.sync(activeUser.current, storage.cloudStorage)
       storage.cloudStorage.updatedAt = Date.now()
 
       storage = await prepareStorage(storage, adapter)
