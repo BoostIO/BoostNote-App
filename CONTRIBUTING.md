@@ -11,8 +11,7 @@ propose changes to this document in a pull request.
 ## Submitting Issues
 
 - Before creating an issue please read the notes below and include as many details as
-  possible with your report. You can create an issue [here](https://github.com/Boostnote.next
-  /Boost/issues/new).
+  possible with your report. You can create an issue [here](https://github.com/BoostIO/BoostNote.next/issues/new).
   If you can, please include:
   - The version of App you are using
   - The operating system you are using
