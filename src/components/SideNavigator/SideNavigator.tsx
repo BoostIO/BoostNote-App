@@ -151,14 +151,15 @@ export default () => {
               submitButtonLabel: 'Create Storage',
               onClose: async (value: string | null) => {
                 if (value == null) return
-                await createStorage(value)
+                const storage = await createStorage(value)
+                push(`/app/storages/${storage.id}/notes`)
               }
             })
           }
         }
       ])
     },
-    [popup, prompt, createStorage]
+    [popup, prompt, createStorage, push]
   )
 
   const { toggleClosed, preferences } = usePreferences()
