@@ -34,7 +34,7 @@ const App = () => {
         description: 'An error occured while syncing cloud storage'
       })
     })
-  }, [initialize, pushMessage])
+  }, [initialize])
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
