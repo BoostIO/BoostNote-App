@@ -26,7 +26,6 @@ export default () => {
       return <StorageCreate />
     case 'tutorials.show':
       return <TutorialsPage pathname={routeParams.path} />
-      break
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
