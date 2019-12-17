@@ -13,7 +13,7 @@ import MdiIcon from '@mdi/react'
 const Container = styled.div`
   position: relative;
   user-select: none;
-  height: 30px;
+  height: 28px;
   display: flex;
 
   transition: 200ms background-color;
@@ -56,12 +56,6 @@ const ClickableContainer = styled.button`
   width: 100%;
 
   ${sideBarTextColor}
-  &:hover,
-  &:focus,
-  &:active,
-  &.active {
-    ${sideBarTextColor}
-  }
 
   .icon {
     margin-right: 4px;

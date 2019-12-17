@@ -48,6 +48,7 @@ export const sepiaTheme: BaseTheme = {
 
   // SideBar
   sideBarBackgroundColor: base3Color,
+  activeSideBarSecondaryTextColor: light100Color,
   sideBarTextColor: light70Color,
   sideBarSecondaryTextColor: light30Color,
 

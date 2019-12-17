@@ -27,7 +27,6 @@ import {
   borderBottom,
   borderRight,
   uiTextColor,
-  contextMenuShadow,
   PrimaryTextColor
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
@@ -44,12 +43,9 @@ export const StyledNoteDetailContainer = styled.div`
   .breadCrumbs {
     display: block;
     width: 100%;
-    height: 30px;
+    height: 25px;
     font-size: 14px;
-    padding: 3px 2%;
-    ${borderBottom}
-    ${contextMenuShadow}
-    border-width: 2px !important;
+    padding: 5px 10px;
     overflow: hidden;
 
     .wrapper {
@@ -68,8 +64,9 @@ export const StyledNoteDetailContainer = styled.div`
 
     .folderLink {
       display: inline-block;
-      padding: 0 15px;
+      padding: 0 9px;
       cursor: pointer;
+      ${uiTextColor}
 
       &:first-of-type {
         padding-left: 0;
@@ -470,7 +467,7 @@ export default class NoteDetail extends React.Component<
                     .reduce((prev, curr) => (
                       <>
                         {prev}
-                        <div className='separator'>></div>
+                        <div className='separator'>/</div>
                         {curr}
                       </>
                     ))}
