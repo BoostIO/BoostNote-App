@@ -181,6 +181,13 @@ const FolderListFragment = ({
           event.preventDefault()
         }}
         onDrop={createDropHandler('/')}
+        controlComponents={[
+          <ControlButton
+            key='addFolderButton'
+            onClick={() => showPromptToCreateFolder('/')}
+            iconPath={mdiPlusCircleOutline}
+          />
+        ]}
       />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
