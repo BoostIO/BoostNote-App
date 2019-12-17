@@ -16,7 +16,7 @@ import {
   mdiFormatText,
   mdiDeleteEmpty,
   mdiRestore,
-  mdiNoteText
+  mdiPencil
 } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
@@ -436,7 +436,7 @@ export default class NoteDetail extends React.Component<
               <ToolbarIconButton
                 className={viewMode === 'edit' ? 'active' : ''}
                 onClick={() => toggleViewMode('edit')}
-                path={mdiNoteText}
+                path={mdiPencil}
               />
               <ToolbarIconButton
                 className={viewMode === 'split' ? 'active' : ''}
