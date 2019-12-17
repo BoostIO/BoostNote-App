@@ -1,6 +1,11 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import { Section, SectionHeader, SectionSubtleText, PrimaryText } from './styled'
+import {
+  Section,
+  SectionHeader,
+  SectionSubtleText,
+  PrimaryText
+} from './styled'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -8,8 +13,12 @@ const AboutContents = styled.div`
 
   a {
     display: inline-block;
-    + a {margin-left: 20px;}
-    &:hover {text-decoration: none;}
+    + a {
+      margin-left: 20px;
+    }
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   .about-outline-basic {
@@ -18,7 +27,9 @@ const AboutContents = styled.div`
     margin-top: 24px;
   }
   .about-outline-basic-logo {
-    img {width: 63px;}
+    img {
+      width: 63px;
+    }
   }
   .about-outline-basic-info {
     margin-left: 16px;
@@ -53,7 +64,9 @@ const AboutContents = styled.div`
       list-style: none;
 
       li {
-        + li {margin-top: 20px;}
+        + li {
+          margin-top: 20px;
+        }
       }
     }
   }
@@ -72,25 +85,40 @@ const AboutTab = () => {
               </div>
               <div className='about-outline-basic-info'>
                 <h4>Boost Note {process.env.VERSION}</h4>
-                <p>An open source note-taking app made for programmers just like you.</p>
                 <p>
-                  <PrimaryText href='//boostnote.io/'>Official Website</PrimaryText>
-                  <PrimaryText href='//boostnote.io/wiki/'>Boost Note for Team</PrimaryText>
+                  An open source note-taking app made for programmers just like
+                  you.
+                </p>
+                <p>
+                  <PrimaryText href='//boostnote.io/'>
+                    Official Website
+                  </PrimaryText>
+                  <PrimaryText href='//boostnote.io/wiki/'>
+                    Boost Note for Team
+                  </PrimaryText>
                   {/* <PrimaryText href='github.com/BoostIO/BoostNote.next/blob/master/docs/build.md'>Development: Development configuration for Boostnote</PrimaryText> */}
                 </p>
               </div>
             </div>
-            <SectionSubtleText className='about-outline-copy'>Copyright (C) 2017 - 2019 BoostIO<br/>License: GPL v3</SectionSubtleText>
+            <SectionSubtleText className='about-outline-copy'>
+              Copyright (C) 2017 - 2019 BoostIO
+              <br />
+              License: GPL v3
+            </SectionSubtleText>
           </div>
           <div className='about-community'>
             <SectionHeader>Community</SectionHeader>
             <div className='about-community-links'>
               <ul>
                 <li>
-                  <PrimaryText href='//issuehunt.io/r/BoostIo/Boostnote'>Bounty on IssueHunt</PrimaryText>
+                  <PrimaryText href='//issuehunt.io/r/BoostIo/Boostnote'>
+                    Bounty on IssueHunt
+                  </PrimaryText>
                 </li>
                 <li>
-                  <PrimaryText href='//github.com/BoostIO/BoostNote.next'>GitHub</PrimaryText>
+                  <PrimaryText href='//github.com/BoostIO/BoostNote.next'>
+                    GitHub
+                  </PrimaryText>
                 </li>
                 <li>
                   <PrimaryText href='//medium.com/boostnote'>Blog</PrimaryText>
@@ -98,16 +126,24 @@ const AboutTab = () => {
               </ul>
               <ul>
                 <li>
-                  <PrimaryText href='//boostnote-group.slack.com/join/shared_invite/enQtMzkxOTk4ODkyNzc0LWQxZTQwNjBlMDI4YjkyYjg2MTRiZGJhNzA1YjQ5ODA5M2M0M2NlMjI5YjhiYWQzNzgzYmU0MDMwOTlmZmZmMGE'>Slack Group</PrimaryText>
+                  <PrimaryText href='//boostnote-group.slack.com/join/shared_invite/enQtMzkxOTk4ODkyNzc0LWQxZTQwNjBlMDI4YjkyYjg2MTRiZGJhNzA1YjQ5ODA5M2M0M2NlMjI5YjhiYWQzNzgzYmU0MDMwOTlmZmZmMGE'>
+                    Slack Group
+                  </PrimaryText>
                 </li>
                 <li>
-                  <PrimaryText href='//twitter.com/boostnoteapp'>Twitter Account</PrimaryText>
+                  <PrimaryText href='//twitter.com/boostnoteapp'>
+                    Twitter Account
+                  </PrimaryText>
                 </li>
                 <li>
-                  <PrimaryText href='//www.facebook.com/groups/boostnote/'>Facebook Group</PrimaryText>
+                  <PrimaryText href='//www.facebook.com/groups/boostnote/'>
+                    Facebook Group
+                  </PrimaryText>
                 </li>
                 <li>
-                  <PrimaryText href='//www.reddit.com/r/Boostnote/'>Reddit</PrimaryText>
+                  <PrimaryText href='//www.reddit.com/r/Boostnote/'>
+                    Reddit
+                  </PrimaryText>
                 </li>
               </ul>
             </div>

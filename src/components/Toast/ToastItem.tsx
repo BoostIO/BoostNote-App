@@ -17,7 +17,6 @@ interface ToastItemProps {
 }
 
 const ToastItem = ({ item, onClose }: ToastItemProps) => {
-
   const [relativeTime, setRelativeTime] = useState(
     dateToRelativeString(item.createdAt)
   )

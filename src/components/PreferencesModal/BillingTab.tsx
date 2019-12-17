@@ -12,7 +12,8 @@ const BillingContent = styled.div`
   .billing-lead {
     margin-bottom: 24px;
 
-    p, button {
+    p,
+    button {
       display: inline-block;
     }
     button {
@@ -102,7 +103,11 @@ const BillingTab = () => {
           </tbody>
         </SectionTable>
         <div className='billing-extra'>
-          <p>* If you need more cloud storage, you can add it at any time by paying $5 (USD) for every 5GB. Click the "Add Extra Storage" button below.</p>
+          <p>
+            * If you need more cloud storage, you can add it at any time by
+            paying $5 (USD) for every 5GB. Click the "Add Extra Storage" button
+            below.
+          </p>
           <SectionPrimaryButton>Add Extra Storage</SectionPrimaryButton>
         </div>
       </BillingContent>
