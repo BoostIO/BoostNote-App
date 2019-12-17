@@ -196,6 +196,8 @@ export default class NoteDb {
       renamedNotes.push(...subFolderRewrite.notes)
     })
 
+    await this.removeFolder(pathname)
+
     return {
       folders: renamedFolders,
       notes: renamedNotes

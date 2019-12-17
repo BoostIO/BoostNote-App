@@ -262,7 +262,6 @@ export function createDbStoreCreator(
           })
         })
 
-        await storage.db.removeFolder(pathname)
         const deletedFolderPathnames = [pathname, ...subFolders]
 
         setStorageMap(
