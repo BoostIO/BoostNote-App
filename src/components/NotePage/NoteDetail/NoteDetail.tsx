@@ -161,8 +161,13 @@ export default class NoteDetail extends React.Component<
     return state
   }
 
+  componentDidMount() {
+    this.titleInputRef.current!.focus()
+  }
+
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { note } = this.props
+    this.titleInputRef.current!.focus()
     if (note._id !== prevState.prevNoteId && this.queued) {
       const { title, content, tags } = prevState
       this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
