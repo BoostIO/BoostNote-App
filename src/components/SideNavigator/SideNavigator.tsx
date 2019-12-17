@@ -30,6 +30,7 @@ import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
 import MdiIcon from '@mdi/react'
+import { useToast } from '../../lib/toast'
 
 const Description = styled.nav`
   margin-left: 5px;
@@ -129,6 +130,7 @@ export default () => {
   const { prompt, messageBox } = useDialog()
   const { push } = useRouter()
   const [[user]] = useUsers()
+  const { pushMessage } = useToast()
 
   const storageEntries = useMemo(() => {
     return entries(storageMap)
@@ -220,15 +222,27 @@ export default () => {
               defaultValue: folderPathname.split('/').pop(),
               submitButtonLabel: 'Rename Folder',
               onClose: async (value: string | null) => {
-                if (value == null || value.includes('/') || value === '') {
-                  return
-                }
                 const folderPathSplit = folderPathname.split('/')
                 folderPathSplit.pop()
+                if (
+                  value == null ||
+                  value.includes('/') ||
+                  value === '' ||
+                  value === folderPathSplit.pop()
+                ) {
+                  return
+                }
                 const newPathname = folderPathSplit.join('/') + '/' + value
-                await renameFolder(storage.id, folderPathname, newPathname)
-                push(`/app/storages/${storage.id}/notes${newPathname}`)
-                openSideNavFolderItemRecursively(storage.id, newPathname)
+                try {
+                  await renameFolder(storage.id, folderPathname, newPathname)
+                  push(`/app/storages/${storage.id}/notes${newPathname}`)
+                  openSideNavFolderItemRecursively(storage.id, newPathname)
+                } catch (error) {
+                  pushMessage({
+                    title: 'Error',
+                    description: 'You could not rename the folder'
+                  })
+                }
               }
             })
           }

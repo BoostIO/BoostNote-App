@@ -140,6 +140,11 @@ export default class NoteDb {
         `this folder already exists \`${newPathname}\``
       )
     }
+    if (pathname.split('/').length !== newPathname.split('/').length) {
+      throw createUnprocessableEntityError(
+        `New name is invalid. \`${newPathname}\``
+      )
+    }
     const notes = await this.findNotesByFolder(pathname)
 
     const now = getNow()
