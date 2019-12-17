@@ -1,7 +1,7 @@
 import React from 'react'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import { mdiEyeOutline, mdiArrowSplitVertical, mdiNoteText } from '@mdi/js'
+import { mdiEyeOutline, mdiArrowSplitVertical, mdiPencil } from '@mdi/js'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
@@ -105,7 +105,7 @@ export default class TutorialsNoteDetail extends React.Component<
               <ToolbarIconButton
                 className={viewMode === 'edit' ? 'active' : ''}
                 onClick={() => toggleViewMode('edit')}
-                path={mdiNoteText}
+                path={mdiPencil}
               />
               <ToolbarIconButton
                 className={viewMode === 'split' ? 'active' : ''}
