@@ -111,10 +111,15 @@ export default () => {
 
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
-    await db.createNote(storageId, {
+    const note = await db.createNote(storageId, {
       folderPathname,
       tags
     })
+    if (note != null) {
+      router.replace(
+        `/app/storages/${storageId}/notes${folderPathname}/${note._id}`
+      )
+    }
   }, [db, routeParams, storageId])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
