@@ -142,8 +142,8 @@ export default ({
           {note.tags.length > 0 && (
             <div className='tag-area'>
               {note.tags.map(tag => (
-                <span className='tag'>
-                  <HighlightText key={tag} text={tag} search={search} />
+                <span className='tag' key={tag}>
+                  <HighlightText text={tag} search={search} />
                 </span>
               ))}
             </div>

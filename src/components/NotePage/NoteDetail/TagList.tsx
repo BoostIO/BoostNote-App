@@ -68,12 +68,8 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
     <StyledContainer>
       <Icon className='icon' path={mdiTagOutline} />
       {tags.map(tag => (
-        <span className='tag'>
-          <TagListItem
-            key={tag}
-            tagName={tag}
-            removeTagByName={removeTagByName}
-          />
+        <span className='tag' key={tag}>
+          <TagListItem tagName={tag} removeTagByName={removeTagByName} />
         </span>
       ))}
     </StyledContainer>
