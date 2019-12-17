@@ -247,42 +247,16 @@ export function createDbStoreCreator(
           aPathname.startsWith(`${pathname}/`)
         )
 
-        const subFoldersRewrites = await Promise.all(
-          subFolders.map(subFolderPathname =>
-            storage.db.renameFolder(
-              subFolderPathname,
-              subFolderPathname.replace(pathname, newPathname)
-            )
-          )
-        )
-
-        const subFoldersRewrittenNotes = subFoldersRewrites.map(
-          rewrite => rewrite.notes
-        )
-
         const allChangedNotes = [...folderRewrite.notes]
-        subFoldersRewrittenNotes.forEach(rewrittenNotes => {
-          rewrittenNotes.forEach(rewrittenNote => {
-            allChangedNotes.push(rewrittenNote)
-          })
-        })
 
         const folderListToRefresh: PopulatedFolderDoc[] = []
-        folderListToRefresh.push({
-          ...folderRewrite.folder,
-          pathname: getFolderPathname(folderRewrite.folder._id),
-          noteIdSet: new Set(folderRewrite.notes.map(noteDoc => noteDoc._id))
-        })
-
-        subFoldersRewrites.forEach(subFolderRewrite => {
-          const subFolderPathname = getFolderPathname(
-            subFolderRewrite.folder._id
-          )
+        folderRewrite.folders.forEach(folder => {
+          const subFolderPathname = getFolderPathname(folder._id)
           const noteIdSet = new Set(
             folderRewrite.notes.map(noteDoc => noteDoc._id)
           )
           folderListToRefresh.push({
-            ...folderRewrite.folder,
+            ...folder,
             pathname: subFolderPathname,
             noteIdSet
           })

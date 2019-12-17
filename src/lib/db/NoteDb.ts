@@ -118,7 +118,7 @@ export default class NoteDb {
   async renameFolder(
     pathname: string,
     newPathname: string
-  ): Promise<{ folder: FolderDoc; notes: NoteDoc[] }> {
+  ): Promise<{ folders: FolderDoc[]; notes: NoteDoc[] }> {
     if (!isFolderPathnameValid(pathname)) {
       throw createUnprocessableEntityError(
         `pathname is invalid, got \`${pathname}\``
@@ -146,6 +146,13 @@ export default class NoteDb {
       )
     }
     const notes = await this.findNotesByFolder(pathname)
+    const directSubFolders = await (await this.getAllFolderUnderPathname(
+      pathname
+    )).filter(
+      subFolder =>
+        getFolderPathname(subFolder._id).split('/').length ===
+        pathname.split('/').length + 1
+    )
 
     const now = getNow()
     const folderDocProps = {
@@ -162,15 +169,36 @@ export default class NoteDb {
       )
     )
 
+    const renamedFolders: FolderDoc[] = []
+    const renamedNotes: NoteDoc[] = []
+
+    renamedFolders.push({
+      _id: folderDocProps._id,
+      createdAt: folderDocProps.createdAt,
+      updatedAt: folderDocProps.updatedAt,
+      data: folderDocProps.data,
+      _rev: rev
+    })
+    renamedNotes.push(...rewrittenNotes)
+
+    const subfoldersRewrites = await Promise.all(
+      directSubFolders.map(subfolder => {
+        const subfolderPathname = getFolderPathname(subfolder._id)
+        return this.renameFolder(
+          subfolderPathname,
+          subfolderPathname.replace(pathname, newPathname)
+        )
+      })
+    )
+
+    subfoldersRewrites.forEach(subFolderRewrite => {
+      renamedFolders.push(...subFolderRewrite.folders)
+      renamedNotes.push(...subFolderRewrite.notes)
+    })
+
     return {
-      folder: {
-        _id: folderDocProps._id,
-        createdAt: folderDocProps.createdAt,
-        updatedAt: folderDocProps.updatedAt,
-        data: folderDocProps.data,
-        _rev: rev
-      },
-      notes: rewrittenNotes
+      folders: renamedFolders,
+      notes: renamedNotes
     }
   }
 
