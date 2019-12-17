@@ -14,7 +14,7 @@ import {
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import { NoteDoc } from '../../lib/db/types'
-import { useGeneralStatus } from '../../lib/generalStatus'
+import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
 
@@ -132,17 +132,14 @@ export default () => {
     [setGeneralStatus]
   )
 
-  const toggleSplitMode = useCallback(() => {
-    setGeneralStatus(prevState => ({
-      noteSplitMode: !prevState.noteSplitMode
-    }))
-  }, [setGeneralStatus])
-
-  const togglePreviewMode = useCallback(() => {
-    setGeneralStatus(prevState => ({
-      notePreviewMode: !prevState.notePreviewMode
-    }))
-  }, [setGeneralStatus])
+  const toggleViewMode = useCallback(
+    (newMode: ViewModeType) => {
+      setGeneralStatus({
+        noteViewMode: newMode
+      })
+    },
+    [setGeneralStatus]
+  )
 
   const { messageBox } = useDialog()
   const purgeNoteFromDb = db.purgeNote
@@ -217,10 +214,8 @@ export default () => {
             untrashNote={db.untrashNote}
             addAttachments={db.addAttachments}
             purgeNote={purgeNote}
-            splitMode={generalStatus.noteSplitMode}
-            previewMode={generalStatus.notePreviewMode}
-            toggleSplitMode={toggleSplitMode}
-            togglePreviewMode={togglePreviewMode}
+            viewMode={generalStatus.noteViewMode}
+            toggleViewMode={toggleViewMode}
           />
         )
       }

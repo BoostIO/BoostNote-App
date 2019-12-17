@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { useGeneralStatus } from '../../lib/generalStatus'
+import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useRouter } from '../../lib/router'
 import TutorialsNoteList from './TutorialsNoteList'
 import TutorialsNoteDetail from './TutorialsNoteDetail'
@@ -108,17 +108,14 @@ export default ({ pathname }: TutorialsPageProps) => {
     [setGeneralStatus]
   )
 
-  const toggleSplitMode = useCallback(() => {
-    setGeneralStatus(prevState => ({
-      noteSplitMode: !prevState.noteSplitMode
-    }))
-  }, [setGeneralStatus])
-
-  const togglePreviewMode = useCallback(() => {
-    setGeneralStatus(prevState => ({
-      notePreviewMode: !prevState.notePreviewMode
-    }))
-  }, [setGeneralStatus])
+  const toggleViewMode = useCallback(
+    (newMode: ViewModeType) => {
+      setGeneralStatus({
+        noteViewMode: newMode
+      })
+    },
+    [setGeneralStatus]
+  )
 
   const selectedNote = useMemo((): TutorialsNavigatorTreeItem | undefined => {
     if (currentTutorialBranch == null) {
@@ -248,10 +245,8 @@ export default ({ pathname }: TutorialsPageProps) => {
         ) : (
           <TutorialsNoteDetail
             note={selectedNote}
-            splitMode={generalStatus.noteSplitMode}
-            previewMode={generalStatus.notePreviewMode}
-            toggleSplitMode={toggleSplitMode}
-            togglePreviewMode={togglePreviewMode}
+            viewMode={generalStatus.noteViewMode}
+            toggleViewMode={toggleViewMode}
           />
         )
       }

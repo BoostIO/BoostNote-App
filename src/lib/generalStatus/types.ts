@@ -1,7 +1,8 @@
 export interface GeneralStatus {
   sideBarWidth: number
   noteListWidth: number
-  noteSplitMode: boolean
-  notePreviewMode: boolean
+  noteViewMode: ViewModeType
   sideNavOpenedItemList: string[]
 }
+
+export type ViewModeType = 'edit' | 'preview' | 'split'

@@ -27,8 +27,7 @@ const initialGeneralStatus = loadGeneralStatus()
 const baseGeneralStatus: GeneralStatus = {
   sideBarWidth: 160,
   noteListWidth: 250,
-  noteSplitMode: true,
-  notePreviewMode: false,
+  noteViewMode: 'edit',
   sideNavOpenedItemList: []
 }
 
