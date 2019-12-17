@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
 
 module.exports = (env, argv) => {
   const config = {
@@ -16,11 +17,21 @@ module.exports = (env, argv) => {
       filename: 'bundle.js',
       // the output bundle
 
-      path: path.resolve(__dirname, 'compiled'),
-      publicPath: ''
+      path: path.resolve(__dirname, 'compiled')
     },
 
     devtool: 'inline-source-map',
+
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/
+          }
+        })
+      ]
+    },
 
     module: {
       rules: [
@@ -121,7 +132,7 @@ module.exports = (env, argv) => {
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     )
-    config.output.publicPath = '/app'
+    ;(config.output as any).publicPath = '/app'
   }
 
   return config
