@@ -115,6 +115,60 @@ export default class NoteDb {
     }
   }
 
+  async renameFolder(
+    pathname: string,
+    newPathname: string
+  ): Promise<{ folder: FolderDoc; notes: NoteDoc[] }> {
+    if (!isFolderPathnameValid(pathname)) {
+      throw createUnprocessableEntityError(
+        `pathname is invalid, got \`${pathname}\``
+      )
+    }
+    if (!isFolderPathnameValid(newPathname)) {
+      throw createUnprocessableEntityError(
+        `pathname is invalid, got \`${newPathname}\``
+      )
+    }
+    const folder = await this.getFolder(pathname)
+    if (folder == null) {
+      throw createUnprocessableEntityError(
+        `this folder does not exist \`${pathname}\``
+      )
+    }
+    if ((await this.getFolder(newPathname)) != null) {
+      throw createUnprocessableEntityError(
+        `this folder already exists \`${newPathname}\``
+      )
+    }
+    const notes = await this.findNotesByFolder(pathname)
+
+    const now = getNow()
+    const folderDocProps = {
+      _id: getFolderId(newPathname),
+      createdAt: folder.createdAt,
+      updatedAt: now,
+      data: folder.data
+    }
+    const { rev } = await this.pouchDb.put(folderDocProps)
+
+    const rewrittenNotes = await Promise.all(
+      notes.map(note =>
+        this.updateNote(note._id, { folderPathname: newPathname })
+      )
+    )
+
+    return {
+      folder: {
+        _id: folderDocProps._id,
+        createdAt: folderDocProps.createdAt,
+        updatedAt: folderDocProps.updatedAt,
+        data: folderDocProps.data,
+        _rev: rev
+      },
+      notes: rewrittenNotes
+    }
+  }
+
   async doesParentFolderExistOrCreate(pathname: string) {
     const parentPathname = getParentFolderPathname(pathname)
     await this.upsertFolder(parentPathname)

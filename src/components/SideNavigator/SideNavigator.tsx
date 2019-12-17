@@ -119,6 +119,7 @@ export default () => {
   const {
     createStorage,
     createFolder,
+    renameFolder,
     renameStorage,
     removeStorage,
     storageMap,
@@ -207,6 +208,27 @@ export default () => {
 
                 // Open folder item
                 openSideNavFolderItemRecursively(storage.id, value)
+              }
+            })
+          }
+          const showPromptToRenameFolder = (folderPathname: string) => {
+            prompt({
+              title: 'Rename the Folder',
+              message:
+                'Enter the new folder name, every note and subfolder paths will also be updated.',
+              iconType: DialogIconTypes.Question,
+              defaultValue: folderPathname.split('/').pop(),
+              submitButtonLabel: 'Rename Folder',
+              onClose: async (value: string | null) => {
+                if (value == null || value.includes('/') || value === '') {
+                  return
+                }
+                const folderPathSplit = folderPathname.split('/')
+                folderPathSplit.pop()
+                const newPathname = folderPathSplit.join('/') + '/' + value
+                await renameFolder(storage.id, folderPathname, newPathname)
+
+                // push(`/app/storages/${storage.id}/notes${newPathname}`)
               }
             })
           }
@@ -306,6 +328,7 @@ export default () => {
                   <FolderListFragment
                     storage={storage}
                     showPromptToCreateFolder={showPromptToCreateFolder}
+                    showPromptToRenameFolder={showPromptToRenameFolder}
                   />
                   <TagListFragment storage={storage} />
                   <SideNavigatorItem

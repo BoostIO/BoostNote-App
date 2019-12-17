@@ -44,6 +44,11 @@ export interface DbStore {
   ) => Promise<void>
   removeCloudLink: (id: string) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
+  renameFolder: (
+    storageName: string,
+    pathname: string,
+    newName: string
+  ) => Promise<void>
   removeFolder: (storageName: string, pathname: string) => Promise<void>
   createNote(
     storageId: string,
@@ -220,6 +225,92 @@ export function createDbStoreCreator(
                   noteIdSet: new Set()
                 }
               }
+            })
+          })
+        )
+      },
+      [storageMap]
+    )
+
+    const renameFolder = useCallback(
+      async (id: string, pathname: string, newPathname: string) => {
+        const storage = storageMap[id]
+        if (storage == null) {
+          return
+        }
+
+        const folderRewrite = await storage.db.renameFolder(
+          pathname,
+          newPathname
+        )
+        const subFolders = Object.keys(storage.folderMap).filter(aPathname =>
+          aPathname.startsWith(`${pathname}/`)
+        )
+
+        const subFoldersRewrites = await Promise.all(
+          subFolders.map(subFolderPathname =>
+            storage.db.renameFolder(
+              subFolderPathname,
+              subFolderPathname.replace(pathname, newPathname)
+            )
+          )
+        )
+
+        const subFoldersRewrittenNotes = subFoldersRewrites.map(
+          rewrite => rewrite.notes
+        )
+
+        const allChangedNotes = [...folderRewrite.notes]
+        subFoldersRewrittenNotes.forEach(rewrittenNotes => {
+          rewrittenNotes.forEach(rewrittenNote => {
+            allChangedNotes.push(rewrittenNote)
+          })
+        })
+
+        const folderListToRefresh: PopulatedFolderDoc[] = []
+        folderListToRefresh.push({
+          ...folderRewrite.folder,
+          pathname: getFolderPathname(folderRewrite.folder._id),
+          noteIdSet: new Set(folderRewrite.notes.map(noteDoc => noteDoc._id))
+        })
+
+        subFoldersRewrites.forEach(subFolderRewrite => {
+          const subFolderPathname = getFolderPathname(
+            subFolderRewrite.folder._id
+          )
+          const noteIdSet = new Set(
+            folderRewrite.notes.map(noteDoc => noteDoc._id)
+          )
+          folderListToRefresh.push({
+            ...folderRewrite.folder,
+            pathname: subFolderPathname,
+            noteIdSet
+          })
+        })
+
+        await storage.db.removeFolder(pathname)
+        const deletedFolderPathnames = [pathname, ...subFolders]
+
+        if (
+          `${currentPathnameWithoutNoteId}/`.startsWith(
+            `/app/storages/${id}/notes${pathname}/`
+          )
+        ) {
+          router.replace(
+            currentPathnameWithoutNoteId.replace(pathname, newPathname)
+          )
+        }
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            allChangedNotes.forEach(noteDoc => {
+              draft[storage.id]!.noteMap[noteDoc._id] = noteDoc
+            })
+            folderListToRefresh.forEach(folderDoc => {
+              draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
+            })
+            deletedFolderPathnames.forEach(aPathname => {
+              delete draft[id]!.folderMap[aPathname]
             })
           })
         )
@@ -931,6 +1022,7 @@ export function createDbStoreCreator(
       setCloudLink,
       removeCloudLink,
       createFolder,
+      renameFolder,
       removeFolder,
       createNote,
       updateNote,
