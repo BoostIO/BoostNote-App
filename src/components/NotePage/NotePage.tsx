@@ -23,7 +23,7 @@ export const StyledNoteDetailNoNote = styled.div`
   margin-top: 300px;
 `
 
-export type ArianeThread = {
+export type BreadCrumbs = {
   folderLabel: string
   folderPathname: string
   folderIsActive: boolean
@@ -129,7 +129,7 @@ export default () => {
     }
   }, [db, routeParams, storageId])
 
-  const arianeThread = useMemo(() => {
+  const breadCrumbs = useMemo(() => {
     if (currentNote == null) return undefined
     const folders = currentNote.folderPathname.substring(1).split('/')
     const thread = folders.map((folder, index) => {
@@ -142,7 +142,7 @@ export default () => {
           `/app/storages/${storageId}/notes${folderPathname}`
       }
     })
-    return thread as ArianeThread
+    return thread as BreadCrumbs
   }, [currentPathnameWithoutNoteId, currentNote])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
@@ -240,7 +240,7 @@ export default () => {
             viewMode={generalStatus.noteViewMode}
             toggleViewMode={toggleViewMode}
             push={push}
-            arianeThread={arianeThread}
+            breadCrumbs={breadCrumbs}
           />
         )
       }

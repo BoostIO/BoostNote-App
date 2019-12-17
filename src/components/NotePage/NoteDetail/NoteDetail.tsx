@@ -33,7 +33,7 @@ import {
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../../lib/generalStatus'
-import { ArianeThread } from '../NotePage'
+import { BreadCrumbs } from '../NotePage'
 import cc from 'classcat'
 
 export const StyledNoteDetailContainer = styled.div`
@@ -41,7 +41,7 @@ export const StyledNoteDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  .ariane {
+  .breadCrumbs {
     display: block;
     width: 100%;
     height: 30px;
@@ -159,7 +159,7 @@ type NoteDetailProps = {
   toggleViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
   push: (path: string) => void
-  arianeThread?: ArianeThread
+  breadCrumbs?: BreadCrumbs
 }
 
 type NoteDetailState = {
@@ -413,7 +413,7 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  handleArianeClick = (folderPathname: string) => () => {
+  handleBreadCrumbsClick = (folderPathname: string) => () => {
     this.props.push(
       `/app/storages/${this.props.storageId}/notes${folderPathname}`
     )
@@ -449,13 +449,15 @@ export default class NoteDetail extends React.Component<
           <p>No note is selected</p>
         ) : (
           <>
-            <div className='ariane'>
+            <div className='breadCrumbs'>
               <div className='wrapper'>
-                {this.props.arianeThread != null &&
-                  this.props.arianeThread
+                {this.props.breadCrumbs != null &&
+                  this.props.breadCrumbs
                     .map(thread => (
                       <div
-                        onClick={this.handleArianeClick(thread.folderPathname)}
+                        onClick={this.handleBreadCrumbsClick(
+                          thread.folderPathname
+                        )}
                         className={cc([
                           'folderLink',
                           thread.folderIsActive && 'active'
