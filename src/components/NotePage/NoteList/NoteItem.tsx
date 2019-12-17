@@ -5,7 +5,8 @@ import { NoteDoc } from '../../../lib/db/types'
 import {
   borderBottom,
   uiTextColor,
-  secondaryBackgroundColor
+  secondaryBackgroundColor,
+  inputStyle
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
@@ -67,7 +68,7 @@ export const StyledNoteListItem = styled.div`
 
   .tag {
     font-size: 12px;
-    background-color: rgba(153, 153, 153, 0.4);
+    ${inputStyle}
     margin-right: 5px;
     padding: 2px 8px;
     border-radius: 13px;
@@ -141,7 +142,9 @@ export default ({
           {note.tags.length > 0 && (
             <div className='tag-area'>
               {note.tags.map(tag => (
-                <HighlightText key={tag} text={tag} search={search} />
+                <span className='tag'>
+                  <HighlightText key={tag} text={tag} search={search} />
+                </span>
               ))}
             </div>
           )}

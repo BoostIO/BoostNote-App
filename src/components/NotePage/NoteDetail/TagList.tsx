@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import Icon from '../../atoms/Icon'
 import { mdiClose, mdiTagOutline } from '@mdi/js'
 import styled from '../../../lib/styled'
-import { iconColor } from '../../../lib/styled/styleFunctions'
+import { iconColor, inputStyle } from '../../../lib/styled/styleFunctions'
 
 interface TagListItemProps {
   tagName: string
@@ -35,6 +35,11 @@ const StyledContainer = styled.div`
     ${iconColor}
   }
 
+  .tag {
+    ${inputStyle}
+    margin-right: 5px;
+  }
+
   .listItem-label {
     padding: 0 4px;
     line-height: 20px;
@@ -63,11 +68,13 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
     <StyledContainer>
       <Icon className='icon' path={mdiTagOutline} />
       {tags.map(tag => (
-        <TagListItem
-          key={tag}
-          tagName={tag}
-          removeTagByName={removeTagByName}
-        />
+        <span className='tag'>
+          <TagListItem
+            key={tag}
+            tagName={tag}
+            removeTagByName={removeTagByName}
+          />
+        </span>
       ))}
     </StyledContainer>
   )
