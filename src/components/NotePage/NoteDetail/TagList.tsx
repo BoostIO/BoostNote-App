@@ -27,17 +27,14 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
 const StyledContainer = styled.div`
   display: flex;
   .listItem {
-    margin: 0 2px;
     display: flex;
+    margin: 0 2px;
+    ${inputStyle}
+    margin-right: 5px;
   }
 
   .icon {
     ${iconColor}
-  }
-
-  .tag {
-    ${inputStyle}
-    margin-right: 5px;
   }
 
   .listItem-label {
@@ -68,9 +65,11 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
     <StyledContainer>
       <Icon className='icon' path={mdiTagOutline} />
       {tags.map(tag => (
-        <span className='tag' key={tag}>
-          <TagListItem tagName={tag} removeTagByName={removeTagByName} />
-        </span>
+        <TagListItem
+          tagName={tag}
+          key={tag}
+          removeTagByName={removeTagByName}
+        />
       ))}
     </StyledContainer>
   )
