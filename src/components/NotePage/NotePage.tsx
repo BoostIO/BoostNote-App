@@ -23,6 +23,12 @@ export const StyledNoteDetailNoNote = styled.div`
   margin-top: 300px;
 `
 
+export type ArianeThread = {
+  folderLabel: string
+  folderPathname: string
+  folderIsActive: boolean
+}[]
+
 function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
   return b.updatedAt.localeCompare(a.updatedAt)
 }
@@ -43,6 +49,7 @@ export default () => {
   const router = useRouter()
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
+  const { push } = useRouter()
 
   const notes = useMemo((): NoteDoc[] => {
     if (currentStorage == null) return []
@@ -121,6 +128,22 @@ export default () => {
       )
     }
   }, [db, routeParams, storageId])
+
+  const arianeThread = useMemo(() => {
+    if (currentNote == null) return undefined
+    const folders = currentNote.folderPathname.substring(1).split('/')
+    const thread = folders.map((folder, index) => {
+      const folderPathname = `/${folders.slice(0, index + 1).join('/')}`
+      return {
+        folderLabel: folder,
+        folderPathname,
+        folderIsActive:
+          currentPathnameWithoutNoteId ===
+          `/app/storages/${storageId}/notes${folderPathname}`
+      }
+    })
+    return thread as ArianeThread
+  }, [currentPathnameWithoutNoteId, currentNote])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
@@ -216,6 +239,8 @@ export default () => {
             purgeNote={purgeNote}
             viewMode={generalStatus.noteViewMode}
             toggleViewMode={toggleViewMode}
+            push={push}
+            arianeThread={arianeThread}
           />
         )
       }

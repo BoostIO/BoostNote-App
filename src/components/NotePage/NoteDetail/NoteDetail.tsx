@@ -25,17 +25,62 @@ import {
   secondaryBackgroundColor,
   textColor,
   borderBottom,
-  borderRight
+  borderRight,
+  uiTextColor,
+  contextMenuShadow,
+  PrimaryTextColor
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../../lib/generalStatus'
+import { ArianeThread } from '../NotePage'
+import cc from 'classcat'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
   display: flex;
   flex-direction: column;
   height: 100%;
+  .ariane {
+    display: block;
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+    padding: 3px 2%;
+    ${borderBottom}
+    ${contextMenuShadow}
+    border-width: 2px !important;
+    overflow: hidden;
+
+    .wrapper {
+      display: block;
+      position: relative;
+      white-space: nowrap;
+      padding-bottom: 16px;
+      overflow-x: scroll;
+      width: 100%;
+    }
+
+    .separator {
+      ${uiTextColor}
+      display: inline-block;
+    }
+
+    .folderLink {
+      display: inline-block;
+      padding: 0 15px;
+      cursor: pointer;
+
+      &:first-of-type {
+        padding-left: 0;
+      }
+
+      &.active,
+      &:hover {
+        ${PrimaryTextColor}
+      }
+    }
+  }
   .titleSection {
     display: flex;
     height: 50px;
@@ -113,6 +158,8 @@ type NoteDetailProps = {
   viewMode: ViewModeType
   toggleViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
+  push: (path: string) => void
+  arianeThread?: ArianeThread
 }
 
 type NoteDetailState = {
@@ -366,9 +413,14 @@ export default class NoteDetail extends React.Component<
     )
   }
 
+  handleArianeClick = (folderPathname: string) => () => {
+    this.props.push(
+      `/app/storages/${this.props.storageId}/notes${folderPathname}`
+    )
+  }
+
   render() {
     const { note, viewMode, toggleViewMode, storageId } = this.props
-
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
@@ -397,6 +449,31 @@ export default class NoteDetail extends React.Component<
           <p>No note is selected</p>
         ) : (
           <>
+            <div className='ariane'>
+              <div className='wrapper'>
+                {this.props.arianeThread != null &&
+                  this.props.arianeThread
+                    .map(thread => (
+                      <div
+                        onClick={this.handleArianeClick(thread.folderPathname)}
+                        className={cc([
+                          'folderLink',
+                          thread.folderIsActive && 'active'
+                        ])}
+                        key={thread.folderLabel}
+                      >
+                        {thread.folderLabel}
+                      </div>
+                    ))
+                    .reduce((prev, curr) => (
+                      <>
+                        {prev}
+                        <div className='separator'>></div>
+                        {curr}
+                      </>
+                    ))}
+              </div>
+            </div>
             <div className='titleSection'>
               <input
                 ref={this.titleInputRef}
