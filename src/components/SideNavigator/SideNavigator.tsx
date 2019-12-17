@@ -223,7 +223,6 @@ export default () => {
               submitButtonLabel: 'Rename Folder',
               onClose: async (value: string | null) => {
                 const folderPathSplit = folderPathname.split('/')
-                folderPathSplit.pop()
                 if (
                   value == null ||
                   value.includes('/') ||
@@ -242,6 +241,7 @@ export default () => {
                     title: 'Error',
                     description: 'You could not rename the folder'
                   })
+                  console.log(error)
                 }
               }
             })
