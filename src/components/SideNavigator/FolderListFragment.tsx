@@ -211,13 +211,7 @@ const FolderListFragment = ({
             folded={folded}
             depth={depth}
             active={folderIsActive}
-            icon={
-              folderIsActive ? (
-                <IconFileOpen color='currentColor' />
-              ) : (
-                <IconFile color='currentColor' />
-              )
-            }
+            icon={folderIsActive ? <IconFileOpen size='1.3em' /> : <IconFile />}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
             onDoubleClick={() => showPromptToRenameFolder(folderPathname)}
@@ -230,7 +224,7 @@ const FolderListFragment = ({
               <ControlButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
-                icon={<IconAddRound size='0.7em' />}
+                icon={<IconAddRound />}
               />
             ]}
             onDragOver={event => {

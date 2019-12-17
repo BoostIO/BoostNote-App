@@ -63,12 +63,12 @@ const TutorialsNavigator = ({}) => {
         icon:
           tree.type === 'folder' ? (
             folderIsActive ? (
-              <IconFileOpen />
+              <IconFileOpen size='1.3em' />
             ) : (
               <IconFile />
             )
           ) : (
-            <IconHelpOutline />
+            <IconHelpOutline size='1.3em' />
           ),
         href: nodeHref,
         active: folderIsActive,

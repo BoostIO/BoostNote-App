@@ -7,7 +7,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
-import { IconTag, IconTags } from '../icons'
+import { IconTag, IconTags, IconTagFill } from '../icons'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -33,7 +33,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         <SideNavigatorItem
           key={`storage:${storageId}/tags:${tagName}`}
           depth={2}
-          icon={tagIsActive ? <IconTag /> : <IconTag />}
+          icon={tagIsActive ? <IconTagFill size='1.4em' /> : <IconTag />}
           label={tagName}
           onClick={() => {
             push(tagPathname)
@@ -72,7 +72,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     <>
       <SideNavigatorItem
         depth={1}
-        icon={<IconTags />}
+        icon={<IconTags size='1.5em' />}
         label='Tags'
         folded={tagList.length > 0 ? tagListIsFolded : undefined}
         onFoldButtonClick={() => {
