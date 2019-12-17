@@ -225,7 +225,6 @@ export default () => {
                 const folderPathSplit = folderPathname.split('/')
                 if (
                   value == null ||
-                  value.includes('/') ||
                   value === '' ||
                   value === folderPathSplit.pop()
                 ) {
