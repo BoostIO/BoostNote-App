@@ -53,9 +53,33 @@ describe('NoteDb', () => {
       await noteDb.renameFolder('/test', '/testok')
 
       // Then
+      const storedFolder = await noteDb.getFolder('/test')
+      expect(storedFolder).toBeNull()
       const storedNewFolder = await noteDb.getFolder('/testok')
       expect(storedNewFolder).toMatchObject({
         _id: getFolderId('/testok'),
+        createdAt: storedNewFolder!.createdAt
+      })
+    })
+    it('renames the subfolders', async () => {
+      // Given
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      await noteDb.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/test/subfolder'
+      })
+
+      // When
+      await noteDb.renameFolder('/test', '/testok')
+
+      // Then
+      const storedFolder = await noteDb.getFolder('/test/subfolder')
+      expect(storedFolder).toBeNull()
+      const storedNewFolder = await noteDb.getFolder('/testok/subfolder')
+      expect(storedNewFolder).toMatchObject({
+        _id: getFolderId('/testok/subfolder'),
         createdAt: storedNewFolder!.createdAt
       })
     })
