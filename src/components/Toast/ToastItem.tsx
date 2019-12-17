@@ -11,21 +11,37 @@ import {
 
 interface ToastItemProps {
   item: ToastMessage
-
   onClose: (item: ToastMessage) => void
 }
 
 interface ToastItemState {
   remaining: number
   timer: any
-  id: number
+}
+
+function hashCode(id: string) {
+  let hash = 0
+  let i
+  let chr
+  if (id.length === 0) {
+    return hash
+  }
+
+  for (i = 0; i < id.length; i++) {
+    chr = id.charCodeAt(i)
+    // tslint:disable-next-line:no-bitwise
+    hash = (hash << 5) - hash + chr
+    // tslint:disable-next-line:no-bitwise
+    hash |= 0
+  }
+  return hash
 }
 
 class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   state = {
     remaining: 3000,
     timer: 0,
-    id: new Date().getTime() + Math.random() * 1000
+    id: hashCode(this.props.item.id)
   }
 
   componentDidMount() {
