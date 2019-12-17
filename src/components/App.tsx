@@ -22,12 +22,19 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
 import Modal from './Modal'
 import ToastList from './Toast'
+import { useToast } from '../lib/toast'
 
 const App = () => {
   const { initialize, initialized } = useDb()
+  const { pushMessage } = useToast()
   useEffect(() => {
-    initialize()
-  }, [initialize])
+    initialize().catch(() => {
+      pushMessage({
+        title: 'Network Error',
+        description: 'An error occured while syncing cloud storage'
+      })
+    })
+  }, [initialize, pushMessage])
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
