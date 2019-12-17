@@ -18,11 +18,13 @@ import { getTransferrableNoteData } from '../../lib/dnd'
 interface FolderListFragmentProps {
   storage: NoteStorage
   showPromptToCreateFolder: (folderPathname: string) => void
+  showPromptToRenameFolder: (folderPathname: string) => void
 }
 
 const FolderListFragment = ({
   storage,
-  showPromptToCreateFolder
+  showPromptToCreateFolder,
+  showPromptToRenameFolder
 }: FolderListFragmentProps) => {
   const {
     removeFolder,
@@ -68,6 +70,14 @@ const FolderListFragment = ({
           label: 'New Folder',
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Rename Folder',
+          enabled: folderPathname !== '/',
+          onClick: async () => {
+            showPromptToRenameFolder(folderPathname)
           }
         },
         {
