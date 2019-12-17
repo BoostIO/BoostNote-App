@@ -14,7 +14,7 @@
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",
     "build": "TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
-    "build:env": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.production.config.ts",
+    "build:env": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
     "meta": "node scripts/meta.js",
     "prepack": "rimraf dist && env-cmd npm run meta && electron-builder --dir",
     "pack": "rimraf dist && env-cmd npm run meta && electron-builder",
