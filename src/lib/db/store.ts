@@ -259,7 +259,6 @@ export function createDbStoreCreator(
           aPathname.startsWith(`${pathname}/`)
         )
         const allFoldersToRename = [pathname, ...subFolders]
-        console.log(allFoldersToRename)
         await Promise.all(
           allFoldersToRename.map(async folderPathname => {
             const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
