@@ -1,19 +1,18 @@
 import React from 'react'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import { mdiEyeOutline, mdiArrowSplitVertical } from '@mdi/js'
+import { mdiEyeOutline, mdiArrowSplitVertical, mdiNoteText } from '@mdi/js'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import { StyledNoteDetailContainer } from '../NotePage/NoteDetail/NoteDetail'
+import { ViewModeType } from '../../lib/generalStatus'
 
 type TutorialsNoteDetailProps = {
   note: TutorialsNavigatorTreeItem
-  splitMode: boolean
-  previewMode: boolean
-  toggleSplitMode: () => void
-  togglePreviewMode: () => void
+  viewMode: ViewModeType
+  toggleViewMode: (mode: ViewModeType) => void
 }
 
 type TutorialsNoteDetailState = {
@@ -64,13 +63,7 @@ export default class TutorialsNoteDetail extends React.Component<
   }
 
   render() {
-    const {
-      note,
-      splitMode,
-      previewMode,
-      toggleSplitMode,
-      togglePreviewMode
-    } = this.props
+    const { note, viewMode, toggleViewMode } = this.props
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -96,9 +89,9 @@ export default class TutorialsNoteDetail extends React.Component<
               <input value={this.props.note.label} disabled={true} />
             </div>
             <div className='contentSection'>
-              {previewMode ? (
+              {viewMode === 'preview' ? (
                 markdownPreviewer
-              ) : splitMode ? (
+              ) : viewMode === 'split' ? (
                 <>
                   <div className='splitLeft'>{codeEditor}</div>
                   <div className='splitRight'>{markdownPreviewer}</div>
@@ -110,13 +103,18 @@ export default class TutorialsNoteDetail extends React.Component<
             <Toolbar>
               <ToolbarSeparator />
               <ToolbarIconButton
-                className={splitMode ? 'active' : ''}
-                onClick={toggleSplitMode}
+                className={viewMode === 'edit' ? 'active' : ''}
+                onClick={() => toggleViewMode('edit')}
+                path={mdiNoteText}
+              />
+              <ToolbarIconButton
+                className={viewMode === 'split' ? 'active' : ''}
+                onClick={() => toggleViewMode('split')}
                 path={mdiArrowSplitVertical}
               />
               <ToolbarIconButton
-                className={previewMode ? 'active' : ''}
-                onClick={togglePreviewMode}
+                className={viewMode === 'preview' ? 'active' : ''}
+                onClick={() => toggleViewMode('preview')}
                 path={mdiEyeOutline}
               />
             </Toolbar>

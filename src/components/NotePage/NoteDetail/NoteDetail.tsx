@@ -15,7 +15,8 @@ import {
   mdiArrowSplitVertical,
   mdiFormatText,
   mdiDeleteEmpty,
-  mdiRestore
+  mdiRestore,
+  mdiNoteText
 } from '@mdi/js'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
@@ -28,6 +29,7 @@ import {
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
+import { ViewModeType } from '../../../lib/generalStatus'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -108,10 +110,8 @@ type NoteDetailProps = {
     noteId: string
   ) => Promise<NoteDoc | undefined>
   purgeNote: (storageId: string, noteId: string) => void
-  splitMode: boolean
-  previewMode: boolean
-  toggleSplitMode: () => void
-  togglePreviewMode: () => void
+  viewMode: ViewModeType
+  toggleViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
 }
 
@@ -367,14 +367,7 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const {
-      note,
-      splitMode,
-      previewMode,
-      toggleSplitMode,
-      togglePreviewMode,
-      storageId
-    } = this.props
+    const { note, viewMode, toggleViewMode, storageId } = this.props
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -385,6 +378,7 @@ export default class NoteDetail extends React.Component<
         onChange={this.updateContent}
       />
     )
+
     const markdownPreviewer = (
       <CustomizedMarkdownPreviewer
         content={this.state.content}
@@ -412,9 +406,9 @@ export default class NoteDetail extends React.Component<
               />
             </div>
             <div className='contentSection'>
-              {previewMode ? (
+              {viewMode === 'preview' ? (
                 markdownPreviewer
-              ) : splitMode ? (
+              ) : viewMode === 'split' ? (
                 <>
                   <div className='splitLeft'>{codeEditor}</div>
                   <div className='splitRight'>{markdownPreviewer}</div>
@@ -440,13 +434,18 @@ export default class NoteDetail extends React.Component<
               <ToolbarExportButton note={this.props.note} />
               <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
               <ToolbarIconButton
-                className={splitMode ? 'active' : ''}
-                onClick={toggleSplitMode}
+                className={viewMode === 'edit' ? 'active' : ''}
+                onClick={() => toggleViewMode('edit')}
+                path={mdiNoteText}
+              />
+              <ToolbarIconButton
+                className={viewMode === 'split' ? 'active' : ''}
+                onClick={() => toggleViewMode('split')}
                 path={mdiArrowSplitVertical}
               />
               <ToolbarIconButton
-                className={previewMode ? 'active' : ''}
-                onClick={togglePreviewMode}
+                className={viewMode === 'preview' ? 'active' : ''}
+                onClick={() => toggleViewMode('preview')}
                 path={mdiEyeOutline}
               />
               {note.trashed ? (
