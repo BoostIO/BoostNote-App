@@ -3,19 +3,14 @@ import {
   SectionMargin,
   SectionHeader1,
   RightMargin,
-  TopMargin,
-  SectionPrimaryButton,
   DeleteStorageButton
 } from '../PreferencesModal/styled'
-import CloudStorageSelector from './CloudStorageSelector'
-import { usePreferences } from '../../lib/preferences'
 import { useDb } from '../../lib/db'
-import { CloudStorage } from '../../lib/accounts'
 import { NoteStorage } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { useDebounce } from 'react-use'
-import LoginButton from '../atoms/LoginButton'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import { isCloudStorageData } from '../../lib/db/utils'
 import { useToast } from '../../lib/toast'
 
 interface StorageEditProps {
@@ -25,32 +20,13 @@ interface StorageEditProps {
 export default ({ storage }: StorageEditProps) => {
   const db = useDb()
   const router = useRouter()
-  const { pushMessage } = useToast()
-  const { preferences } = usePreferences()
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
+  const { pushMessage } = useToast()
 
   useEffect(() => {
     setName(storage.name)
   }, [storage])
-
-  const user = preferences['general.accounts'][0]
-
-  const linkCallback = useCallback(
-    (cloudStorage: CloudStorage) => {
-      db.setCloudLink(storage.id, cloudStorage, user).catch(() => {
-        pushMessage({
-          title: 'Sync Error',
-          description: 'The storage was unable to be synced with the cloud'
-        })
-      })
-    },
-    [storage.id, db, user, pushMessage]
-  )
-
-  const unlinkCallback = useCallback(() => {
-    db.removeCloudLink(storage.id)
-  }, [storage.id, db])
 
   const removeCallback = useCallback(() => {
     messageBox({
@@ -60,18 +36,30 @@ export default ({ storage }: StorageEditProps) => {
       buttons: ['Remove Storage', 'Cancel'],
       defaultButtonIndex: 0,
       cancelButtonIndex: 1,
-      onClose: (value: number | null) => {
+      onClose: async (value: number | null) => {
         if (value === 0) {
-          db.removeStorage(storage.id)
-          router.push('/app')
+          try {
+            await db.removeStorage(storage.id)
+            router.push('/app')
+          } catch {
+            pushMessage({
+              title: 'Network Error',
+              description: `An error occurred while deleting storage (id: ${storage.id})`
+            })
+          }
         }
       }
     })
-  }, [storage.id, db, router])
+  }, [storage, db, router, messageBox, pushMessage])
 
   useDebounce(
     () => {
-      db.renameStorage(storage.id, name)
+      db.renameStorage(storage.id, name).catch(() => {
+        pushMessage({
+          title: 'Network Error',
+          description: `An error occured while updating storage (id:${storage.id}}`
+        })
+      })
     },
     1000,
     [name]
@@ -97,42 +85,12 @@ export default ({ storage }: StorageEditProps) => {
           </DeleteStorageButton>
         </div>
         <div>
-          <h2>Cloud Storage</h2>
-          {storage.cloudStorage != null ? (
+          {isCloudStorageData(storage) && (
             <div>
-              <p>
-                Linked Storage: {storage.cloudStorage.name} (ID:
-                {storage.cloudStorage.id})
-                <span onClick={unlinkCallback}>Unlink</span>
-              </p>
               <p>
                 Last synced at
                 {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
               </p>
-            </div>
-          ) : (
-            <div>
-              {user == null && (
-                <>
-                  <TopMargin>
-                    <p>You need to sign in to add a cloud storage.</p>
-                    <LoginButton
-                      onErr={console.error /* TODO: Toast error */}
-                      ButtonComponent={SectionPrimaryButton}
-                    />
-                  </TopMargin>
-                </>
-              )}
-              {user != null && (
-                <>
-                  <p>This storage is not linked yet</p>
-                  <CloudStorageSelector
-                    user={user}
-                    onSelect={linkCallback}
-                    name={storage.name}
-                  />
-                </>
-              )}
             </div>
           )}
         </div>
