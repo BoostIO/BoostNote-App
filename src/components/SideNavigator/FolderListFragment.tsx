@@ -220,6 +220,7 @@ const FolderListFragment = ({
             iconPath={folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
+            onDoubleClick={() => showPromptToRenameFolder(folderPathname)}
             onContextMenu={createOnContextMenuHandler(
               storage.id,
               folderPathname
