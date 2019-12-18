@@ -38,10 +38,10 @@ export function useAnalytics() {
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
-      if (user !== null) {
+      if (user != null) {
         attributes = { ...attributes, user: user.id.toString() }
       }
-      console.log('Report!!!')
+
       if (analyticsEnabled) {
         if (attributes == null) {
           Analytics.record({ name: name })
