@@ -16,10 +16,10 @@ const StyledButton = styled.button`
   top: 2px;
   font-size: 20px;
   cursor: pointer;
+  ${sideBarTextColor}
   ${sideBarSecondaryTextColor}
   &:hover, &:active, &:focus {
     box-shadow: none;
-    ${sideBarTextColor}
   }
   svg {
     vertical-align: middle;
