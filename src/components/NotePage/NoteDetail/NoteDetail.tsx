@@ -467,7 +467,7 @@ export default class NoteDetail extends React.Component<
                     .reduce((prev, curr) => (
                       <>
                         {prev}
-                        <div className='separator'>/</div>
+                        <div className='separator'>&frasl;</div>
                         {curr}
                       </>
                     ))}

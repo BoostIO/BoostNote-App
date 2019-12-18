@@ -31,7 +31,6 @@ export const sepiaTheme: BaseTheme = {
   // General
   textColor: base3Color,
   uiTextColor: base3Color,
-  activeUiTextColor: base3Color,
   disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,

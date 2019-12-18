@@ -6,7 +6,6 @@ export interface BaseTheme {
   // General
   textColor: string
   uiTextColor: string
-  activeUiTextColor: string
   disabledUiTextColor: string
 
   primaryColor: string
