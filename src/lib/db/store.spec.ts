@@ -117,6 +117,7 @@ describe('DbStore', () => {
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' }),
+        '/default': expect.objectContaining({ pathname: '/default' }),
         '/test': expect.objectContaining({ pathname: '/test' })
       })
 
@@ -141,6 +142,7 @@ describe('DbStore', () => {
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' }),
+        '/default': expect.objectContaining({ pathname: '/default' }),
         '/test': expect.objectContaining({ pathname: '/test' }),
         '/test/child folder': expect.objectContaining({
           pathname: '/test/child folder'
@@ -175,7 +177,8 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/': expect.objectContaining({ pathname: '/' })
+        '/': expect.objectContaining({ pathname: '/' }),
+        '/default': expect.objectContaining({ pathname: '/default' })
       })
     })
 
@@ -194,7 +197,8 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/': expect.objectContaining({ pathname: '/' })
+        '/': expect.objectContaining({ pathname: '/' }),
+        '/default': expect.objectContaining({ pathname: '/default' })
       })
     })
 
