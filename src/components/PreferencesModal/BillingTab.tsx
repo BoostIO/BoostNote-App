@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Section,
   SectionHeader,
@@ -7,6 +7,9 @@ import {
   SectionTable
 } from './styled'
 import styled from '../../lib/styled'
+import { usePreferences } from '../../lib/preferences'
+import { getSubscription, Subscription } from '../../lib/accounts'
+import LoginButton from '../atoms/LoginButton'
 
 const BillingContent = styled.div`
   .billing-lead {
@@ -45,28 +48,59 @@ const BillingContent = styled.div`
 `
 
 const BillingTab = () => {
+  const { preferences } = usePreferences()
+  const user = preferences['general.accounts'][0]
+  const [subscription, setSubscription] = useState<Subscription | undefined>(
+    undefined
+  )
+
+  useEffect(() => {
+    if (user != null) {
+      getSubscription(user).then(subscription => {
+        setSubscription(subscription)
+      })
+    }
+  }, [user])
+
+  const loggedIn = user != null
+  const hasSubscription = subscription != null
+
   return (
     <Section>
       <SectionHeader>Billing</SectionHeader>
       <BillingContent>
-        <div className='billing-lead'>
-          <p>Please sign in to upgrade your plan.</p>
-          <SectionPrimaryButton>Sign In</SectionPrimaryButton>
-        </div>
+        {!loggedIn && (
+          <div className='billing-lead'>
+            <p>Please sign in to upgrade your plan.</p>
+          </div>
+        )}
         <SectionTable>
           <thead>
             <th></th>
             <th className='billing-plan'>
               <span className='billing-name'>Basic</span>
               <span className='billing-price'>$0</span>
-              <SectionSecondaryButton disabled>Current</SectionSecondaryButton>
+              {!hasSubscription && (
+                <SectionSecondaryButton disabled>
+                  Current
+                </SectionSecondaryButton>
+              )}
             </th>
             <th className='billing-plan'>
               <span className='billing-name'>Premium</span>
               <span className='billing-price'>$3/Month (USD) *</span>
-              <SectionPrimaryButton disabled>Upgrade</SectionPrimaryButton>
-              <SectionPrimaryButton>Upgrade</SectionPrimaryButton>
-              <SectionSecondaryButton>Cancel</SectionSecondaryButton>
+              {!loggedIn && (
+                <LoginButton ButtonComponent={SectionPrimaryButton}>
+                  Sign In
+                </LoginButton>
+              )}
+              {loggedIn && (
+                <a href='/subscription'>
+                  <SectionPrimaryButton>
+                    {hasSubscription ? 'Manage' : 'Upgrade'}
+                  </SectionPrimaryButton>
+                </a>
+              )}
             </th>
           </thead>
           <tbody>
@@ -102,14 +136,18 @@ const BillingTab = () => {
             </tr>
           </tbody>
         </SectionTable>
-        <div className='billing-extra'>
-          <p>
-            * If you need more cloud storage, you can add it at any time by
-            paying $5 (USD) for every 5GB. Click the "Add Extra Storage" button
-            below.
-          </p>
-          <SectionPrimaryButton>Add Extra Storage</SectionPrimaryButton>
-        </div>
+        {loggedIn && (
+          <div className='billing-extra'>
+            <p>
+              * If you need more cloud storage, you can add it at any time by
+              paying $5 (USD) for every 5GB. Click the "Add Extra Storage"
+              button below.
+            </p>
+            <a href='/subscription'>
+              <SectionPrimaryButton>Add Extra Storage</SectionPrimaryButton>
+            </a>
+          </div>
+        )}
       </BillingContent>
     </Section>
   )
