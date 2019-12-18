@@ -45,6 +45,9 @@ transition: 200ms color;
 &:hover,
 &:focus,
 &:active,
+&.active{
+  color: ${theme.textColor};
+}
 &:disabled {
   color: ${theme.disabledUiTextColor};
 }`
