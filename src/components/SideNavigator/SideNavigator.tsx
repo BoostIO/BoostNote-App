@@ -152,7 +152,7 @@ export default () => {
               onClose: async (value: string | null) => {
                 if (value == null) return
                 const storage = await createStorage(value)
-                push(`/app/storages/${storage.id}/notes`)
+                push(`/app/storages/${storage.id}/notes/default`)
               }
             })
           }

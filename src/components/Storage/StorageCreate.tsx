@@ -31,7 +31,7 @@ export default () => {
     // update local -> update cloud -> on fail -> revert local
     try {
       const storage = await db.createStorage(name, storageType)
-      push(`/app/storages/${storage.id}/notes`)
+      push(`/app/storages/${storage.id}/notes/default`)
     } catch {
       pushMessage({
         title: 'Cloud Error',

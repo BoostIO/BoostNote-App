@@ -203,11 +203,16 @@ export function createDbStoreCreator(
         }
 
         const storage = await prepareStorage(storageData, adapter)
-
+        const folder = await storage.db.upsertFolder('/default')
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
           newStorageMap = produce(prevStorageMap, draft => {
             draft[id] = storage
+            draft[id]!.folderMap['/default'] = {
+              ...folder,
+              pathname: getFolderPathname(folder._id),
+              noteIdSet: new Set()
+            }
           })
 
           return newStorageMap

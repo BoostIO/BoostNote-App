@@ -126,9 +126,6 @@ const FolderListFragment = ({
     )
   }, [folderPathnameListExceptRoot, storageId, sideNavOpenedItemSet])
 
-  const rootFolderIsActive =
-    currentPathnameWithoutNoteId === `/app/storages/${storageId}/notes`
-
   const createDropHandler = (folderPathname: string) => {
     return async (event: React.DragEvent) => {
       const transferrableNoteData = getTransferrableNoteData(event)
@@ -180,25 +177,6 @@ const FolderListFragment = ({
   }
   return (
     <>
-      <SideNavigatorItem
-        depth={1}
-        active={rootFolderIsActive}
-        iconPath={rootFolderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
-        label='Notes'
-        onClick={createOnFolderItemClickHandler('/')}
-        onContextMenu={createOnContextMenuHandler(storageId, '/')}
-        onDragOver={event => {
-          event.preventDefault()
-        }}
-        onDrop={createDropHandler('/')}
-        controlComponents={[
-          <ControlButton
-            key='addFolderButton'
-            onClick={() => showPromptToCreateFolder('/')}
-            iconPath={mdiPlusCircleOutline}
-          />
-        ]}
-      />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
         const folderName = nameElements[nameElements.length - 1]
