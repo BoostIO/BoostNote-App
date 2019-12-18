@@ -21,4 +21,5 @@ declare module 'styled-components' {
     ) => any
   }
   export const ThemeProvider: any
+  export const keyframes = any
 }

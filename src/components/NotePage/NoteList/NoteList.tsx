@@ -79,6 +79,7 @@ type NoteListProps = {
   navigateDown: () => void
   navigateUp: () => void
   basePathname: string
+  lastCreatedNoteId: string
 }
 
 const NoteList = ({
@@ -90,7 +91,8 @@ const NoteList = ({
   currentNoteIndex,
   setSearchInput,
   navigateDown,
-  navigateUp
+  navigateUp,
+  lastCreatedNoteId
 }: NoteListProps) => {
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
@@ -146,6 +148,7 @@ const NoteList = ({
                 basePathname={basePathname}
                 focusList={focusList}
                 search={search}
+                recentlyCreated={lastCreatedNoteId === note._id}
               />
             </li>
           )

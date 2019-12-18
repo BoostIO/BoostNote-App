@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import NoteList from './NoteList'
 import styled from '../../lib/styled'
 import NoteDetail from './NoteDetail'
@@ -50,6 +50,11 @@ export default () => {
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const { push } = useRouter()
+  const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
+
+  useEffect(() => {
+    setLastCreatedNoteId('')
+  }, [currentPathnameWithoutNoteId])
 
   const notes = useMemo((): NoteDoc[] => {
     if (currentStorage == null) return []
@@ -123,11 +128,12 @@ export default () => {
       tags
     })
     if (note != null) {
+      setLastCreatedNoteId(note._id)
       router.replace(
         `/app/storages/${storageId}/notes${folderPathname}/${note._id}`
       )
     }
-  }, [db, routeParams, storageId])
+  }, [db, routeParams, storageId, setLastCreatedNoteId])
 
   const breadCrumbs = useMemo(() => {
     if (currentNote == null) return undefined
@@ -143,7 +149,7 @@ export default () => {
       }
     })
     return thread as BreadCrumbs
-  }, [currentPathnameWithoutNoteId, currentNote])
+  }, [currentPathnameWithoutNoteId, currentNote, storageId])
 
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
@@ -218,6 +224,7 @@ export default () => {
           navigateDown={navigateDown}
           navigateUp={navigateUp}
           currentNoteIndex={currentNoteIndex}
+          lastCreatedNoteId={lastCreatedNoteId}
         />
       }
       right={
