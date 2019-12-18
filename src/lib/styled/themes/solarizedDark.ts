@@ -27,7 +27,6 @@ export const solarizedDarkTheme: BaseTheme = {
   // General
   textColor: light100Color,
   uiTextColor: light70Color,
-  activeUiTextColor: light100Color,
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,

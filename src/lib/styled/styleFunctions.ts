@@ -32,9 +32,6 @@ export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
 export const textColor = ({ theme }: StyledProps) =>
   `color: ${theme.textColor};`
 
-export const activeUiTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.activeUiTextColor};`
-
 export const disabledUiTextColor = ({ theme }: StyledProps) =>
   `color: ${theme.disabledUiTextColor};`
 
@@ -48,9 +45,6 @@ transition: 200ms color;
 &:hover,
 &:focus,
 &:active,
-&.active {
-  color: ${theme.activeUiTextColor};
-}
 &:disabled {
   color: ${theme.disabledUiTextColor};
 }`

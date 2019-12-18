@@ -28,7 +28,6 @@ export const lightTheme: BaseTheme = {
   // General
   textColor: dark87Color,
   uiTextColor: dark54Color,
-  activeUiTextColor: dark100Color,
   disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,
