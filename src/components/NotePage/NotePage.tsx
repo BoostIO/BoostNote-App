@@ -118,11 +118,14 @@ export default () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
       return
     }
+
+    const folderIsRoot = !(routeParams.name === 'storages.notes')
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
 
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
+
     const note = await db.createNote(storageId, {
       folderPathname,
       tags
@@ -130,7 +133,9 @@ export default () => {
     if (note != null) {
       setLastCreatedNoteId(note._id)
       router.replace(
-        `/app/storages/${storageId}/notes${folderPathname}/${note._id}`
+        `/app/storages/${storageId}/notes${folderPathname}${
+          folderIsRoot ? '' : '/'
+        }${note._id}`
       )
     }
   }, [db, routeParams, storageId, setLastCreatedNoteId])
