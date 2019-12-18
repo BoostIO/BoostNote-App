@@ -60,9 +60,9 @@ export default () => {
     if (currentStorage == null) return []
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[]).filter(
-          note => !note.trashed
-        )
+        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+          .filter(note => !note.trashed)
+          .sort(sortByUpdatedAt)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
