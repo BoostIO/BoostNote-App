@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import Icon from '../atoms/Icon'
-import { mdiPlus, mdiLoading } from '@mdi/js'
+import { mdiLoading } from '@mdi/js'
 import {
   Section,
   SectionHeader,
@@ -77,14 +77,7 @@ const GeneralTab = () => {
           >
             {loginState =>
               loginState !== 'logging-in' ? (
-                <>
-                  <Icon path={mdiPlus} />
-                  {t(
-                    users.length === 0
-                      ? 'preferences.addAccount'
-                      : 'preferences.switchAccount'
-                  )}
-                </>
+                <>{t('preferences.addAccount')}</>
               ) : (
                 <>
                   <Icon path={mdiLoading} />
