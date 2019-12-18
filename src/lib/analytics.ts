@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
 import { usePreferences } from './preferences'
+import { DbStore } from './db'
 
 const amplifyConfig = {
   Auth: {
@@ -31,9 +32,13 @@ if (!initilalized) {
 export function useAnalytics() {
   const { preferences } = usePreferences()
   const analyticsEnabled = preferences['general.enableAnalytics']
+  const user = preferences['general.accounts'][0]
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
+      if (user !== null) {
+        attributes = { ...attributes, user: user.id.toString() }
+      }
       if (analyticsEnabled) {
         if (attributes == null) {
           Analytics.record({ name: name })
@@ -42,10 +47,74 @@ export function useAnalytics() {
         }
       }
     },
-    [analyticsEnabled]
+    [analyticsEnabled, user]
   )
 
   return {
     report
   }
 }
+
+export const analyticsEvents = {
+  addNote: 'Note.Add',
+  editNote: 'Note.Edit',
+  deleteNote: 'Note.Delete',
+  addTag: 'Tag.Add',
+  addStorage: 'Storage.Add',
+  addFolder: 'Folder.Add',
+  colorTheme: 'ColorTheme.Edit',
+  editorTheme: 'EditorTheme.Edit'
+}
+
+export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
+  return () => {
+    const { report } = useAnalytics()
+    const {
+      createNote,
+      updateNote,
+      trashNote,
+      createStorage,
+      createFolder,
+      ...rest
+    } = hook()
+    return {
+      createNote: useCallback(
+        (...args: Parameters<typeof createNote>) => {
+          report(analyticsEvents.addNote)
+          return createNote(...args)
+        },
+        [createNote, report]
+      ),
+      updateNote: useCallback(
+        (...args: Parameters<typeof updateNote>) => {
+          report(analyticsEvents.editNote)
+          return updateNote(...args)
+        },
+        [updateNote, report]
+      ),
+      trashNote: useCallback(
+        (...args: Parameters<typeof trashNote>) => {
+          report(analyticsEvents.deleteNote)
+          return trashNote(...args)
+        },
+        [trashNote, report]
+      ),
+      createStorage: useCallback(
+        (...args: Parameters<typeof createStorage>) => {
+          report(analyticsEvents.addStorage)
+          return createStorage(...args)
+        },
+        [createStorage, report]
+      ),
+      createFolder: useCallback(
+        (...args: Parameters<typeof createFolder>) => {
+          report(analyticsEvents.addFolder)
+          return createFolder(...args)
+        },
+        [createFolder, report]
+      ),
+      ...rest
+    }
+  }
+}
+
