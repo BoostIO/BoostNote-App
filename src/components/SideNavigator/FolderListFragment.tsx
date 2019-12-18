@@ -3,7 +3,9 @@ import { useDb } from '../../lib/db'
 import {
   mdiFolderOutline,
   mdiFolderOpenOutline,
-  mdiPlusCircleOutline
+  mdiPlusCircleOutline,
+  mdiBookOpen,
+  mdiBookOpenOutline
 } from '@mdi/js'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
@@ -183,21 +185,13 @@ const FolderListFragment = ({
       <SideNavigatorItem
         depth={1}
         active={rootFolderIsActive}
-        iconPath={rootFolderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
-        label='Notes'
+        iconPath={rootFolderIsActive ? mdiBookOpen : mdiBookOpenOutline}
+        label='All notes'
         onClick={createOnFolderItemClickHandler('/')}
-        onContextMenu={createOnContextMenuHandler(storageId, '/')}
         onDragOver={event => {
           event.preventDefault()
         }}
         onDrop={createDropHandler('/')}
-        controlComponents={[
-          <ControlButton
-            key='addFolderButton'
-            onClick={() => showPromptToCreateFolder('/')}
-            iconPath={mdiPlusCircleOutline}
-          />
-        ]}
       />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
