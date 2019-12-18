@@ -12,6 +12,7 @@ import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
 import HighlightText from '../../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
+import { scaleAndTransformFromLeft } from '../../../lib/styled'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -27,8 +28,15 @@ export const StyledNoteListItem = styled.div`
     border-left: 2px solid ${({ theme }) => theme.primaryColor};
   }
   ${borderBottom}
-
   transition: 200ms background-color;
+
+  &.new {
+    position: relative;
+    left: -200px;
+    transform: scaleY(0.3);
+    transform-origin: top left;
+    animation: ${scaleAndTransformFromLeft} 0.2s linear forwards;
+  }
 
   a {
     text-decoration: none;
@@ -80,6 +88,7 @@ export const StyledNoteListItem = styled.div`
 type NoteItemProps = {
   note: NoteDoc
   active: boolean
+  recentlyCreated?: boolean
   storageId: string
   search: string
   basePathname: string
@@ -91,7 +100,8 @@ export default ({
   note,
   active,
   basePathname,
-  search
+  search,
+  recentlyCreated
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
 
@@ -126,7 +136,7 @@ export default ({
 
   return (
     <StyledNoteListItem
-      className={cc([active && 'active'])}
+      className={cc([active && 'active', recentlyCreated && 'new'])}
       onDragStart={handleDragStart}
       draggable={true}
     >
