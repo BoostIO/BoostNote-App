@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
 import { usePreferences } from './preferences'
@@ -11,8 +11,6 @@ const amplifyConfig = {
   }
 }
 
-Auth.configure(amplifyConfig)
-
 const analyticsConfig = {
   AWSPinpoint: {
     appId: process.env.AMPLIFY_PINPOINT_APPID,
@@ -21,24 +19,29 @@ const analyticsConfig = {
   }
 }
 
-Analytics.configure(analyticsConfig)
-
-const initilalized = (window as any).initilalized
-if (!initilalized) {
-  ;(window as any).initilalized = true
-  Analytics.record('init')
-}
-
 export function useAnalytics() {
+  const configured = useRef(false)
   const { preferences } = usePreferences()
   const analyticsEnabled = preferences['general.enableAnalytics']
   const user = preferences['general.accounts'][0]
+
+  if (!configured.current) {
+    Auth.configure(amplifyConfig)
+    Analytics.configure(analyticsConfig)
+    configured.current = true
+    const initilalized = (window as any).initilalized
+    if (!initilalized) {
+      ;(window as any).initilalized = true
+      Analytics.record('init')
+    }
+  }
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
       if (user !== null) {
         attributes = { ...attributes, user: user.id.toString() }
       }
+      console.log('Report!!!')
       if (analyticsEnabled) {
         if (attributes == null) {
           Analytics.record({ name: name })
