@@ -186,7 +186,7 @@ const FolderListFragment = ({
         depth={1}
         active={rootFolderIsActive}
         iconPath={rootFolderIsActive ? mdiBookOpen : mdiBookOpenOutline}
-        label='All notes'
+        label='All Notes'
         onClick={createOnFolderItemClickHandler('/')}
         onDragOver={event => {
           event.preventDefault()
