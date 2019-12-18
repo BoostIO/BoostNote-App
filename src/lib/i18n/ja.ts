@@ -2,8 +2,7 @@ export default {
   translation: {
     'preferences.general': '一般',
     'preferences.account': 'アカウント',
-    'preferences.addAccount': 'アカウント追加',
-    'preferences.switchAccount': 'アカウント切り替え',
+    'preferences.addAccount': 'ログイン',
     'preferences.loginWorking': 'ログイン中...',
     'preferences.interfaceLanguage': 'インタフェース言語',
     'preferences.applicationTheme': 'アプリケーションテーマ',

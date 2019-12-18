@@ -2,8 +2,7 @@ export default {
   translation: {
     // Preferences GeneralTab
     'preferences.account': 'Account',
-    'preferences.addAccount': 'Add Account',
-    'preferences.switchAccount': 'Switch Account',
+    'preferences.addAccount': 'Sign in',
     'preferences.loginWorking': 'Loggin in...',
     'preferences.interfaceLanguage': 'Interface Language',
     'preferences.applicationTheme': 'Application Theme',
