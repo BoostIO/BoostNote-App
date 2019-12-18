@@ -140,7 +140,7 @@ export const useRouteParams = () => {
     let noteId: string | undefined = undefined
     if (names[2] === 'notes') {
       const restNames = names.slice(3)
-      if (restNames.length === 0) {
+      if (restNames[0] == null || restNames[0] === '') {
         return {
           name: 'storages.allNotes',
           storageId
