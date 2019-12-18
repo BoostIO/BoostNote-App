@@ -16,7 +16,12 @@ import styled from '../../lib/styled'
 import cc from 'classcat'
 import { useDb } from '../../lib/db'
 
-const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
+const schema = mergeDeepRight(gh, {
+  attributes: {
+    '*': ['className'],
+    input: [['type', 'checkbox'], ['checked', true]]
+  }
+})
 
 interface Element extends Parent {
   type: 'element'
@@ -51,6 +56,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
   const theme = settings.theme || 'default'
   const plainText = settings.plainText || []
   return function(tree: Node) {
+    console.log(tree)
     visit<Element>(tree, 'element', visitor)
 
     return tree
@@ -59,6 +65,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
       if (!isElement(parent, 'pre') || !isElement(node, 'code')) {
         return
       }
+      console.log(`visit for ${node.children[0].value} | index: ${_index}`)
 
       const lang = language(node)
 
@@ -183,6 +190,20 @@ const MarkdownPreviewer = ({
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
+          input: ({ type, ...props }: any) => {
+            if (type !== 'checkbox') {
+              return <input type={type} {...props} />
+            }
+
+            return (
+              <input
+                type='checkbox'
+                {...props}
+                onChange={() => {}}
+                disabled={false}
+              />
+            )
+          },
           img: ({ src, ...props }: any) => {
             const storage = storageMap[options.storageId!]
             if (storage != null && !src.match('/')) {
