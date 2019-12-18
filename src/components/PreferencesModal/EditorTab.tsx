@@ -24,6 +24,7 @@ import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -36,14 +37,16 @@ function say() {
 
 const EditorTab = () => {
   const { preferences, setPreferences } = usePreferences()
+  const { report } = useAnalytics()
 
   const selectEditorTheme: SelectChangeEventHandler = useCallback(
     event => {
       setPreferences({
         'editor.theme': event.target.value
       })
+      report(analyticsEvents.editorTheme)
     },
-    [setPreferences]
+    [setPreferences, report]
   )
 
   const [fontSize, setFontSize] = useState(

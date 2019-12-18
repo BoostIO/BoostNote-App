@@ -39,6 +39,7 @@ import {
   renameStorage as renameCloudStorage,
   getStorages
 } from '../accounts'
+import { wrapDbStoreWithAnalytics } from '../analytics'
 
 export interface DbStore {
   initialized: boolean
@@ -1121,7 +1122,9 @@ const storageDataPredicate = schema({
 export const {
   StoreProvider: DbProvider,
   useStore: useDb
-} = createStoreContext(createDbStoreCreator(localLiteStorage, 'idb'))
+} = createStoreContext(
+  wrapDbStoreWithAnalytics(createDbStoreCreator(localLiteStorage, 'idb'))
+)
 
 export function getStorageDataList(
   liteStorage: LiteStorage
