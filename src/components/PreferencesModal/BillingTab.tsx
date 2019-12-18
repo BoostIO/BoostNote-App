@@ -115,7 +115,7 @@ const BillingTab = () => {
               <td>〇</td>
             </tr>
             <tr>
-              <th>Mobile App (iOS/Android)</th>
+              <th>Mobile App (Will be launched at Jan, 2020)</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
@@ -125,9 +125,14 @@ const BillingTab = () => {
               <td>〇</td>
             </tr>
             <tr>
-              <th>Local Storage Size</th>
-              <td>Unlimited</td>
-              <td>Unlimited</td>
+              <th>Local Storage</th>
+              <td>〇</td>
+              <td>〇</td>
+            </tr>
+            <tr>
+              <th>Cloud Storage</th>
+              <td>〇</td>
+              <td>〇</td>
             </tr>
             <tr>
               <th>Cloud Storage Size</th>
