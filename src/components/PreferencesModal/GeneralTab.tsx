@@ -20,21 +20,18 @@ import { SelectChangeEventHandler } from '../../lib/events'
 import { useUsers } from '../../lib/accounts'
 import UserInfo from '../atoms/UserInfo'
 import LoginButton from '../atoms/LoginButton'
-import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
-  const { report } = useAnalytics()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     event => {
       setPreferences({
         'general.theme': event.target.value as GeneralThemeOptions
       })
-      report(analyticsEvents.editorTheme)
     },
-    [setPreferences, report]
+    [setPreferences]
   )
 
   const selectLanguage: SelectChangeEventHandler = useCallback(

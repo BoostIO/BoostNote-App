@@ -24,6 +24,8 @@ import Modal from './Modal'
 import ToastList from './Toast'
 import { useToast } from '../lib/toast'
 import { useUsers } from '../lib/accounts'
+import { useAnalytics, analyticsEvents } from '../lib/analytics'
+import { useUpdateEffect } from 'react-use'
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -48,6 +50,15 @@ const App = () => {
     })
   }, [initialize, users])
   const { toggleClosed, preferences } = usePreferences()
+  const { report } = useAnalytics()
+  useUpdateEffect(() => {
+    report(analyticsEvents.colorTheme)
+  }, [preferences['general.theme']])
+
+  useUpdateEffect(() => {
+    report(analyticsEvents.editorTheme)
+  }, [preferences['editor.theme']])
+
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       switch (event.key) {
