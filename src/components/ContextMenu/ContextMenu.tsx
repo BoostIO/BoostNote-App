@@ -46,7 +46,7 @@ class ContextMenu extends React.Component<ContextMenuProps> {
         ref={this.menuRef}
         onBlur={this.closeContextMenuIfMenuBlurred}
         style={{
-          left: position.x,
+          left: position.x + 130 < innerWidth ? position.x : innerWidth - 150,
           top: position.y
         }}
       >
