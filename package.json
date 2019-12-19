@@ -147,7 +147,8 @@
     "use-force-update": "^1.0.7"
   },
   "build": {
-    "appId": "com.electron.Boost",
+    "appId": "com.boostio.boostnote",
+    "artifactName": "boost-note-${os}.${ext}",
     "copyright": "Copyright © 2016-2017 BoostIO",
     "extraResources": [
       "compiled/**/*"
