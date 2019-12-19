@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react'
+import isElectron from 'is-electron'
 
 interface ImageProps {
   src: string
@@ -8,7 +9,7 @@ interface ImageProps {
 }
 
 const Image = ({ src, className, style, alt }: ImageProps) => {
-  if (src.startsWith('/app')) {
+  if (isElectron() && src.startsWith('/app')) {
     src = src.slice(1)
   }
 
