@@ -81,7 +81,7 @@ const AboutTab = () => {
             <SectionHeader>About</SectionHeader>
             <div className='about-outline-basic'>
               <div className='about-outline-basic-logo'>
-                <img src='../../../resources/logo_symbol.svg' />
+                <img src='/static/logo_symbol.svg' />
               </div>
               <div className='about-outline-basic-info'>
                 <h4>Boost Note {process.env.VERSION}</h4>
