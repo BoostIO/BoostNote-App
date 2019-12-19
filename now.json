@@ -18,7 +18,7 @@
   ],
   "routes": [
     {
-      "src": "/app/(.*.?bundle.js)",
+      "src": "/app/(.*\\.?bundle.js)$",
       "dest": "/compiled/$1"
     },
     {

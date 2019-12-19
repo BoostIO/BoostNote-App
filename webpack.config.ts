@@ -16,7 +16,6 @@ module.exports = (env, argv) => {
     output: {
       filename: 'bundle.js',
       // the output bundle
-
       path: path.resolve(__dirname, 'compiled')
     },
 
@@ -128,7 +127,6 @@ module.exports = (env, argv) => {
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     )
-    ;(config.output as any).publicPath = '/app'
   }
 
   if (argv.mode === 'production') {
@@ -142,6 +140,10 @@ module.exports = (env, argv) => {
         })
       ]
     }
+  }
+
+  if (process.env.TARGET !== 'electron') {
+    ;(config.output as any).publicPath = '/app/'
   }
 
   return config
