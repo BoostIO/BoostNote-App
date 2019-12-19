@@ -74,21 +74,23 @@ const GeneralTab = () => {
           {users.map(user => (
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
-          <LoginButton
-            onErr={console.error /* TODO: Toast error */}
-            ButtonComponent={SectionPrimaryButton}
-          >
-            {loginState =>
-              loginState !== 'logging-in' ? (
-                <>{t('preferences.addAccount')}</>
-              ) : (
-                <>
-                  <Icon path={mdiLoading} />
-                  {t('preferences.loginWorking')}
-                </>
-              )
-            }
-          </LoginButton>
+          {users.length === 0 && (
+            <LoginButton
+              onErr={console.error /* TODO: Toast error */}
+              ButtonComponent={SectionPrimaryButton}
+            >
+              {loginState =>
+                loginState !== 'logging-in' ? (
+                  <>{t('preferences.addAccount')}</>
+                ) : (
+                  <>
+                    <Icon path={mdiLoading} />
+                    {t('preferences.loginWorking')}
+                  </>
+                )
+              }
+            </LoginButton>
+          )}
         </div>
       </Section>
       <Section>
