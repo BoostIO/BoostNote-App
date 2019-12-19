@@ -74,7 +74,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         depth={1}
         iconPath={mdiTagMultiple}
         label='Tags'
-        folded={tagListIsFolded}
+        folded={tagList.length > 0 ? tagListIsFolded : undefined}
         onFoldButtonClick={() => {
           toggleSideNavOpenedItem(tagListNavItemId)
         }}

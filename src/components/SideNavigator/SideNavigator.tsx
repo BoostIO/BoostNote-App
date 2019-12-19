@@ -362,7 +362,7 @@ export default () => {
                   />
                   <SideNavigatorItem
                     depth={1}
-                    label='Trash Can'
+                    label='Trash'
                     iconPath={
                       trashcanPageIsActive ? mdiDelete : mdiDeleteOutline
                     }
