@@ -15,6 +15,12 @@ const Container = styled.div`
   user-select: none;
   height: 28px;
   display: flex;
+  justify-content: space-between;
+
+  .sideNavWrapper {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
 
   transition: 200ms background-color;
   &:hover,
@@ -40,6 +46,7 @@ const FoldButton = styled.button`
   background-color: transparent;
   margin-right: 3px;
   border-radius: 2px;
+  flex: 0 0 26px;
   top: 2px;
   ${sideBarSecondaryTextColor}
   &:focus {
@@ -53,22 +60,31 @@ const ClickableContainer = styled.button`
   height: 30px;
   display: flex;
   align-items: center;
+  min-width: 0;
   width: 100%;
+  flex: 1 1 auto;
 
   ${sideBarTextColor}
 
   .icon {
+    flex: 0 0 auto;
     margin-right: 4px;
     ${sideBarSecondaryTextColor}
   }
 `
 
 const Label = styled.div`
+  min-width: 0
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1 1 auto;
 `
 
 const ControlContainer = styled.div`
   display: flex;
+  flex: 2 0 auto;
+  justify-content: flex-end;
 `
 
 interface SideNaviagtorItemProps {
@@ -112,36 +128,38 @@ const SideNaviagtorItem = ({
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
     >
-      {folded != null && (
-        <FoldButton
-          className={folded ? 'folded' : ''}
-          onClick={onFoldButtonClick}
-          style={{ left: `${10 * depth}px` }}
+      <div className='sideNavWrapper'>
+        {folded != null && (
+          <FoldButton
+            className={folded ? 'folded' : ''}
+            onClick={onFoldButtonClick}
+            style={{ left: `${10 * depth}px` }}
+          >
+            <MdiIcon
+              path={folded ? mdiChevronRight : mdiChevronDown}
+              size='2em'
+              color='currentColor'
+            />
+          </FoldButton>
+        )}
+        <ClickableContainer
+          style={{
+            paddingLeft: `${10 * depth + 26}px`,
+            cursor: onClick ? 'pointer' : 'initial',
+            fontSize: '15px'
+          }}
+          onClick={onClick}
+          onDoubleClick={onDoubleClick}
         >
-          <MdiIcon
-            path={folded ? mdiChevronRight : mdiChevronDown}
-            size='2em'
-            color='currentColor'
-          />
-        </FoldButton>
-      )}
-      <ClickableContainer
-        style={{
-          paddingLeft: `${10 * depth + 26}px`,
-          cursor: onClick ? 'pointer' : 'initial',
-          fontSize: '15px'
-        }}
-        onClick={onClick}
-        onDoubleClick={onDoubleClick}
-      >
-        {iconPath && <Icon className='icon' path={iconPath} />}
-        <Label>{label}</Label>
-      </ClickableContainer>
+          {iconPath && <Icon className='icon' path={iconPath} />}
+          <Label>{label}</Label>
+        </ClickableContainer>
+      </div>
       {controlComponents && (
         <ControlContainer className='control'>
           {controlComponents}
         </ControlContainer>
-      )}
+      )}{' '}
     </Container>
   )
 }
