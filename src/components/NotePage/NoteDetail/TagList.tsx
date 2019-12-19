@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import ButtonIcon from '../../atoms/ButtonIcon'
 import styled from '../../../lib/styled'
-import { iconColor } from '../../../lib/styled/styleFunctions'
+import { iconColor, inputStyle } from '../../../lib/styled/styleFunctions'
 import { IconTag, IconClose } from '../../icons'
 
 interface TagListItemProps {

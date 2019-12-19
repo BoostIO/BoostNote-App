@@ -115,7 +115,6 @@ export default class TutorialsNoteDetail extends React.Component<
               <ToolbarIconButton
                 className={viewMode === 'preview' ? 'active' : ''}
                 onClick={() => toggleViewMode('preview')}
-                onClick={toggleSplitMode}
                 icon={<IconEye />}
               />
             </Toolbar>
