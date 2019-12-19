@@ -11,18 +11,16 @@ import { getAppLinkFromUserAgent } from '../../../lib/download'
 import { openNew } from '../../../lib/utils/platform'
 import isElectron from 'is-electron'
 
-interface PrimaryLinkProps {
-  children: string
-}
-
 const DownloadOurAppModal = () => {
   const runningOnElectron = isElectron()
   const userAgent = getAppLinkFromUserAgent()
 
-  const AppLink = ({ children }: PrimaryLinkProps) => {
+  const AppLink = () => {
     const handleClick = (event: React.MouseEvent) => {
       event.preventDefault()
-      openNew(runningOnElectron ? 'https://note.boostio.co' : userAgent.link)
+      openNew(
+        runningOnElectron ? 'https://note.boostio.co/app' : userAgent.link
+      )
     }
 
     return (
@@ -31,7 +29,11 @@ const DownloadOurAppModal = () => {
         disabled={!runningOnElectron && userAgent.link == null}
         onClick={handleClick}
       >
-        {children}
+        {runningOnElectron
+          ? 'Open in browser'
+          : `Download ${
+              userAgent.os !== '' ? `for ${userAgent.os}` : 'our app'
+            }`}
       </button>
     )
   }
@@ -47,11 +49,7 @@ const DownloadOurAppModal = () => {
           <div className='center'>
             <Image src='/app/static/Desktop.svg' />
             <img src='/app/static/Desktop.svg' />
-            <AppLink>
-              {`Download ${
-                userAgent.os !== '' ? `for ${userAgent.os}` : 'our app'
-              }`}
-            </AppLink>
+            <AppLink></AppLink>
           </div>
           <div className='center'>
             <Image src='/app/static/Mobile.svg' />
