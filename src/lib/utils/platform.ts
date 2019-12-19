@@ -1,8 +1,12 @@
-export const isElectron = () => navigator.userAgent.indexOf('Electron') >= 0
+import isElectron from 'is-electron'
+
+declare function $openExternal(url: string): void
 
 export const openNew = (url: string) => {
   if (isElectron()) {
-    // electron implementation
+    if (url.length > 0) {
+      $openExternal(url)
+    }
   } else {
     window.open(url, '_blank')
   }
