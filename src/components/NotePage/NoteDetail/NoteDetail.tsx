@@ -135,6 +135,21 @@ export const StyledNoteDetailContainer = styled.div`
     ${textColor}
     margin-left: 4px;
   }
+
+  .buttonsWrapper {
+    flex: 0 0 160px;
+  }
+
+  .tagsWrapper {
+    padding: 5px 0;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 20px;
+    input {
+      min-width: 0 !important;
+      width: 100%;
+    }
+  }
 `
 
 type NoteDetailProps = {
@@ -507,52 +522,56 @@ export default class NoteDetail extends React.Component<
               )}
             </div>
             <Toolbar>
-              <TagList
-                tags={this.state.tags}
-                removeTagByName={this.removeTagByName}
-              />
-              <input
-                className='tagInput'
-                ref={this.newTagNameInputRef}
-                value={this.state.newTagName}
-                placeholder='Tags'
-                onChange={this.updateNewTagName}
-                onKeyDown={this.handleNewTagNameInputKeyDown}
-              />
-              <ToolbarSeparator />
-              <ToolbarIconButton
-                className={viewMode === 'edit' ? 'active' : ''}
-                onClick={() => toggleViewMode('edit')}
-                path={mdiPencil}
-              />
-              <ToolbarIconButton
-                className={viewMode === 'split' ? 'active' : ''}
-                onClick={() => toggleViewMode('split')}
-                path={mdiArrowSplitVertical}
-              />
-              <ToolbarIconButton
-                className={viewMode === 'preview' ? 'active' : ''}
-                onClick={() => toggleViewMode('preview')}
-                path={mdiEyeOutline}
-              />
-              {note.trashed ? (
-                <>
-                  <ToolbarIconButton
-                    onClick={this.untrashNote}
-                    path={mdiRestore}
-                  />
-                  <ToolbarIconButton
-                    onClick={this.purgeNote}
-                    path={mdiDeleteEmpty}
-                  />
-                </>
-              ) : (
-                <ToolbarIconButton
-                  onClick={this.trashNote}
-                  path={mdiTrashCan}
+              <div className='tagsWrapper'>
+                <TagList
+                  tags={this.state.tags}
+                  removeTagByName={this.removeTagByName}
                 />
-              )}
-              <ToolbarExportButton note={this.props.note} />
+                <input
+                  className='tagInput'
+                  ref={this.newTagNameInputRef}
+                  value={this.state.newTagName}
+                  placeholder='Tags'
+                  onChange={this.updateNewTagName}
+                  onKeyDown={this.handleNewTagNameInputKeyDown}
+                />
+                <ToolbarSeparator />
+              </div>
+              <div className='buttonsWrapper'>
+                <ToolbarIconButton
+                  className={viewMode === 'edit' ? 'active' : ''}
+                  onClick={() => toggleViewMode('edit')}
+                  path={mdiPencil}
+                />
+                <ToolbarIconButton
+                  className={viewMode === 'split' ? 'active' : ''}
+                  onClick={() => toggleViewMode('split')}
+                  path={mdiArrowSplitVertical}
+                />
+                <ToolbarIconButton
+                  className={viewMode === 'preview' ? 'active' : ''}
+                  onClick={() => toggleViewMode('preview')}
+                  path={mdiEyeOutline}
+                />
+                {note.trashed ? (
+                  <>
+                    <ToolbarIconButton
+                      onClick={this.untrashNote}
+                      path={mdiRestore}
+                    />
+                    <ToolbarIconButton
+                      onClick={this.purgeNote}
+                      path={mdiDeleteEmpty}
+                    />
+                  </>
+                ) : (
+                  <ToolbarIconButton
+                    onClick={this.trashNote}
+                    path={mdiTrashCan}
+                  />
+                )}
+                <ToolbarExportButton note={this.props.note} />
+              </div>
             </Toolbar>
           </>
         )}
