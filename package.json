@@ -21,7 +21,8 @@
     "release": "rimraf dist && env-cmd npm run meta && env-cmd electron-builder -- --publish",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
-    "tsc": "tsc --watch --noEmit"
+    "tsc": "tsc --watch --noEmit",
+    "ico": "png2icons static/logo.png static/icon -allwe"
   },
   "keywords": [
     "markdown",
@@ -72,6 +73,7 @@
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.9.0",
     "json-loader": "^0.5.7",
+    "png2icons": "^2.0.1",
     "prettier": "^1.18.2",
     "react-hot-loader": "^4.12.13",
     "react-test-renderer": "^16.9.0",
@@ -152,11 +154,18 @@
       "compiled/**/*"
     ],
     "asar": false,
+    "mac": {
+      "icon": "static/icon.icns"
+    },
     "linux": {
+      "icon": "static/icon.icns",
       "target": [
         "deb",
         "AppImage"
       ]
+    },
+    "win": {
+      "icon": "static/icon.ico"
     },
     "publish": "github"
   }

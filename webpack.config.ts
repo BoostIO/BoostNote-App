@@ -22,7 +22,6 @@ module.exports = (env, argv) => {
 
     devtool: 'inline-source-map',
 
-
     module: {
       rules: [
         {
@@ -75,6 +74,12 @@ module.exports = (env, argv) => {
           from: path.join(__dirname, 'node_modules/codemirror/theme'),
           to: 'app/codemirror/theme'
         }
+      ]),
+      new CopyPlugin([
+        {
+          from: path.join(__dirname, 'static'),
+          to: 'app/static'
+        }
       ])
     ],
 
@@ -90,7 +95,7 @@ module.exports = (env, argv) => {
       hot: true,
       // enable HMR on the server
 
-      before: function (app, server) {
+      before: function(app, server) {
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -103,6 +108,7 @@ module.exports = (env, argv) => {
           '/app/codemirror/theme',
           express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
         )
+        app.use('/app/static', express.static(path.join(__dirname, 'static')))
       }
     },
 
@@ -122,11 +128,11 @@ module.exports = (env, argv) => {
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     )
-      ; (config.output as any).publicPath = '/app'
+    ;(config.output as any).publicPath = '/app'
   }
 
   if (argv.mode === 'production') {
-    (config as any).optimization = {
+    ;(config as any).optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
