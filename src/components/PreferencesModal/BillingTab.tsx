@@ -10,6 +10,7 @@ import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import { getSubscription, Subscription } from '../../lib/accounts'
 import LoginButton from '../atoms/LoginButton'
+import { openNew } from '../../lib/utils/platform'
 
 const BillingContent = styled.div`
   .billing-lead {
@@ -95,11 +96,9 @@ const BillingTab = () => {
                 </LoginButton>
               )}
               {loggedIn && (
-                <a href='/subscription'>
-                  <SectionPrimaryButton>
-                    {hasSubscription ? 'Manage' : 'Upgrade'}
-                  </SectionPrimaryButton>
-                </a>
+                <SectionPrimaryButton onClick={() => openNew('https://note.boostio.co/subscription')}>
+                  {hasSubscription ? 'Manage' : 'Upgrade'}
+                </SectionPrimaryButton>
               )}
             </th>
           </thead>
@@ -148,9 +147,7 @@ const BillingTab = () => {
               paying $5 (USD) for every 5GB. Click the "Add Extra Storage"
               button below.
             </p>
-            <a href='/subscription'>
-              <SectionPrimaryButton>Add Extra Storage</SectionPrimaryButton>
-            </a>
+            <SectionPrimaryButton onClick={() => openNew('https://note.boostio.co/subscription')}>Add Extra Storage</SectionPrimaryButton>
           </div>
         )}
       </BillingContent>
