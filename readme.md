@@ -1,3 +1,4 @@
+![uiimage](./static/logo_with_text_teal.svg)
 ![uiimage](./static/img_ui.svg)
 
 <h2 align='center'>A Polished Notes App with Github Flavored Markdown</h2>
