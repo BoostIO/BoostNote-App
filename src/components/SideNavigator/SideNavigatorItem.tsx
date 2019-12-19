@@ -79,6 +79,7 @@ const Label = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1 1 auto;
+  text-align: left;
 `
 
 const ControlContainer = styled.div`
