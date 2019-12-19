@@ -13,7 +13,6 @@ import {
   mdiTrashCan,
   mdiEyeOutline,
   mdiArrowSplitVertical,
-  mdiFormatText,
   mdiDeleteEmpty,
   mdiRestore,
   mdiPencil
@@ -507,8 +506,6 @@ export default class NoteDetail extends React.Component<
                 onKeyDown={this.handleNewTagNameInputKeyDown}
               />
               <ToolbarSeparator />
-              <ToolbarExportButton note={this.props.note} />
-              <ToolbarIconButton onClick={() => {}} path={mdiFormatText} />
               <ToolbarIconButton
                 className={viewMode === 'edit' ? 'active' : ''}
                 onClick={() => toggleViewMode('edit')}
@@ -541,6 +538,7 @@ export default class NoteDetail extends React.Component<
                   path={mdiTrashCan}
                 />
               )}
+              <ToolbarExportButton note={this.props.note} />
             </Toolbar>
           </>
         )}
