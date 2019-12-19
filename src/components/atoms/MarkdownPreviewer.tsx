@@ -15,6 +15,7 @@ import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { useDb } from '../../lib/db'
+import { openNew } from '../../lib/utils/platform'
 
 const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
 
@@ -193,6 +194,19 @@ const MarkdownPreviewer = ({
             }
 
             return <img {...props} src={src} />
+          },
+          a: ({ href, children }: any) => {
+            return (
+              <a
+                href={href}
+                onClick={event => {
+                  event.preventDefault()
+                  openNew(href)
+                }}
+              >
+                {children}
+              </a>
+            )
           }
         }
       })

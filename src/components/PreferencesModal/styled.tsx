@@ -34,7 +34,7 @@ export const SectionSubtleText = styled.p`
   ${disabledUiTextColor}
 `
 
-export const PrimaryText = styled.a`
+export const PrimaryAnchor = styled.a`
   ${PrimaryTextColor}
 `
 

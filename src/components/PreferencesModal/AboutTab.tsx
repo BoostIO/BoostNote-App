@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from '../../lib/styled'
 import {
   Section,
   SectionHeader,
   SectionSubtleText,
-  PrimaryText
+  PrimaryAnchor
 } from './styled'
+import { openNew } from '../../lib/utils/platform'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -72,6 +73,27 @@ const AboutContents = styled.div`
   }
 `
 
+interface PrimaryLinkProps {
+  href: string
+  children: string
+}
+
+const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      openNew(href)
+    },
+    [href]
+  )
+
+  return (
+    <PrimaryAnchor href={href} onClick={handleClick}>
+      {children}
+    </PrimaryAnchor>
+  )
+}
+
 const AboutTab = () => {
   return (
     <div>
@@ -90,13 +112,12 @@ const AboutTab = () => {
                   you.
                 </p>
                 <p>
-                  <PrimaryText href='//boostnote.io/'>
+                  <PrimaryLink href='https://boostnote.io/'>
                     Official Website
-                  </PrimaryText>
-                  <PrimaryText href='//boostnote.io/wiki/'>
+                  </PrimaryLink>
+                  <PrimaryLink href='https://boostnote.io/wiki/'>
                     Boost Note for Team
-                  </PrimaryText>
-                  {/* <PrimaryText href='github.com/BoostIO/BoostNote.next/blob/master/docs/build.md'>Development: Development configuration for Boostnote</PrimaryText> */}
+                  </PrimaryLink>
                 </p>
               </div>
             </div>
@@ -111,39 +132,41 @@ const AboutTab = () => {
             <div className='about-community-links'>
               <ul>
                 <li>
-                  <PrimaryText href='//issuehunt.io/r/BoostIo/Boostnote'>
+                  <PrimaryLink href='https://issuehunt.io/r/BoostIo/Boostnote'>
                     Bounty on IssueHunt
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
                 <li>
-                  <PrimaryText href='//github.com/BoostIO/BoostNote.next'>
+                  <PrimaryLink href='https://github.com/BoostIO/BoostNote.next'>
                     GitHub
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
                 <li>
-                  <PrimaryText href='//medium.com/boostnote'>Blog</PrimaryText>
+                  <PrimaryLink href='https://medium.com/boostnote'>
+                    Blog
+                  </PrimaryLink>
                 </li>
               </ul>
               <ul>
                 <li>
-                  <PrimaryText href='//boostnote-group.slack.com/join/shared_invite/enQtMzkxOTk4ODkyNzc0LWQxZTQwNjBlMDI4YjkyYjg2MTRiZGJhNzA1YjQ5ODA5M2M0M2NlMjI5YjhiYWQzNzgzYmU0MDMwOTlmZmZmMGE'>
+                  <PrimaryLink href='https://boostnote-group.slack.com/join/shared_invite/enQtMzkxOTk4ODkyNzc0LWQxZTQwNjBlMDI4YjkyYjg2MTRiZGJhNzA1YjQ5ODA5M2M0M2NlMjI5YjhiYWQzNzgzYmU0MDMwOTlmZmZmMGE'>
                     Slack Group
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
                 <li>
-                  <PrimaryText href='//twitter.com/boostnoteapp'>
+                  <PrimaryLink href='https://twitter.com/boostnoteapp'>
                     Twitter Account
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
                 <li>
-                  <PrimaryText href='//www.facebook.com/groups/boostnote/'>
+                  <PrimaryLink href='https://www.facebook.com/groups/boostnote/'>
                     Facebook Group
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
                 <li>
-                  <PrimaryText href='//www.reddit.com/r/Boostnote/'>
+                  <PrimaryLink href='https://www.reddit.com/r/Boostnote/'>
                     Reddit
-                  </PrimaryText>
+                  </PrimaryLink>
                 </li>
               </ul>
             </div>
