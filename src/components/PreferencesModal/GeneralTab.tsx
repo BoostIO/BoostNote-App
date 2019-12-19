@@ -18,7 +18,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { useUsers } from '../../lib/accounts'
-import UserInfo from '../atoms/UserInfo'
+import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
