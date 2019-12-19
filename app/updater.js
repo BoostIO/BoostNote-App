@@ -12,10 +12,7 @@ let updating = false
 let foundUpdates = false
 
 autoUpdater.on('error', error => {
-  dialog.showErrorBox(
-    'Error: ',
-    error == null ? 'unknown' : (error.stack || error).toString()
-  )
+  console.info(error.stack || error)
 })
 
 autoUpdater.on('update-available', () => {
