@@ -39,6 +39,12 @@ class ContextMenu extends React.Component<ContextMenuProps> {
 
   render() {
     const { closed, menuItems, position, id } = this.props.contextMenu
+    const windowWith =
+      window.innerWidth ||
+      innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth
+
     if (closed) return null
     return (
       <StyledContextMenu
@@ -46,7 +52,7 @@ class ContextMenu extends React.Component<ContextMenuProps> {
         ref={this.menuRef}
         onBlur={this.closeContextMenuIfMenuBlurred}
         style={{
-          left: position.x + 130 < innerWidth ? position.x : innerWidth - 150,
+          left: position.x + 130 < windowWith ? position.x : windowWith - 150,
           top: position.y
         }}
       >
