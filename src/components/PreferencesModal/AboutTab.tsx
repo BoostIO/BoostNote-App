@@ -103,7 +103,7 @@ const AboutTab = () => {
             <SectionHeader>About</SectionHeader>
             <div className='about-outline-basic'>
               <div className='about-outline-basic-logo'>
-                <img src='/app/static/logo_symbol.svg' />
+                <img src='/app/static/logo.svg' />
               </div>
               <div className='about-outline-basic-info'>
                 <h4>Boost Note {process.env.VERSION}</h4>
@@ -132,13 +132,13 @@ const AboutTab = () => {
             <div className='about-community-links'>
               <ul>
                 <li>
-                  <PrimaryLink href='https://issuehunt.io/r/BoostIo/Boostnote'>
-                    Bounty on IssueHunt
+                  <PrimaryLink href='https://github.com/BoostIO/BoostNote.next'>
+                    GitHub Repository
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://github.com/BoostIO/BoostNote.next'>
-                    GitHub
+                    Bounty on IssueHunt
                   </PrimaryLink>
                 </li>
                 <li>
