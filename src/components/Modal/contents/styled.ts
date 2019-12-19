@@ -29,14 +29,15 @@ export const ModalBody = styled.div`
     line-height: 1;
     text-transform: uppercase;
     color: rgb(255, 255, 255);
-    padding: 16px 32px;
+    padding: 16px 32px !important;
     border-width: initial;
     border-style: none;
     border-color: initial;
     border-image: initial;
     border-radius: 4px;
-    margin: auto;
+    margin: auto !important;
     margin-bottom: 10px;
+    height: auto !important;
 
     &:not(:disabled):hover {
       cursor: pointer;

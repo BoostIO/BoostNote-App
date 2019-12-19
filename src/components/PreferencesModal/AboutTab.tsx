@@ -8,6 +8,7 @@ import {
 } from './styled'
 import { openNew } from '../../lib/utils/platform'
 import Image from '../atoms/Image'
+import AppLink from '../atoms/AppLink'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -127,6 +128,10 @@ const AboutTab = () => {
               <br />
               License: GPL v3
             </SectionSubtleText>
+          </div>
+          <div className='about-community'>
+            <SectionHeader>Cross-platform</SectionHeader>
+            <AppLink />
           </div>
           <div className='about-community'>
             <SectionHeader>Community</SectionHeader>

@@ -7,37 +7,9 @@ import {
   ModalFlex
 } from './styled'
 import Image from '../../atoms/Image'
-import { getAppLinkFromUserAgent } from '../../../lib/download'
-import { openNew } from '../../../lib/utils/platform'
-import isElectron from 'is-electron'
+import AppLink from '../../atoms/AppLink'
 
 const DownloadOurAppModal = () => {
-  const runningOnElectron = isElectron()
-  const userAgent = getAppLinkFromUserAgent()
-
-  const AppLink = () => {
-    const handleClick = (event: React.MouseEvent) => {
-      event.preventDefault()
-      openNew(
-        runningOnElectron ? 'https://note.boostio.co/app' : userAgent.link
-      )
-    }
-
-    return (
-      <button
-        className='button'
-        disabled={!runningOnElectron && userAgent.link == null}
-        onClick={handleClick}
-      >
-        {runningOnElectron
-          ? 'Open in browser'
-          : `Download ${
-              userAgent.os !== '' ? `for ${userAgent.os}` : 'our app'
-            }`}
-      </button>
-    )
-  }
-
   return (
     <ModalContainer>
       <ModalHeader>Download our apps</ModalHeader>
@@ -48,7 +20,6 @@ const DownloadOurAppModal = () => {
         <ModalFlex>
           <div className='center'>
             <Image src='/app/static/Desktop.svg' />
-            <img src='/app/static/Desktop.svg' />
             <AppLink />
           </div>
           <div className='center'>
