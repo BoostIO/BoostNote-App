@@ -17,11 +17,11 @@ const DownloadOurAppModal = () => {
       <ModalBody>
         <ModalFlex>
           <div className='center'>
-            <img src='../../../../resources/Desktop.svg' />
+            <img src='/static/Desktop.svg' />
             <button className='button'>Download for Mac</button>
           </div>
           <div className='center'>
-            <img src='../../../../resources/Mobile.svg' />
+            <img src='/static/Mobile.svg' />
             <button className='button darker' disabled={true}>
               Launching Soon
             </button>
