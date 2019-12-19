@@ -2,8 +2,10 @@ import styled from '../../lib/styled'
 import { borderTop } from '../../lib/styled/styleFunctions'
 
 const Toolbar = styled.div`
-  height: 32px;
+  min-height: 32px;
+  height: auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   ${borderTop}
   padding: 0 5px;
