@@ -184,11 +184,6 @@ const MarkdownPreviewer = ({
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
-          a: ({ children, ...props }: any) => (
-            <a {...props} target='_blank'>
-              {children}
-            </a>
-          ),
           img: ({ src, ...props }: any) => {
             const storage = storageMap[options.storageId!]
             if (storage != null && !src.match('/')) {
