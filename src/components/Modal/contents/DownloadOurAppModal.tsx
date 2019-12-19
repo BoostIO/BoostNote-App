@@ -49,7 +49,7 @@ const DownloadOurAppModal = () => {
           <div className='center'>
             <Image src='/app/static/Desktop.svg' />
             <img src='/app/static/Desktop.svg' />
-            <AppLink></AppLink>
+            <AppLink />
           </div>
           <div className='center'>
             <Image src='/app/static/Mobile.svg' />
