@@ -159,7 +159,7 @@ const SideNaviagtorItem = ({
         <ControlContainer className='control'>
           {controlComponents}
         </ControlContainer>
-      )}{' '}
+      )}
     </Container>
   )
 }
