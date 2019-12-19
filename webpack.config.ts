@@ -94,7 +94,7 @@ module.exports = (env, argv) => {
       hot: true,
       // enable HMR on the server
 
-      before: function (app, server) {
+      before: function(app, server) {
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -130,7 +130,7 @@ module.exports = (env, argv) => {
   }
 
   if (argv.mode === 'production') {
-    ; (config as any).optimization = {
+    ;(config as any).optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -143,7 +143,7 @@ module.exports = (env, argv) => {
   }
 
   if (process.env.TARGET !== 'electron') {
-    (config.output as any).publicPath = '/app/'
+    ;(config.output as any).publicPath = '/app/'
   }
 
   return config
