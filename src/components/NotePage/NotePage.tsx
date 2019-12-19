@@ -141,7 +141,8 @@ export default () => {
   }, [db, routeParams, storageId, setLastCreatedNoteId])
 
   const breadCrumbs = useMemo(() => {
-    if (currentNote == null) return undefined
+    if (currentNote == null || currentNote.folderPathname === '/')
+      return undefined
     const folders = currentNote.folderPathname.substring(1).split('/')
     const thread = folders.map((folder, index) => {
       const folderPathname = `/${folders.slice(0, index + 1).join('/')}`

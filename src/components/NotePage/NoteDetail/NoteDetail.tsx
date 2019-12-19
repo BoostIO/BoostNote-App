@@ -447,29 +447,43 @@ export default class NoteDetail extends React.Component<
           <>
             <div className='breadCrumbs'>
               <div className='wrapper'>
-                {this.props.breadCrumbs != null &&
-                  this.props.breadCrumbs
-                    .map(breadCrumb => (
-                      <div
-                        onClick={this.handleBreadCrumbsClick(
-                          breadCrumb.folderPathname
-                        )}
-                        className={cc([
-                          'folderLink',
-                          breadCrumb.folderIsActive && 'active'
-                        ])}
-                        key={breadCrumb.folderLabel}
-                      >
-                        {breadCrumb.folderLabel}
-                      </div>
-                    ))
-                    .reduce((prev, curr) => (
-                      <>
-                        {prev}
-                        <div className='separator'>&frasl;</div>
-                        {curr}
-                      </>
-                    ))}
+                <div
+                  onClick={this.handleBreadCrumbsClick('/')}
+                  className={cc([
+                    'folderLink',
+                    'allNotesLink',
+                    this.props.breadCrumbs == null && 'active'
+                  ])}
+                >
+                  All Notes
+                </div>
+                {this.props.breadCrumbs != null && (
+                  <>
+                    <div className='separator'>&frasl;</div>
+                    {this.props.breadCrumbs
+                      .map(breadCrumb => (
+                        <div
+                          onClick={this.handleBreadCrumbsClick(
+                            breadCrumb.folderPathname
+                          )}
+                          className={cc([
+                            'folderLink',
+                            breadCrumb.folderIsActive && 'active'
+                          ])}
+                          key={breadCrumb.folderLabel}
+                        >
+                          {breadCrumb.folderLabel}
+                        </div>
+                      ))
+                      .reduce((prev, curr) => (
+                        <>
+                          {prev}
+                          <div className='separator'>&frasl;</div>
+                          {curr}
+                        </>
+                      ))}
+                  </>
+                )}
               </div>
             </div>
             <div className='titleSection'>
