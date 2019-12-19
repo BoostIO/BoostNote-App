@@ -7,7 +7,7 @@ import {
   PrimaryAnchor
 } from './styled'
 import { openNew } from '../../lib/utils/platform'
-import isElectron from 'is-electron'
+import Image from '../atoms/Image'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -104,13 +104,7 @@ const AboutTab = () => {
             <SectionHeader>About</SectionHeader>
             <div className='about-outline-basic'>
               <div className='about-outline-basic-logo'>
-                <img
-                  src={
-                    isElectron()
-                      ? 'app/static/logo.svg'
-                      : '/app/static/logo.svg'
-                  }
-                />
+                <Image src={'/app/static/logo.svg'} />
               </div>
               <div className='about-outline-basic-info'>
                 <h4>Boost Note {process.env.VERSION}</h4>

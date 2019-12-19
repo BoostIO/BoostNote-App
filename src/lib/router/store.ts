@@ -17,7 +17,7 @@ export interface RouterStore extends Location {
 }
 
 const initialLocation = normalizeLocation({
-  pathname: bhistory.location.pathname,
+  pathname: isElectron() ? '/app' : bhistory.location.pathname,
   hash: bhistory.location.hash,
   query: parseQuery(bhistory.location.search)
 })
