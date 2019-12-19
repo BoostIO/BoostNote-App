@@ -6,6 +6,7 @@ import {
   ModalBody,
   ModalFlex
 } from './styled'
+import Image from '../../atoms/Image'
 
 const DownloadOurAppModal = () => {
   return (
@@ -17,11 +18,11 @@ const DownloadOurAppModal = () => {
       <ModalBody>
         <ModalFlex>
           <div className='center'>
-            <img src='/app/static/Desktop.svg' />
+            <Image src='/app/static/Desktop.svg' />
             <button className='button'>Download for Mac</button>
           </div>
           <div className='center'>
-            <img src='/app/static/Mobile.svg' />
+            <Image src='/app/static/Mobile.svg' />
             <button className='button darker' disabled={true}>
               Launching Soon
             </button>
