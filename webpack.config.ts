@@ -16,7 +16,6 @@ module.exports = (env, argv) => {
     output: {
       filename: 'bundle.js',
       // the output bundle
-
       path: path.resolve(__dirname, 'compiled')
     },
 
@@ -95,7 +94,7 @@ module.exports = (env, argv) => {
       hot: true,
       // enable HMR on the server
 
-      before: function(app, server) {
+      before: function (app, server) {
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -128,11 +127,10 @@ module.exports = (env, argv) => {
       'webpack-dev-server/client?http://localhost:3000',
       'webpack/hot/only-dev-server'
     )
-    ;(config.output as any).publicPath = '/app'
   }
 
   if (argv.mode === 'production') {
-    ;(config as any).optimization = {
+    ; (config as any).optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -142,6 +140,10 @@ module.exports = (env, argv) => {
         })
       ]
     }
+  }
+
+  if (process.env.TARGET !== 'electron') {
+    (config.output as any).publicPath = '/app/'
   }
 
   return config
