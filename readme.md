@@ -11,7 +11,7 @@
 
 Boost Note is a renewal of [Boostnote app](https://github.com/BoostIO/Boostnote).
 
-The renewal will be released Jan, 2020.
+It will be officially released in January 2020.
 
 ## Roadmap
 
