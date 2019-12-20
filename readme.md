@@ -4,14 +4,14 @@
 
 ![uiimage](./static/img_ui.svg)
 
+[https://boostnote.io/](https://boostnote.io/)
+
 <h2 align='center'>A Polished Notes App with Github Flavored Markdown</h2>
 <h3 align="center">for macOS, Windows and Linux</h5>
 
-Boost Note will be renewal of Boostnote app.
+Boost Note is a renewal of [Boostnote app](https://github.com/BoostIO/Boostnote).
 
 The renewal will be released Jan, 2020.
-
-- [Renewal plan](https://github.com/BoostIO/Boostnote.next/issues/67)
 
 ## Roadmap
 
