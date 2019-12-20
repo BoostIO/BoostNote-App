@@ -9,7 +9,7 @@
 
 Boost Note will be renewal of Boostnote app.
 
-The renewal will be released Jan, 2020. [To keep updated, subscribe our mailing list!](https://boostnote.io/#subscribe)
+The renewal will be released Jan, 2020.
 
 - [Renewal plan](https://github.com/BoostIO/Boostnote.next/issues/67)
 
