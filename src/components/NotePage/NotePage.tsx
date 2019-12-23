@@ -112,7 +112,7 @@ export default () => {
           .sort(sortByUpdatedAt)
     }
     return []
-  }, [currentStorage, routeParams])
+  }, [db.storageMap, currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
     if (search.trim() === '') return notes
@@ -239,6 +239,7 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
+  console.log(filteredNotes)
   return (
     <TwoPaneLayout
       style={{ height: '100%' }}
