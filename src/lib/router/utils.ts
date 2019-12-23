@@ -112,16 +112,8 @@ export const useRouteParams = () => {
 
     let noteId: string | undefined = undefined
     if (names[0] === 'notes') {
-      const restNames = names.slice(1)
-      const folderNames = []
-      for (const index in restNames) {
-        const name = restNames[index]
-        if (/^note:/.test(name)) {
-          noteId = name
-          break
-        } else {
-          folderNames.push(name)
-        }
+      if (/^note:/.test(names[1])) {
+        noteId = names[1]
       }
 
       return {

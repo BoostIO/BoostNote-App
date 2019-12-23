@@ -485,8 +485,8 @@ export function createDbStoreCreator(
           return
         }
         const noteDoc = {
-          ...(await storage.db.createNote(noteProps)),
-          storageId
+          storageId,
+          ...(await storage.db.createNote(noteProps))
         } as PopulatedNoteDoc
 
         const parentFolderPathnamesToCheck = [
@@ -885,8 +885,8 @@ export function createDbStoreCreator(
           return
         }
         const noteDoc = {
-          ...(await storage.db.untrashNote(noteId)),
-          storageId
+          storageId,
+          ...(await storage.db.untrashNote(noteId))
         } as PopulatedNoteDoc
 
         const folder: PopulatedFolderDoc =
