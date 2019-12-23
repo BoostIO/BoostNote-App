@@ -138,16 +138,11 @@ const SideNaviagtorItem = ({
             onClick={onFoldButtonClick}
             style={{ left: `${10 * depth}px` }}
           >
-            <Icon
-              className='icon'
-              icon={
-                folded ? (
-                  <IconArrowSingleRight color='currentColor' />
-                ) : (
-                  <IconArrowSingleDown color='currentColor' />
-                )
-              }
-            />
+            {folded ? (
+              <IconArrowSingleRight color='currentColor' />
+            ) : (
+              <IconArrowSingleDown color='currentColor' />
+            )}
           </FoldButton>
         )}
         <ClickableContainer
