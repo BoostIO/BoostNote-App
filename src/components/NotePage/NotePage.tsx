@@ -13,7 +13,12 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { NoteDoc, PopulatedNoteDoc } from '../../lib/db/types'
+import {
+  NoteDoc,
+  PopulatedNoteDoc,
+  NoteStorage,
+  ObjectMap
+} from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
@@ -57,7 +62,27 @@ export default () => {
   }, [currentPathnameWithoutNoteId])
 
   const notes = useMemo((): PopulatedNoteDoc[] => {
-    if (currentStorage == null) return []
+    if (currentStorage == null) {
+      if (routeParams.name === 'storages.allNotes') {
+        const allNotesMap = (Object.values(
+          db.storageMap
+        ) as NoteStorage[]).reduce(
+          (map, storage) => {
+            ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
+              note => (map[note._id] = note)
+            )
+            return map
+          },
+          {} as ObjectMap<PopulatedNoteDoc>
+        )
+        console.log(allNotesMap)
+
+        return (Object.values(allNotesMap) as PopulatedNoteDoc[])
+          .filter(note => !note.trashed)
+          .sort(sortByUpdatedAt)
+      }
+      return []
+    }
     switch (routeParams.name) {
       case 'storages.allNotes':
         return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
@@ -215,7 +240,7 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
-  return storageId != null ? (
+  return (
     <TwoPaneLayout
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
@@ -236,10 +261,17 @@ export default () => {
       right={
         currentNote == null ? (
           <StyledNoteDetailNoNote>
-            <div>
-              <h1>Command(⌘) + N</h1>
-              <h2>to create a new note</h2>
-            </div>
+            {storageId != null ? (
+              <div>
+                <h1>Command(⌘) + N</h1>
+                <h2>to create a new note</h2>
+              </div>
+            ) : (
+              <div>
+                <h1>Select a storage</h1>
+                <h2>to create a new note</h2>
+              </div>
+            )}
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
@@ -258,7 +290,5 @@ export default () => {
       }
       onResizeEnd={updateNoteListWidth}
     />
-  ) : (
-    <div>Storage does not exist</div>
   )
 }
