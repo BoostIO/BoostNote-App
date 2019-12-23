@@ -13,7 +13,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { NoteDoc } from '../../lib/db/types'
+import { NoteDoc, PopulatedNoteDoc } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
@@ -56,18 +56,18 @@ export default () => {
     setLastCreatedNoteId('')
   }, [currentPathnameWithoutNoteId])
 
-  const notes = useMemo((): NoteDoc[] => {
+  const notes = useMemo((): PopulatedNoteDoc[] => {
     if (currentStorage == null) return []
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(note => !note.trashed)
           .sort(sortByUpdatedAt)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(
             note =>
               (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
@@ -79,11 +79,11 @@ export default () => {
         const tag = currentStorage.tagMap[tagName]
         if (tag == null) return []
         return [...tag.noteIdSet]
-          .map(noteId => currentStorage.noteMap[noteId]!)
+          .map(noteId => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
           .filter(note => !note.trashed)
           .sort(sortByUpdatedAt)
       case 'storages.trashCan':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(note => note.trashed)
           .sort(sortByUpdatedAt)
     }
@@ -223,7 +223,7 @@ export default () => {
         <NoteList
           search={search}
           setSearchInput={setSearchInput}
-          storageId={storageId}
+          currentStorageId={storageId}
           notes={filteredNotes}
           createNote={createNote}
           basePathname={currentPathnameWithoutNoteId}
@@ -243,7 +243,6 @@ export default () => {
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            storageId={storageId}
             note={currentNote}
             updateNote={db.updateNote}
             trashNote={db.trashNote}

@@ -53,7 +53,7 @@ export interface StorageEdit extends BaseRouteParams {
 
 export interface StorageAllNotes extends BaseRouteParams {
   name: 'storages.allNotes'
-  storageId: string
+  storageId?: string
   noteId?: string
 }
 
@@ -110,6 +110,26 @@ export const useRouteParams = () => {
       .split('/')
       .slice(1)
 
+    let noteId: string | undefined = undefined
+    if (names[0] === 'notes') {
+      const restNames = names.slice(1)
+      const folderNames = []
+      for (const index in restNames) {
+        const name = restNames[index]
+        if (/^note:/.test(name)) {
+          noteId = name
+          break
+        } else {
+          folderNames.push(name)
+        }
+      }
+
+      return {
+        name: 'storages.allNotes',
+        noteId
+      }
+    }
+
     if (names[0] === 'storages' && names[1] == null) {
       return {
         name: 'storages.create'
@@ -137,7 +157,6 @@ export const useRouteParams = () => {
       }
     }
 
-    let noteId: string | undefined = undefined
     if (names[2] === 'notes') {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {

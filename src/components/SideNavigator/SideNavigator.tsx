@@ -26,7 +26,8 @@ import {
   IconArrowAgain,
   IconTrash,
   IconImage,
-  IconSetting
+  IconSetting,
+  IconBook
 } from '../icons'
 
 const Description = styled.nav`
@@ -178,6 +179,14 @@ export default () => {
           <IconAdjustVertical size='0.8em' />
         </button>
       </div>
+
+      <SideNavigatorItem
+        icon={<IconBook />}
+        depth={0}
+        className='allnotes-sidenav'
+        label='All Notes'
+        onClick={() => push(`/app/notes`)}
+      />
 
       <Description>
         Storages

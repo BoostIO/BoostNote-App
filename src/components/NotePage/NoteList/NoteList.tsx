@@ -69,7 +69,7 @@ export const StyledNoteListContainer = styled.div`
 `
 
 type NoteListProps = {
-  storageId: string
+  currentStorageId?: string
   currentNoteIndex: number
   search: string
   notes: NoteDoc[]
@@ -84,7 +84,7 @@ type NoteListProps = {
 const NoteList = ({
   notes,
   createNote,
-  storageId,
+  currentStorageId,
   basePathname,
   search,
   currentNoteIndex,
@@ -131,9 +131,11 @@ const NoteList = ({
           />
           <IconLoupe className='icon' size='0.8em' />
         </div>
-        <button className='newNoteButton' onClick={createNote}>
-          <IconEdit size='0.8em' />
-        </button>
+        {currentStorageId != null && (
+          <button className='newNoteButton' onClick={createNote}>
+            <IconEdit size='0.8em' />
+          </button>
+        )}
       </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
         {notes.map((note, index) => {
@@ -143,7 +145,7 @@ const NoteList = ({
               <NoteItem
                 active={noteIsCurrentNote}
                 note={note}
-                storageId={storageId}
+                storageId={currentStorageId}
                 basePathname={basePathname}
                 focusList={focusList}
                 search={search}

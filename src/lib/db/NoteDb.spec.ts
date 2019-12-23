@@ -1040,12 +1040,12 @@ describe('NoteDb', () => {
       })
 
       // When
-      const result = await client.getAllDocsMap()
+      const result = await client.getAllDocsMap(client.id)
 
       // Then
       expect(result.noteMap).toEqual({
-        [note1._id]: note1,
-        [note2._id]: note2
+        [note1._id]: { storageId: client.id, ...note1 },
+        [note2._id]: { storageId: client.id, ...note2 }
       })
 
       expect(result.folderMap).toEqual({

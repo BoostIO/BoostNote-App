@@ -89,7 +89,7 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   recentlyCreated?: boolean
-  storageId: string
+  storageId?: string
   search: string
   basePathname: string
   focusList: () => void
@@ -129,6 +129,7 @@ export default ({
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
+      if (storageId == null) return
       setTransferrableNoteData(event, storageId, note)
     },
     [note, storageId]
@@ -138,7 +139,7 @@ export default ({
     <StyledNoteListItem
       className={cc([active && 'active', recentlyCreated && 'new'])}
       onDragStart={handleDragStart}
-      draggable={true}
+      draggable={storageId != null}
     >
       <Link href={href}>
         <div className='container'>
