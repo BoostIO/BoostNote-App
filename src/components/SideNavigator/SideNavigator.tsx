@@ -25,7 +25,8 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  IconImage
+  IconImage,
+  IconSetting
 } from '../icons'
 
 const Description = styled.nav`
@@ -280,13 +281,20 @@ export default () => {
             )
           }
 
+          controlComponents.unshift(
+            <ControlButton
+              key='syncButton'
+              onClick={() => push(`/app/storages/${storage.id}`)}
+              icon={<IconSetting size='1.3em' />}
+            />
+          )
+
           return (
             <React.Fragment key={itemId}>
               <SideNavigatorItem
                 depth={0}
                 label={storage.name}
                 folded={storageIsFolded}
-                onClick={() => push(`/app/storages/${storage.id}`)}
                 onFoldButtonClick={() => {
                   toggleSideNavOpenedItem(itemId)
                 }}
