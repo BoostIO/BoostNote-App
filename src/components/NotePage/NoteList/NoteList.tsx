@@ -5,7 +5,7 @@ import React, {
   ChangeEventHandler
 } from 'react'
 import NoteItem from './NoteItem'
-import { NoteDoc } from '../../../lib/db/types'
+import { PopulatedNoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
 import {
   borderBottom,
@@ -72,7 +72,7 @@ type NoteListProps = {
   currentStorageId?: string
   currentNoteIndex: number
   search: string
-  notes: NoteDoc[]
+  notes: PopulatedNoteDoc[]
   createNote: () => Promise<void>
   setSearchInput: (input: string) => void
   navigateDown: () => void

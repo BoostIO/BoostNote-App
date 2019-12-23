@@ -157,6 +157,8 @@ export const StyledNoteDetailContainer = styled.div`
 `
 
 type NoteDetailProps = {
+  noteStorageName: string
+  currentPathnameWithoutNoteId: string
   note: PopulatedNoteDoc
   updateNote: (
     storageId: string,
@@ -439,7 +441,13 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, viewMode, toggleViewMode } = this.props
+    const {
+      note,
+      viewMode,
+      toggleViewMode,
+      noteStorageName,
+      currentPathnameWithoutNoteId
+    } = this.props
     const { storageId } = note
     const codeEditor = (
       <CustomizedCodeEditor
@@ -476,10 +484,11 @@ export default class NoteDetail extends React.Component<
                   className={cc([
                     'folderLink',
                     'allNotesLink',
-                    this.props.breadCrumbs == null && 'active'
+                    currentPathnameWithoutNoteId ===
+                      `/app/storages/${note.storageId}/notes` && 'active'
                   ])}
                 >
-                  All Notes
+                  {noteStorageName}
                 </div>
                 {this.props.breadCrumbs != null && (
                   <>

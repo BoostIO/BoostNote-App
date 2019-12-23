@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
-import { NoteDoc } from '../../../lib/db/types'
 import {
   borderBottom,
   uiTextColor,
@@ -13,6 +12,7 @@ import { setTransferrableNoteData } from '../../../lib/dnd'
 import HighlightText from '../../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
+import { PopulatedNoteDoc } from '../../../lib/db/types'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -86,7 +86,7 @@ export const StyledNoteListItem = styled.div`
 `
 
 type NoteItemProps = {
-  note: NoteDoc
+  note: PopulatedNoteDoc
   active: boolean
   recentlyCreated?: boolean
   storageId?: string
@@ -129,8 +129,7 @@ export default ({
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
-      if (storageId == null) return
-      setTransferrableNoteData(event, storageId, note)
+      setTransferrableNoteData(event, note.storageId, note)
     },
     [note, storageId]
   )
@@ -139,7 +138,7 @@ export default ({
     <StyledNoteListItem
       className={cc([active && 'active', recentlyCreated && 'new'])}
       onDragStart={handleDragStart}
-      draggable={storageId != null}
+      draggable={true}
     >
       <Link href={href}>
         <div className='container'>

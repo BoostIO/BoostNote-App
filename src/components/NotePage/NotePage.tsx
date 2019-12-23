@@ -274,6 +274,8 @@ export default () => {
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
+            noteStorageName={db.storageMap[currentNote.storageId]!.name}
+            currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={db.updateNote}
             trashNote={db.trashNote}
