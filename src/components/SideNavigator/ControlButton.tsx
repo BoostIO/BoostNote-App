@@ -6,6 +6,8 @@ import {
 } from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
+  position: relative;
+  right: 9px;
   width: 30px;
   padding: 0;
   border: none;
@@ -14,8 +16,8 @@ const StyledButton = styled.button`
   font-size: 20px;
   line-height: 20px;
   cursor: pointer;
-  ${sideBarTextColor}
   vertical-align: middle;
+  ${sideBarTextColor}
   ${sideBarSecondaryTextColor}
   &:hover, &:active, &:focus {
     box-shadow: none;

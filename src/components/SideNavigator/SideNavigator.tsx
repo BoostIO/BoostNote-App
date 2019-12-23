@@ -29,7 +29,7 @@ import {
 } from '../icons'
 
 const Description = styled.nav`
-  margin-left: 5px;
+  margin-left: 15px;
   margin-bottom: 10px;
   font-size: 18px;
   ${sideBarDefaultTextColor}
@@ -76,11 +76,11 @@ const StyledSideNavContainer = styled.nav`
   }
 
   .bottomControl {
-    height: 30px;
+    height: 35px;
     display: flex;
     border-top: 1px solid ${({ theme }) => theme.colors.border};
     button {
-      height: 30px;
+      height: 35px;
       border: none;
       background-color: transparent;
       display: flex;
@@ -103,7 +103,7 @@ const StyledSideNavContainer = styled.nav`
 
 const CreateStorageButton = styled.button`
   position: absolute;
-  right: 0px;
+  right: 8px;
   border: none;
   background-color: transparent;
   cursor: pointer;

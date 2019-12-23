@@ -8,7 +8,8 @@ const StyledButtonIcon = styled.button<{ active: boolean }>`
   cursor: pointer;
 
   svg {
-    vertical-align: middle;
+    margin-top: 2px;
+    vertical-align: top;
   }
 `
 

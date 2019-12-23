@@ -12,7 +12,7 @@ import { IconArrowSingleRight, IconArrowSingleDown } from '../icons'
 const Container = styled.div`
   position: relative;
   user-select: none;
-  height: 30px;
+  height: 34px;
   display: flex;
   justify-content: space-between;
 
@@ -52,7 +52,7 @@ const FoldButton = styled.button`
   position: absolute;
   width: 26px;
   height: 26px;
-  padding: 0;
+  padding-left: 15px;
   border: none;
   background-color: transparent;
   margin-right: 3px;
@@ -68,7 +68,7 @@ const FoldButton = styled.button`
 const ClickableContainer = styled.button`
   background-color: transparent;
   border: none;
-  height: 30px;
+  height: 35px;
   display: flex;
   align-items: center;
   min-width: 0;
@@ -163,7 +163,7 @@ const SideNaviagtorItem = ({
         )}
         <ClickableContainer
           style={{
-            paddingLeft: `${10 * depth + 26}px`,
+            paddingLeft: `${depth + 36}px`,
             cursor: onClick ? 'pointer' : 'initial',
             fontSize: '15px'
           }}
