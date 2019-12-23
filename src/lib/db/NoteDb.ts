@@ -212,6 +212,7 @@ export default class NoteDb {
       tags: [],
       folderPathname: '/',
       data: {},
+      bookmarked: false,
       ...noteProps,
       createdAt: now,
       updatedAt: now,
