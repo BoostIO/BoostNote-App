@@ -26,6 +26,7 @@ export type NoteDocEditibleProps = {
   content: string
   folderPathname: string
   tags: string[]
+  bookmarked: boolean
   data: JsonObject
 }
 
