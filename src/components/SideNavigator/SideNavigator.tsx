@@ -283,7 +283,7 @@ export default () => {
 
           controlComponents.unshift(
             <ControlButton
-              key='syncButton'
+              key={`${storage.id}-settingsButton`}
               onClick={() => push(`/app/storages/${storage.id}`)}
               icon={<IconSetting size='1.3em' />}
             />
