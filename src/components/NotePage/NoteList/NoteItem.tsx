@@ -118,7 +118,7 @@ export default ({
           type: MenuTypes.Normal,
           label: 'Duplicate',
           onClick: async () => {
-            createNote(storageId, {
+            createNote(note.storageId, {
               title: note.title,
               content: note.content,
               folderPathname: note.folderPathname,
@@ -132,7 +132,7 @@ export default ({
           type: MenuTypes.Normal,
           label: 'Delete',
           onClick: async () => {
-            trashNote(storageId, note._id)
+            trashNote(note.storageId, note._id)
           }
         },
         {
@@ -140,12 +140,12 @@ export default ({
           label: note.bookmarked ? 'Remove Bookmark' : 'Bookmark',
           onClick: async () => {
             note.bookmarked = !note.bookmarked
-            updateNote(storageId, note._id, note)
+            updateNote(note.storageId, note._id, note)
           }
         }
       ])
     },
-    [popup, createNote, storageId, note, updateNote, trashNote]
+    [popup, createNote, note, updateNote, trashNote]
   )
 
   const contentPreview = useMemo(() => {

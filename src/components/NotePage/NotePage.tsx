@@ -9,7 +9,8 @@ import {
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
   usePathnameWithoutNoteId,
-  useRouter
+  useRouter,
+  StorageBookmarkNotes
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
@@ -45,7 +46,8 @@ export default () => {
     | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
-    | StorageTagsRouteParams)
+    | StorageTagsRouteParams
+    | StorageBookmarkNotes)
   const { storageId, noteId } = routeParams
   const currentStorage = useMemo(() => {
     if (storageId == null) return undefined
@@ -79,6 +81,15 @@ export default () => {
         return (Object.values(allNotesMap) as PopulatedNoteDoc[])
           .filter(note => !note.trashed)
           .sort(sortByUpdatedAt)
+      }
+      if (routeParams.name === 'storages.bookmarks') {
+        return (Object.values(db.storageMap) as NoteStorage[])
+          .map(storage => {
+            return (Object.values(
+              storage.noteMap
+            ) as PopulatedNoteDoc[]).filter(note => note.bookmarked)
+          })
+          .flat()
       }
       return []
     }
