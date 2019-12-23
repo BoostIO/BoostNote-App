@@ -229,6 +229,9 @@ export const usePathnameWithoutNoteId = () => {
   return useMemo(() => {
     switch (routeParams.name) {
       case 'storages.allNotes':
+        if (routeParams.storageId == null) {
+          return `/app/notes`
+        }
         return `/app/storages/${routeParams.storageId}/notes`
       case 'storages.notes':
         return `/app/storages/${routeParams.storageId}/notes${
