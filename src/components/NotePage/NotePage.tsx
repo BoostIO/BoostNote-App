@@ -239,7 +239,6 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
-  console.log(filteredNotes)
   return (
     <TwoPaneLayout
       style={{ height: '100%' }}
