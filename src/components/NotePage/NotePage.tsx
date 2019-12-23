@@ -19,6 +19,10 @@ import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
 import { useTranslation } from 'react-i18next'
+import {
+  useGlobalKeyDownHandler,
+  isWithGeneralCtrlKey
+} from '../../lib/keyboard'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -245,7 +249,37 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
-  return (
+  useGlobalKeyDownHandler(e => {
+    switch (e.key) {
+      case 'Backspace':
+        if (storageId != null && e.shiftKey && isWithGeneralCtrlKey(e)) {
+          db.trashNote(storageId, currentNote._id)
+        }
+        break
+      case 'Enter':
+        if (isWithGeneralCtrlKey(e)) {
+          createNote()
+        }
+        break
+      case 's':
+        if (isWithGeneralCtrlKey(e) && e.altKey) {
+          toggleViewMode('split')
+        }
+        break
+      case 'e':
+        if (isWithGeneralCtrlKey(e) && e.altKey) {
+          toggleViewMode('edit')
+        }
+        break
+      case 'p':
+        if (isWithGeneralCtrlKey(e) && e.altKey) {
+          toggleViewMode('preview')
+        }
+        break
+    }
+  })
+
+  return storageId != null ? (
     <TwoPaneLayout
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
