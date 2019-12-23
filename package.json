@@ -9,7 +9,7 @@
     "url": "https://github.com/BoostIO/Boostnote.next.git"
   },
   "scripts": {
-    "dev": "env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "dev": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
     "start": "electron app/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",
