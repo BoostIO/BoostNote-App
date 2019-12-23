@@ -75,7 +75,6 @@ export default () => {
           },
           {} as ObjectMap<PopulatedNoteDoc>
         )
-        console.log(allNotesMap)
 
         return (Object.values(allNotesMap) as PopulatedNoteDoc[])
           .filter(note => !note.trashed)
