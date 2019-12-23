@@ -254,7 +254,7 @@ export default () => {
 
           const controlComponents = [
             <ControlButton
-              key='addFolderButton'
+              key={`${storage.id}-addFolderButton`}
               onClick={() => showPromptToCreateFolder('/')}
               icon={<IconAddRound />}
             />
@@ -274,7 +274,7 @@ export default () => {
 
             controlComponents.unshift(
               <ControlButton
-                key='syncButton'
+                key={`${storage.id}-syncButton`}
                 onClick={cloudSync}
                 icon={<IconArrowAgain />}
               />
