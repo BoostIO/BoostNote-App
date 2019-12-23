@@ -4,20 +4,26 @@ import styled from '../../lib/styled'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
-  activeBackgroundColor
+  activeBackgroundColor,
+  iconColor
 } from '../../lib/styled/styleFunctions'
 import { IconArrowSingleRight, IconArrowSingleDown } from '../icons'
 
 const Container = styled.div`
   position: relative;
   user-select: none;
-  height: 28px;
+  height: 30px;
   display: flex;
   justify-content: space-between;
 
   .sideNavWrapper {
     min-width: 0;
     flex: 1 1 auto;
+
+    button > span {
+      width: 30px;
+      ${iconColor}
+    }
   }
 
   transition: 200ms background-color;
@@ -26,6 +32,13 @@ const Container = styled.div`
   &:active,
   &.active {
     ${activeBackgroundColor}
+
+    button > span {
+      ${sideBarTextColor}
+    }
+  }
+  &:hover {
+    cursor: pointer;
   }
   .control {
     opacity: 0;
@@ -84,6 +97,9 @@ const ControlContainer = styled.div`
   display: flex;
   flex: 2 0 auto;
   justify-content: flex-end;
+  button {
+    ${iconColor}
+  }
 `
 
 const SideNavigatorItemIconContainer = styled.span`

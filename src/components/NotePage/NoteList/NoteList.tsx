@@ -42,8 +42,8 @@ export const StyledNoteListContainer = styled.div`
     height: 32px;
     .icon {
       position: absolute;
-      top: 5px;
-      left: 5px;
+      top: 8px;
+      left: 10px;
       font-size: 20px;
       z-index: 0;
       pointer-events: none;
@@ -53,14 +53,14 @@ export const StyledNoteListContainer = styled.div`
       position: relative;
       width: 100%;
       height: 32px;
-      padding-left: 30px;
+      padding-left: 35px;
       box-sizing: border-box;
       ${inputStyle}
     }
   }
   .newNoteButton {
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 30px;
     font-size: 24px;
     background: transparent;
     border: none;

@@ -8,9 +8,9 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import {
   sideBarBackgroundColor,
-  sideBarTextColor,
-  sideBarSecondaryTextColor,
-  uiTextColor
+  sideBarDefaultTextColor,
+  uiTextColor,
+  iconColor
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -32,7 +32,7 @@ const Description = styled.nav`
   margin-left: 5px;
   margin-bottom: 10px;
   font-size: 18px;
-  ${sideBarTextColor}
+  ${sideBarDefaultTextColor}
 `
 
 const StyledSideNavContainer = styled.nav`
@@ -52,8 +52,8 @@ const StyledSideNavContainer = styled.nav`
       background-color: transparent;
       border: none;
       cursor: pointer;
-      ${sideBarSecondaryTextColor}
       font-size: 24px;
+      ${iconColor}
     }
   }
 
@@ -107,6 +107,7 @@ const CreateStorageButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
+  ${iconColor}
 `
 
 const Spacer = styled.div`
@@ -180,7 +181,7 @@ export default () => {
       <Description>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
-          <IconAddRound color='gray' size='1.7em' />
+          <IconAddRound size='1.7em' />
         </CreateStorageButton>
       </Description>
 

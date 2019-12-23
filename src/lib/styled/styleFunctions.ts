@@ -20,6 +20,7 @@ export const sideBarBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.sideBarBackgroundColor};`
 
 export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
+transition: 200ms color;
 &:hover,
 &:focus {
   color: ${theme.activeIconColor};
@@ -61,6 +62,9 @@ export const sideBarTextColor = ({
   &.active {
     color: ${theme.activeSideBarSecondaryTextColor};
   }`
+
+export const sideBarDefaultTextColor = ({ theme }: StyledProps) =>
+  `color: ${theme.sideBarTextColor};`
 
 export const sideBarSecondaryTextColor = ({ theme }: StyledProps) =>
   `color: ${theme.sideBarSecondaryTextColor};`

@@ -136,7 +136,11 @@ export const StyledNoteDetailContainer = styled.div`
   }
 
   .buttonsWrapper {
-    flex: 0 0 160px;
+    flex: 0 0 210px;
+
+    button + button {
+      margin-left: 10px;
+    }
   }
 
   .tagsWrapper {
