@@ -83,7 +83,7 @@ const GeneralTab = () => {
                   <>{t('preferences.addAccount')}</>
                 ) : (
                   <>
-                    <Icon icon={<IconArrowRotate />} />
+                    <IconArrowRotate />
                     {t('preferences.loginWorking')}
                   </>
                 )
