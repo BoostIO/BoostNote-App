@@ -13,6 +13,8 @@ import { setTransferrableNoteData } from '../../../lib/dnd'
 import HighlightText from '../../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
+import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useDb } from '../../../lib/db'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -104,6 +106,47 @@ export default ({
   recentlyCreated
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
+  const { popup } = useContextMenu()
+  const { createNote, trashNote, updateNote } = useDb()
+
+  const contextMenuCallback = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation()
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Duplicate',
+          onClick: async () => {
+            createNote(storageId, {
+              title: note.title,
+              content: note.content,
+              folderPathname: note.folderPathname,
+              tags: note.tags,
+              bookmarked: false,
+              data: note.data
+            })
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Delete',
+          onClick: async () => {
+            trashNote(storageId, note._id)
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: note.bookmarked ? 'Remove Bookmark' : 'Bookmark',
+          onClick: async () => {
+            note.bookmarked = !note.bookmarked
+            updateNote(storageId, note._id, note)
+          }
+        }
+      ])
+    },
+    [popup, createNote, storageId, note, updateNote, trashNote]
+  )
 
   const contentPreview = useMemo(() => {
     const trimmedContent = note.content.trim()
@@ -136,6 +179,7 @@ export default ({
 
   return (
     <StyledNoteListItem
+      onContextMenu={contextMenuCallback}
       className={cc([active && 'active', recentlyCreated && 'new'])}
       onDragStart={handleDragStart}
       draggable={true}
