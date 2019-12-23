@@ -25,7 +25,8 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  IconImage
+  IconImage,
+  IconBook
 } from '../icons'
 
 const Description = styled.nav`
@@ -176,6 +177,16 @@ export default () => {
           <IconAdjustVertical size='0.8em' />
         </button>
       </div>
+
+      <SideNavigatorItem
+        depth={0}
+        label='Bookmarks'
+        icon={<IconBook color='currentColor' />}
+        onClick={() => console.log('lciky')}
+        onDragOver={event => {
+          event.preventDefault()
+        }}
+      />
 
       <Description>
         Storages
