@@ -87,13 +87,17 @@ const ClickableContainer = styled.button`
 const Label = styled.div`
   min-width: 0
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1 1 auto;
   text-align: left;
 `
 
 const ControlContainer = styled.div`
+  ${activeBackgroundColor}
+  position: absolute;
+  right: 0;
+  top: 4px;
+  padding-left: 10px;
   display: flex;
   flex: 2 0 auto;
   justify-content: flex-end;
