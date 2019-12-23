@@ -185,6 +185,7 @@ export default () => {
         depth={0}
         className='allnotes-sidenav'
         label='All Notes'
+        active={currentPathname === `/app/notes`}
         onClick={() => push(`/app/notes`)}
       />
 
