@@ -45,7 +45,7 @@ export default class NoteDb {
   async init() {
     await this.upsertNoteListViews()
 
-    const { noteMap, folderMap, tagMap } = await this.getAllDocsMap(this.id)
+    const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
     const { missingPathnameSet, missingTagNameSet } = values(noteMap).reduce<{
       missingPathnameSet: Set<string>
       missingTagNameSet: Set<string>
@@ -121,7 +121,7 @@ export default class NoteDb {
     await this.upsertFolder(parentPathname)
   }
 
-  async getAllDocsMap(storageId: string): Promise<AllDocsMap> {
+  async getAllDocsMap(): Promise<AllDocsMap> {
     const allDocsResponse = await this.pouchDb.allDocs({
       include_docs: true
     })
@@ -135,7 +135,10 @@ export default class NoteDb {
     return allDocsResponse.rows.reduce((map, row) => {
       const { doc } = row
       if (isNoteDoc(doc)) {
-        map.noteMap[doc._id] = { storageId, ...doc } as PopulatedNoteDoc
+        map.noteMap[doc._id] = {
+          storageId: this.id,
+          ...doc
+        } as PopulatedNoteDoc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
       } else if (isTagDoc(doc)) {

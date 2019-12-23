@@ -1199,7 +1199,7 @@ async function prepareStorage(
   const db = new NoteDb(pouchdb, id, name)
   await db.init()
 
-  const { noteMap, folderMap, tagMap } = await db.getAllDocsMap(id)
+  const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
   const attachmentMap = await db.getAttachmentMap()
   const storage: NoteStorage = {
     id,

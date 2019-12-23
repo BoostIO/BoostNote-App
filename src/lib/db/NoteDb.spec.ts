@@ -1040,7 +1040,7 @@ describe('NoteDb', () => {
       })
 
       // When
-      const result = await client.getAllDocsMap(client.id)
+      const result = await client.getAllDocsMap()
 
       // Then
       expect(result.noteMap).toEqual({
