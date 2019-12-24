@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { Link } from '../../../lib/router'
 import styled from '../../../lib/styled/styled'
-import { NoteDoc } from '../../../lib/db/types'
 import {
   borderBottom,
   uiTextColor,
@@ -13,6 +12,9 @@ import { setTransferrableNoteData } from '../../../lib/dnd'
 import HighlightText from '../../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
+import { PopulatedNoteDoc } from '../../../lib/db/types'
+import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useDb } from '../../../lib/db'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -86,10 +88,10 @@ export const StyledNoteListItem = styled.div`
 `
 
 type NoteItemProps = {
-  note: NoteDoc
+  note: PopulatedNoteDoc
   active: boolean
   recentlyCreated?: boolean
-  storageId: string
+  storageId?: string
   search: string
   basePathname: string
   focusList: () => void
@@ -104,6 +106,47 @@ export default ({
   recentlyCreated
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
+  const { popup } = useContextMenu()
+  const { createNote, trashNote, updateNote } = useDb()
+
+  const contextMenuCallback = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation()
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Duplicate',
+          onClick: async () => {
+            createNote(note.storageId, {
+              title: note.title,
+              content: note.content,
+              folderPathname: note.folderPathname,
+              tags: note.tags,
+              bookmarked: false,
+              data: note.data
+            })
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Delete',
+          onClick: async () => {
+            trashNote(note.storageId, note._id)
+          }
+        },
+        {
+          type: MenuTypes.Normal,
+          label: note.bookmarked ? 'Remove Bookmark' : 'Bookmark',
+          onClick: async () => {
+            note.bookmarked = !note.bookmarked
+            updateNote(note.storageId, note._id, note)
+          }
+        }
+      ])
+    },
+    [popup, createNote, note, updateNote, trashNote]
+  )
 
   const contentPreview = useMemo(() => {
     const trimmedContent = note.content.trim()
@@ -129,13 +172,14 @@ export default ({
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
-      setTransferrableNoteData(event, storageId, note)
+      setTransferrableNoteData(event, note.storageId, note)
     },
     [note, storageId]
   )
 
   return (
     <StyledNoteListItem
+      onContextMenu={contextMenuCallback}
       className={cc([active && 'active', recentlyCreated && 'new'])}
       onDragStart={handleDragStart}
       draggable={true}

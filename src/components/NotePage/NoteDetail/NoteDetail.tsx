@@ -2,7 +2,8 @@ import React from 'react'
 import {
   NoteDoc,
   NoteDocEditibleProps,
-  Attachment
+  Attachment,
+  PopulatedNoteDoc
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
@@ -156,8 +157,9 @@ export const StyledNoteDetailContainer = styled.div`
 `
 
 type NoteDetailProps = {
-  storageId: string
-  note: NoteDoc
+  noteStorageName: string
+  currentPathnameWithoutNoteId: string
+  note: PopulatedNoteDoc
   updateNote: (
     storageId: string,
     noteId: string,
@@ -208,7 +210,8 @@ export default class NoteDetail extends React.Component<
     props: NoteDetailProps,
     state: NoteDetailState
   ): NoteDetailState {
-    const { note, storageId } = props
+    const { note } = props
+    const { storageId } = note
     if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
       return {
         prevStorageId: storageId,
@@ -316,7 +319,8 @@ export default class NoteDetail extends React.Component<
   }
 
   trashNote = async () => {
-    const { storageId, note } = this.props
+    const { note } = this.props
+    const { storageId } = note
     const noteId = note._id
 
     if (this.queued) {
@@ -331,7 +335,8 @@ export default class NoteDetail extends React.Component<
   }
 
   untrashNote = async () => {
-    const { storageId, note } = this.props
+    const { note } = this.props
+    const { storageId } = note
     const noteId = note._id
 
     if (this.queued) {
@@ -346,7 +351,8 @@ export default class NoteDetail extends React.Component<
   }
 
   purgeNote = async () => {
-    const { storageId, note } = this.props
+    const { note } = this.props
+    const { storageId } = note
     const noteId = note._id
 
     if (this.queued) {
@@ -369,7 +375,8 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      const { storageId, note } = this.props
+      const { note } = this.props
+      const { storageId } = note
       const { title, content, tags } = this.state
 
       this.saveNote(storageId, note._id, { title, content, tags })
@@ -401,7 +408,8 @@ export default class NoteDetail extends React.Component<
   handleDrop = async (event: React.DragEvent) => {
     event.preventDefault()
 
-    const { storageId, addAttachments: addAttachment } = this.props
+    const { note, addAttachments: addAttachment } = this.props
+    const { storageId } = note
 
     const files = getFileList(event).filter(file =>
       file.type.startsWith('image/')
@@ -428,13 +436,19 @@ export default class NoteDetail extends React.Component<
   }
 
   handleBreadCrumbsClick = (folderPathname: string) => () => {
-    this.props.push(
-      `/app/storages/${this.props.storageId}/notes${folderPathname}`
-    )
+    const { storageId } = this.props.note
+    this.props.push(`/app/storages/${storageId}/notes${folderPathname}`)
   }
 
   render() {
-    const { note, viewMode, toggleViewMode, storageId } = this.props
+    const {
+      note,
+      viewMode,
+      toggleViewMode,
+      noteStorageName,
+      currentPathnameWithoutNoteId
+    } = this.props
+    const { storageId } = note
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
@@ -470,10 +484,11 @@ export default class NoteDetail extends React.Component<
                   className={cc([
                     'folderLink',
                     'allNotesLink',
-                    this.props.breadCrumbs == null && 'active'
+                    currentPathnameWithoutNoteId ===
+                      `/app/storages/${note.storageId}/notes` && 'active'
                   ])}
                 >
-                  All Notes
+                  {noteStorageName}
                 </div>
                 {this.props.breadCrumbs != null && (
                   <>

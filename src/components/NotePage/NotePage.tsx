@@ -9,11 +9,17 @@ import {
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
   usePathnameWithoutNoteId,
-  useRouter
+  useRouter,
+  StorageBookmarkNotes
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { NoteDoc } from '../../lib/db/types'
+import {
+  NoteDoc,
+  PopulatedNoteDoc,
+  NoteStorage,
+  ObjectMap
+} from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
@@ -40,7 +46,8 @@ export default () => {
     | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
-    | StorageTagsRouteParams)
+    | StorageTagsRouteParams
+    | StorageBookmarkNotes)
   const { storageId, noteId } = routeParams
   const currentStorage = useMemo(() => {
     if (storageId == null) return undefined
@@ -56,18 +63,46 @@ export default () => {
     setLastCreatedNoteId('')
   }, [currentPathnameWithoutNoteId])
 
-  const notes = useMemo((): NoteDoc[] => {
-    if (currentStorage == null) return []
+  const notes = useMemo((): PopulatedNoteDoc[] => {
+    if (currentStorage == null) {
+      if (routeParams.name === 'storages.allNotes') {
+        const allNotesMap = (Object.values(
+          db.storageMap
+        ) as NoteStorage[]).reduce(
+          (map, storage) => {
+            ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
+              note => (map[note._id] = note)
+            )
+            return map
+          },
+          {} as ObjectMap<PopulatedNoteDoc>
+        )
+
+        return (Object.values(allNotesMap) as PopulatedNoteDoc[])
+          .filter(note => !note.trashed)
+          .sort(sortByUpdatedAt)
+      }
+      if (routeParams.name === 'storages.bookmarks') {
+        return (Object.values(db.storageMap) as NoteStorage[])
+          .map(storage => {
+            return (Object.values(
+              storage.noteMap
+            ) as PopulatedNoteDoc[]).filter(note => note.bookmarked)
+          })
+          .flat()
+      }
+      return []
+    }
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(note => !note.trashed)
           .sort(sortByUpdatedAt)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(
             note =>
               (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
@@ -79,16 +114,16 @@ export default () => {
         const tag = currentStorage.tagMap[tagName]
         if (tag == null) return []
         return [...tag.noteIdSet]
-          .map(noteId => currentStorage.noteMap[noteId]!)
+          .map(noteId => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
           .filter(note => !note.trashed)
           .sort(sortByUpdatedAt)
       case 'storages.trashCan':
-        return (Object.values(currentStorage.noteMap) as NoteDoc[])
+        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
           .filter(note => note.trashed)
           .sort(sortByUpdatedAt)
     }
     return []
-  }, [currentStorage, routeParams])
+  }, [db.storageMap, currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
     if (search.trim() === '') return notes
@@ -215,7 +250,7 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
 
-  return storageId != null ? (
+  return (
     <TwoPaneLayout
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
@@ -223,7 +258,7 @@ export default () => {
         <NoteList
           search={search}
           setSearchInput={setSearchInput}
-          storageId={storageId}
+          currentStorageId={storageId}
           notes={filteredNotes}
           createNote={createNote}
           basePathname={currentPathnameWithoutNoteId}
@@ -236,14 +271,22 @@ export default () => {
       right={
         currentNote == null ? (
           <StyledNoteDetailNoNote>
-            <div>
-              <h1>Command(⌘) + N</h1>
-              <h2>to create a new note</h2>
-            </div>
+            {storageId != null ? (
+              <div>
+                <h1>Command(⌘) + N</h1>
+                <h2>to create a new note</h2>
+              </div>
+            ) : (
+              <div>
+                <h1>Select a storage</h1>
+                <h2>to create a new note</h2>
+              </div>
+            )}
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            storageId={storageId}
+            noteStorageName={db.storageMap[currentNote.storageId]!.name}
+            currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={db.updateNote}
             trashNote={db.trashNote}
@@ -259,7 +302,5 @@ export default () => {
       }
       onResizeEnd={updateNoteListWidth}
     />
-  ) : (
-    <div>Storage does not exist</div>
   )
 }

@@ -8,7 +8,8 @@ import {
   NoteDocEditibleProps,
   ExceptRev,
   ObjectMap,
-  Attachment
+  Attachment,
+  PopulatedNoteDoc
 } from './types'
 import {
   getFolderId,
@@ -134,7 +135,10 @@ export default class NoteDb {
     return allDocsResponse.rows.reduce((map, row) => {
       const { doc } = row
       if (isNoteDoc(doc)) {
-        map.noteMap[doc._id] = doc
+        map.noteMap[doc._id] = {
+          storageId: this.id,
+          ...doc
+        } as PopulatedNoteDoc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
       } else if (isTagDoc(doc)) {
@@ -211,6 +215,7 @@ export default class NoteDb {
       tags: [],
       folderPathname: '/',
       data: {},
+      bookmarked: false,
       ...noteProps,
       createdAt: now,
       updatedAt: now,

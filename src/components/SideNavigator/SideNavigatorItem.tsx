@@ -46,6 +46,14 @@ const Container = styled.div`
   &:hover .control {
     opacity: 1;
   }
+
+  &.allnotes-sidenav {
+    padding-left: 0 !important;
+    margin-bottom: 12px;
+    button {
+      padding-left: 6px !important;
+    }
+  }
 `
 
 const FoldButton = styled.button`

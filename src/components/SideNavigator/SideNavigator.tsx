@@ -26,7 +26,9 @@ import {
   IconArrowAgain,
   IconTrash,
   IconImage,
-  IconSetting
+  IconSetting,
+  IconBook,
+  IconStarActive
 } from '../icons'
 
 const Description = styled.nav`
@@ -178,6 +180,24 @@ export default () => {
           <IconAdjustVertical size='0.8em' />
         </button>
       </div>
+
+      <SideNavigatorItem
+        icon={<IconBook />}
+        depth={0}
+        className='allnotes-sidenav'
+        label='All Notes'
+        active={currentPathname === `/app/notes`}
+        onClick={() => push(`/app/notes`)}
+      />
+
+      <SideNavigatorItem
+        icon={<IconStarActive />}
+        depth={0}
+        className='allnotes-sidenav'
+        label='Bookmarks'
+        active={currentPathname === `/app/bookmarks`}
+        onClick={() => push(`/app/bookmarks`)}
+      />
 
       <Description>
         Storages

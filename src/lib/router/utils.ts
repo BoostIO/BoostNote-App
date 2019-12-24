@@ -53,7 +53,13 @@ export interface StorageEdit extends BaseRouteParams {
 
 export interface StorageAllNotes extends BaseRouteParams {
   name: 'storages.allNotes'
-  storageId: string
+  storageId?: string
+  noteId?: string
+}
+
+export interface StorageBookmarkNotes extends BaseRouteParams {
+  name: 'storages.bookmarks'
+  storageId?: string
   noteId?: string
 }
 
@@ -95,6 +101,7 @@ export type AllRouteParams =
   | StorageCreate
   | StorageEdit
   | StorageAllNotes
+  | StorageBookmarkNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
@@ -109,6 +116,24 @@ export const useRouteParams = () => {
       .slice('/app'.length)
       .split('/')
       .slice(1)
+
+    let noteId: string | undefined = undefined
+    if (names[0] === 'notes') {
+      if (/^note:/.test(names[1])) {
+        noteId = names[1]
+      }
+
+      return {
+        name: 'storages.allNotes',
+        noteId
+      }
+    }
+
+    if (names[0] === 'bookmarks') {
+      return {
+        name: 'storages.bookmarks'
+      }
+    }
 
     if (names[0] === 'storages' && names[1] == null) {
       return {
@@ -137,7 +162,6 @@ export const useRouteParams = () => {
       }
     }
 
-    let noteId: string | undefined = undefined
     if (names[2] === 'notes') {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {
@@ -210,6 +234,9 @@ export const usePathnameWithoutNoteId = () => {
   return useMemo(() => {
     switch (routeParams.name) {
       case 'storages.allNotes':
+        if (routeParams.storageId == null) {
+          return `/app/notes`
+        }
         return `/app/storages/${routeParams.storageId}/notes`
       case 'storages.notes':
         return `/app/storages/${routeParams.storageId}/notes${
