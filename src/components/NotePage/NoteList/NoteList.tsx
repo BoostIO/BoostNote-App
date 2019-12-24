@@ -73,7 +73,7 @@ type NoteListProps = {
   currentNoteIndex: number
   search: string
   notes: PopulatedNoteDoc[]
-  createNote: () => Promise<void>
+  createNote?: () => Promise<void>
   setSearchInput: (input: string) => void
   navigateDown: () => void
   navigateUp: () => void
@@ -131,7 +131,7 @@ const NoteList = ({
           />
           <IconLoupe className='icon' size='0.8em' />
         </div>
-        {currentStorageId != null && (
+        {currentStorageId != null && createNote != null && (
           <button className='newNoteButton' onClick={createNote}>
             <IconEdit size='0.8em' />
           </button>

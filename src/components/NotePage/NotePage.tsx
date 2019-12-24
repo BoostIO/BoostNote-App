@@ -175,6 +175,8 @@ export default () => {
     }
   }, [db, routeParams, storageId, setLastCreatedNoteId])
 
+  const showCreateNoteInList = routeParams.name === 'storages.notes'
+
   const breadCrumbs = useMemo(() => {
     if (currentNote == null || currentNote.folderPathname === '/')
       return undefined
@@ -260,7 +262,7 @@ export default () => {
           setSearchInput={setSearchInput}
           currentStorageId={storageId}
           notes={filteredNotes}
-          createNote={createNote}
+          createNote={showCreateNoteInList ? createNote : undefined}
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
