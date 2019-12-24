@@ -192,9 +192,11 @@ export default ({
           <div className='title'>
             <HighlightText text={note.title} search={search} />
           </div>
-          {note.title.length === 0 && <div className='title'>No title</div>}
+          {note.title.length === 0 && (
+            <div className='title'>{t('note.noTitle')}</div>
+          )}
           <div className='date'>
-            {formatDistanceToNow(new Date(note.updatedAt))} ago
+            {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
           </div>
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
