@@ -37,11 +37,8 @@ const FolderListFragment = ({
 
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
 
-  const folderPathnameListExceptRoot = useMemo(() => {
-    const folderPathnameList = Object.keys(folderMap).sort((a, b) =>
-      a.localeCompare(b)
-    )
-    return folderPathnameList.slice(1)
+  const folderPathnames = useMemo(() => {
+    return Object.keys(folderMap).sort((a, b) => a.localeCompare(b))
   }, [folderMap])
 
   const createOnFolderItemClickHandler = (folderPathname: string) => {
@@ -101,7 +98,7 @@ const FolderListFragment = ({
   }
 
   const folderSetWithSubFolders = useMemo(() => {
-    return folderPathnameListExceptRoot.reduce((folderSet, folderPathname) => {
+    return folderPathnames.reduce((folderSet, folderPathname) => {
       if (folderPathname !== '/') {
         const nameElements = folderPathname.slice(1).split('/')
         const parentFolderPathname =
@@ -110,17 +107,17 @@ const FolderListFragment = ({
       }
       return folderSet
     }, new Set())
-  }, [folderPathnameListExceptRoot])
+  }, [folderPathnames])
 
   const openedFolderPathnameList = useMemo(() => {
-    const tree = getFolderNameElementTree(folderPathnameListExceptRoot)
+    const tree = getFolderNameElementTree(folderPathnames)
     return getOpenedFolderPathnameList(
       tree,
       storageId,
       sideNavOpenedItemSet,
       '/'
     )
-  }, [folderPathnameListExceptRoot, storageId, sideNavOpenedItemSet])
+  }, [folderPathnames, storageId, sideNavOpenedItemSet])
 
   const createDropHandler = (folderPathname: string) => {
     return async (event: React.DragEvent) => {

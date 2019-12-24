@@ -85,6 +85,10 @@ export default class NoteDb {
       ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName)),
       ...requiresUpdate.map(note => this.updateNote(note._id, note))
     ])
+
+    if (folderMap['/'] != null) {
+      await this.removeFolder('/')
+    }
   }
 
   async getFolder(path: string): Promise<FolderDoc | null> {
