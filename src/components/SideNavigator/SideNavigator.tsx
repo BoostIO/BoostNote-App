@@ -193,7 +193,7 @@ export default () => {
       <SideNavigatorItem
         icon={<IconStarActive />}
         depth={0}
-        className='allnotes-sidenav'
+        className='bookmark-sidenav'
         label='Bookmarks'
         active={currentPathname === `/app/bookmarks`}
         onClick={() => push(`/app/bookmarks`)}
