@@ -119,13 +119,6 @@ describe('getAllParentFolderPathnames', () => {
 
     const result = getAllParentFolderPathnames(input)
 
-    expect(result).toEqual([
-      '/a/b/c/d/e',
-      '/a/b/c/d',
-      '/a/b/c',
-      '/a/b',
-      '/a',
-      '/'
-    ])
+    expect(result).toEqual(['/a/b/c/d/e', '/a/b/c/d', '/a/b/c', '/a/b', '/a'])
   })
 })
