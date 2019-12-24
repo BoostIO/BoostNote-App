@@ -8,10 +8,13 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { IconTag, IconTags, IconTagFill } from '../icons'
+import { useTranslation } from 'react-i18next'
 
 interface TagListFragmentProps {
   storage: NoteStorage
 }
+
+const { t } = useTranslation()
 
 const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
@@ -44,13 +47,13 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
             popup(event, [
               {
                 type: MenuTypes.Normal,
-                label: 'Remove Tag',
+                label: t('tag.remove'),
                 onClick: () => {
                   messageBox({
                     title: `Remove "${tagName}" tag`,
-                    message: 'The tag will be untagged from all notes.',
+                    message: t('tag.removeMessage'),
                     iconType: DialogIconTypes.Warning,
-                    buttons: ['Remove Folder', 'Cancel'],
+                    buttons: [t('tag.removeMessage'), t('general.cancel')],
                     defaultButtonIndex: 0,
                     cancelButtonIndex: 1,
                     onClose: (value: number | null) => {
@@ -73,7 +76,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
       <SideNavigatorItem
         depth={1}
         icon={<IconTags size='1.5em' />}
-        label='Tags'
+        label={t('tag.tag')}
         folded={tagList.length > 0 ? tagListIsFolded : undefined}
         onFoldButtonClick={() => {
           toggleSideNavOpenedItem(tagListNavItemId)
