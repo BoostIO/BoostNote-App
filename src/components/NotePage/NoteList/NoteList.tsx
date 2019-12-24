@@ -12,7 +12,8 @@ import styled from '../../../lib/styled'
 import {
   borderBottom,
   inputStyle,
-  iconColor
+  iconColor,
+  selectTabStyle
 } from '../../../lib/styled/styleFunctions'
 import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 
@@ -60,6 +61,28 @@ export const StyledNoteListContainer = styled.div`
       ${inputStyle}
     }
     select {
+      appearance: none;
+    }
+  }
+
+  .filterTab {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    padding-left: 13px;
+    .filterIcon {
+      font-size: 10px;
+      margin-right: 5px;
+      z-index: 0;
+      pointer-events: none;
+      ${iconColor}
+    }
+    .input {
+      ${selectTabStyle}
+    }
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
       appearance: none;
     }
   }
@@ -154,18 +177,16 @@ const NoteList = ({
           </button>
         )}
       </div>
-      <div className='control'>
-        <div className='searchInput'>
-          <IconArrowSingleDown className='icon' size='0.8em' />
-          <select
-            className='input'
-            onChange={e => setSort(e.target.value as SortProps)}
-          >
-            <option value='updatedAt'>Updated</option>
-            <option value='createdAt'>Created</option>
-            <option value='title'>Title</option>
-          </select>
-        </div>
+      <div className='filterTab'>
+        <IconArrowSingleDown className='filterIcon' size='0.8em' />
+        <select
+          className='input'
+          onChange={e => setSort(e.target.value as SortProps)}
+        >
+          <option value='updatedAt'>Updated</option>
+          <option value='createdAt'>Created</option>
+          <option value='title'>Title</option>
+        </select>
       </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
         {sortedNotes.map(note => {
