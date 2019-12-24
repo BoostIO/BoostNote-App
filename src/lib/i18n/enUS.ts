@@ -33,6 +33,18 @@ export default {
     'tag.remove': 'Remove Tag',
     'tag.removeMessage': 'The tag will be untagged from all notes.',
 
+    //Note
+    'note.duplicate': 'Duplicate',
+    'note.delete': 'Delete',
+    'note.empty': 'Empty note',
+    'note.search': 'Search Notes',
+    'note.nothing': 'No notes',
+    'note.nothingMessage': 'No notes could be found.',
+
+    //Bookmark
+    'bookmark.remove': 'Remove Bookmark',
+    'bookmark.add': 'Bookmark',
+
     // Preferences GeneralTab
     'preferences.account': 'Account',
     'preferences.addAccount': 'Sign in',

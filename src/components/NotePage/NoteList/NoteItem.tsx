@@ -15,6 +15,7 @@ import { scaleAndTransformFromLeft } from '../../../lib/styled'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import { useDb } from '../../../lib/db'
+import { useTranslation } from 'react-i18next'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -109,6 +110,8 @@ export default ({
   const { popup } = useContextMenu()
   const { createNote, trashNote, updateNote } = useDb()
 
+  const { t } = useTranslation()
+
   const contextMenuCallback = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation()
@@ -116,7 +119,7 @@ export default ({
       popup(event, [
         {
           type: MenuTypes.Normal,
-          label: 'Duplicate',
+          label: t('note.duplicate'),
           onClick: async () => {
             createNote(note.storageId, {
               title: note.title,
@@ -130,14 +133,14 @@ export default ({
         },
         {
           type: MenuTypes.Normal,
-          label: 'Delete',
+          label: t('note.delete'),
           onClick: async () => {
             trashNote(note.storageId, note._id)
           }
         },
         {
           type: MenuTypes.Normal,
-          label: note.bookmarked ? 'Remove Bookmark' : 'Bookmark',
+          label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
           onClick: async () => {
             note.bookmarked = !note.bookmarked
             updateNote(note.storageId, note._id, note)
@@ -161,13 +164,13 @@ export default ({
         .shift()
 
       return contentToHighlight == null ? (
-        'Empty note'
+        t('note.empty')
       ) : (
         <HighlightText text={contentToHighlight} search={search} />
       )
     }
 
-    return trimmedContent.split('\n').shift() || 'Empty note'
+    return trimmedContent.split('\n').shift() || t('note.empty')
   }, [note.content, search])
 
   const handleDragStart = useCallback(
