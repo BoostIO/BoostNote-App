@@ -492,6 +492,7 @@ export function createDbStoreCreator(
         const parentFolderPathnamesToCheck = [
           ...getAllParentFolderPathnames(noteDoc.folderPathname)
         ].filter(aPathname => storage.folderMap[aPathname] == null)
+
         const parentFoldersToRefresh = await storage.db.getFoldersByPathnames(
           parentFolderPathnamesToCheck
         )
@@ -1240,8 +1241,6 @@ async function prepareStorage(
       storage.tagMap[tagName]!.noteIdSet.add(noteDoc._id)
     })
   }
-
-  console.log(storage.folderMap)
 
   return storage
 }

@@ -60,6 +60,14 @@ const FolderListFragment = ({
       popup(event, [
         {
           type: MenuTypes.Normal,
+          label: 'New Note',
+          enabled: folderPathname !== '/',
+          onClick: async () => {
+            createNote(storageId, { folderPathname })
+          }
+        },
+        {
+          type: MenuTypes.Normal,
           label: 'New Folder',
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)

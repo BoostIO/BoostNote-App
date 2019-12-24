@@ -121,7 +121,9 @@ export function getAllParentFolderPathnames(pathname: string) {
   let currentPathname = pathname
   do {
     currentPathname = getParentFolderPathname(currentPathname)
-    pathnames.push(currentPathname)
+    if (currentPathname !== '/') {
+      pathnames.push(currentPathname)
+    }
   } while (currentPathname !== '/')
   return pathnames
 }
