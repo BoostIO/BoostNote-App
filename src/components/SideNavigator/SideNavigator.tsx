@@ -27,7 +27,8 @@ import {
   IconTrash,
   IconImage,
   IconSetting,
-  IconBook
+  IconBook,
+  IconStarActive
 } from '../icons'
 
 const Description = styled.nav`
@@ -187,6 +188,15 @@ export default () => {
         label='All Notes'
         active={currentPathname === `/app/notes`}
         onClick={() => push(`/app/notes`)}
+      />
+
+      <SideNavigatorItem
+        icon={<IconStarActive />}
+        depth={0}
+        className='allnotes-sidenav'
+        label='Bookmarks'
+        active={currentPathname === `/app/bookmarks`}
+        onClick={() => push(`/app/bookmarks`)}
       />
 
       <Description>

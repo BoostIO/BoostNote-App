@@ -57,6 +57,12 @@ export interface StorageAllNotes extends BaseRouteParams {
   noteId?: string
 }
 
+export interface StorageBookmarkNotes extends BaseRouteParams {
+  name: 'storages.bookmarks'
+  storageId?: string
+  noteId?: string
+}
+
 export interface StorageNotesRouteParams extends BaseRouteParams {
   name: 'storages.notes'
   storageId: string
@@ -95,6 +101,7 @@ export type AllRouteParams =
   | StorageCreate
   | StorageEdit
   | StorageAllNotes
+  | StorageBookmarkNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
@@ -119,6 +126,12 @@ export const useRouteParams = () => {
       return {
         name: 'storages.allNotes',
         noteId
+      }
+    }
+
+    if (names[0] === 'bookmarks') {
+      return {
+        name: 'storages.bookmarks'
       }
     }
 
