@@ -9,7 +9,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound, IconBook, IconFile, IconFileOpen } from '../icons'
+import { IconAddRound, IconFile, IconFileOpen } from '../icons'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -122,9 +122,6 @@ const FolderListFragment = ({
     )
   }, [folderPathnameListExceptRoot, storageId, sideNavOpenedItemSet])
 
-  const rootFolderIsActive =
-    currentPathnameWithoutNoteId === `/app/storages/${storageId}/notes`
-
   const createDropHandler = (folderPathname: string) => {
     return async (event: React.DragEvent) => {
       const transferrableNoteData = getTransferrableNoteData(event)
@@ -176,23 +173,6 @@ const FolderListFragment = ({
   }
   return (
     <>
-      <SideNavigatorItem
-        depth={1}
-        active={rootFolderIsActive}
-        label='All Notes'
-        icon={
-          rootFolderIsActive ? (
-            <IconBook color='currentColor' />
-          ) : (
-            <IconBook color='currentColor' />
-          )
-        }
-        onClick={createOnFolderItemClickHandler('/')}
-        onDragOver={event => {
-          event.preventDefault()
-        }}
-        onDrop={createDropHandler('/')}
-      />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
         const folderName = nameElements[nameElements.length - 1]
