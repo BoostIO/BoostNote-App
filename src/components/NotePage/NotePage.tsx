@@ -14,12 +14,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import {
-  NoteDoc,
-  PopulatedNoteDoc,
-  NoteStorage,
-  ObjectMap
-} from '../../lib/db/types'
+import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
@@ -34,10 +29,6 @@ export type BreadCrumbs = {
   folderPathname: string
   folderIsActive: boolean
 }[]
-
-function sortByUpdatedAt(a: NoteDoc, b: NoteDoc) {
-  return b.updatedAt.localeCompare(a.updatedAt)
-}
 
 export default () => {
   const db = useDb()
@@ -78,9 +69,9 @@ export default () => {
           {} as ObjectMap<PopulatedNoteDoc>
         )
 
-        return (Object.values(allNotesMap) as PopulatedNoteDoc[])
-          .filter(note => !note.trashed)
-          .sort(sortByUpdatedAt)
+        return (Object.values(allNotesMap) as PopulatedNoteDoc[]).filter(
+          note => !note.trashed
+        )
       }
       if (routeParams.name === 'storages.bookmarks') {
         return (Object.values(db.storageMap) as NoteStorage[])
@@ -95,20 +86,20 @@ export default () => {
     }
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
-          .filter(note => !note.trashed)
-          .sort(sortByUpdatedAt)
+        return (Object.values(
+          currentStorage.noteMap
+        ) as PopulatedNoteDoc[]).filter(note => !note.trashed)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
-          .filter(
-            note =>
-              (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
-              !note.trashed
-          )
-          .sort(sortByUpdatedAt)
+        return (Object.values(
+          currentStorage.noteMap
+        ) as PopulatedNoteDoc[]).filter(
+          note =>
+            (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
+            !note.trashed
+        )
       case 'storages.tags.show':
         const { tagName } = routeParams
         const tag = currentStorage.tagMap[tagName]
@@ -116,11 +107,10 @@ export default () => {
         return [...tag.noteIdSet]
           .map(noteId => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
           .filter(note => !note.trashed)
-          .sort(sortByUpdatedAt)
       case 'storages.trashCan':
-        return (Object.values(currentStorage.noteMap) as PopulatedNoteDoc[])
-          .filter(note => note.trashed)
-          .sort(sortByUpdatedAt)
+        return (Object.values(
+          currentStorage.noteMap
+        ) as PopulatedNoteDoc[]).filter(note => note.trashed)
     }
     return []
   }, [db.storageMap, currentStorage, routeParams])
@@ -264,7 +254,7 @@ export default () => {
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
-          currentNoteIndex={currentNoteIndex}
+          currentNoteId={currentNote._id}
           lastCreatedNoteId={lastCreatedNoteId}
         />
       }

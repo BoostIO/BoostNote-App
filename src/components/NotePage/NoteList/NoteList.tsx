@@ -2,7 +2,9 @@ import React, {
   useCallback,
   KeyboardEvent,
   useRef,
-  ChangeEventHandler
+  ChangeEventHandler,
+  useMemo,
+  useState
 } from 'react'
 import NoteItem from './NoteItem'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
@@ -12,7 +14,7 @@ import {
   inputStyle,
   iconColor
 } from '../../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe } from '../../icons'
+import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -57,7 +59,11 @@ export const StyledNoteListContainer = styled.div`
       box-sizing: border-box;
       ${inputStyle}
     }
+    select {
+      appearance: none;
+    }
   }
+
   .newNoteButton {
     width: 35px;
     height: 30px;
@@ -68,9 +74,11 @@ export const StyledNoteListContainer = styled.div`
   }
 `
 
+type SortProps = 'createdAt' | 'title' | 'updatedAt'
+
 type NoteListProps = {
   currentStorageId?: string
-  currentNoteIndex: number
+  currentNoteId: string
   search: string
   notes: PopulatedNoteDoc[]
   createNote: () => Promise<void>
@@ -87,7 +95,7 @@ const NoteList = ({
   currentStorageId,
   basePathname,
   search,
-  currentNoteIndex,
+  currentNoteId,
   setSearchInput,
   navigateDown,
   navigateUp,
@@ -99,6 +107,15 @@ const NoteList = ({
     },
     [setSearchInput]
   )
+  const [sort, setSort] = useState<SortProps>('updatedAt')
+
+  const sortedNotes = useMemo(() => {
+    return notes.sort((first, second) => {
+      return sort === 'title'
+        ? first[sort].localeCompare(second[sort])
+        : second[sort].localeCompare(first[sort])
+    })
+  }, [notes, sort])
 
   const handleListKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -137,9 +154,22 @@ const NoteList = ({
           </button>
         )}
       </div>
+      <div className='control'>
+        <div className='searchInput'>
+          <IconArrowSingleDown className='icon' size='0.8em' />
+          <select
+            className='input'
+            onChange={e => setSort(e.target.value as SortProps)}
+          >
+            <option value='updatedAt'>Updated</option>
+            <option value='createdAt'>Created</option>
+            <option value='title'>Title</option>
+          </select>
+        </div>
+      </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
-        {notes.map((note, index) => {
-          const noteIsCurrentNote = index === currentNoteIndex
+        {sortedNotes.map(note => {
+          const noteIsCurrentNote = note._id === currentNoteId
           return (
             <li key={note._id}>
               <NoteItem
