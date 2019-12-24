@@ -9,6 +9,7 @@ import {
 import { openNew } from '../../lib/utils/platform'
 import Image from '../atoms/Image'
 import AppLink from '../atoms/AppLink'
+import { useTranslation } from 'react-i18next'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -79,6 +80,7 @@ interface PrimaryLinkProps {
   href: string
   children: string
 }
+const { t } = useTranslation()
 
 const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   const handleClick = useCallback(
@@ -102,23 +104,20 @@ const AboutTab = () => {
       <Section>
         <AboutContents>
           <div className='about-outline'>
-            <SectionHeader>About</SectionHeader>
+            <SectionHeader>{t('about.about')}</SectionHeader>
             <div className='about-outline-basic'>
               <div className='about-outline-basic-logo'>
                 <Image src={'/app/static/logo.svg'} />
               </div>
               <div className='about-outline-basic-info'>
                 <h4>Boost Note {process.env.VERSION}</h4>
-                <p>
-                  An open source note-taking app made for programmers just like
-                  you.
-                </p>
+                <p>{t('about.boostnoteDescription')}</p>
                 <p>
                   <PrimaryLink href='https://boostnote.io/'>
-                    Official Website
+                    {t('about.website')}
                   </PrimaryLink>
                   <PrimaryLink href='https://boostnote.io/wiki/'>
-                    Boost Note for Team
+                    {t('about.boostWiki')}
                   </PrimaryLink>
                 </p>
               </div>
@@ -130,48 +129,48 @@ const AboutTab = () => {
             </SectionSubtleText>
           </div>
           <div className='about-community'>
-            <SectionHeader>Cross-platform</SectionHeader>
+            <SectionHeader>{t('about.platform')}</SectionHeader>
             <AppLink />
           </div>
           <div className='about-community'>
-            <SectionHeader>Community</SectionHeader>
+            <SectionHeader>{t('about.community')}</SectionHeader>
             <div className='about-community-links'>
               <ul>
                 <li>
                   <PrimaryLink href='https://github.com/BoostIO/BoostNote.next'>
-                    GitHub Repository
+                    {t('about.github')}
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://github.com/BoostIO/BoostNote.next'>
-                    Bounty on IssueHunt
+                    {t('about.bounty')}
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://medium.com/boostnote'>
-                    Blog
+                    {t('about.blog')}
                   </PrimaryLink>
                 </li>
               </ul>
               <ul>
                 <li>
                   <PrimaryLink href='https://boostnote-group.slack.com/join/shared_invite/enQtMzkxOTk4ODkyNzc0LWQxZTQwNjBlMDI4YjkyYjg2MTRiZGJhNzA1YjQ5ODA5M2M0M2NlMjI5YjhiYWQzNzgzYmU0MDMwOTlmZmZmMGE'>
-                    Slack Group
+                    {t('about.slack')}
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://twitter.com/boostnoteapp'>
-                    Twitter Account
+                    {t('about.twitter')}
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://www.facebook.com/groups/boostnote/'>
-                    Facebook Group
+                    {t('about.facebook')}
                   </PrimaryLink>
                 </li>
                 <li>
                   <PrimaryLink href='https://www.reddit.com/r/Boostnote/'>
-                    Reddit
+                    {t('about.reddit')}
                   </PrimaryLink>
                 </li>
               </ul>

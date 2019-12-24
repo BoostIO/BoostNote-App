@@ -22,6 +22,7 @@ import {
   textColor
 } from '../../lib/styled/styleFunctions'
 import { useToast } from '../../lib/toast'
+import { useTranslation } from 'react-i18next'
 
 interface Success {
   err: false
@@ -53,6 +54,8 @@ const StyledRemove = styled.span`
   cursor: pointer;
   color: ${({ theme }) => theme.primaryColor};
 `
+
+const { t } = useTranslation()
 
 export default () => {
   const { pushMessage } = useToast()
@@ -168,14 +171,12 @@ export default () => {
 
   return (
     <Section>
-      <SectionHeader>Import</SectionHeader>
-      <p>Import .cson files from old Boostnote.</p>
-      <p>1. Open old Boostnote folder in your PC.</p>
-      <p>2. Drag and drop .cson files to the form below.</p>
-      <p>
-        3. Choose the Storage and Folder that you want to move your old data.
-      </p>
-      <p>4. Upload!</p>
+      <SectionHeader>{t('preferences.import')}</SectionHeader>
+      <p>{t('preferences.description')}</p>
+      <p>{t('preferences.importFlow1')}</p>
+      <p>{t('preferences.importFlow2')}</p>
+      <p>{t('preferences.importFlow3')}</p>
+      <p>{t('preferences.importFlow4')}</p>
       <SectionControl>
         <StyledDropZone className={dragInside ? 'active' : ''}>
           <FileDropZone
@@ -192,7 +193,7 @@ export default () => {
                       ? `Invalid File: ${entry.filename}`
                       : `Ready to import: ${entry.note.title}`}
                     <StyledRemove onClick={() => importRemoveCallback(id)}>
-                      remove
+                      {t('preferences.importRemove')}
                     </StyledRemove>
                   </li>
                 )
@@ -226,7 +227,7 @@ export default () => {
         </label>
       </SectionControl>
       <SectionPrimaryButton onClick={uploadCallback}>
-        Upload
+        {t('preferences.importUpload')}
       </SectionPrimaryButton>
     </Section>
   )

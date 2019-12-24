@@ -6,18 +6,31 @@ export default {
     'general.attachments': 'Attachments',
     'general.trash': 'Trash',
     'general.allnote': 'All Notes',
+    'general.signin': 'Sign In',
+    'general.signOut': 'Sign Out',
+    'general.save': 'Save',
+    'general.default': 'Default',
+    'general.networkError': 'Network Error',
 
     // Storage
+    'storage.name': 'Storage Name',
     'storage.noStorage': 'No storages',
+    'storage.create': 'Create Storage',
+    'storage.edit': 'Edit Storage',
     'storage.rename': 'Rename Storage',
     'storage.renameMessage': 'Enter new storage name',
     'storage.remove': 'Remove Storage',
     'storage.removeMessage': 'The storage will be unlinked from this app.',
+    'storage.delete': 'Delete Storage',
     'storage.move': 'Move Note',
     'storage.moveTitle': 'Move Note to Other storage',
     'storage.moveMessage':
       'You are trying to move a note to different storage.',
     'storage.copy': 'Copy Note',
+    'storage.typeLocal': 'Local',
+    'storage.typeCloud': 'Cloud',
+    'storage.needSignIn': 'You need to sign in to create a cloud storage.',
+    'storage.syncDate': 'Last synced at',
 
     //Folder
     'folder.create': 'New Folder',
@@ -36,14 +49,61 @@ export default {
     //Note
     'note.duplicate': 'Duplicate',
     'note.delete': 'Delete',
+    'note.delete2': 'Delete a Note',
+    'note.deleteMessage': 'The note will be deleted permanently',
     'note.empty': 'Empty note',
+    'note.unselect': 'No note is selected',
     'note.search': 'Search Notes',
     'note.nothing': 'No notes',
     'note.nothingMessage': 'No notes could be found.',
+    'note.noTitle': 'No title',
+    'note.date': 'ago',
+    'note.createKeyMac': 'Mac: Command(⌘) + Enter',
+    'note.createKeyWinLin': 'Windows/Linux: Ctrl + Enter',
+    'note.createkeymessage1': 'to create a new note',
+    'note.createkeymessage2': 'Select a storage',
+    'note.createkeymessage3': 'to create a new note',
 
     //Bookmark
     'bookmark.remove': 'Remove Bookmark',
     'bookmark.add': 'Bookmark',
+
+    //About
+    'about.about': 'About',
+    'about.boostnoteDescription':
+      'An open source note-taking app made for programmers just like you.',
+    'about.website': 'Official Website',
+    'about.boostWiki': 'Boost Note for Team',
+    'about.platform': 'Cross-platform',
+    'about.community': 'Community',
+    'about.github': 'GitHub Repository',
+    'about.bounty': 'Bounty on IssueHunt',
+    'about.blog': 'Blog',
+    'about.slack': 'Slack Group',
+    'about.twitter': 'Twitter Account',
+    'about.facebook': 'Facebook Group',
+    'about.reddit': 'Reddit',
+
+    //Billing
+    'billing.billing': 'Billing',
+    'billing.message': 'Please sign in to upgrade your plan.',
+    'billing.basic': 'Basic',
+    'billing.current': 'Current',
+    'billing.premium': 'Premium',
+    'billing.price': '$3/Month (USD) *',
+    'billing.browser': 'Browser App',
+    'billing.desktop': 'Desktop App (Mac/Windows/Linux)',
+    'billing.mobile': 'Mobile App (Will be launched at Jan, 2020)',
+    'billing.sync': 'Syncing Multiple Devices',
+    'billing.local': 'Local Storage',
+    'billing.cloud': 'Cloud Storage',
+    'billing.storageSize': 'Cloud Storage Size',
+    'billing.addStorageDescription':
+      '* If you need more cloud storage, you can add it at any time by paying $5 (USD) for every 5GB. Click the "Add Extra Storage" button below.',
+    'billing.addStorage': 'Add Extra Storage',
+
+    // Preferences
+    'preferences.general': 'Preferences',
 
     // Preferences GeneralTab
     'preferences.account': 'Account',
@@ -81,6 +141,20 @@ export default {
 
     // Preferences MarkdownTab
     'preferences.previewStyle': 'Preview Style',
-    'preferences.markdownCodeBlockTheme': 'Code Block Theme'
+    'preferences.markdownCodeBlockTheme': 'Code Block Theme',
+    'preferences.defaultTheme': 'Use default style',
+    'preferences.markdownPreview': 'Markdown Preview',
+
+    // Preferences ImportTab
+    'preferences.import': 'Import',
+    'preferences.description': 'Import .cson files from old Boostnote.',
+    'preferences.importFlow1': '1. Open old Boostnote folder in your PC.',
+    'preferences.importFlow2':
+      '2. Drag and drop .cson files to the form below.',
+    'preferences.importFlow3':
+      '3. Choose the Storage and Folder that you want to move your old data.',
+    'preferences.importFlow4': '4. Upload!',
+    'preferences.importRemove': 'remove',
+    'preferences.importUpload': 'Upload'
   }
 }

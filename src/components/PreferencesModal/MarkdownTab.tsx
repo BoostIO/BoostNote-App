@@ -88,10 +88,10 @@ const MarkdownTab = () => {
         <SectionHeader>{t('preferences.previewStyle')}</SectionHeader>
         <SectionControl>
           <SectionPrimaryButton onClick={savePreviewStyle}>
-            Save
+            {t('general.save')}
           </SectionPrimaryButton>
           <SectionSecondaryButton onClick={resetNewPreviewStyle}>
-            Use default style
+            {t('preferences.defaultTheme')}
           </SectionSecondaryButton>
         </SectionControl>
         <EditorContainer>
@@ -109,7 +109,7 @@ const MarkdownTab = () => {
             value={preferences['markdown.codeBlockTheme']}
             onChange={selectCodeFenceTheme}
           >
-            <option value='default'>Default</option>
+            <option value='default'>{t('general.default')}</option>
             {themes.map(theme => (
               <option value={theme} key={theme}>
                 {capitalize(theme)}
@@ -119,7 +119,7 @@ const MarkdownTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Markdown Preview</SectionHeader>
+        <SectionHeader>{t('preferences.markdownPreview')}</SectionHeader>
         <PreviewContainer>
           <div className='panel'>
             <CustomizedCodeEditor

@@ -2,6 +2,7 @@ import React, { useCallback, KeyboardEvent, useRef } from 'react'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TutorialsNoteItem from './TutorialsNoteItem'
 import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
+import { useTranslation } from 'react-i18next'
 
 type TutorialsNoteListProps = {
   currentTree: TutorialsNavigatorTreeItem
@@ -47,6 +48,8 @@ const TutorialsNoteList = ({
       ? []
       : parentTree.children.filter(child => child.type === 'note')
 
+  const { t } = useTranslation()
+
   return (
     <StyledNoteListContainer>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
@@ -65,7 +68,7 @@ const TutorialsNoteList = ({
             </li>
           )
         })}
-        {notes.length === 0 && <li className='empty'>No notes</li>}
+        {notes.length === 0 && <li className='empty'>{t('note.nothing')}</li>}
       </ul>
     </StyledNoteListContainer>
   )
