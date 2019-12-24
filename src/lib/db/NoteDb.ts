@@ -130,7 +130,9 @@ export default class NoteDb {
 
   async doesParentFolderExistOrCreate(pathname: string) {
     const parentPathname = getParentFolderPathname(pathname)
-    await this.upsertFolder(parentPathname)
+    if (parentPathname !== '/') {
+      await this.upsertFolder(parentPathname)
+    }
   }
 
   async getAllDocsMap(): Promise<AllDocsMap> {
