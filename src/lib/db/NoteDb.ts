@@ -154,8 +154,8 @@ export default class NoteDb {
       const { doc } = row
       if (isNoteDoc(doc)) {
         map.noteMap[doc._id] = {
-          storageId: this.id,
-          ...doc
+          ...doc,
+          storageId: this.id
         } as PopulatedNoteDoc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
