@@ -15,14 +15,16 @@ const Container = styled.div`
   margin-bottom: 8px;
 `
 
-const { t } = useTranslation()
+export default ({ user, signout }: UserProps) => {
+  const { t } = useTranslation()
 
-export default ({ user, signout }: UserProps) => (
-  <Container>
-    <MdiIcon path={mdiAccount} size='80px' />
-    <p>{user.name}</p>
-    <SectionPrimaryButton onClick={() => signout(user)}>
-      {t('general.signOut')}
-    </SectionPrimaryButton>
-  </Container>
-)
+  return (
+    <Container>
+      <MdiIcon path={mdiAccount} size='80px' />
+      <p>{user.name}</p>
+      <SectionPrimaryButton onClick={() => signout(user)}>
+        {t('general.signOut')}
+      </SectionPrimaryButton>
+    </Container>
+  )
+}

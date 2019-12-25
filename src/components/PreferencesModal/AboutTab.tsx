@@ -80,7 +80,6 @@ interface PrimaryLinkProps {
   href: string
   children: string
 }
-const { t } = useTranslation()
 
 const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   const handleClick = useCallback(
@@ -99,6 +98,8 @@ const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
 }
 
 const AboutTab = () => {
+  const { t } = useTranslation()
+
   return (
     <div>
       <Section>

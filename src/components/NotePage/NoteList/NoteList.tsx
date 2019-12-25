@@ -113,8 +113,6 @@ type NoteListProps = {
   lastCreatedNoteId: string
 }
 
-const { t } = useTranslation()
-
 const NoteList = ({
   notes,
   createNote,
@@ -127,6 +125,7 @@ const NoteList = ({
   navigateUp,
   lastCreatedNoteId
 }: NoteListProps) => {
+  const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
       setSearchInput(event.target.value)

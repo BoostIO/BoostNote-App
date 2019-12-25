@@ -18,8 +18,6 @@ interface FolderListFragmentProps {
   showPromptToRenameFolder: (folderPathname: string) => void
 }
 
-const { t } = useTranslation()
-
 const FolderListFragment = ({
   storage,
   showPromptToCreateFolder,
@@ -34,6 +32,8 @@ const FolderListFragment = ({
   const { push } = useRouter()
   const { messageBox } = useDialog()
   const { popup } = useContextMenu()
+  const { t } = useTranslation()
+
   const { folderMap, id: storageId } = storage
 
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
