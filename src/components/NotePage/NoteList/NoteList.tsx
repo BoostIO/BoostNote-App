@@ -2,7 +2,9 @@ import React, {
   useCallback,
   KeyboardEvent,
   useRef,
-  ChangeEventHandler
+  ChangeEventHandler,
+  useMemo,
+  useState
 } from 'react'
 import NoteItem from './NoteItem'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
@@ -10,7 +12,8 @@ import styled from '../../../lib/styled'
 import {
   borderBottom,
   inputStyle,
-  iconColor
+  iconColor,
+  selectTabStyle
 } from '../../../lib/styled/styleFunctions'
 import { IconEdit, IconLoupe } from '../../icons'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +61,33 @@ export const StyledNoteListContainer = styled.div`
       box-sizing: border-box;
       ${inputStyle}
     }
+    select {
+      appearance: none;
+    }
   }
+
+  .filterTab {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    padding-left: 13px;
+    .filterIcon {
+      font-size: 10px;
+      margin-right: 5px;
+      z-index: 0;
+      pointer-events: none;
+      ${iconColor}
+    }
+    .input {
+      ${selectTabStyle}
+    }
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+  }
+
   .newNoteButton {
     width: 35px;
     height: 30px;
@@ -69,9 +98,11 @@ export const StyledNoteListContainer = styled.div`
   }
 `
 
+type SortProps = 'createdAt' | 'title' | 'updatedAt'
+
 type NoteListProps = {
   currentStorageId?: string
-  currentNoteIndex: number
+  currentNoteId: string
   search: string
   notes: PopulatedNoteDoc[]
   createNote?: () => Promise<void>
@@ -90,7 +121,7 @@ const NoteList = ({
   currentStorageId,
   basePathname,
   search,
-  currentNoteIndex,
+  currentNoteId,
   setSearchInput,
   navigateDown,
   navigateUp,
@@ -102,6 +133,15 @@ const NoteList = ({
     },
     [setSearchInput]
   )
+  const [sort, setSort] = useState<SortProps>('updatedAt')
+
+  const sortedNotes = useMemo(() => {
+    return notes.sort((first, second) => {
+      return sort === 'title'
+        ? first[sort].localeCompare(second[sort])
+        : second[sort].localeCompare(first[sort])
+    })
+  }, [notes, sort])
 
   const handleListKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -140,9 +180,20 @@ const NoteList = ({
           </button>
         )}
       </div>
+      <div className='filterTab'>
+        <IconArrowSingleDown className='filterIcon' size='0.8em' />
+        <select
+          className='input'
+          onChange={e => setSort(e.target.value as SortProps)}
+        >
+          <option value='updatedAt'>Updated</option>
+          <option value='createdAt'>Created</option>
+          <option value='title'>Title</option>
+        </select>
+      </div>
       <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
-        {notes.map((note, index) => {
-          const noteIsCurrentNote = index === currentNoteIndex
+        {sortedNotes.map(note => {
+          const noteIsCurrentNote = note._id === currentNoteId
           return (
             <li key={note._id}>
               <NoteItem

@@ -100,6 +100,20 @@ color: ${theme.textColor};
 }
 `
 
+export const selectTabStyle = ({ theme }: StyledProps) =>
+  `background-color: ${theme.backgroundColor};
+border: none;
+color: ${theme.uiTextColor};
+cursor: pointer;
+font-weight: 400;
+&:hover,
+&:focus,
+&:active,
+&.active{
+  color: ${theme.textColor};
+}
+`
+
 export const primaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.primaryColor};
 color: ${theme.primaryButtonLabelColor};
