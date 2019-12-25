@@ -48,8 +48,14 @@ const Container = styled.div`
   }
 
   &.allnotes-sidenav {
-    padding-left: 0 !important;
-    margin-bottom: 12px;
+    padding-left: 4px !important;
+    button {
+      padding-left: 6px !important;
+    }
+  }
+  &.bookmark-sidenav {
+    padding-left: 4px !important;
+    margin-bottom: 25px;
     button {
       padding-left: 6px !important;
     }

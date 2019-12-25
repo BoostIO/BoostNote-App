@@ -20,6 +20,7 @@ import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
 import { useToast } from '../../lib/toast'
+import { useTranslation } from 'react-i18next'
 import {
   IconAddRound,
   IconAdjustVertical,
@@ -172,6 +173,8 @@ export default () => {
 
   const currentPathname = usePathnameWithoutNoteId()
 
+  const { t } = useTranslation()
+
   return (
     <StyledSideNavContainer>
       <div className='topControl'>
@@ -193,7 +196,7 @@ export default () => {
       <SideNavigatorItem
         icon={<IconStarActive />}
         depth={0}
-        className='allnotes-sidenav'
+        className='bookmark-sidenav'
         label='Bookmarks'
         active={currentPathname === `/app/bookmarks`}
         onClick={() => push(`/app/bookmarks`)}
@@ -235,12 +238,11 @@ export default () => {
           }
           const showPromptToRenameFolder = (folderPathname: string) => {
             prompt({
-              title: 'Rename the Folder',
-              message:
-                'Enter the new folder name, every note and subfolder paths will also be updated.',
+              title: t('folder.rename'),
+              message: t('folder.renameMessage'),
               iconType: DialogIconTypes.Question,
               defaultValue: folderPathname.split('/').pop(),
-              submitButtonLabel: 'Rename Folder',
+              submitButtonLabel: t('folder.rename'),
               onClose: async (value: string | null) => {
                 const folderPathSplit = folderPathname.split('/')
                 if (
@@ -257,8 +259,8 @@ export default () => {
                   openSideNavFolderItemRecursively(storage.id, newPathname)
                 } catch (error) {
                   pushMessage({
-                    title: 'Error',
-                    description: 'You could not rename the folder'
+                    title: t('general.error'),
+                    description: t('folder.renameErrorMessage')
                   })
                 }
               }
@@ -326,14 +328,14 @@ export default () => {
                   popup(event, [
                     {
                       type: MenuTypes.Normal,
-                      label: 'Rename Storage',
+                      label: t('storage.rename'),
                       onClick: async () => {
                         prompt({
                           title: `Rename "${storage.name}" storage`,
-                          message: 'Enter new storage name',
+                          message: t('storage.renameMessage'),
                           iconType: DialogIconTypes.Question,
                           defaultValue: storage.name,
-                          submitButtonLabel: 'Rename Storage',
+                          submitButtonLabel: t('storage.rename'),
                           onClose: async (value: string | null) => {
                             if (value == null) return
                             await renameStorage(storage.id, value)
@@ -343,14 +345,13 @@ export default () => {
                     },
                     {
                       type: MenuTypes.Normal,
-                      label: 'Remove Storage',
+                      label: t('storage.remove'),
                       onClick: async () => {
                         messageBox({
                           title: `Remove "${storage.name}" storage`,
-                          message:
-                            'The storage will be unlinked from this app.',
+                          message: t('storage.removeMessage'),
                           iconType: DialogIconTypes.Warning,
-                          buttons: ['Remove Storage', 'Cancel'],
+                          buttons: [t('storage.remove'), t('general.cancel')],
                           defaultButtonIndex: 0,
                           cancelButtonIndex: 1,
                           onClose: (value: number | null) => {
@@ -375,7 +376,7 @@ export default () => {
                   <TagListFragment storage={storage} />
                   <SideNavigatorItem
                     depth={1}
-                    label='Attachments'
+                    label={t('general.attachments')}
                     icon={
                       attachmentsPageIsActive ? (
                         <IconImage size='1.5em' />
@@ -391,7 +392,7 @@ export default () => {
                   />
                   <SideNavigatorItem
                     depth={1}
-                    label='Trash'
+                    label={t('general.trash')}
                     icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
                     active={trashcanPageIsActive}
                     onClick={() => push(trashcanPagePathname)}
@@ -406,7 +407,7 @@ export default () => {
           )
         })}
         {storageEntries.length === 0 && (
-          <div className='empty'>No storages</div>
+          <div className='empty'>{t('storage.noStorage')}</div>
         )}
         {preferences['general.tutorials'] === 'display' && (
           <TutorialsNavigator />

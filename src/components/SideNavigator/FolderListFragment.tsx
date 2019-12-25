@@ -9,13 +9,16 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound, IconFile, IconFileOpen } from '../icons'
+import { IconAddRound, IconBook, IconFile, IconFileOpen } from '../icons'
+import { useTranslation } from 'react-i18next'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
 }
+
+const { t } = useTranslation()
 
 const FolderListFragment = ({
   storage,
@@ -60,22 +63,14 @@ const FolderListFragment = ({
       popup(event, [
         {
           type: MenuTypes.Normal,
-          label: 'New Note',
-          enabled: folderPathname !== '/',
-          onClick: async () => {
-            createNote(storageId, { folderPathname })
-          }
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'New Folder',
+          label: t('folder.create'),
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)
           }
         },
         {
           type: MenuTypes.Normal,
-          label: 'Rename Folder',
+          label: t('folder.rename'),
           enabled: folderPathname !== '/',
           onClick: async () => {
             showPromptToRenameFolder(folderPathname)
@@ -83,14 +78,14 @@ const FolderListFragment = ({
         },
         {
           type: MenuTypes.Normal,
-          label: 'Remove Folder',
+          label: t('folder.remove'),
           enabled: folderPathname !== '/',
           onClick: () => {
             messageBox({
               title: `Remove "${folderPathname}" folder`,
-              message: 'All notes and subfolders will be deleted.',
+              message: t('folder.removeMessage'),
               iconType: DialogIconTypes.Warning,
-              buttons: ['Remove Folder', 'Cancel'],
+              buttons: [t('folder.remove'), t('general.cancel')],
               defaultButtonIndex: 0,
               cancelButtonIndex: 1,
               onClose: (value: number | null) => {
@@ -145,10 +140,10 @@ const FolderListFragment = ({
         })
       } else {
         messageBox({
-          title: 'Move Note to Other storage',
-          message: 'You are trying to move a note to different storage.',
+          title: t('storage.moveTitle'),
+          message: t('storage.moveMessage'),
           iconType: DialogIconTypes.Info,
-          buttons: ['Move Note', 'Copy Note', 'Cancel'],
+          buttons: [t('storage.move'), t('storage.copy'), t('general.cancel')],
           defaultButtonIndex: 0,
           cancelButtonIndex: 2,
           onClose: async (value: number | null) => {
@@ -176,8 +171,26 @@ const FolderListFragment = ({
       }
     }
   }
+
   return (
     <>
+      <SideNavigatorItem
+        depth={1}
+        active={rootFolderIsActive}
+        label={t('general.allnote')}
+        icon={
+          rootFolderIsActive ? (
+            <IconBook color='currentColor' />
+          ) : (
+            <IconBook color='currentColor' />
+          )
+        }
+        onClick={createOnFolderItemClickHandler('/')}
+        onDragOver={event => {
+          event.preventDefault()
+        }}
+        onDrop={createDropHandler('/')}
+      />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
         const folderName = nameElements[nameElements.length - 1]

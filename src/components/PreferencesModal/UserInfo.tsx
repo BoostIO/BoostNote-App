@@ -4,6 +4,7 @@ import styled from '../../lib/styled'
 import MdiIcon from '@mdi/react'
 import { mdiAccount } from '@mdi/js'
 import { SectionPrimaryButton } from './styled'
+import { useTranslation } from 'react-i18next'
 
 interface UserProps {
   user: User
@@ -14,12 +15,14 @@ const Container = styled.div`
   margin-bottom: 8px;
 `
 
+const { t } = useTranslation()
+
 export default ({ user, signout }: UserProps) => (
   <Container>
     <MdiIcon path={mdiAccount} size='80px' />
     <p>{user.name}</p>
     <SectionPrimaryButton onClick={() => signout(user)}>
-      Sign Out
+      {t('general.signOut')}
     </SectionPrimaryButton>
   </Container>
 )

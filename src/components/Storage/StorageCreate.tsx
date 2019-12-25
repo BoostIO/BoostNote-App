@@ -46,7 +46,7 @@ export default () => {
       <SectionMargin>
         <SectionHeader1>{t('Create new storage')}</SectionHeader1>
         <RightMargin>
-          <label>Storage Name</label>
+          <label>{t('storage.name')}</label>
         </RightMargin>
         <RightMargin>
           <input
@@ -62,7 +62,7 @@ export default () => {
               checked={storageType === 'cloud'}
               onChange={() => setStorageType('cloud')}
             />
-            Cloud
+            {t('storage.typeCloud')}
           </label>
         </RightMargin>
         <label>
@@ -71,14 +71,14 @@ export default () => {
             checked={storageType === 'local'}
             onChange={() => setStorageType('local')}
           />
-          Local
+          {t('storage.typeLocal')}
         </label>
 
         {(storageType === 'local' || isLoggedIn) && (
           <>
             <TopMargin>
               <SectionPrimaryButton onClick={() => createStorageCallback()}>
-                Create Storage
+                {t('storage.create')}
               </SectionPrimaryButton>
             </TopMargin>
           </>
@@ -86,7 +86,7 @@ export default () => {
         {!isLoggedIn && storageType === 'cloud' && (
           <>
             <TopMargin>
-              <p>You need to sign in to create a cloud storage.</p>
+              <p>{t('storage.needSignIn')}</p>
               <LoginButton
                 onErr={console.error /* TODO: Toast error */}
                 ButtonComponent={SectionPrimaryButton}
