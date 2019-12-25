@@ -320,6 +320,9 @@ export default () => {
                 onFoldButtonClick={() => {
                   toggleSideNavOpenedItem(itemId)
                 }}
+                onClick={() => {
+                  push(`/app/storages/${storage.id}/notes`)
+                }}
                 onContextMenu={event => {
                   event.preventDefault()
                   popup(event, [

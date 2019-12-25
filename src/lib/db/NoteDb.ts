@@ -46,14 +46,23 @@ export default class NoteDb {
     await this.upsertNoteListViews()
 
     const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
-    const { missingPathnameSet, missingTagNameSet } = values(noteMap).reduce<{
+    const { missingPathnameSet, missingTagNameSet, requiresUpdate } = values(
+      noteMap
+    ).reduce<{
       missingPathnameSet: Set<string>
       missingTagNameSet: Set<string>
+      requiresUpdate: NoteDoc[]
     }>(
       (obj, noteDoc) => {
         if (noteDoc.trashed) {
           return obj
         }
+
+        if (noteDoc.folderPathname === '/') {
+          noteDoc.folderPathname = '/default'
+          obj.requiresUpdate.push(noteDoc)
+        }
+
         if (folderMap[noteDoc.folderPathname] == null) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
@@ -64,15 +73,22 @@ export default class NoteDb {
         })
         return obj
       },
-      { missingPathnameSet: new Set(), missingTagNameSet: new Set() }
+      {
+        missingPathnameSet: new Set(),
+        missingTagNameSet: new Set(),
+        requiresUpdate: []
+      }
     )
 
     await Promise.all([
-      ...[...missingPathnameSet, '/'].map(pathname =>
-        this.upsertFolder(pathname)
-      ),
-      ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName))
+      ...[...missingPathnameSet].map(pathname => this.upsertFolder(pathname)),
+      ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName)),
+      ...requiresUpdate.map(note => this.updateNote(note._id, note))
     ])
+
+    if (folderMap['/'] != null) {
+      await this.removeFolder('/')
+    }
   }
 
   async getFolder(path: string): Promise<FolderDoc | null> {
@@ -118,7 +134,9 @@ export default class NoteDb {
 
   async doesParentFolderExistOrCreate(pathname: string) {
     const parentPathname = getParentFolderPathname(pathname)
-    await this.upsertFolder(parentPathname)
+    if (parentPathname !== '/') {
+      await this.upsertFolder(parentPathname)
+    }
   }
 
   async getAllDocsMap(): Promise<AllDocsMap> {
@@ -136,8 +154,8 @@ export default class NoteDb {
       const { doc } = row
       if (isNoteDoc(doc)) {
         map.noteMap[doc._id] = {
-          storageId: this.id,
-          ...doc
+          ...doc,
+          storageId: this.id
         } as PopulatedNoteDoc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
@@ -213,7 +231,7 @@ export default class NoteDb {
       title: '',
       content: '',
       tags: [],
-      folderPathname: '/',
+      folderPathname: '/default',
       data: {},
       bookmarked: false,
       ...noteProps,

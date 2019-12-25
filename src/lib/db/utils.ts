@@ -45,7 +45,7 @@ export function isFolderNameValid(name: string): boolean {
 }
 
 export function isFolderPathnameValid(pathname: string): boolean {
-  if (pathname === '/') return true
+  if (pathname === '/') return false
   if (!pathname.startsWith('/')) return false
   const [, ...folderNames] = pathname.split('/')
   return folderNames.every(isFolderNameValid)
@@ -121,7 +121,9 @@ export function getAllParentFolderPathnames(pathname: string) {
   let currentPathname = pathname
   do {
     currentPathname = getParentFolderPathname(currentPathname)
-    pathnames.push(currentPathname)
+    if (currentPathname !== '/') {
+      pathnames.push(currentPathname)
+    }
   } while (currentPathname !== '/')
   return pathnames
 }
