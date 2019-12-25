@@ -15,7 +15,7 @@ import {
   iconColor,
   selectTabStyle
 } from '../../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe } from '../../icons'
+import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 import { useTranslation } from 'react-i18next'
 
 export const StyledNoteListContainer = styled.div`
