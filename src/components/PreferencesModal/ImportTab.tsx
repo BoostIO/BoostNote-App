@@ -55,9 +55,8 @@ const StyledRemove = styled.span`
   color: ${({ theme }) => theme.primaryColor};
 `
 
-const { t } = useTranslation()
-
 export default () => {
+  const { t } = useTranslation()
   const { pushMessage } = useToast()
   const { storageMap, createNote } = useDb()
   const storageEntries = useMemo(() => entries(storageMap), [storageMap])

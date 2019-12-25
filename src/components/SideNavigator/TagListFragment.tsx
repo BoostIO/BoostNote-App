@@ -14,8 +14,6 @@ interface TagListFragmentProps {
   storage: NoteStorage
 }
 
-const { t } = useTranslation()
-
 const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
   const { id: storageId, tagMap } = storage
@@ -23,6 +21,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { removeTag } = useDb()
+  const { t } = useTranslation()
   const currentPathname = usePathnameWithoutNoteId()
 
   const tagListNavItemId = getTagListItemId(storage.id)
@@ -69,7 +68,16 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         />
       )
     })
-  }, [storageId, tagMap, push, currentPathname, popup, messageBox, removeTag])
+  }, [
+    storageId,
+    tagMap,
+    push,
+    currentPathname,
+    popup,
+    messageBox,
+    removeTag,
+    t
+  ])
 
   return (
     <>
