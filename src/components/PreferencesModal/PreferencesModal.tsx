@@ -11,6 +11,7 @@ import BillingTab from './BillingTab'
 import ImportTab from './ImportTab'
 import { backgroundColor, iconColor } from '../../lib/styled/styleFunctions'
 import { IconClose } from '../icons'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   z-index: 7000;
@@ -89,10 +90,12 @@ const PreferencesModal = () => {
     return null
   }
 
+  const { t } = useTranslation()
+
   return (
     <Container>
       <TabNav>
-        <Header>Preferences</Header>
+        <Header>{t('preferences.general')}</Header>
         <TabButton
           label='General'
           tab='general'

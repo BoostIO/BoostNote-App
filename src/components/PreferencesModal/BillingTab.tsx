@@ -11,6 +11,7 @@ import { usePreferences } from '../../lib/preferences'
 import { getSubscription, Subscription } from '../../lib/accounts'
 import LoginButton from '../atoms/LoginButton'
 import { openNew } from '../../lib/utils/platform'
+import { useTranslation } from 'react-i18next'
 
 const BillingContent = styled.div`
   .billing-lead {
@@ -66,37 +67,43 @@ const BillingTab = () => {
   const loggedIn = user != null
   const hasSubscription = subscription != null
 
+  const { t } = useTranslation()
+
   return (
     <Section>
-      <SectionHeader>Billing</SectionHeader>
+      <SectionHeader>{t('billing.billing')}</SectionHeader>
       <BillingContent>
         {!loggedIn && (
           <div className='billing-lead'>
-            <p>Please sign in to upgrade your plan.</p>
+            <p>{t('billing.message')}</p>
           </div>
         )}
         <SectionTable>
           <thead>
             <th></th>
             <th className='billing-plan'>
-              <span className='billing-name'>Basic</span>
+              <span className='billing-name'>{t('billing.basic')}</span>
               <span className='billing-price'>$0</span>
               {!hasSubscription && (
                 <SectionSecondaryButton disabled>
-                  Current
+                  {t('billing.current')}
                 </SectionSecondaryButton>
               )}
             </th>
             <th className='billing-plan'>
-              <span className='billing-name'>Premium</span>
-              <span className='billing-price'>$3/Month (USD) *</span>
+              <span className='billing-name'>{t('billing.premium')}</span>
+              <span className='billing-price'>{t('billing.price')}</span>
               {!loggedIn && (
                 <LoginButton ButtonComponent={SectionPrimaryButton}>
-                  Sign In
+                  {t('general.signin')}
                 </LoginButton>
               )}
               {loggedIn && (
-                <SectionPrimaryButton onClick={() => openNew('https://note.boostio.co/subscription')}>
+                <SectionPrimaryButton
+                  onClick={() =>
+                    openNew('https://note.boostio.co/subscription')
+                  }
+                >
                   {hasSubscription ? 'Manage' : 'Upgrade'}
                 </SectionPrimaryButton>
               )}
@@ -104,37 +111,37 @@ const BillingTab = () => {
           </thead>
           <tbody>
             <tr>
-              <th>Web App</th>
+              <th>{t('billing.browser')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Desktop App (Mac/Windows/Linux)</th>
+              <th>{t('billing.desktop')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Mobile App (Will be launched at Jan, 2020)</th>
+              <th>{t('billing.mobile')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Syncing Multiple Devices</th>
+              <th>{t('billing.sync')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Local Storage</th>
+              <th>{t('billing.local')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Cloud Storage</th>
+              <th>{t('billing.cloud')}</th>
               <td>〇</td>
               <td>〇</td>
             </tr>
             <tr>
-              <th>Cloud Storage Size</th>
+              <th>{t('billing.storageSize')}</th>
               <td>100MB</td>
               <td>2GB</td>
             </tr>
@@ -142,12 +149,12 @@ const BillingTab = () => {
         </SectionTable>
         {loggedIn && (
           <div className='billing-extra'>
-            <p>
-              * If you need more cloud storage, you can add it at any time by
-              paying $5 (USD) for every 5GB. Click the "Add Extra Storage"
-              button below.
-            </p>
-            <SectionPrimaryButton onClick={() => openNew('https://note.boostio.co/subscription')}>Add Extra Storage</SectionPrimaryButton>
+            <p>{t('billing.addStorageDescription')}</p>
+            <SectionPrimaryButton
+              onClick={() => openNew('https://note.boostio.co/subscription')}
+            >
+              {t('billing.addStorage')}
+            </SectionPrimaryButton>
           </div>
         )}
       </BillingContent>

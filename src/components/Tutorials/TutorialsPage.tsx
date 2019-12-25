@@ -5,6 +5,7 @@ import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useRouter } from '../../lib/router'
 import TutorialsNoteList from './TutorialsNoteList'
 import TutorialsNoteDetail from './TutorialsNoteDetail'
+import { useTranslation } from 'react-i18next'
 
 interface TutorialsPageProps {
   pathname: string
@@ -18,7 +19,7 @@ type TutoriasPagePicker = {
 export default ({ pathname }: TutorialsPageProps) => {
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const router = useRouter()
-
+  const { t } = useTranslation()
   const searchThroughTreeForIdenticalNode = useCallback(
     (
       pathToSearch: string,
@@ -241,7 +242,7 @@ export default ({ pathname }: TutorialsPageProps) => {
       }
       right={
         selectedNote == null ? (
-          <div>No note selected</div>
+          <div>{t('note.unselect')}</div>
         ) : (
           <TutorialsNoteDetail
             note={selectedNote}

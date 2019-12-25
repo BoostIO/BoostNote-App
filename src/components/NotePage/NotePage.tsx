@@ -18,6 +18,7 @@ import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/regex'
+import { useTranslation } from 'react-i18next'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -49,6 +50,8 @@ export default () => {
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const { push } = useRouter()
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     setLastCreatedNoteId('')
@@ -206,10 +209,10 @@ export default () => {
   const purgeNote = useCallback(
     (storageId: string, noteId: string) => {
       messageBox({
-        title: 'Delete a Note',
-        message: 'The note will be deleted permanently',
+        title: t('note.delete2'),
+        message: t('note.deleteMessage'),
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete Note', 'Cancel'],
+        buttons: [t('note.delete2'), t('general.cancel')],
         defaultButtonIndex: 0,
         cancelButtonIndex: 1,
         onClose: (value: number | null) => {
@@ -263,13 +266,14 @@ export default () => {
           <StyledNoteDetailNoNote>
             {storageId != null ? (
               <div>
-                <h1>Command(⌘) + N</h1>
-                <h2>to create a new note</h2>
+                <h1>{t('note.createKeyMac')}</h1>
+                <h1>{t('note.createKeyWinLin')}</h1>
+                <h2>{t('note.createkeymessage1')}</h2>
               </div>
             ) : (
               <div>
-                <h1>Select a storage</h1>
-                <h2>to create a new note</h2>
+                <h1>{t('note.createkeymessage2')}</h1>
+                <h2>{t('note.createkeymessage3')}</h2>
               </div>
             )}
           </StyledNoteDetailNoNote>

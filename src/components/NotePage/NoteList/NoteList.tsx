@@ -15,7 +15,8 @@ import {
   iconColor,
   selectTabStyle
 } from '../../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
+import { IconEdit, IconLoupe } from '../../icons'
+import { useTranslation } from 'react-i18next'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -112,6 +113,8 @@ type NoteListProps = {
   lastCreatedNoteId: string
 }
 
+const { t } = useTranslation()
+
 const NoteList = ({
   notes,
   createNote,
@@ -167,7 +170,7 @@ const NoteList = ({
             className='input'
             value={search}
             onChange={updateSearchInput}
-            placeholder='Search Notes'
+            placeholder={t('note.search')}
           />
           <IconLoupe className='icon' size='0.8em' />
         </div>
@@ -207,9 +210,9 @@ const NoteList = ({
         })}
         {notes.length === 0 ? (
           search.trim() === '' ? (
-            <li className='empty'>No notes</li>
+            <li className='empty'>{t('note.nothing')}</li>
           ) : (
-            <li className='empty'>No notes could be found.</li>
+            <li className='empty'>{t('note.nothingMessage')}</li>
           )
         ) : null}
       </ul>

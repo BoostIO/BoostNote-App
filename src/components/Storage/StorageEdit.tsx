@@ -12,6 +12,7 @@ import { useDebounce } from 'react-use'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { isCloudStorageData } from '../../lib/db/utils'
 import { useToast } from '../../lib/toast'
+import { useTranslation } from 'react-i18next'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -20,6 +21,7 @@ interface StorageEditProps {
 export default ({ storage }: StorageEditProps) => {
   const db = useDb()
   const router = useRouter()
+  const { t } = useTranslation()
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
@@ -31,9 +33,9 @@ export default ({ storage }: StorageEditProps) => {
   const removeCallback = useCallback(() => {
     messageBox({
       title: `Remove "${storage.name}" storage`,
-      message: 'The storage will be unlinked from this app.',
+      message: t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
-      buttons: ['Remove Storage', 'Cancel'],
+      buttons: [t('storage.remove'), t('general.cancel')],
       defaultButtonIndex: 0,
       cancelButtonIndex: 1,
       onClose: async (value: number | null) => {
@@ -43,7 +45,7 @@ export default ({ storage }: StorageEditProps) => {
             router.push('/app')
           } catch {
             pushMessage({
-              title: 'Network Error',
+              title: t('general.networkError'),
               description: `An error occurred while deleting storage (id: ${storage.id})`
             })
           }
@@ -56,7 +58,7 @@ export default ({ storage }: StorageEditProps) => {
     () => {
       db.renameStorage(storage.id, name).catch(() => {
         pushMessage({
-          title: 'Network Error',
+          title: t('general.networkError'),
           description: `An error occured while updating storage (id:${storage.id}}`
         })
       })
@@ -68,11 +70,11 @@ export default ({ storage }: StorageEditProps) => {
   return (
     <div>
       <SectionMargin>
-        <SectionHeader1>Edit Storage</SectionHeader1>
+        <SectionHeader1>{t('storage.edit')}</SectionHeader1>
         <div>
           <RightMargin>
             <label>
-              <RightMargin>Storage Name</RightMargin>
+              <RightMargin>{t('storage.name')}</RightMargin>
               <input
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -81,14 +83,14 @@ export default ({ storage }: StorageEditProps) => {
             </label>
           </RightMargin>
           <DeleteStorageButton onClick={removeCallback}>
-            Delete Storage
+            {t('storage.delete')}
           </DeleteStorageButton>
         </div>
         <div>
           {isCloudStorageData(storage) && (
             <div>
               <p>
-                Last synced at
+                {t('storage.syncDate')}
                 {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
               </p>
             </div>
