@@ -9,7 +9,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound, IconBook, IconFile, IconFileOpen } from '../icons'
+import { IconAddRound, IconFile, IconFileOpen } from '../icons'
 import { useTranslation } from 'react-i18next'
 
 interface FolderListFragmentProps {
@@ -174,23 +174,6 @@ const FolderListFragment = ({
 
   return (
     <>
-      <SideNavigatorItem
-        depth={1}
-        active={rootFolderIsActive}
-        label={t('general.allnote')}
-        icon={
-          rootFolderIsActive ? (
-            <IconBook color='currentColor' />
-          ) : (
-            <IconBook color='currentColor' />
-          )
-        }
-        onClick={createOnFolderItemClickHandler('/')}
-        onDragOver={event => {
-          event.preventDefault()
-        }}
-        onDrop={createDropHandler('/')}
-      />
       {openedFolderPathnameList.map((folderPathname: string) => {
         const nameElements = folderPathname.split('/').slice(1)
         const folderName = nameElements[nameElements.length - 1]
