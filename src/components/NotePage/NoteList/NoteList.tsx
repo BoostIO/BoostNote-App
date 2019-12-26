@@ -102,7 +102,7 @@ type SortProps = 'createdAt' | 'title' | 'updatedAt'
 
 type NoteListProps = {
   currentStorageId?: string
-  currentNoteId: string
+  currentNoteId?: string
   search: string
   notes: PopulatedNoteDoc[]
   createNote?: () => Promise<void>
