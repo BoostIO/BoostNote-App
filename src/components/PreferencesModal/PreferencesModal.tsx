@@ -56,6 +56,7 @@ const CloseButton = styled.button`
 `
 
 const PreferencesModal = () => {
+  const { t } = useTranslation()
   const { closed, toggleClosed } = usePreferences()
   const [tab, setTab] = useState('general')
   const { t } = useTranslation()
