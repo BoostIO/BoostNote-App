@@ -8,12 +8,12 @@ import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import { StyledNoteDetailContainer } from '../NotePage/NoteDetail/NoteDetail'
 import { ViewModeType } from '../../lib/generalStatus'
 import { IconEye, IconSplit, IconEdit } from '../icons'
-import { useTranslation } from 'react-i18next'
 
 type TutorialsNoteDetailProps = {
   note: TutorialsNavigatorTreeItem
   viewMode: ViewModeType
   toggleViewMode: (mode: ViewModeType) => void
+  t: (str: string) => Promise<void>
 }
 
 type TutorialsNoteDetailState = {
@@ -80,12 +80,10 @@ export default class TutorialsNoteDetail extends React.Component<
       <CustomizedMarkdownPreviewer content={this.state.noteContent} />
     )
 
-    const { t } = useTranslation()
-
     return (
       <StyledNoteDetailContainer>
         {note == null ? (
-          <p>{t('note.unselect')}</p>
+          <p>{this.props.t('note.unselect')}</p>
         ) : (
           <>
             <div className='titleSection'>
