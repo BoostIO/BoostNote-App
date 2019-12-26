@@ -26,7 +26,6 @@ const TutorialsNoteList = ({
   selectedNote
 }: TutorialsNoteListProps) => {
   useGlobalKeyDownHandler(e => {
-    console.log(e.key)
     switch (e.key) {
       case 'j':
         if (isWithGeneralCtrlKey(e)) {
