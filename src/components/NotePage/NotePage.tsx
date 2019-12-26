@@ -279,7 +279,7 @@ export default () => {
     }
   })
 
-  return storageId != null ? (
+  return (
     <TwoPaneLayout
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
