@@ -17,7 +17,12 @@ import cc from 'classcat'
 import { useDb } from '../../lib/db'
 import { openNew } from '../../lib/utils/platform'
 
-const schema = mergeDeepRight(gh, { attributes: { '*': ['className'] } })
+const schema = mergeDeepRight(gh, {
+  attributes: {
+    '*': ['className'],
+    input: ['checked']
+  }
+})
 
 interface Element extends Parent {
   type: 'element'
