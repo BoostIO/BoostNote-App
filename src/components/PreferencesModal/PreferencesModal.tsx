@@ -58,7 +58,7 @@ const CloseButton = styled.button`
 const PreferencesModal = () => {
   const { closed, toggleClosed } = usePreferences()
   const [tab, setTab] = useState('general')
-
+  const { t } = useTranslation()
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {
@@ -89,8 +89,6 @@ const PreferencesModal = () => {
   if (closed) {
     return null
   }
-
-  const { t } = useTranslation()
 
   return (
     <Container>
