@@ -138,7 +138,7 @@ export default () => {
     return 0
   }, [filteredNotes, noteId])
 
-  const currentNote = useMemo(() => {
+  const currentNote: PopulatedNoteDoc | undefined = useMemo(() => {
     return filteredNotes[currentNoteIndex]
   }, [filteredNotes, currentNoteIndex])
 
