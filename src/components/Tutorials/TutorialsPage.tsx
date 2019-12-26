@@ -248,7 +248,6 @@ export default ({ pathname }: TutorialsPageProps) => {
             note={selectedNote}
             viewMode={generalStatus.noteViewMode}
             toggleViewMode={toggleViewMode}
-            t={t}
           />
         )
       }

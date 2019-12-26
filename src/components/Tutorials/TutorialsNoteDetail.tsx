@@ -13,7 +13,6 @@ type TutorialsNoteDetailProps = {
   note: TutorialsNavigatorTreeItem
   viewMode: ViewModeType
   toggleViewMode: (mode: ViewModeType) => void
-  t: (str: string) => Promise<void>
 }
 
 type TutorialsNoteDetailState = {
@@ -82,45 +81,39 @@ export default class TutorialsNoteDetail extends React.Component<
 
     return (
       <StyledNoteDetailContainer>
-        {note == null ? (
-          <p>{this.props.t('note.unselect')}</p>
-        ) : (
-          <>
-            <div className='titleSection'>
-              <input value={this.props.note.label} disabled={true} />
-            </div>
-            <div className='contentSection'>
-              {viewMode === 'preview' ? (
-                markdownPreviewer
-              ) : viewMode === 'split' ? (
-                <>
-                  <div className='splitLeft'>{codeEditor}</div>
-                  <div className='splitRight'>{markdownPreviewer}</div>
-                </>
-              ) : (
-                codeEditor
-              )}
-            </div>
-            <Toolbar>
-              <ToolbarSeparator />
-              <ToolbarIconButton
-                className={viewMode === 'edit' ? 'active' : ''}
-                onClick={() => toggleViewMode('edit')}
-                icon={<IconEdit />}
-              />
-              <ToolbarIconButton
-                className={viewMode === 'split' ? 'active' : ''}
-                onClick={() => toggleViewMode('split')}
-                icon={<IconSplit />}
-              />
-              <ToolbarIconButton
-                className={viewMode === 'preview' ? 'active' : ''}
-                onClick={() => toggleViewMode('preview')}
-                icon={<IconEye />}
-              />
-            </Toolbar>
-          </>
-        )}
+        <div className='titleSection'>
+          <input value={this.props.note.label} disabled={true} />
+        </div>
+        <div className='contentSection'>
+          {viewMode === 'preview' ? (
+            markdownPreviewer
+          ) : viewMode === 'split' ? (
+            <>
+              <div className='splitLeft'>{codeEditor}</div>
+              <div className='splitRight'>{markdownPreviewer}</div>
+            </>
+          ) : (
+            codeEditor
+          )}
+        </div>
+        <Toolbar>
+          <ToolbarSeparator />
+          <ToolbarIconButton
+            className={viewMode === 'edit' ? 'active' : ''}
+            onClick={() => toggleViewMode('edit')}
+            icon={<IconEdit />}
+          />
+          <ToolbarIconButton
+            className={viewMode === 'split' ? 'active' : ''}
+            onClick={() => toggleViewMode('split')}
+            icon={<IconSplit />}
+          />
+          <ToolbarIconButton
+            className={viewMode === 'preview' ? 'active' : ''}
+            onClick={() => toggleViewMode('preview')}
+            icon={<IconEye />}
+          />
+        </Toolbar>
       </StyledNoteDetailContainer>
     )
   }
