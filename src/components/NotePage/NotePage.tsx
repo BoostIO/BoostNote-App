@@ -276,19 +276,19 @@ export default () => {
           createNote()
         }
         break
-      case 's':
+      case 't':
         if (isWithGeneralCtrlKey(e) && e.shiftKey) {
-          toggleViewMode('split')
-        }
-        break
-      case 'e':
-        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
-          toggleViewMode('edit')
-        }
-        break
-      case 'p':
-        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
-          toggleViewMode('preview')
+          switch (generalStatus['noteViewMode']) {
+            case 'edit':
+              toggleViewMode('split')
+              break
+            case 'split':
+              toggleViewMode('preview')
+              break
+            default:
+              toggleViewMode('edit')
+              break
+          }
         }
         break
     }
