@@ -259,7 +259,7 @@ export default () => {
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
-          currentNoteId={currentNote._id}
+          currentNoteId={currentNote ? currentNote._id : undefined}
           lastCreatedNoteId={lastCreatedNoteId}
         />
       }
