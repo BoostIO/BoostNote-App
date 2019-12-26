@@ -277,6 +277,7 @@ export default () => {
         }
         break
       case 'T':
+      case 't':
         if (isWithGeneralCtrlKey(e) && e.shiftKey) {
           switch (generalStatus['noteViewMode']) {
             case 'edit':
