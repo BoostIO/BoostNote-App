@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  KeyboardEvent,
-  useRef,
-  ChangeEventHandler,
-  useMemo,
-  useState
-} from 'react'
+import React, { useCallback, useRef, ChangeEventHandler } from 'react'
 import NoteItem from './NoteItem'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
@@ -21,6 +14,7 @@ import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey
 } from '../../../lib/keyboard'
+import { NoteListSortOptions } from '../NotePage'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -102,8 +96,6 @@ export const StyledNoteListContainer = styled.div`
   }
 `
 
-type SortProps = 'createdAt' | 'title' | 'updatedAt'
-
 type NoteListProps = {
   currentStorageId?: string
   currentNoteId?: string
@@ -115,6 +107,7 @@ type NoteListProps = {
   navigateUp: () => void
   basePathname: string
   lastCreatedNoteId: string
+  setSort: (option: NoteListSortOptions) => void
 }
 
 const NoteList = ({
@@ -127,7 +120,8 @@ const NoteList = ({
   setSearchInput,
   navigateDown,
   navigateUp,
-  lastCreatedNoteId
+  lastCreatedNoteId,
+  setSort
 }: NoteListProps) => {
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -136,41 +130,33 @@ const NoteList = ({
     },
     [setSearchInput]
   )
-  const [sort, setSort] = useState<SortProps>('updatedAt')
-
-  const sortedNotes = useMemo(() => {
-    return notes.sort((first, second) => {
-      return sort === 'title'
-        ? first[sort].localeCompare(second[sort])
-        : second[sort].localeCompare(first[sort])
-    })
-  }, [notes, sort])
-
-  const handleListKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'ArrowDown':
-          navigateDown()
-          break
-        case 'ArrowUp':
-          navigateUp()
-          break
-      }
-    },
-    [navigateUp, navigateDown]
-  )
 
   const listRef = useRef<HTMLUListElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
   useGlobalKeyDownHandler(e => {
     switch (e.key) {
-      case 'p':
+      case 's':
+        if (isWithGeneralCtrlKey(e) && !e.shiftKey) {
+          searchRef.current!.focus()
+        }
+        break
+      case 'j':
         if (isWithGeneralCtrlKey(e)) {
           e.preventDefault()
           e.stopPropagation()
-          searchRef.current!.focus()
+          navigateDown()
         }
+        break
+      case 'k':
+        if (isWithGeneralCtrlKey(e)) {
+          e.preventDefault()
+          e.stopPropagation()
+          navigateUp()
+        }
+        break
+      default:
+        break
     }
   })
 
@@ -200,15 +186,15 @@ const NoteList = ({
         <IconArrowSingleDown className='filterIcon' size='0.8em' />
         <select
           className='input'
-          onChange={e => setSort(e.target.value as SortProps)}
+          onChange={e => setSort(e.target.value as NoteListSortOptions)}
         >
           <option value='updatedAt'>Updated</option>
           <option value='createdAt'>Created</option>
           <option value='title'>Title</option>
         </select>
       </div>
-      <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
-        {sortedNotes.map(note => {
+      <ul tabIndex={0} ref={listRef}>
+        {notes.map(note => {
           const noteIsCurrentNote = note._id === currentNoteId
           return (
             <li key={note._id}>

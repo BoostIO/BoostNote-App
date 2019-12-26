@@ -58,8 +58,8 @@ export default {
     'note.nothingMessage': 'ノートが見つかりません',
     'note.noTitle': '無題',
     'note.date': '前',
-    'note.createKeyMac': 'Mac: Command(⌘) + Enter',
-    'note.createKeyWinLin': 'Windows/Linux: Ctrl + Enter',
+    'note.createKeyMac': 'Mac: Command(⌘) + n',
+    'note.createKeyWinLin': 'Windows/Linux: Ctrl + n',
     'note.createkeymessage1': 'ノート作成',
     'note.createkeymessage2': 'ストレージを選択しましょう',
     'note.createkeymessage3': 'ノート作成',
@@ -70,8 +70,7 @@ export default {
 
     //About
     'about.about': '概要',
-    'about.boostnoteDescription':
-      'オープンソースの開発者のためのノートアプリ',
+    'about.boostnoteDescription': 'オープンソースの開発者のためのノートアプリ',
     'about.website': 'ウェブサイト',
     'about.boostWiki': 'チームのためのBoost Note',
     'about.platform': 'クロスプラットフォーム',
@@ -86,7 +85,8 @@ export default {
 
     //Billing
     'billing.billing': '課金',
-    'billing.message': 'プランをアップグレードするためにはサインインしてください',
+    'billing.message':
+      'プランをアップグレードするためにはサインインしてください',
     'billing.basic': '無料',
     'billing.current': '今のプラン',
     'billing.premium': 'プレミアム',
@@ -125,7 +125,8 @@ export default {
       'Boost Noteは、改善のためにエンドポイント数等のみデータを取得しています。あなたのノートの中身を見たり、データを取得することは絶対にありません。Boost Noteはオープンソースであるため、どのように動いているかGitHubから確認することができます。',
     'preferences.analyticsDescription2':
       'データ取得をオンにするかオフにするか、選ぶことができます。',
-    'preferences.analyticsLabel': 'Boost Noteの改善のために、データ取得をオンにする',
+    'preferences.analyticsLabel':
+      'Boost Noteの改善のために、データ取得をオンにする',
     'preferences.displayTutorialsLabel': 'チュートリアルを表示',
 
     // Preferences EditorTab
@@ -148,7 +149,8 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'データ移行',
     'preferences.description': '旧Boost Noteアプリからデータを移行する',
-    'preferences.importFlow1': '1. あなたのPCで、Boost Noteのファイルが入っているフォルダを選択します',
+    'preferences.importFlow1':
+      '1. あなたのPCで、Boost Noteのファイルが入っているフォルダを選択します',
     'preferences.importFlow2':
       '2. .csonファイルを選択し、下のフォームにドラッグ&ドロップしてください',
     'preferences.importFlow3':

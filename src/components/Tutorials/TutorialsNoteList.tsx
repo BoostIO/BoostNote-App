@@ -1,8 +1,12 @@
-import React, { useCallback, KeyboardEvent, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TutorialsNoteItem from './TutorialsNoteItem'
 import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
 import { useTranslation } from 'react-i18next'
+import {
+  isWithGeneralCtrlKey,
+  useGlobalKeyDownHandler
+} from '../../lib/keyboard'
 
 type TutorialsNoteListProps = {
   currentTree: TutorialsNavigatorTreeItem
@@ -21,19 +25,27 @@ const TutorialsNoteList = ({
   basePathname,
   selectedNote
 }: TutorialsNoteListProps) => {
-  const handleListKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'ArrowDown':
+  useGlobalKeyDownHandler(e => {
+    console.log(e.key)
+    switch (e.key) {
+      case 'j':
+        if (isWithGeneralCtrlKey(e)) {
+          e.preventDefault()
+          e.stopPropagation()
           navigateDown()
-          break
-        case 'ArrowUp':
+        }
+        break
+      case 'k':
+        if (isWithGeneralCtrlKey(e)) {
+          e.preventDefault()
+          e.stopPropagation()
           navigateUp()
-          break
-      }
-    },
-    [navigateUp, navigateDown]
-  )
+        }
+        break
+      default:
+        break
+    }
+  })
 
   const listRef = useRef<HTMLUListElement>(null)
 
@@ -52,7 +64,7 @@ const TutorialsNoteList = ({
 
   return (
     <StyledNoteListContainer>
-      <ul tabIndex={0} onKeyDown={handleListKeyDown} ref={listRef}>
+      <ul tabIndex={0} ref={listRef}>
         {notes.map(note => {
           const noteIsCurrentNote =
             selectedNote != null &&

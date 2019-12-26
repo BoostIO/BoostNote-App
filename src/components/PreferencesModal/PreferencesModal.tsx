@@ -59,7 +59,7 @@ const PreferencesModal = () => {
   const { t } = useTranslation()
   const { closed, toggleClosed } = usePreferences()
   const [tab, setTab] = useState('general')
-  const { t } = useTranslation()
+
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {

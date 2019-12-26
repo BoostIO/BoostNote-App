@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "dev:app": "npm run build:electron && npm run start",
     "start": "electron app/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",

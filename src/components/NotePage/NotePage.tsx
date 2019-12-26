@@ -35,6 +35,8 @@ export type BreadCrumbs = {
   folderIsActive: boolean
 }[]
 
+export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
+
 export default () => {
   const db = useDb()
 
@@ -50,12 +52,12 @@ export default () => {
     return db.storageMap[storageId]
   }, [db.storageMap, storageId])
   const router = useRouter()
+  const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const { push } = useRouter()
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
-
-  const { t } = useTranslation()
+  const [sort, setSort] = useState<NoteListSortOptions>('updatedAt')
 
   useEffect(() => {
     setLastCreatedNoteId('')
@@ -123,15 +125,22 @@ export default () => {
   }, [db.storageMap, currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
-    if (search.trim() === '') return notes
-    const regex = new RegExp(escapeRegExp(search), 'i')
-    return notes.filter(
-      note =>
-        note.tags.join().match(regex) ||
-        note.title.match(regex) ||
-        note.content.match(regex)
-    )
-  }, [search, notes])
+    let filteredNotes = notes
+    if (search.trim() != '') {
+      const regex = new RegExp(escapeRegExp(search), 'i')
+      filteredNotes = notes.filter(
+        note =>
+          note.tags.join().match(regex) ||
+          note.title.match(regex) ||
+          note.content.match(regex)
+      )
+    }
+    return filteredNotes.sort((first, second) => {
+      return sort === 'title'
+        ? first[sort].localeCompare(second[sort])
+        : second[sort].localeCompare(first[sort])
+    })
+  }, [search, notes, sort])
 
   const currentNoteIndex = useMemo(() => {
     for (let i = 0; i < filteredNotes.length; i++) {
@@ -143,7 +152,9 @@ export default () => {
   }, [filteredNotes, noteId])
 
   const currentNote: PopulatedNoteDoc | undefined = useMemo(() => {
-    return filteredNotes[currentNoteIndex]
+    return filteredNotes[currentNoteIndex] != null
+      ? filteredNotes[currentNoteIndex]
+      : undefined
   }, [filteredNotes, currentNoteIndex])
 
   const createNote = useCallback(async () => {
@@ -252,27 +263,31 @@ export default () => {
   useGlobalKeyDownHandler(e => {
     switch (e.key) {
       case 'Backspace':
-        if (storageId != null && e.shiftKey && isWithGeneralCtrlKey(e)) {
-          db.trashNote(storageId, currentNote._id)
+        if (currentNote != null && isWithGeneralCtrlKey(e)) {
+          if (!currentNote.trashed) {
+            db.trashNote(currentNote.storageId, currentNote._id)
+          } else {
+            purgeNote(currentNote.storageId, currentNote._id)
+          }
         }
         break
-      case 'Enter':
+      case 'n':
         if (isWithGeneralCtrlKey(e)) {
           createNote()
         }
         break
       case 's':
-        if (isWithGeneralCtrlKey(e) && e.altKey) {
+        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
           toggleViewMode('split')
         }
         break
       case 'e':
-        if (isWithGeneralCtrlKey(e) && e.altKey) {
+        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
           toggleViewMode('edit')
         }
         break
       case 'p':
-        if (isWithGeneralCtrlKey(e) && e.altKey) {
+        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
           toggleViewMode('preview')
         }
         break
@@ -295,6 +310,7 @@ export default () => {
           navigateUp={navigateUp}
           currentNoteId={currentNote ? currentNote._id : undefined}
           lastCreatedNoteId={lastCreatedNoteId}
+          setSort={setSort}
         />
       }
       right={
