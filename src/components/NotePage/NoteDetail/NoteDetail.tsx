@@ -29,9 +29,9 @@ import cc from 'classcat'
 import {
   IconTrash,
   IconArrowAgain,
-  IconEye,
-  IconSplit,
-  IconEdit
+  IconPreview,
+  IconSplitView,
+  IconEditView
 } from '../../icons'
 
 export const StyledNoteDetailContainer = styled.div`
@@ -140,7 +140,7 @@ export const StyledNoteDetailContainer = styled.div`
     flex: 0 0 210px;
 
     button + button {
-      margin-left: 10px;
+      margin-left: 8px;
     }
   }
 
@@ -559,17 +559,17 @@ export default class NoteDetail extends React.Component<
                 <ToolbarIconButton
                   className={viewMode === 'edit' ? 'active' : ''}
                   onClick={() => toggleViewMode('edit')}
-                  icon={<IconEdit />}
+                  icon={<IconEditView />}
                 />
                 <ToolbarIconButton
                   className={viewMode === 'split' ? 'active' : ''}
                   onClick={() => toggleViewMode('split')}
-                  icon={<IconSplit />}
+                  icon={<IconSplitView />}
                 />
                 <ToolbarIconButton
                   className={viewMode === 'preview' ? 'active' : ''}
                   onClick={() => toggleViewMode('preview')}
-                  icon={<IconEye />}
+                  icon={<IconPreview />}
                 />
                 {note.trashed ? (
                   <>
