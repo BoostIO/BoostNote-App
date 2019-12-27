@@ -125,6 +125,9 @@ color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
+&::placeholder {
+  color: ${theme.uiTextColor};
+}
 `
 
 export const selectTabStyle = ({ theme }: StyledProps) =>
