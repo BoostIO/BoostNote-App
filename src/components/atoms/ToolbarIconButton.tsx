@@ -1,16 +1,15 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import { iconColor } from '../../lib/styled/styleFunctions'
+import { noteListIconColor } from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;
-  width: 32px;
   height: 32px;
   box-sizing: border-box;
   font-size: 16px;
   outline: none;
   border: none;
-  ${iconColor}
+  ${noteListIconColor}
   &:first-child {
     margin-left: 0;
   }

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from '../../lib/styled'
-import { iconColor } from '../../lib/styled/styleFunctions'
+import { noteListIconColor } from '../../lib/styled/styleFunctions'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { NoteDoc } from '../../lib/db/types'
 import {
@@ -18,7 +18,7 @@ const StyledButton = styled.button<{ active: boolean }>`
   outline: none;
   font-size: 16px;
   border: none;
-  ${iconColor}
+  ${noteListIconColor}
   &:first-child {
     margin-left: 0;
   }

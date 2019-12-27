@@ -35,6 +35,8 @@ export const darkTheme: BaseTheme = {
   activeIconColor: light70Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
+  noteDetailIconColor: light30Color,
+  noteDetailActiveIconColor: light70Color,
   closeIconColor: light30Color,
   closeActiveIconColor: light70Color,
   backgroundColor: base1Color,
