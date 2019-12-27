@@ -30,6 +30,24 @@ transition: 200ms color;
   color: ${theme.primaryColor};
 }`
 
+export const noteListIconColor = ({ theme }: StyledProps) => `
+color: ${theme.noteListIconColor};
+transition: 200ms color;
+&:hover,
+&:active,
+&:focus {
+  color: ${theme.noteListActiveIconColor};
+}`
+
+export const closeIconColor = ({ theme }: StyledProps) => `
+color: ${theme.closeIconColor};
+transition: 200ms color;
+&:hover,
+&:active,
+&:focus {
+  color: ${theme.closeActiveIconColor};
+}`
+
 export const textColor = ({ theme }: StyledProps) =>
   `color: ${theme.textColor};`
 
