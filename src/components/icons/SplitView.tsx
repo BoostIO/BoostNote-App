@@ -7,8 +7,8 @@ import React from 'react'
 export const IconSplitView = (props: BoostnoteIconProps) => (
   <BoostnoteIconStyledContainer>
     <svg
-      width='1em'
-      height='1em'
+      width='1.5em'
+      height='1.5em'
       viewBox='0 0 72 72'
       {...props}
       style={
@@ -19,7 +19,7 @@ export const IconSplitView = (props: BoostnoteIconProps) => (
     >
       <g fill='none' fillRule='evenodd'>
         <path
-          stroke='#2C3149'
+          stroke='currentColor'
           strokeWidth={4}
           strokeLinejoin='round'
           d='M9 16h54v40H9z'
