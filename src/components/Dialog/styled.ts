@@ -77,7 +77,7 @@ export const StyledDialogButtonGroup = styled.div`
 
 export const StyledDialogButton = styled.button`
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 2px;
   margin-left: 8px;
   user-select: none;
   ${secondaryButtonStyle}

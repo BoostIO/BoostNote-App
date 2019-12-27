@@ -23,7 +23,7 @@ export const StyledContextMenu = styled.div`
   padding: ${menuVerticalPadding}px 0;
   font-size: 14px;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 2px;
   ${contextMenuShadow}
   outline: none;
 `

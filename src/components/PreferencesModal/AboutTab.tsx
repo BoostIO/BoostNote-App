@@ -55,7 +55,8 @@ const AboutContents = styled.div`
     text-align: right;
   }
 
-  .about-community {
+  .about-community,
+  .about-platform {
     margin-top: 40px;
   }
 
@@ -129,7 +130,7 @@ const AboutTab = () => {
               License: GPL v3
             </SectionSubtleText>
           </div>
-          <div className='about-community'>
+          <div className='about-platform'>
             <SectionHeader>{t('about.platform')}</SectionHeader>
             <AppLink />
           </div>
