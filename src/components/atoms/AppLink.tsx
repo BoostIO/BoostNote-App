@@ -4,31 +4,20 @@ import { getAppLinkFromUserAgent } from '../../lib/download'
 import { openNew } from '../../lib/utils/platform'
 import styled from '../../lib/styled'
 import cc from 'classcat'
+import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
 
 const AppLinkContainer = styled.button`
+  ${primaryButtonStyle}
   display: block;
-  background-color: rgb(3, 197, 136);
-  font-size: 13px;
   padding: 0 16px;
   height: 40px;
   line-height: 1;
-  color: rgb(255, 255, 255);
   border-width: initial;
   border-style: none;
   border-color: initial;
   border-image: initial;
-  border-radius: 4px;
+  border-radius: 2px;
   margin-bottom: 10px;
-
-  &:not(:disabled):hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-
-  &.darker {
-    background-color: #d7d7d7;
-    color: #000;
-  }
 
   .subtext {
     font-size: 12px;

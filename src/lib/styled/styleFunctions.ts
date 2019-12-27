@@ -39,6 +39,15 @@ transition: 200ms color;
   color: ${theme.noteListActiveIconColor};
 }`
 
+export const noteDetailIconColor = ({ theme }: StyledProps) => `
+color: ${theme.noteDetailIconColor};
+transition: 200ms color;
+&:hover,
+&:active,
+&:focus {
+  color: ${theme.noteDetailActiveIconColor};
+}`
+
 export const closeIconColor = ({ theme }: StyledProps) => `
 color: ${theme.closeIconColor};
 transition: 200ms color;
@@ -111,7 +120,7 @@ export const contextMenuShadow = ({ theme }: StyledProps) =>
 export const inputStyle = ({ theme }: StyledProps) =>
   `background-color: ${theme.inputBackground};
 border: none;
-border-radius: 4px;
+border-radius: 2px;
 color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
@@ -136,6 +145,12 @@ export const primaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.primaryColor};
 color: ${theme.primaryButtonLabelColor};
 font-size: 13px;
+
+&:hover,
+&:active,
+&.active {
+  cursor: pointer;
+}
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
@@ -149,12 +164,15 @@ export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
 color: ${theme.secondaryButtonLabelColor};
 font-size: 13px;
-&:focus {
-  box-shadow: 0 0 0 2px ${theme.primaryColor};
-}
+
+&:hover,
 &:active,
 &.active {
+  cursor: pointer;
   background-color: ${theme.primaryColor};
+}
+&:focus {
+  box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
 &:disabled {
   opacity: .5;

@@ -34,7 +34,7 @@ export const ModalBody = styled.div`
     border-style: none;
     border-color: initial;
     border-image: initial;
-    border-radius: 4px;
+    border-radius: 2px;
     margin: auto !important;
     margin-bottom: 10px;
     height: auto !important;

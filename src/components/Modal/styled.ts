@@ -34,7 +34,7 @@ export const StyledModalsContainer = styled.div`
   ${border}
   ${backgroundColor}
   ${contextMenuShadow}
-  border-radius: 4px;
+  border-radius: 2px;
   display: flex;
   overflow: hidden;
 `
