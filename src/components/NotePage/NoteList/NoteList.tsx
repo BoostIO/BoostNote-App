@@ -6,6 +6,7 @@ import {
   borderBottom,
   inputStyle,
   iconColor,
+  noteListIconColor,
   selectTabStyle
 } from '../../../lib/styled/styleFunctions'
 import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
@@ -49,7 +50,7 @@ export const StyledNoteListContainer = styled.div`
       font-size: 20px;
       z-index: 0;
       pointer-events: none;
-      ${iconColor}
+      ${noteListIconColor}
     }
     .input {
       position: relative;
@@ -92,7 +93,7 @@ export const StyledNoteListContainer = styled.div`
     font-size: 24px;
     background: transparent;
     border: none;
-    ${iconColor}
+    ${noteListIconColor}
   }
 `
 
