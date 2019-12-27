@@ -72,7 +72,7 @@ const FoldButton = styled.button`
   margin-right: 3px;
   border-radius: 2px;
   flex: 0 0 26px;
-  top: 2px;
+  top: 5px;
   ${sideBarSecondaryTextColor}
   &:focus {
     box-shadow: none;
@@ -107,7 +107,6 @@ const Label = styled.div`
 `
 
 const ControlContainer = styled.div`
-  ${activeBackgroundColor}
   position: absolute;
   right: 0;
   top: 4px;
@@ -181,7 +180,7 @@ const SideNaviagtorItem = ({
         )}
         <ClickableContainer
           style={{
-            paddingLeft: `${depth + 36}px`,
+            paddingLeft: `${10 * depth + 30}px`,
             cursor: onClick ? 'pointer' : 'initial',
             fontSize: '15px'
           }}

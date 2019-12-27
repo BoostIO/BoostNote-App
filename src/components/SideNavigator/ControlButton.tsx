@@ -22,6 +22,9 @@ const StyledButton = styled.button`
   &:hover, &:active, &:focus {
     box-shadow: none;
   }
+  + button {
+    top: -1px;
+  }
 `
 
 interface ControlButtonProps {
