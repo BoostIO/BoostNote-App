@@ -14,6 +14,8 @@ export interface BaseTheme {
   activeIconColor: string
   noteListIconColor: string
   noteListActiveIconColor: string
+  noteDetailIconColor: string
+  noteDetailActiveIconColor: string
   closeIconColor: string
   closeActiveIconColor: string
   backgroundColor: string
