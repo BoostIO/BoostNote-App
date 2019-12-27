@@ -35,7 +35,7 @@
     <div id="root"></div>
     <script>
       ;(function() {
-        if (require == null) {
+        if (typeof require === 'undefined') {
           return
         }
         const electron = require('electron')
