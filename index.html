@@ -35,6 +35,9 @@
     <div id="root"></div>
     <script>
       ;(function() {
+        if (require == null) {
+          return
+        }
         const electron = require('electron')
         function $openExternal(url) {
           console.log('opening ...', url)
