@@ -24,6 +24,11 @@ import Modal from './Modal'
 import ToastList from './Toast'
 import { useToast } from '../lib/toast'
 import { useUsers } from '../lib/accounts'
+import styled from '../lib/styled'
+
+export const LoadingText = styled.div`
+  margin: 30px;
+`
 
 const App = () => {
   const { initialize, initialized } = useDb()
@@ -83,7 +88,7 @@ const App = () => {
             onResizeEnd={updateSideBarWidth}
           />
         ) : (
-          <div>Loading data</div>
+          <LoadingText>Loading Data...</LoadingText>
         )}
         <GlobalStyle />
         <ContextMenu />
