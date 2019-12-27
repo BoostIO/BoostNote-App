@@ -6,7 +6,10 @@ export const useGlobalKeyDownHandler = (
   handler: (event: KeyboardEvent) => void
 ) => {
   return useEffect(() => {
-    if (!isElectron()) return
+    if (!isElectron()) {
+      return
+    }
+
     window.addEventListener('keydown', handler)
     return () => {
       window.removeEventListener('keydown', handler)
