@@ -9,9 +9,13 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let mainWindow
 
 function createMainWindow() {
-  const window = new BrowserWindow({
+  const windowOptions = {
     webPreferences: { nodeIntegration: true }
-  })
+  }
+  if (process.platform === 'darwin') {
+    windowOptions.titleBarStyle = 'hiddenInset'
+  }
+  const window = new BrowserWindow(windowOptions)
 
   window.loadFile(path.join(__dirname, '../compiled/index.html'))
 

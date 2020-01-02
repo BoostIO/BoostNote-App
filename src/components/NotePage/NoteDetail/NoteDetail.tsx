@@ -40,6 +40,7 @@ export const StyledNoteDetailContainer = styled.div`
   flex-direction: column;
   height: 100%;
   .breadCrumbs {
+    -webkit-app-region: drag;
     display: block;
     width: 100%;
     height: 25px;

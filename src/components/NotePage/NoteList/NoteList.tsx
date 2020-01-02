@@ -36,6 +36,7 @@ export const StyledNoteListContainer = styled.div`
     display: flex;
     padding: 8px;
     align-items: center;
+    -webkit-app-region: drag;
     ${borderBottom}
   }
 
