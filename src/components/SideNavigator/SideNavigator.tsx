@@ -47,6 +47,7 @@ const StyledSideNavContainer = styled.nav`
   .topControl {
     height: 50px;
     display: flex;
+    -webkit-app-region: drag;
     .spacer {
       flex: 1;
     }
