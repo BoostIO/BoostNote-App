@@ -45,10 +45,7 @@ function isElement(node: Node, tagName: string): node is Element {
   if (node == null) {
     return false
   }
-  if (node.tagName !== tagName) {
-    return false
-  }
-  return true
+  return node.tagName === tagName
 }
 
 function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
@@ -72,7 +69,12 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
         parent.properties.className != null
           ? [...parent.properties.className]
           : []
-      classNames.push(`cm-s-${theme}`, 'CodeMirror')
+      console.log(theme)
+      if (theme === 'solarized dark') {
+        classNames.push(`cm-s-solarized`, `cm-s-dark`, 'CodeMirror')
+      } else {
+        classNames.push(`cm-s-${theme}`, 'CodeMirror')
+      }
       if (lang != null) {
         classNames.push('language-' + lang)
       }
