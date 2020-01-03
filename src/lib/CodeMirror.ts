@@ -57,6 +57,7 @@ export const themes = [
   'neo',
   'paraiso-light',
   'solarized',
+  'solarized dark',
   'twilight',
   'zenburn',
   '3024-night',
