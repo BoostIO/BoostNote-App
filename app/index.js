@@ -10,7 +10,9 @@ let mainWindow
 
 function createMainWindow() {
   const windowOptions = {
-    webPreferences: { nodeIntegration: true }
+    webPreferences: { nodeIntegration: true },
+    width: 1200,
+    height: 800
   }
   if (process.platform === 'darwin') {
     windowOptions.titleBarStyle = 'hiddenInset'
