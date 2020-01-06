@@ -16,7 +16,7 @@ function createMainWindow() {
     windowOptions.titleBarStyle = 'hiddenInset'
   }
   const window = new BrowserWindow(windowOptions)
-
+  window.maximize()
   window.loadFile(path.join(__dirname, '../compiled/index.html'))
 
   window.on('closed', () => {
