@@ -152,10 +152,15 @@ export default () => {
   }, [filteredNotes, noteId])
 
   const currentNote: PopulatedNoteDoc | undefined = useMemo(() => {
-    return filteredNotes[currentNoteIndex] != null
-      ? filteredNotes[currentNoteIndex]
-      : undefined
-  }, [filteredNotes, currentNoteIndex])
+    for (let i = 0; i < filteredNotes.length; i++) {
+      if (filteredNotes[i]._id === noteId) return filteredNotes[i]
+    }
+    let index = 0
+    for (let i = 0; i < notes.length; i++) {
+      if (notes[i]._id === noteId) index = i
+    }
+    return notes[index]
+  }, [filteredNotes, notes, noteId])
 
   const createNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
