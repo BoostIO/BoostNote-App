@@ -1,5 +1,5 @@
 import React from 'react'
-import CodeMirror from '../../lib/CodeMirror'
+import CodeMirror, { getCodeMirrorTheme } from '../../lib/CodeMirror'
 import styled from '../../lib/styled'
 import {
   EditorIndentTypeOptions,
@@ -48,7 +48,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
         : this.props.keyMap
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
-      theme: this.props.theme == null ? 'default' : this.props.theme,
+      theme: getCodeMirrorTheme(this.props.theme),
       indentWithTabs: this.props.indentType === 'tab',
       indentUnit: indentSize,
       tabSize: indentSize,
@@ -77,7 +77,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.codeMirror.setValue(this.props.value)
     }
     if (this.props.theme !== prevProps.theme) {
-      this.codeMirror.setOption('theme', this.props.theme)
+      this.codeMirror.setOption('theme', getCodeMirrorTheme(this.props.theme))
     }
     if (
       this.props.fontSize !== prevProps.fontSize ||
