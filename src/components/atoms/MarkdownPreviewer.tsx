@@ -69,7 +69,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
         parent.properties.className != null
           ? [...parent.properties.className]
           : []
-      if (theme === 'solarized dark') {
+      if (theme === 'solarized-dark') {
         classNames.push(`cm-s-solarized`, `cm-s-dark`, 'CodeMirror')
       } else {
         classNames.push(`cm-s-${theme}`, 'CodeMirror')

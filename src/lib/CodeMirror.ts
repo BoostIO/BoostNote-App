@@ -19,6 +19,12 @@ export async function requireMode(mode: string) {
   dispatchModeLoad()
 }
 
+export function getCodeMirrorTheme(theme?: string) {
+  if (theme == null) return 'default'
+  if (theme === 'solarized-dark') return 'solarized dark'
+  return theme
+}
+
 function loadMode(_CodeMirror: any) {
   const memoizedModeResult = new Map<string, CodeMirror.ModeInfo | null>()
   function findModeByMIME(mime: string) {
@@ -57,7 +63,7 @@ export const themes = [
   'neo',
   'paraiso-light',
   'solarized',
-  'solarized dark',
+  'solarized-dark',
   'twilight',
   'zenburn',
   '3024-night',

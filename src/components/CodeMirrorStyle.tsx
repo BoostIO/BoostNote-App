@@ -10,7 +10,7 @@ const ThemeLink = ({ theme }: ThemeLinkProps) => {
   if (theme == null || theme === 'default') {
     return null
   }
-  if (theme === 'solarized dark') {
+  if (theme === 'solarized-dark') {
     theme = 'solarized'
   }
   return (
