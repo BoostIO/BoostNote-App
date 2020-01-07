@@ -1,0 +1,155 @@
+export default {
+  translation: {
+    //General
+    'general.error': '错误',
+    'general.cancel': '取消',
+    'general.attachments': '插件',
+    'general.trash': '垃圾',
+    'general.allnote': '所有笔记',
+    'general.signin': '登陆',
+    'general.signOut': '登出',
+    'general.save': '保存',
+    'general.default': '默认',
+    'general.networkError': '网络错误',
+
+    // Storage
+    'storage.name': '储存名',
+    'storage.noStorage': '没有储存档案',
+    'storage.create': '创建新储存',
+    'storage.edit': '超级储存',
+    'storage.rename': '重命名储存',
+    'storage.renameMessage': '输入新的储存名',
+    'storage.remove': '移除储存',
+    'storage.removeMessage': '这个储存将会从这个APP解除联系.',
+    'storage.delete': '删除储存',
+    'storage.move': '移动笔记',
+    'storage.moveTitle': '移动笔记到其他储存',
+    'storage.moveMessage': '你正在尝试把笔记移到另一个储存.',
+    'storage.copy': '复制笔记',
+    'storage.typeLocal': '本地',
+    'storage.typeCloud': '云端',
+    'storage.needSignIn': '你需要登陆来创建云储存.',
+    'storage.syncDate': '上一次同步在',
+
+    //Folder
+    'folder.create': '新文件夹',
+    'folder.rename': '重命名文件夹',
+    'folder.renameMessage':
+      '输入新文件夹名，所有的笔记和子文件夹路径也将被更新.',
+    'folder.renameErrorMessage': '你不能重命名改文件夹',
+    'folder.remove': '移除文件夹',
+    'folder.removeMessage': '所有笔记和子文件夹将被删除.',
+
+    //Tag
+    'tag.tag': '标签',
+    'tag.remove': '移除标签',
+    'tag.removeMessage': '这个标签将从所有笔记中被移除.',
+
+    //Note
+    'note.duplicate': '复制',
+    'note.delete': '删除',
+    'note.delete2': '删除笔记',
+    'note.deleteMessage': '该笔记将被永久移除',
+    'note.empty': '空的笔记',
+    'note.unselect': '没有选择任何笔记',
+    'note.search': '搜索笔记',
+    'note.nothing': '无笔记',
+    'note.nothingMessage': '没有找到笔记.',
+    'note.noTitle': '无标题',
+    'note.date': '之前',
+    'note.createKeyMac': 'Mac: Command(⌘) + Enter',
+    'note.createKeyWinLin': 'Windows/Linux: Ctrl + Enter',
+    'note.createkeymessage1': '建立新笔记',
+    'note.createkeymessage2': '选择储存',
+    'note.createkeymessage3': '建立新笔记',
+
+    //Bookmark
+    'bookmark.remove': '移除书签',
+    'bookmark.add': '添加书签',
+
+    //About
+    'about.about': '关于',
+    'about.boostnoteDescription': '一个面向程序员的开放源笔记软件.',
+    'about.website': '官方网站',
+    'about.boostWiki': 'Boost Note团队版',
+    'about.platform': '跨平台',
+    'about.community': '社团',
+    'about.github': 'GitHub仓库',
+    'about.bounty': 'IssueHunt的奖金',
+    'about.blog': '博客',
+    'about.slack': '非活跃群体',
+    'about.twitter': 'Twitter账号',
+    'about.facebook': '脸书小组',
+    'about.reddit': '红迪网',
+
+    //Billing
+    'billing.billing': '价目表',
+    'billing.message': '请先登录来升级你的套餐.',
+    'billing.basic': '基本套餐',
+    'billing.current': '现在的',
+    'billing.premium': '黄金套餐',
+    'billing.price': '$3/月(USD) ',
+    'billing.browser': '网页软件',
+    'billing.desktop': '桌面软件 (Mac/Windows/Linux)',
+    'billing.mobile': '手机软件 (会在2020年一月发行)',
+    'billing.sync': '多设备同步',
+    'billing.local': '本地储存',
+    'billing.cloud': '云储存',
+    'billing.storageSize': '云储存容量',
+    'billing.addStorageDescription':
+      '你可以在任何时间追加云储存容量，费用是每5GB 5美元.',
+    'billing.addStorage': 'Add Extra Storage',
+
+    // Preferences
+    'preferences.general': '偏好',
+
+    // Preferences GeneralTab
+    'preferences.account': '账户',
+    'preferences.addAccount': '追加账户',
+    'preferences.loginWorking': '登录...',
+    'preferences.interfaceLanguage': '界面语言',
+    'preferences.applicationTheme': '软件主题',
+    'preferences.auto': '自动',
+    'preferences.light': '亮',
+    'preferences.dark': '暗',
+    'preferences.sepia': '颜料',
+    'preferences.solarizedDark': '曝光暗',
+    'preferences.noteSorting': '笔记分类',
+    'preferences.dateUpdated': '更新日期',
+    'preferences.dateCreated': '创建日期',
+    'preferences.title': '标题',
+    'preferences.analytics': '分',
+    'preferences.analyticsDescription1':
+      'Boost Note只为了提升软件收集匿名数据, 并且我们绝不收集你笔记中的个人信息.你可以在 GitHub上看这是如何运作的.',
+    'preferences.analyticsDescription2': '你可以选择开启或者关闭这个选项.',
+    'preferences.analyticsLabel': '开启分析来帮助我们完善Boostnote',
+    'preferences.displayTutorialsLabel': 'Tutorials and FAQ',
+
+    // Preferences EditorTab
+    'preferences.editorTheme': '编辑器主题',
+    'preferences.editorFontSize': '编辑器字号',
+    'preferences.editorFontFamily': '编辑器字体组',
+    'preferences.editorIndentType': '编辑器缩进文字',
+    'preferences.tab': '标签',
+    'preferences.spaces': '空格',
+    'preferences.editorIndentSize': '编辑器缩进尺寸',
+    'preferences.editorKeymap': 'Editor Keymap',
+    'preferences.editorPreview': '编辑器预览',
+
+    // Preferences MarkdownTab
+    'preferences.previewStyle': '预览风格',
+    'preferences.markdownCodeBlockTheme': '编码封锁主题',
+    'preferences.defaultTheme': '使用默认主题',
+    'preferences.markdownPreview': '标记预览',
+
+    // Preferences ImportTab
+    'preferences.import': '导入',
+    'preferences.description': '从旧版Boostnote导入.cson 文件.',
+    'preferences.importFlow1': '1. 在你的电脑打开旧版Boostnote文件夹.',
+    'preferences.importFlow2': '2. 拖拽 .cson 文件到以下形式.',
+    'preferences.importFlow3': '3. 选择你想要移动旧数据的存储和文件夹.',
+    'preferences.importFlow4': '4. 上传!',
+    'preferences.importRemove': '移除',
+    'preferences.importUpload': '上传'
+  }
+}
