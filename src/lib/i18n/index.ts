@@ -2,11 +2,13 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from './enUS'
 import esES from './esEs'
+import zhCN from './zhCN'
 import ja from './ja'
 
 const resources = {
   'en-US': enUS,
   'es-ES': esES,
+  'zh-CN': zhCN,
   ja: ja
 }
 
