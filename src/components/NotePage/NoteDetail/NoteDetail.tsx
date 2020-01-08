@@ -33,6 +33,10 @@ import {
   IconSplitView,
   IconEditView
 } from '../../icons'
+import {
+  listenNoteDetailFocusTitleInputEvent,
+  unlistenNoteDetailFocusTitleInputEvent
+} from '../../../lib/events'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -226,15 +230,9 @@ export default class NoteDetail extends React.Component<
     return state
   }
 
-  componentDidMount() {
-    this.titleInputRef.current!.focus()
-  }
-
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
-      this.titleInputRef.current!.focus()
-
       if (this.queued) {
         const { title, content, tags } = prevState
         this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
@@ -244,6 +242,7 @@ export default class NoteDetail extends React.Component<
         })
       }
     }
+    listenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
   }
 
   componentWillUnmount() {
@@ -255,6 +254,11 @@ export default class NoteDetail extends React.Component<
         tags
       })
     }
+    unlistenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
+  }
+
+  focusTitleInput = () => {
+    this.titleInputRef.current!.focus()
   }
 
   updateTitle = () => {

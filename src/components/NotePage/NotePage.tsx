@@ -23,6 +23,7 @@ import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey
 } from '../../lib/keyboard'
+import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -180,6 +181,7 @@ export default () => {
           folderIsRoot ? '' : '/'
         }${note._id}`
       )
+      dispatchNoteDetailFocusTitleInputEvent()
     }
   }, [db, routeParams, storageId, setLastCreatedNoteId])
 
