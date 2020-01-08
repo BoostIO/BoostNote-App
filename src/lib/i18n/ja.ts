@@ -117,7 +117,7 @@ export default {
     'preferences.sepia': 'セピア',
     'preferences.solarizedDark': 'ソラライズドダーク',
     'preferences.noteSorting': 'ノート整列',
-    'preferences.dateUpdated': 'アプデート順',
+    'preferences.dateUpdated': 'アップデート順',
     'preferences.dateCreated': '生成順',
     'preferences.title': 'タイトル順',
     'preferences.analytics': 'アナリティクス',
