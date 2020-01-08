@@ -4,12 +4,14 @@ import enUS from './enUS'
 import esES from './esEs'
 import zhCN from './zhCN'
 import ja from './ja'
+import ko from './ko'
 
 const resources = {
   'en-US': enUS,
   'es-ES': esES,
   'zh-CN': zhCN,
-  ja: ja
+  ja: ja,
+  ko: ko
 }
 
 i18n
