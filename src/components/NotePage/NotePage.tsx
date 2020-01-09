@@ -40,7 +40,7 @@ export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
 
 export default () => {
   const db = useDb()
-
+  const { trashNote } = db
   const routeParams = useRouteParams() as (
     | StorageAllNotes
     | StorageNotesRouteParams
@@ -52,11 +52,10 @@ export default () => {
     if (storageId == null) return undefined
     return db.storageMap[storageId]
   }, [db.storageMap, storageId])
-  const router = useRouter()
+  const { replace, push } = useRouter()
   const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
-  const { push } = useRouter()
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
   const [sort, setSort] = useState<NoteListSortOptions>('updatedAt')
 
@@ -176,14 +175,14 @@ export default () => {
     })
     if (note != null) {
       setLastCreatedNoteId(note._id)
-      router.replace(
+      replace(
         `/app/storages/${storageId}/notes${folderPathname}${
           folderIsRoot ? '' : '/'
         }${note._id}`
       )
       dispatchNoteDetailFocusTitleInputEvent()
     }
-  }, [db, routeParams, storageId, setLastCreatedNoteId])
+  }, [db, replace, routeParams, storageId, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 
@@ -241,36 +240,47 @@ export default () => {
         }
       })
     },
-    [messageBox, purgeNoteFromDb]
+    [messageBox, t, purgeNoteFromDb]
   )
 
   const navigateUp = useCallback(() => {
     if (currentNoteIndex > 0) {
-      router.push(
+      push(
         currentPathnameWithoutNoteId +
           `/${filteredNotes[currentNoteIndex - 1]._id}`
       )
     }
-  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
+  }, [filteredNotes, currentNoteIndex, push, currentPathnameWithoutNoteId])
 
   const navigateDown = useCallback(() => {
     if (currentNoteIndex < filteredNotes.length - 1) {
-      router.push(
+      push(
         currentPathnameWithoutNoteId +
           `/${filteredNotes[currentNoteIndex + 1]._id}`
       )
     }
-  }, [filteredNotes, currentNoteIndex, router, currentPathnameWithoutNoteId])
+  }, [filteredNotes, currentNoteIndex, push, currentPathnameWithoutNoteId])
+
+  const trashNoteOrPurge = useCallback(
+    (note?: PopulatedNoteDoc) => {
+      if (note == null) {
+        return
+      }
+
+      if (!note.trashed) {
+        trashNote(note.storageId, note._id)
+      } else {
+        purgeNote(note.storageId, note._id)
+      }
+    },
+    [trashNote, purgeNote]
+  )
 
   useGlobalKeyDownHandler(e => {
     switch (e.key) {
       case 'Backspace':
-        if (currentNote != null && isWithGeneralCtrlKey(e)) {
-          if (!currentNote.trashed) {
-            db.trashNote(currentNote.storageId, currentNote._id)
-          } else {
-            purgeNote(currentNote.storageId, currentNote._id)
-          }
+        if (isWithGeneralCtrlKey(e)) {
+          trashNoteOrPurge(currentNote)
         }
         break
       case 'n':
