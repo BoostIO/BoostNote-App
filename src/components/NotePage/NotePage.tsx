@@ -24,6 +24,7 @@ import {
   isWithGeneralCtrlKey
 } from '../../lib/keyboard'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { osName } from '../../lib/utils'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -282,8 +283,12 @@ export default () => {
 
   useGlobalKeyDownHandler(e => {
     switch (e.key) {
+      case 'Delete':
+        if (osName !== 'macos') {
+          trashNoteOrPurge(currentNote)
+        }
       case 'Backspace':
-        if (isWithGeneralCtrlKey(e)) {
+        if (osName === 'macos' && isWithGeneralCtrlKey(e)) {
           trashNoteOrPurge(currentNote)
         }
         break
