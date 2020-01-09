@@ -24,7 +24,6 @@ import {
   isWithGeneralCtrlKey
 } from '../../lib/keyboard'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
-import { osName } from '../../lib/utils'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -266,32 +265,20 @@ export default () => {
     }
   }, [filteredNotes, currentNoteIndex, push, currentPathnameWithoutNoteId])
 
-  const trashNoteOrPurge = useCallback(
-    (note?: PopulatedNoteDoc) => {
-      if (note == null) {
-        return
-      }
+  const trashOrPurgeCurrentNote = useCallback(() => {
+    if (currentNote == null) {
+      return
+    }
 
-      if (!note.trashed) {
-        trashNote(note.storageId, note._id)
-      } else {
-        purgeNote(note.storageId, note._id)
-      }
-    },
-    [trashNote, purgeNote]
-  )
+    if (!currentNote.trashed) {
+      trashNote(currentNote.storageId, currentNote._id)
+    } else {
+      purgeNote(currentNote.storageId, currentNote._id)
+    }
+  }, [trashNote, purgeNote, currentNote])
 
   useGlobalKeyDownHandler(e => {
     switch (e.key) {
-      case 'Delete':
-        if (osName !== 'macos') {
-          trashNoteOrPurge(currentNote)
-        }
-      case 'Backspace':
-        if (osName === 'macos' && isWithGeneralCtrlKey(e)) {
-          trashNoteOrPurge(currentNote)
-        }
-        break
       case 'n':
         if (isWithGeneralCtrlKey(e)) {
           createQuickNote()
@@ -333,6 +320,7 @@ export default () => {
           currentNoteId={currentNote ? currentNote._id : undefined}
           lastCreatedNoteId={lastCreatedNoteId}
           setSort={setSort}
+          trashOrPurgeCurrentNote={trashOrPurgeCurrentNote}
         />
       }
       right={
