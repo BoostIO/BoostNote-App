@@ -104,6 +104,7 @@ const GeneralTab = () => {
             <option value='es-ES'>Español (España)</option>
             <option value='zh-CN'>Chinese (zh-CN)</option>
             <option value='ko'>Korean</option>
+            <option value='pt-BR'>Portuguese (pt-BR)</option>
           </SectionSelect>
         </SectionControl>
       </Section>

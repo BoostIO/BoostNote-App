@@ -20,7 +20,8 @@
     'storage.rename': 'Renomear armazenamento',
     'storage.renameMessage': 'Introduza um novo nome de armazenamento',
     'storage.remove': 'Remover armazenamento',
-    'storage.removeMessage': 'O armazenamento será desvinculado deste aplicativo.',
+    'storage.removeMessage':
+      'O armazenamento será desvinculado deste aplicativo.',
     'storage.delete': 'Deletar armazenamento',
     'storage.move': 'Mover nota',
     'storage.moveTitle': 'Mover nota para outro armazenamento',
@@ -29,7 +30,8 @@
     'storage.copy': 'Copiar nota',
     'storage.typeLocal': 'Local',
     'storage.typeCloud': 'Nuvem',
-    'storage.needSignIn': 'Você precisa logar-se para criar um armazenamento em nuvem.',
+    'storage.needSignIn':
+      'Você precisa logar-se para criar um armazenamento em nuvem.',
     'storage.syncDate': 'Sincronizado pela última vez em',
 
     //Folder
@@ -125,7 +127,8 @@
       'O Boost Note coleta dados anônimos com o único objetivo de melhorar o aplicativo. Não é coletado nenhuma informação pessoal, como o conteúdo de suas anotações. Você pode ver exatamente como o código do programa funciona no GitHub.',
     'preferences.analyticsDescription2':
       'Você pode escolher ativar ou desativar esta opção.',
-    'preferences.analyticsLabel': 'Habilitar analítico para ajudar na melhora de Boost Note',
+    'preferences.analyticsLabel':
+      'Habilitar analítico para ajudar na melhora de Boost Note',
     'preferences.displayTutorialsLabel': 'Tutoriais e FAQ',
 
     // Preferences EditorTab
