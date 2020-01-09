@@ -3,7 +3,7 @@ export default {
     //General
     'general.error': '错误',
     'general.cancel': '取消',
-    'general.attachments': '插件',
+    'general.attachments': '附件',
     'general.trash': '回收站',
     'general.allnote': '所有笔记',
     'general.signin': '登录',
