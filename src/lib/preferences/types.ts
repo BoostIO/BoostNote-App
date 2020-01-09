@@ -6,7 +6,13 @@ export type GeneralThemeOptions =
   | 'dark'
   | 'sepia'
   | 'solarizedDark'
-export type GeneralLanguageOptions = 'en-US' | 'ja' | 'es-ES' | 'zh-CN' | 'ko'
+export type GeneralLanguageOptions =
+  | 'en-US'
+  | 'ja'
+  | 'es-ES'
+  | 'zh-CN'
+  | 'ko'
+  | 'pt-BR'
 export type GeneralNoteSortingOptions =
   | 'date-updated'
   | 'date-created'

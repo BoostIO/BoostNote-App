@@ -5,13 +5,15 @@ import esES from './esEs'
 import zhCN from './zhCN'
 import ja from './ja'
 import ko from './ko'
+import ptBR from './ptBR'
 
 const resources = {
   'en-US': enUS,
   'es-ES': esES,
   'zh-CN': zhCN,
   ja: ja,
-  ko: ko
+  ko: ko,
+  'pt-BR': ptBR
 }
 
 i18n
