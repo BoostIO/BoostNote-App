@@ -39,8 +39,15 @@ export type BreadCrumbs = {
 export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
 
 export default () => {
-  const db = useDb()
-  const { trashNote } = db
+  const {
+    storageMap,
+    createNote,
+    purgeNote,
+    updateNote,
+    trashNote,
+    untrashNote,
+    addAttachments
+  } = useDb()
   const routeParams = useRouteParams() as (
     | StorageAllNotes
     | StorageNotesRouteParams
@@ -50,8 +57,8 @@ export default () => {
   const { storageId, noteId } = routeParams
   const currentStorage = useMemo(() => {
     if (storageId == null) return undefined
-    return db.storageMap[storageId]
-  }, [db.storageMap, storageId])
+    return storageMap[storageId]
+  }, [storageMap, storageId])
   const { replace, push } = useRouter()
   const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
@@ -66,9 +73,7 @@ export default () => {
   const notes = useMemo((): PopulatedNoteDoc[] => {
     if (currentStorage == null) {
       if (routeParams.name === 'storages.allNotes') {
-        const allNotesMap = (Object.values(
-          db.storageMap
-        ) as NoteStorage[]).reduce(
+        const allNotesMap = (Object.values(storageMap) as NoteStorage[]).reduce(
           (map, storage) => {
             ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
               note => (map[note._id] = note)
@@ -83,7 +88,7 @@ export default () => {
         )
       }
       if (routeParams.name === 'storages.bookmarks') {
-        return (Object.values(db.storageMap) as NoteStorage[])
+        return (Object.values(storageMap) as NoteStorage[])
           .map(storage => {
             return (Object.values(
               storage.noteMap
@@ -122,7 +127,7 @@ export default () => {
         ) as PopulatedNoteDoc[]).filter(note => note.trashed)
     }
     return []
-  }, [db.storageMap, currentStorage, routeParams])
+  }, [storageMap, currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
@@ -157,7 +162,7 @@ export default () => {
       : undefined
   }, [filteredNotes, currentNoteIndex])
 
-  const createNote = useCallback(async () => {
+  const createQuickNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
       return
     }
@@ -169,7 +174,7 @@ export default () => {
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
-    const note = await db.createNote(storageId, {
+    const note = await createNote(storageId, {
       folderPathname,
       tags
     })
@@ -182,7 +187,7 @@ export default () => {
       )
       dispatchNoteDetailFocusTitleInputEvent()
     }
-  }, [db, replace, routeParams, storageId, setLastCreatedNoteId])
+  }, [createNote, replace, routeParams, storageId, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 
@@ -223,8 +228,7 @@ export default () => {
   )
 
   const { messageBox } = useDialog()
-  const purgeNoteFromDb = db.purgeNote
-  const purgeNote = useCallback(
+  const showPurgeNoteDialog = useCallback(
     (storageId: string, noteId: string) => {
       messageBox({
         title: t('note.delete2'),
@@ -235,12 +239,12 @@ export default () => {
         cancelButtonIndex: 1,
         onClose: (value: number | null) => {
           if (value === 0) {
-            purgeNoteFromDb(storageId, noteId)
+            purgeNote(storageId, noteId)
           }
         }
       })
     },
-    [messageBox, t, purgeNoteFromDb]
+    [messageBox, t, purgeNote]
   )
 
   const navigateUp = useCallback(() => {
@@ -285,7 +289,7 @@ export default () => {
         break
       case 'n':
         if (isWithGeneralCtrlKey(e)) {
-          createNote()
+          createQuickNote()
         }
         break
       case 'T':
@@ -317,7 +321,7 @@ export default () => {
           setSearchInput={setSearchInput}
           currentStorageId={storageId}
           notes={filteredNotes}
-          createNote={showCreateNoteInList ? createNote : undefined}
+          createNote={showCreateNoteInList ? createQuickNote : undefined}
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
@@ -344,14 +348,14 @@ export default () => {
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            noteStorageName={db.storageMap[currentNote.storageId]!.name}
+            noteStorageName={storageMap[currentNote.storageId]!.name}
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
-            updateNote={db.updateNote}
-            trashNote={db.trashNote}
-            untrashNote={db.untrashNote}
-            addAttachments={db.addAttachments}
-            purgeNote={purgeNote}
+            updateNote={updateNote}
+            trashNote={trashNote}
+            untrashNote={untrashNote}
+            addAttachments={addAttachments}
+            purgeNote={showPurgeNoteDialog}
             viewMode={generalStatus.noteViewMode}
             toggleViewMode={toggleViewMode}
             push={push}
