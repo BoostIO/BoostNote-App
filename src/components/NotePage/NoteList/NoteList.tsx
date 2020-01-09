@@ -16,6 +16,7 @@ import {
   isWithGeneralCtrlKey
 } from '../../../lib/keyboard'
 import { NoteListSortOptions } from '../NotePage'
+import { osName } from '../../../lib/utils'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -110,6 +111,7 @@ type NoteListProps = {
   basePathname: string
   lastCreatedNoteId: string
   setSort: (option: NoteListSortOptions) => void
+  trashOrPurgeCurrentNote: () => void
 }
 
 const NoteList = ({
@@ -123,7 +125,8 @@ const NoteList = ({
   navigateDown,
   navigateUp,
   lastCreatedNoteId,
-  setSort
+  setSort,
+  trashOrPurgeCurrentNote
 }: NoteListProps) => {
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -165,6 +168,25 @@ const NoteList = ({
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
+
+  const handleListKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      switch (event.key) {
+        case 'Delete':
+          if (osName !== 'macos') {
+            trashOrPurgeCurrentNote()
+          }
+          break
+        case 'Backspace':
+          if (isWithGeneralCtrlKey(event)) {
+            trashOrPurgeCurrentNote()
+          }
+          break
+      }
+    },
+    [trashOrPurgeCurrentNote]
+  )
+
   return (
     <StyledNoteListContainer>
       <div className='control'>
@@ -195,7 +217,7 @@ const NoteList = ({
           <option value='title'>Title</option>
         </select>
       </div>
-      <ul tabIndex={0} ref={listRef}>
+      <ul tabIndex={0} ref={listRef} onKeyDown={handleListKeyDown}>
         {notes.map(note => {
           const noteIsCurrentNote = note._id === currentNoteId
           return (

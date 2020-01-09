@@ -17,7 +17,9 @@ export const useGlobalKeyDownHandler = (
   }, [handler])
 }
 
-export function isWithGeneralCtrlKey(event: KeyboardEvent) {
+export function isWithGeneralCtrlKey(
+  event: KeyboardEvent | React.KeyboardEvent
+) {
   switch (osName) {
     case 'macos':
       return event.metaKey
