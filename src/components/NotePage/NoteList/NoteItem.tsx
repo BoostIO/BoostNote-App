@@ -15,6 +15,7 @@ import { scaleAndTransformFromLeft } from '../../../lib/styled'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import { useDb } from '../../../lib/db'
+import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 
 export const StyledNoteListItem = styled.div`
@@ -108,8 +109,9 @@ export default ({
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
-  const { createNote, trashNote, updateNote } = useDb()
+  const { createNote, trashNote, updateNote, purgeNote } = useDb()
 
+  const { messageBox } = useDialog()
   const { t } = useTranslation()
 
   const contextMenuCallback = useCallback(
@@ -135,7 +137,23 @@ export default ({
           type: MenuTypes.Normal,
           label: t('note.delete'),
           onClick: async () => {
-            trashNote(note.storageId, note._id)
+            if (!note.trashed) {
+              trashNote(note.storageId, note._id)
+            } else {
+              messageBox({
+                title: t('note.delete2'),
+                message: t('note.deleteMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('note.delete2'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    purgeNote(note.storageId, note._id)
+                  }
+                }
+              })
+            }
           }
         },
         {
@@ -148,7 +166,7 @@ export default ({
         }
       ])
     },
-    [popup, createNote, note, updateNote, trashNote]
+    [popup, createNote, note, updateNote, trashNote, messageBox]
   )
 
   const contentPreview = useMemo(() => {
