@@ -413,14 +413,14 @@ export default class NoteDetail extends React.Component<
   handleDrop = async (event: React.DragEvent) => {
     event.preventDefault()
 
-    const { note, addAttachments: addAttachment } = this.props
+    const { note, addAttachments } = this.props
     const { storageId } = note
 
     const files = getFileList(event).filter(file =>
       file.type.startsWith('image/')
     )
 
-    const attachments = await addAttachment(storageId, files)
+    const attachments = await addAttachments(storageId, files)
 
     this.setState(
       prevState => {
