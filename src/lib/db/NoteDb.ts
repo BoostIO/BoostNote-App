@@ -1,3 +1,5 @@
+import dashify from 'dashify'
+import parsePath from 'path-parse'
 import {
   AllDocsMap,
   FolderDoc,
@@ -501,17 +503,19 @@ export default class NoteDb {
     let currentRev = _rev
     const attachments: Attachment[] = []
     for (const file of files) {
+      const { name, ext } = parsePath(file.name)
+      const fileName = `${dashify(name)}${ext}`
       const response = await this.pouchDb.putAttachment(
         ATTACHMENTS_ID,
-        file.name,
+        fileName,
         currentRev,
         file,
         file.type
       )
       currentRev = response.rev
-      const data = await this.pouchDb.getAttachment(ATTACHMENTS_ID, file.name)
+      const data = await this.pouchDb.getAttachment(ATTACHMENTS_ID, fileName)
       attachments.push({
-        name: file.name,
+        name: fileName,
         type: file.type,
         blob: data as Blob
       })
