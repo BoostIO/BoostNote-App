@@ -192,7 +192,8 @@ const MarkdownPreviewer = ({
         components: {
           img: ({ src, ...props }: any) => {
             const storage = storageMap[options.storageId!]
-            if (storage != null && !src.match('/')) {
+
+            if (storage != null && src != null && !src.match('/')) {
               const attachment = storage.attachmentMap[src]
               if (attachment != null) {
                 return <BlobImage blob={attachment.blob} />
