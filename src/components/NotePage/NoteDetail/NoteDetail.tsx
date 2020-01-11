@@ -299,7 +299,8 @@ export default class NoteDetail extends React.Component<
   }
 
   appendNewTag = () => {
-    if (isTagNameValid(this.state.newTagName)) {
+    const includes = this.state.tags.includes(this.state.newTagName)
+    if (isTagNameValid(this.state.newTagName) && !includes) {
       this.setState(
         prevState => ({
           newTagName: '',
