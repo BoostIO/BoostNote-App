@@ -186,6 +186,7 @@ export default () => {
         }${note._id}`
       )
       dispatchNoteDetailFocusTitleInputEvent()
+      toggleViewMode('edit')
     }
   }, [createNote, replace, routeParams, storageId, setLastCreatedNoteId])
 
