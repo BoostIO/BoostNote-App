@@ -214,6 +214,11 @@ const MarkdownPreviewer = ({
                 {children}
               </a>
             )
+          },
+          input: (props: any) => {
+            return (
+              <input readOnly {...props} disabled={props.type !== 'checkbox'} />
+            )
           }
         }
       })
