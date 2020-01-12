@@ -1,4 +1,5 @@
 import React from 'react'
+import { includes } from 'ramda'
 import {
   NoteDoc,
   NoteDocEditibleProps,
@@ -299,17 +300,17 @@ export default class NoteDetail extends React.Component<
   }
 
   appendNewTag = () => {
-    if (isTagNameValid(this.state.newTagName)) {
-      this.setState(
-        prevState => ({
-          newTagName: '',
-          tags: [...prevState.tags, prevState.newTagName]
-        }),
-        () => {
-          this.queueToSave()
-        }
-      )
-    }
+    if (includes(this.state.newTagName, this.state.tags)) { return }
+    if (!isTagNameValid(this.state.newTagName)) { return }
+    this.setState(
+      prevState => ({
+        newTagName: '',
+        tags: [...prevState.tags, prevState.newTagName]
+      }),
+      () => {
+        this.queueToSave()
+      }
+    )
   }
 
   removeTagByName = (tagName: string) => {
