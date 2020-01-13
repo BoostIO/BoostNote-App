@@ -62,6 +62,7 @@ export default {
     'note.createkeymessage1': '새 노트 생성',
     'note.createkeymessage2': '저장소 선택',
     'note.createkeymessage3': '새 노트 생성',
+    'note.restore': 'Restore',
 
     //Bookmark
     'bookmark.remove': '북마크 제거',
