@@ -66,6 +66,7 @@ export default {
     'note.createkeymessage1': 'Para crear una nueva nota',
     'note.createkeymessage2': 'Selecciona un lugar de almacenamiento',
     'note.createkeymessage3': 'Para crear una nota',
+    'note.restore': 'Restore',
 
     //Bookmark
     'bookmark.remove': 'Eliminar marcador',

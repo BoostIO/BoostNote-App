@@ -63,6 +63,7 @@ export default {
     'note.createkeymessage1': 'ノート作成',
     'note.createkeymessage2': 'ストレージを選択しましょう',
     'note.createkeymessage3': 'ノート作成',
+    'note.restore': '復元',
 
     //Bookmark
     'bookmark.remove': 'ブックマークを削除する',

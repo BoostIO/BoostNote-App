@@ -65,6 +65,7 @@
     'note.createkeymessage1': 'Para criar uma nova nota',
     'note.createkeymessage2': 'Selecionar um armazenamento',
     'note.createkeymessage3': 'Para criar uma nota',
+    'note.restore': 'Restore',
 
     //Bookmark
     'bookmark.remove': 'Remover marcador',

@@ -62,6 +62,7 @@ export default {
     'note.createkeymessage1': '创建新笔记',
     'note.createkeymessage2': '选择储存',
     'note.createkeymessage3': '创建新笔记',
+    'note.restore': 'Restore',
 
     //Bookmark
     'bookmark.remove': '移除书签',
