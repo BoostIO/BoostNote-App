@@ -13,7 +13,7 @@ import HighlightText from '../../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
-import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useContextMenu, MenuTypes, MenuItem } from '../../../lib/contextMenu'
 import { useDb } from '../../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
@@ -109,7 +109,7 @@ export default ({
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
-  const { createNote, trashNote, updateNote, purgeNote } = useDb()
+  const { createNote, trashNote, updateNote, purgeNote, untrashNote } = useDb()
 
   const { messageBox } = useDialog()
   const { t } = useTranslation()
@@ -118,53 +118,92 @@ export default ({
     (event: React.MouseEvent) => {
       event.stopPropagation()
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: t('note.duplicate'),
-          onClick: async () => {
-            createNote(note.storageId, {
-              title: note.title,
-              content: note.content,
-              folderPathname: note.folderPathname,
-              tags: note.tags,
-              bookmarked: false,
-              data: note.data
-            })
-          }
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('note.delete'),
-          onClick: async () => {
-            if (!note.trashed) {
-              trashNote(note.storageId, note._id)
-            } else {
-              messageBox({
-                title: t('note.delete2'),
-                message: t('note.deleteMessage'),
-                iconType: DialogIconTypes.Warning,
-                buttons: [t('note.delete2'), t('general.cancel')],
-                defaultButtonIndex: 0,
-                cancelButtonIndex: 1,
-                onClose: (value: number | null) => {
-                  if (value === 0) {
-                    purgeNote(note.storageId, note._id)
+
+      let menuItems: MenuItem[]
+      if (note.trashed) {
+        menuItems = [
+          {
+            type: MenuTypes.Normal,
+            label: t('note.restore'),
+            onClick: async () => {
+              untrashNote(note.storageId, note._id)
+            }
+          },
+          {
+            type: MenuTypes.Normal,
+            label: t('note.delete'),
+            onClick: async () => {
+              if (!note.trashed) {
+                trashNote(note.storageId, note._id)
+              } else {
+                messageBox({
+                  title: t('note.delete2'),
+                  message: t('note.deleteMessage'),
+                  iconType: DialogIconTypes.Warning,
+                  buttons: [t('note.delete2'), t('general.cancel')],
+                  defaultButtonIndex: 0,
+                  cancelButtonIndex: 1,
+                  onClose: (value: number | null) => {
+                    if (value === 0) {
+                      purgeNote(note.storageId, note._id)
+                    }
                   }
-                }
-              })
+                })
+              }
             }
           }
-        },
-        {
-          type: MenuTypes.Normal,
-          label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
-          onClick: async () => {
-            note.bookmarked = !note.bookmarked
-            updateNote(note.storageId, note._id, note)
+        ]
+      } else {
+        menuItems = [
+          {
+            type: MenuTypes.Normal,
+            label: t('note.duplicate'),
+            onClick: async () => {
+              createNote(note.storageId, {
+                title: note.title,
+                content: note.content,
+                folderPathname: note.folderPathname,
+                tags: note.tags,
+                bookmarked: false,
+                data: note.data
+              })
+            }
+          },
+          {
+            type: MenuTypes.Normal,
+            label: t('note.delete'),
+            onClick: async () => {
+              if (!note.trashed) {
+                trashNote(note.storageId, note._id)
+              } else {
+                messageBox({
+                  title: t('note.delete2'),
+                  message: t('note.deleteMessage'),
+                  iconType: DialogIconTypes.Warning,
+                  buttons: [t('note.delete2'), t('general.cancel')],
+                  defaultButtonIndex: 0,
+                  cancelButtonIndex: 1,
+                  onClose: (value: number | null) => {
+                    if (value === 0) {
+                      purgeNote(note.storageId, note._id)
+                    }
+                  }
+                })
+              }
+            }
+          },
+          {
+            type: MenuTypes.Normal,
+            label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
+            onClick: async () => {
+              note.bookmarked = !note.bookmarked
+              updateNote(note.storageId, note._id, note)
+            }
           }
-        }
-      ])
+        ]
+      }
+
+      popup(event, menuItems)
     },
     [popup, createNote, note, updateNote, trashNote, messageBox]
   )
