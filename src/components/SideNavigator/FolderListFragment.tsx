@@ -246,6 +246,9 @@ function getOpenedFolderPathnameList(
   for (const name of names) {
     const pathname =
       parentPathname === '/' ? `/${name}` : `${parentPathname}/${name}`
+    if (pathname === '/') {
+      continue
+    }
     pathnameList.push(pathname)
     if (openItemIdSet.has(getFolderItemId(storageId, pathname))) {
       pathnameList.push(
