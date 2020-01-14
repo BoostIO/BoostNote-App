@@ -60,11 +60,6 @@ export default class NoteDb {
           return obj
         }
 
-        if (noteDoc.folderPathname === '/') {
-          noteDoc.folderPathname = '/default'
-          obj.requiresUpdate.push(noteDoc)
-        }
-
         if (folderMap[noteDoc.folderPathname] == null) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
@@ -87,10 +82,6 @@ export default class NoteDb {
       ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName)),
       ...requiresUpdate.map(note => this.updateNote(note._id, note))
     ])
-
-    if (folderMap['/'] != null) {
-      await this.removeFolder('/')
-    }
   }
 
   async getFolder(path: string): Promise<FolderDoc | null> {
