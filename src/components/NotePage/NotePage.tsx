@@ -162,6 +162,25 @@ export default () => {
       : undefined
   }, [filteredNotes, currentNoteIndex])
 
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const updateNoteListWidth = useCallback(
+    (leftWidth: number) => {
+      setGeneralStatus({
+        noteListWidth: leftWidth
+      })
+    },
+    [setGeneralStatus]
+  )
+
+  const toggleViewMode = useCallback(
+    (newMode: ViewModeType) => {
+      setGeneralStatus({
+        noteViewMode: newMode
+      })
+    },
+    [setGeneralStatus]
+  )
+
   const createQuickNote = useCallback(async () => {
     if (storageId == null || routeParams.name === 'storages.trashCan') {
       return
@@ -188,9 +207,18 @@ export default () => {
       dispatchNoteDetailFocusTitleInputEvent()
       toggleViewMode('edit')
     }
-  }, [createNote, replace, routeParams, storageId, setLastCreatedNoteId])
+  }, [
+    createNote,
+    replace,
+    routeParams,
+    storageId,
+    setLastCreatedNoteId,
+    toggleViewMode
+  ])
 
-  const showCreateNoteInList = routeParams.name === 'storages.notes'
+  const showCreateNoteInList =
+    routeParams.name === 'storages.notes' ||
+    routeParams.name === 'storages.allNotes'
 
   const breadCrumbs = useMemo(() => {
     if (currentNote == null || currentNote.folderPathname === '/')
@@ -208,25 +236,6 @@ export default () => {
     })
     return thread as BreadCrumbs
   }, [currentPathnameWithoutNoteId, currentNote, storageId])
-
-  const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const updateNoteListWidth = useCallback(
-    (leftWidth: number) => {
-      setGeneralStatus({
-        noteListWidth: leftWidth
-      })
-    },
-    [setGeneralStatus]
-  )
-
-  const toggleViewMode = useCallback(
-    (newMode: ViewModeType) => {
-      setGeneralStatus({
-        noteViewMode: newMode
-      })
-    },
-    [setGeneralStatus]
-  )
 
   const { messageBox } = useDialog()
   const showPurgeNoteDialog = useCallback(
