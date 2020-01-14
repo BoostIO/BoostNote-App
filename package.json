@@ -1,7 +1,7 @@
 {
   "name": "boostnote",
   "productName": "Boost Note",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
