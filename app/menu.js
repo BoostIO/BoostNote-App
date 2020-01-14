@@ -87,14 +87,10 @@ const template = [
   {
     role: 'help',
     submenu: [
-      ...(isLinux
-        ? []
-        : [
-            {
-              label: 'Check For Updates',
-              click: checkForUpdates
-            }
-          ]),
+      {
+        label: 'Check For Updates',
+        click: checkForUpdates
+      },
       {
         label: 'Learn More',
         click: async () => {
