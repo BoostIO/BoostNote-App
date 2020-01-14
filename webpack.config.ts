@@ -5,6 +5,7 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
+import packageJson from './package.json'
 
 module.exports = (env, argv) => {
   const config = {
@@ -59,6 +60,9 @@ module.exports = (env, argv) => {
         template: 'index.html'
       }),
       new ErrorOverlayPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.VERSION': JSON.stringify(packageJson.version)
+      }),
       new webpack.EnvironmentPlugin([
         'NODE_ENV',
         'AMPLIFY_AUTH_IDENTITY_POOL_ID',

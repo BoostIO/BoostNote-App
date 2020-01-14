@@ -3,7 +3,8 @@
     "module": "commonjs",
     "target": "es5",
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "./typings/**/*.d.ts"]
 }
