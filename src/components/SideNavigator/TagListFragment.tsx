@@ -52,7 +52,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                     title: `Remove "${tagName}" tag`,
                     message: t('tag.removeMessage'),
                     iconType: DialogIconTypes.Warning,
-                    buttons: [t('tag.removeMessage'), t('general.cancel')],
+                    buttons: [t('tag.remove'), t('general.cancel')],
                     defaultButtonIndex: 0,
                     cancelButtonIndex: 1,
                     onClose: (value: number | null) => {
