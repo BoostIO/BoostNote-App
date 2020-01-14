@@ -77,6 +77,8 @@ export default class NoteDb {
       }
     )
 
+    await this.upsertFolder('/')
+
     await Promise.all([
       ...[...missingPathnameSet].map(pathname => this.upsertFolder(pathname)),
       ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName)),
