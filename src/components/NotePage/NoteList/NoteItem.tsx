@@ -93,14 +93,12 @@ type NoteItemProps = {
   note: PopulatedNoteDoc
   active: boolean
   recentlyCreated?: boolean
-  storageId?: string
   search: string
   basePathname: string
   focusList: () => void
 }
 
 export default ({
-  storageId,
   note,
   active,
   basePathname,
@@ -202,7 +200,17 @@ export default ({
 
       popup(event, menuItems)
     },
-    [popup, createNote, note, updateNote, trashNote, messageBox]
+    [
+      popup,
+      createNote,
+      note,
+      updateNote,
+      trashNote,
+      messageBox,
+      purgeNote,
+      t,
+      untrashNote
+    ]
   )
 
   const contentPreview = useMemo(() => {
@@ -225,13 +233,13 @@ export default ({
     }
 
     return trimmedContent.split('\n').shift() || t('note.empty')
-  }, [note.content, search])
+  }, [note.content, search, t])
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
       setTransferrableNoteData(event, note.storageId, note)
     },
-    [note, storageId]
+    [note]
   )
 
   return (
