@@ -66,7 +66,7 @@ const FoldButton = styled.button`
   position: absolute;
   width: 26px;
   height: 26px;
-  padding-left: 15px;
+  padding-left: 10px;
   border: none;
   background-color: transparent;
   margin-right: 3px;
