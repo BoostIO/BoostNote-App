@@ -4,13 +4,15 @@ import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage, NoteDoc } from '../types'
 import { RouterProvider } from '../../router'
 import { getFolderId } from '../utils'
+import { combineProviders } from '../../utils/context'
+import { ToastProvider } from '../../toast'
 
 function prepareDbStore() {
   const memoryStorage = new MemoryLiteStorage()
   const { result } = renderHook(
     () => createDbStoreCreator(memoryStorage, 'memory')(),
     {
-      wrapper: RouterProvider
+      wrapper: combineProviders(RouterProvider, ToastProvider)
     }
   )
 

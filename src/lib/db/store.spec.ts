@@ -4,13 +4,15 @@ import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage, NoteDoc } from './types'
 import { getFolderId } from './utils'
 import { RouterProvider } from '../router'
+import { combineProviders } from '../utils/context'
+import { ToastProvider } from '../toast'
 
 function prepareDbStore() {
   const memoryStorage = new MemoryLiteStorage()
   const { result } = renderHook(
     () => createDbStoreCreator(memoryStorage, 'memory')(),
     {
-      wrapper: RouterProvider
+      wrapper: combineProviders(RouterProvider, ToastProvider)
     }
   )
 
@@ -116,7 +118,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/default': expect.objectContaining({ pathname: '/default' }),
+        '/': expect.objectContaining({ pathname: '/' }),
         '/test': expect.objectContaining({ pathname: '/test' })
       })
 
@@ -140,7 +142,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/default': expect.objectContaining({ pathname: '/default' }),
+        '/': expect.objectContaining({ pathname: '/' }),
         '/test': expect.objectContaining({ pathname: '/test' }),
         '/test/child folder': expect.objectContaining({
           pathname: '/test/child folder'
@@ -175,7 +177,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/default': expect.objectContaining({ pathname: '/default' })
+        '/': expect.objectContaining({ pathname: '/' })
       })
     })
 
@@ -194,7 +196,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/default': expect.objectContaining({ pathname: '/default' })
+        '/': expect.objectContaining({ pathname: '/' })
       })
     })
 
@@ -600,7 +602,7 @@ describe('DbStore', () => {
         // Then
         expect(
           result.current.storageMap[storage!.id]!.folderMap[
-          noteDoc!.folderPathname
+            noteDoc!.folderPathname
           ]
         ).toBeDefined()
       })
