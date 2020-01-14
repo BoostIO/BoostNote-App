@@ -41,6 +41,7 @@ import {
   getStorages
 } from '../accounts'
 import { wrapDbStoreWithAnalytics } from '../analytics'
+import { useToast } from '../toast'
 
 export interface DbStore {
   initialized: boolean
@@ -279,13 +280,25 @@ export function createDbStoreCreator(
       [storageMap]
     )
 
+    const { pushMessage } = useToast()
+
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
         const storage = storageMap[id]
         if (storage == null) {
           return
         }
-        const folder = await storage.db.upsertFolder(pathname)
+        let folder
+        try {
+          folder = await storage.db.upsertFolder(pathname)
+        } catch (error) {
+          pushMessage({
+            title: 'Error',
+            description: 'Folder name is invalid.'
+          })
+          console.error(error)
+          return
+        }
         const parentFolders = await storage.db.getFoldersByPathnames(
           getAllParentFolderPathnames(pathname)
         )
