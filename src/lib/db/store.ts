@@ -204,7 +204,7 @@ export function createDbStoreCreator(
           }
         }
 
-        const storage = await prepareStorage(storageData, adapter, true)
+        const storage = await prepareStorage(storageData, adapter)
 
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
@@ -1194,16 +1194,11 @@ function saveStorageDataList(
 
 async function prepareStorage(
   { id, name, cloudStorage }: NoteStorageData,
-  adapter: 'idb' | 'memory',
-  isNew = false
+  adapter: 'idb' | 'memory'
 ): Promise<NoteStorage> {
   const pouchdb = new PouchDB(id, { adapter })
   const db = new NoteDb(pouchdb, id, name)
   await db.init()
-
-  if (isNew) {
-    await db.upsertFolder('/default')
-  }
 
   const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
   const attachmentMap = await db.getAttachmentMap()
