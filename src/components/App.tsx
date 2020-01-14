@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import SideNavigator from './SideNavigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
@@ -25,7 +25,6 @@ import ToastList from './Toast'
 import { useToast } from '../lib/toast'
 import { useUsers } from '../lib/accounts'
 import styled from '../lib/styled'
-import { useEffectOnce } from 'react-use'
 
 export const LoadingText = styled.div`
   margin: 30px;
@@ -35,7 +34,7 @@ const App = () => {
   const { initialize, initialized } = useDb()
   const [users, { removeUser }] = useUsers()
   const { pushMessage } = useToast()
-  useEffectOnce(() => {
+  useEffect(() => {
     initialize(users[0]).catch(error => {
       if (error.message === 'InvalidUser') {
         if (users[0] != null) {
@@ -53,7 +52,7 @@ const App = () => {
         console.error(error)
       }
     })
-  })
+  }, [users])
 
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
