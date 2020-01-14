@@ -1062,6 +1062,7 @@ describe('NoteDb', () => {
       })
 
       expect(result.folderMap).toEqual({
+        '/': expect.anything(),
         '/test': expect.anything(),
         '/test/child folder': expect.anything(),
         '/test/child folder2': expect.anything()
