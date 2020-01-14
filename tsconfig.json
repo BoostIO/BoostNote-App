@@ -21,6 +21,7 @@
     "skipLibCheck": true,
     "suppressImplicitAnyIndexErrors": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   }
 }
