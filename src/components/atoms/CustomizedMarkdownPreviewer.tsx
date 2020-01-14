@@ -6,11 +6,13 @@ import { usePreviewStyle } from '../../lib/preview'
 interface CustomizedMarkdownPreviewer {
   content: string
   storageId?: string
+  updateContent?: any
 }
 
 const CustomizedMarkdownPreviewer = ({
   content,
-  storageId
+  storageId,
+  updateContent
 }: CustomizedMarkdownPreviewer) => {
   const { preferences } = usePreferences()
   const { previewStyle } = usePreviewStyle()
@@ -22,6 +24,7 @@ const CustomizedMarkdownPreviewer = ({
       codeBlockTheme={preferences['markdown.codeBlockTheme']}
       theme={preferences['general.theme']}
       style={previewStyle}
+      updateContent={updateContent}
     />
   )
 }
