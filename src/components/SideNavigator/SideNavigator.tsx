@@ -268,6 +268,9 @@ export default () => {
             })
           }
 
+          const allNotesPagePathname = `/app/storages/${storage.id}/notes`
+          const allNotesPageIsActive = currentPathname === allNotesPagePathname
+
           const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
           const trashcanPageIsActive = currentPathname === trashcanPagePathname
 
@@ -328,7 +331,7 @@ export default () => {
                   toggleSideNavOpenedItem(itemId)
                 }}
                 onClick={() => {
-                  push(`/app/storages/${storage.id}/notes`)
+                  toggleSideNavOpenedItem(itemId)
                 }}
                 onContextMenu={event => {
                   event.preventDefault()
@@ -375,6 +378,13 @@ export default () => {
               />
               {!storageIsFolded && (
                 <>
+                  <SideNavigatorItem
+                    depth={1}
+                    label='All Notes'
+                    icon={<IconBook size='1em' />}
+                    active={allNotesPageIsActive}
+                    onClick={() => push(allNotesPagePathname)}
+                  />
                   <FolderListFragment
                     storage={storage}
                     showPromptToCreateFolder={showPromptToCreateFolder}
@@ -384,13 +394,7 @@ export default () => {
                   <SideNavigatorItem
                     depth={1}
                     label={t('general.attachments')}
-                    icon={
-                      attachmentsPageIsActive ? (
-                        <IconImage size='1.5em' />
-                      ) : (
-                        <IconImage size='1.5em' />
-                      )
-                    }
+                    icon={<IconImage size='1.5em' />}
                     active={attachmentsPageIsActive}
                     onClick={() => push(attachmentsPagePathname)}
                     onContextMenu={event => {
