@@ -286,12 +286,18 @@ export default () => {
           if (storage.cloudStorage != null && user != null) {
             const cloudSync = () => {
               if (user == null) {
-                // TODO: toast login needed
-                console.error('login required')
+                pushMessage({
+                  title: 'No User Error',
+                  description: 'Please login first to sync the storage.'
+                })
               }
-              syncStorage(storage.id, user).catch(e => {
-                // TODO: toast sync failed error
-                console.error(e)
+              syncStorage(storage.id, user).catch(error => {
+                pushMessage({
+                  title: 'Sync Error',
+                  description:
+                    "Failed to sync the storage. Please check Dev Tool's console to learn more information"
+                })
+                console.error(error)
               })
             }
 
