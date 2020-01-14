@@ -45,7 +45,7 @@ export function isFolderNameValid(name: string): boolean {
 }
 
 export function isFolderPathnameValid(pathname: string): boolean {
-  if (pathname === '/') return false
+  if (pathname === '/') return true
   if (!pathname.startsWith('/')) return false
   const [, ...folderNames] = pathname.split('/')
   return folderNames.every(isFolderNameValid)
