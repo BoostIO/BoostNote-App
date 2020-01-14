@@ -224,39 +224,33 @@ const MarkdownPreviewer = ({
               <input
                 onChange={e => {
                   const regex = {
-                    check: /\[x]/i,
-                    uncheck: /\[ ]/,
                     checked: /^(\s*>?)*\s*[+\-*] \[x]/i,
-                    unchecked: /^(\s*>?)*\s*[+\-*] \[ ]/,
                     checkedAndUnchecked: /^(\s*>?)*\s*[+\-*] (\[x]|\[ ])/i
                   }
-
                   const lines = content.split('\n')
                   let checkboxIndex: any = e.target.getAttribute('id') || ''
+
                   checkboxIndex = Number(
                     checkboxIndex.replace(/^checkbox|(\[|\])/gi, '')
                   )
 
-                  let currCheckboxIndex = 0
+                  let current = 0
 
                   for (let index = 0; index < lines.length; index++) {
                     const line = lines[index]
                     const matches = line.match(regex.checkedAndUnchecked)
+                    console.log(`matches: ${!!matches}`)
                     if (matches) {
-                      if (currCheckboxIndex === checkboxIndex) {
+                      if (current === checkboxIndex) {
                         const isChecked = regex.checked.test(matches[0])
-                        lines.splice(
-                          index,
-                          1,
-                          line.replace(
-                            isChecked ? '[x]' : '[ ]',
-                            isChecked ? '[ ]' : '[x]'
-                          )
+                        lines[index] = line.replace(
+                          isChecked ? '[x]' : '[ ]',
+                          isChecked ? '[ ]' : '[x]'
                         )
                         // Bail out early since we're done
                         break
                       } else {
-                        currCheckboxIndex++
+                        current++
                       }
                     }
                   }

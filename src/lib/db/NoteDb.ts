@@ -1,4 +1,6 @@
+// @ts-ignore
 import dashify from 'dashify'
+// @ts-ignore
 import parsePath from 'path-parse'
 import {
   AllDocsMap,
