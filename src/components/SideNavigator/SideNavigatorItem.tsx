@@ -99,7 +99,7 @@ const ClickableContainer = styled.button`
 `
 
 const Label = styled.div`
-  min-width: 0
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   flex: 1 1 auto;
