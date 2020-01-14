@@ -143,8 +143,6 @@ export const StyledNoteDetailContainer = styled.div`
   }
 
   .buttonsWrapper {
-    flex: 0 0 210px;
-
     button + button {
       margin-left: 8px;
     }
@@ -300,8 +298,12 @@ export default class NoteDetail extends React.Component<
   }
 
   appendNewTag = () => {
-    if (includes(this.state.newTagName, this.state.tags)) { return }
-    if (!isTagNameValid(this.state.newTagName)) { return }
+    if (includes(this.state.newTagName, this.state.tags)) {
+      return
+    }
+    if (!isTagNameValid(this.state.newTagName)) {
+      return
+    }
     this.setState(
       prevState => ({
         newTagName: '',
