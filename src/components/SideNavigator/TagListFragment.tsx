@@ -89,6 +89,9 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         onFoldButtonClick={() => {
           toggleSideNavOpenedItem(tagListNavItemId)
         }}
+        onClick={() => {
+          toggleSideNavOpenedItem(tagListNavItemId)
+        }}
         onContextMenu={event => {
           event.preventDefault()
         }}
