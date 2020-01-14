@@ -159,6 +159,14 @@ interface MarkdownPreviewerProps {
   style?: string
   theme?: string
   storageId?: string
+  updateContent?: any
+}
+
+const regex = {
+  check: /\[x]/i,
+  uncheck: /\[ ]/,
+  checked: /^(\s*>?)*\s*[+\-*] \[x]/i,
+  unchecked: /^(\s*>?)*\s*[+\-*] \[ ]/
 }
 
 const MarkdownPreviewer = ({
@@ -166,14 +174,17 @@ const MarkdownPreviewer = ({
   codeBlockTheme,
   style,
   theme,
-  storageId
+  storageId,
+  updateContent
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
   const previousThemeRef = useRef<string | undefined>('')
+  const checkboxIndexes = React.useRef<any>(0)
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
   const { storageMap } = useDb()
+  console.log(content)
 
   const markdownProcessor = useMemo(() => {
     const options = { codeBlockTheme, storageId }
@@ -216,8 +227,26 @@ const MarkdownPreviewer = ({
             )
           },
           input: (props: any) => {
+            console.log(props)
             return (
-              <input readOnly {...props} disabled={props.type !== 'checkbox'} />
+              <input
+                onChange={() => {
+                  const lines = content.split('\n')
+                  const currIndex = checkboxIndexes.current
+                  let targetLine = lines[currIndex]
+                  targetLine = regex.checked.test(targetLine)
+                    ? targetLine.replace(regex.check, '[ ]')
+                    : targetLine.replace(regex.uncheck, '[x]')
+                  const nextContent = lines
+                    .splice(currIndex, 1, targetLine)
+                    .join('\n')
+                  updateContent(nextContent)
+                }}
+                id={`checkbox[${checkboxIndexes.current++}]`}
+                readOnly
+                {...props}
+                disabled={props.type !== 'checkbox'}
+              />
             )
           }
         }
