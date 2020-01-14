@@ -300,8 +300,12 @@ export default class NoteDetail extends React.Component<
   }
 
   appendNewTag = () => {
-    if (includes(this.state.newTagName, this.state.tags)) { return }
-    if (!isTagNameValid(this.state.newTagName)) { return }
+    if (includes(this.state.newTagName, this.state.tags)) {
+      return
+    }
+    if (!isTagNameValid(this.state.newTagName)) {
+      return
+    }
     this.setState(
       prevState => ({
         newTagName: '',
@@ -469,6 +473,7 @@ export default class NoteDetail extends React.Component<
       <CustomizedMarkdownPreviewer
         content={this.state.content}
         storageId={storageId}
+        updateContent={this.updateContent}
       />
     )
 

@@ -162,13 +162,6 @@ interface MarkdownPreviewerProps {
   updateContent?: any
 }
 
-const regex = {
-  check: /\[x]/i,
-  uncheck: /\[ ]/,
-  checked: /^(\s*>?)*\s*[+\-*] \[x]/i,
-  unchecked: /^(\s*>?)*\s*[+\-*] \[ ]/
-}
-
 const MarkdownPreviewer = ({
   content,
   codeBlockTheme,
@@ -184,7 +177,7 @@ const MarkdownPreviewer = ({
   const checkboxIndexes = React.useRef<any>(0)
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
   const { storageMap } = useDb()
-  console.log(content)
+  // console.log(content)
 
   const markdownProcessor = useMemo(() => {
     const options = { codeBlockTheme, storageId }
@@ -227,19 +220,48 @@ const MarkdownPreviewer = ({
             )
           },
           input: (props: any) => {
-            console.log(props)
             return (
               <input
-                onChange={() => {
+                onChange={e => {
+                  const regex = {
+                    check: /\[x]/i,
+                    uncheck: /\[ ]/,
+                    checked: /^(\s*>?)*\s*[+\-*] \[x]/i,
+                    unchecked: /^(\s*>?)*\s*[+\-*] \[ ]/,
+                    checkedAndUnchecked: /^(\s*>?)*\s*[+\-*] (\[x]|\[ ])/i
+                  }
+
                   const lines = content.split('\n')
-                  const currIndex = checkboxIndexes.current
-                  let targetLine = lines[currIndex]
-                  targetLine = regex.checked.test(targetLine)
-                    ? targetLine.replace(regex.check, '[ ]')
-                    : targetLine.replace(regex.uncheck, '[x]')
-                  const nextContent = lines
-                    .splice(currIndex, 1, targetLine)
-                    .join('\n')
+                  let checkboxIndex: any = e.target.getAttribute('id') || ''
+                  checkboxIndex = Number(
+                    checkboxIndex.replace(/^checkbox|(\[|\])/gi, '')
+                  )
+
+                  let currCheckboxIndex = 0
+
+                  for (let index = 0; index < lines.length; index++) {
+                    const line = lines[index]
+                    const matches = line.match(regex.checkedAndUnchecked)
+                    if (matches) {
+                      if (currCheckboxIndex === checkboxIndex) {
+                        const isChecked = regex.checked.test(matches[0])
+                        lines.splice(
+                          index,
+                          1,
+                          line.replace(
+                            isChecked ? '[x]' : '[ ]',
+                            isChecked ? '[ ]' : '[x]'
+                          )
+                        )
+                        // Bail out early since we're done
+                        break
+                      } else {
+                        currCheckboxIndex++
+                      }
+                    }
+                  }
+                  const nextContent = lines.join('\n')
+                  console.log(nextContent)
                   updateContent(nextContent)
                 }}
                 id={`checkbox[${checkboxIndexes.current++}]`}
@@ -251,7 +273,7 @@ const MarkdownPreviewer = ({
           }
         }
       })
-  }, [codeBlockTheme, storageId, storageMap])
+  }, [codeBlockTheme, content, storageId, storageMap, updateContent])
 
   const renderContent = useCallback(
     async (content: string) => {
