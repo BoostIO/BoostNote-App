@@ -225,7 +225,6 @@ const NoteList = ({
               <NoteItem
                 active={noteIsCurrentNote}
                 note={note}
-                storageId={currentStorageId}
                 basePathname={basePathname}
                 focusList={focusList}
                 search={search}
