@@ -1,11 +1,11 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import enUS from './enUS'
-import esES from './esEs'
-import zhCN from './zhCN'
-import ja from './ja'
-import ko from './ko'
-import ptBR from './ptBR'
+import enUS from '../locales/enUS'
+import esES from '../locales/esEs'
+import zhCN from '../locales/zhCN'
+import ja from '../locales/ja'
+import ko from '../locales/ko'
+import ptBR from '../locales/ptBR'
 
 const resources = {
   'en-US': enUS,

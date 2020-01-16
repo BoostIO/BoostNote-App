@@ -29,7 +29,8 @@ export default {
     'storage.copy': 'Notiz kopieren',
     'storage.typeLocal': 'Lokal',
     'storage.typeCloud': 'Cloud',
-    'storage.needSignIn': 'Du musst dich anmelden um einen Cloud-Speicher zu erstellen.',
+    'storage.needSignIn':
+      'Du musst dich anmelden um einen Cloud-Speicher zu erstellen.',
     'storage.syncDate': 'Zuletzt synchronisiert am',
 
     //Folder
@@ -126,7 +127,8 @@ export default {
       'Boostnote sammelt anonyme Daten um das Nutzererlebnis zu verbessern, und es wird streng darauf geachtet keine persönlichen Informationen wie die Inhalte der Notizen zu senden. Um zu sehen wie das läuft, besuche unsere Github Seite.',
     'preferences.analyticsDescription2':
       'Du kannst wählen diese Option zu aktivieren oder deaktivieren.',
-    'preferences.analyticsLabel': 'Analytik aktivieren um dich an der Verbesserung von Boostnote zu beteiligen.',
+    'preferences.analyticsLabel':
+      'Analytik aktivieren um dich an der Verbesserung von Boostnote zu beteiligen.',
     'preferences.displayTutorialsLabel': 'Tutorials and FAQ',
 
     // Preferences EditorTab
@@ -149,9 +151,9 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'Importieren',
     'preferences.description': 'Importiert .cson files vom alten Boostnote.',
-    'preferences.importFlow1': '1. Öffne den alten Boostnote Ordner auf deinem PC.',
-    'preferences.importFlow2':
-      '2. Ziehe die .cson Dateien in das Feld unten.',
+    'preferences.importFlow1':
+      '1. Öffne den alten Boostnote Ordner auf deinem PC.',
+    'preferences.importFlow2': '2. Ziehe die .cson Dateien in das Feld unten.',
     'preferences.importFlow3':
       '3. Wähle den Speicher und den Ordner in die du die Dateien verschieben möchtest.',
     'preferences.importFlow4': '4. Upload!',
