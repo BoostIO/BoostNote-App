@@ -4,7 +4,7 @@ import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage, NoteDoc } from './types'
 import { getFolderId } from './utils'
 import { RouterProvider } from '../router'
-import { combineProviders } from '../utils/context'
+import { combineProviders } from '../context'
 import { ToastProvider } from '../toast'
 
 function prepareDbStore() {

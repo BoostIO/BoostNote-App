@@ -1,7 +1,7 @@
 import React from 'react'
 import isElectron from 'is-electron'
 import { getAppLinkFromUserAgent } from '../../lib/download'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from '../../lib/platform'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { primaryButtonStyle } from '../../lib/styled/styleFunctions'

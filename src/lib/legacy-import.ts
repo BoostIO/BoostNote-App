@@ -1,4 +1,4 @@
-import { readAsText } from './utils/files'
+import { readAsText } from './files'
 import { parse } from './cson-parser'
 import ow from 'ow'
 

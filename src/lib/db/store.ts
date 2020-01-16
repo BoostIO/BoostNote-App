@@ -10,9 +10,9 @@ import {
   PopulatedNoteDoc
 } from './types'
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { createStoreContext } from '../utils/context'
+import { createStoreContext } from '../context'
 import ow from 'ow'
-import { schema, isValid, optional } from '../utils/predicates'
+import { schema, isValid, optional } from '../predicates'
 import NoteDb from './NoteDb'
 import {
   getFolderPathname,

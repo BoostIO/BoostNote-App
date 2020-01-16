@@ -1,4 +1,4 @@
-import { createStoreContext } from '../utils/context'
+import { createStoreContext } from '../context'
 import { normalizeLocation } from './utils'
 import { useState, useCallback, useEffect } from 'react'
 import { Location } from './types'

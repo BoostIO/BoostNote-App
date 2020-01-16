@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { createStoreContext } from '../utils/context'
+import { createStoreContext } from '../context'
 import { ContextMenuContext, MenuItem } from './types'
 export * from './types'
 

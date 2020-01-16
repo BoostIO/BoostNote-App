@@ -10,7 +10,7 @@ import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import { getSubscription, Subscription } from '../../lib/accounts'
 import LoginButton from '../atoms/LoginButton'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from '../../lib/platform'
 import { useTranslation } from 'react-i18next'
 
 const BillingContent = styled.div`

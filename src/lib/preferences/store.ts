@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { createStoreContext } from '../utils/context'
+import { createStoreContext } from '../context'
 import { localLiteStorage } from 'ltstrg'
 import { Preferences } from './types'
 import { useSetState } from 'react-use'
