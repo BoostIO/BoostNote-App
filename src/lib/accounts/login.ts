@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { retry } from '../sleep'
-import { generateSecret } from '../secret'
+import { generateRandomHex } from '../string'
 import {
   checkLogin,
   isLoginComplete,
@@ -41,7 +41,7 @@ const loginStart = async (
   try {
     setState('logging-in')
 
-    const info = await initiateLogin(generateSecret())
+    const info = await initiateLogin(generateRandomHex())
     openNew(getLoginPageUrl(info))
 
     const response = await pingLogin(info)

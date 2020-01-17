@@ -1,6 +1,5 @@
 import { createStoreContext } from '../context'
 import { useState } from 'react'
-import { generateSecret } from '../secret'
 
 export interface ToastMessage {
   id: string
@@ -15,9 +14,11 @@ interface ToastStore {
   removeMessage: (message: ToastMessage) => void
 }
 
+let id = 0
+
 const createToastMessage = (title: string, description: string) => {
   return {
-    id: generateSecret(),
+    id: `${id++}`,
     createdAt: new Date(),
     title,
     description

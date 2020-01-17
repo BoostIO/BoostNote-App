@@ -1,4 +1,5 @@
 import shortid from 'shortid'
+import { randomBytes } from 'crypto'
 
 export function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -7,3 +8,5 @@ export function capitalize(value: string): string {
 export function generateId(): string {
   return shortid.generate()
 }
+
+export const generateRandomHex = () => randomBytes(32).toString('hex')
