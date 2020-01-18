@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, KeyboardEventHandler } from 'react'
-import { MessageBoxDialogData } from '../../lib/dialog/types'
+import { MessageBoxDialogData } from 'Lib/dialog/types'
 import {
   StyledDialogBody,
   StyledDialogTitle,

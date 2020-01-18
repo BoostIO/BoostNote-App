@@ -1,5 +1,5 @@
 import React from 'react'
-import { DialogIconTypes } from '../../lib/dialog/types'
+import { DialogIconTypes } from 'Lib/dialog/types'
 import { StyledIcon } from './styled'
 
 type DialogIconProps = {

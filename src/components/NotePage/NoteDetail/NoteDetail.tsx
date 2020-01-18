@@ -5,10 +5,10 @@ import {
   NoteDocEditibleProps,
   Attachment,
   PopulatedNoteDoc
-} from '../../../lib/db/types'
-import { isTagNameValid } from '../../../lib/db/utils'
+} from 'Lib/db/types'
+import { isTagNameValid } from 'Lib/db/utils'
 import TagList from './TagList'
-import styled from '../../../lib/styled'
+import styled from 'Lib/styled'
 import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
 import ToolbarIconButton from '../../atoms/ToolbarIconButton'
@@ -21,10 +21,10 @@ import {
   borderRight,
   uiTextColor,
   PrimaryTextColor
-} from '../../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
-import { getFileList } from '../../../lib/dnd'
-import { ViewModeType } from '../../../lib/generalStatus'
+import { getFileList } from 'Lib/dnd'
+import { ViewModeType } from 'Lib/generalStatus'
 import { BreadCrumbs } from '../NotePage'
 import cc from 'classcat'
 import {
@@ -37,7 +37,7 @@ import {
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent
-} from '../../../lib/events'
+} from 'Lib/events'
 
 export const StyledNoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}

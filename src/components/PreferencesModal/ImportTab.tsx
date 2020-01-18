@@ -7,21 +7,21 @@ import {
   SectionPrimaryButton,
   SectionHeader2
 } from './styled'
-import { useDb } from '../../lib/db'
-import { entries } from '../../lib/db/utils'
+import { useDb } from 'Lib/db'
+import { entries } from 'Lib/db/utils'
 import FileDropZone from '../atoms/FileDropZone'
 import {
   convertCSONFileToNote,
   ParsedNote,
   ParseErrors
-} from '../../lib/legacy-import'
-import styled from '../../lib/styled'
+} from 'Lib/legacy-import'
+import styled from 'Lib/styled'
 import {
   secondaryBackgroundColor,
   border,
   textColor
-} from '../../lib/styled/styleFunctions'
-import { useToast } from '../../lib/toast'
+} from 'Lib/styled/styleFunctions'
+import { useToast } from 'Lib/toast'
 import { useTranslation } from 'react-i18next'
 
 interface Success {

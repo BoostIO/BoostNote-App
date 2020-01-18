@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 
 interface TabButtonProps {
   label: string

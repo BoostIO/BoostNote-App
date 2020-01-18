@@ -1,5 +1,5 @@
 import React from 'react'
-import { ToastMessage } from '../../lib/toast'
+import { ToastMessage } from 'Lib/toast'
 import {
   StyledToastContainer,
   StyledToastTop,

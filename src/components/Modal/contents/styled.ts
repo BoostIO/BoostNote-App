@@ -1,5 +1,5 @@
-import styled from '../../../lib/styled'
-import { textColor } from '../../../lib/styled/styleFunctions'
+import styled from 'Lib/styled'
+import { textColor } from 'Lib/styled/styleFunctions'
 
 export const ModalContainer = styled.div`
   width: 100%;

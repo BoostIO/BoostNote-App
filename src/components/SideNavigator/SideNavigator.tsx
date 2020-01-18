@@ -1,25 +1,25 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
-import { useDb } from '../../lib/db'
-import { entries } from '../../lib/db/utils'
-import styled from '../../lib/styled'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import { usePreferences } from '../../lib/preferences'
+import { useRouter, usePathnameWithoutNoteId } from 'Lib/router'
+import { useDb } from 'Lib/db'
+import { entries } from 'Lib/db/utils'
+import styled from 'Lib/styled'
+import { useDialog, DialogIconTypes } from 'Lib/dialog'
+import { useContextMenu, MenuTypes } from 'Lib/contextMenu'
+import { usePreferences } from 'Lib/preferences'
 import {
   sideBarBackgroundColor,
   sideBarDefaultTextColor,
   iconColor,
   sideBarTextColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 import SideNavigatorItem from './SideNavigatorItem'
-import { useGeneralStatus } from '../../lib/generalStatus'
+import { useGeneralStatus } from 'Lib/generalStatus'
 import ControlButton from './ControlButton'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
-import { useUsers } from '../../lib/accounts'
-import { useToast } from '../../lib/toast'
+import { useUsers } from 'Lib/accounts'
+import { useToast } from 'Lib/toast'
 import { useTranslation } from 'react-i18next'
 import {
   IconAddRound,

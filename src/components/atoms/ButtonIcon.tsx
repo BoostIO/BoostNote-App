@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 
 const StyledButtonIcon = styled.button<{ active: boolean }>`
   color: currentColor;

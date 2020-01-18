@@ -4,7 +4,7 @@ import {
   useContextMenu,
   MenuTypes,
   ContextMenuContext
-} from '../../lib/contextMenu'
+} from 'Lib/contextMenu'
 
 interface ContextMenuProps {
   contextMenu: ContextMenuContext

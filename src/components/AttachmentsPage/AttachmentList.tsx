@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
-import styled from '../../lib/styled'
-import { NoteStorage, Attachment } from '../../lib/db/types'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import { downloadBlob } from '../../lib/download'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { useDb } from '../../lib/db'
+import styled from 'Lib/styled'
+import { NoteStorage, Attachment } from 'Lib/db/types'
+import { useContextMenu, MenuTypes } from 'Lib/contextMenu'
+import { downloadBlob } from 'Lib/download'
+import { useDialog, DialogIconTypes } from 'Lib/dialog'
+import { useDb } from 'Lib/db'
 
 const ListContainer = styled.div`
   display: flex;

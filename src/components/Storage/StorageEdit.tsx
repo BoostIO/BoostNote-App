@@ -5,13 +5,13 @@ import {
   RightMargin,
   DeleteStorageButton
 } from '../PreferencesModal/styled'
-import { useDb } from '../../lib/db'
-import { NoteStorage } from '../../lib/db/types'
-import { useRouter } from '../../lib/router'
+import { useDb } from 'Lib/db'
+import { NoteStorage } from 'Lib/db/types'
+import { useRouter } from 'Lib/router'
 import { useDebounce } from 'react-use'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { isCloudStorageData } from '../../lib/db/utils'
-import { useToast } from '../../lib/toast'
+import { useDialog, DialogIconTypes } from 'Lib/dialog'
+import { isCloudStorageData } from 'Lib/db/utils'
+import { useToast } from 'Lib/toast'
 import { useTranslation } from 'react-i18next'
 
 interface StorageEditProps {

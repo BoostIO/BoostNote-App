@@ -1,8 +1,8 @@
 import React from 'react'
-import { useDialog } from '../../lib/dialog'
+import { useDialog } from 'Lib/dialog'
 import DialogIcon from './DialogIcon'
 import PromptDialogBody from './PromptDialogBody'
-import { DialogTypes, DialogData } from '../../lib/dialog/types'
+import { DialogTypes, DialogData } from 'Lib/dialog/types'
 import { StyledDialog, StyledDialogBackground } from './styled'
 import MessageBoxDialogBody from './MessageBoxDialogBody'
 

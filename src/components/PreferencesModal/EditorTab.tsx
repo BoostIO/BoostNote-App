@@ -18,13 +18,13 @@ import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
   EditorKeyMapOptions
-} from '../../lib/preferences'
-import { SelectChangeEventHandler } from '../../lib/events'
-import { themes } from '../../lib/CodeMirror'
-import { capitalize } from '../../lib/string'
+} from 'Lib/preferences'
+import { SelectChangeEventHandler } from 'Lib/events'
+import { themes } from 'Lib/CodeMirror'
+import { capitalize } from 'Lib/string'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
-import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { useAnalytics, analyticsEvents } from 'Lib/analytics'
 
 const defaultPreviewContent = `# hello-world.js
 

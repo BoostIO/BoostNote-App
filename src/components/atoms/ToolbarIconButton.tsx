@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../lib/styled'
-import { noteListIconColor } from '../../lib/styled/styleFunctions'
+import styled from 'Lib/styled'
+import { noteListIconColor } from 'Lib/styled/styleFunctions'
 
 const StyledButton = styled.button<{ active: boolean }>`
   background: transparent;

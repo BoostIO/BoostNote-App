@@ -9,14 +9,14 @@ import {
 } from './styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import { usePreferences } from '../../lib/preferences'
-import styled from '../../lib/styled'
-import { SelectChangeEventHandler } from '../../lib/events'
-import { themes } from '../../lib/CodeMirror'
-import { capitalize } from '../../lib/string'
+import { usePreferences } from 'Lib/preferences'
+import styled from 'Lib/styled'
+import { SelectChangeEventHandler } from 'Lib/events'
+import { themes } from 'Lib/CodeMirror'
+import { capitalize } from 'Lib/string'
 import { useTranslation } from 'react-i18next'
-import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
-import { borderRight, border } from '../../lib/styled/styleFunctions'
+import { usePreviewStyle, defaultPreviewStyle } from 'Lib/preview'
+import { borderRight, border } from 'Lib/styled/styleFunctions'
 
 const EditorContainer = styled.div`
   ${border}

@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, KeyboardEventHandler } from 'react'
-import { PromptDialogOptions } from '../../lib/dialog/types'
+import { PromptDialogOptions } from 'Lib/dialog/types'
 import {
   StyledDialogBody,
   StyledDialogTitle,

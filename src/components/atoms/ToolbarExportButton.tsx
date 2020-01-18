@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
-import { noteListIconColor } from '../../lib/styled/styleFunctions'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import { NoteDoc } from '../../lib/db/types'
+import styled from 'Lib/styled'
+import { noteListIconColor } from 'Lib/styled/styleFunctions'
+import { useContextMenu, MenuTypes } from 'Lib/contextMenu'
+import { NoteDoc } from 'Lib/db/types'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile
-} from '../../lib/exports'
-import { usePreferences } from '../../lib/preferences'
-import { usePreviewStyle } from '../../lib/preview'
+} from 'Lib/exports'
+import { usePreferences } from 'Lib/preferences'
+import { usePreviewStyle } from 'Lib/preview'
 import { IconInfo } from '../icons'
 
 const StyledButton = styled.button<{ active: boolean }>`

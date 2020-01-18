@@ -1,7 +1,7 @@
 import React from 'react'
-import { Link } from '../../lib/router'
+import { Link } from 'Lib/router'
 import cc from 'classcat'
-import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
+import { TutorialsNavigatorTreeItem } from 'Lib/tutorials'
 import { StyledNoteListItem } from '../NotePage/NoteList/NoteItem'
 
 type TutorialsNoteItemProps = {

@@ -1,4 +1,4 @@
-import styled from '../lib/styled'
+import styled from 'Lib/styled'
 
 export const StyledAppContainer = styled.div`
   position: absolute;

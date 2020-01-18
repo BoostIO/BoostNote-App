@@ -1,12 +1,12 @@
 import React from 'react'
 import cc from 'classcat'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
   activeBackgroundColor,
   iconColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 import { IconArrowSingleRight, IconArrowSingleDown } from '../icons'
 
 const Container = styled.div`

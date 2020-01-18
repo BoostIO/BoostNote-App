@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import ButtonIcon from './ButtonIcon'
 const StyledContainer = styled.div`
   position: relative;

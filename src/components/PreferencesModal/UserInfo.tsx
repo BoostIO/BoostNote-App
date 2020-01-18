@@ -1,6 +1,6 @@
 import React from 'react'
-import { User } from '../../lib/accounts/users'
-import styled from '../../lib/styled'
+import { User } from 'Lib/accounts/users'
+import styled from 'Lib/styled'
 import MdiIcon from '@mdi/react'
 import { mdiAccount } from '@mdi/js'
 import { SectionPrimaryButton } from './styled'

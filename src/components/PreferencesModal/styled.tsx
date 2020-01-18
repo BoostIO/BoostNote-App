@@ -1,4 +1,4 @@
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   selectStyle,
   primaryButtonStyle,
@@ -7,7 +7,7 @@ import {
   tableStyle,
   disabledUiTextColor,
   PrimaryTextColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 
 export const Section = styled.section`
   margin-bottom: 2em;

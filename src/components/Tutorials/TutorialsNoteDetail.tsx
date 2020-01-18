@@ -4,9 +4,9 @@ import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
+import { TutorialsNavigatorTreeItem } from 'Lib/tutorials'
 import { StyledNoteDetailContainer } from '../NotePage/NoteDetail/NoteDetail'
-import { ViewModeType } from '../../lib/generalStatus'
+import { ViewModeType } from 'Lib/generalStatus'
 import { IconEye, IconSplit, IconEdit } from '../icons'
 
 type TutorialsNoteDetailProps = {
@@ -35,7 +35,7 @@ export default class TutorialsNoteDetail extends React.Component<
   async fetchNoteContentFromTreeItem() {
     try {
       const doc = await import(
-        `../../lib/tutorials/files${this.props.note.absolutePath}`
+        `Lib/tutorials/files${this.props.note.absolutePath}`
       )
       return doc.default
     } catch (error) {

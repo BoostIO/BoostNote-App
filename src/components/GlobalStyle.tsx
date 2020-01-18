@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
-import { backgroundColor, textColor } from '../lib/styled/styleFunctions'
-import { BaseTheme } from '../lib/styled/themes/types'
+import { backgroundColor, textColor } from 'Lib/styled/styleFunctions'
+import { BaseTheme } from 'Lib/styled/themes/types'
 
 export default createGlobalStyle<BaseTheme>`
   body {
@@ -30,7 +30,7 @@ export default createGlobalStyle<BaseTheme>`
   a {
     color: inherit;
   }
-  
+
   /* total width */
   ::-webkit-scrollbar {
     background-color: transparent;

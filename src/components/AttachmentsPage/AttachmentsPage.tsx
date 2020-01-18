@@ -1,9 +1,9 @@
 import React from 'react'
-import { StorageAttachmentsRouteParams, useRouteParams } from '../../lib/router'
-import { useDb } from '../../lib/db'
-import styled from '../../lib/styled'
-import { getFileList } from '../../lib/dnd'
-import { borderBottom } from '../../lib/styled/styleFunctions'
+import { StorageAttachmentsRouteParams, useRouteParams } from 'Lib/router'
+import { useDb } from 'Lib/db'
+import styled from 'Lib/styled'
+import { getFileList } from 'Lib/dnd'
+import { borderBottom } from 'Lib/styled/styleFunctions'
 import AttachmentList from './AttachmentList'
 
 const Container = styled.div`

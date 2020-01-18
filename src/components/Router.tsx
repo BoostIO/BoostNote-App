@@ -1,12 +1,12 @@
 import React from 'react'
 import NotePage from './NotePage'
-import { useRouteParams } from '../lib/router'
+import { useRouteParams } from 'Lib/router'
 import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
-import { useDb } from '../lib/db'
+import { useDb } from 'Lib/db'
 import AttachmentsPage from './AttachmentsPage/AttachmentsPage'
 import TutorialsPage from './Tutorials/TutorialsPage'
-import useRedirectHandler from '../lib/router/redirect'
+import useRedirectHandler from 'Lib/router/redirect'
 
 export default () => {
   const routeParams = useRouteParams()

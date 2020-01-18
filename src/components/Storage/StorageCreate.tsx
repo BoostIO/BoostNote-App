@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { usePreferences } from '../../lib/preferences'
+import { usePreferences } from 'Lib/preferences'
 import {
   SectionMargin,
   SectionHeader1,
@@ -8,10 +8,10 @@ import {
   SectionPrimaryButton
 } from '../PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
-import { useDb } from '../../lib/db'
+import { useDb } from 'Lib/db'
 import LoginButton from '../atoms/LoginButton'
-import { useToast } from '../../lib/toast'
-import { useRouter } from '../../lib/router'
+import { useToast } from 'Lib/toast'
+import { useRouter } from 'Lib/router'
 
 export default () => {
   const db = useDb()

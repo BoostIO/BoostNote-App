@@ -1,5 +1,5 @@
-import styled from '../../lib/styled'
-import { borderTop } from '../../lib/styled/styleFunctions'
+import styled from 'Lib/styled'
+import { borderTop } from 'Lib/styled/styleFunctions'
 
 const Toolbar = styled.div`
   min-height: 32px;

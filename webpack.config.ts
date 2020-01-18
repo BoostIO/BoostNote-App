@@ -115,7 +115,11 @@ module.exports = (env, argv) => {
     },
 
     resolve: {
-      extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js'],
+
+      alias: {
+        'Lib': path.resolve(__dirname, 'src/lib/'),
+      }
     },
     node: {
       fs: 'empty'

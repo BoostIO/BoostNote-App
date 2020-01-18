@@ -1,10 +1,10 @@
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   border,
   backgroundColor,
   contextMenuShadow,
   iconColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 
 const zIndexModalsBackground = 8001
 

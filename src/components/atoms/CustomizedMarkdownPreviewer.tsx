@@ -1,7 +1,7 @@
 import React from 'react'
-import { usePreferences } from '../../lib/preferences'
+import { usePreferences } from 'Lib/preferences'
 import MarkdownPreviewer from './MarkdownPreviewer'
-import { usePreviewStyle } from '../../lib/preview'
+import { usePreviewStyle } from 'Lib/preview'
 
 interface CustomizedMarkdownPreviewer {
   content: string

@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from 'react'
-import { useGlobalKeyDownHandler } from '../../lib/keyboard'
-import { useModal } from '../../lib/modal/store'
+import { useGlobalKeyDownHandler } from 'Lib/keyboard'
+import { useModal } from 'Lib/modal/store'
 import {
   StyledModalsBackground,
   StyledModalsContainer,
   StyledModalsSkipButton
 } from './styled'
-import { usePreferences } from '../../lib/preferences'
+import { usePreferences } from 'Lib/preferences'
 import DownloadOurAppModal from './contents/DownloadOurAppModal'
 import { IconArrowSingleRight } from '../icons'
 

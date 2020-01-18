@@ -1,7 +1,7 @@
 import {
   BoostnoteIconProps,
   BoostnoteIconStyledContainer
-} from '../../lib/icons'
+} from 'Lib/icons'
 import React from 'react'
 
 export const IconInfo = (props: BoostnoteIconProps) => (

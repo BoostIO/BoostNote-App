@@ -1,11 +1,11 @@
 import React, { useMemo, useCallback } from 'react'
-import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
+import { tutorialsTree, TutorialsNavigatorTreeItem } from 'Lib/tutorials'
 import SideNavigatorItem from '../SideNavigator/SideNavigatorItem'
-import { useRouter, useCurrentTutorialPathname } from '../../lib/router'
-import { useGeneralStatus } from '../../lib/generalStatus'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { usePreferences } from '../../lib/preferences'
+import { useRouter, useCurrentTutorialPathname } from 'Lib/router'
+import { useGeneralStatus } from 'Lib/generalStatus'
+import { useContextMenu, MenuTypes } from 'Lib/contextMenu'
+import { useDialog, DialogIconTypes } from 'Lib/dialog'
+import { usePreferences } from 'Lib/preferences'
 import { IconFile, IconFileOpen, IconHelpOutline } from '../icons'
 
 interface NavigatorNode {

@@ -1,12 +1,12 @@
 import React, { useCallback, useRef } from 'react'
-import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
+import { TutorialsNavigatorTreeItem } from 'Lib/tutorials'
 import TutorialsNoteItem from './TutorialsNoteItem'
 import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
 import { useTranslation } from 'react-i18next'
 import {
   isWithGeneralCtrlKey,
   useGlobalKeyDownHandler
-} from '../../lib/keyboard'
+} from 'Lib/keyboard'
 
 type TutorialsNoteListProps = {
   currentTree: TutorialsNavigatorTreeItem

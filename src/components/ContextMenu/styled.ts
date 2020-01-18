@@ -1,16 +1,16 @@
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   menuHeight,
   menuVerticalPadding,
   menuZIndex
-} from '../../lib/contextMenu'
+} from 'Lib/contextMenu'
 import {
   uiTextColor,
   contextMenuShadow,
   borderColor,
   backgroundColor,
   activeBackgroundColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 
 export const StyledContextMenu = styled.div`
   min-width: 130px;

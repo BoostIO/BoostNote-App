@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import NoteList from './NoteList'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import NoteDetail from './NoteDetail'
 import {
   useRouteParams,
@@ -11,19 +11,19 @@ import {
   usePathnameWithoutNoteId,
   useRouter,
   StorageBookmarkNotes
-} from '../../lib/router'
-import { useDb } from '../../lib/db'
+} from 'Lib/router'
+import { useDb } from 'Lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../lib/db/types'
-import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { escapeRegExp } from '../../lib/regex'
+import { PopulatedNoteDoc, NoteStorage, ObjectMap } from 'Lib/db/types'
+import { useGeneralStatus, ViewModeType } from 'Lib/generalStatus'
+import { useDialog, DialogIconTypes } from 'Lib/dialog'
+import { escapeRegExp } from 'Lib/regex'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey
-} from '../../lib/keyboard'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+} from 'Lib/keyboard'
+import { dispatchNoteDetailFocusTitleInputEvent } from 'Lib/events'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;

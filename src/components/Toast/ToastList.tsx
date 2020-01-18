@@ -1,7 +1,7 @@
 import React from 'react'
-import { useToast } from '../../lib/toast'
+import { useToast } from 'Lib/toast'
 import ToastItem from './ToastItem'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 
 const StyledToastList = styled.ul`
   position: fixed;

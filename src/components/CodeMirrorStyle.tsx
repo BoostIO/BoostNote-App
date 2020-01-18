@@ -1,5 +1,5 @@
 import React from 'react'
-import { usePreferences } from '../lib/preferences'
+import { usePreferences } from 'Lib/preferences'
 import isElectron from 'is-electron'
 
 interface ThemeLinkProps {

@@ -1,10 +1,10 @@
 import React from 'react'
 import isElectron from 'is-electron'
-import { getAppLinkFromUserAgent } from '../../lib/download'
-import { openNew } from '../../lib/utils/platform'
-import styled from '../../lib/styled'
+import { getAppLinkFromUserAgent } from 'Lib/download'
+import { openNew } from 'Lib/utils/platform'
+import styled from 'Lib/styled'
 import cc from 'classcat'
-import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
+import { primaryButtonStyle } from 'Lib/styled/styleFunctions'
 
 const AppLinkContainer = styled.button`
   ${primaryButtonStyle}

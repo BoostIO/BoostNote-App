@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   Section,
   SectionHeader,
   SectionSubtleText,
   PrimaryAnchor
 } from './styled'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from 'Lib/utils/platform'
 import Image from '../atoms/Image'
 import AppLink from '../atoms/AppLink'
 import { useTranslation } from 'react-i18next'

@@ -1,9 +1,9 @@
 import React from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   sideBarTextColor,
   sideBarSecondaryTextColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
   position: relative;

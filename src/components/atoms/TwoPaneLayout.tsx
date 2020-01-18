@@ -5,7 +5,7 @@ import React, {
   useRef,
   CSSProperties
 } from 'react'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import throttle from 'lodash/throttle'
 import { clamp } from 'ramda'
 

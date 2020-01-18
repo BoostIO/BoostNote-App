@@ -12,13 +12,13 @@ import {
   GeneralLanguageOptions,
   GeneralNoteSortingOptions,
   GeneralTutorialsOptions
-} from '../../lib/preferences'
+} from 'Lib/preferences'
 import { useTranslation } from 'react-i18next'
-import { SelectChangeEventHandler } from '../../lib/events'
-import { useUsers } from '../../lib/accounts'
+import { SelectChangeEventHandler } from 'Lib/events'
+import { useUsers } from 'Lib/accounts'
 import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
-import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { useAnalytics, analyticsEvents } from 'Lib/analytics'
 import { IconArrowRotate } from '../icons'
 
 const GeneralTab = () => {

@@ -1,8 +1,8 @@
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import {
   secondaryBackgroundColor,
   iconColor
-} from '../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 
 export const StyledToastContainer = styled.div`
   width: 350px;

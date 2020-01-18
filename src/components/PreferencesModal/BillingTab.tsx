@@ -6,11 +6,11 @@ import {
   SectionSecondaryButton,
   SectionTable
 } from './styled'
-import styled from '../../lib/styled'
-import { usePreferences } from '../../lib/preferences'
-import { getSubscription, Subscription } from '../../lib/accounts'
+import styled from 'Lib/styled'
+import { usePreferences } from 'Lib/preferences'
+import { getSubscription, Subscription } from 'Lib/accounts'
 import LoginButton from '../atoms/LoginButton'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from 'Lib/utils/platform'
 import { useTranslation } from 'react-i18next'
 
 const BillingContent = styled.div`

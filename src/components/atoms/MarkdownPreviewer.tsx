@@ -9,13 +9,13 @@ import gh from 'hast-util-sanitize/lib/github.json'
 import { mergeDeepRight } from 'ramda'
 import visit from 'unist-util-visit'
 import { Node, Parent } from 'unist'
-import CodeMirror from '../../lib/CodeMirror'
+import CodeMirror from 'Lib/CodeMirror'
 import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
-import styled from '../../lib/styled'
+import styled from 'Lib/styled'
 import cc from 'classcat'
-import { useDb } from '../../lib/db'
-import { openNew } from '../../lib/utils/platform'
+import { useDb } from 'Lib/db'
+import { openNew } from 'Lib/utils/platform'
 
 const schema = mergeDeepRight(gh, {
   attributes: {

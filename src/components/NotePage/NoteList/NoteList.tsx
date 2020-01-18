@@ -1,22 +1,22 @@
 import React, { useCallback, useRef, ChangeEventHandler } from 'react'
 import NoteItem from './NoteItem'
-import { PopulatedNoteDoc } from '../../../lib/db/types'
-import styled from '../../../lib/styled'
+import { PopulatedNoteDoc } from 'Lib/db/types'
+import styled from 'Lib/styled'
 import {
   borderBottom,
   inputStyle,
   iconColor,
   noteListIconColor,
   selectTabStyle
-} from '../../../lib/styled/styleFunctions'
+} from 'Lib/styled/styleFunctions'
 import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey
-} from '../../../lib/keyboard'
+} from 'Lib/keyboard'
 import { NoteListSortOptions } from '../NotePage'
-import { osName } from '../../../lib/utils'
+import { osName } from 'Lib/utils'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;

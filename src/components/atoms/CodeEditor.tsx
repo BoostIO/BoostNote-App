@@ -1,11 +1,11 @@
 import React from 'react'
-import CodeMirror, { getCodeMirrorTheme } from '../../lib/CodeMirror'
-import styled from '../../lib/styled'
+import CodeMirror, { getCodeMirrorTheme } from 'Lib/CodeMirror'
+import styled from 'Lib/styled'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
   EditorKeyMapOptions
-} from '../../lib/preferences'
+} from 'Lib/preferences'
 
 const StyledContainer = styled.div`
   .CodeMirror {

@@ -22,6 +22,12 @@
     "suppressImplicitAnyIndexErrors": true,
     "strict": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "Lib/*": [
+        "src/lib/*"
+      ]
+    }
   }
 }

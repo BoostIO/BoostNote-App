@@ -1,6 +1,6 @@
 import React from 'react'
 import CodeEditor from './CodeEditor'
-import { usePreferences } from '../../lib/preferences'
+import { usePreferences } from 'Lib/preferences'
 
 interface CustomizedCodeEditor {
   value: string
