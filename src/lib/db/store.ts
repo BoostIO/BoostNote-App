@@ -32,7 +32,7 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { escapeRegExp } from '../regex'
+import { escapeRegExp } from '../string'
 import {
   User,
   createStorage as createCloudStorage,

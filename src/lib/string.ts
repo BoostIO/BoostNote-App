@@ -10,3 +10,7 @@ export function generateId(): string {
 }
 
 export const generateRandomHex = () => randomBytes(32).toString('hex')
+
+export function escapeRegExp(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
