@@ -121,7 +121,7 @@
     'preferences.solarizedDark': 'Solarized Dark',
     'preferences.noteSorting': 'Classificação de notas',
     'preferences.dateUpdated': 'Data de atualização',
-    'preferences.dateCreated': 'Data de cricação',
+    'preferences.dateCreated': 'Data de criação',
     'preferences.title': 'Título',
     'preferences.analytics': 'Analítico',
     'preferences.analyticsDescription1':
