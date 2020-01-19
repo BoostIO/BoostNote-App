@@ -1,10 +1,56 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { createStoreContext } from '../context'
+import { createStoreContext } from './context'
 import { localLiteStorage } from 'ltstrg'
-import { Preferences } from './types'
 import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
-import { preferencesKey } from '../localStorageKeys'
+import { preferencesKey } from './localStorageKeys'
+import { User } from './accounts'
+
+export type GeneralThemeOptions =
+  | 'auto'
+  | 'light'
+  | 'dark'
+  | 'sepia'
+  | 'solarizedDark'
+export type GeneralLanguageOptions =
+  | 'en-US'
+  | 'ja'
+  | 'es-ES'
+  | 'zh-CN'
+  | 'ko'
+  | 'pt-BR'
+export type GeneralNoteSortingOptions =
+  | 'date-updated'
+  | 'date-created'
+  | 'title'
+export type GeneralTutorialsOptions = 'display' | 'hide'
+
+export type EditorIndentTypeOptions = 'tab' | 'spaces'
+export type EditorIndentSizeOptions = 2 | 4 | 8
+export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
+
+export interface Preferences {
+  // General
+  'general.accounts': User[]
+  'general.language': GeneralLanguageOptions
+  'general.theme': GeneralThemeOptions
+  'general.noteSorting': GeneralNoteSortingOptions
+  'general.enableAnalytics': boolean
+  'general.enableDownloadAppModal': boolean
+  'general.tutorials': GeneralTutorialsOptions
+
+  // Editor
+  'editor.theme': string
+  'editor.fontSize': number
+  'editor.fontFamily': string
+  'editor.indentType': EditorIndentTypeOptions
+  'editor.indentSize': EditorIndentSizeOptions
+  'editor.keyMap': EditorKeyMapOptions
+
+  // Markdown
+  'markdown.previewStyle': string
+  'markdown.codeBlockTheme': string
+}
 
 function loadPreferences() {
   const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
