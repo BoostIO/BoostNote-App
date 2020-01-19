@@ -8,7 +8,6 @@ import { darkTheme } from '../themes/dark'
 import { lightTheme } from '../themes/light'
 import { sepiaTheme } from '../themes/sepia'
 import { solarizedDarkTheme } from '../themes/solarizedDark'
-import { StyledAppContainer } from './styled'
 import ContextMenu from './ContextMenu'
 import Dialog from './Dialog/Dialog'
 import { useDb } from '../lib/db'
@@ -26,8 +25,17 @@ import { useToast } from '../lib/toast'
 import { useUsers } from '../lib/accounts'
 import styled from '../lib/styled'
 
-export const LoadingText = styled.div`
+const LoadingText = styled.div`
   margin: 30px;
+`
+
+const AppContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
 `
 
 const App = () => {
@@ -77,7 +85,7 @@ const App = () => {
   )
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
-      <StyledAppContainer
+      <AppContainer
         onDrop={(event: React.DragEvent) => {
           event.preventDefault()
         }}
@@ -99,7 +107,7 @@ const App = () => {
         <Modal />
         <ToastList />
         <CodeMirrorStyle />
-      </StyledAppContainer>
+      </AppContainer>
     </ThemeProvider>
   )
 }
@@ -117,4 +125,5 @@ function selectTheme(theme: string) {
       return defaultTheme
   }
 }
+
 export default App
