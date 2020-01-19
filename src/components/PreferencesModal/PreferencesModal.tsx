@@ -9,7 +9,10 @@ import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
 import BillingTab from './BillingTab'
 import ImportTab from './ImportTab'
-import { backgroundColor, closeIconColor } from '../../lib/styled/styleFunctions'
+import {
+  backgroundColor,
+  closeIconColor
+} from '../../lib/styled/styleFunctions'
 import { IconClose } from '../icons'
 import { useTranslation } from 'react-i18next'
 

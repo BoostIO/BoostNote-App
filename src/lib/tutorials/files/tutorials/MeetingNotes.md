@@ -2,10 +2,10 @@
 
 ## Basic Info
 
-* Project Name
-* Date, Time, Location
-* Goal of This Meeting
-* Attendees
+- Project Name
+- Date, Time, Location
+- Goal of This Meeting
+- Attendees
 
 ## Background
 
@@ -13,21 +13,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus turpis nunc, 
 
 ## Agenda
 
-* Topic 1
-* Topic 2
-* Topic 3
+- Topic 1
+- Topic 2
+- Topic 3
 
 ## Decisions
 
-* Decision 1
-* Decision 2
-* Decision 3
+- Decision 1
+- Decision 2
+- Decision 3
 
 ## Next Actions
 
-* [x] Task 1
-* [ ] Task 2
-* [ ] Task 3
+- [x] Task 1
+- [ ] Task 2
+- [ ] Task 3
 
 ## Closure
+
 Summary & Takeaways

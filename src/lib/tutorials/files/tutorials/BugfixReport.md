@@ -6,9 +6,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus turpis nunc, 
 
 ## Why Did It Happen?
 
-* Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-* Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-* Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## How Did I Fix?
 
@@ -16,6 +16,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus turpis nunc, 
 
 ## How to Prevent Next Time?
 
-* [ ] Idea 1
-* [ ] Idea 2
-* [ ] Idea 3
+- [ ] Idea 1
+- [ ] Idea 2
+- [ ] Idea 3

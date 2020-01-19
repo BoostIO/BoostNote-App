@@ -120,4 +120,3 @@ export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
     }
   }
 }
-

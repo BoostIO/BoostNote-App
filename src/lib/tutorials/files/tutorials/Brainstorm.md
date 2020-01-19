@@ -2,9 +2,9 @@
 
 ## Goals/Issues
 
-* Point 1
-* Point 2
-* Point 3
+- Point 1
+- Point 2
+- Point 3
 
 ## Research
 
@@ -14,9 +14,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus turpis nunc, 
 
 ## Suggestions/Ideas
 
-* Idea 1
-* Idea 2
-* Idea 3
+- Idea 1
+- Idea 2
+- Idea 3
 
 ## Final Decision
 
@@ -24,6 +24,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus turpis nunc, 
 
 ## Action Items
 
-* [ ] Item 1
-* [ ] Item 2
-* [ ] Item 3
+- [ ] Item 1
+- [ ] Item 2
+- [ ] Item 3
