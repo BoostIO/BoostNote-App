@@ -1,7 +1,11 @@
+export function getStorageItemId(storageId: string) {
+  return `storage:${storageId}`
+}
+
 export function getFolderItemId(storageId: string, folderPathname: string) {
-  return `storage:${storageId}/folder:${folderPathname}`
+  return `${getStorageItemId(storageId)}/folder:${folderPathname}`
 }
 
 export function getTagListItemId(storageId: string) {
-  return `storage:${storageId}/tags`
+  return `${getStorageItemId(storageId)}/tags`
 }
