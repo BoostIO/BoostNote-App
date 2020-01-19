@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
-import { Link } from '../../../lib/router'
+import Link from '../../atoms/Link'
 import styled from '../../../lib/styled/styled'
 import {
   borderBottom,
