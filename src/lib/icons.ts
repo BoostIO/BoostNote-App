@@ -1,4 +1,4 @@
-import styled from '../styled'
+import styled from './styled'
 
 export const BoostnoteIconStyledContainer = styled.div`
   display: inline-block;
@@ -20,3 +20,13 @@ export const BoostnoteIconStyledContainer = styled.div`
     }
   }
 `
+
+export interface BoostnoteIconProps {
+  viewbox?: string
+  color?: string
+  size?: string | number
+  width?: string | number
+  height?: string | number
+  className?: string
+  style?: React.CSSProperties
+}
