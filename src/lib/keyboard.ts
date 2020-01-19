@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { osName } from './utils'
+import { osName } from './platform'
 import isElectron from 'is-electron'
 
 export const useGlobalKeyDownHandler = (

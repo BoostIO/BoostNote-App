@@ -1,4 +1,4 @@
-import { BaseTheme } from './types'
+import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#2c2d30'
 const base2Color = '#1e2022'

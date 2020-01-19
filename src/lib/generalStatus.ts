@@ -1,10 +1,18 @@
 import { useMemo, useCallback, useEffect } from 'react'
 import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
-import { generalStatusKey } from '../localStorageKeys'
-import { createStoreContext } from '../utils/context'
-import { GeneralStatus } from './types'
-import { getFolderItemId } from '../nav'
+import { generalStatusKey } from './localStorageKeys'
+import { createStoreContext } from './context'
+import { getFolderItemId } from './nav'
+
+export type ViewModeType = 'edit' | 'preview' | 'split'
+
+export interface GeneralStatus {
+  sideBarWidth: number
+  noteListWidth: number
+  noteViewMode: ViewModeType
+  sideNavOpenedItemList: string[]
+}
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
   const stringifiedGeneralStatus = localLiteStorage.getItem(generalStatusKey)

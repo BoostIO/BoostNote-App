@@ -15,7 +15,7 @@ import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { useDb } from '../../lib/db'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from '../../lib/platform'
 
 const schema = mergeDeepRight(gh, {
   attributes: {

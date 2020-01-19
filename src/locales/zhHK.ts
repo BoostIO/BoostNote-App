@@ -70,7 +70,8 @@ export default {
 
     //About
     'about.about': '關於',
-    'about.boostnoteDescription': 'An open source note-taking app made for programmers just like you.',
+    'about.boostnoteDescription':
+      'An open source note-taking app made for programmers just like you.',
     'about.website': '官網',
     'about.boostWiki': 'Boost Note 團隊版',
     'about.platform': '跨平台',
@@ -154,5 +155,3 @@ export default {
     'preferences.importUpload': '上傳'
   }
 }
-
-

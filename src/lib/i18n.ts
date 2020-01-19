@@ -1,19 +1,25 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import enUS from './enUS'
-import esES from './esEs'
-import zhCN from './zhCN'
-import ja from './ja'
-import ko from './ko'
-import ptBR from './ptBR'
+import de from '../locales/de'
+import enUS from '../locales/enUS'
+import esES from '../locales/esEs'
+import zhCN from '../locales/zhCN'
+import zhHK from '../locales/zhHK'
+import zhTW from '../locales/zhTW'
+import ja from '../locales/ja'
+import ko from '../locales/ko'
+import ptBR from '../locales/ptBR'
 
 const resources = {
+  de,
   'en-US': enUS,
   'es-ES': esES,
+  ja,
+  ko,
+  'pt-BR': ptBR,
   'zh-CN': zhCN,
-  ja: ja,
-  ko: ko,
-  'pt-BR': ptBR
+  'zh-HK': zhHK,
+  'zh-TW': zhTW
 }
 
 i18n

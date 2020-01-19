@@ -6,7 +6,7 @@ import React, {
   FocusEventHandler,
   DragEventHandler
 } from 'react'
-import { useRouter } from './store'
+import { useRouter } from '../../lib/router/store'
 
 export interface LinkProps {
   href?: string
@@ -21,7 +21,7 @@ export interface LinkProps {
   onDragOver?: DragEventHandler
 }
 
-export const Link: FC<LinkProps> = ({
+const Link: FC<LinkProps> = ({
   children,
   href,
   className,
@@ -61,3 +61,5 @@ export const Link: FC<LinkProps> = ({
     </a>
   )
 }
+
+export default Link

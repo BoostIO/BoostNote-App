@@ -6,7 +6,7 @@ import {
   SectionSubtleText,
   PrimaryAnchor
 } from './styled'
-import { openNew } from '../../lib/utils/platform'
+import { openNew } from '../../lib/platform'
 import Image from '../atoms/Image'
 import AppLink from '../atoms/AppLink'
 import { useTranslation } from 'react-i18next'

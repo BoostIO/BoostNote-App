@@ -1,4 +1,4 @@
-import { BaseTheme } from './themes/types'
+import { BaseTheme } from './BaseTheme'
 
 interface StyledProps {
   theme: BaseTheme

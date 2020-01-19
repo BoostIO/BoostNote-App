@@ -1,12 +1,16 @@
 import React from 'react'
 import NotePage from './NotePage'
 import { useRouteParams } from '../lib/router'
-import { StyledNotFoundPage } from './styled'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './AttachmentsPage/AttachmentsPage'
 import TutorialsPage from './Tutorials/TutorialsPage'
 import useRedirectHandler from '../lib/router/redirect'
+import styled from '../lib/styled'
+
+const NotFoundPageContainer = styled.div`
+  padding: 15px 25px;
+`
 
 export default () => {
   const routeParams = useRouteParams()
@@ -36,9 +40,9 @@ export default () => {
       }
   }
   return (
-    <StyledNotFoundPage>
+    <NotFoundPageContainer>
       <h1>Page not found</h1>
       <p>Check the URL or click other link in the left side navigation.</p>
-    </StyledNotFoundPage>
+    </NotFoundPageContainer>
   )
 }
