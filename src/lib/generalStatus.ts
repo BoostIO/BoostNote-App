@@ -3,7 +3,7 @@ import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
 import { generalStatusKey } from './localStorageKeys'
 import { createStoreContext } from './context'
-import { getFolderItemId } from './nav'
+import { getFolderItemId, getStorageItemId } from './nav'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'
 
@@ -91,6 +91,7 @@ function useGeneralStatusStore() {
       const folderPathElements = folderPathname.slice(1).split('/')
       const itemIdListToOpen = []
       let currentPathname = ''
+      itemIdListToOpen.push(getStorageItemId(storageId))
       for (const element of folderPathElements) {
         currentPathname = `${currentPathname}/${element}`
         itemIdListToOpen.push(getFolderItemId(storageId, currentPathname))
