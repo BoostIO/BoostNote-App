@@ -1,3 +1,6 @@
+import { useState, useCallback } from 'react'
+import { createStoreContext } from './context'
+
 export enum DialogTypes {
   Prompt = 'Prompt',
   MessageBox = 'MessageBox'
@@ -55,3 +58,38 @@ export interface DialogContext {
   messageBox(options: MessageBoxDialogOptions): void
   closeDialog(): void
 }
+
+let id = 0
+
+function useDialogStore(): DialogContext {
+  const [data, setData] = useState<DialogData | null>(null)
+  const prompt = useCallback((options: PromptDialogOptions) => {
+    setData({
+      id: id++,
+      type: DialogTypes.Prompt,
+      ...options
+    })
+  }, [])
+  const messageBox = useCallback((options: MessageBoxDialogOptions) => {
+    setData({
+      id: id++,
+      type: DialogTypes.MessageBox,
+      ...options
+    })
+  }, [])
+  const closeDialog = useCallback(() => {
+    setData(null)
+  }, [])
+
+  return {
+    data,
+    prompt,
+    messageBox,
+    closeDialog
+  }
+}
+
+export const {
+  StoreProvider: DialogProvider,
+  useStore: useDialog
+} = createStoreContext(useDialogStore, 'dialog')
