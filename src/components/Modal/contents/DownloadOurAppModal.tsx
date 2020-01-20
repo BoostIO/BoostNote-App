@@ -28,7 +28,7 @@ const DownloadOurAppModal = () => {
               Launching Soon
             </button>
             <span className='subtext'>
-              We are planning for a launch by the end of the year.
+              We are planning for a launch by the end of January.
             </span>
           </div>
         </ModalFlex>
