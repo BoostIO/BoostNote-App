@@ -5,6 +5,7 @@ node_modules/*
 Desktop.ini
 Thumbs.db
 *.log
+.idea/
 compiled/*
 dist/*
 .cache
