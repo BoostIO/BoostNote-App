@@ -24,8 +24,7 @@ export default {
     'storage.delete': 'Видалити сховище',
     'storage.move': 'Перемістіти нотатку',
     'storage.moveTitle': 'Перемістити нотатку до іншого сховища',
-    'storage.moveMessage':
-      'Ви намагаєтесь перемістити нотатку до іншого сховища.',
+    'storage.moveMessage': 'Ви намагаєтесь перемістити нотатку до іншого сховища.',
     'storage.copy': 'Копіювати нотатку',
     'storage.typeLocal': 'Місцеве сховище',
     'storage.typeCloud': 'Хмарне сховище',
@@ -35,9 +34,7 @@ export default {
     // Folder
     'folder.create': 'Нова папка',
     'folder.rename': 'Перейменування папки',
-    'folder.renameMessage':
-      'Введіть нове ім'я папки, також будуть оновлені всі шляхи,нотатки  та 
-папки.',
+    'folder.renameMessage': 'Введіть нове ім\'я папки, також будуть оновлені всі шляхи, нотатки та папки.',
     'folder.renameErrorMessage': 'Ви не змогли перейменувати папку',
     'folder.remove': 'Видалення папки',
     'folder.removeMessage': 'Усі нотатки та папки будуть видалені.',
@@ -71,19 +68,17 @@ export default {
 
     // About
     'about.about': 'Про',
-    'about.boostnoteDescription':
-      'Додаток для запису з відкритим кодом, створений для програмістів так 
-само, як і ви.',
+    'about.boostnoteDescription': 'Опенсорс додаток для нотаток, від програмістів для програмостів.',
     'about.website': 'Офіційний веб-сайт',
     'about.boostWiki': 'Нотатка для підвищення команди',
     'about.platform': 'Крос-платформа',
     'about.community': 'Громада',
     'about.github': 'Репозиторій GitHub',
-    'about.bounty': 'Bounty on IssueHunt',
+    'about.bounty': 'Bounty на IssueHunt',
     'about.blog': 'Блог',
-    'about.slack': 'Група Slack',
+    'about.slack': 'Група в Slack',
     'about.twitter': 'Обліковий запис Twitter',
-    'about.facebook': 'Група Facebook',
+    'about.facebook': 'Група в Facebook',
     'about.reddit': 'Reddit',
 
     // Billing
@@ -96,9 +91,9 @@ export default {
     'billing.browser': 'Додаток браузера',
     'billing.desktop': 'Настільний додаток (Mac/Windows/Linux)',
     'billing.mobile': 'Мобільний додаток (Буде запущено в січні, 2020)',
-    'billing.sync': 'Синхронізація декількох пристроїв',
-    'billing.local': 'Місцеве сховище',
-    'billing.cloud': 'Сховище у хмарі',
+    'billing.sync': 'Мультигаджетна синхронізація',
+    'billing.local': 'Локальне сховище',
+    'billing.cloud': 'Хмарне сховище',
     'billing.storageSize': 'Розмір хмарного сховища',
     'billing.addStorageDescription':
       '* Якщо вам потрібно більше хмарного сховища, ви можете додати його в будь-який час, оплативши $5 (USD) за кожні 5 Гб. Натисніть кнопку "Додаткове сховище" нижче.',
@@ -148,13 +143,9 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'Імпорт',
     'preferences.description': 'Імпортуйте файли .cson зі старого Boostnote.',
-    'preferences.importFlow1': '1. Відкрийте стару папку Boostnote на своєму 
-ПК.',
-    'preferences.importFlow2':
-      '2. Перетягніть файли .cson у форму нижче.',
-    'preferences.importFlow3':
-      '3. Виберіть Сховище та папку, до яких потрібно перемістити старі 
-дані.',
+    'preferences.importFlow1': '1. Відкрийте стару папку Boostnote на своєму ПК.',
+    'preferences.importFlow2': '2. Перетягніть файли .cson у форму нижче.',
+    'preferences.importFlow3': '3. Виберіть Сховище та папку, до яких потрібно перемістити старі дані.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Видалити',
     'preferences.importUpload': 'Завантажити'
