@@ -31,6 +31,11 @@ export default createGlobalStyle<BaseTheme>`
     color: inherit;
   }
 
+  th,
+  td {
+    ${backgroundColor}
+  }
+
   /* total width */
   ::-webkit-scrollbar {
     background-color: transparent;
