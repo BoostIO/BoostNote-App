@@ -14,7 +14,7 @@ import { useDb } from '../../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../../lib/router'
-import { IconTrash, IconStar, IconStarActive } from '../../../components/icons'
+import { IconTrash } from '../../../components/icons'
 
 export const NoteListItemContainer = styled.div`
   margin: 0;
@@ -49,7 +49,7 @@ export const NoteListItemContainer = styled.div`
   }
 
   &.swiped .container {
-    left: -136px;
+    left: -68px;
   }
 
   .title {
@@ -92,10 +92,10 @@ export const NoteListItemContainer = styled.div`
 `
 
 const NoteItemControlContainer = styled.div`
-  width: 136px;
+  width: 68px;
   position: absolute;
   height: 100%;
-  right: -136px;
+  right: -68px;
   top: 0;
   transition: right 150ms ease-in-out;
 
@@ -129,7 +129,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
   const { push } = useRouter()
-  const { createNote, trashNote, updateNote, purgeNote, untrashNote } = useDb()
+  const { createNote, trashNote, purgeNote, untrashNote } = useDb()
 
   const { messageBox } = useDialog()
   const { t } = useTranslation()
@@ -209,31 +209,12 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
                   })
                 }
               }
-            },
-            {
-              type: MenuTypes.Normal,
-              label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
-              onClick: async () => {
-                updateNote(note.storageId, note._id, {
-                  bookmarked: !note.bookmarked
-                })
-              }
             }
           ]
 
       popup(event, menuItems)
     },
-    [
-      popup,
-      createNote,
-      note,
-      updateNote,
-      trashNote,
-      messageBox,
-      purgeNote,
-      t,
-      untrashNote
-    ]
+    [popup, createNote, note, trashNote, messageBox, purgeNote, t, untrashNote]
   )
 
   const contentPreview = useMemo(() => {
@@ -322,7 +303,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
         )}
       </div>
       <NoteItemControlContainer className={swiped ? 'swiped' : ''}>
-        <button
+        {/* <button
           onClick={() => {
             updateNote(note.storageId, note._id, {
               bookmarked: !note.bookmarked
@@ -333,7 +314,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
           }}
         >
           {note.bookmarked ? <IconStarActive /> : <IconStar />}
-        </button>
+        </button> */}
         <button
           onClick={() => {
             if (!note.trashed) {
