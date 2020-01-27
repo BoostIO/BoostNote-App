@@ -18,7 +18,7 @@ import TopBarLayout from '../layouts/TopBarLayout'
 import NoteDetail from '../organisms/NoteDetail'
 import styled from '../../../lib/styled'
 import Icon from '../atoms/Icon'
-import { mdiChevronLeft } from '@mdi/js'
+import { mdiChevronLeft, mdiEyeOutline } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import NavTopBarButton from '../atoms/NavTopBarButton'
 import { IconBook, IconFileOpen } from '../../../components/icons'
@@ -232,10 +232,27 @@ export default () => {
         }}
       >
         <TopBarLayout
-          title=''
+          title={
+            generalStatus.noteViewMode === 'edit' ? 'Edit Mode' : 'Preview Mode'
+          }
           leftControl={
             <TopBarButton onClick={backToList}>
               <Icon path={mdiChevronLeft} />
+            </TopBarButton>
+          }
+          rightControl={
+            <TopBarButton
+              onClick={() => {
+                setGeneralStatus({
+                  noteViewMode:
+                    generalStatus.noteViewMode === 'edit' ? 'preview' : 'edit'
+                })
+              }}
+              className={
+                generalStatus.noteViewMode === 'preview' ? 'active' : ''
+              }
+            >
+              <Icon path={mdiEyeOutline} />
             </TopBarButton>
           }
         >
