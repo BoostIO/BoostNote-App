@@ -43,12 +43,6 @@ const Container = styled.div`
   &:hover {
     cursor: pointer;
   }
-  .control {
-    opacity: 0;
-  }
-  &:hover .control {
-    opacity: 1;
-  }
 
   &.allnotes-sidenav {
     padding-left: 4px !important;
