@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from '../components/App'
+import App from './components/App'
 import { RouterProvider } from '../lib/router'
 import { ContextMenuProvider } from '../lib/contextMenu'
 import { DialogProvider } from '../lib/dialog'
@@ -8,7 +8,7 @@ import { ModalProvider } from '../lib/modal'
 import { combineProviders } from '../lib/context'
 import { DbProvider } from '../lib/db'
 import { PreferencesProvider } from '../lib/preferences'
-import { GeneralStatusProvider } from '../lib/generalStatus'
+import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from '../lib/preview'
 import { ToastProvider } from '../lib/toast'
 
@@ -40,7 +40,7 @@ function render(Component: typeof App) {
 }
 
 if (module.hot != null) {
-  module.hot.accept('../components/App', () => {
+  module.hot.accept('./components/App', () => {
     render(App)
   })
 }
