@@ -11,15 +11,21 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  &.active {
+    color: ${({ theme }) => theme.primaryColor};
+  }
 `
 
 interface TopBarButtonProps {
   onClick?: React.MouseEventHandler
   children: React.ReactNode
+  className?: string
 }
 
-const TopBarButton = ({ onClick, children }: TopBarButtonProps) => (
-  <Button onClick={onClick}>{children}</Button>
+const TopBarButton = ({ onClick, children, className }: TopBarButtonProps) => (
+  <Button onClick={onClick} className={className}>
+    {children}
+  </Button>
 )
 
 export default TopBarButton

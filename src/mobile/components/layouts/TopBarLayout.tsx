@@ -13,13 +13,29 @@ const TopBarLayoutContainer = styled.div`
 
 const TopBar = styled.div`
   height: 44px;
+  position: relative;
+  ${borderBottom}
   display: flex;
   align-items: center;
-  ${borderBottom}
+  justify-content: center;
+`
+
+const TopBarLeftControl = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 44px;
+`
+const TopBarRightControl = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 44px;
 `
 
 const TopBarTitle = styled.div`
-  text-align: center;
+  height: 44px;
+  line-height: 44px;
 `
 
 const ContentContainer = styled.div`
@@ -32,18 +48,21 @@ interface TopBarLayoutProps {
   children?: React.ReactChild
   style?: CSSProperties
   leftControl?: React.ReactNode
+  rightControl?: React.ReactNode
 }
 
 const TopBarLayout = ({
   title,
   children,
   style,
-  leftControl
+  leftControl,
+  rightControl
 }: TopBarLayoutProps) => (
   <TopBarLayoutContainer style={style}>
     <TopBar>
-      {leftControl}
+      <TopBarLeftControl>{leftControl}</TopBarLeftControl>
       <TopBarTitle>{title}</TopBarTitle>
+      <TopBarRightControl>{rightControl}</TopBarRightControl>
     </TopBar>
     <ContentContainer>{children}</ContentContainer>
   </TopBarLayoutContainer>
