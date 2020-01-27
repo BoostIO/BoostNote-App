@@ -7,7 +7,7 @@ import {
   PopulatedNoteDoc
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
-import TagList from '../../../components/NotePage/NoteDetail/TagList'
+import TagList from '../molecules/TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../../components/atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../../components/atoms/CustomizedMarkdownPreviewer'
@@ -18,7 +18,8 @@ import {
   secondaryBackgroundColor,
   textColor,
   borderBottom,
-  borderRight
+  borderRight,
+  inputStyle
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../../components/atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
@@ -33,8 +34,10 @@ import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent
 } from '../../../lib/events'
+import Icon from '../atoms/Icon'
+import { mdiPlus } from '@mdi/js'
 
-export const StyledNoteDetailContainer = styled.div`
+export const NoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
   display: flex;
   flex-direction: column;
@@ -106,13 +109,17 @@ export const StyledNoteDetailContainer = styled.div`
   }
 
   .tagsWrapper {
+    height: 40px;
     padding: 5px 0;
     display: flex;
-    flex: 1 1 auto;
     min-width: 20px;
+    overflow-x: auto;
     input {
       min-width: 0 !important;
       width: 100%;
+    }
+    button.addButton {
+      ${inputStyle}
     }
   }
 `
@@ -400,25 +407,9 @@ export default class NoteDetail extends React.Component<
   render() {
     const { note, viewMode, toggleViewMode } = this.props
     const { storageId } = note
-    const codeEditor = (
-      <CustomizedCodeEditor
-        className='editor'
-        key={note._id}
-        codeMirrorRef={this.codeMirrorRef}
-        value={this.state.content}
-        onChange={this.updateContent}
-      />
-    )
-
-    const markdownPreviewer = (
-      <CustomizedMarkdownPreviewer
-        content={this.state.content}
-        storageId={storageId}
-      />
-    )
 
     return (
-      <StyledNoteDetailContainer
+      <NoteDetailContainer
         onDragEnd={(event: React.DragEvent) => {
           event.preventDefault()
         }}
@@ -436,25 +427,43 @@ export default class NoteDetail extends React.Component<
                 placeholder='Title'
               />
             </div>
+            <div className='tagsWrapper'>
+              <TagList
+                tags={this.state.tags}
+                removeTagByName={this.removeTagByName}
+              />
+              <input
+                className='tagInput'
+                ref={this.newTagNameInputRef}
+                value={this.state.newTagName}
+                placeholder='Tags'
+                onChange={this.updateNewTagName}
+                onKeyDown={this.handleNewTagNameInputKeyDown}
+              />
+              {this.state.newTagName.trim().length > 0 && (
+                <button className='addButton' onClick={this.appendNewTag}>
+                  <Icon path={mdiPlus} />
+                </button>
+              )}
+              <ToolbarSeparator />
+            </div>
             <div className='contentSection'>
-              {viewMode === 'preview' ? markdownPreviewer : codeEditor}
+              {viewMode === 'preview' ? (
+                <CustomizedMarkdownPreviewer
+                  content={this.state.content}
+                  storageId={storageId}
+                />
+              ) : (
+                <CustomizedCodeEditor
+                  className='editor'
+                  key={note._id}
+                  codeMirrorRef={this.codeMirrorRef}
+                  value={this.state.content}
+                  onChange={this.updateContent}
+                />
+              )}
             </div>
             <Toolbar>
-              <div className='tagsWrapper'>
-                <TagList
-                  tags={this.state.tags}
-                  removeTagByName={this.removeTagByName}
-                />
-                <input
-                  className='tagInput'
-                  ref={this.newTagNameInputRef}
-                  value={this.state.newTagName}
-                  placeholder='Tags'
-                  onChange={this.updateNewTagName}
-                  onKeyDown={this.handleNewTagNameInputKeyDown}
-                />
-                <ToolbarSeparator />
-              </div>
               <div className='buttonsWrapper'>
                 <ToolbarIconButton
                   className={viewMode === 'edit' ? 'active' : ''}
@@ -488,7 +497,7 @@ export default class NoteDetail extends React.Component<
             </Toolbar>
           </>
         )}
-      </StyledNoteDetailContainer>
+      </NoteDetailContainer>
     )
   }
 }
