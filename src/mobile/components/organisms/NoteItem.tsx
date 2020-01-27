@@ -1,11 +1,9 @@
-import React, { useMemo, useCallback } from 'react'
-import Link from '../../../components/atoms/Link'
+import React, { useMemo, useCallback, useRef, useState } from 'react'
 import styled from '../../../lib/styled/styled'
 import {
-  borderBottom,
   uiTextColor,
-  secondaryBackgroundColor,
-  inputStyle
+  inputStyle,
+  backgroundColor
 } from '../../../lib/styled/styleFunctions'
 import HighlightText from '../../../components/atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
@@ -15,21 +13,15 @@ import { useContextMenu, MenuTypes, MenuItem } from '../../../lib/contextMenu'
 import { useDb } from '../../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from '../../../lib/router'
+import { IconTrash, IconStar, IconStarActive } from '../../../components/icons'
 
-export const StyledNoteListItem = styled.div`
+export const NoteListItemContainer = styled.div`
   margin: 0;
-  border-left: 2px solid transparent;
+  overflow: hidden;
+  position: relative;
   ${uiTextColor}
-  &.active,
-  &:active,
-  &:focus,
-  &:hover {
-    ${secondaryBackgroundColor}
-  }
-  &.active {
-    border-left: 2px solid ${({ theme }) => theme.primaryColor};
-  }
-  ${borderBottom}
+  border-bottom: solid 1px #17191B;
   transition: 200ms background-color;
 
   &.new {
@@ -45,7 +37,19 @@ export const StyledNoteListItem = styled.div`
   }
 
   .container {
+    background-color: #1e2022;
+    &.active {
+      border-left: 2px solid ${({ theme }) => theme.primaryColor};
+    }
     padding: 10px 12px;
+    position: relative;
+    width: 100%;
+    left: 0;
+    transition: left 150ms ease-in-out;
+  }
+
+  &.swiped .container {
+    left: -136px;
   }
 
   .title {
@@ -87,6 +91,32 @@ export const StyledNoteListItem = styled.div`
   }
 `
 
+const NoteItemControlContainer = styled.div`
+  width: 136px;
+  position: absolute;
+  height: 100%;
+  right: -136px;
+  top: 0;
+  transition: right 150ms ease-in-out;
+
+  &.swiped {
+    right: 0;
+  }
+
+  button {
+    width: 68px;
+    ${backgroundColor}
+    height: 100%;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: #17191b;
+    color: #acadad;
+    &:last-child {
+      border-width: 0;
+    }
+  }
+`
+
 type NoteItemProps = {
   note: PopulatedNoteDoc
   recentlyCreated?: boolean
@@ -98,6 +128,7 @@ type NoteItemProps = {
 export default ({ note, basePathname, search = '' }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
+  const { push } = useRouter()
   const { createNote, trashNote, updateNote, purgeNote, untrashNote } = useDb()
 
   const { messageBox } = useDialog()
@@ -183,8 +214,9 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
               type: MenuTypes.Normal,
               label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
               onClick: async () => {
-                note.bookmarked = !note.bookmarked
-                updateNote(note.storageId, note._id, note)
+                updateNote(note.storageId, note._id, {
+                  bookmarked: !note.bookmarked
+                })
               }
             }
           ]
@@ -226,31 +258,106 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
     return trimmedContent.split('\n').shift() || t('note.empty')
   }, [note.content, search, t])
 
+  const touchStartClientXRef = useRef({
+    startClientX: -1,
+    currentClientX: -1
+  })
+
+  const [swiped, setSwiped] = useState(false)
+
   return (
-    <StyledNoteListItem onContextMenu={contextMenuCallback}>
-      <Link href={href}>
-        <div className='container'>
-          <div className='title'>
-            <HighlightText text={note.title} search={search} />
-          </div>
-          {note.title.length === 0 && (
-            <div className='title'>{t('note.noTitle')}</div>
-          )}
-          <div className='date'>
-            {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
-          </div>
-          <div className='preview'>{contentPreview}</div>
-          {note.tags.length > 0 && (
-            <div className='tag-area'>
-              {note.tags.map(tag => (
-                <span className='tag' key={tag}>
-                  <HighlightText text={tag} search={search} />
-                </span>
-              ))}
-            </div>
-          )}
+    <NoteListItemContainer
+      onContextMenu={contextMenuCallback}
+      className={swiped ? 'swiped' : ''}
+      onTouchStart={(event: React.TouchEvent) => {
+        touchStartClientXRef.current.startClientX =
+          event.targetTouches[0].clientX
+        touchStartClientXRef.current.currentClientX =
+          event.targetTouches[0].clientX
+      }}
+      onTouchMove={(event: React.TouchEvent) => {
+        touchStartClientXRef.current.currentClientX =
+          event.targetTouches[0].clientX
+      }}
+      onTouchEnd={() => {
+        const diff =
+          touchStartClientXRef.current.startClientX -
+          touchStartClientXRef.current.currentClientX
+        const direction = diff > 10 ? 'left' : diff < -10 ? 'right' : 'idle'
+        if (swiped && direction === 'right') {
+          setSwiped(false)
+        }
+        if (!swiped && direction === 'left') {
+          setSwiped(true)
+        }
+      }}
+    >
+      <div
+        className='container'
+        onClick={() => {
+          push(href)
+          if (swiped) {
+            setSwiped(false)
+          }
+        }}
+      >
+        <div className='title'>
+          <HighlightText text={note.title} search={search} />
         </div>
-      </Link>
-    </StyledNoteListItem>
+        {note.title.length === 0 && (
+          <div className='title'>{t('note.noTitle')}</div>
+        )}
+        <div className='date'>
+          {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
+        </div>
+        <div className='preview'>{contentPreview}</div>
+        {note.tags.length > 0 && (
+          <div className='tag-area'>
+            {note.tags.map(tag => (
+              <span className='tag' key={tag}>
+                <HighlightText text={tag} search={search} />
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+      <NoteItemControlContainer className={swiped ? 'swiped' : ''}>
+        <button
+          onClick={() => {
+            updateNote(note.storageId, note._id, {
+              bookmarked: !note.bookmarked
+            })
+            if (swiped) {
+              setSwiped(false)
+            }
+          }}
+        >
+          {note.bookmarked ? <IconStarActive /> : <IconStar />}
+        </button>
+        <button
+          onClick={() => {
+            if (!note.trashed) {
+              trashNote(note.storageId, note._id)
+            } else {
+              messageBox({
+                title: t('note.delete2'),
+                message: t('note.deleteMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('note.delete2'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    purgeNote(note.storageId, note._id)
+                  }
+                }
+              })
+            }
+          }}
+        >
+          <IconTrash />
+        </button>
+      </NoteItemControlContainer>
+    </NoteListItemContainer>
   )
 }
