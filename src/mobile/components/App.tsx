@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import SideNavigator from '../../components/SideNavigator'
+import Navigator from './Navigator'
 import GlobalStyle from '../../components/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '../../themes/default'
@@ -12,12 +12,14 @@ import Dialog from '../../components/Dialog/Dialog'
 import { useDb } from '../../lib/db'
 import PreferencesModal from '../../components/PreferencesModal/PreferencesModal'
 import { usePreferences } from '../../lib/preferences'
-import '../lib/i18n'
-import '../lib/analytics'
+import '../../lib/i18n'
+import '../../lib/analytics'
 import CodeMirrorStyle from '../../components/CodeMirrorStyle'
 import { useToast } from '../../lib/toast'
 import { useUsers } from '../../lib/accounts'
 import styled from '../../lib/styled'
+import Router from './Router'
+import { useGeneralStatus } from '../lib/generalStatus'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -30,6 +32,44 @@ const AppContainer = styled.div`
   bottom: 0;
   right: 0;
   display: flex;
+`
+
+const NavContainer = styled.div`
+  position: absolute;
+  z-index: 1002;
+  max-width: 300px;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  transition: left 150ms ease-in-out;
+  &.active {
+    left: 0;
+  }
+`
+
+const NavRoot = styled.div`
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+  &.active {
+    pointer-events: initial;
+    opacity: 1;
+  }
+`
+
+const NavShadow = styled.div`
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.3);
 `
 
 const App = () => {
@@ -57,6 +97,7 @@ const App = () => {
   }, [users])
 
   const { preferences } = usePreferences()
+  const { generalStatus, toggleNav } = useGeneralStatus()
 
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
@@ -67,8 +108,13 @@ const App = () => {
       >
         {initialized ? (
           <>
-            <SideNavigator />
-            <div>Page</div>
+            <NavRoot className={generalStatus.navIsOpen ? 'active' : ''}>
+              <NavContainer className={generalStatus.navIsOpen ? 'active' : ''}>
+                <Navigator toggle={toggleNav} />
+              </NavContainer>
+              <NavShadow onClick={toggleNav} />
+            </NavRoot>
+            <Router />
           </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>
