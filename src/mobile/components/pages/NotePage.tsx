@@ -21,6 +21,7 @@ import Icon from '../atoms/Icon'
 import { mdiChevronLeft } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import NavTopBarButton from '../atoms/NavTopBarButton'
+import { IconBook, IconFileOpen } from '../../../components/icons'
 
 const NotePageContainer = styled.div`
   width: 100%;
@@ -188,9 +189,18 @@ export default () => {
   const noteListTitle = useMemo(() => {
     switch (routeParams.name) {
       case 'storages.allNotes':
-        return `All Notes in ${currentStorage!.name}`
+        return (
+          <>
+            <IconBook size='1em' /> All Notes in {currentStorage!.name}
+          </>
+        )
       case 'storages.notes':
-        return `${routeParams.folderPathname} in ${currentStorage!.name}`
+        return (
+          <>
+            <IconFileOpen size='1.3em' /> {routeParams.folderPathname} in{' '}
+            {currentStorage!.name}
+          </>
+        )
       case 'storages.bookmarks':
         return 'Bookmarks'
       default:
