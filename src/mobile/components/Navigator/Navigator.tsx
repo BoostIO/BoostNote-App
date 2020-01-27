@@ -27,8 +27,8 @@ import {
   IconTrash,
   IconImage,
   IconSetting,
-  IconBook,
-  IconStarActive
+  IconBook
+  // IconStarActive
 } from '../../../components/icons'
 import Icon from '../atoms/Icon'
 import { mdiClose } from '@mdi/js'
@@ -194,7 +194,7 @@ export default ({ toggle }: NavigatorProps) => {
         </button>
       </div>
 
-      <NavigatorItem
+      {/* <NavigatorItem
         icon={<IconStarActive />}
         depth={0}
         className='bookmark-sidenav'
@@ -204,7 +204,7 @@ export default ({ toggle }: NavigatorProps) => {
           push(`/app/bookmarks`)
           toggle()
         }}
-      />
+      /> */}
 
       <Description>
         Storages
