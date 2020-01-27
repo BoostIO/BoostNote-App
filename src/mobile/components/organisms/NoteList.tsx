@@ -43,6 +43,13 @@ const NewNoteButton = styled.button`
   }
 `
 
+const EmptyPlaceholder = styled.li`
+  height: 44px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+`
+
 type NoteListProps = {
   currentStorageId?: string
   currentNoteId?: string
@@ -85,7 +92,9 @@ const NoteList = ({
             </li>
           )
         })}
-        {notes.length === 0 && <li className='empty'>{t('note.nothing')}</li>}
+        {notes.length === 0 && (
+          <EmptyPlaceholder>{t('note.nothing')}</EmptyPlaceholder>
+        )}
       </ul>
     </NoteListContainer>
   )
