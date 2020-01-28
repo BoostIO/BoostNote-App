@@ -25,12 +25,14 @@ const TopBarLeftControl = styled.div`
   left: 0;
   top: 0;
   height: 44px;
+  display: flex;
 `
 const TopBarRightControl = styled.div`
   position: absolute;
   right: 0;
   top: 0;
   height: 44px;
+  display: flex;
 `
 
 const TopBarTitle = styled.div`

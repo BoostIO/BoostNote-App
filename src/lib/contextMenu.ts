@@ -42,6 +42,10 @@ export interface ContextMenuContext {
   menuItems: MenuItem[]
   id: number
   popup(event: React.MouseEvent<unknown>, menuItems: MenuItem[]): void
+  popupWithPosition(
+    position: { x: number; y: number },
+    menuItems: MenuItem[]
+  ): void
   close(): void
 }
 
@@ -56,8 +60,8 @@ function useContextMenuStore(): ContextMenuContext {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [id, setId] = useState()
 
-  const popup = useCallback(
-    (event: React.MouseEvent<unknown>, menuItems: MenuItem[]) => {
+  const popupWithPosition = useCallback(
+    ({ x, y }: { x: number; y: number }, menuItems: MenuItem[]) => {
       setId(id + 1)
       setClosed(false)
       setMenuItems(menuItems)
@@ -67,16 +71,23 @@ function useContextMenuStore(): ContextMenuContext {
         menuHeight * menuItems.length -
         menuMargin -
         menuVerticalPadding * 2
-      const clientYIsLowerThanYPositionLimit = event.clientY > yPositionLimit
+      const clientYIsLowerThanYPositionLimit = y > yPositionLimit
 
       const position = {
         // TODO: Limit xPosition
-        x: event.clientX,
-        y: clientYIsLowerThanYPositionLimit ? yPositionLimit : event.clientY
+        x,
+        y: clientYIsLowerThanYPositionLimit ? yPositionLimit : y
       }
       setPosition(position)
     },
     [id]
+  )
+
+  const popup = useCallback(
+    (event: React.MouseEvent<unknown>, menuItems: MenuItem[]) => {
+      popupWithPosition({ x: event.clientX, y: event.clientY }, menuItems)
+    },
+    [popupWithPosition]
   )
 
   const close = useCallback(() => {
@@ -89,6 +100,7 @@ function useContextMenuStore(): ContextMenuContext {
     position,
     menuItems,
     id,
+    popupWithPosition,
     popup,
     close
   }

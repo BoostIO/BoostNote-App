@@ -18,10 +18,11 @@ import TopBarLayout from '../layouts/TopBarLayout'
 import NoteDetail from '../organisms/NoteDetail'
 import styled from '../../../lib/styled'
 import Icon from '../atoms/Icon'
-import { mdiChevronLeft, mdiEyeOutline } from '@mdi/js'
+import { mdiChevronLeft, mdiEyeOutline, mdiDotsVertical } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import NavTopBarButton from '../atoms/NavTopBarButton'
 import { IconBook, IconFileOpen } from '../../../components/icons'
+import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 
 const NotePageContainer = styled.div`
   width: 100%;
@@ -208,6 +209,26 @@ export default () => {
     }
   }, [routeParams, currentStorage])
 
+  const toggleNoteViewMode = useCallback(() => {
+    setGeneralStatus({
+      noteViewMode: generalStatus.noteViewMode === 'edit' ? 'preview' : 'edit'
+    })
+  }, [setGeneralStatus, generalStatus])
+
+  const { popupWithPosition } = useContextMenu()
+  const openContextMenu = useCallback(() => {
+    popupWithPosition({ x: 0, y: 0 }, [
+      {
+        type: MenuTypes.Normal,
+        label: 'Delete',
+        onClick: () => {
+          trashOrPurgeCurrentNote()
+          push(currentPathnameWithoutNoteId)
+        }
+      }
+    ])
+  }, [popupWithPosition, trashOrPurgeCurrentNote, push])
+
   return (
     <NotePageContainer>
       <NotePagePannel
@@ -241,19 +262,20 @@ export default () => {
             </TopBarButton>
           }
           rightControl={
-            <TopBarButton
-              onClick={() => {
-                setGeneralStatus({
-                  noteViewMode:
-                    generalStatus.noteViewMode === 'edit' ? 'preview' : 'edit'
-                })
-              }}
-              className={
-                generalStatus.noteViewMode === 'preview' ? 'active' : ''
-              }
-            >
-              <Icon path={mdiEyeOutline} />
-            </TopBarButton>
+            <>
+              <TopBarButton
+                onClick={toggleNoteViewMode}
+                className={
+                  generalStatus.noteViewMode === 'preview' ? 'active' : ''
+                }
+              >
+                <Icon path={mdiEyeOutline} />
+              </TopBarButton>
+
+              <TopBarButton onClick={openContextMenu}>
+                <Icon path={mdiDotsVertical} />
+              </TopBarButton>
+            </>
           }
         >
           <>
