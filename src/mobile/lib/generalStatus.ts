@@ -10,7 +10,7 @@ export type ViewModeType = 'edit' | 'preview'
 export interface GeneralStatus {
   navIsOpen: boolean
   noteViewMode: ViewModeType
-  sideNavOpenedItemList: string[]
+  navOpenedItemList: string[]
 }
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
@@ -34,7 +34,7 @@ const initialGeneralStatus = loadGeneralStatus()
 const baseGeneralStatus: GeneralStatus = {
   navIsOpen: false,
   noteViewMode: 'edit',
-  sideNavOpenedItemList: []
+  navOpenedItemList: []
 }
 
 function useGeneralStatusStore() {
@@ -58,12 +58,12 @@ function useGeneralStatusStore() {
     })
   }, [setGeneralStatus])
 
-  const { sideNavOpenedItemList } = mergedGeneralStatus
+  const { navOpenedItemList: sideNavOpenedItemList } = mergedGeneralStatus
   const sideNavOpenedItemSet = useMemo(() => {
     return new Set(sideNavOpenedItemList)
   }, [sideNavOpenedItemList])
 
-  const toggleSideNavOpenedItem = useCallback(
+  const toggleNavOpenedItem = useCallback(
     (itemId: string) => {
       const newSet = new Set(sideNavOpenedItemSet)
       if (newSet.has(itemId)) {
@@ -72,7 +72,7 @@ function useGeneralStatusStore() {
         newSet.add(itemId)
       }
       setGeneralStatus({
-        sideNavOpenedItemList: [...newSet]
+        navOpenedItemList: [...newSet]
       })
     },
     [setGeneralStatus, sideNavOpenedItemSet]
@@ -87,7 +87,7 @@ function useGeneralStatusStore() {
       }
 
       setGeneralStatus({
-        sideNavOpenedItemList: [...newSet]
+        navOpenedItemList: [...newSet]
       })
     },
     [setGeneralStatus, sideNavOpenedItemSet]
@@ -116,7 +116,7 @@ function useGeneralStatusStore() {
     generalStatus: mergedGeneralStatus,
     setGeneralStatus,
     sideNavOpenedItemSet,
-    toggleSideNavOpenedItem,
+    toggleSideNavOpenedItem: toggleNavOpenedItem,
     addSideNavOpenedItem,
     openSideNavFolderItemRecursively,
     toggleNav

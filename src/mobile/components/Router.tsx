@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouteParams } from '../../lib/router'
-import { StorageEdit, StorageCreate } from '../../components/Storage'
+import { StorageEdit } from '../../components/Storage'
 import { useDb } from '../../lib/db'
 import AttachmentsPage from '../../components/AttachmentsPage/AttachmentsPage'
 import useRedirectHandler from '../../lib/router/redirect'
@@ -8,6 +8,7 @@ import styled from '../../lib/styled'
 import NotePage from './pages/NotePage'
 import NavTopBarButton from './atoms/NavTopBarButton'
 import TopBarLayout from './layouts/TopBarLayout'
+import StorageCreatePage from './pages/StorageCreatePage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -29,7 +30,7 @@ export default () => {
     case 'storages.attachments':
       return <AttachmentsPage />
     case 'storages.create':
-      return <StorageCreate />
+      return <StorageCreatePage />
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
