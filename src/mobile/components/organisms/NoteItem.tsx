@@ -10,10 +10,10 @@ import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import { useContextMenu, MenuTypes, MenuItem } from '../../../lib/contextMenu'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 import { IconTrash } from '../../../components/icons'
 
 export const NoteListItemContainer = styled.div`

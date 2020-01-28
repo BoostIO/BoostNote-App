@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import styled from '../../../lib/styled'
 import { DeleteStorageButton } from '../../../components/PreferencesModal/styled'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import { NoteStorage } from '../../../lib/db/types'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 import { useDebounce } from 'react-use'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { isCloudStorageData } from '../../../lib/db/utils'
@@ -48,7 +48,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         if (value === 0) {
           try {
             await db.removeStorage(storage.id)
-            router.push('/app')
+            router.push('/m')
           } catch {
             pushMessage({
               title: t('general.networkError'),

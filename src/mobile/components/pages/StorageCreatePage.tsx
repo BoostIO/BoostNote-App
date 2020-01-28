@@ -6,10 +6,10 @@ import {
   SectionPrimaryButton
 } from '../../../components/PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import LoginButton from '../../../components/atoms/LoginButton'
 import { useToast } from '../../../lib/toast'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
 
@@ -39,7 +39,7 @@ const StorageCreatePage = () => {
     // update local -> update cloud -> on fail -> revert local
     try {
       const storage = await db.createStorage(name, storageType)
-      push(`/app/storages/${storage.id}/notes`)
+      push(`/m/storages/${storage.id}/notes`)
     } catch {
       pushMessage({
         title: 'Cloud Error',

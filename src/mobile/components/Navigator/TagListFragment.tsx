@@ -3,10 +3,10 @@ import NavigatorItem from './NavigatorItem'
 import { NoteStorage } from '../../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../../lib/nav'
-import { useRouter, usePathnameWithoutNoteId } from '../../../lib/router'
+import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import { IconTag, IconTags, IconTagFill } from '../../../components/icons'
 import { useTranslation } from 'react-i18next'
 
@@ -31,7 +31,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
 
   const tagList = useMemo(() => {
     return Object.keys(tagMap).map(tagName => {
-      const tagPathname = `/app/storages/${storageId}/tags/${tagName}`
+      const tagPathname = `/m/storages/${storageId}/tags/${tagName}`
       const tagIsActive = currentPathname === tagPathname
       return (
         <NavigatorItem
