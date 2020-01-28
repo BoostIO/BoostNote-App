@@ -1,16 +1,22 @@
-import { createDbStoreCreator, getStorageDataList } from './store'
+import { createDbStoreCreator, getStorageDataList } from './createStore'
 import { MemoryLiteStorage } from 'ltstrg'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { NoteStorage, NoteDoc } from './types'
 import { getFolderId } from './utils'
-import { RouterProvider } from '../router'
+import { RouterProvider, useRouter, usePathnameWithoutNoteId } from '../router'
 import { combineProviders } from '../context'
 import { ToastProvider } from '../toast'
 
 function prepareDbStore() {
   const memoryStorage = new MemoryLiteStorage()
   const { result } = renderHook(
-    () => createDbStoreCreator(memoryStorage, 'memory')(),
+    () =>
+      createDbStoreCreator(
+        memoryStorage,
+        useRouter,
+        usePathnameWithoutNoteId,
+        'memory'
+      )(),
     {
       wrapper: combineProviders(RouterProvider, ToastProvider)
     }
