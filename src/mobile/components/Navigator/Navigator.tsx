@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouter, usePathnameWithoutNoteId } from '../../../lib/router'
-import { useDb } from '../../../lib/db'
+import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
+import { useDb } from '../../lib/db'
 import { entries } from '../../../lib/db/utils'
 import styled from '../../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
@@ -160,7 +160,7 @@ export default ({ toggle }: NavigatorProps) => {
               onClose: async (value: string | null) => {
                 if (value == null) return
                 const storage = await createStorage(value)
-                push(`/app/storages/${storage.id}/notes`)
+                push(`/m/storages/${storage.id}/notes`)
               }
             })
           }
@@ -210,7 +210,7 @@ export default ({ toggle }: NavigatorProps) => {
         Storages
         <CreateStorageButton
           onClick={() => {
-            push('/app/storages')
+            push('/m/storages')
             toggleNav()
           }}
         >
@@ -238,7 +238,7 @@ export default ({ toggle }: NavigatorProps) => {
                 }
                 await createFolder(storage.id, value)
 
-                push(`/app/storages/${storage.id}/notes${value}`)
+                push(`/m/storages/${storage.id}/notes${value}`)
 
                 // Open folder item
                 openSideNavFolderItemRecursively(storage.id, value)
@@ -264,7 +264,7 @@ export default ({ toggle }: NavigatorProps) => {
                 const newPathname = folderPathSplit.join('/') + '/' + value
                 try {
                   await renameFolder(storage.id, folderPathname, newPathname)
-                  push(`/app/storages/${storage.id}/notes${newPathname}`)
+                  push(`/m/storages/${storage.id}/notes${newPathname}`)
                   openSideNavFolderItemRecursively(storage.id, newPathname)
                 } catch (error) {
                   pushMessage({
@@ -276,13 +276,13 @@ export default ({ toggle }: NavigatorProps) => {
             })
           }
 
-          const allNotesPagePathname = `/app/storages/${storage.id}/notes`
+          const allNotesPagePathname = `/m/storages/${storage.id}/notes`
           const allNotesPageIsActive = currentPathname === allNotesPagePathname
 
-          const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
+          const trashcanPagePathname = `/m/storages/${storage.id}/trashcan`
           const trashcanPageIsActive = currentPathname === trashcanPagePathname
 
-          const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
+          const attachmentsPagePathname = `/m/storages/${storage.id}/attachments`
           const attachmentsPageIsActive =
             currentPathname === attachmentsPagePathname
 
@@ -325,7 +325,7 @@ export default ({ toggle }: NavigatorProps) => {
             <ControlButton
               key={`${storage.id}-settingsButton`}
               onClick={() => {
-                push(`/app/storages/${storage.id}`)
+                push(`/m/storages/${storage.id}`)
                 toggleNav()
               }}
               icon={<IconSetting size='1.3em' />}

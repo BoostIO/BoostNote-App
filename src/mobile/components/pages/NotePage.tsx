@@ -9,8 +9,8 @@ import {
   usePathnameWithoutNoteId,
   useRouter,
   StorageBookmarkNotes
-} from '../../../lib/router'
-import { useDb } from '../../../lib/db'
+} from '../../lib/router'
+import { useDb } from '../../lib/db'
 import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
@@ -163,7 +163,7 @@ export default () => {
     })
     if (note != null) {
       replace(
-        `/app/storages/${storageId}/notes${folderPathname}${
+        `/m/storages/${storageId}/notes${folderPathname}${
           folderIsRoot ? '' : '/'
         }${note._id}`
       )

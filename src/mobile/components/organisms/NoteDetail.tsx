@@ -19,7 +19,6 @@ import {
   borderRight,
   inputStyle
 } from '../../../lib/styled/styleFunctions'
-import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../lib/generalStatus'
 import {
   listenNoteDetailFocusTitleInputEvent,
@@ -365,47 +364,12 @@ export default class NoteDetail extends React.Component<
     }
   }
 
-  handleDrop = async (event: React.DragEvent) => {
-    event.preventDefault()
-
-    const { note, addAttachments } = this.props
-    const { storageId } = note
-
-    const files = getFileList(event).filter(file =>
-      file.type.startsWith('image/')
-    )
-
-    const attachments = await addAttachments(storageId, files)
-
-    this.setState(
-      prevState => {
-        return {
-          content:
-            prevState.content +
-            `\n` +
-            attachments
-              .map(attachment => `![](${attachment.name})`)
-              .join('\n') +
-            `\n`
-        }
-      },
-      () => {
-        this.queueToSave()
-      }
-    )
-  }
-
   render() {
     const { note, viewMode } = this.props
     const { storageId } = note
 
     return (
-      <NoteDetailContainer
-        onDragEnd={(event: React.DragEvent) => {
-          event.preventDefault()
-        }}
-        onDrop={this.handleDrop}
-      >
+      <NoteDetailContainer>
         {note == null ? (
           <p>No note is selected</p>
         ) : (

@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import NavigatorItem from './NavigatorItem'
 import { NoteStorage } from '../../../lib/db/types'
-import { usePathnameWithoutNoteId, useRouter } from '../../../lib/router'
+import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../../lib/nav'
-import { getTransferrableNoteData } from '../../../lib/dnd'
 import { IconAddRound, IconFile, IconFileOpen } from '../../../components/icons'
 import { useTranslation } from 'react-i18next'
 
@@ -23,12 +22,7 @@ const FolderListFragment = ({
   showPromptToCreateFolder,
   showPromptToRenameFolder
 }: FolderListFragmentProps) => {
-  const {
-    removeFolder,
-    updateNote,
-    createNote,
-    moveNoteToOtherStorage
-  } = useDb()
+  const { removeFolder } = useDb()
   const { push } = useRouter()
   const { messageBox } = useDialog()
   const { popup } = useContextMenu()
@@ -51,7 +45,7 @@ const FolderListFragment = ({
   const createOnFolderItemClickHandler = (folderPathname: string) => {
     return () => {
       push(
-        `/app/storages/${storage.id}/notes${
+        `/m/storages/${storage.id}/notes${
           folderPathname === '/' ? '' : folderPathname
         }`
       )
@@ -127,56 +121,6 @@ const FolderListFragment = ({
     )
   }, [folderPathnames, storageId, sideNavOpenedItemSet])
 
-  const createDropHandler = (folderPathname: string) => {
-    return async (event: React.DragEvent) => {
-      const transferrableNoteData = getTransferrableNoteData(event)
-      if (transferrableNoteData == null) {
-        return
-      }
-
-      const {
-        storageId: originalNoteStorageId,
-        note: originalNote
-      } = transferrableNoteData
-
-      if (storageId === originalNoteStorageId) {
-        await updateNote(storageId, originalNote._id, {
-          folderPathname
-        })
-      } else {
-        messageBox({
-          title: t('storage.moveTitle'),
-          message: t('storage.moveMessage'),
-          iconType: DialogIconTypes.Info,
-          buttons: [t('storage.move'), t('storage.copy'), t('general.cancel')],
-          defaultButtonIndex: 0,
-          cancelButtonIndex: 2,
-          onClose: async (value: number | null) => {
-            switch (value) {
-              case 0:
-                await moveNoteToOtherStorage(
-                  originalNoteStorageId,
-                  originalNote._id,
-                  storageId,
-                  folderPathname
-                )
-                return
-              case 1:
-                await createNote(storageId, {
-                  title: originalNote.title,
-                  content: originalNote.content,
-                  folderPathname,
-                  tags: originalNote.tags,
-                  data: originalNote.data
-                })
-                return
-            }
-          }
-        })
-      }
-    }
-  }
-
   return (
     <>
       {openedFolderPathnameList.map((folderPathname: string) => {
@@ -190,7 +134,7 @@ const FolderListFragment = ({
 
         const folderIsActive =
           currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/notes${folderPathname}`
+          `/m/storages/${storageId}/notes${folderPathname}`
         return (
           <NavigatorItem
             key={itemId}
@@ -213,10 +157,6 @@ const FolderListFragment = ({
                 icon={<IconAddRound />}
               />
             ]}
-            onDragOver={event => {
-              event.preventDefault()
-            }}
-            onDrop={createDropHandler(folderPathname)}
           />
         )
       })}
