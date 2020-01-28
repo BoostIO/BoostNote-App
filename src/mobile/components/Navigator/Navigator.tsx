@@ -208,7 +208,12 @@ export default ({ toggle }: NavigatorProps) => {
 
       <Description>
         Storages
-        <CreateStorageButton onClick={() => push('/app/storages')}>
+        <CreateStorageButton
+          onClick={() => {
+            push('/app/storages')
+            toggleNav()
+          }}
+        >
           <IconAddRound size='1.7em' />
         </CreateStorageButton>
       </Description>
@@ -261,7 +266,6 @@ export default ({ toggle }: NavigatorProps) => {
                   await renameFolder(storage.id, folderPathname, newPathname)
                   push(`/app/storages/${storage.id}/notes${newPathname}`)
                   openSideNavFolderItemRecursively(storage.id, newPathname)
-                  toggleNav
                 } catch (error) {
                   pushMessage({
                     title: t('general.error'),
@@ -403,7 +407,10 @@ export default ({ toggle }: NavigatorProps) => {
                     label={t('general.attachments')}
                     icon={<IconImage size='1.5em' />}
                     active={attachmentsPageIsActive}
-                    onClick={() => push(attachmentsPagePathname)}
+                    onClick={() => {
+                      push(attachmentsPagePathname)
+                      toggleNav()
+                    }}
                     onContextMenu={event => {
                       event.preventDefault()
                     }}
@@ -413,7 +420,10 @@ export default ({ toggle }: NavigatorProps) => {
                     label={t('general.trash')}
                     icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
                     active={trashcanPageIsActive}
-                    onClick={() => push(trashcanPagePathname)}
+                    onClick={() => {
+                      push(trashcanPagePathname)
+                      toggleNav()
+                    }}
                     onContextMenu={event => {
                       event.preventDefault()
                       // TODO: Implement context menu(restore all notes)
