@@ -11,8 +11,6 @@ import TagList from '../molecules/TagList'
 import styled from '../../../lib/styled'
 import CustomizedCodeEditor from '../../../components/atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../../../components/atoms/CustomizedMarkdownPreviewer'
-import ToolbarIconButton from '../../../components/atoms/ToolbarIconButton'
-import Toolbar from '../../../components/atoms/Toolbar'
 import ToolbarSeparator from '../../../components/atoms/ToolbarSeparator'
 import {
   secondaryBackgroundColor,
@@ -21,15 +19,8 @@ import {
   borderRight,
   inputStyle
 } from '../../../lib/styled/styleFunctions'
-import ToolbarExportButton from '../../../components/atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../lib/generalStatus'
-import {
-  IconTrash,
-  IconArrowAgain,
-  IconPreview,
-  IconEditView
-} from '../../../components/icons'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent
@@ -405,7 +396,7 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const { note, viewMode, toggleViewMode } = this.props
+    const { note, viewMode } = this.props
     const { storageId } = note
 
     return (
@@ -463,38 +454,6 @@ export default class NoteDetail extends React.Component<
                 />
               )}
             </div>
-            <Toolbar>
-              <div className='buttonsWrapper'>
-                <ToolbarIconButton
-                  className={viewMode === 'edit' ? 'active' : ''}
-                  onClick={() => toggleViewMode('edit')}
-                  icon={<IconEditView />}
-                />
-                <ToolbarIconButton
-                  className={viewMode === 'preview' ? 'active' : ''}
-                  onClick={() => toggleViewMode('preview')}
-                  icon={<IconPreview />}
-                />
-                {note.trashed ? (
-                  <>
-                    <ToolbarIconButton
-                      onClick={this.untrashNote}
-                      icon={<IconArrowAgain />}
-                    />
-                    <ToolbarIconButton
-                      onClick={this.purgeNote}
-                      icon={<IconTrash />}
-                    />
-                  </>
-                ) : (
-                  <ToolbarIconButton
-                    onClick={this.trashNote}
-                    icon={<IconTrash />}
-                  />
-                )}
-                <ToolbarExportButton note={this.props.note} />
-              </div>
-            </Toolbar>
           </>
         )}
       </NoteDetailContainer>

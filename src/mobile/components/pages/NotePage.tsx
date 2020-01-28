@@ -227,7 +227,12 @@ export default () => {
         }
       }
     ])
-  }, [popupWithPosition, trashOrPurgeCurrentNote, push])
+  }, [
+    popupWithPosition,
+    trashOrPurgeCurrentNote,
+    push,
+    currentPathnameWithoutNoteId
+  ])
 
   return (
     <NotePageContainer>
