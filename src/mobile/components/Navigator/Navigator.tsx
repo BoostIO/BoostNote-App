@@ -324,7 +324,10 @@ export default ({ toggle }: NavigatorProps) => {
           controlComponents.unshift(
             <ControlButton
               key={`${storage.id}-settingsButton`}
-              onClick={() => push(`/app/storages/${storage.id}`)}
+              onClick={() => {
+                push(`/app/storages/${storage.id}`)
+                toggleNav()
+              }}
               icon={<IconSetting size='1.3em' />}
             />
           )

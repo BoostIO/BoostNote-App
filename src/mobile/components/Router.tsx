@@ -1,6 +1,5 @@
 import React from 'react'
 import { useRouteParams } from '../../lib/router'
-import { StorageEdit } from '../../components/Storage'
 import { useDb } from '../../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import useRedirectHandler from '../../lib/router/redirect'
@@ -9,6 +8,7 @@ import NotePage from './pages/NotePage'
 import TopBarToggleNavButton from './atoms/TopBarToggleNavButton'
 import TopBarLayout from './layouts/TopBarLayout'
 import StorageCreatePage from './pages/StorageCreatePage'
+import StorageEditPage from './pages/StorageEditPage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -34,7 +34,7 @@ export default () => {
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
-        return <StorageEdit storage={storage} />
+        return <StorageEditPage storage={storage} />
       } else {
         break
       }
