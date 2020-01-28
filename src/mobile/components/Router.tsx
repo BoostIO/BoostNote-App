@@ -6,7 +6,7 @@ import AttachmentsPage from '../../components/AttachmentsPage/AttachmentsPage'
 import useRedirectHandler from '../../lib/router/redirect'
 import styled from '../../lib/styled'
 import NotePage from './pages/NotePage'
-import NavTopBarButton from './atoms/NavTopBarButton'
+import TopBarToggleNavButton from './atoms/TopBarToggleNavButton'
 import TopBarLayout from './layouts/TopBarLayout'
 import StorageCreatePage from './pages/StorageCreatePage'
 
@@ -40,7 +40,7 @@ export default () => {
       }
   }
   return (
-    <TopBarLayout leftControl={<NavTopBarButton />}>
+    <TopBarLayout leftControl={<TopBarToggleNavButton />}>
       <NotFoundPageContainer>
         <h1>Page not found</h1>
       </NotFoundPageContainer>

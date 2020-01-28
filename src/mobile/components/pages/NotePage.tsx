@@ -20,7 +20,7 @@ import styled from '../../../lib/styled'
 import Icon from '../atoms/Icon'
 import { mdiChevronLeft, mdiEyeOutline, mdiDotsVertical } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
-import NavTopBarButton from '../atoms/NavTopBarButton'
+import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
 import { IconBook, IconFileOpen } from '../../../components/icons'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 
@@ -241,7 +241,10 @@ export default () => {
           left: currentNote == null ? 0 : '-100%'
         }}
       >
-        <TopBarLayout title={noteListTitle} leftControl={<NavTopBarButton />}>
+        <TopBarLayout
+          title={noteListTitle}
+          leftControl={<TopBarToggleNavButton />}
+        >
           <NoteList
             currentStorageId={storageId}
             notes={notes}
