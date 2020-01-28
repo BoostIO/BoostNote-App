@@ -21,7 +21,12 @@ import Icon from '../atoms/Icon'
 import { mdiChevronLeft, mdiEyeOutline, mdiDotsVertical } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
-import { IconBook, IconFileOpen } from '../../../components/icons'
+import {
+  IconBook,
+  IconFileOpen,
+  IconTrash,
+  IconTag
+} from '../../../components/icons'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 
 const NotePageContainer = styled.div`
@@ -204,6 +209,19 @@ export default () => {
         )
       case 'storages.bookmarks':
         return 'Bookmarks'
+      case 'storages.tags.show':
+        return (
+          <>
+            <IconTag size='1.3em' /> {routeParams.tagName} in{' '}
+            {currentStorage!.name}
+          </>
+        )
+      case 'storages.trashCan':
+        return (
+          <>
+            <IconTrash size='1em' /> Trashed Notes in {currentStorage!.name}
+          </>
+        )
       default:
         return 'unknown'
     }
