@@ -148,8 +148,8 @@ module.exports = (env, argv) => {
     }
   }
 
-  if (process.env.TARGET !== 'electron' && argv.mode !== 'development') {
-    ;(config.output as any).publicPath = '/m/'
+  if (argv.mode !== 'development') {
+    ;(config.output as any).publicPath = '/'
   }
 
   return config
