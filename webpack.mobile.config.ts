@@ -149,7 +149,7 @@ module.exports = (env, argv) => {
   }
 
   if (argv.mode !== 'development') {
-    ;(config.output as any).publicPath = '/'
+    ;(config.output as any).publicPath = 'file:///android_asset/compiled/'
   }
 
   return config
