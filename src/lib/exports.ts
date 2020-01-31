@@ -2,10 +2,12 @@ import unified from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkStringify from 'remark-stringify'
+import remarkMath from 'remark-math'
 import rehypeDocument from 'rehype-document'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
+import rehypeKatex from 'rehype-katex'
 import { mergeDeepRight } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { rehypeCodeMirror } from './../components/atoms/MarkdownPreviewer'
@@ -24,6 +26,7 @@ export const exportNoteAsHtmlFile = async (
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
+    .use(remarkMath)
     .use(remarkRehype, { allowDangerousHTML: false })
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
@@ -34,9 +37,11 @@ export const exportNoteAsHtmlFile = async (
     .use(rehypeDocument, {
       title: note.title,
       style: previewStyle,
+      css: 'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css',
       meta: { keywords: note.tags.join() }
     })
     .use(rehypeStringify)
+    .use(rehypeKatex)
     .process(note.content, (err, file) => {
       if (err != null) {
         /* TODO: Toast error */
