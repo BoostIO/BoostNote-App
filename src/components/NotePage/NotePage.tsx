@@ -352,6 +352,7 @@ export default () => {
         ) : (
           <NoteDetail
             noteStorageName={storageMap[currentNote.storageId]!.name}
+            attachmentMap={storageMap[currentNote.storageId]!.attachmentMap}
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={updateNote}
