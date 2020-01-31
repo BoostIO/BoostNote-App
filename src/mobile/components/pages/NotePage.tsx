@@ -308,6 +308,11 @@ export default () => {
             {currentNote != null && (
               <NoteDetail
                 currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
+                attachmentMap={
+                  storageId != null && storageMap[storageId] != null
+                    ? storageMap[storageId]!.attachmentMap
+                    : {}
+                }
                 note={currentNote}
                 updateNote={updateNote}
                 trashNote={trashNote}

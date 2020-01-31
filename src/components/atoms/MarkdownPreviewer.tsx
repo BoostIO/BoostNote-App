@@ -14,8 +14,8 @@ import h from 'hastscript'
 import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
-import { useDb } from '../../lib/db'
 import { openNew } from '../../lib/platform'
+import { Attachment, ObjectMap } from '../../lib/db/types'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -158,7 +158,7 @@ interface MarkdownPreviewerProps {
   codeBlockTheme?: string
   style?: string
   theme?: string
-  storageId?: string
+  attachmentMap?: ObjectMap<Attachment>
 }
 
 const MarkdownPreviewer = ({
@@ -166,17 +166,16 @@ const MarkdownPreviewer = ({
   codeBlockTheme,
   style,
   theme,
-  storageId
+  attachmentMap = {}
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
   const previousThemeRef = useRef<string | undefined>('')
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
-  const { storageMap } = useDb()
 
   const markdownProcessor = useMemo(() => {
-    const options = { codeBlockTheme, storageId }
+    const options = { codeBlockTheme }
 
     return unified()
       .use(remarkParse)
@@ -191,10 +190,8 @@ const MarkdownPreviewer = ({
         createElement: React.createElement,
         components: {
           img: ({ src, ...props }: any) => {
-            const storage = storageMap[options.storageId!]
-
-            if (storage != null && src != null && !src.match('/')) {
-              const attachment = storage.attachmentMap[src]
+            if (src != null && !src.match('/')) {
+              const attachment = attachmentMap[src]
               if (attachment != null) {
                 return <BlobImage blob={attachment.blob} />
               }
@@ -217,7 +214,7 @@ const MarkdownPreviewer = ({
           }
         }
       })
-  }, [codeBlockTheme, storageId, storageMap])
+  }, [codeBlockTheme, attachmentMap])
 
   const renderContent = useCallback(
     async (content: string) => {

@@ -4,7 +4,8 @@ import {
   NoteDoc,
   NoteDocEditibleProps,
   Attachment,
-  PopulatedNoteDoc
+  PopulatedNoteDoc,
+  ObjectMap
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
@@ -164,6 +165,7 @@ type NoteDetailProps = {
   noteStorageName: string
   currentPathnameWithoutNoteId: string
   note: PopulatedNoteDoc
+  attachmentMap: ObjectMap<Attachment>
   updateNote: (
     storageId: string,
     noteId: string,
@@ -454,9 +456,9 @@ export default class NoteDetail extends React.Component<
       viewMode,
       toggleViewMode,
       noteStorageName,
-      currentPathnameWithoutNoteId
+      currentPathnameWithoutNoteId,
+      attachmentMap
     } = this.props
-    const { storageId } = note
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
@@ -470,7 +472,7 @@ export default class NoteDetail extends React.Component<
     const markdownPreviewer = (
       <CustomizedMarkdownPreviewer
         content={this.state.content}
-        storageId={storageId}
+        attachmentMap={attachmentMap}
       />
     )
 
