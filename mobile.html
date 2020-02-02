@@ -6,5 +6,15 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <script>
+      ;(function() {
+        function $openExternal(url) {
+          console.log('opening ...', url)
+          Android.openUrl(url)
+        }
+        window.$openExternal = $openExternal
+      })()
+    </script>
   </body>
 </html>
