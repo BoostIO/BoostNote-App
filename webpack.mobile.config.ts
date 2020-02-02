@@ -67,10 +67,10 @@ module.exports = (env, argv) => {
       }),
       new webpack.EnvironmentPlugin([
         'NODE_ENV',
-        'AMPLIFY_AUTH_IDENTITY_POOL_ID',
-        'AMPLIFY_AUTH_REGION',
-        'AMPLIFY_PINPOINT_APPID',
-        'AMPLIFY_PINPOINT_REGION',
+        'MOBILE_AMPLIFY_AUTH_IDENTITY_POOL_ID',
+        'MOBILE_AMPLIFY_AUTH_REGION',
+        'MOBILE_AMPLIFY_PINPOINT_APPID',
+        'MOBILE_AMPLIFY_PINPOINT_REGION',
         'BOOST_NOTE_BASE_URL'
       ]),
       new CopyPlugin([
