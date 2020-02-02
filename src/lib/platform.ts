@@ -1,15 +1,15 @@
-import isElectron from 'is-electron'
-
 declare function $openExternal(url: string): void
 
 export const openNew = (url: string) => {
-  if (isElectron()) {
-    if (url.length > 0) {
-      $openExternal(url)
-    }
-  } else {
-    window.open(url, '_blank')
+  if (url.length === 0) {
+    return
   }
+
+  if ($openExternal == null) {
+    window.open(url, '_blank')
+    return
+  }
+  $openExternal(url)
 }
 
 export type OsNameOptions = 'windows' | 'macos' | 'unix' | 'linux' | 'unknown'
