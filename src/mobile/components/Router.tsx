@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouteParams } from '../lib/router'
 import { useDb } from '../lib/db'
-import AttachmentsPage from './pages/AttachmentsPage'
+// import AttachmentsPage from './pages/AttachmentsPage'
 import useRedirectHandler from '../lib/redirect'
 import styled from '../../lib/styled'
 import NotePage from './pages/NotePage'
@@ -27,8 +27,8 @@ export default () => {
     case 'storages.trashCan':
     case 'storages.tags.show':
       return <NotePage />
-    case 'storages.attachments':
-      return <AttachmentsPage />
+    // case 'storages.attachments':
+    //   return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreatePage />
     case 'storages.edit':

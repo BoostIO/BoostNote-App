@@ -25,7 +25,7 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  IconImage,
+  // IconImage,
   IconSetting,
   IconBook
   // IconStarActive
@@ -282,9 +282,9 @@ export default ({ toggle }: NavigatorProps) => {
           const trashcanPagePathname = `/m/storages/${storage.id}/trashcan`
           const trashcanPageIsActive = currentPathname === trashcanPagePathname
 
-          const attachmentsPagePathname = `/m/storages/${storage.id}/attachments`
-          const attachmentsPageIsActive =
-            currentPathname === attachmentsPagePathname
+          // const attachmentsPagePathname = `/m/storages/${storage.id}/attachments`
+          // const attachmentsPageIsActive =
+          //   currentPathname === attachmentsPagePathname
 
           const controlComponents = [
             <ControlButton
@@ -405,7 +405,7 @@ export default ({ toggle }: NavigatorProps) => {
                     showPromptToRenameFolder={showPromptToRenameFolder}
                   />
                   <TagListFragment storage={storage} />
-                  <NavigatorItem
+                  {/* <NavigatorItem
                     depth={1}
                     label={t('general.attachments')}
                     icon={<IconImage size='1.5em' />}
@@ -417,7 +417,7 @@ export default ({ toggle }: NavigatorProps) => {
                     onContextMenu={event => {
                       event.preventDefault()
                     }}
-                  />
+                  /> */}
                   <NavigatorItem
                     depth={1}
                     label={t('general.trash')}
