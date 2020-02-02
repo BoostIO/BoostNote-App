@@ -2,18 +2,11 @@ import React, { useEffect } from 'react'
 import Navigator from './Navigator'
 import GlobalStyle from '../../components/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
-import { defaultTheme } from '../../themes/default'
 import { darkTheme } from '../../themes/dark'
-import { lightTheme } from '../../themes/light'
-import { sepiaTheme } from '../../themes/sepia'
-import { solarizedDarkTheme } from '../../themes/solarizedDark'
 import ContextMenu from './organisms/ContextMenu'
 import Dialog from '../../components/Dialog/Dialog'
 import { useDb } from '../lib/db'
 import PreferencesModal from '../../components/PreferencesModal/PreferencesModal'
-import { usePreferences } from '../../lib/preferences'
-import '../../lib/i18n'
-import '../../lib/analytics'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import { useToast } from '../../lib/toast'
 import { useUsers } from '../../lib/accounts'
@@ -32,6 +25,7 @@ const AppContainer = styled.div`
   bottom: 0;
   right: 0;
   display: flex;
+  color: #fff;
 `
 
 const NavContainer = styled.div`
@@ -96,16 +90,11 @@ const App = () => {
     })
   }, [users])
 
-  const { preferences } = usePreferences()
   const { generalStatus, toggleNav } = useGeneralStatus()
 
   return (
-    <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
-      <AppContainer
-        onDrop={(event: React.DragEvent) => {
-          event.preventDefault()
-        }}
-      >
+    <ThemeProvider theme={darkTheme}>
+      <AppContainer>
         {initialized ? (
           <>
             <NavRoot className={generalStatus.navIsOpen ? 'active' : ''}>
@@ -127,20 +116,6 @@ const App = () => {
       </AppContainer>
     </ThemeProvider>
   )
-}
-function selectTheme(theme: string) {
-  switch (theme) {
-    case 'dark':
-      return darkTheme
-    case 'light':
-      return lightTheme
-    case 'sepia':
-      return sepiaTheme
-    case 'solarizedDark':
-      return solarizedDarkTheme
-    default:
-      return defaultTheme
-  }
 }
 
 export default App

@@ -11,6 +11,9 @@ import { PreferencesProvider } from '../lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from '../lib/preview'
 import { ToastProvider } from '../lib/toast'
+import ErrorBoundary from './components/ErrorBoundary'
+import '../lib/i18n'
+import '../lib/analytics'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -33,7 +36,9 @@ function render(Component: typeof App) {
   }
   ReactDOM.render(
     <CombinedProvider>
-      <Component />
+      <ErrorBoundary>
+        <Component />
+      </ErrorBoundary>
     </CombinedProvider>,
     document.getElementById('root')
   )
