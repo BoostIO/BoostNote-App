@@ -13,7 +13,7 @@ import { PreviewStyleProvider } from '../lib/preview'
 import { ToastProvider } from '../lib/toast'
 import ErrorBoundary from './components/ErrorBoundary'
 import '../lib/i18n'
-import '../lib/analytics'
+import './lib/analytics'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,

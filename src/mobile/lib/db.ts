@@ -2,7 +2,7 @@ import { createStoreContext } from '../../lib/context'
 import { localLiteStorage } from 'ltstrg'
 
 import { useRouter, usePathnameWithoutNoteId } from './router'
-import { wrapDbStoreWithAnalytics } from '../../lib/analytics'
+import { wrapDbStoreWithAnalytics } from './analytics'
 import { createDbStoreCreator } from '../../lib/db/createStore'
 
 export const {
