@@ -37,6 +37,7 @@ const NewNoteButton = styled.button`
   background-color: ${({ theme }) => theme.primaryColor};
   color: ${({ theme }) => theme.textColor};
   opacity: 0.8;
+  z-index: 1;
   &:active,
   &:hover {
     opacity: 1;
