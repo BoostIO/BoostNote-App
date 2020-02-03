@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.boostio.boostnote
 
 import org.junit.Test
 
