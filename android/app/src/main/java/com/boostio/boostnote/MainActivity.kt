@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.boostio.boostnote
 
 import android.content.Context
 import android.content.Intent
