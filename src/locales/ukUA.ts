@@ -24,7 +24,8 @@ export default {
     'storage.delete': 'Видалити сховище',
     'storage.move': 'Перемістіти нотатку',
     'storage.moveTitle': 'Перемістити нотатку до іншого сховища',
-    'storage.moveMessage': 'Ви намагаєтесь перемістити нотатку до іншого сховища.',
+    'storage.moveMessage':
+      'Ви намагаєтесь перемістити нотатку до іншого сховища.',
     'storage.copy': 'Копіювати нотатку',
     'storage.typeLocal': 'Місцеве сховище',
     'storage.typeCloud': 'Хмарне сховище',
@@ -34,7 +35,8 @@ export default {
     // Folder
     'folder.create': 'Нова папка',
     'folder.rename': 'Перейменування папки',
-    'folder.renameMessage': 'Введіть нове ім\'я папки, також будуть оновлені всі шляхи, нотатки та папки.',
+    'folder.renameMessage':
+      "Введіть нове ім'я папки, також будуть оновлені всі шляхи, нотатки та папки.",
     'folder.renameErrorMessage': 'Ви не змогли перейменувати папку',
     'folder.remove': 'Видалення папки',
     'folder.removeMessage': 'Усі нотатки та папки будуть видалені.',
@@ -68,7 +70,8 @@ export default {
 
     // About
     'about.about': 'Про',
-    'about.boostnoteDescription': 'Опенсорс додаток для нотаток, від програмістів для програмостів.',
+    'about.boostnoteDescription':
+      'Опенсорс додаток для нотаток, від програмістів для програмостів.',
     'about.website': 'Офіційний веб-сайт',
     'about.boostWiki': 'Нотатка для підвищення команди',
     'about.platform': 'Крос-платформа',
@@ -118,9 +121,12 @@ export default {
     'preferences.dateCreated': 'Дата створення',
     'preferences.title': 'Назва',
     'preferences.analytics': 'Аналітика',
-    'preferences.analyticsDescription1': 'Boost Note збирає анонімні дані з метою покращення додатку і не збирає жодної особистої інформації, такої як вміст ваших нотаток. Ви можете побачити, як це працює на GitHub.',
-    'preferences.analyticsDescription2': 'Ви можете увімкнути або вимкнути цю опцію.',
-    'preferences.analyticsLabel': 'Увімкніть аналітику для покращення Boostnote',
+    'preferences.analyticsDescription1':
+      'Boost Note збирає анонімні дані з метою покращення додатку і не збирає жодної особистої інформації, такої як вміст ваших нотаток. Ви можете побачити, як це працює на GitHub.',
+    'preferences.analyticsDescription2':
+      'Ви можете увімкнути або вимкнути цю опцію.',
+    'preferences.analyticsLabel':
+      'Увімкніть аналітику для покращення Boostnote',
     'preferences.displayTutorialsLabel': 'Підручники та поширені запитання',
 
     // Preferences EditorTab
@@ -143,9 +149,11 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'Імпорт',
     'preferences.description': 'Імпортуйте файли .cson зі старого Boostnote.',
-    'preferences.importFlow1': '1. Відкрийте стару папку Boostnote на своєму ПК.',
+    'preferences.importFlow1':
+      '1. Відкрийте стару папку Boostnote на своєму ПК.',
     'preferences.importFlow2': '2. Перетягніть файли .cson у форму нижче.',
-    'preferences.importFlow3': '3. Виберіть Сховище та папку, до яких потрібно перемістити старі дані.',
+    'preferences.importFlow3':
+      '3. Виберіть Сховище та папку, до яких потрібно перемістити старі дані.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Видалити',
     'preferences.importUpload': 'Завантажити'
