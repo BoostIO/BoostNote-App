@@ -13,12 +13,16 @@ export type GeneralThemeOptions =
   | 'sepia'
   | 'solarizedDark'
 export type GeneralLanguageOptions =
+  | 'de'
   | 'en-US'
-  | 'ja'
   | 'es-ES'
-  | 'zh-CN'
+  | 'ja'
   | 'ko'
   | 'pt-BR'
+  | 'uk-UA'
+  | 'zh-CN'
+  | 'zh-HK'
+  | 'zh-TW'
 export type GeneralNoteSortingOptions =
   | 'date-updated'
   | 'date-created'

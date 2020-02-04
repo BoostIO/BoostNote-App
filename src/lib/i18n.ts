@@ -9,7 +9,7 @@ import zhTW from '../locales/zhTW'
 import ja from '../locales/ja'
 import ko from '../locales/ko'
 import ptBR from '../locales/ptBR'
-import ukUA from './ukUA'
+import ukUA from '../locales/ukUA'
 
 const resources = {
   de,
