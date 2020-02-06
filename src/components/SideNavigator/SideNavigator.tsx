@@ -31,6 +31,7 @@ import {
   IconBook,
   IconStarActive
 } from '../icons'
+import { getStorageItemId } from '../../lib/nav'
 
 const Description = styled.nav`
   margin-left: 15px;
@@ -212,7 +213,7 @@ export default () => {
 
       <div className='storageList'>
         {storageEntries.map(([, storage]) => {
-          const itemId = `storage:${storage.id}`
+          const itemId = getStorageItemId(storage.id)
           const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
           const showPromptToCreateFolder = (folderPathname: string) => {
             prompt({
