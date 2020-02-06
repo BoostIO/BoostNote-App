@@ -2,9 +2,11 @@ import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import unified, { Plugin } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import remarkMath from 'remark-math'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeReact from 'rehype-react'
+import rehypeKatex from 'rehype-katex'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { mergeDeepRight } from 'ramda'
 import visit from 'unist-util-visit'
@@ -16,6 +18,7 @@ import styled from '../../lib/styled'
 import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
+import 'katex/dist/katex.min.css'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -180,12 +183,14 @@ const MarkdownPreviewer = ({
     return unified()
       .use(remarkParse)
       .use(remarkRehype, { allowDangerousHTML: false })
+      .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
         theme: options.codeBlockTheme
       })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
+      .use(rehypeKatex)
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
