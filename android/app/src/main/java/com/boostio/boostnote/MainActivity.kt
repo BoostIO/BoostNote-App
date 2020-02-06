@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         settings.javaScriptEnabled = true;
         settings.allowContentAccess = true;
         settings.domStorageEnabled = true;
+        settings.allowUniversalAccessFromFileURLs = true;
+        settings.allowFileAccessFromFileURLs = true;
         view.webViewClient = WebViewClient()
         view.webChromeClient = object : WebChromeClient() {
 
