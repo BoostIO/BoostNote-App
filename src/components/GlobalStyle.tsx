@@ -24,6 +24,7 @@ export default createGlobalStyle<BaseTheme>`
 
   button,
   input {
+    padding: 0;
     outline: none;
   }
 
