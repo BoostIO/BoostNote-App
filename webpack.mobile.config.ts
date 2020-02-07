@@ -8,6 +8,7 @@ import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
 const devServerPort = 3001
+const target = process.env.TARGET === 'ios' ? 'ios' : 'android'
 
 module.exports = (env, argv) => {
   const config = {
@@ -18,7 +19,10 @@ module.exports = (env, argv) => {
 
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'compiled-mobile')
+      path:
+        target === 'ios'
+          ? path.resolve(__dirname, 'ios/BoostNote/BoostNote/compiled')
+          : path.resolve(__dirname, 'compiled-mobile')
     },
 
     devtool: 'inline-source-map',
@@ -59,7 +63,7 @@ module.exports = (env, argv) => {
       new webpack.NoEmitOnErrorsPlugin(),
       // do not emit compiled assets that include errors
       new HtmlWebpackPlugin({
-        template: 'mobile.html'
+        template: target === 'ios' ? 'ios.html' : 'android.html'
       }),
       new ErrorOverlayPlugin(),
       new webpack.DefinePlugin({
@@ -71,7 +75,8 @@ module.exports = (env, argv) => {
         'MOBILE_AMPLIFY_AUTH_REGION',
         'MOBILE_AMPLIFY_PINPOINT_APPID',
         'MOBILE_AMPLIFY_PINPOINT_REGION',
-        'BOOST_NOTE_BASE_URL'
+        'BOOST_NOTE_BASE_URL',
+        'TARGET'
       ]),
       new CopyPlugin([
         {
@@ -146,10 +151,8 @@ module.exports = (env, argv) => {
         })
       ]
     }
-  }
-
-  if (argv.mode !== 'development') {
-    ;(config.output as any).publicPath = 'file:///android_asset/compiled/'
+    ;(config.output as any).publicPath =
+      target === 'ios' ? './' : 'file:///android_asset/compiled/'
   }
 
   return config

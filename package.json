@@ -12,6 +12,7 @@
     "dev": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
     "dev:mobile": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --config webpack.mobile.config.ts --mode development --open-page \"m\"",
     "build:mobile": "rimraf compiled-mobile && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --config webpack.mobile.config.ts --mode production && rimraf android/app/src/main/assets/compiled && cp -R compiled-mobile android/app/src/main/assets/compiled",
+    "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
     "dev:app": "npm run build:electron && npm run start",
     "start": "electron app/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
