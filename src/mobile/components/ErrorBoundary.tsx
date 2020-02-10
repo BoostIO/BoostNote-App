@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components'
 import styled from '../../lib/styled'
 import { darkTheme } from '../../themes/dark'
 import { SectionPrimaryButton } from '../../components/PreferencesModal/styled'
+import { useRouter } from '../lib/router'
 
 const AppContainer = styled.div`
   position: absolute;
@@ -14,6 +15,22 @@ const AppContainer = styled.div`
   right: 0;
   display: flex;
 `
+
+const ReloadButton = ({ reset }: { reset: () => void }) => {
+  const { push } = useRouter()
+
+  return (
+    <SectionPrimaryButton
+      onClick={() => {
+        push('/m/storages')
+        reset()
+      }}
+    >
+      Reload App
+    </SectionPrimaryButton>
+  )
+}
+
 interface ErrorBoundaryState {
   errorStack: string | null
 }
@@ -59,9 +76,7 @@ class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
               <div style={{ padding: '15px' }}>
                 <h1>Error!</h1>
                 <p>Please click button</p>
-                <SectionPrimaryButton onClick={this.reset}>
-                  Restart App
-                </SectionPrimaryButton>
+                <ReloadButton reset={this.reset} />
                 <pre>
                   <code>{this.state.errorStack}</code>
                 </pre>
