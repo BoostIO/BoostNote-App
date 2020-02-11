@@ -8,16 +8,28 @@
 
 import UIKit
 import WebKit
+import SafariServices
 
-class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, SFSafariViewControllerDelegate {
 
     var webView: WKWebView!
+    var safariViewController: SFSafariViewController? = nil
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
       //This function handles the events coming from javascript. We'll configure the javascript side of this later.
       //We can access properties through the message body, like this:
-      guard let response = message.body as? String else { return }
-        let url = URL(string: response)!
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        guard let response = message.body as? String else { return }
+        guard let url = URL(string: response) else {
+            return
+        }
+  
+        safariViewController = SFSafariViewController(url: url)
+        safariViewController!.delegate = self
+        present(safariViewController!, animated: true, completion: nil)
+    }
+    
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
+        safariViewController = nil
     }
 
     override func loadView() {
