@@ -60,7 +60,7 @@ export default () => {
   useGlobalKeyDownHandler(keydownHandler)
 
   const backgroundClickHandler = useMemo(() => {
-    return (event: MouseEvent) => {
+    return (event: React.MouseEvent<HTMLDivElement>) => {
       event.preventDefault()
       closeHandler()
     }

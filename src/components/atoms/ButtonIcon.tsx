@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '../../lib/styled'
 
-const StyledButtonIcon = styled.button<{ active: boolean }>`
+const StyledButtonIcon = styled.button`
   color: currentColor;
   background-color: transparent;
   border: none;
