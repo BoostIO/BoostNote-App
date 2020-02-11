@@ -12,7 +12,7 @@ import {
   iconColor,
   sideBarTextColor
 } from '../../lib/styled/styleFunctions'
-import SideNavigatorItem from './SideNavigatorItem'
+import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import FolderListFragment from './FolderListFragment'

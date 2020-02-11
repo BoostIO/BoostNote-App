@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import SideNavigatorItem from './SideNavigatorItem'
+import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../lib/nav'
