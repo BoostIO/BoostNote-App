@@ -4,8 +4,7 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionPrimaryButton,
-  SectionHeader2
+  SectionPrimaryButton
 } from './styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
@@ -78,15 +77,15 @@ export default () => {
   const importEntries = useMemo(() => [...fileImports.entries()], [fileImports])
   const [dragInside, setDragInside] = useState(false)
 
-  const setActiveStorageCallback = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateActiveStorage = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
       setActiveStorage(storageMap[e.target.value])
     },
     [setActiveStorage, storageMap]
   )
 
-  const setActiveFolderCallback = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateActiveFolder = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
       if (activeStorage == null) {
         return
       }
@@ -203,8 +202,8 @@ export default () => {
       </SectionControl>
       <SectionControl>
         <label>
-          <SectionHeader2>Storage:</SectionHeader2>
-          <SectionSelect onChange={setActiveStorageCallback}>
+          Storage:
+          <SectionSelect onChange={updateActiveStorage}>
             {storageEntries.map(([id, { name }]) => (
               <option key={id} value={id}>
                 {name}
@@ -215,8 +214,8 @@ export default () => {
       </SectionControl>
       <SectionControl>
         <label>
-          <SectionHeader2>Folder:</SectionHeader2>
-          <SectionSelect onClick={setActiveFolderCallback}>
+          Folder:
+          <SectionSelect onChange={updateActiveFolder}>
             {folderEntries.map(([id, { pathname }]) => (
               <option key={id} value={id}>
                 {pathname}

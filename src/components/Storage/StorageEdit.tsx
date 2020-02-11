@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import {
   SectionMargin,
-  SectionHeader1,
   RightMargin,
   DeleteStorageButton
 } from '../PreferencesModal/styled'
@@ -70,7 +69,7 @@ export default ({ storage }: StorageEditProps) => {
   return (
     <div>
       <SectionMargin>
-        <SectionHeader1>{t('storage.edit')}</SectionHeader1>
+        <h1>{t('storage.edit')}</h1>
         <div>
           <RightMargin>
             <label>

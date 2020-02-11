@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { usePreferences } from '../../lib/preferences'
 import {
   SectionMargin,
-  SectionHeader1,
   RightMargin,
   TopMargin,
   SectionPrimaryButton
@@ -44,7 +43,7 @@ export default () => {
   return (
     <div>
       <SectionMargin>
-        <SectionHeader1>{t('Create new storage')}</SectionHeader1>
+        <h1>{t('Create new storage')}</h1>
         <RightMargin>
           <label>{t('storage.name')}</label>
         </RightMargin>
