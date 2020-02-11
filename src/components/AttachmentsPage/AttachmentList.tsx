@@ -45,13 +45,6 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
                   event.preventDefault()
 
                   popup(event, [
-                    // {
-                    //   type: MenuTypes.Normal,
-                    //   label: 'Copy Image Reference',
-                    //   onClick: () => {
-                    //     // TODO Clipboard
-                    //   }
-                    // },
                     {
                       type: MenuTypes.Normal,
                       label: 'Download',

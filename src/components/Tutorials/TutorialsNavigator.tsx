@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { tutorialsTree, TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-import SideNavigatorItem from '../SideNavigator/SideNavigatorItem'
+import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { useRouter, useCurrentTutorialPathname } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
