@@ -3,6 +3,7 @@ import { includes } from 'ramda'
 import {
   NoteDoc,
   NoteDocEditibleProps,
+  NoteStorage,
   Attachment,
   PopulatedNoteDoc,
   ObjectMap
@@ -61,6 +62,34 @@ export const StyledNoteDetailContainer = styled.div`
       padding-bottom: 16px;
       overflow-x: scroll;
       width: 100%;
+    }
+
+    .storageLink {
+      position: relative;
+      display: inline-block;
+
+      .trigger {
+        cursor: pointer;
+      }
+
+      .dropdown {
+        display: none;
+        position: fixed;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        min-width: 160px;
+        z-index: 10;
+        background: #fff;
+
+        .storage {
+          color: black;
+          padding: 6px 12px;
+          text-decoration: none;
+          display: block;
+          &:hover {
+            background-color: #f3f3f3;
+          }
+        }
+      }
     }
 
     .separator {
@@ -177,11 +206,18 @@ type NoteDetailProps = {
     noteId: string
   ) => Promise<NoteDoc | undefined>
   purgeNote: (storageId: string, noteId: string) => void
+  moveNoteToOtherStorage(
+    originalStorageId: string,
+    noteId: string,
+    targetStorageId: string,
+    targetFolderPathname: string
+  ): Promise<void>
   viewMode: ViewModeType
   toggleViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
   push: (path: string) => void
   breadCrumbs?: BreadCrumbs
+  storageMap?: ObjectMap<NoteStorage>
 }
 
 type NoteDetailState = {
@@ -211,6 +247,7 @@ export default class NoteDetail extends React.Component<
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
     this.codeMirror = codeMirror
   }
+  breadcrumbDropdownRef = React.createRef<HTMLDivElement>()
 
   static getDerivedStateFromProps(
     props: NoteDetailProps,
@@ -445,6 +482,20 @@ export default class NoteDetail extends React.Component<
     )
   }
 
+  handleBreadcrumbStorageClick = () => {
+    if (this.breadcrumbDropdownRef.current) {
+      this.breadcrumbDropdownRef.current.style.display = 'block'
+    }
+  }
+
+  handleBreadcrumbStorageChange = (storageId: string) => () => {
+    const { note } = this.props
+    this.props.moveNoteToOtherStorage(note.storageId, note._id, storageId, '/')
+    if (this.breadcrumbDropdownRef.current) {
+      this.breadcrumbDropdownRef.current.style.display = 'none'
+    }
+  }
+
   handleBreadCrumbsClick = (folderPathname: string) => () => {
     const { storageId } = this.props.note
     this.props.push(`/app/storages/${storageId}/notes${folderPathname}`)
@@ -457,7 +508,8 @@ export default class NoteDetail extends React.Component<
       toggleViewMode,
       noteStorageName,
       currentPathnameWithoutNoteId,
-      attachmentMap
+      attachmentMap,
+      storageMap
     } = this.props
     const codeEditor = (
       <CustomizedCodeEditor
@@ -490,15 +542,33 @@ export default class NoteDetail extends React.Component<
             <div className='breadCrumbs'>
               <div className='wrapper'>
                 <div
-                  onClick={this.handleBreadCrumbsClick('/')}
+                  onClick={this.handleBreadcrumbStorageClick}
                   className={cc([
+                    'storageLink',
                     'folderLink',
                     'allNotesLink',
                     currentPathnameWithoutNoteId ===
                       `/app/storages/${note.storageId}/notes` && 'active'
                   ])}
                 >
-                  {noteStorageName}
+                  <span className='trigger'>{noteStorageName}</span>
+                  <div ref={this.breadcrumbDropdownRef} className='dropdown'>
+                    {Object.keys(storageMap || {}).map((storageId: any) => {
+                      // @ts-ignore
+                      const storageName = storageMap[storageId].name
+                      return (
+                        <div
+                          key={storageId}
+                          className='storage'
+                          onClick={this.handleBreadcrumbStorageChange(
+                            storageId
+                          )}
+                        >
+                          {storageName}
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
                 {this.props.breadCrumbs != null && (
                   <>

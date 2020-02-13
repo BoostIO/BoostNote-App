@@ -46,8 +46,10 @@ export default () => {
     updateNote,
     trashNote,
     untrashNote,
+    moveNoteToOtherStorage,
     addAttachments
   } = useDb()
+
   const routeParams = useRouteParams() as (
     | StorageAllNotes
     | StorageNotesRouteParams
@@ -360,9 +362,11 @@ export default () => {
             untrashNote={untrashNote}
             addAttachments={addAttachments}
             purgeNote={showPurgeNoteDialog}
+            moveNoteToOtherStorage={moveNoteToOtherStorage}
             viewMode={generalStatus.noteViewMode}
             toggleViewMode={toggleViewMode}
             push={push}
+            storageMap={storageMap}
             breadCrumbs={breadCrumbs}
           />
         )
