@@ -22,7 +22,7 @@ module.exports = (env, argv) => {
       path:
         target === 'ios'
           ? path.resolve(__dirname, 'ios/BoostNote/BoostNote/compiled')
-          : path.resolve(__dirname, 'compiled-mobile')
+          : path.resolve(__dirname, 'android/app/src/main/assets/compiled')
     },
 
     devtool: 'inline-source-map',
