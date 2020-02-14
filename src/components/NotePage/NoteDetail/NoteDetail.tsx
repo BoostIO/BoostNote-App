@@ -484,7 +484,11 @@ export default class NoteDetail extends React.Component<
 
   handleBreadcrumbStorageClick = () => {
     if (this.breadcrumbDropdownRef.current) {
-      this.breadcrumbDropdownRef.current.style.display = 'block'
+      const isHidden =
+        this.breadcrumbDropdownRef.current.style.display === 'none'
+      this.breadcrumbDropdownRef.current.style.display = isHidden
+        ? 'block'
+        : 'none'
     }
   }
 
@@ -528,6 +532,8 @@ export default class NoteDetail extends React.Component<
       />
     )
 
+    const currentStorageIds = Object.keys(storageMap || {})
+
     return (
       <StyledNoteDetailContainer
         onDragEnd={(event: React.DragEvent) => {
@@ -553,21 +559,27 @@ export default class NoteDetail extends React.Component<
                 >
                   <span className='trigger'>{noteStorageName}</span>
                   <div ref={this.breadcrumbDropdownRef} className='dropdown'>
-                    {Object.keys(storageMap || {}).map((storageId: any) => {
-                      // @ts-ignore
-                      const storageName = storageMap[storageId].name
-                      return (
-                        <div
-                          key={storageId}
-                          className='storage'
-                          onClick={this.handleBreadcrumbStorageChange(
-                            storageId
-                          )}
-                        >
-                          {storageName}
-                        </div>
-                      )
-                    })}
+                    {currentStorageIds.map(
+                      (storageId: keyof ObjectMap<NoteStorage>) => {
+                        if (storageMap) {
+                          const storage = storageMap[storageId]
+                          if (storage) {
+                            return (
+                              <div
+                                key={storageId}
+                                className='storage'
+                                onClick={this.handleBreadcrumbStorageChange(
+                                  String(storageId)
+                                )}
+                              >
+                                {storage.name}
+                              </div>
+                            )
+                          }
+                        }
+                        return null
+                      }
+                    )}
                   </div>
                 </div>
                 {this.props.breadCrumbs != null && (
