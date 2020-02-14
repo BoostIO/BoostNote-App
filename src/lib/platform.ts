@@ -5,7 +5,7 @@ export const openNew = (url: string) => {
     return
   }
 
-  if ($openExternal == null) {
+  if (typeof $openExternal === 'undefined') {
     window.open(url, '_blank')
     return
   }
