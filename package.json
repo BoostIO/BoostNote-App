@@ -1,5 +1,5 @@
 {
-  "name": "boostnote",
+  "name": "boostnote.next",
   "productName": "Boost Note",
   "version": "0.1.4",
   "description": "A Polished Notes App with Github Flavored Markdown",
@@ -182,10 +182,13 @@
     "win": {
       "verifyUpdateCodeSignature": false,
       "icon": "static/icon.ico",
-      "arch": [
-        "x64",
-        "ia32"
-      ]
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      }
     },
     "publish": "github"
   }
