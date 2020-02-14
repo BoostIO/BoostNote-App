@@ -6,12 +6,12 @@ import { createStoreContext } from './context'
 export const defaultPreviewStyle = `
 -ms-text-size-adjust: 100%;
 -webkit-text-size-adjust: 100%;
-line-height: 1.5;
+line-height: 1.6;
 color: #24292e;
 font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
   sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 font-size: 16px;
-line-height: 1.5;
+line-height: 1.6;
 word-wrap: break-word;
 
 .dark, .solarizedDark {
@@ -530,8 +530,8 @@ hr {
   border-radius: 5px;
   color: #03C588;
 }
-.default p code,
-.default li code
+.auto p code,
+.auto li code
 {
   padding: 2px;
   background-color: #F9F9F9;
