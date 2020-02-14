@@ -181,7 +181,11 @@
     },
     "win": {
       "verifyUpdateCodeSignature": false,
-      "icon": "static/icon.ico"
+      "icon": "static/icon.ico",
+      "arch": [
+        "x64",
+        "ia32"
+      ]
     },
     "publish": "github"
   }
