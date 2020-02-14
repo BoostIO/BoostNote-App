@@ -1,10 +1,10 @@
 import React from 'react'
 import { useDialog } from '../../lib/dialog'
-import DialogIcon from './DialogIcon'
-import PromptDialogBody from './PromptDialogBody'
+import DialogIcon from '../atoms/dialog/DialogIcon'
+import PromptDialogBody from '../molecules/PromptDialogBody'
 import { DialogTypes, DialogData } from '../../lib/dialog'
-import { StyledDialog, StyledDialogBackground } from './styled'
-import MessageBoxDialogBody from './MessageBoxDialogBody'
+import { DialogContainer, DialogBackground } from '../atoms/dialog/styled'
+import MessageBoxDialogBody from '../molecules/MessageBoxDialogBody'
 
 export default () => {
   const { data, closeDialog } = useDialog()
@@ -34,12 +34,12 @@ export default () => {
   }
 
   return (
-    <StyledDialogBackground>
-      <StyledDialog>
+    <DialogBackground>
+      <DialogContainer>
         <DialogIcon icon={data.iconType} />
 
         {renderBody(data)}
-      </StyledDialog>
-    </StyledDialogBackground>
+      </DialogContainer>
+    </DialogBackground>
   )
 }

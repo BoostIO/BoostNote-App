@@ -1,13 +1,13 @@
 import React, { ChangeEventHandler, KeyboardEventHandler } from 'react'
 import { PromptDialogOptions } from '../../lib/dialog'
 import {
-  StyledDialogBody,
-  StyledDialogTitle,
-  StyledDialogMessage,
-  StyledDialogPromptInput,
-  StyledDialogButtonGroup,
-  StyledDialogButton
-} from './styled'
+  DialogBodyContainer,
+  DialogTitle,
+  DialogMessage,
+  DialogPromptInput,
+  DialogButtonGroup,
+  DialogButton
+} from '../atoms/dialog/styled'
 
 type PromptDialogProps = {
   data: PromptDialogOptions
@@ -69,24 +69,24 @@ export default class PromptDialogBody extends React.Component<
   render() {
     const { data } = this.props
     return (
-      <StyledDialogBody onKeyDown={this.handleBodyKeyDown}>
-        <StyledDialogTitle>{data.title}</StyledDialogTitle>
-        <StyledDialogMessage>{data.message}</StyledDialogMessage>
-        <StyledDialogPromptInput
+      <DialogBodyContainer onKeyDown={this.handleBodyKeyDown}>
+        <DialogTitle>{data.title}</DialogTitle>
+        <DialogMessage>{data.message}</DialogMessage>
+        <DialogPromptInput
           ref={this.inputRef}
           value={this.state.value}
           onChange={this.updateValue}
           onKeyDown={this.handleInputKeyDown}
         />
-        <StyledDialogButtonGroup>
-          <StyledDialogButton onClick={this.submit}>
+        <DialogButtonGroup>
+          <DialogButton onClick={this.submit}>
             {data.submitButtonLabel == null ? 'Submit' : data.submitButtonLabel}
-          </StyledDialogButton>
-          <StyledDialogButton onClick={this.cancel}>
+          </DialogButton>
+          <DialogButton onClick={this.cancel}>
             {data.cancelButtonLabel == null ? 'Cancel' : data.cancelButtonLabel}
-          </StyledDialogButton>
-        </StyledDialogButtonGroup>
-      </StyledDialogBody>
+          </DialogButton>
+        </DialogButtonGroup>
+      </DialogBodyContainer>
     )
   }
 }
