@@ -1,12 +1,12 @@
 import React, { ChangeEventHandler, KeyboardEventHandler } from 'react'
 import { MessageBoxDialogData } from '../../lib/dialog'
 import {
-  StyledDialogBody,
-  StyledDialogTitle,
-  StyledDialogMessage,
-  StyledDialogButtonGroup,
-  StyledDialogButton
-} from './styled'
+  DialogBodyContainer,
+  DialogTitle,
+  DialogMessage,
+  DialogButtonGroup,
+  DialogButton
+} from '../atoms/dialog/styled'
 
 type MessageBoxDialogProps = {
   data: MessageBoxDialogData
@@ -50,12 +50,12 @@ export default class MessageBoxDialogBody extends React.Component<
     const { defaultButtonIndex = 0, title, message, buttons } = data
 
     return (
-      <StyledDialogBody onKeyDown={this.handleBodyKeyDown}>
-        <StyledDialogTitle>{title}</StyledDialogTitle>
-        <StyledDialogMessage>{message}</StyledDialogMessage>
-        <StyledDialogButtonGroup>
+      <DialogBodyContainer onKeyDown={this.handleBodyKeyDown}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogMessage>{message}</DialogMessage>
+        <DialogButtonGroup>
           {buttons.map((button, index) => (
-            <StyledDialogButton
+            <DialogButton
               key={`${data.id}-${index}`}
               onClick={this.close(index)}
               ref={
@@ -63,10 +63,10 @@ export default class MessageBoxDialogBody extends React.Component<
               }
             >
               {button}
-            </StyledDialogButton>
+            </DialogButton>
           ))}
-        </StyledDialogButtonGroup>
-      </StyledDialogBody>
+        </DialogButtonGroup>
+      </DialogBodyContainer>
     )
   }
 }

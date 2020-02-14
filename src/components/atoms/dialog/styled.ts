@@ -1,14 +1,14 @@
-import styled from '../../lib/styled'
+import styled from '../../../lib/styled'
 import {
   border,
   backgroundColor,
   inputStyle,
   secondaryButtonStyle
-} from '../../lib/styled/styleFunctions'
+} from '../../../lib/styled/styleFunctions'
 
 const dialogZIndex = 8000
 
-export const StyledDialogBackground = styled.div`
+export const DialogBackground = styled.div`
   position: fixed;
   left: 0;
   right: 0;
@@ -21,7 +21,7 @@ export const StyledDialogBackground = styled.div`
   align-items: flex-start;
 `
 
-export const StyledDialog = styled.div`
+export const DialogContainer = styled.div`
   width: 100%;
   max-width: 450px;
   ${backgroundColor}
@@ -37,30 +37,24 @@ export const StyledDialog = styled.div`
   display: flex;
 `
 
-export const StyledIcon = styled.div`
-  font-size: 70px;
-  line-height: 100%;
-  margin-right: 15px;
-`
-
-export const StyledDialogBody = styled.div`
+export const DialogBodyContainer = styled.div`
   flex: 1;
 `
 
-export const StyledDialogTitle = styled.h1`
+export const DialogTitle = styled.h1`
   margin: 0 0 10px;
   padding: 0;
   font-size: 14px;
 `
 
-export const StyledDialogMessage = styled.p`
+export const DialogMessage = styled.p`
   margin: 0;
   padding: 0;
   font-size: 12px;
   margin-bottom: 20px;
 `
 
-export const StyledDialogPromptInput = styled.input`
+export const DialogPromptInput = styled.input`
   width: 100%;
   margin-bottom: 15px;
   height: 32px;
@@ -69,13 +63,13 @@ export const StyledDialogPromptInput = styled.input`
   ${inputStyle}
 `
 
-export const StyledDialogButtonGroup = styled.div`
+export const DialogButtonGroup = styled.div`
   width: 100%;
   display: flex;
   flex-flow: row-reverse;
 `
 
-export const StyledDialogButton = styled.button`
+export const DialogButton = styled.button`
   padding: 5px 10px;
   border-radius: 2px;
   margin-left: 8px;

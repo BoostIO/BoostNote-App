@@ -1,7 +1,12 @@
 import React from 'react'
-import { DialogIconTypes } from '../../lib/dialog'
-import { StyledIcon } from './styled'
+import { DialogIconTypes } from '../../../lib/dialog'
+import styled from '../../../lib/styled'
 
+export const StyledIcon = styled.div`
+  font-size: 70px;
+  line-height: 100%;
+  margin-right: 15px;
+`
 type DialogIconProps = {
   icon: DialogIconTypes
 }
