@@ -1,7 +1,7 @@
 import React from 'react'
 import { StorageAttachmentsRouteParams, useRouteParams } from '../../lib/router'
 import { useDb } from '../../lib/db'
-import AttachmentList from '../../../components/AttachmentsPage/AttachmentList'
+import AttachmentList from '../../../components/organisms/AttachmentList'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
 

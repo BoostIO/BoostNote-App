@@ -4,7 +4,7 @@ import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
 import { getFileList } from '../../lib/dnd'
 import { borderBottom } from '../../lib/styled/styleFunctions'
-import AttachmentList from './AttachmentList'
+import AttachmentList from '../organisms/AttachmentList'
 
 const Container = styled.div`
   height: 100%;
