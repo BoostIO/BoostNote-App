@@ -518,6 +518,62 @@ kbd {
 hr {
   border-bottom-color: #eee;
 }
+
+.dark p code,
+.dark li code
+{
+  padding: 2px;
+  background-color: rgba(255,255,255,0.12);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  color: #03C588;
+}
+.default p code,
+.default li code
+{
+  padding: 2px;
+  background-color: #F9F9F9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.26);
+  border-radius: 5px;
+  color: #03C588;
+}
+.light p code,
+.light li code
+{
+  padding: 2px;
+  background-color: #F9F9F9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.26);
+  border-radius: 5px;
+  color: #03C588;
+}
+.sepia p code,
+.sepia li code
+{
+  padding: 2px;
+  background-color: #efe8d6;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.26);
+  border-radius: 5px;
+  color: #F77942;
+}
+.solarizedDark p code,
+.solarizedDark li code
+{
+  padding: 2px;
+  background-color: rgba(255,255,255,0.12);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  color: #36abe3;
+}
 `
 
 function loadPreviewStyle() {
