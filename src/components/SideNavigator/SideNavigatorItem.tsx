@@ -180,7 +180,7 @@ const SideNaviagtorItem = ({
         )}
         <ClickableContainer
           style={{
-            paddingLeft: `${10 * depth + 30}px`,
+            paddingLeft: `${10 * depth + 34}px`,
             cursor: onClick ? 'pointer' : 'initial',
             fontSize: '15px'
           }}

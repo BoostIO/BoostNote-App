@@ -34,9 +34,12 @@ import {
 import { getStorageItemId } from '../../lib/nav'
 
 const Description = styled.nav`
-  margin-left: 15px;
+  margin-left: 10px;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: bold;
+  height: 24px
+  line-height: 24px;
   ${sideBarDefaultTextColor}
 `
 
@@ -203,11 +206,10 @@ export default () => {
         active={currentPathname === `/app/bookmarks`}
         onClick={() => push(`/app/bookmarks`)}
       />
-
       <Description>
-        Storages
+        STORAGES
         <CreateStorageButton onClick={() => push('/app/storages')}>
-          <IconAddRound size='1.7em' />
+          <IconAddRound size='1.5em' />
         </CreateStorageButton>
       </Description>
 
@@ -425,6 +427,7 @@ export default () => {
         {storageEntries.length === 0 && (
           <div className='empty'>{t('storage.noStorage')}</div>
         )}
+
         {preferences['general.tutorials'] === 'display' && (
           <TutorialsNavigator />
         )}

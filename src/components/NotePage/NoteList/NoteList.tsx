@@ -32,8 +32,15 @@ export const StyledNoteListContainer = styled.div`
     overflow-y: auto;
   }
 
+  .empty {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+  }
+
   .control {
-    height: 50px;
+    height: 60px;
     display: flex;
     padding: 8px;
     align-items: center;
@@ -45,10 +52,11 @@ export const StyledNoteListContainer = styled.div`
     flex: 1;
     position: relative;
     height: 32px;
+    padding: 0 8px;
     .icon {
       position: absolute;
       top: 8px;
-      left: 10px;
+      left: 18px;
       font-size: 20px;
       z-index: 0;
       pointer-events: none;
@@ -71,7 +79,7 @@ export const StyledNoteListContainer = styled.div`
     height: 25px;
     display: flex;
     align-items: center;
-    padding-left: 13px;
+    padding: 20px 13px;
     .filterIcon {
       font-size: 10px;
       margin-right: 5px;
@@ -86,13 +94,14 @@ export const StyledNoteListContainer = styled.div`
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
+      outline: none;
     }
   }
 
   .newNoteButton {
     width: 35px;
     height: 30px;
-    font-size: 24px;
+    font-size: 20px;
     background: transparent;
     border: none;
     ${noteListIconColor}

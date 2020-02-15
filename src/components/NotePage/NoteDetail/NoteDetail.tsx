@@ -51,7 +51,7 @@ export const StyledNoteDetailContainer = styled.div`
     width: 100%;
     height: 25px;
     font-size: 14px;
-    padding: 5px 10px;
+    padding: 10px 20px;
     overflow: hidden;
 
     .wrapper {
@@ -86,7 +86,7 @@ export const StyledNoteDetailContainer = styled.div`
   }
   .titleSection {
     display: flex;
-    height: 50px;
+    height: 60px;
     border-width: 0 0 1px;
     ${borderBottom}
 
@@ -94,7 +94,7 @@ export const StyledNoteDetailContainer = styled.div`
       font-size: 24px;
       border: none;
       height: 100%;
-      padding: 0 12px;
+      padding: 0 20px;
       flex: 1;
       background-color: transparent;
       ${textColor}
