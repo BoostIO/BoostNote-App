@@ -94,7 +94,7 @@ export default {
     'billing.price': '$3/Month (USD) *',
     'billing.browser': 'Browser App',
     'billing.desktop': 'Desktop App (Mac/Windows/Linux)',
-    'billing.mobile': 'Mobile App (Will be launched at Jan, 2020)',
+    'billing.mobile': 'Mobile App (iOS/Android)',
     'billing.sync': 'Syncing Multiple Devices',
     'billing.local': 'Local Storage',
     'billing.cloud': 'Cloud Storage',

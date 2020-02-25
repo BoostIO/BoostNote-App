@@ -92,7 +92,7 @@ export default {
     'billing.price': '$3/月(USD) ',
     'billing.browser': '网页软件',
     'billing.desktop': '桌面软件 (Mac/Windows/Linux)',
-    'billing.mobile': '手机软件 (会在2020年一月发布)',
+    'billing.mobile': '手机软件 (iOS/Android)',
     'billing.sync': '多端同步',
     'billing.local': '本地储存',
     'billing.cloud': '云储存',

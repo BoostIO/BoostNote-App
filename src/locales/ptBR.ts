@@ -96,7 +96,7 @@
     'billing.price': '$3/Mês (Dólar) *',
     'billing.browser': 'App Web',
     'billing.desktop': 'App de Computador (Mac/Windows/Linux)',
-    'billing.mobile': 'App Móvel (Será lançado em janeiro de 2020)',
+    'billing.mobile': 'App Móvel (iOS/Android)',
     'billing.sync': 'Sincroniza múltiplos dispositivos',
     'billing.local': 'Armazenamento local',
     'billing.cloud': 'Armazenamento em nuvem',
