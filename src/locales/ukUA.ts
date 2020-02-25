@@ -93,7 +93,7 @@ export default {
     'billing.price': '$3/місяць (USD) *',
     'billing.browser': 'Додаток браузера',
     'billing.desktop': 'Настільний додаток (Mac/Windows/Linux)',
-    'billing.mobile': 'Мобільний додаток (Буде запущено в січні, 2020)',
+    'billing.mobile': 'Мобільний додаток (iOS/Android)',
     'billing.sync': 'Мультигаджетна синхронізація',
     'billing.local': 'Локальне сховище',
     'billing.cloud': 'Хмарне сховище',

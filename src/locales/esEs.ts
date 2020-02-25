@@ -97,8 +97,7 @@ export default {
     'billing.price': '$3/Mes (USD) *',
     'billing.browser': 'Aplicación web',
     'billing.desktop': 'Aplicación para escritorio(Mac/Windows/Linux)',
-    'billing.mobile':
-      'Aplicación para móvil (Va a ser lanzada en enero de 2020)',
+    'billing.mobile': 'Aplicación para móvil(iOS/Android)',
     'billing.sync': 'Sincronizar múltiples dispositivos',
     'billing.local': 'Almacenamiento local',
     'billing.cloud': 'Almacenamiento en la nube',
