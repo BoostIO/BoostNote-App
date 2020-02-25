@@ -66,7 +66,7 @@ export default {
     'note.createkeymessage1': 'Para crear una nueva nota',
     'note.createkeymessage2': 'Selecciona un lugar de almacenamiento',
     'note.createkeymessage3': 'Para crear una nota',
-    'note.restore': 'Restore',
+    'note.restore': 'Restaurar',
 
     //Bookmark
     'bookmark.remove': 'Eliminar marcador',
@@ -127,7 +127,7 @@ export default {
     'preferences.title': 'Títulos',
     'preferences.analytics': 'Analíticas',
     'preferences.analyticsDescription1':
-      'Boost Note recoge datos anónimamente únicamente para mejor la ampliación, y no recoge ninguna posible información personal dentro de las notas .Todo está en Github y puedes ver como funciona.',
+      'Boost Note recoge datos anónimamente únicamente para mejor la ampliación, y no recoge ninguna posible información personal dentro de las notas. Todo está en Github y puedes ver como funciona.',
     'preferences.analyticsDescription2':
       'Puedes activar o desactivar esta opción.',
     'preferences.analyticsLabel':
@@ -155,13 +155,13 @@ export default {
     'preferences.import': 'Importar',
     'preferences.description':
       'Importar .archivos cson desde la versión antigua de Boostnote.',
-    'preferences.importFlow2':
-      '2. Drag and drop .cson files to the form below.',
     'preferences.importFlow1':
       '1. Abre la  antigua carpeta de Boostnote donde se almacenaban los archivos en tu ordenador.',
+    'preferences.importFlow2':
+      '2. Arrastra y suelta los archivos .cson en la forma abajo.',
     'preferences.importFlow3':
       '3. Selecciona el almacenamiento y la carpeta para importar el almacenamiento',
-    'preferences.importFlow4': '4. Subido!',
+    'preferences.importFlow4': '4. Cargar!',
     'preferences.importRemove': 'Eliminar',
     'preferences.importUpload': 'Subir'
   }
