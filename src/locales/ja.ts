@@ -94,7 +94,7 @@ export default {
     'billing.price': '3ドル/月 *',
     'billing.browser': 'ブラウザ',
     'billing.desktop': 'デスクトップアプリ (Mac/Windows/Linux)',
-    'billing.mobile': 'モバイルアプリ (Will be launched at Jan, 2020)',
+    'billing.mobile': 'モバイルアプリ (iOS/Android)',
     'billing.sync': '複数デバイス間でデータ同期',
     'billing.local': 'ローカルストレージ',
     'billing.cloud': 'クラウドストレージ',

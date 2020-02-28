@@ -92,7 +92,7 @@ export default {
     'billing.price': '$3/月 (USD) ',
     'billing.browser': '網頁程式',
     'billing.desktop': '桌面程式 (Mac/Windows/Linux)',
-    'billing.mobile': '手機程式 (會在 2020 年一月發佈)',
+    'billing.mobile': '手機程式 (iOS/Android)',
     'billing.sync': '多端同步',
     'billing.local': '本機儲存空間',
     'billing.cloud': '雲端儲存空間',

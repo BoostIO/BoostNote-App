@@ -93,7 +93,7 @@ export default {
     'billing.price': '$3/월 (USD) *',
     'billing.browser': '브라우저 앱',
     'billing.desktop': '데스크탑 앱 (Mac/Windows/Linux)',
-    'billing.mobile': '모바일 앱 (2020년 1월에 출시 예정)',
+    'billing.mobile': '모바일 앱 (iOS/Android)',
     'billing.sync': '여러 장치 동기화',
     'billing.local': '로컬 저장소',
     'billing.cloud': '클라우드 저장소',
