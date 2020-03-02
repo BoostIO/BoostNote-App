@@ -36,7 +36,7 @@ export default {
     'folder.create': 'Nouveau dossier',
     'folder.rename': 'Renommer dossier',
     'folder.renameMessage':
-      'Entez le nom du nouveau dossier, toutes les notes et adresses des sous-dossiers seront également mises à jour.',
+      'Entrez le nom du nouveau dossier, toutes les notes et adresses des sous-dossiers seront également mises à jour.',
     'folder.renameErrorMessage': 'Impossible de renommer le dossier',
     'folder.remove': 'Supprimer dossier',
     'folder.removeMessage': 'Toutes les notes et sous-dossiers seront supprimés.',
@@ -92,7 +92,7 @@ export default {
     'billing.current': 'Actuel',
     'billing.premium': 'Premium',
     'billing.price': '$3/Mois (USD) *',
-    'billing.browser': 'Appliation web',
+    'billing.browser': 'Application web',
     'billing.desktop': 'Application bureau (Mac/Windows/Linux)',
     'billing.mobile': 'Application mobile (Lancement en Janvier 2020)',
     'billing.sync': 'Synchroniser plusieurs appareils',
@@ -100,7 +100,7 @@ export default {
     'billing.cloud': 'Stockage cloud',
     'billing.storageSize': 'Taille de l\'espace de stockage cloud',
     'billing.addStorageDescription':
-      '* Si vous avez besoin de plus d\'espace de stockage cloud, vous pouvez en ajouter à toute moment en payant $5 (USD) pour 5GB. Cliquez sur le bouton "Ajouter plus de stockage" ci-dessous.',
+      '* Si vous avez besoin de plus d\'espace de stockage cloud, vous pouvez en ajouter à toute moment en payant $5 (USD) pour chaque tranche de 5GB supplémentaire. Cliquez sur le bouton "Ajouter plus de stockage" ci-dessous.',
     'billing.addStorage': 'Ajouter plus de stockage',
 
     // Preferences
@@ -149,11 +149,11 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'Importer',
     'preferences.description': 'Importer des fichiers .cson depuis l\'ancienne version de Boostnote.',
-    'preferences.importFlow1': '1. Ouvrir le fichier de l\'ancienne version de Boostnote sur votre ordinateur.',
+    'preferences.importFlow1': '1. Ouvrir le dossier de l\'ancienne version de Boostnote sur votre ordinateur.',
     'preferences.importFlow2':
       '2. Cliquez et déposez les fichiers .cson dans le formulaire ci-dessous.',
     'preferences.importFlow3':
-      '3. Choisissez l\'espace de stockage et le fichier dans lequel vous voulez déplacer vos anciens fichiers.',
+      '3. Choisissez l\'espace de stockage et le dossier dans lequel vous voulez déplacer vos anciennes données.',
     'preferences.importFlow4': '4. Télécharger!',
     'preferences.importRemove': 'supprimer',
     'preferences.importUpload': 'Télécharger'
