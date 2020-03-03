@@ -2,7 +2,8 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import de from '../locales/de'
 import enUS from '../locales/enUS'
-import esES from '../locales/esEs'
+import esES from '../locales/esES'
+import frFR from '../locales/frFR'
 import zhCN from '../locales/zhCN'
 import zhHK from '../locales/zhHK'
 import zhTW from '../locales/zhTW'
@@ -15,6 +16,7 @@ const resources = {
   de,
   'en-US': enUS,
   'es-ES': esES,
+  'fr-FR': frFR,
   ja,
   ko,
   'pt-BR': ptBR,

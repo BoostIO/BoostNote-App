@@ -16,6 +16,7 @@ export type GeneralLanguageOptions =
   | 'de'
   | 'en-US'
   | 'es-ES'
+  | 'fr-FR'
   | 'ja'
   | 'ko'
   | 'pt-BR'
