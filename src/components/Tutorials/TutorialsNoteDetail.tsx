@@ -5,7 +5,7 @@ import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import Toolbar from '../atoms/Toolbar'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-import { StyledNoteDetailContainer } from '../organisms/NoteDetail'
+import { StyledNoteDetailContainer } from '../organisms/NoteDetail/NoteDetail'
 import { ViewModeType } from '../../lib/generalStatus'
 import { IconEye, IconSplit, IconEdit } from '../icons'
 
