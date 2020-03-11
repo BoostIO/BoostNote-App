@@ -9,7 +9,7 @@ import {
   Attachment,
   PopulatedNoteDoc
 } from './types'
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import ow from 'ow'
 import { schema, isValid, optional } from '../predicates'
 import NoteDb from './NoteDb'
@@ -18,9 +18,7 @@ import {
   getParentFolderPathname,
   getAllParentFolderPathnames,
   isFolderPathnameValid,
-  createUnprocessableEntityError,
-  isCloudStorageData,
-  entries
+  createUnprocessableEntityError
 } from './utils'
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
@@ -37,7 +35,6 @@ import {
   createStorage as createCloudStorage,
   deleteStorage as deleteCloudStorage,
   renameStorage as renameCloudStorage,
-  getStorages
 } from '../accounts'
 import { useToast } from '../toast'
 
@@ -95,37 +92,12 @@ export function createDbStoreCreator(
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
     const activeUser = useRef<User | undefined>(undefined)
 
-    const synced = useRef<Set<string>>(new Set())
-    useEffect(() => {
-      entries(storageMap).forEach(([, storage]) => {
-        if (storage.cloudStorage == null || synced.current.has(storage.id)) {
-          return
-        }
-        synced.current.add(storage.id)
-        syncStorage(storage.id)
-      })
-    }, [storageMap])
-
     const initialize = useCallback(async (user?: User) => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
       activeUser.current = user
 
-      const [local, cloud] = storageDataList.reduce<
-        [NoteStorageData[], Required<NoteStorageData>[]]
-      >(
-        ([local, cloud], storage) => {
-          if (isCloudStorageData(storage)) {
-            cloud.push(storage)
-          } else {
-            local.push(storage)
-          }
-          return [local, cloud]
-        },
-        [[], []]
-      )
-
       const prepared = await Promise.all(
-        local.map(storage => prepareStorage(storage, adapter))
+        storageDataList.map(storage => prepareStorage(storage, adapter))
       )
       const storageMap = prepared.reduce(
         (map, storage) => {
@@ -138,49 +110,6 @@ export function createDbStoreCreator(
       saveStorageDataList(liteStorage, storageMap)
       setStorageMap(storageMap)
       setInitialized(true)
-
-      if (activeUser.current == null) {
-        return
-      }
-
-      const inCloudStorages = await getStorages(activeUser.current)
-
-      const cloudStorageMap = new Map(
-        cloud.map(storage => [storage.cloudStorage.id, storage])
-      )
-      const userCloudStorage = await Promise.all(
-        inCloudStorages.map(storage => {
-          const current = cloudStorageMap.get(storage.id)
-          const id = current ? current.id : generateId()
-          cloudStorageMap.delete(storage.id)
-          const storageData = {
-            id,
-            name: storage.name,
-            cloudStorage: {
-              id: storage.id,
-              size: storage.size,
-              updatedAt: Date.now()
-            }
-          }
-          return prepareStorage(storageData, adapter)
-        })
-      )
-
-      let newStorageMap: ObjectMap<NoteStorage> = {}
-      setStorageMap(prevStorageMap => {
-        newStorageMap = produce(prevStorageMap, draft => {
-          userCloudStorage.forEach(storage => {
-            draft[storage.id] = storage
-          })
-        })
-        return newStorageMap
-      })
-
-      saveStorageDataList(liteStorage, newStorageMap)
-
-      Array.from(cloudStorageMap).forEach(([, storage]) => {
-        new PouchDB(storage.id, { adapter }).destroy()
-      })
     }, [])
 
     const createStorage = useCallback(
