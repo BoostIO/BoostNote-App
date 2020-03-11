@@ -15,7 +15,7 @@ import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey
 } from '../../../lib/keyboard'
-import { NoteListSortOptions } from '../NotePage'
+import { NoteListSortOptions } from '../../pages/NotePage'
 import { osName } from '../../../lib/platform'
 
 export const StyledNoteListContainer = styled.div`

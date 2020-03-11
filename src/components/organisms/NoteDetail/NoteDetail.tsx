@@ -26,7 +26,7 @@ import {
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
 import { ViewModeType } from '../../../lib/generalStatus'
-import { BreadCrumbs } from '../NotePage'
+import { BreadCrumbs } from '../../pages/NotePage'
 import cc from 'classcat'
 import {
   IconTrash,

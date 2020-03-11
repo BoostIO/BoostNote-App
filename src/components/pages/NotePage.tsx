@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import NoteList from './NoteList'
+import NoteList from '../organisms/NoteList'
 import styled from '../../lib/styled'
-import NoteDetail from './NoteDetail'
+import NoteDetail from '../organisms/NoteDetail'
 import {
   useRouteParams,
   StorageAllNotes,

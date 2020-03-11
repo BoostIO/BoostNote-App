@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TutorialsNoteItem from './TutorialsNoteItem'
-import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
+import { StyledNoteListContainer } from '../organisms/NoteList/NoteList'
 import { useTranslation } from 'react-i18next'
 import {
   isWithGeneralCtrlKey,

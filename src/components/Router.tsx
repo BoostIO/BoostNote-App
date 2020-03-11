@@ -1,5 +1,5 @@
 import React from 'react'
-import NotePage from './NotePage'
+import NotePage from './pages/NotePage'
 import { useRouteParams } from '../lib/router'
 import { StorageEdit, StorageCreate } from './Storage'
 import { useDb } from '../lib/db'
