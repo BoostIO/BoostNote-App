@@ -93,8 +93,13 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </FormSection>
         <FormSection>
           <DeleteStorageButton onClick={removeCallback}>
-            {t('storage.delete')}
+            Unlink Storage
           </DeleteStorageButton>
+          <blockquote>
+            Unlinking storage means deleting storage data from this local app.
+            If you're using cloud storage and want to discard from cloud, you
+            have to discard it from web app.
+          </blockquote>
         </FormSection>
         {isCloudStorageData(storage) && (
           <FormSection>

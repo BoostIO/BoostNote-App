@@ -33,8 +33,7 @@ import { escapeRegExp } from '../string'
 import {
   User,
   createStorage as createCloudStorage,
-  deleteStorage as deleteCloudStorage,
-  renameStorage as renameCloudStorage,
+  renameStorage as renameCloudStorage
 } from '../accounts'
 import { useToast } from '../toast'
 
@@ -156,10 +155,6 @@ export function createDbStoreCreator(
         const storage = storageMap[id]
         if (storage == null) {
           return
-        }
-
-        if (activeUser.current != null && storage.cloudStorage != null) {
-          await deleteCloudStorage(activeUser.current, storage.cloudStorage.id)
         }
 
         await storage.db.pouchDb.destroy()
