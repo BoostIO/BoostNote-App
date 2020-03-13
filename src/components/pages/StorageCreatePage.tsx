@@ -1,23 +1,26 @@
 import React, { useState } from 'react'
 import { usePreferences } from '../../lib/preferences'
-import {
-  SectionMargin,
-  RightMargin,
-  TopMargin,
-  SectionPrimaryButton
-} from '../PreferencesModal/styled'
+import { TopMargin, SectionPrimaryButton } from '../PreferencesModal/styled'
 import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
-import LoginButton from '../atoms/LoginButton'
 import { useToast } from '../../lib/toast'
 import { useRouter } from '../../lib/router'
+import PageContainer from '../atoms/PageContainer'
+import {
+  FormHeading,
+  FormGroup,
+  FormCheckInlineItem,
+  FormCheckList,
+  FormLabel
+} from '../atoms/form'
+import LocalStorageCreateForm from '../organisms/LocalStorageCreateForm'
+import CloudStorageCreateForm from '../organisms/CloudStorageCreateForm'
 
 export default () => {
   const db = useDb()
   const { preferences } = usePreferences()
   const { pushMessage } = useToast()
   const { t } = useTranslation()
-  const [name, setName] = useState('')
   const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
   const { push } = useRouter()
 
@@ -42,58 +45,38 @@ export default () => {
 
   return (
     <div>
-      <SectionMargin>
-        <h1>{t('Create new storage')}</h1>
-        <RightMargin>
-          <label>{t('storage.name')}</label>
-        </RightMargin>
-        <RightMargin>
-          <input
-            type='text'
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-        </RightMargin>
-        <RightMargin>
-          <label>
-            <input
+      <PageContainer>
+        <FormHeading depth={1}>{t('Create new storage')}</FormHeading>
+        <FormGroup>
+          <FormLabel>Storage Type</FormLabel>
+          <FormCheckList>
+            <FormCheckInlineItem
+              id='radio-cloudStorageType'
               type='radio'
               checked={storageType === 'cloud'}
-              onChange={() => setStorageType('cloud')}
-            />
-            {t('storage.typeCloud')}
-          </label>
-        </RightMargin>
-        <label>
-          <input
-            type='radio'
-            checked={storageType === 'local'}
-            onChange={() => setStorageType('local')}
-          />
-          {t('storage.typeLocal')}
-        </label>
+              onChange={() => {
+                setStorageType('cloud')
+              }}
+            >
+              {t('storage.typeCloud')}
+            </FormCheckInlineItem>
+            <FormCheckInlineItem
+              id='radio-localStorageType'
+              type='radio'
+              checked={storageType === 'local'}
+              onChange={() => setStorageType('local')}
+            >
+              {t('storage.typeLocal')}
+            </FormCheckInlineItem>
+          </FormCheckList>
+        </FormGroup>
 
-        {(storageType === 'local' || isLoggedIn) && (
-          <>
-            <TopMargin>
-              <SectionPrimaryButton onClick={() => createStorageCallback()}>
-                {t('storage.create')}
-              </SectionPrimaryButton>
-            </TopMargin>
-          </>
+        {storageType === 'local' ? (
+          <LocalStorageCreateForm />
+        ) : (
+          <CloudStorageCreateForm />
         )}
-        {!isLoggedIn && storageType === 'cloud' && (
-          <>
-            <TopMargin>
-              <p>{t('storage.needSignIn')}</p>
-              <LoginButton
-                onErr={console.error /* TODO: Toast error */}
-                ButtonComponent={SectionPrimaryButton}
-              />
-            </TopMargin>
-          </>
-        )}
-      </SectionMargin>
+      </PageContainer>
     </div>
   )
 }
