@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import unified, { Plugin } from 'unified'
+import remarkEmoji from 'remark-emoji'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkMath from 'remark-math'
@@ -191,6 +192,7 @@ const MarkdownPreviewer = ({
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
       .use(rehypeKatex)
+      .use(remarkEmoji)
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
