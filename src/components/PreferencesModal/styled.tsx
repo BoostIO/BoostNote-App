@@ -26,8 +26,9 @@ export const SectionHeader2 = styled.h3`
 `
 
 export const SectionHeader = styled.h3`
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
 `
 
 export const SectionSubtleText = styled.p`
@@ -57,7 +58,7 @@ export const SectionControl = styled.div`
 export const SectionSelect = styled.select`
   ${selectStyle}
   padding: 0 16px;
-  width: 200px;
+  width: 100%;
   height: 40px;
   border-radius: 2px;
 
@@ -88,7 +89,7 @@ export const SectionSecondaryButton = styled.button`
 export const SectionInput = styled.input`
   ${inputStyle}
   padding: 0 16px;
-  width: 200px;
+  width: 100%;
   height: 40px;
   border-radius: 2px;
 `
@@ -113,4 +114,16 @@ export const DeleteStorageButton = styled.button`
   cursor: pointer;
   vertical-align: middle;
   align-items: center;
+`
+
+export const SplitContainer = styled.div`
+  width: 100%;
+  display: flex;
+  .split {
+    width: 50%;
+    padding-right: 20px;
+  }
+  .split:last-child {
+    padding-right: 0px;
+  }
 `

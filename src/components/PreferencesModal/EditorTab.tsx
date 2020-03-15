@@ -10,7 +10,8 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionInput
+  SectionInput,
+  SplitContainer
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import {
@@ -132,67 +133,74 @@ const EditorTab = () => {
   return (
     <div>
       <Section>
+        <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
+        <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
+          <CustomizedCodeEditor
+            value={previewContent}
+            onChange={newValue => setPreviewContent(newValue)}
+          />
+        </SectionControl>
+      </Section>
+      <Section>
         <SectionHeader>{t('preferences.editorTheme')}</SectionHeader>
         <SectionControl>
           <SectionSelect
             value={preferences['editor.theme']}
             onChange={selectEditorTheme}
           >
-            <option value='default'>Default</option>
-            {themes.map(theme => (
-              <option value={theme} key={theme}>
-                {capitalize(theme)}
-              </option>
-            ))}
+            {themes.map(theme => (<option value={theme}>{capitalize(theme)}</option>))}
           </SectionSelect>
         </SectionControl>
       </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
-        <SectionControl>
-          <SectionInput
-            type='number'
-            value={fontSize}
-            onChange={updateFontSize}
-          />{' '}
-          &emsp;px
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
-        <SectionControl>
-          <SectionInput
-            type='value'
-            value={fontFamily}
-            onChange={updateFontFamily}
-          />
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.indentType']}
-            onChange={selectEditorIndentType}
-          >
-            <option value='spaces'>{t('preferences.spaces')}</option>
-            <option value='tab'>{t('preferences.tab')}</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.indentSize']}
-            onChange={selectEditorIndentSize}
-          >
-            <option value={2}>2</option>
-            <option value={4}>4</option>
-            <option value={8}>8</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
+      <SplitContainer>
+        <Section className='split'>
+          <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
+          <SectionControl>
+            <SectionInput
+              type='number'
+              value={fontSize}
+              onChange={updateFontSize}
+            />{' '}
+          </SectionControl>
+        </Section>
+        <Section className='split'>
+          <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
+          <SectionControl>
+            <SectionInput
+              type='value'
+              value={fontFamily}
+              onChange={updateFontFamily}
+            />
+          </SectionControl>
+        </Section>
+      </SplitContainer>
+      <SplitContainer>
+        <Section className='split'>
+          <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
+          <SectionControl>
+            <SectionSelect
+              value={preferences['editor.indentType']}
+              onChange={selectEditorIndentType}
+            >
+              <option value='spaces'>{t('preferences.spaces')}</option>
+              <option value='tab'>{t('preferences.tab')}</option>
+            </SectionSelect>
+          </SectionControl>
+        </Section>
+        <Section className='split'>
+          <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
+          <SectionControl>
+            <SectionSelect
+              value={preferences['editor.indentSize']}
+              onChange={selectEditorIndentSize}
+            >
+              <option value={2}>2</option>
+              <option value={4}>4</option>
+              <option value={8}>8</option>
+            </SectionSelect>
+          </SectionControl>
+        </Section>
+      </SplitContainer>
       <Section>
         <SectionHeader>{t('preferences.editorKeymap')}</SectionHeader>
         <SectionControl>
@@ -204,15 +212,6 @@ const EditorTab = () => {
             <option value='vim'>vim</option>
             <option value='emacs'>emacs</option>
           </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
-        <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
-          <CustomizedCodeEditor
-            value={previewContent}
-            onChange={newValue => setPreviewContent(newValue)}
-          />
         </SectionControl>
       </Section>
     </div>

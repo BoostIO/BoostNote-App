@@ -10,25 +10,29 @@ interface TabButtonProps {
 
 const StyledButton = styled.button`
   width: 100%;
-  height: 40px;
+  height: 30px;
+  margin-bottom: 10px
   background-color: transparent;
   border: none;
   cursor: pointer;
   display: flex;
+  align-items: center
   padding: 0;
+  outline: none
   .border {
-    width: 2px;
-    height: 16px;
+    width: 4px;
+    height: 30px;
   }
   .label {
-    margin-left: 18px;
+    margin-left: 15px;
     flex: 1;
     color: ${({ theme }) => theme.uiTextColor};
     text-align: left;
-    font-size: 14px;
+    font-size: 16px;
   }
   &.active {
     color: ${({ theme }) => theme.textColor};
+    font-weight: bold;
 
     .border {
       background-color: ${({ theme }) => theme.primaryColor};

@@ -129,6 +129,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       <StyledContainer
         className={className}
         style={{
+          width: '100%',
           fontSize: fontSize == null ? 'inherit' : `${fontSize}px`,
           fontFamily: fontFamily == null ? 'monospace' : fontFamily
         }}

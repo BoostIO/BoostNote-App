@@ -35,7 +35,7 @@ const Header = styled.h1`
 
 const TabNav = styled.nav`
   width: 200px;
-  margin-left: 30px;
+  margin-left: 20%;
 `
 
 const TabContent = styled.div`
@@ -43,19 +43,20 @@ const TabContent = styled.div`
   overflow-y: auto;
   padding-left: 4px;
   padding-top: 4em;
-  padding-right: 30px;
+  padding-right: 25%;
 `
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 0;
-  right: 12px;
+  top: 20px;
+  right: calc(25% - 50px);
   width: 40px;
   height: 40px;
   background-color: transparent;
   border: none;
-  font-size: 24px;
-  ${closeIconColor}
+  font-size: 20px;
+  cursor: pointer;
+  ${closeIconColor};
 `
 
 const PreferencesModal = () => {
