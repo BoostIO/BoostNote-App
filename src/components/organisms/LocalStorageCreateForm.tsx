@@ -20,11 +20,10 @@ const LocalStorageCreateForm = () => {
     try {
       const storage = await db.createStorage(name, 'local')
       push(`/app/storages/${storage.id}/notes`)
-    } catch {
+    } catch (error) {
       pushMessage({
-        title: 'Cloud Error',
-        description:
-          'An error occured while attempting to create a cloud storage'
+        title: 'Something went wrong',
+        description: error.toString()
       })
     }
   }
