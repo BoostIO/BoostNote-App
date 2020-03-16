@@ -13,7 +13,11 @@ import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useToast } from '../../lib/toast'
 import Spinner from '../atoms/Spinner'
-import { getStorages, CloudStorage } from '../../lib/accounts'
+import {
+  getStorages,
+  CloudStorage,
+  createStorage as createCloudStorage
+} from '../../lib/accounts'
 import { usePreferences } from '../../lib/preferences'
 import { useEffectOnce } from 'react-use'
 import LoginButton from '../atoms/LoginButton'
@@ -25,25 +29,19 @@ const CloudStorageCreateForm = () => {
   const { push } = useRouter()
   const db = useDb()
   const { pushMessage } = useToast()
-  const createStorageCallback = async () => {
-    try {
-      const storage = await db.createStorage(storageName, 'cloud')
-      push(`/app/storages/${storage.id}/notes`)
-    } catch {
-      pushMessage({
-        title: 'Cloud Error',
-        description:
-          'An error occured while attempting to create a cloud storage'
-      })
-    }
-  }
+  const [creating, setCreating] = useState(false)
+  const { preferences } = usePreferences()
+  const user = preferences['general.accounts'][0]
+
   const [fetching, setFetching] = useState(false)
   const [remoteStorageList, setRemoteStorageList] = useState<CloudStorage[]>([])
+
+  const [usingSameName, setUsingSameName] = useState(true)
 
   const [targetRemoteStorageId, setTargetRemoteStorageId] = useState<
     null | string
   >(null)
-  6
+
   const targetRemoteStorage = useMemo(() => {
     for (const remoteStorage of remoteStorageList) {
       if (remoteStorage.id.toString() === targetRemoteStorageId) {
@@ -53,8 +51,50 @@ const CloudStorageCreateForm = () => {
     return null
   }, [remoteStorageList, targetRemoteStorageId])
 
-  const { preferences } = usePreferences()
-  const user = preferences['general.accounts'][0]
+  const createStorageCallback = useCallback(async () => {
+    setCreating(true)
+    try {
+      const cloudStorage =
+        targetRemoteStorage == null
+          ? await createCloudStorage(
+              usingSameName ? storageName : cloudStorageName,
+              user
+            )
+          : targetRemoteStorage
+      if (cloudStorage === 'SubscriptionRequired') {
+        pushMessage({
+          title: 'Subscription Required',
+          description:
+            'Please update subscription to create more cloud storage.'
+        })
+        setCreating(false)
+        return
+      }
+      const storage = await db.createStorage(storageName)
+      db.linkStorage(storage.id, {
+        id: cloudStorage.id,
+        name: cloudStorageName,
+        size: cloudStorage.size,
+        syncedAt: Date.now()
+      })
+      push(`/app/storages/${storage.id}/notes`)
+    } catch (error) {
+      pushMessage({
+        title: 'Error',
+        description: error.toString()
+      })
+      setCreating(false)
+    }
+  }, [
+    targetRemoteStorage,
+    usingSameName,
+    storageName,
+    cloudStorageName,
+    user,
+    db,
+    push,
+    pushMessage
+  ])
 
   const unmountRef = useRef(false)
 
@@ -85,9 +125,6 @@ const CloudStorageCreateForm = () => {
       unmountRef.current = true
     }
   })
-
-  const [usingSameName, setUsingSameName] = useState(true)
-
   if (user == null) {
     return (
       <>
@@ -202,8 +239,15 @@ const CloudStorageCreateForm = () => {
         </FormGroup>
       )}
       <FormGroup>
-        <FormPrimaryButton onClick={createStorageCallback}>
-          Create Storage
+        <FormPrimaryButton
+          onClick={createStorageCallback}
+          disabled={creating || fetching}
+        >
+          {creating
+            ? 'Creating...'
+            : fetching
+            ? 'Fetching remote storage...'
+            : 'Create Storage'}
         </FormPrimaryButton>
       </FormGroup>
     </>
