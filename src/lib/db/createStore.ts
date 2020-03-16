@@ -7,11 +7,12 @@ import {
   PopulatedFolderDoc,
   PopulatedTagDoc,
   Attachment,
-  PopulatedNoteDoc
+  PopulatedNoteDoc,
+  CloudNoteStorageData
 } from './types'
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import ow from 'ow'
-import { schema, isValid, optional } from '../predicates'
+import { schema, isValid } from '../predicates'
 import NoteDb from './NoteDb'
 import {
   getFolderPathname,
@@ -30,23 +31,17 @@ import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
 import { escapeRegExp } from '../string'
-import {
-  User,
-  createStorage as createCloudStorage,
-  renameStorage as renameCloudStorage
-} from '../accounts'
+import { User } from '../accounts'
 import { useToast } from '../toast'
 
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: (user?: User) => Promise<void>
-  createStorage: (
-    name: string,
-    type?: 'local' | 'cloud'
-  ) => Promise<NoteStorage>
+  createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => Promise<void>
+  linkStorage: (id: string, cloudStorage: CloudNoteStorageData) => void
   syncStorage: (id: string, user: User) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
   renameFolder: (
@@ -89,18 +84,16 @@ export function createDbStoreCreator(
     const currentPathnameWithoutNoteId = pathnameWithoutNoteIdGetter()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
-    const activeUser = useRef<User | undefined>(undefined)
 
-    const initialize = useCallback(async (user?: User) => {
+    const initialize = useCallback(async () => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
-      activeUser.current = user
 
       const prepared = await Promise.all(
         storageDataList.map(storage => prepareStorage(storage, adapter))
       )
       const storageMap = prepared.reduce(
         (map, storage) => {
-          ;(map[storage.id] = storage), adapter
+          map[storage.id] = storage
           return map
         },
         {} as ObjectMap<NoteStorage>
@@ -111,43 +104,49 @@ export function createDbStoreCreator(
       setInitialized(true)
     }, [])
 
-    const createStorage = useCallback(
-      async (name: string, type: 'local' | 'cloud' = 'local') => {
-        const id = generateId()
+    const createStorage = useCallback(async (name: string) => {
+      const id = generateId()
 
-        const storageData: NoteStorageData = { id, name }
+      const storageData: NoteStorageData = { id, name }
 
-        if (type === 'cloud') {
-          if (activeUser.current == null) {
-            throw new Error('NotLoggedIn')
-          }
+      const storage = await prepareStorage(storageData, adapter)
 
-          const result = await createCloudStorage(name, activeUser.current)
-          if (result === 'SubscriptionRequired') {
-            throw new Error(result)
-          }
-          storageData.cloudStorage = {
-            id: result.id,
-            size: 0,
-            updatedAt: Date.now()
-          }
-        }
+      let newStorageMap: ObjectMap<NoteStorage>
+      setStorageMap(prevStorageMap => {
+        newStorageMap = produce(prevStorageMap, draft => {
+          draft[id] = storage
+        })
 
-        const storage = await prepareStorage(storageData, adapter)
+        return newStorageMap
+      })
 
+      saveStorageDataList(liteStorage, newStorageMap!)
+      return storage
+    }, [])
+
+    const linkStorage = useCallback(
+      (storageId: string, cloudStorage: CloudNoteStorageData) => {
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap(prevStorageMap => {
-          newStorageMap = produce(prevStorageMap, draft => {
-            draft[id] = storage
-          })
+          const existingStorage = prevStorageMap[storageId]
+          if (existingStorage == null) {
+            return prevStorageMap
+          }
+          const newStorage = {
+            ...existingStorage,
+            cloudStorage
+          }
 
+          newStorageMap = {
+            ...prevStorageMap,
+            [storageId]: newStorage
+          }
           return newStorageMap
         })
 
         saveStorageDataList(liteStorage, newStorageMap!)
-        return storage
       },
-      [activeUser]
+      []
     )
 
     const removeStorage = useCallback(
@@ -176,30 +175,28 @@ export function createDbStoreCreator(
 
     const renameStorage = useCallback(
       async (id: string, name: string) => {
-        const storageData = storageMap[id]
-        if (
-          storageData != null &&
-          storageData.cloudStorage != null &&
-          activeUser.current != null
-        ) {
-          await renameCloudStorage(
-            activeUser.current,
-            storageData.cloudStorage.id,
-            name
-          )
-        }
-
-        let newStorageMap: ObjectMap<NoteStorage> = {}
-        setStorageMap(prevStorageMap => {
-          newStorageMap = produce(prevStorageMap, draft => {
-            if (draft[id] != null) {
-              draft[id]!.name = name
-            }
-          })
-          return newStorageMap
-        })
-
-        saveStorageDataList(liteStorage, newStorageMap)
+        // const storageData = storageMap[id]
+        // if (
+        //   storageData != null &&
+        //   storageData.cloudStorage != null &&
+        //   activeUser.current != null
+        // ) {
+        //   await renameCloudStorage(
+        //     activeUser.current,
+        //     storageData.cloudStorage.id,
+        //     name
+        //   )
+        // }
+        // let newStorageMap: ObjectMap<NoteStorage> = {}
+        // setStorageMap(prevStorageMap => {
+        //   newStorageMap = produce(prevStorageMap, draft => {
+        //     if (draft[id] != null) {
+        //       draft[id]!.name = name
+        //     }
+        //   })
+        //   return newStorageMap
+        // })
+        // saveStorageDataList(liteStorage, newStorageMap)
       },
       [storageMap]
     )
@@ -243,7 +240,7 @@ export function createDbStoreCreator(
           })
         )
       },
-      [storageMap]
+      [storageMap, pushMessage]
     )
 
     const renameFolder = useCallback(
@@ -1016,26 +1013,24 @@ export function createDbStoreCreator(
     }
 
     const syncStorage = async (storageId: string) => {
-      if (activeUser.current == null) {
-        return
-      }
-
-      let storage = storageMap[storageId]
-      if (storage == null || storage.cloudStorage == null) {
-        return
-      }
-      await storage.db.sync(activeUser.current, storage.cloudStorage)
-      storage.cloudStorage.updatedAt = Date.now()
-
-      storage = await prepareStorage(storage, adapter)
-      setStorageMap(
-        produce(draft => {
-          if (draft[storageId] == null) {
-            return
-          }
-          draft[storageId] = storage
-        })
-      )
+      // if (activeUser.current == null) {
+      //   return
+      // }
+      // let storage = storageMap[storageId]
+      // if (storage == null || storage.cloudStorage == null) {
+      //   return
+      // }
+      // await storage.db.sync(activeUser.current, storage.cloudStorage)
+      // storage.cloudStorage.syncedAt = Date.now()
+      // storage = await prepareStorage(storage, adapter)
+      // setStorageMap(
+      //   produce(draft => {
+      //     if (draft[storageId] == null) {
+      //       return
+      //     }
+      //     draft[storageId] = storage
+      //   })a
+      // )
     }
 
     return {
@@ -1045,6 +1040,7 @@ export function createDbStoreCreator(
       createStorage,
       removeStorage,
       renameStorage,
+      linkStorage,
       syncStorage,
       createFolder,
       renameFolder,
@@ -1064,19 +1060,14 @@ export function createDbStoreCreator(
 
 const storageDataPredicate = schema({
   id: ow.string,
-  name: ow.string,
-  cloudStorage: optional({
-    id: ow.number,
-    size: ow.number,
-    updatedAt: ow.number
-  })
+  name: ow.string
 })
 
 export function getStorageDataList(
   liteStorage: LiteStorage
 ): NoteStorageData[] | null {
   const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
-
+  console.log(serializedStorageDataList)
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
     if (!Array.isArray(parsedStorageDataList))
