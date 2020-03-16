@@ -61,6 +61,7 @@ export const FormTextInput = styled.input`
   background-color: white;
   &:disabled {
     color: gray;
+    background-color: #ccc;
   }
 `
 
