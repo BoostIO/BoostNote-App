@@ -18,7 +18,7 @@ const LocalStorageCreateForm = () => {
   const { pushMessage } = useToast()
   const createStorageCallback = async () => {
     try {
-      const storage = await db.createStorage(name, 'local')
+      const storage = await db.createStorage(name)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
