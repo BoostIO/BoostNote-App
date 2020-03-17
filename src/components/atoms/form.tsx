@@ -67,6 +67,8 @@ export const FormTextInput = styled.input`
 
 export const FormBlockquote = styled.blockquote`
   border-left: 4px solid ${({ theme }) => theme.primaryColor};
+  margin-left: 0;
+  padding: 0.5em 1em;
 `
 
 export const FormCheckInlineItemContainer = styled.div`
