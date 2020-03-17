@@ -192,7 +192,7 @@ const MarkdownPreviewer = ({
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
       .use(rehypeKatex)
-      .use(remarkEmoji)
+      .use(remarkEmoji, { emoticon: true })
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
