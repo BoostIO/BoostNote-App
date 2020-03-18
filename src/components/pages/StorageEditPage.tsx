@@ -1,17 +1,22 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import {
-  SectionMargin,
-  RightMargin,
-  DeleteStorageButton
-} from '../PreferencesModal/styled'
+import React, { useCallback, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { NoteStorage } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
-import { useDebounce } from 'react-use'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { isCloudStorageData } from '../../lib/db/utils'
 import { useToast } from '../../lib/toast'
 import { useTranslation } from 'react-i18next'
+import PageContainer from '../atoms/PageContainer'
+import {
+  FormHeading,
+  FormGroup,
+  FormLabel,
+  FormTextInput,
+  FormBlockquote,
+  FormPrimaryButton,
+  FormSecondaryButton
+} from '../atoms/form'
+import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
+import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -24,10 +29,6 @@ export default ({ storage }: StorageEditProps) => {
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
-
-  useEffect(() => {
-    setName(storage.name)
-  }, [storage])
 
   const removeCallback = useCallback(() => {
     messageBox({
@@ -51,56 +52,51 @@ export default ({ storage }: StorageEditProps) => {
         }
       }
     })
-  }, [storage, db, router, messageBox, pushMessage])
+  }, [storage, t, db, router, messageBox, pushMessage])
 
-  useDebounce(
-    () => {
-      db.renameStorage(storage.id, name).catch(() => {
-        pushMessage({
-          title: t('general.networkError'),
-          description: `An error occured while updating storage (id:${storage.id}}`
-        })
-      })
-    },
-    1000,
-    [name]
-  )
+  const updateStorageName = useCallback(() => {
+    db.renameStorage(storage.id, name)
+  }, [storage.id, db, name])
 
   return (
-    <div>
-      <SectionMargin>
-        <h1>{t('storage.edit')}</h1>
-        <div>
-          <RightMargin>
-            <label>
-              <RightMargin>{t('storage.name')}</RightMargin>
-              <input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                type='text'
-              />
-            </label>
-          </RightMargin>
-          <DeleteStorageButton onClick={removeCallback}>
-            Unlink Storage
-          </DeleteStorageButton>
-          <blockquote>
-            Unlinking storage means deleting storage data from this local app.
-            If you're using cloud storage and want to discard from cloud, you
-            have to discard it from web app.
-          </blockquote>
-        </div>
-        <div>
-          {isCloudStorageData(storage) && (
-            <div>
-              <p>
-                {t('storage.syncDate')}
-                {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
-              </p>
-            </div>
-          )}
-        </div>
-      </SectionMargin>
-    </div>
+    <PageContainer>
+      <FormHeading depth={1}>Storage Settings</FormHeading>
+      <FormGroup>
+        <FormLabel>{t('storage.name')}</FormLabel>
+        <FormTextInput
+          type='text'
+          value={name}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <FormPrimaryButton onClick={updateStorageName}>
+          Update storage name
+        </FormPrimaryButton>
+      </FormGroup>
+      <hr />
+      <FormHeading depth={2}>Remove Storage</FormHeading>
+      {storage.cloudStorage != null && (
+        <FormBlockquote>
+          Your cloud storage will not be deleted by clicking this button. To
+          delete cloud storage too, check cloud storage info section.
+        </FormBlockquote>
+      )}
+      <FormGroup>
+        <FormSecondaryButton onClick={removeCallback}>
+          Remove Storage
+        </FormSecondaryButton>
+      </FormGroup>
+      <hr />
+
+      <FormHeading depth={2}>Cloud Storage info</FormHeading>
+      {storage.cloudStorage == null ? (
+        <LinkCloudStorageForm storage={storage} />
+      ) : (
+        <ManageCloudStorageForm storage={storage} />
+      )}
+    </PageContainer>
   )
 }
