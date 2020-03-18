@@ -43,7 +43,10 @@ export const FormHeading = ({
 }
 
 export const FormGroup = styled.div`
-  margin-bottom: 14px;
+  margin-bottom: 1rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 
 export const FormLabel = styled.label`
@@ -96,6 +99,7 @@ interface FormCheckItemProps {
   checked?: boolean
   className?: string
   style?: React.CSSProperties
+  disabled?: boolean
   onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
@@ -106,6 +110,7 @@ export const FormCheckInlineItem = ({
   checked,
   className,
   style,
+  disabled,
   onChange
 }: FormCheckItemProps) => {
   return (
@@ -115,6 +120,7 @@ export const FormCheckInlineItem = ({
         id={id}
         onChange={onChange}
         checked={checked}
+        disabled={disabled}
       />
       <FormCheckLabel htmlFor={id}>{children}</FormCheckLabel>
     </FormCheckInlineItemContainer>
@@ -132,6 +138,7 @@ export const FormCheckItem = ({
   checked,
   className,
   style,
+  disabled,
   onChange
 }: FormCheckItemProps) => {
   return (
@@ -141,6 +148,7 @@ export const FormCheckItem = ({
         id={id}
         onChange={onChange}
         checked={checked}
+        disabled={disabled}
       />
       <FormCheckLabel htmlFor={id}>{children}</FormCheckLabel>
     </FormCheckItemContainer>
@@ -155,6 +163,10 @@ export const FormPrimaryButton = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
+  margin-left: 0.375rem;
+  &:first-child {
+    margin-left: 0;
+  }
 `
 
 export const FormSecondaryButton = styled.button`
@@ -163,6 +175,10 @@ export const FormSecondaryButton = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
+  margin-left: 0.375rem;
+  &:first-child {
+    margin-left: 0;
+  }
 `
 
 export const FormSelect = styled.select`
@@ -170,6 +186,12 @@ export const FormSelect = styled.select`
   width: 100%;
   padding: 0.375rem 0.75rem;
   line-height: 1.5;
+  border-radius: 0.25rem;
+  ${border}
+`
+
+export const FormField = styled.div`
+  padding: 1rem;
   border-radius: 0.25rem;
   ${border}
 `
