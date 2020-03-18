@@ -43,6 +43,7 @@ export interface DbStore {
   renameStorage: (id: string, name: string) => void
   renameCloudStorage: (id: string, cloudStorageName: string) => void
   linkStorage: (id: string, cloudStorage: CloudNoteStorageData) => void
+  unlinkStorage: (id: string) => void
   syncStorage: (id: string, user: User) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
   renameFolder: (
@@ -149,6 +150,30 @@ export function createDbStoreCreator(
       },
       []
     )
+
+    const unlinkStorage = useCallback((storageId: string) => {
+      let newStorageMap: ObjectMap<NoteStorage>
+      setStorageMap(prevStorageMap => {
+        const existingStorage = prevStorageMap[storageId]
+        if (existingStorage == null) {
+          return prevStorageMap
+        }
+        const newStorage = {
+          ...existingStorage
+        }
+        if (newStorage.cloudStorage != null) {
+          delete newStorage.cloudStorage
+        }
+
+        newStorageMap = {
+          ...prevStorageMap,
+          [storageId]: newStorage
+        }
+        return newStorageMap
+      })
+
+      saveStorageDataList(liteStorage, newStorageMap!)
+    }, [])
 
     const removeStorage = useCallback(
       async (id: string) => {
@@ -1053,6 +1078,7 @@ export function createDbStoreCreator(
       renameStorage,
       renameCloudStorage,
       linkStorage,
+      unlinkStorage,
       syncStorage,
       createFolder,
       renameFolder,
