@@ -69,23 +69,19 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
     setRemoteStorageList([])
     try {
       const storages = await getStorages(user)
-
-      if (unmountRef.current) {
-        return
-      }
-
       setRemoteStorageList(storages)
-      setFetching(false)
     } catch (error) {
-      if (unmountRef.current) {
-        return
-      }
       pushMessage({
         title: 'Cloud Error',
         description:
           'An error occured while attempting to fetch cloud storage list'
       })
     }
+
+    if (unmountRef.current) {
+      return
+    }
+    setFetching(false)
   }, [user, pushMessage])
 
   const openForm = useCallback(() => {
