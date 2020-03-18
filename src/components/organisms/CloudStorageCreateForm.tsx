@@ -98,7 +98,7 @@ const CloudStorageCreateForm = () => {
 
   const unmountRef = useRef(false)
 
-  const fetchStorage = useCallback(async () => {
+  const fetchRemoteStorage = useCallback(async () => {
     if (user == null) {
       return
     }
@@ -112,19 +112,19 @@ const CloudStorageCreateForm = () => {
       }
     } catch (error) {
       pushMessage({
-        title: 'Cloud Error',
-        description:
-          'An error occured while attempting to fetch cloud storage list'
+        title: 'Failed to fetch cloud storage data',
+        description: error.toString()
       })
     }
   }, [user, pushMessage])
 
   useEffectOnce(() => {
-    fetchStorage()
+    fetchRemoteStorage()
     return () => {
       unmountRef.current = true
     }
   })
+
   if (user == null) {
     return (
       <>
@@ -188,12 +188,12 @@ const CloudStorageCreateForm = () => {
       </FormGroup>
       {fetching && (
         <FormGroup>
-          <Spinner /> Fetching remote storage...
+          <Spinner /> Fetching cloud storage...
         </FormGroup>
       )}
       <FormGroup>
-        <FormSecondaryButton onClick={fetchStorage}>
-          Fetch remote storage
+        <FormSecondaryButton onClick={fetchRemoteStorage} disabled={fetching}>
+          Fetch cloud storage
         </FormSecondaryButton>
       </FormGroup>
 
