@@ -1,8 +1,9 @@
 import styled from '../../lib/styled'
 
 const PageContainer = styled.div`
-  margin: 100px;
-  max-width: 600px;
+  padding: 3rem;
+  height: 100%;
+  overflow-y: auto;
 `
 
 export default PageContainer
