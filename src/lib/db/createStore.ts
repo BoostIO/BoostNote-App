@@ -40,7 +40,8 @@ export interface DbStore {
   initialize: (user?: User) => Promise<void>
   createStorage: (name: string) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
-  renameStorage: (id: string, name: string) => Promise<void>
+  renameStorage: (id: string, name: string) => void
+  renameCloudStorage: (id: string, cloudStorageName: string) => void
   linkStorage: (id: string, cloudStorage: CloudNoteStorageData) => void
   syncStorage: (id: string, user: User) => Promise<void>
   createFolder: (storageName: string, pathname: string) => Promise<void>
@@ -174,29 +175,39 @@ export function createDbStoreCreator(
     )
 
     const renameStorage = useCallback(
-      async (id: string, name: string) => {
-        // const storageData = storageMap[id]
-        // if (
-        //   storageData != null &&
-        //   storageData.cloudStorage != null &&
-        //   activeUser.current != null
-        // ) {
-        //   await renameCloudStorage(
-        //     activeUser.current,
-        //     storageData.cloudStorage.id,
-        //     name
-        //   )
-        // }
-        // let newStorageMap: ObjectMap<NoteStorage> = {}
-        // setStorageMap(prevStorageMap => {
-        //   newStorageMap = produce(prevStorageMap, draft => {
-        //     if (draft[id] != null) {
-        //       draft[id]!.name = name
-        //     }
-        //   })
-        //   return newStorageMap
-        // })
-        // saveStorageDataList(liteStorage, newStorageMap)
+      (id: string, name: string) => {
+        const storageData = storageMap[id]
+        if (storageData == null) {
+          return
+        }
+
+        let newStorageMap: ObjectMap<NoteStorage> = {}
+        setStorageMap(prevStorageMap => {
+          newStorageMap = produce(prevStorageMap, draft => {
+            draft[id]!.name = name
+          })
+          return newStorageMap
+        })
+        saveStorageDataList(liteStorage, newStorageMap)
+      },
+      [storageMap]
+    )
+
+    const renameCloudStorage = useCallback(
+      (id: string, cloudStorageName: string) => {
+        const storageData = storageMap[id]
+        if (storageData == null || storageData.cloudStorage == null) {
+          return
+        }
+
+        let newStorageMap: ObjectMap<NoteStorage> = {}
+        setStorageMap(prevStorageMap => {
+          newStorageMap = produce(prevStorageMap, draft => {
+            draft[id]!.cloudStorage!.name = cloudStorageName
+          })
+          return newStorageMap
+        })
+        saveStorageDataList(liteStorage, newStorageMap)
       },
       [storageMap]
     )
@@ -1040,6 +1051,7 @@ export function createDbStoreCreator(
       createStorage,
       removeStorage,
       renameStorage,
+      renameCloudStorage,
       linkStorage,
       syncStorage,
       createFolder,
@@ -1067,7 +1079,6 @@ export function getStorageDataList(
   liteStorage: LiteStorage
 ): NoteStorageData[] | null {
   const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
-  console.log(serializedStorageDataList)
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
     if (!Array.isArray(parsedStorageDataList))
