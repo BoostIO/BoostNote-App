@@ -1,15 +1,20 @@
-import React, { useState, ChangeEvent, useCallback } from 'react'
+import React, { useState, ChangeEvent, useCallback, useRef } from 'react'
 import {
   FormGroup,
   FormLabel,
   FormTextInput,
   FormPrimaryButton,
-  FormBlockquote
+  FormBlockquote,
+  FormSecondaryButton,
+  FormHeading
 } from '../atoms/form'
 import { NoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
-import { renameStorage } from '../../lib/accounts'
+import { renameStorage, deleteStorage } from '../../lib/accounts'
 import { useFirstUser } from '../../lib/preferences'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import { useTranslation } from 'react-i18next'
+import { useToast } from '../../lib/toast'
 
 interface ManageCloudStorageFormProps {
   storage: NoteStorage
@@ -35,17 +40,52 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
 
     setUpdating(false)
   }, [db, storage.id, storage.cloudStorage, cloudStorageName, user])
+  const { t } = useTranslation()
+
+  const [foldedDestructiveButtons, setFoldedDestructiveButtons] = useState(true)
+
+  const unlinkCloudStorage = useCallback(() => {
+    db.unlinkStorage(storage.id)
+  }, [db, storage.id])
+
+  const { messageBox } = useDialog()
+  const { pushMessage } = useToast()
+  const [deleting, setDeleting] = useState(false)
+  const unmountRef = useRef(false)
+
+  const removeAndUnlinkCloudStorage = useCallback(() => {
+    const cloudStorage = storage.cloudStorage!
+    messageBox({
+      title: `Remove "${cloudStorage.name}"(id: ${cloudStorage.id}) cloud storage`,
+      message: 'The cloud storage will be removed permanently.',
+      iconType: DialogIconTypes.Warning,
+      buttons: [t('storage.remove'), t('general.cancel')],
+      defaultButtonIndex: 0,
+      cancelButtonIndex: 1,
+      onClose: async (value: number | null) => {
+        if (value === 0) {
+          try {
+            setDeleting(true)
+            await deleteStorage(user, cloudStorage.id)
+            db.unlinkStorage(storage.id)
+          } catch (error) {
+            pushMessage({
+              title: t('general.networkError'),
+              description: error.toString()
+            })
+          }
+
+          if (unmountRef.current) {
+            return
+          }
+          setDeleting(false)
+        }
+      }
+    })
+  }, [messageBox, pushMessage, t, db, storage.id, storage.cloudStorage, user])
 
   return (
     <>
-      <ul>
-        <li>
-          Cloud storage ID: <strong>{storage.cloudStorage!.id}</strong>
-        </li>
-        <li>
-          Name: <strong>{storage.cloudStorage!.name}</strong>
-        </li>
-      </ul>
       <FormBlockquote>
         {storage.cloudStorage!.syncedAt != null && (
           <>
@@ -56,6 +96,16 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
       </FormBlockquote>
       <FormGroup>
         <FormPrimaryButton>Sync storage</FormPrimaryButton>
+      </FormGroup>
+
+      <FormGroup>
+        <FormLabel>Cloud storage ID</FormLabel>
+        <FormTextInput
+          type='text'
+          disabled={true}
+          readOnly={true}
+          defaultValue={storage.cloudStorage!.id}
+        />
       </FormGroup>
 
       <FormGroup>
@@ -73,6 +123,56 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
           {updating ? 'Updating...' : 'Update cloud storage name'}
         </FormPrimaryButton>
       </FormGroup>
+      <FormHeading depth={3}>Unlink / Remove cloud storage</FormHeading>
+      {foldedDestructiveButtons ? (
+        <FormGroup>
+          <FormSecondaryButton
+            onClick={() => {
+              setFoldedDestructiveButtons(false)
+            }}
+          >
+            Unlink / Remove cloud storage
+          </FormSecondaryButton>
+        </FormGroup>
+      ) : (
+        <>
+          <FormGroup>
+            <FormSecondaryButton
+              onClick={() => {
+                setFoldedDestructiveButtons(true)
+              }}
+            >
+              Hide buttons
+            </FormSecondaryButton>
+          </FormGroup>
+          <FormBlockquote>
+            Simply removing the link between the storage in this device(or
+            browser) and the cloud storage. This action will not any data from
+            both side, local device and cloud. Once it is done, you can always
+            link the storage to any cloud storage.
+          </FormBlockquote>
+          <FormGroup>
+            <FormSecondaryButton
+              disabled={deleting}
+              onClick={unlinkCloudStorage}
+            >
+              Unlink cloud storage
+            </FormSecondaryButton>
+          </FormGroup>
+          <FormBlockquote>
+            Removing and unlinking cloud storage. This action will delete the
+            cloud storage only. So the storage will become a local storage.
+          </FormBlockquote>
+          <FormGroup>
+            <FormSecondaryButton
+              disabled={deleting}
+              onClick={removeAndUnlinkCloudStorage}
+            >
+              Remove cloud storage
+            </FormSecondaryButton>
+          </FormGroup>
+        </>
+      )}
     </>
   )
 }
