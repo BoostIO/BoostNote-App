@@ -120,7 +120,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
       }
       db.linkStorage(storage.id, {
         id: cloudStorage.id,
-        name: cloudStorageName,
+        name: cloudStorage.name,
         size: cloudStorage.size,
         syncedAt: Date.now()
       })
