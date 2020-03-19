@@ -155,14 +155,12 @@ export function createDbStoreCreator(
       async (storageId: string, user: User) => {
         setStorageMap(prevStorageMap => {
           const storage = prevStorageMap[storageId]
-          console.log('try to sync', storage)
           if (storage == null || storage.cloudStorage == null) {
             return prevStorageMap
           }
           if (storage.sync != null) {
             return prevStorageMap
           }
-          console.log('sync start')
           const sync = storage.db
             .sync(user, storage.cloudStorage)
             .on('error', error => {
