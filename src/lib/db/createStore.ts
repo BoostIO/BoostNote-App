@@ -86,6 +86,7 @@ export function createDbStoreCreator(
     const currentPathnameWithoutNoteId = pathnameWithoutNoteIdGetter()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
+    const { pushMessage } = useToast()
 
     const initialize = useCallback(async () => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
@@ -126,31 +127,6 @@ export function createDbStoreCreator(
       return storage
     }, [])
 
-    const linkStorage = useCallback(
-      (storageId: string, cloudStorage: CloudNoteStorageData) => {
-        let newStorageMap: ObjectMap<NoteStorage>
-        setStorageMap(prevStorageMap => {
-          const existingStorage = prevStorageMap[storageId]
-          if (existingStorage == null) {
-            return prevStorageMap
-          }
-          const newStorage = {
-            ...existingStorage,
-            cloudStorage
-          }
-
-          newStorageMap = {
-            ...prevStorageMap,
-            [storageId]: newStorage
-          }
-          return newStorageMap
-        })
-
-        saveStorageDataList(liteStorage, newStorageMap!)
-      },
-      []
-    )
-
     const unlinkStorage = useCallback((storageId: string) => {
       let newStorageMap: ObjectMap<NoteStorage>
       setStorageMap(prevStorageMap => {
@@ -174,6 +150,91 @@ export function createDbStoreCreator(
 
       saveStorageDataList(liteStorage, newStorageMap!)
     }, [])
+
+    const syncStorage = useCallback(
+      async (storageId: string, user: User) => {
+        setStorageMap(prevStorageMap => {
+          const storage = prevStorageMap[storageId]
+          console.log('try to sync', storage)
+          if (storage == null || storage.cloudStorage == null) {
+            return prevStorageMap
+          }
+          if (storage.sync != null) {
+            return prevStorageMap
+          }
+          console.log('sync start')
+          const sync = storage.db
+            .sync(user, storage.cloudStorage)
+            .on('error', error => {
+              switch ((error as any).status) {
+                case 404:
+                  pushMessage({
+                    title: 'Sync Error',
+                    description: 'The cloud storage does not exist anymore.'
+                  })
+                  unlinkStorage(storageId)
+                  break
+                default:
+                  pushMessage({
+                    title: 'Sync Error',
+                    description: error.toString()
+                  })
+              }
+
+              setStorageMap(prevStorageMap => {
+                return produce(prevStorageMap, draft => {
+                  draft[storageId]!.sync = undefined
+                })
+              })
+            })
+            .on('complete', async () => {
+              const syncedStorage = await prepareStorage(storage, adapter)
+              syncedStorage.cloudStorage!.syncedAt = Date.now()
+              let newStorageMap: ObjectMap<NoteStorage>
+              setStorageMap(prevStorageMap => {
+                newStorageMap = produce(prevStorageMap, draft => {
+                  if (draft[storageId] == null) {
+                    return
+                  }
+                  draft[storageId] = syncedStorage
+                })
+                return newStorageMap
+              })
+
+              saveStorageDataList(liteStorage, newStorageMap!)
+            })
+
+          return produce(prevStorageMap, draft => {
+            draft[storageId]!.sync = sync
+          })
+        })
+      },
+      [pushMessage, unlinkStorage]
+    )
+
+    const linkStorage = useCallback(
+      (storageId: string, cloudStorage: CloudNoteStorageData) => {
+        let newStorageMap: ObjectMap<NoteStorage>
+        setStorageMap(prevStorageMap => {
+          const existingStorage = prevStorageMap[storageId]
+          if (existingStorage == null) {
+            return prevStorageMap
+          }
+          const newStorage = {
+            ...existingStorage,
+            cloudStorage
+          }
+
+          newStorageMap = {
+            ...prevStorageMap,
+            [storageId]: newStorage
+          }
+          return newStorageMap
+        })
+        saveStorageDataList(liteStorage, newStorageMap!)
+      },
+      []
+    )
 
     const removeStorage = useCallback(
       async (id: string) => {
@@ -236,8 +297,6 @@ export function createDbStoreCreator(
       },
       [storageMap]
     )
-
-    const { pushMessage } = useToast()
 
     const createFolder = useCallback(
       async (id: string, pathname: string) => {
@@ -1046,63 +1105,6 @@ export function createDbStoreCreator(
           delete draft[storageId]!.attachmentMap[fileName]
         })
       )
-    }
-
-    const syncStorage = async (storageId: string, user: User) => {
-      const storage = storageMap[storageId]
-      if (storage == null || storage.cloudStorage == null) {
-        return
-      }
-      if (storage.sync != null) {
-        return
-      }
-      const sync = storage.db
-        .sync(user, storage.cloudStorage)
-        .on('change', console.log)
-        .on('error', error => {
-          switch ((error as any).status) {
-            case 404:
-              pushMessage({
-                title: 'Sync Error',
-                description: 'The cloud storage does not exist anymore.'
-              })
-              unlinkStorage(storageId)
-              break
-            default:
-              pushMessage({
-                title: 'Sync Error',
-                description: error.toString()
-              })
-          }
-
-          setStorageMap(prevStorageMap => {
-            return produce(prevStorageMap, draft => {
-              draft[storageId]!.sync = undefined
-            })
-          })
-        })
-        .on('complete', async () => {
-          const syncedStorage = await prepareStorage(storage, adapter)
-          syncedStorage.cloudStorage!.syncedAt = Date.now()
-          let newStorageMap: ObjectMap<NoteStorage>
-          setStorageMap(prevStorageMap => {
-            newStorageMap = produce(prevStorageMap, draft => {
-              if (draft[storageId] == null) {
-                return
-              }
-              draft[storageId] = syncedStorage
-            })
-            return newStorageMap
-          })
-
-          saveStorageDataList(liteStorage, newStorageMap!)
-        })
-
-      setStorageMap(prevStorageMap => {
-        return produce(prevStorageMap, draft => {
-          draft[storageId]!.sync = sync
-        })
-      })
     }
 
     return {
