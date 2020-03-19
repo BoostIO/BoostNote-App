@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, useCallback, useRef } from 'react'
+import React, {
+  useState,
+  ChangeEvent,
+  useCallback,
+  useRef,
+  useMemo
+} from 'react'
 import {
   FormGroup,
   FormLabel,
@@ -15,6 +21,7 @@ import { useFirstUser } from '../../lib/preferences'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
+import Spinner from '../atoms/Spinner'
 
 interface ManageCloudStorageFormProps {
   storage: NoteStorage
@@ -84,18 +91,42 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
     })
   }, [messageBox, pushMessage, t, db, storage.id, storage.cloudStorage, user])
 
+  const syncStorage = useCallback(() => {
+    db.syncStorage(storage.id, user)
+  }, [storage.id, user, db])
+
+  const stopSyncing = () => {
+    storage.sync!.cancel()
+  }
+
+  const syncing = useMemo(() => {
+    return storage.sync != null
+  }, [storage.sync])
+
   return (
     <>
-      <FormBlockquote>
-        {storage.cloudStorage!.syncedAt != null && (
-          <>
+      {syncing ? (
+        <FormBlockquote>
+          <Spinner /> Syncing...
+        </FormBlockquote>
+      ) : (
+        storage.cloudStorage!.syncedAt != null && (
+          <FormBlockquote>
             Lastly synced at{' '}
             {new Date(storage.cloudStorage!.syncedAt).toLocaleString()}
-          </>
-        )}
-      </FormBlockquote>
+          </FormBlockquote>
+        )
+      )}
       <FormGroup>
-        <FormPrimaryButton>Sync storage</FormPrimaryButton>
+        {syncing ? (
+          <FormSecondaryButton onClick={stopSyncing}>
+            Stop syncing
+          </FormSecondaryButton>
+        ) : (
+          <FormPrimaryButton onClick={syncStorage}>
+            Sync Storage
+          </FormPrimaryButton>
+        )}
       </FormGroup>
 
       <FormGroup>
