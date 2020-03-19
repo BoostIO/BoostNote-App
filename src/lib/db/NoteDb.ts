@@ -460,10 +460,10 @@ export default class NoteDb {
     return allDocsResponse.rows.map(row => row.doc!)
   }
 
-  async sync(
+  sync(
     user: User,
     cloudStorage: { id: number }
-  ): Promise<PouchDB.Replication.SyncResultComplete<any>> {
+  ): PouchDB.Replication.Sync<any> {
     const cloudPouch = new PouchDB(
       buildCloudSyncUrl(cloudStorage.id, user.id),
       {
@@ -482,13 +482,7 @@ export default class NoteDb {
         }
       }
     )
-
-    return new Promise((resolve, reject) => {
-      this.pouchDb
-        .sync(cloudPouch, { live: false })
-        .on('error', reject)
-        .on('complete', resolve)
-    })
+    return this.pouchDb.sync(cloudPouch, { live: false })
   }
 
   async upsertAttachments(files: File[]): Promise<Attachment[]> {
