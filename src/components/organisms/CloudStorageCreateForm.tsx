@@ -73,10 +73,10 @@ const CloudStorageCreateForm = () => {
       const storage = await db.createStorage(storageName)
       db.linkStorage(storage.id, {
         id: cloudStorage.id,
-        name: cloudStorageName,
-        size: cloudStorage.size,
-        syncedAt: Date.now()
+        name: cloudStorage.name,
+        size: cloudStorage.size
       })
+      db.syncStorage(storage.id, user)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({

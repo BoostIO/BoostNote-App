@@ -124,6 +124,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
         size: cloudStorage.size,
         syncedAt: Date.now()
       })
+      db.syncStorage(storage.id, user)
     } catch (error) {
       pushMessage({
         title: 'Error',
