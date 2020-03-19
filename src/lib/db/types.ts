@@ -85,6 +85,7 @@ export type NoteIdSet = Set<string>
 export type NoteStorage = NoteStorageData &
   AllPopulatedDocsMap & {
     db: NoteDb
+    sync?: PouchDB.Replication.Sync<any>
   }
 
 export type PopulatedFolderDoc = FolderDoc & {

@@ -1048,25 +1048,61 @@ export function createDbStoreCreator(
       )
     }
 
-    const syncStorage = async (storageId: string) => {
-      // if (activeUser.current == null) {
-      //   return
-      // }
-      // let storage = storageMap[storageId]
-      // if (storage == null || storage.cloudStorage == null) {
-      //   return
-      // }
-      // await storage.db.sync(activeUser.current, storage.cloudStorage)
-      // storage.cloudStorage.syncedAt = Date.now()
-      // storage = await prepareStorage(storage, adapter)
-      // setStorageMap(
-      //   produce(draft => {
-      //     if (draft[storageId] == null) {
-      //       return
-      //     }
-      //     draft[storageId] = storage
-      //   })a
-      // )
+    const syncStorage = async (storageId: string, user: User) => {
+      const storage = storageMap[storageId]
+      if (storage == null || storage.cloudStorage == null) {
+        return
+      }
+      if (storage.sync != null) {
+        return
+      }
+      const sync = storage.db
+        .sync(user, storage.cloudStorage)
+        .on('change', console.log)
+        .on('error', error => {
+          switch ((error as any).status) {
+            case 404:
+              pushMessage({
+                title: 'Sync Error',
+                description: 'The cloud storage does not exist anymore.'
+              })
+              unlinkStorage(storageId)
+              break
+            default:
+              pushMessage({
+                title: 'Sync Error',
+                description: error.toString()
+              })
+          }
+
+          setStorageMap(prevStorageMap => {
+            return produce(prevStorageMap, draft => {
+              draft[storageId]!.sync = undefined
+            })
+          })
+        })
+        .on('complete', async () => {
+          const syncedStorage = await prepareStorage(storage, adapter)
+          syncedStorage.cloudStorage!.syncedAt = Date.now()
+          let newStorageMap: ObjectMap<NoteStorage>
+          setStorageMap(prevStorageMap => {
+            newStorageMap = produce(prevStorageMap, draft => {
+              if (draft[storageId] == null) {
+                return
+              }
+              draft[storageId] = syncedStorage
+            })
+            return newStorageMap
+          })
+
+          saveStorageDataList(liteStorage, newStorageMap!)
+        })
+
+      setStorageMap(prevStorageMap => {
+        return produce(prevStorageMap, draft => {
+          draft[storageId]!.sync = sync
+        })
+      })
     }
 
     return {
