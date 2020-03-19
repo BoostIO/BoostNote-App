@@ -22,6 +22,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import Spinner from '../atoms/Spinner'
+import LoginButton from '../atoms/LoginButton'
 
 interface ManageCloudStorageFormProps {
   storage: NoteStorage
@@ -102,6 +103,23 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
   const syncing = useMemo(() => {
     return storage.sync != null
   }, [storage.sync])
+  if (user == null) {
+    return (
+      <>
+        <FormBlockquote>Sign in to manage the cloud storage</FormBlockquote>
+        <LoginButton
+          onErr={() => {
+            pushMessage({
+              title: 'Cloud Error',
+              description:
+                'An error occured while attempting to create a cloud storage'
+            })
+          }}
+          ButtonComponent={FormPrimaryButton}
+        />
+      </>
+    )
+  }
 
   return (
     <>
