@@ -295,18 +295,7 @@ export default () => {
                   description: 'Please login first to sync the storage.'
                 })
               }
-              syncStorage(storage.id, user).catch(error => {
-                const description =
-                  error.status === 409
-                    ? 'You have reached your usage limit. Please upgrade your subscription.'
-                    : "Failed to sync the storage. Please check Dev Tool's console to learn more information"
-
-                pushMessage({
-                  title: 'Sync Error',
-                  description
-                })
-                console.error(error)
-              })
+              syncStorage(storage.id)
             }
 
             controlComponents.unshift(

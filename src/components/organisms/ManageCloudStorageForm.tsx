@@ -93,8 +93,8 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
   }, [messageBox, pushMessage, t, db, storage.id, storage.cloudStorage, user])
 
   const syncStorage = useCallback(() => {
-    db.syncStorage(storage.id, user)
-  }, [storage.id, user, db])
+    db.syncStorage(storage.id)
+  }, [storage.id, db])
 
   const stopSyncing = () => {
     storage.sync!.cancel()

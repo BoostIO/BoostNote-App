@@ -302,14 +302,7 @@ export default ({ toggle }: NavigatorProps) => {
                   description: 'Please login first to sync the storage.'
                 })
               }
-              syncStorage(storage.id, user).catch(error => {
-                pushMessage({
-                  title: 'Sync Error',
-                  description:
-                    "Failed to sync the storage. Please check Dev Tool's console to learn more information"
-                })
-                console.error(error)
-              })
+              syncStorage(storage.id)
             }
 
             controlComponents.unshift(
