@@ -18,7 +18,7 @@ import {
   CloudStorage,
   createStorage as createCloudStorage
 } from '../../lib/accounts'
-import { usePreferences } from '../../lib/preferences'
+import { useFirstUser } from '../../lib/preferences'
 import { useEffectOnce } from 'react-use'
 import LoginButton from '../atoms/LoginButton'
 
@@ -30,8 +30,7 @@ const CloudStorageCreateForm = () => {
   const db = useDb()
   const { pushMessage } = useToast()
   const [creating, setCreating] = useState(false)
-  const { preferences } = usePreferences()
-  const user = preferences['general.accounts'][0]
+  const user = useFirstUser()
 
   const [fetching, setFetching] = useState(false)
   const [remoteStorageList, setRemoteStorageList] = useState<CloudStorage[]>([])
@@ -76,7 +75,7 @@ const CloudStorageCreateForm = () => {
         name: cloudStorage.name,
         size: cloudStorage.size
       })
-      db.syncStorage(storage.id, user)
+      db.syncStorage(storage.id)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
