@@ -43,6 +43,7 @@ export interface Preferences {
   'general.enableAnalytics': boolean
   'general.enableDownloadAppModal': boolean
   'general.tutorials': GeneralTutorialsOptions
+  'general.enableAutoSync': boolean
 
   // Editor
   'editor.theme': string
@@ -83,6 +84,7 @@ const basePreferences: Preferences = {
   'general.enableAnalytics': true,
   'general.enableDownloadAppModal': true,
   'general.tutorials': 'display',
+  'general.enableAutoSync': true,
 
   // Editor
   'editor.theme': 'default',

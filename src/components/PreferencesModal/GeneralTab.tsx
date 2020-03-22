@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, ChangeEventHandler } from 'react'
 import {
   Section,
   SectionHeader,
@@ -20,6 +20,7 @@ import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { IconArrowRotate } from '../icons'
+import { FormCheckItem } from '../atoms/form'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
@@ -63,6 +64,16 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
+  const toggleEnableAutoSync: React.ChangeEventHandler<
+    HTMLInputElement
+  > = useCallback(
+    event => {
+      setPreferences({
+        'general.enableAutoSync': event.target.checked
+      })
+    },
+    [setPreferences]
+  )
   const { t } = useTranslation()
 
   return (
@@ -153,6 +164,19 @@ const GeneralTab = () => {
             <option value='display'>Display</option>
             <option value='hide'>Hide</option>
           </SectionSelect>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Enable auto sync</SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-enable-auto-sync'
+            type='checkbox'
+            checked={preferences['general.enableAutoSync']}
+            onChange={toggleEnableAutoSync}
+          >
+            Enable auto sync
+          </FormCheckItem>
         </SectionControl>
       </Section>
     </div>
