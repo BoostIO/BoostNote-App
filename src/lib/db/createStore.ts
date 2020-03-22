@@ -194,10 +194,20 @@ export function createDbStoreCreator(
             .sync(user, storage.cloudStorage)
             .on('error', error => {
               switch ((error as any).status) {
+                case 409:
+                  if (!silent) {
+                    pushMessage({
+                      title: 'Size Limit',
+                      description:
+                        'You have reached your usage limit. Please upgrade your subscription.'
+                    })
+                  }
+                  console.error('The cloud storage does not exist anymore.')
+                  unlinkStorage(storageId)
                 case 404:
                   if (!silent) {
                     pushMessage({
-                      title: 'Sync Error',
+                      title: 'Not Found',
                       description: 'The cloud storage does not exist anymore.'
                     })
                   }
@@ -208,7 +218,8 @@ export function createDbStoreCreator(
                   if (!silent) {
                     pushMessage({
                       title: 'Sync Error',
-                      description: error.toString()
+                      description:
+                        "Failed to sync the storage. Please check Dev Tool's console to learn more information"
                     })
                   }
                   console.error(error)
