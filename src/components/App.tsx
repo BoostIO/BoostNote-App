@@ -38,11 +38,15 @@ const AppContainer = styled.div`
 `
 
 const App = () => {
-  const { initialize, initialized } = useDb()
+  const { initialize, initialized, queueSyncingAllStorage } = useDb()
   useEffectOnce(() => {
-    initialize().catch(error => {
-      console.error(error)
-    })
+    initialize()
+      .then(() => {
+        queueSyncingAllStorage(0)
+      })
+      .catch(error => {
+        console.error(error)
+      })
   })
 
   const { toggleClosed, preferences } = usePreferences()
