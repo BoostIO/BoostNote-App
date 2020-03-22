@@ -10,7 +10,7 @@ import {
   PopulatedNoteDoc,
   CloudNoteStorageData
 } from './types'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
 import { schema, isValid } from '../predicates'
 import NoteDb from './NoteDb'
@@ -33,6 +33,14 @@ import { difference } from 'ramda'
 import { escapeRegExp } from '../string'
 import { User } from '../accounts'
 import { useToast } from '../toast'
+import { useFirstUser, usePreferences } from '../preferences'
+import { useRefState } from '../hooks'
+
+// const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
+// const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
+
+const autoSyncIntervalTime = 1000 * 5 // Every one hour
+const autoSyncDebounceWaitingTime = 1000 * 5 // 30 seconds after updating data
 
 export interface DbStore {
   initialized: boolean
@@ -44,7 +52,10 @@ export interface DbStore {
   renameCloudStorage: (id: string, cloudStorageName: string) => void
   linkStorage: (id: string, cloudStorage: CloudNoteStorageData) => void
   unlinkStorage: (id: string) => void
-  syncStorage: (id: string, user: User) => Promise<void>
+  syncStorage: (id: string) => Promise<void>
+  queueSyncingStorage: (id: string, delay?: number) => void
+  queueSyncingAllStorage: (delay?: number) => void
+  cancelSyncingStorageQueue: (id: string) => void
   createFolder: (storageName: string, pathname: string) => Promise<void>
   renameFolder: (
     storageName: string,
@@ -85,8 +96,17 @@ export function createDbStoreCreator(
     const router = routerHook()
     const currentPathnameWithoutNoteId = pathnameWithoutNoteIdGetter()
     const [initialized, setInitialized] = useState(false)
-    const [storageMap, setStorageMap] = useState<ObjectMap<NoteStorage>>({})
+    const [storageMap, storageMapRef, setStorageMap] = useRefState<
+      ObjectMap<NoteStorage>
+    >({})
     const { pushMessage } = useToast()
+    const user = useFirstUser()
+    const { preferences } = usePreferences()
+    const enableAutoSync = preferences['general.enableAutoSync']
+    const enableAutoSyncRef = useRef(enableAutoSync)
+    useEffect(() => {
+      enableAutoSyncRef.current = enableAutoSync
+    }, [enableAutoSync])
 
     const initialize = useCallback(async () => {
       const storageDataList = getStorageDataListOrFix(liteStorage)
@@ -105,54 +125,63 @@ export function createDbStoreCreator(
       saveStorageDataList(liteStorage, storageMap)
       setStorageMap(storageMap)
       setInitialized(true)
-    }, [])
+    }, [setStorageMap])
 
-    const createStorage = useCallback(async (name: string) => {
-      const id = generateId()
+    const createStorage = useCallback(
+      async (name: string) => {
+        const id = generateId()
 
-      const storageData: NoteStorageData = { id, name }
+        const storageData: NoteStorageData = { id, name }
 
-      const storage = await prepareStorage(storageData, adapter)
+        const storage = await prepareStorage(storageData, adapter)
 
-      let newStorageMap: ObjectMap<NoteStorage>
-      setStorageMap(prevStorageMap => {
-        newStorageMap = produce(prevStorageMap, draft => {
-          draft[id] = storage
+        let newStorageMap: ObjectMap<NoteStorage>
+        setStorageMap(prevStorageMap => {
+          newStorageMap = produce(prevStorageMap, draft => {
+            draft[id] = storage
+          })
+
+          return newStorageMap
         })
 
-        return newStorageMap
-      })
+        saveStorageDataList(liteStorage, newStorageMap!)
+        return storage
+      },
+      [setStorageMap]
+    )
 
-      saveStorageDataList(liteStorage, newStorageMap!)
-      return storage
-    }, [])
+    const unlinkStorage = useCallback(
+      (storageId: string) => {
+        let newStorageMap: ObjectMap<NoteStorage>
+        setStorageMap(prevStorageMap => {
+          const existingStorage = prevStorageMap[storageId]
+          if (existingStorage == null) {
+            return prevStorageMap
+          }
+          const newStorage = {
+            ...existingStorage
+          }
+          if (newStorage.cloudStorage != null) {
+            delete newStorage.cloudStorage
+          }
 
-    const unlinkStorage = useCallback((storageId: string) => {
-      let newStorageMap: ObjectMap<NoteStorage>
-      setStorageMap(prevStorageMap => {
-        const existingStorage = prevStorageMap[storageId]
-        if (existingStorage == null) {
-          return prevStorageMap
-        }
-        const newStorage = {
-          ...existingStorage
-        }
-        if (newStorage.cloudStorage != null) {
-          delete newStorage.cloudStorage
-        }
+          newStorageMap = {
+            ...prevStorageMap,
+            [storageId]: newStorage
+          }
+          return newStorageMap
+        })
 
-        newStorageMap = {
-          ...prevStorageMap,
-          [storageId]: newStorage
-        }
-        return newStorageMap
-      })
-
-      saveStorageDataList(liteStorage, newStorageMap!)
-    }, [])
+        saveStorageDataList(liteStorage, newStorageMap!)
+      },
+      [setStorageMap]
+    )
 
     const syncStorage = useCallback(
-      async (storageId: string, user: User) => {
+      async (storageId: string, silent = false) => {
+        if (user == null) {
+          return
+        }
         setStorageMap(prevStorageMap => {
           const storage = prevStorageMap[storageId]
           if (storage == null || storage.cloudStorage == null) {
@@ -166,17 +195,23 @@ export function createDbStoreCreator(
             .on('error', error => {
               switch ((error as any).status) {
                 case 404:
-                  pushMessage({
-                    title: 'Sync Error',
-                    description: 'The cloud storage does not exist anymore.'
-                  })
+                  if (!silent) {
+                    pushMessage({
+                      title: 'Sync Error',
+                      description: 'The cloud storage does not exist anymore.'
+                    })
+                  }
+                  console.error('The cloud storage does not exist anymore.')
                   unlinkStorage(storageId)
                   break
                 default:
-                  pushMessage({
-                    title: 'Sync Error',
-                    description: error.toString()
-                  })
+                  if (!silent) {
+                    pushMessage({
+                      title: 'Sync Error',
+                      description: error.toString()
+                    })
+                  }
+                  console.error(error)
               }
 
               setStorageMap(prevStorageMap => {
@@ -207,8 +242,90 @@ export function createDbStoreCreator(
           })
         })
       },
-      [pushMessage, unlinkStorage]
+      [pushMessage, setStorageMap, unlinkStorage, user]
     )
+
+    const queueSyncingStorage = useCallback(
+      (storageId: string, delay = autoSyncIntervalTime) => {
+        if (!enableAutoSyncRef.current) {
+          return
+        }
+
+        setStorageMap(prevStorageMap => {
+          const storage = prevStorageMap[storageId]
+          if (storage == null) return prevStorageMap
+          if (storage.syncTimer != null) {
+            clearTimeout(storage.syncTimer)
+          }
+          const newStorage = {
+            ...storage,
+            syncTimer: setTimeout(() => {
+              syncStorage(storageId, true)
+              queueSyncingStorage(storageId)
+            }, delay)
+          }
+
+          return {
+            ...prevStorageMap,
+            [storageId]: newStorage
+          }
+        })
+      },
+      [setStorageMap, syncStorage]
+    )
+
+    const queueSyncingAllStorage = useCallback(
+      (delay?: number) => {
+        const storageIds = Object.keys(storageMapRef.current)
+
+        for (const storageId of storageIds) {
+          queueSyncingStorage(storageId, delay)
+        }
+      },
+      [storageMapRef, queueSyncingStorage]
+    )
+
+    const cancelSyncingStorageQueue = useCallback(
+      (storageId: string) => {
+        setStorageMap(prevStorageMap => {
+          const storage = prevStorageMap[storageId]
+          if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.syncTimer == null) {
+            return prevStorageMap
+          }
+          clearTimeout(storage.syncTimer)
+
+          const newStorage = {
+            ...storage
+          }
+          delete newStorage.syncTimer
+
+          return {
+            ...prevStorageMap,
+            [storageId]: newStorage
+          }
+        })
+      },
+      [setStorageMap]
+    )
+
+    const cancelAllSyncingStorageQueue = useCallback(() => {
+      const storageIds = Object.keys(storageMapRef.current)
+
+      for (const storageId of storageIds) {
+        cancelSyncingStorageQueue(storageId)
+      }
+    }, [storageMapRef, cancelSyncingStorageQueue])
+
+    useEffect(() => {
+      if (enableAutoSync) {
+        queueSyncingAllStorage()
+      } else {
+        cancelAllSyncingStorageQueue()
+      }
+    }, [queueSyncingAllStorage, cancelAllSyncingStorageQueue, enableAutoSync])
 
     const linkStorage = useCallback(
       (storageId: string, cloudStorage: CloudNoteStorageData) => {
@@ -231,7 +348,7 @@ export function createDbStoreCreator(
         })
         saveStorageDataList(liteStorage, newStorageMap!)
       },
-      []
+      [setStorageMap]
     )
 
     const removeStorage = useCallback(
@@ -255,7 +372,7 @@ export function createDbStoreCreator(
       },
       // FIXME: The callback regenerates every storageMap change.
       // We should move the method to NoteStorage so the method instantiate only once.
-      [storageMap]
+      [setStorageMap, storageMap]
     )
 
     const renameStorage = useCallback(
@@ -274,7 +391,7 @@ export function createDbStoreCreator(
         })
         saveStorageDataList(liteStorage, newStorageMap)
       },
-      [storageMap]
+      [setStorageMap, storageMap]
     )
 
     const renameCloudStorage = useCallback(
@@ -293,12 +410,12 @@ export function createDbStoreCreator(
         })
         saveStorageDataList(liteStorage, newStorageMap)
       },
-      [storageMap]
+      [setStorageMap, storageMap]
     )
 
     const createFolder = useCallback(
-      async (id: string, pathname: string) => {
-        const storage = storageMap[id]
+      async (storageId: string, pathname: string) => {
+        const storage = storageMap[storageId]
         if (storage == null) {
           return
         }
@@ -323,7 +440,7 @@ export function createDbStoreCreator(
             createdFolders.forEach(aFolder => {
               const aPathname = getFolderPathname(aFolder._id)
               if (storage.folderMap[aPathname] == null) {
-                draft[id]!.folderMap[aPathname] = {
+                draft[storageId]!.folderMap[aPathname] = {
                   ...aFolder,
                   pathname: aPathname,
                   noteIdSet: new Set()
@@ -332,13 +449,15 @@ export function createDbStoreCreator(
             })
           })
         )
+
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
       },
-      [storageMap, pushMessage]
+      [storageMap, setStorageMap, queueSyncingStorage, pushMessage]
     )
 
     const renameFolder = useCallback(
-      async (id: string, pathname: string, newPathname: string) => {
-        const storage = storageMap[id]
+      async (storageId: string, pathname: string, newPathname: string) => {
+        const storage = storageMap[storageId]
         if (storage == null) {
           return
         }
@@ -416,28 +535,32 @@ export function createDbStoreCreator(
               draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
             })
             allFoldersToRename.forEach(aPathname => {
-              delete draft[id]!.folderMap[aPathname]
+              delete draft[storageId]!.folderMap[aPathname]
             })
           })
         )
+
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const removeFolder = useCallback(
-      async (id: string, pathname: string) => {
-        const storage = storageMap[id]
+      async (storageId: string, pathname: string) => {
+        const storage = storageMap[storageId]
         if (storage == null) {
           return
         }
         await storage.db.removeFolder(pathname)
         if (
           `${currentPathnameWithoutNoteId}/`.startsWith(
-            `/app/storages/${id}/notes${pathname}/`
+            `/app/storages/${storageId}/notes${pathname}/`
           )
         ) {
           router.replace(
-            `/app/storages/${id}/notes${getParentFolderPathname(pathname)}`
+            `/app/storages/${storageId}/notes${getParentFolderPathname(
+              pathname
+            )}`
           )
         }
 
@@ -489,20 +612,28 @@ export function createDbStoreCreator(
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             deletedFolderPathnames.forEach(aPathname => {
-              delete draft[id]!.folderMap[aPathname]
+              delete draft[storageId]!.folderMap[aPathname]
             })
-            draft[id]!.noteMap = {
-              ...draft[id]!.noteMap,
+            draft[storageId]!.noteMap = {
+              ...draft[storageId]!.noteMap,
               ...modifiedNotes
             }
-            draft[id]!.tagMap = {
-              ...draft[id]!.tagMap,
+            draft[storageId]!.tagMap = {
+              ...draft[storageId]!.tagMap,
               ...modifiedTags
             }
           })
         )
+
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
       },
-      [storageMap, router, currentPathnameWithoutNoteId]
+      [
+        storageMap,
+        currentPathnameWithoutNoteId,
+        setStorageMap,
+        queueSyncingStorage,
+        router
+      ]
     )
 
     const createNote = useCallback(
@@ -579,9 +710,12 @@ export function createDbStoreCreator(
             }
           })
         )
+
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
         return noteDoc
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const updateNote = useCallback(
@@ -702,9 +836,10 @@ export function createDbStoreCreator(
           })
         )
 
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
         return noteDoc
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const moveNoteToOtherStorage = useCallback(
@@ -846,8 +981,13 @@ export function createDbStoreCreator(
             })
           })
         )
+
+        queueSyncingStorage(originalStorageId, autoSyncDebounceWaitingTime)
+        if (originalStorageId !== targetStorageId) {
+          queueSyncingStorage(targetStorageId, autoSyncDebounceWaitingTime)
+        }
       },
-      [storageMap]
+      [queueSyncingStorage, setStorageMap, storageMap]
     )
 
     const trashNote = useCallback(
@@ -901,9 +1041,11 @@ export function createDbStoreCreator(
           })
         )
 
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
         return noteDoc
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const untrashNote = useCallback(
@@ -965,9 +1107,11 @@ export function createDbStoreCreator(
           })
         )
 
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
         return noteDoc
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const purgeNote = useCallback(
@@ -1016,10 +1160,11 @@ export function createDbStoreCreator(
             }
           })
         )
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
 
         return
       },
-      [storageMap]
+      [storageMap, setStorageMap, queueSyncingStorage]
     )
 
     const removeTag = useCallback(
@@ -1064,10 +1209,17 @@ export function createDbStoreCreator(
             draft[storageId]!.tagMap = newTagMap
           })
         )
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
 
         return
       },
-      [storageMap, currentPathnameWithoutNoteId, router]
+      [
+        storageMap,
+        currentPathnameWithoutNoteId,
+        setStorageMap,
+        queueSyncingStorage,
+        router
+      ]
     )
 
     const addAttachments = async (
@@ -1088,6 +1240,8 @@ export function createDbStoreCreator(
         })
       )
 
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
       return attachments
     }
 
@@ -1103,6 +1257,8 @@ export function createDbStoreCreator(
           delete draft[storageId]!.attachmentMap[fileName]
         })
       )
+
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
     }
 
     return {
@@ -1116,6 +1272,9 @@ export function createDbStoreCreator(
       linkStorage,
       unlinkStorage,
       syncStorage,
+      queueSyncingStorage,
+      queueSyncingAllStorage,
+      cancelSyncingStorageQueue,
       createFolder,
       renameFolder,
       removeFolder,
