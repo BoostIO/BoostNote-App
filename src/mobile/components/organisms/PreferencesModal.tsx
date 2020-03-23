@@ -11,6 +11,7 @@ import TableViewCell from '../atoms/TableViewCell'
 import TableViewLabel from '../atoms/TableViewLabel'
 import GeneralPreferencesTab from './GeneralPreferencesTab'
 import ExternalLinkTableViewCell from '../atoms/ExternalLinkTableViewCell'
+import MobilePageContainer from '../atoms/MobilePageContainer'
 
 const PreferencesModalContainer = styled.div`
   z-index: 7000;
@@ -58,7 +59,7 @@ const PreferencesModal = () => {
             </TopBarButton>
           }
         >
-          {getTab(tab)}
+          <MobilePageContainer>{getTab(tab)}</MobilePageContainer>
         </TopBarLayout>
       </PreferencesModalContainer>
     )
