@@ -1,19 +1,33 @@
-import React from 'react'
-import PageContainer from '../../../components/atoms/PageContainer'
+import React, { useCallback } from 'react'
 import {
   Section,
   SectionHeader,
-  SectionPrimaryButton
+  SectionPrimaryButton,
+  SectionControl
 } from '../../../components/PreferencesModal/styled'
 import LoginButton from '../../../components/atoms/LoginButton'
 import UserInfo from '../molecules/UserInfo'
 import { useUsers } from '../../../lib/accounts'
 import { IconArrowRotate } from '../../../components/icons'
+import MobilePageContainer from '../atoms/MobilePageContainer'
+import { FormCheckItem } from '../../../components/atoms/form'
+import { usePreferences } from '../../../lib/preferences'
 
 const GeneralPreferencesTab = () => {
+  const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
+
+  const toggleEnableAutoSync: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    event => {
+      setPreferences({
+        'general.enableAutoSync': event.target.checked
+      })
+    },
+    [setPreferences]
+  )
+
   return (
-    <PageContainer>
+    <MobilePageContainer>
       <Section>
         <SectionHeader>Account</SectionHeader>
         <div>
@@ -39,7 +53,21 @@ const GeneralPreferencesTab = () => {
           )}
         </div>
       </Section>
-    </PageContainer>
+
+      <Section>
+        <SectionHeader>Enable auto sync</SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-enable-auto-sync'
+            type='checkbox'
+            checked={preferences['general.enableAutoSync']}
+            onChange={toggleEnableAutoSync}
+          >
+            Enable auto sync
+          </FormCheckItem>
+        </SectionControl>
+      </Section>
+    </MobilePageContainer>
   )
 }
 
