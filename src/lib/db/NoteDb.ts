@@ -416,7 +416,7 @@ export default class NoteDb {
   async getAllFolderUnderPathname(
     folderPathname: string
   ): Promise<FolderDoc[]> {
-    const [folder, { rows }] = await Promise.all([
+    const [folder, allDocs] = await Promise.all([
       this.getFolder(folderPathname),
       this.pouchDb.allDocs<FolderDoc>({
         startkey: `${getFolderId(folderPathname)}/`,
@@ -424,6 +424,8 @@ export default class NoteDb {
         include_docs: true
       })
     ])
+    // FIXME: https://github.com/microsoft/TypeScript/issues/35626
+    const { rows } = allDocs as PouchDB.Core.AllDocsResponse<FolderDoc>
     const folderList = rows.map(row => row.doc!)
     if (folder != null) {
       folderList.unshift(folder)
@@ -538,16 +540,13 @@ export default class NoteDb {
     if (_attachments == null) {
       return {}
     }
-    return Object.entries(_attachments).reduce(
-      (map, [key, attachment]) => {
-        map[key] = {
-          name: key,
-          type: attachment.content_type,
-          blob: (attachment as PouchDB.Core.FullAttachment).data as Blob
-        }
-        return map
-      },
-      {} as ObjectMap<Attachment>
-    )
+    return Object.entries(_attachments).reduce((map, [key, attachment]) => {
+      map[key] = {
+        name: key,
+        type: attachment.content_type,
+        blob: (attachment as PouchDB.Core.FullAttachment).data as Blob
+      }
+      return map
+    }, {} as ObjectMap<Attachment>)
   }
 }
