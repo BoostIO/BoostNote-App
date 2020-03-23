@@ -18,7 +18,7 @@ import {
 } from '../../../components/atoms/form'
 import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
-import PageContainer from '../atoms/PageContainer'
+import PageContainer from '../../../components/atoms/PageContainer'
 
 interface StorageEditPageProps {
   storage: NoteStorage
