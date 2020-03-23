@@ -37,7 +37,7 @@ export function useAnalytics() {
     }
     Analytics.updateEndpoint({
       attributes: {
-        userId: [user.id.toString()],
+        userId: user == null ? [] : [user.id.toString()],
         target: [process.env.TARGET == null ? 'dev' : process.env.TARGET]
       }
     })
@@ -45,10 +45,6 @@ export function useAnalytics() {
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
-      if (user != null) {
-        attributes = { ...attributes, user: user.id.toString() }
-      }
-
       if (analyticsEnabled) {
         if (attributes == null) {
           Analytics.record({ name: name })
@@ -57,7 +53,7 @@ export function useAnalytics() {
         }
       }
     },
-    [analyticsEnabled, user]
+    [analyticsEnabled]
   )
 
   return {
