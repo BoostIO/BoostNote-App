@@ -90,6 +90,7 @@
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
     "type-fest": "^0.7.1",
+    "typescript": "^3.8.3",
     "url-loader": "^2.1.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9",
@@ -156,7 +157,6 @@
     "remark-stringify": "^7.0.4",
     "shortid": "^2.2.15",
     "styled-components": "^4.3.2",
-    "typescript": "^3.6.3",
     "unified": "^8.4.0",
     "unist-util-visit": "^2.0.0",
     "use-force-update": "^1.0.7"
