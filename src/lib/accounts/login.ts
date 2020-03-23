@@ -52,7 +52,7 @@ const loginStart = async (
       onErr(response as CheckLoginError)
     }
   } catch (error) {
-    onErr('NetworkError')
+    onErr(error)
   } finally {
     setState('idle')
   }

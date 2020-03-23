@@ -59,7 +59,7 @@ const PreferencesModal = () => {
               ))}
               {users.length === 0 && (
                 <LoginButton
-                  onErr={console.error /* TODO: Toast error */}
+                  onErr={error => console.error(error)}
                   ButtonComponent={SectionPrimaryButton}
                 >
                   {loginState =>
