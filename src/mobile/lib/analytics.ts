@@ -3,6 +3,7 @@ import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
 import { usePreferences } from '../../lib/preferences'
 import { DbStore } from '../../lib/db'
+import { useEffectOnce } from 'react-use'
 
 const amplifyConfig = {
   Auth: {
@@ -25,7 +26,7 @@ export function useAnalytics() {
   const analyticsEnabled = preferences['general.enableAnalytics']
   const user = preferences['general.accounts'][0]
 
-  if (!configured.current) {
+  useEffectOnce(() => {
     Auth.configure(amplifyConfig)
     Analytics.configure(analyticsConfig)
     configured.current = true
@@ -34,7 +35,13 @@ export function useAnalytics() {
       ;(window as any).initilalized = true
       Analytics.record('init')
     }
-  }
+    Analytics.updateEndpoint({
+      attributes: {
+        userId: [user.id.toString()],
+        target: [process.env.TARGET == null ? 'dev' : process.env.TARGET]
+      }
+    })
+  })
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
