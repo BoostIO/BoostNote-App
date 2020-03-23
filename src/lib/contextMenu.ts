@@ -58,7 +58,7 @@ function useContextMenuStore(): ContextMenuContext {
   const [closed, setClosed] = useState(true)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
-  const [id, setId] = useState()
+  const [id, setId] = useState(0)
 
   const popupWithPosition = useCallback(
     ({ x, y }: { x: number; y: number }, menuItems: MenuItem[]) => {
