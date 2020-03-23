@@ -9,9 +9,10 @@ import { capitalize } from '../../../lib/string'
 import { backgroundColor } from '../../../lib/styled/styleFunctions'
 import TableViewCell from '../atoms/TableViewCell'
 import TableViewLabel from '../atoms/TableViewLabel'
-import GeneralPreferencesTab from './GeneralPreferencesTab'
 import ExternalLinkTableViewCell from '../atoms/ExternalLinkTableViewCell'
 import MobilePageContainer from '../atoms/MobilePageContainer'
+import GeneralPreferencesTab from './GeneralPreferencesTab'
+import EditorPreferencesTab from './EditorPreferencesTab'
 
 const PreferencesModalContainer = styled.div`
   z-index: 7000;
@@ -113,6 +114,8 @@ const PreferencesModal = () => {
 
 function getTab(tab: 'general' | 'editor' | 'billing') {
   switch (tab) {
+    case 'editor':
+      return <EditorPreferencesTab />
     default:
     case 'general':
       return <GeneralPreferencesTab />
