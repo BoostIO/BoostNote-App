@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffectOnce } from 'react-use'
 import { NoteStorage } from '../../../lib/db/types'
 import Spinner from '../../../components/atoms/Spinner'
-import { useDb } from '../../../lib/db'
+import { useDb } from '../../lib/db'
 import {
   CloudStorage,
   getStorages,
