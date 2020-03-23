@@ -11,7 +11,7 @@ import {
 } from '../../../components/atoms/form'
 import LocalStorageCreateForm from '../organisms/LocalStorageCreateForm'
 import CloudStorageCreateForm from '../organisms/CloudStorageCreateForm'
-import PageContainer from '../atoms/PageContainer'
+import PageContainer from '../../../components/atoms/PageContainer'
 
 const StorageCreatePage = () => {
   const { t } = useTranslation()
