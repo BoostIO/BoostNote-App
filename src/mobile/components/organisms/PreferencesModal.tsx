@@ -1,20 +1,16 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { usePreferences } from '../../../lib/preferences'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarButton from '../atoms/TopBarButton'
 import Icon from '../atoms/Icon'
-import { mdiClose } from '@mdi/js'
+import { mdiClose, mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import styled from '../../../lib/styled'
+import { capitalize } from '../../../lib/string'
 import { backgroundColor } from '../../../lib/styled/styleFunctions'
-import {
-  Section,
-  SectionHeader,
-  SectionPrimaryButton
-} from '../../../components/PreferencesModal/styled'
-import LoginButton from '../../../components/atoms/LoginButton'
-import UserInfo from '../molecules/UserInfo'
-import { useUsers } from '../../../lib/accounts'
-import { IconArrowRotate } from '../../../components/icons'
+import TableViewCell from '../atoms/TableViewCell'
+import TableViewLabel from '../atoms/TableViewLabel'
+import GeneralPreferencesTab from './GeneralPreferencesTab'
+import ExternalLinkTableViewCell from '../atoms/ExternalLinkTableViewCell'
 
 const PreferencesModalContainer = styled.div`
   z-index: 7000;
@@ -28,16 +24,44 @@ const PreferencesModalContainer = styled.div`
   overflow: hidden;
 `
 
-const ContentContainer = styled.div`
-  padding: 15px;
-`
-
 const PreferencesModal = () => {
   const { closed, toggleClosed } = usePreferences()
-  const [users, { removeUser }] = useUsers()
+  const [tab, setTab] = useState<null | 'general' | 'editor' | 'billing'>(null)
+
+  const unselectTab = useCallback(() => {
+    setTab(null)
+  }, [])
+
+  const selectGeneralTab = useCallback(() => {
+    setTab('general')
+  }, [])
+
+  const selectEditorTab = useCallback(() => {
+    setTab('editor')
+  }, [])
+
+  const selectBillingTab = useCallback(() => {
+    setTab('billing')
+  }, [])
 
   if (closed) {
     return null
+  }
+  if (tab != null) {
+    return (
+      <PreferencesModalContainer>
+        <TopBarLayout
+          title={`Preferences / ${capitalize(tab)}`}
+          leftControl={
+            <TopBarButton onClick={unselectTab}>
+              <Icon path={mdiChevronLeft} />
+            </TopBarButton>
+          }
+        >
+          {getTab(tab)}
+        </TopBarLayout>
+      </PreferencesModalContainer>
+    )
   }
 
   return (
@@ -50,36 +74,48 @@ const PreferencesModal = () => {
           </TopBarButton>
         }
       >
-        <ContentContainer>
-          <Section>
-            <SectionHeader>Account</SectionHeader>
-            <div>
-              {users.map(user => (
-                <UserInfo key={user.id} user={user} signout={removeUser} />
-              ))}
-              {users.length === 0 && (
-                <LoginButton
-                  onErr={error => console.error(error)}
-                  ButtonComponent={SectionPrimaryButton}
-                >
-                  {loginState =>
-                    loginState !== 'logging-in' ? (
-                      <>Sign in</>
-                    ) : (
-                      <>
-                        <IconArrowRotate />
-                        Loggin in...
-                      </>
-                    )
-                  }
-                </LoginButton>
-              )}
-            </div>
-          </Section>
-        </ContentContainer>
+        <TableViewCell iconPath={mdiChevronRight} onClick={selectGeneralTab}>
+          General
+        </TableViewCell>
+        <TableViewCell iconPath={mdiChevronRight} onClick={selectEditorTab}>
+          Editor
+        </TableViewCell>
+        <TableViewCell iconPath={mdiChevronRight} onClick={selectBillingTab}>
+          Billing
+        </TableViewCell>
+        <TableViewLabel>External links</TableViewLabel>
+        <ExternalLinkTableViewCell url='https://github.com/BoostIO/Boostnote.next'>
+          Github Repository
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://issuehunt.io/r/BoostIo/Boostnote.next'>
+          IssueHunt
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw'>
+          Slack
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://twitter.com/boostnoteapp'>
+          Twitter
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://www.facebook.com/groups/boostnote/'>
+          Facebook
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://www.reddit.com/r/Boostnote/'>
+          Reddit
+        </ExternalLinkTableViewCell>
+        <ExternalLinkTableViewCell url='https://boostnote.io/wiki'>
+          Boost Note for Team
+        </ExternalLinkTableViewCell>
       </TopBarLayout>
     </PreferencesModalContainer>
   )
+}
+
+function getTab(tab: 'general' | 'editor' | 'billing') {
+  switch (tab) {
+    default:
+    case 'general':
+      return <GeneralPreferencesTab />
+  }
 }
 
 export default PreferencesModal
