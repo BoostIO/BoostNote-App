@@ -36,11 +36,8 @@ import { useToast } from '../toast'
 import { useFirstUser, usePreferences } from '../preferences'
 import { useRefState } from '../hooks'
 
-// const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
-// const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
-
-const autoSyncIntervalTime = 1000 * 5 // Every one hour
-const autoSyncDebounceWaitingTime = 1000 * 5 // 30 seconds after updating data
+const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
+const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
 
 export interface DbStore {
   initialized: boolean
@@ -114,13 +111,10 @@ export function createDbStoreCreator(
       const prepared = await Promise.all(
         storageDataList.map(storage => prepareStorage(storage, adapter))
       )
-      const storageMap = prepared.reduce(
-        (map, storage) => {
-          map[storage.id] = storage
-          return map
-        },
-        {} as ObjectMap<NoteStorage>
-      )
+      const storageMap = prepared.reduce((map, storage) => {
+        map[storage.id] = storage
+        return map
+      }, {} as ObjectMap<NoteStorage>)
 
       saveStorageDataList(liteStorage, storageMap)
       setStorageMap(storageMap)
@@ -771,9 +765,9 @@ export function createDbStoreCreator(
           ...getAllParentFolderPathnames(noteDoc.folderPathname)
         ].filter(aPathname => storage.folderMap[aPathname] == null)
         folderListToRefresh.push(
-          ...(await storage.db.getFoldersByPathnames(
-            parentFolderPathnamesToCheck
-          )).map(folderDoc => {
+          ...(
+            await storage.db.getFoldersByPathnames(parentFolderPathnamesToCheck)
+          ).map(folderDoc => {
             return {
               ...folderDoc,
               pathname: getFolderPathname(folderDoc._id),
