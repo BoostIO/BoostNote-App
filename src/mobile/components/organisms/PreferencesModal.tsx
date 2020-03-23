@@ -13,6 +13,7 @@ import ExternalLinkTableViewCell from '../atoms/ExternalLinkTableViewCell'
 import MobilePageContainer from '../atoms/MobilePageContainer'
 import GeneralPreferencesTab from './GeneralPreferencesTab'
 import EditorPreferencesTab from './EditorPreferencesTab'
+import BillingTab from '../../../components/PreferencesModal/BillingTab'
 
 const PreferencesModalContainer = styled.div`
   z-index: 7000;
@@ -116,6 +117,8 @@ function getTab(tab: 'general' | 'editor' | 'billing') {
   switch (tab) {
     case 'editor':
       return <EditorPreferencesTab />
+    case 'billing':
+      return <BillingTab />
     default:
     case 'general':
       return <GeneralPreferencesTab />
