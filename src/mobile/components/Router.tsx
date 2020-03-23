@@ -34,7 +34,7 @@ export default () => {
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
-        return <StorageEditPage storage={storage} />
+        return <StorageEditPage key={storage.id} storage={storage} />
       } else {
         break
       }
