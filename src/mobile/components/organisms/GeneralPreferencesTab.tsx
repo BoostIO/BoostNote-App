@@ -9,7 +9,6 @@ import LoginButton from '../../../components/atoms/LoginButton'
 import UserInfo from '../molecules/UserInfo'
 import { useUsers } from '../../../lib/accounts'
 import { IconArrowRotate } from '../../../components/icons'
-import MobilePageContainer from '../atoms/MobilePageContainer'
 import { FormCheckItem } from '../../../components/atoms/form'
 import { usePreferences } from '../../../lib/preferences'
 
@@ -27,7 +26,7 @@ const GeneralPreferencesTab = () => {
   )
 
   return (
-    <MobilePageContainer>
+    <div>
       <Section>
         <SectionHeader>Account</SectionHeader>
         <div>
@@ -67,7 +66,7 @@ const GeneralPreferencesTab = () => {
           </FormCheckItem>
         </SectionControl>
       </Section>
-    </MobilePageContainer>
+    </div>
   )
 }
 
