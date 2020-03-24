@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  ChangeEvent
+  ChangeEvent,
 } from 'react'
 import {
   FormGroup,
@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormCheckItem,
   FormField,
-  FormTextInput
+  FormTextInput,
 } from '../atoms/form'
 import LoginButton from '../atoms/LoginButton'
 import { usePreferences } from '../../lib/preferences'
@@ -26,7 +26,7 @@ import { useDb } from '../../lib/db'
 import {
   CloudStorage,
   getStorages,
-  createStorage as createCloudStorage
+  createStorage as createCloudStorage,
 } from '../../lib/accounts'
 
 interface LinkCloudStorageFormProps {
@@ -74,7 +74,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
       pushMessage({
         title: 'Cloud Error',
         description:
-          'An error occured while attempting to fetch cloud storage list'
+          'An error occured while attempting to fetch cloud storage list',
       })
     }
 
@@ -114,7 +114,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
         pushMessage({
           title: 'Subscription Required',
           description:
-            'Please update subscription to create more cloud storage.'
+            'Please update subscription to create more cloud storage.',
         })
         return
       }
@@ -122,13 +122,13 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
         id: cloudStorage.id,
         name: cloudStorage.name,
         size: cloudStorage.size,
-        syncedAt: Date.now()
+        syncedAt: Date.now(),
       })
       db.syncStorage(storage.id)
     } catch (error) {
       pushMessage({
         title: 'Error',
-        description: error.toString()
+        description: error.toString(),
       })
     }
 
@@ -141,7 +141,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
     storage.id,
     storage.name,
     user,
-    targetRemoteStorage
+    targetRemoteStorage,
   ])
 
   if (user == null) {
@@ -152,7 +152,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage'
+                'An error occured while attempting to create a cloud storage',
             })
           }}
           ButtonComponent={FormPrimaryButton}
@@ -185,7 +185,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
           id='radio-remote-storage-new'
           type='radio'
           checked={targetRemoteStorage == null}
-          onChange={event => {
+          onChange={(event) => {
             if (event.target.checked) {
               setTargetRemoteStorageId(null)
             }
@@ -201,7 +201,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
               id='checkbox-remote-storage-new'
               type='checkbox'
               checked={usingSameName}
-              onChange={event => {
+              onChange={(event) => {
                 setUsingSameName(event.target.checked)
               }}
               disabled={targetRemoteStorage != null}
@@ -226,7 +226,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
         {!fetching && remoteStorageList.length === 0 && (
           <p>Remote storage does not exist.</p>
         )}
-        {remoteStorageList.map(cloudStorage => {
+        {remoteStorageList.map((cloudStorage) => {
           const cloudStorageId = cloudStorage.id.toString()
           const id = `radio-remote-storage-${cloudStorageId}`
           return (
@@ -235,7 +235,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
               key={id}
               type='radio'
               checked={targetRemoteStorageId === cloudStorageId}
-              onChange={event => {
+              onChange={(event) => {
                 if (event.target.checked) {
                   setTargetRemoteStorageId(cloudStorageId)
                 }

@@ -25,5 +25,6 @@ export default function useRedirectHandler() {
     } else {
       replace(`/app/storages/${storageEntries[0][1].id}`)
     }
+    /* eslint-disable */
   }, [pathname, replace])
 }

@@ -30,7 +30,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { toggleNav } = useGeneralStatus()
 
   const tagList = useMemo(() => {
-    return Object.keys(tagMap).map(tagName => {
+    return Object.keys(tagMap).map((tagName) => {
       const tagPathname = `/m/storages/${storageId}/tags/${tagName}`
       const tagIsActive = currentPathname === tagPathname
       return (
@@ -44,7 +44,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
             toggleNav()
           }}
           active={tagIsActive}
-          onContextMenu={event => {
+          onContextMenu={(event) => {
             event.preventDefault()
             popup(event, [
               {
@@ -62,10 +62,10 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                       if (value === 0) {
                         removeTag(storageId, tagName)
                       }
-                    }
+                    },
                   })
-                }
-              }
+                },
+              },
             ])
           }}
         />
@@ -80,7 +80,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     messageBox,
     removeTag,
     t,
-    toggleNav
+    toggleNav,
   ])
 
   return (
@@ -96,7 +96,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         onClick={() => {
           toggleSideNavOpenedItem(tagListNavItemId)
         }}
-        onContextMenu={event => {
+        onContextMenu={(event) => {
           event.preventDefault()
         }}
       />

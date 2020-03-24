@@ -19,7 +19,7 @@ export interface RouterStore extends Location {
 const initialLocation = normalizeLocation({
   pathname: isElectron() ? '/app' : bhistory.location.pathname,
   hash: bhistory.location.hash,
-  query: parseQuery(bhistory.location.search)
+  query: parseQuery(bhistory.location.search),
 })
 
 function useRouteStore(): RouterStore {
@@ -41,11 +41,11 @@ function useRouteStore(): RouterStore {
   const goForward = useCallback(() => go(1), [go])
 
   useEffect(() => {
-    return bhistory.listen(blocation => {
+    return bhistory.listen((blocation) => {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,
-        query: parseQuery(blocation.search)
+        query: parseQuery(blocation.search),
       })
     })
   }, [])
@@ -56,11 +56,11 @@ function useRouteStore(): RouterStore {
     replace,
     go,
     goBack,
-    goForward
+    goForward,
   }
 }
 
 export const {
   StoreProvider: RouterProvider,
-  useStore: useRouter
+  useStore: useRouter,
 } = createStoreContext(useRouteStore)

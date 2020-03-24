@@ -3,7 +3,7 @@ import styled from '../../lib/styled'
 import {
   border,
   primaryButtonStyle,
-  secondaryButtonStyle
+  secondaryButtonStyle,
 } from '../../lib/styled/styleFunctions'
 
 interface FormHeadingProps {
@@ -35,7 +35,7 @@ export const FormHeading = ({
   depth,
   children,
   className,
-  style
+  style,
 }: FormHeadingProps) => {
   const elementName = getHeadingByDepth(depth)
 
@@ -111,7 +111,7 @@ export const FormCheckInlineItem = ({
   className,
   style,
   disabled,
-  onChange
+  onChange,
 }: FormCheckItemProps) => {
   return (
     <FormCheckInlineItemContainer className={className} style={style}>
@@ -139,7 +139,7 @@ export const FormCheckItem = ({
   className,
   style,
   disabled,
-  onChange
+  onChange,
 }: FormCheckItemProps) => {
   return (
     <FormCheckItemContainer className={className} style={style}>

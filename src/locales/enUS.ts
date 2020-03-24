@@ -156,6 +156,6 @@ export default {
       '3. Choose the Storage and Folder that you want to move your old data.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'remove',
-    'preferences.importUpload': 'Upload'
-  }
+    'preferences.importUpload': 'Upload',
+  },
 }

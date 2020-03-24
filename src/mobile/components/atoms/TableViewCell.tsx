@@ -3,7 +3,7 @@ import styled from '../../../lib/styled'
 import {
   borderBottom,
   uiTextColor,
-  sideBarBackgroundColor
+  sideBarBackgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import Icon from './Icon'
 
@@ -32,7 +32,7 @@ interface TableViewCellProps {
 const TableViewCell: React.FC<TableViewCellProps> = ({
   children,
   iconPath,
-  onClick
+  onClick,
 }) => {
   return (
     <TableViewCellContainerButton onClick={onClick}>

@@ -115,5 +115,5 @@ export const themes = [
   'paraiso-dark',
   'shadowfox',
   'ttcn',
-  'yonce'
+  'yonce',
 ]

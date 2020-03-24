@@ -97,7 +97,7 @@ const basePreferences: Preferences = {
 
   // Markdown
   'markdown.previewStyle': 'default',
-  'markdown.codeBlockTheme': 'default'
+  'markdown.codeBlockTheme': 'default',
 }
 
 function usePreferencesStore() {
@@ -111,7 +111,7 @@ function usePreferencesStore() {
   const mergedPreferences = useMemo(() => {
     return {
       ...basePreferences,
-      ...preferences
+      ...preferences,
     }
   }, [preferences])
 
@@ -135,13 +135,13 @@ function usePreferencesStore() {
     setClosed,
     toggleClosed,
     preferences: mergedPreferences,
-    setPreferences
+    setPreferences,
   }
 }
 
 export const {
   StoreProvider: PreferencesProvider,
-  useStore: usePreferences
+  useStore: usePreferences,
 } = createStoreContext(usePreferencesStore, 'preferences')
 
 export function useFirstUser() {

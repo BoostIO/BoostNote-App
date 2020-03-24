@@ -13,7 +13,7 @@ import {
   FormTextInput,
   FormBlockquote,
   FormPrimaryButton,
-  FormSecondaryButton
+  FormSecondaryButton,
 } from '../atoms/form'
 import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
@@ -46,11 +46,11 @@ export default ({ storage }: StorageEditProps) => {
           } catch {
             pushMessage({
               title: t('general.networkError'),
-              description: `An error occurred while deleting storage (id: ${storage.id})`
+              description: `An error occurred while deleting storage (id: ${storage.id})`,
             })
           }
         }
-      }
+      },
     })
   }, [storage, t, db, router, messageBox, pushMessage])
 

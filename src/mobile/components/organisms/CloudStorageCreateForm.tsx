@@ -6,7 +6,7 @@ import {
   FormTextInput,
   FormSecondaryButton,
   FormCheckItem,
-  FormBlockquote
+  FormBlockquote,
 } from '../../../components/atoms/form'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
@@ -16,7 +16,7 @@ import Spinner from '../../../components/atoms/Spinner'
 import {
   getStorages,
   CloudStorage,
-  createStorage as createCloudStorage
+  createStorage as createCloudStorage,
 } from '../../../lib/accounts'
 import { useFirstUser } from '../../../lib/preferences'
 import { useEffectOnce } from 'react-use'
@@ -64,7 +64,7 @@ const CloudStorageCreateForm = () => {
         pushMessage({
           title: 'Subscription Required',
           description:
-            'Please update subscription to create more cloud storage.'
+            'Please update subscription to create more cloud storage.',
         })
         setCreating(false)
         return
@@ -73,14 +73,14 @@ const CloudStorageCreateForm = () => {
       db.linkStorage(storage.id, {
         id: cloudStorage.id,
         name: cloudStorage.name,
-        size: cloudStorage.size
+        size: cloudStorage.size,
       })
       db.syncStorage(storage.id)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
         title: 'Error',
-        description: error.toString()
+        description: error.toString(),
       })
       setCreating(false)
     }
@@ -92,7 +92,7 @@ const CloudStorageCreateForm = () => {
     user,
     db,
     push,
-    pushMessage
+    pushMessage,
   ])
 
   const unmountRef = useRef(false)
@@ -112,7 +112,7 @@ const CloudStorageCreateForm = () => {
     } catch (error) {
       pushMessage({
         title: 'Failed to fetch cloud storage data',
-        description: error.toString()
+        description: error.toString(),
       })
     }
   }, [user, pushMessage])
@@ -132,7 +132,7 @@ const CloudStorageCreateForm = () => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage'
+                'An error occured while attempting to create a cloud storage',
             })
           }}
           ButtonComponent={FormPrimaryButton}
@@ -150,7 +150,7 @@ const CloudStorageCreateForm = () => {
           id='radio-remote-storage-new'
           type='radio'
           checked={targetRemoteStorage == null}
-          onChange={event => {
+          onChange={(event) => {
             if (event.target.checked) {
               setStorageName('')
               setCloudStorageName('')
@@ -164,7 +164,7 @@ const CloudStorageCreateForm = () => {
         {!fetching && remoteStorageList.length === 0 && (
           <p>Remote storage does not exist.</p>
         )}
-        {remoteStorageList.map(cloudStorage => {
+        {remoteStorageList.map((cloudStorage) => {
           const cloudStorageId = cloudStorage.id.toString()
           const id = `radio-remote-storage-${cloudStorageId}`
           return (
@@ -173,7 +173,7 @@ const CloudStorageCreateForm = () => {
               key={id}
               type='radio'
               checked={targetRemoteStorageId === cloudStorageId}
-              onChange={event => {
+              onChange={(event) => {
                 if (event.target.checked) {
                   setStorageName(cloudStorage.name)
                   setTargetRemoteStorageId(cloudStorageId)
@@ -215,7 +215,7 @@ const CloudStorageCreateForm = () => {
         <FormCheckItem
           id='checkbox-same-storage-name'
           checked={usingSameName}
-          onChange={event => {
+          onChange={(event) => {
             if (!event.target.checked) {
               setCloudStorageName(storageName)
             }

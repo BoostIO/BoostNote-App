@@ -57,7 +57,7 @@ const TopBarLayout: React.FC<TopBarLayoutProps> = ({
   children,
   style,
   leftControl,
-  rightControl
+  rightControl,
 }) => (
   <TopBarLayoutContainer style={style}>
     <TopBar>

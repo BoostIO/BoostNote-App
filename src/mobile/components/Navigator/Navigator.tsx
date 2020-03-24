@@ -10,7 +10,7 @@ import {
   sideBarBackgroundColor,
   sideBarDefaultTextColor,
   iconColor,
-  sideBarTextColor
+  sideBarTextColor,
 } from '../../../lib/styled/styleFunctions'
 import NavigatorItem from './NavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -27,7 +27,7 @@ import {
   IconTrash,
   // IconImage,
   IconSetting,
-  IconBook
+  IconBook,
   // IconStarActive
 } from '../../../components/icons'
 import Icon from '../atoms/Icon'
@@ -132,7 +132,7 @@ export default ({ toggle }: NavigatorProps) => {
     renameStorage,
     removeStorage,
     storageMap,
-    syncStorage
+    syncStorage,
   } = useDb()
   const { popup } = useContextMenu()
   const { prompt, messageBox } = useDialog()
@@ -161,10 +161,10 @@ export default ({ toggle }: NavigatorProps) => {
                 if (value == null) return
                 const storage = await createStorage(value)
                 push(`/m/storages/${storage.id}/notes`)
-              }
+              },
             })
-          }
-        }
+          },
+        },
       ])
     },
     [popup, prompt, createStorage, push]
@@ -175,7 +175,7 @@ export default ({ toggle }: NavigatorProps) => {
     toggleSideNavOpenedItem,
     sideNavOpenedItemSet,
     openSideNavFolderItemRecursively,
-    toggleNav
+    toggleNav,
   } = useGeneralStatus()
 
   const currentPathname = usePathnameWithoutNoteId()
@@ -242,7 +242,7 @@ export default ({ toggle }: NavigatorProps) => {
 
                 // Open folder item
                 openSideNavFolderItemRecursively(storage.id, value)
-              }
+              },
             })
           }
           const showPromptToRenameFolder = (folderPathname: string) => {
@@ -269,10 +269,10 @@ export default ({ toggle }: NavigatorProps) => {
                 } catch (error) {
                   pushMessage({
                     title: t('general.error'),
-                    description: t('folder.renameErrorMessage')
+                    description: t('folder.renameErrorMessage'),
                   })
                 }
-              }
+              },
             })
           }
 
@@ -291,7 +291,7 @@ export default ({ toggle }: NavigatorProps) => {
               key={`${storage.id}-addFolderButton`}
               onClick={() => showPromptToCreateFolder('/')}
               icon={<IconAddRound />}
-            />
+            />,
           ]
 
           if (storage.cloudStorage != null && user != null) {
@@ -299,7 +299,7 @@ export default ({ toggle }: NavigatorProps) => {
               if (user == null) {
                 pushMessage({
                   title: 'No User Error',
-                  description: 'Please login first to sync the storage.'
+                  description: 'Please login first to sync the storage.',
                 })
               }
               syncStorage(storage.id)
@@ -337,7 +337,7 @@ export default ({ toggle }: NavigatorProps) => {
                 onClick={() => {
                   toggleSideNavOpenedItem(itemId)
                 }}
-                onContextMenu={event => {
+                onContextMenu={(event) => {
                   event.preventDefault()
                   popup(event, [
                     {
@@ -353,9 +353,9 @@ export default ({ toggle }: NavigatorProps) => {
                           onClose: async (value: string | null) => {
                             if (value == null) return
                             await renameStorage(storage.id, value)
-                          }
+                          },
                         })
-                      }
+                      },
                     },
                     {
                       type: MenuTypes.Normal,
@@ -372,10 +372,10 @@ export default ({ toggle }: NavigatorProps) => {
                             if (value === 0) {
                               removeStorage(storage.id)
                             }
-                          }
+                          },
                         })
-                      }
-                    }
+                      },
+                    },
                   ])
                 }}
                 controlComponents={controlComponents}
@@ -420,7 +420,7 @@ export default ({ toggle }: NavigatorProps) => {
                       push(trashcanPagePathname)
                       toggleNav()
                     }}
-                    onContextMenu={event => {
+                    onContextMenu={(event) => {
                       event.preventDefault()
                       // TODO: Implement context menu(restore all notes)
                     }}

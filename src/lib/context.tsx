@@ -20,7 +20,7 @@ export function createStoreContext<R>(
 
   return {
     StoreProvider,
-    useStore
+    useStore,
   }
 }
 

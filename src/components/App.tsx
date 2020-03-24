@@ -44,7 +44,7 @@ const App = () => {
       .then(() => {
         queueSyncingAllStorage(0)
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error)
       })
   })
@@ -65,7 +65,7 @@ const App = () => {
   const updateSideBarWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
-        sideBarWidth: leftWidth
+        sideBarWidth: leftWidth,
       })
     },
     [setGeneralStatus]

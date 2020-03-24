@@ -4,7 +4,7 @@ import { useModal } from '../../lib/modal'
 import {
   StyledModalsBackground,
   StyledModalsContainer,
-  StyledModalsSkipButton
+  StyledModalsSkipButton,
 } from './styled'
 import { usePreferences } from '../../lib/preferences'
 import DownloadOurAppModal from './contents/DownloadOurAppModal'
@@ -23,7 +23,7 @@ export default () => {
   const content = useMemo((): ModalsRenderingOptions => {
     const basicModal: ModalsRenderingOptions = {
       closable: true,
-      body: <></>
+      body: <></>,
     }
 
     switch (modalContent) {
@@ -31,7 +31,7 @@ export default () => {
         basicModal.body = <DownloadOurAppModal />
         basicModal.onSkip = () => {
           setPreferences({
-            'general.enableDownloadAppModal': false
+            'general.enableDownloadAppModal': false,
           })
           closeModal()
         }

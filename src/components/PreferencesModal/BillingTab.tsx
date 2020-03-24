@@ -4,7 +4,7 @@ import {
   SectionHeader,
   SectionPrimaryButton,
   SectionSecondaryButton,
-  SectionTable
+  SectionTable,
 } from './styled'
 import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
@@ -58,7 +58,7 @@ const BillingTab = () => {
 
   useEffect(() => {
     if (user != null) {
-      getSubscription(user).then(subscription => {
+      getSubscription(user).then((subscription) => {
         setSubscription(subscription)
       })
     }

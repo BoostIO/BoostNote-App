@@ -6,7 +6,7 @@ import {
   getTagId,
   getTagName,
   isTagNameValid,
-  getAllParentFolderPathnames
+  getAllParentFolderPathnames,
 } from './utils'
 
 describe('getFolderId', () => {

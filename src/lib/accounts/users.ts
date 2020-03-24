@@ -25,18 +25,18 @@ export const useUsers = (): [User[], UserRepo] => {
 
   const setUsers = (users: User[]) => {
     setPreferences({
-      'general.accounts': users
+      'general.accounts': users,
     })
   }
 
   const repo: UserRepo = {
-    removeUser: user => setUsers(removeUser(user, users)),
-    setUser: user => setUsers([user])
+    removeUser: (user) => setUsers(removeUser(user, users)),
+    setUser: (user) => setUsers([user]),
   }
 
   return [users, repo]
 }
 
 const removeUser = (user: User, users: User[]) => {
-  return users.filter(u => u.id !== user.id)
+  return users.filter((u) => u.id !== user.id)
 }

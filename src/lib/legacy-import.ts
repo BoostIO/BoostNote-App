@@ -60,12 +60,12 @@ const parseCSON = (text: string) => {
 
 const validateNoteSchema = (
   obj: any
-): ParsedNote & { type: string } | 'schema_parse_error' => {
+): (ParsedNote & { type: string }) | 'schema_parse_error' => {
   const validator = ow.object.partialShape({
     tags: ow.optional.array.ofType(ow.string),
     content: ow.string,
     title: ow.string,
-    type: ow.string
+    type: ow.string,
   })
 
   try {

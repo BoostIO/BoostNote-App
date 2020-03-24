@@ -7,13 +7,13 @@ import {
   inputStyle,
   iconColor,
   noteListIconColor,
-  selectTabStyle
+  selectTabStyle,
 } from '../../../lib/styled/styleFunctions'
 import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
-  isWithGeneralCtrlKey
+  isWithGeneralCtrlKey,
 } from '../../../lib/keyboard'
 import { NoteListSortOptions } from '../../pages/NotePage'
 import { osName } from '../../../lib/platform'
@@ -126,11 +126,11 @@ const NoteList = ({
   navigateUp,
   lastCreatedNoteId,
   setSort,
-  trashOrPurgeCurrentNote
+  trashOrPurgeCurrentNote,
 }: NoteListProps) => {
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
+    (event) => {
       setSearchInput(event.target.value)
     },
     [setSearchInput]
@@ -139,7 +139,7 @@ const NoteList = ({
   const listRef = useRef<HTMLUListElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
-  useGlobalKeyDownHandler(e => {
+  useGlobalKeyDownHandler((e) => {
     switch (e.key) {
       case 's':
         if (isWithGeneralCtrlKey(e) && !e.shiftKey) {
@@ -210,7 +210,7 @@ const NoteList = ({
         <IconArrowSingleDown className='filterIcon' size='0.8em' />
         <select
           className='input'
-          onChange={e => setSort(e.target.value as NoteListSortOptions)}
+          onChange={(e) => setSort(e.target.value as NoteListSortOptions)}
         >
           <option value='updatedAt'>Updated</option>
           <option value='createdAt'>Created</option>
@@ -218,7 +218,7 @@ const NoteList = ({
         </select>
       </div>
       <ul tabIndex={0} ref={listRef} onKeyDown={handleListKeyDown}>
-        {notes.map(note => {
+        {notes.map((note) => {
           const noteIsCurrentNote = note._id === currentNoteId
           return (
             <li key={note._id}>

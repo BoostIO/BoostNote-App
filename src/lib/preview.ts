@@ -541,11 +541,11 @@ function usePreviewStyleStore() {
 
   return {
     previewStyle,
-    setPreviewStyle
+    setPreviewStyle,
   }
 }
 
 export const {
   StoreProvider: PreviewStyleProvider,
-  useStore: usePreviewStyle
+  useStore: usePreviewStyle,
 } = createStoreContext(usePreviewStyleStore, 'previewStyle')

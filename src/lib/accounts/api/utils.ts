@@ -10,7 +10,7 @@ interface Options {
 const apiFetch = ({ path, method = 'GET', token, body }: Options) => {
   const opts: any = {
     method,
-    headers: [['accept', 'application/json']]
+    headers: [['accept', 'application/json']],
   }
 
   if (body != null) {

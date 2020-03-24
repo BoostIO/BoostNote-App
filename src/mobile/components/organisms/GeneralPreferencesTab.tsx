@@ -3,7 +3,7 @@ import {
   Section,
   SectionHeader,
   SectionPrimaryButton,
-  SectionControl
+  SectionControl,
 } from '../../../components/PreferencesModal/styled'
 import LoginButton from '../../../components/atoms/LoginButton'
 import UserInfo from '../molecules/UserInfo'
@@ -17,9 +17,9 @@ const GeneralPreferencesTab = () => {
   const [users, { removeUser }] = useUsers()
 
   const toggleEnableAutoSync: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'general.enableAutoSync': event.target.checked
+        'general.enableAutoSync': event.target.checked,
       })
     },
     [setPreferences]
@@ -30,15 +30,15 @@ const GeneralPreferencesTab = () => {
       <Section>
         <SectionHeader>Account</SectionHeader>
         <div>
-          {users.map(user => (
+          {users.map((user) => (
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
           {users.length === 0 && (
             <LoginButton
-              onErr={error => console.error(error)}
+              onErr={(error) => console.error(error)}
               ButtonComponent={SectionPrimaryButton}
             >
-              {loginState =>
+              {(loginState) =>
                 loginState !== 'logging-in' ? (
                   <>Sign in</>
                 ) : (

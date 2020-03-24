@@ -6,7 +6,7 @@ import {
   FormGroup,
   FormCheckInlineItem,
   FormCheckList,
-  FormLabel
+  FormLabel,
 } from '../atoms/form'
 import LocalStorageCreateForm from '../organisms/LocalStorageCreateForm'
 import CloudStorageCreateForm from '../organisms/CloudStorageCreateForm'

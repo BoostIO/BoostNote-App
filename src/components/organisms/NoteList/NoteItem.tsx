@@ -5,7 +5,7 @@ import {
   borderBottom,
   uiTextColor,
   secondaryBackgroundColor,
-  inputStyle
+  inputStyle,
 } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../../lib/dnd'
@@ -103,7 +103,7 @@ export default ({
   active,
   basePathname,
   search,
-  recentlyCreated
+  recentlyCreated,
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
@@ -124,7 +124,7 @@ export default ({
               label: t('note.restore'),
               onClick: async () => {
                 untrashNote(note.storageId, note._id)
-              }
+              },
             },
             {
               type: MenuTypes.Normal,
@@ -144,11 +144,11 @@ export default ({
                       if (value === 0) {
                         purgeNote(note.storageId, note._id)
                       }
-                    }
+                    },
                   })
                 }
-              }
-            }
+              },
+            },
           ]
         : [
             {
@@ -161,9 +161,9 @@ export default ({
                   folderPathname: note.folderPathname,
                   tags: note.tags,
                   bookmarked: false,
-                  data: note.data
+                  data: note.data,
                 })
-              }
+              },
             },
             {
               type: MenuTypes.Normal,
@@ -183,10 +183,10 @@ export default ({
                       if (value === 0) {
                         purgeNote(note.storageId, note._id)
                       }
-                    }
+                    },
                   })
                 }
-              }
+              },
             },
             {
               type: MenuTypes.Normal,
@@ -194,8 +194,8 @@ export default ({
               onClick: async () => {
                 note.bookmarked = !note.bookmarked
                 updateNote(note.storageId, note._id, note)
-              }
-            }
+              },
+            },
           ]
 
       popup(event, menuItems)
@@ -209,7 +209,7 @@ export default ({
       messageBox,
       purgeNote,
       t,
-      untrashNote
+      untrashNote,
     ]
   )
 
@@ -263,7 +263,7 @@ export default ({
           <div className='preview'>{contentPreview}</div>
           {note.tags.length > 0 && (
             <div className='tag-area'>
-              {note.tags.map(tag => (
+              {note.tags.map((tag) => (
                 <span className='tag' key={tag}>
                   <HighlightText text={tag} search={search} />
                 </span>

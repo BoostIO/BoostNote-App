@@ -5,7 +5,7 @@ import {
   SectionControl,
   SectionPrimaryButton,
   SectionSecondaryButton,
-  SectionSelect
+  SectionSelect,
 } from './styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
@@ -64,9 +64,9 @@ const MarkdownTab = () => {
   const { preferences, setPreferences } = usePreferences()
 
   const selectCodeFenceTheme: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'markdown.codeBlockTheme': event.target.value
+        'markdown.codeBlockTheme': event.target.value,
       })
     },
     [setPreferences]
@@ -74,7 +74,7 @@ const MarkdownTab = () => {
 
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
   const updatePreviewContent = useCallback(
-    newValue => {
+    (newValue) => {
       setPreviewContent(newValue)
     },
     [setPreviewContent]
@@ -110,7 +110,7 @@ const MarkdownTab = () => {
             onChange={selectCodeFenceTheme}
           >
             <option value='default'>{t('general.default')}</option>
-            {themes.map(theme => (
+            {themes.map((theme) => (
               <option value={theme} key={theme}>
                 {capitalize(theme)}
               </option>

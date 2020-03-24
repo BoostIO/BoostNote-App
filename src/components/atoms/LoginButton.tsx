@@ -17,7 +17,7 @@ export default ({
   onLoginStart,
   onLoginComplete,
   onErr,
-  ButtonComponent
+  ButtonComponent,
 }: LoginButtonProps) => {
   const [, { setUser }] = useUsers()
   const [loginState, initiateLogin] = useLogin(
@@ -28,7 +28,7 @@ export default ({
       }
       setUser(newUser)
     },
-    err => (onErr != null ? onErr(err) : null)
+    (err) => (onErr != null ? onErr(err) : null)
   )
 
   if (children == null) {

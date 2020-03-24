@@ -3,7 +3,7 @@ import {
   border,
   backgroundColor,
   inputStyle,
-  secondaryButtonStyle
+  secondaryButtonStyle,
 } from '../../../lib/styled/styleFunctions'
 
 const dialogZIndex = 8000

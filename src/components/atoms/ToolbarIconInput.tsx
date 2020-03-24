@@ -35,7 +35,7 @@ const ToolbarIconInput = ({
   className,
   icon,
   value,
-  onChange
+  onChange,
 }: ToolbarIconInputProps) => {
   return (
     <StyledContainer className={className}>

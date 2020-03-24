@@ -4,7 +4,7 @@ import {
   ModalHeader,
   ModalSubtitle,
   ModalBody,
-  ModalFlex
+  ModalFlex,
 } from './styled'
 import Image from '../../atoms/Image'
 import AppLink from '../../atoms/AppLink'

@@ -29,7 +29,7 @@ const ToolbarButton = ({
   icon,
   onClick,
   active = false,
-  className
+  className,
 }: ToolbarButtonProps) => (
   <StyledButton onClick={onClick} active={active} className={className}>
     {icon}

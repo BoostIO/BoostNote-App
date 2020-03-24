@@ -3,7 +3,7 @@ import {
   FormGroup,
   FormLabel,
   FormPrimaryButton,
-  FormTextInput
+  FormTextInput,
 } from '../atoms/form'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
@@ -23,7 +23,7 @@ const LocalStorageCreateForm = () => {
     } catch (error) {
       pushMessage({
         title: 'Something went wrong',
-        description: error.toString()
+        description: error.toString(),
       })
     }
   }

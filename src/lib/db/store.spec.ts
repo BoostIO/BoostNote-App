@@ -24,13 +24,13 @@ function prepareDbStore() {
         PreferencesProvider,
         RouterProvider,
         ToastProvider
-      )
+      ),
     }
   )
 
   return {
     result,
-    memoryStorage
+    memoryStorage,
   }
 }
 
@@ -51,15 +51,15 @@ describe('DbStore', () => {
       // Then
       expect(result.current.storageMap).toEqual({
         [storage!.id]: expect.objectContaining({
-          name: 'test'
-        })
+          name: 'test',
+        }),
       })
 
       expect(getStorageDataList(memoryStorage)).toEqual([
         {
           id: storage!.id,
-          name: 'test'
-        }
+          name: 'test',
+        },
       ])
     })
   })
@@ -102,15 +102,15 @@ describe('DbStore', () => {
       // Then
       expect(result.current.storageMap).toEqual({
         [storage!.id]: expect.objectContaining({
-          name: 'changed'
-        })
+          name: 'changed',
+        }),
       })
 
       expect(getStorageDataList(memoryStorage)).toEqual([
         {
           id: storage!.id,
-          name: 'changed'
-        }
+          name: 'changed',
+        },
       ])
     })
   })
@@ -131,12 +131,12 @@ describe('DbStore', () => {
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
         '/': expect.objectContaining({ pathname: '/' }),
-        '/test': expect.objectContaining({ pathname: '/test' })
+        '/test': expect.objectContaining({ pathname: '/test' }),
       })
 
       const folderDoc = await storage!.db.getFolder('/test')
       expect(folderDoc).toMatchObject({
-        _id: getFolderId('/test')
+        _id: getFolderId('/test'),
       })
     })
 
@@ -157,18 +157,18 @@ describe('DbStore', () => {
         '/': expect.objectContaining({ pathname: '/' }),
         '/test': expect.objectContaining({ pathname: '/test' }),
         '/test/child folder': expect.objectContaining({
-          pathname: '/test/child folder'
-        })
+          pathname: '/test/child folder',
+        }),
       })
 
       const folderDoc = await storage!.db.getFolder('/test')
       expect(folderDoc).toMatchObject({
-        _id: getFolderId('/test')
+        _id: getFolderId('/test'),
       })
 
       const chioldFolderDoc = await storage!.db.getFolder('/test/child folder')
       expect(chioldFolderDoc).toMatchObject({
-        _id: getFolderId('/test/child folder')
+        _id: getFolderId('/test/child folder'),
       })
     })
   })
@@ -189,7 +189,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/': expect.objectContaining({ pathname: '/' })
+        '/': expect.objectContaining({ pathname: '/' }),
       })
     })
 
@@ -208,7 +208,7 @@ describe('DbStore', () => {
 
       // Then
       expect(result.current.storageMap[storage!.id]!.folderMap).toEqual({
-        '/': expect.objectContaining({ pathname: '/' })
+        '/': expect.objectContaining({ pathname: '/' }),
       })
     })
 
@@ -222,7 +222,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         note = await result.current.createNote(storage.id, {
-          folderPathname: '/test'
+          folderPathname: '/test',
         })
 
         // When
@@ -245,7 +245,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test/childfolder')
         note = await result.current.createNote(storage.id, {
-          folderPathname: '/test/childfolder'
+          folderPathname: '/test/childfolder',
         })
 
         // When
@@ -268,7 +268,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         await result.current.createNote(storage.id, {
           folderPathname: '/test',
-          tags: ['tagTest']
+          tags: ['tagTest'],
         })
 
         // When
@@ -292,7 +292,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test/childfolder')
         await result.current.createNote(storage.id, {
           folderPathname: '/test/childfolder',
-          tags: ['tagTest']
+          tags: ['tagTest'],
         })
 
         // When
@@ -320,13 +320,13 @@ describe('DbStore', () => {
 
         // When
         noteDoc = await result.current.createNote(storage.id, {
-          title: 'testNote'
+          title: 'testNote',
         })
       })
 
       // Then
       expect(result.current.storageMap[storage!.id]!.noteMap).toEqual({
-        [noteDoc!._id]: expect.objectContaining({ title: 'testNote' })
+        [noteDoc!._id]: expect.objectContaining({ title: 'testNote' }),
       })
     })
 
@@ -343,7 +343,7 @@ describe('DbStore', () => {
         // When
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['testTag']
+          tags: ['testTag'],
         })
       })
 
@@ -367,12 +367,12 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['tag1', 'tag2']
+          tags: ['tag1', 'tag2'],
         })
 
         // When
         noteDoc = await result.current.updateNote(storage.id, noteDoc!._id, {
-          tags: ['tag2']
+          tags: ['tag2'],
         })
       })
 
@@ -393,16 +393,16 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['tag1']
+          tags: ['tag1'],
         })
         await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['tag2']
+          tags: ['tag2'],
         })
 
         // When
         noteDoc = await result.current.updateNote(storage.id, noteDoc!._id, {
-          tags: ['tag1', 'tag2']
+          tags: ['tag1', 'tag2'],
         })
       })
 
@@ -424,7 +424,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
-          title: 'testNote'
+          title: 'testNote',
         })
 
         // When
@@ -448,7 +448,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          folderPathname: '/test'
+          folderPathname: '/test',
         })
 
         // When
@@ -474,7 +474,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['testTag']
+          tags: ['testTag'],
         })
 
         // When
@@ -501,7 +501,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
-          title: 'testNote'
+          title: 'testNote',
         })
 
         // When
@@ -525,7 +525,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          folderPathname: '/test'
+          folderPathname: '/test',
         })
 
         // When
@@ -551,7 +551,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           title: 'testNote',
-          tags: ['testTag']
+          tags: ['testTag'],
         })
 
         // When
@@ -578,7 +578,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
-          folderPathname: '/test'
+          folderPathname: '/test',
         })
         await result.current.trashNote(storage.id, noteDoc!._id)
 
@@ -604,7 +604,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
-          folderPathname: '/test'
+          folderPathname: '/test',
         })
         await result.current.removeFolder(storage.id, noteDoc!.folderPathname)
 
@@ -631,7 +631,7 @@ describe('DbStore', () => {
         await result.current.createFolder(storage.id, '/test')
         noteDoc = await result.current.createNote(storage.id, {
           folderPathname: '/test',
-          tags: ['testTag']
+          tags: ['testTag'],
         })
         await result.current.trashNote(storage.id, noteDoc!._id)
 
@@ -658,7 +658,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         await result.current.createNote(storage.id, {
-          tags: ['tagTest']
+          tags: ['tagTest'],
         })
 
         // When
@@ -681,7 +681,7 @@ describe('DbStore', () => {
         storage = await result.current.createStorage('test')
         await result.current.createFolder(storage.id, '/test')
         note = await result.current.createNote(storage.id, {
-          tags: ['tagTest']
+          tags: ['tagTest'],
         })
 
         // When
@@ -736,7 +736,7 @@ describe('DbStore', () => {
       // Then
       const folderDoc = await storage!.db.getFolder('/testok')
       expect(folderDoc).toMatchObject({
-        _id: getFolderId('/testok')
+        _id: getFolderId('/testok'),
       })
 
       expect(
@@ -782,7 +782,7 @@ describe('DbStore', () => {
       // Then
       const folderDoc = await storage!.db.getFolder('/testok/subtest')
       expect(folderDoc).toMatchObject({
-        _id: getFolderId('/testok/subtest')
+        _id: getFolderId('/testok/subtest'),
       })
 
       expect(
@@ -798,7 +798,7 @@ describe('DbStore', () => {
         await result.current.initialize()
         storage = await result.current.createStorage('test')
         note = (await result.current.createNote(storage.id, {
-          folderPathname: '/test'
+          folderPathname: '/test',
         })) as NoteDoc
 
         // When
@@ -809,7 +809,7 @@ describe('DbStore', () => {
       expect(
         result.current.storageMap[storage!.id]!.noteMap[note!._id]
       ).toMatchObject({
-        folderPathname: '/testok'
+        folderPathname: '/testok',
       })
     })
 
@@ -821,7 +821,7 @@ describe('DbStore', () => {
         await result.current.initialize()
         storage = await result.current.createStorage('test')
         note = (await result.current.createNote(storage.id, {
-          folderPathname: '/test/subfolder'
+          folderPathname: '/test/subfolder',
         })) as NoteDoc
 
         // When
@@ -832,7 +832,7 @@ describe('DbStore', () => {
       expect(
         result.current.storageMap[storage!.id]!.noteMap[note!._id]
       ).toMatchObject({
-        folderPathname: '/testok/subfolder'
+        folderPathname: '/testok/subfolder',
       })
     })
   })

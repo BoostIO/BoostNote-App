@@ -25,11 +25,11 @@ function useModalStore(): ModalsContext {
   return {
     modalContent,
     closeModal,
-    openModal
+    openModal,
   }
 }
 
 export const {
   StoreProvider: ModalProvider,
-  useStore: useModal
+  useStore: useModal,
 } = createStoreContext(useModalStore, 'modal')
