@@ -1,7 +1,8 @@
 import React from 'react'
-import NotePage from './NotePage'
+import NotePage from './pages/NotePage'
 import { useRouteParams } from '../lib/router'
-import { StorageEdit, StorageCreate } from './Storage'
+import StorageCreatePage from './pages/StorageCreatePage'
+import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import TutorialsPage from './Tutorials/TutorialsPage'
@@ -28,13 +29,13 @@ export default () => {
     case 'storages.attachments':
       return <AttachmentsPage />
     case 'storages.create':
-      return <StorageCreate />
+      return <StorageCreatePage />
     case 'tutorials.show':
       return <TutorialsPage pathname={routeParams.path} />
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
-        return <StorageEdit storage={storage} />
+        return <StorageEditPage key={routeParams.storageId} storage={storage} />
       } else {
         break
       }

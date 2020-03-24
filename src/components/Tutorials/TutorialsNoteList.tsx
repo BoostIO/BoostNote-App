@@ -1,11 +1,11 @@
 import React, { useCallback, useRef } from 'react'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
 import TutorialsNoteItem from './TutorialsNoteItem'
-import { StyledNoteListContainer } from '../NotePage/NoteList/NoteList'
+import { StyledNoteListContainer } from '../organisms/NoteList/NoteList'
 import { useTranslation } from 'react-i18next'
 import {
   isWithGeneralCtrlKey,
-  useGlobalKeyDownHandler
+  useGlobalKeyDownHandler,
 } from '../../lib/keyboard'
 
 type TutorialsNoteListProps = {
@@ -23,9 +23,9 @@ const TutorialsNoteList = ({
   navigateUp,
   navigateDown,
   basePathname,
-  selectedNote
+  selectedNote,
 }: TutorialsNoteListProps) => {
-  useGlobalKeyDownHandler(e => {
+  useGlobalKeyDownHandler((e) => {
     switch (e.key) {
       case 'j':
         if (isWithGeneralCtrlKey(e)) {
@@ -54,17 +54,17 @@ const TutorialsNoteList = ({
 
   const notes =
     currentTree.type !== 'note'
-      ? currentTree.children.filter(child => child.type === 'note')
+      ? currentTree.children.filter((child) => child.type === 'note')
       : parentTree == null
       ? []
-      : parentTree.children.filter(child => child.type === 'note')
+      : parentTree.children.filter((child) => child.type === 'note')
 
   const { t } = useTranslation()
 
   return (
     <StyledNoteListContainer>
       <ul tabIndex={0} ref={listRef}>
-        {notes.map(note => {
+        {notes.map((note) => {
           const noteIsCurrentNote =
             selectedNote != null &&
             note.absolutePath === selectedNote.absolutePath

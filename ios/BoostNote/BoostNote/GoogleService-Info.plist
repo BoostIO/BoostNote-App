@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>100276121443-hvghc597fsln4qbricfk6mf20kbmu0av.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.100276121443-hvghc597fsln4qbricfk6mf20kbmu0av</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDRVq2gbyvhBmQyhuGR6gsoolh7-goFp-k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>100276121443</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.boostio.boostnote</string>
+	<key>PROJECT_ID</key>
+	<string>boostnotenext-mobile</string>
+	<key>STORAGE_BUCKET</key>
+	<string>boostnotenext-mobile.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:100276121443:ios:9e2acebee4f2c62989ed56</string>
+	<key>DATABASE_URL</key>
+	<string>https://boostnotenext-mobile.firebaseio.com</string>
+</dict>
+</plist>

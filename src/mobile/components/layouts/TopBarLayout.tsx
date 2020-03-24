@@ -47,19 +47,18 @@ const ContentContainer = styled.div`
 
 interface TopBarLayoutProps {
   title?: React.ReactNode
-  children?: React.ReactChild
   style?: CSSProperties
   leftControl?: React.ReactNode
   rightControl?: React.ReactNode
 }
 
-const TopBarLayout = ({
+const TopBarLayout: React.FC<TopBarLayoutProps> = ({
   title,
   children,
   style,
   leftControl,
-  rightControl
-}: TopBarLayoutProps) => (
+  rightControl,
+}) => (
   <TopBarLayoutContainer style={style}>
     <TopBar>
       <TopBarLeftControl>{leftControl}</TopBarLeftControl>

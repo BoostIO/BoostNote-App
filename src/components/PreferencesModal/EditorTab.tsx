@@ -3,21 +3,21 @@ import React, {
   useState,
   useMemo,
   ChangeEventHandler,
-  KeyboardEventHandler
+  KeyboardEventHandler,
 } from 'react'
 import {
   Section,
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionInput
+  SectionInput,
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import {
   usePreferences,
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
-  EditorKeyMapOptions
+  EditorKeyMapOptions,
 } from '../../lib/preferences'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
@@ -40,9 +40,9 @@ const EditorTab = () => {
   const { report } = useAnalytics()
 
   const selectEditorTheme: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'editor.theme': event.target.value
+        'editor.theme': event.target.value,
       })
       report(analyticsEvents.editorTheme)
     },
@@ -53,7 +53,7 @@ const EditorTab = () => {
     preferences['editor.fontSize'].toString()
   )
   const updateFontSize: ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
+    (event) => {
       setFontSize(event.target.value)
     },
     [setFontSize]
@@ -63,7 +63,7 @@ const EditorTab = () => {
       const parsedFontSize = parseInt(fontSize, 10)
       if (!Number.isNaN(parsedFontSize)) {
         setPreferences({
-          'editor.fontSize': parsedFontSize
+          'editor.fontSize': parsedFontSize,
         })
       }
     },
@@ -73,7 +73,7 @@ const EditorTab = () => {
 
   const [fontFamily, setFontFamily] = useState(preferences['editor.fontFamily'])
   const updateFontFamily: ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
+    (event) => {
       setFontFamily(event.target.value)
     },
     [setFontFamily]
@@ -81,7 +81,7 @@ const EditorTab = () => {
   useDebounce(
     () => {
       setPreferences({
-        'editor.fontFamily': fontFamily
+        'editor.fontFamily': fontFamily,
       })
     },
     500,
@@ -89,37 +89,37 @@ const EditorTab = () => {
   )
 
   const selectEditorIndentType: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'editor.indentType': event.target.value as EditorIndentTypeOptions
+        'editor.indentType': event.target.value as EditorIndentTypeOptions,
       })
     },
     [setPreferences]
   )
 
   const selectEditorIndentSize: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
         'editor.indentSize': parseInt(
           event.target.value,
           10
-        ) as EditorIndentSizeOptions
+        ) as EditorIndentSizeOptions,
       })
     },
     [setPreferences]
   )
 
   const selectEditorKeyMap: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'editor.keyMap': event.target.value as EditorKeyMapOptions
+        'editor.keyMap': event.target.value as EditorKeyMapOptions,
       })
     },
     [setPreferences]
   )
 
   const codeEditorKeydownInterceptor = useMemo<KeyboardEventHandler>(() => {
-    return event => {
+    return (event) => {
       if (event.key === 'Escape') {
         event.stopPropagation()
       }
@@ -139,7 +139,7 @@ const EditorTab = () => {
             onChange={selectEditorTheme}
           >
             <option value='default'>Default</option>
-            {themes.map(theme => (
+            {themes.map((theme) => (
               <option value={theme} key={theme}>
                 {capitalize(theme)}
               </option>
@@ -211,7 +211,7 @@ const EditorTab = () => {
         <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
           <CustomizedCodeEditor
             value={previewContent}
-            onChange={newValue => setPreviewContent(newValue)}
+            onChange={(newValue) => setPreviewContent(newValue)}
           />
         </SectionControl>
       </Section>

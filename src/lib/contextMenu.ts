@@ -7,7 +7,7 @@ export enum MenuTypes {
   Submenu = 'Submenu',
   // TODO: Implement later
   Checkbox = 'Checkbox',
-  Radio = 'Radio'
+  Radio = 'Radio',
 }
 
 interface MenuItemBase {
@@ -58,7 +58,7 @@ function useContextMenuStore(): ContextMenuContext {
   const [closed, setClosed] = useState(true)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
-  const [id, setId] = useState()
+  const [id, setId] = useState(0)
 
   const popupWithPosition = useCallback(
     ({ x, y }: { x: number; y: number }, menuItems: MenuItem[]) => {
@@ -76,7 +76,7 @@ function useContextMenuStore(): ContextMenuContext {
       const position = {
         // TODO: Limit xPosition
         x,
-        y: clientYIsLowerThanYPositionLimit ? yPositionLimit : y
+        y: clientYIsLowerThanYPositionLimit ? yPositionLimit : y,
       }
       setPosition(position)
     },
@@ -102,11 +102,11 @@ function useContextMenuStore(): ContextMenuContext {
     id,
     popupWithPosition,
     popup,
-    close
+    close,
   }
 }
 
 export const {
   StoreProvider: ContextMenuProvider,
-  useStore: useContextMenu
+  useStore: useContextMenu,
 } = createStoreContext(useContextMenuStore, 'context menu')

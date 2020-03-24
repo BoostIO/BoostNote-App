@@ -156,6 +156,6 @@ export default {
       '3. Виберіть Сховище та папку, до яких потрібно перемістити старі дані.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Видалити',
-    'preferences.importUpload': 'Завантажити'
-  }
+    'preferences.importUpload': 'Завантажити',
+  },
 }

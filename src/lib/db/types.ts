@@ -11,14 +11,17 @@ export type ObjectMap<T> = {
 
 export type ExceptRev<D extends PouchDB.Core.RevisionIdMeta> = Except<D, '_rev'>
 
+export interface CloudNoteStorageData {
+  id: number
+  name?: string
+  size: number
+  syncedAt?: number
+}
+
 export interface NoteStorageData {
   id: string
   name: string
-  cloudStorage?: {
-    id: number
-    size: number
-    updatedAt: number
-  }
+  cloudStorage?: CloudNoteStorageData
 }
 
 export type NoteDocEditibleProps = {
@@ -82,6 +85,8 @@ export type NoteIdSet = Set<string>
 export type NoteStorage = NoteStorageData &
   AllPopulatedDocsMap & {
     db: NoteDb
+    sync?: PouchDB.Replication.Sync<any>
+    syncTimer?: any
   }
 
 export type PopulatedFolderDoc = FolderDoc & {

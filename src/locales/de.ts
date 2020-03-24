@@ -158,6 +158,6 @@ export default {
       '3. Wähle den Speicher und den Ordner in die du die Dateien verschieben möchtest.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'entfernen',
-    'preferences.importUpload': 'Upload'
-  }
+    'preferences.importUpload': 'Upload',
+  },
 }

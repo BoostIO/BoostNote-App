@@ -3,7 +3,7 @@ import styled from '../../../lib/styled/styled'
 import {
   uiTextColor,
   inputStyle,
-  backgroundColor
+  backgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import HighlightText from '../../../components/atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
@@ -146,7 +146,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
               label: t('note.restore'),
               onClick: async () => {
                 untrashNote(note.storageId, note._id)
-              }
+              },
             },
             {
               type: MenuTypes.Normal,
@@ -166,11 +166,11 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
                       if (value === 0) {
                         purgeNote(note.storageId, note._id)
                       }
-                    }
+                    },
                   })
                 }
-              }
-            }
+              },
+            },
           ]
         : [
             {
@@ -183,9 +183,9 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
                   folderPathname: note.folderPathname,
                   tags: note.tags,
                   bookmarked: false,
-                  data: note.data
+                  data: note.data,
                 })
-              }
+              },
             },
             {
               type: MenuTypes.Normal,
@@ -205,11 +205,11 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
                       if (value === 0) {
                         purgeNote(note.storageId, note._id)
                       }
-                    }
+                    },
                   })
                 }
-              }
-            }
+              },
+            },
           ]
 
       popup(event, menuItems)
@@ -241,7 +241,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
 
   const touchStartClientXRef = useRef({
     startClientX: -1,
-    currentClientX: -1
+    currentClientX: -1,
   })
 
   const [swiped, setSwiped] = useState(false)
@@ -294,7 +294,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
         <div className='preview'>{contentPreview}</div>
         {note.tags.length > 0 && (
           <div className='tag-area'>
-            {note.tags.map(tag => (
+            {note.tags.map((tag) => (
               <span className='tag' key={tag}>
                 <HighlightText text={tag} search={search} />
               </span>
@@ -331,7 +331,7 @@ export default ({ note, basePathname, search = '' }: NoteItemProps) => {
                   if (value === 0) {
                     purgeNote(note.storageId, note._id)
                   }
-                }
+                },
               })
             }
           }}

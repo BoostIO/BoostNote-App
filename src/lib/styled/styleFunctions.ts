@@ -67,7 +67,7 @@ export const PrimaryTextColor = ({ theme }: StyledProps) =>
   `color: ${theme.primaryColor};`
 
 export const uiTextColor = ({
-  theme
+  theme,
 }: StyledProps) => `color: ${theme.uiTextColor};
 transition: 200ms color;
 &:hover,
@@ -81,7 +81,7 @@ transition: 200ms color;
 }`
 
 export const sideBarTextColor = ({
-  theme
+  theme,
 }: StyledProps) => `color: ${theme.sideBarTextColor};
   &:hover,
   &:focus,

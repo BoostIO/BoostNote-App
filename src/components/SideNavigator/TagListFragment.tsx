@@ -28,7 +28,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const tagListIsFolded = !sideNavOpenedItemSet.has(tagListNavItemId)
 
   const tagList = useMemo(() => {
-    return Object.keys(tagMap).map(tagName => {
+    return Object.keys(tagMap).map((tagName) => {
       const tagPathname = `/app/storages/${storageId}/tags/${tagName}`
       const tagIsActive = currentPathname === tagPathname
       return (
@@ -41,7 +41,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
             push(tagPathname)
           }}
           active={tagIsActive}
-          onContextMenu={event => {
+          onContextMenu={(event) => {
             event.preventDefault()
             popup(event, [
               {
@@ -59,10 +59,10 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                       if (value === 0) {
                         removeTag(storageId, tagName)
                       }
-                    }
+                    },
                   })
-                }
-              }
+                },
+              },
             ])
           }}
         />
@@ -76,7 +76,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     popup,
     messageBox,
     removeTag,
-    t
+    t,
   ])
 
   return (
@@ -92,7 +92,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         onClick={() => {
           toggleSideNavOpenedItem(tagListNavItemId)
         }}
-        onContextMenu={event => {
+        onContextMenu={(event) => {
           event.preventDefault()
         }}
       />

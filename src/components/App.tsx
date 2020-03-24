@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import SideNavigator from './SideNavigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
@@ -21,9 +21,8 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
 import Modal from './Modal'
 import ToastList from './Toast'
-import { useToast } from '../lib/toast'
-import { useUsers } from '../lib/accounts'
 import styled from '../lib/styled'
+import { useEffectOnce } from 'react-use'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -39,28 +38,16 @@ const AppContainer = styled.div`
 `
 
 const App = () => {
-  const { initialize, initialized } = useDb()
-  const [users, { removeUser }] = useUsers()
-  const { pushMessage } = useToast()
-  useEffect(() => {
-    initialize(users[0]).catch(error => {
-      if (error.message === 'InvalidUser') {
-        if (users[0] != null) {
-          removeUser(users[0])
-        }
-        pushMessage({
-          title: 'Authentication Error',
-          description: 'Please try logging in again'
-        })
-      } else {
-        pushMessage({
-          title: 'Network Error',
-          description: 'An server error occured'
-        })
+  const { initialize, initialized, queueSyncingAllStorage } = useDb()
+  useEffectOnce(() => {
+    initialize()
+      .then(() => {
+        queueSyncingAllStorage(0)
+      })
+      .catch((error) => {
         console.error(error)
-      }
-    })
-  }, [users])
+      })
+  })
 
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
@@ -78,7 +65,7 @@ const App = () => {
   const updateSideBarWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
-        sideBarWidth: leftWidth
+        sideBarWidth: leftWidth,
       })
     },
     [setGeneralStatus]

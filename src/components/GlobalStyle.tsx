@@ -9,17 +9,27 @@ export default createGlobalStyle<{ theme: BaseTheme }>`
     ${textColor}
     font-family: ${({ theme }) => theme.fontFamily};
     font-size: ${({ theme }) => theme.fontSize}px;
+    font-weight: 400;
   }
 
   * {
     box-sizing: border-box;
   }
+
   *:focus {
     outline: none;
   }
 
   input {
     font-size: ${({ theme }) => theme.fontSize}px;
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-weight: 500;
+  }
+
+  b, strong {
+    font-weight: 700;
   }
 
   button,

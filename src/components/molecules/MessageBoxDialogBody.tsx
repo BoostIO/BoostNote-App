@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogMessage,
   DialogButtonGroup,
-  DialogButton
+  DialogButton,
 } from '../atoms/dialog/styled'
 
 type MessageBoxDialogProps = {
@@ -22,13 +22,13 @@ export default class MessageBoxDialogBody extends React.Component<
     this.defaultButtonRef.current!.focus()
   }
 
-  updateValue: ChangeEventHandler<HTMLInputElement> = event => {
+  updateValue: ChangeEventHandler<HTMLInputElement> = (event) => {
     this.setState({
-      value: event.target.value
+      value: event.target.value,
     })
   }
 
-  handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = event => {
+  handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
     const { data } = this.props
     switch (event.key) {
       case 'Escape':

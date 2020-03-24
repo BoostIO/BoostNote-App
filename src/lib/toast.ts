@@ -21,7 +21,7 @@ const createToastMessage = (title: string, description: string) => {
     id: `${id++}`,
     createdAt: new Date(),
     title,
-    description
+    description,
   }
 }
 
@@ -32,12 +32,12 @@ const useToastStore = (): ToastStore => {
     messages,
     pushMessage: ({ title, description }) =>
       setMessages([createToastMessage(title, description), ...messages]),
-    removeMessage: message =>
-      setMessages(messages.filter(({ id }) => id !== message.id))
+    removeMessage: (message) =>
+      setMessages(messages.filter(({ id }) => id !== message.id)),
   }
 }
 
 export const {
   StoreProvider: ToastProvider,
-  useStore: useToast
+  useStore: useToast,
 } = createStoreContext(useToastStore)

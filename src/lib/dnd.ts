@@ -32,7 +32,7 @@ export function setTransferrableNoteData(
     noteFormat,
     JSON.stringify({
       storageId,
-      note
+      note,
     })
   )
 }

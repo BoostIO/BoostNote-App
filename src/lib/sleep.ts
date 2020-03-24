@@ -2,7 +2,7 @@ type BackOff = (iter: number, previous: number) => number | null
 type DoneCheck<T> = (input: T) => boolean
 
 export const sleep = (milliseconds: number) =>
-  new Promise(r => setTimeout(r, milliseconds))
+  new Promise((r) => setTimeout(r, milliseconds))
 
 export const sleepSeconds = (seconds: number) => sleep(seconds * 1000)
 

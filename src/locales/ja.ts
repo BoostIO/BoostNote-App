@@ -158,6 +158,6 @@ export default {
       '3. どのストレージ・フォルダにデータを移行させるか選択してください',
     'preferences.importFlow4': '4. アップロード',
     'preferences.importRemove': '削除',
-    'preferences.importUpload': 'アップロード'
-  }
+    'preferences.importUpload': 'アップロード',
+  },
 }

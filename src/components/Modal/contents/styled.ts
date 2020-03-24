@@ -35,9 +35,9 @@ export const ModalBody = styled.div`
     border-color: initial;
     border-image: initial;
     border-radius: 2px;
-    margin: auto !important;
     margin-bottom: 10px;
-    height: auto !important;
+    height: auto;
+    margin: 0 auto;
 
     &:not(:disabled):hover {
       cursor: pointer;

@@ -6,7 +6,7 @@ import {
   StyledToastRight,
   StyledToastTitle,
   StyledToastCloseButton,
-  StyledToastDescription
+  StyledToastDescription,
 } from './styled'
 
 interface ToastItemProps {
@@ -22,7 +22,7 @@ interface ToastItemState {
 class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   state = {
     remaining: 3000,
-    timer: 0
+    timer: 0,
   }
 
   componentDidMount() {
@@ -36,7 +36,7 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   resumeTimer = () => {
     window.clearTimeout(this.state.timer)
     this.setState({
-      timer: setTimeout(this.dismissMessage, this.state.remaining)
+      timer: setTimeout(this.dismissMessage, this.state.remaining),
     })
   }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		089B10E424292AE500435757 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 089B10E324292AE500435757 /* GoogleService-Info.plist */; };
 		08D27AFD23EC7DB0002D149A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D27AFC23EC7DB0002D149A /* AppDelegate.swift */; };
 		08D27AFF23EC7DB0002D149A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D27AFE23EC7DB0002D149A /* SceneDelegate.swift */; };
 		08D27B0123EC7DB0002D149A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D27B0023EC7DB0002D149A /* ViewController.swift */; };
@@ -16,6 +17,9 @@
 		08D27B1423EC7DB2002D149A /* BoostNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D27B1323EC7DB2002D149A /* BoostNoteTests.swift */; };
 		08D27B1F23EC7DB2002D149A /* BoostNoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D27B1E23EC7DB2002D149A /* BoostNoteUITests.swift */; };
 		08D27B3323EC89EF002D149A /* compiled in Resources */ = {isa = PBXBuildFile; fileRef = 08D27B3223EC89EE002D149A /* compiled */; };
+		55F9CFE05CC5CDB86DAE7438 /* Pods_BoostNote_BoostNoteUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7706F2A5842D559D4D82F3BE /* Pods_BoostNote_BoostNoteUITests.framework */; };
+		6E83DE286BEAAD5D8E1F5254 /* Pods_BoostNote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44833E2F7C1C2199E983582D /* Pods_BoostNote.framework */; };
+		80E9BCF41B3699A6391934E2 /* Pods_BoostNoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF7B56B6349CBE62069E60EE /* Pods_BoostNoteTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		089B10E324292AE500435757 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		08D27AF923EC7DB0002D149A /* BoostNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoostNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08D27AFC23EC7DB0002D149A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08D27AFE23EC7DB0002D149A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +56,15 @@
 		08D27B1E23EC7DB2002D149A /* BoostNoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoostNoteUITests.swift; sourceTree = "<group>"; };
 		08D27B2023EC7DB2002D149A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08D27B3223EC89EE002D149A /* compiled */ = {isa = PBXFileReference; lastKnownFileType = folder; path = compiled; sourceTree = "<group>"; };
+		44833E2F7C1C2199E983582D /* Pods_BoostNote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoostNote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		462004D6D361CD71AC6C39CA /* Pods-BoostNote-BoostNoteUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNote-BoostNoteUITests.debug.xcconfig"; path = "Target Support Files/Pods-BoostNote-BoostNoteUITests/Pods-BoostNote-BoostNoteUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		7706F2A5842D559D4D82F3BE /* Pods_BoostNote_BoostNoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoostNote_BoostNoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8803E30622396296D815A7A3 /* Pods-BoostNoteTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNoteTests.release.xcconfig"; path = "Target Support Files/Pods-BoostNoteTests/Pods-BoostNoteTests.release.xcconfig"; sourceTree = "<group>"; };
+		A3727067A38D615FD41F2CD6 /* Pods-BoostNote.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNote.release.xcconfig"; path = "Target Support Files/Pods-BoostNote/Pods-BoostNote.release.xcconfig"; sourceTree = "<group>"; };
+		AF1AA59DF1514DE514FA21ED /* Pods-BoostNoteTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNoteTests.debug.xcconfig"; path = "Target Support Files/Pods-BoostNoteTests/Pods-BoostNoteTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C93F5CD4EB537A2037FE3BE3 /* Pods-BoostNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNote.debug.xcconfig"; path = "Target Support Files/Pods-BoostNote/Pods-BoostNote.debug.xcconfig"; sourceTree = "<group>"; };
+		DF7B56B6349CBE62069E60EE /* Pods_BoostNoteTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoostNoteTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D42D040F781D0B1DEF55E6 /* Pods-BoostNote-BoostNoteUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoostNote-BoostNoteUITests.release.xcconfig"; path = "Target Support Files/Pods-BoostNote-BoostNoteUITests/Pods-BoostNote-BoostNoteUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E83DE286BEAAD5D8E1F5254 /* Pods_BoostNote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80E9BCF41B3699A6391934E2 /* Pods_BoostNoteTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55F9CFE05CC5CDB86DAE7438 /* Pods_BoostNote_BoostNoteUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +102,8 @@
 				08D27B1223EC7DB2002D149A /* BoostNoteTests */,
 				08D27B1D23EC7DB2002D149A /* BoostNoteUITests */,
 				08D27AFA23EC7DB0002D149A /* Products */,
+				BC91E229DC7AE3D635EE0EBC /* Pods */,
+				7A38D2490B448A075DCE8FAE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +128,7 @@
 				08D27B0523EC7DB2002D149A /* Assets.xcassets */,
 				08D27B0723EC7DB2002D149A /* LaunchScreen.storyboard */,
 				08D27B0A23EC7DB2002D149A /* Info.plist */,
+				089B10E324292AE500435757 /* GoogleService-Info.plist */,
 			);
 			path = BoostNote;
 			sourceTree = "<group>";
@@ -131,6 +151,30 @@
 			path = BoostNoteUITests;
 			sourceTree = "<group>";
 		};
+		7A38D2490B448A075DCE8FAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				44833E2F7C1C2199E983582D /* Pods_BoostNote.framework */,
+				7706F2A5842D559D4D82F3BE /* Pods_BoostNote_BoostNoteUITests.framework */,
+				DF7B56B6349CBE62069E60EE /* Pods_BoostNoteTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BC91E229DC7AE3D635EE0EBC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C93F5CD4EB537A2037FE3BE3 /* Pods-BoostNote.debug.xcconfig */,
+				A3727067A38D615FD41F2CD6 /* Pods-BoostNote.release.xcconfig */,
+				462004D6D361CD71AC6C39CA /* Pods-BoostNote-BoostNoteUITests.debug.xcconfig */,
+				F1D42D040F781D0B1DEF55E6 /* Pods-BoostNote-BoostNoteUITests.release.xcconfig */,
+				AF1AA59DF1514DE514FA21ED /* Pods-BoostNoteTests.debug.xcconfig */,
+				8803E30622396296D815A7A3 /* Pods-BoostNoteTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,9 +182,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 08D27B2323EC7DB2002D149A /* Build configuration list for PBXNativeTarget "BoostNote" */;
 			buildPhases = (
+				7B1E3B07905D6809B132726A /* [CP] Check Pods Manifest.lock */,
 				08D27AF523EC7DB0002D149A /* Sources */,
 				08D27AF623EC7DB0002D149A /* Frameworks */,
 				08D27AF723EC7DB0002D149A /* Resources */,
+				65F667AB88B9806F4290553C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -155,6 +201,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 08D27B2623EC7DB2002D149A /* Build configuration list for PBXNativeTarget "BoostNoteTests" */;
 			buildPhases = (
+				E19D93809C3D7ED9CEC59FA9 /* [CP] Check Pods Manifest.lock */,
 				08D27B0B23EC7DB2002D149A /* Sources */,
 				08D27B0C23EC7DB2002D149A /* Frameworks */,
 				08D27B0D23EC7DB2002D149A /* Resources */,
@@ -173,9 +220,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 08D27B2923EC7DB2002D149A /* Build configuration list for PBXNativeTarget "BoostNoteUITests" */;
 			buildPhases = (
+				2D18C5DFB489575306401C9E /* [CP] Check Pods Manifest.lock */,
 				08D27B1623EC7DB2002D149A /* Sources */,
 				08D27B1723EC7DB2002D149A /* Frameworks */,
 				08D27B1823EC7DB2002D149A /* Resources */,
+				7884166EEC7ED2AFC5106534 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -237,6 +286,7 @@
 			files = (
 				08D27B0923EC7DB2002D149A /* LaunchScreen.storyboard in Resources */,
 				08D27B3323EC89EF002D149A /* compiled in Resources */,
+				089B10E424292AE500435757 /* GoogleService-Info.plist in Resources */,
 				08D27B0623EC7DB2002D149A /* Assets.xcassets in Resources */,
 				08D27B0423EC7DB0002D149A /* Main.storyboard in Resources */,
 			);
@@ -257,6 +307,109 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2D18C5DFB489575306401C9E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoostNote-BoostNoteUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		65F667AB88B9806F4290553C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoostNote/Pods-BoostNote-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoostNote/Pods-BoostNote-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BoostNote/Pods-BoostNote-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7884166EEC7ED2AFC5106534 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoostNote-BoostNoteUITests/Pods-BoostNote-BoostNoteUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoostNote-BoostNoteUITests/Pods-BoostNote-BoostNoteUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BoostNote-BoostNoteUITests/Pods-BoostNote-BoostNoteUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B1E3B07905D6809B132726A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoostNote-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E19D93809C3D7ED9CEC59FA9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoostNoteTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		08D27AF523EC7DB0002D149A /* Sources */ = {
@@ -436,6 +589,7 @@
 		};
 		08D27B2423EC7DB2002D149A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C93F5CD4EB537A2037FE3BE3 /* Pods-BoostNote.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -456,6 +610,7 @@
 		};
 		08D27B2523EC7DB2002D149A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3727067A38D615FD41F2CD6 /* Pods-BoostNote.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -476,6 +631,7 @@
 		};
 		08D27B2723EC7DB2002D149A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF1AA59DF1514DE514FA21ED /* Pods-BoostNoteTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -498,6 +654,7 @@
 		};
 		08D27B2823EC7DB2002D149A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8803E30622396296D815A7A3 /* Pods-BoostNoteTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -520,6 +677,7 @@
 		};
 		08D27B2A23EC7DB2002D149A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 462004D6D361CD71AC6C39CA /* Pods-BoostNote-BoostNoteUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -540,6 +698,7 @@
 		};
 		08D27B2B23EC7DB2002D149A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1D42D040F781D0B1DEF55E6 /* Pods-BoostNote-BoostNoteUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

@@ -2,20 +2,20 @@ import React from 'react'
 import {
   useContextMenu,
   MenuTypes,
-  ContextMenuContext
+  ContextMenuContext,
 } from '../../lib/contextMenu'
 import styled from '../../lib/styled'
 import {
   menuHeight,
   menuVerticalPadding,
-  menuZIndex
+  menuZIndex,
 } from '../../lib/contextMenu'
 import {
   uiTextColor,
   contextMenuShadow,
   borderColor,
   backgroundColor,
-  activeBackgroundColor
+  activeBackgroundColor,
 } from '../../lib/styled/styleFunctions'
 
 const StyledContextMenu = styled.div`
@@ -102,7 +102,7 @@ class ContextMenu extends React.Component<ContextMenuProps> {
         onBlur={this.closeContextMenuIfMenuBlurred}
         style={{
           left: position.x + 130 < windowWith ? position.x : windowWith - 150,
-          top: position.y
+          top: position.y,
         }}
       >
         {menuItems.map((menu, index) => {

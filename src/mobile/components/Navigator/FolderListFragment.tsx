@@ -20,7 +20,7 @@ interface FolderListFragmentProps {
 const FolderListFragment = ({
   storage,
   showPromptToCreateFolder,
-  showPromptToRenameFolder
+  showPromptToRenameFolder,
 }: FolderListFragmentProps) => {
   const { removeFolder } = useDb()
   const { push } = useRouter()
@@ -33,7 +33,7 @@ const FolderListFragment = ({
   const {
     toggleSideNavOpenedItem,
     sideNavOpenedItemSet,
-    toggleNav
+    toggleNav,
   } = useGeneralStatus()
 
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
@@ -65,7 +65,7 @@ const FolderListFragment = ({
           label: t('folder.create'),
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)
-          }
+          },
         },
         {
           type: MenuTypes.Normal,
@@ -73,7 +73,7 @@ const FolderListFragment = ({
           enabled: folderPathname !== '/',
           onClick: async () => {
             showPromptToRenameFolder(folderPathname)
-          }
+          },
         },
         {
           type: MenuTypes.Normal,
@@ -91,10 +91,10 @@ const FolderListFragment = ({
                 if (value === 0) {
                   removeFolder(storageId, folderPathname)
                 }
-              }
+              },
             })
-          }
-        }
+          },
+        },
       ])
     }
   }
@@ -155,7 +155,7 @@ const FolderListFragment = ({
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
                 icon={<IconAddRound />}
-              />
+              />,
             ]}
           />
         )

@@ -49,7 +49,7 @@ export const renameStorage = async (
 ): Promise<'Ok'> => {
   const response = await apiPost(`/api/storages/${id}`, {
     token,
-    body: { name }
+    body: { name },
   })
 
   switch (response.status) {
@@ -69,7 +69,7 @@ export const deleteStorage = async (
   id: number
 ): Promise<'Ok'> => {
   const response = await apiDelete(`/api/storages/${id}`, {
-    token
+    token,
   })
 
   switch (response.status) {

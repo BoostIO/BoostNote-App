@@ -19,7 +19,7 @@ export interface RouterStore extends Location {
 const initialLocation = normalizeLocation({
   pathname: bhistory.location.pathname,
   hash: bhistory.location.hash,
-  query: parseQuery(bhistory.location.search)
+  query: parseQuery(bhistory.location.search),
 })
 
 function useRouteStore(): RouterStore {
@@ -41,11 +41,11 @@ function useRouteStore(): RouterStore {
   const goForward = useCallback(() => go(1), [go])
 
   useEffect(() => {
-    return bhistory.listen(blocation => {
+    return bhistory.listen((blocation) => {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,
-        query: parseQuery(blocation.search)
+        query: parseQuery(blocation.search),
       })
     })
   }, [])
@@ -56,22 +56,19 @@ function useRouteStore(): RouterStore {
     replace,
     go,
     goBack,
-    goForward
+    goForward,
   }
 }
 
 export const {
   StoreProvider: RouterProvider,
-  useStore: useRouter
+  useStore: useRouter,
 } = createStoreContext(useRouteStore)
 
 export const useRouteParams = () => {
   const { pathname } = useRouter()
   return useMemo((): AllRouteParams => {
-    const names = pathname
-      .slice('/m'.length)
-      .split('/')
-      .slice(1)
+    const names = pathname.slice('/m'.length).split('/').slice(1)
 
     let noteId: string | undefined = undefined
     if (names[0] === 'notes') {
@@ -81,32 +78,32 @@ export const useRouteParams = () => {
 
       return {
         name: 'storages.allNotes',
-        noteId
+        noteId,
       }
     }
 
     if (names[0] === 'bookmarks') {
       return {
-        name: 'storages.bookmarks'
+        name: 'storages.bookmarks',
       }
     }
 
     if (names[0] === 'storages' && names[1] == null) {
       return {
-        name: 'storages.create'
+        name: 'storages.create',
       }
     }
 
     if (names[0] === 'tutorials') {
       return {
         name: 'tutorials.show',
-        path: pathname
+        path: pathname,
       }
     }
 
     if (names[0] !== 'storages' || names[1] == null) {
       return {
-        name: 'unknown'
+        name: 'unknown',
       }
     }
     const storageId = names[1]
@@ -114,7 +111,7 @@ export const useRouteParams = () => {
     if (names[2] == null) {
       return {
         name: 'storages.edit',
-        storageId
+        storageId,
       }
     }
 
@@ -123,7 +120,7 @@ export const useRouteParams = () => {
       if (restNames[0] == null || restNames[0] === '') {
         return {
           name: 'storages.allNotes',
-          storageId
+          storageId,
         }
       }
 
@@ -142,7 +139,7 @@ export const useRouteParams = () => {
         return {
           name: 'storages.allNotes',
           storageId,
-          noteId
+          noteId,
         }
       }
 
@@ -150,7 +147,7 @@ export const useRouteParams = () => {
         name: 'storages.notes',
         storageId,
         folderPathname: '/' + folderNames.join('/'),
-        noteId
+        noteId,
       }
     }
 
@@ -159,7 +156,7 @@ export const useRouteParams = () => {
         name: 'storages.tags.show',
         storageId,
         tagName: names[3],
-        noteId: /^note:/.test(names[4]) ? names[4] : undefined
+        noteId: /^note:/.test(names[4]) ? names[4] : undefined,
       }
     }
 
@@ -167,19 +164,19 @@ export const useRouteParams = () => {
       return {
         name: 'storages.trashCan',
         storageId,
-        noteId: /^note:/.test(names[3]) ? names[3] : undefined
+        noteId: /^note:/.test(names[3]) ? names[3] : undefined,
       }
     }
 
     if (names[2] === 'attachments') {
       return {
         name: 'storages.attachments',
-        storageId
+        storageId,
       }
     }
 
     return {
-      name: 'unknown'
+      name: 'unknown',
     }
   }, [pathname])
 }

@@ -13,7 +13,7 @@ export default ({
   onDragEnter,
   onDragLeave,
   children,
-  style
+  style,
 }: FileDropProps) => {
   const drop = (e: React.DragEvent) => {
     e.preventDefault()
@@ -49,7 +49,7 @@ export default ({
       onDrop={drop}
       onDragEnter={dragenter}
       onDragLeave={dragleave}
-      onDragOver={e => e.preventDefault()}
+      onDragOver={(e) => e.preventDefault()}
     >
       {children}
     </div>
@@ -57,7 +57,7 @@ export default ({
 }
 
 function getFilesFromDragEvent({
-  dataTransfer: { items, files }
+  dataTransfer: { items, files },
 }: React.DragEvent): File[] {
   if (items != null) {
     const arr = []

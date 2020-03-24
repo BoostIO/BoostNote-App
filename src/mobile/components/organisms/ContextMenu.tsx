@@ -4,7 +4,7 @@ import {
   MenuTypes,
   ContextMenuContext,
   menuVerticalPadding,
-  menuZIndex
+  menuZIndex,
 } from '../../../lib/contextMenu'
 import styled from '../../../lib/styled'
 import {
@@ -13,7 +13,7 @@ import {
   borderColor,
   backgroundColor,
   activeBackgroundColor,
-  borderBottom
+  borderBottom,
 } from '../../../lib/styled/styleFunctions'
 import { keyframes } from 'styled-components'
 

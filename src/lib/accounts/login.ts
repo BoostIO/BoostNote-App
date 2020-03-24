@@ -7,7 +7,7 @@ import {
   initiateLogin,
   getLoginPageUrl,
   LoginCompleteResponse,
-  CheckLoginError
+  CheckLoginError,
 } from './api/login'
 import { openNew } from '../platform'
 
@@ -52,10 +52,14 @@ const loginStart = async (
       onErr(response as CheckLoginError)
     }
   } catch (error) {
-    onErr('NetworkError')
+    onErr(error)
   } finally {
     setState('idle')
   }
 }
 
-const pingLogin = retry(() => 5, check => check !== 'NotReady', checkLogin)
+const pingLogin = retry(
+  () => 5,
+  (check) => check !== 'NotReady',
+  checkLogin
+)

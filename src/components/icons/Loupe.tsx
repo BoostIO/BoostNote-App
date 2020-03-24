@@ -1,6 +1,6 @@
 import {
   BoostnoteIconProps,
-  BoostnoteIconStyledContainer
+  BoostnoteIconStyledContainer,
 } from '../../lib/icons'
 import React from 'react'
 

@@ -28,7 +28,7 @@ export function getAppLinkFromUserAgent() {
   const userAgent = navigator.userAgent
   const download = {
     os: '',
-    link: ''
+    link: '',
   }
 
   if (userAgent.indexOf('Windows') != -1) {

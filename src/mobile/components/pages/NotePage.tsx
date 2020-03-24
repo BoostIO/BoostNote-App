@@ -8,7 +8,7 @@ import {
   StorageTagsRouteParams,
   usePathnameWithoutNoteId,
   useRouter,
-  StorageBookmarkNotes
+  StorageBookmarkNotes,
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../../lib/db/types'
@@ -25,7 +25,7 @@ import {
   IconBook,
   IconFileOpen,
   IconTrash,
-  IconTag
+  IconTag,
 } from '../../../components/icons'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 
@@ -53,14 +53,14 @@ export default () => {
     updateNote,
     trashNote,
     untrashNote,
-    addAttachments
+    addAttachments,
   } = useDb()
-  const routeParams = useRouteParams() as (
+  const routeParams = useRouteParams() as
     | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
-    | StorageBookmarkNotes)
+    | StorageBookmarkNotes
   const { storageId, noteId } = routeParams
   const currentStorage = useMemo(() => {
     if (storageId == null) return undefined
@@ -75,7 +75,7 @@ export default () => {
         const allNotesMap = (Object.values(storageMap) as NoteStorage[]).reduce(
           (map, storage) => {
             ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
-              note => (map[note._id] = note)
+              (note) => (map[note._id] = note)
             )
             return map
           },
@@ -83,15 +83,15 @@ export default () => {
         )
 
         return (Object.values(allNotesMap) as PopulatedNoteDoc[]).filter(
-          note => !note.trashed
+          (note) => !note.trashed
         )
       }
       if (routeParams.name === 'storages.bookmarks') {
         return (Object.values(storageMap) as NoteStorage[])
-          .map(storage => {
+          .map((storage) => {
             return (Object.values(
               storage.noteMap
-            ) as PopulatedNoteDoc[]).filter(note => note.bookmarked)
+            ) as PopulatedNoteDoc[]).filter((note) => note.bookmarked)
           })
           .flat()
       }
@@ -101,7 +101,7 @@ export default () => {
       case 'storages.allNotes':
         return (Object.values(
           currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter(note => !note.trashed)
+        ) as PopulatedNoteDoc[]).filter((note) => !note.trashed)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
@@ -109,7 +109,7 @@ export default () => {
         return (Object.values(
           currentStorage.noteMap
         ) as PopulatedNoteDoc[]).filter(
-          note =>
+          (note) =>
             (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
             !note.trashed
         )
@@ -118,12 +118,12 @@ export default () => {
         const tag = currentStorage.tagMap[tagName]
         if (tag == null) return []
         return [...tag.noteIdSet]
-          .map(noteId => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
-          .filter(note => !note.trashed)
+          .map((noteId) => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
+          .filter((note) => !note.trashed)
       case 'storages.trashCan':
         return (Object.values(
           currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter(note => note.trashed)
+        ) as PopulatedNoteDoc[]).filter((note) => note.trashed)
     }
     return []
   }, [storageMap, currentStorage, routeParams])
@@ -140,7 +140,7 @@ export default () => {
   const toggleViewMode = useCallback(
     (newMode: ViewModeType) => {
       setGeneralStatus({
-        noteViewMode: newMode
+        noteViewMode: newMode,
       })
     },
     [setGeneralStatus]
@@ -159,7 +159,7 @@ export default () => {
 
     const note = await createNote(storageId, {
       folderPathname,
-      tags
+      tags,
     })
     if (note != null) {
       replace(
@@ -229,7 +229,7 @@ export default () => {
 
   const toggleNoteViewMode = useCallback(() => {
     setGeneralStatus({
-      noteViewMode: generalStatus.noteViewMode === 'edit' ? 'preview' : 'edit'
+      noteViewMode: generalStatus.noteViewMode === 'edit' ? 'preview' : 'edit',
     })
   }, [setGeneralStatus, generalStatus])
 
@@ -242,21 +242,21 @@ export default () => {
         onClick: () => {
           trashOrPurgeCurrentNote()
           push(currentPathnameWithoutNoteId)
-        }
-      }
+        },
+      },
     ])
   }, [
     popupWithPosition,
     trashOrPurgeCurrentNote,
     push,
-    currentPathnameWithoutNoteId
+    currentPathnameWithoutNoteId,
   ])
 
   return (
     <NotePageContainer>
       <NotePagePannel
         style={{
-          left: currentNote == null ? 0 : '-100%'
+          left: currentNote == null ? 0 : '-100%',
         }}
       >
         <TopBarLayout
@@ -275,7 +275,7 @@ export default () => {
 
       <NotePagePannel
         style={{
-          left: currentNote == null ? '100%' : 0
+          left: currentNote == null ? '100%' : 0,
         }}
       >
         <TopBarLayout

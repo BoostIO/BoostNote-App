@@ -4,14 +4,14 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionPrimaryButton
+  SectionPrimaryButton,
 } from './styled'
 import {
   usePreferences,
   GeneralThemeOptions,
   GeneralLanguageOptions,
   GeneralNoteSortingOptions,
-  GeneralTutorialsOptions
+  GeneralTutorialsOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -20,6 +20,7 @@ import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { IconArrowRotate } from '../icons'
+import { FormCheckItem } from '../atoms/form'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
@@ -27,9 +28,9 @@ const GeneralTab = () => {
   const { report } = useAnalytics()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'general.theme': event.target.value as GeneralThemeOptions
+        'general.theme': event.target.value as GeneralThemeOptions,
       })
       report(analyticsEvents.colorTheme)
     },
@@ -37,32 +38,40 @@ const GeneralTab = () => {
   )
 
   const selectLanguage: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'general.language': event.target.value as GeneralLanguageOptions
+        'general.language': event.target.value as GeneralLanguageOptions,
       })
     },
     [setPreferences]
   )
 
   const selectNoteSorting: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'general.noteSorting': event.target.value as GeneralNoteSortingOptions
+        'general.noteSorting': event.target.value as GeneralNoteSortingOptions,
       })
     },
     [setPreferences]
   )
 
   const selectTutorialsDisplay: SelectChangeEventHandler = useCallback(
-    event => {
+    (event) => {
       setPreferences({
-        'general.tutorials': event.target.value as GeneralTutorialsOptions
+        'general.tutorials': event.target.value as GeneralTutorialsOptions,
       })
     },
     [setPreferences]
   )
 
+  const toggleEnableAutoSync: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'general.enableAutoSync': event.target.checked,
+      })
+    },
+    [setPreferences]
+  )
   const { t } = useTranslation()
 
   return (
@@ -70,7 +79,7 @@ const GeneralTab = () => {
       <Section>
         <SectionHeader>{t('preferences.account')}</SectionHeader>
         <div>
-          {users.map(user => (
+          {users.map((user) => (
             <UserInfo key={user.id} user={user} signout={removeUser} />
           ))}
           {users.length === 0 && (
@@ -78,7 +87,7 @@ const GeneralTab = () => {
               onErr={console.error /* TODO: Toast error */}
               ButtonComponent={SectionPrimaryButton}
             >
-              {loginState =>
+              {(loginState) =>
                 loginState !== 'logging-in' ? (
                   <>{t('preferences.addAccount')}</>
                 ) : (
@@ -153,6 +162,19 @@ const GeneralTab = () => {
             <option value='display'>Display</option>
             <option value='hide'>Hide</option>
           </SectionSelect>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Enable auto sync</SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-enable-auto-sync'
+            type='checkbox'
+            checked={preferences['general.enableAutoSync']}
+            onChange={toggleEnableAutoSync}
+          >
+            Enable auto sync
+          </FormCheckItem>
         </SectionControl>
       </Section>
     </div>

@@ -203,7 +203,7 @@ const nodeTransforms = {
       )
     }
     return transformNode(expressions[0])
-  }
+  },
 }
 
 export function parse(source: string) {

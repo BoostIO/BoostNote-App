@@ -4,7 +4,7 @@ import {
   Section,
   SectionHeader,
   SectionSubtleText,
-  PrimaryAnchor
+  PrimaryAnchor,
 } from './styled'
 import { openNew } from '../../lib/platform'
 import Image from '../atoms/Image'

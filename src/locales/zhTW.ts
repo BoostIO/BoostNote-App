@@ -121,7 +121,7 @@ export default {
     'preferences.title': '標題',
     'preferences.analytics': 'Analytics(資料收集)',
     'preferences.analyticsDescription1':
-    'Boost Note 只會因提升程式品質而匿名收集資料，並且我們絕不收集您筆記中的個人資訊。您可以在 GitHub 上看這是如何運作的。',
+      'Boost Note 只會因提升程式品質而匿名收集資料，並且我們絕不收集您筆記中的個人資訊。您可以在 GitHub 上看這是如何運作的。',
     'preferences.analyticsDescription2': '您可以選擇開啟或者關閉這個選項。',
     'preferences.analyticsLabel': '開啟資料收集來幫助我們完善 Boostnote',
     'preferences.displayTutorialsLabel': '教學與 FAQ',
@@ -151,6 +151,6 @@ export default {
     'preferences.importFlow3': '3. 選擇想要移動舊資料的存儲和資料夾。',
     'preferences.importFlow4': '4. 上傳!',
     'preferences.importRemove': '移除',
-    'preferences.importUpload': '上傳'
-  }
+    'preferences.importUpload': '上傳',
+  },
 }
