@@ -6,6 +6,8 @@ import { getFolderId } from './utils'
 import { RouterProvider, useRouter, usePathnameWithoutNoteId } from '../router'
 import { combineProviders } from '../context'
 import { ToastProvider } from '../toast'
+import { PreferencesProvider } from '../preferences'
+import '../i18n'
 
 function prepareDbStore() {
   const memoryStorage = new MemoryLiteStorage()
@@ -18,7 +20,11 @@ function prepareDbStore() {
         'memory'
       )(),
     {
-      wrapper: combineProviders(RouterProvider, ToastProvider)
+      wrapper: combineProviders(
+        PreferencesProvider,
+        RouterProvider,
+        ToastProvider
+      )
     }
   )
 
