@@ -146,7 +146,7 @@ export default {
     // Preferences ImportTab
     'preferences.import': '導入',
     'preferences.description': '從舊版 Boostnote 導入 .cson 文件。',
-    'preferences.importFlow2': '1. 在您的電腦打開舊版 Boostnote 資料夾。',
+    'preferences.importFlow1': '1. 在您的電腦打開舊版 Boostnote 資料夾。',
     'preferences.importFlow2': '2. 拖拽 .cson 檔到以下表單。',
     'preferences.importFlow3': '3. 選擇想要移動舊資料的存儲和資料夾。',
     'preferences.importFlow4': '4. 上傳!',
