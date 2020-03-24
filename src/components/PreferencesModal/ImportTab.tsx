@@ -4,7 +4,7 @@ import {
   SectionHeader,
   SectionControl,
   SectionSelect,
-  SectionPrimaryButton
+  SectionPrimaryButton,
 } from './styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
@@ -12,13 +12,13 @@ import FileDropZone from '../atoms/FileDropZone'
 import {
   convertCSONFileToNote,
   ParsedNote,
-  ParseErrors
+  ParseErrors,
 } from '../../lib/legacy-import'
 import styled from '../../lib/styled'
 import {
   secondaryBackgroundColor,
   border,
-  textColor
+  textColor,
 } from '../../lib/styled/styleFunctions'
 import { useToast } from '../../lib/toast'
 import { useTranslation } from 'react-i18next'
@@ -103,17 +103,17 @@ export default () => {
       importEntries
         .map(([, entry]) => entry)
         .filter(({ err }) => !err)
-        .map(entry =>
+        .map((entry) =>
           createNote(activeStorage.id, {
             folderPathname: activeFolder.pathname,
-            ...(entry as Success).note
+            ...(entry as Success).note,
           })
         )
     )
 
     const title = `Successfully imported ${created.length} notes`
     const description = created
-      .map(note => (note == null ? '' : note.title))
+      .map((note) => (note == null ? '' : note.title))
       .join('\n')
 
     pushMessage({ title, description })
@@ -125,20 +125,20 @@ export default () => {
     activeFolder,
     importEntries,
     setFileImports,
-    pushMessage
+    pushMessage,
   ])
 
   const draggedInCallback = useCallback(() => setDragInside(true), [
-    setDragInside
+    setDragInside,
   ])
   const draggedOutCallback = useCallback(() => setDragInside(false), [
-    setDragInside
+    setDragInside,
   ])
 
   const fileDropCallback = useCallback(
     (files: File[]) => {
       setDragInside(false)
-      files.forEach(async file => {
+      files.forEach(async (file) => {
         const result = await convertCSONFileToNote(file)
         if (!result.err) {
           setFileImports(
@@ -152,7 +152,7 @@ export default () => {
               fileImports.set(file.name, {
                 err: true,
                 filename: file.name,
-                type: result.data
+                type: result.data,
               })
             )
           )

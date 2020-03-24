@@ -152,6 +152,6 @@ export default {
     'preferences.importFlow3': '3. 選擇你想要移動舊資料的存儲和資料夾.',
     'preferences.importFlow4': '4. 上傳!',
     'preferences.importRemove': '移除',
-    'preferences.importUpload': '上傳'
-  }
+    'preferences.importUpload': '上傳',
+  },
 }

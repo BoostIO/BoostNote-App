@@ -151,6 +151,6 @@ export default {
     'preferences.importFlow3': '3. 选择你想要移动旧数据的存储和文件夹.',
     'preferences.importFlow4': '4. 上传!',
     'preferences.importRemove': '移除',
-    'preferences.importUpload': '上传'
-  }
+    'preferences.importUpload': '上传',
+  },
 }

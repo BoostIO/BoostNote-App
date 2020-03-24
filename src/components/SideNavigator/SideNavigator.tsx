@@ -10,7 +10,7 @@ import {
   sideBarBackgroundColor,
   sideBarDefaultTextColor,
   iconColor,
-  sideBarTextColor
+  sideBarTextColor,
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -29,7 +29,7 @@ import {
   IconImage,
   IconSetting,
   IconBook,
-  IconStarActive
+  IconStarActive,
 } from '../icons'
 import { getStorageItemId } from '../../lib/nav'
 
@@ -128,7 +128,7 @@ export default () => {
     renameStorage,
     removeStorage,
     storageMap,
-    syncStorage
+    syncStorage,
   } = useDb()
   const { popup } = useContextMenu()
   const { prompt, messageBox } = useDialog()
@@ -157,10 +157,10 @@ export default () => {
                 if (value == null) return
                 const storage = await createStorage(value)
                 push(`/app/storages/${storage.id}/notes`)
-              }
+              },
             })
-          }
-        }
+          },
+        },
       ])
     },
     [popup, prompt, createStorage, push]
@@ -170,7 +170,7 @@ export default () => {
   const {
     toggleSideNavOpenedItem,
     sideNavOpenedItemSet,
-    openSideNavFolderItemRecursively
+    openSideNavFolderItemRecursively,
   } = useGeneralStatus()
 
   const currentPathname = usePathnameWithoutNoteId()
@@ -235,7 +235,7 @@ export default () => {
 
                 // Open folder item
                 openSideNavFolderItemRecursively(storage.id, value)
-              }
+              },
             })
           }
           const showPromptToRenameFolder = (folderPathname: string) => {
@@ -262,10 +262,10 @@ export default () => {
                 } catch (error) {
                   pushMessage({
                     title: t('general.error'),
-                    description: t('folder.renameErrorMessage')
+                    description: t('folder.renameErrorMessage'),
                   })
                 }
-              }
+              },
             })
           }
 
@@ -284,7 +284,7 @@ export default () => {
               key={`${storage.id}-addFolderButton`}
               onClick={() => showPromptToCreateFolder('/')}
               icon={<IconAddRound />}
-            />
+            />,
           ]
 
           if (storage.cloudStorage != null && user != null) {
@@ -292,7 +292,7 @@ export default () => {
               if (user == null) {
                 pushMessage({
                   title: 'No User Error',
-                  description: 'Please login first to sync the storage.'
+                  description: 'Please login first to sync the storage.',
                 })
               }
               syncStorage(storage.id)
@@ -327,7 +327,7 @@ export default () => {
                 onClick={() => {
                   toggleSideNavOpenedItem(itemId)
                 }}
-                onContextMenu={event => {
+                onContextMenu={(event) => {
                   event.preventDefault()
                   popup(event, [
                     {
@@ -343,9 +343,9 @@ export default () => {
                           onClose: async (value: string | null) => {
                             if (value == null) return
                             await renameStorage(storage.id, value)
-                          }
+                          },
                         })
-                      }
+                      },
                     },
                     {
                       type: MenuTypes.Normal,
@@ -362,10 +362,10 @@ export default () => {
                             if (value === 0) {
                               removeStorage(storage.id)
                             }
-                          }
+                          },
                         })
-                      }
-                    }
+                      },
+                    },
                   ])
                 }}
                 controlComponents={controlComponents}
@@ -391,7 +391,7 @@ export default () => {
                     icon={<IconImage size='1.5em' />}
                     active={attachmentsPageIsActive}
                     onClick={() => push(attachmentsPagePathname)}
-                    onContextMenu={event => {
+                    onContextMenu={(event) => {
                       event.preventDefault()
                     }}
                   />
@@ -401,7 +401,7 @@ export default () => {
                     icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
                     active={trashcanPageIsActive}
                     onClick={() => push(trashcanPagePathname)}
-                    onContextMenu={event => {
+                    onContextMenu={(event) => {
                       event.preventDefault()
                       // TODO: Implement context menu(restore all notes)
                     }}

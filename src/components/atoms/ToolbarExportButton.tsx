@@ -5,7 +5,7 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { NoteDoc } from '../../lib/db/types'
 import {
   exportNoteAsHtmlFile,
-  exportNoteAsMarkdownFile
+  exportNoteAsMarkdownFile,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -45,13 +45,13 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
           type: MenuTypes.Normal,
           label: 'HTML export',
           onClick: async () =>
-            await exportNoteAsHtmlFile(note, preferences, previewStyle)
+            await exportNoteAsHtmlFile(note, preferences, previewStyle),
         },
         {
           type: MenuTypes.Normal,
           label: 'Markdown export',
-          onClick: async () => await exportNoteAsMarkdownFile(note)
-        }
+          onClick: async () => await exportNoteAsMarkdownFile(note),
+        },
       ])
     },
     [popup, note, preferences, previewStyle]

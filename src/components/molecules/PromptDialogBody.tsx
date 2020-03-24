@@ -6,7 +6,7 @@ import {
   DialogMessage,
   DialogPromptInput,
   DialogButtonGroup,
-  DialogButton
+  DialogButton,
 } from '../atoms/dialog/styled'
 
 type PromptDialogProps = {
@@ -24,7 +24,7 @@ export default class PromptDialogBody extends React.Component<
 > {
   state = {
     value:
-      this.props.data.defaultValue == null ? '' : this.props.data.defaultValue
+      this.props.data.defaultValue == null ? '' : this.props.data.defaultValue,
   }
   inputRef = React.createRef<HTMLInputElement>()
 
@@ -32,13 +32,13 @@ export default class PromptDialogBody extends React.Component<
     this.inputRef.current!.focus()
   }
 
-  updateValue: ChangeEventHandler<HTMLInputElement> = event => {
+  updateValue: ChangeEventHandler<HTMLInputElement> = (event) => {
     this.setState({
-      value: event.target.value
+      value: event.target.value,
     })
   }
 
-  handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = event => {
+  handleBodyKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
     switch (event.key) {
       case 'Escape':
         this.cancel()
@@ -46,7 +46,7 @@ export default class PromptDialogBody extends React.Component<
     }
   }
 
-  handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = event => {
+  handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     switch (event.key) {
       case 'Enter':
         this.submit()

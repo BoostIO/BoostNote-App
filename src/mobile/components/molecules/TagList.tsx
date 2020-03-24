@@ -3,7 +3,7 @@ import ButtonIcon from '../../../components/atoms/ButtonIcon'
 import styled from '../../../lib/styled'
 import {
   iconColor,
-  noteListIconColor
+  noteListIconColor,
 } from '../../../lib/styled/styleFunctions'
 import { IconTag, IconClose } from '../../../components/icons'
 
@@ -73,7 +73,7 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
     <TagListContainer>
       <ButtonIcon className='icon' icon={<IconTag />} />
-      {tags.map(tag => (
+      {tags.map((tag) => (
         <TagListItem
           tagName={tag}
           key={tag}

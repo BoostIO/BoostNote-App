@@ -7,7 +7,7 @@ import { createDbStoreCreator } from './createStore'
 
 export const {
   StoreProvider: DbProvider,
-  useStore: useDb
+  useStore: useDb,
 } = createStoreContext(
   wrapDbStoreWithAnalytics(
     createDbStoreCreator(

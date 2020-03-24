@@ -22,7 +22,7 @@ export const sepiaTheme: BaseTheme = {
     background: base1Color,
     alternativeBackground: base2Color,
     active: primaryColor,
-    border: dark12Color
+    border: dark12Color,
   },
   fontSize: 15,
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
@@ -64,5 +64,5 @@ export const sepiaTheme: BaseTheme = {
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: dark12Color
+  inputBackground: dark12Color,
 }

@@ -15,7 +15,7 @@ export default ({
   note,
   active,
   basePathname,
-  focusList
+  focusList,
 }: TutorialsNoteItemProps) => {
   const href = `${basePathname}/notes/note:${note.slug}`
 

@@ -21,13 +21,13 @@ interface FolderListFragmentProps {
 const FolderListFragment = ({
   storage,
   showPromptToCreateFolder,
-  showPromptToRenameFolder
+  showPromptToRenameFolder,
 }: FolderListFragmentProps) => {
   const {
     removeFolder,
     updateNote,
     createNote,
-    moveNoteToOtherStorage
+    moveNoteToOtherStorage,
   } = useDb()
   const { push } = useRouter()
   const { messageBox } = useDialog()
@@ -66,7 +66,7 @@ const FolderListFragment = ({
           label: t('folder.create'),
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)
-          }
+          },
         },
         {
           type: MenuTypes.Normal,
@@ -74,7 +74,7 @@ const FolderListFragment = ({
           enabled: folderPathname !== '/',
           onClick: async () => {
             showPromptToRenameFolder(folderPathname)
-          }
+          },
         },
         {
           type: MenuTypes.Normal,
@@ -92,10 +92,10 @@ const FolderListFragment = ({
                 if (value === 0) {
                   removeFolder(storageId, folderPathname)
                 }
-              }
+              },
             })
-          }
-        }
+          },
+        },
       ])
     }
   }
@@ -131,12 +131,12 @@ const FolderListFragment = ({
 
       const {
         storageId: originalNoteStorageId,
-        note: originalNote
+        note: originalNote,
       } = transferrableNoteData
 
       if (storageId === originalNoteStorageId) {
         await updateNote(storageId, originalNote._id, {
-          folderPathname
+          folderPathname,
         })
       } else {
         messageBox({
@@ -162,11 +162,11 @@ const FolderListFragment = ({
                   content: originalNote.content,
                   folderPathname,
                   tags: originalNote.tags,
-                  data: originalNote.data
+                  data: originalNote.data,
                 })
                 return
             }
-          }
+          },
         })
       }
     }
@@ -206,9 +206,9 @@ const FolderListFragment = ({
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
                 icon={<IconAddRound />}
-              />
+              />,
             ]}
-            onDragOver={event => {
+            onDragOver={(event) => {
               event.preventDefault()
             }}
             onDrop={createDropHandler(folderPathname)}

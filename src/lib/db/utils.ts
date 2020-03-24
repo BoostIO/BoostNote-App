@@ -59,7 +59,7 @@ export function isTagNameValid(name: string): boolean {
 enum DbClientErrorCode {
   UnprocessableEntity = 'UnprocessableEntity',
   Conflict = 'Conflict',
-  NotFound = 'NotFound'
+  NotFound = 'NotFound',
 }
 
 export class DbClientError extends Error {

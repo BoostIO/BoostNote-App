@@ -25,7 +25,7 @@ export default class TutorialsNoteDetail extends React.Component<
 > {
   state: TutorialsNoteDetailState = {
     noteComponent: this.props.note.slug,
-    noteContent: ''
+    noteContent: '',
   }
 
   async componentDidMount() {
@@ -52,7 +52,7 @@ export default class TutorialsNoteDetail extends React.Component<
     if (note.absolutePath !== prevState.noteComponent) {
       this.setState({
         noteComponent: note.absolutePath,
-        noteContent: await this.fetchNoteContentFromTreeItem()
+        noteContent: await this.fetchNoteContentFromTreeItem(),
       })
     }
   }
@@ -71,7 +71,6 @@ export default class TutorialsNoteDetail extends React.Component<
         key={note.slug}
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.noteContent}
-        onChange={() => {}}
         readonly={true}
       />
     )

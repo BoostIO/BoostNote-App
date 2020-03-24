@@ -4,7 +4,7 @@ import ow from 'ow'
 describe('schema(ow predicate)', () => {
   it('validates object with schema', () => {
     const predicate = schema({
-      stringProp: ow.string
+      stringProp: ow.string,
     })
 
     const result = ow.isValid({} as unknown, predicate)
@@ -14,8 +14,8 @@ describe('schema(ow predicate)', () => {
   it('validates with nested schema', () => {
     const predicate = schema({
       parent: schema({
-        stringProp: ow.string
-      })
+        stringProp: ow.string,
+      }),
     })
 
     const result = ow.isValid({ parent: {} } as unknown, predicate)

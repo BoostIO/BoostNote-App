@@ -4,7 +4,7 @@ import styled from '../../lib/styled'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
-  EditorKeyMapOptions
+  EditorKeyMapOptions,
 } from '../../lib/preferences'
 
 const StyledContainer = styled.div`
@@ -15,12 +15,12 @@ const StyledContainer = styled.div`
 
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
-  lineNumbers: true
+  lineNumbers: true,
 }
 
 interface CodeEditorProps {
   value: string
-  onChange: (
+  onChange?: (
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
@@ -54,7 +54,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       tabSize: indentSize,
       keyMap,
       mode: this.props.mode || 'markdown',
-      readOnly: this.props.readonly === true
+      readOnly: this.props.readonly === true,
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
@@ -117,7 +117,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     editor: CodeMirror.Editor,
     change: CodeMirror.EditorChangeLinkedList
   ) => {
-    if (change.origin !== 'setValue') {
+    if (change.origin !== 'setValue' && this.props.onChange != null) {
       this.props.onChange(editor.getValue(), change)
     }
   }
@@ -130,7 +130,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
         className={className}
         style={{
           fontSize: fontSize == null ? 'inherit' : `${fontSize}px`,
-          fontFamily: fontFamily == null ? 'monospace' : fontFamily
+          fontFamily: fontFamily == null ? 'monospace' : fontFamily,
         }}
       >
         <textarea ref={this.textAreaRef} defaultValue={value} />

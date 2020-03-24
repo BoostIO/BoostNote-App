@@ -4,7 +4,7 @@ import React, {
   CSSProperties,
   MouseEventHandler,
   FocusEventHandler,
-  DragEventHandler
+  DragEventHandler,
 } from 'react'
 import { useRouter } from '../../lib/router/store'
 
@@ -30,7 +30,7 @@ const Link: FC<LinkProps> = ({
   onFocus,
   onDragStart,
   onDragOver,
-  onDrop
+  onDrop,
 }) => {
   const router = useRouter()
 

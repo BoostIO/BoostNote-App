@@ -9,7 +9,7 @@ export interface Subscription {
 type GetResponse = undefined | Subscription
 
 export const getSubscription = async ({
-  token
+  token,
 }: {
   token: string
 }): Promise<GetResponse> => {

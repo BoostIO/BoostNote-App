@@ -32,14 +32,14 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
     <ListContainer>
       {useMemo(() => {
         return (Object.values(attachmentMap) as Attachment[]).map(
-          attachment => {
+          (attachment) => {
             return (
               <ListItem
                 key={attachment!.name}
                 style={{
                   backgroundImage: `url("${URL.createObjectURL(
                     attachment!.blob
-                  )}")`
+                  )}")`,
                 }}
                 onContextMenu={(event: React.MouseEvent) => {
                   event.preventDefault()
@@ -50,7 +50,7 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
                       label: 'Download',
                       onClick: () => {
                         downloadBlob(attachment.blob, attachment.name)
-                      }
+                      },
                     },
                     {
                       type: MenuTypes.Normal,
@@ -68,10 +68,10 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
                             if (value === 0) {
                               removeAttachment(storage.id, attachment.name)
                             }
-                          }
+                          },
                         })
-                      }
-                    }
+                      },
+                    },
                   ])
                 }}
               />

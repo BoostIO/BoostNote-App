@@ -40,8 +40,9 @@ const TutorialsNavigator = ({}) => {
         return
       }
 
-      const componentPathname = `${parentComponentPathname != null &&
-        parentComponentPathname}/${tree.absolutePath}`
+      const componentPathname = `${
+        parentComponentPathname != null && parentComponentPathname
+      }/${tree.absolutePath}`
       const nodeHref = `${parentNode != null ? parentNode.href : '/app'}/${
         tree.slug
       }`
@@ -49,7 +50,7 @@ const TutorialsNavigator = ({}) => {
       const folderIsActive = currentHref.split('/notes/note:')[0] === nodeHref
 
       const notesUnderCurrentNode = tree.children.filter(
-        child => child.type === 'note'
+        (child) => child.type === 'note'
       )
 
       const nodeId = `TF-${nodeHref.split('/app')[1]}`
@@ -74,14 +75,14 @@ const TutorialsNavigator = ({}) => {
         active: folderIsActive,
         depth: currentDepth,
         opened: sideNavOpenedItemSet.has(nodeId),
-        children: []
+        children: [],
       }
 
       const childrenNodes =
         tree.children.length === 0
           ? []
           : (tree.children
-              .map(childrenTree =>
+              .map((childrenTree) =>
                 getNavigatorNodesFromTreeItem(
                   childrenTree,
                   currentDepth + 1,
@@ -89,10 +90,10 @@ const TutorialsNavigator = ({}) => {
                   componentPathname
                 )
               )
-              .filter(node => node != null) as NavigatorNode[])
+              .filter((node) => node != null) as NavigatorNode[])
       return {
         ...currentNode,
-        children: childrenNodes
+        children: childrenNodes,
       }
     },
     [currentHref, sideNavOpenedItemSet]
@@ -117,18 +118,18 @@ const TutorialsNavigator = ({}) => {
               cancelButtonIndex: 1,
               onClose: () => {
                 setPreferences({ 'general.tutorials': 'hide' })
-              }
+              },
             })
-          }
-        }
+          },
+        },
       ])
     }
   }
 
   const nodes = useMemo(() => {
     return tutorials
-      .map(tutorial => getNavigatorNodesFromTreeItem(tutorial, 0))
-      .filter(node => node != null) as NavigatorNode[]
+      .map((tutorial) => getNavigatorNodesFromTreeItem(tutorial, 0))
+      .filter((node) => node != null) as NavigatorNode[]
   }, [tutorials, getNavigatorNodesFromTreeItem])
 
   const redirectToTutorialNode = (node: NavigatorNode) => {
@@ -154,12 +155,12 @@ const TutorialsNavigator = ({}) => {
           folded={node.children.length === 0 ? undefined : !node.opened}
           onContextMenu={createOnContextMenuHandler(node.depth)}
         />
-        {node.children.map(child => renderNode(child, node.opened))}
+        {node.children.map((child) => renderNode(child, node.opened))}
       </React.Fragment>
     )
   }
 
-  return <>{nodes.map(node => renderNode(node, true))}</>
+  return <>{nodes.map((node) => renderNode(node, true))}</>
 }
 
 export default TutorialsNavigator

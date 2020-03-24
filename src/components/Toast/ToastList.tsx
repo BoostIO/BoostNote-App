@@ -18,7 +18,7 @@ export default () => {
 
   return (
     <StyledToastList>
-      {messages.map(message => (
+      {messages.map((message) => (
         <li key={message.id}>
           <ToastItem item={message} onClose={removeMessage} />
         </li>

@@ -64,7 +64,7 @@ const NoteList = ({
   notes,
   createNote,
   currentStorageId,
-  basePathname
+  basePathname,
 }: NoteListProps) => {
   const { t } = useTranslation()
 
@@ -82,7 +82,7 @@ const NoteList = ({
         </NewNoteButton>
       )}
       <ul tabIndex={0} ref={listRef}>
-        {notes.map(note => {
+        {notes.map((note) => {
           return (
             <li key={note._id}>
               <NoteItem

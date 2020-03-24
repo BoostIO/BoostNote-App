@@ -24,14 +24,14 @@ export type CheckLoginResponse = CheckLoginError | CheckLoginOk
 
 const headers = [
   ['accept', 'application/json'],
-  ['Content-Type', 'application/json']
+  ['Content-Type', 'application/json'],
 ]
 
 export const initiateLogin = async (state: string): Promise<LoginInfo> => {
   const response = await fetch(loginStartUrl, {
     method: 'POST',
     body: JSON.stringify({ state }),
-    headers
+    headers,
   })
 
   if (!response.ok) {
@@ -44,12 +44,12 @@ export const initiateLogin = async (state: string): Promise<LoginInfo> => {
 
 export const checkLogin = async ({
   code,
-  state
+  state,
 }: LoginInfo): Promise<CheckLoginResponse> => {
   const response = await fetch(loginCheckUrl, {
     method: 'POST',
     body: JSON.stringify({ state, code }),
-    headers
+    headers,
   })
 
   switch (response.status) {

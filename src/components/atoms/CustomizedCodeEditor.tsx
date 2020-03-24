@@ -2,9 +2,9 @@ import React from 'react'
 import CodeEditor from './CodeEditor'
 import { usePreferences } from '../../lib/preferences'
 
-interface CustomizedCodeEditor {
+interface CustomizedCodeEditorProps {
   value: string
-  onChange: (
+  onChange?: (
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
@@ -20,8 +20,8 @@ const CustomizedCodeEditor = ({
   codeMirrorRef,
   className,
   mode,
-  readonly
-}: CustomizedCodeEditor) => {
+  readonly,
+}: CustomizedCodeEditorProps) => {
   const { preferences } = usePreferences()
   return (
     <CodeEditor

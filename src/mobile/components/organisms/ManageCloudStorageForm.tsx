@@ -3,7 +3,7 @@ import React, {
   ChangeEvent,
   useCallback,
   useRef,
-  useMemo
+  useMemo,
 } from 'react'
 import {
   FormGroup,
@@ -12,7 +12,7 @@ import {
   FormPrimaryButton,
   FormBlockquote,
   FormSecondaryButton,
-  FormHeading
+  FormHeading,
 } from '../../../components/atoms/form'
 import { NoteStorage } from '../../../lib/db/types'
 import { useDb } from '../../lib/db'
@@ -79,7 +79,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
           } catch (error) {
             pushMessage({
               title: t('general.networkError'),
-              description: error.toString()
+              description: error.toString(),
             })
           }
 
@@ -88,7 +88,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
           }
           setDeleting(false)
         }
-      }
+      },
     })
   }, [messageBox, pushMessage, t, db, storage.id, storage.cloudStorage, user])
 
@@ -112,7 +112,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage'
+                'An error occured while attempting to create a cloud storage',
             })
           }}
           ButtonComponent={FormPrimaryButton}

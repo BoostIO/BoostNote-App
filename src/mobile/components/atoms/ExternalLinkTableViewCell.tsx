@@ -9,7 +9,7 @@ interface ExternalLinkTableViewCellProps {
 
 const ExternalLinkTableViewCell: React.FC<ExternalLinkTableViewCellProps> = ({
   children,
-  url
+  url,
 }) => {
   return (
     <TableViewCell
