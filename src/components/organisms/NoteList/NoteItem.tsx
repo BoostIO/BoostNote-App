@@ -96,6 +96,7 @@ type NoteItemProps = {
   search: string
   basePathname: string
   focusList: () => void
+  liststyle?: boolean
 }
 
 export default ({
@@ -104,6 +105,7 @@ export default ({
   basePathname,
   search,
   recentlyCreated,
+  liststyle,
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
@@ -257,19 +259,27 @@ export default ({
           {note.title.length === 0 && (
             <div className='title'>{t('note.noTitle')}</div>
           )}
-          <div className='date'>
-            {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
-          </div>
-          <div className='preview'>{contentPreview}</div>
-          {note.tags.length > 0 && (
-            <div className='tag-area'>
-              {note.tags.map((tag) => (
-                <span className='tag' key={tag}>
-                  <HighlightText text={tag} search={search} />
-                </span>
-              ))}
+
+          {liststyle && (
+            <div>
+              <div className='date'>
+              {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
+              </div>
+              <div className='preview'>{contentPreview}</div>
+              {note.tags.length > 0 && (
+                <div className='tag-area'>
+                  {note.tags.map((tag) => (
+                    <span className='tag' key={tag}>
+                      <HighlightText text={tag} search={search} />
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
+          
+          
+          
         </div>
       </Link>
     </StyledNoteListItem>

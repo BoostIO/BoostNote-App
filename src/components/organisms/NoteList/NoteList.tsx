@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, ChangeEventHandler } from 'react'
+import React, { useCallback, useRef, ChangeEventHandler, useState } from 'react'
 import NoteItem from './NoteItem'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
@@ -97,6 +97,18 @@ export const StyledNoteListContainer = styled.div`
     border: none;
     ${noteListIconColor}
   }
+  .list-button{
+    width: 25px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    transition: 0.15s;
+    &:active, &:active:hover;
+      color: $ui-inactive-text-color;
+    &:hover
+      color: $ui-inactive-text-color;
+  }
 `
 
 type NoteListProps = {
@@ -128,6 +140,8 @@ const NoteList = ({
   setSort,
   trashOrPurgeCurrentNote,
 }: NoteListProps) => {
+
+  const [liststyle, setListStyle] = useState(false);
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -187,6 +201,14 @@ const NoteList = ({
     [trashOrPurgeCurrentNote]
   )
 
+  function enableDetailView(){
+    setListStyle(true);
+  }
+
+  function disableDetailView(){
+    setListStyle(false);
+  }
+
   return (
     <StyledNoteListContainer>
       <div className='control'>
@@ -216,6 +238,22 @@ const NoteList = ({
           <option value='createdAt'>Created</option>
           <option value='title'>Title</option>
         </select>
+        <button
+              title={'Default View'}
+              className={'list-button'}
+              onClick={enableDetailView}
+            >
+              <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>icon-column</title><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Artboard" transform="translate(-440.000000, -198.000000)"><g id="icon-column" transform="translate(436.000000, 194.000000)"><rect id="Rectangle-7" fill="#D8D8D8" opacity="0" x="0" y="0" width="20" height="20"></rect><g id="server" transform="translate(5.000000, 5.000000)" stroke="#8A8C8D" stroke-linecap="round" stroke-linejoin="round"><rect id="Rectangle-path" x="0" y="0" width="10" height="4" rx="1"></rect><rect id="Rectangle-path" x="0" y="6" width="10" height="4" rx="1"></rect></g></g></g></g></svg>
+            </button>
+
+        <button
+              title={'Default View'}
+              className={'list-button'}
+              onClick={disableDetailView}
+            >
+            <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="13px" height="13px"><path d="M 0 7.5 L 0 12.5 L 50 12.5 L 50 7.5 Z M 0 22.5 L 0 27.5 L 50 27.5 L 50 22.5 Z M 0 37.5 L 0 42.5 L 50 42.5 L 50 37.5 Z"/></svg>
+              
+        </button>
       </div>
       <ul tabIndex={0} ref={listRef} onKeyDown={handleListKeyDown}>
         {notes.map((note) => {
@@ -228,6 +266,7 @@ const NoteList = ({
                 basePathname={basePathname}
                 focusList={focusList}
                 search={search}
+                liststyle={liststyle}
                 recentlyCreated={lastCreatedNoteId === note._id}
               />
             </li>
