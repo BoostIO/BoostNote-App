@@ -157,5 +157,16 @@ export default {
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'remove',
     'preferences.importUpload': 'Upload',
+
+    //Preferences KeyBindings
+    "preferences.toggleBoostnote": "Show/Hide BoostNote",
+    "preferences.toggleMenu": "Show/Hide Menu",
+    "preferences.toggleEditMode": "Toggle Editor Mode",
+    "preferences.toggleDirection": "Toggle Direction",
+    "preferences.deleteNote": "Delete Note",
+    "preferences.pasteHTML": "Paste HTML",
+    "preferences.prettifyMarkdown": "Prettify Markdown",
+    "preferences.insertCurrentDate": "Insert Current Date",
+    "preferences.insertCurrentDateTime": "Insert Current Date/Time"
   },
 }

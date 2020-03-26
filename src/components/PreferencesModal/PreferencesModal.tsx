@@ -86,7 +86,7 @@ const PreferencesModal = () => {
         return <BillingTab />
       case 'import':
         return <ImportTab />
-      case 'import':
+      case 'keybindings':
         return <KeyBindingTab />
       case 'general':
       default:
