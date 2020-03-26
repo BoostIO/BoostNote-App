@@ -43,6 +43,8 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 
 ## Build
 
+Don't forget to create a file named `.env` in the root of the project directory, or the build will fail.
+
 ### Web app
 
 ```sh
