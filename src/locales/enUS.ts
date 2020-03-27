@@ -159,7 +159,7 @@ export default {
     'preferences.importUpload': 'Upload',
 
     //Preferences KeyBindings
-    "preferences.toggleBoostnote": "Show/Hide BoostNote",
+    "preferences.toggleBoostNote": "Show/Hide BoostNote",
     "preferences.toggleMenu": "Show/Hide Menu",
     "preferences.toggleEditMode": "Toggle Editor Mode",
     "preferences.toggleDirection": "Toggle Direction",
