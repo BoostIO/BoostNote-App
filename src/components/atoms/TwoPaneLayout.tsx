@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  CSSProperties
+  CSSProperties,
 } from 'react'
 import styled from '../../lib/styled'
 import throttle from 'lodash/throttle'
@@ -67,7 +67,7 @@ const Divider = ({ onMouseDown, dragging, leftWidth }: DividerProps) => (
     className={dragging ? 'active' : ''}
     onMouseDown={onMouseDown}
     style={{
-      left: `${leftWidth}px`
+      left: `${leftWidth}px`,
     }}
   >
     <DividerBorder />
@@ -81,7 +81,7 @@ const TwoPaneLayout = ({
   style,
   defaultLeftWidth = 250,
   maxLeftWidth = 500,
-  onResizeEnd
+  onResizeEnd,
 }: TwoPaneLayoutProps) => {
   const [leftWidth, setLeftWidth] = useState(defaultLeftWidth)
   const [dragging, setDragging] = useState(false)

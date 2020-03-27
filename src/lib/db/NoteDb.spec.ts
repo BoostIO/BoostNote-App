@@ -5,7 +5,7 @@ import {
   getTagId,
   generateNoteId,
   getNow,
-  sortByTitle
+  sortByTitle,
 } from './utils'
 import { NoteDoc, FolderDoc, ExceptRev } from './types'
 
@@ -13,7 +13,7 @@ let noteDbCount = 0
 async function prepareNoteDb(shouldInit = true): Promise<NoteDb> {
   const id = `dummy${++noteDbCount}`
   const pouchDb = new PouchDB(id, {
-    adapter: 'memory'
+    adapter: 'memory',
   })
   const noteDb = new NoteDb(pouchDb, id, id)
 
@@ -34,7 +34,7 @@ describe('NoteDb', () => {
         _id: getFolderId('/test'),
         createdAt: now,
         updatedAt: now,
-        data: {}
+        data: {},
       })
 
       // When
@@ -46,7 +46,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: now,
         updatedAt: now,
-        data: {}
+        data: {},
       })
     })
 
@@ -76,7 +76,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: {}
+        data: {},
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -85,7 +85,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: {}
+        data: {},
       })
     })
 
@@ -102,7 +102,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: {}
+        data: {},
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/parent/test'))
@@ -111,7 +111,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: {}
+        data: {},
       })
 
       const parentDoc = await noteDb.pouchDb.get(getFolderId('/parent'))
@@ -120,7 +120,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: {}
+        data: {},
       })
     })
 
@@ -131,7 +131,7 @@ describe('NoteDb', () => {
 
       // When
       const result = await noteDb.upsertFolder('/test', {
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
 
       // Then
@@ -140,7 +140,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -149,7 +149,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
     })
 
@@ -170,7 +170,7 @@ describe('NoteDb', () => {
         _rev,
         createdAt,
         updatedAt,
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -179,7 +179,7 @@ describe('NoteDb', () => {
         _rev,
         createdAt,
         updatedAt,
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
     })
 
@@ -209,7 +209,7 @@ describe('NoteDb', () => {
         _id: getTagId('test'),
         createdAt: now,
         updatedAt: now,
-        data: {}
+        data: {},
       })
 
       // When
@@ -221,7 +221,7 @@ describe('NoteDb', () => {
         _rev: expect.any(String),
         createdAt: now,
         updatedAt: now,
-        data: {}
+        data: {},
       })
     })
 
@@ -244,7 +244,7 @@ describe('NoteDb', () => {
 
       // When
       const result = await noteDb.upsertTag('test', {
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
 
       // Then
@@ -254,8 +254,8 @@ describe('NoteDb', () => {
         updatedAt: expect.any(String),
         _rev: expect.any(String),
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
 
       const doc = await noteDb.getTag('test')
@@ -265,8 +265,8 @@ describe('NoteDb', () => {
         updatedAt: expect.any(String),
         _rev: expect.any(String),
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
     })
 
@@ -274,12 +274,12 @@ describe('NoteDb', () => {
       // Given
       const noteDb = await prepareNoteDb()
       await noteDb.upsertTag('test', {
-        data: {}
+        data: {},
       })
 
       // When
       const result = await noteDb.upsertTag('test', {
-        data: { message: 'yolo' }
+        data: { message: 'yolo' },
       })
 
       // Then
@@ -289,8 +289,8 @@ describe('NoteDb', () => {
         updatedAt: expect.any(String),
         _rev: expect.any(String),
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
 
       const doc = await noteDb.getTag('test')
@@ -300,8 +300,8 @@ describe('NoteDb', () => {
         updatedAt: expect.any(String),
         _rev: expect.any(String),
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
     })
 
@@ -310,8 +310,8 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const { createdAt, updatedAt, _rev } = await noteDb.upsertTag('test', {
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
 
       // When
@@ -324,8 +324,8 @@ describe('NoteDb', () => {
         updatedAt,
         _rev,
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
 
       const doc = await noteDb.getTag('test')
@@ -335,8 +335,8 @@ describe('NoteDb', () => {
         updatedAt,
         _rev,
         data: {
-          message: 'yolo'
-        }
+          message: 'yolo',
+        },
       })
     })
 
@@ -370,7 +370,7 @@ describe('NoteDb', () => {
         movedToTrash: false,
         title: 'test title',
         content: 'test content',
-        data: {}
+        data: {},
       })
 
       // When
@@ -387,7 +387,7 @@ describe('NoteDb', () => {
         movedToTrash: false,
         title: 'test title',
         content: 'test content',
-        data: {}
+        data: {},
       })
     })
 
@@ -411,7 +411,7 @@ describe('NoteDb', () => {
       // When
       const result = await noteDb.createNote({
         title: 'test title',
-        content: 'test content'
+        content: 'test content',
       })
 
       // Then
@@ -426,7 +426,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
 
       const doc = await noteDb.getNote(result._id)
@@ -441,7 +441,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
     })
 
@@ -454,7 +454,7 @@ describe('NoteDb', () => {
         title: 'test title',
         content: 'test content',
         tags: ['test'],
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
 
       // Then
@@ -469,7 +469,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
 
       const folder = await noteDb.getFolder('/test')
@@ -486,13 +486,13 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const { _id } = await noteDb.createNote({
         title: 'test title',
-        content: 'test content'
+        content: 'test content',
       })
 
       // When
       const result = await noteDb.updateNote(_id, {
         title: 'changed title',
-        content: 'changed content'
+        content: 'changed content',
       })
 
       // Then
@@ -507,7 +507,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
 
       const doc = await noteDb.getNote(_id)
@@ -522,7 +522,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
     })
 
@@ -532,7 +532,7 @@ describe('NoteDb', () => {
       const { _id } = await noteDb.createNote({
         title: 'test title',
         content: 'test content',
-        tags: ['old']
+        tags: ['old'],
       })
 
       // When
@@ -540,7 +540,7 @@ describe('NoteDb', () => {
         title: 'changed title',
         content: 'changed content',
         folderPathname: '/new folder',
-        tags: ['new']
+        tags: ['new'],
       })
 
       // Then
@@ -555,7 +555,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         trashed: false,
-        _rev: expect.any(String)
+        _rev: expect.any(String),
       })
 
       const tag = await noteDb.getTag('new')
@@ -574,7 +574,7 @@ describe('NoteDb', () => {
       try {
         await noteDb.updateNote('note:missing', {
           title: 'changed title',
-          content: 'changed content'
+          content: 'changed content',
         })
       } catch (error) {
         // Then
@@ -591,17 +591,17 @@ describe('NoteDb', () => {
       const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
       const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
       await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
-        folderPathname: '/another folder'
+        folderPathname: '/another folder',
       })
 
       // When
@@ -619,7 +619,7 @@ describe('NoteDb', () => {
           data: {},
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
+          trashed: false,
         },
         {
           _id: note2._id,
@@ -632,8 +632,8 @@ describe('NoteDb', () => {
           data: {},
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
-        }
+          trashed: false,
+        },
       ])
     })
   })
@@ -647,19 +647,19 @@ describe('NoteDb', () => {
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/default',
-        tags: ['tag1']
+        tags: ['tag1'],
       })
       const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/default',
-        tags: ['tag1', 'tag2']
+        tags: ['tag1', 'tag2'],
       })
       const note3 = await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
         folderPathname: '/default',
-        tags: ['tag2']
+        tags: ['tag2'],
       })
 
       // When
@@ -678,7 +678,7 @@ describe('NoteDb', () => {
           data: {},
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
+          trashed: false,
         },
         {
           _id: note2._id,
@@ -691,8 +691,8 @@ describe('NoteDb', () => {
           data: {},
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
-        }
+          trashed: false,
+        },
       ])
 
       // When
@@ -711,7 +711,7 @@ describe('NoteDb', () => {
           bookmarked: false,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
+          trashed: false,
         },
         {
           _id: note3._id,
@@ -724,8 +724,8 @@ describe('NoteDb', () => {
           data: {},
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-          trashed: false
-        }
+          trashed: false,
+        },
       ])
     })
   })
@@ -736,7 +736,7 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const note = await noteDb.createNote({
         title: 'test title',
-        content: 'test content'
+        content: 'test content',
       })
 
       // When
@@ -745,13 +745,13 @@ describe('NoteDb', () => {
       // Then
       expect(result).toMatchObject({
         _id: note._id,
-        trashed: true
+        trashed: true,
       })
 
       const doc = await noteDb.pouchDb.get(note._id)
       expect(doc).toMatchObject({
         _id: note._id,
-        trashed: true
+        trashed: true,
       })
     })
 
@@ -776,7 +776,7 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const note = await noteDb.createNote({
         title: 'test title',
-        content: 'test content'
+        content: 'test content',
       })
 
       // When
@@ -785,13 +785,13 @@ describe('NoteDb', () => {
       // Then
       expect(result).toMatchObject({
         _id: note._id,
-        trashed: false
+        trashed: false,
       })
 
       const doc = await noteDb.pouchDb.get(note._id)
       expect(doc).toMatchObject({
         _id: note._id,
-        trashed: false
+        trashed: false,
       })
     })
 
@@ -810,7 +810,7 @@ describe('NoteDb', () => {
         bookmarked: false,
         title: 'test title',
         content: 'test content',
-        data: {}
+        data: {},
       })
 
       // When
@@ -819,13 +819,13 @@ describe('NoteDb', () => {
       // Then
       expect(result).toMatchObject({
         _id: noteId,
-        trashed: false
+        trashed: false,
       })
 
       const doc = await noteDb.pouchDb.get(noteId)
       expect(doc).toMatchObject({
         _id: noteId,
-        trashed: false
+        trashed: false,
       })
 
       const folderDoc = await noteDb.getFolder('/missing folder')
@@ -853,7 +853,7 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const note = await noteDb.createNote({
         title: 'test title',
-        content: 'test content'
+        content: 'test content',
       })
 
       // When
@@ -888,13 +888,13 @@ describe('NoteDb', () => {
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/default',
-        tags: ['tag1']
+        tags: ['tag1'],
       })
       const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/default',
-        tags: ['tag1', 'tag2']
+        tags: ['tag1', 'tag2'],
       })
 
       // When
@@ -903,12 +903,12 @@ describe('NoteDb', () => {
       // Then
       const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
-        tags: []
+        tags: [],
       })
 
       const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
-        tags: ['tag2']
+        tags: ['tag2'],
       })
     })
   })
@@ -921,7 +921,7 @@ describe('NoteDb', () => {
       const note = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
 
       // When
@@ -933,7 +933,7 @@ describe('NoteDb', () => {
 
       const storedNote = await noteDb.getNote(note._id)
       expect(storedNote).toMatchObject({
-        trashed: true
+        trashed: true,
       })
     })
 
@@ -943,12 +943,12 @@ describe('NoteDb', () => {
       const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
       const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
-        folderPathname: '/test/child folder'
+        folderPathname: '/test/child folder',
       })
 
       // When
@@ -963,12 +963,12 @@ describe('NoteDb', () => {
 
       const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
-        trashed: true
+        trashed: true,
       })
 
       const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
-        trashed: true
+        trashed: true,
       })
     })
   })
@@ -986,11 +986,11 @@ describe('NoteDb', () => {
       // Then
       expect(result).toEqual([
         expect.objectContaining({
-          _id: getFolderId('/test')
+          _id: getFolderId('/test'),
         }),
         expect.objectContaining({
-          _id: getFolderId('/test/child folder')
-        })
+          _id: getFolderId('/test/child folder'),
+        }),
       ])
     })
   })
@@ -1002,17 +1002,17 @@ describe('NoteDb', () => {
       const note1 = await noteDb.createNote({
         title: 'test title1',
         content: 'test content1',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
       const note2 = await noteDb.createNote({
         title: 'test title2',
         content: 'test content2',
-        folderPathname: '/test'
+        folderPathname: '/test',
       })
       const note3 = await noteDb.createNote({
         title: 'test title3',
         content: 'test content3',
-        folderPathname: '/test2'
+        folderPathname: '/test2',
       })
 
       // When
@@ -1021,16 +1021,16 @@ describe('NoteDb', () => {
       // Then
       const storedNote1 = await noteDb.getNote(note1._id)
       expect(storedNote1).toMatchObject({
-        trashed: true
+        trashed: true,
       })
       const storedNote2 = await noteDb.getNote(note2._id)
       expect(storedNote2).toMatchObject({
-        trashed: true
+        trashed: true,
       })
 
       const storedNote3 = await noteDb.getNote(note3._id)
       expect(storedNote3).toMatchObject({
-        trashed: false
+        trashed: false,
       })
     })
   })
@@ -1043,13 +1043,13 @@ describe('NoteDb', () => {
         title: 'test title1',
         content: 'test content1',
         folderPathname: '/test/child folder',
-        tags: ['tag1', 'tag2']
+        tags: ['tag1', 'tag2'],
       })
       const note2 = await client.createNote({
         title: 'test title2',
         content: 'test content2',
         folderPathname: '/test/child folder2',
-        tags: ['tag2', 'tag3']
+        tags: ['tag2', 'tag3'],
       })
 
       // When
@@ -1058,20 +1058,20 @@ describe('NoteDb', () => {
       // Then
       expect(result.noteMap).toEqual({
         [note1._id]: { storageId: client.id, ...note1 },
-        [note2._id]: { storageId: client.id, ...note2 }
+        [note2._id]: { storageId: client.id, ...note2 },
       })
 
       expect(result.folderMap).toEqual({
         '/': expect.anything(),
         '/test': expect.anything(),
         '/test/child folder': expect.anything(),
-        '/test/child folder2': expect.anything()
+        '/test/child folder2': expect.anything(),
       })
 
       expect(result.tagMap).toEqual({
         tag1: expect.anything(),
         tag2: expect.anything(),
-        tag3: expect.anything()
+        tag3: expect.anything(),
       })
     })
 
@@ -1083,13 +1083,13 @@ describe('NoteDb', () => {
           title: 'test title1',
           content: 'test content1',
           folderPathname: '/test/child folder',
-          tags: ['tag1', 'tag2']
+          tags: ['tag1', 'tag2'],
         })
         await client.createNote({
           title: 'test title2',
           content: 'test content2',
           folderPathname: '/test/child folder2',
-          tags: ['tag2', 'tag3']
+          tags: ['tag2', 'tag3'],
         })
         await client.pouchDb.remove(
           (await client.getFolder('/test/child folder'))!

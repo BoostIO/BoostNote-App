@@ -18,64 +18,64 @@ export const tutorialsTree: TutorialsNavigatorTreeItem[] = [
         absolutePath: 'GetStarted.md',
         slug: 'get-started',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: "Today's Task",
         absolutePath: 'TodaysTask.md',
         slug: 'daily-task',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'About our community',
         absolutePath: 'AboutOurCommunity.md',
         slug: 'community',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Keyboard shortcuts',
         absolutePath: 'KeyboardShortcuts.md',
         slug: 'keyboard-shortcuts',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Storage guide',
         absolutePath: 'StorageGuide.md',
         slug: 'storage-guide',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Template - Brainstorm',
         absolutePath: 'Brainstorm.md',
         slug: 'brainstorm',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Template - Bugfix Report',
         absolutePath: 'BugfixReport.md',
         slug: 'bugfix-report',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Template - Meeting Notes',
         absolutePath: 'MeetingNotes.md',
         slug: 'meeting-notes',
         type: 'note',
-        children: []
+        children: [],
       },
       {
         label: 'Template - Weekly Planner',
         absolutePath: 'WeeklyPlanner.md',
         slug: 'weekly-planner',
         type: 'note',
-        children: []
-      }
-    ]
-  }
+        children: [],
+      },
+    ],
+  },
 ]

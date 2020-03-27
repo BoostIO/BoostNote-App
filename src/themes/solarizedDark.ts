@@ -18,7 +18,7 @@ export const solarizedDarkTheme: BaseTheme = {
     background: light100Color,
     alternativeBackground: light12Color,
     active: primaryColor,
-    border: dark26Color
+    border: dark26Color,
   },
   fontSize: 15,
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
@@ -60,5 +60,5 @@ export const solarizedDarkTheme: BaseTheme = {
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: light12Color
+  inputBackground: light12Color,
 }

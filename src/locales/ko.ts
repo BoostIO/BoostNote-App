@@ -154,6 +154,6 @@ export default {
     'preferences.importFlow3': '3. 옮기고 싶은 이전 저장소와 폴더를 선택한다.',
     'preferences.importFlow4': '4. 업로드!',
     'preferences.importRemove': '삭제',
-    'preferences.importUpload': '업로드'
-  }
+    'preferences.importUpload': '업로드',
+  },
 }

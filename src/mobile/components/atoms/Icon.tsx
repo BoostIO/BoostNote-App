@@ -11,7 +11,7 @@ const Icon = ({ path, color = 'currentColor' }: IconProps) => (
     path={path}
     style={{
       width: '1em',
-      height: '1em'
+      height: '1em',
     }}
     color={color}
   />

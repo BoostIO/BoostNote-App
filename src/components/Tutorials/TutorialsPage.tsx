@@ -38,12 +38,12 @@ export default ({ pathname }: TutorialsPageProps) => {
         const currentTreeWithDepthAbsolutePath = {
           ...tree,
           absolutePath: currentAbsolutePath,
-          children: Object.entries(tree.children).map(obj => {
+          children: Object.entries(tree.children).map((obj) => {
             return {
               ...obj[1],
-              absolutePath: currentAbsolutePath + '/' + obj[1].absolutePath
+              absolutePath: currentAbsolutePath + '/' + obj[1].absolutePath,
             }
-          }) as TutorialsNavigatorTreeItem[]
+          }) as TutorialsNavigatorTreeItem[],
         }
 
         const parentTreeWithDepthAbsolutePath =
@@ -51,18 +51,19 @@ export default ({ pathname }: TutorialsPageProps) => {
             ? {
                 ...parentTree,
                 absolutePath: parentAbsolutePath,
-                children: Object.entries(parentTree.children).map(obj => {
+                children: Object.entries(parentTree.children).map((obj) => {
                   return {
                     ...obj[1],
-                    absolutePath: parentAbsolutePath + '/' + obj[1].absolutePath
+                    absolutePath:
+                      parentAbsolutePath + '/' + obj[1].absolutePath,
                   }
-                })
+                }),
               }
             : undefined
 
         return {
           currentTree: currentTreeWithDepthAbsolutePath,
-          parentTree: parentTreeWithDepthAbsolutePath
+          parentTree: parentTreeWithDepthAbsolutePath,
         }
       }
 
@@ -103,7 +104,7 @@ export default ({ pathname }: TutorialsPageProps) => {
   const updateNoteListWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
-        noteListWidth: leftWidth
+        noteListWidth: leftWidth,
       })
     },
     [setGeneralStatus]
@@ -112,7 +113,7 @@ export default ({ pathname }: TutorialsPageProps) => {
   const toggleViewMode = useCallback(
     (newMode: ViewModeType) => {
       setGeneralStatus({
-        noteViewMode: newMode
+        noteViewMode: newMode,
       })
     },
     [setGeneralStatus]
@@ -128,7 +129,7 @@ export default ({ pathname }: TutorialsPageProps) => {
     }
 
     const notesChildren = currentTutorialBranch.currentTree.children.filter(
-      node => node.type === 'note'
+      (node) => node.type === 'note'
     )
     if (notesChildren.length > 0) {
       return notesChildren[0]
@@ -152,11 +153,11 @@ export default ({ pathname }: TutorialsPageProps) => {
     const notes =
       currentTutorialBranch.currentTree.type !== 'note'
         ? currentTutorialBranch.currentTree.children.filter(
-            node => node.type === 'note'
+            (node) => node.type === 'note'
           )
         : currentTutorialBranch.parentTree != null
         ? currentTutorialBranch.parentTree.children.filter(
-            node => node.type === 'note'
+            (node) => node.type === 'note'
           )
         : []
 
@@ -194,11 +195,11 @@ export default ({ pathname }: TutorialsPageProps) => {
     const notes =
       currentTutorialBranch.currentTree.type !== 'note'
         ? currentTutorialBranch.currentTree.children.filter(
-            node => node.type === 'note'
+            (node) => node.type === 'note'
           )
         : currentTutorialBranch.parentTree != null
         ? currentTutorialBranch.parentTree.children.filter(
-            node => node.type === 'note'
+            (node) => node.type === 'note'
           )
         : []
 

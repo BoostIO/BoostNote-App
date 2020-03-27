@@ -5,11 +5,11 @@ import {
   sideBarTextColor,
   sideBarSecondaryTextColor,
   activeBackgroundColor,
-  iconColor
+  iconColor,
 } from '../../../lib/styled/styleFunctions'
 import {
   IconArrowSingleRight,
-  IconArrowSingleDown
+  IconArrowSingleDown,
 } from '../../../components/icons'
 
 const Container = styled.div`
@@ -151,7 +151,7 @@ const SideNaviagtorItem = ({
   onContextMenu,
   onDrop,
   onDragOver,
-  onDragEnd
+  onDragEnd,
 }: SideNaviagtorItemProps) => {
   return (
     <Container
@@ -179,7 +179,7 @@ const SideNaviagtorItem = ({
           style={{
             paddingLeft: `${10 * depth + 30}px`,
             cursor: onClick ? 'pointer' : 'initial',
-            fontSize: '15px'
+            fontSize: '15px',
           }}
           onClick={onClick}
           onDoubleClick={onDoubleClick}

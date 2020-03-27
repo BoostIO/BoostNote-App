@@ -162,6 +162,6 @@ export default {
       '3. Selecciona el almacenamiento y la carpeta para importar el almacenamiento',
     'preferences.importFlow4': '4. Cargar!',
     'preferences.importRemove': 'Eliminar',
-    'preferences.importUpload': 'Subir'
-  }
+    'preferences.importUpload': 'Subir',
+  },
 }

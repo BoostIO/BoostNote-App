@@ -3,14 +3,14 @@ import { createStoreContext } from './context'
 
 export enum DialogTypes {
   Prompt = 'Prompt',
-  MessageBox = 'MessageBox'
+  MessageBox = 'MessageBox',
 }
 
 export enum DialogIconTypes {
   Question = 'Question',
   Info = 'Info',
   Error = 'Error',
-  Warning = 'Warning'
+  Warning = 'Warning',
 }
 
 export interface MessageBoxDialogOptions {
@@ -67,14 +67,14 @@ function useDialogStore(): DialogContext {
     setData({
       id: id++,
       type: DialogTypes.Prompt,
-      ...options
+      ...options,
     })
   }, [])
   const messageBox = useCallback((options: MessageBoxDialogOptions) => {
     setData({
       id: id++,
       type: DialogTypes.MessageBox,
-      ...options
+      ...options,
     })
   }, [])
   const closeDialog = useCallback(() => {
@@ -85,11 +85,11 @@ function useDialogStore(): DialogContext {
     data,
     prompt,
     messageBox,
-    closeDialog
+    closeDialog,
   }
 }
 
 export const {
   StoreProvider: DialogProvider,
-  useStore: useDialog
+  useStore: useDialog,
 } = createStoreContext(useDialogStore, 'dialog')

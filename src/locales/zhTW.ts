@@ -121,7 +121,7 @@ export default {
     'preferences.title': '標題',
     'preferences.analytics': 'Analytics(資料收集)',
     'preferences.analyticsDescription1':
-    'Boost Note 只會因提升程式品質而匿名收集資料，並且我們絕不收集您筆記中的個人資訊。您可以在 GitHub 上看這是如何運作的。',
+      'Boost Note 只會因提升程式品質而匿名收集資料，並且我們絕不收集您筆記中的個人資訊。您可以在 GitHub 上看這是如何運作的。',
     'preferences.analyticsDescription2': '您可以選擇開啟或者關閉這個選項。',
     'preferences.analyticsLabel': '開啟資料收集來幫助我們完善 Boostnote',
     'preferences.displayTutorialsLabel': '教學與 FAQ',
@@ -146,11 +146,11 @@ export default {
     // Preferences ImportTab
     'preferences.import': '導入',
     'preferences.description': '從舊版 Boostnote 導入 .cson 文件。',
-    'preferences.importFlow2': '1. 在您的電腦打開舊版 Boostnote 資料夾。',
+    'preferences.importFlow1': '1. 在您的電腦打開舊版 Boostnote 資料夾。',
     'preferences.importFlow2': '2. 拖拽 .cson 檔到以下表單。',
     'preferences.importFlow3': '3. 選擇想要移動舊資料的存儲和資料夾。',
     'preferences.importFlow4': '4. 上傳!',
     'preferences.importRemove': '移除',
-    'preferences.importUpload': '上傳'
-  }
+    'preferences.importUpload': '上傳',
+  },
 }

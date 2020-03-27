@@ -11,7 +11,7 @@ interface CustomizedMarkdownPreviewer {
 
 const CustomizedMarkdownPreviewer = ({
   content,
-  attachmentMap
+  attachmentMap,
 }: CustomizedMarkdownPreviewer) => {
   const { preferences } = usePreferences()
   const { previewStyle } = usePreviewStyle()

@@ -3,7 +3,7 @@ import {
   border,
   backgroundColor,
   contextMenuShadow,
-  iconColor
+  iconColor,
 } from '../../lib/styled/styleFunctions'
 
 const zIndexModalsBackground = 8001

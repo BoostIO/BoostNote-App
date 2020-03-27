@@ -17,7 +17,7 @@ export function normalizePathname(pathname: string): string {
 export function normalizeLocation({ pathname, ...otherProps }: Location) {
   return {
     pathname: normalizePathname(pathname),
-    ...otherProps
+    ...otherProps,
   }
 }
 
@@ -25,7 +25,7 @@ export const tagRegexp = pathToRegexp(
   '/app/storages/:storageName/tags/:tag',
   undefined,
   {
-    sensitive: true
+    sensitive: true,
   }
 )
 
@@ -34,17 +34,14 @@ export function parseUrl(urlStr: string): Location {
   return {
     pathname: url.pathname || '',
     hash: url.hash || '',
-    query: url.query
+    query: url.query,
   }
 }
 
 export const useRouteParams = () => {
   const { pathname } = useRouter()
   return useMemo((): AllRouteParams => {
-    const names = pathname
-      .slice('/app'.length)
-      .split('/')
-      .slice(1)
+    const names = pathname.slice('/app'.length).split('/').slice(1)
 
     let noteId: string | undefined = undefined
     if (names[0] === 'notes') {
@@ -54,32 +51,32 @@ export const useRouteParams = () => {
 
       return {
         name: 'storages.allNotes',
-        noteId
+        noteId,
       }
     }
 
     if (names[0] === 'bookmarks') {
       return {
-        name: 'storages.bookmarks'
+        name: 'storages.bookmarks',
       }
     }
 
     if (names[0] === 'storages' && names[1] == null) {
       return {
-        name: 'storages.create'
+        name: 'storages.create',
       }
     }
 
     if (names[0] === 'tutorials') {
       return {
         name: 'tutorials.show',
-        path: pathname
+        path: pathname,
       }
     }
 
     if (names[0] !== 'storages' || names[1] == null) {
       return {
-        name: 'unknown'
+        name: 'unknown',
       }
     }
     const storageId = names[1]
@@ -87,7 +84,7 @@ export const useRouteParams = () => {
     if (names[2] == null) {
       return {
         name: 'storages.edit',
-        storageId
+        storageId,
       }
     }
 
@@ -96,7 +93,7 @@ export const useRouteParams = () => {
       if (restNames[0] == null || restNames[0] === '') {
         return {
           name: 'storages.allNotes',
-          storageId
+          storageId,
         }
       }
 
@@ -115,7 +112,7 @@ export const useRouteParams = () => {
         return {
           name: 'storages.allNotes',
           storageId,
-          noteId
+          noteId,
         }
       }
 
@@ -123,7 +120,7 @@ export const useRouteParams = () => {
         name: 'storages.notes',
         storageId,
         folderPathname: '/' + folderNames.join('/'),
-        noteId
+        noteId,
       }
     }
 
@@ -132,7 +129,7 @@ export const useRouteParams = () => {
         name: 'storages.tags.show',
         storageId,
         tagName: names[3],
-        noteId: /^note:/.test(names[4]) ? names[4] : undefined
+        noteId: /^note:/.test(names[4]) ? names[4] : undefined,
       }
     }
 
@@ -140,19 +137,19 @@ export const useRouteParams = () => {
       return {
         name: 'storages.trashCan',
         storageId,
-        noteId: /^note:/.test(names[3]) ? names[3] : undefined
+        noteId: /^note:/.test(names[3]) ? names[3] : undefined,
       }
     }
 
     if (names[2] === 'attachments') {
       return {
         name: 'storages.attachments',
-        storageId
+        storageId,
       }
     }
 
     return {
-      name: 'unknown'
+      name: 'unknown',
     }
   }, [pathname])
 }

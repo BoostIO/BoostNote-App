@@ -11,7 +11,7 @@ import {
   ExceptRev,
   ObjectMap,
   Attachment,
-  PopulatedNoteDoc
+  PopulatedNoteDoc,
 } from './types'
 import {
   getFolderId,
@@ -28,7 +28,7 @@ import {
   isFolderDoc,
   isTagDoc,
   getTagName,
-  values
+  values,
 } from './utils'
 import { FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
 import PouchDB from './PouchDB'
@@ -63,7 +63,7 @@ export default class NoteDb {
         if (folderMap[noteDoc.folderPathname] == null) {
           obj.missingPathnameSet.add(noteDoc.folderPathname)
         }
-        noteDoc.tags.forEach(tagName => {
+        noteDoc.tags.forEach((tagName) => {
           if (tagMap[tagName] == null) {
             obj.missingTagNameSet.add(tagName)
           }
@@ -73,16 +73,16 @@ export default class NoteDb {
       {
         missingPathnameSet: new Set(),
         missingTagNameSet: new Set(),
-        requiresUpdate: []
+        requiresUpdate: [],
       }
     )
 
     await this.upsertFolder('/')
 
     await Promise.all([
-      ...[...missingPathnameSet].map(pathname => this.upsertFolder(pathname)),
-      ...[...missingTagNameSet].map(tagName => this.upsertTag(tagName)),
-      ...requiresUpdate.map(note => this.updateNote(note._id, note))
+      ...[...missingPathnameSet].map((pathname) => this.upsertFolder(pathname)),
+      ...[...missingTagNameSet].map((tagName) => this.upsertTag(tagName)),
+      ...requiresUpdate.map((note) => this.updateNote(note._id, note)),
     ])
   }
 
@@ -111,10 +111,10 @@ export default class NoteDb {
       ...(folder || {
         _id: getFolderId(pathname),
         createdAt: now,
-        data: {}
+        data: {},
       }),
       ...props,
-      updatedAt: now
+      updatedAt: now,
     }
     const { rev } = await this.pouchDb.put(folderDocProps)
 
@@ -123,7 +123,7 @@ export default class NoteDb {
       createdAt: folderDocProps.createdAt,
       updatedAt: folderDocProps.updatedAt,
       data: folderDocProps.data,
-      _rev: rev
+      _rev: rev,
     }
   }
 
@@ -136,13 +136,13 @@ export default class NoteDb {
 
   async getAllDocsMap(): Promise<AllDocsMap> {
     const allDocsResponse = await this.pouchDb.allDocs({
-      include_docs: true
+      include_docs: true,
     })
 
     const map: AllDocsMap = {
       noteMap: {},
       folderMap: {},
-      tagMap: {}
+      tagMap: {},
     }
 
     return allDocsResponse.rows.reduce((map, row) => {
@@ -150,7 +150,7 @@ export default class NoteDb {
       if (isNoteDoc(doc)) {
         map.noteMap[doc._id] = {
           ...doc,
-          storageId: this.id
+          storageId: this.id,
         } as PopulatedNoteDoc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
@@ -197,10 +197,10 @@ export default class NoteDb {
       ...(tag || {
         _id: getTagId(tagName),
         createdAt: now,
-        data: {}
+        data: {},
       }),
       ...props,
-      updatedAt: now
+      updatedAt: now,
     }
     const { rev } = await this.pouchDb.put(tagDocProps)
 
@@ -209,7 +209,7 @@ export default class NoteDb {
       createdAt: tagDocProps.createdAt,
       updatedAt: tagDocProps.updatedAt,
       data: tagDocProps.data,
-      _rev: rev
+      _rev: rev,
     }
   }
 
@@ -232,17 +232,19 @@ export default class NoteDb {
       ...noteProps,
       createdAt: now,
       updatedAt: now,
-      trashed: false
+      trashed: false,
     }
 
     await this.upsertFolder(noteDocProps.folderPathname)
-    await Promise.all(noteDocProps.tags.map(tagName => this.upsertTag(tagName)))
+    await Promise.all(
+      noteDocProps.tags.map((tagName) => this.upsertTag(tagName))
+    )
 
     const { rev } = await this.pouchDb.put(noteDocProps)
 
     return {
       ...noteDocProps,
-      _rev: rev
+      _rev: rev,
     }
   }
 
@@ -255,39 +257,41 @@ export default class NoteDb {
       await this.upsertFolder(noteProps.folderPathname)
     }
     if (noteProps.tags) {
-      await Promise.all(noteProps.tags.map(tagName => this.upsertTag(tagName)))
+      await Promise.all(
+        noteProps.tags.map((tagName) => this.upsertTag(tagName))
+      )
     }
 
     const now = getNow()
     const noteDocProps = {
       ...note,
       ...noteProps,
-      updatedAt: now
+      updatedAt: now,
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
-      _rev: rev
+      _rev: rev,
     }
   }
 
   async findNotesByFolder(folderPathname: string): Promise<NoteDoc[]> {
     const { rows } = await this.pouchDb.query<NoteDoc>('notes/by_folder', {
       key: folderPathname,
-      include_docs: true
+      include_docs: true,
     })
 
-    return rows.map(row => row.doc!)
+    return rows.map((row) => row.doc!)
   }
 
   async findNotesByTag(tagName: string): Promise<NoteDoc[]> {
     const { rows } = await this.pouchDb.query<NoteDoc>('notes/by_tag', {
       key: tagName,
-      include_docs: true
+      include_docs: true,
     })
 
-    return rows.map(row => row.doc!)
+    return rows.map((row) => row.doc!)
   }
 
   async upsertNoteListViews() {
@@ -320,16 +324,16 @@ export default class NoteDb {
 
     return this.pouchDb.put({
       ...(ddoc || {
-        _id: '_design/notes'
+        _id: '_design/notes',
       }),
       views: {
         by_folder: {
-          map: byFolderMap
+          map: byFolderMap,
         },
         by_tag: {
-          map: byTagMap
-        }
-      }
+          map: byTagMap,
+        },
+      },
     })
   }
 
@@ -340,13 +344,13 @@ export default class NoteDb {
 
     const noteDocProps = {
       ...note,
-      trashed: true
+      trashed: true,
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
-      _rev: rev
+      _rev: rev,
     }
   }
 
@@ -358,20 +362,20 @@ export default class NoteDb {
     await this.upsertFolder(note.folderPathname)
 
     await Promise.all(
-      note.tags.map(tag => {
+      note.tags.map((tag) => {
         this.upsertTag(tag)
       })
     )
 
     const noteDocProps = {
       ...note,
-      trashed: false
+      trashed: false,
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {
       ...noteDocProps,
-      _rev: rev
+      _rev: rev,
     }
   }
 
@@ -386,9 +390,9 @@ export default class NoteDb {
   async removeTag(tagName: string): Promise<void> {
     const notes = await this.findNotesByTag(tagName)
     await Promise.all(
-      notes.map(note => {
+      notes.map((note) => {
         return this.updateNote(note._id, {
-          tags: note.tags.filter(tag => tag !== tagName)
+          tags: note.tags.filter((tag) => tag !== tagName),
         })
       })
     )
@@ -403,28 +407,30 @@ export default class NoteDb {
     const foldersToDelete = await this.getAllFolderUnderPathname(folderPathname)
 
     await Promise.all(
-      foldersToDelete.map(folder =>
+      foldersToDelete.map((folder) =>
         this.trashAllNotesInFolder(getFolderPathname(folder._id))
       )
     )
 
     await Promise.all(
-      foldersToDelete.map(folder => this.pouchDb.remove(folder))
+      foldersToDelete.map((folder) => this.pouchDb.remove(folder))
     )
   }
 
   async getAllFolderUnderPathname(
     folderPathname: string
   ): Promise<FolderDoc[]> {
-    const [folder, { rows }] = await Promise.all([
+    const [folder, allDocs] = await Promise.all([
       this.getFolder(folderPathname),
       this.pouchDb.allDocs<FolderDoc>({
         startkey: `${getFolderId(folderPathname)}/`,
         endkey: `${getFolderId(folderPathname)}/\ufff0`,
-        include_docs: true
-      })
+        include_docs: true,
+      }),
     ])
-    const folderList = rows.map(row => row.doc!)
+    // FIXME: https://github.com/microsoft/TypeScript/issues/35626
+    const { rows } = allDocs as PouchDB.Core.AllDocsResponse<FolderDoc>
+    const folderList = rows.map((row) => row.doc!)
     if (folder != null) {
       folderList.unshift(folder)
     }
@@ -436,7 +442,9 @@ export default class NoteDb {
     const notes = await this.findNotesByFolder(folderPathname)
 
     await Promise.all(
-      notes.filter(note => !note.trashed).map(note => this.trashNote(note._id))
+      notes
+        .filter((note) => !note.trashed)
+        .map((note) => this.trashNote(note._id))
     )
   }
 
@@ -444,9 +452,9 @@ export default class NoteDb {
     const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
       startkey: `${FOLDER_ID_PREFIX}/`,
       endkey: `${FOLDER_ID_PREFIX}/\ufff0`,
-      include_docs: true
+      include_docs: true,
     })
-    return allDocsResponse.rows.map(row => row.doc!)
+    return allDocsResponse.rows.map((row) => row.doc!)
   }
 
   async getFoldersByPathnames(pathnames: string[]): Promise<FolderDoc[]> {
@@ -454,16 +462,16 @@ export default class NoteDb {
       return []
     }
     const allDocsResponse = await this.pouchDb.allDocs<FolderDoc>({
-      keys: pathnames.map(pathname => getFolderId(pathname)),
-      include_docs: true
+      keys: pathnames.map((pathname) => getFolderId(pathname)),
+      include_docs: true,
     })
-    return allDocsResponse.rows.map(row => row.doc!)
+    return allDocsResponse.rows.map((row) => row.doc!)
   }
 
-  async sync(
+  sync(
     user: User,
     cloudStorage: { id: number }
-  ): Promise<PouchDB.Replication.SyncResultComplete<any>> {
+  ): PouchDB.Replication.Sync<any> {
     const cloudPouch = new PouchDB(
       buildCloudSyncUrl(cloudStorage.id, user.id),
       {
@@ -479,16 +487,10 @@ export default class NoteDb {
           )
 
           return PouchDB.fetch(url, opts)
-        }
+        },
       }
     )
-
-    return new Promise((resolve, reject) => {
-      this.pouchDb
-        .sync(cloudPouch, { live: false })
-        .on('error', reject)
-        .on('complete', resolve)
-    })
+    return this.pouchDb.sync(cloudPouch, { live: false })
   }
 
   async upsertAttachments(files: File[]): Promise<Attachment[]> {
@@ -510,7 +512,7 @@ export default class NoteDb {
       attachments.push({
         name: fileName,
         type: file.type,
-        blob: data as Blob
+        blob: data as Blob,
       })
     }
 
@@ -527,7 +529,7 @@ export default class NoteDb {
     try {
       attachmentDoc = await this.pouchDb.get(ATTACHMENTS_ID, {
         attachments: true,
-        binary: true
+        binary: true,
       })
     } catch (error) {
       if (error.name !== 'not_found') {
@@ -536,7 +538,7 @@ export default class NoteDb {
       await this.pouchDb.put({ _id: ATTACHMENTS_ID })
       attachmentDoc = await this.pouchDb.get(ATTACHMENTS_ID, {
         attachments: true,
-        binary: true
+        binary: true,
       })
     }
 
@@ -544,16 +546,13 @@ export default class NoteDb {
     if (_attachments == null) {
       return {}
     }
-    return Object.entries(_attachments).reduce(
-      (map, [key, attachment]) => {
-        map[key] = {
-          name: key,
-          type: attachment.content_type,
-          blob: (attachment as PouchDB.Core.FullAttachment).data as Blob
-        }
-        return map
-      },
-      {} as ObjectMap<Attachment>
-    )
+    return Object.entries(_attachments).reduce((map, [key, attachment]) => {
+      map[key] = {
+        name: key,
+        type: attachment.content_type,
+        blob: (attachment as PouchDB.Core.FullAttachment).data as Blob,
+      }
+      return map
+    }, {} as ObjectMap<Attachment>)
   }
 }

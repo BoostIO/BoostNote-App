@@ -15,7 +15,7 @@ export type ValidatedObject<S extends PredicateSchema> = {
 export const schema = <T extends PredicateSchema>(
   predicateSchema: T
 ): BasePredicate<ValidatedObject<T>> =>
-  ow.object.is(value => {
+  ow.object.is((value) => {
     const predicateEntries = Object.entries(predicateSchema)
     for (const [key, predicate] of predicateEntries) {
       try {
@@ -31,7 +31,7 @@ export const schema = <T extends PredicateSchema>(
 export const optional = <T extends PredicateSchema>(
   predicateSchema: T
 ): BasePredicate<ValidatedObject<T>> =>
-  ow.optional.object.is(value => {
+  ow.optional.object.is((value) => {
     const predicateEntries = Object.entries(predicateSchema)
     for (const [key, predicate] of predicateEntries) {
       try {

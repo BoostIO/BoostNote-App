@@ -1,24 +1,24 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import styled from '../../../lib/styled'
-import { DeleteStorageButton } from '../../../components/PreferencesModal/styled'
+import React, { useCallback, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { NoteStorage } from '../../../lib/db/types'
 import { useRouter } from '../../lib/router'
-import { useDebounce } from 'react-use'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
-import { isCloudStorageData } from '../../../lib/db/utils'
 import { useToast } from '../../../lib/toast'
 import { useTranslation } from 'react-i18next'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
-
-const StorageEditPageContainer = styled.div`
-  padding: 15px;
-`
-
-const FormSection = styled.section`
-  margin-bottom: 15px;
-`
+import {
+  FormGroup,
+  FormLabel,
+  FormTextInput,
+  FormHeading,
+  FormPrimaryButton,
+  FormBlockquote,
+  FormSecondaryButton,
+} from '../../../components/atoms/form'
+import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
+import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
+import PageContainer from '../../../components/atoms/PageContainer'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -32,10 +32,6 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
 
-  useEffect(() => {
-    setName(storage.name)
-  }, [storage])
-
   const removeCallback = useCallback(() => {
     messageBox({
       title: `Remove "${storage.name}" storage`,
@@ -48,63 +44,65 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         if (value === 0) {
           try {
             await db.removeStorage(storage.id)
-            router.push('/m')
+            router.push('/app')
           } catch {
             pushMessage({
               title: t('general.networkError'),
-              description: `An error occurred while deleting storage (id: ${storage.id})`
+              description: `An error occurred while deleting storage (id: ${storage.id})`,
             })
           }
         }
-      }
+      },
     })
-  }, [storage, db, router, messageBox, pushMessage, t])
+  }, [storage, t, db, router, messageBox, pushMessage])
 
-  useDebounce(
-    () => {
-      db.renameStorage(storage.id, name).catch(() => {
-        pushMessage({
-          title: t('general.networkError'),
-          description: `An error occured while updating storage (id:${storage.id}}`
-        })
-      })
-    },
-    1000,
-    [name]
-  )
+  const updateStorageName = useCallback(() => {
+    db.renameStorage(storage.id, name)
+  }, [storage.id, db, name])
 
   return (
     <TopBarLayout
       leftControl={<TopBarToggleNavButton />}
       title={t('storage.edit')}
     >
-      <StorageEditPageContainer>
-        <FormSection>
-          <label>
-            {t('storage.name')}
-            <div>
-              <input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                type='text'
-              />
-            </div>
-          </label>
-        </FormSection>
-        <FormSection>
-          <DeleteStorageButton onClick={removeCallback}>
-            {t('storage.delete')}
-          </DeleteStorageButton>
-        </FormSection>
-        {isCloudStorageData(storage) && (
-          <FormSection>
-            <p>
-              {t('storage.syncDate')}
-              {new Date(storage.cloudStorage.updatedAt).toLocaleString()}
-            </p>
-          </FormSection>
+      <PageContainer>
+        <FormGroup>
+          <FormLabel>{t('storage.name')}</FormLabel>
+          <FormTextInput
+            type='text'
+            value={name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setName(e.target.value)
+            }
+          />
+        </FormGroup>
+        <FormGroup>
+          <FormPrimaryButton onClick={updateStorageName}>
+            Update storage name
+          </FormPrimaryButton>
+        </FormGroup>
+        <hr />
+        <FormHeading depth={2}>Remove Storage</FormHeading>
+        {storage.cloudStorage != null && (
+          <FormBlockquote>
+            Your cloud storage will not be deleted by clicking this button. To
+            delete cloud storage too, check cloud storage info section.
+          </FormBlockquote>
         )}
-      </StorageEditPageContainer>
+        <FormGroup>
+          <FormSecondaryButton onClick={removeCallback}>
+            Remove Storage
+          </FormSecondaryButton>
+        </FormGroup>
+        <hr />
+
+        <FormHeading depth={2}>Cloud Storage info</FormHeading>
+        {storage.cloudStorage == null ? (
+          <LinkCloudStorageForm storage={storage} />
+        ) : (
+          <ManageCloudStorageForm storage={storage} />
+        )}
+      </PageContainer>
     </TopBarLayout>
   )
 }

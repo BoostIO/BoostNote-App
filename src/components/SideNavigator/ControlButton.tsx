@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '../../lib/styled'
 import {
   sideBarTextColor,
-  sideBarSecondaryTextColor
+  sideBarSecondaryTextColor,
 } from '../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`

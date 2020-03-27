@@ -7,7 +7,7 @@ import CopyPlugin from 'copy-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
-const devServerPort = 3001
+const devServerPort = 3000
 const target = process.env.TARGET === 'ios' ? 'ios' : 'android'
 
 module.exports = (env, argv) => {
@@ -63,7 +63,12 @@ module.exports = (env, argv) => {
       new webpack.NoEmitOnErrorsPlugin(),
       // do not emit compiled assets that include errors
       new HtmlWebpackPlugin({
-        template: target === 'ios' ? 'ios.html' : 'android.html'
+        template:
+          argv.mode === 'development'
+            ? 'mobile-dev.html'
+            : target === 'ios'
+            ? 'ios.html'
+            : 'android.html'
       }),
       new ErrorOverlayPlugin(),
       new webpack.DefinePlugin({

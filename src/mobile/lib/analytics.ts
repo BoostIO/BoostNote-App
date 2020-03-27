@@ -3,20 +3,21 @@ import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
 import { usePreferences } from '../../lib/preferences'
 import { DbStore } from '../../lib/db'
+import { useEffectOnce } from 'react-use'
 
 const amplifyConfig = {
   Auth: {
     identityPoolId: process.env.MOBILE_AMPLIFY_AUTH_IDENTITY_POOL_ID,
-    region: process.env.MOBILE_AMPLIFY_AUTH_REGION
-  }
+    region: process.env.MOBILE_AMPLIFY_AUTH_REGION,
+  },
 }
 
 const analyticsConfig = {
   AWSPinpoint: {
     appId: process.env.MOBILE_AMPLIFY_PINPOINT_APPID,
     region: process.env.MOBILE_AMPLIFY_PINPOINT_REGION,
-    mandatorySignIn: false
-  }
+    mandatorySignIn: false,
+  },
 }
 
 export function useAnalytics() {
@@ -25,7 +26,7 @@ export function useAnalytics() {
   const analyticsEnabled = preferences['general.enableAnalytics']
   const user = preferences['general.accounts'][0]
 
-  if (!configured.current) {
+  useEffectOnce(() => {
     Auth.configure(amplifyConfig)
     Analytics.configure(analyticsConfig)
     configured.current = true
@@ -34,14 +35,16 @@ export function useAnalytics() {
       ;(window as any).initilalized = true
       Analytics.record('init')
     }
-  }
+    Analytics.updateEndpoint({
+      attributes: {
+        userId: user == null ? [] : [user.id.toString()],
+        target: [process.env.TARGET == null ? 'dev' : process.env.TARGET],
+      },
+    })
+  })
 
   const report = useCallback(
     (name: string, attributes?: { [key: string]: string }) => {
-      if (user != null) {
-        attributes = { ...attributes, user: user.id.toString() }
-      }
-
       if (analyticsEnabled) {
         if (attributes == null) {
           Analytics.record({ name: name })
@@ -50,11 +53,11 @@ export function useAnalytics() {
         }
       }
     },
-    [analyticsEnabled, user]
+    [analyticsEnabled]
   )
 
   return {
-    report
+    report,
   }
 }
 
@@ -66,7 +69,7 @@ export const analyticsEvents = {
   addStorage: 'Storage.Add',
   addFolder: 'Folder.Add',
   colorTheme: 'ColorTheme.Edit',
-  editorTheme: 'EditorTheme.Edit'
+  editorTheme: 'EditorTheme.Edit',
 }
 
 export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
@@ -116,7 +119,7 @@ export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
         },
         [createFolder, report]
       ),
-      ...rest
+      ...rest,
     }
   }
 }

@@ -11,7 +11,7 @@ import BillingTab from './BillingTab'
 import ImportTab from './ImportTab'
 import {
   backgroundColor,
-  closeIconColor
+  closeIconColor,
 } from '../../lib/styled/styleFunctions'
 import { IconClose } from '../icons'
 import { useTranslation } from 'react-i18next'

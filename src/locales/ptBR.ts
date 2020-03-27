@@ -159,6 +159,6 @@
       '3. Escolha o armazenamento e pasta que você quer mover seus arquivos antigos.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Remover',
-    'preferences.importUpload': 'Upload'
-  }
+    'preferences.importUpload': 'Upload',
+  },
 }

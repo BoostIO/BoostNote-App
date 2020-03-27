@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Navigator from './Navigator'
 import GlobalStyle from '../../components/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -9,10 +9,10 @@ import { useDb } from '../lib/db'
 import PreferencesModal from './organisms/PreferencesModal'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import { useToast } from '../../lib/toast'
-import { useUsers } from '../../lib/accounts'
 import styled from '../../lib/styled'
 import Router from './Router'
 import { useGeneralStatus } from '../lib/generalStatus'
+import { useEffectOnce } from 'react-use'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -68,27 +68,16 @@ const NavShadow = styled.div`
 
 const App = () => {
   const { initialize, initialized } = useDb()
-  const [users, { removeUser }] = useUsers()
   const { pushMessage } = useToast()
-  useEffect(() => {
-    initialize(users[0]).catch(error => {
-      if (error.message === 'InvalidUser') {
-        if (users[0] != null) {
-          removeUser(users[0])
-        }
-        pushMessage({
-          title: 'Authentication Error',
-          description: 'Please try logging in again'
-        })
-      } else {
-        pushMessage({
-          title: 'Network Error',
-          description: 'An server error occured'
-        })
-        console.error(error)
-      }
+  useEffectOnce(() => {
+    initialize().catch((error: Error) => {
+      pushMessage({
+        title: 'Network Error',
+        description: 'An server error occured',
+      })
+      console.error(error)
     })
-  }, [users])
+  })
 
   const { generalStatus, toggleNav } = useGeneralStatus()
 

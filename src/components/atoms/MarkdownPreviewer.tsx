@@ -24,8 +24,8 @@ import 'katex/dist/katex.min.css'
 const schema = mergeDeepRight(gh, {
   attributes: {
     '*': ['className'],
-    input: ['checked']
-  }
+    input: ['checked'],
+  },
 })
 
 interface Element extends Parent {
@@ -57,7 +57,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
   const ignoreMissing = settings.ignoreMissing || false
   const theme = settings.theme || 'default'
   const plainText = settings.plainText || []
-  return function(tree: Node) {
+  return function (tree: Node) {
     visit<Element>(tree, 'element', visitor)
 
     return tree
@@ -99,7 +99,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
                 {
                   className: style
                     ? 'cm-' + style.replace(/ +/g, ' cm-')
-                    : undefined
+                    : undefined,
                 },
                 text
               )
@@ -170,7 +170,7 @@ const MarkdownPreviewer = ({
   codeBlockTheme,
   style,
   theme,
-  attachmentMap = {}
+  attachmentMap = {},
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
@@ -187,7 +187,7 @@ const MarkdownPreviewer = ({
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
-        theme: options.codeBlockTheme
+        theme: options.codeBlockTheme,
       })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
@@ -210,7 +210,7 @@ const MarkdownPreviewer = ({
             return (
               <a
                 href={href}
-                onClick={event => {
+                onClick={(event) => {
                   event.preventDefault()
                   openNew(href)
                 }}
@@ -218,8 +218,8 @@ const MarkdownPreviewer = ({
                 {children}
               </a>
             )
-          }
-        }
+          },
+        },
       })
   }, [codeBlockTheme, attachmentMap])
 

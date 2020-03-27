@@ -2,7 +2,7 @@ import React from 'react'
 import Link from '../atoms/Link'
 import cc from 'classcat'
 import { TutorialsNavigatorTreeItem } from '../../lib/tutorials'
-import { StyledNoteListItem } from '../NotePage/NoteList/NoteItem'
+import { StyledNoteListItem } from '../organisms/NoteList/NoteItem'
 
 type TutorialsNoteItemProps = {
   note: TutorialsNavigatorTreeItem
@@ -15,7 +15,7 @@ export default ({
   note,
   active,
   basePathname,
-  focusList
+  focusList,
 }: TutorialsNoteItemProps) => {
   const href = `${basePathname}/notes/note:${note.slug}`
 

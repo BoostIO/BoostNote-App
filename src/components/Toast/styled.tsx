@@ -1,7 +1,7 @@
 import styled from '../../lib/styled'
 import {
   secondaryBackgroundColor,
-  iconColor
+  iconColor,
 } from '../../lib/styled/styleFunctions'
 
 export const StyledToastContainer = styled.div`

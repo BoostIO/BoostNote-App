@@ -20,7 +20,7 @@ export default {
     'storage.rename': 'Rename Storage',
     'storage.renameMessage': 'Enter new storage name',
     'storage.remove': 'Remove Storage',
-    'storage.removeMessage': 'The storage will be unlinked from this app.',
+    'storage.removeMessage': 'The storage will be removed from this app.',
     'storage.delete': 'Delete Storage',
     'storage.move': 'Move Note',
     'storage.moveTitle': 'Move Note to Other storage',
@@ -156,6 +156,6 @@ export default {
       '3. Choose the Storage and Folder that you want to move your old data.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'remove',
-    'preferences.importUpload': 'Upload'
-  }
+    'preferences.importUpload': 'Upload',
+  },
 }

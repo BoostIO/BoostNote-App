@@ -43,6 +43,7 @@ export interface Preferences {
   'general.enableAnalytics': boolean
   'general.enableDownloadAppModal': boolean
   'general.tutorials': GeneralTutorialsOptions
+  'general.enableAutoSync': boolean
 
   // Editor
   'editor.theme': string
@@ -83,6 +84,7 @@ const basePreferences: Preferences = {
   'general.enableAnalytics': true,
   'general.enableDownloadAppModal': true,
   'general.tutorials': 'display',
+  'general.enableAutoSync': true,
 
   // Editor
   'editor.theme': 'default',
@@ -95,7 +97,7 @@ const basePreferences: Preferences = {
 
   // Markdown
   'markdown.previewStyle': 'default',
-  'markdown.codeBlockTheme': 'default'
+  'markdown.codeBlockTheme': 'default',
 }
 
 function usePreferencesStore() {
@@ -109,7 +111,7 @@ function usePreferencesStore() {
   const mergedPreferences = useMemo(() => {
     return {
       ...basePreferences,
-      ...preferences
+      ...preferences,
     }
   }, [preferences])
 
@@ -133,11 +135,18 @@ function usePreferencesStore() {
     setClosed,
     toggleClosed,
     preferences: mergedPreferences,
-    setPreferences
+    setPreferences,
   }
 }
 
 export const {
   StoreProvider: PreferencesProvider,
-  useStore: usePreferences
+  useStore: usePreferences,
 } = createStoreContext(usePreferencesStore, 'preferences')
+
+export function useFirstUser() {
+  const { preferences } = usePreferences()
+  return useMemo(() => {
+    return preferences['general.accounts'][0]
+  }, [preferences])
+}

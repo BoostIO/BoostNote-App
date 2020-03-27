@@ -34,7 +34,7 @@ const initialGeneralStatus = loadGeneralStatus()
 const baseGeneralStatus: GeneralStatus = {
   navIsOpen: false,
   noteViewMode: 'edit',
-  navOpenedItemList: []
+  navOpenedItemList: [],
 }
 
 function useGeneralStatusStore() {
@@ -45,15 +45,15 @@ function useGeneralStatusStore() {
   const mergedGeneralStatus = useMemo(() => {
     return {
       ...baseGeneralStatus,
-      ...generalStatus
+      ...generalStatus,
     }
   }, [generalStatus])
 
   const toggleNav = useCallback(() => {
-    setGeneralStatus(generalStatus => {
+    setGeneralStatus((generalStatus) => {
       return {
         ...generalStatus,
-        navIsOpen: !generalStatus.navIsOpen
+        navIsOpen: !generalStatus.navIsOpen,
       }
     })
   }, [setGeneralStatus])
@@ -72,7 +72,7 @@ function useGeneralStatusStore() {
         newSet.add(itemId)
       }
       setGeneralStatus({
-        navOpenedItemList: [...newSet]
+        navOpenedItemList: [...newSet],
       })
     },
     [setGeneralStatus, sideNavOpenedItemSet]
@@ -87,7 +87,7 @@ function useGeneralStatusStore() {
       }
 
       setGeneralStatus({
-        navOpenedItemList: [...newSet]
+        navOpenedItemList: [...newSet],
       })
     },
     [setGeneralStatus, sideNavOpenedItemSet]
@@ -119,11 +119,11 @@ function useGeneralStatusStore() {
     toggleSideNavOpenedItem: toggleNavOpenedItem,
     addSideNavOpenedItem,
     openSideNavFolderItemRecursively,
-    toggleNav
+    toggleNav,
   }
 }
 
 export const {
   StoreProvider: GeneralStatusProvider,
-  useStore: useGeneralStatus
+  useStore: useGeneralStatus,
 } = createStoreContext(useGeneralStatusStore, 'generalStatus')
