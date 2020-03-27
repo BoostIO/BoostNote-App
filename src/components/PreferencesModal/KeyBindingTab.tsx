@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState} from 'react'
 import {
   Section,
   SectionHeader,
@@ -6,7 +6,8 @@ import {
   SectionSelect,
   SectionPrimaryButton,
   SectionInput,
-  SectionTable
+  SectionTable,
+  SectionSubtleText
 } from './styled'
 import {
   usePreferences,
@@ -17,23 +18,13 @@ import {
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
-import { useUsers } from '../../lib/accounts'
-import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
-const GeneralTab = () => {
+const KeybindingsTab = () => {
   const { preferences, setPreferences } = usePreferences()
-  const { report } = useAnalytics()
   const { t } = useTranslation()
-
-  const selectTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
-      setPreferences({
-        'general.theme': event.target.value as GeneralThemeOptions,
-      })
-      report(analyticsEvents.colorTheme)
-    },
-    [setPreferences, report]
-  )
+  const [selected, setSelected] = useState("")
+  const [keyCode, setKeyCode] = useState(0)
+  
   
   const selectKeybinding: SelectChangeEventHandler = useCallback(
     (event) => {
@@ -64,16 +55,21 @@ const GeneralTab = () => {
           {t("preferences." + curr)}
         </td>
         <td>
-          <SectionInput label={curr} key={index}/>
+          <SectionInput label={curr} key={index} onKeyDown={handleTextChange}/>
         </td>
       </tr>
     )
-  } 
+  }
+
+  const handleTextChange = (e: KeyboardEvent) => {
+    setKeyCode(e.keyCode)
+  }
 
   return (
     <div>
       <Section>
         <SectionHeader>Key Binding Settings</SectionHeader>
+        <SectionSubtleText>Button last pressed: {keyCode} {selected} </SectionSubtleText>
          
         <SectionTable>
           
@@ -88,4 +84,4 @@ const GeneralTab = () => {
   )
 }
 
-export default GeneralTab
+export default KeybindingsTab
