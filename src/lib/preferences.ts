@@ -34,7 +34,7 @@ export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 
-export type KeybindingConfig = number[]
+export type KeybindingConfig = string[]
 
 export interface Preferences {
   // General
@@ -113,7 +113,7 @@ const basePreferences: Preferences = {
   'markdown.codeBlockTheme': 'default',
 
   //Keybindings
-  "keybinding.toggleBoostNote": [16, 17, 69],
+  "keybinding.toggleBoostNote": [],
   "keybinding.toggleMenu": [],
   "keybinding.toggleEditMode": [],
   "keybinding.toggleDirection": [],

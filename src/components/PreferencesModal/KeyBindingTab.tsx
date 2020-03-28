@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, SyntheticEvent} from 'react'
 import {
   Section,
   SectionHeader,
@@ -16,13 +16,10 @@ import { useTranslation } from 'react-i18next'
 const KeybindingsTab = () => {
   const { preferences, setPreferences } = usePreferences() //where all keybindings are stored
   const { t } = useTranslation()
-  const [selected, setSelected] = useState("") //DEBUGGING
-  const [keyCode, setKeyCode] = useState(0) //DEBUGGING
-  const numArray: number[] = [] //used to init buffer
-  const [buffer, setBuffer] = useState(numArray) //Buffer for current selection
+  const [keyCode, setKeyCode] = useState("") //DEBUGGING
   const [keybindings, setKeybindings] = useState({}) //stores all keybindings locally
-  const modifierKeys = [16, 17, 18] //SHIFT, CTRL, ALT: Modifier keys
-  
+  const [recording, setRecording] = useState(false)
+
   const keybindingOptions = [ //list of all the options available
     "toggleBoostNote",
     "toggleMenu",
@@ -37,13 +34,13 @@ const KeybindingsTab = () => {
 
   //populate existing settings
   useEffect(() => {
-    let newState = keybindings
+    let newState = {}
     keybindingOptions.forEach((option) => {
       newState[option] = preferences['keybinding.' + option]
     })
     console.log(newState)
     setKeybindings(newState)
-  }, [setKeybindings])
+  }, [preferences])
 
   //generates the list of options
   const generateOptions = (curr: string, index: number) => {
@@ -58,7 +55,11 @@ const KeybindingsTab = () => {
           key={index} 
           onKeyDown={(e:KeyboardEvent) => {handleKeyDown(e, curr)}} 
           onKeyUp={(e:KeyboardEvent) => {handleKeyUp(e, curr)}}
-          value={codeToReadable(keybindings[curr]) || codeToReadable(preferences['keybinding.' + curr])}/>
+          value={codeToReadable(keybindings[curr]) /*|| codeToReadable(preferences['keybinding.' + curr])*/}
+          //@ts-ignore [Don't know what event type to use]
+          onFocus={(e) => {setRecording(true); e.target.value = ""; keybindings[curr] = [];}}
+          onBlur={() => {if(recording) {setRecording(false)}}}
+          />
         </td>
       </tr>
     )
@@ -67,37 +68,48 @@ const KeybindingsTab = () => {
   //changes Char codes to readable chars (needs to be tested in other locales)
   const codeToReadable = (keyCodeArray: KeybindingConfig = []) => {
     return keyCodeArray.map((keyCode) => {
-      switch(keyCode){
-        case 16: return 'SHIFT'
-        case 17: return 'CTRL'
-        case 18: return 'ALT'
-        default: return String.fromCharCode(keyCode).toUpperCase()
-      }
+      return keyCode.toUpperCase()
     }).join(" + ")
   }
 
   const handleKeyDown = (e: KeyboardEvent, label: string) => {
-    setSelected(label)
-    setKeyCode(e.keyCode)
+    if(recording){
+      setKeyCode(e.key)
+      if(!keybindings[label].includes(e.key)){
+        let newState = keybindings
+        newState[label].push(e.key)
+        setKeybindings(newState)
+      }
+    }
   }
 
   const handleKeyUp = (e: KeyboardEvent, label: string) => {
-  
+    if(keybindings[label][keybindings[label].length-1] == e.key){
+      setRecording(false)
+    }
+  }
+
+  const handleSave = () => {
+    let newPreferences = preferences
+    for(let option in keybindings){
+      console.log(option, keybindings[option])
+      newPreferences['keybinding.' + option] = keybindings[option]
+    }
+    setPreferences(newPreferences)
   }
 
   return (
     <div>
       <Section>
         <SectionHeader>Key Binding Settings</SectionHeader>
-        <SectionSubtleText>Button last pressed: {keyCode} {selected} </SectionSubtleText> {/*Debugging*/}
-        <SectionPrimaryButton> Save </SectionPrimaryButton>
+        <SectionSubtleText>Button last pressed: {keyCode} {recording.toString()} </SectionSubtleText> {/*Debugging*/}
+        <SectionPrimaryButton onClick={handleSave}> Save </SectionPrimaryButton>
         <SectionTable>
           <tbody>
             { //@ts-ignore
               keybindingOptions.map((curr, index) => generateOptions(curr, index))
             }
           </tbody>
-          
         </SectionTable>
       </Section>
     </div>
