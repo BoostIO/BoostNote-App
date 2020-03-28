@@ -12,11 +12,14 @@ import {
   KeybindingConfig,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
+//@ts-ignore
+const keycoder = require('keycoder')
+
 
 const KeybindingsTab = () => {
   const { preferences, setPreferences } = usePreferences() //where all keybindings are stored
   const { t } = useTranslation()
-  const [keyCode, setKeyCode] = useState("") //DEBUGGING
+  const [keyCode, setKeyCode] = useState(0) //DEBUGGING
   const [keybindings, setKeybindings] = useState({}) //stores all keybindings locally
   const [recording, setRecording] = useState(false)
 
@@ -68,23 +71,24 @@ const KeybindingsTab = () => {
   //changes Char codes to readable chars (needs to be tested in other locales)
   const codeToReadable = (keyCodeArray: KeybindingConfig = []) => {
     return keyCodeArray.map((keyCode) => {
-      return keyCode.toUpperCase()
+      const key = keycoder.fromKeyCode(keyCode)
+      return key.names[0] || key.character.toUpperCase()
     }).join(" + ")
   }
 
   const handleKeyDown = (e: KeyboardEvent, label: string) => {
     if(recording){
-      setKeyCode(e.key)
-      if(!keybindings[label].includes(e.key)){
+      setKeyCode(e.keyCode)
+      if(!keybindings[label].includes(e.keyCode)){
         let newState = keybindings
-        newState[label].push(e.key)
+        newState[label].push(e.keyCode)
         setKeybindings(newState)
       }
     }
   }
 
   const handleKeyUp = (e: KeyboardEvent, label: string) => {
-    if(keybindings[label][keybindings[label].length-1] == e.key){
+    if(keybindings[label][keybindings[label].length-1] == e.keyCode){
       setRecording(false)
     }
   }

@@ -34,7 +34,7 @@ export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 
-export type KeybindingConfig = string[]
+export type KeybindingConfig = number[]
 
 export interface Preferences {
   // General
@@ -113,15 +113,15 @@ const basePreferences: Preferences = {
   'markdown.codeBlockTheme': 'default',
 
   //Keybindings
-  "keybinding.toggleBoostNote": [],
-  "keybinding.toggleMenu": [],
-  "keybinding.toggleEditMode": [],
-  "keybinding.toggleDirection": [],
-  "keybinding.deleteNote": [],
-  "keybinding.pasteHTML": [],
-  "keybinding.prettifyMarkdown": [],
-  "keybinding.insertCurrentDate": [],
-  "keybinding.insertCurrentDateTime": []
+  "keybinding.toggleBoostNote": [17, 18],
+  "keybinding.toggleMenu": [18],
+  "keybinding.toggleEditMode": [17, 77],
+  "keybinding.toggleDirection": [17, 39],
+  "keybinding.deleteNote": [17, 16, 8],
+  "keybinding.pasteHTML": [17, 16, 86],
+  "keybinding.prettifyMarkdown": [17, 16, 70],
+  "keybinding.insertCurrentDate": [17, 191],
+  "keybinding.insertCurrentDateTime": [17, 16, 191]
 }
 
 function usePreferencesStore() {
