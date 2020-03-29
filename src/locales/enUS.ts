@@ -159,14 +159,14 @@ export default {
     'preferences.importUpload': 'Upload',
 
     //Preferences KeyBindings
-    "preferences.toggleBoostNote": "Show/Hide BoostNote",
-    "preferences.toggleMenu": "Show/Hide Menu",
-    "preferences.toggleEditMode": "Toggle Editor Mode",
-    "preferences.toggleDirection": "Toggle Direction",
-    "preferences.deleteNote": "Delete Note",
-    "preferences.pasteHTML": "Paste HTML",
-    "preferences.prettifyMarkdown": "Prettify Markdown",
-    "preferences.insertCurrentDate": "Insert Current Date",
-    "preferences.insertCurrentDateTime": "Insert Current Date/Time"
+    'preferences.toggleBoostNote': 'Show/Hide BoostNote',
+    'preferences.toggleMenu': 'Show/Hide Menu',
+    'preferences.toggleEditMode': 'Toggle Editor Mode',
+    'preferences.toggleDirection': 'Toggle Direction',
+    'preferences.deleteNote': 'Delete Note',
+    'preferences.pasteHTML': 'Paste HTML',
+    'preferences.prettifyMarkdown': 'Prettify Markdown',
+    'preferences.insertCurrentDate': 'Insert Current Date',
+    'preferences.insertCurrentDateTime': 'Insert Current Date/Time',
   },
 }
