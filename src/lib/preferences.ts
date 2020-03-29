@@ -69,6 +69,8 @@ export interface Preferences {
   'keybinding.prettifyMarkdown': KeybindingConfig
   'keybinding.insertCurrentDate': KeybindingConfig
   'keybinding.insertCurrentDateTime': KeybindingConfig
+  'keybinding.nextNote': KeybindingConfig
+  'keybinding.previousNote': KeybindingConfig
 }
 
 function loadPreferences() {
@@ -122,6 +124,8 @@ const basePreferences: Preferences = {
   'keybinding.prettifyMarkdown': [17, 16, 70],
   'keybinding.insertCurrentDate': [17, 191],
   'keybinding.insertCurrentDateTime': [17, 16, 191],
+  'keybinding.nextNote': [],
+  'keybinding.previousNote': []
 }
 
 function usePreferencesStore() {

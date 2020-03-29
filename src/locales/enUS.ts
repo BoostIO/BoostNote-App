@@ -168,5 +168,8 @@ export default {
     'preferences.prettifyMarkdown': 'Prettify Markdown',
     'preferences.insertCurrentDate': 'Insert Current Date',
     'preferences.insertCurrentDateTime': 'Insert Current Date/Time',
+    'preferences.nextNote': 'Switch to Next Note',
+    'preferences.previousNote': 'Switch to Previous Note',
+    'preferences.keybindingSaveError': 'An error occured. Shortcuts cannot end in a modifier except single key shortcuts CONTROL and ALT'
   },
 }

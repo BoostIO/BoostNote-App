@@ -19,18 +19,14 @@ const KeybindingsTab = () => {
   const [errored, setErrored] = useState([] as string[])
   const [errorMessage, setErrorMessage] = useState('')
 
-  const keybindingOptions = [
-    //list of all the options available
-    'toggleBoostNote',
-    'toggleMenu',
-    'toggleEditMode',
-    'toggleDirection',
-    'deleteNote',
-    'pasteHTML',
-    'prettifyMarkdown',
-    'insertCurrentDate',
-    'insertCurrentDateTime',
-  ]
+  let keybindingOptions: string[] = []
+
+  for (let option in preferences){
+    let test = option.split('.')
+    if (test[0] == 'keybinding'){
+      keybindingOptions.push(test[1])
+    }
+  }
 
   const tableStyle: CSSProperties = {
     width: '25vw',
@@ -135,7 +131,7 @@ const KeybindingsTab = () => {
       setErrored(errors)
     } else {
       setErrorMessage(
-        'An error occured. Shortcuts cannot end in a modifier except single key shortcuts CONTROL and ALT'
+        t('preferences.keybindingSaveError')
       )
       setErrored(errors)
       setPreferences(preferences)
