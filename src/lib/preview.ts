@@ -6,12 +6,12 @@ import { createStoreContext } from './context'
 export const defaultPreviewStyle = `
 -ms-text-size-adjust: 100%;
 -webkit-text-size-adjust: 100%;
-line-height: 1.5;
+line-height: 1.6;
 color: #24292e;
 font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
   sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 font-size: 16px;
-line-height: 1.5;
+line-height: 1.6;
 word-wrap: break-word;
 
 .dark, .solarizedDark {
@@ -436,6 +436,15 @@ code {
   padding: 0.2em 0.4em;
 }
 
+p code,
+li code
+{
+  padding: 2px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+}
+
 pre {
   word-wrap: normal;
 }
@@ -517,6 +526,42 @@ kbd {
 
 hr {
   border-bottom-color: #eee;
+}
+
+.dark p code,
+.dark li code
+{
+  background-color: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+  color: #03C588;
+}
+.auto p code,
+.auto li code
+{
+  background-color: #F9F9F9;
+  border-color: rgba(0,0,0,0.26);
+  color: #03C588;
+}
+.light p code,
+.light li code
+{
+  background-color: #F9F9F9;
+  border-color: rgba(0,0,0,0.26);
+  color: #03C588;
+}
+.sepia p code,
+.sepia li code
+{
+  background-color: #efe8d6;
+  border-color: rgba(0,0,0,0.26);
+  color: #F77942;
+}
+.solarizedDark p code,
+.solarizedDark li code
+{
+  background-color: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+  color: #36abe3;
 }
 `
 
