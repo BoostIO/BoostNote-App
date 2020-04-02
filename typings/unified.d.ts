@@ -1,3 +1,4 @@
+declare module 'remark-emoji'
 declare module 'remark-rehype'
 declare module 'remark-stringify'
 declare module 'remark-math'
