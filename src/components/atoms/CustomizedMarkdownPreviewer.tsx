@@ -7,11 +7,13 @@ import { ObjectMap, Attachment } from '../../lib/db/types'
 interface CustomizedMarkdownPreviewer {
   content: string
   attachmentMap?: ObjectMap<Attachment>
+  updateContent: (newValue: string) => void
 }
 
 const CustomizedMarkdownPreviewer = ({
   content,
   attachmentMap,
+  updateContent,
 }: CustomizedMarkdownPreviewer) => {
   const { preferences } = usePreferences()
   const { previewStyle } = usePreviewStyle()
@@ -23,6 +25,7 @@ const CustomizedMarkdownPreviewer = ({
       codeBlockTheme={preferences['markdown.codeBlockTheme']}
       theme={preferences['general.theme']}
       style={previewStyle}
+      updateContent={updateContent}
     />
   )
 }

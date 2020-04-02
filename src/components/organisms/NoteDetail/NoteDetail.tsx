@@ -473,6 +473,7 @@ export default class NoteDetail extends React.Component<
       <CustomizedMarkdownPreviewer
         content={this.state.content}
         attachmentMap={attachmentMap}
+        updateContent={this.updateContent}
       />
     )
 

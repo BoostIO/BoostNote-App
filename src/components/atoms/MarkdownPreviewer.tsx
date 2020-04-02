@@ -163,6 +163,7 @@ interface MarkdownPreviewerProps {
   style?: string
   theme?: string
   attachmentMap?: ObjectMap<Attachment>
+  updateContent: (newValue: string) => void
 }
 
 const MarkdownPreviewer = ({
@@ -171,6 +172,7 @@ const MarkdownPreviewer = ({
   style,
   theme,
   attachmentMap = {},
+  updateContent,
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
@@ -180,6 +182,47 @@ const MarkdownPreviewer = ({
 
   const markdownProcessor = useMemo(() => {
     const options = { codeBlockTheme }
+    let checkboxIndexes = 0
+
+    const renderInput = (props: React.HTMLProps<HTMLInputElement>) => {
+      const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const lines = content.split('\n')
+        const id = e.target.getAttribute('id')
+        if (id === null) return
+        const checkboxIndex = Number(id.replace(/^checkbox|(\[|\])/gi, ''))
+
+        let current = 0
+
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index]
+          // Matches both checked + unchecked
+          const matches = line.match(/^(\s*>?)*\s*[+\-*] (\[x]|\[ ])/i)
+          if (matches) {
+            if (current === checkboxIndex) {
+              const isChecked = /^(\s*>?)*\s*[+\-*] \[x]/i.test(matches[0])
+              lines[index] = line.replace(
+                isChecked ? '[x]' : '[ ]',
+                isChecked ? '[ ]' : '[x]'
+              )
+              // Bail out early since we're done
+              break
+            } else {
+              current++
+            }
+          }
+        }
+        updateContent(lines.join('\n'))
+      }
+      return (
+        <input
+          onChange={onChange}
+          id={`checkbox[${checkboxIndexes++}]`}
+          readOnly
+          {...props}
+          disabled={props.type !== 'checkbox'}
+        />
+      )
+    }
 
     return unified()
       .use(remarkParse)
@@ -219,9 +262,10 @@ const MarkdownPreviewer = ({
               </a>
             )
           },
+          input: renderInput,
         },
       })
-  }, [codeBlockTheme, attachmentMap])
+  }, [codeBlockTheme, attachmentMap, content, updateContent])
 
   const renderContent = useCallback(
     async (content: string) => {
