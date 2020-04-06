@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useDb } from '../../lib/db'
-import { NoteStorage } from '../../lib/db/types'
+import { NoteStorage, PopulatedFolderDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useToast } from '../../lib/toast'
@@ -17,6 +17,8 @@ import {
 } from '../atoms/form'
 import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
+import { values } from '../../lib/db/utils'
+import FolderList from '../organisms/FolderList/FolderList'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -58,6 +60,91 @@ export default ({ storage }: StorageEditProps) => {
     db.renameStorage(storage.id, name)
   }, [storage.id, db, name])
 
+  const getFolderTreeData = (folderArray: PopulatedFolderDoc[]) => {
+    folderArray.sort((a, b) => {
+      return a.pathname.length - b.pathname.length
+    })
+    let result: string[] = []
+    folderArray.forEach((folder) => {
+      if (folder.pathname !== '/') {
+        const paths = folder.pathname.split('/')
+        paths.splice(0, 1)
+        result = setRecursivePathArray(paths, result, folder.pathname)
+      }
+    })
+    return transformArrayToMap(result)
+  }
+
+  const setRecursivePathArray = (
+    input: string[],
+    tempResult: string[],
+    pathname?: string
+  ) => {
+    const key = input.shift()
+    if (key == null) return []
+    if (
+      tempResult[key] !== '' &&
+      tempResult[key] !== null &&
+      tempResult[key] !== undefined
+    ) {
+      tempResult[key]['children'] = setRecursivePathArray(
+        input,
+        tempResult[key]['children'],
+        pathname
+      )
+    } else {
+      if (_.isEmpty(input)) {
+        tempResult[key] = { pathname: pathname, children: [] }
+      } else {
+        tempResult[key]['children'] = setRecursivePathArray(input, [], pathname)
+      }
+    }
+    return tempResult
+  }
+
+  const transformArrayToMap = (input: string[]) => {
+    const result: object[] = []
+    Object.keys(input).forEach((key) => {
+      if (Object.keys(input[key]['children']).length > 0) {
+        result.push({
+          title: key,
+          pathname: input[key]['pathname'],
+          isDirectory: true,
+          children: transformArrayToMap(input[key]['children']),
+          expanded: true,
+        })
+      } else {
+        result.push({ title: key, pathname: input[key]['pathname'], isDirectory: true })
+      }
+    })
+    return result
+  }
+
+  const folderTreeData = getFolderTreeData(values(storage.folderMap))
+  const [folderTreeDataState, setFolderTreeDataState] = useState(folderTreeData)
+
+  const updateFolderTreeData = (treeData: object[]) => {
+    setFolderTreeDataState(treeData)
+  }
+
+  const rearrangeFolders = useCallback(() => {
+    // TODO: execute rearrange
+    folderTreeDataState.forEach((folder: object) => {
+      updateRecursiveFolders(folder, '/')
+    })
+  }, [folderTreeDataState])
+
+  const updateRecursiveFolders = (folder: object, pathname: string) => {
+    if (_.isEmpty(folder['children'])) {
+      console.log(pathname + folder['title'] + `(${folder['pathname']})`)
+    } else {
+      console.log(pathname + folder['title'] + `(${folder['pathname']})`)
+      folder['children'].forEach((child: object) => {
+        updateRecursiveFolders(child, pathname + folder['title'] + '/')
+      })
+    }
+  }
+
   return (
     <PageContainer>
       <FormHeading depth={1}>Storage Settings</FormHeading>
@@ -74,6 +161,17 @@ export default ({ storage }: StorageEditProps) => {
       <FormGroup>
         <FormPrimaryButton onClick={updateStorageName}>
           Update storage name
+        </FormPrimaryButton>
+      </FormGroup>
+      <hr />
+      <FormHeading depth={2}>Folders</FormHeading>
+      <FolderList
+        folderTreeData={folderTreeDataState}
+        handleFolderTreeDataUpdated={updateFolderTreeData}
+      ></FolderList>
+      <FormGroup>
+        <FormPrimaryButton onClick={rearrangeFolders}>
+          Update folders
         </FormPrimaryButton>
       </FormGroup>
       <hr />

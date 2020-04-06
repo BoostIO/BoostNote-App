@@ -23,6 +23,7 @@ import Modal from './Modal'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
+import 'react-sortable-tree/style.css'
 
 const LoadingText = styled.div`
   margin: 30px;

@@ -144,6 +144,8 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-i18next": "^11.0.1",
+    "react-sortable-tree": "^2.7.1",
+    "react-sortable-tree-theme-file-explorer": "^2.0.0",
     "react-use": "^12.10.0",
     "rehype-document": "^3.2.0",
     "rehype-katex": "^2.0.0",
