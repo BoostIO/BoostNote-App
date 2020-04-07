@@ -21,8 +21,7 @@ const FolderList = ({
         onChange={handleFolderTreeDataUpdated}
         theme={FileExplorerTheme}
         generateNodeProps={(rowInfo) => ({
-          icons: rowInfo.node.isDirectory
-            ? [
+          icons: [
               <div
                 style={{
                   borderLeft: 'solid 8px gray',
@@ -37,20 +36,6 @@ const FolderList = ({
                   borderColor: rowInfo.node.expanded ? 'white' : 'gray',
                 }}
               />,
-            ]
-            : [
-              <div
-                style={{
-                  border: 'solid 1px black',
-                  fontSize: 8,
-                  textAlign: 'center',
-                  marginRight: 10,
-                  width: 12,
-                  height: 16,
-                }}
-              >
-                F
-                </div>,
             ],
           // buttons: [
           //   <button

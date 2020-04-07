@@ -109,7 +109,6 @@ export default ({ storage }: StorageEditProps) => {
         result.push({
           title: key,
           pathname: input[key]['pathname'],
-          isDirectory: true,
           children: transformArrayToMap(input[key]['children']),
           expanded: true,
         })
@@ -117,7 +116,6 @@ export default ({ storage }: StorageEditProps) => {
         result.push({
           title: key,
           pathname: input[key]['pathname'],
-          isDirectory: true,
         })
       }
     })
