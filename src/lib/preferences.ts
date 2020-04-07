@@ -56,6 +56,9 @@ export interface Preferences {
   // Markdown
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
+
+  // Export
+  'export.markdown.includeFrontMatter': boolean
 }
 
 function loadPreferences() {
@@ -98,6 +101,7 @@ const basePreferences: Preferences = {
   // Markdown
   'markdown.previewStyle': 'default',
   'markdown.codeBlockTheme': 'default',
+  'export.markdown.includeFrontMatter': true
 }
 
 function usePreferencesStore() {
@@ -111,7 +115,7 @@ function usePreferencesStore() {
   const mergedPreferences = useMemo(() => {
     return {
       ...basePreferences,
-      ...preferences,
+      ...preferences
     }
   }, [preferences])
 
@@ -135,13 +139,13 @@ function usePreferencesStore() {
     setClosed,
     toggleClosed,
     preferences: mergedPreferences,
-    setPreferences,
+    setPreferences
   }
 }
 
 export const {
   StoreProvider: PreferencesProvider,
-  useStore: usePreferences,
+  useStore: usePreferences
 } = createStoreContext(usePreferencesStore, 'preferences')
 
 export function useFirstUser() {

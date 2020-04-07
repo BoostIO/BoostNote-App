@@ -16,7 +16,7 @@ import { NoteDoc } from './db/types'
 import { Preferences } from './preferences'
 
 const sanitizeSchema = mergeDeepRight(gh, {
-  attributes: { '*': ['className'] },
+  attributes: { '*': ['className'] }
 })
 
 export const exportNoteAsHtmlFile = async (
@@ -30,7 +30,7 @@ export const exportNoteAsHtmlFile = async (
     .use(remarkRehype, { allowDangerousHTML: false })
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
-      theme: preferences['markdown.codeBlockTheme'],
+      theme: preferences['markdown.codeBlockTheme']
     })
     .use(rehypeRaw)
     .use(rehypeSanitize, sanitizeSchema)
@@ -38,7 +38,7 @@ export const exportNoteAsHtmlFile = async (
       title: note.title,
       style: previewStyle,
       css: 'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css',
-      meta: { keywords: note.tags.join() },
+      meta: { keywords: note.tags.join() }
     })
     .use(rehypeStringify)
     .use(rehypeKatex)
@@ -59,7 +59,8 @@ export const exportNoteAsHtmlFile = async (
 }
 
 export const exportNoteAsMarkdownFile = async (
-  note: NoteDoc
+  note: NoteDoc,
+  preferences: Preferences
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
@@ -70,14 +71,17 @@ export const exportNoteAsMarkdownFile = async (
         console.error(err)
         return
       }
-      downloadString(
-        [
+      let exportContent = [file.toString()]
+      if (preferences['export.markdown.includeFrontMatter']) {
+        exportContent = [
           '---',
           `title: "${note.title}"`,
           `tags: "${note.tags.join()}"`,
-          '---',
-          file.toString(),
-        ].join('\n'),
+          '---'
+        ].concat(exportContent)
+      }
+      downloadString(
+        exportContent.join('\n'),
         `${note.title.toLowerCase().replace(/\s+/g, '-')}.md`,
         'text/markdown'
       )

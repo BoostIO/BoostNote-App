@@ -9,9 +9,10 @@ import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
 import BillingTab from './BillingTab'
 import ImportTab from './ImportTab'
+import ExportTab from './ExportTab'
 import {
   backgroundColor,
-  closeIconColor,
+  closeIconColor
 } from '../../lib/styled/styleFunctions'
 import { IconClose } from '../icons'
 import { useTranslation } from 'react-i18next'
@@ -84,6 +85,8 @@ const PreferencesModal = () => {
         return <BillingTab />
       case 'import':
         return <ImportTab />
+      case 'export':
+        return <ExportTab />
       case 'general':
       default:
         return <GeneralTab />
@@ -138,6 +141,12 @@ const PreferencesModal = () => {
           label='Import'
           tab='import'
           active={tab === 'import'}
+          setTab={setTab}
+        />
+        <TabButton
+          label='Export'
+          tab='export'
+          active={tab === 'export'}
           setTab={setTab}
         />
       </TabNav>

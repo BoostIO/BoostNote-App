@@ -157,5 +157,8 @@ export default {
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'remove',
     'preferences.importUpload': 'Upload',
-  },
+
+    // Preferences ExportTab
+    'preferences.export': 'Export'
+  }
 }
