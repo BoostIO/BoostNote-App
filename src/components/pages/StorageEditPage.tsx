@@ -114,7 +114,11 @@ export default ({ storage }: StorageEditProps) => {
           expanded: true,
         })
       } else {
-        result.push({ title: key, pathname: input[key]['pathname'], isDirectory: true })
+        result.push({
+          title: key,
+          pathname: input[key]['pathname'],
+          isDirectory: true,
+        })
       }
     })
     return result
@@ -124,23 +128,62 @@ export default ({ storage }: StorageEditProps) => {
   const [folderTreeDataState, setFolderTreeDataState] = useState(folderTreeData)
 
   const updateFolderTreeData = (treeData: object[]) => {
-    setFolderTreeDataState(treeData)
+    if (!isDuplicateFolderPathname(treeData)) {
+      setFolderTreeDataState(treeData)
+    }
+  }
+
+  const isDuplicateFolderPathname = (treeData: object[]) => {
+    const pathnames: string[] = []
+    treeData.map((folder) => {
+      organizeOrUpdateFolderTree(false, folder, '/', pathnames)
+    })
+    return _.uniq(pathnames).length !== pathnames.length
   }
 
   const rearrangeFolders = useCallback(() => {
     // TODO: execute rearrange
     folderTreeDataState.forEach((folder: object) => {
-      updateRecursiveFolders(folder, '/')
+      organizeOrUpdateFolderTree(true, folder, '/', [])
     })
   }, [folderTreeDataState])
 
-  const updateRecursiveFolders = (folder: object, pathname: string) => {
+  const collectAllPathnames = (
+    folder: object,
+    pathname: string,
+    pathnames: string[]
+  ) => {
+    const newPathname = pathname + folder['title']
     if (_.isEmpty(folder['children'])) {
-      console.log(pathname + folder['title'] + `(${folder['pathname']})`)
+      pathnames.push(newPathname)
     } else {
-      console.log(pathname + folder['title'] + `(${folder['pathname']})`)
+      pathnames.push(newPathname)
       folder['children'].forEach((child: object) => {
-        updateRecursiveFolders(child, pathname + folder['title'] + '/')
+        collectAllPathnames(child, pathname + folder['title'] + '/', pathnames)
+      })
+    }
+  }
+
+  const organizeOrUpdateFolderTree = (
+    execUpdate: boolean,
+    folder: object,
+    pathname: string,
+    pathnames: string[]
+  ) => {
+    const oldPathname = folder['pathname']
+    const newPathname = pathname + folder['title']
+    pathnames.push(newPathname)
+    if (execUpdate) {
+      console.log(`TODO: execute update(${oldPathname} -> ${newPathname})`)
+    }
+    if (!_.isEmpty(folder['children'])) {
+      folder['children'].forEach((child: object) => {
+        organizeOrUpdateFolderTree(
+          execUpdate,
+          child,
+          pathname + folder['title'] + '/',
+          pathnames
+        )
       })
     }
   }
