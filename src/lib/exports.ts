@@ -59,7 +59,8 @@ export const exportNoteAsHtmlFile = async (
 }
 
 export const exportNoteAsMarkdownFile = async (
-  note: NoteDoc
+  note: NoteDoc,
+  { includeFrontMatter }: { includeFrontMatter: boolean }
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
@@ -70,14 +71,18 @@ export const exportNoteAsMarkdownFile = async (
         console.error(err)
         return
       }
-      downloadString(
-        [
+      let content = file.toString()
+      if (includeFrontMatter) {
+        content += [
           '---',
           `title: "${note.title}"`,
           `tags: "${note.tags.join()}"`,
           '---',
-          file.toString(),
-        ].join('\n'),
+        ].join('\n')
+      }
+
+      downloadString(
+        content,
         `${note.title.toLowerCase().replace(/\s+/g, '-')}.md`,
         'text/markdown'
       )

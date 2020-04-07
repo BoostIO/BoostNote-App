@@ -52,6 +52,7 @@ export interface Preferences {
   // Markdown
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
+  'markdown.includeFrontMatter': boolean
 }
 
 function loadPreferences() {
@@ -93,6 +94,7 @@ const basePreferences: Preferences = {
   // Markdown
   'markdown.previewStyle': 'default',
   'markdown.codeBlockTheme': 'material-darker',
+  'markdown.includeFrontMatter': true,
 }
 
 function usePreferencesStore() {
