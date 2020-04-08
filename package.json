@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "dev:electron": "env-cmd cross-env NODE_ENV=development ts-node -P tsconfig-webpack.json scripts/dev-electron.ts",
     "dev:mobile": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --config webpack.mobile.config.ts --mode development --open-page \"m\"",
     "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
     "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
@@ -66,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
     "babel-jest": "^24.9.0",
+    "chalk": "^4.0.0",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
     "electron": "^6.1.5",
