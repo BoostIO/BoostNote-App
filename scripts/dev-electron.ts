@@ -9,7 +9,7 @@ const outputFilename = 'boostnote.main.js'
 const outputPath = path.join(tmpDirPath, outputFilename)
 
 const compiler = webpack({
-  entry: './app/index.js',
+  entry: './app/index.ts',
   output: {
     filename: outputFilename,
     path: tmpDirPath,
@@ -24,6 +24,9 @@ const compiler = webpack({
         exclude: /node_modules/,
       },
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
   },
 })
 
