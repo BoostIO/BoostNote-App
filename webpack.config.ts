@@ -144,10 +144,14 @@ module.exports = (env, argv) => {
         }),
       ],
     }
-  }
-
-  if (process.env.TARGET !== 'electron' && argv.mode !== 'development') {
-    ;(config.output as any).publicPath = '/app/'
+    if (process.env.TARGET === 'electron') {
+      ;(config.output as any).path = path.resolve(
+        __dirname,
+        'electron/compiled'
+      )
+    } else {
+      ;(config.output as any).publicPath = '/app/'
+    }
   }
 
   return config
