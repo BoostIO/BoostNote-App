@@ -13,7 +13,7 @@ const target = process.env.TARGET === 'ios' ? 'ios' : 'android'
 module.exports = (env, argv) => {
   const config = {
     entry: [
-      './src/mobile/index.tsx'
+      './src/mobile/index.tsx',
       // the entry point of our app
     ],
 
@@ -22,7 +22,7 @@ module.exports = (env, argv) => {
       path:
         target === 'ios'
           ? path.resolve(__dirname, 'ios/BoostNote/BoostNote/compiled')
-          : path.resolve(__dirname, 'android/app/src/main/assets/compiled')
+          : path.resolve(__dirname, 'android/app/src/main/assets/compiled'),
     },
 
     devtool: 'inline-source-map',
@@ -31,29 +31,29 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader']
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
           loader: 'url-loader',
           options: {
-            limit: 8192
-          }
+            limit: 8192,
+          },
         },
         {
           test: /\.tsx?$/,
           use: [{ loader: 'ts-loader' }],
-          exclude: /node_modules/
+          exclude: /node_modules/,
         },
         {
           test: /\.md$/,
           use: [
             {
-              loader: 'raw-loader'
-            }
-          ]
-        }
-      ]
+              loader: 'raw-loader',
+            },
+          ],
+        },
+      ],
     },
 
     plugins: [
@@ -68,11 +68,11 @@ module.exports = (env, argv) => {
             ? 'mobile-dev.html'
             : target === 'ios'
             ? 'ios.html'
-            : 'android.html'
+            : 'android.html',
       }),
       new ErrorOverlayPlugin(),
       new webpack.DefinePlugin({
-        'process.env.VERSION': JSON.stringify(packageJson.version)
+        'process.env.VERSION': JSON.stringify(packageJson.version),
       }),
       new webpack.EnvironmentPlugin([
         'NODE_ENV',
@@ -81,20 +81,20 @@ module.exports = (env, argv) => {
         'MOBILE_AMPLIFY_PINPOINT_APPID',
         'MOBILE_AMPLIFY_PINPOINT_REGION',
         'BOOST_NOTE_BASE_URL',
-        'TARGET'
+        'TARGET',
       ]),
       new CopyPlugin([
         {
           from: path.join(__dirname, 'node_modules/codemirror/theme'),
-          to: 'm/codemirror/theme'
-        }
+          to: 'm/codemirror/theme',
+        },
       ]),
       new CopyPlugin([
         {
           from: path.join(__dirname, 'static'),
-          to: 'm/static'
-        }
-      ])
+          to: 'm/static',
+        },
+      ]),
     ],
 
     devServer: {
@@ -102,14 +102,14 @@ module.exports = (env, argv) => {
       port: devServerPort,
 
       historyApiFallback: {
-        index: '/m'
+        index: '/m',
       },
       // respond to 404s with index.html
 
       hot: true,
       // enable HMR on the server
 
-      before: function(app, server) {
+      before: function (app, server) {
         app.use(
           '/m/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -123,15 +123,15 @@ module.exports = (env, argv) => {
           express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
         )
         app.use('/m/static', express.static(path.join(__dirname, 'static')))
-      }
+      },
     },
 
     resolve: {
-      extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js'],
     },
     node: {
-      fs: 'empty'
-    }
+      fs: 'empty',
+    },
   }
 
   if (argv.mode === 'development') {
@@ -151,10 +151,10 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/
-          }
-        })
-      ]
+            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/,
+          },
+        }),
+      ],
     }
     ;(config.output as any).publicPath =
       target === 'ios' ? './' : 'file:///android_asset/compiled/'
