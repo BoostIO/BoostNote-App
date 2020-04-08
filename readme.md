@@ -24,8 +24,7 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 - Desktop app(Windows, mac and Linux) (Dec 2019)
 - Cloud storage (Dec 2019)
 - Mobile app(Android and iOS) (Feb 2020)
-- File system based storage (WIP)
-- MDX (TBA)
+- File system based storage (June 2020)
 
 ## Authors & Maintainers
 
@@ -51,11 +50,8 @@ Don't forget to create a file named `.env` in the root of the project directory,
 # Install deps
 npm i
 
-# Compile script
-npm run build
-
-# Deploy to now.sh
-now
+# Run webpack and open browser
+npm run dev
 ```
 
 ### Electron app
@@ -64,12 +60,16 @@ now
 # Install deps
 npm i
 
-# Compile script
-npm run build
+# Run webpack
+npm run dev:webpack
 
-# Package app
-npm run pack
+# Run electron(You have to open another terminal to run this)
+npm run dev:electron
 ```
+
+### Mobile app
+
+TBA
 
 ## License
 
