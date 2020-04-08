@@ -9,7 +9,8 @@
     "url": "https://github.com/BoostIO/Boostnote.next.git"
   },
   "scripts": {
-    "dev:webpack": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "dev": "npm run dev:webpack -- --open-page \"app\"",
+    "dev:webpack": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development",
     "dev:electron": "env-cmd cross-env NODE_ENV=development ts-node -P tsconfig-webpack.json scripts/dev-electron.ts",
     "dev:mobile": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --config webpack.mobile.config.ts --mode development --open-page \"m\"",
     "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
