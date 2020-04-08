@@ -4,15 +4,15 @@ import os from 'os'
 import { execFile, ChildProcess } from 'child_process'
 import chalk from 'chalk'
 
-const tmpDirPath = os.tmpdir()
-const outputFilename = 'boostnote.main.js'
-const outputPath = path.join(tmpDirPath, outputFilename)
+const outputDirPath = path.join(__dirname, '../app')
+const outputFilename = 'index.js'
+const outputPath = path.join(outputDirPath, outputFilename)
 
 const compiler = webpack({
-  entry: './app/index.ts',
+  entry: './src/app/index.ts',
   output: {
     filename: outputFilename,
-    path: tmpDirPath,
+    path: outputDirPath,
   },
   mode: 'development',
   target: 'electron-main',
@@ -27,6 +27,10 @@ const compiler = webpack({
   },
   resolve: {
     extensions: ['.ts', '.js'],
+  },
+  externals: {
+    'electron-log': 'commonjs2 electron-log',
+    'electron-updater': 'commonjs2 electron-updater',
   },
 })
 
