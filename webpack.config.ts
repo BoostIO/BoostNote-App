@@ -8,11 +8,8 @@ import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
 module.exports = (env, argv) => {
-  const config = {
-    entry: [
-      './src/index.tsx',
-      // the entry point of our app
-    ],
+  const config: webpack.Configuration = {
+    entry: ['./src/index.tsx'],
 
     output: {
       filename: 'bundle.js',
@@ -125,16 +122,17 @@ module.exports = (env, argv) => {
   if (argv.mode === 'development') {
     config.plugins.unshift(new webpack.HotModuleReplacementPlugin())
 
-    config.entry.unshift(
+    config.entry = [
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:3000',
-      'webpack/hot/only-dev-server'
-    )
-    ;(config.output as any).publicPath = 'http://localhost:3000/app'
+      'webpack/hot/only-dev-server',
+      ...(config.entry as string[]),
+    ]
+    config.output.publicPath = 'http://localhost:3000/app'
   }
 
   if (argv.mode === 'production') {
-    ;(config as any).optimization = {
+    config.optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -145,12 +143,9 @@ module.exports = (env, argv) => {
       ],
     }
     if (process.env.TARGET === 'electron') {
-      ;(config.output as any).path = path.resolve(
-        __dirname,
-        'electron/compiled'
-      )
+      config.output.path = path.resolve(__dirname, 'electron/compiled')
     } else {
-      ;(config.output as any).publicPath = '/app/'
+      config.output.publicPath = '/app/'
     }
   }
 
