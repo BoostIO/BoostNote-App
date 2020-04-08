@@ -2,10 +2,10 @@ import webpack from 'webpack'
 import path from 'path'
 
 const compiler = webpack({
-  entry: './src/app/index.ts',
+  entry: './src/electron/index.ts',
   output: {
     filename: 'index.js',
-    path: path.join(__dirname, '../app'),
+    path: path.join(__dirname, '../electron'),
   },
   mode: 'production',
   target: 'electron-main',

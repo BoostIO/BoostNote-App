@@ -7,8 +7,7 @@ import {
 import path from 'path'
 import url from 'url'
 import { template } from './menu'
-
-const dev = process.env.NODE_ENV !== 'production'
+import { dev } from './consts'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null
@@ -29,7 +28,7 @@ function createMainWindow() {
   } else {
     window.loadURL(
       url.format({
-        pathname: path.join(app.getAppPath(), '../compiled/index.html'),
+        pathname: path.join(app.getAppPath(), './compiled/index.html'),
         protocol: 'file',
         slashes: true,
       })

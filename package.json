@@ -13,13 +13,13 @@
     "dev:webpack": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development",
     "dev:electron": "env-cmd cross-env NODE_ENV=development ts-node -P tsconfig-webpack.json scripts/dev-electron.ts",
     "dev:mobile": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --config webpack.mobile.config.ts --mode development --open-page \"m\"",
-    "start": "electron app/index.js",
+    "start": "electron electron/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",
     "build": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
     "build:electron": "npm run build:electron-renderer && npm run build:electron-main",
-    "build:electron-renderer": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
-    "build:electron-main": "rimraf app/index.js && env-cmd ts-node -P tsconfig-webpack.json scripts/build-electron-main",
+    "build:electron-renderer": "rimraf electron/compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
+    "build:electron-main": "rimraf electron/index.js && env-cmd ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
     "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
     "meta": "node scripts/meta.js",
@@ -169,9 +169,9 @@
     "appId": "com.boostio.boostnote",
     "artifactName": "boost-note-${os}.${ext}",
     "copyright": "Copyright © 2016-2017 BoostIO",
-    "extraResources": [
-      "compiled/**/*"
-    ],
+    "directories": {
+      "app": "electron"
+    },
     "asar": false,
     "mac": {
       "icon": "static/icon.icns"

@@ -1,15 +1,14 @@
 import webpack from 'webpack'
 import path from 'path'
-import os from 'os'
 import { execFile, ChildProcess } from 'child_process'
 import chalk from 'chalk'
 
-const outputDirPath = path.join(__dirname, '../app')
+const outputDirPath = path.join(__dirname, '../electron')
 const outputFilename = 'index.js'
 const outputPath = path.join(outputDirPath, outputFilename)
 
 const compiler = webpack({
-  entry: './src/app/index.ts',
+  entry: './src/electron/index.ts',
   output: {
     filename: outputFilename,
     path: outputDirPath,
