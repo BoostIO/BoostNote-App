@@ -1,16 +1,20 @@
-const electron = require('electron')
-const path = require('path')
-const url = require('url')
-require('./menu')
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  Menu,
+} from 'electron'
+import path from 'path'
+import url from 'url'
+import { template } from './menu'
 
-const { app, BrowserWindow } = electron
 const dev = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow
+let mainWindow: BrowserWindow | null = null
 
 function createMainWindow() {
-  const windowOptions = {
+  const windowOptions: BrowserWindowConstructorOptions = {
     webPreferences: { nodeIntegration: true },
     width: 1200,
     height: 800,
@@ -25,12 +29,15 @@ function createMainWindow() {
   } else {
     window.loadURL(
       url.format({
-        pathname: path.join(__dirname, '../compiled/index.html'),
-        protocol: true,
+        pathname: path.join(app.getAppPath(), '../compiled/index.html'),
+        protocol: 'file',
         slashes: true,
       })
     )
   }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 
   window.on('closed', () => {
     mainWindow = null
