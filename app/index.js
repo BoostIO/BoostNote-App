@@ -1,9 +1,10 @@
 const electron = require('electron')
 const path = require('path')
+const url = require('url')
 require('./menu')
 
 const { app, BrowserWindow } = electron
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const dev = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
@@ -12,14 +13,24 @@ function createMainWindow() {
   const windowOptions = {
     webPreferences: { nodeIntegration: true },
     width: 1200,
-    height: 800
+    height: 800,
   }
   if (process.platform === 'darwin') {
     windowOptions.titleBarStyle = 'hiddenInset'
   }
   const window = new BrowserWindow(windowOptions)
 
-  window.loadFile(path.join(__dirname, '../compiled/index.html'))
+  if (dev) {
+    window.loadURL(`http://localhost:3000/app`)
+  } else {
+    window.loadURL(
+      url.format({
+        pathname: path.join(__dirname, '../compiled/index.html'),
+        protocol: true,
+        slashes: true,
+      })
+    )
+  }
 
   window.on('closed', () => {
     mainWindow = null
