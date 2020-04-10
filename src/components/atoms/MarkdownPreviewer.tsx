@@ -163,7 +163,9 @@ interface MarkdownPreviewerProps {
   style?: string
   theme?: string
   attachmentMap?: ObjectMap<Attachment>
-  updateContent: (newValue: string) => void
+  updateContent?: (
+    newContentOrUpdater: string | ((newValue: string) => string)
+  ) => void
 }
 
 const MarkdownPreviewer = ({
@@ -186,9 +188,14 @@ const MarkdownPreviewer = ({
 
     const renderInput = (props: React.HTMLProps<HTMLInputElement>) => {
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (updateContent == null) {
+          return
+        }
         const lines = content.split('\n')
         const id = e.target.getAttribute('id')
-        if (id === null) return
+        if (id === null) {
+          return
+        }
         const checkboxIndex = Number(id.replace(/^checkbox|(\[|\])/gi, ''))
 
         let current = 0
@@ -199,10 +206,10 @@ const MarkdownPreviewer = ({
           const matches = line.match(/^(\s*>?)*\s*[+\-*] (\[x]|\[ ])/i)
           if (matches) {
             if (current === checkboxIndex) {
-              const isChecked = /^(\s*>?)*\s*[+\-*] \[x]/i.test(matches[0])
+              const checked = /^(\s*>?)*\s*[+\-*] \[x]/i.test(matches[0])
               lines[index] = line.replace(
-                isChecked ? '[x]' : '[ ]',
-                isChecked ? '[ ]' : '[x]'
+                checked ? '[x]' : '[ ]',
+                checked ? '[ ]' : '[x]'
               )
               // Bail out early since we're done
               break

@@ -224,10 +224,18 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  updateContent = (newValue: string) => {
+  updateContent = (
+    newValueOrUpdater: string | ((prevValue: string) => string)
+  ) => {
+    const updater =
+      typeof newValueOrUpdater === 'string'
+        ? () => newValueOrUpdater
+        : newValueOrUpdater
     this.setState(
-      {
-        content: newValue,
+      (prevState) => {
+        return {
+          content: updater(prevState.content),
+        }
       },
       () => {
         this.queueToSave()
@@ -408,6 +416,7 @@ export default class NoteDetail extends React.Component<
                 <CustomizedMarkdownPreviewer
                   content={this.state.content}
                   attachmentMap={attachmentMap}
+                  updateContent={this.updateContent}
                 />
               ) : (
                 <CustomizedCodeEditor
