@@ -56,7 +56,8 @@ export interface DbStore {
   renameFolder: (
     storageName: string,
     pathname: string,
-    newName: string
+    newName: string,
+    needUpdateSubFolders: boolean
   ) => Promise<void>
   removeFolder: (storageName: string, pathname: string) => Promise<void>
   createNote(
@@ -460,7 +461,7 @@ export function createDbStoreCreator(
     )
 
     const renameFolder = useCallback(
-      async (storageId: string, pathname: string, newPathname: string) => {
+      async (storageId: string, pathname: string, newPathname: string, needUpdateSubFolders: boolean = true) => {
         const storage = storageMap[storageId]
         if (storage == null) {
           return
@@ -479,9 +480,11 @@ export function createDbStoreCreator(
         const folderListToRefresh: PopulatedFolderDoc[] = []
         const notesListToRefresh: NoteDoc[] = []
 
-        const subFolders = Object.keys(storage.folderMap).filter((aPathname) =>
-          aPathname.startsWith(`${pathname}/`)
-        )
+        const subFolders = needUpdateSubFolders
+          ? Object.keys(storage.folderMap).filter((aPathname) =>
+              aPathname.startsWith(`${pathname}/`)
+            )
+          : []
         const allFoldersToRename = [pathname, ...subFolders]
         await Promise.all(
           allFoldersToRename.map(async (folderPathname) => {
@@ -499,6 +502,7 @@ export function createDbStoreCreator(
               )
             }
             if (
+              needUpdateSubFolders &&
               folderPathname.split('/').length !==
               newfolderPathname.split('/').length
             ) {
@@ -525,7 +529,7 @@ export function createDbStoreCreator(
           })
         )
 
-        await storage.db.removeFolder(pathname)
+        await storage.db.removeFolder(pathname, needUpdateSubFolders)
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {

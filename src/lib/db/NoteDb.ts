@@ -403,8 +403,10 @@ export default class NoteDb {
     }
   }
 
-  async removeFolder(folderPathname: string): Promise<void> {
-    const foldersToDelete = await this.getAllFolderUnderPathname(folderPathname)
+  async removeFolder(folderPathname: string, needDeleteSubFolders: boolean = true): Promise<void> {
+    const foldersToDelete = needDeleteSubFolders
+      ? await this.getAllFolderUnderPathname(folderPathname)
+      : [await this.getFolder(folderPathname)]
 
     await Promise.all(
       foldersToDelete.map((folder) =>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { useDb } from '../../lib/db'
 import { NoteStorage, PopulatedFolderDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
@@ -19,6 +19,9 @@ import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 import { values } from '../../lib/db/utils'
 import FolderList from '../organisms/FolderList/FolderList'
+import { generateId } from '../../lib/string'
+import _ from 'lodash'
+import { sleep } from '../../lib/sleep'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -31,6 +34,21 @@ export default ({ storage }: StorageEditProps) => {
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
+
+  useEffect(() => {
+    if (folderTreeDataState === prevFolderTreeState) {
+      const newStorage = db.storageMap[storage.id]
+      setFolderTreeDataState(getFolderTreeData(values(newStorage.folderMap)))  
+    }
+  })
+
+  function usePrevious(value: any) {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
+  }
 
   const removeCallback = useCallback(() => {
     messageBox({
@@ -82,11 +100,7 @@ export default ({ storage }: StorageEditProps) => {
   ) => {
     const key = input.shift()
     if (key == null) return []
-    if (
-      tempResult[key] !== '' &&
-      tempResult[key] !== null &&
-      tempResult[key] !== undefined
-    ) {
+    if (!_.isEmpty(tempResult[key])) {
       tempResult[key]['children'] = setRecursivePathArray(
         input,
         tempResult[key]['children'],
@@ -96,7 +110,9 @@ export default ({ storage }: StorageEditProps) => {
       if (_.isEmpty(input)) {
         tempResult[key] = { pathname: pathname, children: [] }
       } else {
-        tempResult[key]['children'] = setRecursivePathArray(input, [], pathname)
+        tempResult[key] = {
+          children: setRecursivePathArray(input, [], pathname),
+        }
       }
     }
     return tempResult
@@ -122,8 +138,10 @@ export default ({ storage }: StorageEditProps) => {
     return result
   }
 
-  const folderTreeData = getFolderTreeData(values(storage.folderMap))
-  const [folderTreeDataState, setFolderTreeDataState] = useState(folderTreeData)
+  const [folderTreeDataState, setFolderTreeDataState] = useState(
+    getFolderTreeData(values(storage.folderMap))
+  )
+  const prevFolderTreeState = usePrevious(folderTreeDataState)
 
   const updateFolderTreeData = (treeData: object[]) => {
     if (!isDuplicateFolderPathname(treeData)) {
@@ -132,59 +150,76 @@ export default ({ storage }: StorageEditProps) => {
   }
 
   const isDuplicateFolderPathname = (treeData: object[]) => {
-    const pathnames: string[] = []
+    const pathnames: Record<string, string>[] = []
     treeData.map((folder) => {
-      organizeOrUpdateFolderTree(false, folder, '/', pathnames)
+      organizeFolderTrees(false, folder, '/', pathnames)
     })
-    return _.uniq(pathnames).length !== pathnames.length
+    const newPathnameEntries = pathnames.map(
+      (pathname: Record<string, string>) => pathname['new']
+    )
+    return _.uniq(newPathnameEntries).length !== newPathnameEntries.length
   }
 
-  const rearrangeFolders = useCallback(() => {
-    // TODO: execute rearrange
-    folderTreeDataState.forEach((folder: object) => {
-      organizeOrUpdateFolderTree(true, folder, '/', [])
+  const organizeFolderTrees = useCallback(
+    async (
+      execUpdate: boolean,
+      folder: object,
+      pathname: string,
+      pathnames: Record<string, string>[]
+    ) => {
+      pathnames.push({
+        old: folder['pathname'],
+        new: pathname + folder['title'],
+      })
+      if (!_.isEmpty(folder['children'])) {
+        folder['children'].forEach(async (child: object) => {
+          await organizeFolderTrees(
+            execUpdate,
+            child,
+            pathname + folder['title'] + '/',
+            pathnames
+          )
+        })
+      }
+    },
+    []
+  )
+
+  const rearrangeFolders = useCallback(async () => {
+    const pathnames: Record<string, string>[] = []
+    folderTreeDataState.map((folder) => {
+      organizeFolderTrees(false, folder, '/', pathnames)
     })
-  }, [folderTreeDataState])
-
-  const collectAllPathnames = (
-    folder: object,
-    pathname: string,
-    pathnames: string[]
-  ) => {
-    const newPathname = pathname + folder['title']
-    if (_.isEmpty(folder['children'])) {
-      pathnames.push(newPathname)
-    } else {
-      pathnames.push(newPathname)
-      folder['children'].forEach((child: object) => {
-        collectAllPathnames(child, pathname + folder['title'] + '/', pathnames)
+    const pathnamesToReplace: Record<string, string>[] = []
+    const swapTargetInfo: string[] = []
+    pathnames.sort((a, b) => a.new.length - b.new.length).forEach((pathname, idx) => {
+        if (pathname.old !== pathname.new) {
+          if (!_.isEmpty(swapTargetInfo[idx])) {
+            pathnamesToReplace.push({old: swapTargetInfo[idx], new: pathname.new, swapTargetPathname: ''})
+          } else {
+            let swapTargetIdx = -1
+            for (let i = idx + 1; i < pathnames.length; i++) {
+              if (pathname.new === pathnames[i].old) {
+                swapTargetIdx = i
+              }
+            }
+            if (swapTargetIdx < 0) {
+              pathnamesToReplace.push({old: pathname.old, new: pathname.new, swapTargetPathname: ''})
+            } else {
+              const swapTargetPathname = `/${generateId()}`
+              pathnamesToReplace.push({old: pathname.old, new: pathname.new, swapTargetPathname: swapTargetPathname})
+              swapTargetInfo[swapTargetIdx] = swapTargetPathname
+            }
+          }
+        }
       })
+    for (const val of pathnamesToReplace) {
+      if (!_.isEmpty(val.swapTargetPathname)) {
+        await db.renameFolder(storage.id, val.new, val.swapTargetPathname, false)
+      }
+      await db.renameFolder(storage.id, val.old, val.new, false)
     }
-  }
-
-  const organizeOrUpdateFolderTree = (
-    execUpdate: boolean,
-    folder: object,
-    pathname: string,
-    pathnames: string[]
-  ) => {
-    const oldPathname = folder['pathname']
-    const newPathname = pathname + folder['title']
-    pathnames.push(newPathname)
-    if (execUpdate) {
-      console.log(`TODO: execute update(${oldPathname} -> ${newPathname})`)
-    }
-    if (!_.isEmpty(folder['children'])) {
-      folder['children'].forEach((child: object) => {
-        organizeOrUpdateFolderTree(
-          execUpdate,
-          child,
-          pathname + folder['title'] + '/',
-          pathnames
-        )
-      })
-    }
-  }
+  }, [db, folderTreeDataState, organizeFolderTrees, storage.id])
 
   return (
     <PageContainer>
