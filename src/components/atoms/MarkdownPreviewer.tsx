@@ -20,6 +20,7 @@ import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
+import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -182,62 +183,16 @@ const MarkdownPreviewer = ({
   const previousThemeRef = useRef<string | undefined>('')
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
+  const checkboxIndexRef = useRef<number>(0)
+
   const markdownProcessor = useMemo(() => {
-    const options = { codeBlockTheme }
-    let checkboxIndexes = 0
-
-    const renderInput = (props: React.HTMLProps<HTMLInputElement>) => {
-      const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (updateContent == null) {
-          return
-        }
-        const lines = content.split('\n')
-        const id = e.target.getAttribute('id')
-        if (id === null) {
-          return
-        }
-        const checkboxIndex = Number(id.replace(/^checkbox|(\[|\])/gi, ''))
-
-        let current = 0
-
-        for (let index = 0; index < lines.length; index++) {
-          const line = lines[index]
-          // Matches both checked + unchecked
-          const matches = line.match(/^(\s*>?)*\s*[+\-*] (\[x]|\[ ])/i)
-          if (matches) {
-            if (current === checkboxIndex) {
-              const checked = /^(\s*>?)*\s*[+\-*] \[x]/i.test(matches[0])
-              lines[index] = line.replace(
-                checked ? '[x]' : '[ ]',
-                checked ? '[ ]' : '[x]'
-              )
-              // Bail out early since we're done
-              break
-            } else {
-              current++
-            }
-          }
-        }
-        updateContent(lines.join('\n'))
-      }
-      return (
-        <input
-          onChange={onChange}
-          id={`checkbox[${checkboxIndexes++}]`}
-          readOnly
-          {...props}
-          disabled={props.type !== 'checkbox'}
-        />
-      )
-    }
-
     return unified()
       .use(remarkParse)
       .use(remarkRehype, { allowDangerousHTML: false })
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
-        theme: options.codeBlockTheme,
+        theme: codeBlockTheme,
       })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
@@ -269,10 +224,24 @@ const MarkdownPreviewer = ({
               </a>
             )
           },
-          input: renderInput,
+          input: (props: React.HTMLProps<HTMLInputElement>) => {
+            const { type, checked } = props
+
+            if (type !== 'checkbox') {
+              return <input {...props} />
+            }
+
+            return (
+              <MarkdownCheckbox
+                index={checkboxIndexRef.current++}
+                checked={checked}
+                updateContent={updateContent}
+              />
+            )
+          },
         },
       })
-  }, [codeBlockTheme, attachmentMap, content, updateContent])
+  }, [codeBlockTheme, attachmentMap, updateContent])
 
   const renderContent = useCallback(
     async (content: string) => {
@@ -281,6 +250,7 @@ const MarkdownPreviewer = ({
       setRendering(true)
 
       console.time('render')
+      checkboxIndexRef.current = 0
       const result = await markdownProcessor.process(content)
       console.timeEnd('render')
 
