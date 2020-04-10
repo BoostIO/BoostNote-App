@@ -7,7 +7,9 @@ import { ObjectMap, Attachment } from '../../lib/db/types'
 interface CustomizedMarkdownPreviewer {
   content: string
   attachmentMap?: ObjectMap<Attachment>
-  updateContent: (newValue: string) => void
+  updateContent?: (
+    newContentOrUpdater: string | ((newValue: string) => string)
+  ) => void
 }
 
 const CustomizedMarkdownPreviewer = ({
