@@ -6,7 +6,7 @@ import {
   inputStyle,
   tableStyle,
   disabledUiTextColor,
-  PrimaryTextColor,
+  PrimaryTextColor
 } from '../../lib/styled/styleFunctions'
 
 export const Section = styled.section`
