@@ -1,15 +1,15 @@
-const { app, Menu } = require('electron')
-const { checkForUpdates } = require('./updater')
+import { app, shell } from 'electron'
+import { checkForUpdates } from './updater'
 
-const isMac = process.platform === 'darwin'
-const isLinux = process.platform === 'linux'
+const mac = process.platform === 'darwin'
+// const linux = process.platform === 'linux'
 
-const template = [
+export const template: any[] = [
   // { role: 'appMenu' }
-  ...(isMac
+  ...(mac
     ? [
         {
-          label: app.name,
+          label: app.getName(),
           submenu: [
             { role: 'about' },
             { type: 'separator' },
@@ -19,15 +19,15 @@ const template = [
             { role: 'hideothers' },
             { role: 'unhide' },
             { type: 'separator' },
-            { role: 'quit' }
-          ]
-        }
+            { role: 'quit' },
+          ],
+        },
       ]
     : []),
   // { role: 'fileMenu' }
   {
     label: 'File',
-    submenu: [isMac ? { role: 'close' } : { role: 'quit' }]
+    submenu: [mac ? { role: 'close' } : { role: 'quit' }],
   },
   // { role: 'editMenu' }
   {
@@ -39,7 +39,7 @@ const template = [
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
-      ...(isMac
+      ...(mac
         ? [
             { role: 'pasteAndMatchStyle' },
             { role: 'delete' },
@@ -47,11 +47,11 @@ const template = [
             { type: 'separator' },
             {
               label: 'Speech',
-              submenu: [{ role: 'startspeaking' }, { role: 'stopspeaking' }]
-            }
+              submenu: [{ role: 'startspeaking' }, { role: 'stopspeaking' }],
+            },
           ]
-        : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }])
-    ]
+        : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
+    ],
   },
   // { role: 'viewMenu' }
   {
@@ -65,8 +65,8 @@ const template = [
       { role: 'zoomin' },
       { role: 'zoomout' },
       { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
+      { role: 'togglefullscreen' },
+    ],
   },
   // { role: 'windowMenu' }
   {
@@ -74,33 +74,29 @@ const template = [
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
-      ...(isMac
+      ...(mac
         ? [
             { type: 'separator' },
             { role: 'front' },
             { type: 'separator' },
-            { role: 'window' }
+            { role: 'window' },
           ]
-        : [{ role: 'close' }])
-    ]
+        : [{ role: 'close' }]),
+    ],
   },
   {
     role: 'help',
     submenu: [
       {
         label: 'Check For Updates',
-        click: checkForUpdates
+        click: checkForUpdates,
       },
       {
         label: 'Learn More',
         click: async () => {
-          const { shell } = require('electron')
           await shell.openExternal('https://boostnote.io')
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  },
 ]
-
-const menu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(menu)

@@ -9,16 +9,19 @@
     "url": "https://github.com/BoostIO/Boostnote.next.git"
   },
   "scripts": {
-    "dev": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --open-page \"app\"",
+    "dev": "npm run dev:webpack -- --open-page \"app\"",
+    "dev:webpack": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development",
+    "dev:electron": "env-cmd cross-env NODE_ENV=development ts-node -P tsconfig-webpack.json scripts/dev-electron.ts",
     "dev:mobile": "env-cmd cross-env NODE_ENV=development TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --config webpack.mobile.config.ts --mode development --open-page \"m\"",
-    "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
-    "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
-    "dev:app": "npm run build:electron && npm run start",
-    "start": "electron app/index.js",
+    "start": "electron electron/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",
     "build": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
-    "build:electron": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
+    "build:electron": "npm run build:electron-renderer && npm run build:electron-main",
+    "build:electron-renderer": "rimraf electron/compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
+    "build:electron-main": "rimraf electron/index.js && env-cmd ts-node -P tsconfig-webpack.json scripts/build-electron-main",
+    "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
+    "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
     "meta": "node scripts/meta.js",
     "prepack": "rimraf dist && env-cmd npm run meta && electron-builder --dir",
     "pack": "rimraf dist && env-cmd npm run meta && env-cmd electron-builder",
@@ -66,6 +69,7 @@
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
     "babel-jest": "^24.9.0",
+    "chalk": "^4.0.0",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
     "electron": "^6.1.5",
@@ -166,9 +170,9 @@
     "appId": "com.boostio.boostnote",
     "artifactName": "boost-note-${os}.${ext}",
     "copyright": "Copyright © 2016-2017 BoostIO",
-    "extraResources": [
-      "compiled/**/*"
-    ],
+    "directories": {
+      "app": "electron"
+    },
     "asar": false,
     "mac": {
       "icon": "static/icon.icns"

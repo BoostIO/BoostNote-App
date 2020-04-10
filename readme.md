@@ -24,8 +24,7 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 - Desktop app(Windows, mac and Linux) (Dec 2019)
 - Cloud storage (Dec 2019)
 - Mobile app(Android and iOS) (Feb 2020)
-- File system based storage (WIP)
-- MDX (TBA)
+- File system based storage (June 2020)
 
 ## Authors & Maintainers
 
@@ -41,35 +40,47 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 - [Blog](https://medium.com/boostnote)
 - [Reddit](https://www.reddit.com/r/Boostnote/)
 
-## Build
+## Developmenet
+
+### Folder structure
+
+- `android` : Android app project. Please open with Android Studio.
+- `dist` : Bundled electron app stuff. All executable and installable of the electron app are generated in this folder. You can generate this by `npm run prepack`, `npm run pack` and `npm run release` scripts.
+- `compiled` : Compiled web app resources from `npm run build` script. The resources are for deploying the web app.
+- `electron` : Compiled electron resources from `npm run build:electron` script. You can run it by `npm start` script. The resources are for packaging the electron app.
+- `ios` : iOS app project. Please open with XCode.
+- `src` : Source code.
+
+### Build
 
 Don't forget to create a file named `.env` in the root of the project directory, or the build will fail.
 
-### Web app
+#### Web app
 
 ```sh
 # Install deps
 npm i
 
-# Compile script
-npm run build
-
-# Deploy to now.sh
-now
+# Run webpack and open browser
+npm run dev
 ```
 
-### Electron app
+#### Electron app
 
 ```sh
 # Install deps
 npm i
 
-# Compile script
-npm run build
+# Run webpack
+npm run dev:webpack
 
-# Package app
-npm run pack
+# Run electron(You have to open another terminal to run this)
+npm run dev:electron
 ```
+
+#### Mobile app
+
+TBA
 
 ## License
 
