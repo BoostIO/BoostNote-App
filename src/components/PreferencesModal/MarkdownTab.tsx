@@ -17,6 +17,7 @@ import { capitalize } from '../../lib/string'
 import { useTranslation } from 'react-i18next'
 import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
 import { borderRight, border } from '../../lib/styled/styleFunctions'
+import { FormCheckItem } from '../atoms/form'
 
 const EditorContainer = styled.div`
   ${border}
@@ -80,6 +81,15 @@ const MarkdownTab = () => {
     [setPreviewContent]
   )
 
+  const toggleFrontMatterExport: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'markdown.includeFrontMatter': event.target.checked,
+      })
+    },
+    [setPreferences]
+  )
+
   const { t } = useTranslation()
 
   return (
@@ -131,6 +141,19 @@ const MarkdownTab = () => {
             <CustomizedMarkdownPreviewer content={previewContent} />
           </div>
         </PreviewContainer>
+      </Section>
+      <Section>
+        <SectionHeader>Include front-matters in markdown export</SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-include-front-matters'
+            type='checkbox'
+            checked={preferences['export.markdown.includeFrontMatter']}
+            onChange={toggleFrontMatterExport}
+          >
+            Include front-matters in markdown export
+          </FormCheckItem>
+        </SectionControl>
       </Section>
     </div>
   )
