@@ -57,8 +57,8 @@ export interface DbStore {
     storageName: string,
     pathname: string,
     newName: string,
-    needUpdateSubFolders: boolean,
-    order: number
+    needUpdateSubFolders?: boolean,
+    order?: number
   ) => Promise<void>
   reorderFolder: (
     storageId: string,
@@ -467,7 +467,13 @@ export function createDbStoreCreator(
     )
 
     const renameFolder = useCallback(
-      async (storageId: string, pathname: string, newPathname: string, needUpdateSubFolders = true, order?: number) => {
+      async (
+        storageId: string,
+        pathname: string,
+        newPathname: string,
+        needUpdateSubFolders = true,
+        order?: number
+      ) => {
         const storage = storageMap[storageId]
         if (storage == null) {
           return
@@ -492,50 +498,48 @@ export function createDbStoreCreator(
             )
           : []
         const allFoldersToRename = [pathname, ...subFolders]
-        await Promise.all(
-          allFoldersToRename.map(async (folderPathname) => {
-            const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
-            const newfolderPathname = folderPathname.replace(regex, newPathname)
-            const folder = await storage.db.getFolder(folderPathname)
-            if (folder == null) {
-              throw createUnprocessableEntityError(
-                `this folder does not exist \`${folderPathname}\``
-              )
-            }
-            if ((await storage.db.getFolder(newfolderPathname)) != null) {
-              throw createUnprocessableEntityError(
-                `this folder already exists \`${newfolderPathname}\``
-              )
-            }
-            if (
-              needUpdateSubFolders &&
-              folderPathname.split('/').length !==
-              newfolderPathname.split('/').length
-            ) {
-              throw createUnprocessableEntityError(
-                `New name is invalid. \`${newfolderPathname}\``
-              )
-            }
-            const notes = await storage.db.findNotesByFolder(folderPathname)
-            const newFolder = await storage.db.upsertFolder(newfolderPathname, {
-              order: order,
-            })
-            const rewrittenNotes = await Promise.all(
-              notes.map((note) =>
-                storage.db.updateNote(note._id, {
-                  folderPathname: newfolderPathname,
-                })
-              )
+        for (const folderPathname of allFoldersToRename) {
+          const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
+          const newfolderPathname = folderPathname.replace(regex, newPathname)
+          const folder = await storage.db.getFolder(folderPathname)
+          if (folder == null) {
+            throw createUnprocessableEntityError(
+              `this folder does not exist \`${folderPathname}\``
             )
-
-            folderListToRefresh.push({
-              ...newFolder,
-              pathname: getFolderPathname(newFolder._id),
-              noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
-            })
-            notesListToRefresh.push(...rewrittenNotes)
+          }
+          if ((await storage.db.getFolder(newfolderPathname)) != null) {
+            throw createUnprocessableEntityError(
+              `this folder already exists \`${newfolderPathname}\``
+            )
+          }
+          if (
+            needUpdateSubFolders &&
+            folderPathname.split('/').length !==
+              newfolderPathname.split('/').length
+          ) {
+            throw createUnprocessableEntityError(
+              `New name is invalid. \`${newfolderPathname}\``
+            )
+          }
+          const notes = await storage.db.findNotesByFolder(folderPathname)
+          const newFolder = await storage.db.upsertFolder(newfolderPathname, {
+            order: order,
           })
-        )
+          const rewrittenNotes = await Promise.all(
+            notes.map((note) =>
+              storage.db.updateNote(note._id, {
+                folderPathname: newfolderPathname,
+              })
+            )
+          )
+
+          folderListToRefresh.push({
+            ...newFolder,
+            pathname: getFolderPathname(newFolder._id),
+            noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
+          })
+          notesListToRefresh.push(...rewrittenNotes)
+        }
 
         await storage.db.removeFolder(pathname, needUpdateSubFolders)
 

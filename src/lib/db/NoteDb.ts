@@ -427,13 +427,19 @@ export default class NoteDb {
       : [await this.getFolder(folderPathname)]
 
     await Promise.all(
-      foldersToDelete.map((folder) =>
-        this.trashAllNotesInFolder(getFolderPathname(folder._id))
-      )
+      foldersToDelete.map((folder) => {
+        if (folder != null) {
+          this.trashAllNotesInFolder(getFolderPathname(folder._id))
+        }
+      })
     )
 
     await Promise.all(
-      foldersToDelete.map((folder) => this.pouchDb.remove(folder))
+      foldersToDelete.map((folder) => {
+        if (folder != null) {
+          this.pouchDb.remove(folder)
+        }
+      })
     )
   }
 

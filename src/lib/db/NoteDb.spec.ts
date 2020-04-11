@@ -35,6 +35,7 @@ describe('NoteDb', () => {
         createdAt: now,
         updatedAt: now,
         data: {},
+        order: 1,
       })
 
       // When
@@ -47,6 +48,7 @@ describe('NoteDb', () => {
         createdAt: now,
         updatedAt: now,
         data: {},
+        order: 1,
       })
     })
 
@@ -77,6 +79,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: {},
+        order: expect.any(Number),
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -86,6 +89,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: {},
+        order: expect.any(Number),
       })
     })
 
@@ -103,6 +107,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: {},
+        order: expect.any(Number),
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/parent/test'))
@@ -112,6 +117,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: {},
+        order: expect.any(Number),
       })
 
       const parentDoc = await noteDb.pouchDb.get(getFolderId('/parent'))
@@ -121,6 +127,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: {},
+        order: expect.any(Number),
       })
     })
 
@@ -141,6 +148,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: { message: 'yolo' },
+        order: expect.any(Number),
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -150,13 +158,14 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: { message: 'yolo' },
+        order: expect.any(Number),
       })
     })
 
     it('does NOT update folder props if nothing to change', async () => {
       // Given
       const noteDb = await prepareNoteDb()
-      const { createdAt, updatedAt, _rev } = await noteDb.upsertFolder(
+      const { createdAt, updatedAt, _rev, order } = await noteDb.upsertFolder(
         '/test',
         { data: { message: 'yolo' } }
       )
@@ -171,6 +180,7 @@ describe('NoteDb', () => {
         createdAt,
         updatedAt,
         data: { message: 'yolo' },
+        order,
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -180,6 +190,7 @@ describe('NoteDb', () => {
         createdAt,
         updatedAt,
         data: { message: 'yolo' },
+        order,
       })
     })
 

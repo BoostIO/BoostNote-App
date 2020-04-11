@@ -37,7 +37,9 @@ export default ({ storage }: StorageEditProps) => {
   useEffect(() => {
     if (folderTreeDataState === prevFolderTreeState) {
       const newStorage = db.storageMap[storage.id]
-      setFolderTreeDataState(getFolderTreeData(values(newStorage.folderMap)))  
+      if (newStorage != undefined) {
+        setFolderTreeDataState(getFolderTreeData(values(newStorage.folderMap)))
+      }
     }
   })
 
@@ -86,7 +88,12 @@ export default ({ storage }: StorageEditProps) => {
       if (folder.pathname !== '/') {
         const paths = folder.pathname.split('/')
         paths.splice(0, 1)
-        result = setPathArrayRecursively(paths, result, folder.pathname, folder.order)
+        result = setPathArrayRecursively(
+          paths,
+          result,
+          folder.pathname,
+          String(folder.order)
+        )
       }
     })
     return transformArrayToMap(result)
@@ -94,7 +101,7 @@ export default ({ storage }: StorageEditProps) => {
 
   const setPathArrayRecursively = (
     input: string[],
-    tempResult: string[],
+    tempResult: object[],
     pathname?: string,
     order?: string
   ) => {
@@ -125,8 +132,8 @@ export default ({ storage }: StorageEditProps) => {
         return { data: input[key], key: key }
       })
       .sort((a, b) => {
-        const aOrder = (a.data.order === undefined) ? 0 : a.data.order!
-        const bOrder = (b.data.order === undefined) ? 0 : b.data.order!
+        const aOrder = a.data.order === undefined ? 0 : a.data.order!
+        const bOrder = b.data.order === undefined ? 0 : b.data.order!
         if (aOrder === bOrder) {
           return a.data.pathname.localeCompare(b.data.pathname)
         } else {
@@ -210,10 +217,17 @@ export default ({ storage }: StorageEditProps) => {
     })
     const pathnamesToReplace: Record<string, string>[] = []
     const swapTargetInfo: string[] = []
-    pathnames.sort((a, b) => a.new.length - b.new.length).forEach((pathname, idx) => {
+    pathnames
+      .sort((a, b) => a.new.length - b.new.length)
+      .forEach((pathname, idx) => {
         if (pathname.old !== pathname.new) {
           if (!_.isEmpty(swapTargetInfo[idx])) {
-            pathnamesToReplace.push({old: swapTargetInfo[idx], new: pathname.new, swapTargetPathname: '', order: pathname.order})
+            pathnamesToReplace.push({
+              old: swapTargetInfo[idx],
+              new: pathname.new,
+              swapTargetPathname: '',
+              order: pathname.order,
+            })
           } else {
             let swapTargetIdx = -1
             for (let i = idx + 1; i < pathnames.length; i++) {
@@ -222,15 +236,30 @@ export default ({ storage }: StorageEditProps) => {
               }
             }
             if (swapTargetIdx < 0) {
-              pathnamesToReplace.push({old: pathname.old, new: pathname.new, swapTargetPathname: '', order: pathname.order})
+              pathnamesToReplace.push({
+                old: pathname.old,
+                new: pathname.new,
+                swapTargetPathname: '',
+                order: pathname.order,
+              })
             } else {
               const swapTargetPathname = `/${generateId()}`
-              pathnamesToReplace.push({old: pathname.old, new: pathname.new, swapTargetPathname: swapTargetPathname, order: pathname.order})
+              pathnamesToReplace.push({
+                old: pathname.old,
+                new: pathname.new,
+                swapTargetPathname: swapTargetPathname,
+                order: pathname.order,
+              })
               swapTargetInfo[swapTargetIdx] = swapTargetPathname
             }
           }
         } else {
-          pathnamesToReplace.push({old: pathname.old, new: '', swapTargetPathname: '', order: pathname.order})
+          pathnamesToReplace.push({
+            old: pathname.old,
+            new: '',
+            swapTargetPathname: '',
+            order: pathname.order,
+          })
         }
       })
     for (const val of pathnamesToReplace) {
@@ -238,9 +267,21 @@ export default ({ storage }: StorageEditProps) => {
         await db.reorderFolder(storage.id, val.old, parseInt(val.order))
       } else {
         if (!_.isEmpty(val.swapTargetPathname)) {
-          await db.renameFolder(storage.id, val.new, val.swapTargetPathname, false, parseInt(val.order))
+          await db.renameFolder(
+            storage.id,
+            val.new,
+            val.swapTargetPathname,
+            false,
+            parseInt(val.order)
+          )
         }
-        await db.renameFolder(storage.id, val.old, val.new, false, parseInt(val.order))
+        await db.renameFolder(
+          storage.id,
+          val.old,
+          val.new,
+          false,
+          parseInt(val.order)
+        )
       }
     }
   }, [db, folderTreeDataState, organizeFolderTrees, storage.id])
