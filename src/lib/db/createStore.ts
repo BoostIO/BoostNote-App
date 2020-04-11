@@ -57,7 +57,13 @@ export interface DbStore {
     storageName: string,
     pathname: string,
     newName: string,
-    needUpdateSubFolders: boolean
+    needUpdateSubFolders: boolean,
+    order: number
+  ) => Promise<void>
+  reorderFolder: (
+    storageId: string,
+    pathname: string,
+    newOrder: number
   ) => Promise<void>
   removeFolder: (storageName: string, pathname: string) => Promise<void>
   createNote(
@@ -461,7 +467,7 @@ export function createDbStoreCreator(
     )
 
     const renameFolder = useCallback(
-      async (storageId: string, pathname: string, newPathname: string, needUpdateSubFolders: boolean = true) => {
+      async (storageId: string, pathname: string, newPathname: string, needUpdateSubFolders = true, order?: number) => {
         const storage = storageMap[storageId]
         if (storage == null) {
           return
@@ -511,7 +517,9 @@ export function createDbStoreCreator(
               )
             }
             const notes = await storage.db.findNotesByFolder(folderPathname)
-            const newFolder = await storage.db.upsertFolder(newfolderPathname)
+            const newFolder = await storage.db.upsertFolder(newfolderPathname, {
+              order: order,
+            })
             const rewrittenNotes = await Promise.all(
               notes.map((note) =>
                 storage.db.updateNote(note._id, {
@@ -551,6 +559,36 @@ export function createDbStoreCreator(
         queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
       },
       [storageMap, setStorageMap, queueSyncingStorage]
+    )
+
+    const reorderFolder = useCallback(
+      async (storageId: string, pathname: string, newOrder: number) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+        const updatedFolderDoc = await storage.db.upsertFolder(pathname, {
+          order: newOrder,
+        })
+        if (updatedFolderDoc == null) {
+          return
+        }
+        const notes = await storage.db.findNotesByFolder(pathname)
+        const folder: PopulatedFolderDoc = {
+          ...updatedFolderDoc,
+          pathname: pathname,
+          noteIdSet: new Set(notes.map((note) => note._id)),
+        }
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storage.id]!.folderMap[folder.pathname] = folder
+          })
+        )
+
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+      },
+      [queueSyncingStorage, setStorageMap, storageMap]
     )
 
     const removeFolder = useCallback(
@@ -1285,6 +1323,7 @@ export function createDbStoreCreator(
       cancelSyncingStorageQueue,
       createFolder,
       renameFolder,
+      reorderFolder,
       removeFolder,
       createNote,
       updateNote,

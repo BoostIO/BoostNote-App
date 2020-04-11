@@ -106,12 +106,29 @@ export default class NoteDb {
     if (folder != null && props == null) {
       return folder
     }
+    let order = 0
+    if (props != null && props.order != null) {
+      order = props.order
+    } else {
+      if (folder != null && folder.order != null) {
+        order = folder.order
+      } else {
+        const parentFolder = await this.getFolder(
+          getParentFolderPathname(pathname)
+        )
+        if (parentFolder != null && parentFolder.order != null) {
+          order = parentFolder.order
+        }
+      }
+    }
+
     const now = getNow()
     const folderDocProps = {
       ...(folder || {
         _id: getFolderId(pathname),
         createdAt: now,
         data: {},
+        order: order,
       }),
       ...props,
       updatedAt: now,
@@ -123,6 +140,7 @@ export default class NoteDb {
       createdAt: folderDocProps.createdAt,
       updatedAt: folderDocProps.updatedAt,
       data: folderDocProps.data,
+      order: folderDocProps.order,
       _rev: rev,
     }
   }
@@ -403,7 +421,7 @@ export default class NoteDb {
     }
   }
 
-  async removeFolder(folderPathname: string, needDeleteSubFolders: boolean = true): Promise<void> {
+  async removeFolder(folderPathname: string, needDeleteSubFolders = true): Promise<void> {
     const foldersToDelete = needDeleteSubFolders
       ? await this.getAllFolderUnderPathname(folderPathname)
       : [await this.getFolder(folderPathname)]

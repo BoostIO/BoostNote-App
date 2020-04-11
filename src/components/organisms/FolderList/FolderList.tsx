@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '../../../lib/styled'
 import SortableTree from 'react-sortable-tree'
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer'
 
-const FolderListContainer = styled.div``
+const FolderListContainer = styled.div`
+  height: 300px;
+`
 
 type FolderListProps = {
   folderTreeData: object[]
@@ -15,7 +17,7 @@ const FolderList = ({
   handleFolderTreeDataUpdated,
 }: FolderListProps) => {
   return (
-    <FolderListContainer style={{ height: 200 }}>
+    <FolderListContainer>
       <SortableTree
         treeData={folderTreeData}
         onChange={handleFolderTreeDataUpdated}
@@ -37,23 +39,6 @@ const FolderList = ({
                 }}
               />,
             ],
-          // buttons: [
-          //   <button
-          //     style={{
-          //       padding: 0,
-          //       borderRadius: '100%',
-          //       backgroundColor: 'gray',
-          //       color: 'white',
-          //       width: 16,
-          //       height: 16,
-          //       border: 0,
-          //       fontWeight: 100,
-          //     }}
-          //     onClick={() => console.log('aaa')}
-          //   >
-          //     i
-          //   </button>,
-          // ],
         })}
       />
     </FolderListContainer>
