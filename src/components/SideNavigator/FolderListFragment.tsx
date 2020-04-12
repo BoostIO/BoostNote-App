@@ -50,8 +50,8 @@ const FolderListFragment = ({
         }
       })
       .sort((a, b) => {
-        const aOrder = (a.order === undefined) ? 0 : a.order!
-        const bOrder = (b.order === undefined) ? 0 : b.order!
+        const aOrder = a.order === undefined ? 0 : a.order!
+        const bOrder = b.order === undefined ? 0 : b.order!
         if (aOrder === bOrder) {
           return a.pathname.localeCompare(b.pathname)
         } else {
