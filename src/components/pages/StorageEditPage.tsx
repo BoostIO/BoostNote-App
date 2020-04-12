@@ -26,6 +26,7 @@ import {
   FolderTree,
   getUpdateFolderTreeInfo,
 } from '../../lib/folderTree'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -148,6 +149,7 @@ export default ({ storage }: StorageEditProps) => {
       <hr />
       <FormHeading depth={2}>Folders</FormHeading>
       <FolderList
+        backend={HTML5Backend}
         folderTreeData={folderTreeDataState}
         handleFolderTreeDataUpdated={updateFolderTreeData}
       ></FolderList>

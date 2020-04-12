@@ -28,6 +28,7 @@ import {
 } from '../../../lib/folderTree'
 import { values } from '../../../lib/db/utils'
 import _ from 'lodash'
+import TouchBackend from 'react-dnd-touch-backend'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -153,6 +154,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         <hr />
         <FormHeading depth={2}>Folders</FormHeading>
         <FolderList
+          backend={TouchBackend}
           folderTreeData={folderTreeDataState}
           handleFolderTreeDataUpdated={updateFolderTreeData}
         ></FolderList>

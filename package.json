@@ -144,6 +144,7 @@
     "ramda": "^0.26.1",
     "raw-loader": "^4.0.0",
     "react": "^16.9.0",
+    "react-dnd-touch-backend": "^10.0.2",
     "react-dom": "^16.9.0",
     "react-i18next": "^11.0.1",
     "react-sortable-tree": "^2.7.1",
