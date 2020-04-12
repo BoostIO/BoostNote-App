@@ -106,18 +106,22 @@ export default class NoteDb {
     if (folder != null && props == null) {
       return folder
     }
-    let order = 0
+    let order = (await this.getAllFolders()).length
     if (props != null && props.order != null) {
       order = props.order
     } else {
       if (folder != null && folder.order != null) {
         order = folder.order
       } else {
-        const parentFolder = await this.getFolder(
-          getParentFolderPathname(pathname)
-        )
-        if (parentFolder != null && parentFolder.order != null) {
-          order = parentFolder.order
+        const parentFoldername = getParentFolderPathname(pathname)
+        if (parentFoldername !== '/') {
+          const parentFolder = await this.getFolder(parentFoldername)
+          if (parentFolder != null && parentFolder.order != null) {
+            const foldersUnderPathname = await this.getAllFolderUnderPathname(
+              pathname
+            )
+            order = parentFolder.order + foldersUnderPathname.length + 1
+          }
         }
       }
     }
@@ -427,17 +431,17 @@ export default class NoteDb {
       : [await this.getFolder(folderPathname)]
 
     await Promise.all(
-      foldersToDelete.map((folder) => {
+      foldersToDelete.map(async (folder) => {
         if (folder != null) {
-          this.trashAllNotesInFolder(getFolderPathname(folder._id))
+          await this.trashAllNotesInFolder(getFolderPathname(folder._id))
         }
       })
     )
 
     await Promise.all(
-      foldersToDelete.map((folder) => {
+      foldersToDelete.map(async (folder) => {
         if (folder != null) {
-          this.pouchDb.remove(folder)
+          await this.pouchDb.remove(folder)
         }
       })
     )
@@ -470,7 +474,7 @@ export default class NoteDb {
     await Promise.all(
       notes
         .filter((note) => !note.trashed)
-        .map((note) => this.trashNote(note._id))
+        .map(async (note) => await this.trashNote(note._id))
     )
   }
 

@@ -139,6 +139,7 @@ describe('NoteDb', () => {
       // When
       const result = await noteDb.upsertFolder('/test', {
         data: { message: 'yolo' },
+        order: 5
       })
 
       // Then
@@ -148,7 +149,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: { message: 'yolo' },
-        order: expect.any(Number),
+        order: 5,
       })
 
       const doc = await noteDb.pouchDb.get(getFolderId('/test'))
@@ -158,7 +159,7 @@ describe('NoteDb', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         data: { message: 'yolo' },
-        order: expect.any(Number),
+        order: 5,
       })
     })
 
@@ -167,7 +168,7 @@ describe('NoteDb', () => {
       const noteDb = await prepareNoteDb()
       const { createdAt, updatedAt, _rev, order } = await noteDb.upsertFolder(
         '/test',
-        { data: { message: 'yolo' } }
+        { data: { message: 'yolo' }, order: 5 }
       )
 
       // When

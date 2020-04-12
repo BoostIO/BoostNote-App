@@ -152,7 +152,7 @@ function organizeFolderTrees(
       )
     })
   }
-  return order
+  return ++order
 }
 
 export async function getUpdateFolderTreeInfo(
