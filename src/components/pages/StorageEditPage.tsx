@@ -46,15 +46,6 @@ export default ({ storage }: StorageEditProps) => {
     endRearrangement,
   } = useFolderRearrangement()
 
-  useEffect(() => {
-    if (folderTreeDataState === prevFolderTreeState) {
-      const newStorage = db.storageMap[storage.id]
-      if (newStorage != undefined) {
-        setFolderTreeDataState(getFolderTreeData(values(newStorage.folderMap)))
-      }
-    }
-  })
-
   function usePrevious(value: any) {
     const ref = useRef()
     useEffect(() => {
@@ -95,6 +86,15 @@ export default ({ storage }: StorageEditProps) => {
     getFolderTreeData(values(storage.folderMap))
   )
   const prevFolderTreeState = usePrevious(folderTreeDataState)
+
+  useEffect(() => {
+    if (folderTreeDataState === prevFolderTreeState) {
+      const newStorage = db.storageMap[storage.id]
+      if (newStorage != undefined) {
+        setFolderTreeDataState(getFolderTreeData(values(newStorage.folderMap)))
+      }
+    }
+  }, [folderTreeDataState, prevFolderTreeState, db.storageMap, storage.id])
 
   const updateFolderTreeData = (treeData: FolderTree[]) => {
     if (!isDuplicateFolderPathname(treeData)) {
