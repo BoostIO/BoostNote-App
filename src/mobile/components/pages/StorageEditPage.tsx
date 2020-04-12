@@ -29,6 +29,7 @@ import {
 import { values } from '../../../lib/db/utils'
 import _ from 'lodash'
 import TouchBackend from 'react-dnd-touch-backend'
+import { useFolderRearrangement } from '../../../lib/folderRearrangement'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -41,6 +42,11 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
+  const {
+    isRearranging,
+    startRearrangement,
+    endRearrangement,
+  } = useFolderRearrangement()
 
   useEffect(() => {
     if (folderTreeDataState === prevFolderTreeState) {
@@ -99,6 +105,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   }
 
   const rearrangeFolders = useCallback(async () => {
+    startRearrangement()
     const updateFolderTreeInfo = await getUpdateFolderTreeInfo(
       folderTreeDataState
     )
@@ -128,7 +135,14 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         )
       }
     }
-  }, [db, folderTreeDataState, storage.id])
+    endRearrangement()
+  }, [
+    db,
+    endRearrangement,
+    folderTreeDataState,
+    startRearrangement,
+    storage.id,
+  ])
 
   return (
     <TopBarLayout
@@ -157,6 +171,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           backend={TouchBackend}
           folderTreeData={folderTreeDataState}
           handleFolderTreeDataUpdated={updateFolderTreeData}
+          isRearranging={isRearranging}
         ></FolderList>
         <FormGroup>
           <FormPrimaryButton onClick={rearrangeFolders}>

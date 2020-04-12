@@ -27,6 +27,7 @@ import {
   getUpdateFolderTreeInfo,
 } from '../../lib/folderTree'
 import HTML5Backend from 'react-dnd-html5-backend'
+import { useFolderRearrangement } from '../../lib/folderRearrangement'
 
 interface StorageEditProps {
   storage: NoteStorage
@@ -39,6 +40,11 @@ export default ({ storage }: StorageEditProps) => {
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
+  const {
+    isRearranging,
+    startRearrangement,
+    endRearrangement,
+  } = useFolderRearrangement()
 
   useEffect(() => {
     if (folderTreeDataState === prevFolderTreeState) {
@@ -97,6 +103,7 @@ export default ({ storage }: StorageEditProps) => {
   }
 
   const rearrangeFolders = useCallback(async () => {
+    startRearrangement()
     const updateFolderTreeInfo = await getUpdateFolderTreeInfo(
       folderTreeDataState
     )
@@ -126,7 +133,14 @@ export default ({ storage }: StorageEditProps) => {
         )
       }
     }
-  }, [db, folderTreeDataState, storage.id])
+    endRearrangement()
+  }, [
+    db,
+    endRearrangement,
+    folderTreeDataState,
+    startRearrangement,
+    storage.id,
+  ])
 
   return (
     <PageContainer>
@@ -152,6 +166,7 @@ export default ({ storage }: StorageEditProps) => {
         backend={HTML5Backend}
         folderTreeData={folderTreeDataState}
         handleFolderTreeDataUpdated={updateFolderTreeData}
+        isRearranging={isRearranging}
       ></FolderList>
       <FormGroup>
         <FormPrimaryButton onClick={rearrangeFolders}>

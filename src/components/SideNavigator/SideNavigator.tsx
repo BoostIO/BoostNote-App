@@ -32,6 +32,8 @@ import {
   IconStarActive,
 } from '../icons'
 import { getStorageItemId } from '../../lib/nav'
+import { useFolderRearrangement } from '../../lib/folderRearrangement'
+import Spinner from '../atoms/Spinner'
 
 const Description = styled.nav`
   margin-left: 15px;
@@ -120,6 +122,13 @@ const Spacer = styled.div`
   flex: 1;
 `
 
+const Loader = styled.div`
+  margin: 5px;
+  p {
+    text-align: center;
+  }
+`
+
 export default () => {
   const {
     createStorage,
@@ -135,6 +144,7 @@ export default () => {
   const { push } = useRouter()
   const [[user]] = useUsers()
   const { pushMessage } = useToast()
+  const { isRearranging } = useFolderRearrangement()
 
   const storageEntries = useMemo(() => {
     return entries(storageMap)
@@ -379,11 +389,19 @@ export default () => {
                     active={allNotesPageIsActive}
                     onClick={() => push(allNotesPagePathname)}
                   />
-                  <FolderListFragment
-                    storage={storage}
-                    showPromptToCreateFolder={showPromptToCreateFolder}
-                    showPromptToRenameFolder={showPromptToRenameFolder}
-                  />
+                  {isRearranging ? (
+                    <Loader>
+                      <p>
+                        <Spinner /> Loading...
+                      </p>
+                    </Loader>
+                  ) : (
+                    <FolderListFragment
+                      storage={storage}
+                      showPromptToCreateFolder={showPromptToCreateFolder}
+                      showPromptToRenameFolder={showPromptToRenameFolder}
+                    />
+                  )}
                   <TagListFragment storage={storage} />
                   <SideNavigatorItem
                     depth={1}

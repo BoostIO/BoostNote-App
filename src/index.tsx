@@ -11,6 +11,7 @@ import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
+import { FolderRearrangementProvider } from './lib/folderRearrangement'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -21,7 +22,8 @@ const CombinedProvider = combineProviders(
   DbProvider,
   PreferencesProvider,
   RouterProvider,
-  ToastProvider
+  ToastProvider,
+  FolderRearrangementProvider
 )
 
 function render(Component: typeof App) {
