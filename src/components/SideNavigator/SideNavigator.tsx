@@ -122,11 +122,9 @@ const Spacer = styled.div`
   flex: 1;
 `
 
-const Loader = styled.div`
+const Loader = styled.p`
   margin: 5px;
-  p {
-    text-align: center;
-  }
+  text-align: center;
 `
 
 export default () => {
@@ -391,9 +389,7 @@ export default () => {
                   />
                   {isRearranging ? (
                     <Loader>
-                      <p>
-                        <Spinner /> Loading...
-                      </p>
+                      <Spinner /> Loading...
                     </Loader>
                   ) : (
                     <FolderListFragment

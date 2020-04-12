@@ -113,12 +113,12 @@ export default class NoteDb {
       if (folder != null && folder.order != null) {
         order = folder.order
       } else {
-        const parentFoldername = getParentFolderPathname(pathname)
-        if (parentFoldername !== '/') {
-          const parentFolder = await this.getFolder(parentFoldername)
+        const parentFolderPathname = getParentFolderPathname(pathname)
+        if (parentFolderPathname !== '/') {
+          const parentFolder = await this.getFolder(parentFolderPathname)
           if (parentFolder != null && parentFolder.order != null) {
             const foldersUnderPathname = await this.getAllFolderUnderPathname(
-              pathname
+              parentFolderPathname
             )
             order = parentFolder.order + foldersUnderPathname.length + 1
           }
