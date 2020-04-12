@@ -120,7 +120,7 @@ export default class NoteDb {
             const foldersUnderPathname = await this.getAllFolderUnderPathname(
               parentFolderPathname
             )
-            order = parentFolder.order + foldersUnderPathname.length + 1
+            order = parentFolder.order + foldersUnderPathname.length
           }
         }
       }
