@@ -8,15 +8,12 @@ import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
 module.exports = (env, argv) => {
-  const config = {
-    entry: [
-      './src/index.tsx'
-      // the entry point of our app
-    ],
+  const config: webpack.Configuration = {
+    entry: ['./src/index.tsx'],
 
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'compiled')
+      path: path.resolve(__dirname, 'compiled'),
     },
 
     devtool: 'inline-source-map',
@@ -25,29 +22,29 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader']
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
           loader: 'url-loader',
           options: {
-            limit: 8192
-          }
+            limit: 8192,
+          },
         },
         {
           test: /\.tsx?$/,
           use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
-          exclude: /node_modules/
+          exclude: /node_modules/,
         },
         {
           test: /\.md$/,
           use: [
             {
-              loader: 'raw-loader'
-            }
-          ]
-        }
-      ]
+              loader: 'raw-loader',
+            },
+          ],
+        },
+      ],
     },
 
     plugins: [
@@ -57,11 +54,11 @@ module.exports = (env, argv) => {
       new webpack.NoEmitOnErrorsPlugin(),
       // do not emit compiled assets that include errors
       new HtmlWebpackPlugin({
-        template: 'index.html'
+        template: 'index.html',
       }),
       new ErrorOverlayPlugin(),
       new webpack.DefinePlugin({
-        'process.env.VERSION': JSON.stringify(packageJson.version)
+        'process.env.VERSION': JSON.stringify(packageJson.version),
       }),
       new webpack.EnvironmentPlugin([
         'NODE_ENV',
@@ -69,20 +66,20 @@ module.exports = (env, argv) => {
         'AMPLIFY_AUTH_REGION',
         'AMPLIFY_PINPOINT_APPID',
         'AMPLIFY_PINPOINT_REGION',
-        'BOOST_NOTE_BASE_URL'
+        'BOOST_NOTE_BASE_URL',
       ]),
       new CopyPlugin([
         {
           from: path.join(__dirname, 'node_modules/codemirror/theme'),
-          to: 'app/codemirror/theme'
-        }
+          to: 'app/codemirror/theme',
+        },
       ]),
       new CopyPlugin([
         {
           from: path.join(__dirname, 'static'),
-          to: 'app/static'
-        }
-      ])
+          to: 'app/static',
+        },
+      ]),
     ],
 
     devServer: {
@@ -90,14 +87,14 @@ module.exports = (env, argv) => {
       port: 3000,
 
       historyApiFallback: {
-        index: '/app'
+        index: '/app',
       },
       // respond to 404s with index.html
 
       hot: true,
       // enable HMR on the server
 
-      before: function(app, server) {
+      before: function (app, server) {
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -111,43 +108,45 @@ module.exports = (env, argv) => {
           express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
         )
         app.use('/app/static', express.static(path.join(__dirname, 'static')))
-      }
+      },
     },
 
     resolve: {
-      extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js'],
     },
     node: {
-      fs: 'empty'
-    }
+      fs: 'empty',
+    },
   }
 
   if (argv.mode === 'development') {
     config.plugins.unshift(new webpack.HotModuleReplacementPlugin())
 
-    config.entry.unshift(
+    config.entry = [
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:3000',
-      'webpack/hot/only-dev-server'
-    )
-    ;(config.output as any).publicPath = 'http://localhost:3000/app'
+      'webpack/hot/only-dev-server',
+      ...(config.entry as string[]),
+    ]
+    config.output.publicPath = 'http://localhost:3000/app'
   }
 
   if (argv.mode === 'production') {
-    ;(config as any).optimization = {
+    config.optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/
-          }
-        })
-      ]
+            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/,
+          },
+        }),
+      ],
     }
-  }
-
-  if (process.env.TARGET !== 'electron' && argv.mode !== 'development') {
-    ;(config.output as any).publicPath = '/app/'
+    if (process.env.TARGET === 'electron') {
+      config.output.path = path.resolve(__dirname, 'electron/compiled')
+    } else {
+      config.output.publicPath = '/app/'
+    }
   }
 
   return config

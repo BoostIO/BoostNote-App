@@ -273,10 +273,18 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  updateContent = (newValue: string) => {
+  updateContent = (
+    newValueOrUpdater: string | ((prevValue: string) => string)
+  ) => {
+    const updater =
+      typeof newValueOrUpdater === 'string'
+        ? () => newValueOrUpdater
+        : newValueOrUpdater
     this.setState(
-      {
-        content: newValue,
+      (prevState) => {
+        return {
+          content: updater(prevState.content),
+        }
       },
       () => {
         this.queueToSave()
@@ -389,7 +397,11 @@ export default class NoteDetail extends React.Component<
       const { storageId } = note
       const { title, content, tags } = this.state
 
-      this.saveNote(storageId, note._id, { title, content, tags })
+      this.saveNote(storageId, note._id, {
+        title,
+        content,
+        tags,
+      })
     }, 3000)
   }
 
@@ -473,6 +485,7 @@ export default class NoteDetail extends React.Component<
       <CustomizedMarkdownPreviewer
         content={this.state.content}
         attachmentMap={attachmentMap}
+        updateContent={this.updateContent}
       />
     )
 

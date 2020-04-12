@@ -20,6 +20,7 @@ import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
+import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -163,6 +164,9 @@ interface MarkdownPreviewerProps {
   style?: string
   theme?: string
   attachmentMap?: ObjectMap<Attachment>
+  updateContent?: (
+    newContentOrUpdater: string | ((newValue: string) => string)
+  ) => void
 }
 
 const MarkdownPreviewer = ({
@@ -171,6 +175,7 @@ const MarkdownPreviewer = ({
   style,
   theme,
   attachmentMap = {},
+  updateContent,
 }: MarkdownPreviewerProps) => {
   const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
@@ -178,16 +183,16 @@ const MarkdownPreviewer = ({
   const previousThemeRef = useRef<string | undefined>('')
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
-  const markdownProcessor = useMemo(() => {
-    const options = { codeBlockTheme }
+  const checkboxIndexRef = useRef<number>(0)
 
+  const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
       .use(remarkRehype, { allowDangerousHTML: false })
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
-        theme: options.codeBlockTheme,
+        theme: codeBlockTheme,
       })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
@@ -219,9 +224,24 @@ const MarkdownPreviewer = ({
               </a>
             )
           },
+          input: (props: React.HTMLProps<HTMLInputElement>) => {
+            const { type, checked } = props
+
+            if (type !== 'checkbox') {
+              return <input {...props} />
+            }
+
+            return (
+              <MarkdownCheckbox
+                index={checkboxIndexRef.current++}
+                checked={checked}
+                updateContent={updateContent}
+              />
+            )
+          },
         },
       })
-  }, [codeBlockTheme, attachmentMap])
+  }, [codeBlockTheme, attachmentMap, updateContent])
 
   const renderContent = useCallback(
     async (content: string) => {
@@ -230,6 +250,7 @@ const MarkdownPreviewer = ({
       setRendering(true)
 
       console.time('render')
+      checkboxIndexRef.current = 0
       const result = await markdownProcessor.process(content)
       console.timeEnd('render')
 
