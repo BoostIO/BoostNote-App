@@ -24,7 +24,7 @@ const analyticsConfig = {
 Auth.configure(amplifyConfig)
 Analytics.configure(analyticsConfig)
 
-function reportViaPinpoint(name: string, attributes: any) {
+function reportViaPinpoint(name: string, attributes?: any) {
   if (process.env.NODE_ENV === 'production') {
     Analytics.record({ name, attributes })
   }
@@ -36,7 +36,7 @@ export function useAnalytics() {
   const user = useFirstUser()
 
   useEffectOnce(() => {
-    Analytics.record('init')
+    reportViaPinpoint('init')
   })
 
   const userId = useMemo(() => {
