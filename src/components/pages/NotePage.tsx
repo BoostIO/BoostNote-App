@@ -4,7 +4,6 @@ import styled from '../../lib/styled'
 import NoteDetail from '../organisms/NoteDetail'
 import {
   useRouteParams,
-  StorageAllNotes,
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
@@ -14,7 +13,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../lib/db/types'
+import { PopulatedNoteDoc, NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/string'
@@ -49,7 +48,6 @@ export default () => {
     addAttachments,
   } = useDb()
   const routeParams = useRouteParams() as
-    | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
@@ -72,21 +70,6 @@ export default () => {
 
   const notes = useMemo((): PopulatedNoteDoc[] => {
     if (currentStorage == null) {
-      if (routeParams.name === 'storages.allNotes') {
-        const allNotesMap = (Object.values(storageMap) as NoteStorage[]).reduce(
-          (map, storage) => {
-            ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
-              (note) => (map[note._id] = note)
-            )
-            return map
-          },
-          {} as ObjectMap<PopulatedNoteDoc>
-        )
-
-        return (Object.values(allNotesMap) as PopulatedNoteDoc[]).filter(
-          (note) => !note.trashed
-        )
-      }
       if (routeParams.name === 'storages.bookmarks') {
         return (Object.values(storageMap) as NoteStorage[])
           .map((storage) => {
@@ -99,10 +82,6 @@ export default () => {
       return []
     }
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter((note) => !note.trashed)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
@@ -216,9 +195,7 @@ export default () => {
     toggleViewMode,
   ])
 
-  const showCreateNoteInList =
-    routeParams.name === 'storages.notes' ||
-    routeParams.name === 'storages.allNotes'
+  const showCreateNoteInList = routeParams.name === 'storages.notes'
 
   const breadCrumbs = useMemo(() => {
     if (currentNote == null || currentNote.folderPathname === '/')

@@ -185,15 +185,6 @@ export default () => {
           <IconAdjustVertical size='0.8em' />
         </button>
       </div>
-      {/*
-      <SideNavigatorItem
-        icon={<IconBook />}
-        depth={0}
-        className='allnotes-sidenav'
-        label='All Notes'
-        active={currentPathname === `/app/notes`}
-        onClick={() => push(`/app/notes`)}
-      /> */}
 
       <SideNavigatorItem
         icon={<IconStarActive />}
