@@ -69,8 +69,8 @@ export default () => {
   }, [currentPathnameWithoutNoteId])
 
   const notes = useMemo((): PopulatedNoteDoc[] => {
-    if (currentStorage == null) {
-      if (routeParams.name === 'storages.bookmarks') {
+    switch (routeParams.name) {
+      case 'storages.bookmarks':
         return (Object.values(storageMap) as NoteStorage[])
           .map((storage) => {
             return (Object.values(
@@ -78,11 +78,8 @@ export default () => {
             ) as PopulatedNoteDoc[]).filter((note) => note.bookmarked)
           })
           .flat()
-      }
-      return []
-    }
-    switch (routeParams.name) {
       case 'storages.notes':
+        if (currentStorage == null) return []
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
@@ -94,6 +91,7 @@ export default () => {
             !note.trashed
         )
       case 'storages.tags.show':
+        if (currentStorage == null) return []
         const { tagName } = routeParams
         const tag = currentStorage.tagMap[tagName]
         if (tag == null) return []
@@ -101,11 +99,13 @@ export default () => {
           .map((noteId) => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
           .filter((note) => !note.trashed)
       case 'storages.trashCan':
+        if (currentStorage == null) return []
         return (Object.values(
           currentStorage.noteMap
         ) as PopulatedNoteDoc[]).filter((note) => note.trashed)
+      default:
+        return []
     }
-    return []
   }, [storageMap, currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
