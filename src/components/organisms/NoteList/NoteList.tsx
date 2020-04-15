@@ -8,6 +8,7 @@ import {
   iconColor,
   noteListIconColor,
   selectTabStyle,
+  disabledUiTextColor,
 } from '../../../lib/styled/styleFunctions'
 import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
 import { useTranslation } from 'react-i18next'
@@ -85,17 +86,16 @@ export const StyledNoteListContainer = styled.div`
     select {
       -webkit-appearance: none;
       -moz-appearance: none;
-      appearance: none;
+      border: none;
+      background: transparent;
     }
+    ${borderBottom};
+    ${noteListIconColor};
   }
-
-  .newNoteButton {
-    width: 35px;
-    height: 30px;
-    font-size: 24px;
-    background: transparent;
-    border: none;
-    ${noteListIconColor}
+  .empty {
+    user-select: none;
+    padding: 10px;
+    ${disabledUiTextColor};
   }
 `
 
