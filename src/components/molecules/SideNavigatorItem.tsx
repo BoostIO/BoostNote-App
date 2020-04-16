@@ -7,7 +7,8 @@ import {
   activeBackgroundColor,
   iconColor,
 } from '../../lib/styled/styleFunctions'
-import { IconArrowSingleRight, IconArrowSingleDown } from '../icons'
+import Icon from '../atoms/Icon'
+import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 const Container = styled.div`
   position: relative;
@@ -66,13 +67,14 @@ const FoldButton = styled.button`
   position: absolute;
   width: 26px;
   height: 26px;
-  padding-left: 10px;
+  padding-left: 0.5em;
   border: none;
   background-color: transparent;
   margin-right: 3px;
   border-radius: 2px;
   flex: 0 0 26px;
   top: 5px;
+  font-size: 1em;
   ${sideBarSecondaryTextColor}
   &:focus {
     box-shadow: none;
@@ -172,9 +174,9 @@ const SideNaviagtorItem = ({
             style={{ left: `${10 * depth}px` }}
           >
             {folded ? (
-              <IconArrowSingleRight color='currentColor' />
+              <Icon path={mdiChevronRight} />
             ) : (
-              <IconArrowSingleDown color='currentColor' />
+              <Icon path={mdiChevronDown} />
             )}
           </FoldButton>
         )}

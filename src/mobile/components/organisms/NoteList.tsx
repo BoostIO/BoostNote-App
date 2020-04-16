@@ -3,7 +3,7 @@ import NoteItem from './NoteItem'
 import { PopulatedNoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
 import { useTranslation } from 'react-i18next'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiPencil } from '@mdi/js'
 
 const NoteListContainer = styled.div`

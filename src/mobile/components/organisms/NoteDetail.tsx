@@ -25,7 +25,7 @@ import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../../lib/events'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 
 export const NoteDetailContainer = styled.div`
