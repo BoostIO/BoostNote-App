@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
-import SideNavigator from './SideNavigator'
+import SideNavigator from './organisms/SideNavigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
