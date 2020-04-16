@@ -34,7 +34,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
       return (
         <SideNavigatorItem
           key={`storage:${storageId}/tags:${tagName}`}
-          depth={2}
+          depth={1}
           icon={tagIsActive ? <IconTagFill size='1.4em' /> : <IconTag />}
           label={tagName}
           onClick={() => {
@@ -82,7 +82,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   return (
     <>
       <SideNavigatorItem
-        depth={1}
+        depth={0}
         icon={<IconTags size='1.5em' />}
         label={t('tag.tag')}
         folded={tagList.length > 0 ? tagListIsFolded : undefined}

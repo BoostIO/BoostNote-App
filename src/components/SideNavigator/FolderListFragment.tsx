@@ -178,7 +178,7 @@ const FolderListFragment = ({
         const nameElements = folderPathname.split('/').slice(1)
         const folderName = nameElements[nameElements.length - 1]
         const itemId = getFolderItemId(storageId, folderPathname)
-        const depth = nameElements.length
+        const depth = nameElements.length - 1
         const folded = folderSetWithSubFolders.has(folderPathname)
           ? !sideNavOpenedItemSet.has(itemId)
           : undefined

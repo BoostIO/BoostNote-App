@@ -204,7 +204,7 @@ const StorageSideNavigatorItem = ({
       {!storageIsFolded && (
         <>
           <SideNavigatorItem
-            depth={1}
+            depth={0}
             label='All Notes'
             icon={<IconBook size='1em' />}
             active={allNotesPageIsActive}
@@ -217,7 +217,7 @@ const StorageSideNavigatorItem = ({
           />
           <TagListFragment storage={storage} />
           <SideNavigatorItem
-            depth={1}
+            depth={0}
             label={t('general.attachments')}
             icon={<IconImage size='1.5em' />}
             active={attachmentsPageIsActive}
@@ -227,7 +227,7 @@ const StorageSideNavigatorItem = ({
             }}
           />
           <SideNavigatorItem
-            depth={1}
+            depth={0}
             label={t('general.trash')}
             icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
             active={trashcanPageIsActive}
