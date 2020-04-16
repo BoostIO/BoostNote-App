@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, ChangeEventHandler } from 'react'
-import NoteItem from './NoteItem'
-import { PopulatedNoteDoc } from '../../../lib/db/types'
-import styled from '../../../lib/styled'
+import NoteItem from '../molecules/NoteItem'
+import { PopulatedNoteDoc } from '../../lib/db/types'
+import styled from '../../lib/styled'
 import {
   borderBottom,
   inputStyle,
@@ -9,15 +9,15 @@ import {
   noteListIconColor,
   selectTabStyle,
   disabledUiTextColor,
-} from '../../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe, IconArrowSingleDown } from '../../icons'
+} from '../../lib/styled/styleFunctions'
+import { IconEdit, IconLoupe, IconArrowSingleDown } from '../icons'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey,
-} from '../../../lib/keyboard'
-import { NoteListSortOptions } from '../../pages/NotePage'
-import { osName } from '../../../lib/platform'
+} from '../../lib/keyboard'
+import { NoteListSortOptions } from '../pages/NotePage'
+import { osName } from '../../lib/platform'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
