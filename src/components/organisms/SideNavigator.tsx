@@ -15,8 +15,9 @@ import {
 import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useTranslation } from 'react-i18next'
-import { IconAddRound, IconAdjustVertical, IconStarActive } from '../icons'
+import { IconAddRound, IconAdjustVertical } from '../icons'
 import StorageSideNavigatorItem from '../molecules/StorageSideNavigatorItem'
+import { mdiStarOutline } from '@mdi/js'
 
 const SideNavigatorLabel = styled.nav`
   font-size: 14px;
@@ -156,9 +157,8 @@ export default () => {
       </div>
 
       <SideNavigatorItem
-        icon={<IconStarActive />}
+        iconPath={mdiStarOutline}
         depth={0}
-        className='bookmark-sidenav'
         label='Bookmarks'
         active={currentPathname === `/app/bookmarks`}
         onClick={() => push(`/app/bookmarks`)}

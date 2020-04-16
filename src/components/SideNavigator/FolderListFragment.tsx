@@ -9,8 +9,9 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound, IconFile, IconFileOpen } from '../icons'
+import { IconAddRound } from '../icons'
 import { useTranslation } from 'react-i18next'
+import { mdiFolderOutline, mdiFolderOpenOutline } from '@mdi/js'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -192,7 +193,7 @@ const FolderListFragment = ({
             folded={folded}
             depth={depth}
             active={folderIsActive}
-            icon={folderIsActive ? <IconFileOpen size='1.3em' /> : <IconFile />}
+            iconPath={folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
             onDoubleClick={() => showPromptToRenameFolder(folderPathname)}

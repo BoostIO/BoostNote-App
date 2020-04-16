@@ -7,20 +7,14 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import ControlButton from '../SideNavigator/ControlButton'
-import {
-  IconAddRound,
-  IconArrowAgain,
-  IconSetting,
-  IconBook,
-  IconImage,
-  IconTrash,
-} from '../icons'
+import { IconAddRound, IconArrowAgain, IconSetting } from '../icons'
 import { useFirstUser } from '../../lib/preferences'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import FolderListFragment from '../SideNavigator/FolderListFragment'
 import { NoteStorage } from '../../lib/db/types'
 import TagListFragment from '../SideNavigator/TagListFragment'
+import { mdiTrashCanOutline, mdiBookOpenOutline, mdiPaperclip } from '@mdi/js'
 
 interface StorageSideNavigatorItemProps {
   storage: NoteStorage
@@ -206,7 +200,7 @@ const StorageSideNavigatorItem = ({
           <SideNavigatorItem
             depth={0}
             label='All Notes'
-            icon={<IconBook size='1em' />}
+            iconPath={mdiBookOpenOutline}
             active={allNotesPageIsActive}
             onClick={() => push(allNotesPagePathname)}
           />
@@ -219,7 +213,7 @@ const StorageSideNavigatorItem = ({
           <SideNavigatorItem
             depth={0}
             label={t('general.attachments')}
-            icon={<IconImage size='1.5em' />}
+            iconPath={mdiPaperclip}
             active={attachmentsPageIsActive}
             onClick={() => push(attachmentsPagePathname)}
             onContextMenu={(event) => {
@@ -229,7 +223,7 @@ const StorageSideNavigatorItem = ({
           <SideNavigatorItem
             depth={0}
             label={t('general.trash')}
-            icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
+            iconPath={mdiTrashCanOutline}
             active={trashcanPageIsActive}
             onClick={() => push(trashcanPagePathname)}
             onContextMenu={(event) => {
