@@ -20,11 +20,6 @@ const Container = styled.div`
   .sideNavWrapper {
     min-width: 0;
     flex: 1 1 auto;
-
-    button > span {
-      width: 30px;
-      ${iconColor}
-    }
   }
 
   transition: 200ms background-color;
@@ -33,10 +28,6 @@ const Container = styled.div`
   &:active,
   &.active {
     ${activeBackgroundColor}
-
-    button > span {
-      ${sideBarTextColor}
-    }
   }
   &:hover {
     cursor: pointer;
@@ -46,20 +37,6 @@ const Container = styled.div`
   }
   &:hover .control {
     opacity: 1;
-  }
-
-  &.allnotes-sidenav {
-    padding-left: 4px !important;
-    button {
-      padding-left: 6px !important;
-    }
-  }
-  &.bookmark-sidenav {
-    padding-left: 4px !important;
-    margin-bottom: 25px;
-    button {
-      padding-left: 6px !important;
-    }
   }
 `
 
