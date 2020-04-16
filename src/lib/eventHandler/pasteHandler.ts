@@ -14,31 +14,21 @@ const handlePasteText = (
 const handlePasteUrl = async (doc: CodeMirror.Doc, change: CodeMirror.EditorChange, pastedText: string) => {
   const taggedUrl = `<${pastedText}>`
   const urlToFetch = pastedText
-  const titleMark = ''
 
   doc.replaceRange(taggedUrl, change.from, {
     line: change.from.line,
     ch: change.from.ch + pastedText.length,
   })
 
-  const replaceTaggedUrl = (replacement: string) => {
-    const value = doc.getValue()
-    const cursor = doc.getCursor()
-    const newValue = value.replace(taggedUrl, titleMark + replacement)
-    const newCursor = Object.assign({}, cursor, {
-      ch: cursor.ch + newValue.length - (value.length - titleMark.length),
-    })
-
-    doc.setValue(newValue)
-    doc.setCursor(newCursor)
-  }
-
   const response = await fetch(urlToFetch, { method: 'get' })
   let replacement = pastedText
   if (!isImageResponse(response)) {
     replacement = await mapNormalResponse(response, urlToFetch)
   }
-  replaceTaggedUrl(replacement)
+  doc.replaceRange(replacement, change.from, {
+    line: change.from.line,
+    ch: change.from.ch + pastedText.length + 2,
+  })
 }
 
 const mapNormalResponse = async (response: Response, pastedTxt: string) => {

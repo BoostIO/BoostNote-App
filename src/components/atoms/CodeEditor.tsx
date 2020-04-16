@@ -124,7 +124,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     editor: CodeMirror.Editor,
     change: CodeMirror.EditorChangeLinkedList
   ) => {
-    if (this.props.onChange != null) {
+    if (change.origin !== 'setValue' && this.props.onChange != null) {
       this.props.onChange(editor.getValue(), change)
     }
   }
