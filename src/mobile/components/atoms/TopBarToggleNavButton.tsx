@@ -1,6 +1,6 @@
 import React from 'react'
 import TopBarButton from './TopBarButton'
-import Icon from './Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiMenu } from '@mdi/js'
 import { useGeneralStatus } from '../../lib/generalStatus'
 

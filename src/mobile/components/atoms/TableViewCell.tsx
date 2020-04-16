@@ -5,7 +5,7 @@ import {
   uiTextColor,
   sideBarBackgroundColor,
 } from '../../../lib/styled/styleFunctions'
-import Icon from './Icon'
+import Icon from '../../../components/atoms/Icon'
 
 const TableViewCellContainerButton = styled.button`
   height: 44px;

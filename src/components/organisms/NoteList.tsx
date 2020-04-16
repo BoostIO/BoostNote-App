@@ -10,7 +10,7 @@ import {
   selectTabStyle,
   disabledUiTextColor,
 } from '../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe, IconArrowSingleDown } from '../icons'
+import { IconEdit, IconLoupe } from '../icons'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
@@ -18,6 +18,8 @@ import {
 } from '../../lib/keyboard'
 import { NoteListSortOptions } from '../pages/NotePage'
 import { osName } from '../../lib/platform'
+import Icon from '../atoms/Icon'
+import { mdiChevronDown } from '@mdi/js'
 
 export const StyledNoteListContainer = styled.div`
   display: flex;
@@ -207,7 +209,7 @@ const NoteList = ({
         )}
       </div>
       <div className='filterTab'>
-        <IconArrowSingleDown className='filterIcon' size='0.8em' />
+        <Icon path={mdiChevronDown} />
         <select
           className='input'
           onChange={(e) => setSort(e.target.value as NoteListSortOptions)}

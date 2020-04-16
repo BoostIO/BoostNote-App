@@ -8,8 +8,8 @@ import {
 } from './styled'
 import { usePreferences } from '../../lib/preferences'
 import DownloadOurAppModal from './contents/DownloadOurAppModal'
-import { IconArrowSingleRight } from '../icons'
-
+import Icon from '../atoms/Icon'
+import { mdiArrowRight } from '@mdi/js'
 interface ModalsRenderingOptions {
   closable: boolean
   body: JSX.Element
@@ -79,7 +79,7 @@ export default () => {
         {content.closable && (
           <StyledModalsSkipButton onClick={closeHandler}>
             <span>
-              Skip <IconArrowSingleRight />
+              Skip <Icon path={mdiArrowRight} />
             </span>
           </StyledModalsSkipButton>
         )}

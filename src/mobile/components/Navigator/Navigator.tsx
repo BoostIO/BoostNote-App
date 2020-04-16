@@ -30,7 +30,7 @@ import {
   IconBook,
   // IconStarActive
 } from '../../../components/icons'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiClose } from '@mdi/js'
 
 const Description = styled.nav`
