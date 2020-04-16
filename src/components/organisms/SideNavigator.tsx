@@ -8,15 +8,15 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import {
   sideBarBackgroundColor,
-  sideBarDefaultTextColor,
+  sideBarSecondaryTextColor,
   iconColor,
   sideBarTextColor,
 } from '../../lib/styled/styleFunctions'
 import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import ControlButton from './ControlButton'
-import FolderListFragment from './FolderListFragment'
-import TagListFragment from './TagListFragment'
+import ControlButton from '../SideNavigator/ControlButton'
+import FolderListFragment from '../SideNavigator/FolderListFragment'
+import TagListFragment from '../SideNavigator/TagListFragment'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useUsers } from '../../lib/accounts'
 import { useToast } from '../../lib/toast'
@@ -33,11 +33,11 @@ import {
 } from '../icons'
 import { getStorageItemId } from '../../lib/nav'
 
-const Description = styled.nav`
-  margin-left: 15px;
-  margin-bottom: 10px;
-  font-size: 18px;
-  ${sideBarDefaultTextColor}
+const SideNavigatorLabel = styled.nav`
+  font-size: 14px;
+  ${sideBarSecondaryTextColor}
+  user-select: none;
+  margin: 0.5em 1em;
 `
 
 const StyledSideNavContainer = styled.nav`
@@ -195,12 +195,12 @@ export default () => {
         onClick={() => push(`/app/bookmarks`)}
       />
 
-      <Description>
+      <SideNavigatorLabel>
         Storages
         <CreateStorageButton onClick={() => push('/app/storages')}>
           <IconAddRound size='1.7em' />
         </CreateStorageButton>
-      </Description>
+      </SideNavigatorLabel>
 
       <div className='storageList'>
         {storageEntries.map(([, storage]) => {
