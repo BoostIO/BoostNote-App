@@ -27,6 +27,7 @@ import {
 } from '../../../lib/events'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
+import { codeMirrorPasteHandler } from '../../../lib/eventHandler/pasteHandler'
 
 export const NoteDetailContainer = styled.div`
   ${secondaryBackgroundColor}
@@ -425,6 +426,7 @@ export default class NoteDetail extends React.Component<
                   codeMirrorRef={this.codeMirrorRef}
                   value={this.state.content}
                   onChange={this.updateContent}
+                  onPaste={codeMirrorPasteHandler}
                 />
               )}
             </div>

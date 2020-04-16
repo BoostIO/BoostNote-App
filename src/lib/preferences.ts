@@ -52,6 +52,7 @@ export interface Preferences {
   'editor.indentType': EditorIndentTypeOptions
   'editor.indentSize': EditorIndentSizeOptions
   'editor.keyMap': EditorKeyMapOptions
+  'editor.enableAutoFetchWebPageTitle': boolean
 
   // Markdown
   'markdown.previewStyle': string
@@ -94,6 +95,7 @@ const basePreferences: Preferences = {
   'editor.indentType': 'spaces',
   'editor.indentSize': 4,
   'editor.keyMap': 'default',
+  'editor.enableAutoFetchWebPageTitle': true,
 
   // Markdown
   'markdown.previewStyle': 'default',

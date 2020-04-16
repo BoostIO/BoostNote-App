@@ -139,6 +139,8 @@ export default {
     'preferences.editorIndentSize': 'Editor Indent Size',
     'preferences.editorKeymap': 'Editor Keymap',
     'preferences.editorPreview': 'Editor Preview',
+    'preferences.enableAutoFetchWebPageTitle':
+      'Bring in web page title when pasting URL on editor',
 
     // Preferences MarkdownTab
     'preferences.previewStyle': 'Preview Style',

@@ -24,6 +24,11 @@ interface CodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
+  onPaste?: (
+    editor: CodeMirror.Editor,
+    change: CodeMirror.EditorChange,
+    enableAutoFetchWebPageTitle: boolean
+  ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   theme?: string
@@ -34,6 +39,7 @@ interface CodeEditorProps {
   keyMap?: EditorKeyMapOptions
   mode?: string
   readonly?: boolean
+  enableAutoFetchWebPageTitle?: boolean
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -57,6 +63,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       readOnly: this.props.readonly === true,
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
+    this.codeMirror.on('inputRead', this.handleCodeMirrorPaste)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
     if (this.props.codeMirrorRef != null) {
       this.props.codeMirrorRef(this.codeMirror)
@@ -117,8 +124,21 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     editor: CodeMirror.Editor,
     change: CodeMirror.EditorChangeLinkedList
   ) => {
-    if (change.origin !== 'setValue' && this.props.onChange != null) {
+    if (this.props.onChange != null) {
       this.props.onChange(editor.getValue(), change)
+    }
+  }
+
+  handleCodeMirrorPaste = (
+    editor: CodeMirror.Editor,
+    change: CodeMirror.EditorChange
+  ) => {
+    const enableAutoFetchWebPageTitle =
+      this.props.enableAutoFetchWebPageTitle != undefined
+        ? this.props.enableAutoFetchWebPageTitle
+        : false
+    if (this.props.onPaste != null && change.origin == 'paste') {
+      this.props.onPaste(editor, change, enableAutoFetchWebPageTitle)
     }
   }
 

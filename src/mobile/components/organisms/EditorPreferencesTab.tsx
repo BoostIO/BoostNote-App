@@ -24,6 +24,8 @@ import { capitalize } from '../../../lib/string'
 import CustomizedCodeEditor from '../../../components/atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { FormCheckItem } from '../../../components/atoms/form'
+import { codeMirrorPasteHandler } from '../../../lib/eventHandler/pasteHandler'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -116,6 +118,15 @@ const EditorPreferencesTab = () => {
     }
   }, [])
 
+  const toggleEnableAutoFetchWebPageTitle: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'editor.enableAutoFetchWebPageTitle': event.target.checked,
+      })
+    },
+    [setPreferences]
+  )
+
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
 
   const { t } = useTranslation()
@@ -184,11 +195,27 @@ const EditorPreferencesTab = () => {
         </SectionControl>
       </Section>
       <Section>
+        <SectionHeader>
+          {t('preferences.enableAutoFetchWebPageTitle')}
+        </SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-enable-auto-sync'
+            type='checkbox'
+            checked={preferences['editor.enableAutoFetchWebPageTitle']}
+            onChange={toggleEnableAutoFetchWebPageTitle}
+          >
+            {t('preferences.enableAutoFetchWebPageTitle')}
+          </FormCheckItem>
+        </SectionControl>
+      </Section>
+      <Section>
         <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
         <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
           <CustomizedCodeEditor
             value={previewContent}
             onChange={(newValue) => setPreviewContent(newValue)}
+            onPaste={codeMirrorPasteHandler}
           />
         </SectionControl>
       </Section>
