@@ -1,21 +1,21 @@
 import React, { useMemo, useCallback } from 'react'
-import Link from '../../atoms/Link'
-import styled from '../../../lib/styled/styled'
+import Link from '../atoms/Link'
+import styled from '../../lib/styled/styled'
 import {
   borderBottom,
   uiTextColor,
   secondaryBackgroundColor,
   inputStyle,
-} from '../../../lib/styled/styleFunctions'
+} from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
-import { setTransferrableNoteData } from '../../../lib/dnd'
-import HighlightText from '../../atoms/HighlightText'
+import { setTransferrableNoteData } from '../../lib/dnd'
+import HighlightText from '../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
-import { scaleAndTransformFromLeft } from '../../../lib/styled'
-import { PopulatedNoteDoc } from '../../../lib/db/types'
-import { useContextMenu, MenuTypes, MenuItem } from '../../../lib/contextMenu'
-import { useDb } from '../../../lib/db'
-import { useDialog, DialogIconTypes } from '../../../lib/dialog'
+import { scaleAndTransformFromLeft } from '../../lib/styled'
+import { PopulatedNoteDoc } from '../../lib/db/types'
+import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
+import { useDb } from '../../lib/db'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 
 export const StyledNoteListItem = styled.div`
