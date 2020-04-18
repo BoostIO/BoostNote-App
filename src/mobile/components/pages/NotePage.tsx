@@ -2,7 +2,6 @@ import React, { useMemo, useCallback } from 'react'
 import NoteList from '../organisms/NoteList'
 import {
   useRouteParams,
-  StorageAllNotes,
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
@@ -11,7 +10,7 @@ import {
   StorageBookmarkNotes,
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
-import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../../lib/db/types'
+import { PopulatedNoteDoc, NoteStorage } from '../../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
 import TopBarLayout from '../layouts/TopBarLayout'
@@ -21,12 +20,7 @@ import Icon from '../../../components/atoms/Icon'
 import { mdiChevronLeft, mdiEyeOutline, mdiDotsVertical } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
-import {
-  IconBook,
-  IconFileOpen,
-  IconTrash,
-  IconTag,
-} from '../../../components/icons'
+import { IconFileOpen, IconTrash, IconTag } from '../../../components/icons'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 
 const NotePageContainer = styled.div`
@@ -56,7 +50,6 @@ export default () => {
     addAttachments,
   } = useDb()
   const routeParams = useRouteParams() as
-    | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
@@ -71,21 +64,6 @@ export default () => {
 
   const notes = useMemo((): PopulatedNoteDoc[] => {
     if (currentStorage == null) {
-      if (routeParams.name === 'storages.allNotes') {
-        const allNotesMap = (Object.values(storageMap) as NoteStorage[]).reduce(
-          (map, storage) => {
-            ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
-              (note) => (map[note._id] = note)
-            )
-            return map
-          },
-          {} as ObjectMap<PopulatedNoteDoc>
-        )
-
-        return (Object.values(allNotesMap) as PopulatedNoteDoc[]).filter(
-          (note) => !note.trashed
-        )
-      }
       if (routeParams.name === 'storages.bookmarks') {
         return (Object.values(storageMap) as NoteStorage[])
           .map((storage) => {
@@ -98,10 +76,6 @@ export default () => {
       return []
     }
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter((note) => !note.trashed)
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = currentStorage.folderMap[folderPathname]
@@ -172,9 +146,7 @@ export default () => {
     }
   }, [createNote, replace, routeParams, storageId, toggleViewMode])
 
-  const showCreateNoteInList =
-    routeParams.name === 'storages.notes' ||
-    routeParams.name === 'storages.allNotes'
+  const showCreateNoteInList = routeParams.name === 'storages.notes'
 
   const trashOrPurgeCurrentNote = useCallback(() => {
     if (currentNote == null) {
@@ -194,12 +166,6 @@ export default () => {
 
   const noteListTitle = useMemo(() => {
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        return (
-          <>
-            <IconBook size='1em' /> All Notes in {currentStorage!.name}
-          </>
-        )
       case 'storages.notes':
         return (
           <>

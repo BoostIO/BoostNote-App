@@ -71,17 +71,6 @@ export const useRouteParams = () => {
     const names = pathname.slice('/m'.length).split('/').slice(1)
 
     let noteId: string | undefined = undefined
-    if (names[0] === 'notes') {
-      if (/^note:/.test(names[1])) {
-        noteId = names[1]
-      }
-
-      return {
-        name: 'storages.allNotes',
-        noteId,
-      }
-    }
-
     if (names[0] === 'bookmarks') {
       return {
         name: 'storages.bookmarks',
@@ -119,34 +108,32 @@ export const useRouteParams = () => {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {
         return {
-          name: 'storages.allNotes',
+          name: 'storages.notes',
           storageId,
+          folderPathname: '/',
         }
       }
 
       const folderNames = []
       for (const index in restNames) {
         const name = restNames[index]
+        if (name === '') {
+          break
+        }
+
         if (/^note:/.test(name)) {
           noteId = name
           break
-        } else {
-          folderNames.push(name)
         }
-      }
 
-      if (restNames[0].match(new RegExp(`(^note\:[A-z0-9]*)`, 'g'))) {
-        return {
-          name: 'storages.allNotes',
-          storageId,
-          noteId,
-        }
+        folderNames.push(name)
       }
 
       return {
         name: 'storages.notes',
         storageId,
-        folderPathname: '/' + folderNames.join('/'),
+        folderPathname:
+          folderNames.length === 0 ? '/' : '/' + folderNames.join('/'),
         noteId,
       }
     }
@@ -186,11 +173,6 @@ export const usePathnameWithoutNoteId = () => {
   const routeParams = useRouteParams()
   return useMemo(() => {
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        if (routeParams.storageId == null) {
-          return `/m/notes`
-        }
-        return `/m/storages/${routeParams.storageId}/notes`
       case 'storages.notes':
         return `/m/storages/${routeParams.storageId}/notes${
           routeParams.folderPathname === '/' ? '' : routeParams.folderPathname
