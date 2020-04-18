@@ -155,5 +155,8 @@ export default {
     'preferences.importFlow4': '4. 업로드!',
     'preferences.importRemove': '삭제',
     'preferences.importUpload': '업로드',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter': 'Markdown 내보내기에 선행 사항 포함'
+  }
 }

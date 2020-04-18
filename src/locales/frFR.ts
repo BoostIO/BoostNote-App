@@ -164,5 +164,9 @@ export default {
     'preferences.importFlow4': '4. Télécharger!',
     'preferences.importRemove': 'supprimer',
     'preferences.importUpload': 'Télécharger',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter':
+      "Inclure l'avant-propos dans l'exportation Markdown"
+  }
 }

@@ -159,5 +159,9 @@ export default {
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'entfernen',
     'preferences.importUpload': 'Upload',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter':
+      'Front-Materie in den Markdown-Export einbeziehen'
+  }
 }

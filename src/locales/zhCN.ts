@@ -152,5 +152,8 @@ export default {
     'preferences.importFlow4': '4. 上传!',
     'preferences.importRemove': '移除',
     'preferences.importUpload': '上传',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter': '在Markdown导出中包括前题'
+  }
 }

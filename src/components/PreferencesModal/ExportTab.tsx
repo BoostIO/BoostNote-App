@@ -22,7 +22,7 @@ export default () => {
   return (
     <div>
       <Section>
-        <SectionHeader>Include front-matters in markdown export</SectionHeader>
+        <SectionHeader>{t('preferences.exportFrontMatter')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-include-front-matters'
@@ -30,7 +30,7 @@ export default () => {
             checked={preferences['export.markdown.includeFrontMatter']}
             onChange={toggleFrontMatterExport}
           >
-            Include front-matters in markdown export
+            {t('preferences.exportFrontMatter')}
           </FormCheckItem>
         </SectionControl>
       </Section>

@@ -159,6 +159,6 @@ export default {
     'preferences.importUpload': 'Upload',
 
     // Preferences ExportTab
-    'preferences.export': 'Export'
+    'preferences.exportFrontMatter': 'Include front-matters in Markdown export'
   }
 }

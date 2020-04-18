@@ -159,5 +159,9 @@ export default {
     'preferences.importFlow4': '4. アップロード',
     'preferences.importRemove': '削除',
     'preferences.importUpload': 'アップロード',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter':
+      'Markdownエクスポートにフロントマターを含める'
+  }
 }

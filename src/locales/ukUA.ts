@@ -157,5 +157,9 @@ export default {
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Видалити',
     'preferences.importUpload': 'Завантажити',
-  },
+
+    // Preferences ExportTab
+    'preferences.exportFrontMatter':
+      'Включіть експортну інформацію в експорті Markdown'
+  }
 }
