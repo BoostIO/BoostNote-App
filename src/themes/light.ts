@@ -2,7 +2,7 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#ECECEC'
 const base2Color = '#F9F9F9'
-const primaryColor = '#03C588'
+const primaryColor = '#02A47E'
 
 const dark87Color = 'rgba(0,0,0,0.87)'
 const dark54Color = 'rgba(0,0,0,0.54)'
@@ -21,9 +21,6 @@ export const lightTheme: BaseTheme = {
     active: primaryColor,
     border: dark12Color,
   },
-  fontSize: 15,
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
   textColor: dark87Color,
@@ -49,10 +46,17 @@ export const lightTheme: BaseTheme = {
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideBarBackgroundColor: base1Color,
-  activeSideBarSecondaryTextColor: dark87Color,
-  sideBarTextColor: dark54Color,
-  sideBarSecondaryTextColor: dark26Color,
+  sideNavBackgroundColor: '#fff',
+  sideNavLabelColor: '#555',
+  sideNavButtonColor: '#777',
+  sideNavButtonHoverColor: '#555',
+  sideNavButtonActiveColor: primaryColor,
+  sideNavItemColor: '#555',
+  sideNavItemBackgroundColor: 'transparent',
+  sideNavItemHoverBackgroundColor: '#eee',
+  sideNavItemActiveColor: '#111',
+  sideNavItemActiveBackgroundColor: '#eee',
+  sideNavItemHoverActiveBackgroundColor: '#e0e0e0',
 
   // Button
   primaryButtonLabelColor: light100Color,
