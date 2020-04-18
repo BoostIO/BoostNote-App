@@ -1,7 +1,5 @@
 export interface BaseTheme {
   colors: any
-  fontSize: number
-  fontFamily: string
 
   // General
   textColor: string
@@ -26,10 +24,17 @@ export interface BaseTheme {
   scrollBarThumbColor: string
 
   // SideBar
-  sideBarBackgroundColor: string
-  sideBarTextColor: string
-  activeSideBarSecondaryTextColor: string
-  sideBarSecondaryTextColor: string
+  sideNavBackgroundColor: string
+  sideNavLabelColor: string
+  sideNavButtonColor: string
+  sideNavButtonHoverColor: string
+  sideNavButtonActiveColor: string
+  sideNavItemColor: string
+  sideNavItemBackgroundColor: string
+  sideNavItemHoverBackgroundColor: string
+  sideNavItemActiveColor: string
+  sideNavItemActiveBackgroundColor: string
+  sideNavItemHoverActiveBackgroundColor: string
 
   // Button
   primaryButtonLabelColor: string
