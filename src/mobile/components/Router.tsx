@@ -21,7 +21,6 @@ export default () => {
   useRedirectHandler()
 
   switch (routeParams.name) {
-    case 'storages.allNotes':
     case 'storages.bookmarks':
     case 'storages.notes':
     case 'storages.trashCan':
