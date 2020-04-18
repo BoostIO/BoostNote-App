@@ -6,12 +6,6 @@ import styled from '../../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import { usePreferences } from '../../../lib/preferences'
-import {
-  sideBarBackgroundColor,
-  sideBarDefaultTextColor,
-  iconColor,
-  sideBarTextColor,
-} from '../../../lib/styled/styleFunctions'
 import NavigatorItem from './NavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from './ControlButton'
@@ -25,10 +19,8 @@ import {
   IconAdjustVertical,
   IconArrowAgain,
   IconTrash,
-  // IconImage,
   IconSetting,
   IconBook,
-  // IconStarActive
 } from '../../../components/icons'
 import Icon from '../../../components/atoms/Icon'
 import { mdiClose } from '@mdi/js'
@@ -37,14 +29,13 @@ const Description = styled.nav`
   margin-left: 15px;
   margin-bottom: 10px;
   font-size: 18px;
-  ${sideBarDefaultTextColor}
 `
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
+  background-color: ${({ theme }) => theme.sideNavBackgroundColor};
   flex-direction: column;
   height: 100%;
-  ${sideBarBackgroundColor}
   .topControl {
     height: 50px;
     display: flex;
@@ -59,7 +50,17 @@ const StyledSideNavContainer = styled.nav`
       border: none;
       cursor: pointer;
       font-size: 24px;
-      ${iconColor}
+
+      transition: color 200ms ease-in-out;
+      color: ${({ theme }) => theme.sideNavButtonColor};
+      &:hover {
+        color: ${({ theme }) => theme.sideNavButtonHoverColor};
+      }
+
+      &:active,
+      .active {
+        color: ${({ theme }) => theme.sideNavButtonActiveColor};
+      }
     }
   }
 
@@ -77,7 +78,7 @@ const StyledSideNavContainer = styled.nav`
     padding: 4px;
     padding-left: 26px;
     margin-bottom: 4px;
-    ${sideBarTextColor}
+    color: ${({ theme }) => theme.sideNavLabelColor};
     user-select: none;
   }
 
@@ -113,7 +114,16 @@ const CreateStorageButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  ${iconColor}
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
+  &:hover {
+    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+  }
+
+  &:active,
+  .active {
+    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+  }
 `
 
 const Spacer = styled.div`

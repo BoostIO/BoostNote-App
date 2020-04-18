@@ -1,10 +1,6 @@
 import React from 'react'
 import styled from '../../../lib/styled'
-import {
-  borderBottom,
-  uiTextColor,
-  sideBarBackgroundColor,
-} from '../../../lib/styled/styleFunctions'
+import { borderBottom, uiTextColor } from '../../../lib/styled/styleFunctions'
 import Icon from '../../../components/atoms/Icon'
 
 const TableViewCellContainerButton = styled.button`
@@ -16,7 +12,7 @@ const TableViewCellContainerButton = styled.button`
   text-align: left;
   font-size: 15px;
   ${uiTextColor}
-  ${sideBarBackgroundColor}
+  background-color: ${({ theme }) => theme.sideNavBackgroundColor};
   ${borderBottom}
 `
 

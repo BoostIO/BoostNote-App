@@ -1,16 +1,9 @@
 import React from 'react'
 import cc from 'classcat'
 import styled from '../../../lib/styled'
-import {
-  sideBarTextColor,
-  sideBarSecondaryTextColor,
-  activeBackgroundColor,
-  iconColor,
-} from '../../../lib/styled/styleFunctions'
-import {
-  IconArrowSingleRight,
-  IconArrowSingleDown,
-} from '../../../components/icons'
+import { activeBackgroundColor } from '../../../lib/styled/styleFunctions'
+import Icon from '../../../components/atoms/Icon'
+import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
 
 const Container = styled.div`
   position: relative;
@@ -25,7 +18,16 @@ const Container = styled.div`
 
     button > span {
       width: 30px;
-      ${iconColor}
+      transition: color 200ms ease-in-out;
+      color: ${({ theme }) => theme.sideNavButtonColor};
+      &:hover {
+        color: ${({ theme }) => theme.sideNavButtonHoverColor};
+      }
+
+      &:active,
+      .active {
+        color: ${({ theme }) => theme.sideNavButtonActiveColor};
+      }
     }
   }
 
@@ -37,7 +39,7 @@ const Container = styled.div`
     ${activeBackgroundColor}
 
     button > span {
-      ${sideBarTextColor}
+      color: ${({ theme }) => theme.sideNavButtonColor};
     }
   }
   &:hover {
@@ -70,7 +72,7 @@ const FoldButton = styled.button`
   border-radius: 2px;
   flex: 0 0 26px;
   top: 5px;
-  ${sideBarSecondaryTextColor}
+  color: ${({ theme }) => theme.sideNavButtonColor};
   &:focus {
     box-shadow: none;
   }
@@ -86,12 +88,20 @@ const ClickableContainer = styled.button`
   width: 100%;
   flex: 1 1 auto;
 
-  ${sideBarTextColor}
+  color: ${({ theme }) => theme.sideNavLabelColor};
 
   .icon {
     flex: 0 0 auto;
     margin-right: 4px;
-    ${sideBarSecondaryTextColor}
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
   }
 `
 
@@ -112,7 +122,16 @@ const ControlContainer = styled.div`
   flex: 2 0 auto;
   justify-content: flex-end;
   button {
-    ${iconColor}
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
   }
 `
 
@@ -168,11 +187,7 @@ const SideNaviagtorItem = ({
             onClick={onFoldButtonClick}
             style={{ left: `${10 * depth}px` }}
           >
-            {folded ? (
-              <IconArrowSingleRight color='currentColor' />
-            ) : (
-              <IconArrowSingleDown color='currentColor' />
-            )}
+            <Icon path={folded ? mdiChevronRight : mdiChevronDown} />
           </FoldButton>
         )}
         <ClickableContainer

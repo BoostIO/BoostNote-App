@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import ButtonIcon from '../../atoms/ButtonIcon'
 import styled from '../../../lib/styled'
 import {
-  iconColor,
   noteListIconColor,
   inputStyle,
 } from '../../../lib/styled/styleFunctions'
@@ -54,9 +53,18 @@ const StyledContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    ${iconColor};
     background-color: transparent;
 
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
     svg {
       vertical-align: top;
     }

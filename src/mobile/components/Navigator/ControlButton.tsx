@@ -1,9 +1,5 @@
 import React from 'react'
 import styled from '../../../lib/styled'
-import {
-  sideBarTextColor,
-  sideBarSecondaryTextColor,
-} from '../../../lib/styled/styleFunctions'
 
 const StyledButton = styled.button`
   position: relative;
@@ -17,9 +13,10 @@ const StyledButton = styled.button`
   line-height: 20px;
   cursor: pointer;
   vertical-align: middle;
-  ${sideBarTextColor}
-  ${sideBarSecondaryTextColor}
-  &:hover, &:active, &:focus {
+  color: ${({ theme }) => theme.sideNavLabelColor};
+  &:hover,
+  &:active,
+  &:focus {
     box-shadow: none;
   }
   + button {

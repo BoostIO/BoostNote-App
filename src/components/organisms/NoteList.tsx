@@ -5,7 +5,6 @@ import styled from '../../lib/styled'
 import {
   borderBottom,
   inputStyle,
-  iconColor,
   noteListIconColor,
   selectTabStyle,
   disabledUiTextColor,
@@ -80,7 +79,17 @@ export const StyledNoteListContainer = styled.div`
       margin-right: 5px;
       z-index: 0;
       pointer-events: none;
-      ${iconColor}
+
+      transition: color 200ms ease-in-out;
+      color: ${({ theme }) => theme.sideNavButtonColor};
+      &:hover {
+        color: ${({ theme }) => theme.sideNavButtonHoverColor};
+      }
+
+      &:active,
+      .active {
+        color: ${({ theme }) => theme.sideNavButtonActiveColor};
+      }
     }
     .input {
       ${selectTabStyle}

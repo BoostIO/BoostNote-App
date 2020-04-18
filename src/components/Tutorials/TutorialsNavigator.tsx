@@ -148,7 +148,6 @@ const TutorialsNavigator = ({}) => {
         <SideNavigatorItem
           label={node.name}
           depth={node.depth}
-          icon={node.icon}
           active={node.active}
           onClick={() => redirectToTutorialNode(node)}
           onFoldButtonClick={() => toggleSideNavOpenedItem(node.id)}

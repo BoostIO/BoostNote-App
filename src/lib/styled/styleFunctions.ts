@@ -13,23 +13,6 @@ export const secondaryBackgroundColor = ({ theme }: StyledProps) =>
 export const activeBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.activeBackgroundColor};`
 
-export const activeSideBarSecondaryTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.activeSideBarSecondaryTextColor};`
-
-export const sideBarBackgroundColor = ({ theme }: StyledProps) =>
-  `background-color: ${theme.sideBarBackgroundColor};`
-
-export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
-transition: 200ms color;
-&:hover,
-&:focus {
-  color: ${theme.activeIconColor};
-}
-&:active,
-&.active {
-  color: ${theme.primaryColor};
-}`
-
 export const noteListIconColor = ({ theme }: StyledProps) => `
 color: ${theme.noteListIconColor};
 transition: 200ms color;
@@ -79,22 +62,6 @@ transition: 200ms color;
 &:disabled {
   color: ${theme.disabledUiTextColor};
 }`
-
-export const sideBarTextColor = ({
-  theme,
-}: StyledProps) => `color: ${theme.sideBarTextColor};
-  &:hover,
-  &:focus,
-  &:active,
-  &.active {
-    color: ${theme.activeSideBarSecondaryTextColor};
-  }`
-
-export const sideBarDefaultTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.sideBarTextColor};`
-
-export const sideBarSecondaryTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.sideBarSecondaryTextColor};`
 
 export const borderColor = ({ theme }: StyledProps) =>
   `border-color: ${theme.borderColor};`
