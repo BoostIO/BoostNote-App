@@ -6,12 +6,11 @@ import SideNavigatorItem from '../molecules/SideNavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import ControlButton from './ControlButton'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
-import { IconAddRound } from '../icons'
 import { useTranslation } from 'react-i18next'
-import { mdiFolderOutline, mdiFolderOpenOutline } from '@mdi/js'
+import { mdiFolderOutline, mdiFolderOpenOutline, mdiPlus } from '@mdi/js'
+import SideNavigatorButton from '../atoms/SideNavigatorButton'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -202,11 +201,11 @@ const FolderListFragment = ({
               folderPathname
             )}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
-            controlComponents={[
-              <ControlButton
+            control={[
+              <SideNavigatorButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
-                icon={<IconAddRound />}
+                iconPath={mdiPlus}
               />,
             ]}
             onDragOver={(event) => {
