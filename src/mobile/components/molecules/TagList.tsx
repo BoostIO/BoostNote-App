@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react'
 import ButtonIcon from '../../../components/atoms/ButtonIcon'
 import styled from '../../../lib/styled'
-import {
-  iconColor,
-  noteListIconColor,
-} from '../../../lib/styled/styleFunctions'
+import { noteListIconColor } from '../../../lib/styled/styleFunctions'
 import { IconTag, IconClose } from '../../../components/icons'
 
 interface TagListItemProps {
@@ -55,7 +52,17 @@ const TagListContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    ${iconColor};
+
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
     background-color: transparent;
 
     svg {

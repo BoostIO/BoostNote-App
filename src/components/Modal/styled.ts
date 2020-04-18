@@ -3,7 +3,6 @@ import {
   border,
   backgroundColor,
   contextMenuShadow,
-  iconColor,
 } from '../../lib/styled/styleFunctions'
 
 const zIndexModalsBackground = 8001
@@ -55,7 +54,16 @@ export const StyledModalsSkipButton = styled.button`
   font-size: 16px;
   white-space: nowrap;
   cursor: pointer;
-  ${iconColor}
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
+  &:hover {
+    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+  }
+
+  &:active,
+  .active {
+    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+  }
 
   span {
     line-height: 20px;
