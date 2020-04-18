@@ -9,11 +9,12 @@ const ButtonContainer = styled.button`
   align-items: center;
   justify-content: center;
 
-  color: ${({ theme }) => theme.sideNavButtonColor};
   background-color: transparent;
   border-radius: 50%;
   border: none;
 
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
   &:hover {
     color: ${({ theme }) => theme.sideNavButtonHoverColor};
   }
