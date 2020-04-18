@@ -6,15 +6,27 @@ import { useDb } from '../../lib/db'
 import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
-import ControlButton from '../SideNavigator/ControlButton'
-import { IconAddRound, IconArrowAgain, IconSetting } from '../icons'
 import { useFirstUser } from '../../lib/preferences'
 import SideNavigatorItem from './SideNavigatorItem'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import FolderListFragment from '../SideNavigator/FolderListFragment'
 import { NoteStorage } from '../../lib/db/types'
 import TagListFragment from '../SideNavigator/TagListFragment'
-import { mdiTrashCanOutline, mdiBookOpenOutline, mdiPaperclip } from '@mdi/js'
+import {
+  mdiTrashCanOutline,
+  mdiBookOpenOutline,
+  mdiPaperclip,
+  mdiTuneVertical,
+  mdiCloudOutline,
+  mdiPlus,
+} from '@mdi/js'
+import SideNavigatorHeader from '../atoms/SideNavigatorHeader'
+import SideNavigatorButton from '../atoms/SideNavigatorButton'
+import styled from '../../lib/styled'
+
+const Spacer = styled.div`
+  height: 1em;
+`
 
 interface StorageSideNavigatorItemProps {
   storage: NoteStorage
@@ -23,11 +35,7 @@ interface StorageSideNavigatorItemProps {
 const StorageSideNavigatorItem = ({
   storage,
 }: StorageSideNavigatorItemProps) => {
-  const {
-    toggleSideNavOpenedItem,
-    sideNavOpenedItemSet,
-    openSideNavFolderItemRecursively,
-  } = useGeneralStatus()
+  const { openSideNavFolderItemRecursively } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
     createFolder,
@@ -44,7 +52,6 @@ const StorageSideNavigatorItem = ({
   const { popup } = useContextMenu()
 
   const itemId = getStorageItemId(storage.id)
-  const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
   const showPromptToCreateFolder = (folderPathname: string) => {
     prompt({
       title: 'Create a Folder',
@@ -104,135 +111,114 @@ const StorageSideNavigatorItem = ({
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
   const attachmentsPageIsActive = currentPathname === attachmentsPagePathname
 
-  const controlComponents = [
-    <ControlButton
-      key={`${storage.id}-addFolderButton`}
-      onClick={() => showPromptToCreateFolder('/')}
-      icon={<IconAddRound />}
-    />,
-  ]
-
-  if (storage.cloudStorage != null && user != null) {
-    const cloudSync = () => {
-      if (user == null) {
-        pushMessage({
-          title: 'No User Error',
-          description: 'Please login first to sync the storage.',
-        })
-      }
-      syncStorage(storage.id)
-    }
-
-    controlComponents.unshift(
-      <ControlButton
-        key={`${storage.id}-syncButton`}
-        onClick={cloudSync}
-        icon={<IconArrowAgain />}
-      />
-    )
+  const openContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    event.preventDefault()
+    popup(event, [
+      {
+        type: MenuTypes.Normal,
+        label: t('storage.rename'),
+        onClick: async () => {
+          prompt({
+            title: `Rename "${storage.name}" storage`,
+            message: t('storage.renameMessage'),
+            iconType: DialogIconTypes.Question,
+            defaultValue: storage.name,
+            submitButtonLabel: t('storage.rename'),
+            onClose: async (value: string | null) => {
+              if (value == null) return
+              await renameStorage(storage.id, value)
+            },
+          })
+        },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: t('storage.remove'),
+        onClick: async () => {
+          messageBox({
+            title: `Remove "${storage.name}" storage`,
+            message: t('storage.removeMessage'),
+            iconType: DialogIconTypes.Warning,
+            buttons: [t('storage.remove'), t('general.cancel')],
+            defaultButtonIndex: 0,
+            cancelButtonIndex: 1,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                removeStorage(storage.id)
+              }
+            },
+          })
+        },
+      },
+    ])
   }
-
-  controlComponents.unshift(
-    <ControlButton
-      key={`${storage.id}-settingsButton`}
-      onClick={() => push(`/app/storages/${storage.id}`)}
-      icon={<IconSetting size='1.3em' />}
-    />
-  )
 
   return (
     <React.Fragment key={itemId}>
+      <SideNavigatorHeader
+        label={storage.name}
+        onContextMenu={openContextMenu}
+        control={
+          <>
+            <SideNavigatorButton
+              onClick={() => showPromptToCreateFolder('/')}
+              iconPath={mdiPlus}
+            />
+            <SideNavigatorButton
+              onClick={() => {
+                if (user == null) {
+                  pushMessage({
+                    title: 'No User Error',
+                    description: 'Please login first to sync the storage.',
+                  })
+                  return
+                }
+                syncStorage(storage.id)
+              }}
+              iconPath={mdiCloudOutline}
+            />
+            <SideNavigatorButton
+              onClick={() => push(`/app/storages/${storage.id}`)}
+              iconPath={mdiTuneVertical}
+            />
+          </>
+        }
+      />
       <SideNavigatorItem
         depth={0}
-        label={storage.name}
-        folded={storageIsFolded}
-        onFoldButtonClick={() => {
-          toggleSideNavOpenedItem(itemId)
-        }}
-        onClick={() => {
-          toggleSideNavOpenedItem(itemId)
-        }}
+        label='All Notes'
+        iconPath={mdiBookOpenOutline}
+        active={allNotesPageIsActive}
+        onClick={() => push(allNotesPagePathname)}
+      />
+      <FolderListFragment
+        storage={storage}
+        showPromptToCreateFolder={showPromptToCreateFolder}
+        showPromptToRenameFolder={showPromptToRenameFolder}
+      />
+      <TagListFragment storage={storage} />
+      <SideNavigatorItem
+        depth={0}
+        label={t('general.attachments')}
+        iconPath={mdiPaperclip}
+        active={attachmentsPageIsActive}
+        onClick={() => push(attachmentsPagePathname)}
         onContextMenu={(event) => {
           event.preventDefault()
-          popup(event, [
-            {
-              type: MenuTypes.Normal,
-              label: t('storage.rename'),
-              onClick: async () => {
-                prompt({
-                  title: `Rename "${storage.name}" storage`,
-                  message: t('storage.renameMessage'),
-                  iconType: DialogIconTypes.Question,
-                  defaultValue: storage.name,
-                  submitButtonLabel: t('storage.rename'),
-                  onClose: async (value: string | null) => {
-                    if (value == null) return
-                    await renameStorage(storage.id, value)
-                  },
-                })
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              label: t('storage.remove'),
-              onClick: async () => {
-                messageBox({
-                  title: `Remove "${storage.name}" storage`,
-                  message: t('storage.removeMessage'),
-                  iconType: DialogIconTypes.Warning,
-                  buttons: [t('storage.remove'), t('general.cancel')],
-                  defaultButtonIndex: 0,
-                  cancelButtonIndex: 1,
-                  onClose: (value: number | null) => {
-                    if (value === 0) {
-                      removeStorage(storage.id)
-                    }
-                  },
-                })
-              },
-            },
-          ])
         }}
-        controlComponents={controlComponents}
       />
-      {!storageIsFolded && (
-        <>
-          <SideNavigatorItem
-            depth={0}
-            label='All Notes'
-            iconPath={mdiBookOpenOutline}
-            active={allNotesPageIsActive}
-            onClick={() => push(allNotesPagePathname)}
-          />
-          <FolderListFragment
-            storage={storage}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
-          />
-          <TagListFragment storage={storage} />
-          <SideNavigatorItem
-            depth={0}
-            label={t('general.attachments')}
-            iconPath={mdiPaperclip}
-            active={attachmentsPageIsActive}
-            onClick={() => push(attachmentsPagePathname)}
-            onContextMenu={(event) => {
-              event.preventDefault()
-            }}
-          />
-          <SideNavigatorItem
-            depth={0}
-            label={t('general.trash')}
-            iconPath={mdiTrashCanOutline}
-            active={trashcanPageIsActive}
-            onClick={() => push(trashcanPagePathname)}
-            onContextMenu={(event) => {
-              event.preventDefault()
-              // TODO: Implement context menu(restore all notes)
-            }}
-          />
-        </>
-      )}
+      <SideNavigatorItem
+        depth={0}
+        label={t('general.trash')}
+        iconPath={mdiTrashCanOutline}
+        active={trashcanPageIsActive}
+        onClick={() => push(trashcanPagePathname)}
+        onContextMenu={(event) => {
+          event.preventDefault()
+          // TODO: Implement context menu(restore all notes)
+        }}
+      />
+      <Spacer />
     </React.Fragment>
   )
 }
