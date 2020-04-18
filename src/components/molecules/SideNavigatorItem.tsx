@@ -1,12 +1,6 @@
 import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
-import {
-  sideBarTextColor,
-  sideBarSecondaryTextColor,
-  activeBackgroundColor,
-  iconColor,
-} from '../../lib/styled/styleFunctions'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
@@ -16,86 +10,70 @@ const Container = styled.div`
   height: 34px;
   display: flex;
   justify-content: space-between;
+  width: 100%;
 
-  .sideNavWrapper {
-    min-width: 0;
-    flex: 1 1 auto;
-  }
-
+  font-size: 1em;
   transition: 200ms background-color;
-  &:hover,
-  &:focus,
-  &:active,
-  &.active {
-    ${activeBackgroundColor}
-  }
-  &:hover {
-    cursor: pointer;
-  }
-  .control {
-    opacity: 0;
-  }
-  &:hover .control {
-    opacity: 1;
-  }
 `
 
 const FoldButton = styled.button`
   position: absolute;
-  width: 26px;
-  height: 26px;
-  padding-left: 0.5em;
+  width: 24px;
+  height: 24px;
   border: none;
   background-color: transparent;
-  margin-right: 3px;
-  border-radius: 2px;
-  flex: 0 0 26px;
+  border-radius: 50%;
   top: 5px;
-  font-size: 1em;
-  ${sideBarSecondaryTextColor}
-  &:focus {
-    box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
+  &:hover {
+    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+  }
+
+  &:active,
+  .active {
+    color: ${({ theme }) => theme.sideNavButtonActiveColor};
   }
 `
 
 const ClickableContainer = styled.button`
   background-color: transparent;
   border: none;
-  height: 35px;
   display: flex;
   align-items: center;
-  min-width: 0;
-  width: 100%;
   flex: 1 1 auto;
+  cursor: pointer;
 
-  ${sideBarTextColor}
-
-  .icon {
-    flex: 0 0 auto;
-    margin-right: 4px;
-    ${sideBarSecondaryTextColor}
+  color: ${({ theme }) => theme.sideNavItemColor};
+  background-color: ${({ theme }) => theme.sideNavItemBackgroundColor};
+  &:hover {
+    background-color: ${({ theme }) => theme.sideNavItemHoverBackgroundColor};
+  }
+  &:active,
+  &.active {
+    color: ${({ theme }) => theme.sideNavItemActiveColor};
+    background-color: ${({ theme }) => theme.sideNavItemActiveBackgroundColor};
+  }
+  &:hover:active,
+  &:hover.active {
+    background-color: ${({ theme }) =>
+      theme.sideNavItemHoverActiveBackgroundColor};
   }
 `
 
 const Label = styled.div`
-  min-width: 0;
-  overflow: hidden;
+  overflow: ellipsis;
   white-space: nowrap;
-  flex: 1 1 auto;
-  text-align: left;
 `
 
-const ControlContainer = styled.div`
+const Control = styled.div`
   position: absolute;
   right: 0;
-  top: 4px;
-  padding-left: 10px;
-  display: flex;
-  flex: 2 0 auto;
-  justify-content: flex-end;
-  button {
-    ${iconColor}
-  }
+  top: 5px;
 `
 
 const SideNavigatorItemIconContainer = styled.span`
@@ -104,9 +82,9 @@ const SideNavigatorItemIconContainer = styled.span`
 
 interface SideNaviagtorItemProps {
   label: string
-  icon?: React.ReactNode
+  iconPath?: string
   depth: number
-  controlComponents?: any[]
+  control?: React.ReactNode
   className?: string
   folded?: boolean
   active?: boolean
@@ -121,9 +99,9 @@ interface SideNaviagtorItemProps {
 
 const SideNaviagtorItem = ({
   label,
-  icon,
+  iconPath,
   depth,
-  controlComponents,
+  control,
   className,
   folded,
   active,
@@ -143,42 +121,35 @@ const SideNaviagtorItem = ({
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
     >
-      <div className='sideNavWrapper'>
-        {folded != null && (
-          <FoldButton
-            className={folded ? 'folded' : ''}
-            onClick={onFoldButtonClick}
-            style={{ left: `${10 * depth}px` }}
-          >
-            {folded ? (
-              <Icon path={mdiChevronRight} />
-            ) : (
-              <Icon path={mdiChevronDown} />
-            )}
-          </FoldButton>
-        )}
-        <ClickableContainer
-          style={{
-            paddingLeft: `${10 * depth + 30}px`,
-            cursor: onClick ? 'pointer' : 'initial',
-            fontSize: '15px',
-          }}
-          onClick={onClick}
-          onDoubleClick={onDoubleClick}
+      {folded != null && (
+        <FoldButton
+          className={folded ? 'folded' : ''}
+          onClick={onFoldButtonClick}
+          style={{ left: `${10 * depth}px` }}
         >
-          {icon != null && (
-            <SideNavigatorItemIconContainer>
-              {icon}
-            </SideNavigatorItemIconContainer>
+          {folded ? (
+            <Icon path={mdiChevronRight} />
+          ) : (
+            <Icon path={mdiChevronDown} />
           )}
-          <Label>{label}</Label>
-        </ClickableContainer>
-      </div>
-      {controlComponents && (
-        <ControlContainer className='control'>
-          {controlComponents}
-        </ControlContainer>
+        </FoldButton>
       )}
+      <ClickableContainer
+        style={{
+          paddingLeft: `${10 * depth + 24}px`,
+        }}
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
+        className={active ? 'active' : ''}
+      >
+        {iconPath != null && (
+          <SideNavigatorItemIconContainer>
+            <Icon path={iconPath} />
+          </SideNavigatorItemIconContainer>
+        )}
+        <Label>{label}</Label>
+      </ClickableContainer>
+      {control && <Control className='control'>{control}</Control>}
     </Container>
   )
 }
