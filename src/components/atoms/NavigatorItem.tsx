@@ -14,6 +14,11 @@ const Container = styled.div`
 
   font-size: 1em;
   transition: 200ms background-color;
+  &:hover {
+    .control {
+      opacity: 1;
+    }
+  }
 `
 
 const FoldButton = styled.button`
@@ -74,6 +79,8 @@ const Control = styled.div`
   position: absolute;
   right: 0;
   top: 5px;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 `
 
 const IconContainer = styled.div`
