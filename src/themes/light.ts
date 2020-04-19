@@ -7,9 +7,17 @@ const primaryColor = '#02A47E'
 const dark87Color = 'rgba(0,0,0,0.87)'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
-const dark12Color = 'rgba(0,0,0,0.12)'
+const dark12Color = '#bbb'
 const dark100Color = '#000'
 const light100Color = '#FFF'
+
+const uiColor = '#808080'
+const uiDimColor = '#999'
+const uiVividColor = '#555'
+
+const uiBackgroundColor = '#fff'
+const uiVividBackgroundColor = '#e4e4e4'
+const uiVivid2BackgroundColor = '#d4d4d4'
 
 export const lightTheme: BaseTheme = {
   colors: {
@@ -37,26 +45,26 @@ export const lightTheme: BaseTheme = {
   noteDetailActiveIconColor: dark54Color,
   closeIconColor: dark26Color,
   closeActiveIconColor: dark54Color,
-  backgroundColor: base1Color,
-  secondaryBackgroundColor: base2Color,
-  activeBackgroundColor: base2Color,
+  backgroundColor: '#fff',
+  secondaryBackgroundColor: uiVividBackgroundColor,
+  activeBackgroundColor: uiVividBackgroundColor,
   shadow: '0 3px 5px rgba(0,0,0,0.1)',
 
   scrollBarTrackColor: base2Color,
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideNavBackgroundColor: '#fff',
-  sideNavLabelColor: '#808080',
-  sideNavButtonColor: '#999',
-  sideNavButtonHoverColor: '#808080',
+  sideNavBackgroundColor: uiBackgroundColor,
+  sideNavLabelColor: uiColor,
+  sideNavButtonColor: uiDimColor,
+  sideNavButtonHoverColor: uiColor,
   sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: '#808080',
+  sideNavItemColor: uiColor,
   sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: '#e4e4e4',
-  sideNavItemActiveColor: '#555',
-  sideNavItemActiveBackgroundColor: '#e4e4e4',
-  sideNavItemHoverActiveBackgroundColor: '#d4d4d4',
+  sideNavItemHoverBackgroundColor: uiVividBackgroundColor,
+  sideNavItemActiveColor: uiVividColor,
+  sideNavItemActiveBackgroundColor: uiVividBackgroundColor,
+  sideNavItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
 
   // Button
   primaryButtonLabelColor: light100Color,
@@ -65,5 +73,5 @@ export const lightTheme: BaseTheme = {
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: dark12Color,
+  inputBackground: '#fff',
 }
