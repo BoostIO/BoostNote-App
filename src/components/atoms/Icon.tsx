@@ -5,13 +5,14 @@ interface IconProps {
   path: string
   color?: string
   size?: number
+  style?: React.CSSProperties
 }
 
-const Icon = ({ path, color = 'currentColor', size }: IconProps) => (
+const Icon = ({ path, color = 'currentColor', size, style }: IconProps) => (
   <MdiIcon
     path={path}
-    style={
-      size == null
+    style={{
+      ...(size == null
         ? {
             width: '1em',
             height: '1em',
@@ -19,8 +20,9 @@ const Icon = ({ path, color = 'currentColor', size }: IconProps) => (
         : {
             width: `${size}px`,
             height: `${size}px`,
-          }
-    }
+          }),
+      ...style,
+    }}
     color={color}
   />
 )
