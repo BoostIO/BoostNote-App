@@ -19,7 +19,6 @@ import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
-import Modal from './Modal'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
@@ -91,7 +90,6 @@ const App = () => {
         <ContextMenu />
         <Dialog />
         <PreferencesModal />
-        <Modal />
         <ToastList />
         <CodeMirrorStyle />
       </AppContainer>
