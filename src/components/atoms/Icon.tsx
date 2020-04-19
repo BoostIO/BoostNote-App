@@ -7,6 +7,7 @@ interface IconProps {
   size?: number
   style?: React.CSSProperties
   className?: string
+  spin?: boolean
 }
 
 const Icon = ({
@@ -15,6 +16,7 @@ const Icon = ({
   size,
   style,
   className,
+  spin,
 }: IconProps) => (
   <MdiIcon
     path={path}
@@ -32,6 +34,7 @@ const Icon = ({
     }}
     color={color}
     className={className}
+    spin={spin}
   />
 )
 
