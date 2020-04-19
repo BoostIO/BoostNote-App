@@ -32,6 +32,7 @@ interface NavigatorButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   onContextMenu?: React.MouseEventHandler<HTMLButtonElement>
   iconPath: string
+  title?: string
 }
 
 const NavigatorButton = ({
@@ -39,11 +40,13 @@ const NavigatorButton = ({
   onClick,
   onContextMenu,
   iconPath,
+  title,
 }: NavigatorButtonProps) => {
   return (
     <ButtonContainer
       onClick={onClick}
       onContextMenu={onContextMenu}
+      title={title}
       className={active ? 'active' : ''}
     >
       <Icon path={iconPath} />
