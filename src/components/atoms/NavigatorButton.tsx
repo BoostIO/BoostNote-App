@@ -22,7 +22,7 @@ const ButtonContainer = styled.button`
   }
 
   &:active,
-  .active {
+  &.active {
     color: ${({ theme }) => theme.sideNavButtonActiveColor};
   }
 `
@@ -32,6 +32,7 @@ interface NavigatorButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   onContextMenu?: React.MouseEventHandler<HTMLButtonElement>
   iconPath: string
+  spin?: boolean
   title?: string
 }
 
@@ -41,6 +42,7 @@ const NavigatorButton = ({
   onContextMenu,
   iconPath,
   title,
+  spin,
 }: NavigatorButtonProps) => {
   return (
     <ButtonContainer
@@ -49,7 +51,7 @@ const NavigatorButton = ({
       title={title}
       className={active ? 'active' : ''}
     >
-      <Icon path={iconPath} />
+      <Icon path={iconPath} spin={spin} />
     </ButtonContainer>
   )
 }
