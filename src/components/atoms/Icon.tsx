@@ -6,9 +6,16 @@ interface IconProps {
   color?: string
   size?: number
   style?: React.CSSProperties
+  className?: string
 }
 
-const Icon = ({ path, color = 'currentColor', size, style }: IconProps) => (
+const Icon = ({
+  path,
+  color = 'currentColor',
+  size,
+  style,
+  className,
+}: IconProps) => (
   <MdiIcon
     path={path}
     style={{
@@ -24,6 +31,7 @@ const Icon = ({ path, color = 'currentColor', size, style }: IconProps) => (
       ...style,
     }}
     color={color}
+    className={className}
   />
 )
 

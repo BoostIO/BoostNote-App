@@ -4,12 +4,11 @@ import { PopulatedNoteDoc } from '../../lib/db/types'
 import styled from '../../lib/styled'
 import {
   borderBottom,
-  inputStyle,
   noteListIconColor,
   selectTabStyle,
   disabledUiTextColor,
+  inputStyle,
 } from '../../lib/styled/styleFunctions'
-import { IconEdit, IconLoupe } from '../icons'
 import { useTranslation } from 'react-i18next'
 import {
   useGlobalKeyDownHandler,
@@ -18,9 +17,9 @@ import {
 import { NoteListSortOptions } from '../pages/NotePage'
 import { osName } from '../../lib/platform'
 import Icon from '../atoms/Icon'
-import { mdiChevronDown } from '@mdi/js'
+import { mdiChevronDown, mdiPlus, mdiMagnify } from '@mdi/js'
 
-export const StyledNoteListContainer = styled.div`
+const NoteListContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -34,46 +33,11 @@ export const StyledNoteListContainer = styled.div`
     overflow-y: auto;
   }
 
-  .control {
-    height: 50px;
-    display: flex;
-    padding: 8px;
-    align-items: center;
-    -webkit-app-region: drag;
-    ${borderBottom}
-  }
-
-  .searchInput {
-    flex: 1;
-    position: relative;
-    height: 32px;
-    .icon {
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      font-size: 20px;
-      z-index: 0;
-      pointer-events: none;
-      ${noteListIconColor}
-    }
-    .input {
-      position: relative;
-      width: 100%;
-      height: 32px;
-      padding-left: 35px;
-      box-sizing: border-box;
-      ${inputStyle}
-    }
-    select {
-      appearance: none;
-    }
-  }
-
   .filterTab {
     height: 25px;
     display: flex;
     align-items: center;
-    padding-left: 13px;
+    padding-left: 1em;
     .filterIcon {
       font-size: 10px;
       margin-right: 5px;
@@ -107,6 +71,73 @@ export const StyledNoteListContainer = styled.div`
     user-select: none;
     padding: 10px;
     ${disabledUiTextColor};
+  }
+`
+
+const Control = styled.div`
+  height: 50px;
+  display: flex;
+  padding: 0 0 0 8px;
+  align-items: center;
+  -webkit-app-region: drag;
+  ${borderBottom}
+  .newNoteButton {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: transparent;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
+  }
+
+  .searchInput {
+    ${inputStyle}
+    flex: 1;
+    position: relative;
+    height: 32px;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    border-radius: 4px;
+    overflow: hidden;
+    &:focus {
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryColor};
+    }
+    .icon {
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      font-size: 18px;
+      z-index: 0;
+      pointer-events: none;
+      ${noteListIconColor}
+    }
+    .input {
+      background-color: transparent;
+      position: relative;
+      width: 100%;
+      height: 30px;
+      padding-left: 35px;
+      box-sizing: border-box;
+      border: none;
+    }
+    select {
+      appearance: none;
+    }
   }
 `
 
@@ -199,8 +230,8 @@ const NoteList = ({
   )
 
   return (
-    <StyledNoteListContainer>
-      <div className='control'>
+    <NoteListContainer>
+      <Control className='control'>
         <div className='searchInput'>
           <input
             ref={searchRef}
@@ -209,14 +240,14 @@ const NoteList = ({
             onChange={updateSearchInput}
             placeholder={t('note.search')}
           />
-          <IconLoupe className='icon' size='0.8em' />
+          <Icon className='icon' path={mdiMagnify} />
         </div>
         {currentStorageId != null && createNote != null && (
           <button className='newNoteButton' onClick={createNote}>
-            <IconEdit size='0.8em' />
+            <Icon className='icon' path={mdiPlus} />
           </button>
         )}
-      </div>
+      </Control>
       <div className='filterTab'>
         <Icon path={mdiChevronDown} />
         <select
@@ -252,7 +283,7 @@ const NoteList = ({
           )
         ) : null}
       </ul>
-    </StyledNoteListContainer>
+    </NoteListContainer>
   )
 }
 

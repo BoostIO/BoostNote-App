@@ -86,8 +86,8 @@ export const contextMenuShadow = ({ theme }: StyledProps) =>
 
 export const inputStyle = ({ theme }: StyledProps) =>
   `background-color: ${theme.inputBackground};
-border: none;
-border-radius: 2px;
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
 color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
@@ -133,6 +133,8 @@ font-size: 13px;
 export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
 color: ${theme.secondaryButtonLabelColor};
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
 font-size: 13px;
 
 &:hover,
@@ -150,9 +152,11 @@ font-size: 13px;
 }
 `
 
-export const selectStyle = ({ theme }: StyledProps) => `
-  border: ${theme.borderColor};
-  background-color: ${theme.inputBackground};
+export const selectStyle = ({
+  theme,
+}: StyledProps) => `background-color: ${theme.inputBackground};
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
   color: ${theme.textColor};
   &:focus {
     box-shadow: 0 0 0 2px ${theme.primaryColor};
