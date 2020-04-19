@@ -4,7 +4,6 @@ import App from './components/App'
 import { RouterProvider } from './lib/router'
 import { ContextMenuProvider } from '../lib/contextMenu'
 import { DialogProvider } from '../lib/dialog'
-import { ModalProvider } from '../lib/modal'
 import { combineProviders } from '../lib/context'
 import { DbProvider } from './lib/db'
 import { PreferencesProvider } from '../lib/preferences'
@@ -18,7 +17,6 @@ import './lib/analytics'
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
   GeneralStatusProvider,
-  ModalProvider,
   DialogProvider,
   ContextMenuProvider,
   DbProvider,

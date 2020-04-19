@@ -39,7 +39,6 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
-  'general.enableDownloadAppModal': boolean
   'general.enableAutoSync': boolean
 
   // Editor
@@ -79,7 +78,6 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'date-updated',
   'general.enableAnalytics': true,
-  'general.enableDownloadAppModal': true,
   'general.enableAutoSync': true,
 
   // Editor
