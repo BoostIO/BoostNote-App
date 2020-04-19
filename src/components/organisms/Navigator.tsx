@@ -7,7 +7,6 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import NavigatorItem from '../atoms/NavigatorItem'
-import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useTranslation } from 'react-i18next'
 import { IconAdjustVertical } from '../icons'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
@@ -59,7 +58,7 @@ const Navigator = () => {
     [popup, prompt, createStorage, push]
   )
 
-  const { toggleClosed, preferences } = usePreferences()
+  const { toggleClosed } = usePreferences()
 
   const currentPathname = usePathnameWithoutNoteId()
 
@@ -94,7 +93,6 @@ const Navigator = () => {
           <div className='empty'>{t('storage.noStorage')}</div>
         )}
       </div>
-      {preferences['general.tutorials'] === 'display' && <TutorialsNavigator />}
       <Spacer onContextMenu={openSideNavContextMenu} />
     </NavigatorContainer>
   )
