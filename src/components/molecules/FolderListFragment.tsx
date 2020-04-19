@@ -9,8 +9,9 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
-import { mdiPlus, mdiFolderOpen, mdiFolder } from '@mdi/js'
+import { mdiFolderOpen, mdiFolder, mdiDotsVertical } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
+import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -61,6 +62,24 @@ const FolderListFragment = ({
     return (event: React.MouseEvent) => {
       event.preventDefault()
       popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: async () => {
+            const note = await createNote(storage.id, {
+              folderPathname,
+            })
+            push(
+              `/app/storages/${storage.id}/notes${folderPathname}/note:${
+                note!._id
+              }`
+            )
+            dispatchNoteDetailFocusTitleInputEvent()
+          },
+        },
+        {
+          type: MenuTypes.Separator,
+        },
         {
           type: MenuTypes.Normal,
           label: t('folder.create'),
@@ -201,13 +220,12 @@ const FolderListFragment = ({
               folderPathname
             )}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
-            control={[
+            control={
               <NavigatorButton
-                key='addFolderButton'
-                onClick={() => showPromptToCreateFolder(folderPathname)}
-                iconPath={mdiPlus}
-              />,
-            ]}
+                onClick={createOnContextMenuHandler(storage.id, folderPathname)}
+                iconPath={mdiDotsVertical}
+              />
+            }
             onDragOver={(event) => {
               event.preventDefault()
             }}
