@@ -186,7 +186,7 @@ const StorageNavigatorFragment = ({
               iconPath={mdiCloud}
             />
             <NavigatorButton
-              onClick={() => push(`/app/storages/${storage.id}`)}
+              onClick={() => push(`/app/storages/${storage.id}/settings`)}
               iconPath={mdiTuneVertical}
             />
           </>

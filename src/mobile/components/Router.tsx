@@ -30,7 +30,7 @@ export default () => {
     //   return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreatePage />
-    case 'storages.edit':
+    case 'storages.settings':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
         return <StorageEditPage key={storage.id} storage={storage} />
