@@ -119,10 +119,10 @@ const GeneralTab = () => {
             value={preferences['general.theme']}
             onChange={selectTheme}
           >
-            <option value='auto'>{t('preferences.auto')}</option>
-            <option value='light'>{t('preferences.light')}</option>
             <option value='dark'>{t('preferences.dark')}</option>
+            <option value='light'>{t('preferences.light')}</option>
             <option value='sepia'>{t('preferences.sepia')}</option>
+            <option value='legacy'>Legacy</option>
             <option value='solarizedDark'>
               {t('preferences.solarizedDark')}
             </option>

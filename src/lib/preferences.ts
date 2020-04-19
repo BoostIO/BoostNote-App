@@ -81,7 +81,7 @@ const basePreferences: Preferences = {
   'general.enableAutoSync': true,
 
   // Editor
-  'editor.theme': 'default',
+  'editor.theme': 'material-darker',
   'editor.fontSize': 15,
   'editor.fontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',

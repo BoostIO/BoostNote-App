@@ -3,7 +3,7 @@ import Navigator from './organisms/Navigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
-import { defaultTheme } from '../themes/default'
+import { legacyTheme } from '../themes/legacy'
 import { darkTheme } from '../themes/dark'
 import { lightTheme } from '../themes/light'
 import { sepiaTheme } from '../themes/sepia'
@@ -98,16 +98,17 @@ const App = () => {
 }
 function selectTheme(theme: string) {
   switch (theme) {
-    case 'dark':
-      return darkTheme
+    case 'legacy':
+      return legacyTheme
     case 'light':
       return lightTheme
     case 'sepia':
       return sepiaTheme
     case 'solarizedDark':
       return solarizedDarkTheme
+    case 'dark':
     default:
-      return defaultTheme
+      return darkTheme
   }
 }
 
