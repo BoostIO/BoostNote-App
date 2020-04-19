@@ -8,7 +8,7 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
-import { mdiTagMultipleOutline, mdiPound } from '@mdi/js'
+import { mdiPound, mdiTagMultiple } from '@mdi/js'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -87,7 +87,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     <>
       <SideNavigatorItem
         depth={0}
-        iconPath={mdiTagMultipleOutline}
+        iconPath={mdiTagMultiple}
         label={t('tag.tag')}
         folded={tagList.length > 0 ? tagListIsFolded : undefined}
         onFoldButtonClick={() => {

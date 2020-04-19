@@ -12,11 +12,11 @@ import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import {
   mdiTrashCanOutline,
-  mdiBookOpenOutline,
   mdiPaperclip,
   mdiTuneVertical,
-  mdiCloudOutline,
   mdiPlus,
+  mdiCloud,
+  mdiBookOpen,
 } from '@mdi/js'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
@@ -183,7 +183,7 @@ const StorageNavigatorFragment = ({
                 }
                 syncStorage(storage.id)
               }}
-              iconPath={mdiCloudOutline}
+              iconPath={mdiCloud}
             />
             <NavigatorButton
               onClick={() => push(`/app/storages/${storage.id}`)}
@@ -195,7 +195,7 @@ const StorageNavigatorFragment = ({
       <NavigatorItem
         depth={0}
         label='All Notes'
-        iconPath={mdiBookOpenOutline}
+        iconPath={mdiBookOpen}
         active={allNotesPageIsActive}
         onClick={() => push(allNotesPagePathname)}
       />

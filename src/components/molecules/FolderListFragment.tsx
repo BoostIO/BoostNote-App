@@ -9,7 +9,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
-import { mdiFolderOutline, mdiFolderOpenOutline, mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiFolderOpen, mdiFolder } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 
 interface FolderListFragmentProps {
@@ -192,7 +192,7 @@ const FolderListFragment = ({
             folded={folded}
             depth={depth}
             active={folderIsActive}
-            iconPath={folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
+            iconPath={folderIsActive ? mdiFolderOpen : mdiFolder}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
             onDoubleClick={() => showPromptToRenameFolder(folderPathname)}
