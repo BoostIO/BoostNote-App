@@ -49,8 +49,8 @@ export interface ContextMenuContext {
   close(): void
 }
 
-export const menuHeight = 20
-export const menuSeparatorHeight = 10
+export const menuHeight = 24
+export const menuSeparatorHeight = 12
 export const menuMargin = 10
 export const menuVerticalPadding = 4
 export const menuZIndex = 9000
