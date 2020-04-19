@@ -91,7 +91,7 @@ const basePreferences: Preferences = {
 
   // Markdown
   'markdown.previewStyle': 'default',
-  'markdown.codeBlockTheme': 'default',
+  'markdown.codeBlockTheme': 'material-darker',
 }
 
 function usePreferencesStore() {
