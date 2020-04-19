@@ -7,7 +7,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiTuneVertical, mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiHammerWrench } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
 import { usePathnameWithoutNoteId } from '../../lib/router'
@@ -93,7 +93,7 @@ const Navigator = () => {
           onClick={() => push('/app/storages')}
         />
         <NavigatorButton
-          iconPath={mdiTuneVertical}
+          iconPath={mdiHammerWrench}
           title='Preferences'
           onClick={toggleClosed}
         />
