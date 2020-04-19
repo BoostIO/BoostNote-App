@@ -81,15 +81,24 @@ export default () => {
       case 'storages.notes':
         if (currentStorage == null) return []
         const { folderPathname } = routeParams
+        const noteEntries = Object.entries(currentStorage.noteMap) as [
+          string,
+          PopulatedNoteDoc
+        ][]
+        if (folderPathname === '/') {
+          return noteEntries.map(([_id, note]) => note)
+        }
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter(
-          (note) =>
-            (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
-            !note.trashed
-        )
+        return noteEntries.reduce<PopulatedNoteDoc[]>((notes, [_id, note]) => {
+          if (
+            (note!.folderPathname + '/').startsWith(folder.pathname + '/') &&
+            !note!.trashed
+          ) {
+            notes.push(note)
+          }
+          return notes
+        }, [])
       case 'storages.tags.show':
         if (currentStorage == null) return []
         const { tagName } = routeParams
