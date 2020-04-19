@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { getStorageItemId } from '../../lib/nav'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
@@ -23,6 +22,7 @@ import TagListFragment from './TagListFragment'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
 import styled from '../../lib/styled'
+import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 const Spacer = styled.div`
   height: 1em;
@@ -38,6 +38,7 @@ const StorageNavigatorFragment = ({
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
+    createNote,
     createFolder,
     renameFolder,
     renameStorage,
@@ -51,7 +52,6 @@ const StorageNavigatorFragment = ({
   const user = useFirstUser()
   const { popup } = useContextMenu()
 
-  const itemId = getStorageItemId(storage.id)
   const showPromptToCreateFolder = (folderPathname: string) => {
     prompt({
       title: 'Create a Folder',
@@ -111,7 +111,7 @@ const StorageNavigatorFragment = ({
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
   const attachmentsPageIsActive = currentPathname === attachmentsPagePathname
 
-  const openContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const openContextMenu: React.MouseEventHandler = (event) => {
     event.preventDefault()
     popup(event, [
       {
@@ -153,6 +153,33 @@ const StorageNavigatorFragment = ({
     ])
   }
 
+  const openAllNotesContextMenu: React.MouseEventHandler = (event) => {
+    event.preventDefault()
+    popup(event, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Note',
+        onClick: async () => {
+          const note = await createNote(storage.id, {
+            folderPathname: '/',
+          })
+          push(`/app/storages/${storage.id}/notes/note:${note!._id}`)
+          dispatchNoteDetailFocusTitleInputEvent()
+        },
+      },
+      {
+        type: MenuTypes.Separator,
+      },
+      {
+        type: MenuTypes.Normal,
+        label: t('folder.create'),
+        onClick: async () => {
+          showPromptToCreateFolder('/')
+        },
+      },
+    ])
+  }
+
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
     storage.attachmentMap,
   ])
@@ -162,7 +189,7 @@ const StorageNavigatorFragment = ({
   )
 
   return (
-    <React.Fragment key={itemId}>
+    <>
       <NavigatorHeader
         label={storage.name}
         onContextMenu={openContextMenu}
@@ -198,6 +225,7 @@ const StorageNavigatorFragment = ({
         iconPath={mdiBookOpen}
         active={allNotesPageIsActive}
         onClick={() => push(allNotesPagePathname)}
+        onContextMenu={openAllNotesContextMenu}
       />
       <FolderListFragment
         storage={storage}
@@ -231,7 +259,7 @@ const StorageNavigatorFragment = ({
         />
       )}
       <Spacer />
-    </React.Fragment>
+    </>
   )
 }
 
