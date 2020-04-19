@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import SideNavigatorItem from '../molecules/SideNavigatorItem'
+import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -10,7 +10,7 @@ import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
 import { mdiFolderOutline, mdiFolderOpenOutline, mdiPlus } from '@mdi/js'
-import SideNavigatorButton from '../atoms/SideNavigatorButton'
+import NavigatorButton from '../atoms/NavigatorButton'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -187,7 +187,7 @@ const FolderListFragment = ({
           currentPathnameWithoutNoteId ===
           `/app/storages/${storageId}/notes${folderPathname}`
         return (
-          <SideNavigatorItem
+          <NavigatorItem
             key={itemId}
             folded={folded}
             depth={depth}
@@ -202,7 +202,7 @@ const FolderListFragment = ({
             )}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
             control={[
-              <SideNavigatorButton
+              <NavigatorButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
                 iconPath={mdiPlus}

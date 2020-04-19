@@ -25,19 +25,19 @@ const ButtonContainer = styled.button`
   }
 `
 
-interface SideNavigatorButtonProps {
+interface NavigatorButtonProps {
   active?: boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   onContextMenu?: React.MouseEventHandler<HTMLButtonElement>
   iconPath: string
 }
 
-const SideNavigatorButton = ({
+const NavigatorButton = ({
   active,
   onClick,
   onContextMenu,
   iconPath,
-}: SideNavigatorButtonProps) => {
+}: NavigatorButtonProps) => {
   return (
     <ButtonContainer
       onClick={onClick}
@@ -49,4 +49,4 @@ const SideNavigatorButton = ({
   )
 }
 
-export default SideNavigatorButton
+export default NavigatorButton

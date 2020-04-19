@@ -1,7 +1,7 @@
 import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
+import Icon from './Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 const Container = styled.div`

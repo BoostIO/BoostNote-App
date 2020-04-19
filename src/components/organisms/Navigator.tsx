@@ -6,14 +6,14 @@ import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
-import SideNavigatorItem from '../molecules/SideNavigatorItem'
+import NavigatorItem from '../atoms/NavigatorItem'
 import TutorialsNavigator from '../Tutorials/TutorialsNavigator'
 import { useTranslation } from 'react-i18next'
 import { IconAdjustVertical } from '../icons'
-import StorageSideNavigatorItem from '../molecules/StorageSideNavigatorItem'
+import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
 import { mdiStarOutline } from '@mdi/js'
 
-const StyledSideNavContainer = styled.nav`
+const NavigatorContainer = styled.nav`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -24,7 +24,7 @@ const Spacer = styled.div`
   flex: 1;
 `
 
-export default () => {
+const Navigator = () => {
   const { createStorage, storageMap } = useDb()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
@@ -66,14 +66,14 @@ export default () => {
   const { t } = useTranslation()
 
   return (
-    <StyledSideNavContainer>
+    <NavigatorContainer>
       <div className='topControl'>
         <div className='spacer' />
         <button className='button' onClick={toggleClosed}>
           <IconAdjustVertical size='0.8em' />
         </button>
       </div>
-      <SideNavigatorItem
+      <NavigatorItem
         iconPath={mdiStarOutline}
         depth={0}
         label='Bookmarks'
@@ -88,7 +88,7 @@ export default () => {
       </SideNavigatorLabel> */}
       <div className='storageList'>
         {storageEntries.map(([, storage]) => (
-          <StorageSideNavigatorItem key={storage.id} storage={storage} />
+          <StorageNavigatorFragment key={storage.id} storage={storage} />
         ))}
         {storageEntries.length === 0 && (
           <div className='empty'>{t('storage.noStorage')}</div>
@@ -96,6 +96,8 @@ export default () => {
       </div>
       {preferences['general.tutorials'] === 'display' && <TutorialsNavigator />}
       <Spacer onContextMenu={openSideNavContextMenu} />
-    </StyledSideNavContainer>
+    </NavigatorContainer>
   )
 }
+
+export default Navigator
