@@ -45,6 +45,11 @@ const Empty = styled.button`
   }
 `
 
+const ScrollableContainer = styled.div`
+  flex: 1;
+  overflow: auto;
+`
+
 const Navigator = () => {
   const { createStorage, storageMap } = useDb()
   const { popup } = useContextMenu()
@@ -84,7 +89,7 @@ const Navigator = () => {
 
   return (
     <NavigatorContainer>
-      <TopControl>
+      <TopControl onContextMenu={openSideNavContextMenu}>
         <Spacer />
         <NavigatorButton
           iconPath={mdiPlus}
@@ -99,7 +104,7 @@ const Navigator = () => {
         />
       </TopControl>
 
-      <div className='storageList'>
+      <ScrollableContainer>
         {storageEntries.map(([, storage]) => (
           <StorageNavigatorFragment key={storage.id} storage={storage} />
         ))}
@@ -110,8 +115,8 @@ const Navigator = () => {
             Click here to create one.
           </Empty>
         )}
-      </div>
-      <Spacer onContextMenu={openSideNavContextMenu} />
+        <Spacer onContextMenu={openSideNavContextMenu} />
+      </ScrollableContainer>
     </NavigatorContainer>
   )
 }
