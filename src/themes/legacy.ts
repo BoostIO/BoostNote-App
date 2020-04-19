@@ -15,7 +15,7 @@ const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
 const light12Color = 'rgba(255,255,255,0.12)'
 
-export const defaultTheme: BaseTheme = {
+export const legacyTheme: BaseTheme = {
   colors: {
     text: dark87Color,
     deemedText: dark26Color,
