@@ -57,7 +57,7 @@ export default () => {
     if (storageId == null) return undefined
     return storageMap[storageId]
   }, [storageMap, storageId])
-  const { replace, push } = useRouter()
+  const { push } = useRouter()
   const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
@@ -174,7 +174,6 @@ export default () => {
       return
     }
 
-    const folderIsRoot = !(routeParams.name === 'storages.notes')
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
 
@@ -186,15 +185,13 @@ export default () => {
       tags,
     })
     if (note != null) {
+      console.log(`/app/storages/${storageId}/notes${folderPathname}
+        ${note._id}`)
       setLastCreatedNoteId(note._id)
-      replace(
-        `/app/storages/${storageId}/notes${folderPathname}${
-          folderIsRoot ? '' : '/'
-        }${note._id}`
-      )
+      push(`/app/storages/${storageId}/notes${folderPathname}${note._id}`)
       dispatchNoteDetailFocusTitleInputEvent()
     }
-  }, [createNote, replace, routeParams, storageId, setLastCreatedNoteId])
+  }, [createNote, push, routeParams, storageId, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 

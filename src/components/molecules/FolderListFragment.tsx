@@ -70,9 +70,7 @@ const FolderListFragment = ({
               folderPathname,
             })
             push(
-              `/app/storages/${storage.id}/notes${folderPathname}/note:${
-                note!._id
-              }`
+              `/app/storages/${storage.id}/notes${folderPathname}/${note!._id}`
             )
             dispatchNoteDetailFocusTitleInputEvent()
           },

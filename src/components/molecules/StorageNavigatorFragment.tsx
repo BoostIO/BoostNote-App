@@ -131,7 +131,7 @@ const StorageNavigatorFragment = ({
           const note = await createNote(storage.id, {
             folderPathname: '/',
           })
-          push(`/app/storages/${storage.id}/notes/note:${note!._id}`)
+          push(`/app/storages/${storage.id}/notes/${note!._id}`)
           dispatchNoteDetailFocusTitleInputEvent()
         },
       },
@@ -204,7 +204,7 @@ const StorageNavigatorFragment = ({
           const note = await createNote(storage.id, {
             folderPathname: '/',
           })
-          push(`/app/storages/${storage.id}/notes/note:${note!._id}`)
+          push(`/app/storages/${storage.id}/notes/${note!._id}`)
           dispatchNoteDetailFocusTitleInputEvent()
         },
       },
