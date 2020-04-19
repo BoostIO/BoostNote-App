@@ -7,11 +7,9 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import { useFirstUser } from '../../lib/preferences'
-import SideNavigatorItem from './SideNavigatorItem'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import FolderListFragment from '../SideNavigator/FolderListFragment'
+import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
-import TagListFragment from '../SideNavigator/TagListFragment'
 import {
   mdiTrashCanOutline,
   mdiBookOpenOutline,
@@ -20,21 +18,23 @@ import {
   mdiCloudOutline,
   mdiPlus,
 } from '@mdi/js'
-import SideNavigatorHeader from '../atoms/SideNavigatorHeader'
-import SideNavigatorButton from '../atoms/SideNavigatorButton'
+import FolderListFragment from './FolderListFragment'
+import TagListFragment from './TagListFragment'
+import NavigatorHeader from '../atoms/NavigatorHeader'
+import NavigatorButton from '../atoms/NavigatorButton'
 import styled from '../../lib/styled'
 
 const Spacer = styled.div`
   height: 1em;
 `
 
-interface StorageSideNavigatorItemProps {
+interface StorageNavigatorFragmentProps {
   storage: NoteStorage
 }
 
-const StorageSideNavigatorItem = ({
+const StorageNavigatorFragment = ({
   storage,
-}: StorageSideNavigatorItemProps) => {
+}: StorageNavigatorFragmentProps) => {
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
@@ -163,16 +163,16 @@ const StorageSideNavigatorItem = ({
 
   return (
     <React.Fragment key={itemId}>
-      <SideNavigatorHeader
+      <NavigatorHeader
         label={storage.name}
         onContextMenu={openContextMenu}
         control={
           <>
-            <SideNavigatorButton
+            <NavigatorButton
               onClick={() => showPromptToCreateFolder('/')}
               iconPath={mdiPlus}
             />
-            <SideNavigatorButton
+            <NavigatorButton
               onClick={() => {
                 if (user == null) {
                   pushMessage({
@@ -185,14 +185,14 @@ const StorageSideNavigatorItem = ({
               }}
               iconPath={mdiCloudOutline}
             />
-            <SideNavigatorButton
+            <NavigatorButton
               onClick={() => push(`/app/storages/${storage.id}`)}
               iconPath={mdiTuneVertical}
             />
           </>
         }
       />
-      <SideNavigatorItem
+      <NavigatorItem
         depth={0}
         label='All Notes'
         iconPath={mdiBookOpenOutline}
@@ -206,7 +206,7 @@ const StorageSideNavigatorItem = ({
       />
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (
-        <SideNavigatorItem
+        <NavigatorItem
           depth={0}
           label={t('general.attachments')}
           iconPath={mdiPaperclip}
@@ -218,7 +218,7 @@ const StorageSideNavigatorItem = ({
         />
       )}
       {trashed.length > 0 && (
-        <SideNavigatorItem
+        <NavigatorItem
           depth={0}
           label={t('general.trash')}
           iconPath={mdiTrashCanOutline}
@@ -235,4 +235,4 @@ const StorageSideNavigatorItem = ({
   )
 }
 
-export default StorageSideNavigatorItem
+export default StorageNavigatorFragment

@@ -20,17 +20,17 @@ const Control = styled.div`
   display: flex;
 `
 
-interface SideNavigatorHeaderProps {
+interface NavigatorHeaderProps {
   label: string
   control?: React.ReactNode
   onContextMenu: React.MouseEventHandler<HTMLDivElement>
 }
 
-const SideNavigatorHeader = ({
+const NavigatorHeader = ({
   label,
   onContextMenu,
   control,
-}: SideNavigatorHeaderProps) => {
+}: NavigatorHeaderProps) => {
   return (
     <HeaderContainer onContextMenu={onContextMenu}>
       <Label>{label}</Label>
@@ -39,4 +39,4 @@ const SideNavigatorHeader = ({
   )
 }
 
-export default SideNavigatorHeader
+export default NavigatorHeader

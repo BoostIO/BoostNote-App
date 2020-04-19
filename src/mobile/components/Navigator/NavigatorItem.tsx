@@ -139,7 +139,7 @@ const SideNavigatorItemIconContainer = styled.span`
   padding-right: 6px;
 `
 
-interface SideNaviagtorItemProps {
+interface NavigatorItemProps {
   label: string
   icon?: React.ReactNode
   depth: number
@@ -156,7 +156,7 @@ interface SideNaviagtorItemProps {
   onDoubleClick?: (event: React.MouseEvent) => void
 }
 
-const SideNaviagtorItem = ({
+const NavigatorItem = ({
   label,
   icon,
   depth,
@@ -171,7 +171,7 @@ const SideNaviagtorItem = ({
   onDrop,
   onDragOver,
   onDragEnd,
-}: SideNaviagtorItemProps) => {
+}: NavigatorItemProps) => {
   return (
     <Container
       className={cc([className, active && 'active'])}
@@ -216,4 +216,4 @@ const SideNaviagtorItem = ({
   )
 }
 
-export default SideNaviagtorItem
+export default NavigatorItem

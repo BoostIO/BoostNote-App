@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
-import SideNavigator from './organisms/SideNavigator'
+import Navigator from './organisms/Navigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -62,7 +62,7 @@ const App = () => {
   }, [toggleClosed])
   useGlobalKeyDownHandler(keyboardHandler)
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const updateSideBarWidth = useCallback(
+  const updateNavWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
         sideBarWidth: leftWidth,
@@ -80,9 +80,9 @@ const App = () => {
         {initialized ? (
           <TwoPaneLayout
             defaultLeftWidth={generalStatus.sideBarWidth}
-            left={<SideNavigator />}
+            left={<Navigator />}
             right={<Router />}
-            onResizeEnd={updateSideBarWidth}
+            onResizeEnd={updateNavWidth}
           />
         ) : (
           <LoadingText>Loading Data...</LoadingText>
