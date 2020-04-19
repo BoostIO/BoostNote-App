@@ -47,16 +47,16 @@ export const lightTheme: BaseTheme = {
 
   // SideBar
   sideNavBackgroundColor: '#fff',
-  sideNavLabelColor: '#555',
-  sideNavButtonColor: '#777',
-  sideNavButtonHoverColor: '#555',
+  sideNavLabelColor: '#808080',
+  sideNavButtonColor: '#999',
+  sideNavButtonHoverColor: '#808080',
   sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: '#555',
+  sideNavItemColor: '#808080',
   sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: '#eee',
-  sideNavItemActiveColor: '#111',
-  sideNavItemActiveBackgroundColor: '#eee',
-  sideNavItemHoverActiveBackgroundColor: '#e0e0e0',
+  sideNavItemHoverBackgroundColor: '#e4e4e4',
+  sideNavItemActiveColor: '#555',
+  sideNavItemActiveBackgroundColor: '#e4e4e4',
+  sideNavItemHoverActiveBackgroundColor: '#d4d4d4',
 
   // Button
   primaryButtonLabelColor: light100Color,
