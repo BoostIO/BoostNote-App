@@ -101,7 +101,7 @@
     "webpack-dev-server": "^3.8.1"
   },
   "dependencies": {
-    "@mdi/js": "^4.4.95",
+    "@mdi/js": "^5.1.45",
     "@mdi/react": "^1.2.1",
     "@svgr/cli": "^4.3.3",
     "@svgr/webpack": "^4.3.3",
