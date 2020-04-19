@@ -51,7 +51,6 @@ export function useAnalytics() {
 
     if (userId == null) {
       endpointConfig.userId = userId
-      endpointConfig.attributes.userId = [userId]
     }
     Analytics.updateEndpoint(endpointConfig)
   }, [userId])
