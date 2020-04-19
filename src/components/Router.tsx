@@ -5,7 +5,6 @@ import StorageCreatePage from './pages/StorageCreatePage'
 import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
-import TutorialsPage from './Tutorials/TutorialsPage'
 import useRedirectHandler from '../lib/router/redirect'
 import styled from '../lib/styled'
 
@@ -29,8 +28,6 @@ export default () => {
       return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreatePage />
-    case 'tutorials.show':
-      return <TutorialsPage pathname={routeParams.path} />
     case 'storages.edit':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
