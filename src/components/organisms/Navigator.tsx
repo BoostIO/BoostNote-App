@@ -21,6 +21,7 @@ const NavigatorContainer = styled.nav`
 
 const TopControl = styled.div`
   display: flex;
+  margin: 1em 0;
 `
 
 const Empty = styled.button`
@@ -86,11 +87,16 @@ const Navigator = () => {
       <TopControl>
         <Spacer />
         <NavigatorButton
+          iconPath={mdiPlus}
+          title='New Storage'
           active={pathname === '/app/storages'}
           onClick={() => push('/app/storages')}
-          iconPath={mdiPlus}
         />
-        <NavigatorButton onClick={toggleClosed} iconPath={mdiTuneVertical} />
+        <NavigatorButton
+          iconPath={mdiTuneVertical}
+          title='Preferences'
+          onClick={toggleClosed}
+        />
       </TopControl>
 
       <div className='storageList'>
