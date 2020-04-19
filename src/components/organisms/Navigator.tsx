@@ -8,9 +8,10 @@ import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { useTranslation } from 'react-i18next'
-import { IconAdjustVertical } from '../icons'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiStarOutline } from '@mdi/js'
+import { mdiStarOutline, mdiTuneVertical } from '@mdi/js'
+import NavigatorButton from '../atoms/NavigatorButton'
+import Spacer from '../atoms/Spacer'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -19,8 +20,8 @@ const NavigatorContainer = styled.nav`
   background-color: ${({ theme }) => theme.sideNavBackgroundColor};
 `
 
-const Spacer = styled.div`
-  flex: 1;
+const TopControl = styled.div`
+  display: flex;
 `
 
 const Navigator = () => {
@@ -66,12 +67,10 @@ const Navigator = () => {
 
   return (
     <NavigatorContainer>
-      <div className='topControl'>
-        <div className='spacer' />
-        <button className='button' onClick={toggleClosed}>
-          <IconAdjustVertical size='0.8em' />
-        </button>
-      </div>
+      <TopControl>
+        <Spacer />
+        <NavigatorButton onClick={toggleClosed} iconPath={mdiTuneVertical} />
+      </TopControl>
       <NavigatorItem
         iconPath={mdiStarOutline}
         depth={0}
