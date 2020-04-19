@@ -4,15 +4,23 @@ import { Icon as MdiIcon } from '@mdi/react'
 interface IconProps {
   path: string
   color?: string
+  size?: number
 }
 
-const Icon = ({ path, color = 'currentColor' }: IconProps) => (
+const Icon = ({ path, color = 'currentColor', size }: IconProps) => (
   <MdiIcon
     path={path}
-    style={{
-      width: '1em',
-      height: '1em',
-    }}
+    style={
+      size == null
+        ? {
+            width: '1em',
+            height: '1em',
+          }
+        : {
+            width: `${size}px`,
+            height: `${size}px`,
+          }
+    }
     color={color}
   />
 )

@@ -3,8 +3,9 @@ import styled from '../../lib/styled'
 import Icon from './Icon'
 
 const ButtonContainer = styled.button`
-  height: 24px;
   width: 24px;
+  height: 24px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,6 +13,7 @@ const ButtonContainer = styled.button`
   background-color: transparent;
   border-radius: 50%;
   border: none;
+  cursor: pointer;
 
   transition: color 200ms ease-in-out;
   color: ${({ theme }) => theme.sideNavButtonColor};

@@ -76,11 +76,12 @@ const Control = styled.div`
   top: 5px;
 `
 
-const SideNavigatorItemIconContainer = styled.span`
-  padding-right: 6px;
+const IconContainer = styled.span`
+  padding-right: 0.2em;
+  font-size: 18px;
 `
 
-interface SideNaviagtorItemProps {
+interface NavigatorItemProps {
   label: string
   iconPath?: string
   depth: number
@@ -97,7 +98,7 @@ interface SideNaviagtorItemProps {
   onDoubleClick?: (event: React.MouseEvent) => void
 }
 
-const SideNaviagtorItem = ({
+const NavigatorItem = ({
   label,
   iconPath,
   depth,
@@ -112,7 +113,7 @@ const SideNaviagtorItem = ({
   onDrop,
   onDragOver,
   onDragEnd,
-}: SideNaviagtorItemProps) => {
+}: NavigatorItemProps) => {
   return (
     <Container
       className={cc([className, active && 'active'])}
@@ -127,11 +128,7 @@ const SideNaviagtorItem = ({
           onClick={onFoldButtonClick}
           style={{ left: `${10 * depth}px` }}
         >
-          {folded ? (
-            <Icon path={mdiChevronRight} />
-          ) : (
-            <Icon path={mdiChevronDown} />
-          )}
+          <Icon path={folded ? mdiChevronRight : mdiChevronDown} size={18} />
         </FoldButton>
       )}
       <ClickableContainer
@@ -143,9 +140,9 @@ const SideNaviagtorItem = ({
         className={active ? 'active' : ''}
       >
         {iconPath != null && (
-          <SideNavigatorItemIconContainer>
+          <IconContainer>
             <Icon path={iconPath} />
-          </SideNavigatorItemIconContainer>
+          </IconContainer>
         )}
         <Label>{label}</Label>
       </ClickableContainer>
@@ -154,4 +151,4 @@ const SideNaviagtorItem = ({
   )
 }
 
-export default SideNaviagtorItem
+export default NavigatorItem
