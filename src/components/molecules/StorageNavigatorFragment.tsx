@@ -12,10 +12,9 @@ import { NoteStorage } from '../../lib/db/types'
 import {
   mdiTrashCanOutline,
   mdiPaperclip,
-  mdiTuneVertical,
-  mdiPlus,
-  mdiCloud,
   mdiBookOpen,
+  mdiTuneVertical,
+  mdiSync,
 } from '@mdi/js'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
@@ -102,6 +101,17 @@ const StorageNavigatorFragment = ({
     })
   }
 
+  const syncThisStorage = () => {
+    if (user == null) {
+      pushMessage({
+        title: 'No User Error',
+        description: 'Please login first to sync the storage.',
+      })
+      return
+    }
+    syncStorage(storage.id)
+  }
+
   const allNotesPagePathname = `/app/storages/${storage.id}/notes`
   const allNotesPageIsActive = currentPathname === allNotesPagePathname
 
@@ -114,6 +124,32 @@ const StorageNavigatorFragment = ({
   const openContextMenu: React.MouseEventHandler = (event) => {
     event.preventDefault()
     popup(event, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Note',
+        onClick: async () => {
+          const note = await createNote(storage.id, {
+            folderPathname: '/',
+          })
+          push(`/app/storages/${storage.id}/notes/note:${note!._id}`)
+          dispatchNoteDetailFocusTitleInputEvent()
+        },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: t('folder.create'),
+        onClick: async () => {
+          showPromptToCreateFolder('/')
+        },
+      },
+      {
+        type: MenuTypes.Separator,
+      },
+      {
+        type: MenuTypes.Normal,
+        label: t('storage.rename'),
+        onClick: syncThisStorage,
+      },
       {
         type: MenuTypes.Normal,
         label: t('storage.rename'),
@@ -149,6 +185,11 @@ const StorageNavigatorFragment = ({
             },
           })
         },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'Configure Storage',
+        onClick: () => push(`/app/storages/${storage.id}/settings`),
       },
     ])
   }
@@ -188,6 +229,8 @@ const StorageNavigatorFragment = ({
     [storage.noteMap]
   )
 
+  const syncing = storage.sync != null
+
   return (
     <>
       <NavigatorHeader
@@ -196,21 +239,10 @@ const StorageNavigatorFragment = ({
         control={
           <>
             <NavigatorButton
-              onClick={() => showPromptToCreateFolder('/')}
-              iconPath={mdiPlus}
-            />
-            <NavigatorButton
-              onClick={() => {
-                if (user == null) {
-                  pushMessage({
-                    title: 'No User Error',
-                    description: 'Please login first to sync the storage.',
-                  })
-                  return
-                }
-                syncStorage(storage.id)
-              }}
-              iconPath={mdiCloud}
+              active={syncing}
+              onClick={syncThisStorage}
+              iconPath={mdiSync}
+              spin={syncing}
             />
             <NavigatorButton
               onClick={() => push(`/app/storages/${storage.id}/settings`)}
