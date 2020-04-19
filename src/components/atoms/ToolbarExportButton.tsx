@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
-import { noteListIconColor } from '../../lib/styled/styleFunctions'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { NoteDoc } from '../../lib/db/types'
 import {
@@ -9,30 +7,15 @@ import {
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
-import { IconInfo } from '../icons'
-
-const StyledButton = styled.button<{ active: boolean }>`
-  background: transparent;
-  height: 32px;
-  box-sizing: border-box;
-  outline: none;
-  font-size: 16px;
-  border: none;
-  ${noteListIconColor}
-  &:first-child {
-    margin-left: 0;
-  }
-  &:last-child {
-    margin-right: 0;
-  }
-`
+import ToolbarButton from './ToolbarIconButton'
+import { mdiExportVariant } from '@mdi/js'
 
 interface ToolbarExportButtonProps {
   note: NoteDoc
   className?: string
 }
 
-const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
+const ToolbarExportButton = ({ note }: ToolbarExportButtonProps) => {
   const { popup } = useContextMenu()
   const { preferences } = usePreferences()
   const { previewStyle } = usePreviewStyle()
@@ -58,13 +41,11 @@ const ToolbarExportButton = ({ className, note }: ToolbarExportButtonProps) => {
   )
 
   return (
-    <StyledButton
+    <ToolbarButton
       active={false}
       onClick={openExportButtonContextMenu}
-      className={className}
-    >
-      <IconInfo />
-    </StyledButton>
+      iconPath={mdiExportVariant}
+    />
   )
 }
 

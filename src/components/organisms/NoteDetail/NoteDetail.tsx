@@ -16,12 +16,12 @@ import ToolbarIconButton from '../../atoms/ToolbarIconButton'
 import Toolbar from '../../atoms/Toolbar'
 import ToolbarSeparator from '../../atoms/ToolbarSeparator'
 import {
-  secondaryBackgroundColor,
   textColor,
   borderBottom,
   borderRight,
   uiTextColor,
   PrimaryTextColor,
+  backgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import ToolbarExportButton from '../../atoms/ToolbarExportButton'
 import { getFileList } from '../../../lib/dnd'
@@ -29,19 +29,19 @@ import { ViewModeType } from '../../../lib/generalStatus'
 import { BreadCrumbs } from '../../pages/NotePage'
 import cc from 'classcat'
 import {
-  IconTrash,
-  IconArrowAgain,
-  IconPreview,
-  IconSplitView,
-  IconEditView,
-} from '../../icons'
-import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../../lib/events'
+import {
+  mdiTrashCan,
+  mdiRestore,
+  mdiViewSplitVertical,
+  mdiCodeTags,
+  mdiTextSubject,
+} from '@mdi/js'
 
 export const StyledNoteDetailContainer = styled.div`
-  ${secondaryBackgroundColor}
+  ${backgroundColor};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -580,35 +580,35 @@ export default class NoteDetail extends React.Component<
               </div>
               <div className='buttonsWrapper'>
                 <ToolbarIconButton
-                  className={viewMode === 'edit' ? 'active' : ''}
+                  active={viewMode === 'edit'}
                   onClick={() => toggleViewMode('edit')}
-                  icon={<IconEditView />}
+                  iconPath={mdiCodeTags}
                 />
                 <ToolbarIconButton
-                  className={viewMode === 'split' ? 'active' : ''}
+                  active={viewMode === 'split'}
                   onClick={() => toggleViewMode('split')}
-                  icon={<IconSplitView />}
+                  iconPath={mdiViewSplitVertical}
                 />
                 <ToolbarIconButton
-                  className={viewMode === 'preview' ? 'active' : ''}
+                  active={viewMode === 'preview'}
                   onClick={() => toggleViewMode('preview')}
-                  icon={<IconPreview />}
+                  iconPath={mdiTextSubject}
                 />
                 {note.trashed ? (
                   <>
                     <ToolbarIconButton
                       onClick={this.untrashNote}
-                      icon={<IconArrowAgain />}
+                      iconPath={mdiRestore}
                     />
                     <ToolbarIconButton
                       onClick={this.purgeNote}
-                      icon={<IconTrash />}
+                      iconPath={mdiTrashCan}
                     />
                   </>
                 ) : (
                   <ToolbarIconButton
                     onClick={this.trashNote}
-                    icon={<IconTrash />}
+                    iconPath={mdiTrashCan}
                   />
                 )}
                 <ToolbarExportButton note={this.props.note} />

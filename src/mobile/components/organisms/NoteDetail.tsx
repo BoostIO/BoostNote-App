@@ -14,11 +14,11 @@ import CustomizedCodeEditor from '../../../components/atoms/CustomizedCodeEditor
 import CustomizedMarkdownPreviewer from '../../../components/atoms/CustomizedMarkdownPreviewer'
 import ToolbarSeparator from '../../../components/atoms/ToolbarSeparator'
 import {
-  secondaryBackgroundColor,
   textColor,
   borderBottom,
   borderRight,
   inputStyle,
+  backgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
 import {
@@ -29,7 +29,7 @@ import Icon from '../../../components/atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 
 export const NoteDetailContainer = styled.div`
-  ${secondaryBackgroundColor}
+  ${backgroundColor};
   display: flex;
   flex-direction: column;
   height: 100%;
