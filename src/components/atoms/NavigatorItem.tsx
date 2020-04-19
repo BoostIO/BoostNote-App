@@ -76,8 +76,11 @@ const Control = styled.div`
   top: 5px;
 `
 
-const IconContainer = styled.span`
-  padding-right: 0.2em;
+const IconContainer = styled.div`
+  width: 22px;
+  height: 24px;
+  display: flex;
+  align-items: center;
   font-size: 18px;
 `
 
