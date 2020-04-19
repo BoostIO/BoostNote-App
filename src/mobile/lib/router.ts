@@ -83,23 +83,23 @@ export const useRouteParams = () => {
       }
     }
 
-    if (names[0] === 'tutorials') {
-      return {
-        name: 'tutorials.show',
-        path: pathname,
-      }
-    }
-
     if (names[0] !== 'storages' || names[1] == null) {
       return {
         name: 'unknown',
       }
     }
     const storageId = names[1]
-
-    if (names[2] == null) {
+    if (names[2] == null || names[2].length === 0) {
       return {
-        name: 'storages.edit',
+        name: 'storages.notes',
+        storageId,
+        folderPathname: '/',
+      }
+    }
+
+    if (names[2] == 'settings') {
+      return {
+        name: 'storages.settings',
         storageId,
       }
     }

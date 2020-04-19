@@ -43,23 +43,9 @@ export const useRouteParams = () => {
   return useMemo((): AllRouteParams => {
     const names = pathname.slice('/app'.length).split('/').slice(1)
 
-    let noteId: string | undefined = undefined
-    if (names[0] === 'bookmarks') {
-      return {
-        name: 'storages.bookmarks',
-      }
-    }
-
     if (names[0] === 'storages' && names[1] == null) {
       return {
         name: 'storages.create',
-      }
-    }
-
-    if (names[0] === 'tutorials') {
-      return {
-        name: 'tutorials.show',
-        path: pathname,
       }
     }
 
@@ -69,14 +55,22 @@ export const useRouteParams = () => {
       }
     }
     const storageId = names[1]
-
-    if (names[2] == null) {
+    if (names[2] == null || names[2].length === 0) {
       return {
-        name: 'storages.edit',
+        name: 'storages.notes',
+        storageId,
+        folderPathname: '/',
+      }
+    }
+
+    if (names[2] === 'settings') {
+      return {
+        name: 'storages.settings',
         storageId,
       }
     }
 
+    let noteId: string | undefined = undefined
     if (names[2] === 'notes') {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {
@@ -157,15 +151,4 @@ export const usePathnameWithoutNoteId = () => {
     }
     return pathname
   }, [routeParams, pathname])
-}
-
-export const useCurrentTutorialPathname = () => {
-  const routeParams = useRouteParams()
-  return useMemo(() => {
-    switch (routeParams.name) {
-      case 'tutorials.show':
-        return routeParams.path
-    }
-    return '/app'
-  }, [routeParams])
 }

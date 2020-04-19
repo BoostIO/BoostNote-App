@@ -19,7 +19,6 @@ export default () => {
   useRedirectHandler()
 
   switch (routeParams.name) {
-    case 'storages.bookmarks':
     case 'storages.notes':
     case 'storages.trashCan':
     case 'storages.tags.show':
@@ -28,7 +27,7 @@ export default () => {
       return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreatePage />
-    case 'storages.edit':
+    case 'storages.settings':
       const storage = db.storageMap[routeParams.storageId]
       if (storage != null) {
         return <StorageEditPage key={routeParams.storageId} storage={storage} />

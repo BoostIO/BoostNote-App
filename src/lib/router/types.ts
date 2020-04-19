@@ -14,8 +14,8 @@ export interface StorageCreate extends BaseRouteParams {
   name: 'storages.create'
 }
 
-export interface StorageEdit extends BaseRouteParams {
-  name: 'storages.edit'
+export interface StorageSettings extends BaseRouteParams {
+  name: 'storages.settings'
   storageId: string
 }
 
@@ -50,22 +50,16 @@ export interface StorageAttachmentsRouteParams extends BaseRouteParams {
   storageId: string
 }
 
-export interface TutorialsRouteParams extends BaseRouteParams {
-  name: 'tutorials.show'
-  path: string
-}
-
 export interface UnknownRouteparams extends BaseRouteParams {
   name: 'unknown'
 }
 
 export type AllRouteParams =
   | StorageCreate
-  | StorageEdit
+  | StorageSettings
   | StorageBookmarkNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
   | StorageAttachmentsRouteParams
   | UnknownRouteparams
-  | TutorialsRouteParams
