@@ -70,14 +70,6 @@ export default () => {
 
   const notes = useMemo((): PopulatedNoteDoc[] => {
     switch (routeParams.name) {
-      case 'storages.bookmarks':
-        return (Object.values(storageMap) as NoteStorage[])
-          .map((storage) => {
-            return (Object.values(
-              storage.noteMap
-            ) as PopulatedNoteDoc[]).filter((note) => note.bookmarked)
-          })
-          .flat()
       case 'storages.notes':
         if (currentStorage == null) return []
         const { folderPathname } = routeParams
@@ -86,7 +78,15 @@ export default () => {
           PopulatedNoteDoc
         ][]
         if (folderPathname === '/') {
-          return noteEntries.map(([_id, note]) => note)
+          return noteEntries.reduce<PopulatedNoteDoc[]>(
+            (notes, [_id, note]) => {
+              if (!note.trashed) {
+                notes.push(note)
+              }
+              return notes
+            },
+            []
+          )
         }
         const folder = currentStorage.folderMap[folderPathname]
         if (folder == null) return []
@@ -115,7 +115,7 @@ export default () => {
       default:
         return []
     }
-  }, [storageMap, currentStorage, routeParams])
+  }, [currentStorage, routeParams])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
@@ -193,16 +193,8 @@ export default () => {
         }${note._id}`
       )
       dispatchNoteDetailFocusTitleInputEvent()
-      toggleViewMode('edit')
     }
-  }, [
-    createNote,
-    replace,
-    routeParams,
-    storageId,
-    setLastCreatedNoteId,
-    toggleViewMode,
-  ])
+  }, [createNote, replace, routeParams, storageId, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 
