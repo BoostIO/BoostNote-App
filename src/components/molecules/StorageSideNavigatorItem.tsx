@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { getStorageItemId } from '../../lib/nav'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -153,6 +153,14 @@ const StorageSideNavigatorItem = ({
     ])
   }
 
+  const attachments = useMemo(() => Object.values(storage.attachmentMap), [
+    storage.attachmentMap,
+  ])
+  const trashed = useMemo(
+    () => Object.values(storage.noteMap).filter((note) => note!.trashed),
+    [storage.noteMap]
+  )
+
   return (
     <React.Fragment key={itemId}>
       <SideNavigatorHeader
@@ -197,27 +205,31 @@ const StorageSideNavigatorItem = ({
         showPromptToRenameFolder={showPromptToRenameFolder}
       />
       <TagListFragment storage={storage} />
-      <SideNavigatorItem
-        depth={0}
-        label={t('general.attachments')}
-        iconPath={mdiPaperclip}
-        active={attachmentsPageIsActive}
-        onClick={() => push(attachmentsPagePathname)}
-        onContextMenu={(event) => {
-          event.preventDefault()
-        }}
-      />
-      <SideNavigatorItem
-        depth={0}
-        label={t('general.trash')}
-        iconPath={mdiTrashCanOutline}
-        active={trashcanPageIsActive}
-        onClick={() => push(trashcanPagePathname)}
-        onContextMenu={(event) => {
-          event.preventDefault()
-          // TODO: Implement context menu(restore all notes)
-        }}
-      />
+      {attachments.length > 0 && (
+        <SideNavigatorItem
+          depth={0}
+          label={t('general.attachments')}
+          iconPath={mdiPaperclip}
+          active={attachmentsPageIsActive}
+          onClick={() => push(attachmentsPagePathname)}
+          onContextMenu={(event) => {
+            event.preventDefault()
+          }}
+        />
+      )}
+      {trashed.length > 0 && (
+        <SideNavigatorItem
+          depth={0}
+          label={t('general.trash')}
+          iconPath={mdiTrashCanOutline}
+          active={trashcanPageIsActive}
+          onClick={() => push(trashcanPagePathname)}
+          onContextMenu={(event) => {
+            event.preventDefault()
+            // TODO: Implement context menu(restore all notes)
+          }}
+        />
+      )}
       <Spacer />
     </React.Fragment>
   )
