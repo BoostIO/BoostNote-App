@@ -8,7 +8,6 @@ import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
 
 const AppLinkContainer = styled.button`
   ${primaryButtonStyle}
-  display: block;
   padding: 0 16px;
   height: 40px;
   line-height: 1;
