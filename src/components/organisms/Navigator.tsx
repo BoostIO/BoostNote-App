@@ -1,17 +1,16 @@
 import React, { useMemo, useCallback } from 'react'
-import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
+import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
-import NavigatorItem from '../atoms/NavigatorItem'
-import { useTranslation } from 'react-i18next'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiStarOutline, mdiTuneVertical } from '@mdi/js'
+import { mdiTuneVertical, mdiPlus } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
+import { usePathnameWithoutNoteId } from '../../lib/router'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -22,6 +21,27 @@ const NavigatorContainer = styled.nav`
 
 const TopControl = styled.div`
   display: flex;
+`
+
+const Empty = styled.button`
+  width: 100%;
+  border: none;
+  text-decoration: underline;
+  padding: 0.25em;
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
+  &:hover {
+    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+  }
+
+  &:active,
+  .active {
+    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+  }
 `
 
 const Navigator = () => {
@@ -58,38 +78,31 @@ const Navigator = () => {
     },
     [popup, prompt, createStorage, push]
   )
-
+  const pathname = usePathnameWithoutNoteId()
   const { toggleClosed } = usePreferences()
-
-  const currentPathname = usePathnameWithoutNoteId()
-
-  const { t } = useTranslation()
 
   return (
     <NavigatorContainer>
       <TopControl>
         <Spacer />
+        <NavigatorButton
+          active={pathname === '/app/storages'}
+          onClick={() => push('/app/storages')}
+          iconPath={mdiPlus}
+        />
         <NavigatorButton onClick={toggleClosed} iconPath={mdiTuneVertical} />
       </TopControl>
-      <NavigatorItem
-        iconPath={mdiStarOutline}
-        depth={0}
-        label='Bookmarks'
-        active={currentPathname === `/app/bookmarks`}
-        onClick={() => push(`/app/bookmarks`)}
-      />
-      {/* <SideNavigatorLabel>
-        Storages
-        <CreateStorageButton onClick={() => push('/app/storages')}>
-          <IconAddRound size='1.7em' />
-        </CreateStorageButton>
-      </SideNavigatorLabel> */}
+
       <div className='storageList'>
         {storageEntries.map(([, storage]) => (
           <StorageNavigatorFragment key={storage.id} storage={storage} />
         ))}
         {storageEntries.length === 0 && (
-          <div className='empty'>{t('storage.noStorage')}</div>
+          <Empty onClick={() => push('/app/storages')}>
+            There are no storages.
+            <br />
+            Click here to create one.
+          </Empty>
         )}
       </div>
       <Spacer onContextMenu={openSideNavContextMenu} />
