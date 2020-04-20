@@ -105,7 +105,7 @@ const PreferencesModal = () => {
         <ExternalLinkTableViewCell url='https://www.reddit.com/r/Boostnote/'>
           Reddit
         </ExternalLinkTableViewCell>
-        <ExternalLinkTableViewCell url='https://boostnote.io/wiki'>
+        <ExternalLinkTableViewCell url='https://hub.boostio.co/'>
           Boost Note for Team
         </ExternalLinkTableViewCell>
       </TopBarLayout>
