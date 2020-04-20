@@ -222,14 +222,14 @@ export default () => {
           const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
           const showPromptToCreateFolder = (folderPathname: string) => {
             folderConfig({
-              title: 'Create a Folder',
-              message: 'Enter the path where do you want to create a folder',
+              title: t('folder.create'),
+              message: t('folder.createMessage'),
               iconType: DialogIconTypes.Question,
               defaultValue: {
                 folderPath: folderPathname === '/' ? '/' : `${folderPathname}/`,
                 color: '',
               },
-              submitButtonLabel: 'Create Folder',
+              submitButtonLabel: t('folder.create'),
               onClose: async (value: FolderConfigDialogValues | null) => {
                 if (value === null || value.folderPath === undefined) {
                   return

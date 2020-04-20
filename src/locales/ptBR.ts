@@ -36,6 +36,7 @@
 
     //Folder
     'folder.create': 'Nova pasta',
+    'folder.createMessage': 'Insira o caminho onde você deseja criar uma pasta',
     'folder.rename': 'Renomear pasta',
     'folder.renameMessage':
       'Insira um novo nome de pasta, o caminho de cada nota e sub-pasta será também atualizado.',

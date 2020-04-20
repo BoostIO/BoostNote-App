@@ -33,6 +33,7 @@ export default {
 
     //Folder
     'folder.create': '新資料夾',
+    'folder.createMessage': '輸入您要在其中創建文件夾的路徑',
     'folder.rename': '重新命名資料夾',
     'folder.renameMessage':
       '請輸入新資料夾名稱，所有的筆記和子資料夾路徑也將會被更新。',

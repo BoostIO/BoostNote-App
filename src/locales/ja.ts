@@ -34,6 +34,7 @@ export default {
 
     //Folder
     'folder.create': 'フォルダ作成',
+    'folder.createMessage': 'フォルダを作成するパスを入力します',
     'folder.rename': 'フォルダ名変更',
     'folder.renameMessage':
       'フォルダ名を変えると、全てのノートやサブフォルダのパスも更新されます',

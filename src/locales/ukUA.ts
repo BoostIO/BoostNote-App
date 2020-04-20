@@ -34,6 +34,7 @@ export default {
 
     // Folder
     'folder.create': 'Нова папка',
+    'folder.createMessage': 'Введіть шлях, де ви хочете створити папку',
     'folder.rename': 'Перейменування папки',
     'folder.renameMessage':
       "Введіть нове ім'я папки, також будуть оновлені всі шляхи, нотатки та папки.",

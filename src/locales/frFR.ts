@@ -36,6 +36,8 @@ export default {
 
     //Folder
     'folder.create': 'Nouveau dossier',
+    'folder.createMessage':
+      'Entrez le chemin où vous souhaitez créer un dossier',
     'folder.rename': 'Renommer dossier',
     'folder.renameMessage':
       'Entrez le nom du nouveau dossier, toutes les notes et adresses des sous-dossiers seront également mises à jour.',

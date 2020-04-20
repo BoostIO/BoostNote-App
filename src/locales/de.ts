@@ -35,6 +35,8 @@ export default {
 
     //Folder
     'folder.create': 'Neuer Ordner',
+    'folder.createMessage':
+      'Geben Sie den Pfad ein, unter dem Sie einen Ordner erstellen möchten',
     'folder.rename': 'Ordner umbenennen',
     'folder.renameMessage':
       'Gib den neuen Ordnernamen an, jede Notiz und Unterordner-Pfad wird aktualisiert.',

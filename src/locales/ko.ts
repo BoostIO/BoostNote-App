@@ -33,6 +33,7 @@ export default {
 
     //Folder
     'folder.create': '폴더 생성',
+    'folder.createMessage': '폴더를 만들 경로를 입력하십시오',
     'folder.rename': '폴더명 변경',
     'folder.renameMessage':
       '새 폴더명을 입력하면, 관련된 모든 노트와 하위 폴더 경로가 변경됩니다.',

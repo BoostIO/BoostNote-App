@@ -34,6 +34,7 @@ export default {
 
     //Folder
     'folder.create': 'New Folder',
+    'folder.createMessage': 'Enter the path where you want to create a folder',
     'folder.rename': 'Rename Folder',
     'folder.renameMessage':
       'Enter the new folder name, every note and subfolder paths will also be updated.',

@@ -33,6 +33,7 @@ export default {
 
     //Folder
     'folder.create': '新文件夹',
+    'folder.createMessage': '输入您要在其中创建文件夹的路径',
     'folder.rename': '重命名文件夹',
     'folder.renameMessage':
       '输入新文件夹名，所有的笔记和子文件夹路径也将被更新.',

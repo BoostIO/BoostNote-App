@@ -36,6 +36,7 @@ export default {
 
     //Folder
     'folder.create': 'Nueva carpeta',
+    'folder.createMessage': 'Introduce la ruta donde quieres crear una carpeta',
     'folder.rename': 'Renombrar la carpeta',
     'folder.renameMessage':
       'Introduce el nuevo nombre para la carpeta, cada nota y subcarpeta también se vera afectada.',
