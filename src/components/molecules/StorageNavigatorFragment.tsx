@@ -238,12 +238,14 @@ const StorageNavigatorFragment = ({
         onContextMenu={openContextMenu}
         control={
           <>
-            <NavigatorButton
-              active={syncing}
-              onClick={syncThisStorage}
-              iconPath={mdiSync}
-              spin={syncing}
-            />
+            {storage.cloudStorage != null && (
+              <NavigatorButton
+                active={syncing}
+                onClick={syncThisStorage}
+                iconPath={mdiSync}
+                spin={syncing}
+              />
+            )}
             <NavigatorButton
               onClick={() => push(`/app/storages/${storage.id}/settings`)}
               iconPath={mdiTuneVertical}
