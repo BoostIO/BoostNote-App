@@ -1,3 +1,9 @@
+> ### [Boost Note for Teams](https://hub.boostio.co/)
+>
+> We'll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!
+>
+> Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.
+
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
   
