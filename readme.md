@@ -26,11 +26,7 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 
 ## Roadmap
 
-- Browser app (Dec 2019)
-- Desktop app(Windows, mac and Linux) (Dec 2019)
-- Cloud storage (Dec 2019)
-- Mobile app(Android and iOS) (Feb 2020)
-- File system based storage (June 2020)
+[Boost Note Roadmap 2020](https://medium.com/boostnote/boost-note-roadmap-2020-9f06a642f5f1)
 
 ## Authors & Maintainers
 
