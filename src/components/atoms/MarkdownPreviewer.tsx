@@ -188,6 +188,7 @@ const MarkdownPreviewer = ({
   const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
+      .use(remarkEmoji, { emoticon: false })
       .use(remarkRehype, { allowDangerousHTML: false })
       .use(remarkMath)
       .use(rehypeCodeMirror, {
@@ -197,7 +198,6 @@ const MarkdownPreviewer = ({
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
       .use(rehypeKatex)
-      .use(remarkEmoji, { emoticon: true })
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
