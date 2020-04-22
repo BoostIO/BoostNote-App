@@ -326,8 +326,16 @@ export default () => {
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            noteStorageName={storageMap[currentNote.storageId]!.name}
-            attachmentMap={storageMap[currentNote.storageId]!.attachmentMap}
+            noteStorageName={
+              storageMap[currentNote.storageId] == null
+                ? ''
+                : storageMap[currentNote.storageId]!.name
+            }
+            attachmentMap={
+              storageMap[currentNote.storageId] == null
+                ? {}
+                : storageMap[currentNote.storageId]!.attachmentMap
+            }
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={updateNote}
