@@ -3,6 +3,7 @@ import cc from 'classcat'
 import styled from '../../lib/styled'
 import Icon from './Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import { textOverflow } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
   position: relative;
@@ -50,7 +51,9 @@ const ClickableContainer = styled.button`
   border: none;
   display: flex;
   align-items: center;
-  flex: 1 1 auto;
+  text-align: left;
+  flex: 1;
+  overflow: hidden;
   cursor: pointer;
 
   color: ${({ theme }) => theme.sideNavItemColor};
@@ -71,8 +74,8 @@ const ClickableContainer = styled.button`
 `
 
 const Label = styled.div`
-  overflow: ellipsis;
-  white-space: nowrap;
+  ${textOverflow}
+  flex: 1;
 `
 
 const Control = styled.div`
