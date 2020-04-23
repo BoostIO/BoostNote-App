@@ -147,7 +147,7 @@ const StorageNavigatorFragment = ({
       },
       {
         type: MenuTypes.Normal,
-        label: t('storage.rename'),
+        label: 'Sync Storage',
         onClick: syncThisStorage,
       },
       {
