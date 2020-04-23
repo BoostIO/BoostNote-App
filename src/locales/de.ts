@@ -37,7 +37,7 @@ export default {
     'folder.create': 'Neuer Ordner',
     'folder.rename': 'Ordner umbenennen',
     'folder.renameMessage':
-      'Gib den neuen Ordnernamen an. Notizen und Pfade von Unterordnern werden aktualisiert.',
+      'Gib den neuen Ordnernamen an. Notizen und Pfade von Unterordnern werden automatisch aktualisiert.',
     'folder.renameErrorMessage': 'Ordner konnte nicht umbenannt werden',
     'folder.remove': 'Ordner löschen',
     'folder.removeMessage': 'Alle Notizen und Unterordner werden gelöscht.',
