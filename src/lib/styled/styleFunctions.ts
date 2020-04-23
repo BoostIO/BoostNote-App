@@ -157,34 +157,40 @@ export const selectStyle = ({
 }: StyledProps) => `background-color: ${theme.inputBackground};
 border: 1px solid ${theme.borderColor};
 border-radius: 4px;
-  color: ${theme.textColor};
-  &:focus {
-    box-shadow: 0 0 0 2px ${theme.primaryColor};
-  }
+color: ${theme.textColor};
+&:focus {
+  box-shadow: 0 0 0 2px ${theme.primaryColor};
+}
 `
 
 export const tableStyle = ({ theme }: StyledProps) => `
+border: 1px solid ${theme.borderColor};
+border-collapse: collapse;
+color: ${theme.textColor};
+text-align: left;
+
+th, td {
+  padding: 16px 24px;
   border: 1px solid ${theme.borderColor};
-  border-collapse: collapse;
-  color: ${theme.textColor};
-  text-align: left;
+  font-weight: 400;
+}
 
-  th, td {
-    padding: 16px 24px;
-    border: 1px solid ${theme.borderColor};
-    font-weight: 400;
+thead th {
+  font-size: 20px;
+  font-weight: 500;
+
+  span {
+    display: block;
   }
+}
 
-  thead th {
-    font-size: 20px;
-    font-weight: 500;
+tbody td {
+  text-align: center;
+}
+`
 
-    span {
-      display: block;
-    }
-  }
-
-  tbody td {
-    text-align: center;
-  }
+export const textOverflow = () => `
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
 `

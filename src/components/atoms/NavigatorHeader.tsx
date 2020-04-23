@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '../../lib/styled'
+import { textOverflow } from '../../lib/styled/styleFunctions'
 
 const HeaderContainer = styled.header`
   position: relative;
@@ -14,6 +15,7 @@ const HeaderContainer = styled.header`
 const Label = styled.div`
   padding: 0 0 0 0.5em;
   color: ${({ theme }) => theme.sideNavLabelColor};
+  ${textOverflow}
 `
 
 const Control = styled.div`
