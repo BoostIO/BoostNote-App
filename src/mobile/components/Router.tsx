@@ -21,22 +21,24 @@ export default () => {
   useRedirectHandler()
 
   switch (routeParams.name) {
-    case 'storages.bookmarks':
     case 'storages.notes':
     case 'storages.trashCan':
-    case 'storages.tags.show':
-      return <NotePage />
-    // case 'storages.attachments':
-    //   return <AttachmentsPage />
-    case 'storages.create':
-      return <StorageCreatePage />
-    case 'storages.settings':
+    case 'storages.tags.show': {
       const storage = db.storageMap[routeParams.storageId]
-      if (storage != null) {
-        return <StorageEditPage key={storage.id} storage={storage} />
-      } else {
+      if (storage == null) {
         break
       }
+      return <NotePage storage={storage} />
+    }
+    case 'storages.create':
+      return <StorageCreatePage />
+    case 'storages.settings': {
+      const storage = db.storageMap[routeParams.storageId]
+      if (storage == null) {
+        break
+      }
+      return <StorageEditPage key={storage.id} storage={storage} />
+    }
   }
   return (
     <TopBarLayout leftControl={<TopBarToggleNavButton />}>

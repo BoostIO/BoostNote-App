@@ -204,18 +204,6 @@ export default ({ toggle }: NavigatorProps) => {
         </button>
       </div>
 
-      {/* <NavigatorItem
-        icon={<IconStarActive />}
-        depth={0}
-        className='bookmark-sidenav'
-        label='Bookmarks'
-        active={currentPathname === `/app/bookmarks`}
-        onClick={() => {
-          push(`/app/bookmarks`)
-          toggle()
-        }}
-      /> */}
-
       <Description>
         Storages
         <CreateStorageButton
@@ -292,10 +280,6 @@ export default ({ toggle }: NavigatorProps) => {
           const trashcanPagePathname = `/m/storages/${storage.id}/trashcan`
           const trashcanPageIsActive = currentPathname === trashcanPagePathname
 
-          // const attachmentsPagePathname = `/m/storages/${storage.id}/attachments`
-          // const attachmentsPageIsActive =
-          //   currentPathname === attachmentsPagePathname
-
           const controlComponents = [
             <ControlButton
               key={`${storage.id}-addFolderButton`}
@@ -328,7 +312,7 @@ export default ({ toggle }: NavigatorProps) => {
             <ControlButton
               key={`${storage.id}-settingsButton`}
               onClick={() => {
-                push(`/m/storages/${storage.id}`)
+                push(`/m/storages/${storage.id}/settings`)
                 toggleNav()
               }}
               icon={<IconSetting size='1.3em' />}
@@ -408,19 +392,7 @@ export default ({ toggle }: NavigatorProps) => {
                     showPromptToRenameFolder={showPromptToRenameFolder}
                   />
                   <TagListFragment storage={storage} />
-                  {/* <NavigatorItem
-                    depth={1}
-                    label={t('general.attachments')}
-                    icon={<IconImage size='1.5em' />}
-                    active={attachmentsPageIsActive}
-                    onClick={() => {
-                      push(attachmentsPagePathname)
-                      toggleNav()
-                    }}
-                    onContextMenu={event => {
-                      event.preventDefault()
-                    }}
-                  /> */}
+
                   <NavigatorItem
                     depth={1}
                     label={t('general.trash')}

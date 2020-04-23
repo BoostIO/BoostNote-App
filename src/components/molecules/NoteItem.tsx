@@ -12,11 +12,11 @@ import { setTransferrableNoteData } from '../../lib/dnd'
 import HighlightText from '../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../lib/styled'
-import { PopulatedNoteDoc } from '../../lib/db/types'
 import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
+import { NoteDoc } from '../../lib/db/types'
 
 export const StyledNoteListItem = styled.div`
   margin: 0;
@@ -90,7 +90,8 @@ export const StyledNoteListItem = styled.div`
 `
 
 type NoteItemProps = {
-  note: PopulatedNoteDoc
+  storageId: string
+  note: NoteDoc
   active: boolean
   recentlyCreated?: boolean
   search: string
@@ -99,6 +100,7 @@ type NoteItemProps = {
 }
 
 export default ({
+  storageId,
   note,
   active,
   basePathname,
@@ -123,7 +125,7 @@ export default ({
               type: MenuTypes.Normal,
               label: t('note.restore'),
               onClick: async () => {
-                untrashNote(note.storageId, note._id)
+                untrashNote(storageId, note._id)
               },
             },
             {
@@ -131,7 +133,7 @@ export default ({
               label: t('note.delete'),
               onClick: async () => {
                 if (!note.trashed) {
-                  trashNote(note.storageId, note._id)
+                  trashNote(storageId, note._id)
                 } else {
                   messageBox({
                     title: t('note.delete2'),
@@ -142,7 +144,7 @@ export default ({
                     cancelButtonIndex: 1,
                     onClose: (value: number | null) => {
                       if (value === 0) {
-                        purgeNote(note.storageId, note._id)
+                        purgeNote(storageId, note._id)
                       }
                     },
                   })
@@ -155,7 +157,7 @@ export default ({
               type: MenuTypes.Normal,
               label: t('note.duplicate'),
               onClick: async () => {
-                createNote(note.storageId, {
+                createNote(storageId, {
                   title: note.title,
                   content: note.content,
                   folderPathname: note.folderPathname,
@@ -170,7 +172,7 @@ export default ({
               label: t('note.delete'),
               onClick: async () => {
                 if (!note.trashed) {
-                  trashNote(note.storageId, note._id)
+                  trashNote(storageId, note._id)
                 } else {
                   messageBox({
                     title: t('note.delete2'),
@@ -181,7 +183,7 @@ export default ({
                     cancelButtonIndex: 1,
                     onClose: (value: number | null) => {
                       if (value === 0) {
-                        purgeNote(note.storageId, note._id)
+                        purgeNote(storageId, note._id)
                       }
                     },
                   })
@@ -193,7 +195,7 @@ export default ({
               label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
               onClick: async () => {
                 note.bookmarked = !note.bookmarked
-                updateNote(note.storageId, note._id, note)
+                updateNote(storageId, note._id, note)
               },
             },
           ]
@@ -201,6 +203,7 @@ export default ({
       popup(event, menuItems)
     },
     [
+      storageId,
       popup,
       createNote,
       note,
@@ -237,9 +240,9 @@ export default ({
 
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
-      setTransferrableNoteData(event, note.storageId, note)
+      setTransferrableNoteData(event, storageId, note)
     },
-    [note]
+    [storageId, note]
   )
 
   return (
