@@ -13,7 +13,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { PopulatedNoteDoc } from '../../lib/db/types'
+import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/string'
@@ -37,9 +37,13 @@ export type BreadCrumbs = {
 
 export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
 
-export default () => {
+interface NotePageProps {
+  storage: NoteStorage
+  noteId: string | undefined
+}
+
+const NotePage = ({ storage }: NotePageProps) => {
   const {
-    storageMap,
     createNote,
     purgeNote,
     updateNote,
@@ -52,11 +56,7 @@ export default () => {
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
     | StorageBookmarkNotes
-  const { storageId, noteId } = routeParams
-  const currentStorage = useMemo(() => {
-    if (storageId == null) return undefined
-    return storageMap[storageId]
-  }, [storageMap, storageId])
+  const { noteId } = routeParams
   const { push } = useRouter()
   const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
@@ -68,29 +68,26 @@ export default () => {
     setLastCreatedNoteId('')
   }, [currentPathnameWithoutNoteId])
 
-  const notes = useMemo((): PopulatedNoteDoc[] => {
+  const notes = useMemo((): NoteDoc[] => {
     switch (routeParams.name) {
       case 'storages.notes':
-        if (currentStorage == null) return []
+        if (storage == null) return []
         const { folderPathname } = routeParams
-        const noteEntries = Object.entries(currentStorage.noteMap) as [
+        const noteEntries = Object.entries(storage.noteMap) as [
           string,
-          PopulatedNoteDoc
+          NoteDoc
         ][]
         if (folderPathname === '/') {
-          return noteEntries.reduce<PopulatedNoteDoc[]>(
-            (notes, [_id, note]) => {
-              if (!note.trashed) {
-                notes.push(note)
-              }
-              return notes
-            },
-            []
-          )
+          return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
+            if (!note.trashed) {
+              notes.push(note)
+            }
+            return notes
+          }, [])
         }
-        const folder = currentStorage.folderMap[folderPathname]
+        const folder = storage.folderMap[folderPathname]
         if (folder == null) return []
-        return noteEntries.reduce<PopulatedNoteDoc[]>((notes, [_id, note]) => {
+        return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
           if (
             (note!.folderPathname + '/').startsWith(folder.pathname + '/') &&
             !note!.trashed
@@ -100,22 +97,22 @@ export default () => {
           return notes
         }, [])
       case 'storages.tags.show':
-        if (currentStorage == null) return []
+        if (storage == null) return []
         const { tagName } = routeParams
-        const tag = currentStorage.tagMap[tagName]
+        const tag = storage.tagMap[tagName]
         if (tag == null) return []
         return [...tag.noteIdSet]
-          .map((noteId) => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
+          .map((noteId) => storage.noteMap[noteId]! as NoteDoc)
           .filter((note) => !note.trashed)
       case 'storages.trashCan':
-        if (currentStorage == null) return []
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter((note) => note.trashed)
+        if (storage == null) return []
+        return (Object.values(storage.noteMap) as NoteDoc[]).filter(
+          (note) => note.trashed
+        )
       default:
         return []
     }
-  }, [currentStorage, routeParams])
+  }, [storage, routeParams])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
@@ -144,7 +141,7 @@ export default () => {
     return 0
   }, [filteredNotes, noteId])
 
-  const currentNote: PopulatedNoteDoc | undefined = useMemo(() => {
+  const currentNote: NoteDoc | undefined = useMemo(() => {
     return filteredNotes[currentNoteIndex] != null
       ? filteredNotes[currentNoteIndex]
       : undefined
@@ -170,7 +167,7 @@ export default () => {
   )
 
   const createQuickNote = useCallback(async () => {
-    if (storageId == null || routeParams.name === 'storages.trashCan') {
+    if (storage.id == null || routeParams.name === 'storages.trashCan') {
       return
     }
 
@@ -180,18 +177,18 @@ export default () => {
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
-    const note = await createNote(storageId, {
+    const note = await createNote(storage.id, {
       folderPathname,
       tags,
     })
     if (note != null) {
-      console.log(`/app/storages/${storageId}/notes${folderPathname}
+      console.log(`/app/storages/${storage.id}/notes${folderPathname}
         ${note._id}`)
       setLastCreatedNoteId(note._id)
-      push(`/app/storages/${storageId}/notes${folderPathname}${note._id}`)
+      push(`/app/storages/${storage.id}/notes${folderPathname}${note._id}`)
       dispatchNoteDetailFocusTitleInputEvent()
     }
-  }, [createNote, push, routeParams, storageId, setLastCreatedNoteId])
+  }, [createNote, push, routeParams, storage.id, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 
@@ -206,11 +203,11 @@ export default () => {
         folderPathname,
         folderIsActive:
           currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/notes${folderPathname}`,
+          `/app/storages/${storage.id}/notes${folderPathname}`,
       }
     })
     return thread as BreadCrumbs
-  }, [currentPathnameWithoutNoteId, currentNote, storageId])
+  }, [currentPathnameWithoutNoteId, currentNote, storage.id])
 
   const { messageBox } = useDialog()
   const showPurgeNoteDialog = useCallback(
@@ -256,11 +253,11 @@ export default () => {
     }
 
     if (!currentNote.trashed) {
-      trashNote(currentNote.storageId, currentNote._id)
+      trashNote(storage.id, currentNote._id)
     } else {
-      purgeNote(currentNote.storageId, currentNote._id)
+      purgeNote(storage.id, currentNote._id)
     }
-  }, [trashNote, purgeNote, currentNote])
+  }, [trashNote, purgeNote, currentNote, storage.id])
 
   useGlobalKeyDownHandler((e) => {
     switch (e.key) {
@@ -296,7 +293,7 @@ export default () => {
         <NoteList
           search={search}
           setSearchInput={setSearchInput}
-          currentStorageId={storageId}
+          storageId={storage.id}
           notes={filteredNotes}
           createNote={showCreateNoteInList ? createQuickNote : undefined}
           basePathname={currentPathnameWithoutNoteId}
@@ -311,31 +308,15 @@ export default () => {
       right={
         currentNote == null ? (
           <StyledNoteDetailNoNote>
-            {storageId != null ? (
-              <div>
-                <h1>{t('note.createKeyMac')}</h1>
-                <h1>{t('note.createKeyWinLin')}</h1>
-                <h2>{t('note.createkeymessage1')}</h2>
-              </div>
-            ) : (
-              <div>
-                <h1>{t('note.createkeymessage2')}</h1>
-                <h2>{t('note.createkeymessage3')}</h2>
-              </div>
-            )}
+            <div>
+              <h1>{t('note.createKeyMac')}</h1>
+              <h1>{t('note.createKeyWinLin')}</h1>
+              <h2>{t('note.createkeymessage1')}</h2>
+            </div>
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            noteStorageName={
-              storageMap[currentNote.storageId] == null
-                ? ''
-                : storageMap[currentNote.storageId]!.name
-            }
-            attachmentMap={
-              storageMap[currentNote.storageId] == null
-                ? {}
-                : storageMap[currentNote.storageId]!.attachmentMap
-            }
+            storage={storage}
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={updateNote}
@@ -354,3 +335,5 @@ export default () => {
     />
   )
 }
+
+export default NotePage

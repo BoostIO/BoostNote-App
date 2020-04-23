@@ -4,7 +4,6 @@ import {
   NoteDoc,
   NoteDocEditibleProps,
   Attachment,
-  PopulatedNoteDoc,
   ObjectMap,
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
@@ -117,7 +116,8 @@ export const NoteDetailContainer = styled.div`
 
 type NoteDetailProps = {
   currentPathnameWithoutNoteId: string
-  note: PopulatedNoteDoc
+  note: NoteDoc
+  storageId: string
   attachmentMap: ObjectMap<Attachment>
   updateNote: (
     storageId: string,
@@ -167,8 +167,7 @@ export default class NoteDetail extends React.Component<
     props: NoteDetailProps,
     state: NoteDetailState
   ): NoteDetailState {
-    const { note } = props
-    const { storageId } = note
+    const { note, storageId } = props
     if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
       return {
         prevStorageId: storageId,
@@ -288,8 +287,7 @@ export default class NoteDetail extends React.Component<
   }
 
   trashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -304,8 +302,7 @@ export default class NoteDetail extends React.Component<
   }
 
   untrashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -320,8 +317,7 @@ export default class NoteDetail extends React.Component<
   }
 
   purgeNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -344,8 +340,7 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      const { note } = this.props
-      const { storageId } = note
+      const { note, storageId } = this.props
       const { title, content, tags } = this.state
 
       this.saveNote(storageId, note._id, { title, content, tags })

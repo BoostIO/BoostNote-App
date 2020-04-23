@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, ChangeEventHandler } from 'react'
 import NoteItem from '../molecules/NoteItem'
-import { PopulatedNoteDoc } from '../../lib/db/types'
 import styled from '../../lib/styled'
 import {
   borderBottom,
@@ -18,6 +17,7 @@ import { NoteListSortOptions } from '../pages/NotePage'
 import { osName } from '../../lib/platform'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiPlus, mdiMagnify } from '@mdi/js'
+import { NoteDoc } from '../../lib/db/types'
 
 const NoteListContainer = styled.div`
   display: flex;
@@ -142,10 +142,10 @@ const Control = styled.div`
 `
 
 type NoteListProps = {
-  currentStorageId?: string
+  storageId: string
   currentNoteId?: string
   search: string
-  notes: PopulatedNoteDoc[]
+  notes: NoteDoc[]
   createNote?: () => Promise<void>
   setSearchInput: (input: string) => void
   navigateDown: () => void
@@ -159,7 +159,7 @@ type NoteListProps = {
 const NoteList = ({
   notes,
   createNote,
-  currentStorageId,
+  storageId,
   basePathname,
   search,
   currentNoteId,
@@ -242,7 +242,7 @@ const NoteList = ({
           />
           <Icon className='icon' path={mdiMagnify} />
         </div>
-        {currentStorageId != null && createNote != null && (
+        {storageId != null && createNote != null && (
           <button className='newNoteButton' onClick={createNote}>
             <Icon className='icon' path={mdiPlus} />
           </button>
@@ -265,6 +265,7 @@ const NoteList = ({
           return (
             <li key={note._id}>
               <NoteItem
+                storageId={storageId}
                 active={noteIsCurrentNote}
                 note={note}
                 basePathname={basePathname}

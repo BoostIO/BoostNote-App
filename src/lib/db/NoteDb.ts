@@ -11,7 +11,6 @@ import {
   ExceptRev,
   ObjectMap,
   Attachment,
-  PopulatedNoteDoc,
 } from './types'
 import {
   getFolderId,
@@ -148,10 +147,7 @@ export default class NoteDb {
     return allDocsResponse.rows.reduce((map, row) => {
       const { doc } = row
       if (isNoteDoc(doc)) {
-        map.noteMap[doc._id] = {
-          ...doc,
-          storageId: this.id,
-        } as PopulatedNoteDoc
+        map.noteMap[doc._id] = doc
       } else if (isFolderDoc(doc)) {
         map.folderMap[getFolderPathname(doc._id)] = doc
       } else if (isTagDoc(doc)) {

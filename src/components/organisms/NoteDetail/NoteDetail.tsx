@@ -4,8 +4,7 @@ import {
   NoteDoc,
   NoteDocEditibleProps,
   Attachment,
-  PopulatedNoteDoc,
-  ObjectMap,
+  NoteStorage,
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
 import TagList from './TagList'
@@ -40,7 +39,7 @@ import {
   mdiTextSubject,
 } from '@mdi/js'
 
-export const StyledNoteDetailContainer = styled.div`
+const StyledNoteDetailContainer = styled.div`
   ${backgroundColor};
   display: flex;
   flex-direction: column;
@@ -162,10 +161,9 @@ export const StyledNoteDetailContainer = styled.div`
 `
 
 type NoteDetailProps = {
-  noteStorageName: string
   currentPathnameWithoutNoteId: string
-  note: PopulatedNoteDoc
-  attachmentMap: ObjectMap<Attachment>
+  note: NoteDoc
+  storage: NoteStorage
   updateNote: (
     storageId: string,
     noteId: string,
@@ -216,11 +214,10 @@ export default class NoteDetail extends React.Component<
     props: NoteDetailProps,
     state: NoteDetailState
   ): NoteDetailState {
-    const { note } = props
-    const { storageId } = note
-    if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
+    const { note, storage } = props
+    if (storage.id !== state.prevStorageId || note._id !== state.prevNoteId) {
       return {
-        prevStorageId: storageId,
+        prevStorageId: storage.id,
         prevNoteId: note._id,
         title: note.title,
         content: note.content,
@@ -337,51 +334,48 @@ export default class NoteDetail extends React.Component<
   }
 
   trashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storage } = this.props
     const noteId = note._id
 
     if (this.queued) {
       const { title, content, tags } = this.state
-      await this.saveNote(storageId, noteId, {
+      await this.saveNote(storage.id, noteId, {
         title,
         content,
         tags,
       })
     }
-    await this.props.trashNote(storageId, noteId)
+    await this.props.trashNote(storage.id, noteId)
   }
 
   untrashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storage } = this.props
     const noteId = note._id
 
     if (this.queued) {
       const { title, content, tags } = this.state
-      await this.saveNote(storageId, noteId, {
+      await this.saveNote(storage.id, noteId, {
         title,
         content,
         tags,
       })
     }
-    await this.props.untrashNote(storageId, noteId)
+    await this.props.untrashNote(storage.id, noteId)
   }
 
   purgeNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storage } = this.props
     const noteId = note._id
 
     if (this.queued) {
       const { title, content, tags } = this.state
-      await this.saveNote(storageId, noteId, {
+      await this.saveNote(storage.id, noteId, {
         title,
         content,
         tags,
       })
     }
-    await this.props.purgeNote(storageId, noteId)
+    await this.props.purgeNote(storage.id, noteId)
   }
 
   queued = false
@@ -393,11 +387,10 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      const { note } = this.props
-      const { storageId } = note
+      const { note, storage } = this.props
       const { title, content, tags } = this.state
 
-      this.saveNote(storageId, note._id, {
+      this.saveNote(storage.id, note._id, {
         title,
         content,
         tags,
@@ -430,14 +423,13 @@ export default class NoteDetail extends React.Component<
   handleDrop = async (event: React.DragEvent) => {
     event.preventDefault()
 
-    const { note, addAttachments } = this.props
-    const { storageId } = note
+    const { storage, addAttachments } = this.props
 
     const files = getFileList(event).filter((file) =>
       file.type.startsWith('image/')
     )
 
-    const attachments = await addAttachments(storageId, files)
+    const attachments = await addAttachments(storage.id, files)
 
     this.setState(
       (prevState) => {
@@ -458,18 +450,17 @@ export default class NoteDetail extends React.Component<
   }
 
   handleBreadCrumbsClick = (folderPathname: string) => () => {
-    const { storageId } = this.props.note
-    this.props.push(`/app/storages/${storageId}/notes${folderPathname}`)
+    const { storage } = this.props
+    this.props.push(`/app/storages/${storage.id}/notes${folderPathname}`)
   }
 
   render() {
     const {
       note,
+      storage,
       viewMode,
       toggleViewMode,
-      noteStorageName,
       currentPathnameWithoutNoteId,
-      attachmentMap,
     } = this.props
     const codeEditor = (
       <CustomizedCodeEditor
@@ -484,7 +475,7 @@ export default class NoteDetail extends React.Component<
     const markdownPreviewer = (
       <CustomizedMarkdownPreviewer
         content={this.state.content}
-        attachmentMap={attachmentMap}
+        attachmentMap={storage.attachmentMap}
         updateContent={this.updateContent}
       />
     )
@@ -508,10 +499,10 @@ export default class NoteDetail extends React.Component<
                     'folderLink',
                     'allNotesLink',
                     currentPathnameWithoutNoteId ===
-                      `/app/storages/${note.storageId}/notes` && 'active',
+                      `/app/storages/${storage.id}/notes` && 'active',
                   ])}
                 >
-                  {noteStorageName}
+                  {storage.name}
                 </div>
                 {this.props.breadCrumbs != null && (
                   <>
