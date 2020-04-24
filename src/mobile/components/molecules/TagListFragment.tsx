@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import NavigatorItem from './NavigatorItem'
+import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../../lib/nav'
