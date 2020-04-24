@@ -16,11 +16,18 @@ import TopBarLayout from '../layouts/TopBarLayout'
 import NoteDetail from '../organisms/NoteDetail'
 import styled from '../../../lib/styled'
 import Icon from '../../../components/atoms/Icon'
-import { mdiChevronLeft, mdiEyeOutline, mdiDotsVertical } from '@mdi/js'
+import {
+  mdiChevronLeft,
+  mdiEyeOutline,
+  mdiDotsVertical,
+  mdiFolderOpen,
+  mdiPound,
+  mdiTrashCan,
+} from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
-import { IconFileOpen, IconTrash, IconTag } from '../../../components/icons'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { values } from '../../../lib/db/utils'
 
 const NotePageContainer = styled.div`
   width: 100%;
@@ -65,7 +72,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         const { folderPathname } = routeParams
         const folder = storage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(storage.noteMap) as NoteDoc[]).filter(
+        return values(storage.noteMap).filter(
           (note) =>
             (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
             !note.trashed
@@ -78,9 +85,7 @@ const NotePage = ({ storage }: NotePageProps) => {
           .map((noteId) => storage.noteMap[noteId]!)
           .filter((note) => !note.trashed)
       case 'storages.trashCan':
-        return (Object.values(storage.noteMap) as NoteDoc[]).filter(
-          (note) => note.trashed
-        )
+        return values(storage.noteMap).filter((note) => note.trashed)
     }
     return []
   }, [storage, routeParams])
@@ -152,20 +157,20 @@ const NotePage = ({ storage }: NotePageProps) => {
       case 'storages.notes':
         return (
           <>
-            <IconFileOpen size='1.3em' /> {routeParams.folderPathname} in{' '}
-            {storage!.name}
+            <Icon path={mdiFolderOpen} /> {storage!.name}
+            {routeParams.folderPathname}
           </>
         )
       case 'storages.tags.show':
         return (
           <>
-            <IconTag size='1.3em' /> {routeParams.tagName} in {storage!.name}
+            <Icon path={mdiPound} /> {routeParams.tagName} in {storage!.name}
           </>
         )
       case 'storages.trashCan':
         return (
           <>
-            <IconTrash size='1em' /> Trashed Notes in {storage!.name}
+            <Icon path={mdiTrashCan} /> Trashed Notes in {storage!.name}
           </>
         )
       default:
