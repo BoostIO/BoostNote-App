@@ -13,8 +13,9 @@ import {
   backgroundColor,
   closeIconColor,
 } from '../../lib/styled/styleFunctions'
-import { IconClose } from '../icons'
 import { useTranslation } from 'react-i18next'
+import Icon from '../atoms/Icon'
+import { mdiClose } from '@mdi/js'
 
 const Container = styled.div`
   z-index: 7000;
@@ -143,7 +144,7 @@ const PreferencesModal = () => {
       </TabNav>
       <TabContent>{content}</TabContent>
       <CloseButton onClick={toggleClosed}>
-        <IconClose />
+        <Icon path={mdiClose} />
       </CloseButton>
     </Container>
   )

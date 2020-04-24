@@ -18,7 +18,6 @@ import { useUsers } from '../../lib/accounts'
 import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import { IconArrowRotate } from '../icons'
 import { FormCheckItem } from '../atoms/form'
 
 const GeneralTab = () => {
@@ -81,10 +80,7 @@ const GeneralTab = () => {
                 loginState !== 'logging-in' ? (
                   <>{t('preferences.addAccount')}</>
                 ) : (
-                  <>
-                    <IconArrowRotate />
-                    {t('preferences.loginWorking')}
-                  </>
+                  <>{t('preferences.loginWorking')}</>
                 )
               }
             </LoginButton>

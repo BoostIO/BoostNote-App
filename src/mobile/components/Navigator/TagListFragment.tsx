@@ -7,8 +7,8 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useDb } from '../../lib/db'
-import { IconTag, IconTags, IconTagFill } from '../../../components/icons'
 import { useTranslation } from 'react-i18next'
+import { mdiTagMultiple, mdiPound } from '@mdi/js'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -37,7 +37,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         <NavigatorItem
           key={`storage:${storageId}/tags:${tagName}`}
           depth={2}
-          icon={tagIsActive ? <IconTagFill size='1.4em' /> : <IconTag />}
+          iconPath={mdiPound}
           label={tagName}
           onClick={() => {
             push(tagPathname)
@@ -87,7 +87,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     <>
       <NavigatorItem
         depth={1}
-        icon={<IconTags size='1.5em' />}
+        iconPath={mdiTagMultiple}
         label={t('tag.tag')}
         folded={tagList.length > 0 ? tagListIsFolded : undefined}
         onFoldButtonClick={() => {
