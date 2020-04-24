@@ -45,7 +45,7 @@ export default {
     //Tag
     'tag.tag': 'Tag',
     'tag.remove': 'Tag löschen',
-    'tag.removeMessage': 'Der Tag wird von allen Notizen entfernt.',
+    'tag.removeMessage': 'Das Tag wird von allen Notizen entfernt.',
 
     //Note
     'note.duplicate': 'Duplizieren',
@@ -88,7 +88,7 @@ export default {
 
     //Billing
     'billing.billing': 'Billing',
-    'billing.message': 'Bitte melde dich an, um deinen Plan zu ugpraden.',
+    'billing.message': 'Bitte melde dich an, um deinen Plan zu erweitern.',
     'billing.basic': 'Basic',
     'billing.current': 'Aktuell',
     'billing.premium': 'Premium',
@@ -144,7 +144,7 @@ export default {
 
     // Preferences MarkdownTab
     'preferences.previewStyle': 'Vorschau Style',
-    'preferences.markdownCodeBlockTheme': 'Code Block Theme',
+    'preferences.markdownCodeBlockTheme': 'Code Block Design',
     'preferences.defaultTheme': 'Verwende Standard-Design',
     'preferences.markdownPreview': 'Markdown Vorschau',
 
