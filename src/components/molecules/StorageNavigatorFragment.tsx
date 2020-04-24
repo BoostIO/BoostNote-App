@@ -101,7 +101,7 @@ const StorageNavigatorFragment = ({
     })
   }
 
-  const syncThisStorage = () => {
+  const sync = () => {
     if (user == null) {
       pushMessage({
         title: 'No User Error',
@@ -148,7 +148,7 @@ const StorageNavigatorFragment = ({
       {
         type: MenuTypes.Normal,
         label: 'Sync Storage',
-        onClick: syncThisStorage,
+        onClick: sync,
       },
       {
         type: MenuTypes.Normal,
@@ -241,7 +241,7 @@ const StorageNavigatorFragment = ({
             {storage.cloudStorage != null && (
               <NavigatorButton
                 active={syncing}
-                onClick={syncThisStorage}
+                onClick={sync}
                 iconPath={mdiSync}
                 spin={syncing}
               />

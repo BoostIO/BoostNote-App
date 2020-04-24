@@ -13,8 +13,9 @@ import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
-import { IconTrash } from '../../../components/icons'
 import { NoteDoc } from '../../../lib/db/types'
+import { mdiTrashCan } from '@mdi/js'
+import Icon from '../../../components/atoms/Icon'
 
 export const NoteListItemContainer = styled.div`
   margin: 0;
@@ -352,7 +353,7 @@ export default ({
             }
           }}
         >
-          <IconTrash />
+          <Icon path={mdiTrashCan} />
         </button>
       </NoteItemControlContainer>
     </NoteListItemContainer>

@@ -14,22 +14,15 @@ import TagListFragment from './TagListFragment'
 import { useUsers } from '../../../lib/accounts'
 import { useToast } from '../../../lib/toast'
 import { useTranslation } from 'react-i18next'
-import {
-  IconAddRound,
-  IconAdjustVertical,
-  IconArrowAgain,
-  IconTrash,
-  IconSetting,
-  IconBook,
-} from '../../../components/icons'
 import Icon from '../../../components/atoms/Icon'
-import { mdiClose } from '@mdi/js'
-
-const Description = styled.nav`
-  margin-left: 15px;
-  margin-bottom: 10px;
-  font-size: 18px;
-`
+import {
+  mdiClose,
+  mdiTrashCan,
+  mdiBookOpen,
+  mdiSync,
+  mdiPlus,
+  mdiTuneVertical,
+} from '@mdi/js'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -108,24 +101,6 @@ const StyledSideNavContainer = styled.nav`
   }
 `
 
-const CreateStorageButton = styled.button`
-  position: absolute;
-  right: 8px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.sideNavButtonColor};
-  &:hover {
-    color: ${({ theme }) => theme.sideNavButtonHoverColor};
-  }
-
-  &:active,
-  .active {
-    color: ${({ theme }) => theme.sideNavButtonActiveColor};
-  }
-`
-
 const Spacer = styled.div`
   flex: 1;
 `
@@ -199,22 +174,19 @@ export default ({ toggle }: NavigatorProps) => {
           <Icon path={mdiClose} />
         </button>
         <div className='spacer' />
-        <button className='button' onClick={toggleClosed}>
-          <IconAdjustVertical size='0.8em' />
-        </button>
-      </div>
-
-      <Description>
-        Storages
-        <CreateStorageButton
+        <button
+          className='button'
           onClick={() => {
             push('/m/storages')
             toggleNav()
           }}
         >
-          <IconAddRound size='1.7em' />
-        </CreateStorageButton>
-      </Description>
+          <Icon path={mdiPlus} />
+        </button>
+        <button className='button' onClick={toggleClosed}>
+          <Icon path={mdiTuneVertical} />
+        </button>
+      </div>
 
       <div className='storageList'>
         {storageEntries.map(([, storage]) => {
@@ -284,7 +256,7 @@ export default ({ toggle }: NavigatorProps) => {
             <ControlButton
               key={`${storage.id}-addFolderButton`}
               onClick={() => showPromptToCreateFolder('/')}
-              icon={<IconAddRound />}
+              iconPath={mdiPlus}
             />,
           ]
 
@@ -303,21 +275,11 @@ export default ({ toggle }: NavigatorProps) => {
               <ControlButton
                 key={`${storage.id}-syncButton`}
                 onClick={cloudSync}
-                icon={<IconArrowAgain />}
+                iconPath={mdiSync}
+                spin={storage.sync != null}
               />
             )
           }
-
-          controlComponents.unshift(
-            <ControlButton
-              key={`${storage.id}-settingsButton`}
-              onClick={() => {
-                push(`/m/storages/${storage.id}/settings`)
-                toggleNav()
-              }}
-              icon={<IconSetting size='1.3em' />}
-            />
-          )
 
           return (
             <React.Fragment key={itemId}>
@@ -379,7 +341,7 @@ export default ({ toggle }: NavigatorProps) => {
                   <NavigatorItem
                     depth={1}
                     label='All Notes'
-                    icon={<IconBook size='1em' />}
+                    iconPath={mdiBookOpen}
                     active={allNotesPageIsActive}
                     onClick={() => {
                       push(allNotesPagePathname)
@@ -396,7 +358,7 @@ export default ({ toggle }: NavigatorProps) => {
                   <NavigatorItem
                     depth={1}
                     label={t('general.trash')}
-                    icon={trashcanPageIsActive ? <IconTrash /> : <IconTrash />}
+                    iconPath={mdiTrashCan}
                     active={trashcanPageIsActive}
                     onClick={() => {
                       push(trashcanPagePathname)

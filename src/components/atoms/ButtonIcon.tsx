@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '../../lib/styled'
+import Icon from './Icon'
 
 const StyledButtonIcon = styled.button`
   color: currentColor;
@@ -14,14 +15,14 @@ const StyledButtonIcon = styled.button`
 `
 
 interface ButtonIconProps {
-  icon: React.ReactNode
+  iconPath: string
   className?: string
   onClick?: () => void
 }
 
-const ButtonIcon = ({ icon, className, onClick }: ButtonIconProps) => (
+const ButtonIcon = ({ iconPath, className, onClick }: ButtonIconProps) => (
   <StyledButtonIcon onClick={onClick} className={className}>
-    {icon}
+    <Icon path={iconPath} />
   </StyledButtonIcon>
 )
 

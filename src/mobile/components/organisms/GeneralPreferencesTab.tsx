@@ -8,7 +8,6 @@ import {
 import LoginButton from '../../../components/atoms/LoginButton'
 import UserInfo from '../molecules/UserInfo'
 import { useUsers } from '../../../lib/accounts'
-import { IconArrowRotate } from '../../../components/icons'
 import { FormCheckItem } from '../../../components/atoms/form'
 import { usePreferences } from '../../../lib/preferences'
 
@@ -39,14 +38,7 @@ const GeneralPreferencesTab = () => {
               ButtonComponent={SectionPrimaryButton}
             >
               {(loginState) =>
-                loginState !== 'logging-in' ? (
-                  <>Sign in</>
-                ) : (
-                  <>
-                    <IconArrowRotate />
-                    Loggin in...
-                  </>
-                )
+                loginState !== 'logging-in' ? <>Sign in</> : <>Loggin in...</>
               }
             </LoginButton>
           )}

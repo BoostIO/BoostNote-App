@@ -2,7 +2,8 @@ import React, { useCallback } from 'react'
 import ButtonIcon from '../../../components/atoms/ButtonIcon'
 import styled from '../../../lib/styled'
 import { noteListIconColor } from '../../../lib/styled/styleFunctions'
-import { IconTag, IconClose } from '../../../components/icons'
+import Icon from '../../../components/atoms/Icon'
+import { mdiClose, mdiTagMultiple } from '@mdi/js'
 
 interface TagListItemProps {
   tagName: string
@@ -18,7 +19,7 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
     <div className='listItem'>
       <div className='listItem-label'>{tagName}</div>
       <button className='listItem-removeButton' onClick={removeTag}>
-        <IconClose />
+        <Icon path={mdiClose} />
       </button>
     </div>
   )
@@ -79,7 +80,7 @@ interface TagListProps {
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
     <TagListContainer>
-      <ButtonIcon className='icon' icon={<IconTag />} />
+      <ButtonIcon className='icon' iconPath={mdiTagMultiple} />
       {tags.map((tag) => (
         <TagListItem
           tagName={tag}

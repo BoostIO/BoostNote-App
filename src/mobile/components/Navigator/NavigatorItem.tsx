@@ -141,7 +141,7 @@ const SideNavigatorItemIconContainer = styled.span`
 
 interface NavigatorItemProps {
   label: string
-  icon?: React.ReactNode
+  iconPath?: string
   depth: number
   controlComponents?: any[]
   className?: string
@@ -158,7 +158,7 @@ interface NavigatorItemProps {
 
 const NavigatorItem = ({
   label,
-  icon,
+  iconPath,
   depth,
   controlComponents,
   className,
@@ -199,9 +199,9 @@ const NavigatorItem = ({
           onClick={onClick}
           onDoubleClick={onDoubleClick}
         >
-          {icon != null && (
+          {iconPath != null && (
             <SideNavigatorItemIconContainer>
-              {icon}
+              <Icon path={iconPath} />
             </SideNavigatorItemIconContainer>
           )}
           <Label>{label}</Label>

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '../../../lib/styled'
+import Icon from '../../../components/atoms/Icon'
 
 const StyledButton = styled.button`
   position: relative;
@@ -25,12 +26,17 @@ const StyledButton = styled.button`
 `
 
 interface ControlButtonProps {
-  icon: React.ReactNode
+  iconPath: string
   onClick?: (event: React.MouseEvent) => void
+  spin?: boolean
 }
 
-const ControlButton = ({ icon, onClick }: ControlButtonProps) => {
-  return <StyledButton onClick={onClick}>{icon}</StyledButton>
+const ControlButton = ({ iconPath, spin, onClick }: ControlButtonProps) => {
+  return (
+    <StyledButton onClick={onClick}>
+      <Icon path={iconPath} spin={spin} />
+    </StyledButton>
+  )
 }
 
 export default ControlButton
