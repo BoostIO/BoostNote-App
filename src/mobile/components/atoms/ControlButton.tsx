@@ -15,7 +15,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   color: ${({ theme }) => theme.sideNavButtonColor};
 
-  .active {
+  &.active {
     color: ${({ theme }) => theme.sideNavButtonActiveColor};
   }
 `
