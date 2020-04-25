@@ -19,7 +19,7 @@ const FoldButton = styled.button`
   position: absolute;
   width: 24px;
   height: 34px;
-  padding-left: 10px;
+  left: 0;
   border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.sideNavButtonColor};
@@ -84,7 +84,7 @@ const NavigatorItem = ({
       {folded != null && (
         <FoldButton
           onClick={onFoldButtonClick}
-          style={{ left: `${10 * depth}px` }}
+          style={{ paddingLeft: `${10 * depth + 10}px` }}
         >
           <Icon size={18} path={folded ? mdiChevronRight : mdiChevronDown} />
         </FoldButton>

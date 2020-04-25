@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import Icon from '../../../components/atoms/Icon'
 import { mdiClose, mdiPlus, mdiTuneVertical } from '@mdi/js'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
+import { borderBottom } from '../../../lib/styled/styleFunctions'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
@@ -18,15 +19,16 @@ const StyledSideNavContainer = styled.nav`
   flex-direction: column;
   height: 100%;
   .topControl {
-    height: 50px;
+    height: 44px;
     display: flex;
     -webkit-app-region: drag;
+    ${borderBottom}
     .spacer {
       flex: 1;
     }
     .button {
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       background-color: transparent;
       border: none;
       cursor: pointer;
@@ -47,7 +49,6 @@ const StyledSideNavContainer = styled.nav`
 
   .storageList {
     list-style: none;
-    padding: 0;
     margin: 0;
     flex: 1;
     overflow: auto;
