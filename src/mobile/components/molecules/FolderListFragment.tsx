@@ -150,13 +150,13 @@ const FolderListFragment = ({
               folderPathname
             )}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
-            controlComponents={[
+            control={
               <ControlButton
                 key='addFolderButton'
                 onClick={() => showPromptToCreateFolder(folderPathname)}
                 iconPath={mdiPlus}
-              />,
-            ]}
+              />
+            }
           />
         )
       })}

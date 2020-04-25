@@ -183,7 +183,7 @@ const StorageNavigatorFragment = ({
             },
           ])
         }}
-        controlComponents={controlComponents}
+        control={controlComponents}
       />
       {!storageIsFolded && (
         <>
