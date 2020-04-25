@@ -2,7 +2,7 @@ export default {
     translation: {
       //General
       'general.error': 'Errore',
-      'general.cancel': 'Annullare',
+      'general.cancel': 'Annulla',
       'general.attachments': 'Allegati',
       'general.trash': 'Cestino',
       'general.allnote': 'Tutte le note',
@@ -13,7 +13,7 @@ export default {
       'general.networkError': 'Errore di connessione',
   
       // Storage
-      'storage.name': 'Nome dell\'Archivio',
+      'storage.name': 'Nome Archivio',
       'storage.noStorage': 'Nessun archivio',
       'storage.create': 'Crea Archivio',
       'storage.edit': 'Modifica Archivio',
@@ -38,7 +38,7 @@ export default {
       'folder.renameMessage':
         'Inserisci il nuovo nome della cartella, verrà aggiornato anche il percorso di ogni nota e sottocartella',
       'folder.renameErrorMessage': 'Non puoi rinominare la cartella',
-      'folder.remove': 'Elimina la cartella',
+      'folder.remove': 'Elimina Cartella',
       'folder.removeMessage': 'Tutte le note e sottocartelle sarnno eliminate.',
   
       //Tag
@@ -49,7 +49,7 @@ export default {
       //Note
       'note.duplicate': 'Duplica',
       'note.delete': 'Elimina',
-      'note.delete2': 'Eliminata una nota',
+      'note.delete2': 'Elimina nota',
       'note.deleteMessage': 'La nota verrà eliminata definitavamente',
       'note.empty': 'Nota vuota',
       'note.unselect': 'Nessuna nota selezionata',
@@ -80,7 +80,7 @@ export default {
       'about.github': 'GitHub Repository',
       'about.bounty': 'Ricompense in IssueHunt',
       'about.blog': 'Blog',
-      'about.slack': 'Gruppo di Slack',
+      'about.slack': 'Gruppo Slack',
       'about.twitter': 'Twitter Account',
       'about.facebook': 'Gruppo Facebook',
       'about.reddit': 'Reddit',
@@ -89,16 +89,16 @@ export default {
       'billing.billing': 'Fatturazione',
       'billing.message': 'Accedi per eseguire l\'upgrade del tuo account.',
       'billing.basic': 'Base',
-      'billing.current': 'Corrente',
+      'billing.current': 'Attuale',
       'billing.premium': 'Premium',
       'billing.price': '$3/Mese (USD) *',
       'billing.browser': 'Applicazione Web',
       'billing.desktop': 'Applicazione Desktop (Mac/Windows/Linux)',
-      'billing.mobile': 'Applicazione per Telefoni (iOS/Android)',
-      'billing.sync': 'Sicronizzazione di più dispositivi',
-      'billing.local': 'Archivio Locale',
-      'billing.cloud': 'Archivio in Cloud',
-      'billing.storageSize': 'Dimensione spazio di archiviazione in Cloud',
+      'billing.mobile': 'Applicazione per Smartphone (iOS/Android)',
+      'billing.sync': 'Sicronizzazione tra più dispositivi',
+      'billing.local': 'Archiviazione Locale',
+      'billing.cloud': 'Archiviazione in Cloud',
+      'billing.storageSize': 'Spazio archiviazione in Cloud',
       'billing.addStorageDescription':
         '* Se hai bisogno di più spazio di memoria in cloud, puoi aggiungerlo in qualsiasi momento pagando $5 (USD) per ogni 5 GB. Clicca il pulsante "Aumenta spazio di archiviazione" situato qui in basso',
       'billing.addStorage': 'Aumenta spazio di archiviazione',
@@ -116,10 +116,10 @@ export default {
       'preferences.light': 'Chiaro',
       'preferences.dark': 'Scuro',
       'preferences.sepia': 'Seppia',
-      'preferences.solarizedDark': 'Solarizzato Scuro',
+      'preferences.solarizedDark': 'Solarized Scuro',
       'preferences.noteSorting': 'Ordinamento Note',
-      'preferences.dateUpdated': 'Data Aggiornata',
-      'preferences.dateCreated': 'Data Creata',
+      'preferences.dateUpdated': 'Data di aggiornamento',
+      'preferences.dateCreated': 'Data di creazione',
       'preferences.title': 'Titolo',
       'preferences.analytics': 'Analytics',
       'preferences.analyticsDescription1':
@@ -131,18 +131,18 @@ export default {
   
       // Preferences EditorTab
       'preferences.editorTheme': 'Tema Editor',
-      'preferences.editorFontSize': 'Dimensione Font dell\'Editor',
-      'preferences.editorFontFamily': 'Famiglia Font dell\'Editor',
-      'preferences.editorIndentType': 'Tipo di indentazione dell\'Editor',
+      'preferences.editorFontSize': 'Dimensione Font Editor',
+      'preferences.editorFontFamily': 'Font-Family Editor',
+      'preferences.editorIndentType': 'Tipo di indentazione Editor',
       'preferences.tab': 'Tab',
       'preferences.spaces': 'Spazi',
-      'preferences.editorIndentSize': 'Dimensione indentazione dell\'Editor',
-      'preferences.editorKeymap': 'Mappa dei caratteri dell\'Editor',
+      'preferences.editorIndentSize': 'Dimensione indentazione',
+      'preferences.editorKeymap': 'Keymap Editor',
       'preferences.editorPreview': 'Anteprima Editor',
   
       // Preferences MarkdownTab
-      'preferences.previewStyle': 'Stile dell\'anteprima',
-      'preferences.markdownCodeBlockTheme': 'Tema blocco di codice',
+      'preferences.previewStyle': 'Stile Anteprima',
+      'preferences.markdownCodeBlockTheme': 'Tema blocco codice',
       'preferences.defaultTheme': 'Usa lo stile predefinito',
       'preferences.markdownPreview': 'Anteprima Markdown',
   
@@ -155,7 +155,7 @@ export default {
       'preferences.importFlow3':
         '3. Scegli l\'archivio e la cartella che vuoi importare.',
       'preferences.importFlow4': '4. Carica!',
-      'preferences.importRemove': 'rimuovi',
+      'preferences.importRemove': 'Rimuovi',
       'preferences.importUpload': 'Carica',
     },
   }
