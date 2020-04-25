@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
 import {
-  FormHeading,
   FormGroup,
   FormLabel,
   FormCheckList,
@@ -23,7 +22,6 @@ const StorageCreatePage = () => {
       titleLabel='New Storage'
     >
       <PageContainer>
-        <FormHeading depth={1}>{t('Create new storage')}</FormHeading>
         <FormGroup>
           <FormLabel>Storage Type</FormLabel>
           <FormCheckList>
