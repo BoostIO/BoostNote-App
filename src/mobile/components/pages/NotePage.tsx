@@ -23,11 +23,12 @@ import {
   mdiFolderOpen,
   mdiPound,
   mdiTrashCan,
+  mdiBookOpen,
 } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
 import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
-import { values } from '../../../lib/db/utils'
+import { values, getFolderNameFromPathname } from '../../../lib/db/utils'
 
 const NotePageContainer = styled.div`
   width: 100%;
@@ -152,29 +153,37 @@ const NotePage = ({ storage }: NotePageProps) => {
     push(currentPathnameWithoutNoteId)
   }, [push, currentPathnameWithoutNoteId])
 
-  const noteListTitle = useMemo(() => {
+  const { titleIconPath, titleLabel } = useMemo<{
+    titleIconPath?: string
+    titleLabel: React.ReactNode
+  }>(() => {
     switch (routeParams.name) {
       case 'storages.notes':
-        return (
-          <>
-            <Icon path={mdiFolderOpen} />{' '}
-            <code>{routeParams.folderPathname}</code>
-          </>
-        )
+        const folderName = getFolderNameFromPathname(routeParams.folderPathname)
+        if (folderName === null) {
+          return {
+            titleIconPath: mdiBookOpen,
+            titleLabel: 'All Notes',
+          }
+        }
+        return {
+          titleIconPath: mdiFolderOpen,
+          titleLabel: <code>{folderName}</code>,
+        }
       case 'storages.tags.show':
-        return (
-          <>
-            <Icon path={mdiPound} /> {routeParams.tagName}
-          </>
-        )
+        return {
+          titleIconPath: mdiPound,
+          titleLabel: <code>{routeParams.tagName}</code>,
+        }
       case 'storages.trashCan':
-        return (
-          <>
-            <Icon path={mdiTrashCan} /> Trashed Notes
-          </>
-        )
+        return {
+          titleIconPath: mdiTrashCan,
+          titleLabel: 'Trashed Notes',
+        }
       default:
-        return 'unknown'
+        return {
+          titleLabel: 'Unknown page',
+        }
     }
   }, [routeParams])
 
@@ -211,7 +220,8 @@ const NotePage = ({ storage }: NotePageProps) => {
         }}
       >
         <TopBarLayout
-          title={noteListTitle}
+          titleLabel={titleLabel}
+          titleIconPath={titleIconPath}
           leftControl={<TopBarToggleNavButton />}
         >
           <NoteList
@@ -230,7 +240,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         }}
       >
         <TopBarLayout
-          title={
+          titleLabel={
             generalStatus.noteViewMode === 'edit' ? 'Edit Mode' : 'Preview Mode'
           }
           leftControl={

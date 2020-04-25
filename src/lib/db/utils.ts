@@ -31,6 +31,11 @@ export function getParentFolderPathname(pathname: string): string {
   return join(pathname, '..')
 }
 
+export function getFolderNameFromPathname(pathname: string): string | null {
+  if (pathname === '/') return null
+  return pathname.split('/').slice(-1)[0]
+}
+
 export function getTagId(name: string): string {
   return `${TAG_ID_PREFIX}${name}`
 }
