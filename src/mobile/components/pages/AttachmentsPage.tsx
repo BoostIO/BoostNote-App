@@ -18,7 +18,7 @@ const AttachmentsPage = () => {
   return (
     <TopBarLayout
       leftControl={<TopBarToggleNavButton />}
-      title={<>Attachments in {storage.name}</>}
+      titleLabel={`Attachments in ${storage.name}`}
     >
       <AttachmentList storage={storage} />
     </TopBarLayout>

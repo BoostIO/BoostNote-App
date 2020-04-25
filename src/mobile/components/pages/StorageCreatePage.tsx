@@ -18,7 +18,10 @@ const StorageCreatePage = () => {
   const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
 
   return (
-    <TopBarLayout leftControl={<TopBarToggleNavButton />} title='New Storage'>
+    <TopBarLayout
+      leftControl={<TopBarToggleNavButton />}
+      titleLabel='New Storage'
+    >
       <PageContainer>
         <FormHeading depth={1}>{t('Create new storage')}</FormHeading>
         <FormGroup>

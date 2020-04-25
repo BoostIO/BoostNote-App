@@ -194,3 +194,8 @@ overflow: hidden;
 text-overflow: ellipsis;
 white-space: nowrap;
 `
+
+export const flexCenter = () => `display: flex;
+align-items: center;
+justify-content: center;
+`

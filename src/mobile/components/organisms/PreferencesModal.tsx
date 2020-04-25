@@ -54,7 +54,7 @@ const PreferencesModal = () => {
     return (
       <PreferencesModalContainer>
         <TopBarLayout
-          title={`Preferences / ${capitalize(tab)}`}
+          titleLabel={`Preferences / ${capitalize(tab)}`}
           leftControl={
             <TopBarButton onClick={unselectTab}>
               <Icon path={mdiChevronLeft} />
@@ -70,7 +70,7 @@ const PreferencesModal = () => {
   return (
     <PreferencesModalContainer>
       <TopBarLayout
-        title='Preferences'
+        titleLabel='Preferences'
         leftControl={
           <TopBarButton onClick={toggleClosed}>
             <Icon path={mdiClose} />
