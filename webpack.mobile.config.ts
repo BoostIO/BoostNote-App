@@ -42,7 +42,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.tsx?$/,
-          use: [{ loader: 'ts-loader' }],
+          use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
           exclude: /node_modules/,
         },
         {
