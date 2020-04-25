@@ -98,6 +98,7 @@ const GeneralTab = () => {
             <option value='en-US'>🇺🇸English (US)</option>
             <option value='es-ES'>🇪🇸Español (España)</option>
             <option value='fr-FR'>🇫🇷Français (France)</option>
+            <option value='it-IT'>🇮🇹️Italiano (Italia)</option>
             <option value='ja'>🇯🇵日本語</option>
             <option value='ko'>🇰🇷한국어</option>
             <option value='pt-BR'>🇧🇷Português (BR)</option>
