@@ -152,8 +152,10 @@ const StorageNavigatorFragment = ({
             defaultValue: storage.name,
             submitButtonLabel: t('storage.rename'),
             onClose: async (value: string | null) => {
-              if (value == null) return
-              await renameStorage(storage.id, value)
+              if (value == null) {
+                return
+              }
+              renameStorage(storage.id, value)
             },
           })
         },
