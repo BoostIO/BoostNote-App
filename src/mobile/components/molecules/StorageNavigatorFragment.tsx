@@ -204,6 +204,8 @@ const StorageNavigatorFragment = ({
     t,
   ])
 
+  const syncing = storage.sync != null
+
   return (
     <>
       <NavigatorItem
@@ -219,9 +221,10 @@ const StorageNavigatorFragment = ({
         control={
           <>
             <ControlButton
+              active={syncing}
               onClick={sync}
               iconPath={mdiSync}
-              spin={storage.sync != null}
+              spin={syncing}
             />
             <ControlButton
               iconPath={mdiDotsVertical}
