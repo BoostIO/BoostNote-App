@@ -222,7 +222,7 @@ export default class NoteDb {
       title: '',
       content: '',
       tags: [],
-      folderPathname: '/default',
+      folderPathname: '/',
       data: {},
       bookmarked: false,
       ...noteProps,
