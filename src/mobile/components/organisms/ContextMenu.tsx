@@ -78,6 +78,14 @@ const ContextMenuItem = styled.button`
   }
 `
 
+const SeparatorContextMenuItem = styled.div`
+  height: 10px;
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.borderColor};
+  border: none;
+  width: 100%;
+`
+
 interface ContextMenuProps {
   contextMenu: ContextMenuContext
 }
@@ -137,6 +145,8 @@ class ContextMenu extends React.Component<ContextMenuProps> {
                     {menu.label}
                   </ContextMenuItem>
                 )
+              case MenuTypes.Separator:
+                return <SeparatorContextMenuItem key={key} />
               default:
                 return (
                   <ContextMenuItem key={key}>
