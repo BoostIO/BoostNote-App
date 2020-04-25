@@ -187,7 +187,7 @@ const NavigatorItem = ({
             onClick={onFoldButtonClick}
             style={{ left: `${10 * depth}px` }}
           >
-            <Icon path={folded ? mdiChevronRight : mdiChevronDown} />
+            <Icon size={18} path={folded ? mdiChevronRight : mdiChevronDown} />
           </FoldButton>
         )}
         <ClickableContainer
@@ -201,7 +201,7 @@ const NavigatorItem = ({
         >
           {iconPath != null && (
             <SideNavigatorItemIconContainer>
-              <Icon path={iconPath} />
+              <Icon size={18} path={iconPath} />
             </SideNavigatorItemIconContainer>
           )}
           <Label>{label}</Label>
