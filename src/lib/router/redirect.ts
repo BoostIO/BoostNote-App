@@ -11,7 +11,9 @@ export default function useRedirectHandler() {
   useEffect(() => {
     const storageEntries = entries(storageMapRef.current)
 
-    if (pathname !== '/app') return
+    if (pathname !== '/app') {
+      return
+    }
 
     if (storageEntries.length === 0) {
       replace('/app/storages')
