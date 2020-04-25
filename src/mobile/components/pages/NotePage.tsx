@@ -157,26 +157,26 @@ const NotePage = ({ storage }: NotePageProps) => {
       case 'storages.notes':
         return (
           <>
-            <Icon path={mdiFolderOpen} /> {storage!.name}
-            {routeParams.folderPathname}
+            <Icon path={mdiFolderOpen} />{' '}
+            <code>{routeParams.folderPathname}</code>
           </>
         )
       case 'storages.tags.show':
         return (
           <>
-            <Icon path={mdiPound} /> {routeParams.tagName} in {storage!.name}
+            <Icon path={mdiPound} /> {routeParams.tagName}
           </>
         )
       case 'storages.trashCan':
         return (
           <>
-            <Icon path={mdiTrashCan} /> Trashed Notes in {storage!.name}
+            <Icon path={mdiTrashCan} /> Trashed Notes
           </>
         )
       default:
         return 'unknown'
     }
-  }, [routeParams, storage])
+  }, [routeParams])
 
   const toggleNoteViewMode = useCallback(() => {
     setGeneralStatus({
