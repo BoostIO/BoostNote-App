@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
@@ -11,8 +11,9 @@ import FolderListFragment from '../molecules/FolderListFragment'
 import TagListFragment from '../molecules/TagListFragment'
 import { useToast } from '../../../lib/toast'
 import { useTranslation } from 'react-i18next'
-import { mdiTrashCan, mdiBookOpen, mdiSync, mdiPlus } from '@mdi/js'
+import { mdiTrashCan, mdiBookOpen, mdiSync, mdiDotsVertical } from '@mdi/js'
 import { NoteStorage } from '../../../lib/db/types'
+import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -27,6 +28,7 @@ const StorageNavigatorFragment = ({
     renameStorage,
     removeStorage,
     syncStorage,
+    createNote,
   } = useDb()
   const currentPathname = usePathnameWithoutNoteId()
 
@@ -38,36 +40,41 @@ const StorageNavigatorFragment = ({
   } = useGeneralStatus()
 
   const { t } = useTranslation()
-  const { popup } = useContextMenu()
+  const { popupWithPosition } = useContextMenu()
   const { prompt, messageBox } = useDialog()
   const { push } = useRouter()
   const user = useFirstUser()
   const { pushMessage } = useToast()
   const itemId = `storage:${storage.id}`
   const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
-  const showPromptToCreateFolder = (folderPathname: string) => {
-    prompt({
-      title: 'Create a Folder',
-      message: 'Enter the path where do you want to create a folder',
-      iconType: DialogIconTypes.Question,
-      defaultValue: folderPathname === '/' ? '/' : `${folderPathname}/`,
-      submitButtonLabel: 'Create Folder',
-      onClose: async (value: string | null) => {
-        if (value == null) {
-          return
-        }
-        if (value.endsWith('/')) {
-          value = value.slice(0, value.length - 1)
-        }
-        await createFolder(storage.id, value)
 
-        push(`/m/storages/${storage.id}/notes${value}`)
+  const showPromptToCreateFolder = useCallback(
+    (folderPathname: string) => {
+      prompt({
+        title: 'Create a Folder',
+        message: 'Enter the path where do you want to create a folder',
+        iconType: DialogIconTypes.Question,
+        defaultValue: folderPathname === '/' ? '/' : `${folderPathname}/`,
+        submitButtonLabel: 'Create Folder',
+        onClose: async (value: string | null) => {
+          if (value == null) {
+            return
+          }
+          if (value.endsWith('/')) {
+            value = value.slice(0, value.length - 1)
+          }
+          await createFolder(storage.id, value)
 
-        // Open folder item
-        openSideNavFolderItemRecursively(storage.id, value)
-      },
-    })
-  }
+          push(`/m/storages/${storage.id}/notes${value}`)
+
+          // Open folder item
+          openSideNavFolderItemRecursively(storage.id, value)
+        },
+      })
+    },
+    [createFolder, prompt, push, storage.id, openSideNavFolderItemRecursively]
+  )
+
   const showPromptToRenameFolder = (folderPathname: string) => {
     prompt({
       title: t('folder.rename'),
@@ -101,34 +108,99 @@ const StorageNavigatorFragment = ({
   const trashcanPagePathname = `/m/storages/${storage.id}/trashcan`
   const trashcanPageIsActive = currentPathname === trashcanPagePathname
 
-  const controlComponents = [
-    <ControlButton
-      key={`${storage.id}-addFolderButton`}
-      onClick={() => showPromptToCreateFolder('/')}
-      iconPath={mdiPlus}
-    />,
-  ]
-
-  if (storage.cloudStorage != null && user != null) {
-    const cloudSync = () => {
-      if (user == null) {
-        pushMessage({
-          title: 'No User Error',
-          description: 'Please login first to sync the storage.',
-        })
-      }
-      syncStorage(storage.id)
+  const sync = useCallback(() => {
+    if (user == null) {
+      pushMessage({
+        title: 'No User Error',
+        description: 'Please login first to sync the storage.',
+      })
     }
+    syncStorage(storage.id)
+  }, [user, pushMessage, syncStorage, storage.id])
 
-    controlComponents.unshift(
-      <ControlButton
-        key={`${storage.id}-syncButton`}
-        onClick={cloudSync}
-        iconPath={mdiSync}
-        spin={storage.sync != null}
-      />
-    )
-  }
+  const openStorageContextMenu = useCallback(() => {
+    popupWithPosition({ x: 0, y: 0 }, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Note',
+        onClick: async () => {
+          const newNote = await createNote(storage.id, {})
+          if (newNote == null) {
+            return
+          }
+          push(`/m/storages/${storage.id}/notes/${newNote._id}`)
+          toggleNav()
+          dispatchNoteDetailFocusTitleInputEvent()
+        },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'New Folder',
+        onClick: async () => {
+          showPromptToCreateFolder('/')
+        },
+      },
+      { type: MenuTypes.Separator },
+      {
+        type: MenuTypes.Normal,
+        label: t('storage.rename'),
+        onClick: async () => {
+          prompt({
+            title: `Rename "${storage.name}" storage`,
+            message: t('storage.renameMessage'),
+            iconType: DialogIconTypes.Question,
+            defaultValue: storage.name,
+            submitButtonLabel: t('storage.rename'),
+            onClose: async (value: string | null) => {
+              if (value == null) return
+              await renameStorage(storage.id, value)
+            },
+          })
+        },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'Configure Storage',
+        onClick: async () => {
+          toggleNav()
+          push(`/m/storages/${storage.id}/settings`)
+        },
+      },
+      { type: MenuTypes.Separator },
+      {
+        type: MenuTypes.Normal,
+        label: t('storage.remove'),
+        onClick: async () => {
+          messageBox({
+            title: `Remove "${storage.name}" storage`,
+            message: t('storage.removeMessage'),
+            iconType: DialogIconTypes.Warning,
+            buttons: [t('storage.remove'), t('general.cancel')],
+            defaultButtonIndex: 0,
+            cancelButtonIndex: 1,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                removeStorage(storage.id)
+              }
+            },
+          })
+        },
+      },
+    ])
+  }, [
+    popupWithPosition,
+    showPromptToCreateFolder,
+    push,
+    prompt,
+    messageBox,
+    createNote,
+    renameStorage,
+    toggleNav,
+    removeStorage,
+    storage.id,
+    storage.name,
+    t,
+  ])
 
   return (
     <>
@@ -142,48 +214,19 @@ const StorageNavigatorFragment = ({
         onClick={() => {
           toggleSideNavOpenedItem(itemId)
         }}
-        onContextMenu={(event) => {
-          event.preventDefault()
-          popup(event, [
-            {
-              type: MenuTypes.Normal,
-              label: t('storage.rename'),
-              onClick: async () => {
-                prompt({
-                  title: `Rename "${storage.name}" storage`,
-                  message: t('storage.renameMessage'),
-                  iconType: DialogIconTypes.Question,
-                  defaultValue: storage.name,
-                  submitButtonLabel: t('storage.rename'),
-                  onClose: async (value: string | null) => {
-                    if (value == null) return
-                    await renameStorage(storage.id, value)
-                  },
-                })
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              label: t('storage.remove'),
-              onClick: async () => {
-                messageBox({
-                  title: `Remove "${storage.name}" storage`,
-                  message: t('storage.removeMessage'),
-                  iconType: DialogIconTypes.Warning,
-                  buttons: [t('storage.remove'), t('general.cancel')],
-                  defaultButtonIndex: 0,
-                  cancelButtonIndex: 1,
-                  onClose: (value: number | null) => {
-                    if (value === 0) {
-                      removeStorage(storage.id)
-                    }
-                  },
-                })
-              },
-            },
-          ])
-        }}
-        control={controlComponents}
+        control={
+          <>
+            <ControlButton
+              onClick={sync}
+              iconPath={mdiSync}
+              spin={storage.sync != null}
+            />
+            <ControlButton
+              iconPath={mdiDotsVertical}
+              onClick={openStorageContextMenu}
+            />
+          </>
+        }
       />
       {!storageIsFolded && (
         <>
