@@ -72,6 +72,9 @@ const NotePage = ({ storage }: NotePageProps) => {
       case 'storages.notes':
         const { folderPathname } = routeParams
         const folder = storage.folderMap[folderPathname]
+        if (folderPathname === '/') {
+          return values(storage.noteMap).filter((note) => !note.trashed)
+        }
         if (folder == null) return []
         return values(storage.noteMap).filter(
           (note) =>
@@ -90,6 +93,12 @@ const NotePage = ({ storage }: NotePageProps) => {
     }
     return []
   }, [storage, routeParams])
+
+  const sortedNotes = useMemo(() => {
+    return notes.slice().sort((a, b) => {
+      return new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()
+    })
+  }, [notes])
 
   const currentNote: NoteDoc | undefined = useMemo(() => {
     if (storage == null || noteId == null) {
@@ -226,7 +235,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         >
           <NoteList
             currentStorageId={storageId}
-            notes={notes}
+            notes={sortedNotes}
             createNote={showCreateNoteInList ? createQuickNote : undefined}
             basePathname={currentPathnameWithoutNoteId}
             trashOrPurgeCurrentNote={trashOrPurgeCurrentNote}
