@@ -143,6 +143,11 @@ const StorageNavigatorFragment = ({
       { type: MenuTypes.Separator },
       {
         type: MenuTypes.Normal,
+        label: 'Sync Storage',
+        onClick: sync,
+      },
+      {
+        type: MenuTypes.Normal,
         label: t('storage.rename'),
         onClick: async () => {
           prompt({
@@ -192,6 +197,7 @@ const StorageNavigatorFragment = ({
   }, [
     popupWithPosition,
     showPromptToCreateFolder,
+    sync,
     push,
     prompt,
     messageBox,
