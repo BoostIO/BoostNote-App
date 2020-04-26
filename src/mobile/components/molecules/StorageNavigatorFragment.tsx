@@ -118,19 +118,34 @@ const StorageNavigatorFragment = ({
     syncStorage(storage.id)
   }, [user, pushMessage, syncStorage, storage.id])
 
+  const createNoteToFolder = useCallback(
+    async (folderPathname: string) => {
+      const newNote = await createNote(storage.id, {
+        folderPathname,
+      })
+      if (newNote == null) {
+        return
+      }
+      console.log(folderPathname)
+
+      const notePathname =
+        newNote.folderPathname === '/'
+          ? `/m/storages/${storage.id}/notes/${newNote._id}`
+          : `/m/storages/${storage.id}/notes${newNote.folderPathname}/${newNote._id}`
+      push(notePathname)
+      toggleNav()
+      dispatchNoteDetailFocusTitleInputEvent()
+    },
+    [createNote, push, toggleNav, storage.id]
+  )
+
   const openStorageContextMenu = useCallback(() => {
     popupWithPosition({ x: 0, y: 0 }, [
       {
         type: MenuTypes.Normal,
         label: 'New Note',
         onClick: async () => {
-          const newNote = await createNote(storage.id, {})
-          if (newNote == null) {
-            return
-          }
-          push(`/m/storages/${storage.id}/notes/${newNote._id}`)
-          toggleNav()
-          dispatchNoteDetailFocusTitleInputEvent()
+          createNoteToFolder('/')
         },
       },
       {
@@ -201,7 +216,7 @@ const StorageNavigatorFragment = ({
     push,
     prompt,
     messageBox,
-    createNote,
+    createNoteToFolder,
     renameStorage,
     toggleNav,
     removeStorage,
@@ -253,6 +268,7 @@ const StorageNavigatorFragment = ({
           />
           <FolderListFragment
             storage={storage}
+            createNoteToFolder={createNoteToFolder}
             showPromptToCreateFolder={showPromptToCreateFolder}
             showPromptToRenameFolder={showPromptToRenameFolder}
           />
@@ -277,4 +293,5 @@ const StorageNavigatorFragment = ({
     </>
   )
 }
+
 export default StorageNavigatorFragment

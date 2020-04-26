@@ -9,23 +9,25 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from '../atoms/ControlButton'
 import { getFolderItemId } from '../../../lib/nav'
 import { useTranslation } from 'react-i18next'
-import { mdiFolder, mdiFolderOpen, mdiPlus } from '@mdi/js'
+import { mdiFolder, mdiFolderOpen, mdiDotsVertical } from '@mdi/js'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
+  createNoteToFolder: (folderPathname: string) => void
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
 }
 
 const FolderListFragment = ({
   storage,
+  createNoteToFolder,
   showPromptToCreateFolder,
   showPromptToRenameFolder,
 }: FolderListFragmentProps) => {
   const { removeFolder } = useDb()
   const { push } = useRouter()
   const { messageBox } = useDialog()
-  const { popup } = useContextMenu()
+  const { popupWithPosition } = useContextMenu()
   const { t } = useTranslation()
 
   const { folderMap, id: storageId } = storage
@@ -57,9 +59,15 @@ const FolderListFragment = ({
     storageId: string,
     folderPathname: string
   ) => {
-    return (event: React.MouseEvent) => {
-      event.preventDefault()
-      popup(event, [
+    return () => {
+      popupWithPosition({ x: 0, y: 0 }, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: () => {
+            createNoteToFolder(folderPathname)
+          },
+        },
         {
           type: MenuTypes.Normal,
           label: t('folder.create'),
@@ -67,6 +75,8 @@ const FolderListFragment = ({
             showPromptToCreateFolder(folderPathname)
           },
         },
+        { type: MenuTypes.Separator },
+
         {
           type: MenuTypes.Normal,
           label: t('folder.rename'),
@@ -144,17 +154,11 @@ const FolderListFragment = ({
             iconPath={folderIsActive ? mdiFolderOpen : mdiFolder}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
-            onDoubleClick={() => showPromptToRenameFolder(folderPathname)}
-            onContextMenu={createOnContextMenuHandler(
-              storage.id,
-              folderPathname
-            )}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
             control={
               <ControlButton
-                key='addFolderButton'
-                onClick={() => showPromptToCreateFolder(folderPathname)}
-                iconPath={mdiPlus}
+                onClick={createOnContextMenuHandler(storageId, folderPathname)}
+                iconPath={mdiDotsVertical}
               />
             }
           />
