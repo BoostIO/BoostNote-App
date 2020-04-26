@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { mdiTrashCan, mdiBookOpen, mdiSync, mdiDotsVertical } from '@mdi/js'
 import { NoteStorage } from '../../../lib/db/types'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
+import { getStorageItemId } from '../../../lib/nav'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -45,7 +46,7 @@ const StorageNavigatorFragment = ({
   const { push } = useRouter()
   const user = useFirstUser()
   const { pushMessage } = useToast()
-  const itemId = `storage:${storage.id}`
+  const itemId = getStorageItemId(storage.id)
   const storageIsFolded = !sideNavOpenedItemSet.has(itemId)
 
   const showPromptToCreateFolder = useCallback(
