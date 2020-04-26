@@ -3,7 +3,7 @@ import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
 import { generalStatusKey } from '../../lib/localStorageKeys'
 import { createStoreContext } from '../../lib/context'
-import { getFolderItemId } from '../../lib/nav'
+import { getFolderItemId, getStorageItemId } from '../../lib/nav'
 
 export type ViewModeType = 'edit' | 'preview'
 
@@ -103,7 +103,7 @@ function useGeneralStatusStore() {
         itemIdListToOpen.push(getFolderItemId(storageId, currentPathname))
       }
 
-      addSideNavOpenedItem(...itemIdListToOpen)
+      addSideNavOpenedItem(getStorageItemId(storageId), ...itemIdListToOpen)
     },
     [addSideNavOpenedItem]
   )
