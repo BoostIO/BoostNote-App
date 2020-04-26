@@ -12,7 +12,7 @@ export default function useRedirectHandler() {
   useEffectOnce(() => {
     const storageEntries = entries(storageMapRef.current)
 
-    if (pathname !== '/m') {
+    if (pathname.startsWith('/m') && pathname !== '/m') {
       return
     }
     if (storageEntries.length === 0) {
