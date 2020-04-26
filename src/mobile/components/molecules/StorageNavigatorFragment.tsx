@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
@@ -227,6 +227,10 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.sync != null
 
+  const trashed = useMemo(
+    () => Object.values(storage.noteMap).filter((note) => note!.trashed),
+    [storage.noteMap]
+  )
   return (
     <>
       <NavigatorItem
@@ -274,20 +278,22 @@ const StorageNavigatorFragment = ({
           />
           <TagListFragment storage={storage} />
 
-          <NavigatorItem
-            depth={1}
-            label={t('general.trash')}
-            iconPath={mdiTrashCan}
-            active={trashcanPageIsActive}
-            onClick={() => {
-              push(trashcanPagePathname)
-              toggleNav()
-            }}
-            onContextMenu={(event) => {
-              event.preventDefault()
-              // TODO: Implement context menu(restore all notes)
-            }}
-          />
+          {trashed.length > 0 && (
+            <NavigatorItem
+              depth={1}
+              label={t('general.trash')}
+              iconPath={mdiTrashCan}
+              active={trashcanPageIsActive}
+              onClick={() => {
+                push(trashcanPagePathname)
+                toggleNav()
+              }}
+              onContextMenu={(event) => {
+                event.preventDefault()
+                // TODO: Implement context menu(restore all notes)
+              }}
+            />
+          )}
         </>
       )}
     </>

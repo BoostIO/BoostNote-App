@@ -83,6 +83,10 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     toggleNav,
   ])
 
+  if (tagList.length === 0) {
+    return null
+  }
+
   return (
     <>
       <NavigatorItem
