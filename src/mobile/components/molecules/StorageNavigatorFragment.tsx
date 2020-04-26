@@ -225,6 +225,25 @@ const StorageNavigatorFragment = ({
     t,
   ])
 
+  const openAllNotesContextMenu = useCallback(() => {
+    popupWithPosition({ x: 0, y: 0 }, [
+      {
+        type: MenuTypes.Normal,
+        label: 'New Note',
+        onClick: async () => {
+          createNoteToFolder('/')
+        },
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'New Folder',
+        onClick: async () => {
+          showPromptToCreateFolder('/')
+        },
+      },
+    ])
+  }, [popupWithPosition, showPromptToCreateFolder, createNoteToFolder])
+
   const syncing = storage.sync != null
 
   const trashed = useMemo(
@@ -269,6 +288,12 @@ const StorageNavigatorFragment = ({
               push(allNotesPagePathname)
               toggleNav()
             }}
+            control={
+              <ControlButton
+                iconPath={mdiDotsVertical}
+                onClick={openAllNotesContextMenu}
+              />
+            }
           />
           <FolderListFragment
             storage={storage}
