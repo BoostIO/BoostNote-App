@@ -122,7 +122,6 @@ const NotePage = ({ storage }: NotePageProps) => {
       return
     }
 
-    const folderIsRoot = !(routeParams.name === 'storages.notes')
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
 
@@ -133,15 +132,21 @@ const NotePage = ({ storage }: NotePageProps) => {
       folderPathname,
       tags,
     })
-    if (note != null) {
-      replace(
-        `/m/storages/${storageId}/notes${folderPathname}${
-          folderIsRoot ? '' : '/'
-        }${note._id}`
-      )
-      dispatchNoteDetailFocusTitleInputEvent()
-      toggleViewMode('edit')
+    if (note == null) {
+      return
     }
+
+    const notePathname =
+      routeParams.name === 'storages.notes'
+        ? routeParams.folderPathname === '/'
+          ? `/m/storages/${storageId}/notes/${note._id}`
+          : `/m/storages/${storageId}/notes${folderPathname}/${note._id}`
+        : routeParams.name === 'storages.tags.show'
+        ? `/m/storages/${storageId}/tags/${routeParams.tagName}/${note._id}`
+        : `/m/storages/${storageId}/notes/${note._id}`
+    replace(notePathname)
+    toggleViewMode('edit')
+    dispatchNoteDetailFocusTitleInputEvent()
   }, [createNote, replace, routeParams, storageId, toggleViewMode])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
