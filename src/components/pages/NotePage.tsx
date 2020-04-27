@@ -4,7 +4,6 @@ import styled from '../../lib/styled'
 import NoteDetail from '../organisms/NoteDetail'
 import {
   useRouteParams,
-  StorageAllNotes,
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
@@ -14,7 +13,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { PopulatedNoteDoc, NoteStorage, ObjectMap } from '../../lib/db/types'
+import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/string'
@@ -38,9 +37,13 @@ export type BreadCrumbs = {
 
 export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
 
-export default () => {
+interface NotePageProps {
+  storage: NoteStorage
+  noteId: string | undefined
+}
+
+const NotePage = ({ storage }: NotePageProps) => {
   const {
-    storageMap,
     createNote,
     purgeNote,
     updateNote,
@@ -49,17 +52,12 @@ export default () => {
     addAttachments,
   } = useDb()
   const routeParams = useRouteParams() as
-    | StorageAllNotes
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
     | StorageBookmarkNotes
-  const { storageId, noteId } = routeParams
-  const currentStorage = useMemo(() => {
-    if (storageId == null) return undefined
-    return storageMap[storageId]
-  }, [storageMap, storageId])
-  const { replace, push } = useRouter()
+  const { noteId } = routeParams
+  const { push } = useRouter()
   const { t } = useTranslation()
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
@@ -70,64 +68,51 @@ export default () => {
     setLastCreatedNoteId('')
   }, [currentPathnameWithoutNoteId])
 
-  const notes = useMemo((): PopulatedNoteDoc[] => {
-    if (currentStorage == null) {
-      if (routeParams.name === 'storages.allNotes') {
-        const allNotesMap = (Object.values(storageMap) as NoteStorage[]).reduce(
-          (map, storage) => {
-            ;(Object.values(storage.noteMap) as PopulatedNoteDoc[]).forEach(
-              (note) => (map[note._id] = note)
-            )
-            return map
-          },
-          {} as ObjectMap<PopulatedNoteDoc>
-        )
-
-        return (Object.values(allNotesMap) as PopulatedNoteDoc[]).filter(
-          (note) => !note.trashed
-        )
-      }
-      if (routeParams.name === 'storages.bookmarks') {
-        return (Object.values(storageMap) as NoteStorage[])
-          .map((storage) => {
-            return (Object.values(
-              storage.noteMap
-            ) as PopulatedNoteDoc[]).filter((note) => note.bookmarked)
-          })
-          .flat()
-      }
-      return []
-    }
+  const notes = useMemo((): NoteDoc[] => {
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter((note) => !note.trashed)
       case 'storages.notes':
+        if (storage == null) return []
         const { folderPathname } = routeParams
-        const folder = currentStorage.folderMap[folderPathname]
+        const noteEntries = Object.entries(storage.noteMap) as [
+          string,
+          NoteDoc
+        ][]
+        if (folderPathname === '/') {
+          return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
+            if (!note.trashed) {
+              notes.push(note)
+            }
+            return notes
+          }, [])
+        }
+        const folder = storage.folderMap[folderPathname]
         if (folder == null) return []
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter(
-          (note) =>
-            (note.folderPathname + '/').startsWith(folder.pathname + '/') &&
-            !note.trashed
-        )
+        return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
+          if (
+            (note!.folderPathname + '/').startsWith(folder.pathname + '/') &&
+            !note!.trashed
+          ) {
+            notes.push(note)
+          }
+          return notes
+        }, [])
       case 'storages.tags.show':
+        if (storage == null) return []
         const { tagName } = routeParams
-        const tag = currentStorage.tagMap[tagName]
+        const tag = storage.tagMap[tagName]
         if (tag == null) return []
         return [...tag.noteIdSet]
-          .map((noteId) => currentStorage.noteMap[noteId]! as PopulatedNoteDoc)
+          .map((noteId) => storage.noteMap[noteId]! as NoteDoc)
           .filter((note) => !note.trashed)
       case 'storages.trashCan':
-        return (Object.values(
-          currentStorage.noteMap
-        ) as PopulatedNoteDoc[]).filter((note) => note.trashed)
+        if (storage == null) return []
+        return (Object.values(storage.noteMap) as NoteDoc[]).filter(
+          (note) => note.trashed
+        )
+      default:
+        return []
     }
-    return []
-  }, [storageMap, currentStorage, routeParams])
+  }, [storage, routeParams])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
@@ -156,7 +141,7 @@ export default () => {
     return 0
   }, [filteredNotes, noteId])
 
-  const currentNote: PopulatedNoteDoc | undefined = useMemo(() => {
+  const currentNote: NoteDoc | undefined = useMemo(() => {
     return filteredNotes[currentNoteIndex] != null
       ? filteredNotes[currentNoteIndex]
       : undefined
@@ -182,43 +167,30 @@ export default () => {
   )
 
   const createQuickNote = useCallback(async () => {
-    if (storageId == null || routeParams.name === 'storages.trashCan') {
+    if (storage.id == null || routeParams.name === 'storages.trashCan') {
       return
     }
 
-    const folderIsRoot = !(routeParams.name === 'storages.notes')
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
 
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
-    const note = await createNote(storageId, {
+    const note = await createNote(storage.id, {
       folderPathname,
       tags,
     })
     if (note != null) {
+      console.log(`/app/storages/${storage.id}/notes${folderPathname}
+        ${note._id}`)
       setLastCreatedNoteId(note._id)
-      replace(
-        `/app/storages/${storageId}/notes${folderPathname}${
-          folderIsRoot ? '' : '/'
-        }${note._id}`
-      )
+      push(`/app/storages/${storage.id}/notes${folderPathname}${note._id}`)
       dispatchNoteDetailFocusTitleInputEvent()
-      toggleViewMode('edit')
     }
-  }, [
-    createNote,
-    replace,
-    routeParams,
-    storageId,
-    setLastCreatedNoteId,
-    toggleViewMode,
-  ])
+  }, [createNote, push, routeParams, storage.id, setLastCreatedNoteId])
 
-  const showCreateNoteInList =
-    routeParams.name === 'storages.notes' ||
-    routeParams.name === 'storages.allNotes'
+  const showCreateNoteInList = routeParams.name === 'storages.notes'
 
   const breadCrumbs = useMemo(() => {
     if (currentNote == null || currentNote.folderPathname === '/')
@@ -231,11 +203,11 @@ export default () => {
         folderPathname,
         folderIsActive:
           currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/notes${folderPathname}`,
+          `/app/storages/${storage.id}/notes${folderPathname}`,
       }
     })
     return thread as BreadCrumbs
-  }, [currentPathnameWithoutNoteId, currentNote, storageId])
+  }, [currentPathnameWithoutNoteId, currentNote, storage.id])
 
   const { messageBox } = useDialog()
   const showPurgeNoteDialog = useCallback(
@@ -281,11 +253,11 @@ export default () => {
     }
 
     if (!currentNote.trashed) {
-      trashNote(currentNote.storageId, currentNote._id)
+      trashNote(storage.id, currentNote._id)
     } else {
-      purgeNote(currentNote.storageId, currentNote._id)
+      purgeNote(storage.id, currentNote._id)
     }
-  }, [trashNote, purgeNote, currentNote])
+  }, [trashNote, purgeNote, currentNote, storage.id])
 
   useGlobalKeyDownHandler((e) => {
     switch (e.key) {
@@ -321,7 +293,7 @@ export default () => {
         <NoteList
           search={search}
           setSearchInput={setSearchInput}
-          currentStorageId={storageId}
+          storageId={storage.id}
           notes={filteredNotes}
           createNote={showCreateNoteInList ? createQuickNote : undefined}
           basePathname={currentPathnameWithoutNoteId}
@@ -336,23 +308,15 @@ export default () => {
       right={
         currentNote == null ? (
           <StyledNoteDetailNoNote>
-            {storageId != null ? (
-              <div>
-                <h1>{t('note.createKeyMac')}</h1>
-                <h1>{t('note.createKeyWinLin')}</h1>
-                <h2>{t('note.createkeymessage1')}</h2>
-              </div>
-            ) : (
-              <div>
-                <h1>{t('note.createkeymessage2')}</h1>
-                <h2>{t('note.createkeymessage3')}</h2>
-              </div>
-            )}
+            <div>
+              <h1>{t('note.createKeyMac')}</h1>
+              <h1>{t('note.createKeyWinLin')}</h1>
+              <h2>{t('note.createkeymessage1')}</h2>
+            </div>
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
-            noteStorageName={storageMap[currentNote.storageId]!.name}
-            attachmentMap={storageMap[currentNote.storageId]!.attachmentMap}
+            storage={storage}
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={updateNote}
@@ -371,3 +335,5 @@ export default () => {
     />
   )
 }
+
+export default NotePage

@@ -28,8 +28,6 @@ export type GeneralNoteSortingOptions =
   | 'date-updated'
   | 'date-created'
   | 'title'
-export type GeneralTutorialsOptions = 'display' | 'hide'
-
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -41,8 +39,6 @@ export interface Preferences {
   'general.theme': GeneralThemeOptions
   'general.noteSorting': GeneralNoteSortingOptions
   'general.enableAnalytics': boolean
-  'general.enableDownloadAppModal': boolean
-  'general.tutorials': GeneralTutorialsOptions
   'general.enableAutoSync': boolean
 
   // Editor
@@ -82,12 +78,10 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'date-updated',
   'general.enableAnalytics': true,
-  'general.enableDownloadAppModal': true,
-  'general.tutorials': 'display',
   'general.enableAutoSync': true,
 
   // Editor
-  'editor.theme': 'default',
+  'editor.theme': 'material-darker',
   'editor.fontSize': 15,
   'editor.fontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
@@ -97,7 +91,7 @@ const basePreferences: Preferences = {
 
   // Markdown
   'markdown.previewStyle': 'default',
-  'markdown.codeBlockTheme': 'default',
+  'markdown.codeBlockTheme': 'material-darker',
 }
 
 function usePreferencesStore() {

@@ -49,7 +49,8 @@ export interface ContextMenuContext {
   close(): void
 }
 
-export const menuHeight = 26
+export const menuHeight = 24
+export const menuSeparatorHeight = 12
 export const menuMargin = 10
 export const menuVerticalPadding = 4
 export const menuZIndex = 9000
@@ -66,9 +67,17 @@ function useContextMenuStore(): ContextMenuContext {
       setClosed(false)
       setMenuItems(menuItems)
 
+      const menuContentHeight = menuItems.reduce((height, menuItem) => {
+        const menuItemHeight =
+          menuItem.type === MenuTypes.Separator
+            ? menuSeparatorHeight
+            : menuHeight
+        return height + menuItemHeight
+      }, 0)
+
       const yPositionLimit =
         window.innerHeight -
-        menuHeight * menuItems.length -
+        menuContentHeight -
         menuMargin -
         menuVerticalPadding * 2
       const clientYIsLowerThanYPositionLimit = y > yPositionLimit

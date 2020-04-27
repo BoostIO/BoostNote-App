@@ -1,9 +1,9 @@
 import React, { useMemo, useCallback } from 'react'
-import SideNavigator from './SideNavigator'
+import Navigator from './organisms/Navigator'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
-import { defaultTheme } from '../themes/default'
+import { legacyTheme } from '../themes/legacy'
 import { darkTheme } from '../themes/dark'
 import { lightTheme } from '../themes/light'
 import { sepiaTheme } from '../themes/sepia'
@@ -19,7 +19,6 @@ import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
 import { useGeneralStatus } from '../lib/generalStatus'
-import Modal from './Modal'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
@@ -63,7 +62,7 @@ const App = () => {
   }, [toggleClosed])
   useGlobalKeyDownHandler(keyboardHandler)
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const updateSideBarWidth = useCallback(
+  const updateNavWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
         sideBarWidth: leftWidth,
@@ -81,9 +80,9 @@ const App = () => {
         {initialized ? (
           <TwoPaneLayout
             defaultLeftWidth={generalStatus.sideBarWidth}
-            left={<SideNavigator />}
+            left={<Navigator />}
             right={<Router />}
-            onResizeEnd={updateSideBarWidth}
+            onResizeEnd={updateNavWidth}
           />
         ) : (
           <LoadingText>Loading Data...</LoadingText>
@@ -92,7 +91,6 @@ const App = () => {
         <ContextMenu />
         <Dialog />
         <PreferencesModal />
-        <Modal />
         <ToastList />
         <CodeMirrorStyle />
       </AppContainer>
@@ -101,16 +99,17 @@ const App = () => {
 }
 function selectTheme(theme: string) {
   switch (theme) {
-    case 'dark':
-      return darkTheme
+    case 'legacy':
+      return legacyTheme
     case 'light':
       return lightTheme
     case 'sepia':
       return sepiaTheme
     case 'solarizedDark':
       return solarizedDarkTheme
+    case 'dark':
     default:
-      return defaultTheme
+      return darkTheme
   }
 }
 

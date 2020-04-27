@@ -10,6 +10,7 @@ import { openNew } from '../../lib/platform'
 import Image from '../atoms/Image'
 import AppLink from '../atoms/AppLink'
 import { useTranslation } from 'react-i18next'
+import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -77,6 +78,22 @@ const AboutContents = styled.div`
   }
 `
 
+const MobileLink = styled.button`
+  ${primaryButtonStyle}
+  padding: 0 16px;
+  height: 40px;
+  line-height: 1;
+  border-width: initial;
+  border-style: none;
+  border-color: initial;
+  border-image: initial;
+  border-radius: 2px;
+  margin-bottom: 10px;
+
+  .subtext {
+    font-size: 12px;
+  }
+`
 interface PrimaryLinkProps {
   href: string
   children: string
@@ -118,7 +135,7 @@ const AboutTab = () => {
                   <PrimaryLink href='https://boostnote.io/'>
                     {t('about.website')}
                   </PrimaryLink>
-                  <PrimaryLink href='https://boostnote.io/wiki/'>
+                  <PrimaryLink href='https://hub.boostio.co/'>
                     {t('about.boostWiki')}
                   </PrimaryLink>
                 </p>
@@ -132,7 +149,27 @@ const AboutTab = () => {
           </div>
           <div className='about-platform'>
             <SectionHeader>{t('about.platform')}</SectionHeader>
-            <AppLink />
+            <div>
+              <AppLink />{' '}
+              <MobileLink
+                onClick={() => {
+                  openNew(
+                    'https://apps.apple.com/us/app/boostnote-mobile/id1498182749'
+                  )
+                }}
+              >
+                iOS App
+              </MobileLink>{' '}
+              <MobileLink
+                onClick={() => {
+                  openNew(
+                    'https://play.google.com/store/apps/details?id=com.boostio.boostnote'
+                  )
+                }}
+              >
+                Android
+              </MobileLink>
+            </div>
           </div>
           <div className='about-community'>
             <SectionHeader>{t('about.community')}</SectionHeader>

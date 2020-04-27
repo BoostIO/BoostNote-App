@@ -1,39 +1,43 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import { noteListIconColor } from '../../lib/styled/styleFunctions'
+import Icon from './Icon'
 
-const StyledButton = styled.button<{ active: boolean }>`
-  background: transparent;
+const ToolbarButtonContainer = styled.button`
   height: 32px;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 18px;
   outline: none;
+
+  background-color: transparent;
   border: none;
-  ${noteListIconColor}
-  &:first-child {
-    margin-left: 0;
+  cursor: pointer;
+
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.sideNavButtonColor};
+  &:hover {
+    color: ${({ theme }) => theme.sideNavButtonHoverColor};
   }
-  &:last-child {
-    margin-right: 0;
+
+  &:active,
+  &.active {
+    color: ${({ theme }) => theme.sideNavButtonActiveColor};
   }
 `
 
 interface ToolbarButtonProps {
-  icon: React.ReactNode
+  iconPath: string
   active?: boolean
-  className?: string
   onClick: React.MouseEventHandler
 }
 
 const ToolbarButton = ({
-  icon,
+  iconPath,
   onClick,
   active = false,
-  className,
 }: ToolbarButtonProps) => (
-  <StyledButton onClick={onClick} active={active} className={className}>
-    {icon}
-  </StyledButton>
+  <ToolbarButtonContainer onClick={onClick} className={active ? 'active' : ''}>
+    <Icon path={iconPath} />
+  </ToolbarButtonContainer>
 )
 
 export default ToolbarButton

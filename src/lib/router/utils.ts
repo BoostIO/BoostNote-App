@@ -43,34 +43,9 @@ export const useRouteParams = () => {
   return useMemo((): AllRouteParams => {
     const names = pathname.slice('/app'.length).split('/').slice(1)
 
-    let noteId: string | undefined = undefined
-    if (names[0] === 'notes') {
-      if (/^note:/.test(names[1])) {
-        noteId = names[1]
-      }
-
-      return {
-        name: 'storages.allNotes',
-        noteId,
-      }
-    }
-
-    if (names[0] === 'bookmarks') {
-      return {
-        name: 'storages.bookmarks',
-      }
-    }
-
     if (names[0] === 'storages' && names[1] == null) {
       return {
         name: 'storages.create',
-      }
-    }
-
-    if (names[0] === 'tutorials') {
-      return {
-        name: 'tutorials.show',
-        path: pathname,
       }
     }
 
@@ -80,46 +55,52 @@ export const useRouteParams = () => {
       }
     }
     const storageId = names[1]
-
-    if (names[2] == null) {
+    if (names[2] == null || names[2].length === 0) {
       return {
-        name: 'storages.edit',
+        name: 'storages.notes',
+        storageId,
+        folderPathname: '/',
+      }
+    }
+
+    if (names[2] === 'settings') {
+      return {
+        name: 'storages.settings',
         storageId,
       }
     }
 
+    let noteId: string | undefined = undefined
     if (names[2] === 'notes') {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {
         return {
-          name: 'storages.allNotes',
+          name: 'storages.notes',
           storageId,
+          folderPathname: '/',
         }
       }
 
       const folderNames = []
       for (const index in restNames) {
         const name = restNames[index]
+        if (name === '') {
+          break
+        }
+
         if (/^note:/.test(name)) {
           noteId = name
           break
-        } else {
-          folderNames.push(name)
         }
-      }
 
-      if (restNames[0].match(new RegExp(`(^note\:[A-z0-9]*)`, 'g'))) {
-        return {
-          name: 'storages.allNotes',
-          storageId,
-          noteId,
-        }
+        folderNames.push(name)
       }
 
       return {
         name: 'storages.notes',
         storageId,
-        folderPathname: '/' + folderNames.join('/'),
+        folderPathname:
+          folderNames.length === 0 ? '/' : '/' + folderNames.join('/'),
         noteId,
       }
     }
@@ -159,11 +140,6 @@ export const usePathnameWithoutNoteId = () => {
   const routeParams = useRouteParams()
   return useMemo(() => {
     switch (routeParams.name) {
-      case 'storages.allNotes':
-        if (routeParams.storageId == null) {
-          return `/app/notes`
-        }
-        return `/app/storages/${routeParams.storageId}/notes`
       case 'storages.notes':
         return `/app/storages/${routeParams.storageId}/notes${
           routeParams.folderPathname === '/' ? '' : routeParams.folderPathname
@@ -175,15 +151,4 @@ export const usePathnameWithoutNoteId = () => {
     }
     return pathname
   }, [routeParams, pathname])
-}
-
-export const useCurrentTutorialPathname = () => {
-  const routeParams = useRouteParams()
-  return useMemo(() => {
-    switch (routeParams.name) {
-      case 'tutorials.show':
-        return routeParams.path
-    }
-    return '/app'
-  }, [routeParams])
 }

@@ -41,8 +41,6 @@ export type NoteDoc = {
   _rev: string
 } & NoteDocEditibleProps
 
-export type PopulatedNoteDoc = NoteDoc & { storageId: string }
-
 export type FolderDoc = {
   _id: string // folder:${FOLDER_PATHNAME}
   createdAt: string
@@ -73,7 +71,7 @@ export type Attachment = {
 }
 
 export interface AllDocsMap {
-  noteMap: ObjectMap<PopulatedNoteDoc>
+  noteMap: ObjectMap<NoteDoc>
   folderMap: ObjectMap<FolderDoc>
   tagMap: ObjectMap<TagDoc>
 }
@@ -101,7 +99,7 @@ export type PopulatedTagDoc = TagDoc & {
 }
 
 export interface AllPopulatedDocsMap {
-  noteMap: ObjectMap<PopulatedNoteDoc>
+  noteMap: ObjectMap<NoteDoc>
   folderMap: ObjectMap<PopulatedFolderDoc>
   tagMap: ObjectMap<PopulatedTagDoc>
   attachmentMap: ObjectMap<Attachment>

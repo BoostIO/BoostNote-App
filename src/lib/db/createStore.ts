@@ -7,7 +7,6 @@ import {
   PopulatedFolderDoc,
   PopulatedTagDoc,
   Attachment,
-  PopulatedNoteDoc,
   CloudNoteStorageData,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
@@ -546,10 +545,7 @@ export function createDbStoreCreator(
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             notesListToRefresh.forEach((noteDoc) => {
-              draft[storage.id]!.noteMap[noteDoc._id] = {
-                storageId: storage.id,
-                ...noteDoc,
-              } as PopulatedNoteDoc
+              draft[storage.id]!.noteMap[noteDoc._id] = noteDoc
             })
             folderListToRefresh.forEach((folderDoc) => {
               draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
@@ -623,7 +619,7 @@ export function createDbStoreCreator(
 
         const noteIds = Object.keys(storage.noteMap)
         const affectedTagIdAndNotesIdMap = new Map<string, string[]>()
-        const modifiedNotes: ObjectMap<PopulatedNoteDoc> = noteIds.reduce(
+        const modifiedNotes: ObjectMap<NoteDoc> = noteIds.reduce(
           (acc, noteId) => {
             const note = { ...storage.noteMap[noteId]! }
             if (deletedFolderPathnames.includes(note.folderPathname)) {
@@ -692,10 +688,7 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const noteDoc = {
-          storageId,
-          ...(await storage.db.createNote(noteProps)),
-        } as PopulatedNoteDoc
+        const noteDoc = await storage.db.createNote(noteProps)
 
         const parentFolderPathnamesToCheck = [
           ...getAllParentFolderPathnames(noteDoc.folderPathname),
@@ -779,11 +772,10 @@ export function createDbStoreCreator(
           return
         }
         let previousNoteDoc = await storage.db.getNote(noteId)
-        const updatedNoteDoc = await storage.db.updateNote(noteId, noteProps)
-        if (updatedNoteDoc == null) {
+        const noteDoc = await storage.db.updateNote(noteId, noteProps)
+        if (noteDoc == null) {
           return
         }
-        const noteDoc = { storageId, ...updatedNoteDoc } as PopulatedNoteDoc
         if (previousNoteDoc == null) {
           previousNoteDoc = noteDoc
         }
@@ -918,16 +910,13 @@ export function createDbStoreCreator(
           )
         }
 
-        const newNote = {
-          storageId: targetStorage.id,
-          ...(await targetStorage.db.createNote({
-            title: originalNote.title,
-            content: originalNote.content,
-            tags: originalNote.tags,
-            data: originalNote.data,
-            folderPathname: targetFolderPathname,
-          })),
-        } as PopulatedNoteDoc
+        const newNote = await targetStorage.db.createNote({
+          title: originalNote.title,
+          content: originalNote.content,
+          tags: originalNote.tags,
+          data: originalNote.data,
+          folderPathname: targetFolderPathname,
+        })
         await originalStorage.db.purgeNote(originalNote._id)
 
         const modifiedTagsInOriginalStorage = originalNote.tags
@@ -1046,11 +1035,10 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const updatedNoteDoc = await storage.db.trashNote(noteId)
-        if (updatedNoteDoc == null) {
+        const noteDoc = await storage.db.trashNote(noteId)
+        if (noteDoc == null) {
           return
         }
-        const noteDoc = { storageId, ...updatedNoteDoc } as PopulatedNoteDoc
 
         let folder: PopulatedFolderDoc | undefined
         if (storage.folderMap[noteDoc.folderPathname] != null) {
@@ -1104,10 +1092,7 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const noteDoc = {
-          storageId,
-          ...(await storage.db.untrashNote(noteId)),
-        } as PopulatedNoteDoc
+        const noteDoc = await storage.db.untrashNote(noteId)
 
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
@@ -1233,7 +1218,7 @@ export function createDbStoreCreator(
           router.replace(`/app/storages/${storageId}/notes`)
         }
 
-        const modifiedNotes: ObjectMap<PopulatedNoteDoc> = Object.keys(
+        const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
           if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(tag)) {

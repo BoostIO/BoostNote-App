@@ -11,7 +11,6 @@ import {
   GeneralThemeOptions,
   GeneralLanguageOptions,
   GeneralNoteSortingOptions,
-  GeneralTutorialsOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -19,7 +18,6 @@ import { useUsers } from '../../lib/accounts'
 import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import { IconArrowRotate } from '../icons'
 import { FormCheckItem } from '../atoms/form'
 
 const GeneralTab = () => {
@@ -55,15 +53,6 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
-  const selectTutorialsDisplay: SelectChangeEventHandler = useCallback(
-    (event) => {
-      setPreferences({
-        'general.tutorials': event.target.value as GeneralTutorialsOptions,
-      })
-    },
-    [setPreferences]
-  )
-
   const toggleEnableAutoSync: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
       setPreferences({
@@ -91,10 +80,7 @@ const GeneralTab = () => {
                 loginState !== 'logging-in' ? (
                   <>{t('preferences.addAccount')}</>
                 ) : (
-                  <>
-                    <IconArrowRotate />
-                    {t('preferences.loginWorking')}
-                  </>
+                  <>{t('preferences.loginWorking')}</>
                 )
               }
             </LoginButton>
@@ -129,10 +115,10 @@ const GeneralTab = () => {
             value={preferences['general.theme']}
             onChange={selectTheme}
           >
-            <option value='auto'>{t('preferences.auto')}</option>
-            <option value='light'>{t('preferences.light')}</option>
             <option value='dark'>{t('preferences.dark')}</option>
+            <option value='light'>{t('preferences.light')}</option>
             <option value='sepia'>{t('preferences.sepia')}</option>
+            <option value='legacy'>Legacy</option>
             <option value='solarizedDark'>
               {t('preferences.solarizedDark')}
             </option>
@@ -149,18 +135,6 @@ const GeneralTab = () => {
             <option value='date-updated'>{t('preferences.dateUpdated')}</option>
             <option value='date-created'>{t('preferences.dateCreated')}</option>
             <option value='title'>{t('preferences.title')}</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.displayTutorialsLabel')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['general.tutorials']}
-            onChange={selectTutorialsDisplay}
-          >
-            <option value='display'>Display</option>
-            <option value='hide'>Hide</option>
           </SectionSelect>
         </SectionControl>
       </Section>

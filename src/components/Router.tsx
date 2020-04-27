@@ -5,7 +5,6 @@ import StorageCreatePage from './pages/StorageCreatePage'
 import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
-import TutorialsPage from './Tutorials/TutorialsPage'
 import useRedirectHandler from '../lib/router/redirect'
 import styled from '../lib/styled'
 
@@ -20,25 +19,26 @@ export default () => {
   useRedirectHandler()
 
   switch (routeParams.name) {
-    case 'storages.allNotes':
-    case 'storages.bookmarks':
     case 'storages.notes':
     case 'storages.trashCan':
-    case 'storages.tags.show':
-      return <NotePage />
+    case 'storages.tags.show': {
+      const { storageId, noteId } = routeParams
+      const storage = db.storageMap[storageId]
+      if (storage == null) {
+        break
+      }
+      return <NotePage storage={storage} noteId={noteId} />
+    }
     case 'storages.attachments':
       return <AttachmentsPage />
     case 'storages.create':
       return <StorageCreatePage />
-    case 'tutorials.show':
-      return <TutorialsPage pathname={routeParams.path} />
-    case 'storages.edit':
+    case 'storages.settings':
       const storage = db.storageMap[routeParams.storageId]
-      if (storage != null) {
-        return <StorageEditPage key={routeParams.storageId} storage={storage} />
-      } else {
+      if (storage == null) {
         break
       }
+      return <StorageEditPage key={routeParams.storageId} storage={storage} />
   }
   return (
     <NotFoundPageContainer>

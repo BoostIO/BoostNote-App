@@ -1,5 +1,5 @@
 import React from 'react'
-import Navigator from './Navigator'
+import Navigator from './organisms/Navigator'
 import GlobalStyle from '../../components/GlobalStyle'
 import { ThemeProvider } from 'styled-components'
 import { darkTheme } from '../../themes/dark'

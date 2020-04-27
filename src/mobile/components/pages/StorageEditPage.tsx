@@ -147,7 +147,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   return (
     <TopBarLayout
       leftControl={<TopBarToggleNavButton />}
-      title={t('storage.edit')}
+      titleLabel={t('storage.edit')}
     >
       <PageContainer>
         <FormGroup>

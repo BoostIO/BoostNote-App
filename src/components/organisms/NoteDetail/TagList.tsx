@@ -1,12 +1,8 @@
 import React, { useCallback } from 'react'
-import ButtonIcon from '../../atoms/ButtonIcon'
 import styled from '../../../lib/styled'
-import {
-  iconColor,
-  noteListIconColor,
-  inputStyle,
-} from '../../../lib/styled/styleFunctions'
-import { IconTag, IconClose } from '../../icons'
+import { inputStyle } from '../../../lib/styled/styleFunctions'
+import Icon from '../../atoms/Icon'
+import { mdiTagMultiple, mdiClose } from '@mdi/js'
 
 interface TagListItemProps {
   tagName: string
@@ -22,27 +18,28 @@ const TagListItem = ({ tagName, removeTagByName }: TagListItemProps) => {
     <div className='listItem'>
       <div className='listItem-label'>{tagName}</div>
       <button className='listItem-removeButton' onClick={removeTag}>
-        <IconClose />
+        <Icon path={mdiClose} />
       </button>
     </div>
   )
 }
 
-const StyledContainer = styled.div`
+const TagListContainer = styled.div`
   display: flex;
   .listItem {
     display: flex;
-    margin: 0 2px;
-    ${inputStyle}
     margin-right: 5px;
+    padding: 0 0 0 0.5em;
+    ${inputStyle}
+    border-radius: 13px;
   }
 
   .icon {
-    ${noteListIconColor}
+    color: ${({ theme }) => theme.sideNavButtonColor};
   }
 
   .listItem-label {
-    padding: 0 4px;
+    padding-right: 0.25em;
     line-height: 20px;
   }
 
@@ -54,9 +51,18 @@ const StyledContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    ${iconColor};
     background-color: transparent;
 
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.sideNavButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    }
     svg {
       vertical-align: top;
     }
@@ -70,8 +76,8 @@ interface TagListProps {
 
 const TagList = ({ tags, removeTagByName }: TagListProps) => {
   return (
-    <StyledContainer>
-      <ButtonIcon className='icon' icon={<IconTag />} />
+    <TagListContainer>
+      <Icon className='icon' size={18} path={mdiTagMultiple} />
       {tags.map((tag) => (
         <TagListItem
           tagName={tag}
@@ -79,7 +85,7 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
           removeTagByName={removeTagByName}
         />
       ))}
-    </StyledContainer>
+    </TagListContainer>
   )
 }
 

@@ -1,3 +1,9 @@
+> ### [Boost Note for Teams](https://hub.boostio.co/)
+>
+> We'll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!
+>
+> Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.
+
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
   
@@ -20,11 +26,7 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 
 ## Roadmap
 
-- Browser app (Dec 2019)
-- Desktop app(Windows, mac and Linux) (Dec 2019)
-- Cloud storage (Dec 2019)
-- Mobile app(Android and iOS) (Feb 2020)
-- File system based storage (June 2020)
+[Boost Note Roadmap 2020](https://medium.com/boostnote/boost-note-roadmap-2020-9f06a642f5f1)
 
 ## Authors & Maintainers
 

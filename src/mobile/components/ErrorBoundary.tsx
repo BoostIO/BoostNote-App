@@ -72,7 +72,7 @@ class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
         <ThemeProvider theme={darkTheme}>
           <AppContainer>
             <GlobalStyle />
-            <TopBarLayout title='Error'>
+            <TopBarLayout titleLabel='Error'>
               <div style={{ padding: '15px' }}>
                 <h1>Error!</h1>
                 <p>Please click button</p>

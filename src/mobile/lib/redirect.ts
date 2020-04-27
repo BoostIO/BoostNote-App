@@ -6,12 +6,15 @@ import { useEffectOnce } from 'react-use'
 
 export default function useRedirectHandler() {
   const db = useDb()
-  const { replace } = useRouter()
+  const { replace, pathname } = useRouter()
 
   const storageMapRef = useRef(db.storageMap)
   useEffectOnce(() => {
     const storageEntries = entries(storageMapRef.current)
 
+    if (pathname.startsWith('/m') && pathname !== '/m') {
+      return
+    }
     if (storageEntries.length === 0) {
       replace('/m/storages')
     } else {

@@ -7,8 +7,9 @@ export default createGlobalStyle<{ theme: BaseTheme }>`
     margin: 0;
     ${backgroundColor}
     ${textColor}
-    font-family: ${({ theme }) => theme.fontFamily};
-    font-size: ${({ theme }) => theme.fontSize}px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-size: 15px;
     font-weight: 400;
   }
 
@@ -20,8 +21,8 @@ export default createGlobalStyle<{ theme: BaseTheme }>`
     outline: none;
   }
 
-  input {
-    font-size: ${({ theme }) => theme.fontSize}px;
+  input, button {
+    font-size: 15px;
   }
 
   h1,h2,h3,h4,h5,h6 {
