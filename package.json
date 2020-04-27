@@ -181,6 +181,7 @@
       "icon": "static/icon.icns",
       "target": [
         "deb",
+        "rpm",
         "AppImage"
       ]
     },
