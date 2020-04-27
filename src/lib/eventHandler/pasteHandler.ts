@@ -1,4 +1,5 @@
 import { decodeResponse, isImageResponse } from '../http'
+import { isDesktopOrMobileApp } from '../platform'
 
 const handlePasteText = (
   doc: CodeMirror.Doc,
@@ -48,6 +49,7 @@ export const codeMirrorPasteHandler = (
   change: CodeMirror.EditorChange,
   enableAutoFetchWebPageTitle: boolean
 ) => {
+  if (!isDesktopOrMobileApp()) return
   if (!enableAutoFetchWebPageTitle) return
   const editorDoc = editor.getDoc()
 

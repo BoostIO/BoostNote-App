@@ -111,6 +111,7 @@
     "@types/pouchdb-core": "^7.0.3",
     "@types/pouchdb-mapreduce": "^6.1.4",
     "@types/pouchdb-replication": "^6.4.2",
+    "@types/ua-parser-js": "^0.7.33",
     "aws-amplify": "^1.2.4",
     "classcat": "^4.0.2",
     "codemirror": "^5.49.0",
@@ -163,6 +164,7 @@
     "remark-stringify": "^7.0.4",
     "shortid": "^2.2.15",
     "styled-components": "^4.3.2",
+    "ua-parser-js": "^0.7.21",
     "unified": "^8.4.0",
     "unist-util-visit": "^2.0.0",
     "use-force-update": "^1.0.7"

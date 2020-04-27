@@ -26,6 +26,7 @@ import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../../../components/atoms/form'
 import { codeMirrorPasteHandler } from '../../../lib/eventHandler/pasteHandler'
+import { isDesktopOrMobileApp } from '../../../lib/platform'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -194,21 +195,23 @@ const EditorPreferencesTab = () => {
           </SectionSelect>
         </SectionControl>
       </Section>
-      <Section>
-        <SectionHeader>
-          {t('preferences.enableAutoFetchWebPageTitle')}
-        </SectionHeader>
-        <SectionControl>
-          <FormCheckItem
-            id='checkbox-enable-auto-sync'
-            type='checkbox'
-            checked={preferences['editor.enableAutoFetchWebPageTitle']}
-            onChange={toggleEnableAutoFetchWebPageTitle}
-          >
+      {isDesktopOrMobileApp() && (
+        <Section>
+          <SectionHeader>
             {t('preferences.enableAutoFetchWebPageTitle')}
-          </FormCheckItem>
-        </SectionControl>
-      </Section>
+          </SectionHeader>
+          <SectionControl>
+            <FormCheckItem
+              id='checkbox-enable-auto-sync'
+              type='checkbox'
+              checked={preferences['editor.enableAutoFetchWebPageTitle']}
+              onChange={toggleEnableAutoFetchWebPageTitle}
+            >
+              {t('preferences.enableAutoFetchWebPageTitle')}
+            </FormCheckItem>
+          </SectionControl>
+        </Section>
+      )}
       <Section>
         <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
         <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
