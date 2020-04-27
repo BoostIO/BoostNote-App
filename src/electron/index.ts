@@ -12,6 +12,9 @@ import { dev } from './consts'
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null
 
+// global reference for single instance lock
+const singleInstance = app.requestSingleInstanceLock()
+
 function createMainWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
     webPreferences: { nodeIntegration: true },
@@ -42,6 +45,18 @@ function createMainWindow() {
     mainWindow = null
   })
   return window
+}
+
+// single instance lock
+if (!singleInstance) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (!mainWindow.isVisible()) mainWindow.show()
+      mainWindow.focus()
+    }
+  })
 }
 
 // quit application when all windows are closed
