@@ -20,7 +20,7 @@ export default {
     'storage.rename': 'Rename Storage',
     'storage.renameMessage': 'Enter new storage name',
     'storage.remove': 'Remove Storage',
-    'storage.removeMessage': 'The storage will be removed from this app.',
+    'storage.removeMessage': 'Warning! This will permanently remove all notes locally stored on this location.',
     'storage.delete': 'Delete Storage',
     'storage.move': 'Move Note',
     'storage.moveTitle': 'Move Note to Other storage',
