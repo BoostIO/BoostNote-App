@@ -12,7 +12,7 @@ import { dev } from './consts'
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null
 
-// global reference for single instance lock
+// single instance lock
 const singleInstance = app.requestSingleInstanceLock()
 
 function createMainWindow() {
@@ -47,7 +47,7 @@ function createMainWindow() {
   return window
 }
 
-// single instance lock
+// single instance lock handler
 if (!singleInstance) {
   app.quit()
 } else {
