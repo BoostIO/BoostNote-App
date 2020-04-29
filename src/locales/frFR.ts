@@ -22,7 +22,7 @@ export default {
     'storage.remove': "Supprimer l'espace de stockage",
     'storage.removeMessage':
       "L'espace de stockage sera dissocié de cette application.",
-    'storage.delete': "Supprimer l'espace de stockage",
+    'storage.delete': "Supprimer l'espace de stockage {{storage}}",
     'storage.move': 'Déplacer la note',
     'storage.moveTitle': 'Déplacer la note dans un autre espace de stockage',
     'storage.moveMessage':

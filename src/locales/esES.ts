@@ -22,7 +22,7 @@ export default {
     'storage.remove': 'Eliminar almacenamiento',
     'storage.removeMessage':
       'Este almacenamiento se va a desvincular de esta aplicación.',
-    'storage.delete': 'Eliminar almacenamiento',
+    'storage.delete': 'Eliminar almacenamiento {{storage}}',
     'storage.move': 'Mover nota',
     'storage.moveTitle': 'Mover nota a otro almacenamiento',
     'storage.moveMessage':

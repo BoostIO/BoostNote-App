@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': '새로운 저장소명을 입력해주세요.',
     'storage.remove': '저장소 제거',
     'storage.removeMessage': '해당 저장소가 이 앱에서 연결이 해제됩니다.',
-    'storage.delete': '저장소 삭제',
+    'storage.delete': '저장소 삭제 {{storage}}',
     'storage.move': '노트 이동',
     'storage.moveTitle': '다른 저장소로 노트 이동',
     'storage.moveMessage': '노트를 다른 저장소로 옮기려고 합니다.',

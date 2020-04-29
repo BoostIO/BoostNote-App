@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': '請輸入新儲存空間名稱',
     'storage.remove': '移除儲存空間',
     'storage.removeMessage': '這個筆記將會從這個 APP 解除連結。',
-    'storage.delete': '刪除儲存空間',
+    'storage.delete': '刪除儲存空間 {{storage}}',
     'storage.move': '移動儲存空間',
     'storage.moveTitle': '移動筆記到其他儲存空間',
     'storage.moveMessage': '您正在嘗試把筆記移到另一個儲存空間。',

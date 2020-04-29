@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': '输入新的储存名',
     'storage.remove': '移除储存',
     'storage.removeMessage': '这个储存将会从这个 APP 解除联系.',
-    'storage.delete': '删除储存',
+    'storage.delete': '删除储存 {{storage}}',
     'storage.move': '移动笔记',
     'storage.moveTitle': '移动笔记到其他储存',
     'storage.moveMessage': '你正在尝试把笔记移到另一个储存.',

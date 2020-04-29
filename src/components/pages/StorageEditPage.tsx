@@ -32,7 +32,7 @@ export default ({ storage }: StorageEditProps) => {
 
   const removeCallback = useCallback(() => {
     messageBox({
-      title: `Delete "${storage.name}" storage`,
+      title: t('storage.delete', { storage: storage.name }),
       message: t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
       buttons: [t('storage.remove'), t('general.cancel')],

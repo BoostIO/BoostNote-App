@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': '新しいストレージ名を入力する',
     'storage.remove': 'ストレージを除去する',
     'storage.removeMessage': 'このストレージはアプリから除外されます',
-    'storage.delete': 'ストレージを削除する',
+    'storage.delete': 'ストレージを削除する {{storage}}',
     'storage.move': 'ストレージを移動する',
     'storage.moveTitle': 'ノートを新しいストレージに移動する',
     'storage.moveMessage': 'ノートを別のストレージに移動させています',
