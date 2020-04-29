@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': 'Введіть нову назву сховища',
     'storage.remove': 'Видаліть сховище',
     'storage.removeMessage': 'З цього додатка буде від’єднано сховище.',
-    'storage.delete': 'Видалити сховище',
+    'storage.delete': 'Видалити сховище {{storage}}',
     'storage.move': 'Перемістіти нотатку',
     'storage.moveTitle': 'Перемістити нотатку до іншого сховища',
     'storage.moveMessage':

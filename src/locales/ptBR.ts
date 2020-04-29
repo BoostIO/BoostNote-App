@@ -22,7 +22,7 @@
     'storage.remove': 'Remover armazenamento',
     'storage.removeMessage':
       'O armazenamento será desvinculado deste aplicativo.',
-    'storage.delete': 'Deletar armazenamento',
+    'storage.delete': 'Deletar armazenamento {{storage}}',
     'storage.move': 'Mover nota',
     'storage.moveTitle': 'Mover nota para outro armazenamento',
     'storage.moveMessage':
