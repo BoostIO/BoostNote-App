@@ -20,8 +20,9 @@ export default {
       'storage.rename': 'Rinomina Archivio',
       'storage.renameMessage': 'Inserisci il nuovo nome per l\'archivio',
       'storage.remove': 'Rimuovi Archivio',
-      'storage.removeMessage': 'L\'archivio verrà rimosso da questa App',
-      'storage.delete': 'Cancella Archivio',
+      'storage.removeMessage':
+        'Attenzione! Proseguendo verrano eliminate tutte le note contenute.',
+      'storage.delete': 'Cancellazione archivio {{storage}}',
       'storage.move': 'Sposta Nota',
       'storage.moveTitle': 'Sposta la nota in un altro archivio',
       'storage.moveMessage':
