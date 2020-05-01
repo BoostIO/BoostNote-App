@@ -20,7 +20,7 @@ export default {
     'storage.rename': 'Speicherort umbenennen',
     'storage.renameMessage': 'Name des Speicherorts ändern',
     'storage.remove': 'Speicherort entfernen',
-    'storage.removeMessage': 'Verknüpfung des Speicherorts wird entfernt',
+    'storage.removeMessage': 'Achtung! Alle Notizen dieses Speicherorts werden dauerhaft gelöscht.',
     'storage.delete': 'Speicherort {{storage}} löschen',
     'storage.move': 'Speicherort verschieben',
     'storage.moveTitle': 'Speicherort wird verschoben',
