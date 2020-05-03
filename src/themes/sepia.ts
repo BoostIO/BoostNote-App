@@ -49,17 +49,17 @@ export const sepiaTheme: BaseTheme = {
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideNavBackgroundColor: '#fdf6e4',
-  sideNavLabelColor: '#555',
-  sideNavButtonColor: '#777',
-  sideNavButtonHoverColor: '#555',
-  sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: '#555',
-  sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: '#eee8d6',
-  sideNavItemActiveColor: '#111',
-  sideNavItemActiveBackgroundColor: '#eee8d6',
-  sideNavItemHoverActiveBackgroundColor: '#e0e0e0',
+  navBackgroundColor: '#fdf6e4',
+  navLabelColor: '#555',
+  navButtonColor: '#777',
+  navButtonHoverColor: '#555',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#555',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#eee8d6',
+  navItemActiveColor: '#111',
+  navItemActiveBackgroundColor: '#eee8d6',
+  navItemHoverActiveBackgroundColor: '#e0e0e0',
 
   // Button
   primaryButtonLabelColor: light100Color,

@@ -19,7 +19,7 @@ import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiPlus, mdiMagnify } from '@mdi/js'
 import { NoteDoc } from '../../lib/db/types'
 
-const NoteListContainer = styled.div`
+const NoteNavigatorContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -45,14 +45,14 @@ const NoteListContainer = styled.div`
       pointer-events: none;
 
       transition: color 200ms ease-in-out;
-      color: ${({ theme }) => theme.sideNavButtonColor};
+      color: ${({ theme }) => theme.navButtonColor};
       &:hover {
-        color: ${({ theme }) => theme.sideNavButtonHoverColor};
+        color: ${({ theme }) => theme.navButtonHoverColor};
       }
 
       &:active,
       .active {
-        color: ${({ theme }) => theme.sideNavButtonActiveColor};
+        color: ${({ theme }) => theme.navButtonActiveColor};
       }
     }
     .input {
@@ -74,7 +74,7 @@ const NoteListContainer = styled.div`
   }
 `
 
-const Control = styled.div`
+const Toolbar = styled.div`
   height: 50px;
   display: flex;
   padding: 0 0 0 8px;
@@ -95,14 +95,14 @@ const Control = styled.div`
     cursor: pointer;
 
     transition: color 200ms ease-in-out;
-    color: ${({ theme }) => theme.sideNavButtonColor};
+    color: ${({ theme }) => theme.navButtonColor};
     &:hover {
-      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+      color: ${({ theme }) => theme.navButtonHoverColor};
     }
 
     &:active,
     .active {
-      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+      color: ${({ theme }) => theme.navButtonActiveColor};
     }
   }
 
@@ -111,7 +111,7 @@ const Control = styled.div`
     flex: 1;
     position: relative;
     height: 32px;
-    color: ${({ theme }) => theme.sideNavButtonColor};
+    color: ${({ theme }) => theme.navButtonColor};
     border-radius: 4px;
     overflow: hidden;
     &:focus {
@@ -135,13 +135,10 @@ const Control = styled.div`
       box-sizing: border-box;
       border: none;
     }
-    select {
-      appearance: none;
-    }
   }
 `
 
-type NoteListProps = {
+type NoteNavigatorprops = {
   storageId: string
   currentNoteId?: string
   search: string
@@ -156,7 +153,7 @@ type NoteListProps = {
   trashOrPurgeCurrentNote: () => void
 }
 
-const NoteList = ({
+const NoteNavigator = ({
   notes,
   createNote,
   storageId,
@@ -169,7 +166,7 @@ const NoteList = ({
   lastCreatedNoteId,
   setSort,
   trashOrPurgeCurrentNote,
-}: NoteListProps) => {
+}: NoteNavigatorprops) => {
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -230,8 +227,8 @@ const NoteList = ({
   )
 
   return (
-    <NoteListContainer>
-      <Control className='control'>
+    <NoteNavigatorContainer>
+      <Toolbar>
         <div className='searchInput'>
           <input
             ref={searchRef}
@@ -247,7 +244,7 @@ const NoteList = ({
             <Icon className='icon' path={mdiPlus} />
           </button>
         )}
-      </Control>
+      </Toolbar>
       <div className='filterTab'>
         <Icon path={mdiChevronDown} />
         <select
@@ -284,8 +281,8 @@ const NoteList = ({
           )
         ) : null}
       </ul>
-    </NoteListContainer>
+    </NoteNavigatorContainer>
   )
 }
 
-export default NoteList
+export default NoteNavigator

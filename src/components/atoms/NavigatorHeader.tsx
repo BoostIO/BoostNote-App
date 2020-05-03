@@ -14,7 +14,7 @@ const HeaderContainer = styled.header`
 
 const Label = styled.div`
   padding: 0 0 0 0.5em;
-  color: ${({ theme }) => theme.sideNavLabelColor};
+  color: ${({ theme }) => theme.navLabelColor};
   ${textOverflow}
 `
 

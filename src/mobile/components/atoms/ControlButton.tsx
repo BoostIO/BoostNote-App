@@ -13,10 +13,10 @@ const StyledButton = styled.button`
   background-color: transparent;
   font-size: 18px;
   cursor: pointer;
-  color: ${({ theme }) => theme.sideNavButtonColor};
+  color: ${({ theme }) => theme.navButtonColor};
 
   &.active {
-    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
 

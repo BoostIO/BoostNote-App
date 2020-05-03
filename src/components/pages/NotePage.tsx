@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
-import NoteList from '../organisms/NoteList'
+import NoteNavigator from '../organisms/NoteNavigator'
 import styled from '../../lib/styled'
 import NoteDetail from '../organisms/NoteDetail'
 import {
@@ -344,7 +344,7 @@ const NotePage = ({ storage }: NotePageProps) => {
       style={{ height: '100%' }}
       defaultLeftWidth={generalStatus.noteListWidth}
       left={
-        <NoteList
+        <NoteNavigator
           search={search}
           setSearchInput={setSearchInput}
           storageId={storage.id}
