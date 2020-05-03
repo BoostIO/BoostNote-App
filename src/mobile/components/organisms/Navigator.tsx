@@ -15,7 +15,7 @@ import { borderBottom } from '../../../lib/styled/styleFunctions'
 
 const StyledSideNavContainer = styled.nav`
   display: flex;
-  background-color: ${({ theme }) => theme.sideNavBackgroundColor};
+  background-color: ${({ theme }) => theme.navBackgroundColor};
   flex-direction: column;
   height: 100%;
   .topControl {
@@ -35,14 +35,14 @@ const StyledSideNavContainer = styled.nav`
       font-size: 24px;
 
       transition: color 200ms ease-in-out;
-      color: ${({ theme }) => theme.sideNavButtonColor};
+      color: ${({ theme }) => theme.navButtonColor};
       &:hover {
-        color: ${({ theme }) => theme.sideNavButtonHoverColor};
+        color: ${({ theme }) => theme.navButtonHoverColor};
       }
 
       &:active,
       .active {
-        color: ${({ theme }) => theme.sideNavButtonActiveColor};
+        color: ${({ theme }) => theme.navButtonActiveColor};
       }
     }
   }
@@ -60,7 +60,7 @@ const StyledSideNavContainer = styled.nav`
     padding: 4px;
     padding-left: 26px;
     margin-bottom: 4px;
-    color: ${({ theme }) => theme.sideNavLabelColor};
+    color: ${({ theme }) => theme.navLabelColor};
     user-select: none;
   }
 

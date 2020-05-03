@@ -11,7 +11,7 @@ const Container = styled.div`
   height: 34px;
   display: flex;
   &.active {
-    background-color: ${({ theme }) => theme.sideNavItemActiveBackgroundColor};
+    background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
   }
 `
 
@@ -22,7 +22,7 @@ const FoldButton = styled.button`
   left: 0;
   border: none;
   background-color: transparent;
-  color: ${({ theme }) => theme.sideNavButtonColor};
+  color: ${({ theme }) => theme.navButtonColor};
 `
 
 const ClickableContainer = styled.button`
@@ -33,7 +33,7 @@ const ClickableContainer = styled.button`
 
   background-color: transparent;
   border: none;
-  color: ${({ theme }) => theme.sideNavLabelColor};
+  color: ${({ theme }) => theme.navLabelColor};
 `
 
 const Label = styled.div`

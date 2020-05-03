@@ -54,17 +54,17 @@ export const lightTheme: BaseTheme = {
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideNavBackgroundColor: uiBackgroundColor,
-  sideNavLabelColor: uiColor,
-  sideNavButtonColor: uiDimColor,
-  sideNavButtonHoverColor: uiColor,
-  sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: uiColor,
-  sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: uiVividBackgroundColor,
-  sideNavItemActiveColor: uiVividColor,
-  sideNavItemActiveBackgroundColor: uiVividBackgroundColor,
-  sideNavItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
+  navBackgroundColor: uiBackgroundColor,
+  navLabelColor: uiColor,
+  navButtonColor: uiDimColor,
+  navButtonHoverColor: uiColor,
+  navButtonActiveColor: primaryColor,
+  navItemColor: uiColor,
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: uiVividBackgroundColor,
+  navItemActiveColor: uiVividColor,
+  navItemActiveBackgroundColor: uiVividBackgroundColor,
+  navItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
 
   // Button
   primaryButtonLabelColor: light100Color,

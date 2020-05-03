@@ -35,7 +35,7 @@ const TagListContainer = styled.div`
   }
 
   .icon {
-    color: ${({ theme }) => theme.sideNavButtonColor};
+    color: ${({ theme }) => theme.navButtonColor};
   }
 
   .listItem-label {
@@ -54,14 +54,14 @@ const TagListContainer = styled.div`
     background-color: transparent;
 
     transition: color 200ms ease-in-out;
-    color: ${({ theme }) => theme.sideNavButtonColor};
+    color: ${({ theme }) => theme.navButtonColor};
     &:hover {
-      color: ${({ theme }) => theme.sideNavButtonHoverColor};
+      color: ${({ theme }) => theme.navButtonHoverColor};
     }
 
     &:active,
     .active {
-      color: ${({ theme }) => theme.sideNavButtonActiveColor};
+      color: ${({ theme }) => theme.navButtonActiveColor};
     }
     svg {
       vertical-align: top;

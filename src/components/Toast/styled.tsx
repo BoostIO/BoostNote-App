@@ -37,12 +37,12 @@ export const StyledToastCloseButton = styled.button`
   cursor: pointer;
   border: none;
   &:hover {
-    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    color: ${({ theme }) => theme.navButtonHoverColor};
   }
 
   &:active,
   .active {
-    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
 

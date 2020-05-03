@@ -44,17 +44,17 @@ export const solarizedDarkTheme: BaseTheme = {
   scrollBarThumbColor: light12Color,
 
   // SideBar
-  sideNavBackgroundColor: '#0c3641',
-  sideNavLabelColor: '#bbb',
-  sideNavButtonColor: '#bbb',
-  sideNavButtonHoverColor: '#eee',
-  sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: '#bbb',
-  sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: '#0E404D',
-  sideNavItemActiveColor: '#eee',
-  sideNavItemActiveBackgroundColor: '#0E404D',
-  sideNavItemHoverActiveBackgroundColor: '#104B59',
+  navBackgroundColor: '#0c3641',
+  navLabelColor: '#bbb',
+  navButtonColor: '#bbb',
+  navButtonHoverColor: '#eee',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#bbb',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#0E404D',
+  navItemActiveColor: '#eee',
+  navItemActiveBackgroundColor: '#0E404D',
+  navItemHoverActiveBackgroundColor: '#104B59',
 
   // Button
   primaryButtonLabelColor: light100Color,

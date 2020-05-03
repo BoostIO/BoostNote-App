@@ -12,7 +12,7 @@ const TableViewCellContainerButton = styled.button`
   text-align: left;
   font-size: 15px;
   ${uiTextColor}
-  background-color: ${({ theme }) => theme.sideNavBackgroundColor};
+  background-color: ${({ theme }) => theme.navBackgroundColor};
   ${borderBottom}
 `
 

@@ -45,17 +45,19 @@ export const darkTheme: BaseTheme = {
   scrollBarThumbColor: light12Color,
 
   // SideBar
-  sideNavBackgroundColor: '#2c2c2c',
-  sideNavLabelColor: '#bbb',
-  sideNavButtonColor: '#999',
-  sideNavButtonHoverColor: '#bbb',
-  sideNavButtonActiveColor: primaryColor,
-  sideNavItemColor: '#bbb',
-  sideNavItemBackgroundColor: 'transparent',
-  sideNavItemHoverBackgroundColor: '#444',
-  sideNavItemActiveColor: '#eee',
-  sideNavItemActiveBackgroundColor: '#444',
-  sideNavItemHoverActiveBackgroundColor: '#555',
+  navBackgroundColor: '#2c2c2c',
+  navLabelColor: '#bbb',
+  navButtonColor: '#999',
+  navButtonHoverColor: '#bbb',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#bbb',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#444',
+  navItemActiveColor: '#eee',
+  navItemActiveBackgroundColor: '#444',
+  navItemHoverActiveBackgroundColor: '#555',
+
+  // NoteNavigator
 
   // Button
   primaryButtonLabelColor: light100Color,

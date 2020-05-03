@@ -35,14 +35,14 @@ const FoldButton = styled.button`
   justify-content: center;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.sideNavButtonColor};
+  color: ${({ theme }) => theme.navButtonColor};
   &:hover {
-    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    color: ${({ theme }) => theme.navButtonHoverColor};
   }
 
   &:active,
   .active {
-    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
 
@@ -56,20 +56,19 @@ const ClickableContainer = styled.button`
   overflow: hidden;
   cursor: pointer;
 
-  color: ${({ theme }) => theme.sideNavItemColor};
-  background-color: ${({ theme }) => theme.sideNavItemBackgroundColor};
+  color: ${({ theme }) => theme.navItemColor};
+  background-color: ${({ theme }) => theme.navItemBackgroundColor};
   &:hover {
-    background-color: ${({ theme }) => theme.sideNavItemHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
   }
   &:active,
   &.active {
-    color: ${({ theme }) => theme.sideNavItemActiveColor};
-    background-color: ${({ theme }) => theme.sideNavItemActiveBackgroundColor};
+    color: ${({ theme }) => theme.navItemActiveColor};
+    background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
   }
   &:hover:active,
   &:hover.active {
-    background-color: ${({ theme }) =>
-      theme.sideNavItemHoverActiveBackgroundColor};
+    background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
   }
 `
 

@@ -16,14 +16,14 @@ const ButtonContainer = styled.button`
   cursor: pointer;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.sideNavButtonColor};
+  color: ${({ theme }) => theme.navButtonColor};
   &:hover {
-    color: ${({ theme }) => theme.sideNavButtonHoverColor};
+    color: ${({ theme }) => theme.navButtonHoverColor};
   }
 
   &:active,
   &.active {
-    color: ${({ theme }) => theme.sideNavButtonActiveColor};
+    color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
 
