@@ -10,7 +10,6 @@ const dark26Color = 'rgba(0,0,0,0.26)'
 const dark12Color = 'rgba(0,0,0,0.12)'
 
 const light100Color = '#FFF'
-const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
 const light12Color = 'rgba(255,255,255,0.12)'
 
@@ -32,8 +31,7 @@ export const sepiaTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark12Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
+
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,
   noteDetailIconColor: dark26Color,
@@ -60,6 +58,9 @@ export const sepiaTheme: BaseTheme = {
   navItemActiveColor: '#111',
   navItemActiveBackgroundColor: '#eee8d6',
   navItemHoverActiveBackgroundColor: '#e0e0e0',
+
+  // NotePage
+  noteNavEmptyItemColor: '#777',
 
   // Button
   primaryButtonLabelColor: light100Color,

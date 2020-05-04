@@ -27,8 +27,6 @@ export const solarizedDarkTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark26Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
@@ -55,6 +53,9 @@ export const solarizedDarkTheme: BaseTheme = {
   navItemActiveColor: '#eee',
   navItemActiveBackgroundColor: '#0E404D',
   navItemHoverActiveBackgroundColor: '#104B59',
+
+  // NotePage
+  noteNavEmptyItemColor: '#bbb',
 
   // Button
   primaryButtonLabelColor: light100Color,
