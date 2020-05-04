@@ -8,8 +8,7 @@ export interface BaseTheme {
 
   primaryColor: string
   borderColor: string
-  iconColor: string
-  activeIconColor: string
+
   noteListIconColor: string
   noteListActiveIconColor: string
   noteDetailIconColor: string
@@ -35,6 +34,9 @@ export interface BaseTheme {
   navItemActiveColor: string
   navItemActiveBackgroundColor: string
   navItemHoverActiveBackgroundColor: string
+
+  // NotePage
+  noteNavEmptyItemColor: string
 
   // Button
   primaryButtonLabelColor: string

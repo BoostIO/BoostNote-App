@@ -37,8 +37,7 @@ export const lightTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark12Color,
-  iconColor: dark26Color,
-  activeIconColor: dark54Color,
+
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,
   noteDetailIconColor: dark26Color,
@@ -65,6 +64,9 @@ export const lightTheme: BaseTheme = {
   navItemActiveColor: uiVividColor,
   navItemActiveBackgroundColor: uiVividBackgroundColor,
   navItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
+
+  // NotePage
+  noteNavEmptyItemColor: uiDimColor,
 
   // Button
   primaryButtonLabelColor: light100Color,

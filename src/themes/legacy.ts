@@ -11,8 +11,6 @@ const dark12Color = 'rgba(0,0,0,0.12)'
 const dark100Color = '#000'
 
 const light100Color = '#FFF'
-const light70Color = 'rgba(255,255,255,0.7)'
-const light30Color = 'rgba(255,255,255,0.3)'
 const light12Color = 'rgba(255,255,255,0.12)'
 
 export const legacyTheme: BaseTheme = {
@@ -33,8 +31,6 @@ export const legacyTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark12Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,
   noteDetailIconColor: dark26Color,
@@ -61,6 +57,9 @@ export const legacyTheme: BaseTheme = {
   navItemActiveColor: '#eee',
   navItemActiveBackgroundColor: '#444',
   navItemHoverActiveBackgroundColor: '#555',
+
+  // NotePage
+  noteNavEmptyItemColor: '#999',
 
   // Button
   primaryButtonLabelColor: light100Color,
