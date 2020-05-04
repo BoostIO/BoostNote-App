@@ -4,6 +4,7 @@ import { NoteDoc } from '../../lib/db/types'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
+  exportNoteAsPdfFile
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -24,6 +25,7 @@ const ToolbarExportButton = ({ note }: ToolbarExportButtonProps) => {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
       popup(event, [
+
         {
           type: MenuTypes.Normal,
           label: 'HTML export',
@@ -35,6 +37,12 @@ const ToolbarExportButton = ({ note }: ToolbarExportButtonProps) => {
           label: 'Markdown export',
           onClick: async () => await exportNoteAsMarkdownFile(note),
         },
+        {
+          type: MenuTypes.Normal,
+          label: 'PDF export',
+          onClick: async () =>
+            await exportNoteAsPdfFile(note, preferences, previewStyle),
+        }        
       ])
     },
     [popup, note, preferences, previewStyle]
