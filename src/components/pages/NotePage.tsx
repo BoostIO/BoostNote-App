@@ -24,6 +24,11 @@ import {
   isWithGeneralCtrlKey,
 } from '../../lib/keyboard'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { usePreferences } from '../../lib/preferences'
+import {
+  sortNotesByNoteSortingOption,
+  NoteSortingOptions,
+} from '../../lib/sort'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -87,8 +92,6 @@ export type BreadCrumbs = {
   folderIsActive: boolean
 }[]
 
-export type NoteListSortOptions = 'createdAt' | 'title' | 'updatedAt'
-
 interface NotePageProps {
   storage: NoteStorage
   noteId: string | undefined
@@ -114,7 +117,17 @@ const NotePage = ({ storage }: NotePageProps) => {
   const [search, setSearchInput] = useState<string>('')
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
-  const [sort, setSort] = useState<NoteListSortOptions>('updatedAt')
+  const { preferences, setPreferences } = usePreferences()
+  const noteSorting = preferences['general.noteSorting']
+
+  const setNoteSorting = useCallback(
+    (noteSorting: NoteSortingOptions) => {
+      setPreferences({
+        'general.noteSorting': noteSorting,
+      })
+    },
+    [setPreferences]
+  )
 
   useEffect(() => {
     setLastCreatedNoteId('')
@@ -177,12 +190,9 @@ const NotePage = ({ storage }: NotePageProps) => {
           note.content.match(regex)
       )
     }
-    return filteredNotes.sort((first, second) => {
-      return sort === 'title'
-        ? first[sort].localeCompare(second[sort])
-        : second[sort].localeCompare(first[sort])
-    })
-  }, [search, notes, sort])
+
+    return sortNotesByNoteSortingOption(filteredNotes, noteSorting)
+  }, [search, notes, noteSorting])
 
   const currentNoteIndex = useMemo(() => {
     for (let i = 0; i < filteredNotes.length; i++) {
@@ -349,13 +359,14 @@ const NotePage = ({ storage }: NotePageProps) => {
           setSearchInput={setSearchInput}
           storageId={storage.id}
           notes={filteredNotes}
+          noteSorting={noteSorting}
+          setNoteSorting={setNoteSorting}
           createNote={showCreateNoteInList ? createQuickNote : undefined}
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
           currentNoteId={currentNote ? currentNote._id : undefined}
           lastCreatedNoteId={lastCreatedNoteId}
-          setSort={setSort}
           trashOrPurgeCurrentNote={trashOrPurgeCurrentNote}
         />
       }
