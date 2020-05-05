@@ -133,16 +133,6 @@ export function getAllParentFolderPathnames(pathname: string) {
   return pathnames
 }
 
-export function sortByTitle(noteDoc: NoteDoc[], descendingOrder = false) {
-  return noteDoc
-    .slice()
-    .sort((a, b) =>
-      descendingOrder
-        ? b.title.localeCompare(a.title)
-        : a.title.localeCompare(b.title)
-    )
-}
-
 export function isCloudStorageData(
   data: NoteStorageData
 ): data is Required<NoteStorageData> {

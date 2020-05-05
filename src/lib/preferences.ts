@@ -5,6 +5,7 @@ import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
+import { NoteSortingOptions } from './sort'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -25,10 +26,6 @@ export type GeneralLanguageOptions =
   | 'zh-CN'
   | 'zh-HK'
   | 'zh-TW'
-export type GeneralNoteSortingOptions =
-  | 'date-updated'
-  | 'date-created'
-  | 'title'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -38,7 +35,7 @@ export interface Preferences {
   'general.accounts': User[]
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
-  'general.noteSorting': GeneralNoteSortingOptions
+  'general.noteSorting': NoteSortingOptions
   'general.enableAnalytics': boolean
   'general.enableAutoSync': boolean
 
@@ -77,7 +74,7 @@ const basePreferences: Preferences = {
   'general.accounts': [],
   'general.language': 'en-US',
   'general.theme': 'dark',
-  'general.noteSorting': 'date-updated',
+  'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
   'general.enableAutoSync': true,
 
