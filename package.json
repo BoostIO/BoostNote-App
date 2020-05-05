@@ -93,7 +93,7 @@
     "terser-webpack-plugin": "^2.2.3",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
-    "type-fest": "^0.7.1",
+    "type-fest": "^0.13.1",
     "typescript": "^3.8.3",
     "url-loader": "^2.1.0",
     "webpack": "^4.40.2",
