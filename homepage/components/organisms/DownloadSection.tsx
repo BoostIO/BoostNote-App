@@ -8,6 +8,7 @@ import {
   mdiApple,
   mdiMicrosoftWindows,
   mdiCellphone,
+  mdiOpenInNew,
 } from '@mdi/js'
 import FlexBox from '../atoms/FlexBox'
 import {
@@ -22,6 +23,14 @@ import {
 import DownloadButtonLink from '../atoms/DownloadButtonLink'
 import { space, SpaceProps } from 'styled-system'
 import styled from '../../lib/styled'
+import ButtonLink from '../atoms/ButtonLink'
+import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
+
+const Container = styled.div<SpaceProps>`
+  max-width: 60em;
+  margin: 0 auto;
+  ${space}
+`
 
 const MobileAppLink = styled.a<SpaceProps>`
   ${space}
@@ -108,6 +117,56 @@ const DownloadSection = () => {
               >
                 <img height='50' src='/static/ios-app-store-badge.svg' />
               </MobileAppLink>
+            </FlexBox>
+          </li>
+          <li>
+            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+              Legacy App
+            </Text>
+            <Container>
+              <Text as='p' textAlign='center'>
+                We are going to keep maintaining the old app until the current
+                Boost Note.next support most of features of the old app like
+                file system based storage and markdown extensions. So please
+                don&apos;t force yourself too much to migrate to the new app.
+              </Text>
+            </Container>
+            <FlexBox justifyContent='center' flexWrap='wrap'>
+              <ButtonLink
+                bg='teal'
+                color='white'
+                mx={1}
+                my={[1, 0]}
+                py={2}
+                href='https://github.com/BoostIO/boost-releases/releases/latest'
+                onClick={(event) => {
+                  event.preventDefault()
+                  sendGAEvent('download-old')
+                  queueNavigateToGA(
+                    'https://github.com/BoostIO/boost-releases/releases/latest',
+                    true
+                  )
+                }}
+              >
+                <Icon path={mdiOpenInNew} /> Legacy Download Links
+              </ButtonLink>
+              <ButtonLink
+                color='teal'
+                mx={1}
+                my={[1, 0]}
+                py={2}
+                href='https://github.com/BoostIO/BoostNote'
+                onClick={(event) => {
+                  event.preventDefault()
+                  sendGAEvent('repository-old')
+                  queueNavigateToGA(
+                    'https://github.com/BoostIO/BoostNote',
+                    true
+                  )
+                }}
+              >
+                <Icon path={mdiOpenInNew} /> Legacy Repository
+              </ButtonLink>
             </FlexBox>
           </li>
         </Box>
