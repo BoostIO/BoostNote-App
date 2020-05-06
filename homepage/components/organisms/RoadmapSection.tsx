@@ -17,7 +17,7 @@ const RoadmapImage = styled.img`
 const RoadmapSection = () => {
   return (
     <section>
-      <Box bg='#2c2c2c' color='#f0f0f0' py={4} px={2}>
+      <Box bg='#f0f0f0' py={4} px={2}>
         <Text as='h2' fontSize={4} my={4} textAlign='center'>
           🏃 Roadmap 2020
         </Text>
