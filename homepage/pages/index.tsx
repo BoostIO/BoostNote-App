@@ -5,7 +5,7 @@ import RoadmapSection from '../components/organisms/RoadmapSection'
 import FeaturesSection from '../components/organisms/FeaturesSection'
 import PricingPlansSection from '../components/organisms/PricingPlansSection'
 import BoostHubSection from '../components/organisms/BoostHubSection'
-import LegacyAppSection from '../components/organisms/LegacyAppSection'
+import DownloadSection from '../components/organisms/DownloadSection'
 import CommunitySection from '../components/organisms/CommunitySection'
 
 const HomePage = () => {
@@ -16,7 +16,7 @@ const HomePage = () => {
       <FeaturesSection />
       <PricingPlansSection />
       <BoostHubSection />
-      <LegacyAppSection />
+      <DownloadSection />
       <CommunitySection />
     </DefaultLayout>
   )
