@@ -8,7 +8,14 @@ import Container from '../atoms/Container'
 import HomeLogoLink from '../atoms/HomeLogoLink'
 import { display, space, SpaceProps } from 'styled-system'
 import Icon from '../atoms/Icon'
-import { mdiDownload } from '@mdi/js'
+import { mdiDownload, mdiOpenInApp } from '@mdi/js'
+
+const HeaderContainer = styled.header`
+  position: sticky;
+  top: 0;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.9);
+`
 
 const HeaderNavigator = styled.nav<SpaceProps>`
   ${space}
@@ -118,7 +125,7 @@ const Header = () => {
   )
 
   return (
-    <header>
+    <HeaderContainer>
       <Container>
         <HeaderNavigator mx={2} mt={2}>
           <HeaderLogo>
@@ -152,6 +159,17 @@ const Header = () => {
               </ButtonLink>
             </li>
             <li>
+              <ButtonLink
+                bg='white'
+                color='teal'
+                fontSize={1}
+                py={2}
+                href='https://note.boostio.co'
+              >
+                <Icon path={mdiOpenInApp} /> Open in Browser
+              </ButtonLink>
+            </li>
+            <li>
               <HeaderLanguageSelect
                 value={i18n.language}
                 onChange={switchLanguage}
@@ -170,7 +188,7 @@ const Header = () => {
           </HeaderRightList>
         </HeaderNavigator>
       </Container>
-    </header>
+    </HeaderContainer>
   )
 }
 
