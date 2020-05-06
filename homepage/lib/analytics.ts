@@ -7,11 +7,15 @@ export function sendGAEvent(eventName: string) {
   ga('send', 'event', eventName, 'clicked')
 }
 
-export function queueNavigateToGA(url: string) {
+export function queueNavigateToGA(url: string, newTab = false) {
   if (ga == null) {
     return
   }
   ga(() => {
+    if (newTab) {
+      window.open(url, '_blank')
+      return
+    }
     window.location.href = url
   })
 }
