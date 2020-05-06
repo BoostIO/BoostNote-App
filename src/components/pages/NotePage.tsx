@@ -13,6 +13,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
+import Image from '../atoms/Image'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -26,7 +27,48 @@ import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
-  margin-top: 300px;
+  margin-top: 13%;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  section {
+    margin: auto;
+    display: flex;
+    width: 50%;
+    text-align: center;
+
+    div {
+      text-align: center;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+
+  // Keybinds
+  h2 {
+    font-weight: normal;
+
+    // Keybind Buttons
+    span {
+      margin: 5px auto;
+      padding: 5px 10px;
+      width: max-content;
+      background: #303030;
+      border-radius: 8px;
+      box-shadow: 1px 5px 5px #222;
+    }
+  }
+  h3 {
+    margin: 20px auto;
+    font-weight: normal;
+  }
+  h4 {
+    margin: 0;
+    font-weight: normal;
+  }
 `
 
 export type BreadCrumbs = {
@@ -308,11 +350,25 @@ const NotePage = ({ storage }: NotePageProps) => {
       right={
         currentNote == null ? (
           <StyledNoteDetailNoNote>
-            <div>
-              <h1>{t('note.createKeyMac')}</h1>
-              <h1>{t('note.createKeyWinLin')}</h1>
-              <h2>{t('note.createkeymessage1')}</h2>
-            </div>
+            <Image src={'/app/static/logo_index.svg'} />
+            <h3>{t('note.createkeymessage1')}</h3>
+            {/* Might need to be changed if custom keybinds is implemented */}
+            <section>
+              <div>
+                {/* 'note.createKey' differs in locales: N/Enter */}
+                <h2>
+                  <span>⌘</span> + <span>{t('note.createKey')}</span>
+                </h2>
+                <h4>{t('note.createKeyMac')}</h4>
+              </div>
+              <h3>{t('note.createKeyOr')}</h3>
+              <div>
+                <h2>
+                  <span>Ctrl</span> + <span>{t('note.createKey')}</span>
+                </h2>
+                <h4>{t('note.createKeyWinLin')}</h4>
+              </div>
+            </section>
           </StyledNoteDetailNoNote>
         ) : (
           <NoteDetail
