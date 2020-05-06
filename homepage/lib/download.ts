@@ -5,6 +5,7 @@ const downloadUrlPrefix =
   'https://github.com/BoostIO/BoostNote.next/releases/latest/download/'
 
 export const macDmgDownloadUrl = downloadUrlPrefix + 'boost-note-mac.dmg'
+export const macZipDownloadUrl = downloadUrlPrefix + 'boost-note-mac.zip'
 export const linuxAppImageDownloadUrl =
   downloadUrlPrefix + 'boost-note-linux.AppImage'
 export const linuxDebDownloadUrl = downloadUrlPrefix + 'boost-note-linux.deb'

@@ -17,6 +17,8 @@ import {
 import ButtonLink from '../atoms/ButtonLink'
 import {
   macDmgDownloadUrl,
+  macZipDownloadUrl,
+  windowsAppIntallerUrl,
   linuxAppImageDownloadUrl,
   linuxDebDownloadUrl,
   androidPlayStoreUrl,
@@ -24,6 +26,7 @@ import {
 } from '../../lib/download'
 import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
+import DownloadButtonLink from '../atoms/DownloadButtonLink'
 
 const HeroTitle = styled.h1<TypographyProps>`
   ${typography}
@@ -53,7 +56,7 @@ const DownloadButtonLinksFragment = () => {
             .dmg (macOS)
           </DownloadButtonLink>
           <DownloadButtonLink
-            href={macDmgDownloadUrl}
+            href={macZipDownloadUrl}
             gaEventName='download-mac'
           >
             <Icon path={mdiDownload} /> .zip (macOS)
@@ -64,7 +67,7 @@ const DownloadButtonLinksFragment = () => {
       return (
         <>
           <DownloadButtonLink
-            href={linuxAppImageDownloadUrl}
+            href={windowsAppIntallerUrl}
             gaEventName='download-win'
           >
             <Icon path={mdiDownload} /> .exe (NSIS installer) (Windows)
@@ -98,31 +101,6 @@ const DownloadButtonLinksFragment = () => {
         </ButtonLink>
       )
   }
-}
-
-interface DownloadButtonLinkProps {
-  href: string
-  gaEventName: string
-}
-
-const DownloadButtonLink: React.FC<DownloadButtonLinkProps> = ({
-  children,
-  href,
-}) => {
-  return (
-    <ButtonLink
-      bg='teal'
-      color='white'
-      mx={1}
-      my={[1, 0]}
-      py={2}
-      target='_blank'
-      rel='noopener noreferrer'
-      href={href}
-    >
-      {children}
-    </ButtonLink>
-  )
 }
 
 const MobileAppLink = styled.a<SpaceProps>`
