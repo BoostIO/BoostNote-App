@@ -20,6 +20,8 @@ function createMainWindow() {
     webPreferences: { nodeIntegration: true },
     width: 1200,
     height: 800,
+    minWidth: 960,
+    minHeight: 630,
   }
   if (process.platform === 'darwin') {
     windowOptions.titleBarStyle = 'hiddenInset'
