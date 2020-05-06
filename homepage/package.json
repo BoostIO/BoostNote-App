@@ -9,6 +9,7 @@
   "dependencies": {
     "@mdi/js": "^5.1.45",
     "@mdi/react": "^1.4.0",
+    "axios": "^0.19.2",
     "i18next": "^19.4.4",
     "next": "^9.3.6",
     "next-i18next": "^4.4.1",
