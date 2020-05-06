@@ -28,10 +28,10 @@ export default {
       browser: 'Open in Browser',
     },
     pricing: {
-      title: 'Choose Your Plan',
       feature: 'Feature',
       premium: 'Premium',
       basic: 'Basic',
+      price: 'Price',
       cloudStorageSize: 'Cloud Storage Size',
       month: 'Month',
       usd: 'USD',
@@ -44,7 +44,7 @@ export default {
       unlimited: 'Unlimited',
     },
     community: {
-      title: 'Be Part of Community',
+      title: 'Community',
       description:
         'Our community of developers backs Boostnote. It has gained a lot of attention on GitHub and supported by tons of contributors from over 200 countries and regions. Our community always welcomes you. Be part of us!',
     },

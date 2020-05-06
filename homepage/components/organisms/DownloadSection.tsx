@@ -30,16 +30,16 @@ const MobileAppLink = styled.a<SpaceProps>`
 const DownloadSection = () => {
   return (
     <section>
-      <Box py={4}>
+      <Box py={4} bg='#f0f0f0'>
         <Text as='h2' id='download' fontSize={4} my={4} textAlign='center'>
           📦 Download App
         </Text>
-        <ul>
+        <Box as='ul' my={4}>
           <li>
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
               <Icon path={mdiApple} /> macOS
             </Text>
-            <FlexBox justifyContent='center'>
+            <FlexBox justifyContent='center' flexWrap='wrap'>
               <DownloadButtonLink
                 href={macDmgDownloadUrl}
                 gaEventName='download-mac'
@@ -59,7 +59,7 @@ const DownloadSection = () => {
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
               <Icon path={mdiMicrosoftWindows} /> Windows
             </Text>
-            <FlexBox justifyContent='center'>
+            <FlexBox justifyContent='center' flexWrap='wrap'>
               <DownloadButtonLink
                 href={windowsAppIntallerUrl}
                 gaEventName='download-win'
@@ -72,7 +72,7 @@ const DownloadSection = () => {
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
               <Icon path={mdiLinux} /> Linux
             </Text>
-            <FlexBox justifyContent='center'>
+            <FlexBox justifyContent='center' flexWrap='wrap'>
               <DownloadButtonLink
                 href={linuxAppImageDownloadUrl}
                 gaEventName='download-linux'
@@ -91,7 +91,7 @@ const DownloadSection = () => {
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
               <Icon path={mdiCellphone} /> Mobile App
             </Text>
-            <FlexBox justifyContent='center'>
+            <FlexBox justifyContent='center' flexWrap='wrap'>
               <MobileAppLink
                 mx={1}
                 target='_blank'
@@ -110,7 +110,7 @@ const DownloadSection = () => {
               </MobileAppLink>
             </FlexBox>
           </li>
-        </ul>
+        </Box>
       </Box>
     </section>
   )

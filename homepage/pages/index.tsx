@@ -12,10 +12,10 @@ const HomePage = () => {
   return (
     <DefaultLayout>
       <HeroSection />
-      <RoadmapSection />
+      <BoostHubSection />
       <FeaturesSection />
       <PricingPlansSection />
-      <BoostHubSection />
+      <RoadmapSection />
       <DownloadSection />
       <CommunitySection />
     </DefaultLayout>
