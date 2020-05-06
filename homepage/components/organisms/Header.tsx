@@ -135,13 +135,14 @@ const Header = () => {
             <HeaderLink p={2} mx={3} href='https://hub.boostio.co/'>
               {t('header.forTeam')}
             </HeaderLink>
-            <li style={{ height: '20px' }}>
+            <li style={{ height: '30px' }}>
               <iframe
-                src='https://ghbtns.com/github-btn.html?user=boostio&repo=boostnote.next&type=star&count=true'
+                src='https://ghbtns.com/github-btn.html?user=boostio&repo=boostnote.next&type=star&count=true&size=large'
                 frameBorder='0'
                 scrolling='0'
-                width='100px'
-                height='20px'
+                width='170'
+                height='30'
+                title='Star boostio/boostnote.next on GitHub'
               ></iframe>
             </li>
           </HeaderLeftList>
