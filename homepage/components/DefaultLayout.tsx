@@ -10,6 +10,11 @@ const DefaultLayout: React.FC = ({ children }) => (
     <Head>
       <title>Boost Note | Boost Happiness, Productivity, and Creativity.</title>
 
+      <meta charSet='utf-8' />
+      <meta
+        name='viewport'
+        content='width=device-width, initial-scale=1, maximum-scale=1'
+      />
       <meta name='subject' content='Boost Note' />
       <meta
         name='description'
