@@ -138,14 +138,14 @@ const HeroSection = () => {
   return (
     <section>
       <Container>
-        <Box mt={[0, 5, 9]} px={3}>
-          <HeroTitle textAlign={'center'} fontSize={5}>
-            {t('hero.title')}
+        <Box mt={[5, 5, 9]} px={3}>
+          <HeroTitle textAlign={'center'} fontSize={[3, 4, 5]}>
+            🚀 {t('hero.title')}
           </HeroTitle>
           <HeroSubTitle
             textAlign={'center'}
             color={'gray'}
-            fontSize={3}
+            fontSize={[2, 3]}
             fontWeight={'normal'}
           >
             {t('hero.subtitle')}
