@@ -358,16 +358,16 @@ const NotePage = ({ storage }: NotePageProps) => {
               <div>
                 {/* 'note.createKey' differs in locales: N/Enter */}
                 <h2>
-                  <span>⌘</span> + <span>{t('note.createKey')}</span>
+                  <span>Ctrl</span> + <span>{t('note.createKey')}</span>
                 </h2>
-                <h4>{t('note.createKeyMac')}</h4>
+                <h4>{t('note.createKeyWinLin')}</h4>
               </div>
               <h3>{t('note.createKeyOr')}</h3>
               <div>
                 <h2>
-                  <span>Ctrl</span> + <span>{t('note.createKey')}</span>
+                  <span>⌘</span> + <span>{t('note.createKey')}</span>
                 </h2>
-                <h4>{t('note.createKeyWinLin')}</h4>
+                <h4>{t('note.createKeyMac')}</h4>
               </div>
             </section>
           </StyledNoteDetailNoNote>
