@@ -4,13 +4,13 @@ import Text from '../atoms/Text'
 import Row from '../atoms/Row'
 import Column from '../atoms/Column'
 import styled from '../../lib/styled'
-import { padding, PaddingProps } from 'styled-system'
+import { space, SpaceProps } from 'styled-system'
 import BoosthubBetaForm from '../molecules/BoosthubBetaForm'
 
-const Container = styled.div<PaddingProps>`
+const Container = styled.div<SpaceProps>`
   max-width: 72em;
-  margin: ${({ theme }) => theme.space[0]} auto;
-  ${padding}
+  margin: 0 auto;
+  ${space}
 `
 
 const BoostHubImage = styled.img`
@@ -21,7 +21,7 @@ const BoostHubSection = () => {
   return (
     <section>
       <Box bg='#2c2c2c' color='#f0f0f0' py={4} px={2}>
-        <Container>
+        <Container my={4}>
           <Row>
             <Column width={[1, 1, 1, 1 / 2]}>
               <Text as='h2' fontSize={4} my={4}>

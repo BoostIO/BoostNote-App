@@ -1,10 +1,10 @@
 import styled from '../../lib/styled'
-import { padding, PaddingProps } from 'styled-system'
+import { space, SpaceProps } from 'styled-system'
 
-const Container = styled.div<PaddingProps>`
+const Container = styled.div<SpaceProps>`
   max-width: 96em;
-  margin: ${({ theme }) => theme.space[0]} auto;
-  ${padding}
+  margin: 0 auto;
+  ${space}
 `
 
 export default Container
