@@ -129,6 +129,10 @@ const MobileAppLink = styled.a<SpaceProps>`
   ${space}
 `
 
+const HeroImage = styled.img`
+  max-width: 100%;
+`
+
 const HeroSection = () => {
   const { t } = useTranslation()
   return (
@@ -182,6 +186,9 @@ const HeroSection = () => {
               <img height='50' src='/static/ios-app-store-badge.svg' />
             </MobileAppLink>
           </FlexBox>
+        </Box>
+        <Box>
+          <HeroImage src='/static/hero.png' />
         </Box>
       </Container>
     </section>
