@@ -33,10 +33,7 @@ const DefaultLayout: React.FC = ({ children }) => (
         property='og:description'
         content="Boost Note is an intuitive and stylish markdown editor for developers. It's fully open-source."
       />
-      <meta
-        property='og:image'
-        content='https://boostnote.io/static/images/ogp.jpg'
-      />
+      <meta property='og:image' content='https://boostnote.io/static/ogp.jpg' />
       <meta property='og:image:alt' content='Image of Boost Note App' />
       <meta property='og:url' content='https://boostnote.io/' />
       <meta property='og:site_name' content='Boost Note' />
@@ -51,15 +48,15 @@ const DefaultLayout: React.FC = ({ children }) => (
       />
       <meta
         name='twitter:image:src'
-        content='https://boostnote.io/static/images/ogp.jpg'
+        content='https://boostnote.io/static/ogp.jpg'
       />
       <meta name='twitter:site' content='Boost Note' />
 
-      <link rel='icon' href='/static/images/favicon.ico' />
+      <link rel='icon' href='/static/favicon.ico' />
       <link
         rel='apple-touch-icon'
         sizes='180x180'
-        href='/static/images/apple-touch-icon.png'
+        href='/static/apple-touch-icon.png'
       />
     </Head>
 
