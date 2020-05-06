@@ -27,6 +27,7 @@ import {
 import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
 import DownloadButtonLink from '../atoms/DownloadButtonLink'
+import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
 const HeroTitle = styled.h1<TypographyProps>`
   ${typography}
@@ -142,6 +143,11 @@ const HeroSection = () => {
               py={2}
               my={[1, 0]}
               href='https://note.boostio.co'
+              onClick={(event) => {
+                event.preventDefault()
+                sendGAEvent('open-in-browser')
+                queueNavigateToGA('https://note.boostio.co')
+              }}
             >
               <Icon path={mdiOpenInApp} /> Open in Browser
             </ButtonLink>
