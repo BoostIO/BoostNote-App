@@ -6,23 +6,31 @@ import ButtonLink from '../atoms/ButtonLink'
 import { useEffectOnce } from 'react-use'
 import Container from '../atoms/Container'
 import HomeLogoLink from '../atoms/HomeLogoLink'
-import { layout, LayoutProps, space, SpaceProps } from 'styled-system'
+import {
+  layout,
+  LayoutProps,
+  space,
+  SpaceProps,
+  flex,
+  FlexProps,
+} from 'styled-system'
 import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
 
 const HeaderContainer = styled.header`
   position: sticky;
   top: 0;
-  height: 60px;
   background-color: rgba(255, 255, 255, 0.9);
 `
 
 const HeaderNavigator = styled.nav<SpaceProps>`
   ${space}
   display: flex;
-  height: 60px;
+  align-items: center;
 `
-const HeaderLogo = styled.div``
+const HeaderLogo = styled.div<FlexProps>`
+  ${flex}
+`
 
 const HeaderLeftList = styled.ul<LayoutProps>`
   ${layout}
@@ -127,7 +135,7 @@ const Header = () => {
     <HeaderContainer>
       <Container>
         <HeaderNavigator mx={2} mt={2}>
-          <HeaderLogo>
+          <HeaderLogo flex={[1, 'inherit']}>
             <HomeLogoLink />
           </HeaderLogo>
           <HeaderLeftList display={['none', 'flex']}>
@@ -145,7 +153,7 @@ const Header = () => {
               ></iframe>
             </li>
           </HeaderLeftList>
-          <HeaderRightList display={['none', 'flex']}>
+          <HeaderRightList display={['none', 'none', 'none', 'flex']}>
             <li>
               <ButtonLink
                 bg='teal'
@@ -169,23 +177,18 @@ const Header = () => {
                 <Icon path={mdiOpenInApp} /> Open in Browser
               </ButtonLink>
             </li>
-            <li>
-              <HeaderLanguageSelect
-                value={i18n.language}
-                onChange={switchLanguage}
-              >
-                <option value='en'>🇺🇸</option>
-                <option value='es'>🇪🇸</option>
-                <option value='fr'>🇫🇷</option>
-                <option value='ja'>🇯🇵</option>
-                <option value='ko'>🇰🇷</option>
-                <option value='nl'>🇳🇱</option>
-                <option value='pt'>🇵🇹</option>
-                <option value='ru'>🇷🇺</option>
-                <option value='zh'>🇨🇳</option>
-              </HeaderLanguageSelect>
-            </li>
           </HeaderRightList>
+          <HeaderLanguageSelect value={i18n.language} onChange={switchLanguage}>
+            <option value='en'>🇺🇸</option>
+            <option value='es'>🇪🇸</option>
+            <option value='fr'>🇫🇷</option>
+            <option value='ja'>🇯🇵</option>
+            <option value='ko'>🇰🇷</option>
+            <option value='nl'>🇳🇱</option>
+            <option value='pt'>🇵🇹</option>
+            <option value='ru'>🇷🇺</option>
+            <option value='zh'>🇨🇳</option>
+          </HeaderLanguageSelect>
         </HeaderNavigator>
       </Container>
     </HeaderContainer>
