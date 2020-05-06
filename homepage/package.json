@@ -3,6 +3,7 @@
   "main": "index.js",
   "scripts": {
     "start": "next",
+    "build": "next build && next export",
     "dev": "next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
