@@ -2,6 +2,7 @@ import React from 'react'
 import styled from '../../lib/styled'
 import Container from '../atoms/Container'
 import { useTranslation } from 'react-i18next'
+import FlexBox from '../atoms/FlexBox'
 
 const FooterNavigator = styled.nav`
   & > ul {
@@ -30,9 +31,9 @@ const Footer = () => {
 
   return (
     <footer>
-      <Container py={4}>
+      <Container py={4} bg='#f0f0f0'>
         <FooterNavigator>
-          <ul>
+          <FlexBox as='ul' flexWrap='wrap' my={4}>
             <li>
               <a href='https://boostio.co'>BoostIO</a>
             </li>
@@ -54,7 +55,7 @@ const Footer = () => {
             <li>
               <a href='/privacy'>Privacy</a>
             </li>
-          </ul>
+          </FlexBox>
           <CopyRight>© 2016 - 2020 BoostIO</CopyRight>
         </FooterNavigator>
       </Container>

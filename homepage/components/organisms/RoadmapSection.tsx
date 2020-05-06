@@ -7,7 +7,7 @@ import styled from '../../lib/styled'
 const RoadmapImage = styled.img`
   border-radius: 5px;
   max-width: 100%;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
   &:hover {
     transform: translateY(-3px);
     transition: 0.2s cubic-bezier(0, 0, 0.25, 1);
@@ -17,7 +17,7 @@ const RoadmapImage = styled.img`
 const RoadmapSection = () => {
   return (
     <section>
-      <Box bg='#f0f0f0' py={4} px={2}>
+      <Box py={4} px={2}>
         <Text as='h2' fontSize={4} my={4} textAlign='center'>
           🏃 Roadmap 2020
         </Text>
