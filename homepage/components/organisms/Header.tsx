@@ -16,6 +16,7 @@ import {
 } from 'styled-system'
 import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
+import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
 const HeaderContainer = styled.header`
   position: sticky;
@@ -173,6 +174,11 @@ const Header = () => {
                 fontSize={1}
                 py={2}
                 href='https://note.boostio.co'
+                onClick={(event) => {
+                  event.preventDefault()
+                  sendGAEvent('open-in-browser')
+                  queueNavigateToGA('https://note.boostio.co')
+                }}
               >
                 <Icon path={mdiOpenInApp} /> Open in Browser
               </ButtonLink>
