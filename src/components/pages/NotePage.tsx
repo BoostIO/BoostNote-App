@@ -27,7 +27,8 @@ import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
-  margin-top: 13%;
+  margin-top: 11%;
+  color: #a9a9a9;
 
   img {
     max-width: 100%;
@@ -56,9 +57,9 @@ export const StyledNoteDetailNoNote = styled.div`
       margin: 5px auto;
       padding: 5px 10px;
       width: max-content;
-      background: #303030;
+      background: #333;
       border-radius: 8px;
-      box-shadow: 1px 5px 5px #222;
+      box-shadow: 0 5px #242424;
     }
   }
   h3 {
