@@ -98,18 +98,20 @@ const StyledBetaForm = styled.form`
     display: flex;
     margin-bottom: ${({ theme }) => theme.space.xsmall}px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   input {
     background-color: ${({ theme }) => theme.secondaryBackgroundColor};
     color: ${({ theme }) => theme.emphasizedTextColor};
+    margin-bottom: 10px;
 
     &:focus {
       box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryShadowColor};
     }
     border: 1px solid #ddd;
-    height: 60px;
-    padding: 5px 10px;
+    padding: 20px 10px;
     border-radius: 2px;
     flex-grow: 1;
     flex-shrink: 1;
@@ -121,6 +123,7 @@ const StyledBetaForm = styled.form`
     padding-right: 30px;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-bottom: 10px;
     background-color: #005868;
     color: #fff;
     text-transform: uppercase;

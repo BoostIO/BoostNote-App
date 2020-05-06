@@ -20,8 +20,8 @@ const BoostHubImage = styled.img`
 const BoostHubSection = () => {
   return (
     <section>
-      <Box bg='#2c2c2c' color='#f0f0f0' py={4} px={2}>
-        <Container my={4}>
+      <Box bg='#2c2c2c' color='#f0f0f0' py={5} px={2}>
+        <Container my={5}>
           <Row>
             <Column width={[1, 1, 1, 1 / 2]}>
               <Text as='h2' fontSize={4} my={4}>
