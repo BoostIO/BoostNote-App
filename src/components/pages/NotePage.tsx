@@ -27,18 +27,19 @@ import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
-  margin-top: 11%;
+  margin-top: 13%;
   color: #a9a9a9;
 
   img {
     max-width: 100%;
+    width: 40%;
     height: auto;
   }
 
   section {
     margin: auto;
     display: flex;
-    width: 50%;
+    width: 70%;
     text-align: center;
 
     div {
@@ -69,6 +70,14 @@ export const StyledNoteDetailNoNote = styled.div`
   h4 {
     margin: 0;
     font-weight: normal;
+  }
+
+  // Media Query
+  @media only screen and (max-width: 970px) {
+    section {
+      width: 100%;
+      display: block;
+    }
   }
 `
 
