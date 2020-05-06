@@ -6,7 +6,7 @@ import ButtonLink from '../atoms/ButtonLink'
 import { useEffectOnce } from 'react-use'
 import Container from '../atoms/Container'
 import HomeLogoLink from '../atoms/HomeLogoLink'
-import { display, space, SpaceProps } from 'styled-system'
+import { layout, LayoutProps, space, SpaceProps } from 'styled-system'
 import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
 
@@ -24,10 +24,9 @@ const HeaderNavigator = styled.nav<SpaceProps>`
 `
 const HeaderLogo = styled.div``
 
-const HeaderLeftList = styled.ul`
+const HeaderLeftList = styled.ul<LayoutProps>`
+  ${layout}
   flex: 1;
-  ${display}
-  display: flex;
   align-items: center;
 `
 
@@ -77,9 +76,9 @@ const HeaderLink = styled.a<SpaceProps>`
   }
 `
 
-const HeaderRightList = styled.ul`
+const HeaderRightList = styled.ul<LayoutProps>`
+  ${layout}
   list-style: none;
-  display: flex;
   align-items: center;
 
   li {
@@ -131,7 +130,7 @@ const Header = () => {
           <HeaderLogo>
             <HomeLogoLink />
           </HeaderLogo>
-          <HeaderLeftList>
+          <HeaderLeftList display={['none', 'flex']}>
             <HeaderLink p={2} mx={3} href='https://hub.boostio.co/'>
               {t('header.forTeam')}
             </HeaderLink>
@@ -146,7 +145,7 @@ const Header = () => {
               ></iframe>
             </li>
           </HeaderLeftList>
-          <HeaderRightList>
+          <HeaderRightList display={['none', 'flex']}>
             <li>
               <ButtonLink
                 bg='teal'
