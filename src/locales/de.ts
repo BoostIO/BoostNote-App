@@ -59,6 +59,7 @@ export default {
     'note.nothingMessage': 'Keine Notizen gefunden.',
     'note.noTitle': 'Kein Titel',
     'note.date': 'her',
+    'note.createKey': 'N',
     'note.createKeyOr': 'oder',
     'note.createKeyMac': 'on Mac',
     'note.createKeyWinLin': 'on Windows/Linux',
