@@ -8,17 +8,40 @@ export default {
       forTeams: '团队版',
     },
     hero: {
-      buttonHint1: '支持 ',
-      buttonHint2: '软件!',
+      // title: 'Boost Happiness, Productivity and Creativity.',
+      // subtitle:
+      //   "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+    },
+    boostHub: {
+      // title: 'Boost Note for Teams',
+      // description1:
+      //   'We\'ll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!',
+      // description2:
+      //   'Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.',
     },
     features: {
-      why: 'Boost Note 是什么?',
-      feature1Title: '线下编写',
-      feature1Description: '离线环境下也可以进行笔记的编写和修改。',
-      feature2Title: '多终端',
-      feature2Description: '支持网页·桌面软件。手机软件也将在年底面市。',
-      feature3Title: '语法高亮',
-      feature3Description: '可高亮超过100种语言。',
+      // title: 'Features',
+      // cloudStorage: 'Cloud Storage',
+      // cloudStorageDescription:
+      //   'Notes in a cloud storage will be stored safely and accessible from other devices.',
+      // multiplePlatforms: 'Multiple Platforms',
+      // multiplePlatformsDescription:
+      //   'Boost Note app is available in browsers, desktop app and mobile app.',
+      // syntaxHighlight: 'Syntax Highlight',
+      // syntaxHighlightDescription:
+      //   'Boost Note can highlight more than 100 programming languages.',
+      // mathEquations: 'Math Equations',
+      // mathEquationsDescription:
+      //   'Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.',
+      // customizableTheme: 'Customizable Theme',
+      // customizableThemeDescription:
+      //   'You can customize style of the app UI, its editor and rendered markdown contents.',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // fileSystemBasedStorageDescription:
+      //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
+      // extensibleMarkdown: 'Extensible Markdown',
+      // extensibleMarkdownDescription:
+      //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
       title: '选择您的套餐',

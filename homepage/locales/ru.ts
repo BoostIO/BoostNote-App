@@ -8,23 +8,40 @@ export default {
       forTeams: 'Для комманды',
     },
     hero: {
-      title: 'Boost Happiness, Productivity and Creativity.',
-      subtitle:
-        "An intuitive and stylish markdown note app for developers. It's fully open-source.",
-      buttonHint1: 'Также доступны версии для',
-      buttonHint2: '',
+      // title: 'Boost Happiness, Productivity and Creativity.',
+      // subtitle:
+      //   "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+    },
+    boostHub: {
+      // title: 'Boost Note for Teams',
+      // description1:
+      //   'We\'ll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!',
+      // description2:
+      //   'Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.',
     },
     features: {
-      why: 'Что дает Boost Note?',
-      feature1Title: 'Пишите в оффлайне',
-      feature1Description:
-        'Вы можете редактировать свои заметки даже без подключения к сети.',
-      feature2Title: 'На нескольких устройствах',
-      feature2Description:
-        'Boostnote доступен в браузере или приложении для ПК, а в конце года ожидайте мобильную версию.',
-      feature3Title: 'Подсветка синтаксиса',
-      feature3Description:
-        'BoostNote поддерживает подсветку синтаксиса для более чем 100 языков.',
+      // title: 'Features',
+      // cloudStorage: 'Cloud Storage',
+      // cloudStorageDescription:
+      //   'Notes in a cloud storage will be stored safely and accessible from other devices.',
+      // multiplePlatforms: 'Multiple Platforms',
+      // multiplePlatformsDescription:
+      //   'Boost Note app is available in browsers, desktop app and mobile app.',
+      // syntaxHighlight: 'Syntax Highlight',
+      // syntaxHighlightDescription:
+      //   'Boost Note can highlight more than 100 programming languages.',
+      // mathEquations: 'Math Equations',
+      // mathEquationsDescription:
+      //   'Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.',
+      // customizableTheme: 'Customizable Theme',
+      // customizableThemeDescription:
+      //   'You can customize style of the app UI, its editor and rendered markdown contents.',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // fileSystemBasedStorageDescription:
+      //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
+      // extensibleMarkdown: 'Extensible Markdown',
+      // extensibleMarkdownDescription:
+      //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
       title: 'Выберите свой план',
