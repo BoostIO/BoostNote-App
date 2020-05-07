@@ -3,6 +3,11 @@ export default {
     common: {
       openInBrowser: 'Ouvrir dans le navigateur',
       downloadApp: 'Télécharger App',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // comingSoon: 'Coming Soon',
+      webApp: 'Application Web',
+      desktopApp: 'Application de Bureau',
+      mobileApp: 'Application Mobile',
     },
     header: {
       forTeams: "Pour l'équipe",
@@ -36,32 +41,25 @@ export default {
       // customizableTheme: 'Customizable Theme',
       // customizableThemeDescription:
       //   'You can customize style of the app UI, its editor and rendered markdown contents.',
-      // fileSystemBasedStorage: 'File System Based Storage',
       // fileSystemBasedStorageDescription:
       //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       // extensibleMarkdown: 'Extensible Markdown',
       // extensibleMarkdownDescription:
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
-    buttonSet: {
-      desktop: "Télécharger l'application {{osName}}",
-      browser: 'Ouvrir dans le navigateur',
-    },
     pricing: {
-      title: 'Choisissez votre plan',
+      // title: 'Pricing Plans',
       feature: 'Fonctionnalité',
-      premium: 'Premium',
       basic: 'Basique',
-      cloudStorageSize: 'Taille de stockage en ligne',
-      month: 'Mois',
-      usd: 'USD',
-      furtherPlan: 'Après cela, 5$/mois pour chaque tranche de 5Go.',
-      webApp: 'Application Web',
-      desktopApp: 'Application de Bureau',
-      mobileApp: 'Application Mobile',
+      premium: 'Premium',
       sync: 'Synchroniser multiples appareils',
       localStorageSize: 'Taille de stockage local',
       unlimited: 'Illimitée',
+      cloudStorageSize: 'Taille de stockage en ligne',
+      // price: 'Price',
+      // free: 'Free',
+      month: 'Mois',
+      furtherPlan: 'Après cela, 5$/mois pour chaque tranche de 5Go.',
     },
     community: {
       title: 'Faites partie de notre communauté',
@@ -69,12 +67,10 @@ export default {
         'Notre communauté de développeurs soutient BoostNote. Elle a gagné une grande attention venant de Github et est supportée par un grand nombre de contributeur. Nous serions ravis de vous avoir parmi nous, joignez nous!',
     },
     footer: {
-      company: 'Société',
-      about: 'À propos',
-      mission: 'Mission',
-      community: 'Communauté',
-      pressKit: 'Press Kit',
-      contact: 'Get in Touch',
+      // mission: 'Mission',
+      // pressKit: 'Press Kit',
+      // userTerms: 'User Terms',
+      // privacyPolicy: 'Privacy Policy',
     },
   },
 }

@@ -69,7 +69,7 @@ export default {
       legacyRepository: 'Legacy Repository',
     },
     community: {
-      title: 'Community',
+      title: 'Join our community',
       description:
         'Our community of developers backs Boostnote. It has gained a lot of attention on GitHub and supported by tons of contributors from over 200 countries and regions. Our community always welcomes you. Be part of us!',
     },
