@@ -3,6 +3,11 @@ export default {
     common: {
       openInBrowser: 'Abrir en el navegador',
       downloadApp: 'Descargar App',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // comingSoon: 'Coming Soon',
+      webApp: 'Aplicación Web',
+      desktopApp: 'Aplicación de Escritorio',
+      mobileApp: 'Aplicación movil',
     },
     header: {
       forTeam: 'Para equipos',
@@ -36,7 +41,6 @@ export default {
       // customizableTheme: 'Customizable Theme',
       // customizableThemeDescription:
       //   'You can customize style of the app UI, its editor and rendered markdown contents.',
-      // fileSystemBasedStorage: 'File System Based Storage',
       // fileSystemBasedStorageDescription:
       //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       // extensibleMarkdown: 'Extensible Markdown',
@@ -44,20 +48,25 @@ export default {
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
-      title: 'Elige su plan',
+      // title: 'Pricing Plans',
       feature: 'Característica',
-      premium: 'Premium',
       basic: 'Básico',
-      cloudStorageSize: 'Almacenamiento en la nube',
-      month: 'mes',
-      usd: 'USD',
-      furtherPlan: 'Después, $5.00 por cada 5GB extra.',
-      webApp: 'Aplicación Web',
-      desktopApp: 'Aplicación de Escritorio',
-      mobileApp: 'Aplicación movil',
+      premium: 'Premium',
       sync: 'Sincronizar múltiples dispositivos',
       localStorageSize: 'Almacenamiento local',
       unlimited: 'Ilimitado',
+      cloudStorageSize: 'Almacenamiento en la nube',
+      // price: 'Price',
+      // free: 'Free',
+      month: 'mes',
+      furtherPlan: 'Después, $5.00 por cada 5GB extra.',
+    },
+    download: {
+      // legacyApp: 'Legacy App',
+      // legacyAppDescription:
+      //   "We are going to keep maintaining the old app until the current Boost Note.next support most of features of the old app like file system based storage and markdown extensions. So please don't force yourself too much to migrate to the new app.",
+      // legacyDownloadLinks: 'Legacy Download Links',
+      // legacyRepository: 'Legacy Repository',
     },
     community: {
       title: 'Se parte de la comunidad',
@@ -65,12 +74,10 @@ export default {
         'Nuestra comunidad de desarrolladores destras de Boost note. Ha ganado un montón de atención en Github y estan contribuyendo mucha gente. Nuestra comunidad siempre le recivira. Únete!',
     },
     footer: {
-      company: 'Compañia',
-      about: 'Sobre',
-      mission: 'Mission',
-      community: 'Comunidad',
-      pressKit: 'Press Kit',
-      contact: 'Get in Touch',
+      // mission: 'Mission',
+      // pressKit: 'Press Kit',
+      // userTerms: 'User Terms',
+      // privacyPolicy: 'Privacy Policy',
     },
   },
 }

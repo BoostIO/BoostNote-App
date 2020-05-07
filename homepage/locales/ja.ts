@@ -3,6 +3,11 @@ export default {
     common: {
       openInBrowser: 'ブラウザーから開く',
       downloadApp: 'アプリ ダウンロード',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // comingSoon: 'Coming Soon',
+      webApp: 'ウェブアプリ',
+      desktopApp: 'デスクトップアプリ',
+      mobileApp: 'モバイルアプリ',
     },
     header: {
       forTeams: 'チーム版',
@@ -36,7 +41,6 @@ export default {
       // customizableTheme: 'Customizable Theme',
       // customizableThemeDescription:
       //   'You can customize style of the app UI, its editor and rendered markdown contents.',
-      // fileSystemBasedStorage: 'File System Based Storage',
       // fileSystemBasedStorageDescription:
       //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       // extensibleMarkdown: 'Extensible Markdown',
@@ -44,20 +48,18 @@ export default {
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
-      title: 'あなたのプランを選びましょう',
+      // title: 'Pricing Plans',
       feature: '機能',
-      premium: 'プレミアム',
       basic: 'ベーシック',
-      cloudStorageSize: 'クラウドスレージ',
-      month: '月',
-      usd: 'USD',
-      furtherPlan: 'その後は5GB毎に$5/月',
-      webApp: 'ウェブアプリ',
-      desktopApp: 'デスクトップアプリ',
-      mobileApp: 'モバイルアプリ',
+      premium: 'プレミアム',
       sync: 'デバイス間のデータ同期',
       localStorageSize: 'ローカルストレージ',
       unlimited: '無限',
+      cloudStorageSize: 'クラウドスレージ',
+      // price: 'Price',
+      // free: 'Free',
+      month: '月',
+      furtherPlan: 'その後は5GB毎に$5/月',
     },
     community: {
       title: 'コミュニティに加わりましょう！',
@@ -65,11 +67,10 @@ export default {
         'Boost Noteのコミュニティは全世界に拡がっており、私たちはいつでもあなたを歓迎しています。Boost Noteのコミュニティに加わりましょう！',
     },
     footer: {
-      company: '運営会社',
-      about: 'BoostIOについて',
-      mission: 'Mission',
-      community: 'コミュニティ',
-      pressKit: 'プレスキット',
+      // mission: 'Mission',
+      // pressKit: 'Press Kit',
+      // userTerms: 'User Terms',
+      // privacyPolicy: 'Privacy Policy',
     },
   },
 }
