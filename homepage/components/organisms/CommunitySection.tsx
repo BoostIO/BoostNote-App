@@ -29,7 +29,7 @@ const CommunitySection = () => {
   return (
     <section>
       <Box py={4}>
-        <Text as='h2' fontSize={4} my={4} textAlign='center'>
+        <Text as='h2' fontSize={[3, 4, 5]} my={4} textAlign='center'>
           🎙️ {t('community.title')}
         </Text>
         <Container my={4}>

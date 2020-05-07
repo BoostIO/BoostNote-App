@@ -48,12 +48,18 @@ const DownloadSection = () => {
   return (
     <section>
       <Box py={4} bg='#f0f0f0'>
-        <Text as='h2' id='download' fontSize={4} my={4} textAlign='center'>
+        <Text
+          as='h2'
+          id='download'
+          fontSize={[3, 4, 5]}
+          my={4}
+          textAlign='center'
+        >
           📦 {t('common.downloadApp')}
         </Text>
         <Box as='ul' my={4}>
           <li>
-            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+            <Text as='h3' fontSize={[2, 3]} my={4} textAlign='center'>
               <Icon path={mdiApple} /> macOS
             </Text>
             <FlexBox justifyContent='center' flexWrap='wrap'>
@@ -73,7 +79,7 @@ const DownloadSection = () => {
             </FlexBox>
           </li>
           <li>
-            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+            <Text as='h3' fontSize={[2, 3]} my={4} textAlign='center'>
               <Icon path={mdiMicrosoftWindows} /> Windows
             </Text>
             <FlexBox justifyContent='center' flexWrap='wrap'>
@@ -86,7 +92,7 @@ const DownloadSection = () => {
             </FlexBox>
           </li>
           <li>
-            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+            <Text as='h3' fontSize={[2, 3]} my={4} textAlign='center'>
               <Icon path={mdiLinux} /> Linux
             </Text>
             <FlexBox justifyContent='center' flexWrap='wrap'>
@@ -105,7 +111,7 @@ const DownloadSection = () => {
             </FlexBox>
           </li>
           <li>
-            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+            <Text as='h3' fontSize={[2, 3]} my={4} textAlign='center'>
               <Icon path={mdiCellphone} /> {t('common.mobileApp')}
             </Text>
             <FlexBox justifyContent='center' flexWrap='wrap'>
@@ -128,7 +134,7 @@ const DownloadSection = () => {
             </FlexBox>
           </li>
           <li>
-            <Text as='h3' fontSize={3} my={4} textAlign='center'>
+            <Text as='h3' fontSize={[2, 3]} my={4} textAlign='center'>
               {t('download.legacyApp')}
             </Text>
             <Container>

@@ -29,7 +29,7 @@ const FeatureListItem = ({
   return (
     <Box as='li'>
       <FlexBox alignItems='center'>
-        <Text fontSize={5} mr={2} lineHeight={0}>
+        <Text fontSize={[3, 4, 5]} mr={2} lineHeight={0}>
           <Icon path={iconPath} />
         </Text>
         <Text as='h4' my={0} fontSize={2}>
@@ -59,7 +59,7 @@ const FeaturesSection = () => {
   return (
     <section>
       <Box py={4} bg='#f0f0f0'>
-        <Text as='h2' fontSize={4} my={4} textAlign='center'>
+        <Text as='h2' fontSize={[3, 4, 5]} my={4} textAlign='center'>
           ⚡ {t('features.title')}
         </Text>
         <FlexBox justifyContent='center' mx={2} mb={5}>
