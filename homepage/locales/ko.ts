@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: '브라우저에서 열기',
+      downloadApp: '앱 다운로드',
+    },
     header: {
-      forTeam: '팀',
-      download: '앱 다운로드',
+      forTeams: '팀',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
@@ -21,10 +24,6 @@ export default {
       feature3Title: '신택스 하이라이트',
       feature3Description:
         '100여개 이상의 언어의 코드 신택스 하이라이트가 가능합니다.',
-    },
-    buttonSet: {
-      desktop: '{{osName}} 앱 다운로드',
-      browser: '브라우저에서 열기',
     },
     pricing: {
       title: '플랜 선택',
