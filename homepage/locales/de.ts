@@ -1,83 +1,84 @@
 export default {
   translation: {
     common: {
-      openInBrowser: 'Open in Browser',
-      downloadApp: 'Download App',
-      fileSystemBasedStorage: 'File System Based Storage',
-      comingSoon: 'Coming Soon',
+      openInBrowser: 'Im Browser öffnen',
+      downloadApp: 'App herunterladen',
+      fileSystemBasedStorage: 'Lokaler Speicher',
+      comingSoon: 'Demnächst',
       webApp: 'Web App',
       desktopApp: 'Desktop App',
       mobileApp: 'Mobile App',
     },
     header: {
-      forTeams: 'For Teams',
+      forTeams: 'Für Teams',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
-        "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+        "Eine intuitive und stylishe Markdown Notiz-App für Entwickler. Vollständig Open-Source.",
     },
     boostHub: {
-      title: 'Boost Note for Teams',
+      title: 'Boost Note für Teams',
       description1:
-        'We\'ll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!',
+        'Wir veröffentlichen das einfache und speziell für Entwickler entworfene Wiki namens "Boost Hub" im Juni 2020!',
       description2:
-        'Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.',
+        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von 			Dritten zu zentralisieren und zu erweitern.
+        ',
     },
     features: {
-      title: 'Features',
-      cloudStorage: 'Cloud Storage',
+      title: 'Funktionen',
+      cloudStorage: 'Cloud-Speicher',
       cloudStorageDescription:
-        'Notes in a cloud storage will be stored safely and accessible from other devices.',
-      multiplePlatforms: 'Multiple Platforms',
+        'Notizen in einem Cloud-Speicher werden sicher gespeichert und sind von anderen Geräten aus zugänglich.',
+      multiplePlatforms: 'Mehrere Plattformen',
       multiplePlatformsDescription:
-        'Boost Note app is available in browsers, desktop app and mobile app.',
+        'Die Boost Note App ist für Browser, PCs und Mobilgeräte erhältlich.',
       syntaxHighlight: 'Syntax Highlight',
       syntaxHighlightDescription:
-        'Boost Note can highlight more than 100 programming languages.',
-      mathEquations: 'Math Equations',
+        'Boost Note unterstützt Syntax-Highlighting von mehr als 100 Programmiersprachen.',
+      mathEquations: 'Mathematische Formeln',
       mathEquationsDescription:
-        'Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.',
-      customizableTheme: 'Customizable Theme',
+        'Boost Note unterstützt Mathe-Blöcke. Mit Hilfe der LaTeX-Syntax kann man in den Blöcken mathematische Formeln aufschreiben.',
+      customizableTheme: 'Anpassbares Design',
       customizableThemeDescription:
-        'You can customize style of the app UI, its editor and rendered markdown contents.',
+        'Das Design, der Editor und der gerenderte Markdown-Inhalt kann frei angepasst werden.',
       fileSystemBasedStorageDescription:
-        'You can have full control of your data. Share your notes with your favorite cloud storage service.',
-      extensibleMarkdown: 'Extensible Markdown',
+        'Volle Kontrolle über deine Daten. Du kannst deine Notizen mit deinem bevorzugten Cloud-Speicherdienst teilen.',
+      extensibleMarkdown: 'Erweiterbares Markdown',
       extensibleMarkdownDescription:
-        'You can introduce custom markdown syntax and configure how to render it.',
+        'Erstelle benutzerdefinierte Markdown-Syntax und konfiguriere, wie sie gerendert werden soll.',
     },
     pricing: {
-      title: 'Pricing Plans',
-      feature: 'Feature',
+      title: 'Preisgestaltung',
+      feature: 'Funktion',
       basic: 'Basic',
       premium: 'Premium',
-      sync: 'Syncing Multiple Devices',
-      localStorageSize: 'Local Storage Size',
-      unlimited: 'Unlimited',
-      cloudStorageSize: 'Cloud Storage Size',
-      price: 'Price',
-      free: 'Free',
-      month: 'Month',
-      furtherPlan: 'After that, $5 (USD) for every 5GB.',
+      sync: 'Mehrere Geräte synchronisieren',
+      localStorageSize: 'Lokale Speichergröße',
+      unlimited: 'Unbegrenzt',
+      cloudStorageSize: 'Cloud-Speichergröße',
+      price: 'Preis',
+      free: 'Gratis',
+      month: 'Monat',
+      furtherPlan: 'Danach 5$ (USD) für jede 5GB.',
     },
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        "We are going to keep maintaining the old app until the current Boost Note.next support most of features of the old app like file system based storage and markdown extensions. So please don't force yourself too much to migrate to the new app.",
+        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und 				Markdown-Erweiterungen unterstützt. Bitte zwingen Sie sich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
       legacyDownloadLinks: 'Legacy Download Links',
       legacyRepository: 'Legacy Repository',
     },
     community: {
-      title: 'Join our community',
+      title: 'Tritt unserer Community bei',
       description:
-        'Our community of developers backs Boostnote. It has gained a lot of attention on GitHub and supported by tons of contributors from over 200 countries and regions. Our community always welcomes you. Be part of us!',
+        'Unsere Community von Entwicklern ist für Boost Note enorm wichtig. Die App hat auf Github viel Aufmerksamkeit erhalten und wird von Mitwirkenden aus über 200 Ländern 			und Regionen unterstützt. Unsere Community heißt dich willkommen. Sei ein Teil von uns!',
     },
     footer: {
       mission: 'Mission',
-      pressKit: 'Press Kit',
-      userTerms: 'User Terms',
-      privacyPolicy: 'Privacy Policy',
+      pressKit: 'Pressunterlagen',
+      userTerms: 'Nutzungsbedingungen',
+      privacyPolicy: 'Datenschutzerklärung',
     },
   },
 }
