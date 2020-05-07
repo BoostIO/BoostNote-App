@@ -37,7 +37,7 @@ const PricingPlansSection = () => {
   return (
     <section>
       <Box py={4}>
-        <Text as='h2' fontSize={4} my={5} textAlign='center'>
+        <Text as='h2' fontSize={[3, 4, 5]} my={5} textAlign='center'>
           🏁 {t('pricing.title')}
         </Text>
         <FlexBox justifyContent='center' mx={2}>
