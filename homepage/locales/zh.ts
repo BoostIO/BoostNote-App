@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: '用浏览器打开',
+      downloadApp: '下载 软件',
+    },
     header: {
-      forTeam: '团队版',
-      download: '下载 软件',
+      forTeams: '团队版',
     },
     hero: {
       buttonHint1: '支持 ',
@@ -16,11 +19,6 @@ export default {
       feature2Description: '支持网页·桌面软件。手机软件也将在年底面市。',
       feature3Title: '语法高亮',
       feature3Description: '可高亮超过100种语言。',
-    },
-    buttonSet: {
-      mobile: 'Mobile app is coming soon.',
-      desktop: '下载 {{osName}} 软件',
-      browser: '用浏览器打开',
     },
     pricing: {
       title: '选择您的套餐',

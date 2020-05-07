@@ -141,7 +141,7 @@ const Header = () => {
           </HeaderLogo>
           <HeaderLeftList display={['none', 'flex']}>
             <HeaderLink p={2} mx={3} href='https://hub.boostio.co/'>
-              {t('header.forTeam')}
+              {t('header.forTeams')}
             </HeaderLink>
             <li style={{ height: '30px' }}>
               <iframe
@@ -164,7 +164,7 @@ const Header = () => {
                 href='/#download'
               >
                 <Icon path={mdiDownload} />
-                {t('header.download')}
+                {t('common.downloadApp')}
               </ButtonLink>
             </li>
             <li>
@@ -180,7 +180,7 @@ const Header = () => {
                   queueNavigateToGA('https://note.boostio.co')
                 }}
               >
-                <Icon path={mdiOpenInApp} /> Open in Browser
+                <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
               </ButtonLink>
             </li>
           </HeaderRightList>
