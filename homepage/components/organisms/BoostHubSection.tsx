@@ -27,7 +27,7 @@ const BoostHubSection = () => {
         <Container my={5}>
           <Row>
             <Column width={[1, 1, 1, 1 / 2]}>
-              <Text as='h2' fontSize={4} my={4}>
+              <Text as='h2' fontSize={[3, 4, 5]} my={4}>
                 🤝 {t('boostHub.title')}
               </Text>
               <p>{t('boostHub.description1')}</p>
