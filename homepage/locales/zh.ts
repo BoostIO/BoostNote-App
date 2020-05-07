@@ -3,6 +3,11 @@ export default {
     common: {
       openInBrowser: '用浏览器打开',
       downloadApp: '下载 软件',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // comingSoon: 'Coming Soon',
+      webApp: '网页软件',
+      desktopApp: '桌面软件',
+      mobileApp: '手机软件',
     },
     header: {
       forTeams: '团队版',
@@ -36,7 +41,6 @@ export default {
       // customizableTheme: 'Customizable Theme',
       // customizableThemeDescription:
       //   'You can customize style of the app UI, its editor and rendered markdown contents.',
-      // fileSystemBasedStorage: 'File System Based Storage',
       // fileSystemBasedStorageDescription:
       //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       // extensibleMarkdown: 'Extensible Markdown',
@@ -44,20 +48,16 @@ export default {
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
-      title: '选择您的套餐',
+      // title: 'Pricing Plans',
       feature: '功能',
-      premium: '黄金套餐',
       basic: '基本套餐',
-      cloudStorageSize: '云端存储量',
-      month: '月',
-      usd: '美元',
-      furtherPlan: '之后每5GB是5美元/月',
-      webApp: '网页软件',
-      desktopApp: '桌面软件',
-      mobileApp: '手机软件',
+      premium: '黄金套餐',
       sync: '多终端同步',
       localStorageSize: '本地存储量',
       unlimited: '无限制',
+      cloudStorageSize: '云端存储量',
+      month: '月',
+      furtherPlan: '之后每5GB是5美元/月',
     },
     community: {
       title: '加入我们的社团吧！',
@@ -65,12 +65,10 @@ export default {
         'Boost Note的社团正在向全世界拓展，我们一直欢迎您。加入这个大家庭吧！',
     },
     footer: {
-      company: '运营公司',
-      about: '关于BoostIO',
-      mission: 'Mission',
-      community: '社团',
-      pressKit: 'Press Kit',
-      contact: 'Get in Touch',
+      // mission: 'Mission',
+      // pressKit: 'Press Kit',
+      // userTerms: 'User Terms',
+      // privacyPolicy: 'Privacy Policy',
     },
   },
 }

@@ -3,6 +3,11 @@ export default {
     common: {
       openInBrowser: 'Open in Browser',
       downloadApp: 'Download App',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // comingSoon: 'Coming Soon',
+      webApp: 'Web App',
+      desktopApp: 'Desktop App',
+      mobileApp: 'Mobiele App',
     },
     header: {
       forTeams: 'Voor Teams',
@@ -36,32 +41,25 @@ export default {
       // customizableTheme: 'Customizable Theme',
       // customizableThemeDescription:
       //   'You can customize style of the app UI, its editor and rendered markdown contents.',
-      // fileSystemBasedStorage: 'File System Based Storage',
       // fileSystemBasedStorageDescription:
       //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       // extensibleMarkdown: 'Extensible Markdown',
       // extensibleMarkdownDescription:
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
-    buttonSet: {
-      desktop: 'Download {{osName}} App',
-      browser: 'Openen in browser',
-    },
     pricing: {
-      title: 'Kies je plan',
+      // title: 'Pricing Plans',
       feature: 'Feature',
-      premium: 'Premium',
       basic: 'Basis',
-      cloudStorageSize: 'Cloud opslagruimte',
-      month: 'Mnd',
-      usd: 'USD',
-      furtherPlan: 'Daarna, $5,00 voor elke 5 GB.',
-      webApp: 'Web App',
-      desktopApp: 'Desktop App',
-      mobileApp: 'Mobiele App',
+      premium: 'Premium',
       sync: 'Synchroniseer tussen meerdere apparaten',
       localStorageSize: 'Lokale opslagruimte',
       unlimited: 'Ongelimiteerd',
+      cloudStorageSize: 'Cloud opslagruimte',
+      // price: 'Price',
+      // free: 'Free',
+      month: 'Mnd',
+      furtherPlan: 'Daarna, $5,00 voor elke 5 GB.',
     },
     community: {
       title: 'Word onderdeel van onze community',
@@ -69,12 +67,10 @@ export default {
         'Onze community van developers ondersteunt Boostnote. Boostnote heeft aanzienlijke populariteit op GitHub en wordt door vele programmeurs onderhouden. Onze community verwelkomt iedereen. Doe mee!',
     },
     footer: {
-      company: 'Bedrijf',
-      about: 'Over',
-      mission: 'Mission',
-      community: 'Community',
-      pressKit: 'Press Kit',
-      contact: 'Get in Touch',
+      // mission: 'Mission',
+      // pressKit: 'Press Kit',
+      // userTerms: 'User Terms',
+      // privacyPolicy: 'Privacy Policy',
     },
   },
 }
