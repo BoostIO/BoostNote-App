@@ -4,6 +4,7 @@ import Container from '../atoms/Container'
 import { useTranslation } from 'react-i18next'
 import Box from '../atoms/Box'
 import FlexBox from '../atoms/FlexBox'
+import Text from '../atoms/Text'
 
 const FooterNavigator = styled.nav`
   & > ul {
@@ -21,10 +22,6 @@ const FooterNavigator = styled.nav`
       text-decoration: underline;
     }
   }
-`
-
-const CopyRight = styled.div`
-  text-align: center;
 `
 
 const Footer = () => {
@@ -52,13 +49,13 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href='/terms'>User terms</a>
+                <a href='/terms'>{t('footer.userTerms')}</a>
               </li>
               <li>
-                <a href='/privacy'>Privacy</a>
+                <a href='/privacy'>{t('footer.privacyPolicy')}</a>
               </li>
             </FlexBox>
-            <CopyRight>© 2016 - 2020 BoostIO</CopyRight>
+            <Text textAlign='center'>© 2016 - 2020 BoostIO</Text>
           </FooterNavigator>
         </Container>
       </Box>

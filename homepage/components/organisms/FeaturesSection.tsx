@@ -91,7 +91,7 @@ const FeaturesSection = () => {
             />
             <FeatureListItem
               iconPath={mdiHarddisk}
-              title={`${t('features.fileSystemBasedStorage')} (${t(
+              title={`${t('common.fileSystemBasedStorage')} (${t(
                 'common.comingSoon'
               )})`}
               description={t('features.fileSystemBasedStorageDescription')}
