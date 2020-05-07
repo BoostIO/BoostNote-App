@@ -6,6 +6,7 @@ import Column from '../atoms/Column'
 import styled from '../../lib/styled'
 import { space, SpaceProps } from 'styled-system'
 import BoosthubBetaForm from '../molecules/BoosthubBetaForm'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div<SpaceProps>`
   max-width: 72em;
@@ -18,6 +19,8 @@ const BoostHubImage = styled.img`
 `
 
 const BoostHubSection = () => {
+  const { t } = useTranslation()
+
   return (
     <section>
       <Box bg='#2c2c2c' color='#f0f0f0' py={5} px={2}>
@@ -25,19 +28,11 @@ const BoostHubSection = () => {
           <Row>
             <Column width={[1, 1, 1, 1 / 2]}>
               <Text as='h2' fontSize={4} my={4}>
-                🤝 Boost Note for Teams
+                🤝 {t('boostHub.title')}
               </Text>
-              <p>
-                We&apos;ll launch the clean and simple wiki specially optimized
-                for developers called <strong>&ldquo;Boost Hub&rdquo;</strong>{' '}
-                at June 2020!
-              </p>
+              <p>{t('boostHub.description1')}</p>
 
-              <p>
-                Boost Hub will aim to be a collaborative wiki tool for teams to
-                centralize and amplify the availability and search ability of
-                both first-party and third-party information.
-              </p>
+              <p>{t('boostHub.description2')}</p>
 
               <BoosthubBetaForm />
             </Column>

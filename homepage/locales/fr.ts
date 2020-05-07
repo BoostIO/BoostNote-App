@@ -8,20 +8,40 @@ export default {
       forTeams: "Pour l'équipe",
     },
     hero: {
-      buttonHint1: 'Des versions ',
-      buttonHint2: 'sont également disponibles!',
+      // title: 'Boost Happiness, Productivity and Creativity.',
+      // subtitle:
+      //   "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+    },
+    boostHub: {
+      // title: 'Boost Note for Teams',
+      // description1:
+      //   'We\'ll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!',
+      // description2:
+      //   'Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.',
     },
     features: {
-      why: 'Pourquoi Boostnote?',
-      feature1Title: 'Écrivez hors-ligne',
-      feature1Description:
-        "Vous pouvez écrire ou modifier vos notes sur votre ordinateur même si vous n'êtes pas connecté.",
-      feature2Title: 'Écrivez sur de multiples appareils',
-      feature2Description:
-        "Boostnote est disponible sur navigateurs et bureau. La version mobile va arriver à la fin de l'année.",
-      feature3Title: 'Mise en évidence de syntaxe',
-      feature3Description:
-        'Boostnote peut surligner la syntaxe de votre code dans plus de 100 languages différents.',
+      // title: 'Features',
+      // cloudStorage: 'Cloud Storage',
+      // cloudStorageDescription:
+      //   'Notes in a cloud storage will be stored safely and accessible from other devices.',
+      // multiplePlatforms: 'Multiple Platforms',
+      // multiplePlatformsDescription:
+      //   'Boost Note app is available in browsers, desktop app and mobile app.',
+      // syntaxHighlight: 'Syntax Highlight',
+      // syntaxHighlightDescription:
+      //   'Boost Note can highlight more than 100 programming languages.',
+      // mathEquations: 'Math Equations',
+      // mathEquationsDescription:
+      //   'Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.',
+      // customizableTheme: 'Customizable Theme',
+      // customizableThemeDescription:
+      //   'You can customize style of the app UI, its editor and rendered markdown contents.',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // fileSystemBasedStorageDescription:
+      //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
+      // extensibleMarkdown: 'Extensible Markdown',
+      // extensibleMarkdownDescription:
+      //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     buttonSet: {
       desktop: "Télécharger l'application {{osName}}",

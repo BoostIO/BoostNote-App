@@ -13,6 +13,7 @@ import {
   mdiHarddisk,
 } from '@mdi/js'
 import styled from '../../lib/styled'
+import { useTranslation } from 'react-i18next'
 
 interface FeatureListItemProps {
   iconPath: string
@@ -53,48 +54,54 @@ const RoadmapImage = styled.img`
 `
 
 const FeaturesSection = () => {
+  const { t } = useTranslation()
+
   return (
     <section>
       <Box py={4} bg='#f0f0f0'>
         <Text as='h2' fontSize={4} my={4} textAlign='center'>
-          ⚡ Features
+          ⚡ {t('features.title')}
         </Text>
         <FlexBox justifyContent='center' mx={2} mb={5}>
           <ul>
             <FeatureListItem
               iconPath={mdiCloudSync}
-              title='Cloud Storage'
-              description='Notes in a cloud storage will be stored safely and accessible from other devices.'
+              title={t('features.cloudStorage')}
+              description={t('features.cloudStorage.description')}
             />
             <FeatureListItem
               iconPath={mdiCellphoneLink}
-              title='Multiple Devices'
-              description='Boost Note app is available in browsers, desktop app and mobile app.'
+              title={t('features.multiplePlatforms')}
+              description={t('features.multiplePlatformsDescription')}
             />
             <FeatureListItem
               iconPath={mdiCodeNotEqualVariant}
-              title='Syntax Highlight'
-              description='Boost Note can highlight more than 100 programming languages.'
+              title={t('features.syntaxHighlight')}
+              description={t('features.syntaxHighlightDescription')}
             />
             <FeatureListItem
               iconPath={mdiFunctionVariant}
-              title='Math Equations'
-              description='Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.'
+              title={t('features.mathEquations')}
+              description={t('features.mathEquationsDescription')}
             />
             <FeatureListItem
               iconPath={mdiPalette}
-              title='Customizable Theme'
-              description='You can customize style of the app UI, its editor and rendered markdown contents.'
+              title={t('features.customizableTheme')}
+              description={t('features.customizableThemeDescription')}
             />
             <FeatureListItem
               iconPath={mdiHarddisk}
-              title='File System Based Storage (Coming Soon)'
-              description='You can have full control of your data. Share your notes with your favorite cloud storage service.'
+              title={`${t('features.fileSystemBasedStorage')} (${t(
+                'common.comingSoon'
+              )})`}
+              description={t('features.fileSystemBasedStorageDescription')}
             />
             <FeatureListItem
               iconPath={mdiLanguageMarkdown}
-              title='Extensible Markdown (Coming Soon)'
-              description='You can introduce custom markdown syntax and configure how to render it.'
+              title={`${t('features.extensibleMarkdown')} (${t(
+                'common.comingSoon'
+              )})`}
+              description={t('features.extensibleMarkdownDescription')}
             />
           </ul>
         </FlexBox>

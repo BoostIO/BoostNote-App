@@ -8,22 +8,40 @@ export default {
       forTeams: '팀',
     },
     hero: {
-      title: 'Boost Happiness, Productivity and Creativity.',
-      subtitle:
-        "An intuitive and stylish markdown note app for developers. It's fully open-source.",
-      buttonHint1: '',
-      buttonHint2: '또한 이용 가능합니다!',
+      // title: 'Boost Happiness, Productivity and Creativity.',
+      // subtitle:
+      //   "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+    },
+    boostHub: {
+      // title: 'Boost Note for Teams',
+      // description1:
+      //   'We\'ll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!',
+      // description2:
+      //   'Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.',
     },
     features: {
-      why: 'Boost Note에 대해서',
-      feature1Title: '오프라인 작성',
-      feature1Description: '오프라인에서도 노트를 쓰거나 편집 할 수 있습니다.',
-      feature2Title: '여러 기기에서 사용 가능',
-      feature2Description:
-        'Boost Note는 브라우저와 데스크톱에서 사용가능하며 모바일 앱 역시 올해 말에 준비될 것입니다.',
-      feature3Title: '신택스 하이라이트',
-      feature3Description:
-        '100여개 이상의 언어의 코드 신택스 하이라이트가 가능합니다.',
+      // title: 'Features',
+      // cloudStorage: 'Cloud Storage',
+      // cloudStorageDescription:
+      //   'Notes in a cloud storage will be stored safely and accessible from other devices.',
+      // multiplePlatforms: 'Multiple Platforms',
+      // multiplePlatformsDescription:
+      //   'Boost Note app is available in browsers, desktop app and mobile app.',
+      // syntaxHighlight: 'Syntax Highlight',
+      // syntaxHighlightDescription:
+      //   'Boost Note can highlight more than 100 programming languages.',
+      // mathEquations: 'Math Equations',
+      // mathEquationsDescription:
+      //   'Boost Note supports math blocks. In the blocks, you can write math equations with LaTeX syntax.',
+      // customizableTheme: 'Customizable Theme',
+      // customizableThemeDescription:
+      //   'You can customize style of the app UI, its editor and rendered markdown contents.',
+      // fileSystemBasedStorage: 'File System Based Storage',
+      // fileSystemBasedStorageDescription:
+      //   'You can have full control of your data. Share your notes with your favorite cloud storage service.',
+      // extensibleMarkdown: 'Extensible Markdown',
+      // extensibleMarkdownDescription:
+      //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
       title: '플랜 선택',
