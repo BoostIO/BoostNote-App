@@ -3,7 +3,11 @@ export default {
     common: {
       openInBrowser: 'Open in Browser',
       downloadApp: 'Download App',
+      fileSystemBasedStorage: 'File System Based Storage',
       comingSoon: 'Coming Soon',
+      webApp: 'Web App',
+      desktopApp: 'Desktop App',
+      mobileApp: 'Mobile App',
     },
     header: {
       forTeams: 'For Teams',
@@ -37,7 +41,6 @@ export default {
       customizableTheme: 'Customizable Theme',
       customizableThemeDescription:
         'You can customize style of the app UI, its editor and rendered markdown contents.',
-      fileSystemBasedStorage: 'File System Based Storage',
       fileSystemBasedStorageDescription:
         'You can have full control of your data. Share your notes with your favorite cloud storage service.',
       extensibleMarkdown: 'Extensible Markdown',
@@ -45,20 +48,25 @@ export default {
         'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
+      title: 'Pricing Plans',
       feature: 'Feature',
-      premium: 'Premium',
       basic: 'Basic',
-      price: 'Price',
-      cloudStorageSize: 'Cloud Storage Size',
-      month: 'Month',
-      usd: 'USD',
-      furtherPlan: 'After that, $5 (USD) for every 5GB.',
-      webApp: 'Web App',
-      desktopApp: 'Desktop App',
-      mobileApp: 'Mobile App',
+      premium: 'Premium',
       sync: 'Syncing Multiple Devices',
       localStorageSize: 'Local Storage Size',
       unlimited: 'Unlimited',
+      cloudStorageSize: 'Cloud Storage Size',
+      price: 'Price',
+      free: 'Free',
+      month: 'Month',
+      furtherPlan: 'After that, $5 (USD) for every 5GB.',
+    },
+    download: {
+      legacyApp: 'Legacy App',
+      legacyAppDescription:
+        "We are going to keep maintaining the old app until the current Boost Note.next support most of features of the old app like file system based storage and markdown extensions. So please don't force yourself too much to migrate to the new app.",
+      legacyDownloadLinks: 'Legacy Download Links',
+      legacyRepository: 'Legacy Repository',
     },
     community: {
       title: 'Community',
@@ -66,12 +74,10 @@ export default {
         'Our community of developers backs Boostnote. It has gained a lot of attention on GitHub and supported by tons of contributors from over 200 countries and regions. Our community always welcomes you. Be part of us!',
     },
     footer: {
-      company: 'Company',
-      about: 'About',
       mission: 'Mission',
-      community: 'Community',
       pressKit: 'Press Kit',
-      contact: 'Get in Touch',
+      userTerms: 'User Terms',
+      privacyPolicy: 'Privacy Policy',
     },
   },
 }

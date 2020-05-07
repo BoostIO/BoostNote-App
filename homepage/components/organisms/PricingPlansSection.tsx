@@ -38,7 +38,7 @@ const PricingPlansSection = () => {
     <section>
       <Box py={4}>
         <Text as='h2' fontSize={4} my={5} textAlign='center'>
-          🏁 Pricing Plans
+          🏁 {t('pricing.title')}
         </Text>
         <FlexBox justifyContent='center' mx={2}>
           <TableContainer>
@@ -52,17 +52,17 @@ const PricingPlansSection = () => {
               </thead>
               <tbody>
                 <tr>
-                  <th>{t('pricing.webApp')}</th>
+                  <th>{t('common.webApp')}</th>
                   <td>〇</td>
                   <td>〇</td>
                 </tr>
                 <tr>
-                  <th>{t('pricing.desktopApp')} (Mac/Windows/Linux)</th>
+                  <th>{t('common.desktopApp')} (Mac/Windows/Linux)</th>
                   <td>〇</td>
                   <td>〇</td>
                 </tr>
                 <tr>
-                  <th>{t('pricing.mobileApp')} (iOS/Android)</th>
+                  <th>{t('common.mobileApp')} (iOS/Android)</th>
                   <td>〇</td>
                   <td>〇</td>
                 </tr>
@@ -72,7 +72,10 @@ const PricingPlansSection = () => {
                   <td>〇</td>
                 </tr>
                 <tr>
-                  <th>File System Based Storage (Coming Soon)</th>
+                  <th>
+                    {t('common.fileSystemBasedStorage')} (
+                    {t('common.comingSoon')})
+                  </th>
                   <td>〇</td>
                   <td>〇</td>
                 </tr>
@@ -88,8 +91,8 @@ const PricingPlansSection = () => {
                 </tr>
                 <tr>
                   <th>{t('pricing.price')}</th>
-                  <td>Free</td>
-                  <td>$3/Month *</td>
+                  <td>{t('pricing.free')}</td>
+                  <td>$3 / {t('pricing.month')} *</td>
                 </tr>
               </tbody>
             </PriceTable>
