@@ -5,7 +5,7 @@ const HomeLogoLink = () => {
   return (
     <Link href='/'>
       <a>
-        <img src='/static/logo.svg' />
+        <img alt='Boost Note Logo' src='/static/logo.svg' />
       </a>
     </Link>
   )
