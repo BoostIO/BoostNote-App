@@ -39,6 +39,8 @@ const HeroSubTitle = styled.h2<TypographyProps | ColorProps>`
 `
 
 const DownloadButtonLinksFragment = () => {
+  const { t } = useTranslation()
+
   const [osName, setOSName] = useState<OSName | null>(null)
 
   useEffectOnce(() => {
@@ -98,7 +100,7 @@ const DownloadButtonLinksFragment = () => {
     default:
       return (
         <ButtonLink bg='teal' color='white' href='/#download'>
-          <Icon path={mdiDownload} /> Download App
+          <Icon path={mdiDownload} /> {t('common.downloadApp')}
         </ButtonLink>
       )
   }
@@ -154,7 +156,7 @@ const HeroSection = () => {
                 queueNavigateToGA('https://note.boostio.co')
               }}
             >
-              <Icon path={mdiOpenInApp} /> Open in Browser
+              <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
             </ButtonLink>
           </FlexBox>
           <FlexBox justifyContent='center' mt={2}>
