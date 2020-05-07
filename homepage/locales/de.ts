@@ -22,8 +22,7 @@ export default {
       description1:
         'Wir veröffentlichen das einfache und speziell für Entwickler entworfene Wiki namens "Boost Hub" im Juni 2020!',
       description2:
-        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von 			Dritten zu zentralisieren und zu erweitern.
-        ',
+        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von Dritten zu zentralisieren und zu erweitern.',
     },
     features: {
       title: 'Funktionen',
@@ -65,14 +64,14 @@ export default {
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und 				Markdown-Erweiterungen unterstützt. Bitte zwingen Sie sich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
+        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und Markdown-Erweiterungen unterstützt. Bitte zwingen Sie sich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
       legacyDownloadLinks: 'Legacy Download Links',
       legacyRepository: 'Legacy Repository',
     },
     community: {
       title: 'Tritt unserer Community bei',
       description:
-        'Unsere Community von Entwicklern ist für Boost Note enorm wichtig. Die App hat auf Github viel Aufmerksamkeit erhalten und wird von Mitwirkenden aus über 200 Ländern 			und Regionen unterstützt. Unsere Community heißt dich willkommen. Sei ein Teil von uns!',
+        'Unsere Community von Entwicklern ist für Boost Note enorm wichtig. Die App hat auf Github viel Aufmerksamkeit erhalten und wird von Mitwirkenden aus über 200 Ländern und Regionen unterstützt. Unsere Community heißt dich willkommen. Sei ein Teil von uns!',
     },
     footer: {
       mission: 'Mission',
