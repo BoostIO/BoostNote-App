@@ -34,6 +34,11 @@ const Container = styled.div<SpaceProps>`
 
 const MobileAppLink = styled.a<SpaceProps>`
   ${space}
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-3px);
+    transition: 0.2s cubic-bezier(0, 0, 0.25, 1);
+  }
 `
 
 const DownloadSection = () => {
