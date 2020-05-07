@@ -1,15 +1,16 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'Open in Browser',
+      downloadApp: 'Download App',
+    },
     header: {
-      forTeam: 'For Team',
-      download: 'Download App',
+      forTeams: 'For Teams',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
         "An intuitive and stylish markdown note app for developers. It's fully open-source.",
-      buttonHint1: '',
-      buttonHint2: 'versions are available too!',
     },
     features: {
       why: 'Why Boost Note?',
@@ -22,10 +23,6 @@ export default {
       feature3Title: 'Syntax Highlight',
       feature3Description:
         'Boostnote can highlight code syntax in more than 100 languages.',
-    },
-    buttonSet: {
-      desktop: 'Download {{osName}} App',
-      browser: 'Open in Browser',
     },
     pricing: {
       feature: 'Feature',

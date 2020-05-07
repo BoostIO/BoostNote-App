@@ -1,9 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'ブラウザーから開く',
+      downloadApp: 'アプリ ダウンロード',
+    },
     header: {
-      community: 'コミュニティ',
-      forTeam: 'チーム版',
-      download: '{{osName}} アプリ ダウンロード',
+      forTeams: 'チーム版',
     },
     hero: {
       buttonHint1: '',
@@ -19,10 +21,6 @@ export default {
       feature3Title: 'シンタックスハイライト',
       feature3Description:
         '100言語以上に対応しており、美しくコードをまとめることが出来ます。',
-    },
-    buttonSet: {
-      desktop: 'Download {{osName}} App',
-      browser: 'Open in Browser',
     },
     pricing: {
       title: 'あなたのプランを選びましょう',

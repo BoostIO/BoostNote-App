@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'Abrir en el navegador',
+      downloadApp: 'Descargar App',
+    },
     header: {
       forTeam: 'Para equipos',
-      download: 'Descargar App',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
@@ -22,10 +25,6 @@ export default {
       feature3Title: 'Resaltar sintaxis',
       feature3Description:
         'Boostnote puede resaltar sintaxis para más de 100 lenguajes.',
-    },
-    buttonSet: {
-      desktop: 'Descargar aplicación para {{osName}}',
-      browser: 'Abrir en el navegador',
     },
     pricing: {
       title: 'Elige su plan',

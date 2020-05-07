@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'Ouvrir dans le navigateur',
+      downloadApp: 'Télécharger App',
+    },
     header: {
-      forTeam: "Pour l'équipe",
-      download: 'Télécharger App',
+      forTeams: "Pour l'équipe",
     },
     hero: {
       buttonHint1: 'Des versions ',

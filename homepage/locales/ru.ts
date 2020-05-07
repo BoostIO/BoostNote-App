@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'Открыть в браузере',
+      downloadApp: 'Скачать App',
+    },
     header: {
-      forTeam: 'Для комманды',
-      download: 'Скачать App',
+      forTeams: 'Для комманды',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
@@ -22,10 +25,6 @@ export default {
       feature3Title: 'Подсветка синтаксиса',
       feature3Description:
         'BoostNote поддерживает подсветку синтаксиса для более чем 100 языков.',
-    },
-    buttonSet: {
-      desktop: 'Скачать приложение для {{osName}}',
-      browser: 'Открыть в браузере',
     },
     pricing: {
       title: 'Выберите свой план',

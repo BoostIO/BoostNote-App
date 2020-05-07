@@ -1,8 +1,11 @@
 export default {
   translation: {
+    common: {
+      openInBrowser: 'Abrir no navegador',
+      downloadApp: 'Baixar App',
+    },
     header: {
-      forTeam: 'Equipe',
-      download: 'Baixar App',
+      forTeams: 'Para Equipes',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
@@ -22,10 +25,6 @@ export default {
       feature3Title: 'Destaque de sintaxe',
       feature3Description:
         'O Boostnote pode destacar a sintaxe do código em mais de 100 idiomas.',
-    },
-    buttonSet: {
-      desktop: 'Baixar App para {{osName}}',
-      browser: 'Abrir no navegador',
     },
     pricing: {
       title: 'Escolha seu plano',
