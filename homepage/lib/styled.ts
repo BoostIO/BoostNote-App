@@ -10,13 +10,7 @@ export const defaultTheme = {
     gray: 'rgba(12,24,39,.64)',
     black: '#0B1118',
   },
-  fontSizes: [14, 16, 18, 24, 40, 48],
-  lineHeights: {
-    default: 1,
-    headings: 1.3,
-    descriptions: 1.6,
-    leads: 2.3,
-  },
+  fontSizes: [14, 16, 18, 24, 32, 40, 48],
 }
 
 export type BaseTheme = typeof defaultTheme
