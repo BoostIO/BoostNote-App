@@ -64,7 +64,7 @@ export default {
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und Markdown-Erweiterungen unterstützt. Bitte zwingen Sie sich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
+        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und Markdown-Erweiterungen unterstützt. Bitte zwing dich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
       legacyDownloadLinks: 'Legacy Download Links',
       legacyRepository: 'Legacy Repository',
     },
