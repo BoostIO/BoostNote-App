@@ -1,7 +1,6 @@
 import React from 'react'
 import DefaultLayout from '../components/DefaultLayout'
 import HeroSection from '../components/organisms/HeroSection'
-import RoadmapSection from '../components/organisms/RoadmapSection'
 import FeaturesSection from '../components/organisms/FeaturesSection'
 import PricingPlansSection from '../components/organisms/PricingPlansSection'
 import BoostHubSection from '../components/organisms/BoostHubSection'
@@ -15,7 +14,6 @@ const HomePage = () => {
       <BoostHubSection />
       <FeaturesSection />
       <PricingPlansSection />
-      <RoadmapSection />
       <DownloadSection />
       <CommunitySection />
     </DefaultLayout>

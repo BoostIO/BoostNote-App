@@ -118,7 +118,7 @@ const HeroSection = () => {
     <section>
       <Container>
         <Box mt={[5, 5, 9]} px={3}>
-          <HeroTitle textAlign={'center'} fontSize={[3, 4, 5]}>
+          <HeroTitle textAlign={'center'} fontSize={[4, 5, 6]}>
             🚀 {t('hero.title')}
           </HeroTitle>
           <HeroSubTitle
