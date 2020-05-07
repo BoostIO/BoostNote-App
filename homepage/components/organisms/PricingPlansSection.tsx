@@ -10,8 +10,8 @@ const TableContainer = styled.div`
 `
 const PriceTable = styled.table`
   max-width: 100%;
-  tr:nth-child(2n) {
-    background-color: ${({ theme }) => theme.colors.white};
+  tr:nth-child(2n + 1) {
+    background-color: ${({ theme }) => theme.colors.lightGray};
   }
 
   th,
@@ -28,7 +28,6 @@ const PriceTable = styled.table`
   thead th {
     background-color: ${({ theme }) => theme.colors.white};
     color: ${({ theme }) => theme.colors.gray};
-    font-size: ${({ theme }) => theme.fontSizes[2]}px;
     text-transform: uppercase;
   }
 `
@@ -37,7 +36,7 @@ const PricingPlansSection = () => {
   const { t } = useTranslation()
   return (
     <section>
-      <Box py={4} bg='#f0f0f0'>
+      <Box py={4}>
         <Text as='h2' fontSize={4} my={5} textAlign='center'>
           🏁 Pricing Plans
         </Text>
