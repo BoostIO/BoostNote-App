@@ -67,7 +67,7 @@ const FeaturesSection = () => {
             <FeatureListItem
               iconPath={mdiCloudSync}
               title={t('features.cloudStorage')}
-              description={t('features.cloudStorage.description')}
+              description={t('features.cloudStorageDescription')}
             />
             <FeatureListItem
               iconPath={mdiCellphoneLink}
