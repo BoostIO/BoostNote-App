@@ -185,7 +185,7 @@ const Header = () => {
             </li>
           </HeaderRightList>
           <HeaderLanguageSelect value={i18n.language} onChange={switchLanguage}>
-            <option value='de'>DE</option>
+            <option value='de'>🇩🇪</option>
             <option value='en'>🇺🇸</option>
             <option value='es'>🇪🇸</option>
             <option value='fr'>🇫🇷</option>
