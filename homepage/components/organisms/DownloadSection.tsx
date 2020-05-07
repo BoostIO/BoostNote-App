@@ -25,6 +25,7 @@ import { space, SpaceProps } from 'styled-system'
 import styled from '../../lib/styled'
 import ButtonLink from '../atoms/ButtonLink'
 import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div<SpaceProps>`
   max-width: 60em;
@@ -42,11 +43,13 @@ const MobileAppLink = styled.a<SpaceProps>`
 `
 
 const DownloadSection = () => {
+  const { t } = useTranslation()
+
   return (
     <section>
       <Box py={4} bg='#f0f0f0'>
         <Text as='h2' id='download' fontSize={4} my={4} textAlign='center'>
-          📦 Download App
+          📦 {t('common.downloadApp')}
         </Text>
         <Box as='ul' my={4}>
           <li>
@@ -103,7 +106,7 @@ const DownloadSection = () => {
           </li>
           <li>
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
-              <Icon path={mdiCellphone} /> Mobile App
+              <Icon path={mdiCellphone} /> {t('common.mobileApp')}
             </Text>
             <FlexBox justifyContent='center' flexWrap='wrap'>
               <MobileAppLink
@@ -126,14 +129,11 @@ const DownloadSection = () => {
           </li>
           <li>
             <Text as='h3' fontSize={3} my={4} textAlign='center'>
-              Legacy App
+              {t('download.legacyApp')}
             </Text>
             <Container>
               <Text as='p' textAlign='center'>
-                We are going to keep maintaining the old app until the current
-                Boost Note.next support most of features of the old app like
-                file system based storage and markdown extensions. So please
-                don&apos;t force yourself too much to migrate to the new app.
+                {t('download.legacyAppDescription')}
               </Text>
             </Container>
             <FlexBox justifyContent='center' flexWrap='wrap'>
@@ -153,7 +153,7 @@ const DownloadSection = () => {
                   )
                 }}
               >
-                <Icon path={mdiOpenInNew} /> Legacy Download Links
+                <Icon path={mdiOpenInNew} /> {t('download.legacyDownloadLinks')}
               </ButtonLink>
               <ButtonLink
                 color='teal'
@@ -170,7 +170,7 @@ const DownloadSection = () => {
                   )
                 }}
               >
-                <Icon path={mdiOpenInNew} /> Legacy Repository
+                <Icon path={mdiOpenInNew} /> {t('download.legacyRepository')}
               </ButtonLink>
             </FlexBox>
           </li>
