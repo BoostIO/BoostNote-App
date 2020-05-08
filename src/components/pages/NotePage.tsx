@@ -31,9 +31,9 @@ export const StyledNoteDetailNoNote = styled.div`
   color: #a9a9a9;
 
   img {
+    width: 310px;
     max-width: 100%;
-    width: 40%;
-    height: auto;
+    padding: 10px 40px;
   }
 
   section {
