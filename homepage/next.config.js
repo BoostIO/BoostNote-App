@@ -1,4 +1,5 @@
 module.exports = {
+  exportTrailingSlash: true,
   publicRuntimeConfig: {
     localeSubpaths:
       typeof process.env.LOCALE_SUBPATHS === 'string'
