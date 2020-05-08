@@ -60,7 +60,7 @@ export const StyledNoteDetailNoNote = styled.div`
       width: max-content;
       background: #333;
       border-radius: 8px;
-      box-shadow: 0 5px #242424;
+      box-shadow: 0 4px #404040;
     }
   }
   h3 {
