@@ -15,14 +15,14 @@ export default {
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
-        "Eine intuitive und stylishe Markdown Notiz-App für Entwickler. Vollständig Open-Source.",
+        "Eine intuitive und stylische Markdown Notiz-App für Entwickler. Vollständig Open-Source.",
     },
     boostHub: {
       title: 'Boost Note für Teams',
       description1:
         'Wir veröffentlichen das einfache und speziell für Entwickler entworfene Wiki namens "Boost Hub" im Juni 2020!',
       description2:
-        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von Dritten zu zentralisieren und zu erweitern.',
+        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von Dritten zu Zentralisieren und zu Erweitern.',
     },
     features: {
       title: 'Funktionen',
@@ -32,12 +32,12 @@ export default {
       multiplePlatforms: 'Mehrere Plattformen',
       multiplePlatformsDescription:
         'Die Boost Note App ist für Browser, PCs und Mobilgeräte erhältlich.',
-      syntaxHighlight: 'Syntax Highlight',
+      syntaxHighlight: 'Syntax Highlighting',
       syntaxHighlightDescription:
         'Boost Note unterstützt Syntax-Highlighting von mehr als 100 Programmiersprachen.',
       mathEquations: 'Mathematische Formeln',
       mathEquationsDescription:
-        'Boost Note unterstützt Mathe-Blöcke. Mit Hilfe der LaTeX-Syntax kann man in den Blöcken mathematische Formeln aufschreiben.',
+        'Mit Boost Note können mathematische Formeln mühelos mit LaTeX direkt in die Markdown Notiz eingebettet werden.',
       customizableTheme: 'Anpassbares Design',
       customizableThemeDescription:
         'Das Design, der Editor und der gerenderte Markdown-Inhalt kann frei angepasst werden.',
@@ -75,7 +75,7 @@ export default {
     },
     footer: {
       mission: 'Mission',
-      pressKit: 'Pressunterlagen',
+      pressKit: 'Presseunterlagen',
       userTerms: 'Nutzungsbedingungen',
       privacyPolicy: 'Datenschutzerklärung',
     },
