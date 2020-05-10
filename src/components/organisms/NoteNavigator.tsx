@@ -129,9 +129,9 @@ const NoteList = styled.ul`
   overflow-y: auto;
 `
 
-type NoteNavigatorprops = {
+type NoteNavigatorProps = {
   storageId: string
-  currentNoteId?: string
+  currentNote?: NoteDoc
   search: string
   notes: NoteDoc[]
   noteSorting: NoteSortingOptions
@@ -142,10 +142,12 @@ type NoteNavigatorprops = {
   navigateUp: () => void
   basePathname: string
   lastCreatedNoteId: string
-  trashOrPurgeCurrentNote: () => void
+  trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
+  purgeNote: (storageId: string, noteId: string) => void
 }
 
 const NoteNavigator = ({
+  currentNote,
   notes,
   noteSorting,
   setNoteSorting,
@@ -153,13 +155,13 @@ const NoteNavigator = ({
   storageId,
   basePathname,
   search,
-  currentNoteId,
   setSearchInput,
   navigateDown,
   navigateUp,
   lastCreatedNoteId,
-  trashOrPurgeCurrentNote,
-}: NoteNavigatorprops) => {
+  trashNote,
+  purgeNote,
+}: NoteNavigatorProps) => {
   const { t } = useTranslation()
   const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -200,6 +202,19 @@ const NoteNavigator = ({
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
+
+  const trashOrPurgeCurrentNote = useCallback(() => {
+    if (currentNote == null) {
+      return
+    }
+
+    if (!currentNote.trashed) {
+      trashNote(storageId, currentNote._id)
+    } else {
+      purgeNote(storageId, currentNote._id)
+    }
+    focusList()
+  }, [trashNote, purgeNote, currentNote, storageId, focusList])
 
   const handleListKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
@@ -250,7 +265,8 @@ const NoteNavigator = ({
       </NoteListControl>
       <NoteList tabIndex={0} ref={listRef} onKeyDown={handleListKeyDown}>
         {notes.map((note) => {
-          const noteIsCurrentNote = note._id === currentNoteId
+          const noteIsCurrentNote = note._id === currentNote?._id
+
           return (
             <li key={note._id}>
               <NoteItem
