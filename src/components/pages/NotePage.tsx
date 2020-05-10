@@ -225,7 +225,6 @@ const NotePage = ({ storage }: NotePageProps) => {
 
     const folderPathname =
       routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
-
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
@@ -234,10 +233,13 @@ const NotePage = ({ storage }: NotePageProps) => {
       tags,
     })
     if (note != null) {
-      console.log(`/app/storages/${storage.id}/notes${folderPathname}
-        ${note._id}`)
       setLastCreatedNoteId(note._id)
-      push(`/app/storages/${storage.id}/notes${folderPathname}${note._id}`)
+
+      push(
+        folderPathname === '/'
+          ? `/app/storages/${storage.id}/notes/${note._id}`
+          : `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
+      )
       dispatchNoteDetailFocusTitleInputEvent()
     }
   }, [createNote, push, routeParams, storage.id, setLastCreatedNoteId])
