@@ -54,11 +54,9 @@ export const StyledNoteDetailNoNote = styled.div`
     }
   }
 
-  // Keybinds
   h2 {
     font-weight: normal;
 
-    // Keybind Buttons
     span {
       margin: 5px auto;
       padding: 5px 10px;
@@ -77,7 +75,6 @@ export const StyledNoteDetailNoNote = styled.div`
     font-weight: normal;
   }
 
-  // Media Query
   @media only screen and (max-width: 970px) {
     section {
       width: 100%;
@@ -311,18 +308,6 @@ const NotePage = ({ storage }: NotePageProps) => {
     }
   }, [filteredNotes, currentNoteIndex, push, currentPathnameWithoutNoteId])
 
-  const trashOrPurgeCurrentNote = useCallback(() => {
-    if (currentNote == null) {
-      return
-    }
-
-    if (!currentNote.trashed) {
-      trashNote(storage.id, currentNote._id)
-    } else {
-      purgeNote(storage.id, currentNote._id)
-    }
-  }, [trashNote, purgeNote, currentNote, storage.id])
-
   useGlobalKeyDownHandler((e) => {
     switch (e.key) {
       case 'n':
@@ -365,9 +350,10 @@ const NotePage = ({ storage }: NotePageProps) => {
           basePathname={currentPathnameWithoutNoteId}
           navigateDown={navigateDown}
           navigateUp={navigateUp}
-          currentNoteId={currentNote ? currentNote._id : undefined}
+          currentNote={currentNote}
           lastCreatedNoteId={lastCreatedNoteId}
-          trashOrPurgeCurrentNote={trashOrPurgeCurrentNote}
+          trashNote={trashNote}
+          purgeNote={showPurgeNoteDialog}
         />
       }
       right={
