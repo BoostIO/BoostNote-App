@@ -11,6 +11,7 @@ import { mdiPlus, mdiHammerWrench } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
 import { usePathnameWithoutNoteId } from '../../lib/router'
+import { borderBottom } from '../../lib/styled/styleFunctions'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -21,7 +22,9 @@ const NavigatorContainer = styled.nav`
 
 const TopControl = styled.div`
   display: flex;
-  margin: 1em 0;
+  align-items: center;
+  height: 50px;
+  ${borderBottom}
 `
 
 const Empty = styled.button`
