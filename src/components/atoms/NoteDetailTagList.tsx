@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
-import styled from '../../../lib/styled'
-import { inputStyle } from '../../../lib/styled/styleFunctions'
-import Icon from '../../atoms/Icon'
+import styled from '../../lib/styled'
+import { inputStyle } from '../../lib/styled/styleFunctions'
+import Icon from './Icon'
 import { mdiTagMultiple, mdiClose } from '@mdi/js'
 
 interface TagListItemProps {
@@ -69,12 +69,15 @@ const TagListContainer = styled.div`
   }
 `
 
-interface TagListProps {
+interface NoteDetailTagListProps {
   tags: string[]
   removeTagByName: (tagName: string) => void
 }
 
-const TagList = ({ tags, removeTagByName }: TagListProps) => {
+const NoteDetailTagList = ({
+  tags,
+  removeTagByName,
+}: NoteDetailTagListProps) => {
   return (
     <TagListContainer>
       <Icon className='icon' size={18} path={mdiTagMultiple} />
@@ -89,4 +92,4 @@ const TagList = ({ tags, removeTagByName }: TagListProps) => {
   )
 }
 
-export default TagList
+export default NoteDetailTagList
