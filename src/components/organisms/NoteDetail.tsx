@@ -5,15 +5,15 @@ import {
   NoteDocEditibleProps,
   Attachment,
   NoteStorage,
-} from '../../../lib/db/types'
-import { isTagNameValid } from '../../../lib/db/utils'
-import TagList from './TagList'
-import styled from '../../../lib/styled'
-import CustomizedCodeEditor from '../../atoms/CustomizedCodeEditor'
-import CustomizedMarkdownPreviewer from '../../atoms/CustomizedMarkdownPreviewer'
-import ToolbarIconButton from '../../atoms/ToolbarIconButton'
-import Toolbar from '../../atoms/Toolbar'
-import ToolbarSeparator from '../../atoms/ToolbarSeparator'
+} from '../../lib/db/types'
+import { isTagNameValid } from '../../lib/db/utils'
+import NoteDetailTagList from '../atoms/NoteDetailTagList'
+import styled from '../../lib/styled'
+import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
+import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
+import ToolbarIconButton from '../atoms/ToolbarIconButton'
+import Toolbar from '../atoms/Toolbar'
+import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import {
   textColor,
   borderBottom,
@@ -21,16 +21,16 @@ import {
   uiTextColor,
   PrimaryTextColor,
   backgroundColor,
-} from '../../../lib/styled/styleFunctions'
-import ToolbarExportButton from '../../atoms/ToolbarExportButton'
-import { getFileList } from '../../../lib/dnd'
-import { ViewModeType } from '../../../lib/generalStatus'
-import { BreadCrumbs } from '../../pages/NotePage'
+} from '../../lib/styled/styleFunctions'
+import ToolbarExportButton from '../atoms/ToolbarExportButton'
+import { getFileList } from '../../lib/dnd'
+import { ViewModeType } from '../../lib/generalStatus'
+import { BreadCrumbs } from '../pages/NotePage'
 import cc from 'classcat'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
-} from '../../../lib/events'
+} from '../../lib/events'
 import {
   mdiTrashCan,
   mdiRestore,
@@ -449,7 +449,7 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  handleBreadCrumbsClick = (folderPathname: string) => () => {
+  navigateToFolder = (folderPathname: string) => () => {
     const { storage } = this.props
     this.props.push(`/app/storages/${storage.id}/notes${folderPathname}`)
   }
@@ -494,7 +494,7 @@ export default class NoteDetail extends React.Component<
             <div className='breadCrumbs'>
               <div className='wrapper'>
                 <div
-                  onClick={this.handleBreadCrumbsClick('/')}
+                  onClick={this.navigateToFolder('/')}
                   className={cc([
                     'folderLink',
                     'allNotesLink',
@@ -510,7 +510,7 @@ export default class NoteDetail extends React.Component<
                     {this.props.breadCrumbs
                       .map((breadCrumb) => (
                         <div
-                          onClick={this.handleBreadCrumbsClick(
+                          onClick={this.navigateToFolder(
                             breadCrumb.folderPathname
                           )}
                           className={cc([
@@ -555,7 +555,7 @@ export default class NoteDetail extends React.Component<
             </div>
             <Toolbar>
               <div className='tagsWrapper'>
-                <TagList
+                <NoteDetailTagList
                   tags={this.state.tags}
                   removeTagByName={this.removeTagByName}
                 />
