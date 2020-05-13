@@ -194,6 +194,7 @@ const Header = () => {
             <option value='nl'>🇳🇱</option>
             <option value='pt'>🇵🇹</option>
             <option value='ru'>🇷🇺</option>
+            <option value='vn'>🇻🇳</option>
             <option value='zh'>🇨🇳</option>
           </HeaderLanguageSelect>
         </HeaderNavigator>
