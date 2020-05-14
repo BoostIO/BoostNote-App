@@ -3,22 +3,22 @@ export default {
     common: {
       openInBrowser: 'Mở trong trình duyệt',
       downloadApp: 'Tải ứng dụng',
-      fileSystemBasedStorage: 'Lưu trữ trên file',
+      fileSystemBasedStorage: 'Lưu trữ trên tập tin',
       comingSoon: 'Sắp ra mắt',
       webApp: 'Ứng dụng web',
       desktopApp: 'Ứng dụng desktop',
       mobileApp: 'Ứng dụng điện thoại',
     },
     header: {
-      forTeams: 'Dành cho teams',
+      forTeams: 'Dành cho nhóm',
     },
     hero: {
-      title: 'Tăng sự hài lòng, năng suất và sáng tạo.',
+      title: 'Thêm vui vẻ, năng suất và sáng tạo.',
       subtitle:
         "Một ứng dụng ghi chú markdown hiệu quả cho lập trình viên và hoàn toàn open-source.",
     },
     boostHub: {
-      title: 'Boost Note dành cho teams',
+      title: 'Boost Note dành cho nhóm',
       description1:
         'Chúng tôi sẽ cho ra mắt 1 ứng dụng wiki đơn giản dành riêng cho lập trình viên, gọi là "BoostHub" vào tháng 6 năm 2020!',
       description2:
@@ -32,15 +32,15 @@ export default {
       multiplePlatforms: 'Đa nền tảng',
       multiplePlatformsDescription:
         'Ứng dụng Boost Note có thể sự dụng dưới dạng: ứng dụng web, ứng dụng desktop và ứng dụng điện thoại.',
-      syntaxHighlight: 'Tô sáng cú pháp',
+      syntaxHighlight: 'Syntax Highlight',
       syntaxHighlightDescription:
-        'Boost Note hỗ trợ tô sáng cú pháp hơn 100 ngôn ngữ lập trình.',
+        'Boost Note hỗ trợ syntax highlighting cho hơn 100 ngôn ngữ lập trình.',
       mathEquations: 'Phương trình toán học',
       mathEquationsDescription:
         'Boost Note hỗ trợ hiển thị phương trình toán học. Bạn có thể viết phương trình toán học lên ghi chú với cú pháp của LaTeX.',
       customizableTheme: 'Tuỳ chỉnh giao diện',
       customizableThemeDescription:
-        'Bạn có thể tuỳ chỉnh giao diện của ứng dụng, ô soạn thảo của ứng dụng và cả giao diện hiển thị Markdown.',
+        'Bạn có thể tuỳ chỉnh giao diện của ứng dụng, khung soạn thảo của ứng dụng và cả giao diện hiển thị Markdown.',
       fileSystemBasedStorageDescription:
         'Bạn sẽ có toàn quyền kiểm soát ghi chú của bạn. Bạn có thể lưu trữ ghi chú với dịch vụ lưu trữ đám mây mà bạn yêu thích.',
       extensibleMarkdown: 'Mở rộng Markdown',
@@ -50,10 +50,10 @@ export default {
     pricing: {
       title: 'Gói dịch vụ',
       feature: 'Chức năng',
-      basic: 'Basic',
-      premium: 'Premium',
+      basic: 'Cơ bản',
+      premium: 'Cao cấp',
       sync: 'Đồng bộ hoá đa nền tảng',
-      localStorageSize: 'Local Storage Size',
+      localStorageSize: 'Dung lượng lưu trữ nội bộ',
       unlimited: 'Không giới hạn',
       cloudStorageSize: 'Dung lượng lưu trữ đám mây',
       price: 'Giá',
@@ -65,7 +65,7 @@ export default {
       legacyApp: 'Phiên bản cũ',
       legacyAppDescription:
         "Chúng tôi sẽ tiếp tục duy trì phiên bản cũ cho đến khi phiên bản mới là Boost Note.Next hoàn thiện các chức năng mà phiên bản cũ hỗ trợ như: lưu trữ trên file và tiện ích cho markdown. Vì thế bạn chưa cần phải chuyển hoàn toàn sang phiên bản mới.",
-      legacyDownloadLinks: 'Links download phiên bản cũ',
+      legacyDownloadLinks: 'Đường dẫn để tải phiên bản cũ',
       legacyRepository: 'Repository phiên bản cũ',
     },
     community: {
