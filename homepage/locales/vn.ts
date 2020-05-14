@@ -15,7 +15,7 @@ export default {
     hero: {
       title: 'Thêm vui vẻ, năng suất và sáng tạo.',
       subtitle:
-        "Một ứng dụng ghi chú markdown hiệu quả cho lập trình viên và hoàn toàn open-source.",
+        'Một ứng dụng ghi chú markdown hiệu quả cho lập trình viên và hoàn toàn open-source.',
     },
     boostHub: {
       title: 'Boost Note dành cho nhóm',
@@ -32,7 +32,7 @@ export default {
       multiplePlatforms: 'Đa nền tảng',
       multiplePlatformsDescription:
         'Ứng dụng Boost Note có thể sự dụng dưới dạng: ứng dụng web, ứng dụng desktop và ứng dụng điện thoại.',
-      syntaxHighlight: 'Syntax Highlight',
+      syntaxHighlight: 'Syntax Highlighting',
       syntaxHighlightDescription:
         'Boost Note hỗ trợ syntax highlighting cho hơn 100 ngôn ngữ lập trình.',
       mathEquations: 'Phương trình toán học',
@@ -64,7 +64,7 @@ export default {
     download: {
       legacyApp: 'Phiên bản cũ',
       legacyAppDescription:
-        "Chúng tôi sẽ tiếp tục duy trì phiên bản cũ cho đến khi phiên bản mới là Boost Note.Next hoàn thiện các chức năng mà phiên bản cũ hỗ trợ như: lưu trữ trên file và tiện ích cho markdown. Vì thế bạn chưa cần phải chuyển hoàn toàn sang phiên bản mới.",
+        'Chúng tôi sẽ tiếp tục duy trì phiên bản cũ cho đến khi phiên bản mới là Boost Note.Next hoàn thiện các chức năng mà phiên bản cũ hỗ trợ như: lưu trữ trên file và tiện ích cho markdown. Vì thế bạn chưa cần phải chuyển hoàn toàn sang phiên bản mới.',
       legacyDownloadLinks: 'Đường dẫn để tải phiên bản cũ',
       legacyRepository: 'Repository phiên bản cũ',
     },
