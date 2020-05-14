@@ -127,6 +127,7 @@ const StyledNoteDetailContainer = styled.div`
     border: none;
     ${textColor}
     margin-left: 4px;
+    word-break: keep-all;
   }
 
   .buttonsWrapper {
@@ -140,6 +141,7 @@ const StyledNoteDetailContainer = styled.div`
     display: flex;
     flex: 1 1 auto;
     min-width: 20px;
+    word-break: keep-all;
     input {
       min-width: 0 !important;
       width: 100%;
