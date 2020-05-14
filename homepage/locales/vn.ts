@@ -32,9 +32,9 @@ export default {
       multiplePlatforms: 'Đa nền tảng',
       multiplePlatformsDescription:
         'Ứng dụng Boost Note có thể sự dụng dưới dạng: ứng dụng web, ứng dụng desktop và ứng dụng điện thoại.',
-      syntaxHighlight: 'Syntax Highlight',
+      syntaxHighlight: 'Tô sáng cú pháp',
       syntaxHighlightDescription:
-        'Boost Note hỗ trợ highlight hơn 100 ngôn ngữ lập trình.',
+        'Boost Note hỗ trợ tô sáng cú pháp hơn 100 ngôn ngữ lập trình.',
       mathEquations: 'Phương trình toán học',
       mathEquationsDescription:
         'Boost Note hỗ trợ hiển thị phương trình toán học. Bạn có thể viết phương trình toán học lên ghi chú với cú pháp của LaTeX.',
