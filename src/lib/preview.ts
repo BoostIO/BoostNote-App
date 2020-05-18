@@ -6,7 +6,6 @@ import { createStoreContext } from './context'
 export const defaultPreviewStyle = `
 -ms-text-size-adjust: 100%;
 -webkit-text-size-adjust: 100%;
-line-height: 1.6;
 color: #24292e;
 font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
   sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
@@ -35,42 +34,6 @@ a:hover {
   outline-width: 0;
 }
 
-strong {
-  font-weight: inherit;
-  font-weight: bolder;
-}
-
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
-
-img {
-  border-style: none;
-}
-
-code,
-kbd,
-pre {
-  font-family: monospace, monospace;
-  font-size: 1em;
-}
-
-hr {
-  box-sizing: content-box;
-  height: 0;
-  overflow: visible;
-}
-
-input {
-  font: inherit;
-  margin: 0;
-}
-
-input {
-  overflow: visible;
-}
-
 [type='checkbox'] {
   box-sizing: border-box;
   padding: 0;
@@ -81,6 +44,9 @@ input {
 }
 
 input {
+  font: inherit;
+  margin: 0;
+  overflow: visible;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -99,15 +65,6 @@ strong {
   font-weight: 600;
 }
 
-hr {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid #dfe2e5;
-  height: 0;
-  margin: 15px 0;
-  overflow: hidden;
-}
-
 hr:before {
   content: '';
   display: table;
@@ -119,11 +76,6 @@ hr:after {
   display: table;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
 td,
 th {
   padding: 0;
@@ -133,69 +85,9 @@ details summary {
   cursor: pointer;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-h1 {
-  font-size: 32px;
-}
-
-h1,
-h2 {
-  font-weight: 600;
-}
-
-h2 {
-  font-size: 24px;
-}
-
-h3 {
-  font-size: 20px;
-}
-
-h3,
-h4 {
-  font-weight: 600;
-}
-
-h4 {
-  font-size: 16px;
-}
-
-h5 {
-  font-size: 14px;
-}
-
-h5,
-h6 {
-  font-weight: 600;
-}
-
-h6 {
-  font-size: 12px;
-}
-
 p {
   margin-bottom: 10px;
   margin-top: 0;
-}
-
-blockquote {
-  margin: 0;
-}
-
-ol,
-ul {
-  margin-bottom: 0;
-  margin-top: 0;
-  padding-left: 0;
 }
 
 ol ol,
@@ -219,11 +111,6 @@ pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
     monospace;
   font-size: 12px;
-}
-
-pre {
-  margin-bottom: 0;
-  margin-top: 0;
 }
 
 input::-webkit-inner-spin-button,
@@ -257,6 +144,13 @@ a:not([href]) {
   text-decoration: none;
 }
 
+blockquote {
+  margin: 0;
+  border-left: 0.25em solid #dfe2e5;
+  color: #6a737d;
+  padding: 0 1em;
+}
+
 blockquote,
 dl,
 ol,
@@ -268,40 +162,12 @@ ul {
   margin-top: 0;
 }
 
-hr {
-  background-color: #e1e4e8;
-  border: 0;
-  height: 0.25em;
-  margin: 24px 0;
-  padding: 0;
-}
-
-blockquote {
-  border-left: 0.25em solid #dfe2e5;
-  color: #6a737d;
-  padding: 0 1em;
-}
-
 blockquote > :first-child {
   margin-top: 0;
 }
 
 blockquote > :last-child {
   margin-bottom: 0;
-}
-
-kbd {
-  background-color: #fafbfc;
-  border: 1px solid #c6cbd1;
-  border-bottom-color: #959da5;
-  border-radius: 3px;
-  box-shadow: inset 0 -1px 0 #959da5;
-  color: #444d56;
-  display: inline-block;
-  font-size: 11px;
-  line-height: 10px;
-  padding: 3px 5px;
-  vertical-align: middle;
 }
 
 h1,
@@ -316,14 +182,15 @@ h6 {
   margin-top: 24px;
 }
 
-h1 {
-  font-size: 2em;
-}
-
 h1,
 h2 {
   border-bottom: 1px solid #eaecef;
   padding-bottom: 0.3em;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
 }
 
 h2 {
@@ -390,6 +257,8 @@ dl dd {
 }
 
 table {
+  border-collapse: collapse;
+  border-spacing: 0;
   display: block;
   overflow: auto;
   width: 100%;
@@ -415,6 +284,7 @@ table tr:nth-child(2n) {
 }
 
 img {
+  border-style: none;
   background-color: #fff;
   box-sizing: content-box;
   max-width: 100%;
@@ -525,7 +395,15 @@ kbd {
 }
 
 hr {
-  border-bottom-color: #eee;
+  box-sizing: content-box;
+  background: transparent;
+  overflow: hidden;
+  background-color: #e1e4e8;
+  border: 0;
+  height: 0.25em;
+  margin: 24px 0;
+  padding: 0;
+  border-bottom: 1px solid #eee;
 }
 
 .dark p code,
