@@ -1,27 +1,27 @@
 > ### [Boost Note for Teams](https://hub.boostio.co/)
 >
-> We'll launch the clean and simple wiki specially optimized for developers called "Boost Hub" at June 2020!
+> We'll launch the clean and simple wiki specially optimized for developers called "Boost Hub" in June 2020!
 >
-> Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and search ability of both first-party and third-party information.
+> Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and searchability of both first-party and third-party information.
 
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
-  
+
   [https://boostnote.io/](https://boostnote.io/)
 </div>
 
 ![uiimage](./static/img_ui.svg)
 
-<h2 align='center'>A Polished Notes App with Github Flavored Markdown</h2>
-<h3 align="center">for macOS, Windows, Linux, iOS and Android</h5>
+<h2 align='center'>A Polished Notes App with GitHub Flavored Markdown</h2>
+<h3 align="center">for macOS, Windows, Linux, iOS, and Android</h3>
 
-BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostnote).
+BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Boostnote).
 
 ## Latest releases
 
 - [Web app (note.boostio.co)](https://note.boostio.co)
 - [Desktop app (macOS, Windows, Linux)](https://github.com/BoostIO/BoostNote.next/releases/latest)
-- [iOS app in App Store](https://apps.apple.com/us/app/boostnote-mobile/id1498182749)
+- [iOS app in the App Store](https://apps.apple.com/us/app/boostnote-mobile/id1498182749)
 - [Android app in Play Store](https://play.google.com/store/apps/details?id=com.boostio.boostnote)
 
 ## Roadmap
@@ -42,12 +42,12 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 - [Blog](https://medium.com/boostnote)
 - [Reddit](https://www.reddit.com/r/Boostnote/)
 
-## Developmenet
+## Development
 
 ### Folder structure
 
 - `android` : Android app project. Please open with Android Studio.
-- `dist` : Bundled electron app stuff. All executable and installable of the electron app are generated in this folder. You can generate this by `npm run prepack`, `npm run pack` and `npm run release` scripts.
+- `dist` : Bundled electron app stuff. All executable and installable of the electron app are generated in this folder. You can generate this by `npm run prepack`, `npm run pack`, and `npm run release` scripts.
 - `compiled` : Compiled web app resources from `npm run build` script. The resources are for deploying the web app.
 - `electron` : Compiled electron resources from `npm run build:electron` script. You can run it by `npm start` script. The resources are for packaging the electron app.
 - `ios` : iOS app project. Please open with XCode.
@@ -55,12 +55,12 @@ BoostNote.next is a renewal of [Boostnote app](https://github.com/BoostIO/Boostn
 
 ### Build
 
-Don't forget to create a file named `.env` in the root of the project directory, or the build will fail.
+You have to create a file named `.env` in the root of the project directory, or the build will fail.
 
 #### Web app
 
 ```sh
-# Install deps
+# Install dependencies
 npm i
 
 # Run webpack and open browser
@@ -70,19 +70,19 @@ npm run dev
 #### Electron app
 
 ```sh
-# Install deps
+# Install dependencies
 npm i
 
 # Run webpack
 npm run dev:webpack
 
-# Run electron(You have to open another terminal to run this)
+# Run electron (You have to open another terminal to run this)
 npm run dev:electron
 ```
 
 #### Mobile app
 
-TBA
+To be announced.
 
 ## License
 
