@@ -8,6 +8,7 @@ interface CustomizedCodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
+  onPaste?: (event: ClipboardEvent) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   mode?: string
@@ -16,6 +17,7 @@ interface CustomizedCodeEditorProps {
 
 const CustomizedCodeEditor = ({
   onChange,
+  onPaste,
   value,
   codeMirrorRef,
   className,
@@ -26,6 +28,7 @@ const CustomizedCodeEditor = ({
   return (
     <CodeEditor
       onChange={onChange}
+      onPaste={onPaste}
       value={value}
       codeMirrorRef={codeMirrorRef}
       className={className}

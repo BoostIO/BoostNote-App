@@ -47,7 +47,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
     "@testing-library/react-hooks": "^2.0.1",
-    "@types/codemirror": "0.0.77",
+    "@types/codemirror": "0.0.94",
     "@types/dashify": "^1.0.0",
     "@types/filenamify": "^2.0.2",
     "@types/history": "^4.7.3",

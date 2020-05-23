@@ -38,6 +38,7 @@ import {
   mdiCodeTags,
   mdiTextSubject,
 } from '@mdi/js'
+import { getFilesFromClipboard } from '../../../lib/files'
 
 const StyledNoteDetailContainer = styled.div`
   ${backgroundColor};
@@ -449,6 +450,36 @@ export default class NoteDetail extends React.Component<
     )
   }
 
+  handlePaste = async (event: ClipboardEvent) => {
+    event.preventDefault()
+
+    const { storage, addAttachments } = this.props
+
+    const files = getFilesFromClipboard(event).filter((file) =>
+      file.type.startsWith('image/')
+    )
+
+    const attachments = await addAttachments(storage.id, files)
+    if (attachments.length === 0) return
+
+    this.setState(
+      (prevState) => {
+        return {
+          content:
+            prevState.content +
+            `\n` +
+            attachments
+              .map((attachment) => `![](${attachment.name})`)
+              .join('\n') +
+            `\n`,
+        }
+      },
+      () => {
+        this.queueToSave()
+      }
+    )
+  }
+
   handleBreadCrumbsClick = (folderPathname: string) => () => {
     const { storage } = this.props
     this.props.push(`/app/storages/${storage.id}/notes${folderPathname}`)
@@ -469,6 +500,7 @@ export default class NoteDetail extends React.Component<
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}
+        onPaste={this.handlePaste}
       />
     )
 
