@@ -7,13 +7,9 @@ import {
   NoteStorage,
 } from '../../lib/db/types'
 import { isTagNameValid } from '../../lib/db/utils'
-import NoteDetailTagList from '../atoms/NoteDetailTagList'
 import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import ToolbarIconButton from '../atoms/ToolbarIconButton'
-import Toolbar from '../atoms/Toolbar'
-import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import {
   textColor,
   borderBottom,
@@ -22,22 +18,13 @@ import {
   PrimaryTextColor,
   backgroundColor,
 } from '../../lib/styled/styleFunctions'
-import ToolbarExportButton from '../atoms/ToolbarExportButton'
 import { getFileList } from '../../lib/dnd'
 import { ViewModeType } from '../../lib/generalStatus'
-import { BreadCrumbs } from '../pages/NotePage'
-import cc from 'classcat'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../lib/events'
-import {
-  mdiTrashCan,
-  mdiRestore,
-  mdiViewSplitVertical,
-  mdiCodeTags,
-  mdiTextSubject,
-} from '@mdi/js'
+import NoteDetailToolbar from '../molecules/NoteDetailToolbar'
 
 const StyledNoteDetailContainer = styled.div`
   ${backgroundColor};
@@ -176,10 +163,9 @@ type NoteDetailProps = {
   ) => Promise<NoteDoc | undefined>
   purgeNote: (storageId: string, noteId: string) => void
   viewMode: ViewModeType
-  toggleViewMode: (mode: ViewModeType) => void
+  selectViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
   push: (path: string) => void
-  breadCrumbs?: BreadCrumbs
 }
 
 type NoteDetailState = {
@@ -188,7 +174,6 @@ type NoteDetailState = {
   title: string
   content: string
   tags: string[]
-  newTagName: string
 }
 
 export default class NoteDetail extends React.Component<
@@ -201,7 +186,6 @@ export default class NoteDetail extends React.Component<
     title: '',
     content: '',
     tags: [],
-    newTagName: '',
   }
   titleInputRef = React.createRef<HTMLInputElement>()
   newTagNameInputRef = React.createRef<HTMLInputElement>()
@@ -222,7 +206,6 @@ export default class NoteDetail extends React.Component<
         title: note.title,
         content: note.content,
         tags: note.tags,
-        newTagName: '',
       }
     }
     return state
@@ -289,32 +272,16 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  updateNewTagName = () => {
-    this.setState({
-      newTagName: this.newTagNameInputRef.current!.value,
-    })
-  }
-
-  handleNewTagNameInputKeyDown: React.KeyboardEventHandler = (event) => {
-    switch (event.key) {
-      case 'Enter':
-        event.preventDefault()
-        this.appendNewTag()
-        return
-    }
-  }
-
-  appendNewTag = () => {
-    if (includes(this.state.newTagName, this.state.tags)) {
+  appendTagByName = (tagName: string) => {
+    if (includes(tagName, this.state.tags)) {
       return
     }
-    if (!isTagNameValid(this.state.newTagName)) {
+    if (!isTagNameValid(tagName)) {
       return
     }
     this.setState(
       (prevState) => ({
-        newTagName: '',
-        tags: [...prevState.tags, prevState.newTagName],
+        tags: [...new Set([...prevState.tags, tagName])],
       }),
       () => {
         this.queueToSave()
@@ -333,49 +300,38 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  trashNote = async () => {
+  executeSaveQueue = async () => {
     const { note, storage } = this.props
-    const noteId = note._id
 
     if (this.queued) {
       const { title, content, tags } = this.state
-      await this.saveNote(storage.id, noteId, {
+      await this.saveNote(storage.id, note._id, {
         title,
         content,
         tags,
       })
     }
-    await this.props.trashNote(storage.id, noteId)
+  }
+
+  trashNote = async () => {
+    const { note, storage } = this.props
+
+    await this.executeSaveQueue()
+    await this.props.trashNote(storage.id, note._id)
   }
 
   untrashNote = async () => {
     const { note, storage } = this.props
-    const noteId = note._id
 
-    if (this.queued) {
-      const { title, content, tags } = this.state
-      await this.saveNote(storage.id, noteId, {
-        title,
-        content,
-        tags,
-      })
-    }
-    await this.props.untrashNote(storage.id, noteId)
+    await this.executeSaveQueue()
+    await this.props.untrashNote(storage.id, note._id)
   }
 
   purgeNote = async () => {
     const { note, storage } = this.props
-    const noteId = note._id
 
-    if (this.queued) {
-      const { title, content, tags } = this.state
-      await this.saveNote(storage.id, noteId, {
-        title,
-        content,
-        tags,
-      })
-    }
-    await this.props.purgeNote(storage.id, noteId)
+    await this.executeSaveQueue()
+    this.props.purgeNote(storage.id, note._id)
   }
 
   queued = false
@@ -455,13 +411,8 @@ export default class NoteDetail extends React.Component<
   }
 
   render() {
-    const {
-      note,
-      storage,
-      viewMode,
-      toggleViewMode,
-      currentPathnameWithoutNoteId,
-    } = this.props
+    const { note, storage, viewMode, selectViewMode } = this.props
+
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
@@ -487,126 +438,38 @@ export default class NoteDetail extends React.Component<
         }}
         onDrop={this.handleDrop}
       >
-        {note == null ? (
-          <p>No note is selected</p>
-        ) : (
-          <>
-            <div className='breadCrumbs'>
-              <div className='wrapper'>
-                <div
-                  onClick={this.navigateToFolder('/')}
-                  className={cc([
-                    'folderLink',
-                    'allNotesLink',
-                    currentPathnameWithoutNoteId ===
-                      `/app/storages/${storage.id}/notes` && 'active',
-                  ])}
-                >
-                  {storage.name}
-                </div>
-                {this.props.breadCrumbs != null && (
-                  <>
-                    <div className='separator'>&frasl;</div>
-                    {this.props.breadCrumbs
-                      .map((breadCrumb) => (
-                        <div
-                          onClick={this.navigateToFolder(
-                            breadCrumb.folderPathname
-                          )}
-                          className={cc([
-                            'folderLink',
-                            breadCrumb.folderIsActive && 'active',
-                          ])}
-                          key={breadCrumb.folderLabel}
-                        >
-                          {breadCrumb.folderLabel}
-                        </div>
-                      ))
-                      .reduce((prev, curr) => (
-                        <>
-                          {prev}
-                          <div className='separator'>&frasl;</div>
-                          {curr}
-                        </>
-                      ))}
-                  </>
-                )}
-              </div>
-            </div>
-            <div className='titleSection'>
-              <input
-                ref={this.titleInputRef}
-                value={this.state.title}
-                onChange={this.updateTitle}
-                placeholder='Title'
-              />
-            </div>
-            <div className='contentSection'>
-              {viewMode === 'preview' ? (
-                markdownPreviewer
-              ) : viewMode === 'split' ? (
-                <>
-                  <div className='splitLeft'>{codeEditor}</div>
-                  <div className='splitRight'>{markdownPreviewer}</div>
-                </>
-              ) : (
-                codeEditor
-              )}
-            </div>
-            <Toolbar>
-              <div className='tagsWrapper'>
-                <NoteDetailTagList
-                  tags={this.state.tags}
-                  removeTagByName={this.removeTagByName}
-                />
-                <input
-                  className='tagInput'
-                  ref={this.newTagNameInputRef}
-                  value={this.state.newTagName}
-                  placeholder='Tags'
-                  onChange={this.updateNewTagName}
-                  onKeyDown={this.handleNewTagNameInputKeyDown}
-                />
-                <ToolbarSeparator />
-              </div>
-              <div className='buttonsWrapper'>
-                <ToolbarIconButton
-                  active={viewMode === 'edit'}
-                  onClick={() => toggleViewMode('edit')}
-                  iconPath={mdiCodeTags}
-                />
-                <ToolbarIconButton
-                  active={viewMode === 'split'}
-                  onClick={() => toggleViewMode('split')}
-                  iconPath={mdiViewSplitVertical}
-                />
-                <ToolbarIconButton
-                  active={viewMode === 'preview'}
-                  onClick={() => toggleViewMode('preview')}
-                  iconPath={mdiTextSubject}
-                />
-                {note.trashed ? (
-                  <>
-                    <ToolbarIconButton
-                      onClick={this.untrashNote}
-                      iconPath={mdiRestore}
-                    />
-                    <ToolbarIconButton
-                      onClick={this.purgeNote}
-                      iconPath={mdiTrashCan}
-                    />
-                  </>
-                ) : (
-                  <ToolbarIconButton
-                    onClick={this.trashNote}
-                    iconPath={mdiTrashCan}
-                  />
-                )}
-                <ToolbarExportButton note={this.props.note} />
-              </div>
-            </Toolbar>
-          </>
-        )}
+        <NoteDetailToolbar
+          storage={storage}
+          note={note}
+          tags={this.state.tags}
+          viewMode={viewMode}
+          selectViewMode={selectViewMode}
+          trashNote={this.trashNote}
+          untrashNote={this.untrashNote}
+          purgeNote={this.purgeNote}
+          appendTagByName={this.appendTagByName}
+          removeTagByName={this.removeTagByName}
+        />
+        <div className='titleSection'>
+          <input
+            ref={this.titleInputRef}
+            value={this.state.title}
+            onChange={this.updateTitle}
+            placeholder='Title'
+          />
+        </div>
+        <div className='contentSection'>
+          {viewMode === 'preview' ? (
+            markdownPreviewer
+          ) : viewMode === 'split' ? (
+            <>
+              <div className='splitLeft'>{codeEditor}</div>
+              <div className='splitRight'>{markdownPreviewer}</div>
+            </>
+          ) : (
+            codeEditor
+          )}
+        </div>
       </StyledNoteDetailContainer>
     )
   }

@@ -38,7 +38,7 @@ const EmptyItem = styled.li`
 `
 
 const Toolbar = styled.div`
-  height: 50px;
+  height: 40px;
   display: flex;
   padding: 0 0 0 8px;
   align-items: center;
