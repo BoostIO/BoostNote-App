@@ -29,6 +29,7 @@ import {
   sortNotesByNoteSortingOption,
   NoteSortingOptions,
 } from '../../lib/sort'
+import { values } from '../../lib/db/utils'
 
 export const StyledNoteDetailNoNote = styled.div`
   text-align: center;
@@ -82,12 +83,6 @@ export const StyledNoteDetailNoNote = styled.div`
     }
   }
 `
-
-export type BreadCrumbs = {
-  folderLabel: string
-  folderPathname: string
-  folderIsActive: boolean
-}[]
 
 interface NotePageProps {
   storage: NoteStorage
@@ -168,9 +163,7 @@ const NotePage = ({ storage }: NotePageProps) => {
           .filter((note) => !note.trashed)
       case 'storages.trashCan':
         if (storage == null) return []
-        return (Object.values(storage.noteMap) as NoteDoc[]).filter(
-          (note) => note.trashed
-        )
+        return values(storage.noteMap).filter((note) => note.trashed)
       default:
         return []
     }
@@ -216,7 +209,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     [setGeneralStatus]
   )
 
-  const toggleViewMode = useCallback(
+  const selectViewMode = useCallback(
     (newMode: ViewModeType) => {
       setGeneralStatus({
         noteViewMode: newMode,
@@ -252,23 +245,6 @@ const NotePage = ({ storage }: NotePageProps) => {
   }, [createNote, push, routeParams, storage.id, setLastCreatedNoteId])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
-
-  const breadCrumbs = useMemo(() => {
-    if (currentNote == null || currentNote.folderPathname === '/')
-      return undefined
-    const folders = currentNote.folderPathname.substring(1).split('/')
-    const thread = folders.map((folder, index) => {
-      const folderPathname = `/${folders.slice(0, index + 1).join('/')}`
-      return {
-        folderLabel: folder,
-        folderPathname,
-        folderIsActive:
-          currentPathnameWithoutNoteId ===
-          `/app/storages/${storage.id}/notes${folderPathname}`,
-      }
-    })
-    return thread as BreadCrumbs
-  }, [currentPathnameWithoutNoteId, currentNote, storage.id])
 
   const { messageBox } = useDialog()
   const showPurgeNoteDialog = useCallback(
@@ -320,13 +296,13 @@ const NotePage = ({ storage }: NotePageProps) => {
         if (isWithGeneralCtrlKey(e) && e.shiftKey) {
           switch (generalStatus['noteViewMode']) {
             case 'edit':
-              toggleViewMode('split')
+              selectViewMode('split')
               break
             case 'split':
-              toggleViewMode('preview')
+              selectViewMode('preview')
               break
             default:
-              toggleViewMode('edit')
+              selectViewMode('edit')
               break
           }
         }
@@ -390,9 +366,8 @@ const NotePage = ({ storage }: NotePageProps) => {
             addAttachments={addAttachments}
             purgeNote={showPurgeNoteDialog}
             viewMode={generalStatus.noteViewMode}
-            toggleViewMode={toggleViewMode}
+            selectViewMode={selectViewMode}
             push={push}
-            breadCrumbs={breadCrumbs}
           />
         )
       }

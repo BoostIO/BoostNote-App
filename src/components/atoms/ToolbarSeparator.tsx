@@ -1,5 +1,8 @@
 import styled from '../../lib/styled'
 
 export default styled.div`
-  flex: 1;
+  width: 1px;
+  background-color: gray;
+  height: 24px;
+  margin: 0 12px;
 `
