@@ -450,7 +450,7 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  handlePaste = async (event: ClipboardEvent) => {
+  handlePaste = async (editor: CodeMirror.Editor, event: ClipboardEvent) => {
     event.preventDefault()
 
     const { storage, addAttachments } = this.props
@@ -462,16 +462,19 @@ export default class NoteDetail extends React.Component<
     const attachments = await addAttachments(storage.id, files)
     if (attachments.length === 0) return
 
+    const links = attachments
+      .map((attachment) => `![](${attachment.name})`)
+      .join('\n')
+
+    const doc = editor.getDoc()
+    const cursorPosition = doc.getCursor()
+    doc.replaceRange(links, cursorPosition)
+    const newValue = doc.getValue()
+
     this.setState(
-      (prevState) => {
+      () => {
         return {
-          content:
-            prevState.content +
-            `\n` +
-            attachments
-              .map((attachment) => `![](${attachment.name})`)
-              .join('\n') +
-            `\n`,
+          content: newValue,
         }
       },
       () => {

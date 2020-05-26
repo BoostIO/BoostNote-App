@@ -8,7 +8,7 @@ interface CustomizedCodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
-  onPaste?: (event: ClipboardEvent) => void
+  onPaste?: (editor: CodeMirror.Editor, event: ClipboardEvent) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   mode?: string

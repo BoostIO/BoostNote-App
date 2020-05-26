@@ -24,7 +24,7 @@ interface CodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
-  onPaste?: (event: ClipboardEvent) => void
+  onPaste?: (editor: CodeMirror.Editor, event: ClipboardEvent) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   theme?: string
@@ -125,11 +125,11 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   }
 
   handleCodeMirrorPaste = (
-    _editor: CodeMirror.Editor,
+    editor: CodeMirror.Editor,
     event: ClipboardEvent
   ) => {
     if (this.props.onPaste != null) {
-      this.props.onPaste(event)
+      this.props.onPaste(editor, event)
     }
   }
 
