@@ -8,6 +8,7 @@ import {
   PopulatedTagDoc,
   Attachment,
   CloudNoteStorageData,
+  TagDoc,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
@@ -800,9 +801,10 @@ export function createDbStoreCreator(
           noteDoc.tags.map(async (tag) => {
             if (storage.tagMap[tag] == null) {
               return {
-                ...(await storage.db.getTag(tag)!),
+                ...((await storage.db.getTag(tag)!) as TagDoc),
+                name: tag,
                 noteIdSet: new Set([noteDoc._id]),
-              } as PopulatedTagDoc
+              }
             } else {
               return {
                 ...storage.tagMap[tag]!,
