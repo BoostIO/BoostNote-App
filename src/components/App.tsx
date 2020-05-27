@@ -22,6 +22,7 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
+import FeatureCheckListPopup from './organisms/FeatureCheckListPopup'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -92,6 +93,7 @@ const App = () => {
         <PreferencesModal />
         <ToastList />
         <CodeMirrorStyle />
+        <FeatureCheckListPopup />
       </AppContainer>
     </ThemeProvider>
   )

@@ -25,6 +25,7 @@ import { capitalize } from '../../lib/string'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -38,15 +39,17 @@ function say() {
 const EditorTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const { report } = useAnalytics()
+  const { checkFeature } = useGeneralStatus()
 
   const selectEditorTheme: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
         'editor.theme': event.target.value,
       })
+      checkFeature('changeEditorTheme')
       report(analyticsEvents.editorTheme)
     },
-    [setPreferences, report]
+    [setPreferences, checkFeature, report]
   )
 
   const [fontSize, setFontSize] = useState(

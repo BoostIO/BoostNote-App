@@ -20,20 +20,23 @@ import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../atoms/form'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
   const { report } = useAnalytics()
+  const { checkFeature } = useGeneralStatus()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
         'general.theme': event.target.value as GeneralThemeOptions,
       })
+      checkFeature('changeAppTheme')
       report(analyticsEvents.colorTheme)
     },
-    [setPreferences, report]
+    [setPreferences, checkFeature, report]
   )
 
   const selectLanguage: SelectChangeEventHandler = useCallback(

@@ -34,7 +34,7 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
-  const { openSideNavFolderItemRecursively } = useGeneralStatus()
+  const { openSideNavFolderItemRecursively, checkFeature } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
     createNote,
@@ -71,6 +71,7 @@ const StorageNavigatorFragment = ({
 
         // Open folder item
         openSideNavFolderItemRecursively(storage.id, value)
+        checkFeature('createFolder')
       },
     })
   }
