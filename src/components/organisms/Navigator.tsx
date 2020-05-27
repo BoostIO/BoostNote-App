@@ -23,7 +23,7 @@ const NavigatorContainer = styled.nav`
 const TopControl = styled.div`
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 40px;
   ${borderBottom}
 `
 
@@ -50,6 +50,7 @@ const Empty = styled.button`
 
 const ScrollableContainer = styled.div`
   flex: 1;
+  padding: 10px 0;
   overflow: auto;
 `
 
