@@ -199,7 +199,7 @@ const NotePage = ({ storage }: NotePageProps) => {
       : undefined
   }, [filteredNotes, currentNoteIndex])
 
-  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const { generalStatus, setGeneralStatus, checkFeature } = useGeneralStatus()
   const updateNoteListWidth = useCallback(
     (leftWidth: number) => {
       setGeneralStatus({
@@ -232,17 +232,26 @@ const NotePage = ({ storage }: NotePageProps) => {
       folderPathname,
       tags,
     })
-    if (note != null) {
-      setLastCreatedNoteId(note._id)
-
-      push(
-        folderPathname === '/'
-          ? `/app/storages/${storage.id}/notes/${note._id}`
-          : `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
-      )
-      dispatchNoteDetailFocusTitleInputEvent()
+    if (note == null) {
+      return
     }
-  }, [createNote, push, routeParams, storage.id, setLastCreatedNoteId])
+    setLastCreatedNoteId(note._id)
+
+    push(
+      folderPathname === '/'
+        ? `/app/storages/${storage.id}/notes/${note._id}`
+        : `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
+    )
+    dispatchNoteDetailFocusTitleInputEvent()
+    checkFeature('createNote')
+  }, [
+    createNote,
+    push,
+    routeParams,
+    storage.id,
+    setLastCreatedNoteId,
+    checkFeature,
+  ])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
 
@@ -368,6 +377,7 @@ const NotePage = ({ storage }: NotePageProps) => {
             viewMode={generalStatus.noteViewMode}
             selectViewMode={selectViewMode}
             push={push}
+            checkFeature={checkFeature}
           />
         )
       }

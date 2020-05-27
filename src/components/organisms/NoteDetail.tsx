@@ -19,7 +19,7 @@ import {
   backgroundColor,
 } from '../../lib/styled/styleFunctions'
 import { getFileList } from '../../lib/dnd'
-import { ViewModeType } from '../../lib/generalStatus'
+import { ViewModeType, FeatureType } from '../../lib/generalStatus'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
@@ -166,6 +166,7 @@ type NoteDetailProps = {
   selectViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
   push: (path: string) => void
+  checkFeature: (featureName: FeatureType) => void
 }
 
 type NoteDetailState = {
@@ -273,15 +274,16 @@ export default class NoteDetail extends React.Component<
   }
 
   appendTagByName = (tagName: string) => {
-    if (includes(tagName, this.state.tags)) {
+    const trimmedTagName = tagName.trim()
+    if (includes(trimmedTagName, this.state.tags)) {
       return
     }
-    if (!isTagNameValid(tagName)) {
+    if (!isTagNameValid(trimmedTagName)) {
       return
     }
     this.setState(
       (prevState) => ({
-        tags: [...new Set([...prevState.tags, tagName])],
+        tags: [...new Set([...prevState.tags, trimmedTagName])],
       }),
       () => {
         this.queueToSave()
