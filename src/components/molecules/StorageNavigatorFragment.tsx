@@ -17,7 +17,7 @@ import {
   mdiSync,
   mdiPlus,
 } from '@mdi/js'
-import FolderListFragment from './FolderListFragment'
+import FolderListFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
