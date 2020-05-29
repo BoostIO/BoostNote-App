@@ -125,9 +125,9 @@ const StyledNoteDetailContainer = styled.div`
   .tagInput {
     background-color: transparent;
     border: none;
+    word-break: keep-all;
     ${textColor}
     margin-left: 4px;
-    word-break: keep-all;
   }
 
   .buttonsWrapper {
@@ -139,9 +139,9 @@ const StyledNoteDetailContainer = styled.div`
   .tagsWrapper {
     padding: 5px 0;
     display: flex;
+    word-break: keep-all;
     flex: 1 1 auto;
     min-width: 20px;
-    word-break: keep-all;
     input {
       min-width: 0 !important;
       width: 100%;
@@ -442,127 +442,38 @@ export default class NoteDetail extends React.Component<
         }}
         onDrop={this.handleDrop}
       >
-        {note == null ? (
-          <p>No note is selected</p>
-        ) : (
-          <>
-            <div className='breadCrumbs'>
-              <div className='wrapper'>
-                <div
-                  onClick={this.handleBreadCrumbsClick('/')}
-                  className={cc([
-                    'folderLink',
-                    'allNotesLink',
-                    currentPathnameWithoutNoteId ===
-                      `/app/storages/${storage.id}/notes` && 'active',
-                  ])}
-                >
-                  {storage.name}
-                </div>
-                {this.props.breadCrumbs != null && (
-                  <>
-                    <div className='separator'>&frasl;</div>
-                    {this.props.breadCrumbs
-                      .map((breadCrumb) => (
-                        <div
-                          onClick={this.handleBreadCrumbsClick(
-                            breadCrumb.folderPathname
-                          )}
-                          className={cc([
-                            'folderLink',
-                            breadCrumb.folderIsActive && 'active',
-                          ])}
-                          key={breadCrumb.folderLabel}
-                        >
-                          {breadCrumb.folderLabel}
-                        </div>
-                      ))
-                      .reduce((prev, curr) => (
-                        <>
-                          {prev}
-                          <div className='separator'>&frasl;</div>
-                          {curr}
-                        </>
-                      ))}
-                  </>
-                )}
-              </div>
-            </div>
-            <div className='titleSection'>
-              <input
-                ref={this.titleInputRef}
-                value={this.state.title}
-                onChange={this.updateTitle}
-                placeholder='Title'
-              />
-            </div>
-            <div className='contentSection'>
-              {viewMode === 'preview' ? (
-                markdownPreviewer
-              ) : viewMode === 'split' ? (
-                <>
-                  <div className='splitLeft'>{codeEditor}</div>
-                  <div className='splitRight'>{markdownPreviewer}</div>
-                </>
-              ) : (
-                codeEditor
-              )}
-            </div>
-            <Toolbar>
-              <div className='tagsWrapper'>
-                <TagList
-                  tags={this.state.tags}
-                  removeTagByName={this.removeTagByName}
-                />
-                <input
-                  className='tagInput'
-                  ref={this.newTagNameInputRef}
-                  value={this.state.newTagName}
-                  maxLength={25}
-                  placeholder='Tags'
-                  onChange={this.updateNewTagName}
-                  onKeyDown={this.handleNewTagNameInputKeyDown}
-                />
-                <ToolbarSeparator />
-              </div>
-              <div className='buttonsWrapper'>
-                <ToolbarIconButton
-                  active={viewMode === 'edit'}
-                  onClick={() => toggleViewMode('edit')}
-                  iconPath={mdiCodeTags}
-                />
-                <ToolbarIconButton
-                  active={viewMode === 'split'}
-                  onClick={() => toggleViewMode('split')}
-                  iconPath={mdiViewSplitVertical}
-                />
-                <ToolbarIconButton
-                  active={viewMode === 'preview'}
-                  onClick={() => toggleViewMode('preview')}
-                  iconPath={mdiTextSubject}
-                />
-                {note.trashed ? (
-                  <>
-                    <ToolbarIconButton
-                      onClick={this.untrashNote}
-                      iconPath={mdiRestore}
-                    />
-                    <ToolbarIconButton
-                      onClick={this.purgeNote}
-                      iconPath={mdiTrashCan}
-                    />
-                  </>
-                ) : (
-                  <ToolbarIconButton
-                    onClick={this.trashNote}
-                    iconPath={mdiTrashCan}
-                  />
-                )}
-                <ToolbarExportButton note={this.props.note} />
-              </div>
-            </Toolbar>
-          </>
-        )}
+        <NoteDetailToolbar
+          storage={storage}
+          note={note}
+          tags={this.state.tags}
+          viewMode={viewMode}
+          selectViewMode={selectViewMode}
+          trashNote={this.trashNote}
+          untrashNote={this.untrashNote}
+          purgeNote={this.purgeNote}
+          appendTagByName={this.appendTagByName}
+          removeTagByName={this.removeTagByName}
+        />
+        <div className='titleSection'>
+          <input
+            ref={this.titleInputRef}
+            value={this.state.title}
+            onChange={this.updateTitle}
+            placeholder='Title'
+          />
+        </div>
+        <div className='contentSection'>
+          {viewMode === 'preview' ? (
+            markdownPreviewer
+          ) : viewMode === 'split' ? (
+            <>
+              <div className='splitLeft'>{codeEditor}</div>
+              <div className='splitRight'>{markdownPreviewer}</div>
+            </>
+          ) : (
+            codeEditor
+          )}
+        </div>
       </StyledNoteDetailContainer>
     )
   }
