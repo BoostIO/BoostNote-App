@@ -11,10 +11,10 @@ import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
 import { mdiFolderOpen, mdiFolder, mdiDotsVertical } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
+  createNoteInFolderAndRedirect: (folderPathname: string) => void
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
 }
@@ -23,6 +23,7 @@ const FolderListFragment = ({
   storage,
   showPromptToCreateFolder,
   showPromptToRenameFolder,
+  createNoteInFolderAndRedirect,
 }: FolderListFragmentProps) => {
   const {
     removeFolder,
@@ -66,13 +67,7 @@ const FolderListFragment = ({
           type: MenuTypes.Normal,
           label: 'New Note',
           onClick: async () => {
-            const note = await createNote(storage.id, {
-              folderPathname,
-            })
-            push(
-              `/app/storages/${storage.id}/notes${folderPathname}/${note!._id}`
-            )
-            dispatchNoteDetailFocusTitleInputEvent()
+            createNoteInFolderAndRedirect(folderPathname)
           },
         },
         {
