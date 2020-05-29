@@ -1,16 +1,9 @@
 import React, { useMemo } from 'react'
-import { useDb } from '../../lib/db'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
-import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
-import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
+import { usePathnameWithoutNoteId } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
-import { getTransferrableNoteData } from '../../lib/dnd'
-import { useTranslation } from 'react-i18next'
-import { mdiFolderOpen, mdiFolder, mdiDotsVertical } from '@mdi/js'
-import NavigatorButton from '../atoms/NavigatorButton'
+import FolderNavigatorItem from './FolderNavigatorItem'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -25,92 +18,15 @@ const FolderListFragment = ({
   showPromptToRenameFolder,
   createNoteInFolderAndRedirect,
 }: FolderListFragmentProps) => {
-  const {
-    removeFolder,
-    updateNote,
-    createNote,
-    moveNoteToOtherStorage,
-  } = useDb()
-  const { push } = useRouter()
-  const { messageBox } = useDialog()
-  const { popup } = useContextMenu()
-  const { t } = useTranslation()
-
   const { folderMap, id: storageId } = storage
 
-  const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
+  const { sideNavOpenedItemSet } = useGeneralStatus()
 
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
 
   const folderPathnames = useMemo(() => {
     return Object.keys(folderMap).sort((a, b) => a.localeCompare(b))
   }, [folderMap])
-
-  const createOnFolderItemClickHandler = (folderPathname: string) => {
-    return () => {
-      push(
-        `/app/storages/${storage.id}/notes${
-          folderPathname === '/' ? '' : folderPathname
-        }`
-      )
-    }
-  }
-
-  const createOnContextMenuHandler = (
-    storageId: string,
-    folderPathname: string
-  ) => {
-    return (event: React.MouseEvent) => {
-      event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Note',
-          onClick: async () => {
-            createNoteInFolderAndRedirect(folderPathname)
-          },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'New Subfolder',
-          onClick: async () => {
-            showPromptToCreateFolder(folderPathname)
-          },
-        },
-        {
-          type: MenuTypes.Separator,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.rename'),
-          enabled: folderPathname !== '/',
-          onClick: async () => {
-            showPromptToRenameFolder(folderPathname)
-          },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.remove'),
-          enabled: folderPathname !== '/',
-          onClick: () => {
-            messageBox({
-              title: `Remove "${folderPathname}" folder`,
-              message: t('folder.removeMessage'),
-              iconType: DialogIconTypes.Warning,
-              buttons: [t('folder.remove'), t('general.cancel')],
-              defaultButtonIndex: 0,
-              cancelButtonIndex: 1,
-              onClose: (value: number | null) => {
-                if (value === 0) {
-                  removeFolder(storageId, folderPathname)
-                }
-              },
-            })
-          },
-        },
-      ])
-    }
-  }
 
   const folderSetWithSubFolders = useMemo(() => {
     return folderPathnames.reduce((folderSet, folderPathname) => {
@@ -121,7 +37,7 @@ const FolderListFragment = ({
         folderSet.add(parentFolderPathname)
       }
       return folderSet
-    }, new Set())
+    }, new Set<string>())
   }, [folderPathnames])
 
   const openedFolderPathnameList = useMemo(() => {
@@ -134,95 +50,22 @@ const FolderListFragment = ({
     )
   }, [folderPathnames, storageId, sideNavOpenedItemSet])
 
-  const createDropHandler = (folderPathname: string) => {
-    return async (event: React.DragEvent) => {
-      const transferrableNoteData = getTransferrableNoteData(event)
-      if (transferrableNoteData == null) {
-        return
-      }
-
-      const {
-        storageId: originalNoteStorageId,
-        note: originalNote,
-      } = transferrableNoteData
-
-      if (storageId === originalNoteStorageId) {
-        await updateNote(storageId, originalNote._id, {
-          folderPathname,
-        })
-      } else {
-        messageBox({
-          title: t('storage.moveTitle'),
-          message: t('storage.moveMessage'),
-          iconType: DialogIconTypes.Info,
-          buttons: [t('storage.move'), t('storage.copy'), t('general.cancel')],
-          defaultButtonIndex: 0,
-          cancelButtonIndex: 2,
-          onClose: async (value: number | null) => {
-            switch (value) {
-              case 0:
-                await moveNoteToOtherStorage(
-                  originalNoteStorageId,
-                  originalNote._id,
-                  storageId,
-                  folderPathname
-                )
-                return
-              case 1:
-                await createNote(storageId, {
-                  title: originalNote.title,
-                  content: originalNote.content,
-                  folderPathname,
-                  tags: originalNote.tags,
-                  data: originalNote.data,
-                })
-                return
-            }
-          },
-        })
-      }
-    }
-  }
-
   return (
     <>
       {openedFolderPathnameList.map((folderPathname: string) => {
-        const nameElements = folderPathname.split('/').slice(1)
-        const folderName = nameElements[nameElements.length - 1]
-        const itemId = getFolderItemId(storageId, folderPathname)
-        const depth = nameElements.length - 1
-        const folded = folderSetWithSubFolders.has(folderPathname)
-          ? !sideNavOpenedItemSet.has(itemId)
-          : undefined
-
-        const folderIsActive =
-          currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/notes${folderPathname}`
         return (
-          <NavigatorItem
-            key={itemId}
-            folded={folded}
-            depth={depth}
-            active={folderIsActive}
-            iconPath={folderIsActive ? mdiFolderOpen : mdiFolder}
-            label={folderName}
-            onClick={createOnFolderItemClickHandler(folderPathname)}
-            onDoubleClick={() => showPromptToRenameFolder(folderPathname)}
-            onContextMenu={createOnContextMenuHandler(
-              storage.id,
-              folderPathname
-            )}
-            onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
-            control={
-              <NavigatorButton
-                onClick={createOnContextMenuHandler(storage.id, folderPathname)}
-                iconPath={mdiDotsVertical}
-              />
+          <FolderNavigatorItem
+            key={`folder:${folderPathname}`}
+            active={
+              currentPathnameWithoutNoteId ===
+              `/app/storages/${storageId}/notes${folderPathname}`
             }
-            onDragOver={(event) => {
-              event.preventDefault()
-            }}
-            onDrop={createDropHandler(folderPathname)}
+            storageId={storage.id}
+            folderPathname={folderPathname}
+            folderSetWithSubFolders={folderSetWithSubFolders}
+            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+            showPromptToCreateFolder={showPromptToCreateFolder}
+            showPromptToRenameFolder={showPromptToRenameFolder}
           />
         )
       })}
