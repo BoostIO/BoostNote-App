@@ -262,9 +262,6 @@ const StorageNavigatorFragment = ({
           },
         },
         {
-          type: MenuTypes.Separator,
-        },
-        {
           type: MenuTypes.Normal,
           label: t('folder.create'),
           onClick: async () => {
@@ -316,6 +313,12 @@ const StorageNavigatorFragment = ({
         active={allNotesPageIsActive}
         onClick={() => push(allNotesPagePathname)}
         onContextMenu={openAllNotesContextMenu}
+        control={
+          <NavigatorButton
+            iconPath={mdiPlus}
+            onClick={openAllNotesContextMenu}
+          />
+        }
       />
       <FolderListFragment
         storage={storage}
