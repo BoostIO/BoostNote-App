@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
@@ -15,6 +15,7 @@ import {
   mdiBookOpen,
   mdiTuneVertical,
   mdiSync,
+  mdiPlus,
 } from '@mdi/js'
 import FolderListFragment from './FolderListFragment'
 import TagListFragment from './TagListFragment'
@@ -51,30 +52,51 @@ const StorageNavigatorFragment = ({
   const user = useFirstUser()
   const { popup } = useContextMenu()
 
-  const showPromptToCreateFolder = (folderPathname: string) => {
-    prompt({
-      title: 'Create a Folder',
-      message: 'Enter the path where do you want to create a folder',
-      iconType: DialogIconTypes.Question,
-      defaultValue: folderPathname === '/' ? '/' : `${folderPathname}/`,
-      submitButtonLabel: 'Create Folder',
-      onClose: async (value: string | null) => {
-        if (value == null) {
-          return
-        }
-        if (value.endsWith('/')) {
-          value = value.slice(0, value.length - 1)
-        }
-        await createFolder(storage.id, value)
+  const createNoteInFolderAndRedirect = useCallback(
+    async (folderPathname: string) => {
+      const note = await createNote(storage.id, {
+        folderPathname,
+      })
+      push(`/app/storages/${storage.id}/notes${folderPathname}/${note!._id}`)
+      dispatchNoteDetailFocusTitleInputEvent()
+    },
+    [storage.id, createNote, push]
+  )
 
-        push(`/app/storages/${storage.id}/notes${value}`)
+  const showPromptToCreateFolder = useCallback(
+    (folderPathname: string) => {
+      prompt({
+        title: 'Create a Folder',
+        message: 'Enter the path where do you want to create a folder',
+        iconType: DialogIconTypes.Question,
+        defaultValue: folderPathname === '/' ? '/' : `${folderPathname}/`,
+        submitButtonLabel: 'Create Folder',
+        onClose: async (value: string | null) => {
+          if (value == null) {
+            return
+          }
+          if (value.endsWith('/')) {
+            value = value.slice(0, value.length - 1)
+          }
+          await createFolder(storage.id, value)
 
-        // Open folder item
-        openSideNavFolderItemRecursively(storage.id, value)
-        checkFeature('createFolder')
-      },
-    })
-  }
+          push(`/app/storages/${storage.id}/notes${value}`)
+
+          openSideNavFolderItemRecursively(storage.id, value)
+          checkFeature('createFolder')
+        },
+      })
+    },
+    [
+      storage.id,
+      prompt,
+      createFolder,
+      push,
+      openSideNavFolderItemRecursively,
+      checkFeature,
+    ]
+  )
+
   const showPromptToRenameFolder = (folderPathname: string) => {
     prompt({
       title: t('folder.rename'),
@@ -101,8 +123,7 @@ const StorageNavigatorFragment = ({
       },
     })
   }
-
-  const sync = () => {
+  const sync = useCallback(() => {
     if (user == null) {
       pushMessage({
         title: 'No User Error',
@@ -111,7 +132,7 @@ const StorageNavigatorFragment = ({
       return
     }
     syncStorage(storage.id)
-  }
+  }, [user, storage.id, pushMessage, syncStorage])
 
   const allNotesPagePathname = `/app/storages/${storage.id}/notes`
   const allNotesPageIsActive = currentPathname === allNotesPagePathname
@@ -122,105 +143,138 @@ const StorageNavigatorFragment = ({
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
   const attachmentsPageIsActive = currentPathname === attachmentsPagePathname
 
-  const openContextMenu: React.MouseEventHandler = (event) => {
-    event.preventDefault()
-    popup(event, [
-      {
-        type: MenuTypes.Normal,
-        label: 'New Note',
-        onClick: async () => {
-          const note = await createNote(storage.id, {
-            folderPathname: '/',
-          })
-          push(`/app/storages/${storage.id}/notes/${note!._id}`)
-          dispatchNoteDetailFocusTitleInputEvent()
+  const openContextMenu: MouseEventHandler = useCallback(
+    (event) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: async () => {
+            createNoteInFolderAndRedirect('/')
+          },
         },
-      },
-      {
-        type: MenuTypes.Normal,
-        label: t('folder.create'),
-        onClick: async () => {
-          showPromptToCreateFolder('/')
+        {
+          type: MenuTypes.Normal,
+          label: t('folder.create'),
+          onClick: async () => {
+            showPromptToCreateFolder('/')
+          },
         },
-      },
-      {
-        type: MenuTypes.Separator,
-      },
-      {
-        type: MenuTypes.Normal,
-        label: 'Sync Storage',
-        onClick: sync,
-      },
-      {
-        type: MenuTypes.Normal,
-        label: t('storage.rename'),
-        onClick: async () => {
-          prompt({
-            title: `Rename "${storage.name}" storage`,
-            message: t('storage.renameMessage'),
-            iconType: DialogIconTypes.Question,
-            defaultValue: storage.name,
-            submitButtonLabel: t('storage.rename'),
-            onClose: async (value: string | null) => {
-              if (value == null) return
-              await renameStorage(storage.id, value)
-            },
-          })
+        {
+          type: MenuTypes.Separator,
         },
-      },
-      {
-        type: MenuTypes.Normal,
-        label: t('storage.remove'),
-        onClick: async () => {
-          messageBox({
-            title: `Remove "${storage.name}" storage`,
-            message: t('storage.removeMessage'),
-            iconType: DialogIconTypes.Warning,
-            buttons: [t('storage.remove'), t('general.cancel')],
-            defaultButtonIndex: 0,
-            cancelButtonIndex: 1,
-            onClose: (value: number | null) => {
-              if (value === 0) {
-                removeStorage(storage.id)
-              }
-            },
-          })
+        {
+          type: MenuTypes.Normal,
+          label: 'Sync Storage',
+          onClick: sync,
         },
-      },
-      {
-        type: MenuTypes.Normal,
-        label: 'Configure Storage',
-        onClick: () => push(`/app/storages/${storage.id}/settings`),
-      },
-    ])
-  }
+        {
+          type: MenuTypes.Normal,
+          label: t('storage.rename'),
+          onClick: async () => {
+            prompt({
+              title: `Rename "${storage.name}" storage`,
+              message: t('storage.renameMessage'),
+              iconType: DialogIconTypes.Question,
+              defaultValue: storage.name,
+              submitButtonLabel: t('storage.rename'),
+              onClose: async (value: string | null) => {
+                if (value == null) return
+                await renameStorage(storage.id, value)
+              },
+            })
+          },
+        },
+        {
+          type: MenuTypes.Normal,
+          label: t('storage.remove'),
+          onClick: async () => {
+            messageBox({
+              title: `Remove "${storage.name}" storage`,
+              message: t('storage.removeMessage'),
+              iconType: DialogIconTypes.Warning,
+              buttons: [t('storage.remove'), t('general.cancel')],
+              defaultButtonIndex: 0,
+              cancelButtonIndex: 1,
+              onClose: (value: number | null) => {
+                if (value === 0) {
+                  removeStorage(storage.id)
+                }
+              },
+            })
+          },
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Configure Storage',
+          onClick: () => push(`/app/storages/${storage.id}/settings`),
+        },
+      ])
+    },
+    [
+      storage.id,
+      storage.name,
+      popup,
+      prompt,
+      messageBox,
+      createNoteInFolderAndRedirect,
+      showPromptToCreateFolder,
+      sync,
+      t,
+      push,
+      renameStorage,
+      removeStorage,
+    ]
+  )
 
-  const openAllNotesContextMenu: React.MouseEventHandler = (event) => {
-    event.preventDefault()
-    popup(event, [
-      {
-        type: MenuTypes.Normal,
-        label: 'New Note',
-        onClick: async () => {
-          const note = await createNote(storage.id, {
-            folderPathname: '/',
-          })
-          push(`/app/storages/${storage.id}/notes/${note!._id}`)
-          dispatchNoteDetailFocusTitleInputEvent()
+  const openNewContextMenu: MouseEventHandler = useCallback(
+    (event) => {
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: async () => {
+            createNoteInFolderAndRedirect('/')
+          },
         },
-      },
-      {
-        type: MenuTypes.Separator,
-      },
-      {
-        type: MenuTypes.Normal,
-        label: t('folder.create'),
-        onClick: async () => {
-          showPromptToCreateFolder('/')
+        {
+          type: MenuTypes.Normal,
+          label: 'New Folder',
+          onClick: async () => {
+            showPromptToCreateFolder('/')
+          },
         },
-      },
-    ])
-  }
+      ])
+    },
+    [popup, createNoteInFolderAndRedirect, showPromptToCreateFolder]
+  )
+
+  const openAllNotesContextMenu: MouseEventHandler = useCallback(
+    (event) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: async () => {
+            createNoteInFolderAndRedirect('/')
+          },
+        },
+        {
+          type: MenuTypes.Separator,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: t('folder.create'),
+          onClick: async () => {
+            showPromptToCreateFolder('/')
+          },
+        },
+      ])
+    },
+    [t, popup, createNoteInFolderAndRedirect, showPromptToCreateFolder]
+  )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
     storage.attachmentMap,
@@ -239,6 +293,7 @@ const StorageNavigatorFragment = ({
         onContextMenu={openContextMenu}
         control={
           <>
+            <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />
             {storage.cloudStorage != null && (
               <NavigatorButton
                 active={syncing}
