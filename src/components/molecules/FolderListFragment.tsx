@@ -76,14 +76,14 @@ const FolderListFragment = ({
           },
         },
         {
-          type: MenuTypes.Separator,
-        },
-        {
           type: MenuTypes.Normal,
-          label: t('folder.create'),
+          label: 'New Subfolder',
           onClick: async () => {
             showPromptToCreateFolder(folderPathname)
           },
+        },
+        {
+          type: MenuTypes.Separator,
         },
         {
           type: MenuTypes.Normal,
