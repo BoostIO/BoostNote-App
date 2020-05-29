@@ -322,6 +322,7 @@ const StorageNavigatorFragment = ({
       />
       <FolderListFragment
         storage={storage}
+        createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
         showPromptToCreateFolder={showPromptToCreateFolder}
         showPromptToRenameFolder={showPromptToRenameFolder}
       />
