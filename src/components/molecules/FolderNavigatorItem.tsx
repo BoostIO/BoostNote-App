@@ -7,7 +7,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
-import { mdiFolderOpen, mdiFolder, mdiDotsVertical } from '@mdi/js'
+import { mdiFolderOpen, mdiFolder, mdiDotsVertical, mdiPlus } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
 
@@ -141,6 +141,55 @@ const FolderNavigatorItem = ({
     ]
   )
 
+  const openPlusContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Note',
+          onClick: async () => {
+            createNoteInFolderAndRedirect(folderPathname)
+          },
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'New Subfolder',
+          onClick: async () => {
+            showPromptToCreateFolder(folderPathname)
+          },
+        },
+      ])
+    },
+    [
+      folderPathname,
+      popup,
+      createNoteInFolderAndRedirect,
+      showPromptToCreateFolder,
+    ]
+  )
+
+  const openMoreContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: t('folder.rename'),
+          enabled: folderPathname !== '/',
+          onClick: showRenamePrompt,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: t('folder.remove'),
+          enabled: folderPathname !== '/',
+          onClick: showFolderRemoveMessageBox,
+        },
+      ])
+    },
+    [folderPathname, popup, t, showRenamePrompt, showFolderRemoveMessageBox]
+  )
+
   const handleDrop = async (event: React.DragEvent) => {
     const transferrableNoteData = getTransferrableNoteData(event)
     if (transferrableNoteData == null) {
@@ -201,7 +250,13 @@ const FolderNavigatorItem = ({
       onContextMenu={openContextMenu}
       onFoldButtonClick={toggleFolded}
       control={
-        <NavigatorButton onClick={openContextMenu} iconPath={mdiDotsVertical} />
+        <>
+          <NavigatorButton onClick={openPlusContextMenu} iconPath={mdiPlus} />
+          <NavigatorButton
+            onClick={openMoreContextMenu}
+            iconPath={mdiDotsVertical}
+          />
+        </>
       }
       onDragOver={preventDefault}
       onDrop={handleDrop}
