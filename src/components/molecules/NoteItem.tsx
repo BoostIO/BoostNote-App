@@ -1,27 +1,38 @@
 import React, { useMemo, useCallback } from 'react'
-import Link from '../atoms/Link'
 import styled from '../../lib/styled/styled'
 import {
   borderBottom,
   uiTextColor,
   secondaryBackgroundColor,
   inputStyle,
+  textOverflow,
 } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../lib/dnd'
 import HighlightText from '../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../lib/styled'
-import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
+import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { NoteDoc } from '../../lib/db/types'
+import { useRouter } from '../../lib/router'
 
-export const StyledNoteListItem = styled.div`
+const Container = styled.button`
   margin: 0;
   border-left: 2px solid transparent;
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
+  text-align: left;
+  padding: 6px 10px 6px 8px;
   ${uiTextColor}
+
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0 0 0 2px;
+
   &.active,
   &:active,
   &:focus,
@@ -29,7 +40,7 @@ export const StyledNoteListItem = styled.div`
     ${secondaryBackgroundColor}
   }
   &.active {
-    border-left: 2px solid ${({ theme }) => theme.primaryColor};
+    border-left-color: ${({ theme }) => theme.primaryColor};
   }
   ${borderBottom}
   transition: 200ms background-color;
@@ -41,52 +52,42 @@ export const StyledNoteListItem = styled.div`
     transform-origin: top left;
     animation: ${scaleAndTransformFromLeft} 0.2s linear forwards;
   }
+`
 
-  a {
-    text-decoration: none;
-  }
+const TitleSection = styled.div`
+  font-size: 17px;
+  font-weight: bold;
+  width: 100%;
+  ${textOverflow}
+`
 
-  .container {
-    padding: 10px 12px;
-  }
+const DateSection = styled.div`
+  font-size: 10px;
+  margin-top: 5px;
+  font-style: italic;
+  ${textOverflow}
+`
 
-  .title {
-    font-size: 18px;
-    margin-bottom: 6px;
-    font-weight: 500;
-  }
+const PreviewSection = styled.div`
+  margin-top: 6px;
+  overflow: hidden;
+`
 
-  .date {
-    font-size: 10px;
-    font-style: italic;
-    margin-bottom: 6px;
-  }
+const TagListSection = styled.div`
+  margin-top: 6px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+`
 
-  .preview {
-    font-size: 13px;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-
-  .tag-area,
-  .title {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .tag {
-    font-size: 12px;
-    ${inputStyle}
-    margin-right: 5px;
-    padding: 2px 8px;
-    border-radius: 13px;
-    display: inline-block;
-  }
+const TagListItem = styled.div`
+  font-size: 12px;
+  ${inputStyle}
+  margin-right: 5px;
+  padding: 2px 8px;
+  border-radius: 13px;
+  display: inline-block;
+  ${textOverflow}
 `
 
 type NoteItemProps = {
@@ -99,7 +100,7 @@ type NoteItemProps = {
   focusList: () => void
 }
 
-export default ({
+const NoteItem = ({
   storageId,
   note,
   active,
@@ -109,111 +110,94 @@ export default ({
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
-  const { createNote, trashNote, updateNote, purgeNote, untrashNote } = useDb()
+  const { createNote, trashNote, purgeNote, untrashNote } = useDb()
+  const { push } = useRouter()
 
   const { messageBox } = useDialog()
   const { t } = useTranslation()
 
-  const contextMenuCallback = useCallback(
+  const openUntrashedNoteContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation()
       event.preventDefault()
 
-      const menuItems: MenuItem[] = note.trashed
-        ? [
-            {
-              type: MenuTypes.Normal,
-              label: t('note.restore'),
-              onClick: async () => {
-                untrashNote(storageId, note._id)
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              label: t('note.delete'),
-              onClick: async () => {
-                if (!note.trashed) {
-                  trashNote(storageId, note._id)
-                } else {
-                  messageBox({
-                    title: t('note.delete2'),
-                    message: t('note.deleteMessage'),
-                    iconType: DialogIconTypes.Warning,
-                    buttons: [t('note.delete2'), t('general.cancel')],
-                    defaultButtonIndex: 0,
-                    cancelButtonIndex: 1,
-                    onClose: (value: number | null) => {
-                      if (value === 0) {
-                        purgeNote(storageId, note._id)
-                      }
-                    },
-                  })
-                }
-              },
-            },
-          ]
-        : [
-            {
-              type: MenuTypes.Normal,
-              label: t('note.duplicate'),
-              onClick: async () => {
-                createNote(storageId, {
-                  title: note.title,
-                  content: note.content,
-                  folderPathname: note.folderPathname,
-                  tags: note.tags,
-                  bookmarked: false,
-                  data: note.data,
-                })
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              label: t('note.delete'),
-              onClick: async () => {
-                if (!note.trashed) {
-                  trashNote(storageId, note._id)
-                } else {
-                  messageBox({
-                    title: t('note.delete2'),
-                    message: t('note.deleteMessage'),
-                    iconType: DialogIconTypes.Warning,
-                    buttons: [t('note.delete2'), t('general.cancel')],
-                    defaultButtonIndex: 0,
-                    cancelButtonIndex: 1,
-                    onClose: (value: number | null) => {
-                      if (value === 0) {
-                        purgeNote(storageId, note._id)
-                      }
-                    },
-                  })
-                }
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              label: note.bookmarked ? t('bookmark.remove') : t('bookmark.add'),
-              onClick: async () => {
-                note.bookmarked = !note.bookmarked
-                updateNote(storageId, note._id, note)
-              },
-            },
-          ]
-
-      popup(event, menuItems)
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Duplicate Note',
+          onClick: async () => {
+            createNote(storageId, {
+              title: note.title,
+              content: note.content,
+              folderPathname: note.folderPathname,
+              tags: note.tags,
+              data: note.data,
+            })
+          },
+        },
+        { type: MenuTypes.Separator },
+        {
+          type: MenuTypes.Normal,
+          label: 'Trash Note',
+          onClick: async () => {
+            if (note.trashed) {
+              return
+            }
+            trashNote(storageId, note._id)
+          },
+        },
+      ])
     },
     [
-      storageId,
       popup,
       createNote,
-      note,
-      updateNote,
+      storageId,
+      note.title,
+      note.content,
+      note.folderPathname,
+      note.tags,
+      note.data,
+      note.trashed,
+      note._id,
       trashNote,
-      messageBox,
-      purgeNote,
-      t,
-      untrashNote,
     ]
+  )
+
+  const openTrashedNoteContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation()
+      event.preventDefault()
+
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Restore Note',
+          onClick: async () => {
+            untrashNote(storageId, note._id)
+          },
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Delete Note',
+          onClick: async () => {
+            messageBox({
+              title: 'Delete Note',
+              message: t('note.deleteMessage'),
+              iconType: DialogIconTypes.Warning,
+              buttons: [t('note.delete2'), t('general.cancel')],
+              defaultButtonIndex: 0,
+              cancelButtonIndex: 1,
+              onClose: (value: number | null) => {
+                if (value === 0) {
+                  purgeNote(storageId, note._id)
+                }
+              },
+            })
+          },
+        },
+      ])
+    },
+    [storageId, note._id, t, popup, untrashNote, purgeNote, messageBox]
   )
 
   const contentPreview = useMemo(() => {
@@ -238,43 +222,49 @@ export default ({
     return trimmedContent.split('\n').shift() || t('note.empty')
   }, [note.content, search, t])
 
-  const handleDragStart = useCallback(
+  const loadTransferrableNoteData = useCallback(
     (event: React.DragEvent) => {
       setTransferrableNoteData(event, storageId, note)
     },
     [storageId, note]
   )
 
+  const navigateToNote = useCallback(() => {
+    push(href)
+  }, [push, href])
+
   return (
-    <StyledNoteListItem
-      onContextMenu={contextMenuCallback}
+    <Container
+      onContextMenu={
+        note.trashed ? openTrashedNoteContextMenu : openUntrashedNoteContextMenu
+      }
       className={cc([active && 'active', recentlyCreated && 'new'])}
-      onDragStart={handleDragStart}
+      onDragStart={loadTransferrableNoteData}
       draggable={true}
+      onClick={navigateToNote}
     >
-      <Link href={href}>
-        <div className='container'>
-          <div className='title'>
-            <HighlightText text={note.title} search={search} />
-          </div>
-          {note.title.length === 0 && (
-            <div className='title'>{t('note.noTitle')}</div>
-          )}
-          <div className='date'>
-            {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
-          </div>
-          <div className='preview'>{contentPreview}</div>
-          {note.tags.length > 0 && (
-            <div className='tag-area'>
-              {note.tags.map((tag) => (
-                <span className='tag' key={tag}>
-                  <HighlightText text={tag} search={search} />
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </Link>
-    </StyledNoteListItem>
+      <TitleSection>
+        {note.title.length === 0 ? (
+          t('note.noTitle')
+        ) : (
+          <HighlightText text={note.title} search={search} />
+        )}
+      </TitleSection>
+      <DateSection>
+        {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
+      </DateSection>
+      <PreviewSection>{contentPreview}</PreviewSection>
+      {note.tags.length > 0 && (
+        <TagListSection>
+          {note.tags.map((tag) => (
+            <TagListItem key={tag}>
+              <HighlightText text={tag} search={search} />
+            </TagListItem>
+          ))}
+        </TagListSection>
+      )}
+    </Container>
   )
 }
+
+export default NoteItem
