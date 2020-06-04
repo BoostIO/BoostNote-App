@@ -1,6 +1,5 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react'
 import NoteNavigator from '../organisms/NoteNavigator'
-import styled from '../../lib/styled'
 import NoteDetail from '../organisms/NoteDetail'
 import {
   useRouteParams,
