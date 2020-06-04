@@ -26,6 +26,7 @@ export type GeneralLanguageOptions =
   | 'zh-CN'
   | 'zh-HK'
   | 'zh-TW'
+export type GeneralNoteListViewOptions = 'default' | 'compact'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -36,6 +37,7 @@ export interface Preferences {
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.noteSorting': NoteSortingOptions
+  'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
   'general.enableAutoSync': boolean
 
@@ -77,6 +79,7 @@ const basePreferences: Preferences = {
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
   'general.enableAutoSync': true,
+  'general.noteListView': 'default',
 
   // Editor
   'editor.theme': 'material-darker',

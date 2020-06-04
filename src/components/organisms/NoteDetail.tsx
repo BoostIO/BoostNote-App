@@ -14,8 +14,6 @@ import {
   textColor,
   borderBottom,
   borderRight,
-  uiTextColor,
-  PrimaryTextColor,
   backgroundColor,
 } from '../../lib/styled/styleFunctions'
 import { getFileList } from '../../lib/dnd'
@@ -31,109 +29,37 @@ const StyledNoteDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  .breadCrumbs {
-    -webkit-app-region: drag;
-    display: block;
-    width: 100%;
-    height: 25px;
-    font-size: 14px;
-    padding: 5px 10px;
-    overflow: hidden;
+`
 
-    .wrapper {
-      display: block;
-      position: relative;
-      white-space: nowrap;
-      padding-bottom: 16px;
-      overflow-x: scroll;
-      width: 100%;
-    }
+const TitleSection = styled.div`
+  display: flex;
+  height: 50px;
+  border-width: 0 0 1px;
+  ${borderBottom}
 
-    .separator {
-      ${uiTextColor}
-      display: inline-block;
-    }
-
-    .folderLink {
-      display: inline-block;
-      padding: 0 9px;
-      cursor: pointer;
-      ${uiTextColor}
-
-      &:first-of-type {
-        padding-left: 0;
-      }
-
-      &.active,
-      &:hover {
-        ${PrimaryTextColor}
-      }
-    }
-  }
-  .titleSection {
-    display: flex;
-    height: 50px;
-    border-width: 0 0 1px;
-    ${borderBottom}
-
-    input {
-      font-size: 24px;
-      border: none;
-      height: 100%;
-      padding: 0 12px;
-      flex: 1;
-      background-color: transparent;
-      ${textColor}
-    }
-  }
-
-  .contentSection {
+  input {
+    font-size: 24px;
+    border: none;
+    height: 100%;
+    padding: 0 12px;
     flex: 1;
-    overflow: hidden;
-    position: relative;
-    .editor .CodeMirror {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .MarkdownPreviewer {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
-    .splitLeft {
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      ${borderRight}
-    }
-    .splitRight {
-      position: absolute;
-      left: 50%;
-      width: 50%;
-      height: 100%;
-    }
-  }
-
-  .tagInput {
     background-color: transparent;
     border: none;
     word-break: keep-all;
     ${textColor}
-    margin-left: 4px;
   }
+`
 
-  .buttonsWrapper {
-    button + button {
-      margin-left: 8px;
-    }
+const ContentSection = styled.div`
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  .editor .CodeMirror {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .tagsWrapper {
@@ -454,15 +380,15 @@ export default class NoteDetail extends React.Component<
           appendTagByName={this.appendTagByName}
           removeTagByName={this.removeTagByName}
         />
-        <div className='titleSection'>
+        <TitleSection>
           <input
             ref={this.titleInputRef}
             value={this.state.title}
             onChange={this.updateTitle}
             placeholder='Title'
           />
-        </div>
-        <div className='contentSection'>
+        </TitleSection>
+        <ContentSection>
           {viewMode === 'preview' ? (
             markdownPreviewer
           ) : viewMode === 'split' ? (
@@ -473,7 +399,7 @@ export default class NoteDetail extends React.Component<
           ) : (
             codeEditor
           )}
-        </div>
+        </ContentSection>
       </StyledNoteDetailContainer>
     )
   }

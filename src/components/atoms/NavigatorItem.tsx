@@ -83,6 +83,7 @@ const Control = styled.div`
   top: 5px;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
+  display: flex;
 `
 
 const IconContainer = styled.div`
