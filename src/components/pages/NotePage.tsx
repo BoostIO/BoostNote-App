@@ -13,7 +13,6 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import Image from '../atoms/Image'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -30,59 +29,7 @@ import {
   NoteSortingOptions,
 } from '../../lib/sort'
 import { values } from '../../lib/db/utils'
-
-export const StyledNoteDetailNoNote = styled.div`
-  text-align: center;
-  margin-top: 13%;
-  color: #a9a9a9;
-
-  img {
-    width: 310px;
-    max-width: 100%;
-    padding: 10px 40px;
-  }
-
-  section {
-    margin: auto;
-    display: flex;
-    width: 70%;
-    text-align: center;
-
-    div {
-      text-align: center;
-      margin: 0 auto;
-      display: block;
-    }
-  }
-
-  h2 {
-    font-weight: normal;
-
-    span {
-      margin: 5px auto;
-      padding: 5px 10px;
-      width: max-content;
-      background: #333;
-      border-radius: 8px;
-      box-shadow: 0 4px #404040;
-    }
-  }
-  h3 {
-    margin: 20px auto;
-    font-weight: normal;
-  }
-  h4 {
-    margin: 0;
-    font-weight: normal;
-  }
-
-  @media only screen and (max-width: 970px) {
-    section {
-      width: 100%;
-      display: block;
-    }
-  }
-`
+import IdleNoteDetail from '../organisms/IdleNoteDetail'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -343,27 +290,7 @@ const NotePage = ({ storage }: NotePageProps) => {
       }
       right={
         currentNote == null ? (
-          <StyledNoteDetailNoNote>
-            <Image src={'/app/static/logo_index.svg'} />
-            <h3>{t('note.createkeymessage1')}</h3>
-            {/* Might need to be changed if custom keybinds is implemented */}
-            <section>
-              <div>
-                {/* 'note.createKey' differs in locales: N/Enter */}
-                <h2>
-                  <span>Ctrl</span> + <span>{t('note.createKey')}</span>
-                </h2>
-                <h4>{t('note.createKeyWinLin')}</h4>
-              </div>
-              <h3>{t('note.createKeyOr')}</h3>
-              <div>
-                <h2>
-                  <span>⌘</span> + <span>{t('note.createKey')}</span>
-                </h2>
-                <h4>{t('note.createKeyMac')}</h4>
-              </div>
-            </section>
-          </StyledNoteDetailNoNote>
+          <IdleNoteDetail />
         ) : (
           <NoteDetail
             storage={storage}
