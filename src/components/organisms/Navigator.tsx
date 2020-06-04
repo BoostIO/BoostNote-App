@@ -25,6 +25,7 @@ const TopControl = styled.div`
   align-items: center;
   height: 40px;
   ${borderBottom}
+  -webkit-app-region: drag;
 `
 
 const Empty = styled.button`

@@ -27,6 +27,7 @@ import { usePreviewStyle } from '../../lib/preview'
 const NoteDetailToolbarContainer = styled.div`
   display: flex;
   height: 40px;
+  -webkit-app-region: drag;
   padding: 0 8px;
   ${borderBottom}
   align-items: center;
