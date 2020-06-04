@@ -7,7 +7,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiPlus, mdiHammerWrench } from '@mdi/js'
+import { mdiPlus, mdiHammerWrench, mdiBookPlusMultiple } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
 import { usePathnameWithoutNoteId } from '../../lib/router'
@@ -97,7 +97,7 @@ const Navigator = () => {
       <TopControl onContextMenu={openSideNavContextMenu}>
         <Spacer />
         <NavigatorButton
-          iconPath={mdiPlus}
+          iconPath={mdiBookPlusMultiple}
           title='New Storage'
           active={pathname === '/app/storages'}
           onClick={() => push('/app/storages')}
