@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useRef,
-  ChangeEventHandler,
-  ChangeEvent,
-} from 'react'
+import React, { useCallback, useRef } from 'react'
 import NoteItem from '../molecules/NoteItem'
 import styled from '../../lib/styled'
 import {
@@ -22,6 +17,8 @@ import { mdiPlus, mdiMagnify } from '@mdi/js'
 import { NoteDoc } from '../../lib/db/types'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
+import { usePreferences } from '../../lib/preferences'
+import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 
 const NoteNavigatorContainer = styled.div`
   display: flex;
@@ -162,8 +159,21 @@ const NoteNavigator = ({
   trashNote,
   purgeNote,
 }: NoteNavigatorProps) => {
+  const { preferences, setPreferences } = usePreferences()
   const { t } = useTranslation()
-  const updateSearchInput: ChangeEventHandler<HTMLInputElement> = useCallback(
+  const { popup } = useContextMenu()
+
+  const noteListing = preferences['general.noteListing']
+
+  const applyDefaultNoteListing = useCallback(() => {
+    setPreferences({ ['general.noteListing']: 'default' })
+  }, [setPreferences])
+
+  const applyCompactListing = useCallback(() => {
+    setPreferences({ ['general.noteListing']: 'compact' })
+  }, [setPreferences])
+
+  const updateSearchInput: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
       setSearchInput(event.target.value)
     },
@@ -216,8 +226,8 @@ const NoteNavigator = ({
     focusList()
   }, [trashNote, purgeNote, currentNote, storageId, focusList])
 
-  const handleListKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
+  const handleListKeyDown: React.KeyboardEventHandler = useCallback(
+    (event) => {
       switch (event.key) {
         case 'Delete':
           if (osName !== 'macos') {
@@ -232,6 +242,41 @@ const NoteNavigator = ({
       }
     },
     [trashOrPurgeCurrentNote]
+  )
+
+  const openListContextMenu: React.MouseEventHandler = useCallback(
+    (event) => {
+      event.preventDefault()
+
+      const menuItems: MenuItem[] = [
+        {
+          type: MenuTypes.Normal,
+          label: 'Default View',
+          onClick: applyDefaultNoteListing,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Compact View',
+          onClick: applyCompactListing,
+        },
+      ]
+
+      if (createNote != null) {
+        menuItems.unshift(
+          {
+            type: MenuTypes.Normal,
+            label: 'New Note',
+            onClick: createNote,
+          },
+          {
+            type: MenuTypes.Separator,
+          }
+        )
+      }
+
+      popup(event, menuItems)
+    },
+    [createNote, popup, applyDefaultNoteListing, applyCompactListing]
   )
 
   return (
@@ -256,14 +301,19 @@ const NoteNavigator = ({
       <NoteListControl>
         <NoteSortingSelect
           value={noteSorting}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
             setNoteSorting(event.target.value as NoteSortingOptions)
           }}
         >
           <NoteSortingOptionsFragment />
         </NoteSortingSelect>
       </NoteListControl>
-      <NoteList tabIndex={0} ref={listRef} onKeyDown={handleListKeyDown}>
+      <NoteList
+        tabIndex={0}
+        ref={listRef}
+        onKeyDown={handleListKeyDown}
+        onContextMenu={openListContextMenu}
+      >
         {notes.map((note) => {
           const noteIsCurrentNote = note._id === currentNote?._id
 
@@ -277,6 +327,9 @@ const NoteNavigator = ({
                 focusList={focusList}
                 search={search}
                 recentlyCreated={lastCreatedNoteId === note._id}
+                noteListing={noteListing}
+                applyDefaultNoteListing={applyDefaultNoteListing}
+                applyCompactListing={applyCompactListing}
               />
             </li>
           )
