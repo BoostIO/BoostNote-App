@@ -111,6 +111,10 @@ class ContextMenu extends React.Component<ContextMenuProps> {
     return true
   }
 
+  preventDefault(event: React.MouseEvent) {
+    event.preventDefault()
+  }
+
   render() {
     const { closed, menuItems, position, id } = this.props.contextMenu
     const windowWith =
@@ -129,6 +133,7 @@ class ContextMenu extends React.Component<ContextMenuProps> {
           left: position.x + 130 < windowWith ? position.x : windowWith - 150,
           top: position.y,
         }}
+        onContextMenu={this.preventDefault}
       >
         {menuItems.map((menu, index) => {
           const key = `${id}-${index}`

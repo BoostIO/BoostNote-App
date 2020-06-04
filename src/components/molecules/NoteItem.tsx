@@ -4,7 +4,6 @@ import {
   borderBottom,
   uiTextColor,
   secondaryBackgroundColor,
-  inputStyle,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
@@ -18,6 +17,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { NoteDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
+import { GeneralNoteListing } from '../../lib/preferences'
 
 const Container = styled.button`
   margin: 0;
@@ -26,7 +26,7 @@ const Container = styled.button`
   width: 100%;
   background-color: transparent;
   text-align: left;
-  padding: 6px 10px 6px 8px;
+  padding: 8px 10px 8px 8px;
   ${uiTextColor}
 
   border-color: transparent;
@@ -70,7 +70,7 @@ const DateSection = styled.div`
 
 const PreviewSection = styled.div`
   margin-top: 6px;
-  overflow: hidden;
+  ${textOverflow}
 `
 
 const TagListSection = styled.div`
@@ -78,15 +78,18 @@ const TagListSection = styled.div`
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
+  display: flex;
 `
 
 const TagListItem = styled.div`
+  height: 20px;
+  padding: 0 8px;
+  margin-right: 2px;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.textColor};
   font-size: 12px;
-  ${inputStyle}
-  margin-right: 5px;
-  padding: 2px 8px;
-  border-radius: 13px;
-  display: inline-block;
+  line-height: 20px;
   ${textOverflow}
 `
 
@@ -98,6 +101,9 @@ type NoteItemProps = {
   search: string
   basePathname: string
   focusList: () => void
+  noteListing: GeneralNoteListing
+  applyDefaultNoteListing: () => void
+  applyCompactListing: () => void
 }
 
 const NoteItem = ({
@@ -107,6 +113,9 @@ const NoteItem = ({
   basePathname,
   search,
   recentlyCreated,
+  noteListing,
+  applyDefaultNoteListing,
+  applyCompactListing,
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
@@ -146,6 +155,17 @@ const NoteItem = ({
             trashNote(storageId, note._id)
           },
         },
+        { type: MenuTypes.Separator },
+        {
+          type: MenuTypes.Normal,
+          label: 'Default View',
+          onClick: applyDefaultNoteListing,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Compact View',
+          onClick: applyCompactListing,
+        },
       ])
     },
     [
@@ -160,6 +180,8 @@ const NoteItem = ({
       note.trashed,
       note._id,
       trashNote,
+      applyDefaultNoteListing,
+      applyCompactListing,
     ]
   )
 
@@ -176,6 +198,7 @@ const NoteItem = ({
             untrashNote(storageId, note._id)
           },
         },
+        { type: MenuTypes.Separator },
         {
           type: MenuTypes.Normal,
           label: 'Delete Note',
@@ -195,9 +218,30 @@ const NoteItem = ({
             })
           },
         },
+        { type: MenuTypes.Separator },
+        {
+          type: MenuTypes.Normal,
+          label: 'Default View',
+          onClick: applyDefaultNoteListing,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Compact View',
+          onClick: applyCompactListing,
+        },
       ])
     },
-    [storageId, note._id, t, popup, untrashNote, purgeNote, messageBox]
+    [
+      storageId,
+      note._id,
+      t,
+      popup,
+      untrashNote,
+      purgeNote,
+      messageBox,
+      applyDefaultNoteListing,
+      applyCompactListing,
+    ]
   )
 
   const contentPreview = useMemo(() => {
@@ -250,18 +294,22 @@ const NoteItem = ({
           <HighlightText text={note.title} search={search} />
         )}
       </TitleSection>
-      <DateSection>
-        {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
-      </DateSection>
-      <PreviewSection>{contentPreview}</PreviewSection>
-      {note.tags.length > 0 && (
-        <TagListSection>
-          {note.tags.map((tag) => (
-            <TagListItem key={tag}>
-              <HighlightText text={tag} search={search} />
-            </TagListItem>
-          ))}
-        </TagListSection>
+      {noteListing !== 'compact' && (
+        <>
+          <DateSection>
+            {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
+          </DateSection>
+          <PreviewSection>{contentPreview}</PreviewSection>
+          {note.tags.length > 0 && (
+            <TagListSection>
+              {note.tags.map((tag) => (
+                <TagListItem key={tag}>
+                  <HighlightText text={tag} search={search} />
+                </TagListItem>
+              ))}
+            </TagListSection>
+          )}
+        </>
       )}
     </Container>
   )
