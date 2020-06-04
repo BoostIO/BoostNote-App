@@ -3,19 +3,12 @@ import { StorageAttachmentsRouteParams, useRouteParams } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
 import { getFileList } from '../../lib/dnd'
-import { borderBottom } from '../../lib/styled/styleFunctions'
 import AttachmentList from '../organisms/AttachmentList'
+import { mdiPaperclip } from '@mdi/js'
+import PageDraggableHeader from '../atoms/PageDraggableHeader'
 
 const Container = styled.div`
   height: 100%;
-`
-
-const Header = styled.div`
-  height: 40px;
-  padding: 10px;
-  width: 100%;
-  ${borderBottom}
-  -webkit-app-region: drag;
 `
 
 const AttachmentsPage = () => {
@@ -40,7 +33,11 @@ const AttachmentsPage = () => {
         addAttachments(storageId, files)
       }}
     >
-      <Header>Attachments in {storage.name}</Header>
+      <PageDraggableHeader
+        iconPath={mdiPaperclip}
+        label={`Attachments in ${storage.name}`}
+      />
+
       <AttachmentList storage={storage} />
     </Container>
   )
