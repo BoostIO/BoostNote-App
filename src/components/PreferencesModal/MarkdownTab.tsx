@@ -143,15 +143,15 @@ const MarkdownTab = () => {
         </PreviewContainer>
       </Section>
       <Section>
-        <SectionHeader>Include front-matters in markdown export</SectionHeader>
+        <SectionHeader>Export</SectionHeader>
         <SectionControl>
           <FormCheckItem
-            id='checkbox-include-front-matters'
+            id='checkbox-include-front-matter'
             type='checkbox'
-            checked={preferences['export.markdown.includeFrontMatter']}
+            checked={preferences['markdown.includeFrontMatter']}
             onChange={toggleFrontMatterExport}
           >
-            Include front-matters in markdown export
+            Include Front Matter
           </FormCheckItem>
         </SectionControl>
       </Section>
