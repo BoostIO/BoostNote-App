@@ -98,7 +98,10 @@ const NoteDetailToolbar = ({
         {
           type: MenuTypes.Normal,
           label: 'Markdown export',
-          onClick: async () => await exportNoteAsMarkdownFile(note),
+          onClick: async () =>
+            await exportNoteAsMarkdownFile(note, {
+              includeFrontMatter: preferences['markdown.includeFrontMatter'],
+            }),
         },
       ])
     },
