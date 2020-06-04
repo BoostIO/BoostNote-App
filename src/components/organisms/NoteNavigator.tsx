@@ -160,14 +160,14 @@ const NoteNavigator = ({
   const { t } = useTranslation()
   const { popup } = useContextMenu()
 
-  const noteListing = preferences['general.noteListing']
+  const noteListView = preferences['general.noteListView']
 
   const applyDefaultNoteListing = useCallback(() => {
-    setPreferences({ ['general.noteListing']: 'default' })
+    setPreferences({ ['general.noteListView']: 'default' })
   }, [setPreferences])
 
   const applyCompactListing = useCallback(() => {
-    setPreferences({ ['general.noteListing']: 'compact' })
+    setPreferences({ ['general.noteListView']: 'compact' })
   }, [setPreferences])
 
   const updateSearchInput: React.ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -307,7 +307,7 @@ const NoteNavigator = ({
                 focusList={focusList}
                 search={search}
                 recentlyCreated={lastCreatedNoteId === note._id}
-                noteListing={noteListing}
+                noteListView={noteListView}
                 applyDefaultNoteListing={applyDefaultNoteListing}
                 applyCompactListing={applyCompactListing}
               />
