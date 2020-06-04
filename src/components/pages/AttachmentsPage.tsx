@@ -15,6 +15,7 @@ const Header = styled.div`
   padding: 10px;
   width: 100%;
   ${borderBottom}
+  -webkit-app-region: drag;
 `
 
 const AttachmentsPage = () => {
