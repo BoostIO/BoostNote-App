@@ -7,10 +7,7 @@ import {
   flexCenter,
 } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
-import {
-  useGlobalKeyDownHandler,
-  isWithGeneralCtrlKey,
-} from '../../lib/keyboard'
+import { isWithGeneralCtrlKey } from '../../lib/keyboard'
 import { osName } from '../../lib/platform'
 import Icon from '../atoms/Icon'
 import { mdiPlus, mdiMagnify } from '@mdi/js'
@@ -183,32 +180,6 @@ const NoteNavigator = ({
   const listRef = useRef<HTMLUListElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
-  useGlobalKeyDownHandler((e) => {
-    switch (e.key) {
-      case 's':
-        if (isWithGeneralCtrlKey(e) && !e.shiftKey) {
-          searchRef.current!.focus()
-        }
-        break
-      case 'j':
-        if (isWithGeneralCtrlKey(e)) {
-          e.preventDefault()
-          e.stopPropagation()
-          navigateDown()
-        }
-        break
-      case 'k':
-        if (isWithGeneralCtrlKey(e)) {
-          e.preventDefault()
-          e.stopPropagation()
-          navigateUp()
-        }
-        break
-      default:
-        break
-    }
-  })
-
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
@@ -239,9 +210,18 @@ const NoteNavigator = ({
             trashOrPurgeCurrentNote()
           }
           break
+        case 's':
+          searchRef.current!.focus()
+          break
+        case 'j':
+          navigateDown()
+          break
+        case 'k':
+          navigateUp()
+          break
       }
     },
-    [trashOrPurgeCurrentNote]
+    [trashOrPurgeCurrentNote, navigateDown, navigateUp]
   )
 
   const openListContextMenu: React.MouseEventHandler = useCallback(
