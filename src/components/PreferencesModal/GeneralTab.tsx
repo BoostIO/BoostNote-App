@@ -10,6 +10,7 @@ import {
   usePreferences,
   GeneralThemeOptions,
   GeneralLanguageOptions,
+  GeneralNoteListViewOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -52,6 +53,16 @@ const GeneralTab = () => {
     (event) => {
       setPreferences({
         'general.noteSorting': event.target.value as NoteSortingOptions,
+      })
+    },
+    [setPreferences]
+  )
+
+  const selectNoteListView: SelectChangeEventHandler = useCallback(
+    (event) => {
+      setPreferences({
+        'general.noteListView': event.target
+          .value as GeneralNoteListViewOptions,
       })
     },
     [setPreferences]
@@ -138,6 +149,18 @@ const GeneralTab = () => {
             onChange={selectNoteSorting}
           >
             <NoteSortingOptionsFragment />
+          </SectionSelect>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Note List view</SectionHeader>
+        <SectionControl>
+          <SectionSelect
+            value={preferences['general.noteListView']}
+            onChange={selectNoteListView}
+          >
+            <option value='default'>Default</option>
+            <option value='compact'>Compact</option>
           </SectionSelect>
         </SectionControl>
       </Section>
