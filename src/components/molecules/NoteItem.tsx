@@ -17,7 +17,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { NoteDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
-import { GeneralNoteListing } from '../../lib/preferences'
+import { GeneralNoteListViewOptions } from '../../lib/preferences'
 
 const Container = styled.button`
   margin: 0;
@@ -101,7 +101,7 @@ type NoteItemProps = {
   search: string
   basePathname: string
   focusList: () => void
-  noteListing: GeneralNoteListing
+  noteListView: GeneralNoteListViewOptions
   applyDefaultNoteListing: () => void
   applyCompactListing: () => void
 }
@@ -113,7 +113,7 @@ const NoteItem = ({
   basePathname,
   search,
   recentlyCreated,
-  noteListing,
+  noteListView,
   applyDefaultNoteListing,
   applyCompactListing,
 }: NoteItemProps) => {
@@ -294,7 +294,7 @@ const NoteItem = ({
           <HighlightText text={note.title} search={search} />
         )}
       </TitleSection>
-      {noteListing !== 'compact' && (
+      {noteListView !== 'compact' && (
         <>
           <DateSection>
             {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
