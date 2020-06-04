@@ -14,6 +14,7 @@ import { rehypeCodeMirror } from './../components/atoms/MarkdownPreviewer'
 import { downloadString } from './download'
 import { NoteDoc } from './db/types'
 import { Preferences } from './preferences'
+import { filenamify } from './string'
 
 const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] },
@@ -51,7 +52,7 @@ export const exportNoteAsHtmlFile = async (
 
       downloadString(
         file.toString(),
-        `${note.title.toLowerCase().replace(/\s+/g, '-')}.html`,
+        `${filenamify(note.title.toLowerCase().replace(/\s+/g, '-'))}.html`,
         'text/html'
       )
       return
@@ -86,7 +87,7 @@ export const exportNoteAsMarkdownFile = async (
 
       downloadString(
         content,
-        `${note.title.toLowerCase().replace(/\s+/g, '-')}.md`,
+        `${filenamify(note.title.toLowerCase().replace(/\s+/g, '-'))}.md`,
         'text/markdown'
       )
       return
