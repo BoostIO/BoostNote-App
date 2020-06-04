@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '../../lib/styled'
 import Icon from './Icon'
-import { borderBottom } from '../../lib/styled/styleFunctions'
+import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
   display: flex;
@@ -16,6 +16,9 @@ const Container = styled.div`
 
 const IconContainer = styled.div`
   font-size: 18px;
+  width: 24px;
+  height: 24px;
+  ${flexCenter}
 `
 
 const Label = styled.div`
