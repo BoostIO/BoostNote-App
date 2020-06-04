@@ -20,12 +20,12 @@ export default {
     'storage.rename': 'Speicherort umbenennen',
     'storage.renameMessage': 'Name des Speicherorts ändern',
     'storage.remove': 'Speicherort entfernen',
-    'storage.removeMessage': 'Achtung! Alle Notizen dieses Speicherorts werden dauerhaft gelöscht.',
+    'storage.removeMessage':
+      'Achtung! Alle Notizen dieses Speicherorts werden dauerhaft gelöscht.',
     'storage.delete': 'Speicherort {{storage}} löschen',
     'storage.move': 'Speicherort verschieben',
     'storage.moveTitle': 'Speicherort wird verschoben',
-    'storage.moveMessage':
-      'Es wird versucht, den Speicherort zu verschieben.',
+    'storage.moveMessage': 'Es wird versucht, den Speicherort zu verschieben.',
     'storage.copy': 'Speicherort kopieren',
     'storage.typeLocal': 'Lokal',
     'storage.typeCloud': 'Cloud',
@@ -152,7 +152,8 @@ export default {
 
     // Preferences ImportTab
     'preferences.import': 'Importieren',
-    'preferences.description': 'Importiert .cson Dateien vom alten Boostnote Ordner.',
+    'preferences.description':
+      'Importiert .cson Dateien vom alten Boostnote Ordner.',
     'preferences.importFlow1':
       '1. Öffne den alten Boostnote Ordner auf deinem PC.',
     'preferences.importFlow2': '2. Ziehe die .cson Dateien in das Feld unten.',
