@@ -71,14 +71,17 @@ export const exportNoteAsMarkdownFile = async (
         console.error(err)
         return
       }
-      let content = file.toString()
+      let content = file.toString().trim() + '\n'
       if (includeFrontMatter) {
-        content += [
-          '---',
-          `title: "${note.title}"`,
-          `tags: "${note.tags.join()}"`,
-          '---',
-        ].join('\n')
+        content =
+          [
+            '---',
+            `title: "${note.title}"`,
+            `tags: "${note.tags.join()}"`,
+            '---',
+            '',
+            '',
+          ].join('\n') + content
       }
 
       downloadString(
