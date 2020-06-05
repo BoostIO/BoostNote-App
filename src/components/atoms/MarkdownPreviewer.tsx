@@ -14,7 +14,6 @@ import visit from 'unist-util-visit'
 import { Node, Parent } from 'unist'
 import CodeMirror from '../../lib/CodeMirror'
 import h from 'hastscript'
-import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { openNew } from '../../lib/platform'
@@ -177,7 +176,6 @@ const MarkdownPreviewer = ({
   attachmentMap = {},
   updateContent,
 }: MarkdownPreviewerProps) => {
-  const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
   const previousThemeRef = useRef<string | undefined>('')
@@ -243,29 +241,25 @@ const MarkdownPreviewer = ({
       })
   }, [codeBlockTheme, attachmentMap, updateContent])
 
-  const renderContent = useCallback(
-    async (content: string) => {
-      previousContentRef.current = content
-      previousThemeRef.current = codeBlockTheme
-      setRendering(true)
+  const renderContent = useCallback(async () => {
+    const content = previousContentRef.current
+    setRendering(true)
 
-      console.time('render')
-      checkboxIndexRef.current = 0
-      const result = await markdownProcessor.process(content)
-      console.timeEnd('render')
+    console.time('render')
+    checkboxIndexRef.current = 0
+    const result = await markdownProcessor.process(content)
+    console.timeEnd('render')
 
-      setRendering(false)
-      setRenderedContent(result.contents)
-    },
-    [codeBlockTheme, markdownProcessor]
-  )
+    setRendering(false)
+    setRenderedContent(result.contents)
+  }, [markdownProcessor])
 
   useEffect(() => {
-    window.addEventListener('codemirror-mode-load', forceUpdate)
+    window.addEventListener('codemirror-mode-load', renderContent)
     return () => {
-      window.removeEventListener('codemirror-mode-load', forceUpdate)
+      window.removeEventListener('codemirror-mode-load', renderContent)
     }
-  }, [forceUpdate])
+  }, [renderContent])
 
   useEffect(() => {
     console.log('render requested')
@@ -277,7 +271,9 @@ const MarkdownPreviewer = ({
       return
     }
     console.log('rendering...')
-    renderContent(content)
+    previousContentRef.current = content
+    previousThemeRef.current = codeBlockTheme
+    renderContent()
   }, [content, codeBlockTheme, rendering, renderContent, renderedContent])
 
   const StyledContainer = useMemo(() => {
