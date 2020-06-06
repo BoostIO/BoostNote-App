@@ -122,7 +122,7 @@
     "electron-log": "^4.0.0",
     "electron-updater": "^4.2.0",
     "file-loader": "^5.0.2",
-    "filenamify": "^2.1.0",
+    "filenamify": "^4.1.0",
     "hast-util-sanitize": "^2.0.1",
     "hast-util-to-text": "^1.0.1",
     "hastscript": "^5.1.0",
