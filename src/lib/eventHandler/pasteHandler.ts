@@ -88,7 +88,7 @@ export const codeMirrorPasteHandler = (
 
   const isInLinkTag = (doc: CodeMirror.Doc) => {
     const startCursor = doc.getCursor('start')
-    const prevChar = doc.getRange(
+    const prevChars = doc.getRange(
       {
         line: startCursor.line,
         ch: startCursor.ch - 2,
@@ -109,7 +109,7 @@ export const codeMirrorPasteHandler = (
         ch: endCursor.ch + 1,
       }
     )
-    return prevChar === '](' && nextChar === ')'
+    return prevChars === '](' && nextChar === ')'
   }
 
   const isInFencedCodeBlock = (editor: CodeMirror.Editor) => {
