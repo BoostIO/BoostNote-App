@@ -18,13 +18,6 @@ export const template: any[] = [
               click: checkForUpdates,
             },
             { type: 'separator' },
-            {
-              label: 'For Team',
-              click: async () => {
-                await shell.openExternal('https://hub.boostio.co/')
-              },
-            },
-            { type: 'separator' },
             { role: 'services' },
             { type: 'separator' },
             { role: 'hide' },
@@ -153,6 +146,18 @@ export const template: any[] = [
         label: 'Reddit',
         click: async () => {
           await shell.openExternal('https://www.reddit.com/r/Boostnote/')
+        },
+      },
+    ],
+  },
+
+  {
+    label: 'For Team',
+    submenu: [
+      {
+        label: 'BoostHub',
+        click: async () => {
+          await shell.openExternal('https://hub.boostio.co/')
         },
       },
     ],
