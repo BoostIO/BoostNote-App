@@ -1,7 +1,7 @@
 {
   "name": "boostnote.next",
   "productName": "Boost Note",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
