@@ -11,6 +11,7 @@ import { dev } from './consts'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null
+const MAC = process.platform === 'darwin'
 
 // single instance lock
 const singleInstance = app.requestSingleInstanceLock()
@@ -43,6 +44,17 @@ function createMainWindow() {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 
+  if (MAC) {
+    window.on('close', (event) => {
+      event.preventDefault()
+      window.hide()
+    })
+
+    app.on('before-quit', () => {
+      window.removeAllListeners()
+    })
+  }
+
   window.on('closed', () => {
     mainWindow = null
   })
@@ -73,6 +85,9 @@ app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (mainWindow === null) {
     mainWindow = createMainWindow()
+  } else {
+    mainWindow.show()
+    mainWindow.focus()
   }
 })
 
