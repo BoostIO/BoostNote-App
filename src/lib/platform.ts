@@ -1,6 +1,3 @@
-import isElectron from 'is-electron'
-import { UAParser } from 'ua-parser-js'
-
 declare function $openExternal(url: string): void
 
 export const openNew = (url: string) => {
@@ -27,23 +24,3 @@ function getOsName(): OsNameOptions {
 }
 
 export const osName = getOsName()
-
-export const isDesktopOrMobileApp = () => {
-  if (isElectron()) {
-    // desktop app
-    return true
-  }
-  const userAgent = window.navigator.userAgent.toLowerCase()
-  const safari = /safari/.test(userAgent)
-  const ios = /iphone|ipod|ipad/.test(userAgent)
-  if (ios && !safari) {
-    // webview(ios)
-    return true
-  }
-  const browserName = new UAParser(navigator.userAgent).getBrowser().name
-  if (browserName !== undefined && browserName.indexOf('WebView') != -1) {
-    // webview(android)
-    return true
-  }
-  return false
-}

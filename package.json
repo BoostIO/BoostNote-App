@@ -135,6 +135,7 @@
     "lodash": "^4.17.15",
     "ltstrg": "^1.0.1",
     "mdast-util-to-string": "^1.0.6",
+    "node-fetch": "^2.6.0",
     "ow": "^0.13.2",
     "path-parse": "^1.0.6",
     "path-to-regexp": "^2.4.0",
@@ -164,7 +165,6 @@
     "remark-stringify": "^7.0.4",
     "shortid": "^2.2.15",
     "styled-components": "^4.3.2",
-    "ua-parser-js": "^0.7.21",
     "unified": "^8.4.0",
     "unist-util-visit": "^2.0.0",
     "use-force-update": "^1.0.7"
@@ -172,7 +172,7 @@
   "build": {
     "appId": "com.boostio.boostnote",
     "artifactName": "boost-note-${os}.${ext}",
-    "copyright": "Copyright © 2016-2017 BoostIO",
+    "copyright": "Copyright 息 2016-2017 BoostIO",
     "directories": {
       "app": "electron"
     },

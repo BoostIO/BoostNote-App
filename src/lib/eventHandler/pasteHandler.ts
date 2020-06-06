@@ -1,5 +1,27 @@
-import { decodeResponse, isImageResponse } from '../http'
-import { isDesktopOrMobileApp } from '../platform'
+import { isImageResponse } from '../http'
+import { IpcRenderer } from 'electron'
+import isElectron from 'is-electron'
+
+let ipcRenderer: IpcRenderer | null = null
+if (window.require !== undefined) {
+  // avoid for 'fs.existsSync is not a function'
+  // see https://github.com/electron/electron/issues/7300#issuecomment-248773783
+  ipcRenderer = window.require('electron').ipcRenderer
+}
+
+interface PasteInfo {
+  doc: CodeMirror.Doc
+  change: CodeMirror.EditorChange
+  pastedText: string
+}
+
+interface FetchResult {
+  contentType: string
+  body: string
+  isSuccess: boolean
+}
+
+let info: PasteInfo
 
 const handlePasteText = (
   doc: CodeMirror.Doc,
@@ -13,6 +35,9 @@ const handlePasteText = (
 }
 
 const handlePasteUrl = async (doc: CodeMirror.Doc, change: CodeMirror.EditorChange, pastedText: string) => {
+  if (ipcRenderer === null) return
+  info = { doc, change, pastedText }
+
   const taggedUrl = `<${pastedText}>`
   const urlToFetch = pastedText
 
@@ -21,23 +46,27 @@ const handlePasteUrl = async (doc: CodeMirror.Doc, change: CodeMirror.EditorChan
     ch: change.from.ch + pastedText.length,
   })
 
-  const response = await fetch(urlToFetch, { method: 'get' })
-  let replacement = pastedText
-  if (!isImageResponse(response)) {
-    replacement = await mapNormalResponse(response, urlToFetch)
-  }
-  doc.replaceRange(replacement, change.from, {
-    line: change.from.line,
-    ch: change.from.ch + pastedText.length + 2,
+  ipcRenderer.send('fetch-page-title-request', urlToFetch)
+}
+
+if (ipcRenderer !== null) {
+  ipcRenderer.on('fetch-page-title-response', async (_, fetchResult: FetchResult) => {
+    let replacement = info.pastedText
+    if (!isImageResponse(fetchResult.contentType)) {
+      replacement = mapNormalResponse(fetchResult.body)
+    }
+    info.doc.replaceRange(replacement, info.change.from, {
+      line: info.change.from.line,
+      ch: info.change.from.ch + info.pastedText.length + 2,
+    })
   })
 }
 
-const mapNormalResponse = async (response: Response, pastedTxt: string) => {
-  const body = await decodeResponse(response)
+const mapNormalResponse = (body: string) => {
   try {
     const escapePipe = (str: string) => str.replace('|', '\\|')
     const parsedBody = new window.DOMParser().parseFromString(body, 'text/html')
-    return `[${escapePipe(parsedBody.title)}](${pastedTxt})`
+    return `[${escapePipe(parsedBody.title)}](${info.pastedText})`
   } catch (e) {
     console.log(e)
   }
@@ -49,7 +78,7 @@ export const codeMirrorPasteHandler = (
   change: CodeMirror.EditorChange,
   enableAutoFetchWebPageTitle: boolean
 ) => {
-  if (!isDesktopOrMobileApp()) return
+  if (!isElectron()) return
   if (!enableAutoFetchWebPageTitle) return
   const editorDoc = editor.getDoc()
 

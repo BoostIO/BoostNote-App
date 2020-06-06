@@ -27,7 +27,7 @@ import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../atoms/form'
 import { codeMirrorPasteHandler } from '../../lib/eventHandler/pasteHandler'
-import { isDesktopOrMobileApp } from '../../lib/platform'
+import isElectron from 'is-electron'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -218,7 +218,7 @@ const EditorTab = () => {
           </SectionSelect>
         </SectionControl>
       </Section>
-      {isDesktopOrMobileApp() && (
+      {isElectron() && (
         <Section>
           <SectionHeader>
             {t('preferences.enableAutoFetchWebPageTitle')}
