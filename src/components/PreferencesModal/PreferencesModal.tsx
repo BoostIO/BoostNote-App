@@ -46,7 +46,6 @@ const TabContent = styled.div`
   padding-left: 4px;
   padding-top: 4em;
   padding-right: 15%;
-  scrollbar-color: rgba(32, 34, 37, 0.6) transparent;
 `
 
 const CloseButton = styled.button`
