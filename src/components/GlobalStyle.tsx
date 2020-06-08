@@ -15,6 +15,7 @@ export default createGlobalStyle<{ theme: BaseTheme }>`
 
   * {
     box-sizing: border-box;
+    scrollbar-color: rgba(0, 0, 0, 0.12) #efe8d6; /* scrollbar style for firefox */
   }
 
   *:focus {
