@@ -12,6 +12,10 @@ const BackersPage = () => (
       <Text as='h1' textAlign='center' fontSize={[3, 4, 5]}>
         Our Honorable Kickstarter Campaign Backers
       </Text>
+      <Text as='p' textAlign='center' mb={5}>
+        127 people sponsored the campaign. Based on their pledges, we could
+        provide the new Boost Note around the world! Thank you for supporting!
+      </Text>
       <Row>
         {backers.map((backer) => {
           return (
