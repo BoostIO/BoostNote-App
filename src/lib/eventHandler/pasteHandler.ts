@@ -1,4 +1,3 @@
-import { isImageResponse } from '../http'
 import { IpcRenderer } from 'electron'
 import isElectron from 'is-electron'
 
@@ -52,7 +51,7 @@ const handlePasteUrl = async (doc: CodeMirror.Doc, change: CodeMirror.EditorChan
 if (ipcRenderer !== null) {
   ipcRenderer.on('fetch-page-title-response', async (_, fetchResult: FetchResult) => {
     let replacement = info.pastedText
-    if (!isImageResponse(fetchResult.contentType)) {
+    if (fetchResult.contentType.toLowerCase().includes('text/html')) {
       replacement = mapNormalResponse(fetchResult.body)
     }
     info.doc.replaceRange(replacement, info.change.from, {

@@ -15,11 +15,3 @@ export const setHeader = <T extends InitHeaders>(
 
   return headers
 }
-
-export const isImageResponse = (contentType: string) => {
-  let result
-  if (contentType != null) {
-    result = contentType.match(/^image\/.+$/)
-  }
-  return result != null
-}
