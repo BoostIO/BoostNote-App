@@ -26,7 +26,6 @@
     "prepack": "rimraf dist && env-cmd npm run meta && electron-builder --dir",
     "pack": "rimraf dist && env-cmd npm run meta && env-cmd electron-builder",
     "release": "npm run build:electron && rimraf dist && env-cmd npm run meta && env-cmd electron-builder -- --publish",
-    "convertIcons": "rm ./src/components/icons/* && npx @svgr/cli --icon -d ./src/components/icons ./static/icons && node scripts/importIcons.js && rm ./src/components/icons/*.js && prettier --write src/components/icons/*.tsx",
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit",
@@ -103,8 +102,6 @@
   "dependencies": {
     "@mdi/js": "^5.1.45",
     "@mdi/react": "^1.2.1",
-    "@svgr/cli": "^4.3.3",
-    "@svgr/webpack": "^4.3.3",
     "@types/pouchdb-adapter-http": "^6.1.3",
     "@types/pouchdb-adapter-idb": "^6.1.3",
     "@types/pouchdb-adapter-memory": "^6.1.3",
