@@ -6,6 +6,7 @@ import { DbStore } from './db'
 import { useEffectOnce } from 'react-use'
 import { osName } from './platform'
 import isElectron from 'is-electron'
+import { createStoreContext } from './context'
 
 const amplifyConfig = {
   Auth: {
@@ -30,7 +31,11 @@ function reportViaPinpoint(name: string, attributes?: any) {
   }
 }
 
-export function useAnalytics() {
+interface AnalyticsStore {
+  report: (name: string, attributes?: any) => void
+}
+
+function useAnalyticsStore(): AnalyticsStore {
   const { preferences } = usePreferences()
   const analyticsEnabled = preferences['general.enableAnalytics']
   const user = useFirstUser()
@@ -70,6 +75,11 @@ export function useAnalytics() {
     report,
   }
 }
+
+export const {
+  StoreProvider: AnalyticsProvider,
+  useStore: useAnalytics,
+} = createStoreContext(useAnalyticsStore)
 
 export const analyticsEvents = {
   addNote: 'Note.Add',
