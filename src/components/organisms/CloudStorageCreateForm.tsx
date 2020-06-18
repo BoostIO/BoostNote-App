@@ -21,6 +21,7 @@ import {
 import { useFirstUser } from '../../lib/preferences'
 import { useEffectOnce } from 'react-use'
 import LoginButton from '../atoms/LoginButton'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const CloudStorageCreateForm = () => {
   const [storageName, setStorageName] = useState('')
@@ -40,6 +41,8 @@ const CloudStorageCreateForm = () => {
   const [targetRemoteStorageId, setTargetRemoteStorageId] = useState<
     null | string
   >(null)
+
+  const { report } = useAnalytics()
 
   const targetRemoteStorage = useMemo(() => {
     for (const remoteStorage of remoteStorageList) {
@@ -76,6 +79,7 @@ const CloudStorageCreateForm = () => {
         size: cloudStorage.size,
       })
       db.syncStorage(storage.id)
+      report(analyticsEvents.addStorage)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
@@ -93,6 +97,7 @@ const CloudStorageCreateForm = () => {
     db,
     push,
     pushMessage,
+    report,
   ])
 
   const unmountRef = useRef(false)

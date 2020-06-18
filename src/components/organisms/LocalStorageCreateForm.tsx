@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useToast } from '../../lib/toast'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const LocalStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -16,9 +17,11 @@ const LocalStorageCreateForm = () => {
   const { push } = useRouter()
   const db = useDb()
   const { pushMessage } = useToast()
+  const { report } = useAnalytics()
   const createStorageCallback = async () => {
     try {
       const storage = await db.createStorage(name)
+      report(analyticsEvents.addStorage)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
