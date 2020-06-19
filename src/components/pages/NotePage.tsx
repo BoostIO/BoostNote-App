@@ -29,6 +29,7 @@ import {
 } from '../../lib/sort'
 import { values } from '../../lib/db/utils'
 import IdleNoteDetail from '../organisms/IdleNoteDetail'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -57,6 +58,7 @@ const NotePage = ({ storage }: NotePageProps) => {
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
+  const { report } = useAnalytics()
 
   const setNoteSorting = useCallback(
     (noteSorting: NoteSortingOptions) => {
@@ -174,6 +176,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
+    report(analyticsEvents.addNote)
     const note = await createNote(storage.id, {
       folderPathname,
       tags,
@@ -197,6 +200,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     storage.id,
     setLastCreatedNoteId,
     checkFeature,
+    report,
   ])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'
