@@ -23,6 +23,7 @@ import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
 import styled from '../../lib/styled'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const Spacer = styled.div`
   height: 1em;
@@ -51,16 +52,21 @@ const StorageNavigatorFragment = ({
   const currentPathname = usePathnameWithoutNoteId()
   const user = useFirstUser()
   const { popup } = useContextMenu()
+  const { report } = useAnalytics()
 
   const createNoteInFolderAndRedirect = useCallback(
     async (folderPathname: string) => {
+      report(analyticsEvents.addNote)
       const note = await createNote(storage.id, {
         folderPathname,
       })
-      push(`/app/storages/${storage.id}/notes${folderPathname}/${note!._id}`)
+      if (note == null) {
+        return
+      }
+      push(`/app/storages/${storage.id}/notes${folderPathname}/${note._id}`)
       dispatchNoteDetailFocusTitleInputEvent()
     },
-    [storage.id, createNote, push]
+    [storage.id, createNote, push, report]
   )
 
   const showPromptToCreateFolder = useCallback(
