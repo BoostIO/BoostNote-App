@@ -47,7 +47,7 @@ const EditorTab = () => {
         'editor.theme': event.target.value,
       })
       checkFeature('changeEditorTheme')
-      report(analyticsEvents.editorTheme)
+      report(analyticsEvents.updateEditorTheme)
     },
     [setPreferences, checkFeature, report]
   )

@@ -79,7 +79,7 @@ const CloudStorageCreateForm = () => {
         size: cloudStorage.size,
       })
       db.syncStorage(storage.id)
-      report(analyticsEvents.addStorage)
+      report(analyticsEvents.createStorage)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({
