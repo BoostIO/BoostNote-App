@@ -85,61 +85,8 @@ export const analyticsEvents = {
   createNote: 'notes.create',
   updateNote: 'notes.update',
   trashNote: 'notes.trash',
-  addTag: 'tags.create',
   createStorage: 'storages.create',
   createFolder: 'folders.create',
   updateUiTheme: 'preferences.updateUiTheme',
   updateEditorTheme: 'preferences.updateEditorTheme',
-}
-
-export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
-  return () => {
-    const { report } = useAnalytics()
-    const {
-      createNote,
-      updateNote,
-      trashNote,
-      createStorage,
-      createFolder,
-      ...rest
-    } = hook()
-    return {
-      createNote: useCallback(
-        (...args: Parameters<typeof createNote>) => {
-          report(analyticsEvents.createNote)
-          return createNote(...args)
-        },
-        [createNote, report]
-      ),
-      updateNote: useCallback(
-        (...args: Parameters<typeof updateNote>) => {
-          report(analyticsEvents.updateNote)
-          return updateNote(...args)
-        },
-        [updateNote, report]
-      ),
-      trashNote: useCallback(
-        (...args: Parameters<typeof trashNote>) => {
-          report(analyticsEvents.trashNote)
-          return trashNote(...args)
-        },
-        [trashNote, report]
-      ),
-      createStorage: useCallback(
-        (...args: Parameters<typeof createStorage>) => {
-          report(analyticsEvents.createStorage)
-          return createStorage(...args)
-        },
-        [createStorage, report]
-      ),
-      createFolder: useCallback(
-        (...args: Parameters<typeof createFolder>) => {
-          report(analyticsEvents.createFolder)
-          return createFolder(...args)
-        },
-        [createFolder, report]
-      ),
-      ...rest,
-    }
-  }
 }
