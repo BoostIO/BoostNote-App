@@ -90,6 +90,7 @@ const StorageNavigatorFragment = ({
 
           openSideNavFolderItemRecursively(storage.id, value)
           checkFeature('createFolder')
+          report(analyticsEvents.createFolder)
         },
       })
     },
@@ -100,6 +101,7 @@ const StorageNavigatorFragment = ({
       push,
       openSideNavFolderItemRecursively,
       checkFeature,
+      report,
     ]
   )
 
