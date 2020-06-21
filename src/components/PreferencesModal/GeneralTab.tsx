@@ -35,7 +35,7 @@ const GeneralTab = () => {
         'general.theme': event.target.value as GeneralThemeOptions,
       })
       checkFeature('changeAppTheme')
-      report(analyticsEvents.colorTheme)
+      report(analyticsEvents.updateUiTheme)
     },
     [setPreferences, checkFeature, report]
   )

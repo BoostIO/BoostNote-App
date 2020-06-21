@@ -12,7 +12,7 @@ import {
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
-import { NoteDoc, NoteStorage } from '../../lib/db/types'
+import { NoteDoc, NoteStorage, NoteDocEditibleProps } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { escapeRegExp } from '../../lib/string'
@@ -59,6 +59,18 @@ const NotePage = ({ storage }: NotePageProps) => {
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
   const { report } = useAnalytics()
+
+  const updateNoteAndReport = useCallback(
+    (
+      storageId: string,
+      noteId: string,
+      noteProps: Partial<NoteDocEditibleProps>
+    ) => {
+      report(analyticsEvents.updateNote)
+      return updateNote(storageId, noteId, noteProps)
+    },
+    [updateNote, report]
+  )
 
   const setNoteSorting = useCallback(
     (noteSorting: NoteSortingOptions) => {
@@ -176,7 +188,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     const tags =
       routeParams.name === 'storages.tags.show' ? [routeParams.tagName] : []
 
-    report(analyticsEvents.addNote)
+    report(analyticsEvents.createNote)
     const note = await createNote(storage.id, {
       folderPathname,
       tags,
@@ -299,7 +311,7 @@ const NotePage = ({ storage }: NotePageProps) => {
             storage={storage}
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
-            updateNote={updateNote}
+            updateNote={updateNoteAndReport}
             trashNote={trashNote}
             untrashNote={untrashNote}
             addAttachments={addAttachments}

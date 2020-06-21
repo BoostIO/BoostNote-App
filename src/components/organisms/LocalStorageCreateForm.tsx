@@ -21,7 +21,7 @@ const LocalStorageCreateForm = () => {
   const createStorageCallback = async () => {
     try {
       const storage = await db.createStorage(name)
-      report(analyticsEvents.addStorage)
+      report(analyticsEvents.createStorage)
       push(`/app/storages/${storage.id}/notes`)
     } catch (error) {
       pushMessage({

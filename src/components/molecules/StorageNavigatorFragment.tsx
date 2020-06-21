@@ -56,7 +56,7 @@ const StorageNavigatorFragment = ({
 
   const createNoteInFolderAndRedirect = useCallback(
     async (folderPathname: string) => {
-      report(analyticsEvents.addNote)
+      report(analyticsEvents.createNote)
       const note = await createNote(storage.id, {
         folderPathname,
       })
