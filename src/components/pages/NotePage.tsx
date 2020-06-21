@@ -72,6 +72,14 @@ const NotePage = ({ storage }: NotePageProps) => {
     [updateNote, report]
   )
 
+  const trashNoteAndReport = useCallback(
+    (storageId: string, noteId: string) => {
+      report(analyticsEvents.trashNote)
+      return trashNote(storageId, noteId)
+    },
+    [trashNote, report]
+  )
+
   const setNoteSorting = useCallback(
     (noteSorting: NoteSortingOptions) => {
       setPreferences({
@@ -299,7 +307,7 @@ const NotePage = ({ storage }: NotePageProps) => {
           navigateUp={navigateUp}
           currentNote={currentNote}
           lastCreatedNoteId={lastCreatedNoteId}
-          trashNote={trashNote}
+          trashNote={trashNoteAndReport}
           purgeNote={showPurgeNoteDialog}
         />
       }
@@ -312,7 +320,7 @@ const NotePage = ({ storage }: NotePageProps) => {
             currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
             note={currentNote}
             updateNote={updateNoteAndReport}
-            trashNote={trashNote}
+            trashNote={trashNoteAndReport}
             untrashNote={untrashNote}
             addAttachments={addAttachments}
             purgeNote={showPurgeNoteDialog}
