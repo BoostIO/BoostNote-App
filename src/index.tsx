@@ -10,6 +10,7 @@ import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
+import { AnalyticsProvider } from './lib/analytics'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -17,6 +18,7 @@ const CombinedProvider = combineProviders(
   DialogProvider,
   ContextMenuProvider,
   DbProvider,
+  AnalyticsProvider,
   PreferencesProvider,
   RouterProvider,
   ToastProvider
