@@ -82,7 +82,8 @@ npm run dev:electron
 
 #### Mobile app
 
-To be announced.
+- [Android (beta)](https://play.google.com/store/apps/details?id=com.boostio.boostnote)
+- [iOS (beta)](https://apps.apple.com/us/app/boostnote-mobile/id1498182749)
 
 ## License
 
