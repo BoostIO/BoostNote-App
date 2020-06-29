@@ -189,7 +189,7 @@ const TagNavigatorNewTagPopup = ({
     },
     [close]
   )
-  console.log(tags)
+
   return (
     <Container
       style={{ left: position.x - 100 }}
