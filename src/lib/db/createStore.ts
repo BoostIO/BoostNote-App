@@ -503,14 +503,6 @@ export function createDbStoreCreator(
           notes,
           removedFolders,
         } = await storage.db.renameFolder(pathname, newPathname)
-
-        // folderListToRefresh.push({
-        //   ...newFolder,
-        //   pathname: getFolderPathname(newFolder._id),
-        //   noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
-        // })
-        // notesListToRefresh.push(...rewrittenNotes)
-
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
             notes.forEach((noteDoc) => {
