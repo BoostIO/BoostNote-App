@@ -1,16 +1,16 @@
-import NoteDb from './NoteDb'
+import PouchNoteDb from './PouchNoteDb'
 import PouchDB from './PouchDB'
 import { getFolderId, getTagId, generateNoteId, getNow } from './utils'
 import { sortNotesByKeys } from '../sort'
 import { NoteDoc, FolderDoc, ExceptRev } from './types'
 
 let noteDbCount = 0
-async function prepareNoteDb(shouldInit = true): Promise<NoteDb> {
+async function prepareNoteDb(shouldInit = true): Promise<PouchNoteDb> {
   const id = `dummy${++noteDbCount}`
   const pouchDb = new PouchDB(id, {
     adapter: 'memory',
   })
-  const noteDb = new NoteDb(pouchDb, id, id)
+  const noteDb = new PouchNoteDb(pouchDb, id, id)
 
   if (shouldInit) {
     await noteDb.init()
@@ -19,13 +19,13 @@ async function prepareNoteDb(shouldInit = true): Promise<NoteDb> {
   return noteDb
 }
 
-describe('NoteDb', () => {
+describe('PouchNoteDb', () => {
   describe('#getFolder', () => {
     it('returns a folder', async () => {
       // Given
       const noteDb = await prepareNoteDb()
       const now = new Date().toISOString()
-      await noteDb.pouchDb.put<ExceptRev<FolderDoc>>({
+      await noteDb.pouchDb.put<FolderDoc>({
         _id: getFolderId('/test'),
         createdAt: now,
         updatedAt: now,
@@ -1087,9 +1087,9 @@ describe('NoteDb', () => {
           tags: ['tag2', 'tag3'],
         })
         await client.pouchDb.remove(
-          (await client.getFolder('/test/child folder'))!
+          ((await client.getFolder('/test/child folder')) as any)!
         )
-        await client.pouchDb.remove((await client.getTag('tag1'))!)
+        await client.pouchDb.remove((await client.getTag('tag1')) as any)
         expect(await client.getFolder('/test/child folder')).toBe(null)
         expect(await client.getTag('tag1')).toBe(null)
 

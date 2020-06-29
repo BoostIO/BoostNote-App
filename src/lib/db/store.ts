@@ -8,10 +8,5 @@ export const {
   StoreProvider: DbProvider,
   useStore: useDb,
 } = createStoreContext(
-  createDbStoreCreator(
-    localLiteStorage,
-    useRouter,
-    usePathnameWithoutNoteId,
-    'idb'
-  )
+  createDbStoreCreator(localLiteStorage, useRouter, usePathnameWithoutNoteId)
 )

@@ -14,7 +14,7 @@ import {
   FormSecondaryButton,
   FormHeading,
 } from '../atoms/form'
-import { NoteStorage } from '../../lib/db/types'
+import { PouchNoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
 import { renameStorage, deleteStorage } from '../../lib/accounts'
 import { useFirstUser } from '../../lib/preferences'
@@ -25,7 +25,7 @@ import Spinner from '../atoms/Spinner'
 import LoginButton from '../atoms/LoginButton'
 
 interface ManageCloudStorageFormProps {
-  storage: NoteStorage
+  storage: PouchNoteStorage
 }
 
 const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {

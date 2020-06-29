@@ -36,7 +36,10 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const removeCallback = useCallback(() => {
     messageBox({
       title: t('storage.delete', { storage: storage.name }),
-      message: t('storage.removeMessage'),
+      message:
+        storage.type === 'fs'
+          ? "This operation won't delete the actual storage folder. You can add it to the app again."
+          : t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
       buttons: [t('storage.remove'), t('general.cancel')],
       defaultButtonIndex: 0,
@@ -82,7 +85,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </FormGroup>
         <hr />
         <FormHeading depth={2}>Remove Storage</FormHeading>
-        {storage.cloudStorage != null && (
+        {storage.type !== 'fs' && storage.cloudStorage != null && (
           <FormBlockquote>
             Your cloud storage will not be deleted by clicking this button. To
             delete cloud storage too, check cloud storage info section.
@@ -93,13 +96,17 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             Remove Storage
           </FormSecondaryButton>
         </FormGroup>
-        <hr />
 
-        <FormHeading depth={2}>Cloud Storage info</FormHeading>
-        {storage.cloudStorage == null ? (
-          <LinkCloudStorageForm storage={storage} />
-        ) : (
-          <ManageCloudStorageForm storage={storage} />
+        {storage.type !== 'fs' && (
+          <>
+            <hr />
+            <FormHeading depth={2}>Cloud Storage info</FormHeading>
+            {storage.cloudStorage == null ? (
+              <LinkCloudStorageForm storage={storage} />
+            ) : (
+              <ManageCloudStorageForm storage={storage as any} />
+            )}
+          </>
         )}
       </PageScrollableContent>
     </PageContainer>

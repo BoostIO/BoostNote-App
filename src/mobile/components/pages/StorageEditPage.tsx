@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useDb } from '../../lib/db'
-import { NoteStorage } from '../../../lib/db/types'
+import { NoteStorage, PouchNoteStorage } from '../../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useToast } from '../../../lib/toast'
@@ -31,6 +31,8 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const [name, setName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
+  const storageHasCloudStorage =
+    storage.type !== 'fs' && storage.cloudStorage != null
 
   const removeCallback = useCallback(() => {
     messageBox({
@@ -83,7 +85,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </FormGroup>
         <hr />
         <FormHeading depth={2}>Remove Storage</FormHeading>
-        {storage.cloudStorage != null && (
+        {storageHasCloudStorage != null && (
           <FormBlockquote>
             Your cloud storage will not be deleted by clicking this button. To
             delete cloud storage too, check cloud storage info section.
@@ -97,10 +99,10 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         <hr />
 
         <FormHeading depth={2}>Cloud Storage info</FormHeading>
-        {storage.cloudStorage == null ? (
+        {storageHasCloudStorage == null ? (
           <LinkCloudStorageForm storage={storage} />
         ) : (
-          <ManageCloudStorageForm storage={storage} />
+          <ManageCloudStorageForm storage={storage as PouchNoteStorage} />
         )}
       </PageContainer>
     </TopBarLayout>

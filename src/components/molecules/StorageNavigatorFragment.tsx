@@ -289,7 +289,7 @@ const StorageNavigatorFragment = ({
     [storage.noteMap]
   )
 
-  const syncing = storage.sync != null
+  const syncing = storage.type !== 'fs' && storage.sync != null
 
   return (
     <>
@@ -299,7 +299,7 @@ const StorageNavigatorFragment = ({
         control={
           <>
             <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />
-            {storage.cloudStorage != null && (
+            {storage.type !== 'fs' && storage.cloudStorage != null && (
               <NavigatorButton
                 active={syncing}
                 onClick={sync}
