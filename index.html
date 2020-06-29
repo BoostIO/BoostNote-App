@@ -34,16 +34,108 @@
   <body>
     <div id="root"></div>
     <script>
-      ;(function() {
+      ;(function () {
         if (typeof require === 'undefined') {
           return
         }
         const electron = require('electron')
+        const fs = require('fs')
+        const FileType = require('file-type')
+        const readChunk = require('read-chunk')
+
         function $openExternal(url) {
           console.log('opening ...', url)
           electron.shell.openExternal(url)
         }
+        function $readFile(pathname) {
+          return new Promise((resolve, reject) => {
+            fs.readFile(pathname, (error, result) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve(result.toString())
+            })
+          })
+        }
+        function $readdir(pathname, options) {
+          return new Promise((resolve, reject) => {
+            fs.readdir(pathname, options, (error, result) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve(result)
+            })
+          })
+        }
+        function $showOpenDialog(options) {
+          return electron.remote.dialog.showOpenDialog(options)
+        }
+        function $getHomePath() {
+          return electron.remote.app.getPath('home')
+        }
+        function $writeFile(pathname, blob) {
+          return new Promise((resolve, reject) => {
+            fs.writeFile(pathname, blob, (error) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve()
+            })
+          })
+        }
+        function $unlinkFile(pathname) {
+          return new Promise((resolve, reject) => {
+            fs.unlink(pathname, (error) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve()
+            })
+          })
+        }
+        function $stat(pathname) {
+          return new Promise((resolve, reject) => {
+            fs.stat(pathname, (error, stats) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve(stats)
+            })
+          })
+        }
+        function $mkdir(pathname) {
+          return new Promise((resolve, reject) => {
+            fs.mkdir(pathname, { recursive: true }, (error) => {
+              if (error != null) {
+                reject(error)
+                return
+              }
+              resolve()
+            })
+          })
+        }
+
+        async function $readFileType(pathname) {
+          const buffer = readChunk.sync(pathname, 0, 4100)
+          const { mime } = await FileType.fromBuffer(buffer)
+          return mime
+        }
+
         window.$openExternal = $openExternal
+        window.$readFile = $readFile
+        window.$showOpenDialog = $showOpenDialog
+        window.$getHomePath = $getHomePath
+        window.$writeFile = $writeFile
+        window.$unlinkFile = $unlinkFile
+        window.$readdir = $readdir
+        window.$stat = $stat
+        window.$mkdir = $mkdir
+        window.$readFileType = $readFileType
       })()
     </script>
   </body>
