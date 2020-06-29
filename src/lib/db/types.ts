@@ -1,5 +1,6 @@
-import NoteDb from './NoteDb'
+import PouchNoteDb from './PouchNoteDb'
 import { JsonObject, Except } from 'type-fest'
+import FSNoteDb from './FSNoteDb'
 
 export type ObjectMap<T> = {
   [key: string]: T | undefined
@@ -18,11 +19,21 @@ export interface CloudNoteStorageData {
   syncedAt?: number
 }
 
-export interface NoteStorageData {
+export interface PouchNoteStorageData {
+  type?: 'pouch'
   id: string
   name: string
   cloudStorage?: CloudNoteStorageData
 }
+
+export interface FSNoteStorageData {
+  type: 'fs'
+  id: string
+  name: string
+  location: string
+}
+
+export type NoteStorageData = PouchNoteStorageData | FSNoteStorageData
 
 export type NoteDocEditibleProps = {
   title: string
@@ -45,7 +56,7 @@ export type FolderDoc = {
   _id: string // folder:${FOLDER_PATHNAME}
   createdAt: string
   updatedAt: string
-  _rev: string
+  _rev?: string
 } & FolderDocEditibleProps
 
 export type FolderDocEditibleProps = {
@@ -56,7 +67,7 @@ export type TagDoc = {
   _id: string // tag:${TAG_NAME}
   createdAt: string
   updatedAt: string
-  _rev: string
+  _rev?: string
 } & TagDocEditibleProps
 
 export type TagDocEditibleProps = {
@@ -80,13 +91,18 @@ export interface AllDocsMap {
  */
 
 export type NoteIdSet = Set<string>
-export type NoteStorage = NoteStorageData &
+
+export type PouchNoteStorage = PouchNoteStorageData &
   AllPopulatedDocsMap & {
-    db: NoteDb
+    db: PouchNoteDb
     sync?: PouchDB.Replication.Sync<any>
     syncTimer?: any
   }
-
+export type FSNoteStorage = FSNoteStorageData &
+  AllPopulatedDocsMap & {
+    db: FSNoteDb
+  }
+export type NoteStorage = PouchNoteStorage | FSNoteStorage
 export type PopulatedFolderDoc = FolderDoc & {
   pathname: string
   noteIdSet: NoteIdSet

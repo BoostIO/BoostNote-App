@@ -1,6 +1,6 @@
 import {
   NoteStorage,
-  NoteStorageData,
+  PouchNoteStorageData,
   ObjectMap,
   NoteDoc,
   NoteDocEditibleProps,
@@ -9,17 +9,19 @@ import {
   Attachment,
   CloudNoteStorageData,
   TagDoc,
+  NoteStorageData,
+  PouchNoteStorage,
+  FSNoteStorage,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
 import { schema, isValid } from '../predicates'
-import NoteDb from './NoteDb'
+import PouchNoteDb from './PouchNoteDb'
 import {
   getFolderPathname,
   getParentFolderPathname,
   getAllParentFolderPathnames,
-  isFolderPathnameValid,
-  createUnprocessableEntityError,
+  entries,
 } from './utils'
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
@@ -30,19 +32,21 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { escapeRegExp } from '../string'
 import { useToast } from '../toast'
 import { useFirstUser, usePreferences } from '../preferences'
 import { useRefState } from '../hooks'
+import FSNoteDb from './FSNoteDb'
 
 const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
 const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
-
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
-  createStorage: (name: string) => Promise<NoteStorage>
+  createStorage: (
+    name: string,
+    props?: { type: 'fs'; location: string }
+  ) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => void
   renameCloudStorage: (id: string, cloudStorageName: string) => void
@@ -85,8 +89,7 @@ export interface DbStore {
 export function createDbStoreCreator(
   liteStorage: LiteStorage,
   routerHook: () => RouterStore,
-  pathnameWithoutNoteIdGetter: () => string,
-  adapter: 'idb' | 'memory'
+  pathnameWithoutNoteIdGetter: () => string
 ) {
   return (): DbStore => {
     const router = routerHook()
@@ -108,7 +111,7 @@ export function createDbStoreCreator(
       const storageDataList = getStorageDataListOrFix(liteStorage)
 
       const prepared = await Promise.all(
-        storageDataList.map((storage) => prepareStorage(storage, adapter))
+        storageDataList.map((storage) => prepareStorage(storage))
       )
       const storageMap = prepared.reduce((map, storage) => {
         map[storage.id] = storage
@@ -121,12 +124,15 @@ export function createDbStoreCreator(
     }, [setStorageMap])
 
     const createStorage = useCallback(
-      async (name: string) => {
+      async (name: string, props?: { type: 'fs'; location: string }) => {
         const id = generateId()
 
-        const storageData: NoteStorageData = { id, name }
+        const storageData: PouchNoteStorageData = { id, name }
 
-        const storage = await prepareStorage(storageData, adapter)
+        const storage = await prepareStorage({
+          ...storageData,
+          ...props,
+        })
 
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap((prevStorageMap) => {
@@ -149,6 +155,9 @@ export function createDbStoreCreator(
         setStorageMap((prevStorageMap) => {
           const existingStorage = prevStorageMap[storageId]
           if (existingStorage == null) {
+            return prevStorageMap
+          }
+          if (existingStorage.type === 'fs') {
             return prevStorageMap
           }
           const newStorage = {
@@ -177,7 +186,13 @@ export function createDbStoreCreator(
         }
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
-          if (storage == null || storage.cloudStorage == null) {
+          if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
+            return prevStorageMap
+          }
+          if (storage.cloudStorage == null) {
             return prevStorageMap
           }
           if (storage.sync != null) {
@@ -220,12 +235,14 @@ export function createDbStoreCreator(
 
               setStorageMap((prevStorageMap) => {
                 return produce(prevStorageMap, (draft) => {
-                  draft[storageId]!.sync = undefined
+                  ;(draft[storageId]! as PouchNoteStorage).sync = undefined
                 })
               })
             })
             .on('complete', async () => {
-              const syncedStorage = await prepareStorage(storage, adapter)
+              const syncedStorage = (await prepareStorage(
+                storage
+              )) as PouchNoteStorage
               syncedStorage.cloudStorage!.syncedAt = Date.now()
               let newStorageMap: ObjectMap<NoteStorage>
               setStorageMap((prevStorageMap) => {
@@ -242,7 +259,7 @@ export function createDbStoreCreator(
             })
 
           return produce(prevStorageMap, (draft) => {
-            draft[storageId]!.sync = sync
+            ;(draft[storageId]! as PouchNoteStorage).sync = sync
           })
         })
       },
@@ -257,7 +274,12 @@ export function createDbStoreCreator(
 
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
-          if (storage == null) return prevStorageMap
+          if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
+            return prevStorageMap
+          }
           if (storage.syncTimer != null) {
             clearTimeout(storage.syncTimer)
           }
@@ -294,6 +316,9 @@ export function createDbStoreCreator(
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
           if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
             return prevStorageMap
           }
           if (storage.syncTimer == null) {
@@ -362,7 +387,10 @@ export function createDbStoreCreator(
           return
         }
 
-        await storage.db.pouchDb.destroy()
+        if (storage.type !== 'fs') {
+          await storage.db.pouchDb.destroy()
+        }
+
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap((prevStorageMap) => {
           newStorageMap = produce(prevStorageMap, (draft) => {
@@ -401,14 +429,19 @@ export function createDbStoreCreator(
     const renameCloudStorage = useCallback(
       (id: string, cloudStorageName: string) => {
         const storageData = storageMap[id]
-        if (storageData == null || storageData.cloudStorage == null) {
+        if (storageData == null || storageData.type === 'fs') {
+          return
+        }
+        if (storageData.cloudStorage == null) {
           return
         }
 
         let newStorageMap: ObjectMap<NoteStorage> = {}
         setStorageMap((prevStorageMap) => {
           newStorageMap = produce(prevStorageMap, (draft) => {
-            draft[id]!.cloudStorage!.name = cloudStorageName
+            ;(draft[
+              id
+            ]! as PouchNoteStorage).cloudStorage!.name = cloudStorageName
           })
           return newStorageMap
         })
@@ -465,77 +498,28 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        if (!isFolderPathnameValid(pathname)) {
-          throw createUnprocessableEntityError(
-            `pathname is invalid, got \`${pathname}\``
-          )
-        }
-        if (!isFolderPathnameValid(newPathname)) {
-          throw createUnprocessableEntityError(
-            `pathname is invalid, got \`${newPathname}\``
-          )
-        }
+        const {
+          folders,
+          notes,
+          removedFolders,
+        } = await storage.db.renameFolder(pathname, newPathname)
 
-        const folderListToRefresh: PopulatedFolderDoc[] = []
-        const notesListToRefresh: NoteDoc[] = []
-
-        const subFolders = Object.keys(storage.folderMap).filter((aPathname) =>
-          aPathname.startsWith(`${pathname}/`)
-        )
-        const allFoldersToRename = [pathname, ...subFolders]
-        await Promise.all(
-          allFoldersToRename.map(async (folderPathname) => {
-            const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
-            const newfolderPathname = folderPathname.replace(regex, newPathname)
-            const folder = await storage.db.getFolder(folderPathname)
-            if (folder == null) {
-              throw createUnprocessableEntityError(
-                `this folder does not exist \`${folderPathname}\``
-              )
-            }
-            if ((await storage.db.getFolder(newfolderPathname)) != null) {
-              throw createUnprocessableEntityError(
-                `this folder already exists \`${newfolderPathname}\``
-              )
-            }
-            if (
-              folderPathname.split('/').length !==
-              newfolderPathname.split('/').length
-            ) {
-              throw createUnprocessableEntityError(
-                `New name is invalid. \`${newfolderPathname}\``
-              )
-            }
-            const notes = await storage.db.findNotesByFolder(folderPathname)
-            const newFolder = await storage.db.upsertFolder(newfolderPathname)
-            const rewrittenNotes = await Promise.all(
-              notes.map((note) =>
-                storage.db.updateNote(note._id, {
-                  folderPathname: newfolderPathname,
-                })
-              )
-            )
-
-            folderListToRefresh.push({
-              ...newFolder,
-              pathname: getFolderPathname(newFolder._id),
-              noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
-            })
-            notesListToRefresh.push(...rewrittenNotes)
-          })
-        )
-
-        await storage.db.removeFolder(pathname)
+        // folderListToRefresh.push({
+        //   ...newFolder,
+        //   pathname: getFolderPathname(newFolder._id),
+        //   noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
+        // })
+        // notesListToRefresh.push(...rewrittenNotes)
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            notesListToRefresh.forEach((noteDoc) => {
+            notes.forEach((noteDoc) => {
               draft[storage.id]!.noteMap[noteDoc._id] = noteDoc
             })
-            folderListToRefresh.forEach((folderDoc) => {
+            folders.forEach((folderDoc) => {
               draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
             })
-            allFoldersToRename.forEach((aPathname) => {
+            removedFolders.forEach((aPathname) => {
               delete draft[storageId]!.folderMap[aPathname]
             })
           })
@@ -1289,14 +1273,14 @@ const storageDataPredicate = schema({
 
 export function getStorageDataList(
   liteStorage: LiteStorage
-): NoteStorageData[] | null {
+): PouchNoteStorageData[] | null {
   const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
     if (!Array.isArray(parsedStorageDataList))
       throw new Error('storage data is corrupted')
 
-    return parsedStorageDataList.reduce<NoteStorageData[]>(
+    return parsedStorageDataList.reduce<PouchNoteStorageData[]>(
       (validatedList, parsedStorageData) => {
         if (isValid(parsedStorageData, storageDataPredicate)) {
           validatedList.push(parsedStorageData)
@@ -1327,59 +1311,90 @@ function saveStorageDataList(
   liteStorage.setItem(
     storageDataListKey,
     JSON.stringify(
-      values(storageMap).map(({ id, name, cloudStorage }) => ({
-        id,
-        name,
-        cloudStorage,
-      }))
+      values(storageMap).map((storage) => {
+        const { id, name } = storage
+        if (storage.type === 'fs') {
+          return {
+            id,
+            name,
+            type: 'fs',
+            location: storage.location,
+          }
+        }
+        return {
+          id,
+          name,
+          cloudStorage: storage.cloudStorage,
+        }
+      })
     )
   )
 }
 
 async function prepareStorage(
-  { id, name, cloudStorage }: NoteStorageData,
-  adapter: 'idb' | 'memory'
+  storageData: NoteStorageData
 ): Promise<NoteStorage> {
-  const pouchdb = new PouchDB(id, { adapter })
-  const db = new NoteDb(pouchdb, id, name)
+  const { id, name } = storageData
+  const db =
+    storageData.type === 'fs'
+      ? new FSNoteDb(id, name, storageData.location)
+      : new PouchNoteDb(new PouchDB(id, { adapter: 'idb' }), id, name)
   await db.init()
 
   const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
   const attachmentMap = await db.getAttachmentMap()
-  const storage: NoteStorage = {
-    id,
-    name,
-    cloudStorage,
-    noteMap,
-    folderMap: Object.entries(folderMap).reduce(
-      (map, [pathname, folderDoc]) => {
-        map[pathname] = {
-          ...folderDoc,
-          pathname,
-          noteIdSet: new Set(),
-        }
+  const populatedFolderMap = entries(folderMap).reduce<
+    ObjectMap<PopulatedFolderDoc>
+  >((map, [pathname, folderDoc]) => {
+    map[pathname] = {
+      ...folderDoc,
+      pathname,
+      noteIdSet: new Set(),
+    }
 
-        return map
-      },
-      {}
-    ),
-    tagMap: Object.entries(tagMap).reduce((map, [name, tagDoc]) => {
+    return map
+  }, {})
+  const populatedTagMap = entries(tagMap).reduce<ObjectMap<PopulatedTagDoc>>(
+    (map, [name, tagDoc]) => {
       map[name] = { ...tagDoc, name, noteIdSet: new Set() }
       return map
-    }, {}),
-    attachmentMap,
-    db,
-  }
+    },
+    {}
+  )
 
-  for (const noteDoc of Object.values(noteMap) as NoteDoc[]) {
+  for (const noteDoc of values(noteMap)) {
     if (noteDoc.trashed) {
       continue
     }
-    storage.folderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
-    noteDoc.tags.forEach((tagName) => {
-      storage.tagMap[tagName]!.noteIdSet.add(noteDoc._id)
+    populatedFolderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
+    noteDoc.tags.forEach((tag) => {
+      populatedTagMap[tag]!.noteIdSet.add(noteDoc._id)
     })
   }
 
-  return storage
+  if (storageData.type === 'fs') {
+    return {
+      type: 'fs',
+      id,
+      name,
+      location: storageData.location,
+      noteMap,
+      folderMap: populatedFolderMap,
+      tagMap: populatedTagMap,
+      attachmentMap,
+      db: db as any,
+    } as FSNoteStorage
+  }
+
+  return {
+    type: storageData.type,
+    id,
+    name,
+    cloudStorage: storageData.cloudStorage,
+    noteMap,
+    folderMap: populatedFolderMap,
+    tagMap: populatedTagMap,
+    attachmentMap,
+    db,
+  } as PouchNoteStorage
 }

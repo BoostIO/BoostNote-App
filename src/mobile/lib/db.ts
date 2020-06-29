@@ -10,11 +10,6 @@ export const {
   useStore: useDb,
 } = createStoreContext(
   wrapDbStoreWithAnalytics(
-    createDbStoreCreator(
-      localLiteStorage,
-      useRouter,
-      usePathnameWithoutNoteId,
-      'idb'
-    )
+    createDbStoreCreator(localLiteStorage, useRouter, usePathnameWithoutNoteId)
   )
 )

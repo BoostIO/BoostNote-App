@@ -1,7 +1,13 @@
 import { NOTE_ID_PREFIX, FOLDER_ID_PREFIX, TAG_ID_PREFIX } from './consts'
 import { join } from 'path'
-import { ObjectMap, NoteDoc, FolderDoc, TagDoc, NoteStorageData } from './types'
-import { generateId } from '../string'
+import {
+  ObjectMap,
+  NoteDoc,
+  FolderDoc,
+  TagDoc,
+  PouchNoteStorageData,
+} from './types'
+import { generateId, escapeRegExp } from '../string'
 
 export function values<T>(objectMap: ObjectMap<T>): T[] {
   return Object.values(objectMap) as T[]
@@ -11,12 +17,27 @@ export function entries<T>(objectMap: ObjectMap<T>): [string, T][] {
   return Object.entries(objectMap) as [string, T][]
 }
 
+export function keys(objectMap: ObjectMap<any>): string[] {
+  return Object.keys(objectMap)
+}
+
 export function getNow(): string {
   return new Date().toISOString()
 }
 
 export function generateNoteId(): string {
   return `${NOTE_ID_PREFIX}${generateId()}`
+}
+
+export function excludeNoteIdPrefix(noteId: string): string {
+  return noteId.replace(new RegExp(`^${NOTE_ID_PREFIX}`), '')
+}
+
+export function prependNoteIdPrefix(noteId: string): string {
+  if (new RegExp(`^${NOTE_ID_PREFIX}`).test(noteId)) {
+    return `${NOTE_ID_PREFIX}${noteId}`
+  }
+  return noteId
 }
 
 export function getFolderId(pathname: string): string {
@@ -59,6 +80,10 @@ export function isFolderPathnameValid(pathname: string): boolean {
 export function isTagNameValid(name: string): boolean {
   if (name.length === 0) return false
   return !/[\s#<>:"\/\\|?*\x00-\x1F]/g.test(name)
+}
+
+export function isSubPathname(pathname: string, newPathname: string) {
+  return new RegExp(`^${escapeRegExp(pathname)}/.+`).test(newPathname)
 }
 
 enum DbClientErrorCode {
@@ -134,7 +159,7 @@ export function getAllParentFolderPathnames(pathname: string) {
 }
 
 export function isCloudStorageData(
-  data: NoteStorageData
-): data is Required<NoteStorageData> {
+  data: PouchNoteStorageData
+): data is Required<PouchNoteStorageData> {
   return data.cloudStorage != null
 }

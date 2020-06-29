@@ -96,7 +96,7 @@ const TagNavigatorNewTagPopup = ({
 
   const availableTagNames = useMemo(() => {
     const tagSet = new Set(tags)
-    console.log(tagSet, storageTags)
+
     return storageTags.filter((storageTag) => {
       return storageTag != null && !tagSet.has(storageTag)
     })

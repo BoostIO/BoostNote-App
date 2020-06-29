@@ -127,7 +127,6 @@ const StorageNavigatorFragment = ({
       if (newNote == null) {
         return
       }
-      console.log(folderPathname)
 
       const notePathname =
         newNote.folderPathname === '/'
@@ -245,7 +244,7 @@ const StorageNavigatorFragment = ({
     ])
   }, [popupWithPosition, showPromptToCreateFolder, createNoteToFolder])
 
-  const syncing = storage.sync != null
+  const syncing = storage.type !== 'fs' && storage.sync != null
 
   const trashed = useMemo(
     () => Object.values(storage.noteMap).filter((note) => note!.trashed),

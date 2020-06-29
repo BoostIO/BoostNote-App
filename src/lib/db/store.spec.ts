@@ -16,8 +16,7 @@ function prepareDbStore() {
       createDbStoreCreator(
         memoryStorage,
         useRouter,
-        usePathnameWithoutNoteId,
-        'memory'
+        usePathnameWithoutNoteId
       )(),
     {
       wrapper: combineProviders(
