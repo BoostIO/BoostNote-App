@@ -20,6 +20,7 @@ import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
+import AttachmentImage from './markdown/AttachmentImage'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -145,18 +146,6 @@ export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
   [Partial<RehypeCodeMirrorOptions>?]
 >
 
-const BlobImage = ({ blob, ...props }: any) => {
-  const url = useMemo(() => {
-    return URL.createObjectURL(blob)
-  }, [blob])
-  useEffect(() => {
-    return () => {
-      URL.revokeObjectURL(url)
-    }
-  }, [blob, url])
-  return <img src={url} {...props} />
-}
-
 interface MarkdownPreviewerProps {
   content: string
   codeBlockTheme?: string
@@ -203,7 +192,7 @@ const MarkdownPreviewer = ({
             if (src != null && !src.match('/')) {
               const attachment = attachmentMap[src]
               if (attachment != null) {
-                return <BlobImage blob={attachment.blob} />
+                return <AttachmentImage attachment={attachment} />
               }
             }
 
