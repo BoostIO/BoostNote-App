@@ -175,20 +175,20 @@ export default class PouchNoteDb implements NoteDb {
     await Promise.all(
       allFoldersToRename.map(async (folderPathname) => {
         const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
-        const newfolderPathname = folderPathname.replace(regex, newPathname)
+        const destinationPathname = folderPathname.replace(regex, newPathname)
         const notes = await this.findNotesByFolder(folderPathname)
-        const newFolder = await this.upsertFolder(newfolderPathname)
+        const newFolder = await this.upsertFolder(destinationPathname)
         const rewrittenNotes = await Promise.all(
           notes.map((note) =>
             this.updateNote(note._id, {
-              folderPathname: newfolderPathname,
+              folderPathname: destinationPathname,
             })
           )
         )
 
         updatedFolders.push({
           ...newFolder,
-          pathname: newPathname,
+          pathname: destinationPathname,
           noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
         })
         updatedNotes.push(...rewrittenNotes)
