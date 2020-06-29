@@ -583,11 +583,19 @@ export default class PouchNoteDb implements NoteDb {
         file.type
       )
       currentRev = response.rev
-      const data = await this.pouchDb.getAttachment(ATTACHMENTS_ID, fileName)
       attachments.push({
         name: fileName,
         type: file.type,
-        blob: data as Blob,
+        getData: async () => {
+          const blob = await this.pouchDb.getAttachment(
+            ATTACHMENTS_ID,
+            fileName
+          )
+          return {
+            type: 'blob',
+            blob: blob as Blob,
+          }
+        },
       })
     }
 
@@ -613,7 +621,6 @@ export default class PouchNoteDb implements NoteDb {
       await this.pouchDb.put({ _id: ATTACHMENTS_ID })
       attachmentDoc = await this.pouchDb.get(ATTACHMENTS_ID, {
         attachments: true,
-        binary: true,
       })
     }
 
@@ -625,7 +632,14 @@ export default class PouchNoteDb implements NoteDb {
       map[key] = {
         name: key,
         type: attachment.content_type,
-        blob: (attachment as PouchDB.Core.FullAttachment).data as Blob,
+
+        getData: async () => {
+          const blob = await this.pouchDb.getAttachment(ATTACHMENTS_ID, key)
+          return {
+            type: 'blob',
+            blob: blob as Blob,
+          }
+        },
       }
       return map
     }, {} as ObjectMap<Attachment>)

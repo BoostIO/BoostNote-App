@@ -226,11 +226,16 @@ export default class FSNoteDb implements NoteDb {
       if (!mime.startsWith('image/')) {
         continue
       }
-      const buffer = await $readFile(filePathname)
+
       attachmentMap[fileName] = {
         name: fileName,
         type: mime,
-        blob: new Blob([buffer], { type: mime }),
+        getData: async () => {
+          return {
+            type: 'src',
+            src: this.appendFileProtocol(filePathname),
+          }
+        },
       }
     }
 
@@ -244,12 +249,18 @@ export default class FSNoteDb implements NoteDb {
       const fileName = `${dashify(name)}${ext}`
 
       const data = Buffer.from(await file.arrayBuffer())
-      await $writeFile(this.getAttachmentPathname(fileName), data)
+      const attachmentPathname = this.getAttachmentPathname(fileName)
+      await $writeFile(attachmentPathname, data)
 
       attachments.push({
         name: fileName,
         type: file.type,
-        blob: file as Blob,
+        getData: async () => {
+          return {
+            type: 'src',
+            src: this.appendFileProtocol(attachmentPathname),
+          }
+        },
       })
     }
     return attachments
@@ -586,5 +597,9 @@ export default class FSNoteDb implements NoteDb {
 
   getAttachmentPathname(fileName: string) {
     return join(this.getAttachmentsFolderPathname(), fileName)
+  }
+
+  appendFileProtocol(pathname: string) {
+    return `file://${pathname}`
   }
 }

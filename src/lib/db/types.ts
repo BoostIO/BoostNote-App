@@ -74,10 +74,14 @@ export type TagDocEditibleProps = {
   data: JsonObject
 }
 
+export type AttachmentData =
+  | { type: 'blob'; blob: Blob }
+  | { type: 'src'; src: string }
+
 export type Attachment = {
   name: string
   type: string
-  blob: Blob
+  getData: () => Promise<AttachmentData>
 }
 
 export interface AllDocsMap {

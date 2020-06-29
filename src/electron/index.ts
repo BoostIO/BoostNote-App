@@ -18,7 +18,7 @@ const singleInstance = app.requestSingleInstanceLock()
 
 function createMainWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
-    webPreferences: { nodeIntegration: true },
+    webPreferences: { nodeIntegration: true, webSecurity: !dev },
     width: 1200,
     height: 800,
     minWidth: 960,
