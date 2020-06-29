@@ -6,7 +6,7 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import { useFirstUser } from '../../lib/preferences'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import {
@@ -154,7 +154,7 @@ const StorageNavigatorFragment = ({
   const openContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, [
+      const contentMenuItems: MenuItem[] = [
         {
           type: MenuTypes.Normal,
           label: 'New Note',
@@ -169,14 +169,9 @@ const StorageNavigatorFragment = ({
             showPromptToCreateFolder('/')
           },
         },
-        {
-          type: MenuTypes.Separator,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Sync Storage',
-          onClick: sync,
-        },
+      ]
+
+      const storageMenuItems: MenuItem[] = [
         {
           type: MenuTypes.Normal,
           label: t('storage.rename'),
@@ -218,11 +213,26 @@ const StorageNavigatorFragment = ({
           label: 'Configure Storage',
           onClick: () => push(`/app/storages/${storage.id}/settings`),
         },
-      ])
+      ]
+      if (storage.type !== 'fs' && storage.cloudStorage != null) {
+        storageMenuItems.unshift({
+          type: MenuTypes.Normal,
+          label: 'Sync Storage',
+          onClick: sync,
+        })
+      }
+
+      const menuItems: MenuItem[] = [
+        ...contentMenuItems,
+        {
+          type: MenuTypes.Separator,
+        },
+        ...storageMenuItems,
+      ]
+      popup(event, menuItems)
     },
     [
-      storage.id,
-      storage.name,
+      storage,
       popup,
       prompt,
       messageBox,
