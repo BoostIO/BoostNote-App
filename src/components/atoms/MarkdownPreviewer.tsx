@@ -23,7 +23,7 @@ import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': ['className'],
+    '*': ['className', 'align'],
     input: ['checked'],
   },
 })
