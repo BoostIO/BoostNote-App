@@ -1349,7 +1349,13 @@ async function prepareStorage(
   const db =
     storageData.type === 'fs'
       ? new FSNoteDb(id, name, storageData.location)
-      : new PouchNoteDb(new PouchDB(id, { adapter: 'idb' }), id, name)
+      : new PouchNoteDb(
+          new PouchDB(id, {
+            adapter: process.env.NODE_ENV === 'test' ? 'memory' : 'idb',
+          }),
+          id,
+          name
+        )
   await db.init()
 
   const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
