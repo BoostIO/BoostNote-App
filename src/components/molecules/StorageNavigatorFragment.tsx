@@ -188,7 +188,10 @@ const StorageNavigatorFragment = ({
           onClick: async () => {
             messageBox({
               title: `Remove "${storage.name}" storage`,
-              message: t('storage.removeMessage'),
+              message:
+                storage.type === 'fs'
+                  ? "This operation won't delete the actual storage folder. You can add it to the app again."
+                  : t('storage.removeMessage'),
               iconType: DialogIconTypes.Warning,
               buttons: [t('storage.remove'), t('general.cancel')],
               defaultButtonIndex: 0,
