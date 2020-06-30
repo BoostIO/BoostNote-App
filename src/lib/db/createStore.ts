@@ -1041,6 +1041,19 @@ export function createDbStoreCreator(
                   noteDoc._id,
                 ]),
               }
+        const parentFolderPathnames = getAllParentFolderPathnames(
+          noteDoc.folderPathname
+        )
+        const missingFolders: PopulatedFolderDoc[] = []
+        for (const parentFolderPathname of parentFolderPathnames) {
+          if (storage.folderMap[parentFolderPathname] == null) {
+            missingFolders.push({
+              ...(await storage.db.getFolder(parentFolderPathname)),
+              pathname: parentFolderPathname,
+              noteIdSet: new Set(),
+            } as PopulatedFolderDoc)
+          }
+        }
 
         const modifiedTags: ObjectMap<PopulatedTagDoc> = ((await Promise.all(
           noteDoc.tags.map(async (tag) => {
@@ -1068,6 +1081,11 @@ export function createDbStoreCreator(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            missingFolders.forEach((missingFolder) => {
+              draft[storageId]!.folderMap[
+                missingFolder.pathname
+              ] = missingFolder
+            })
             draft[storageId]!.tagMap = {
               ...storage.tagMap,
               ...modifiedTags,
