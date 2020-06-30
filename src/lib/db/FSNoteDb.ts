@@ -604,6 +604,6 @@ export default class FSNoteDb implements NoteDb {
   }
 
   appendFileProtocol(pathname: string) {
-    return `file://${pathname}`
+    return `file://${pathname.replace(/\\/g, '/')}`
   }
 }
