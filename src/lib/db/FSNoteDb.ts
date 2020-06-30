@@ -28,7 +28,7 @@ import {
   isSubPathname,
   keys,
 } from './utils'
-import { generateId, escapeRegExp } from '../string'
+import { generateId } from '../string'
 import { Stats, Dirent } from 'fs'
 
 declare function $readFile(pathname: string): Promise<string>
@@ -78,9 +78,7 @@ export default class FSNoteDb implements NoteDb {
     const missingFolderPathnameSet = new Set<string>()
     const missingTagNameSet = new Set<string>()
     for (const note of notes) {
-      if (this.data!.folderMap[note.folderPathname] == null) {
-        missingFolderPathnameSet.add(note.folderPathname)
-      }
+      missingFolderPathnameSet.add(note.folderPathname)
       note.tags.forEach((tag) => {
         if (this.data!.tagMap[tag] == null) {
           missingTagNameSet.add(tag)
@@ -146,7 +144,7 @@ export default class FSNoteDb implements NoteDb {
       return folder
     }
     const now = getNow()
-    const folderDocProps = {
+    const newFolderDoc = {
       ...(folder || {
         _id: getFolderId(pathname),
         createdAt: now,
@@ -155,17 +153,11 @@ export default class FSNoteDb implements NoteDb {
       ...props,
       updatedAt: now,
     }
-    const folderDoc = {
-      _id: folderDocProps._id,
-      createdAt: folderDocProps.createdAt,
-      updatedAt: folderDocProps.updatedAt,
-      data: folderDocProps.data,
-    }
 
-    this.data!.folderMap[pathname] = folderDoc
+    this.data!.folderMap[pathname] = newFolderDoc
     await this.saveBoostNoteJSON()
 
-    return folderDoc
+    return newFolderDoc
   }
 
   async removeFolder(pathname: string) {
@@ -464,31 +456,37 @@ export default class FSNoteDb implements NoteDb {
     const updatedNotes: NoteDoc[] = []
     const subFolderPathnames = this.getAllFolderUnderPathname(pathname)
     const allFoldersToRename = [pathname, ...subFolderPathnames].sort()
+
+    const replacePathname = (folderPathname: string) => {
+      return folderPathname.replace(new RegExp(`^${pathname}`), newPathname)
+    }
+    await Promise.all(
+      allFoldersToRename.map(async (folderPathname) => {
+        const newFolderPathname = replacePathname(folderPathname)
+        updatedFolderMap.set(newFolderPathname, {
+          ...(await this.upsertFolder(newFolderPathname)),
+          pathname: newFolderPathname,
+          noteIdSet: new Set<string>(),
+        })
+      })
+    )
+
     const allNotes = await this.loadAllNotes()
-    const folderPathnameRegExp = new RegExp(`^${escapeRegExp(pathname)}/`, 'g')
     for (const note of allNotes) {
-      if (!folderPathnameRegExp.test(note.folderPathname)) {
+      if (
+        note.folderPathname !== pathname &&
+        !note.folderPathname.startsWith(`${pathname}/`)
+      ) {
         continue
       }
 
-      const updatedNote = await this.updateNote(note._id, {
-        folderPathname: note.folderPathname.replace(
-          folderPathnameRegExp,
-          `${newPathname}/`
-        ),
-      })
+      const newFolderPathname = replacePathname(note.folderPathname)
+      const updatedNote = {
+        ...note,
+        folderPathname: newFolderPathname,
+      }
 
-      const updatedFolder = updatedFolderMap.has(note.folderPathname)
-        ? {
-            ...(await this.upsertFolder(note.folderPathname)),
-            pathname: note.folderPathname,
-            noteIdSet: new Set<string>(),
-          }
-        : updatedFolderMap.get(note.folderPathname)!
-      updatedFolderMap.set(note.folderPathname, {
-        ...updatedFolder,
-        noteIdSet: new Set([...updatedFolder?.noteIdSet, updatedNote._id]),
-      })
+      updatedFolderMap.get(newFolderPathname)!.noteIdSet.add(updatedNote._id)
       updatedNotes.push(updatedNote)
     }
 
@@ -510,6 +508,12 @@ export default class FSNoteDb implements NoteDb {
         data,
       }
     })
+
+    await Promise.all(
+      updatedNotes.map((note) => {
+        return $writeFile(this.getNotePathname(note._id), JSON.stringify(note))
+      })
+    )
 
     this.data!.folderMap = newFolderMap
     await this.saveBoostNoteJSON()

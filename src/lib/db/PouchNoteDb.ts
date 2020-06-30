@@ -51,7 +51,7 @@ export default class PouchNoteDb implements NoteDb {
   async init() {
     await this.upsertNoteListViews()
 
-    const { noteMap, folderMap, tagMap } = await this.getAllDocsMap()
+    const { noteMap, tagMap } = await this.getAllDocsMap()
     const { missingPathnameSet, missingTagNameSet } = values(noteMap).reduce<{
       missingPathnameSet: Set<string>
       missingTagNameSet: Set<string>
@@ -61,9 +61,7 @@ export default class PouchNoteDb implements NoteDb {
           return obj
         }
 
-        if (folderMap[noteDoc.folderPathname] == null) {
-          obj.missingPathnameSet.add(noteDoc.folderPathname)
-        }
+        obj.missingPathnameSet.add(noteDoc.folderPathname)
         noteDoc.tags.forEach((tagName) => {
           if (tagMap[tagName] == null) {
             obj.missingTagNameSet.add(tagName)
