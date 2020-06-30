@@ -118,16 +118,9 @@ const StorageNavigatorFragment = ({
           return
         }
         const newPathname = folderPathSplit.join('/') + '/' + value
-        try {
-          await renameFolder(storage.id, folderPathname, newPathname)
-          push(`/app/storages/${storage.id}/notes${newPathname}`)
-          openSideNavFolderItemRecursively(storage.id, newPathname)
-        } catch (error) {
-          pushMessage({
-            title: t('general.error'),
-            description: t('folder.renameErrorMessage'),
-          })
-        }
+        await renameFolder(storage.id, folderPathname, newPathname)
+        push(`/app/storages/${storage.id}/notes${newPathname}`)
+        openSideNavFolderItemRecursively(storage.id, newPathname)
       },
     })
   }
