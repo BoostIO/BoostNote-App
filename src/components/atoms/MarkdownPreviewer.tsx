@@ -24,7 +24,7 @@ import AttachmentImage from './markdown/AttachmentImage'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': ['className'],
+    '*': ['className', 'align'],
     input: ['checked'],
   },
 })
