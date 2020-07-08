@@ -8,6 +8,7 @@ export default {
       webApp: 'Ứng dụng web',
       desktopApp: 'Ứng dụng desktop',
       mobileApp: 'Ứng dụng điện thoại',
+      boostHub: 'Evolve Your Workspace',
     },
     header: {
       forTeams: 'Dành cho nhóm',
@@ -20,9 +21,11 @@ export default {
     boostHub: {
       title: 'Boost Note dành cho nhóm',
       description1:
-        'Chúng tôi sẽ cho ra mắt 1 ứng dụng wiki đơn giản dành riêng cho lập trình viên, gọi là "BoostHub" vào tháng 6 năm 2020!',
-      description2:
-        'BoostHub hướng đến việc trở thành 1 công cụ wiki cho phép các team tương tác với nhau. Công cụ này sẽ giúp các teams tập trung mọi dữ liệu và cung cấp khả năng tìm kiếm trên dữ liệu của cả bên thứ nhất và bên thứ ba.',
+        'We\'ve developed a collaborative workspace app called "Boost Hub" for developer teams. It\'s customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!',
+      description2: 'Custom Blocks: Display and interact the third party info',
+      description3: 'Real-time Coauthoring: Edit documents with team members',
+      description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
+      description5: 'Keyboard Shortcuts: More than 20 shortcuts are prepared',
     },
     features: {
       title: 'Các chức năng',

@@ -8,6 +8,7 @@ export default {
       webApp: 'Web App',
       desktopApp: 'Desktop App',
       mobileApp: 'Mobile App',
+      boostHub: 'Evolve Your Workspace',
     },
     header: {
       forTeams: 'Für Teams',
@@ -15,14 +16,16 @@ export default {
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
-        "Eine intuitive und stylische Markdown Notiz-App für Entwickler. Vollständig Open-Source.",
+        'Eine intuitive und stylische Markdown Notiz-App für Entwickler. Vollständig Open-Source.',
     },
     boostHub: {
       title: 'Boost Note für Teams',
       description1:
-        'Wir veröffentlichen das einfache und speziell für Entwickler entworfene Wiki namens "Boost Hub" im Juni 2020!',
-      description2:
-        'Boost Hub soll ein gemeinschaftliches Wiki-Tool für Teams sein, um die Verfügbarkeit und Suchmöglichkeiten von Informationen sowohl von Erstanbietern als auch von Dritten zu Zentralisieren und zu Erweitern.',
+        'We\'ve developed a collaborative workspace app called "Boost Hub" for developer teams. It\'s customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!',
+      description2: 'Custom Blocks: Display and interact the third party info',
+      description3: 'Real-time Coauthoring: Edit documents with team members',
+      description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
+      description5: 'Keyboard Shortcuts: More than 20 shortcuts are prepared',
     },
     features: {
       title: 'Funktionen',
@@ -64,7 +67,7 @@ export default {
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        "Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und Markdown-Erweiterungen unterstützt. Bitte zwing dich also nicht zu sehr, auf die neue Anwendung zu migrieren.",
+        'Wir werden die alte Anwendung so lange weiterentwickeln, bis die aktuelle Boost Note.next App die meisten Funktionen der alten Anwendung wie lokalen Speicher und Markdown-Erweiterungen unterstützt. Bitte zwing dich also nicht zu sehr, auf die neue Anwendung zu migrieren.',
       legacyDownloadLinks: 'Legacy Download Links',
       legacyRepository: 'Legacy Repository',
     },
