@@ -8,6 +8,7 @@ export default {
       webApp: 'Application Web',
       desktopApp: 'Application Desktop',
       mobileApp: 'Application Mobile',
+      boostHub: 'Evolve Your Workspace',
     },
     header: {
       forTeams: 'Pour les équipes',
@@ -20,9 +21,11 @@ export default {
     boostHub: {
       title: 'Boost Note pour les équipes',
       description1:
-        'Nous lancerons le wiki propre et simple spécialement optimisé pour les développeurs appelé "Boost Hub" en juin 2020 !',
-      description2:
-        "Boost Hub se veut être un outil de wiki collaboratif permettant aux équipes de centraliser et d'amplifier la disponibilité et la capacité de recherche des informations de sources directes et tiers",
+        'We\'ve developed a collaborative workspace app called "Boost Hub" for developer teams. It\'s customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!',
+      description2: 'Custom Blocks: Display and interact the third party info',
+      description3: 'Real-time Coauthoring: Edit documents with team members',
+      description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
+      description5: 'Keyboard Shortcuts: More than 20 shortcuts are prepared',
     },
     features: {
       title: 'Fonctionnalités',
