@@ -140,7 +140,7 @@ const Header = () => {
             <HomeLogoLink />
           </HeaderLogo>
           <HeaderLeftList display={['none', 'flex']}>
-            <HeaderLink p={2} mx={3} href='https://hub.boostio.co/'>
+            <HeaderLink p={2} mx={3} href='https://boosthub.io'>
               {t('header.forTeams')}
             </HeaderLink>
             <li style={{ height: '30px' }}>
