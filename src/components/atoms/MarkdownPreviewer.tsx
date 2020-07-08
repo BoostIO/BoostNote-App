@@ -21,6 +21,7 @@ import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 import AttachmentImage from './markdown/AttachmentImage'
+import CodeblockCopyButton from './markdown/CodeblockCopyButton'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -111,6 +112,8 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
         }
       }
 
+      // copy button
+      cmResult.push(h('span', { className: 'code-copy-btn' }, rawContent))
       node.children = cmResult
     }
 
@@ -225,6 +228,13 @@ const MarkdownPreviewer = ({
                 updateContent={updateContent}
               />
             )
+          },
+          span: (props: React.HTMLProps<HTMLSpanElement>) => {
+            const { className, children } = props
+            if (className == 'code-copy-btn') {
+              return <CodeblockCopyButton code={children[0]} />
+            }
+            return <span {...props} />
           },
         },
       })
