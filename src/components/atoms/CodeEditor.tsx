@@ -5,6 +5,7 @@ import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
+  EditorHotkeys,
 } from '../../lib/preferences'
 
 const StyledContainer = styled.div`
@@ -16,6 +17,13 @@ const StyledContainer = styled.div`
 const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineWrapping: true,
   lineNumbers: true,
+}
+
+const translateHotkey = (hotkey) => {
+  return hotkey
+    .replace(/\s*\+\s*/g, '-')
+    .replace(/Command/g, 'Cmd')
+    .replace(/Control/g, 'Ctrl')
 }
 
 interface CodeEditorProps {
@@ -32,6 +40,7 @@ interface CodeEditorProps {
   indentType?: EditorIndentTypeOptions
   indentSize?: EditorIndentSizeOptions
   keyMap?: EditorKeyMapOptions
+  hotkeys?: EditorHotkeys
   mode?: string
   readonly?: boolean
 }
@@ -46,6 +55,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.props.keyMap == null || this.props.keyMap === 'default'
         ? 'sublime'
         : this.props.keyMap
+    const hotkeys = this.props.hotkeys
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
       theme: getCodeMirrorTheme(this.props.theme),
@@ -55,6 +65,16 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       keyMap,
       mode: this.props.mode || 'markdown',
       readOnly: this.props.readonly === true,
+      extraKeys: CodeMirror.normalizeKeyMap({
+        [translateHotkey(hotkeys['date.insert'])]: (cm) => {
+          const dateNow = new Date()
+          cm.replaceSelection(dateNow.toLocaleDateString())
+        },
+        [translateHotkey(hotkeys['datetime.insert'])]: (cm) => {
+          const dateNow = new Date()
+          cm.replaceSelection(dateNow.toLocaleString())
+        },
+      }),
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)

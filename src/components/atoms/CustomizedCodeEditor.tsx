@@ -35,6 +35,7 @@ const CustomizedCodeEditor = ({
       indentType={preferences['editor.indentType']}
       indentSize={preferences['editor.indentSize']}
       keyMap={preferences['editor.keyMap']}
+      hotkeys={preferences['editor.hotkeys']}
       mode={mode}
       readonly={readonly}
     />
