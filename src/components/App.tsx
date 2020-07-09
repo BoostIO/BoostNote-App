@@ -52,7 +52,6 @@ const App = () => {
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      console.log(event)
       switch (event.key) {
         case ',':
           if (isWithGeneralCtrlKey(event)) {
