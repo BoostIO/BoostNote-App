@@ -1109,12 +1109,32 @@ export function createDbStoreCreator(
 
         await storage.db.purgeNote(noteId)
 
-        const noteMap = { ...storageMap[storageId]!.noteMap }
-        delete noteMap[noteId]
-
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
+            const storage = draft[storageId]!
+            const note = storage.noteMap[noteId]
+            if (note == null) {
+              return
+            }
+            const noteMap = { ...storage.noteMap }
+            delete noteMap[noteId]
             draft[storageId]!.noteMap = noteMap
+
+            const folder = storage.folderMap[note.folderPathname]
+            if (folder != null) {
+              const newFolderNoteIdSet = new Set(folder.noteIdSet)
+              newFolderNoteIdSet.delete(note._id)
+              folder.noteIdSet = newFolderNoteIdSet
+            }
+
+            note.tags.forEach((tagName) => {
+              const tag = storage.tagMap[tagName]
+              if (tag != null) {
+                const newTagNoteIdSet = new Set(tag.noteIdSet)
+                newTagNoteIdSet.delete(note._id)
+                tag.noteIdSet = newTagNoteIdSet
+              }
+            })
           })
         )
         queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
