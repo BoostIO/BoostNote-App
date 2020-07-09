@@ -52,11 +52,23 @@ const App = () => {
   const { toggleClosed, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
+      console.log(event)
       switch (event.key) {
         case ',':
           if (isWithGeneralCtrlKey(event)) {
             toggleClosed()
           }
+          break
+        case 'a':
+          if (isWithGeneralCtrlKey(event)) {
+            if (event.target.classList.contains('MarkdownPreviewer')) {
+              event.preventDefault()
+              const range = document.createRange()
+              range.selectNode(event.target)
+              window.getSelection().addRange(range)
+            }
+          }
+          break
       }
     }
   }, [toggleClosed])

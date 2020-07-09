@@ -275,7 +275,7 @@ const MarkdownPreviewer = ({
   }, [style])
 
   return (
-    <StyledContainer className='MarkdownPreviewer'>
+    <StyledContainer className='MarkdownPreviewer' tabIndex='0'>
       <div className={cc([theme])}>
         {rendering && 'rendering...'}
         {renderedContent}
