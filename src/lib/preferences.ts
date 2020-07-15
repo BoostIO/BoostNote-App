@@ -6,9 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
-import { osName } from './platform'
-
-const isMac = osName === 'mac'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -33,9 +30,6 @@ export type GeneralNoteListViewOptions = 'default' | 'compact'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
-export interface EditorHotkeys {
-  [string]: string
-}
 
 export type KeybindingConfig = number[]
 
@@ -56,7 +50,6 @@ export interface Preferences {
   'editor.indentType': EditorIndentTypeOptions
   'editor.indentSize': EditorIndentSizeOptions
   'editor.keyMap': EditorKeyMapOptions
-  'editor.hotkeys': EditorHotkeys
 
   // Markdown
   'markdown.previewStyle': string
@@ -112,10 +105,6 @@ const basePreferences: Preferences = {
   'editor.indentType': 'spaces',
   'editor.indentSize': 4,
   'editor.keyMap': 'default',
-  'editor.hotkeys': {
-    'date.insert': isMac ? 'Cmd + /' : 'Ctrl + /',
-    'datetime.insert': isMac ? 'Cmd + Shift + /' : 'Ctrl + Shift + /',
-  },
 
   // Markdown
   'markdown.previewStyle': 'default',
