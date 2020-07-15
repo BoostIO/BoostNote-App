@@ -1,13 +1,14 @@
-> ### [Boost Note for Teams](https://hub.boostio.co/)
+> ### [Boost Note for Teams](https://boosthub.io/)
 >
-> We'll launch the clean and simple wiki specially optimized for developers called "Boost Hub" in June 2020!
+> We've developed a collaborative workspace app called "Boost Hub" for developer teams.
 >
-> Boost Hub will aim to be a collaborative wiki tool for teams to centralize and amplify the availability and searchability of both first-party and third-party information.
+> It's customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!
 
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
 
-  [https://boostnote.io/](https://boostnote.io/)
+[https://boostnote.io/](https://boostnote.io/)
+
 </div>
 
 ![uiimage](./static/img_ui.svg)
@@ -82,7 +83,8 @@ npm run dev:electron
 
 #### Mobile app
 
-To be announced.
+- [Android (beta)](https://play.google.com/store/apps/details?id=com.boostio.boostnote)
+- [iOS (beta)](https://apps.apple.com/us/app/boostnote-mobile/id1498182749)
 
 ## License
 
