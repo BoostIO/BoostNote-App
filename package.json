@@ -128,6 +128,7 @@
     "i18next": "^19.0.0",
     "immer": "^3.3.0",
     "is-electron": "^2.2.0",
+    "keycoder": "^1.1.1",
     "lodash": "^4.17.15",
     "ltstrg": "^1.0.1",
     "mdast-util-to-string": "^1.0.6",

@@ -37,6 +37,8 @@ export interface EditorHotkeys {
   [string]: string
 }
 
+export type KeybindingConfig = number[]
+
 export interface Preferences {
   // General
   'general.accounts': User[]
@@ -60,6 +62,19 @@ export interface Preferences {
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
   'markdown.includeFrontMatter': boolean
+
+  //Keybindings
+  'keybinding.toggleBoostNote': KeybindingConfig
+  'keybinding.toggleMenu': KeybindingConfig
+  'keybinding.toggleEditMode': KeybindingConfig
+  'keybinding.toggleDirection': KeybindingConfig
+  'keybinding.deleteNote': KeybindingConfig
+  'keybinding.pasteHTML': KeybindingConfig
+  'keybinding.prettifyMarkdown': KeybindingConfig
+  'keybinding.insertCurrentDate': KeybindingConfig
+  'keybinding.insertCurrentDateTime': KeybindingConfig
+  'keybinding.nextNote': KeybindingConfig
+  'keybinding.previousNote': KeybindingConfig
 }
 
 function loadPreferences() {
@@ -106,6 +121,19 @@ const basePreferences: Preferences = {
   'markdown.previewStyle': 'default',
   'markdown.codeBlockTheme': 'material-darker',
   'markdown.includeFrontMatter': true,
+
+  //Keybindings
+  'keybinding.toggleBoostNote': [17, 18],
+  'keybinding.toggleMenu': [18],
+  'keybinding.toggleEditMode': [17, 77],
+  'keybinding.toggleDirection': [17, 39],
+  'keybinding.deleteNote': [17, 16, 8],
+  'keybinding.pasteHTML': [17, 16, 86],
+  'keybinding.prettifyMarkdown': [17, 16, 70],
+  'keybinding.insertCurrentDate': [17, 191],
+  'keybinding.insertCurrentDateTime': [17, 16, 191],
+  'keybinding.nextNote': [],
+  'keybinding.previousNote': []
 }
 
 function usePreferencesStore() {
