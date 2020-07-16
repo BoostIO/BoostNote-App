@@ -128,7 +128,7 @@
     "i18next": "^19.0.0",
     "immer": "^3.3.0",
     "is-electron": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "ltstrg": "^1.0.1",
     "mdast-util-to-string": "^1.0.6",
     "ow": "^0.13.2",
