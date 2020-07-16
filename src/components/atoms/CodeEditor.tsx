@@ -1,11 +1,12 @@
 import React from 'react'
 import CodeMirror, { getCodeMirrorTheme } from '../../lib/CodeMirror'
+import { Doc } from 'codemirror'
 import styled from '../../lib/styled'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
-  EditorHotkeys,
+  Keybinding,
 } from '../../lib/preferences'
 
 const StyledContainer = styled.div`
@@ -19,8 +20,9 @@ const defaultCodeMirrorOptions: CodeMirror.EditorConfiguration = {
   lineNumbers: true,
 }
 
-const translateHotkey = (hotkey) => {
-  return hotkey
+const translateHotkey = (hotkey: string[]) => {
+  const joinedHotkey = hotkey.join(' + ');
+  return joinedHotkey
     .replace(/\s*\+\s*/g, '-')
     .replace(/Command/g, 'Cmd')
     .replace(/Control/g, 'Ctrl')
@@ -40,7 +42,7 @@ interface CodeEditorProps {
   indentType?: EditorIndentTypeOptions
   indentSize?: EditorIndentSizeOptions
   keyMap?: EditorKeyMapOptions
-  hotkeys?: EditorHotkeys
+  keybindings?: {[key: string]: Keybinding}
   mode?: string
   readonly?: boolean
 }
@@ -55,7 +57,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.props.keyMap == null || this.props.keyMap === 'default'
         ? 'sublime'
         : this.props.keyMap
-    const hotkeys = this.props.hotkeys
+    const keybindings = this.props.keybindings || {}
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
       theme: getCodeMirrorTheme(this.props.theme),
@@ -65,12 +67,12 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       keyMap,
       mode: this.props.mode || 'markdown',
       readOnly: this.props.readonly === true,
-      extraKeys: CodeMirror.normalizeKeyMap({
-        [translateHotkey(hotkeys['date.insert'])]: (cm) => {
+      extraKeys: (CodeMirror as any).normalizeKeyMap({
+        [translateHotkey(keybindings['keybinding.insertCurrentDate'])]: (cm: Doc) => {
           const dateNow = new Date()
           cm.replaceSelection(dateNow.toLocaleDateString())
         },
-        [translateHotkey(hotkeys['datetime.insert'])]: (cm) => {
+        [translateHotkey(keybindings['keybinding.insertCurrentDateTime'])]: (cm: Doc) => {
           const dateNow = new Date()
           cm.replaceSelection(dateNow.toLocaleString())
         },

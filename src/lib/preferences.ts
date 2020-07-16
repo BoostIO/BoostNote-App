@@ -31,7 +31,7 @@ export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 
-export type KeybindingConfig = number[]
+export type Keybinding = string[]
 
 export interface Preferences {
   // General
@@ -57,17 +57,17 @@ export interface Preferences {
   'markdown.includeFrontMatter': boolean
 
   //Keybindings
-  'keybinding.toggleBoostNote': KeybindingConfig
-  'keybinding.toggleMenu': KeybindingConfig
-  'keybinding.toggleEditMode': KeybindingConfig
-  'keybinding.toggleDirection': KeybindingConfig
-  'keybinding.deleteNote': KeybindingConfig
-  'keybinding.pasteHTML': KeybindingConfig
-  'keybinding.prettifyMarkdown': KeybindingConfig
-  'keybinding.insertCurrentDate': KeybindingConfig
-  'keybinding.insertCurrentDateTime': KeybindingConfig
-  'keybinding.nextNote': KeybindingConfig
-  'keybinding.previousNote': KeybindingConfig
+  'keybinding.toggleBoostNote': Keybinding
+  'keybinding.toggleMenu': Keybinding
+  'keybinding.toggleEditMode': Keybinding
+  'keybinding.toggleDirection': Keybinding
+  'keybinding.deleteNote': Keybinding
+  'keybinding.pasteHTML': Keybinding
+  'keybinding.prettifyMarkdown': Keybinding
+  'keybinding.insertCurrentDate': Keybinding
+  'keybinding.insertCurrentDateTime': Keybinding
+  'keybinding.nextNote': Keybinding
+  'keybinding.previousNote': Keybinding
 }
 
 function loadPreferences() {
@@ -112,15 +112,15 @@ const basePreferences: Preferences = {
   'markdown.includeFrontMatter': true,
 
   //Keybindings
-  'keybinding.toggleBoostNote': [17, 18],
-  'keybinding.toggleMenu': [18],
-  'keybinding.toggleEditMode': [17, 77],
-  'keybinding.toggleDirection': [17, 39],
-  'keybinding.deleteNote': [17, 16, 8],
-  'keybinding.pasteHTML': [17, 16, 86],
-  'keybinding.prettifyMarkdown': [17, 16, 70],
-  'keybinding.insertCurrentDate': [17, 191],
-  'keybinding.insertCurrentDateTime': [17, 16, 191],
+  'keybinding.toggleBoostNote': ["ctrl", "alt"],
+  'keybinding.toggleMenu': ["alt"],
+  'keybinding.toggleEditMode': ["ctrl", "m"],
+  'keybinding.toggleDirection': ["ctrl", "ArrowRight"],
+  'keybinding.deleteNote': ["ctrl", "shift", "backspace"],
+  'keybinding.pasteHTML': ["ctrl", "shift", "v"],
+  'keybinding.prettifyMarkdown': ["ctrl", "shift", "f"],
+  'keybinding.insertCurrentDate': ["ctrl", "/"],
+  'keybinding.insertCurrentDateTime': ["ctrl", "shift", "/"],
   'keybinding.nextNote': [],
   'keybinding.previousNote': []
 }
