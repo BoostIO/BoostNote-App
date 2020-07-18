@@ -142,7 +142,7 @@ const AboutTab = () => {
               </div>
             </div>
             <SectionSubtleText className='about-outline-copy'>
-              Copyright (C) 2017 - 2019 BoostIO
+              Copyright (C) 2016 - 2020 BoostIO
               <br />
               License: GPL v3
             </SectionSubtleText>
