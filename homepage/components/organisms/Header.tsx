@@ -18,6 +18,22 @@ import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
 import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
+const HeaderAlert = styled.div`
+  background-color: #0091ad;
+
+  p {
+    margin: 0;
+    padding: 15px 0;
+    color: #fff;
+    font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
+    text-align: center;
+  }
+
+  span {
+    font-weight: bold;
+  }
+`
+
 const HeaderContainer = styled.header`
   position: sticky;
   top: 0;
@@ -133,73 +149,85 @@ const Header = () => {
   )
 
   return (
-    <HeaderContainer>
-      <Container>
-        <HeaderNavigator mx={2} mt={2}>
-          <HeaderLogo flex={[1, 'inherit']}>
-            <HomeLogoLink />
-          </HeaderLogo>
-          <HeaderLeftList display={['none', 'flex']}>
-            <HeaderLink p={2} mx={3} href='https://boosthub.io'>
-              {t('header.forTeams')}
-            </HeaderLink>
-            <li style={{ height: '30px' }}>
-              <iframe
-                src='https://ghbtns.com/github-btn.html?user=boostio&repo=boostnote.next&type=star&count=true&size=large'
-                frameBorder='0'
-                scrolling='0'
-                width='170'
-                height='30'
-                title='Star boostio/boostnote.next on GitHub'
-              ></iframe>
-            </li>
-          </HeaderLeftList>
-          <HeaderRightList display={['none', 'none', 'none', 'flex']}>
-            <li>
-              <ButtonLink
-                bg='teal'
-                color='white'
-                fontSize={1}
-                py={2}
-                href='/#download'
-              >
-                <Icon path={mdiDownload} />
-                {t('common.downloadApp')}
-              </ButtonLink>
-            </li>
-            <li>
-              <ButtonLink
-                bg='white'
-                color='teal'
-                fontSize={1}
-                py={2}
-                href='https://note.boostio.co'
-                onClick={(event) => {
-                  event.preventDefault()
-                  sendGAEvent('open-in-browser')
-                  queueNavigateToGA('https://note.boostio.co')
-                }}
-              >
-                <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
-              </ButtonLink>
-            </li>
-          </HeaderRightList>
-          <HeaderLanguageSelect value={i18n.language} onChange={switchLanguage}>
-            <option value='de'>🇩🇪</option>
-            <option value='en'>🇺🇸</option>
-            <option value='es'>🇪🇸</option>
-            <option value='fr'>🇫🇷</option>
-            <option value='ja'>🇯🇵</option>
-            <option value='ko'>🇰🇷</option>
-            <option value='nl'>🇳🇱</option>
-            <option value='pt'>🇵🇹</option>
-            <option value='ru'>🇷🇺</option>
-            <option value='vn'>🇻🇳</option>
-            <option value='zh'>🇨🇳</option>
-          </HeaderLanguageSelect>
-        </HeaderNavigator>
-      </Container>
-    </HeaderContainer>
+    <>
+      <HeaderAlert>
+        <p>
+          <span>Boost Hub</span>, the workspace app for developer teams, has
+          arrived!
+        </p>
+      </HeaderAlert>
+
+      <HeaderContainer>
+        <Container>
+          <HeaderNavigator mx={2} py={2}>
+            <HeaderLogo flex={[1, 'inherit']}>
+              <HomeLogoLink />
+            </HeaderLogo>
+            <HeaderLeftList display={['none', 'flex']}>
+              <HeaderLink p={2} mx={3} href='https://boosthub.io'>
+                {t('header.forTeams')}
+              </HeaderLink>
+              <li style={{ height: '30px' }}>
+                <iframe
+                  src='https://ghbtns.com/github-btn.html?user=boostio&repo=boostnote.next&type=star&count=true&size=large'
+                  frameBorder='0'
+                  scrolling='0'
+                  width='170'
+                  height='30'
+                  title='Star boostio/boostnote.next on GitHub'
+                ></iframe>
+              </li>
+            </HeaderLeftList>
+            <HeaderRightList display={['none', 'none', 'none', 'flex']}>
+              <li>
+                <ButtonLink
+                  bg='teal'
+                  color='white'
+                  fontSize={1}
+                  py={2}
+                  href='/#download'
+                >
+                  <Icon path={mdiDownload} />
+                  {t('common.downloadApp')}
+                </ButtonLink>
+              </li>
+              <li>
+                <ButtonLink
+                  bg='white'
+                  color='teal'
+                  fontSize={1}
+                  py={2}
+                  href='https://note.boostio.co'
+                  onClick={(event) => {
+                    event.preventDefault()
+                    sendGAEvent('open-in-browser')
+                    queueNavigateToGA('https://note.boostio.co')
+                  }}
+                >
+                  <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
+                </ButtonLink>
+              </li>
+            </HeaderRightList>
+            <HeaderLanguageSelect
+              value={i18n.language}
+              onChange={switchLanguage}
+            >
+              <option value='de'>🇩🇪</option>
+              <option value='en'>🇺🇸</option>
+              <option value='es'>🇪🇸</option>
+              <option value='fr'>🇫🇷</option>
+              <option value='ja'>🇯🇵</option>
+              <option value='ko'>🇰🇷</option>
+              <option value='nl'>🇳🇱</option>
+              <option value='pt'>🇵🇹</option>
+              <option value='ru'>🇷🇺</option>
+              <option value='vn'>🇻🇳</option>
+              <option value='zh'>🇨🇳</option>
+            </HeaderLanguageSelect>
+          </HeaderNavigator>
+        </Container>
+      </HeaderContainer>
+    </>
   )
 }
 
