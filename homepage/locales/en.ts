@@ -8,7 +8,7 @@ export default {
       webApp: 'Web App',
       desktopApp: 'Desktop App',
       mobileApp: 'Mobile App',
-      boostHub: 'Evolve Your Workspace',
+      boostHub: 'Learn More About Boost Hub',
     },
     header: {
       forTeams: 'For Teams',

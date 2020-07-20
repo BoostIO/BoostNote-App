@@ -8,7 +8,7 @@ export default {
       webApp: 'Ứng dụng web',
       desktopApp: 'Ứng dụng desktop',
       mobileApp: 'Ứng dụng điện thoại',
-      boostHub: 'Evolve Your Workspace',
+      boostHub: 'Learn More About Boost Hub',
     },
     header: {
       forTeams: 'Dành cho nhóm',
