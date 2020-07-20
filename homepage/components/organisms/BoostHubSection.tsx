@@ -36,13 +36,25 @@ const BoostHubSection = () => {
               <Text as='h2' fontSize={[3, 4, 5]} mt={0} mb={4}>
                 🤝 {t('boostHub.title')}
               </Text>
-              <p>{t('boostHub.description1')}</p>
+              <p>{t('boostHub.description')}</p>
 
               <FeatureList>
-                <li>{t('boostHub.description2')}</li>
-                <li>{t('boostHub.description3')}</li>
-                <li>{t('boostHub.description4')}</li>
-                <li>{t('boostHub.description5')}</li>
+                <li>
+                  <span>{t('boostHub.feature1Name')}:</span>
+                  {t('boostHub.feature1Detail')}
+                </li>
+                <li>
+                  <span>{t('boostHub.feature2Name')}:</span>
+                  {t('boostHub.feature2Detail')}
+                </li>
+                <li>
+                  <span>{t('boostHub.feature3Name')}:</span>
+                  {t('boostHub.feature3Detail')}
+                </li>
+                <li>
+                  <span>{t('boostHub.feature4Name')}:</span>
+                  {t('boostHub.feature4Detail')}
+                </li>
               </FeatureList>
 
               <ButtonLink

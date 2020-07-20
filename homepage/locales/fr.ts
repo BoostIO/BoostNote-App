@@ -20,13 +20,17 @@ export default {
     },
     boostHub: {
       title: 'Do you know Boost Hub?',
-      description1:
+      description:
         // eslint-disable-next-line prettier/prettier
         'We\'ve developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.',
-      description2: 'Custom Blocks: Display and interact the third party info',
-      description3: 'Real-time Coauthoring: Edit documents with team members',
-      description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
-      description5: 'Keyboard Shortcuts: More than 20 shortcuts are prepared',
+      feature1Name: 'Custom Blocks',
+      feature1Detail: 'Display and interact the third party info',
+      feature2Name: 'Real-time Coauthoring',
+      feature2Detail: 'Edit documents with team members',
+      feature3Name: 'Versatile Markdown',
+      feature3Detail: 'Supporting LaTex, PlantUML, etc.',
+      feature4Name: 'Keyboard Shortcuts',
+      feature4Detail: 'More than 20 shortcuts are prepared',
     },
     features: {
       title: 'Fonctionnalités',
