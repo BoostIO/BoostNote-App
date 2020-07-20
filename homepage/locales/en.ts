@@ -19,9 +19,10 @@ export default {
         "An intuitive and stylish markdown note app for developers. It's fully open-source.",
     },
     boostHub: {
-      title: 'Boost Note for Teams',
+      title: 'Do you know Boost Hub?',
       description1:
-        'We\'ve developed a collaborative workspace app called "Boost Hub" for developer teams. It\'s customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!',
+        // eslint-disable-next-line prettier/prettier
+        'We\'ve developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.',
       description2: 'Custom Blocks: Display and interact the third party info',
       description3: 'Real-time Coauthoring: Edit documents with team members',
       description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
