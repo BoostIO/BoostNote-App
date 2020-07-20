@@ -41,7 +41,7 @@ const CommunitySection = () => {
           as='ul'
           justifyContent='center'
           mx={2}
-          my={5}
+          mt={5}
           py={4}
           flexWrap='wrap'
         >
