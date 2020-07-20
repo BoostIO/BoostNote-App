@@ -8,7 +8,7 @@ export default {
       webApp: '网页软件',
       desktopApp: '桌面软件',
       mobileApp: '手机软件',
-      boostHub: 'Evolve Your Workspace',
+      boostHub: 'Learn More About Boost Hub',
     },
     header: {
       forTeams: '团队版',
