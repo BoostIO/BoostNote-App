@@ -19,9 +19,10 @@ export default {
         'Une application de prise de notes Markdown intuitive et élégante pour les développeurs, le tout entièrement open-source.',
     },
     boostHub: {
-      title: 'Boost Note pour les équipes',
+      title: 'Do you know Boost Hub?',
       description1:
-        'We\'ve developed a collaborative workspace app called "Boost Hub" for developer teams. It\'s customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!',
+        // eslint-disable-next-line prettier/prettier
+        'We\'ve developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.',
       description2: 'Custom Blocks: Display and interact the third party info',
       description3: 'Real-time Coauthoring: Edit documents with team members',
       description4: 'Versatile Markdown: Supporting LaTex, PlantUML, etc.',
