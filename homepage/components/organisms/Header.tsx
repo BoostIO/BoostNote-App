@@ -20,17 +20,21 @@ import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
 const HeaderAlert = styled.div`
   background-color: #0091ad;
+  font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
+  color: #fff;
+  text-decoration-color: #fff !important;
 
   p {
     margin: 0;
     padding: 15px 0;
-    color: #fff;
-    font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
     text-align: center;
   }
-
   span {
     font-weight: bold;
+  }
+
+  &:hover {
+    text-decoration: underline;
   }
 `
 
@@ -150,12 +154,14 @@ const Header = () => {
 
   return (
     <>
-      <HeaderAlert>
-        <p>
-          <span>Boost Hub</span>, the workspace app for developer teams, has
-          arrived!
-        </p>
-      </HeaderAlert>
+      <a href='#boosthub'>
+        <HeaderAlert>
+          <p>
+            <span>Boost Hub</span>, the workspace app for developer teams, has
+            arrived!
+          </p>
+        </HeaderAlert>
+      </a>
 
       <HeaderContainer>
         <Container>

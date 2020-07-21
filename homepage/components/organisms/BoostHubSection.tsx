@@ -53,7 +53,7 @@ const BoostHubSection = () => {
   const { t } = useTranslation()
 
   return (
-    <section>
+    <section id='boosthub'>
       <Box bg='#2c2c2c' color='#f0f0f0' pt={5} px={2}>
         <Container mt={5}>
           <Row>
