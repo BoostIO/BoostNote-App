@@ -19,18 +19,17 @@ export default {
         'Une application de prise de notes Markdown intuitive et élégante pour les développeurs, le tout entièrement open-source.',
     },
     boostHub: {
-      title: 'Do you know Boost Hub?',
-      description:
-        // eslint-disable-next-line prettier/prettier
-        'We\'ve developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.',
-      feature1Name: 'Custom Blocks',
-      feature1Detail: 'Display and interact the third party info',
-      feature2Name: 'Real-time Coauthoring',
-      feature2Detail: 'Edit documents with team members',
-      feature3Name: 'Versatile Markdown',
-      feature3Detail: 'Supporting LaTex, PlantUML, etc.',
-      feature4Name: 'Keyboard Shortcuts',
-      feature4Detail: 'More than 20 shortcuts are prepared',
+      // title: 'Do you know Boost Hub?',
+      // description:
+      //   "We've developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.",
+      // feature1Name: 'Custom Blocks',
+      // feature1Detail: 'Display and interact the third party info',
+      // feature2Name: 'Real-time Coauthoring',
+      // feature2Detail: 'Edit documents with team members',
+      // feature3Name: 'Versatile Markdown',
+      // feature3Detail: 'Supporting LaTex, PlantUML, etc.',
+      // feature4Name: 'Keyboard Shortcuts',
+      // feature4Detail: 'More than 20 shortcuts are prepared',
     },
     features: {
       title: 'Fonctionnalités',

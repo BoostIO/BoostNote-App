@@ -19,10 +19,9 @@ export default {
         'Một ứng dụng ghi chú markdown hiệu quả cho lập trình viên và hoàn toàn open-source.',
     },
     boostHub: {
-      title: 'Do you know Boost Hub?',
+      // title: 'Do you know Boost Hub?',
       // description:
-      //   // eslint-disable-next-line prettier/prettier
-      //   'We\'ve developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.',
+      //   "We've developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.",
       // feature1Name: 'Custom Blocks',
       // feature1Detail: 'Display and interact the third party info',
       // feature2Name: 'Real-time Coauthoring',
