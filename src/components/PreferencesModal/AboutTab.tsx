@@ -135,7 +135,7 @@ const AboutTab = () => {
                   <PrimaryLink href='https://boostnote.io/'>
                     {t('about.website')}
                   </PrimaryLink>
-                  <PrimaryLink href='https://hub.boostio.co/'>
+                  <PrimaryLink href='https://boosthub.io/'>
                     {t('about.boostWiki')}
                   </PrimaryLink>
                 </p>
