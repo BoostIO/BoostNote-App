@@ -71,7 +71,7 @@
     "chalk": "^4.0.0",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
-    "electron": "^6.1.5",
+    "electron": "^7.2.4",
     "electron-builder": "^21.2.0",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
