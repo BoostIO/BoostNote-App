@@ -25,8 +25,8 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   ${backgroundColor}
-  display: flex;
-  overflow: hidden;
+  overflow: auto;
+  padding: 0 calc((100% - 1070px) / 2);
 `
 
 const Header = styled.h1`
@@ -37,7 +37,7 @@ const Header = styled.h1`
 
 const TabNav = styled.nav`
   width: 200px;
-  margin-left: 15%;
+  position: fixed;
 `
 
 const TabContent = styled.div`
@@ -45,11 +45,13 @@ const TabContent = styled.div`
   overflow-y: auto;
   padding-left: 4px;
   padding-top: 4em;
-  padding-right: 15%;
+  position: relative;
+  left: 200px;
+  width: 800px;
 `
 
 const CloseButton = styled.button`
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: calc(15% - 30px);
   width: 40px;
