@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next'
 import Icon from '../atoms/Icon'
 import { mdiClose } from '@mdi/js'
 
+const contentWidth = 1070
+
 const Container = styled.div`
   z-index: 7000;
   position: absolute;
@@ -26,7 +28,7 @@ const Container = styled.div`
   bottom: 0;
   ${backgroundColor}
   overflow: auto;
-  padding: 0 calc((100% - 1070px) / 2);
+  padding: 0 calc((100% - ${contentWidth}px) / 2);
 `
 
 const Header = styled.h1`
@@ -47,7 +49,7 @@ const TabContent = styled.div`
   padding-top: 4em;
   position: relative;
   left: 200px;
-  width: 800px;
+  width: ${contentWidth - 200}px;
 `
 
 const CloseButton = styled.button`
