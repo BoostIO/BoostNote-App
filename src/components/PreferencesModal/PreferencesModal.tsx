@@ -55,7 +55,7 @@ const TabContent = styled.div`
 const CloseButton = styled.button`
   position: fixed;
   top: 20px;
-  right: calc(15% - 30px);
+  right: calc((100% - ${contentWidth}px) / 2 - 40px);
   width: 40px;
   height: 40px;
   background-color: transparent;
