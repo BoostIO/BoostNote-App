@@ -11,7 +11,6 @@ import {
   TagDoc,
   NoteStorageData,
   PouchNoteStorage,
-  FSNoteStorage,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
@@ -74,6 +73,11 @@ export interface DbStore {
   ): Promise<NoteDoc | undefined>
   trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   untrashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  bookmarkNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  unbookmarkNote(
+    storageId: string,
+    noteId: string
+  ): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
   removeTag(storageId: string, tag: string): Promise<void>
   moveNoteToOtherStorage(
@@ -1009,6 +1013,11 @@ export function createDbStoreCreator(
               ...storage.tagMap,
               ...modifiedTags,
             }
+            if (noteDoc.data.bookmarked) {
+              const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+              bookmarkedItemIdSet.delete(noteDoc._id)
+              draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+            }
           })
         )
 
@@ -1089,6 +1098,11 @@ export function createDbStoreCreator(
             draft[storageId]!.tagMap = {
               ...storage.tagMap,
               ...modifiedTags,
+            }
+            if (noteDoc.data.bookmarked) {
+              const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+              bookmarkedItemIdSet.add(noteDoc._id)
+              draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
             }
           })
         )
@@ -1238,6 +1252,56 @@ export function createDbStoreCreator(
       queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
     }
 
+    const bookmarkNote = async (storageId: string, noteId: string) => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return
+      }
+      const noteDoc = await storage.db.bookmarkNote(noteId)
+      if (noteDoc == null) {
+        return
+      }
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+          bookmarkedItemIdSet.add(noteDoc._id)
+          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+
+          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+        })
+      )
+
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+      return noteDoc
+    }
+
+    const unbookmarkNote = async (storageId: string, noteId: string) => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return
+      }
+      const noteDoc = await storage.db.unbookmarkNote(noteId)
+      if (noteDoc == null) {
+        return
+      }
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+          bookmarkedItemIdSet.delete(noteDoc._id)
+          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+
+          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+        })
+      )
+
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+      return noteDoc
+    }
+
     return {
       initialized,
       storageMap,
@@ -1264,6 +1328,8 @@ export function createDbStoreCreator(
       removeTag,
       addAttachments,
       removeAttachment,
+      bookmarkNote,
+      unbookmarkNote,
     }
   }
 }
@@ -1369,6 +1435,7 @@ async function prepareStorage(
     },
     {}
   )
+  const bookmarkedIdSet = new Set<string>()
 
   for (const noteDoc of values(noteMap)) {
     if (noteDoc.trashed) {
@@ -1378,7 +1445,11 @@ async function prepareStorage(
     noteDoc.tags.forEach((tag) => {
       populatedTagMap[tag]!.noteIdSet.add(noteDoc._id)
     })
+    if (noteDoc.data.bookmarked) {
+      bookmarkedIdSet.add(noteDoc._id)
+    }
   }
+  const bookmarkedItemIds = [...bookmarkedIdSet]
 
   if (storageData.type === 'fs') {
     return {
@@ -1390,12 +1461,13 @@ async function prepareStorage(
       folderMap: populatedFolderMap,
       tagMap: populatedTagMap,
       attachmentMap,
-      db: db as any,
-    } as FSNoteStorage
+      db: db as FSNoteDb,
+      bookmarkedItemIds,
+    }
   }
 
   return {
-    type: storageData.type,
+    type: 'pouch',
     id,
     name,
     cloudStorage: storageData.cloudStorage,
@@ -1403,6 +1475,7 @@ async function prepareStorage(
     folderMap: populatedFolderMap,
     tagMap: populatedTagMap,
     attachmentMap,
-    db,
-  } as PouchNoteStorage
+    db: db as PouchNoteDb,
+    bookmarkedItemIds,
+  }
 }
