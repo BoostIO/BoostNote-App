@@ -39,7 +39,6 @@ import NoteDb from './NoteDb'
 import { escapeRegExp } from '../string'
 
 export default class PouchNoteDb implements NoteDb {
-  public initialized = false
   type: 'pouch' = 'pouch'
 
   constructor(
@@ -298,7 +297,6 @@ export default class PouchNoteDb implements NoteDb {
       tags: [],
       folderPathname: '/',
       data: {},
-      bookmarked: false,
       ...noteProps,
       createdAt: now,
       updatedAt: now,
@@ -441,6 +439,59 @@ export default class PouchNoteDb implements NoteDb {
       ...note,
       trashed: false,
     }
+    const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev,
+    }
+  }
+
+  async bookmarkNote(noteId: string): Promise<NoteDoc> {
+    const note = await this.getNote(noteId)
+    if (note == null) {
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+    }
+
+    if (note.data.bookmarked) {
+      return note
+    }
+
+    const noteDocProps = {
+      ...note,
+      data: {
+        ...note.data,
+        bookmarked: true,
+      },
+    }
+
+    const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
+
+    return {
+      ...noteDocProps,
+      _rev: rev,
+    }
+  }
+
+  async unbookmarkNote(noteId: string): Promise<NoteDoc> {
+    const note = await this.getNote(noteId)
+    if (note == null) {
+      throw createNotFoundError(`The note \`${noteId}\` does not exist`)
+    }
+
+    if (!note.data.bookmarked) {
+      console.log('nochange ignore call')
+      return note
+    }
+
+    const noteDocProps = {
+      ...note,
+      data: {
+        ...note.data,
+        bookmarked: false,
+      },
+    }
+
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
     return {

@@ -29,6 +29,8 @@ export default interface NoteDb {
   ): Promise<NoteDoc>
   trashNote(noteId: string): Promise<NoteDoc>
   untrashNote(noteId: string): Promise<NoteDoc>
+  bookmarkNote(noteId: string): Promise<NoteDoc>
+  unbookmarkNote(noteId: string): Promise<NoteDoc>
   purgeNote(noteId: string): Promise<void>
   removeTag(tagName: string): Promise<void>
   removeFolder(folerPathname: string): Promise<void>

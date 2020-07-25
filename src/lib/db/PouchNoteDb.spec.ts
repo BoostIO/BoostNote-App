@@ -802,7 +802,6 @@ describe('PouchNoteDb', () => {
         createdAt: now,
         updatedAt: now,
         trashed: true,
-        bookmarked: false,
         title: 'test title',
         content: 'test content',
         data: {},

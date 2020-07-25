@@ -40,7 +40,6 @@ export type NoteDocEditibleProps = {
   content: string
   folderPathname: string
   tags: string[]
-  bookmarked: boolean
   data: JsonObject
 }
 
@@ -122,4 +121,5 @@ export interface AllPopulatedDocsMap {
   folderMap: ObjectMap<PopulatedFolderDoc>
   tagMap: ObjectMap<PopulatedTagDoc>
   attachmentMap: ObjectMap<Attachment>
+  bookmarkedItemIds: string[]
 }

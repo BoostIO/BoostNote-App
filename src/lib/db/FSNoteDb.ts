@@ -54,7 +54,7 @@ interface StorageJSONData {
   tagMap: ObjectMap<TagDoc>
 }
 
-export default class FSNoteDb implements NoteDb {
+class FSNoteDb implements NoteDb {
   type = 'fs'
   id: string
   name: string
@@ -272,7 +272,6 @@ export default class FSNoteDb implements NoteDb {
       tags: [],
       folderPathname: '/',
       data: {},
-      bookmarked: false,
       ...noteProps,
       createdAt: now,
       updatedAt: now,
@@ -358,6 +357,48 @@ export default class FSNoteDb implements NoteDb {
     const newNoteDoc = {
       ...noteDoc,
       trashed: false,
+    }
+
+    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+
+    return newNoteDoc
+  }
+
+  async bookmarkNote(noteId: string): Promise<NoteDoc> {
+    const notePathname = this.getNotePathname(noteId)
+    const rawNoteDoc = await $readFile(notePathname)
+    const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
+    if (noteDoc.data.bookmarked) {
+      return noteDoc
+    }
+
+    const newNoteDoc = {
+      ...noteDoc,
+      data: {
+        ...noteDoc.data,
+        bookmarked: true,
+      },
+    }
+
+    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+
+    return newNoteDoc
+  }
+
+  async unbookmarkNote(noteId: string): Promise<NoteDoc> {
+    const notePathname = this.getNotePathname(noteId)
+    const rawNoteDoc = await $readFile(notePathname)
+    const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
+    if (!noteDoc.data.bookmarked) {
+      return noteDoc
+    }
+
+    const newNoteDoc = {
+      ...noteDoc,
+      data: {
+        ...noteDoc.data,
+        bookmarked: false,
+      },
     }
 
     await $writeFile(notePathname, JSON.stringify(newNoteDoc))
@@ -607,3 +648,5 @@ export default class FSNoteDb implements NoteDb {
     return `file://${pathname.replace(/\\/g, '/')}`
   }
 }
+
+export default FSNoteDb
