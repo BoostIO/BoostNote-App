@@ -71,12 +71,6 @@ export const useRouteParams = () => {
     const names = pathname.slice('/m'.length).split('/').slice(1)
 
     let noteId: string | undefined = undefined
-    if (names[0] === 'bookmarks') {
-      return {
-        name: 'storages.bookmarks',
-      }
-    }
-
     if (names[0] === 'storages' && names[1] == null) {
       return {
         name: 'storages.create',

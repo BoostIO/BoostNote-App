@@ -19,12 +19,6 @@ export interface StorageSettings extends BaseRouteParams {
   storageId: string
 }
 
-export interface StorageBookmarkNotes extends BaseRouteParams {
-  name: 'storages.bookmarks'
-  storageId?: string
-  noteId?: string
-}
-
 export interface StorageNotesRouteParams extends BaseRouteParams {
   name: 'storages.notes'
   storageId: string
@@ -57,7 +51,6 @@ export interface UnknownRouteparams extends BaseRouteParams {
 export type AllRouteParams =
   | StorageCreate
   | StorageSettings
-  | StorageBookmarkNotes
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
