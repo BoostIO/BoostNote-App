@@ -59,12 +59,17 @@ const App = () => {
           }
           break
         case 'a':
-          if (isWithGeneralCtrlKey(event)) {
-            if (event.target.classList.contains('MarkdownPreviewer')) {
+          if (isWithGeneralCtrlKey(event) && event.target != null) {
+            const targetElement = event.target as HTMLElement
+            const windowSelection = window.getSelection()
+            if (
+              targetElement.classList.contains('MarkdownPreviewer') &&
+              windowSelection != null
+            ) {
               event.preventDefault()
               const range = document.createRange()
-              range.selectNode(event.target)
-              window.getSelection().addRange(range)
+              range.selectNode(targetElement)
+              windowSelection.addRange(range)
             }
           }
           break
