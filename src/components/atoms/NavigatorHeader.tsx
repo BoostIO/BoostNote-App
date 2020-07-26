@@ -20,6 +20,9 @@ const Label = styled.div`
   color: ${({ theme }) => theme.navLabelColor};
   flex: 1;
   ${textOverflow}
+  &:first-child {
+    padding-left: 5px;
+  }
 `
 
 const Control = styled.div`

@@ -21,13 +21,10 @@ import FolderListFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
-import styled from '../../lib/styled'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-
-const Spacer = styled.div`
-  height: 1em;
-`
+import { getStorageItemId } from '../../lib/nav'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -36,7 +33,12 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
-  const { openSideNavFolderItemRecursively, checkFeature } = useGeneralStatus()
+  const {
+    openSideNavFolderItemRecursively,
+    checkFeature,
+    sideNavOpenedItemSet,
+    toggleSideNavOpenedItem,
+  } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
     createNote,
@@ -297,11 +299,22 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
+  const storageItemId = getStorageItemId(storage.id)
+
+  const folded = !sideNavOpenedItemSet.has(storageItemId)
+
+  const toggleStorageNavItem = useCallback(() => {
+    toggleSideNavOpenedItem(storageItemId)
+  }, [toggleSideNavOpenedItem, storageItemId])
+
+  // TODO: Extract bottom content so it won't be rendered when storage is folded
   return (
     <>
       <NavigatorHeader
         label={storage.name}
         onContextMenu={openContextMenu}
+        folded={folded}
+        onClick={toggleStorageNavItem}
         control={
           <>
             <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />
@@ -320,53 +333,57 @@ const StorageNavigatorFragment = ({
           </>
         }
       />
-      <NavigatorItem
-        depth={0}
-        label='All Notes'
-        iconPath={mdiBookOpen}
-        active={allNotesPageIsActive}
-        onClick={() => push(allNotesPagePathname)}
-        onContextMenu={openAllNotesContextMenu}
-        control={
-          <NavigatorButton
-            iconPath={mdiPlus}
-            onClick={openAllNotesContextMenu}
+      {!folded && (
+        <>
+          <NavigatorItem
+            depth={0}
+            label='All Notes'
+            iconPath={mdiBookOpen}
+            active={allNotesPageIsActive}
+            onClick={() => push(allNotesPagePathname)}
+            onContextMenu={openAllNotesContextMenu}
+            control={
+              <NavigatorButton
+                iconPath={mdiPlus}
+                onClick={openAllNotesContextMenu}
+              />
+            }
           />
-        }
-      />
-      <FolderListFragment
-        storage={storage}
-        createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-        showPromptToCreateFolder={showPromptToCreateFolder}
-        showPromptToRenameFolder={showPromptToRenameFolder}
-      />
-      <TagListFragment storage={storage} />
-      {attachments.length > 0 && (
-        <NavigatorItem
-          depth={0}
-          label={t('general.attachments')}
-          iconPath={mdiPaperclip}
-          active={attachmentsPageIsActive}
-          onClick={() => push(attachmentsPagePathname)}
-          onContextMenu={(event) => {
-            event.preventDefault()
-          }}
-        />
+          <FolderListFragment
+            storage={storage}
+            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+            showPromptToCreateFolder={showPromptToCreateFolder}
+            showPromptToRenameFolder={showPromptToRenameFolder}
+          />
+          <TagListFragment storage={storage} />
+          {attachments.length > 0 && (
+            <NavigatorItem
+              depth={0}
+              label={t('general.attachments')}
+              iconPath={mdiPaperclip}
+              active={attachmentsPageIsActive}
+              onClick={() => push(attachmentsPagePathname)}
+              onContextMenu={(event) => {
+                event.preventDefault()
+              }}
+            />
+          )}
+          {trashed.length > 0 && (
+            <NavigatorItem
+              depth={0}
+              label={t('general.trash')}
+              iconPath={mdiTrashCanOutline}
+              active={trashcanPageIsActive}
+              onClick={() => push(trashcanPagePathname)}
+              onContextMenu={(event) => {
+                event.preventDefault()
+                // TODO: Implement context menu(restore all notes)
+              }}
+            />
+          )}
+          <NavigatorSeparator />
+        </>
       )}
-      {trashed.length > 0 && (
-        <NavigatorItem
-          depth={0}
-          label={t('general.trash')}
-          iconPath={mdiTrashCanOutline}
-          active={trashcanPageIsActive}
-          onClick={() => push(trashcanPagePathname)}
-          onContextMenu={(event) => {
-            event.preventDefault()
-            // TODO: Implement context menu(restore all notes)
-          }}
-        />
-      )}
-      <Spacer />
     </>
   )
 }

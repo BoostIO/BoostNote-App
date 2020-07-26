@@ -7,16 +7,9 @@ import NavigatorHeader from '../atoms/NavigatorHeader'
 import { mdiTextBoxOutline, mdiClose } from '@mdi/js'
 import { useRouter, useRouteParams } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import styled from '../../lib/styled'
-import { borderBottom } from '../../lib/styled/styleFunctions'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
 
 const navItemName = 'bookmarks'
-
-const Border = styled.div`
-  height: 1px;
-  box-sizing: border-box;
-  ${borderBottom};
-`
 
 interface BookmarkNavigatorFragmentProps {
   storageEntries: [string, NoteStorage][]
@@ -98,7 +91,7 @@ const BookmarkNavigatorFragment = ({
               />
             )
           })}
-          <Border />
+          <NavigatorSeparator />
         </>
       )}
     </>
