@@ -8,7 +8,6 @@ import {
   StorageTagsRouteParams,
   usePathnameWithoutNoteId,
   useRouter,
-  StorageBookmarkNotes,
 } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
@@ -44,12 +43,13 @@ const NotePage = ({ storage }: NotePageProps) => {
     trashNote,
     untrashNote,
     addAttachments,
+    bookmarkNote,
+    unbookmarkNote,
   } = useDb()
   const routeParams = useRouteParams() as
     | StorageNotesRouteParams
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
-    | StorageBookmarkNotes
   const { noteId } = routeParams
   const { push } = useRouter()
   const { t } = useTranslation()
@@ -328,6 +328,8 @@ const NotePage = ({ storage }: NotePageProps) => {
             selectViewMode={selectViewMode}
             push={push}
             checkFeature={checkFeature}
+            bookmarkNote={bookmarkNote}
+            unbookmarkNote={unbookmarkNote}
           />
         )
       }

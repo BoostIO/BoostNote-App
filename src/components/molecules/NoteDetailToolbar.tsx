@@ -8,6 +8,8 @@ import {
   mdiTrashCan,
   mdiRestore,
   mdiDotsVertical,
+  mdiStarOutline,
+  mdiStar,
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
@@ -48,6 +50,8 @@ interface NoteDetailToolbarProps {
   purgeNote: () => void
   appendTagByName: (tagName: string) => void
   removeTagByName: (tagName: string) => void
+  bookmarkNote: () => void
+  unbookmarkNote: () => void
 }
 
 const NoteDetailToolbar = ({
@@ -61,6 +65,8 @@ const NoteDetailToolbar = ({
   purgeNote,
   appendTagByName,
   removeTagByName,
+  bookmarkNote,
+  unbookmarkNote,
 }: NoteDetailToolbarProps) => {
   const storageTags = useMemo(() => {
     if (storage == null) return []
@@ -70,6 +76,7 @@ const NoteDetailToolbar = ({
   const { popup } = useContextMenu()
   const { preferences } = usePreferences()
   const { previewStyle } = usePreviewStyle()
+
   const storageId = storage.id
   const storageName = storage.name
 
@@ -142,6 +149,11 @@ const NoteDetailToolbar = ({
           iconPath={mdiTextSubject}
         />
         <ToolbarSeparator />
+        <ToolbarIconButton
+          active={!!note.data.bookmarked}
+          onClick={!note.data.bookmarked ? bookmarkNote : unbookmarkNote}
+          iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
+        />
         {note.trashed ? (
           <>
             <ToolbarIconButton onClick={untrashNote} iconPath={mdiRestore} />
