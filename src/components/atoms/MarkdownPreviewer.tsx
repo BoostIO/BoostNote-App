@@ -21,11 +21,13 @@ import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 import AttachmentImage from './markdown/AttachmentImage'
+import CodeFence from './markdown/CodeFence'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
     '*': ['className', 'align'],
     input: ['checked'],
+    pre: ['dataRaw'],
   },
 })
 
@@ -70,6 +72,10 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
       const lang = language(node)
 
+      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
+        return
+      }
+
       const classNames =
         parent.properties.className != null
           ? [...parent.properties.className]
@@ -84,11 +90,10 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
       }
       parent.properties.className = classNames
 
-      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
-        return
-      }
-
       const rawContent = node.children[0].value as string
+      // TODO: Stop using html attribute after exposing HAST Node is shipped
+      parent.properties['data-raw'] = rawContent
+
       const cmResult = [] as Node[]
       if (lang != null) {
         const mime = getMime(lang)
@@ -226,6 +231,7 @@ const MarkdownPreviewer = ({
               />
             )
           },
+          pre: CodeFence,
         },
       })
   }, [codeBlockTheme, attachmentMap, updateContent])
