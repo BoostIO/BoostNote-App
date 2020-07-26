@@ -119,7 +119,14 @@ const NoteItem = ({
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
   const { popup } = useContextMenu()
-  const { createNote, trashNote, purgeNote, untrashNote } = useDb()
+  const {
+    createNote,
+    trashNote,
+    purgeNote,
+    untrashNote,
+    bookmarkNote,
+    unbookmarkNote,
+  } = useDb()
   const { push } = useRouter()
 
   const { messageBox } = useDialog()
@@ -156,6 +163,22 @@ const NoteItem = ({
           },
         },
         { type: MenuTypes.Separator },
+        !note.data.bookmarked
+          ? {
+              type: MenuTypes.Normal,
+              label: 'Bookmark',
+              onClick: () => {
+                bookmarkNote(storageId, note._id)
+              },
+            }
+          : {
+              type: MenuTypes.Normal,
+              label: 'Unbookmark',
+              onClick: () => {
+                unbookmarkNote(storageId, note._id)
+              },
+            },
+        { type: MenuTypes.Separator },
         {
           type: MenuTypes.Normal,
           label: 'Default View',
@@ -182,6 +205,8 @@ const NoteItem = ({
       trashNote,
       applyDefaultNoteListing,
       applyCompactListing,
+      bookmarkNote,
+      unbookmarkNote,
     ]
   )
 
