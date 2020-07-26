@@ -12,6 +12,7 @@ import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
 import { usePathnameWithoutNoteId } from '../../lib/router'
 import { borderBottom } from '../../lib/styled/styleFunctions'
+import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -51,7 +52,7 @@ const Empty = styled.button`
 
 const ScrollableContainer = styled.div`
   flex: 1;
-  padding: 10px 0;
+  padding: 0 0 10px;
   overflow: auto;
 `
 
@@ -110,6 +111,7 @@ const Navigator = () => {
       </TopControl>
 
       <ScrollableContainer>
+        <BookmarkNavigatorFragment storageEntries={storageEntries} />
         {storageEntries.map(([, storage]) => (
           <StorageNavigatorFragment key={storage.id} storage={storage} />
         ))}
