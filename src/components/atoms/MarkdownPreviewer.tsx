@@ -181,7 +181,7 @@ const MarkdownPreviewer = ({
     return unified()
       .use(remarkParse)
       .use(remarkEmoji, { emoticon: false })
-      .use(remarkRehype, { allowDangerousHTML: false })
+      .use(remarkRehype, { allowDangerousHTML: true })
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
