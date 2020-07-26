@@ -15,10 +15,11 @@ const StyledButton = styled.button`
   border: none;
   cursor: pointer;
   display: flex;
-  padding: 0;
+  align-items: center;
+  padding: 0 0 0 1em;
   .border {
-    width: 2px;
-    height: 16px;
+    width: 4px;
+    height: 24px;
   }
   .label {
     margin-left: 18px;
