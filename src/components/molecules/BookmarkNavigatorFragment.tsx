@@ -8,8 +8,7 @@ import { mdiTextBoxOutline, mdiClose } from '@mdi/js'
 import { useRouter, useRouteParams } from '../../lib/router'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
-
-const navItemName = 'bookmarks'
+import { bookmarkItemId } from '../../lib/nav'
 
 interface BookmarkNavigatorFragmentProps {
   storageEntries: [string, NoteStorage][]
@@ -21,10 +20,10 @@ const BookmarkNavigatorFragment = ({
   const { unbookmarkNote } = useDb()
   const { push } = useRouter()
   const { sideNavOpenedItemSet, toggleSideNavOpenedItem } = useGeneralStatus()
-  const opened = sideNavOpenedItemSet.has(navItemName)
+  const opened = sideNavOpenedItemSet.has(bookmarkItemId)
 
   const toggleBookmarks = useCallback(() => {
-    toggleSideNavOpenedItem(navItemName)
+    toggleSideNavOpenedItem(bookmarkItemId)
   }, [toggleSideNavOpenedItem])
 
   const params = useRouteParams()

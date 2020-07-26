@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next'
 import { NoteDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { GeneralNoteListViewOptions } from '../../lib/preferences'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import { bookmarkItemId } from '../../lib/nav'
 
 const Container = styled.button`
   margin: 0;
@@ -128,6 +130,7 @@ const NoteItem = ({
     unbookmarkNote,
   } = useDb()
   const { push } = useRouter()
+  const { addSideNavOpenedItem } = useGeneralStatus()
 
   const { messageBox } = useDialog()
   const { t } = useTranslation()
@@ -169,6 +172,7 @@ const NoteItem = ({
               label: 'Bookmark',
               onClick: () => {
                 bookmarkNote(storageId, note._id)
+                addSideNavOpenedItem(bookmarkItemId)
               },
             }
           : {
@@ -207,6 +211,7 @@ const NoteItem = ({
       applyCompactListing,
       bookmarkNote,
       unbookmarkNote,
+      addSideNavOpenedItem,
     ]
   )
 

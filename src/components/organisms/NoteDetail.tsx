@@ -106,6 +106,7 @@ type NoteDetailProps = {
     storageId: string,
     noteId: string
   ) => Promise<NoteDoc | undefined>
+  openBookmarkNavItem: () => void
   viewMode: ViewModeType
   selectViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
@@ -285,6 +286,7 @@ export default class NoteDetail extends React.Component<
 
     await this.executeSaveQueue()
     this.props.bookmarkNote(storage.id, note._id)
+    this.props.openBookmarkNavItem()
   }
 
   unbookmarkNote = async () => {

@@ -29,6 +29,7 @@ import {
 import { values } from '../../lib/db/utils'
 import IdleNoteDetail from '../organisms/IdleNoteDetail'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { bookmarkItemId } from '../../lib/nav'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -59,6 +60,11 @@ const NotePage = ({ storage }: NotePageProps) => {
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
   const { report } = useAnalytics()
+  const { addSideNavOpenedItem } = useGeneralStatus()
+
+  const openBookmarkNavItem = useCallback(() => {
+    addSideNavOpenedItem(bookmarkItemId)
+  }, [addSideNavOpenedItem])
 
   const updateNoteAndReport = useCallback(
     (
@@ -330,6 +336,7 @@ const NotePage = ({ storage }: NotePageProps) => {
             checkFeature={checkFeature}
             bookmarkNote={bookmarkNote}
             unbookmarkNote={unbookmarkNote}
+            openBookmarkNavItem={openBookmarkNavItem}
           />
         )
       }
