@@ -98,6 +98,14 @@ type NoteDetailProps = {
     noteId: string
   ) => Promise<NoteDoc | undefined>
   purgeNote: (storageId: string, noteId: string) => void
+  bookmarkNote: (
+    storageId: string,
+    noteId: string
+  ) => Promise<NoteDoc | undefined>
+  unbookmarkNote: (
+    storageId: string,
+    noteId: string
+  ) => Promise<NoteDoc | undefined>
   viewMode: ViewModeType
   selectViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
@@ -272,6 +280,20 @@ export default class NoteDetail extends React.Component<
     this.props.purgeNote(storage.id, note._id)
   }
 
+  bookmarkNote = async () => {
+    const { note, storage } = this.props
+
+    await this.executeSaveQueue()
+    this.props.bookmarkNote(storage.id, note._id)
+  }
+
+  unbookmarkNote = async () => {
+    const { note, storage } = this.props
+
+    await this.executeSaveQueue()
+    this.props.unbookmarkNote(storage.id, note._id)
+  }
+
   queued = false
   timer?: any
 
@@ -387,6 +409,8 @@ export default class NoteDetail extends React.Component<
           purgeNote={this.purgeNote}
           appendTagByName={this.appendTagByName}
           removeTagByName={this.removeTagByName}
+          bookmarkNote={this.bookmarkNote}
+          unbookmarkNote={this.unbookmarkNote}
         />
         <TitleSection>
           <input
