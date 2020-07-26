@@ -189,7 +189,6 @@ export default ({
                   content: note.content,
                   folderPathname: note.folderPathname,
                   tags: note.tags,
-                  bookmarked: false,
                   data: note.data,
                 })
               },
