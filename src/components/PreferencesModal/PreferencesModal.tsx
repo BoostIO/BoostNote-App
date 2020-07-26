@@ -36,18 +36,19 @@ const BackgroundShadow = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
+  ${border}
 `
 
 const ContentContainer = styled.div`
   z-index: 7001;
   position: relative;
-  height: calc(100% - 2em);
-  width: calc(100%-2em);
+  height: calc(100% - 90px);
+  width: calc(100% - 2em);
   display: flex;
   flex-direction: column;
   max-width: 1080px;
-  margin: 1em auto;
+  margin: 45px auto;
   ${backgroundColor}
   ${border}
 `
