@@ -55,6 +55,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       keyMap,
       mode: this.props.mode || 'markdown',
       readOnly: this.props.readonly === true,
+      extraKeys: { Enter: 'newlineAndIndentContinueMarkdownList' },
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
