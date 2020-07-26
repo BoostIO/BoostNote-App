@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { isWithGeneralCtrlKey } from '../../lib/keyboard'
 import { osName } from '../../lib/platform'
 import Icon from '../atoms/Icon'
-import { mdiPlus, mdiMagnify } from '@mdi/js'
+import { mdiPlus, mdiMagnify, mdiClose } from '@mdi/js'
 import { NoteDoc } from '../../lib/db/types'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
@@ -60,6 +60,32 @@ const Toolbar = styled.div`
       color: ${({ theme }) => theme.navButtonActiveColor};
     }
   }
+
+  .clearButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    transition: color 200ms ease-in-out;
+    ${flexCenter}
+
+    color: ${({ theme }) => theme.navButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.navButtonHoverColor};
+    }
+
+    &:active,
+    .active {
+      color: ${({ theme }) => theme.navButtonActiveColor};
+    }
+  }
 `
 
 const Search = styled.div`
@@ -88,6 +114,7 @@ const Search = styled.div`
   .input {
     background-color: transparent;
     position: relative;
+    color: ${({ theme }) => theme.uiTextColor};
     width: 100%;
     height: 30px;
     padding-left: 35px;
@@ -175,6 +202,21 @@ const NoteNavigator = ({
       setSearchInput(event.target.value)
     },
     [setSearchInput]
+  )
+
+  const clearSearchInput = useCallback(() => {
+    setSearchInput('')
+  }, [setSearchInput])
+
+  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      switch (event.key) {
+        case 'Escape':
+          clearSearchInput()
+          break
+      }
+    },
+    [clearSearchInput]
   )
 
   const listRef = useRef<HTMLUListElement>(null)
@@ -268,9 +310,15 @@ const NoteNavigator = ({
             className='input'
             value={search}
             onChange={updateSearchInput}
+            onKeyDown={handleSearchInputKeyDown}
             placeholder={t('note.search')}
           />
           <Icon className='icon' path={mdiMagnify} />
+          {search.length > 0 && (
+            <button className='clearButton' onClick={clearSearchInput}>
+              <Icon path={mdiClose} />
+            </button>
+          )}
         </Search>
         {storageId != null && createNote != null && (
           <button className='newNoteButton' onClick={createNote}>
