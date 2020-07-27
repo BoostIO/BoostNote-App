@@ -38,7 +38,7 @@ const CodeFenceCopyButton = styled.button`
 `
 
 const CodeFence = (props: React.HTMLProps<HTMLPreElement>) => {
-  if (props.className!.includes('CodeMirror')) {
+  if (props.className != null && props.className!.includes('CodeMirror')) {
     const otherProps = { ...props }
     const rawContent = props['data-raw']
     delete otherProps['data-raw']
