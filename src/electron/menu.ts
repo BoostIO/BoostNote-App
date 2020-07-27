@@ -157,7 +157,7 @@ export const template: any[] = [
       {
         label: 'BoostHub',
         click: async () => {
-          await shell.openExternal('https://hub.boostio.co/')
+          await shell.openExternal('https://boosthub.io/')
         },
       },
     ],
@@ -168,7 +168,7 @@ export const template: any[] = [
       {
         label: 'Learn More',
         click: async () => {
-          await shell.openExternal('https://boostnote.io')
+          await shell.openExternal('https://boosthub.io')
         },
       },
     ],
