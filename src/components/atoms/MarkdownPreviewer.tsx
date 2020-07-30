@@ -281,11 +281,13 @@ const MarkdownPreviewer = ({
       const linenumbers = [...code.querySelectorAll('.CodeMirror-linenumber')]
       const linenumberGutter = code.querySelector('.CodeMirror-linenumbers')
       const lastLinenumber = linenumbers[linenumbers.length - 1]
-      const linenumberWidth = lastLinenumber.offsetWidth
-      for (const linenumber of linenumbers) {
-        linenumber.style.width = `${linenumberWidth}px`
+      if (lastLinenumber && linenumberGutter) {
+        const linenumberWidth = lastLinenumber.offsetWidth
+        for (const linenumber of linenumbers) {
+          linenumber.style.width = `${linenumberWidth}px`
+        }
+        linenumberGutter.style.width = `${linenumberWidth}px`
       }
-      linenumberGutter.style.width = `${linenumberWidth}px`
     }
   }, [markdownProcessor])
 
@@ -324,6 +326,7 @@ const MarkdownPreviewer = ({
       .CodeMirror-linenumber {
         display: inline-block;
         min-width: 15px;
+        user-select: none;
       }
       .CodeMirror-linecontent {
         padding-left: 7px;
