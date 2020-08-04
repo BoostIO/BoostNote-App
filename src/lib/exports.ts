@@ -28,7 +28,7 @@ export const exportNoteAsHtmlFile = async (
   await unified()
     .use(remarkParse)
     .use(remarkMath)
-    .use(remarkRehype, { allowDangerousHTML: false })
+    .use([remarkRehype, { allowDangerousHTML: false }])
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
       theme: preferences['markdown.codeBlockTheme'],
