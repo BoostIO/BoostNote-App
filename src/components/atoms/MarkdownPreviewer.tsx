@@ -25,8 +25,8 @@ import CodeFence from './markdown/CodeFence'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': ['className', 'align'],
-    input: ['checked'],
+    '*': [...gh.attributes['*'], 'className', 'align'],
+    input: [...gh.attributes.input, 'checked'],
     pre: ['dataRaw'],
   },
 })
@@ -48,7 +48,7 @@ interface RehypeCodeMirrorOptions {
   theme: string
 }
 
-function isElement(node: Node, tagName: string): node is Element {
+function isElement(node: Node | undefined, tagName: string): node is Element {
   if (node == null) {
     return false
   }
@@ -65,7 +65,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
     return tree
 
-    function visitor(node: Element, _index: number, parent: Node) {
+    function visitor(node: Element, _index: number, parent?: Node) {
       if (!isElement(parent, 'pre') || !isElement(node, 'code')) {
         return
       }
@@ -181,14 +181,14 @@ const MarkdownPreviewer = ({
     return unified()
       .use(remarkParse)
       .use(remarkEmoji, { emoticon: false })
-      .use(remarkRehype, { allowDangerousHTML: true })
+      .use([remarkRehype, { allowDangerousHTML: true }])
+      .use(rehypeRaw)
+      .use(rehypeSanitize, schema)
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
         theme: codeBlockTheme,
       })
-      .use(rehypeRaw)
-      .use(rehypeSanitize, schema)
       .use(rehypeKatex)
       .use(rehypeReact, {
         createElement: React.createElement,
@@ -246,7 +246,7 @@ const MarkdownPreviewer = ({
     console.timeEnd('render')
 
     setRendering(false)
-    setRenderedContent(result.contents)
+    setRenderedContent((result as any).result)
   }, [markdownProcessor])
 
   useEffect(() => {
