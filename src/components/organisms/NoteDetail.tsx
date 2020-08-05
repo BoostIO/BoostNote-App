@@ -342,7 +342,20 @@ export default class NoteDetail extends React.Component<
     event.preventDefault()
 
     const { storage, addAttachments } = this.props
+    if (event.dataTransfer.items != null) {
+      for (let i = 0; i < event.dataTransfer.items.length; i++) {
+        console.log(
+          '... items[' +
+            i +
+            '].kind = ' +
+            event.dataTransfer.items[i].kind +
+            ' ; type = ' +
+            event.dataTransfer.items[i].type
+        )
 
+        event.dataTransfer.items[i].getAsString(console.log)
+      }
+    }
     const files = getFileList(event).filter((file) =>
       file.type.startsWith('image/')
     )
