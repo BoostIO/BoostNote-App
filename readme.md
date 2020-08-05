@@ -81,6 +81,8 @@ npm run dev:webpack
 npm run dev:electron
 ```
 
+> For Windows users, If `npm run dev:electron` doesn't spawn an electron window, please try again after removing `%APPDATA%\electron` directory.
+
 #### Mobile app
 
 - [Android (beta)](https://play.google.com/store/apps/details?id=com.boostio.boostnote)
