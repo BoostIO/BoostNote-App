@@ -3,9 +3,17 @@ import path from 'path'
 import { execFile, ChildProcess } from 'child_process'
 import chalk from 'chalk'
 
+const WIN = process.platform === 'win32'
+
 const outputDirPath = path.join(__dirname, '../electron')
 const outputFilename = 'index.js'
 const outputPath = path.join(outputDirPath, outputFilename)
+const electronFileName = WIN ? 'electron.cmd' : 'electron'
+const electronFilePath = path.join(
+  __dirname,
+  '../node_modules/.bin',
+  electronFileName
+)
 
 const compiler = webpack({
   entry: './src/electron/index.ts',
@@ -34,10 +42,7 @@ const compiler = webpack({
 })
 
 function execute() {
-  const process = execFile(
-    path.join(__dirname, '../node_modules/.bin/electron'),
-    [outputPath]
-  )
+  const process = execFile(electronFilePath, [outputPath])
 
   process.stdout.on('data', (data) => {
     const title = `Electron stdout(pid:${process.pid})`
