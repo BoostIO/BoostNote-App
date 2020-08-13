@@ -12,6 +12,8 @@ interface CustomizedCodeEditorProps {
   className?: string
   mode?: string
   readonly?: boolean
+  onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
+  onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
 }
 
 const CustomizedCodeEditor = ({
@@ -21,6 +23,8 @@ const CustomizedCodeEditor = ({
   className,
   mode,
   readonly,
+  onPaste,
+  onDrop,
 }: CustomizedCodeEditorProps) => {
   const { preferences } = usePreferences()
   return (
@@ -37,7 +41,10 @@ const CustomizedCodeEditor = ({
       keyMap={preferences['editor.keyMap']}
       mode={mode}
       readonly={readonly}
+      onPaste={onPaste}
+      onDrop={onDrop}
     />
   )
 }
+
 export default CustomizedCodeEditor

@@ -6,6 +6,7 @@ import {
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
 } from '../../lib/preferences'
+import { mdiKeyboardReturn } from '@mdi/js'
 
 const StyledContainer = styled.div`
   .CodeMirror {
@@ -34,6 +35,8 @@ interface CodeEditorProps {
   keyMap?: EditorKeyMapOptions
   mode?: string
   readonly?: boolean
+  onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
+  onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -62,6 +65,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.props.codeMirrorRef != null) {
       this.props.codeMirrorRef(this.codeMirror)
     }
+    this.codeMirror.on('paste', this.handlePaste as any)
+    this.codeMirror.on('drop', this.handleDrop)
   }
 
   reloadMode = () => {
@@ -110,8 +115,27 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   componentWillUnmount() {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
+      this.codeMirror.off('paste', this.handlePaste as any)
     }
     window.removeEventListener('codemirror-mode-load', this.reloadMode)
+  }
+
+  handlePaste = (editor: CodeMirror.Editor, event: ClipboardEvent) => {
+    const { onPaste } = this.props
+    if (onPaste == null) {
+      return
+    }
+
+    onPaste(editor, event)
+  }
+
+  handleDrop = (editor: CodeMirror.Editor, event: DragEvent) => {
+    const { onDrop } = this.props
+    if (onDrop == null) {
+      mdiKeyboardReturn
+    }
+
+    onDrop(editor, event)
   }
 
   handleCodeMirrorChange = (
