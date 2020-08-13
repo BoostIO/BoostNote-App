@@ -28,7 +28,7 @@ import {
   isSubPathname,
   keys,
 } from './utils'
-import { generateId } from '../string'
+import { generateId, getHexatrigesimalString } from '../string'
 import { Stats, Dirent } from 'fs'
 
 declare function $readFile(pathname: string): Promise<string>
@@ -236,10 +236,12 @@ class FSNoteDb implements NoteDb {
 
   async upsertAttachments(files: File[]): Promise<Attachment[]> {
     const attachments: Attachment[] = []
+    let time = Date.now()
     for (const file of files) {
       const { name, ext } = parsePath(file.name)
-      const fileName = `${dashify(name)}${ext}`
-
+      const fileName = `${dashify(name)}-${getHexatrigesimalString(
+        time++
+      )}${ext}`
       const data = Buffer.from(await file.arrayBuffer())
       const attachmentPathname = this.getAttachmentPathname(fileName)
       await $writeFile(attachmentPathname, data)

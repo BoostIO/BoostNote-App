@@ -36,7 +36,7 @@ import PouchDB from './PouchDB'
 import { buildCloudSyncUrl, User } from '../accounts'
 import { setHeader } from '../http'
 import NoteDb from './NoteDb'
-import { escapeRegExp } from '../string'
+import { escapeRegExp, getHexatrigesimalString } from '../string'
 
 export default class PouchNoteDb implements NoteDb {
   type: 'pouch' = 'pouch'
@@ -618,9 +618,12 @@ export default class PouchNoteDb implements NoteDb {
     const { _rev } = await this.pouchDb.get(ATTACHMENTS_ID)
     let currentRev = _rev
     const attachments: Attachment[] = []
+    let time = Date.now()
     for (const file of files) {
       const { name, ext } = parsePath(file.name)
-      const fileName = `${dashify(name)}${ext}`
+      const fileName = `${dashify(name)}-${getHexatrigesimalString(
+        time++
+      )}${ext}`
       const response = await this.pouchDb.putAttachment(
         ATTACHMENTS_ID,
         fileName,

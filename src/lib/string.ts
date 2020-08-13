@@ -19,3 +19,7 @@ export function escapeRegExp(value: string) {
 export function filenamify(value: string) {
   return originalFilenamify(value, { replacement: '-' })
 }
+
+export function getHexatrigesimalString(value: number) {
+  return value.toString(36)
+}
