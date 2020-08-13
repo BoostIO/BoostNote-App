@@ -19,3 +19,30 @@ export function convertItemListToArray(
 
   return items
 }
+
+export function inspectDataTransfer(dataTransfer: DataTransfer) {
+  if (process.env.NODE_ENV === 'production') {
+    return
+  }
+  const items = convertItemListToArray(dataTransfer.items).map((item) => {
+    return {
+      type: item.type,
+      kind: item.kind,
+      file: item.getAsFile(),
+    }
+  })
+  const files = convertFileListToArray(dataTransfer.files).map((file) => {
+    return {
+      name: file.name,
+      type: file.type,
+      path: file.path,
+      size: file.size,
+      lastModified: file.lastModified,
+    }
+  })
+
+  console.log({
+    items,
+    files,
+  })
+}
