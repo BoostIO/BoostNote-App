@@ -16,13 +16,17 @@ import {
   borderRight,
   backgroundColor,
 } from '../../lib/styled/styleFunctions'
-import { getFileList } from '../../lib/dnd'
 import { ViewModeType, FeatureType } from '../../lib/generalStatus'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../lib/events'
 import NoteDetailToolbar from '../molecules/NoteDetailToolbar'
+import {
+  convertItemListToArray,
+  inspectDataTransfer,
+  convertFileListToArray,
+} from '../../lib/dom'
 
 const StyledNoteDetailContainer = styled.div`
   ${backgroundColor};
@@ -338,45 +342,78 @@ export default class NoteDetail extends React.Component<
     }
   }
 
-  handleDrop = async (event: React.DragEvent) => {
+  handleDrop = async (codeMirror: CodeMirror.Editor, event: DragEvent) => {
     event.preventDefault()
 
-    const { storage, addAttachments } = this.props
-    if (event.dataTransfer.items != null) {
-      for (let i = 0; i < event.dataTransfer.items.length; i++) {
-        console.log(
-          '... items[' +
-            i +
-            '].kind = ' +
-            event.dataTransfer.items[i].kind +
-            ' ; type = ' +
-            event.dataTransfer.items[i].type
-        )
-
-        event.dataTransfer.items[i].getAsString(console.log)
-      }
+    if (event.dataTransfer == null) {
+      return
     }
-    const files = getFileList(event).filter((file) =>
-      file.type.startsWith('image/')
-    )
+
+    inspectDataTransfer(event.dataTransfer)
+
+    const { storage, addAttachments } = this.props
+    const files = convertFileListToArray(
+      event.dataTransfer.files
+    ).filter((file) => file.type.startsWith('image/'))
+
+    if (files.length === 0) {
+      return
+    }
 
     const attachments = await addAttachments(storage.id, files)
 
-    this.setState(
-      (prevState) => {
-        return {
-          content:
-            prevState.content +
-            `\n` +
-            attachments
-              .map((attachment) => `![](${attachment.name})`)
-              .join('\n') +
-            `\n`,
-        }
-      },
-      () => {
-        this.queueToSave()
+    const coords = codeMirror.coordsChar({
+      left: event.x,
+      top: event.y,
+    })
+    codeMirror.getDoc().replaceRange(
+      attachments
+        .map((attachment) => {
+          return `![](${attachment.name})`
+        })
+        .join(' '),
+      coords
+    )
+  }
+
+  handlePaste = async (
+    codeMirror: CodeMirror.Editor,
+    event: ClipboardEvent
+  ) => {
+    const { clipboardData } = event
+    if (clipboardData == null) {
+      return
+    }
+
+    inspectDataTransfer(clipboardData)
+
+    const items = convertItemListToArray(clipboardData.items)
+    const imageItems = items.filter((item) => {
+      return item.kind === 'file' && item.type.startsWith('image/')
+    })
+    if (imageItems.length === 0) {
+      return
+    }
+
+    event.preventDefault()
+    const { storage, addAttachments } = this.props
+
+    const imageFiles = imageItems.reduce<File[]>((files, item) => {
+      const file = item.getAsFile()
+      if (file != null) {
+        files.push(file)
       }
+      return files
+    }, [])
+
+    const attachments = await addAttachments(storage.id, imageFiles)
+
+    codeMirror.getDoc().replaceSelection(
+      attachments
+        .map((attachment) => {
+          return `![](${attachment.name})`
+        })
+        .join(' ')
     )
   }
 
@@ -395,6 +432,8 @@ export default class NoteDetail extends React.Component<
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}
+        onPaste={this.handlePaste}
+        onDrop={this.handleDrop}
       />
     )
 
@@ -407,12 +446,7 @@ export default class NoteDetail extends React.Component<
     )
 
     return (
-      <StyledNoteDetailContainer
-        onDragEnd={(event: React.DragEvent) => {
-          event.preventDefault()
-        }}
-        onDrop={this.handleDrop}
-      >
+      <StyledNoteDetailContainer>
         <NoteDetailToolbar
           storage={storage}
           note={note}
