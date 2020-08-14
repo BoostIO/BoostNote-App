@@ -14,18 +14,20 @@ import visit from 'unist-util-visit'
 import { Node, Parent } from 'unist'
 import CodeMirror from '../../lib/CodeMirror'
 import h from 'hastscript'
-import useForceUpdate from 'use-force-update'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
 import 'katex/dist/katex.min.css'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
+import AttachmentImage from './markdown/AttachmentImage'
+import CodeFence from './markdown/CodeFence'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': ['className'],
-    input: ['checked'],
+    '*': [...gh.attributes['*'], 'className', 'align'],
+    input: [...gh.attributes.input, 'checked'],
+    pre: ['dataRaw'],
   },
 })
 
@@ -46,7 +48,7 @@ interface RehypeCodeMirrorOptions {
   theme: string
 }
 
-function isElement(node: Node, tagName: string): node is Element {
+function isElement(node: Node | undefined, tagName: string): node is Element {
   if (node == null) {
     return false
   }
@@ -63,7 +65,7 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
     return tree
 
-    function visitor(node: Element, _index: number, parent: Node) {
+    function visitor(node: Element, _index: number, parent?: Node) {
       if (!isElement(parent, 'pre') || !isElement(node, 'code')) {
         return
       }
@@ -89,6 +91,9 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
       }
 
       const rawContent = node.children[0].value as string
+      // TODO: Stop using html attribute after exposing HAST Node is shipped
+      parent.properties['data-raw'] = rawContent
+
       const cmResult = [] as Node[]
       if (lang != null) {
         const mime = getMime(lang)
@@ -146,18 +151,6 @@ export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
   [Partial<RehypeCodeMirrorOptions>?]
 >
 
-const BlobImage = ({ blob, ...props }: any) => {
-  const url = useMemo(() => {
-    return URL.createObjectURL(blob)
-  }, [blob])
-  useEffect(() => {
-    return () => {
-      URL.revokeObjectURL(url)
-    }
-  }, [blob, url])
-  return <img src={url} {...props} />
-}
-
 interface MarkdownPreviewerProps {
   content: string
   codeBlockTheme?: string
@@ -177,7 +170,6 @@ const MarkdownPreviewer = ({
   attachmentMap = {},
   updateContent,
 }: MarkdownPreviewerProps) => {
-  const forceUpdate = useForceUpdate()
   const [rendering, setRendering] = useState(false)
   const previousContentRef = useRef('')
   const previousThemeRef = useRef<string | undefined>('')
@@ -188,16 +180,16 @@ const MarkdownPreviewer = ({
   const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
-      .use(remarkRehype, { allowDangerousHTML: false })
+      .use(remarkEmoji, { emoticon: false })
+      .use([remarkRehype, { allowDangerousHTML: true }])
+      .use(rehypeRaw)
+      .use(rehypeSanitize, schema)
       .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
         theme: codeBlockTheme,
       })
-      .use(rehypeRaw)
-      .use(rehypeSanitize, schema)
       .use(rehypeKatex)
-      .use(remarkEmoji, { emoticon: true })
       .use(rehypeReact, {
         createElement: React.createElement,
         components: {
@@ -205,7 +197,7 @@ const MarkdownPreviewer = ({
             if (src != null && !src.match('/')) {
               const attachment = attachmentMap[src]
               if (attachment != null) {
-                return <BlobImage blob={attachment.blob} />
+                return <AttachmentImage attachment={attachment} />
               }
             }
 
@@ -239,33 +231,30 @@ const MarkdownPreviewer = ({
               />
             )
           },
+          pre: CodeFence,
         },
       })
   }, [codeBlockTheme, attachmentMap, updateContent])
 
-  const renderContent = useCallback(
-    async (content: string) => {
-      previousContentRef.current = content
-      previousThemeRef.current = codeBlockTheme
-      setRendering(true)
+  const renderContent = useCallback(async () => {
+    const content = previousContentRef.current
+    setRendering(true)
 
-      console.time('render')
-      checkboxIndexRef.current = 0
-      const result = await markdownProcessor.process(content)
-      console.timeEnd('render')
+    console.time('render')
+    checkboxIndexRef.current = 0
+    const result = await markdownProcessor.process(content)
+    console.timeEnd('render')
 
-      setRendering(false)
-      setRenderedContent(result.contents)
-    },
-    [codeBlockTheme, markdownProcessor]
-  )
+    setRendering(false)
+    setRenderedContent((result as any).result)
+  }, [markdownProcessor])
 
   useEffect(() => {
-    window.addEventListener('codemirror-mode-load', forceUpdate)
+    window.addEventListener('codemirror-mode-load', renderContent)
     return () => {
-      window.removeEventListener('codemirror-mode-load', forceUpdate)
+      window.removeEventListener('codemirror-mode-load', renderContent)
     }
-  }, [forceUpdate])
+  }, [renderContent])
 
   useEffect(() => {
     console.log('render requested')
@@ -277,7 +266,9 @@ const MarkdownPreviewer = ({
       return
     }
     console.log('rendering...')
-    renderContent(content)
+    previousContentRef.current = content
+    previousThemeRef.current = codeBlockTheme
+    renderContent()
   }, [content, codeBlockTheme, rendering, renderContent, renderedContent])
 
   const StyledContainer = useMemo(() => {
@@ -290,7 +281,7 @@ const MarkdownPreviewer = ({
   }, [style])
 
   return (
-    <StyledContainer className='MarkdownPreviewer'>
+    <StyledContainer className='MarkdownPreviewer' tabIndex='0'>
       <div className={cc([theme])}>
         {rendering && 'rendering...'}
         {renderedContent}

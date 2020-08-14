@@ -9,3 +9,5 @@ export function getFolderItemId(storageId: string, folderPathname: string) {
 export function getTagListItemId(storageId: string) {
   return `${getStorageItemId(storageId)}/tags`
 }
+
+export const bookmarkItemId = 'bookmarks'

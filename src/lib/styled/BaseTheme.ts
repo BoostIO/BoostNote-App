@@ -1,7 +1,5 @@
 export interface BaseTheme {
   colors: any
-  fontSize: number
-  fontFamily: string
 
   // General
   textColor: string
@@ -10,8 +8,7 @@ export interface BaseTheme {
 
   primaryColor: string
   borderColor: string
-  iconColor: string
-  activeIconColor: string
+
   noteListIconColor: string
   noteListActiveIconColor: string
   noteDetailIconColor: string
@@ -26,10 +23,20 @@ export interface BaseTheme {
   scrollBarThumbColor: string
 
   // SideBar
-  sideBarBackgroundColor: string
-  sideBarTextColor: string
-  activeSideBarSecondaryTextColor: string
-  sideBarSecondaryTextColor: string
+  navBackgroundColor: string
+  navLabelColor: string
+  navButtonColor: string
+  navButtonHoverColor: string
+  navButtonActiveColor: string
+  navItemColor: string
+  navItemBackgroundColor: string
+  navItemHoverBackgroundColor: string
+  navItemActiveColor: string
+  navItemActiveBackgroundColor: string
+  navItemHoverActiveBackgroundColor: string
+
+  // NotePage
+  noteNavEmptyItemColor: string
 
   // Button
   primaryButtonLabelColor: string

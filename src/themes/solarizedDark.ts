@@ -2,7 +2,7 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#1d3f48'
 const base2Color = '#18353d'
-const primaryColor = '#36abe3'
+const primaryColor = '#34a198'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
@@ -20,10 +20,6 @@ export const solarizedDarkTheme: BaseTheme = {
     active: primaryColor,
     border: dark26Color,
   },
-  fontSize: 15,
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
-
   // General
   textColor: light100Color,
   uiTextColor: light70Color,
@@ -31,8 +27,6 @@ export const solarizedDarkTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark26Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
@@ -48,10 +42,20 @@ export const solarizedDarkTheme: BaseTheme = {
   scrollBarThumbColor: light12Color,
 
   // SideBar
-  sideBarBackgroundColor: base1Color,
-  activeSideBarSecondaryTextColor: light100Color,
-  sideBarTextColor: light70Color,
-  sideBarSecondaryTextColor: light30Color,
+  navBackgroundColor: '#0c3641',
+  navLabelColor: '#bbb',
+  navButtonColor: '#bbb',
+  navButtonHoverColor: '#eee',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#bbb',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#0E404D',
+  navItemActiveColor: '#eee',
+  navItemActiveBackgroundColor: '#0E404D',
+  navItemHoverActiveBackgroundColor: '#104B59',
+
+  // NotePage
+  noteNavEmptyItemColor: '#bbb',
 
   // Button
   primaryButtonLabelColor: light100Color,

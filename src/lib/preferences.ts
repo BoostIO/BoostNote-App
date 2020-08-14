@@ -5,6 +5,7 @@ import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
+import { NoteSortingOptions } from './sort'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -17,6 +18,7 @@ export type GeneralLanguageOptions =
   | 'en-US'
   | 'es-ES'
   | 'fr-FR'
+  | 'it-IT'
   | 'ja'
   | 'ko'
   | 'pt-BR'
@@ -24,12 +26,7 @@ export type GeneralLanguageOptions =
   | 'zh-CN'
   | 'zh-HK'
   | 'zh-TW'
-export type GeneralNoteSortingOptions =
-  | 'date-updated'
-  | 'date-created'
-  | 'title'
-export type GeneralTutorialsOptions = 'display' | 'hide'
-
+export type GeneralNoteListViewOptions = 'default' | 'compact'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -39,10 +36,9 @@ export interface Preferences {
   'general.accounts': User[]
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
-  'general.noteSorting': GeneralNoteSortingOptions
+  'general.noteSorting': NoteSortingOptions
+  'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
-  'general.enableDownloadAppModal': boolean
-  'general.tutorials': GeneralTutorialsOptions
   'general.enableAutoSync': boolean
 
   // Editor
@@ -57,6 +53,7 @@ export interface Preferences {
   // Markdown
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
+  'markdown.includeFrontMatter': boolean
 }
 
 function loadPreferences() {
@@ -81,14 +78,13 @@ const basePreferences: Preferences = {
   'general.accounts': [],
   'general.language': 'en-US',
   'general.theme': 'dark',
-  'general.noteSorting': 'date-updated',
+  'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
-  'general.enableDownloadAppModal': true,
-  'general.tutorials': 'display',
   'general.enableAutoSync': true,
+  'general.noteListView': 'default',
 
   // Editor
-  'editor.theme': 'default',
+  'editor.theme': 'material-darker',
   'editor.fontSize': 15,
   'editor.fontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
@@ -99,7 +95,8 @@ const basePreferences: Preferences = {
 
   // Markdown
   'markdown.previewStyle': 'default',
-  'markdown.codeBlockTheme': 'default',
+  'markdown.codeBlockTheme': 'material-darker',
+  'markdown.includeFrontMatter': true,
 }
 
 function usePreferencesStore() {

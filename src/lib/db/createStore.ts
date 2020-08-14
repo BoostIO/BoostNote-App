@@ -1,25 +1,26 @@
 import {
   NoteStorage,
-  NoteStorageData,
+  PouchNoteStorageData,
   ObjectMap,
   NoteDoc,
   NoteDocEditibleProps,
   PopulatedFolderDoc,
   PopulatedTagDoc,
   Attachment,
-  PopulatedNoteDoc,
   CloudNoteStorageData,
+  TagDoc,
+  NoteStorageData,
+  PouchNoteStorage,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
 import { schema, isValid } from '../predicates'
-import NoteDb from './NoteDb'
+import PouchNoteDb from './PouchNoteDb'
 import {
   getFolderPathname,
   getParentFolderPathname,
   getAllParentFolderPathnames,
-  isFolderPathnameValid,
-  createUnprocessableEntityError,
+  entries,
 } from './utils'
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
@@ -30,19 +31,21 @@ import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { escapeRegExp } from '../string'
 import { useToast } from '../toast'
 import { useFirstUser, usePreferences } from '../preferences'
 import { useRefState } from '../hooks'
+import FSNoteDb from './FSNoteDb'
 
 const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
 const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
-
 export interface DbStore {
   initialized: boolean
   storageMap: ObjectMap<NoteStorage>
   initialize: () => Promise<void>
-  createStorage: (name: string) => Promise<NoteStorage>
+  createStorage: (
+    name: string,
+    props?: { type: 'fs'; location: string }
+  ) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => void
   renameCloudStorage: (id: string, cloudStorageName: string) => void
@@ -70,6 +73,11 @@ export interface DbStore {
   ): Promise<NoteDoc | undefined>
   trashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
   untrashNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  bookmarkNote(storageId: string, noteId: string): Promise<NoteDoc | undefined>
+  unbookmarkNote(
+    storageId: string,
+    noteId: string
+  ): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
   removeTag(storageId: string, tag: string): Promise<void>
   moveNoteToOtherStorage(
@@ -85,8 +93,7 @@ export interface DbStore {
 export function createDbStoreCreator(
   liteStorage: LiteStorage,
   routerHook: () => RouterStore,
-  pathnameWithoutNoteIdGetter: () => string,
-  adapter: 'idb' | 'memory'
+  pathnameWithoutNoteIdGetter: () => string
 ) {
   return (): DbStore => {
     const router = routerHook()
@@ -108,7 +115,7 @@ export function createDbStoreCreator(
       const storageDataList = getStorageDataListOrFix(liteStorage)
 
       const prepared = await Promise.all(
-        storageDataList.map((storage) => prepareStorage(storage, adapter))
+        storageDataList.map((storage) => prepareStorage(storage))
       )
       const storageMap = prepared.reduce((map, storage) => {
         map[storage.id] = storage
@@ -121,12 +128,15 @@ export function createDbStoreCreator(
     }, [setStorageMap])
 
     const createStorage = useCallback(
-      async (name: string) => {
+      async (name: string, props?: { type: 'fs'; location: string }) => {
         const id = generateId()
 
-        const storageData: NoteStorageData = { id, name }
+        const storageData: PouchNoteStorageData = { id, name }
 
-        const storage = await prepareStorage(storageData, adapter)
+        const storage = await prepareStorage({
+          ...storageData,
+          ...props,
+        })
 
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap((prevStorageMap) => {
@@ -149,6 +159,9 @@ export function createDbStoreCreator(
         setStorageMap((prevStorageMap) => {
           const existingStorage = prevStorageMap[storageId]
           if (existingStorage == null) {
+            return prevStorageMap
+          }
+          if (existingStorage.type === 'fs') {
             return prevStorageMap
           }
           const newStorage = {
@@ -177,7 +190,13 @@ export function createDbStoreCreator(
         }
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
-          if (storage == null || storage.cloudStorage == null) {
+          if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
+            return prevStorageMap
+          }
+          if (storage.cloudStorage == null) {
             return prevStorageMap
           }
           if (storage.sync != null) {
@@ -220,12 +239,14 @@ export function createDbStoreCreator(
 
               setStorageMap((prevStorageMap) => {
                 return produce(prevStorageMap, (draft) => {
-                  draft[storageId]!.sync = undefined
+                  ;(draft[storageId]! as PouchNoteStorage).sync = undefined
                 })
               })
             })
             .on('complete', async () => {
-              const syncedStorage = await prepareStorage(storage, adapter)
+              const syncedStorage = (await prepareStorage(
+                storage
+              )) as PouchNoteStorage
               syncedStorage.cloudStorage!.syncedAt = Date.now()
               let newStorageMap: ObjectMap<NoteStorage>
               setStorageMap((prevStorageMap) => {
@@ -242,7 +263,7 @@ export function createDbStoreCreator(
             })
 
           return produce(prevStorageMap, (draft) => {
-            draft[storageId]!.sync = sync
+            ;(draft[storageId]! as PouchNoteStorage).sync = sync
           })
         })
       },
@@ -257,7 +278,12 @@ export function createDbStoreCreator(
 
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
-          if (storage == null) return prevStorageMap
+          if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
+            return prevStorageMap
+          }
           if (storage.syncTimer != null) {
             clearTimeout(storage.syncTimer)
           }
@@ -294,6 +320,9 @@ export function createDbStoreCreator(
         setStorageMap((prevStorageMap) => {
           const storage = prevStorageMap[storageId]
           if (storage == null) {
+            return prevStorageMap
+          }
+          if (storage.type === 'fs') {
             return prevStorageMap
           }
           if (storage.syncTimer == null) {
@@ -362,7 +391,10 @@ export function createDbStoreCreator(
           return
         }
 
-        await storage.db.pouchDb.destroy()
+        if (storage.type !== 'fs') {
+          await storage.db.pouchDb.destroy()
+        }
+
         let newStorageMap: ObjectMap<NoteStorage>
         setStorageMap((prevStorageMap) => {
           newStorageMap = produce(prevStorageMap, (draft) => {
@@ -401,14 +433,19 @@ export function createDbStoreCreator(
     const renameCloudStorage = useCallback(
       (id: string, cloudStorageName: string) => {
         const storageData = storageMap[id]
-        if (storageData == null || storageData.cloudStorage == null) {
+        if (storageData == null || storageData.type === 'fs') {
+          return
+        }
+        if (storageData.cloudStorage == null) {
           return
         }
 
         let newStorageMap: ObjectMap<NoteStorage> = {}
         setStorageMap((prevStorageMap) => {
           newStorageMap = produce(prevStorageMap, (draft) => {
-            draft[id]!.cloudStorage!.name = cloudStorageName
+            ;(draft[
+              id
+            ]! as PouchNoteStorage).cloudStorage!.name = cloudStorageName
           })
           return newStorageMap
         })
@@ -465,80 +502,21 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        if (!isFolderPathnameValid(pathname)) {
-          throw createUnprocessableEntityError(
-            `pathname is invalid, got \`${pathname}\``
-          )
-        }
-        if (!isFolderPathnameValid(newPathname)) {
-          throw createUnprocessableEntityError(
-            `pathname is invalid, got \`${newPathname}\``
-          )
-        }
-
-        const folderListToRefresh: PopulatedFolderDoc[] = []
-        const notesListToRefresh: NoteDoc[] = []
-
-        const subFolders = Object.keys(storage.folderMap).filter((aPathname) =>
-          aPathname.startsWith(`${pathname}/`)
-        )
-        const allFoldersToRename = [pathname, ...subFolders]
-        await Promise.all(
-          allFoldersToRename.map(async (folderPathname) => {
-            const regex = new RegExp(`^${escapeRegExp(pathname)}`, 'g')
-            const newfolderPathname = folderPathname.replace(regex, newPathname)
-            const folder = await storage.db.getFolder(folderPathname)
-            if (folder == null) {
-              throw createUnprocessableEntityError(
-                `this folder does not exist \`${folderPathname}\``
-              )
-            }
-            if ((await storage.db.getFolder(newfolderPathname)) != null) {
-              throw createUnprocessableEntityError(
-                `this folder already exists \`${newfolderPathname}\``
-              )
-            }
-            if (
-              folderPathname.split('/').length !==
-              newfolderPathname.split('/').length
-            ) {
-              throw createUnprocessableEntityError(
-                `New name is invalid. \`${newfolderPathname}\``
-              )
-            }
-            const notes = await storage.db.findNotesByFolder(folderPathname)
-            const newFolder = await storage.db.upsertFolder(newfolderPathname)
-            const rewrittenNotes = await Promise.all(
-              notes.map((note) =>
-                storage.db.updateNote(note._id, {
-                  folderPathname: newfolderPathname,
-                })
-              )
-            )
-
-            folderListToRefresh.push({
-              ...newFolder,
-              pathname: getFolderPathname(newFolder._id),
-              noteIdSet: new Set(rewrittenNotes.map((note) => note._id)),
-            })
-            notesListToRefresh.push(...rewrittenNotes)
-          })
-        )
-
-        await storage.db.removeFolder(pathname)
+        const {
+          folders,
+          notes,
+          removedFolders,
+        } = await storage.db.renameFolder(pathname, newPathname)
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            notesListToRefresh.forEach((noteDoc) => {
-              draft[storage.id]!.noteMap[noteDoc._id] = {
-                storageId: storage.id,
-                ...noteDoc,
-              } as PopulatedNoteDoc
+            notes.forEach((noteDoc) => {
+              draft[storage.id]!.noteMap[noteDoc._id] = noteDoc
             })
-            folderListToRefresh.forEach((folderDoc) => {
+            folders.forEach((folderDoc) => {
               draft[storage.id]!.folderMap[folderDoc.pathname] = folderDoc
             })
-            allFoldersToRename.forEach((aPathname) => {
+            removedFolders.forEach((aPathname) => {
               delete draft[storageId]!.folderMap[aPathname]
             })
           })
@@ -577,7 +555,7 @@ export function createDbStoreCreator(
 
         const noteIds = Object.keys(storage.noteMap)
         const affectedTagIdAndNotesIdMap = new Map<string, string[]>()
-        const modifiedNotes: ObjectMap<PopulatedNoteDoc> = noteIds.reduce(
+        const modifiedNotes: ObjectMap<NoteDoc> = noteIds.reduce(
           (acc, noteId) => {
             const note = { ...storage.noteMap[noteId]! }
             if (deletedFolderPathnames.includes(note.folderPathname)) {
@@ -646,10 +624,7 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const noteDoc = {
-          storageId,
-          ...(await storage.db.createNote(noteProps)),
-        } as PopulatedNoteDoc
+        const noteDoc = await storage.db.createNote(noteProps)
 
         const parentFolderPathnamesToCheck = [
           ...getAllParentFolderPathnames(noteDoc.folderPathname),
@@ -733,11 +708,10 @@ export function createDbStoreCreator(
           return
         }
         let previousNoteDoc = await storage.db.getNote(noteId)
-        const updatedNoteDoc = await storage.db.updateNote(noteId, noteProps)
-        if (updatedNoteDoc == null) {
+        const noteDoc = await storage.db.updateNote(noteId, noteProps)
+        if (noteDoc == null) {
           return
         }
-        const noteDoc = { storageId, ...updatedNoteDoc } as PopulatedNoteDoc
         if (previousNoteDoc == null) {
           previousNoteDoc = noteDoc
         }
@@ -808,9 +782,10 @@ export function createDbStoreCreator(
           noteDoc.tags.map(async (tag) => {
             if (storage.tagMap[tag] == null) {
               return {
-                ...(await storage.db.getTag(tag)!),
+                ...((await storage.db.getTag(tag)!) as TagDoc),
+                name: tag,
                 noteIdSet: new Set([noteDoc._id]),
-              } as PopulatedTagDoc
+              }
             } else {
               return {
                 ...storage.tagMap[tag]!,
@@ -872,16 +847,13 @@ export function createDbStoreCreator(
           )
         }
 
-        const newNote = {
-          storageId: targetStorage.id,
-          ...(await targetStorage.db.createNote({
-            title: originalNote.title,
-            content: originalNote.content,
-            tags: originalNote.tags,
-            data: originalNote.data,
-            folderPathname: targetFolderPathname,
-          })),
-        } as PopulatedNoteDoc
+        const newNote = await targetStorage.db.createNote({
+          title: originalNote.title,
+          content: originalNote.content,
+          tags: originalNote.tags,
+          data: originalNote.data,
+          folderPathname: targetFolderPathname,
+        })
         await originalStorage.db.purgeNote(originalNote._id)
 
         const modifiedTagsInOriginalStorage = originalNote.tags
@@ -1000,11 +972,10 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const updatedNoteDoc = await storage.db.trashNote(noteId)
-        if (updatedNoteDoc == null) {
+        const noteDoc = await storage.db.trashNote(noteId)
+        if (noteDoc == null) {
           return
         }
-        const noteDoc = { storageId, ...updatedNoteDoc } as PopulatedNoteDoc
 
         let folder: PopulatedFolderDoc | undefined
         if (storage.folderMap[noteDoc.folderPathname] != null) {
@@ -1042,6 +1013,11 @@ export function createDbStoreCreator(
               ...storage.tagMap,
               ...modifiedTags,
             }
+            if (noteDoc.data.bookmarked) {
+              const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+              bookmarkedItemIdSet.delete(noteDoc._id)
+              draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+            }
           })
         )
 
@@ -1058,10 +1034,7 @@ export function createDbStoreCreator(
         if (storage == null) {
           return
         }
-        const noteDoc = {
-          storageId,
-          ...(await storage.db.untrashNote(noteId)),
-        } as PopulatedNoteDoc
+        const noteDoc = await storage.db.untrashNote(noteId)
 
         const folder: PopulatedFolderDoc =
           storage.folderMap[noteDoc.folderPathname] == null
@@ -1077,6 +1050,19 @@ export function createDbStoreCreator(
                   noteDoc._id,
                 ]),
               }
+        const parentFolderPathnames = getAllParentFolderPathnames(
+          noteDoc.folderPathname
+        )
+        const missingFolders: PopulatedFolderDoc[] = []
+        for (const parentFolderPathname of parentFolderPathnames) {
+          if (storage.folderMap[parentFolderPathname] == null) {
+            missingFolders.push({
+              ...(await storage.db.getFolder(parentFolderPathname)),
+              pathname: parentFolderPathname,
+              noteIdSet: new Set(),
+            } as PopulatedFolderDoc)
+          }
+        }
 
         const modifiedTags: ObjectMap<PopulatedTagDoc> = ((await Promise.all(
           noteDoc.tags.map(async (tag) => {
@@ -1104,9 +1090,19 @@ export function createDbStoreCreator(
           produce((draft: ObjectMap<NoteStorage>) => {
             draft[storageId]!.noteMap[noteDoc._id] = noteDoc
             draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
+            missingFolders.forEach((missingFolder) => {
+              draft[storageId]!.folderMap[
+                missingFolder.pathname
+              ] = missingFolder
+            })
             draft[storageId]!.tagMap = {
               ...storage.tagMap,
               ...modifiedTags,
+            }
+            if (noteDoc.data.bookmarked) {
+              const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+              bookmarkedItemIdSet.add(noteDoc._id)
+              draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
             }
           })
         )
@@ -1127,41 +1123,32 @@ export function createDbStoreCreator(
 
         await storage.db.purgeNote(noteId)
 
-        const noteDoc = storageMap[storageId]!.noteMap[noteId]!
-
-        const noteMap = { ...storageMap[storageId]!.noteMap }
-        delete noteMap[noteId]
-
-        const newFolderNoteIdSet = new Set(
-          storage.folderMap[noteDoc.folderPathname]!.noteIdSet
-        )
-        newFolderNoteIdSet.delete(noteDoc._id)
-        const folder: PopulatedFolderDoc = {
-          ...storage.folderMap[noteDoc.folderPathname]!,
-          noteIdSet: newFolderNoteIdSet,
-        }
-
-        const modifiedTags: ObjectMap<PopulatedTagDoc> = noteDoc.tags.reduce(
-          (acc, tag) => {
-            const newNoteIdSet = new Set(storage.tagMap[tag]!.noteIdSet)
-            newNoteIdSet.delete(noteDoc._id)
-            acc[tag] = {
-              ...storage.tagMap[tag]!,
-              noteIdSet: newNoteIdSet,
-            }
-            return acc
-          },
-          {}
-        )
-
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[storageId]!.noteMap = noteMap
-            draft[storageId]!.folderMap[noteDoc.folderPathname] = folder
-            draft[storageId]!.tagMap = {
-              ...storage.tagMap,
-              ...modifiedTags,
+            const storage = draft[storageId]!
+            const note = storage.noteMap[noteId]
+            if (note == null) {
+              return
             }
+            const noteMap = { ...storage.noteMap }
+            delete noteMap[noteId]
+            draft[storageId]!.noteMap = noteMap
+
+            const folder = storage.folderMap[note.folderPathname]
+            if (folder != null) {
+              const newFolderNoteIdSet = new Set(folder.noteIdSet)
+              newFolderNoteIdSet.delete(note._id)
+              folder.noteIdSet = newFolderNoteIdSet
+            }
+
+            note.tags.forEach((tagName) => {
+              const tag = storage.tagMap[tagName]
+              if (tag != null) {
+                const newTagNoteIdSet = new Set(tag.noteIdSet)
+                newTagNoteIdSet.delete(note._id)
+                tag.noteIdSet = newTagNoteIdSet
+              }
+            })
           })
         )
         queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
@@ -1187,7 +1174,7 @@ export function createDbStoreCreator(
           router.replace(`/app/storages/${storageId}/notes`)
         }
 
-        const modifiedNotes: ObjectMap<PopulatedNoteDoc> = Object.keys(
+        const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
           if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(tag)) {
@@ -1265,6 +1252,56 @@ export function createDbStoreCreator(
       queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
     }
 
+    const bookmarkNote = async (storageId: string, noteId: string) => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return
+      }
+      const noteDoc = await storage.db.bookmarkNote(noteId)
+      if (noteDoc == null) {
+        return
+      }
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+          bookmarkedItemIdSet.add(noteDoc._id)
+          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+
+          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+        })
+      )
+
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+      return noteDoc
+    }
+
+    const unbookmarkNote = async (storageId: string, noteId: string) => {
+      const storage = storageMap[storageId]
+      if (storage == null) {
+        return
+      }
+      const noteDoc = await storage.db.unbookmarkNote(noteId)
+      if (noteDoc == null) {
+        return
+      }
+
+      setStorageMap(
+        produce((draft: ObjectMap<NoteStorage>) => {
+          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+          bookmarkedItemIdSet.delete(noteDoc._id)
+          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+
+          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+        })
+      )
+
+      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+      return noteDoc
+    }
+
     return {
       initialized,
       storageMap,
@@ -1291,6 +1328,8 @@ export function createDbStoreCreator(
       removeTag,
       addAttachments,
       removeAttachment,
+      bookmarkNote,
+      unbookmarkNote,
     }
   }
 }
@@ -1302,14 +1341,14 @@ const storageDataPredicate = schema({
 
 export function getStorageDataList(
   liteStorage: LiteStorage
-): NoteStorageData[] | null {
+): PouchNoteStorageData[] | null {
   const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
     if (!Array.isArray(parsedStorageDataList))
       throw new Error('storage data is corrupted')
 
-    return parsedStorageDataList.reduce<NoteStorageData[]>(
+    return parsedStorageDataList.reduce<PouchNoteStorageData[]>(
       (validatedList, parsedStorageData) => {
         if (isValid(parsedStorageData, storageDataPredicate)) {
           validatedList.push(parsedStorageData)
@@ -1340,59 +1379,103 @@ function saveStorageDataList(
   liteStorage.setItem(
     storageDataListKey,
     JSON.stringify(
-      values(storageMap).map(({ id, name, cloudStorage }) => ({
-        id,
-        name,
-        cloudStorage,
-      }))
+      values(storageMap).map((storage) => {
+        const { id, name } = storage
+        if (storage.type === 'fs') {
+          return {
+            id,
+            name,
+            type: 'fs',
+            location: storage.location,
+          }
+        }
+        return {
+          id,
+          name,
+          cloudStorage: storage.cloudStorage,
+        }
+      })
     )
   )
 }
 
 async function prepareStorage(
-  { id, name, cloudStorage }: NoteStorageData,
-  adapter: 'idb' | 'memory'
+  storageData: NoteStorageData
 ): Promise<NoteStorage> {
-  const pouchdb = new PouchDB(id, { adapter })
-  const db = new NoteDb(pouchdb, id, name)
+  const { id, name } = storageData
+  const db =
+    storageData.type === 'fs'
+      ? new FSNoteDb(id, name, storageData.location)
+      : new PouchNoteDb(
+          new PouchDB(id, {
+            adapter: process.env.NODE_ENV === 'test' ? 'memory' : 'idb',
+          }),
+          id,
+          name
+        )
   await db.init()
 
   const { noteMap, folderMap, tagMap } = await db.getAllDocsMap()
   const attachmentMap = await db.getAttachmentMap()
-  const storage: NoteStorage = {
-    id,
-    name,
-    cloudStorage,
-    noteMap,
-    folderMap: Object.entries(folderMap).reduce(
-      (map, [pathname, folderDoc]) => {
-        map[pathname] = {
-          ...folderDoc,
-          pathname,
-          noteIdSet: new Set(),
-        }
+  const populatedFolderMap = entries(folderMap).reduce<
+    ObjectMap<PopulatedFolderDoc>
+  >((map, [pathname, folderDoc]) => {
+    map[pathname] = {
+      ...folderDoc,
+      pathname,
+      noteIdSet: new Set(),
+    }
 
-        return map
-      },
-      {}
-    ),
-    tagMap: Object.entries(tagMap).reduce((map, [name, tagDoc]) => {
+    return map
+  }, {})
+  const populatedTagMap = entries(tagMap).reduce<ObjectMap<PopulatedTagDoc>>(
+    (map, [name, tagDoc]) => {
       map[name] = { ...tagDoc, name, noteIdSet: new Set() }
       return map
-    }, {}),
-    attachmentMap,
-    db,
-  }
+    },
+    {}
+  )
+  const bookmarkedIdSet = new Set<string>()
 
-  for (const noteDoc of Object.values(noteMap) as NoteDoc[]) {
+  for (const noteDoc of values(noteMap)) {
     if (noteDoc.trashed) {
       continue
     }
-    storage.folderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
-    noteDoc.tags.forEach((tagName) => {
-      storage.tagMap[tagName]!.noteIdSet.add(noteDoc._id)
+    populatedFolderMap[noteDoc.folderPathname]!.noteIdSet.add(noteDoc._id)
+    noteDoc.tags.forEach((tag) => {
+      populatedTagMap[tag]!.noteIdSet.add(noteDoc._id)
     })
+    if (noteDoc.data.bookmarked) {
+      bookmarkedIdSet.add(noteDoc._id)
+    }
+  }
+  const bookmarkedItemIds = [...bookmarkedIdSet]
+
+  if (storageData.type === 'fs') {
+    return {
+      type: 'fs',
+      id,
+      name,
+      location: storageData.location,
+      noteMap,
+      folderMap: populatedFolderMap,
+      tagMap: populatedTagMap,
+      attachmentMap,
+      db: db as FSNoteDb,
+      bookmarkedItemIds,
+    }
   }
 
-  return storage
+  return {
+    type: 'pouch',
+    id,
+    name,
+    cloudStorage: storageData.cloudStorage,
+    noteMap,
+    folderMap: populatedFolderMap,
+    tagMap: populatedTagMap,
+    attachmentMap,
+    db: db as PouchNoteDb,
+    bookmarkedItemIds,
+  }
 }

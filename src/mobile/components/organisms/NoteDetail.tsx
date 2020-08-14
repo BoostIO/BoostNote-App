@@ -4,7 +4,6 @@ import {
   NoteDoc,
   NoteDocEditibleProps,
   Attachment,
-  PopulatedNoteDoc,
   ObjectMap,
 } from '../../../lib/db/types'
 import { isTagNameValid } from '../../../lib/db/utils'
@@ -14,23 +13,23 @@ import CustomizedCodeEditor from '../../../components/atoms/CustomizedCodeEditor
 import CustomizedMarkdownPreviewer from '../../../components/atoms/CustomizedMarkdownPreviewer'
 import ToolbarSeparator from '../../../components/atoms/ToolbarSeparator'
 import {
-  secondaryBackgroundColor,
   textColor,
   borderBottom,
   borderRight,
   inputStyle,
+  backgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../../lib/events'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { codeMirrorPasteHandler } from '../../../lib/eventHandler/pasteHandler'
 
 export const NoteDetailContainer = styled.div`
-  ${secondaryBackgroundColor}
+  ${backgroundColor};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -118,7 +117,8 @@ export const NoteDetailContainer = styled.div`
 
 type NoteDetailProps = {
   currentPathnameWithoutNoteId: string
-  note: PopulatedNoteDoc
+  note: NoteDoc
+  storageId: string
   attachmentMap: ObjectMap<Attachment>
   updateNote: (
     storageId: string,
@@ -168,8 +168,7 @@ export default class NoteDetail extends React.Component<
     props: NoteDetailProps,
     state: NoteDetailState
   ): NoteDetailState {
-    const { note } = props
-    const { storageId } = note
+    const { note, storageId } = props
     if (storageId !== state.prevStorageId || note._id !== state.prevNoteId) {
       return {
         prevStorageId: storageId,
@@ -289,8 +288,7 @@ export default class NoteDetail extends React.Component<
   }
 
   trashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -305,8 +303,7 @@ export default class NoteDetail extends React.Component<
   }
 
   untrashNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -321,8 +318,7 @@ export default class NoteDetail extends React.Component<
   }
 
   purgeNote = async () => {
-    const { note } = this.props
-    const { storageId } = note
+    const { note, storageId } = this.props
     const noteId = note._id
 
     if (this.queued) {
@@ -345,8 +341,7 @@ export default class NoteDetail extends React.Component<
       clearTimeout(this.timer)
     }
     this.timer = setTimeout(() => {
-      const { note } = this.props
-      const { storageId } = note
+      const { note, storageId } = this.props
       const { title, content, tags } = this.state
 
       this.saveNote(storageId, note._id, { title, content, tags })

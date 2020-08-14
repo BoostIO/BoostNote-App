@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { usePreferences } from '../../../lib/preferences'
 import TopBarLayout from '../layouts/TopBarLayout'
 import TopBarButton from '../atoms/TopBarButton'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiClose, mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import styled from '../../../lib/styled'
 import { capitalize } from '../../../lib/string'
@@ -54,7 +54,7 @@ const PreferencesModal = () => {
     return (
       <PreferencesModalContainer>
         <TopBarLayout
-          title={`Preferences / ${capitalize(tab)}`}
+          titleLabel={`Preferences / ${capitalize(tab)}`}
           leftControl={
             <TopBarButton onClick={unselectTab}>
               <Icon path={mdiChevronLeft} />
@@ -70,7 +70,7 @@ const PreferencesModal = () => {
   return (
     <PreferencesModalContainer>
       <TopBarLayout
-        title='Preferences'
+        titleLabel='Preferences'
         leftControl={
           <TopBarButton onClick={toggleClosed}>
             <Icon path={mdiClose} />
@@ -105,7 +105,7 @@ const PreferencesModal = () => {
         <ExternalLinkTableViewCell url='https://www.reddit.com/r/Boostnote/'>
           Reddit
         </ExternalLinkTableViewCell>
-        <ExternalLinkTableViewCell url='https://boostnote.io/wiki'>
+        <ExternalLinkTableViewCell url='https://boosthub.io/'>
           Boost Note for Team
         </ExternalLinkTableViewCell>
       </TopBarLayout>

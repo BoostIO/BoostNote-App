@@ -9,6 +9,8 @@ const filteredJson = {
   dependencies: {
     'electron-updater': '^4.2.0',
     'electron-log': '^4.0.0',
+    'read-chunk': '^3.2.0',
+    'file-type': '^14.6.2',
   },
 }
 

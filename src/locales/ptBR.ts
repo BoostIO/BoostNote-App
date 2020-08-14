@@ -22,7 +22,7 @@
     'storage.remove': 'Remover armazenamento',
     'storage.removeMessage':
       'O armazenamento será desvinculado deste aplicativo.',
-    'storage.delete': 'Deletar armazenamento',
+    'storage.delete': 'Deletar armazenamento {{storage}}',
     'storage.move': 'Mover nota',
     'storage.moveTitle': 'Mover nota para outro armazenamento',
     'storage.moveMessage':
@@ -60,9 +60,11 @@
     'note.nothingMessage': 'Nenhuma nota foi encontrada.',
     'note.noTitle': 'Sem título',
     'note.date': 'Atrás',
-    'note.createKeyMac': 'Mac: Command(⌘) + n',
-    'note.createKeyWinLin': 'Windows/Linux: Ctrl + n',
-    'note.createkeymessage1': 'Para criar uma nova nota',
+    'note.createKeyOr': 'ou',
+    'note.createKey': 'N',
+    'note.createKeyMac': 'em Mac',
+    'note.createKeyWinLin': 'em Windows/Linux',
+    'note.createkeymessage1': 'Para criar uma nova nota, pressione',
     'note.createkeymessage2': 'Selecionar um armazenamento',
     'note.createkeymessage3': 'Para criar uma nota',
     'note.restore': 'Restore',

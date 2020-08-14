@@ -21,7 +21,7 @@ export default {
     'storage.renameMessage': 'Введіть нову назву сховища',
     'storage.remove': 'Видаліть сховище',
     'storage.removeMessage': 'З цього додатка буде від’єднано сховище.',
-    'storage.delete': 'Видалити сховище',
+    'storage.delete': 'Видалити сховище {{storage}}',
     'storage.move': 'Перемістіти нотатку',
     'storage.moveTitle': 'Перемістити нотатку до іншого сховища',
     'storage.moveMessage':
@@ -58,9 +58,11 @@ export default {
     'note.nothingMessage': 'Не вдалося знайти нотатки.',
     'note.noTitle': 'Без назви',
     'note.date': 'тому',
-    'note.createKeyMac': 'Mac: Command(⌘) + n',
-    'note.createKeyWinLin': 'Windows/Linux: Ctrl + n',
-    'note.createkeymessage1': 'Щоб створити нову нотатку',
+    'note.createKeyOr': 'или',
+    'note.createKey': 'N',
+    'note.createKeyMac': 'на Mac',
+    'note.createKeyWinLin': 'на Windows/Linux',
+    'note.createkeymessage1': 'Щоб створити нову нотатку, натисніть',
     'note.createkeymessage2': 'Виберіть сховище',
     'note.createkeymessage3': 'Щоб створити нову нотатку',
 

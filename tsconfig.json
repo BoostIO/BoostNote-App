@@ -3,7 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "target": "esnext",
+    "target": "es2018",
     "downlevelIteration": true,
     "importHelpers": true,
     "sourceMap": true,
@@ -12,7 +12,7 @@
     "jsx": "react",
     "allowJs": true,
     "checkJs": false,
-    "lib": ["dom", "es2015", "es2016", "es2017", "esnext"],
+    "lib": ["dom", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,

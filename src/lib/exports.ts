@@ -14,6 +14,7 @@ import { rehypeCodeMirror } from './../components/atoms/MarkdownPreviewer'
 import { downloadString } from './download'
 import { NoteDoc } from './db/types'
 import { Preferences } from './preferences'
+import { filenamify } from './string'
 
 const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] },
@@ -27,7 +28,7 @@ export const exportNoteAsHtmlFile = async (
   await unified()
     .use(remarkParse)
     .use(remarkMath)
-    .use(remarkRehype, { allowDangerousHTML: false })
+    .use([remarkRehype, { allowDangerousHTML: false }])
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
       theme: preferences['markdown.codeBlockTheme'],
@@ -51,7 +52,7 @@ export const exportNoteAsHtmlFile = async (
 
       downloadString(
         file.toString(),
-        `${note.title.toLowerCase().replace(/\s+/g, '-')}.html`,
+        `${filenamify(note.title.toLowerCase().replace(/\s+/g, '-'))}.html`,
         'text/html'
       )
       return
@@ -59,7 +60,8 @@ export const exportNoteAsHtmlFile = async (
 }
 
 export const exportNoteAsMarkdownFile = async (
-  note: NoteDoc
+  note: NoteDoc,
+  { includeFrontMatter }: { includeFrontMatter: boolean }
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
@@ -70,15 +72,22 @@ export const exportNoteAsMarkdownFile = async (
         console.error(err)
         return
       }
+      let content = file.toString().trim() + '\n'
+      if (includeFrontMatter) {
+        content =
+          [
+            '---',
+            `title: "${note.title}"`,
+            `tags: "${note.tags.join()}"`,
+            '---',
+            '',
+            '',
+          ].join('\n') + content
+      }
+
       downloadString(
-        [
-          '---',
-          `title: "${note.title}"`,
-          `tags: "${note.tags.join()}"`,
-          '---',
-          file.toString(),
-        ].join('\n'),
-        `${note.title.toLowerCase().replace(/\s+/g, '-')}.md`,
+        content,
+        `${filenamify(note.title.toLowerCase().replace(/\s+/g, '-'))}.md`,
         'text/markdown'
       )
       return

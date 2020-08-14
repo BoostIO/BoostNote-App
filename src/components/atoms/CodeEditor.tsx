@@ -24,11 +24,6 @@ interface CodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
-  onPaste?: (
-    editor: CodeMirror.Editor,
-    change: CodeMirror.EditorChange,
-    enableAutoFetchWebPageTitle: boolean
-  ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   theme?: string
@@ -40,6 +35,8 @@ interface CodeEditorProps {
   mode?: string
   readonly?: boolean
   enableAutoFetchWebPageTitle?: boolean
+  onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
+  onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -61,13 +58,15 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       keyMap,
       mode: this.props.mode || 'markdown',
       readOnly: this.props.readonly === true,
+      extraKeys: { Enter: 'newlineAndIndentContinueMarkdownList' },
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
-    this.codeMirror.on('inputRead', this.handleCodeMirrorPaste)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
     if (this.props.codeMirrorRef != null) {
       this.props.codeMirrorRef(this.codeMirror)
     }
+    this.codeMirror.on('paste', this.handlePaste as any)
+    this.codeMirror.on('drop', this.handleDrop)
   }
 
   reloadMode = () => {
@@ -116,8 +115,27 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   componentWillUnmount() {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
+      this.codeMirror.off('paste', this.handlePaste as any)
     }
     window.removeEventListener('codemirror-mode-load', this.reloadMode)
+  }
+
+  handlePaste = (editor: CodeMirror.Editor, event: ClipboardEvent) => {
+    const { onPaste } = this.props
+    if (onPaste == null) {
+      return
+    }
+
+    onPaste(editor, event)
+  }
+
+  handleDrop = (editor: CodeMirror.Editor, event: DragEvent) => {
+    const { onDrop } = this.props
+    if (onDrop == null) {
+      return
+    }
+
+    onDrop(editor, event)
   }
 
   handleCodeMirrorChange = (
@@ -126,19 +144,6 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   ) => {
     if (change.origin !== 'setValue' && this.props.onChange != null) {
       this.props.onChange(editor.getValue(), change)
-    }
-  }
-
-  handleCodeMirrorPaste = (
-    editor: CodeMirror.Editor,
-    change: CodeMirror.EditorChange
-  ) => {
-    const enableAutoFetchWebPageTitle =
-      this.props.enableAutoFetchWebPageTitle != undefined
-        ? this.props.enableAutoFetchWebPageTitle
-        : false
-    if (this.props.onPaste != null && change.origin == 'paste') {
-      this.props.onPaste(editor, change, enableAutoFetchWebPageTitle)
     }
   }
 

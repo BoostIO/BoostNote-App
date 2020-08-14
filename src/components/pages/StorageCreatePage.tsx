@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import PageContainer from '../atoms/PageContainer'
 import {
-  FormHeading,
   FormGroup,
   FormCheckInlineItem,
   FormCheckList,
@@ -10,18 +9,64 @@ import {
 } from '../atoms/form'
 import LocalStorageCreateForm from '../organisms/LocalStorageCreateForm'
 import CloudStorageCreateForm from '../organisms/CloudStorageCreateForm'
+import FSStorageCreateForm from '../organisms/FSStorageCreateForm'
+import PageDraggableHeader from '../atoms/PageDraggableHeader'
+import { mdiBookPlusMultiple } from '@mdi/js'
+import PageScrollableContent from '../atoms/PageScrollableContent'
+import isElectron from 'is-electron'
 
-export default () => {
+const ELECTRON = isElectron()
+
+type StorageType = 'cloud' | 'local' | 'fs'
+
+interface StorageCreateFormProps {
+  storageType: StorageType
+}
+
+const StorageCreateForm = ({ storageType }: StorageCreateFormProps) => {
+  switch (storageType) {
+    case 'cloud':
+      return <CloudStorageCreateForm />
+    case 'fs':
+      return <FSStorageCreateForm />
+    case 'local':
+    default:
+      return <LocalStorageCreateForm />
+  }
+}
+
+const StorageCreatePage = () => {
   const { t } = useTranslation()
-  const [storageType, setStorageType] = useState<'cloud' | 'local'>('cloud')
+  const [storageType, setStorageType] = useState<'cloud' | 'local' | 'fs'>('fs')
 
   return (
-    <div>
-      <PageContainer>
-        <FormHeading depth={1}>{t('Create new storage')}</FormHeading>
+    <PageContainer>
+      <PageDraggableHeader
+        iconPath={mdiBookPlusMultiple}
+        label={t('Create new storage')}
+      />
+      <PageScrollableContent>
         <FormGroup>
           <FormLabel>Storage Type</FormLabel>
           <FormCheckList>
+            {ELECTRON && (
+              <FormCheckInlineItem
+                id='radio-localStorageType'
+                type='radio'
+                checked={storageType === 'fs'}
+                onChange={() => setStorageType('fs')}
+              >
+                File System
+              </FormCheckInlineItem>
+            )}
+            <FormCheckInlineItem
+              id='radio-localStorageType'
+              type='radio'
+              checked={storageType === 'local'}
+              onChange={() => setStorageType('local')}
+            >
+              {t('storage.typeLocal')}
+            </FormCheckInlineItem>
             <FormCheckInlineItem
               id='radio-cloudStorageType'
               type='radio'
@@ -32,23 +77,13 @@ export default () => {
             >
               {t('storage.typeCloud')}
             </FormCheckInlineItem>
-            <FormCheckInlineItem
-              id='radio-localStorageType'
-              type='radio'
-              checked={storageType === 'local'}
-              onChange={() => setStorageType('local')}
-            >
-              {t('storage.typeLocal')}
-            </FormCheckInlineItem>
           </FormCheckList>
         </FormGroup>
 
-        {storageType === 'local' ? (
-          <LocalStorageCreateForm />
-        ) : (
-          <CloudStorageCreateForm />
-        )}
-      </PageContainer>
-    </div>
+        <StorageCreateForm storageType={storageType} />
+      </PageScrollableContent>
+    </PageContainer>
   )
 }
+
+export default StorageCreatePage

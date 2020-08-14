@@ -13,23 +13,6 @@ export const secondaryBackgroundColor = ({ theme }: StyledProps) =>
 export const activeBackgroundColor = ({ theme }: StyledProps) =>
   `background-color: ${theme.activeBackgroundColor};`
 
-export const activeSideBarSecondaryTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.activeSideBarSecondaryTextColor};`
-
-export const sideBarBackgroundColor = ({ theme }: StyledProps) =>
-  `background-color: ${theme.sideBarBackgroundColor};`
-
-export const iconColor = ({ theme }: StyledProps) => `color: ${theme.iconColor};
-transition: 200ms color;
-&:hover,
-&:focus {
-  color: ${theme.activeIconColor};
-}
-&:active,
-&.active {
-  color: ${theme.primaryColor};
-}`
-
 export const noteListIconColor = ({ theme }: StyledProps) => `
 color: ${theme.noteListIconColor};
 transition: 200ms color;
@@ -80,22 +63,6 @@ transition: 200ms color;
   color: ${theme.disabledUiTextColor};
 }`
 
-export const sideBarTextColor = ({
-  theme,
-}: StyledProps) => `color: ${theme.sideBarTextColor};
-  &:hover,
-  &:focus,
-  &:active,
-  &.active {
-    color: ${theme.activeSideBarSecondaryTextColor};
-  }`
-
-export const sideBarDefaultTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.sideBarTextColor};`
-
-export const sideBarSecondaryTextColor = ({ theme }: StyledProps) =>
-  `color: ${theme.sideBarSecondaryTextColor};`
-
 export const borderColor = ({ theme }: StyledProps) =>
   `border-color: ${theme.borderColor};`
 
@@ -119,8 +86,8 @@ export const contextMenuShadow = ({ theme }: StyledProps) =>
 
 export const inputStyle = ({ theme }: StyledProps) =>
   `background-color: ${theme.inputBackground};
-border: none;
-border-radius: 2px;
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
 color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
@@ -166,6 +133,8 @@ font-size: 13px;
 export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
 color: ${theme.secondaryButtonLabelColor};
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
 font-size: 13px;
 
 &:hover,
@@ -183,37 +152,50 @@ font-size: 13px;
 }
 `
 
-export const selectStyle = ({ theme }: StyledProps) => `
-  border: ${theme.borderColor};
-  background-color: ${theme.inputBackground};
-  color: ${theme.textColor};
-  &:focus {
-    box-shadow: 0 0 0 2px ${theme.primaryColor};
-  }
+export const selectStyle = ({
+  theme,
+}: StyledProps) => `background-color: ${theme.inputBackground};
+border: 1px solid ${theme.borderColor};
+border-radius: 4px;
+color: ${theme.textColor};
+&:focus {
+  box-shadow: 0 0 0 2px ${theme.primaryColor};
+}
 `
 
 export const tableStyle = ({ theme }: StyledProps) => `
+border: 1px solid ${theme.borderColor};
+border-collapse: collapse;
+color: ${theme.textColor};
+text-align: left;
+
+th, td {
+  padding: 16px 24px;
   border: 1px solid ${theme.borderColor};
-  border-collapse: collapse;
-  color: ${theme.textColor};
-  text-align: left;
+  font-weight: 400;
+}
 
-  th, td {
-    padding: 16px 24px;
-    border: 1px solid ${theme.borderColor};
-    font-weight: 400;
+thead th {
+  font-size: 20px;
+  font-weight: 500;
+
+  span {
+    display: block;
   }
+}
 
-  thead th {
-    font-size: 20px;
-    font-weight: 500;
+tbody td {
+  text-align: center;
+}
+`
 
-    span {
-      display: block;
-    }
-  }
+export const textOverflow = () => `
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+`
 
-  tbody td {
-    text-align: center;
-  }
+export const flexCenter = () => `display: flex;
+align-items: center;
+justify-content: center;
 `

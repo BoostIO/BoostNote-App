@@ -1,8 +1,8 @@
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
-const base1Color = '#2c2d30'
+const base1Color = '#2c2c2c'
 const base2Color = '#1e2022'
-const primaryColor = '#03C588'
+const primaryColor = '#02A47E'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
@@ -20,9 +20,6 @@ export const darkTheme: BaseTheme = {
     active: primaryColor,
     border: dark26Color,
   },
-  fontSize: 15,
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
   textColor: light100Color,
@@ -30,9 +27,7 @@ export const darkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  borderColor: dark26Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
+  borderColor: '#202020',
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
@@ -42,16 +37,26 @@ export const darkTheme: BaseTheme = {
   backgroundColor: base1Color,
   secondaryBackgroundColor: base2Color,
   activeBackgroundColor: base2Color,
-  shadow: '0 3px 5px rgba(0,0,0,0.1)',
+  shadow: '0 3px 5px rgba(0,0,0,0.3)',
 
-  scrollBarTrackColor: base2Color,
-  scrollBarThumbColor: light12Color,
+  scrollBarTrackColor: '#2c2c2c',
+  scrollBarThumbColor: '#555',
 
   // SideBar
-  sideBarBackgroundColor: base1Color,
-  activeSideBarSecondaryTextColor: light100Color,
-  sideBarTextColor: light70Color,
-  sideBarSecondaryTextColor: light30Color,
+  navBackgroundColor: '#2c2c2c',
+  navLabelColor: '#bbb',
+  navButtonColor: '#999',
+  navButtonHoverColor: '#bbb',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#bbb',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#444',
+  navItemActiveColor: '#eee',
+  navItemActiveBackgroundColor: '#444',
+  navItemHoverActiveBackgroundColor: '#555',
+
+  // NotePage
+  noteNavEmptyItemColor: '#999',
 
   // Button
   primaryButtonLabelColor: light100Color,

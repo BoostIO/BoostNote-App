@@ -3,14 +3,13 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 const base1Color = '#fdf6e4'
 const base2Color = '#efe8d6'
 const base3Color = '#393733'
-const primaryColor = '#F77942'
+const primaryColor = '#b38925'
 
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
 const dark12Color = 'rgba(0,0,0,0.12)'
 
 const light100Color = '#FFF'
-const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
 const light12Color = 'rgba(255,255,255,0.12)'
 
@@ -24,9 +23,6 @@ export const sepiaTheme: BaseTheme = {
     active: primaryColor,
     border: dark12Color,
   },
-  fontSize: 15,
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
   textColor: base3Color,
@@ -35,8 +31,7 @@ export const sepiaTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark12Color,
-  iconColor: light30Color,
-  activeIconColor: light70Color,
+
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,
   noteDetailIconColor: dark26Color,
@@ -52,10 +47,20 @@ export const sepiaTheme: BaseTheme = {
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideBarBackgroundColor: base3Color,
-  activeSideBarSecondaryTextColor: light100Color,
-  sideBarTextColor: light70Color,
-  sideBarSecondaryTextColor: light30Color,
+  navBackgroundColor: '#fdf6e4',
+  navLabelColor: '#555',
+  navButtonColor: '#777',
+  navButtonHoverColor: '#555',
+  navButtonActiveColor: primaryColor,
+  navItemColor: '#555',
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: '#eee8d6',
+  navItemActiveColor: '#111',
+  navItemActiveBackgroundColor: '#eee8d6',
+  navItemHoverActiveBackgroundColor: '#e0e0e0',
+
+  // NotePage
+  noteNavEmptyItemColor: '#777',
 
   // Button
   primaryButtonLabelColor: light100Color,

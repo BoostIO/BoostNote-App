@@ -13,3 +13,5 @@ secrets
 compiled-mobile
 electron/*
 !electron/.gitkeep
+
+.now

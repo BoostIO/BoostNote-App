@@ -1,9 +1,9 @@
 import React, { useCallback, useRef } from 'react'
 import NoteItem from './NoteItem'
-import { PopulatedNoteDoc } from '../../../lib/db/types'
+import { NoteDoc } from '../../../lib/db/types'
 import styled from '../../../lib/styled'
 import { useTranslation } from 'react-i18next'
-import Icon from '../atoms/Icon'
+import Icon from '../../../components/atoms/Icon'
 import { mdiPencil } from '@mdi/js'
 
 const NoteListContainer = styled.div`
@@ -52,9 +52,9 @@ const EmptyPlaceholder = styled.li`
 `
 
 type NoteListProps = {
-  currentStorageId?: string
+  currentStorageId: string
   currentNoteId?: string
-  notes: PopulatedNoteDoc[]
+  notes: NoteDoc[]
   createNote?: () => Promise<void>
   basePathname: string
   trashOrPurgeCurrentNote: () => void
@@ -76,7 +76,7 @@ const NoteList = ({
 
   return (
     <NoteListContainer>
-      {currentStorageId != null && createNote != null && (
+      {currentStorageId && createNote != null && (
         <NewNoteButton onClick={createNote}>
           <Icon path={mdiPencil} />
         </NewNoteButton>
@@ -89,6 +89,7 @@ const NoteList = ({
                 note={note}
                 basePathname={basePathname}
                 focusList={focusList}
+                storageId={currentStorageId}
               />
             </li>
           )

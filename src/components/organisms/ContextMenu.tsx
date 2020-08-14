@@ -3,6 +3,7 @@ import {
   useContextMenu,
   MenuTypes,
   ContextMenuContext,
+  menuSeparatorHeight,
 } from '../../lib/contextMenu'
 import styled from '../../lib/styled'
 import {
@@ -27,15 +28,15 @@ const StyledContextMenu = styled.div`
   border-style: solid;
   border-width: 1px;
   padding: ${menuVerticalPadding}px 0;
-  font-size: 14px;
   box-sizing: border-box;
   border-radius: 2px;
   ${contextMenuShadow}
   outline: none;
 `
 
-const StyledContextMenuItem = styled.button`
+const NormalContextMenuItem = styled.button`
   height: ${menuHeight}px;
+  font-size: 13px;
   padding: 0 20px;
   box-sizing: border-box;
   background-color: transparent;
@@ -54,6 +55,30 @@ const StyledContextMenuItem = styled.button`
     background-color: transparent;
   }
 `
+
+const SeparatorContextMenuItemContainer = styled.div`
+  height: ${menuSeparatorHeight}px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+`
+
+const SeparatorContextMenuItemBorder = styled.div`
+  height: 1px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.borderColor};
+`
+
+const SeparatorContextMenuItem = () => {
+  return (
+    <SeparatorContextMenuItemContainer>
+      <SeparatorContextMenuItemBorder />
+    </SeparatorContextMenuItemContainer>
+  )
+}
 
 interface ContextMenuProps {
   contextMenu: ContextMenuContext
@@ -86,6 +111,10 @@ class ContextMenu extends React.Component<ContextMenuProps> {
     return true
   }
 
+  preventDefault(event: React.MouseEvent) {
+    event.preventDefault()
+  }
+
   render() {
     const { closed, menuItems, position, id } = this.props.contextMenu
     const windowWith =
@@ -104,13 +133,14 @@ class ContextMenu extends React.Component<ContextMenuProps> {
           left: position.x + 130 < windowWith ? position.x : windowWith - 150,
           top: position.y,
         }}
+        onContextMenu={this.preventDefault}
       >
         {menuItems.map((menu, index) => {
           const key = `${id}-${index}`
           switch (menu.type) {
             case MenuTypes.Normal:
               return (
-                <StyledContextMenuItem
+                <NormalContextMenuItem
                   key={key}
                   onClick={() => {
                     this.closeContextMenu()
@@ -119,13 +149,15 @@ class ContextMenu extends React.Component<ContextMenuProps> {
                   disabled={menu.enabled == null ? false : !menu.enabled}
                 >
                   {menu.label}
-                </StyledContextMenuItem>
+                </NormalContextMenuItem>
               )
+            case MenuTypes.Separator:
+              return <SeparatorContextMenuItem key={key} />
             default:
               return (
-                <StyledContextMenuItem key={key}>
+                <NormalContextMenuItem key={key}>
                   Not implemented yet
-                </StyledContextMenuItem>
+                </NormalContextMenuItem>
               )
           }
         })}

@@ -10,8 +10,7 @@ import {
   usePreferences,
   GeneralThemeOptions,
   GeneralLanguageOptions,
-  GeneralNoteSortingOptions,
-  GeneralTutorialsOptions,
+  GeneralNoteListViewOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -19,22 +18,26 @@ import { useUsers } from '../../lib/accounts'
 import UserInfo from './UserInfo'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import { IconArrowRotate } from '../icons'
 import { FormCheckItem } from '../atoms/form'
+import { NoteSortingOptions } from '../../lib/sort'
+import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
   const { report } = useAnalytics()
+  const { checkFeature } = useGeneralStatus()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
         'general.theme': event.target.value as GeneralThemeOptions,
       })
-      report(analyticsEvents.colorTheme)
+      checkFeature('changeAppTheme')
+      report(analyticsEvents.updateUiTheme)
     },
-    [setPreferences, report]
+    [setPreferences, checkFeature, report]
   )
 
   const selectLanguage: SelectChangeEventHandler = useCallback(
@@ -49,16 +52,17 @@ const GeneralTab = () => {
   const selectNoteSorting: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
-        'general.noteSorting': event.target.value as GeneralNoteSortingOptions,
+        'general.noteSorting': event.target.value as NoteSortingOptions,
       })
     },
     [setPreferences]
   )
 
-  const selectTutorialsDisplay: SelectChangeEventHandler = useCallback(
+  const selectNoteListView: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
-        'general.tutorials': event.target.value as GeneralTutorialsOptions,
+        'general.noteListView': event.target
+          .value as GeneralNoteListViewOptions,
       })
     },
     [setPreferences]
@@ -91,10 +95,7 @@ const GeneralTab = () => {
                 loginState !== 'logging-in' ? (
                   <>{t('preferences.addAccount')}</>
                 ) : (
-                  <>
-                    <IconArrowRotate />
-                    {t('preferences.loginWorking')}
-                  </>
+                  <>{t('preferences.loginWorking')}</>
                 )
               }
             </LoginButton>
@@ -112,6 +113,7 @@ const GeneralTab = () => {
             <option value='en-US'>🇺🇸English (US)</option>
             <option value='es-ES'>🇪🇸Español (España)</option>
             <option value='fr-FR'>🇫🇷Français (France)</option>
+            <option value='it-IT'>🇮🇹️Italiano (Italia)</option>
             <option value='ja'>🇯🇵日本語</option>
             <option value='ko'>🇰🇷한국어</option>
             <option value='pt-BR'>🇧🇷Português (BR)</option>
@@ -129,10 +131,10 @@ const GeneralTab = () => {
             value={preferences['general.theme']}
             onChange={selectTheme}
           >
-            <option value='auto'>{t('preferences.auto')}</option>
-            <option value='light'>{t('preferences.light')}</option>
             <option value='dark'>{t('preferences.dark')}</option>
+            <option value='light'>{t('preferences.light')}</option>
             <option value='sepia'>{t('preferences.sepia')}</option>
+            <option value='legacy'>Legacy</option>
             <option value='solarizedDark'>
               {t('preferences.solarizedDark')}
             </option>
@@ -146,21 +148,19 @@ const GeneralTab = () => {
             value={preferences['general.noteSorting']}
             onChange={selectNoteSorting}
           >
-            <option value='date-updated'>{t('preferences.dateUpdated')}</option>
-            <option value='date-created'>{t('preferences.dateCreated')}</option>
-            <option value='title'>{t('preferences.title')}</option>
+            <NoteSortingOptionsFragment />
           </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>{t('preferences.displayTutorialsLabel')}</SectionHeader>
+        <SectionHeader>Note List view</SectionHeader>
         <SectionControl>
           <SectionSelect
-            value={preferences['general.tutorials']}
-            onChange={selectTutorialsDisplay}
+            value={preferences['general.noteListView']}
+            onChange={selectNoteListView}
           >
-            <option value='display'>Display</option>
-            <option value='hide'>Hide</option>
+            <option value='default'>Default</option>
+            <option value='compact'>Compact</option>
           </SectionSelect>
         </SectionControl>
       </Section>

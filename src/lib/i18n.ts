@@ -4,6 +4,7 @@ import de from '../locales/de'
 import enUS from '../locales/enUS'
 import esES from '../locales/esES'
 import frFR from '../locales/frFR'
+import itIT from '../locales/itIT'
 import zhCN from '../locales/zhCN'
 import zhHK from '../locales/zhHK'
 import zhTW from '../locales/zhTW'
@@ -17,6 +18,7 @@ const resources = {
   'en-US': enUS,
   'es-ES': esES,
   'fr-FR': frFR,
+  'it-IT': itIT,
   ja,
   ko,
   'pt-BR': ptBR,

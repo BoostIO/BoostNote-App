@@ -10,42 +10,42 @@ export default {
     'general.signOut': 'Abmelden',
     'general.save': 'Speichern',
     'general.default': 'Standard',
-    'general.networkError': 'Netzwerk-Fehler',
+    'general.networkError': 'Netzwerkfehler',
 
     // Storage
-    'storage.name': 'Speicherort Name',
+    'storage.name': 'Name des Speicherorts',
     'storage.noStorage': 'Kein Speicherort',
     'storage.create': 'Speicherort erstellen',
     'storage.edit': 'Speicherort ändern',
     'storage.rename': 'Speicherort umbenennen',
-    'storage.renameMessage': 'Name für Speicherort ändern',
+    'storage.renameMessage': 'Name des Speicherorts ändern',
     'storage.remove': 'Speicherort entfernen',
-    'storage.removeMessage': 'Speicherort wird von App entknüpft',
-    'storage.delete': 'Speicherort löschen',
-    'storage.move': 'Notiz verschieben',
-    'storage.moveTitle': 'Notiz in anderen Speicherort verschieben',
-    'storage.moveMessage':
-      'Es wird versucht eine Notiz in einen anderen Speicherort zu verschieben.',
-    'storage.copy': 'Notiz kopieren',
+    'storage.removeMessage':
+      'Achtung! Alle Notizen dieses Speicherorts werden dauerhaft gelöscht.',
+    'storage.delete': 'Speicherort {{storage}} löschen',
+    'storage.move': 'Speicherort verschieben',
+    'storage.moveTitle': 'Speicherort wird verschoben',
+    'storage.moveMessage': 'Es wird versucht, den Speicherort zu verschieben.',
+    'storage.copy': 'Speicherort kopieren',
     'storage.typeLocal': 'Lokal',
     'storage.typeCloud': 'Cloud',
     'storage.needSignIn':
-      'Du musst dich anmelden um einen Cloud-Speicher zu erstellen.',
+      'Du musst dich anmelden, um einen Cloud-Speicher zu erstellen.',
     'storage.syncDate': 'Zuletzt synchronisiert am',
 
     //Folder
     'folder.create': 'Neuer Ordner',
     'folder.rename': 'Ordner umbenennen',
     'folder.renameMessage':
-      'Gib den neuen Ordnernamen an, jede Notiz und Unterordner-Pfad wird aktualisiert.',
+      'Gib den neuen Ordnernamen an. Notizen und Pfade von Unterordnern werden automatisch aktualisiert.',
     'folder.renameErrorMessage': 'Ordner konnte nicht umbenannt werden',
     'folder.remove': 'Ordner löschen',
     'folder.removeMessage': 'Alle Notizen und Unterordner werden gelöscht.',
 
     //Tag
-    'tag.tag': 'Etikett',
-    'tag.remove': 'Etikett löschen',
-    'tag.removeMessage': 'Das Etikett wird von allen Notizen entfernt.',
+    'tag.tag': 'Tag',
+    'tag.remove': 'Tag löschen',
+    'tag.removeMessage': 'Das Tag wird von allen Notizen entfernt.',
 
     //Note
     'note.duplicate': 'Duplizieren',
@@ -59,9 +59,11 @@ export default {
     'note.nothingMessage': 'Keine Notizen gefunden.',
     'note.noTitle': 'Kein Titel',
     'note.date': 'her',
-    'note.createKeyMac': 'Mac: Befehl(⌘) + n',
-    'note.createKeyWinLin': 'Windows/Linux: Ctrl + n',
-    'note.createkeymessage1': 'um eine neue Notiz zu erstellen',
+    'note.createKey': 'N',
+    'note.createKeyOr': 'oder',
+    'note.createKeyMac': 'on Mac',
+    'note.createKeyWinLin': 'on Windows/Linux',
+    'note.createkeymessage1': 'um eine neue Notiz zu erstellen, presse',
     'note.createkeymessage2': 'Wähle einen Speicherort',
     'note.createkeymessage3': 'um eine neue Notiz zu erstellen',
     'note.restore': 'Wiederherstellen',
@@ -73,13 +75,13 @@ export default {
     //About
     'about.about': 'Über',
     'about.boostnoteDescription':
-      'Ein quelloffenes Notiz-Programm geschaffen für Programmierer wie dir.',
+      'Ein quelloffenes Notiz-Programm, geschaffen für Programmierer wie dich.',
     'about.website': 'Offizielle Webseite',
-    'about.boostWiki': 'Boost Note für Team',
+    'about.boostWiki': 'Boost Note für Teams',
     'about.platform': 'Cross-platform',
     'about.community': 'Community',
     'about.github': 'GitHub Repository',
-    'about.bounty': 'Bounty on IssueHunt',
+    'about.bounty': 'Bounty auf IssueHunt',
     'about.blog': 'Blog',
     'about.slack': 'Slack Gruppe',
     'about.twitter': 'Twitter Account',
@@ -88,7 +90,7 @@ export default {
 
     //Billing
     'billing.billing': 'Billing',
-    'billing.message': 'Bitte melde dich an um deinen Plan zu ugpraden.',
+    'billing.message': 'Bitte melde dich an, um deinen Plan zu erweitern.',
     'billing.basic': 'Basic',
     'billing.current': 'Aktuell',
     'billing.premium': 'Premium',
@@ -99,7 +101,7 @@ export default {
     'billing.sync': 'Mehrere Geräte synchronisieren',
     'billing.local': 'Lokaler Speicher',
     'billing.cloud': 'Cloud Speicher',
-    'billing.storageSize': 'Cloud Speicher Größe',
+    'billing.storageSize': 'Cloud Speichergröße',
     'billing.addStorageDescription':
       '* Wenn du mehr Cloud-Speicher brauchst, zahlst du 5$ (USD) für jede zusätzliche 5GB. Drücke auf den "Extra Speicher hinzufügen"-Knopf unten.',
     'billing.addStorage': 'Extra Speicher hinzufügen',
@@ -112,7 +114,7 @@ export default {
     'preferences.addAccount': 'Anmelden',
     'preferences.loginWorking': 'Wird angemeldet...',
     'preferences.interfaceLanguage': 'Oberflächen Sprache',
-    'preferences.applicationTheme': 'Anwendungs-Theme',
+    'preferences.applicationTheme': 'Anwendungs-Design',
     'preferences.auto': 'Auto',
     'preferences.light': 'Hell',
     'preferences.dark': 'Dunkel',
@@ -122,17 +124,17 @@ export default {
     'preferences.dateUpdated': 'Datum aktualisiert',
     'preferences.dateCreated': 'Datum erstellt',
     'preferences.title': 'Titel',
-    'preferences.analytics': 'Analytik',
+    'preferences.analytics': 'Analytics',
     'preferences.analyticsDescription1':
-      'Boostnote sammelt anonyme Daten um das Nutzererlebnis zu verbessern, und es wird streng darauf geachtet keine persönlichen Informationen wie die Inhalte der Notizen zu senden. Um zu sehen wie das läuft, besuche unsere Github Seite.',
+      'Boostnote sammelt anonyme Daten, um das Nutzererlebnis zu verbessern. Es wird streng darauf geachtet keine persönlichen Informationen wie die Inhalte der Notizen zu senden. Um zu sehen wie das läuft, besuche unsere Github Seite.',
     'preferences.analyticsDescription2':
-      'Du kannst wählen diese Option zu aktivieren oder deaktivieren.',
+      'Du kannst diese Option aktivieren oder deaktivieren.',
     'preferences.analyticsLabel':
-      'Analytik aktivieren um dich an der Verbesserung von Boostnote zu beteiligen.',
-    'preferences.displayTutorialsLabel': 'Tutorials and FAQ',
+      'Analytics aktivieren, um dich an der Verbesserung von Boostnote zu beteiligen.',
+    'preferences.displayTutorialsLabel': 'Tutorials und FAQ',
 
     // Preferences EditorTab
-    'preferences.editorTheme': 'Editor Theme',
+    'preferences.editorTheme': 'Editor Design',
     'preferences.editorFontSize': 'Editor Schriftgröße',
     'preferences.editorFontFamily': 'Editor Schriftart',
     'preferences.editorIndentType': 'Editor Einrückungs-Typ',
@@ -146,20 +148,21 @@ export default {
 
     // Preferences MarkdownTab
     'preferences.previewStyle': 'Vorschau Style',
-    'preferences.markdownCodeBlockTheme': 'Code Block Theme',
-    'preferences.defaultTheme': 'Verwende standard Style',
+    'preferences.markdownCodeBlockTheme': 'Code Block Design',
+    'preferences.defaultTheme': 'Verwende Standard-Design',
     'preferences.markdownPreview': 'Markdown Vorschau',
 
     // Preferences ImportTab
     'preferences.import': 'Importieren',
-    'preferences.description': 'Importiert .cson files vom alten Boostnote.',
+    'preferences.description':
+      'Importiert .cson Dateien vom alten Boostnote Ordner.',
     'preferences.importFlow1':
       '1. Öffne den alten Boostnote Ordner auf deinem PC.',
     'preferences.importFlow2': '2. Ziehe die .cson Dateien in das Feld unten.',
     'preferences.importFlow3':
-      '3. Wähle den Speicher und den Ordner in die du die Dateien verschieben möchtest.',
+      '3. Wähle den Speicher und den Ordner, in welchen du die Dateien verschieben möchtest.',
     'preferences.importFlow4': '4. Upload!',
-    'preferences.importRemove': 'entfernen',
+    'preferences.importRemove': 'Entfernen',
     'preferences.importUpload': 'Upload',
   },
 }

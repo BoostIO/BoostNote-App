@@ -1,10 +1,11 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
-import { usePreferences } from './preferences'
-import { DbStore } from './db'
+import { usePreferences, useFirstUser } from './preferences'
 import { useEffectOnce } from 'react-use'
 import { osName } from './platform'
+import isElectron from 'is-electron'
+import { createStoreContext } from './context'
 
 const amplifyConfig = {
   Auth: {
@@ -20,38 +21,50 @@ const analyticsConfig = {
     mandatorySignIn: false,
   },
 }
+Auth.configure(amplifyConfig)
+Analytics.configure(analyticsConfig)
 
-export function useAnalytics() {
-  const configured = useRef(false)
+function reportViaPinpoint(name: string, attributes?: any) {
+  if (process.env.NODE_ENV === 'production') {
+    Analytics.record({ name, attributes })
+  }
+}
+
+interface AnalyticsStore {
+  report: (name: string, attributes?: any) => void
+}
+
+function useAnalyticsStore(): AnalyticsStore {
   const { preferences } = usePreferences()
   const analyticsEnabled = preferences['general.enableAnalytics']
-  const user = preferences['general.accounts'][0]
+  const user = useFirstUser()
 
   useEffectOnce(() => {
-    Auth.configure(amplifyConfig)
-    Analytics.configure(analyticsConfig)
-    configured.current = true
-    const initilalized = (window as any).initilalized
-    if (!initilalized) {
-      ;(window as any).initilalized = true
-      Analytics.record('init')
-    }
-    Analytics.updateEndpoint({
-      attributes: {
-        userId: user == null ? [] : [user.id.toString()],
-        target: [osName],
-      },
-    })
+    reportViaPinpoint('init')
   })
 
+  const userId = useMemo(() => {
+    return user != null ? user.id.toString() : null
+  }, [user])
+
+  useEffect(() => {
+    const endpointConfig: any = {
+      attributes: {
+        target: [osName],
+        target2: [`${isElectron() ? 'electron' : 'web'}:${osName}`],
+      },
+    }
+
+    if (userId != null) {
+      endpointConfig.userId = userId
+    }
+    Analytics.updateEndpoint(endpointConfig)
+  }, [userId])
+
   const report = useCallback(
-    (name: string, attributes?: { [key: string]: string }) => {
+    (name: string, attributes?: any) => {
       if (analyticsEnabled) {
-        if (attributes == null) {
-          Analytics.record({ name: name })
-        } else {
-          Analytics.record({ name, attributes })
-        }
+        reportViaPinpoint(name, attributes)
       }
     },
     [analyticsEnabled]
@@ -62,65 +75,17 @@ export function useAnalytics() {
   }
 }
 
-export const analyticsEvents = {
-  addNote: 'Note.Add',
-  editNote: 'Note.Edit',
-  deleteNote: 'Note.Delete',
-  addTag: 'Tag.Add',
-  addStorage: 'Storage.Add',
-  addFolder: 'Folder.Add',
-  colorTheme: 'ColorTheme.Edit',
-  editorTheme: 'EditorTheme.Edit',
-}
+export const {
+  StoreProvider: AnalyticsProvider,
+  useStore: useAnalytics,
+} = createStoreContext(useAnalyticsStore)
 
-export function wrapDbStoreWithAnalytics(hook: () => DbStore): () => DbStore {
-  return () => {
-    const { report } = useAnalytics()
-    const {
-      createNote,
-      updateNote,
-      trashNote,
-      createStorage,
-      createFolder,
-      ...rest
-    } = hook()
-    return {
-      createNote: useCallback(
-        (...args: Parameters<typeof createNote>) => {
-          report(analyticsEvents.addNote)
-          return createNote(...args)
-        },
-        [createNote, report]
-      ),
-      updateNote: useCallback(
-        (...args: Parameters<typeof updateNote>) => {
-          report(analyticsEvents.editNote)
-          return updateNote(...args)
-        },
-        [updateNote, report]
-      ),
-      trashNote: useCallback(
-        (...args: Parameters<typeof trashNote>) => {
-          report(analyticsEvents.deleteNote)
-          return trashNote(...args)
-        },
-        [trashNote, report]
-      ),
-      createStorage: useCallback(
-        (...args: Parameters<typeof createStorage>) => {
-          report(analyticsEvents.addStorage)
-          return createStorage(...args)
-        },
-        [createStorage, report]
-      ),
-      createFolder: useCallback(
-        (...args: Parameters<typeof createFolder>) => {
-          report(analyticsEvents.addFolder)
-          return createFolder(...args)
-        },
-        [createFolder, report]
-      ),
-      ...rest,
-    }
-  }
+export const analyticsEvents = {
+  createNote: 'notes.create',
+  updateNote: 'notes.update',
+  trashNote: 'notes.trash',
+  createStorage: 'storages.create',
+  createFolder: 'folders.create',
+  updateUiTheme: 'preferences.updateUiTheme',
+  updateEditorTheme: 'preferences.updateEditorTheme',
 }

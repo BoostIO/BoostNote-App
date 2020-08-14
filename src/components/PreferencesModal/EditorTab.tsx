@@ -26,8 +26,8 @@ import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../atoms/form'
-import { codeMirrorPasteHandler } from '../../lib/eventHandler/pasteHandler'
 import isElectron from 'is-electron'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -41,15 +41,17 @@ function say() {
 const EditorTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const { report } = useAnalytics()
+  const { checkFeature } = useGeneralStatus()
 
   const selectEditorTheme: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
         'editor.theme': event.target.value,
       })
-      report(analyticsEvents.editorTheme)
+      checkFeature('changeEditorTheme')
+      report(analyticsEvents.updateEditorTheme)
     },
-    [setPreferences, report]
+    [setPreferences, checkFeature, report]
   )
 
   const [fontSize, setFontSize] = useState(
@@ -241,7 +243,6 @@ const EditorTab = () => {
           <CustomizedCodeEditor
             value={previewContent}
             onChange={(newValue) => setPreviewContent(newValue)}
-            onPaste={codeMirrorPasteHandler}
           />
         </SectionControl>
       </Section>

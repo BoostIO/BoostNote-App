@@ -2,14 +2,22 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#ECECEC'
 const base2Color = '#F9F9F9'
-const primaryColor = '#03C588'
+const primaryColor = '#02A47E'
 
 const dark87Color = 'rgba(0,0,0,0.87)'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
-const dark12Color = 'rgba(0,0,0,0.12)'
+const dark12Color = '#bbb'
 const dark100Color = '#000'
 const light100Color = '#FFF'
+
+const uiColor = '#808080'
+const uiDimColor = '#999'
+const uiVividColor = '#555'
+
+const uiBackgroundColor = '#fff'
+const uiVividBackgroundColor = '#e4e4e4'
+const uiVivid2BackgroundColor = '#d4d4d4'
 
 export const lightTheme: BaseTheme = {
   colors: {
@@ -21,9 +29,6 @@ export const lightTheme: BaseTheme = {
     active: primaryColor,
     border: dark12Color,
   },
-  fontSize: 15,
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
 
   // General
   textColor: dark87Color,
@@ -32,27 +37,36 @@ export const lightTheme: BaseTheme = {
 
   primaryColor: primaryColor,
   borderColor: dark12Color,
-  iconColor: dark26Color,
-  activeIconColor: dark54Color,
+
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,
   noteDetailIconColor: dark26Color,
   noteDetailActiveIconColor: dark54Color,
   closeIconColor: dark26Color,
   closeActiveIconColor: dark54Color,
-  backgroundColor: base1Color,
-  secondaryBackgroundColor: base2Color,
-  activeBackgroundColor: base2Color,
+  backgroundColor: '#fff',
+  secondaryBackgroundColor: uiVividBackgroundColor,
+  activeBackgroundColor: uiVividBackgroundColor,
   shadow: '0 3px 5px rgba(0,0,0,0.1)',
 
   scrollBarTrackColor: base2Color,
   scrollBarThumbColor: dark12Color,
 
   // SideBar
-  sideBarBackgroundColor: base1Color,
-  activeSideBarSecondaryTextColor: dark87Color,
-  sideBarTextColor: dark54Color,
-  sideBarSecondaryTextColor: dark26Color,
+  navBackgroundColor: uiBackgroundColor,
+  navLabelColor: uiColor,
+  navButtonColor: uiDimColor,
+  navButtonHoverColor: uiColor,
+  navButtonActiveColor: primaryColor,
+  navItemColor: uiColor,
+  navItemBackgroundColor: 'transparent',
+  navItemHoverBackgroundColor: uiVividBackgroundColor,
+  navItemActiveColor: uiVividColor,
+  navItemActiveBackgroundColor: uiVividBackgroundColor,
+  navItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
+
+  // NotePage
+  noteNavEmptyItemColor: uiDimColor,
 
   // Button
   primaryButtonLabelColor: light100Color,
@@ -61,5 +75,5 @@ export const lightTheme: BaseTheme = {
   secondaryButtonBackgroundColor: 'transparent',
 
   // Input
-  inputBackground: dark12Color,
+  inputBackground: '#fff',
 }

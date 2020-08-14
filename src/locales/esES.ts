@@ -22,7 +22,7 @@ export default {
     'storage.remove': 'Eliminar almacenamiento',
     'storage.removeMessage':
       'Este almacenamiento se va a desvincular de esta aplicación.',
-    'storage.delete': 'Eliminar almacenamiento',
+    'storage.delete': 'Eliminar almacenamiento {{storage}}',
     'storage.move': 'Mover nota',
     'storage.moveTitle': 'Mover nota a otro almacenamiento',
     'storage.moveMessage':
@@ -61,9 +61,11 @@ export default {
     'note.nothingMessage': 'No se han encontrado notas.',
     'note.noTitle': 'No hay título',
     'note.date': 'Hace',
-    'note.createKeyMac': 'Mac: Command(⌘) + n',
-    'note.createKeyWinLin': 'Windows/Linux: Ctrl + n',
-    'note.createkeymessage1': 'Para crear una nueva nota',
+    'note.createKeyOr': 'o',
+    'note.createKey': 'N',
+    'note.createKeyMac': 'en Mac',
+    'note.createKeyWinLin': 'en Windows/Linux',
+    'note.createkeymessage1': 'Para crear una nueva nota, presione',
     'note.createkeymessage2': 'Selecciona un lugar de almacenamiento',
     'note.createkeymessage3': 'Para crear una nota',
     'note.restore': 'Restaurar',

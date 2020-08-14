@@ -13,12 +13,18 @@ import { onFetchPageTitle } from './ipcEventHandlers'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null
+const MAC = process.platform === 'darwin'
+
+// single instance lock
+const singleInstance = app.requestSingleInstanceLock()
 
 function createMainWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
-    webPreferences: { nodeIntegration: true },
+    webPreferences: { nodeIntegration: true, webSecurity: !dev },
     width: 1200,
     height: 800,
+    minWidth: 960,
+    minHeight: 630,
   }
   if (process.platform === 'darwin') {
     windowOptions.titleBarStyle = 'hiddenInset'
@@ -40,10 +46,33 @@ function createMainWindow() {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 
+  if (MAC) {
+    window.on('close', (event) => {
+      event.preventDefault()
+      window.hide()
+    })
+
+    app.on('before-quit', () => {
+      window.removeAllListeners()
+    })
+  }
+
   window.on('closed', () => {
     mainWindow = null
   })
   return window
+}
+
+// single instance lock handler
+if (!singleInstance) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (!mainWindow.isVisible()) mainWindow.show()
+      mainWindow.focus()
+    }
+  })
 }
 
 // quit application when all windows are closed
@@ -58,6 +87,9 @@ app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (mainWindow === null) {
     mainWindow = createMainWindow()
+  } else {
+    mainWindow.show()
+    mainWindow.focus()
   }
 })
 

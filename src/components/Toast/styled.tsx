@@ -1,8 +1,5 @@
 import styled from '../../lib/styled'
-import {
-  secondaryBackgroundColor,
-  iconColor,
-} from '../../lib/styled/styleFunctions'
+import { secondaryBackgroundColor } from '../../lib/styled/styleFunctions'
 
 export const StyledToastContainer = styled.div`
   width: 350px;
@@ -24,21 +21,31 @@ export const StyledToastRight = styled.div`
 `
 export const StyledToastTitle = styled.p`
   font-size: 16px;
-  font-weight: 600:
+  font-weight: 600;
 `
+
 export const StyledToastTime = styled.p`
   font-size: 12px;
   margin-right: 10px;
   line-height: 25px;
 `
+
 export const StyledToastCloseButton = styled.button`
   background-color: transparent;
   font-size: 24px;
   order: none;
   cursor: pointer;
   border: none;
-  ${iconColor}
+  &:hover {
+    color: ${({ theme }) => theme.navButtonHoverColor};
+  }
+
+  &:active,
+  .active {
+    color: ${({ theme }) => theme.navButtonActiveColor};
+  }
 `
+
 export const StyledToastDescription = styled.p`
   font-size: 14px;
 `

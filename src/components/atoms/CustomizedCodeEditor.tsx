@@ -8,31 +8,28 @@ interface CustomizedCodeEditorProps {
     newValue: string,
     change: CodeMirror.EditorChangeLinkedList
   ) => void
-  onPaste?: (
-    editor: CodeMirror.Editor,
-    change: CodeMirror.EditorChange,
-    enableAutoFetchWebPageTitle: boolean
-  ) => void
   codeMirrorRef?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   className?: string
   mode?: string
   readonly?: boolean
+  onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
+  onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
 }
 
 const CustomizedCodeEditor = ({
   onChange,
-  onPaste,
   value,
   codeMirrorRef,
   className,
   mode,
   readonly,
+  onPaste,
+  onDrop,
 }: CustomizedCodeEditorProps) => {
   const { preferences } = usePreferences()
   return (
     <CodeEditor
       onChange={onChange}
-      onPaste={onPaste}
       value={value}
       codeMirrorRef={codeMirrorRef}
       className={className}
@@ -47,7 +44,10 @@ const CustomizedCodeEditor = ({
       enableAutoFetchWebPageTitle={
         preferences['editor.enableAutoFetchWebPageTitle']
       }
+      onPaste={onPaste}
+      onDrop={onDrop}
     />
   )
 }
+
 export default CustomizedCodeEditor

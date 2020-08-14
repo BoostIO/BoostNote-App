@@ -17,12 +17,15 @@ import {
 } from '../atoms/form'
 import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
+import { mdiBook } from '@mdi/js'
+import PageDraggableHeader from '../atoms/PageDraggableHeader'
+import PageScrollableContent from '../atoms/PageScrollableContent'
 
-interface StorageEditProps {
+interface StorageEditPageProps {
   storage: NoteStorage
 }
 
-export default ({ storage }: StorageEditProps) => {
+const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const db = useDb()
   const router = useRouter()
   const { t } = useTranslation()
@@ -32,8 +35,11 @@ export default ({ storage }: StorageEditProps) => {
 
   const removeCallback = useCallback(() => {
     messageBox({
-      title: `Remove "${storage.name}" storage`,
-      message: t('storage.removeMessage'),
+      title: t('storage.delete', { storage: storage.name }),
+      message:
+        storage.type === 'fs'
+          ? "This operation won't delete the actual storage folder. You can add it to the app again."
+          : t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
       buttons: [t('storage.remove'), t('general.cancel')],
       defaultButtonIndex: 0,
@@ -60,43 +66,51 @@ export default ({ storage }: StorageEditProps) => {
 
   return (
     <PageContainer>
-      <FormHeading depth={1}>Storage Settings</FormHeading>
-      <FormGroup>
-        <FormLabel>{t('storage.name')}</FormLabel>
-        <FormTextInput
-          type='text'
-          value={name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setName(e.target.value)
-          }
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormPrimaryButton onClick={updateStorageName}>
-          Update storage name
-        </FormPrimaryButton>
-      </FormGroup>
-      <hr />
-      <FormHeading depth={2}>Remove Storage</FormHeading>
-      {storage.cloudStorage != null && (
-        <FormBlockquote>
-          Your cloud storage will not be deleted by clicking this button. To
-          delete cloud storage too, check cloud storage info section.
-        </FormBlockquote>
-      )}
-      <FormGroup>
-        <FormSecondaryButton onClick={removeCallback}>
-          Remove Storage
-        </FormSecondaryButton>
-      </FormGroup>
-      <hr />
+      <PageDraggableHeader iconPath={mdiBook} label='Storage Settings' />
+      <PageScrollableContent>
+        <FormGroup>
+          <FormLabel>{t('storage.name')}</FormLabel>
+          <FormTextInput
+            type='text'
+            value={name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setName(e.target.value)
+            }
+          />
+        </FormGroup>
+        <FormGroup>
+          <FormPrimaryButton onClick={updateStorageName}>
+            Update storage name
+          </FormPrimaryButton>
+        </FormGroup>
+        <hr />
+        <FormHeading depth={2}>Remove Storage</FormHeading>
+        {storage.type !== 'fs' && storage.cloudStorage != null && (
+          <FormBlockquote>
+            Your cloud storage will not be deleted by clicking this button. To
+            delete cloud storage too, check cloud storage info section.
+          </FormBlockquote>
+        )}
+        <FormGroup>
+          <FormSecondaryButton onClick={removeCallback}>
+            Remove Storage
+          </FormSecondaryButton>
+        </FormGroup>
 
-      <FormHeading depth={2}>Cloud Storage info</FormHeading>
-      {storage.cloudStorage == null ? (
-        <LinkCloudStorageForm storage={storage} />
-      ) : (
-        <ManageCloudStorageForm storage={storage} />
-      )}
+        {storage.type !== 'fs' && (
+          <>
+            <hr />
+            <FormHeading depth={2}>Cloud Storage info</FormHeading>
+            {storage.cloudStorage == null ? (
+              <LinkCloudStorageForm storage={storage} />
+            ) : (
+              <ManageCloudStorageForm storage={storage as any} />
+            )}
+          </>
+        )}
+      </PageScrollableContent>
     </PageContainer>
   )
 }
+
+export default StorageEditPage
