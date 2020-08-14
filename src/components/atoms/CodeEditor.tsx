@@ -6,7 +6,6 @@ import {
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
 } from '../../lib/preferences'
-import { mdiKeyboardReturn } from '@mdi/js'
 
 const StyledContainer = styled.div`
   .CodeMirror {
@@ -132,7 +131,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   handleDrop = (editor: CodeMirror.Editor, event: DragEvent) => {
     const { onDrop } = this.props
     if (onDrop == null) {
-      mdiKeyboardReturn
+      return
     }
 
     onDrop(editor, event)
