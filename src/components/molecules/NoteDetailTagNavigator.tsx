@@ -79,11 +79,17 @@ const NoteDetailTagNavigator = ({
   }, [setNewTagPopupPosition])
 
   useEffect(() => {
-    window.addEventListener('resize', showNewTagPopup)
-    return () => {
-      window.removeEventListener('resize', showNewTagPopup)
+    const resizeHandler = () => {
+      if (newTagPopupPosition == null) {
+        return
+      }
+      showNewTagPopup()
     }
-  }, [showNewTagPopup])
+    window.addEventListener('resize', resizeHandler)
+    return () => {
+      window.removeEventListener('resize', resizeHandler)
+    }
+  }, [newTagPopupPosition, showNewTagPopup])
 
   return (
     <>
