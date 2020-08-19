@@ -13,9 +13,7 @@ import FSStorageCreateForm from '../organisms/FSStorageCreateForm'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiBookPlusMultiple } from '@mdi/js'
 import PageScrollableContent from '../atoms/PageScrollableContent'
-import isElectron from 'is-electron'
-
-const ELECTRON = isElectron()
+import { appIsElectron } from '../../lib/platform'
 
 type StorageType = 'cloud' | 'local' | 'fs'
 
@@ -49,7 +47,7 @@ const StorageCreatePage = () => {
         <FormGroup>
           <FormLabel>Storage Type</FormLabel>
           <FormCheckList>
-            {ELECTRON && (
+            {appIsElectron && (
               <FormCheckInlineItem
                 id='radio-localStorageType'
                 type='radio'
