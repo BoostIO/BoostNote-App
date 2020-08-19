@@ -11,6 +11,7 @@ const filteredJson = {
     'electron-log': '^4.0.0',
     'read-chunk': '^3.2.0',
     'file-type': '^14.6.2',
+    'cson-parser': '^4.0.5',
   },
 }
 

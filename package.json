@@ -114,6 +114,7 @@
     "coffeescript": "^2.4.1",
     "copy-to-clipboard": "^3.3.1",
     "copy-webpack-plugin": "^5.0.4",
+    "cson-parser": "^4.0.5",
     "dashify": "^2.0.0",
     "date-fns": "^2.8.1",
     "dotenv": "^8.2.0",
