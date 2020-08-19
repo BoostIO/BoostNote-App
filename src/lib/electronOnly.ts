@@ -1,4 +1,5 @@
 import { Stats, Dirent } from 'fs'
+import { JsonValue } from 'type-fest'
 
 const __ELECTRON_ONLY__: {
   readFile(pathname: string): Promise<string>
@@ -17,6 +18,8 @@ const __ELECTRON_ONLY__: {
   ): Promise<Electron.OpenDialogReturnValue>
   getHomePath(): string
   openExternal(url: string): void
+  parseCSON(value: string): JsonValue
+  stringifyCSON(value: any): string
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -30,6 +33,8 @@ const {
   showOpenDialog,
   getHomePath,
   openExternal,
+  parseCSON,
+  stringifyCSON,
 } = __ELECTRON_ONLY__ || {}
 
 export {
@@ -43,4 +48,6 @@ export {
   showOpenDialog,
   getHomePath,
   openExternal,
+  parseCSON,
+  stringifyCSON,
 }

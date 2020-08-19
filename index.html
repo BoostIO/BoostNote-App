@@ -42,6 +42,7 @@
         const fs = require('fs')
         const FileType = require('file-type')
         const readChunk = require('read-chunk')
+        const CSON = require('cson-parser')
 
         function openExternal(url) {
           console.log('opening ...', url)
@@ -127,6 +128,14 @@
           return mime
         }
 
+        function parseCSON(value) {
+          return CSON.parse(value)
+        }
+
+        function stringifyCSON(value) {
+          return CSON.stringify(value)
+        }
+
         window.__ELECTRON_ONLY__ = {}
         window.__ELECTRON_ONLY__.openExternal = openExternal
         window.__ELECTRON_ONLY__.readFile = readFile
@@ -138,6 +147,8 @@
         window.__ELECTRON_ONLY__.stat = stat
         window.__ELECTRON_ONLY__.mkdir = mkdir
         window.__ELECTRON_ONLY__.readFileType = readFileType
+        window.__ELECTRON_ONLY__.parseCSON = parseCSON
+        window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
       })()
     </script>
   </body>
