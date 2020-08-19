@@ -11,13 +11,7 @@ import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useToast } from '../../lib/toast'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import { Stats } from 'fs'
-
-declare function $showOpenDialog(
-  options: Electron.OpenDialogOptions
-): Promise<Electron.OpenDialogReturnValue>
-declare function $getHomePath(): string
-declare function $stat(pathname: string): Promise<Stats>
+import { getHomePath, showOpenDialog } from '../../lib/electronOnly'
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -40,10 +34,10 @@ const FSStorageCreateForm = () => {
     }
   }, [createStorage, location, name, push, report, pushMessage])
   const openDialog = useCallback(async () => {
-    const result = await $showOpenDialog({
+    const result = await showOpenDialog({
       properties: ['openDirectory', 'createDirectory'],
       buttonLabel: 'Select Folder',
-      defaultPath: $getHomePath(),
+      defaultPath: getHomePath(),
     })
     if (result.canceled) {
       return

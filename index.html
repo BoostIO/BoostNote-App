@@ -43,11 +43,12 @@
         const FileType = require('file-type')
         const readChunk = require('read-chunk')
 
-        function $openExternal(url) {
+        function openExternal(url) {
           console.log('opening ...', url)
           electron.shell.openExternal(url)
         }
-        function $readFile(pathname) {
+
+        function readFile(pathname) {
           return new Promise((resolve, reject) => {
             fs.readFile(pathname, (error, result) => {
               if (error != null) {
@@ -58,7 +59,7 @@
             })
           })
         }
-        function $readdir(pathname, options) {
+        function readdir(pathname, options) {
           return new Promise((resolve, reject) => {
             fs.readdir(pathname, options, (error, result) => {
               if (error != null) {
@@ -69,13 +70,13 @@
             })
           })
         }
-        function $showOpenDialog(options) {
+        function showOpenDialog(options) {
           return electron.remote.dialog.showOpenDialog(options)
         }
-        function $getHomePath() {
+        function getHomePath() {
           return electron.remote.app.getPath('home')
         }
-        function $writeFile(pathname, blob) {
+        function writeFile(pathname, blob) {
           return new Promise((resolve, reject) => {
             fs.writeFile(pathname, blob, (error) => {
               if (error != null) {
@@ -86,7 +87,7 @@
             })
           })
         }
-        function $unlinkFile(pathname) {
+        function unlinkFile(pathname) {
           return new Promise((resolve, reject) => {
             fs.unlink(pathname, (error) => {
               if (error != null) {
@@ -97,7 +98,7 @@
             })
           })
         }
-        function $stat(pathname) {
+        function stat(pathname) {
           return new Promise((resolve, reject) => {
             fs.stat(pathname, (error, stats) => {
               if (error != null) {
@@ -108,7 +109,7 @@
             })
           })
         }
-        function $mkdir(pathname) {
+        function mkdir(pathname) {
           return new Promise((resolve, reject) => {
             fs.mkdir(pathname, { recursive: true }, (error) => {
               if (error != null) {
@@ -120,22 +121,23 @@
           })
         }
 
-        async function $readFileType(pathname) {
+        async function readFileType(pathname) {
           const buffer = readChunk.sync(pathname, 0, 4100)
           const { mime } = await FileType.fromBuffer(buffer)
           return mime
         }
 
-        window.$openExternal = $openExternal
-        window.$readFile = $readFile
-        window.$showOpenDialog = $showOpenDialog
-        window.$getHomePath = $getHomePath
-        window.$writeFile = $writeFile
-        window.$unlinkFile = $unlinkFile
-        window.$readdir = $readdir
-        window.$stat = $stat
-        window.$mkdir = $mkdir
-        window.$readFileType = $readFileType
+        window.__ELECTRON_ONLY__ = {}
+        window.__ELECTRON_ONLY__.openExternal = openExternal
+        window.__ELECTRON_ONLY__.readFile = readFile
+        window.__ELECTRON_ONLY__.showOpenDialog = showOpenDialog
+        window.__ELECTRON_ONLY__.getHomePath = getHomePath
+        window.__ELECTRON_ONLY__.writeFile = writeFile
+        window.__ELECTRON_ONLY__.unlinkFile = unlinkFile
+        window.__ELECTRON_ONLY__.readdir = readdir
+        window.__ELECTRON_ONLY__.stat = stat
+        window.__ELECTRON_ONLY__.mkdir = mkdir
+        window.__ELECTRON_ONLY__.readFileType = readFileType
       })()
     </script>
   </body>

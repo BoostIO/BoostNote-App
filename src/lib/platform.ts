@@ -1,15 +1,18 @@
-declare function $openExternal(url: string): void
+import isElectron from 'is-electron'
+import { openExternal } from './electronOnly'
+
+export const appIsElectron = isElectron()
 
 export const openNew = (url: string) => {
   if (url.length === 0) {
     return
   }
 
-  if (typeof $openExternal === 'undefined') {
+  if (appIsElectron) {
+    openExternal(url)
+  } else {
     window.open(url, '_blank')
-    return
   }
-  $openExternal(url)
 }
 
 export type OsNameOptions = 'windows' | 'macos' | 'unix' | 'linux' | 'unknown'

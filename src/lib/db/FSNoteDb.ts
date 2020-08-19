@@ -29,25 +29,15 @@ import {
   keys,
 } from './utils'
 import { generateId, getHexatrigesimalString } from '../string'
-import { Stats, Dirent } from 'fs'
-
-declare function $readFile(pathname: string): Promise<string>
-declare function $readdir(
-  pathname: string,
-  options?: { withFileTypes?: false }
-): Promise<string[]>
-declare function $readdir(
-  pathname: string,
-  options: { withFileTypes: true }
-): Promise<Dirent[]>
-declare function $writeFile(
-  pathname: string,
-  data: string | Buffer
-): Promise<void>
-declare function $unlinkFile(pathname: string): Promise<void>
-declare function $stat(pathname: string): Promise<Stats>
-declare function $mkdir(pathname: string): Promise<void>
-declare function $readFileType(pathname: string): Promise<string>
+import {
+  stat,
+  mkdir,
+  readFile,
+  readdir,
+  readFileType,
+  writeFile,
+  unlinkFile,
+} from '../electronOnly'
 
 interface StorageJSONData {
   folderMap: ObjectMap<FolderDoc>
@@ -96,13 +86,13 @@ class FSNoteDb implements NoteDb {
 
   async prepareDirectory(pathname: string) {
     try {
-      const stats = await $stat(pathname)
+      const stats = await stat(pathname)
       if (!stats.isDirectory()) {
         throw new Error(`Failed to prepare a directory, ${pathname}`)
       }
     } catch (error) {
       if (error.code === 'ENOENT') {
-        await $mkdir(pathname)
+        await mkdir(pathname)
       } else {
         throw error
       }
@@ -176,7 +166,7 @@ class FSNoteDb implements NoteDb {
 
   async getNote(noteId: string): Promise<NoteDoc | null> {
     const notePathname = this.getNotePathname(noteId)
-    const rawContent = await $readFile(notePathname)
+    const rawContent = await readFile(notePathname)
 
     return JSON.parse(rawContent)
   }
@@ -201,7 +191,7 @@ class FSNoteDb implements NoteDb {
 
   async getAttachmentMap(): Promise<ObjectMap<Attachment>> {
     await this.prepareDirectory(this.getAttachmentsFolderPathname())
-    const fileDirents = await $readdir(this.getAttachmentsFolderPathname(), {
+    const fileDirents = await readdir(this.getAttachmentsFolderPathname(), {
       withFileTypes: true,
     })
     const fileNames = fileDirents.reduce<string[]>((fileNames, dirent) => {
@@ -214,7 +204,7 @@ class FSNoteDb implements NoteDb {
     const attachmentMap: ObjectMap<Attachment> = {}
     for (const fileName of fileNames) {
       const filePathname = this.getAttachmentPathname(fileName)
-      const mime = await $readFileType(filePathname)
+      const mime = await readFileType(filePathname)
       if (!mime.startsWith('image/')) {
         continue
       }
@@ -244,7 +234,7 @@ class FSNoteDb implements NoteDb {
       )}${ext}`
       const data = Buffer.from(await file.arrayBuffer())
       const attachmentPathname = this.getAttachmentPathname(fileName)
-      await $writeFile(attachmentPathname, data)
+      await writeFile(attachmentPathname, data)
 
       attachments.push({
         name: fileName,
@@ -262,7 +252,7 @@ class FSNoteDb implements NoteDb {
 
   async removeAttachment(fileName: string): Promise<void> {
     const attachmentPathname = this.getAttachmentPathname(fileName)
-    await $unlinkFile(attachmentPathname)
+    await unlinkFile(attachmentPathname)
   }
 
   async createNote(noteProps: Partial<NoteDocEditibleProps>) {
@@ -284,7 +274,7 @@ class FSNoteDb implements NoteDb {
     await this.upsertFolder(noteDoc.folderPathname)
     await Promise.all(noteDoc.tags.map((tagName) => this.upsertTag(tagName)))
 
-    await $writeFile(
+    await writeFile(
       this.getNotePathname(excludeNoteIdPrefix(noteDoc._id)),
       JSON.stringify(noteDoc)
     )
@@ -294,7 +284,7 @@ class FSNoteDb implements NoteDb {
 
   async updateNote(noteId: string, noteProps: Partial<NoteDocEditibleProps>) {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await $readFile(notePathname)
+    const rawNoteDoc = await readFile(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
 
@@ -315,14 +305,14 @@ class FSNoteDb implements NoteDb {
       _rev: generateId(),
     }
 
-    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+    await writeFile(notePathname, JSON.stringify(newNoteDoc))
 
     return newNoteDoc
   }
 
   async trashNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await $readFile(notePathname)
+    const rawNoteDoc = await readFile(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
     if (noteDoc.trashed) {
@@ -334,14 +324,14 @@ class FSNoteDb implements NoteDb {
       trashed: true,
     }
 
-    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+    await writeFile(notePathname, JSON.stringify(newNoteDoc))
 
     return newNoteDoc
   }
 
   async untrashNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await $readFile(notePathname)
+    const rawNoteDoc = await readFile(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
     if (!noteDoc.trashed) {
@@ -361,14 +351,14 @@ class FSNoteDb implements NoteDb {
       trashed: false,
     }
 
-    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+    await writeFile(notePathname, JSON.stringify(newNoteDoc))
 
     return newNoteDoc
   }
 
   async bookmarkNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await $readFile(notePathname)
+    const rawNoteDoc = await readFile(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     if (noteDoc.data.bookmarked) {
       return noteDoc
@@ -382,14 +372,14 @@ class FSNoteDb implements NoteDb {
       },
     }
 
-    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+    await writeFile(notePathname, JSON.stringify(newNoteDoc))
 
     return newNoteDoc
   }
 
   async unbookmarkNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await $readFile(notePathname)
+    const rawNoteDoc = await readFile(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     if (!noteDoc.data.bookmarked) {
       return noteDoc
@@ -403,7 +393,7 @@ class FSNoteDb implements NoteDb {
       },
     }
 
-    await $writeFile(notePathname, JSON.stringify(newNoteDoc))
+    await writeFile(notePathname, JSON.stringify(newNoteDoc))
 
     return newNoteDoc
   }
@@ -411,7 +401,7 @@ class FSNoteDb implements NoteDb {
   async purgeNote(noteId: string): Promise<void> {
     // TODO: Check file does exist or throw error
     const notePathname = this.getNotePathname(noteId)
-    await $unlinkFile(notePathname)
+    await unlinkFile(notePathname)
   }
 
   async getTag(tagName: string): Promise<TagDoc | null> {
@@ -554,7 +544,7 @@ class FSNoteDb implements NoteDb {
 
     await Promise.all(
       updatedNotes.map((note) => {
-        return $writeFile(this.getNotePathname(note._id), JSON.stringify(note))
+        return writeFile(this.getNotePathname(note._id), JSON.stringify(note))
       })
     )
 
@@ -585,7 +575,7 @@ class FSNoteDb implements NoteDb {
   async loadBoostNoteJSON(): Promise<void> {
     const jsonPathname = this.getBoostNoteJSONPath()
     try {
-      const rawContent = await $readFile(jsonPathname)
+      const rawContent = await readFile(jsonPathname)
       this.data = JSON.parse(rawContent)
     } catch (error) {
       if (error.code === 'ENOENT') {
@@ -594,7 +584,7 @@ class FSNoteDb implements NoteDb {
           tagMap: {},
         }
         this.data = defaultBoostNoteJSON
-        $writeFile(jsonPathname, JSON.stringify(defaultBoostNoteJSON))
+        writeFile(jsonPathname, JSON.stringify(defaultBoostNoteJSON))
       } else {
         throw error
       }
@@ -602,11 +592,11 @@ class FSNoteDb implements NoteDb {
   }
 
   async saveBoostNoteJSON(): Promise<void> {
-    await $writeFile(this.getBoostNoteJSONPath(), JSON.stringify(this.data))
+    await writeFile(this.getBoostNoteJSONPath(), JSON.stringify(this.data))
   }
 
   async loadAllNotes(): Promise<NoteDoc[]> {
-    const fileNames = await $readdir(this.getNotesFolderPathname())
+    const fileNames = await readdir(this.getNotesFolderPathname())
 
     const noteFileNames = fileNames.filter((fileName) =>
       /\.json$/.test(fileName)
@@ -615,7 +605,7 @@ class FSNoteDb implements NoteDb {
 
     for (const noteFileName of noteFileNames) {
       try {
-        const rawDoc = await $readFile(
+        const rawDoc = await readFile(
           join(this.location, 'notes', noteFileName)
         )
         notes.push(JSON.parse(rawDoc) as NoteDoc)
