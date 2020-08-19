@@ -8,7 +8,6 @@ import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
 import BillingTab from './BillingTab'
-import ImportTab from './ImportTab'
 import {
   backgroundColor,
   closeIconColor,
@@ -121,8 +120,6 @@ const PreferencesModal = () => {
         return <AboutTab />
       case 'billing':
         return <BillingTab />
-      case 'import':
-        return <ImportTab />
       case 'general':
       default:
         return <GeneralTab />
@@ -165,12 +162,6 @@ const PreferencesModal = () => {
               active={tab === 'markdown'}
               setTab={setTab}
             />
-            {/* <TabButton
-          label='Hotkeys'
-          tab='hotkeys'
-          active={tab === 'hotkeys'}
-          setTab={setTab}
-        /> */}
             <TabButton
               label='About'
               tab='about'
@@ -181,12 +172,6 @@ const PreferencesModal = () => {
               label='Billing'
               tab='billing'
               active={tab === 'billing'}
-              setTab={setTab}
-            />
-            <TabButton
-              label='Import'
-              tab='import'
-              active={tab === 'import'}
               setTab={setTab}
             />
           </TabNav>
