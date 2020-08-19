@@ -3,8 +3,7 @@ import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
 import { usePreferences, useFirstUser } from './preferences'
 import { useEffectOnce } from 'react-use'
-import { osName } from './platform'
-import isElectron from 'is-electron'
+import { osName, appIsElectron } from './platform'
 import { createStoreContext } from './context'
 
 const amplifyConfig = {
@@ -51,7 +50,7 @@ function useAnalyticsStore(): AnalyticsStore {
     const endpointConfig: any = {
       attributes: {
         target: [osName],
-        target2: [`${isElectron() ? 'electron' : 'web'}:${osName}`],
+        target2: [`${appIsElectron ? 'electron' : 'web'}:${osName}`],
       },
     }
 

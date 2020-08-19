@@ -4,9 +4,9 @@ import { useState, useCallback, useEffect } from 'react'
 import { Location } from './types'
 import { createBrowserHistory, createHashHistory } from 'history'
 import { parse as parseQuery } from 'querystring'
-import isElectron from 'is-electron'
+import { appIsElectron } from '../platform'
 
-const bhistory = isElectron() ? createHashHistory() : createBrowserHistory()
+const bhistory = appIsElectron ? createHashHistory() : createBrowserHistory()
 
 export interface RouterStore extends Location {
   push: (path: string) => void
@@ -17,7 +17,7 @@ export interface RouterStore extends Location {
 }
 
 const initialLocation = normalizeLocation({
-  pathname: isElectron() ? '/app' : bhistory.location.pathname,
+  pathname: appIsElectron ? '/app' : bhistory.location.pathname,
   hash: bhistory.location.hash,
   query: parseQuery(bhistory.location.search),
 })
