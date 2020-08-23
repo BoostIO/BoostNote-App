@@ -68,6 +68,9 @@ class FSNoteDb implements NoteDb {
     const missingFolderPathnameSet = new Set<string>()
     const missingTagNameSet = new Set<string>()
     for (const note of notes) {
+      if (note.trashed) {
+        continue
+      }
       missingFolderPathnameSet.add(note.folderPathname)
       note.tags.forEach((tag) => {
         if (this.data!.tagMap[tag] == null) {
@@ -152,7 +155,22 @@ class FSNoteDb implements NoteDb {
 
   async removeFolder(pathname: string) {
     const newFolderMap = { ...this.data!.folderMap }
-    delete newFolderMap[pathname]
+    const foldersToDelete = this.getAllFolderUnderPathname(pathname)
+    const foldersToDeleteSet = new Set(foldersToDelete)
+
+    const allNotes = await this.loadAllNotes()
+
+    await Promise.all(
+      allNotes.map(async (note) => {
+        if (foldersToDeleteSet.has(note.folderPathname)) {
+          await this.trashNote(note._id)
+        }
+      })
+    )
+
+    foldersToDelete.forEach((folderPathname) => {
+      delete newFolderMap[folderPathname]
+    })
     this.data!.folderMap = newFolderMap
     await this.saveBoostNoteJSON()
   }
@@ -487,8 +505,7 @@ class FSNoteDb implements NoteDb {
 
     const updatedFolderMap = new Map<string, PopulatedFolderDoc>()
     const updatedNotes: NoteDoc[] = []
-    const subFolderPathnames = this.getAllFolderUnderPathname(pathname)
-    const allFoldersToRename = [pathname, ...subFolderPathnames].sort()
+    const allFoldersToRename = this.getAllFolderUnderPathname(pathname).sort()
 
     const replacePathname = (folderPathname: string) => {
       return folderPathname.replace(new RegExp(`^${pathname}`), newPathname)
@@ -563,9 +580,11 @@ class FSNoteDb implements NoteDb {
   getAllFolderUnderPathname(pathname: string) {
     const allFolderPathnames = keys(this.data!.folderMap)
     const pathnameRegexp = new RegExp(`^${pathname}/`)
-    return allFolderPathnames.filter((pathname) => {
+    const subFolderPathnames = allFolderPathnames.filter((pathname) => {
       return pathnameRegexp.test(pathname)
     })
+
+    return [pathname, ...subFolderPathnames]
   }
 
   getBoostNoteJSONPath() {
