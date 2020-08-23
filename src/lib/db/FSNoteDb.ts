@@ -32,7 +32,7 @@ import { generateId, getHexatrigesimalString } from '../string'
 import {
   stat,
   mkdir,
-  readFile,
+  readFileAsString,
   readdir,
   readFileType,
   writeFile,
@@ -166,7 +166,7 @@ class FSNoteDb implements NoteDb {
 
   async getNote(noteId: string): Promise<NoteDoc | null> {
     const notePathname = this.getNotePathname(noteId)
-    const rawContent = await readFile(notePathname)
+    const rawContent = await readFileAsString(notePathname)
 
     return JSON.parse(rawContent)
   }
@@ -284,7 +284,7 @@ class FSNoteDb implements NoteDb {
 
   async updateNote(noteId: string, noteProps: Partial<NoteDocEditibleProps>) {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await readFile(notePathname)
+    const rawNoteDoc = await readFileAsString(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
 
@@ -312,7 +312,7 @@ class FSNoteDb implements NoteDb {
 
   async trashNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await readFile(notePathname)
+    const rawNoteDoc = await readFileAsString(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
     if (noteDoc.trashed) {
@@ -331,7 +331,7 @@ class FSNoteDb implements NoteDb {
 
   async untrashNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await readFile(notePathname)
+    const rawNoteDoc = await readFileAsString(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     // TODO: If note doesn't exist, throw not found error
     if (!noteDoc.trashed) {
@@ -358,7 +358,7 @@ class FSNoteDb implements NoteDb {
 
   async bookmarkNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await readFile(notePathname)
+    const rawNoteDoc = await readFileAsString(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     if (noteDoc.data.bookmarked) {
       return noteDoc
@@ -379,7 +379,7 @@ class FSNoteDb implements NoteDb {
 
   async unbookmarkNote(noteId: string): Promise<NoteDoc> {
     const notePathname = this.getNotePathname(noteId)
-    const rawNoteDoc = await readFile(notePathname)
+    const rawNoteDoc = await readFileAsString(notePathname)
     const noteDoc: NoteDoc = JSON.parse(rawNoteDoc)
     if (!noteDoc.data.bookmarked) {
       return noteDoc
@@ -575,7 +575,7 @@ class FSNoteDb implements NoteDb {
   async loadBoostNoteJSON(): Promise<void> {
     const jsonPathname = this.getBoostNoteJSONPath()
     try {
-      const rawContent = await readFile(jsonPathname)
+      const rawContent = await readFileAsString(jsonPathname)
       this.data = JSON.parse(rawContent)
     } catch (error) {
       if (error.code === 'ENOENT') {
@@ -605,7 +605,7 @@ class FSNoteDb implements NoteDb {
 
     for (const noteFileName of noteFileNames) {
       try {
-        const rawDoc = await readFile(
+        const rawDoc = await readFileAsString(
           join(this.location, 'notes', noteFileName)
         )
         notes.push(JSON.parse(rawDoc) as NoteDoc)
