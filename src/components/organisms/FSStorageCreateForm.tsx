@@ -4,14 +4,13 @@ import {
   FormLabel,
   FormPrimaryButton,
   FormTextInput,
-  FormSecondaryButton,
 } from '../atoms/form'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useToast } from '../../lib/toast'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import { getHomePath, showOpenDialog } from '../../lib/electronOnly'
+import FormFolderSelector from '../atoms/FormFolderSelector'
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -33,21 +32,7 @@ const FSStorageCreateForm = () => {
       })
     }
   }, [createStorage, location, name, push, report, pushMessage])
-  const openDialog = useCallback(async () => {
-    const result = await showOpenDialog({
-      properties: ['openDirectory', 'createDirectory'],
-      buttonLabel: 'Select Folder',
-      defaultPath: getHomePath(),
-    })
-    if (result.canceled) {
-      return
-    }
-    if (result.filePaths == null) {
-      return
-    }
 
-    setLocation(result.filePaths[0])
-  }, [])
   return (
     <>
       <FormGroup>
@@ -62,10 +47,8 @@ const FSStorageCreateForm = () => {
       </FormGroup>
       <FormGroup>
         <FormLabel>Location</FormLabel>
-        <div>{location.trim().length === 0 ? 'Empty' : location}</div>
-        <FormSecondaryButton onClick={openDialog}>
-          Select Folder
-        </FormSecondaryButton>
+
+        <FormFolderSelector value={location} setValue={setLocation} />
       </FormGroup>
       <FormGroup>
         <FormPrimaryButton

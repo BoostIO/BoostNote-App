@@ -134,7 +134,6 @@ export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
 background-color: ${theme.inputBackground};
 color: ${theme.secondaryButtonLabelColor};
 border: 1px solid ${theme.borderColor};
-border-radius: 4px;
 font-size: 13px;
 
 &:hover,
