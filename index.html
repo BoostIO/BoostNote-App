@@ -48,7 +48,6 @@
           console.log('opening ...', url)
           electron.shell.openExternal(url)
         }
-
         function readFile(pathname) {
           return new Promise((resolve, reject) => {
             fs.readFile(pathname, (error, result) => {
@@ -56,7 +55,7 @@
                 reject(error)
                 return
               }
-              resolve(result.toString())
+              resolve(result)
             })
           })
         }
@@ -124,6 +123,10 @@
 
         async function readFileType(pathname) {
           const buffer = readChunk.sync(pathname, 0, 4100)
+          return readFileTypeFromBuffer(buffer)
+        }
+
+        async function readFileTypeFromBuffer(buffer) {
           const { mime } = await FileType.fromBuffer(buffer)
           return mime
         }
@@ -147,6 +150,7 @@
         window.__ELECTRON_ONLY__.stat = stat
         window.__ELECTRON_ONLY__.mkdir = mkdir
         window.__ELECTRON_ONLY__.readFileType = readFileType
+        window.__ELECTRON_ONLY__.readFileTypeFromBuffer = readFileTypeFromBuffer
         window.__ELECTRON_ONLY__.parseCSON = parseCSON
         window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
       })()
