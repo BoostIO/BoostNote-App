@@ -20,6 +20,7 @@ import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 import { mdiBook } from '@mdi/js'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import PageScrollableContent from '../atoms/PageScrollableContent'
+import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -64,6 +65,16 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
     db.renameStorage(storage.id, name)
   }, [storage.id, db, name])
 
+  const [importLegacyFormIsFolded, setImportLegacyFormIsFolded] = useState(true)
+
+  const openImportLegacyForm = useCallback(() => {
+    setImportLegacyFormIsFolded(false)
+  }, [])
+
+  const foldImportLegacyForm = useCallback(() => {
+    setImportLegacyFormIsFolded(true)
+  }, [])
+
   return (
     <PageContainer>
       <PageDraggableHeader iconPath={mdiBook} label='Storage Settings' />
@@ -83,6 +94,26 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             Update storage name
           </FormPrimaryButton>
         </FormGroup>
+        {storage.type === 'fs' && (
+          <>
+            <hr />
+            <FormHeading depth={2}>
+              Import Notes from Legacy BoostNote
+            </FormHeading>
+            {importLegacyFormIsFolded ? (
+              <FormGroup>
+                <FormSecondaryButton onClick={openImportLegacyForm}>
+                  Import
+                </FormSecondaryButton>
+              </FormGroup>
+            ) : (
+              <ImportLegacyNotesForm
+                storageId={storage.id}
+                onCancel={foldImportLegacyForm}
+              />
+            )}
+          </>
+        )}
         <hr />
         <FormHeading depth={2}>Remove Storage</FormHeading>
         {storage.type !== 'fs' && storage.cloudStorage != null && (
