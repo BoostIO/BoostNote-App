@@ -16,7 +16,7 @@ export default {
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
-        'Eine intuitive und stylische Markdown Notiz-App für Entwickler. Vollständig Open-Source.',
+        "Boost Note is an intuitive and stylish markdown note app. It's fully open-source, and used by 1 million developers!",
     },
     boostHub: {
       // title: 'Do you know Boost Hub?',
