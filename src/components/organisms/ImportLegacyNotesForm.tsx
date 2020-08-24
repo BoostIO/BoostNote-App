@@ -22,6 +22,7 @@ import { NoteDocEditibleProps } from '../../lib/db/types'
 import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
+import { useRouter } from '../../lib/router'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -40,6 +41,7 @@ const ImportLegacyNotesForm = ({
   )
   const [importing, setImporting] = useState(false)
   const { addAttachments, createFolder, createNote } = useDb()
+  const { push } = useRouter()
 
   const importNotes = useCallback(async () => {
     if (importing) {
@@ -183,6 +185,12 @@ const ImportLegacyNotesForm = ({
         }
         await createNote(storageId, note)
       }
+
+      push(
+        `/app/storages/${storageId}/notes${
+          destinationFolderPathname === '/' ? '' : destinationFolderPathname
+        }`
+      )
     } catch (error) {
       setErrorMessage(error.message)
       console.error(error)
@@ -197,6 +205,7 @@ const ImportLegacyNotesForm = ({
     createFolder,
     createNote,
     importing,
+    push,
   ])
 
   const updateConvertingSnippetNotes = useCallback(
