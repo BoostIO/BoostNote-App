@@ -26,6 +26,7 @@ export const solarizedDarkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
+  dangerColor: '#dc3545',
   borderColor: dark26Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,

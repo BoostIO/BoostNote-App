@@ -30,6 +30,7 @@ export const legacyTheme: BaseTheme = {
   disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,
+  dangerColor: '#dc3545',
   borderColor: dark12Color,
   noteListIconColor: dark26Color,
   noteListActiveIconColor: dark54Color,

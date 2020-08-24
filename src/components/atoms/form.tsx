@@ -68,8 +68,19 @@ export const FormTextInput = styled.input`
   }
 `
 
-export const FormBlockquote = styled.blockquote`
-  border-left: 4px solid ${({ theme }) => theme.primaryColor};
+export const FormBlockquote = styled.blockquote<{
+  variant?: 'primary' | 'danger'
+}>`
+  border-left: 4px solid
+    ${({ theme, variant }) => {
+      switch (variant) {
+        case 'danger':
+          return theme.dangerColor
+        case 'primary':
+        default:
+          return theme.primaryColor
+      }
+    }};
   margin-left: 0;
   padding: 0.5em 1em;
 `
