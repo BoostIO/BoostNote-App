@@ -29,6 +29,9 @@ const HeaderAlert = styled.div`
     padding: 15px 0;
     text-align: center;
   }
+  a {
+    color: #fff;
+  }
   span {
     font-weight: bold;
   }
@@ -157,8 +160,14 @@ const Header = () => {
       <a href='#boosthub'>
         <HeaderAlert>
           <p>
-            <span>Boost Hub</span>, the workspace app for developer teams, has
-            arrived!
+            <a
+              href='https://boosthub.io/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <span>Boost Hub</span>, the workspace app for developer teams, has
+              arrived!
+            </a>
           </p>
         </HeaderAlert>
       </a>
@@ -173,16 +182,6 @@ const Header = () => {
               <HeaderLink p={2} mx={3} href='https://boosthub.io'>
                 {t('header.forTeams')}
               </HeaderLink>
-              <li style={{ height: '30px' }}>
-                <iframe
-                  src='https://ghbtns.com/github-btn.html?user=boostio&repo=boostnote.next&type=star&count=true&size=large'
-                  frameBorder='0'
-                  scrolling='0'
-                  width='170'
-                  height='30'
-                  title='Star boostio/boostnote.next on GitHub'
-                ></iframe>
-              </li>
             </HeaderLeftList>
             <HeaderRightList display={['none', 'none', 'none', 'flex']}>
               <li>
