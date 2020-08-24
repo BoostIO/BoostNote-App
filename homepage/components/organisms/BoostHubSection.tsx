@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import ButtonLink from '../atoms/ButtonLink'
 
 const Container = styled.div<SpaceProps>`
-  max-width: 72em;
+  max-width: 70em;
   margin: 0 auto;
   ${space}
 `
