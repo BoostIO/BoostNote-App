@@ -11,6 +11,7 @@ import Image from '../atoms/Image'
 import AppLink from '../atoms/AppLink'
 import { useTranslation } from 'react-i18next'
 import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
+import SubscribeNewsLettersForm from '../organisms/SubscribeNewsLettersForm'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -147,6 +148,7 @@ const AboutTab = () => {
               License: GPL v3
             </SectionSubtleText>
           </div>
+          <SubscribeNewsLettersForm />
           <div className='about-platform'>
             <SectionHeader>{t('about.platform')}</SectionHeader>
             <div>
