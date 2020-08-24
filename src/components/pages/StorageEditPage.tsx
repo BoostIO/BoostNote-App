@@ -21,6 +21,7 @@ import { mdiBook } from '@mdi/js'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import PageScrollableContent from '../atoms/PageScrollableContent'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
+import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -75,6 +76,16 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
     setImportLegacyFormIsFolded(true)
   }, [])
 
+  const [convertPouchFormIsFolded, setConvertPouchFormIsFolded] = useState(true)
+
+  const openConvertPouchForm = useCallback(() => {
+    setConvertPouchFormIsFolded(false)
+  }, [])
+
+  const foldConvertPouchForm = useCallback(() => {
+    setConvertPouchFormIsFolded(true)
+  }, [])
+
   return (
     <PageContainer>
       <PageDraggableHeader iconPath={mdiBook} label='Storage Settings' />
@@ -110,6 +121,27 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
               <ImportLegacyNotesForm
                 storageId={storage.id}
                 onCancel={foldImportLegacyForm}
+              />
+            )}
+          </>
+        )}
+
+        {storage.type === 'pouch' && (
+          <>
+            <hr />
+
+            <FormHeading depth={2}>
+              Convert File System based Storage
+            </FormHeading>
+            {convertPouchFormIsFolded ? (
+              <FormSecondaryButton onClick={openConvertPouchForm}>
+                Convert
+              </FormSecondaryButton>
+            ) : (
+              <ConvertPouchStorageForm
+                storageId={storage.id}
+                storageName={storage.name}
+                onCancel={foldConvertPouchForm}
               />
             )}
           </>
