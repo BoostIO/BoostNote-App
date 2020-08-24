@@ -1,8 +1,15 @@
 import styled from '../../lib/styled'
-import { space, color, typography } from 'styled-system'
+import {
+  space,
+  color,
+  typography,
+  SpaceProps,
+  ColorProps,
+  TypographyProps,
+} from 'styled-system'
 
-const Button = styled.button`
-  padding: 10px;
+const Button = styled.button<SpaceProps & ColorProps & TypographyProps>`
+  padding: 1em;
   display: inline-block;
   ${space}
   ${color}
@@ -12,7 +19,6 @@ const Button = styled.button`
   border: solid 1px ${({ theme }) => theme.colors.gray};
   white-space: nowrap;
   font-family: SFMono-Regular,Consolas,Liberation, Mono,Menlo,monospace;
-
 
   &:hover {
     cursor: pointer;
