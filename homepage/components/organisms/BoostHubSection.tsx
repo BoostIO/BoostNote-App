@@ -19,29 +19,27 @@ const BoostHubTitle = styled.div`
 `
 
 const BoostHubDescription = styled.div`
-  display: flex;
-  margin-top: 30px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  text-align: center;
 
   p {
-    margin-top: 0;
-    margin-bottom: 30px;
+    margin: 5px 0;
+  }
+
+  a {
+    margin-top: 40px;
   }
 `
 
-const FeatureList = styled.ul`
-  li {
-    font-size: 20px;
-
-    + li {
-      margin-top: 10px;
-    }
+const FeatureList = styled.div`
+  span {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
   }
 
-  span {
-    display: inline-block;
-    margin-right: 5px;
-    font-weight: bold;
+  @media only screen and (min-width: 1024px) {
+    margin-bottom: 30px;
   }
 `
 
@@ -54,8 +52,8 @@ const BoostHubSection = () => {
 
   return (
     <section id='boosthub'>
-      <Box bg='#2c2c2c' color='#f0f0f0' pt={5} px={2}>
-        <Container mt={5}>
+      <Box bg='#2c2c2c' color='#f0f0f0' px={2}>
+        <Container py={9}>
           <Row>
             <Column width={1}>
               <BoostHubTitle>
@@ -68,8 +66,9 @@ const BoostHubSection = () => {
 
           <BoostHubDescription>
             <Row>
-              <Column width={[1, 1, 1, 1 / 2]} mb={[6, 6, 6, 0]}>
-                <p>{t('boostHub.description')}</p>
+              <Column width={1} mb={[6, 6, 6, 0]}>
+                <p>{t('boostHub.description1')}</p>
+                <p>{t('boostHub.description2')}</p>
                 <ButtonLink
                   bg='teal'
                   color='white'
@@ -80,26 +79,6 @@ const BoostHubSection = () => {
                   {t('common.boostHub')}
                 </ButtonLink>
               </Column>
-              <Column width={[1, 1, 1, 1 / 2]}>
-                <FeatureList>
-                  <li>
-                    <span>{t('boostHub.feature1Name')}:</span>
-                    {t('boostHub.feature1Detail')}
-                  </li>
-                  <li>
-                    <span>{t('boostHub.feature2Name')}:</span>
-                    {t('boostHub.feature2Detail')}
-                  </li>
-                  <li>
-                    <span>{t('boostHub.feature3Name')}:</span>
-                    {t('boostHub.feature3Detail')}
-                  </li>
-                  <li>
-                    <span>{t('boostHub.feature4Name')}:</span>
-                    {t('boostHub.feature4Detail')}
-                  </li>
-                </FeatureList>
-              </Column>
             </Row>
           </BoostHubDescription>
 
@@ -108,6 +87,23 @@ const BoostHubSection = () => {
               <BoostHubImage src='/static/boosthub.png' />
             </Column>
           </Row>
+
+          <FeatureList>
+            <Row>
+              <Column width={[1, 1, 1, 1 / 3]} px={[3, 3, 5]} py={[3, 3, 0]}>
+                <span>{t('boostHub.feature1Name')}</span>
+                {t('boostHub.feature1Detail')}
+              </Column>
+              <Column width={[1, 1, 1, 1 / 3]} px={[3, 3, 5]} py={[3, 3, 0]}>
+                <span>{t('boostHub.feature2Name')}</span>
+                {t('boostHub.feature2Detail')}
+              </Column>
+              <Column width={[1, 1, 1, 1 / 3]} px={[3, 3, 5]} py={[3, 3, 0]}>
+                <span>{t('boostHub.feature3Name')}</span>
+                {t('boostHub.feature3Detail')}
+              </Column>
+            </Row>
+          </FeatureList>
         </Container>
       </Box>
     </section>
