@@ -128,6 +128,10 @@ const ImportLegacyNotesForm = ({
                   `:storage/${legacyNoteId}/${originalName}`,
                   newName
                 )
+                content = content.replace(
+                  `:storage\\${legacyNoteId}\\${originalName}`,
+                  newName
+                )
               }
 
               const noteProps: NoteDocEditibleProps = {
