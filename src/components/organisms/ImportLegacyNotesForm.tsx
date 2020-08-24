@@ -211,7 +211,9 @@ const ImportLegacyNotesForm = ({
 
   return (
     <>
-      {errorMessage != null && <FormBlockquote>{errorMessage}</FormBlockquote>}
+      {errorMessage != null && (
+        <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
+      )}
       <FormGroup>
         <FormLabel>Legacy Storage Location</FormLabel>
         <FormFolderSelector value={location} setValue={setLocation} />
