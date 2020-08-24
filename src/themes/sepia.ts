@@ -30,6 +30,7 @@ export const sepiaTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
+  dangerColor: '#dc3545',
   borderColor: dark12Color,
 
   noteListIconColor: dark26Color,

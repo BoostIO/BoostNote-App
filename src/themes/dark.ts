@@ -27,6 +27,7 @@ export const darkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
+  dangerColor: '#dc3545',
   borderColor: '#202020',
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
