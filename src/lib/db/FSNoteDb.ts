@@ -30,8 +30,7 @@ import {
 } from './utils'
 import { generateId, getHexatrigesimalString } from '../string'
 import {
-  stat,
-  mkdir,
+  prepareDirectory,
   readFileAsString,
   readdir,
   readFileType,
@@ -58,9 +57,9 @@ class FSNoteDb implements NoteDb {
   }
 
   async init(): Promise<void> {
-    await this.prepareDirectory(this.location)
-    await this.prepareDirectory(this.getNotesFolderPathname())
-    await this.prepareDirectory(this.getAttachmentsFolderPathname())
+    await prepareDirectory(this.location)
+    await prepareDirectory(this.getNotesFolderPathname())
+    await prepareDirectory(this.getAttachmentsFolderPathname())
     await this.loadBoostNoteJSON()
     await this.upsertFolder('/')
 
@@ -85,21 +84,6 @@ class FSNoteDb implements NoteDb {
       ),
       ...[...missingTagNameSet].map((tagName) => this.upsertTag(tagName)),
     ])
-  }
-
-  async prepareDirectory(pathname: string) {
-    try {
-      const stats = await stat(pathname)
-      if (!stats.isDirectory()) {
-        throw new Error(`Failed to prepare a directory, ${pathname}`)
-      }
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        await mkdir(pathname)
-      } else {
-        throw error
-      }
-    }
   }
 
   async getFolder(pathname: string): Promise<FolderDoc | null> {
@@ -208,7 +192,7 @@ class FSNoteDb implements NoteDb {
   }
 
   async getAttachmentMap(): Promise<ObjectMap<Attachment>> {
-    await this.prepareDirectory(this.getAttachmentsFolderPathname())
+    await prepareDirectory(this.getAttachmentsFolderPathname())
     const fileDirents = await readdir(this.getAttachmentsFolderPathname(), {
       withFileTypes: true,
     })

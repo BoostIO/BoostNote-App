@@ -47,6 +47,23 @@ async function readFileAsString(pathname: string) {
   return result.toString()
 }
 
+async function prepareDirectory(pathname: string) {
+  try {
+    const stats = await stat(pathname)
+    if (!stats.isDirectory()) {
+      throw new Error(
+        `Failed to prepare a directory because ${pathname} is a file`
+      )
+    }
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      await mkdir(pathname)
+    } else {
+      throw error
+    }
+  }
+}
+
 export {
   readFile,
   readFileAsString,
@@ -55,6 +72,7 @@ export {
   unlinkFile,
   stat,
   mkdir,
+  prepareDirectory,
   readFileType,
   readFileTypeFromBuffer,
   showOpenDialog,
