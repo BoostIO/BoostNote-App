@@ -83,6 +83,7 @@ export default {
     footer: {
       mission: 'Mission',
       pressKit: 'Presseunterlagen',
+      backers: 'Backers',
       userTerms: 'Nutzungsbedingungen',
       privacyPolicy: 'Datenschutzerklärung',
     },

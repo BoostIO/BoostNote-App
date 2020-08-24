@@ -77,6 +77,7 @@ export default {
     footer: {
       // mission: 'Mission',
       // pressKit: 'Press Kit',
+      // backers: 'Backers',
       // userTerms: 'User Terms',
       // privacyPolicy: 'Privacy Policy',
     },

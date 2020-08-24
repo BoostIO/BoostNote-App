@@ -83,6 +83,7 @@ export default {
     footer: {
       mission: 'Sứ mệnh',
       pressKit: 'Press Kit',
+      backers: 'Backers',
       userTerms: 'Điều khoản người dùng',
       privacyPolicy: 'Quy định về quyền riêng tư',
     },
