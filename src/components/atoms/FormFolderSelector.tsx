@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from '../../lib/styled'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { getHomePath, showOpenDialog } from '../../lib/electronOnly'
@@ -41,21 +41,32 @@ interface FormFolderSelector {
 }
 
 const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
+  const [dialogIsOpen, setDialogIsOpen] = useState(false)
   const openDialog = useCallback(async () => {
-    const result = await showOpenDialog({
-      properties: ['openDirectory', 'createDirectory'],
-      buttonLabel: 'Select Folder',
-      defaultPath: getHomePath(),
-    })
-    if (result.canceled) {
+    if (dialogIsOpen) {
       return
     }
-    if (result.filePaths == null) {
-      return
-    }
+    setDialogIsOpen(true)
+    try {
+      const result = await showOpenDialog({
+        properties: ['openDirectory', 'createDirectory'],
+        buttonLabel: 'Select Folder',
+        defaultPath: getHomePath(),
+      })
+      if (result.canceled) {
+        return
+      }
+      if (result.filePaths == null) {
+        return
+      }
 
-    setValue(result.filePaths[0])
-  }, [setValue])
+      setValue(result.filePaths[0])
+    } catch (error) {
+      throw error
+    } finally {
+      setDialogIsOpen(false)
+    }
+  }, [dialogIsOpen, setValue])
 
   return (
     <FormFolderSelectorContainer>
