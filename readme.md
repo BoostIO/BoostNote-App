@@ -27,7 +27,7 @@ BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Bo
 
 ## Roadmap
 
-[Boost Note Roadmap 2020](https://medium.com/boostnote/boost-note-roadmap-2020-9f06a642f5f1)
+[Boost Note Roadmap 2020](https://github.com/BoostIO/BoostNote.next/projects/3)
 
 ## Authors & Maintainers
 
