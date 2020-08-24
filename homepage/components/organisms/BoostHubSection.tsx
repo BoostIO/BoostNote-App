@@ -105,7 +105,7 @@ const BoostHubSection = () => {
 
           <Row>
             <Column>
-              <BoostHubImage src='/static/boosthub.svg' />
+              <BoostHubImage src='/static/boosthub.png' />
             </Column>
           </Row>
         </Container>
