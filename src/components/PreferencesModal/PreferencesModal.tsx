@@ -99,7 +99,7 @@ const CloseButton = styled.button`
 const PreferencesModal = () => {
   const { t } = useTranslation()
   const { closed, toggleClosed } = usePreferences()
-  const [tab, setTab] = useState('general')
+  const [tab, setTab] = useState('about')
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -145,6 +145,12 @@ const PreferencesModal = () => {
         <ModalBody>
           <TabNav>
             <TabButton
+              label='About'
+              tab='about'
+              active={tab === 'about'}
+              setTab={setTab}
+            />
+            <TabButton
               label='General'
               tab='general'
               active={tab === 'general'}
@@ -160,12 +166,6 @@ const PreferencesModal = () => {
               label='Markdown'
               tab='markdown'
               active={tab === 'markdown'}
-              setTab={setTab}
-            />
-            <TabButton
-              label='About'
-              tab='about'
-              active={tab === 'about'}
               setTab={setTab}
             />
             <TabButton
