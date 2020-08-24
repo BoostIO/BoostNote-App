@@ -28,6 +28,8 @@ import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp } from '@mdi/js'
 import DownloadButtonLink from '../atoms/DownloadButtonLink'
 import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
+import Text from '../atoms/Text'
+import SubscribeNewsLettersForm from './SubscribeNewsLettersForm'
 
 const HeroTitle = styled.h1<TypographyProps>`
   ${typography}
@@ -115,6 +117,17 @@ const MobileAppLink = styled.a<SpaceProps>`
   }
 `
 
+const SubscribeInput = styled.input<SpaceProps>`
+  ${space}
+  padding: 1em;
+  display: inline-block;
+  border-radius: 4px;
+  border: solid 1px ${({ theme }) => theme.colors.gray};
+  white-space: nowrap;
+  font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
+  margin-right: 0.5em;
+`
+
 const HeroImage = styled.img`
   max-width: 100%;
 `
@@ -131,7 +144,7 @@ const HeroSection = () => {
           <HeroSubTitle
             textAlign={'center'}
             color={'gray'}
-            fontSize={[2, 3]}
+            fontSize={[3, 4]}
             fontWeight={'normal'}
           >
             {t('hero.subtitle')}
@@ -159,6 +172,7 @@ const HeroSection = () => {
               <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
             </ButtonLink>
           </FlexBox>
+
           <FlexBox justifyContent='center' mt={2}>
             <MobileAppLink
               mx={1}
@@ -177,6 +191,19 @@ const HeroSection = () => {
               <img height='50' src='/static/ios-app-store-badge.svg' />
             </MobileAppLink>
           </FlexBox>
+        </Box>
+        <Box>
+          <Text
+            as='p'
+            textAlign='center'
+            color={'gray'}
+            fontSize={[3]}
+            fontWeight={'normal'}
+          >
+            Also, please join our news letters to get the latest news and update
+            notes.
+          </Text>
+          <SubscribeNewsLettersForm />
         </Box>
         <Box>
           <HeroImage src='/static/hero.png' />

@@ -22,7 +22,11 @@ const DownloadButtonLink: React.FC<DownloadButtonLinkProps> = ({
       href={href}
       onClick={(event) => {
         event.preventDefault()
-        sendGAEvent(gaEventName)
+        try {
+          sendGAEvent(gaEventName)
+        } catch (error) {
+          console.error(error)
+        }
         queueNavigateToGA(href)
       }}
     >
