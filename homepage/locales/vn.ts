@@ -12,6 +12,7 @@ export default {
     },
     header: {
       forTeams: 'Dành cho nhóm',
+      community: 'Community',
     },
     hero: {
       title: 'Thêm vui vẻ, năng suất và sáng tạo.',

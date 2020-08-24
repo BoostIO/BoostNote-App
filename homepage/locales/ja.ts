@@ -12,6 +12,7 @@ export default {
     },
     header: {
       forTeams: 'チーム版',
+      community: 'コミュニティ',
     },
     hero: {
       // title: 'Boost Happiness, Productivity and Creativity.',

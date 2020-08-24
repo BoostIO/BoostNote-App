@@ -15,7 +15,7 @@ import {
   FlexProps,
 } from 'styled-system'
 import Icon from '../atoms/Icon'
-import { mdiDownload, mdiOpenInApp } from '@mdi/js'
+import { mdiDownload, mdiOpenInApp, mdiChevronDown } from '@mdi/js'
 import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
 const HeaderAlert = styled.div`
@@ -108,6 +108,57 @@ const HeaderLink = styled.a<SpaceProps>`
   }
 `
 
+const HeaderDropdown = styled.div`
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+
+    ul {
+      display: block;
+    }
+  }
+
+  span {
+    display: inline-block;
+    line-height: 45px;
+    font-weight: bold;
+
+    svg {
+      margin-left: ${({ theme }) => theme.space[1]}px;
+      vertical-align: middle;
+    }
+  }
+
+  ul {
+    display: none;
+    position: absolute;
+    top: 40px;
+    z-index: 1;
+    width: 150px;
+    background-color: #fff;
+    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.16);
+    border-radius: 3px;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    padding: ${({ theme }) => theme.space[1]}px
+      ${({ theme }) => theme.space[2]}px;
+    color: ${({ theme }) => theme.colors.black} !important;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  img {
+    margin-right: ${({ theme }) => theme.space[1]}px;
+    height: 21px;
+  }
+`
+
 const HeaderRightList = styled.ul<LayoutProps>`
   ${layout}
   list-style: none;
@@ -182,6 +233,74 @@ const Header = () => {
               <HeaderLink p={2} mx={3} href='https://boosthub.io'>
                 {t('header.forTeams')}
               </HeaderLink>
+              <HeaderDropdown>
+                <span>
+                  {t('header.community')}
+                  <Icon path={mdiChevronDown} />
+                </span>
+                <ul>
+                  <li>
+                    <a
+                      href='https://github.com/BoostIO/Boostnote.next'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/github.svg' />
+                      GitHub
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href='https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/slack.svg' />
+                      Slack
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href='https://issuehunt.io/r/BoostIo/Boostnote.next'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/issuehunt.svg' />
+                      IssueHunt
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href='https://twitter.com/boostnoteapp'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/twitter.svg' />
+                      Twitter
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href='https://www.facebook.com/groups/boostnote/'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/facebook.svg' />
+                      Facebook
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href='https://www.reddit.com/r/Boostnote/'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <img src='/static/community-logos/reddit.svg' />
+                      Reddit
+                    </a>
+                  </li>
+                </ul>
+              </HeaderDropdown>
             </HeaderLeftList>
             <HeaderRightList display={['none', 'none', 'none', 'flex']}>
               <li>

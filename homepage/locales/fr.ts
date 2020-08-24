@@ -12,6 +12,7 @@ export default {
     },
     header: {
       forTeams: 'Pour les équipes',
+      community: 'Community',
     },
     hero: {
       title: 'Stimuler le bonheur, la productivité et la créativité.',
