@@ -134,9 +134,11 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
               Convert File System based Storage
             </FormHeading>
             {convertPouchFormIsFolded ? (
-              <FormSecondaryButton onClick={openConvertPouchForm}>
-                Convert
-              </FormSecondaryButton>
+              <FormGroup>
+                <FormSecondaryButton onClick={openConvertPouchForm}>
+                  Convert
+                </FormSecondaryButton>
+              </FormGroup>
             ) : (
               <ConvertPouchStorageForm
                 storageId={storage.id}
