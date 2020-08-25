@@ -117,17 +117,6 @@ const MobileAppLink = styled.a<SpaceProps>`
   }
 `
 
-const SubscribeInput = styled.input<SpaceProps>`
-  ${space}
-  padding: 1em;
-  display: inline-block;
-  border-radius: 4px;
-  border: solid 1px ${({ theme }) => theme.colors.gray};
-  white-space: nowrap;
-  font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
-  margin-right: 0.5em;
-`
-
 const HeroImage = styled.img`
   max-width: 100%;
 `
