@@ -12,16 +12,17 @@ export default {
     },
     header: {
       forTeams: 'Voor Teams',
+      community: 'Community',
     },
     hero: {
       title: 'Boost Geluk, Productiviteit en Creativiteit.',
       subtitle:
-        "Een intuïtieve en stijlvolle markdown notitie-app voor ontwikkelaars. Volledig open-source.",
+        'Een intuïtieve en stijlvolle markdown notitie-app voor ontwikkelaars. Volledig open-source.',
     },
     boostHub: {
       title: 'Kent u Boost Hub al?',
       description:
-        "We hebben deze samenwerkingsapp ontwikkeld als een apart project, en we hebben ons hierbij gericht op functies die zorgen voor een geheel dat makkelijk aanpasbaar en eenvoudig te optimaliseren is voor elk team van ontwikkelaars.",
+        'We hebben deze samenwerkingsapp ontwikkeld als een apart project, en we hebben ons hierbij gericht op functies die zorgen voor een geheel dat makkelijk aanpasbaar en eenvoudig te optimaliseren is voor elk team van ontwikkelaars.',
       feature1Name: 'Custom blokken',
       feature1Detail: 'Weergave van- en interactie met externe informatie',
       feature2Name: 'Real-time Samenwerken',
@@ -71,14 +72,14 @@ export default {
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        "We blijven de oude app onderhouden totdat de huidige Boost Note.next het merendeel van de functies van de oude app ondersteunt, zoals lokale opslag en markdown-extensies. Push uzelf dus niet te hard om naar de nieuwe app te migreren.",
+        'We blijven de oude app onderhouden totdat de huidige Boost Note.next het merendeel van de functies van de oude app ondersteunt, zoals lokale opslag en markdown-extensies. Push uzelf dus niet te hard om naar de nieuwe app te migreren.',
       legacyDownloadLinks: 'Legacy Downloadlinks',
       legacyRepository: 'Legacy Repository',
     },
     community: {
       title: 'Word onderdeel van onze community',
       description:
-        "Onze gemeenschap van developers ondersteunt Boostnote. Boostnote geniet van aanzienlijke populariteit op GitHub en wordt door vele programmeurs onderhouden. Onze community verwelkomt iedereen. Doe mee!",
+        'Onze gemeenschap van developers ondersteunt Boostnote. Boostnote geniet van aanzienlijke populariteit op GitHub en wordt door vele programmeurs onderhouden. Onze community verwelkomt iedereen. Doe mee!',
     },
     footer: {
       mission: 'Missie',

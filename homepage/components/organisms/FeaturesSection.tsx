@@ -108,7 +108,7 @@ const FeaturesSection = () => {
             <a
               target='_blank'
               rel='noopener noreferrer'
-              href='https://medium.com/boostnote/boost-note-roadmap-2020-9f06a642f5f1'
+              href='https://github.com/BoostIO/BoostNote.next/projects/3'
             >
               <RoadmapImage width='600' src='/static/roadmap2020.png' />
             </a>

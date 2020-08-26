@@ -6,7 +6,6 @@ import PricingPlansSection from '../components/organisms/PricingPlansSection'
 import BoostHubSection from '../components/organisms/BoostHubSection'
 import DownloadSection from '../components/organisms/DownloadSection'
 import CommunitySection from '../components/organisms/CommunitySection'
-import KickstarterCampaignSection from '../components/organisms/KickstarterCampaignSection'
 
 const HomePage = () => {
   return (
@@ -17,7 +16,6 @@ const HomePage = () => {
       <PricingPlansSection />
       <DownloadSection />
       <CommunitySection />
-      <KickstarterCampaignSection />
     </DefaultLayout>
   )
 }

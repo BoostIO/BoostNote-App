@@ -10,6 +10,12 @@ const Container = styled.div<SpaceProps>`
   max-width: 60em;
   margin: 0 auto;
   ${space}
+
+  p {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `
 
 const CommunityLink = styled.a<SpaceProps>`

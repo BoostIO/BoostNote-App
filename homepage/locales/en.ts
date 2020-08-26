@@ -12,24 +12,27 @@ export default {
     },
     header: {
       forTeams: 'For Teams',
+      community: 'Community',
     },
     hero: {
       title: 'Boost Happiness, Productivity and Creativity.',
       subtitle:
-        "An intuitive and stylish markdown note app for developers. It's fully open-source.",
+        "Boost Note is an intuitive and stylish markdown note app. It's fully open-source, and used by 1 million developers!",
     },
     boostHub: {
-      title: 'Do you know Boost Hub?',
-      description:
-        "We've developed this workspace app as another project, and we focused on the features to make it customizable and easy to optimize for every developer team.",
-      feature1Name: 'Custom Blocks',
-      feature1Detail: 'Display and interact the third party info',
-      feature2Name: 'Real-time Coauthoring',
-      feature2Detail: 'Edit documents with team members',
-      feature3Name: 'Versatile Markdown',
-      feature3Detail: 'Supporting LaTex, PlantUML, etc.',
-      feature4Name: 'Keyboard Shortcuts',
-      feature4Detail: 'More than 20 shortcuts are prepared',
+      title: 'Looking for Team Version?',
+      description1: 'Boost Hub is more than just a markdown editor or a wiki.',
+      description2:
+        'You can collaborate with your team members in real-time, from anywhere.',
+      feature1Name: 'Real-time Coauthoring',
+      feature1Detail:
+        'Write and edit documents as a team and sharing your knowledge and ideas in real-time. No one will be left behind.',
+      feature2Name: 'Create Diagrams Like a Pro',
+      feature2Detail:
+        'Supports Charts.js, Mermaid, andPlantUML, which means you can put diagrams in your document.',
+      feature3Name: 'Beautiful Mathematical Script',
+      feature3Detail:
+        'For clean representation of maths equations it is time to use LaTex in the Boost Hub editor.',
     },
     features: {
       title: 'Features',
@@ -83,6 +86,7 @@ export default {
     footer: {
       mission: 'Mission',
       pressKit: 'Press Kit',
+      backers: 'Backers',
       userTerms: 'User Terms',
       privacyPolicy: 'Privacy Policy',
     },

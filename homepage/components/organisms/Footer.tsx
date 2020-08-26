@@ -49,6 +49,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
+                <a href='/backers'>{t('footer.backers')}</a>
+              </li>
+              <li>
                 <a href='/terms'>{t('footer.userTerms')}</a>
               </li>
               <li>
