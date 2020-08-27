@@ -25,6 +25,7 @@ import {
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
+import { useTranslation } from 'react-i18next'
 
 const NoteDetailToolbarContainer = styled.div`
   display: flex;
@@ -68,6 +69,8 @@ const NoteDetailToolbar = ({
   bookmarkNote,
   unbookmarkNote,
 }: NoteDetailToolbarProps) => {
+  const { t } = useTranslation()
+
   const storageTags = useMemo(() => {
     if (storage == null) return []
     return values(storage.tagMap).map((tag) => tag.name)
@@ -135,34 +138,51 @@ const NoteDetailToolbar = ({
       <Control>
         <ToolbarIconButton
           active={viewMode === 'edit'}
+          title={t('note.edit')}
           onClick={selectEditMode}
           iconPath={mdiCodeTags}
         />
         <ToolbarIconButton
           active={viewMode === 'split'}
+          title={t('note.splitView')}
           onClick={selectSplitMode}
           iconPath={mdiViewSplitVertical}
         />
         <ToolbarIconButton
           active={viewMode === 'preview'}
+          title={t('note.preview')}
           onClick={selectPreviewMode}
           iconPath={mdiTextSubject}
         />
         <ToolbarSeparator />
         <ToolbarIconButton
           active={!!note.data.bookmarked}
+          title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
           onClick={!note.data.bookmarked ? bookmarkNote : unbookmarkNote}
           iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
         />
         {note.trashed ? (
           <>
-            <ToolbarIconButton onClick={untrashNote} iconPath={mdiRestore} />
-            <ToolbarIconButton onClick={purgeNote} iconPath={mdiTrashCan} />
+            <ToolbarIconButton
+              title={t('note.restore')}
+              onClick={untrashNote}
+              iconPath={mdiRestore}
+            />
+            <ToolbarIconButton
+              title={t('note.delete')}
+              onClick={purgeNote}
+              iconPath={mdiTrashCan}
+            />
           </>
         ) : (
-          <ToolbarIconButton onClick={trashNote} iconPath={mdiTrashCan} />
-        )}
+            <ToolbarIconButton
+              title={t('note.trash')}
+              onClick={trashNote}
+              iconPath={mdiTrashCan}
+            />
+          )}
         <ToolbarIconButton
+          title={t('note.export')}
           onClick={openContextMenu}
           iconPath={mdiDotsVertical}
         />
