@@ -4,6 +4,7 @@ import { mdiBookOpen, mdiSlashForward } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useRouter, useRouteParams } from '../../lib/router'
 import { flexCenter } from '../../lib/styled/styleFunctions'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +61,8 @@ const NoteDetailFolderNavigator = ({
   noteId,
   noteFolderPathname,
 }: NoteDetailFolderNavigatorProps) => {
+  const { t } = useTranslation()
+
   const { push } = useRouter()
   const routeParams = useRouteParams()
 
@@ -87,12 +90,18 @@ const NoteDetailFolderNavigator = ({
     return folderDataList
   }, [noteFolderPathname])
 
+  const storageTooltip = `${t('storage.storage')} ${storageName}: ${t('general.allnote')}`;
+
+  const getFolderTooltip = (foldername: string) =>
+    `${t('folder.folder')} ${foldername}: ${t('general.allnote')}`;
+
   return (
     <Container>
       <IconContainer>
         <Icon path={mdiBookOpen} />
       </IconContainer>
       <FolderNavItem
+        title={storageTooltip}
         href={`/app/storages/${storageId}/notes/${noteId}`}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault()
@@ -106,6 +115,7 @@ const NoteDetailFolderNavigator = ({
         <React.Fragment key={folderData.pathname}>
           <Icon path={mdiSlashForward} />
           <FolderNavItem
+            title={getFolderTooltip(folderData.name)}
             onClick={() => {
               push(
                 `/app/storages/${storageId}/notes${folderData.pathname}/${noteId}`
