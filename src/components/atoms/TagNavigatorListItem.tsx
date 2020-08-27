@@ -4,6 +4,7 @@ import styled from '../../lib/styled'
 import { mdiClose } from '@mdi/js'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 import { useRouter } from '../../lib/router'
+import { useTranslation } from 'react-i18next'
 
 const TagItem = styled.li`
   margin-right: 5px;
@@ -65,10 +66,13 @@ const TagNavigatorListItem = ({
   currentTagName,
   removeTagByName,
 }: TagNavigatorListItemProps) => {
+  const { t } = useTranslation()
   const { push } = useRouter()
+
   return (
     <TagItem>
       <TagItemAnchor
+        title={`${tag}: ${t('general.allnote')}`}
         onClick={() => {
           push(`/app/storages/${storageId}/tags/${tag}/${noteId}`)
         }}
@@ -77,6 +81,7 @@ const TagNavigatorListItem = ({
         {tag}
       </TagItemAnchor>
       <TagRemoveButton
+        title={t('tag.remove')}
         onClick={() => {
           removeTagByName(tag)
         }}
