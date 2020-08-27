@@ -30,16 +30,18 @@ const ToolbarButtonContainer = styled.button`
 
 interface ToolbarButtonProps {
   iconPath: string
-  active?: boolean
+  active?: boolean,
+  title?: string,
   onClick: React.MouseEventHandler
 }
 
 const ToolbarButton = React.forwardRef(
-  ({ iconPath, onClick, active = false }: ToolbarButtonProps, ref) => (
+  ({ iconPath, onClick, active = false, title }: ToolbarButtonProps, ref) => (
     <ToolbarButtonContainer
       onClick={onClick}
       className={active ? 'active' : ''}
       ref={ref}
+      title={title}
     >
       <Icon path={iconPath} />
     </ToolbarButtonContainer>
