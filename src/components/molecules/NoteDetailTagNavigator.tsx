@@ -7,6 +7,7 @@ import { useRouteParams } from '../../lib/router'
 import ToolbarButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -48,6 +49,8 @@ const NoteDetailTagNavigator = ({
   appendTagByName,
   removeTagByName,
 }: NoteDetailTagNavigatorProps) => {
+  const { t } = useTranslation()
+
   const routeParams = useRouteParams()
 
   const currentTagName = useMemo(() => {
@@ -94,7 +97,7 @@ const NoteDetailTagNavigator = ({
   return (
     <>
       <Container>
-        <IconContainer>
+        <IconContainer title={t('tag.tag')}>
           <Icon path={mdiTagMultiple} />{' '}
         </IconContainer>
         <TagNavigatorList>
@@ -112,6 +115,7 @@ const NoteDetailTagNavigator = ({
           })}
         </TagNavigatorList>
         <ToolbarButton
+          title={t('tag.add')}
           iconPath={mdiPlus}
           ref={buttonRef}
           onClick={showNewTagPopup}
