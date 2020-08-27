@@ -13,6 +13,7 @@ export default {
     'general.networkError': 'Network Error',
 
     // Storage
+    'storage.storage': 'Storage',
     'storage.name': 'Storage Name',
     'storage.noStorage': 'No storages',
     'storage.create': 'Create Storage',
@@ -34,6 +35,7 @@ export default {
     'storage.syncDate': 'Last synced at',
 
     //Folder
+    'folder.folder': 'Folder',
     'folder.create': 'New Folder',
     'folder.rename': 'Rename Folder',
     'folder.renameMessage':
@@ -44,6 +46,7 @@ export default {
 
     //Tag
     'tag.tag': 'Tags',
+    'tag.add': 'Add Tag',
     'tag.remove': 'Remove Tag',
     'tag.removeMessage': 'The tag will be untagged from all notes.',
 
@@ -67,6 +70,11 @@ export default {
     'note.createkeymessage2': 'Select a storage',
     'note.createkeymessage3': 'to create a new note',
     'note.restore': 'Restore',
+    'note.edit': 'Edit',
+    'note.splitView': 'Split View',
+    'note.preview': 'Preview',
+    'note.trash': 'Trash',
+    'note.export': 'Export',
 
     //Bookmark
     'bookmark.remove': 'Remove Bookmark',
