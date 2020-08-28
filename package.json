@@ -111,6 +111,7 @@
     "aws-amplify": "^1.2.4",
     "classcat": "^4.0.2",
     "codemirror": "^5.49.0",
+    "codemirror-abap": "^0.2.2",
     "coffeescript": "^2.4.1",
     "copy-to-clipboard": "^3.3.1",
     "copy-webpack-plugin": "^5.0.4",
