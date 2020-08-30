@@ -76,6 +76,15 @@ const GeneralTab = () => {
     },
     [setPreferences]
   )
+
+  const toggleShowSubfolderContent: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'general.showSubfolderContent': event.target.checked,
+      })
+    },
+    [setPreferences]
+  )
   const { t } = useTranslation()
 
   return (
@@ -174,6 +183,19 @@ const GeneralTab = () => {
             onChange={toggleEnableAutoSync}
           >
             Enable auto sync
+          </FormCheckItem>
+        </SectionControl>
+      </Section>
+      <Section>
+        <SectionHeader>Subfolders</SectionHeader>
+        <SectionControl>
+          <FormCheckItem
+            id='checkbox-show-subfolder-content'
+            type='checkbox'
+            checked={preferences['general.showSubfolderContent']}
+            onChange={toggleShowSubfolderContent}
+          >
+            Show content of all subfolders
           </FormCheckItem>
         </SectionControl>
       </Section>
