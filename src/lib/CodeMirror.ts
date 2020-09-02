@@ -10,6 +10,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/keymap/sublime'
 import 'codemirror/keymap/emacs'
 import 'codemirror/keymap/vim'
+import 'codemirror-abap'
 
 const dispatchModeLoad = debounce(() => {
   window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
