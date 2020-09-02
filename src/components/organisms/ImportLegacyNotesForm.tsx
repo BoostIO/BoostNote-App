@@ -23,6 +23,7 @@ import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
 import { useRouter } from '../../lib/router'
+import { filenamify } from '../../lib/string'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -62,7 +63,7 @@ const ImportLegacyNotesForm = ({
       const folderMap = new Map<string, string>(
         legacyStorageConfig.folders.map(
           (folder: { key: string; name: string; color: string }) => {
-            return [folder.key, folder.name]
+            return [folder.key, filenamify(folder.name)]
           }
         )
       )
