@@ -128,7 +128,7 @@ const NotePage = ({ storage }: NotePageProps) => {
             }
           } else {
             if (
-              (note!.folderPathname + '/') === (folder.pathname + '/') &&
+              note!.folderPathname === folder.pathname &&
               !note!.trashed
             ) {
               notes.push(note)
