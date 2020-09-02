@@ -150,7 +150,7 @@ const NotePage = ({ storage }: NotePageProps) => {
       default:
         return []
     }
-  }, [storage, routeParams])
+  }, [storage, routeParams, preferences['general.showSubfolderContents']])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
