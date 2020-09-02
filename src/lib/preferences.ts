@@ -40,7 +40,7 @@ export interface Preferences {
   'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
   'general.enableAutoSync': boolean
-  'general.showSubfolderContent': boolean
+  'general.showSubfolderContents': boolean
 
   // Editor
   'editor.theme': string
@@ -82,7 +82,7 @@ const basePreferences: Preferences = {
   'general.enableAnalytics': true,
   'general.enableAutoSync': true,
   'general.noteListView': 'default',
-  'general.showSubfolderContent': true,
+  'general.showSubfolderContents': true,
 
   // Editor
   'editor.theme': 'material-darker',
