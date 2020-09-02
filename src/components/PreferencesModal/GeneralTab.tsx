@@ -77,10 +77,10 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
-  const toggleShowSubfolderContent: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+  const toggleShowSubfolderContents: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
       setPreferences({
-        'general.showSubfolderContent': event.target.checked,
+        'general.showSubfolderContents': event.target.checked,
       })
     },
     [setPreferences]
@@ -192,8 +192,8 @@ const GeneralTab = () => {
           <FormCheckItem
             id='checkbox-show-subfolder-content'
             type='checkbox'
-            checked={preferences['general.showSubfolderContent']}
-            onChange={toggleShowSubfolderContent}
+            checked={preferences['general.showSubfolderContents']}
+            onChange={toggleShowSubfolderContents}
           >
             Show content of all subfolders
           </FormCheckItem>

@@ -119,7 +119,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         const folder = storage.folderMap[folderPathname]
         if (folder == null) return []
         return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
-          if (preferences['general.showSubfolderContent']) {
+          if (preferences['general.showSubfolderContents']) {
             if (
               (note!.folderPathname + '/').startsWith(folder.pathname + '/') &&
               !note!.trashed
