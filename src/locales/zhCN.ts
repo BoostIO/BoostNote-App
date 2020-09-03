@@ -5,7 +5,7 @@ export default {
     'general.cancel': '取消',
     'general.attachments': '附件',
     'general.trash': '回收站',
-    'general.allnote': '所有笔记',
+    'general.allNotes': '所有笔记',
     'general.signin': '登录',
     'general.signOut': '登出',
     'general.save': '保存',

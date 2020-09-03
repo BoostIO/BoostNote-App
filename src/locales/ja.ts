@@ -5,7 +5,7 @@ export default {
     'general.cancel': 'キャンセル',
     'general.attachments': '画像',
     'general.trash': 'ゴミ箱',
-    'general.allnote': '全てのノート',
+    'general.allNotess': '全てのノート',
     'general.signin': 'サインイン',
     'general.signOut': 'サインアウト',
     'general.save': '保存',

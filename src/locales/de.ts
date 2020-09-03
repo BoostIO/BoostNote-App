@@ -5,7 +5,7 @@ export default {
     'general.cancel': 'Abbrechen',
     'general.attachments': 'Anhänge',
     'general.trash': 'Papierkorb',
-    'general.allnote': 'Alle Notizen',
+    'general.allNotes': 'Alle Notizen',
     'general.signin': 'Anmelden',
     'general.signOut': 'Abmelden',
     'general.save': 'Speichern',
