@@ -22,6 +22,7 @@ import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import PageScrollableContent from '../atoms/PageScrollableContent'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
+import { appIsElectron } from '../../lib/platform'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -126,7 +127,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           </>
         )}
 
-        {storage.type === 'pouch' && (
+        {storage.type === 'pouch' && appIsElectron && (
           <>
             <hr />
 
