@@ -5,7 +5,7 @@
     'general.cancel': 'Cancelar',
     'general.attachments': 'Anexos',
     'general.trash': 'Lixo',
-    'general.allnote': 'All Notes',
+    'general.allNotes': 'All Notes',
     'general.signin': 'Logar',
     'general.signOut': 'Sair',
     'general.save': 'Salvar',

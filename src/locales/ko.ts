@@ -5,7 +5,7 @@ export default {
     'general.cancel': '취소',
     'general.attachments': '첨부파일',
     'general.trash': '휴지통',
-    'general.allnote': '전체 노트',
+    'general.allNotes': '전체 노트',
     'general.signin': '로그인',
     'general.signOut': '로그아웃',
     'general.save': '저장',

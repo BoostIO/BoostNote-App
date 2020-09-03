@@ -5,7 +5,7 @@ export default {
     'general.cancel': 'Скасувати',
     'general.attachments': 'Вкладення',
     'general.trash': 'Сміття',
-    'general.allnote': 'Усі примітки',
+    'general.allNotes': 'Усі примітки',
     'general.signin': 'Увійти',
     'general.signOut': 'Вийти',
     'general.save': 'Зберегти',
