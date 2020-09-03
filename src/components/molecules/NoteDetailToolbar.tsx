@@ -15,7 +15,7 @@ import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import { ViewModeType } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import NoteDetailFolderNavigator from './NoteDetailFolderNavigator'
+import NoteDetailNavigator from './NoteDetailNavigator'
 import NoteDetailTagNavigator from './NoteDetailTagNavigator'
 import { values } from '../../lib/db/utils'
 import { MenuTypes, useContextMenu } from '../../lib/contextMenu'
@@ -120,7 +120,7 @@ const NoteDetailToolbar = ({
 
   return (
     <NoteDetailToolbarContainer>
-      <NoteDetailFolderNavigator
+      <NoteDetailNavigator
         storageId={storageId}
         storageName={storageName}
         noteId={note._id}
@@ -175,12 +175,12 @@ const NoteDetailToolbar = ({
             />
           </>
         ) : (
-            <ToolbarIconButton
-              title={t('note.trash')}
-              onClick={trashNote}
-              iconPath={mdiTrashCan}
-            />
-          )}
+          <ToolbarIconButton
+            title={t('note.trash')}
+            onClick={trashNote}
+            iconPath={mdiTrashCan}
+          />
+        )}
         <ToolbarIconButton
           title={t('note.export')}
           onClick={openContextMenu}
