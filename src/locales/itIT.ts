@@ -43,7 +43,7 @@ export default {
     'folder.removeMessage': 'Tutte le note e sottocartelle sarnno eliminate.',
 
     //Tag
-    'tag.tag': 'Tags',
+    'tag.tags': 'Tags',
     'tag.remove': 'Rimuovi Tag',
     'tag.removeMessage': 'Il tag verrà rimosso da tutte le note',
 

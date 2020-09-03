@@ -42,7 +42,7 @@ export default {
     'folder.removeMessage': 'Усі нотатки та папки будуть видалені.',
 
     // Tag
-    'tag.tag': 'Теги',
+    'tag.tags': 'Теги',
     'tag.remove': 'Видалити тег',
     'tag.removeMessage': 'Тег буде відмічений від усіх нотаток.',
 

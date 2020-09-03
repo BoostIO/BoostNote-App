@@ -44,7 +44,7 @@
     'folder.removeMessage': 'Todas as notas e sub-pastas serão deletadas.',
 
     //Tag
-    'tag.tag': 'Tags',
+    'tag.tags': 'Tags',
     'tag.remove': 'Remover Tag',
     'tag.removeMessage': 'A Tag será removida de todas as notas.',
 
