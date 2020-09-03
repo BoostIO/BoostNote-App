@@ -41,7 +41,7 @@ export default {
     'folder.removeMessage': '所有筆記和子資料夾將被刪除.',
 
     //Tag
-    'tag.tag': '標籤',
+    'tag.tags': '標籤',
     'tag.remove': '移除標籤',
     'tag.removeMessage': '這個標籤將從所有筆記中被移除.',
 

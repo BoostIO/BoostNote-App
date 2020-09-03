@@ -72,7 +72,7 @@ const TagNavigatorListItem = ({
   return (
     <TagItem>
       <TagItemAnchor
-        title={`${tag}: ${t('general.allnote')}`}
+        title={`#${tag}`}
         onClick={() => {
           push(`/app/storages/${storageId}/tags/${tag}/${noteId}`)
         }}
@@ -81,7 +81,7 @@ const TagNavigatorListItem = ({
         {tag}
       </TagItemAnchor>
       <TagRemoveButton
-        title={t('tag.remove')}
+        title={t('tag.removeX', { tag })}
         onClick={() => {
           removeTagByName(tag)
         }}

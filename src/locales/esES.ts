@@ -45,7 +45,7 @@ export default {
       'Todas las notas y subcarpetas van a ser eliminadas.',
 
     //Tag
-    'tag.tag': 'Etiqueta',
+    'tag.tags': 'Etiqueta',
     'tag.remove': 'Eliminar etiqueta',
     'tag.removeMessage': 'Vas a quitar esta etiqueta de todas las notas.',
 

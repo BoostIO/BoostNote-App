@@ -41,7 +41,7 @@ export default {
     'folder.removeMessage': '所有笔记和子文件夹将被删除.',
 
     //Tag
-    'tag.tag': '标签',
+    'tag.tags': '标签',
     'tag.remove': '移除标签',
     'tag.removeMessage': '这个标签将从所有笔记中被移除.',
 

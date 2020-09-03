@@ -45,9 +45,10 @@ export default {
     'folder.removeMessage': 'All notes and subfolders will be deleted.',
 
     //Tag
-    'tag.tag': 'Tags',
+    'tag.tags': 'Tags',
     'tag.add': 'Add Tag',
     'tag.remove': 'Remove Tag',
+    'tag.removeX': 'Remove #{{tag}}',
     'tag.removeMessage': 'The tag will be untagged from all notes.',
 
     //Note

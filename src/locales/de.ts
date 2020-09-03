@@ -43,7 +43,7 @@ export default {
     'folder.removeMessage': 'Alle Notizen und Unterordner werden gelöscht.',
 
     //Tag
-    'tag.tag': 'Tag',
+    'tag.tags': 'Tag',
     'tag.remove': 'Tag löschen',
     'tag.removeMessage': 'Das Tag wird von allen Notizen entfernt.',
 

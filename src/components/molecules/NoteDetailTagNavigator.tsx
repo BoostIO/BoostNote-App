@@ -97,7 +97,7 @@ const NoteDetailTagNavigator = ({
   return (
     <>
       <Container>
-        <IconContainer title={t('tag.tag')}>
+        <IconContainer title={t('tag.tags')}>
           <Icon path={mdiTagMultiple} />{' '}
         </IconContainer>
         <TagNavigatorList>

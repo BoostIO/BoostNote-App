@@ -52,12 +52,11 @@ const NavigatorFolderItem: React.FC<FolderNavItemProps> = ({
   folderPathname,
   noteId,
 }: FolderNavItemProps) => {
-  const { t } = useTranslation()
   const { push } = useRouter()
 
   return (
     <NoteDetailNavigatorItem
-      title={`${t('general.allNotes')}(${storageName}${folderPathname})`}
+      title={`${storageName}${folderPathname}`}
       onClick={(event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         push(`/app/storages/${storageId}/notes${folderPathname}/${noteId}`)
@@ -75,7 +74,6 @@ const NoteDetailFolderNavigator = ({
   noteId,
   noteFolderPathname,
 }: NoteDetailFolderNavigatorProps) => {
-  const { t } = useTranslation()
   const { push } = useRouter()
   const routeParams = useRouteParams()
 
@@ -109,7 +107,7 @@ const NoteDetailFolderNavigator = ({
         <Icon path={mdiBookOpen} />
       </IconContainer>
       <NoteDetailNavigatorItem
-        title={`${t('general.allNotes')}(${storageName})`}
+        title={storageName}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault()
           push(`/app/storages/${storageId}/notes/${noteId}`)
