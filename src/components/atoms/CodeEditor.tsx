@@ -55,7 +55,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       indentUnit: indentSize,
       tabSize: indentSize,
       keyMap,
-      mode: this.props.mode || 'markdown',
+      mode: this.props.mode || 'gfm',
       readOnly: this.props.readonly === true,
       extraKeys: { Enter: 'newlineAndIndentContinueMarkdownList' },
     })
@@ -115,6 +115,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     if (this.codeMirror != null) {
       this.codeMirror.toTextArea()
       this.codeMirror.off('paste', this.handlePaste as any)
+      this.codeMirror.off('drop', this.handleDrop)
     }
     window.removeEventListener('codemirror-mode-load', this.reloadMode)
   }
