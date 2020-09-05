@@ -292,6 +292,12 @@ const StorageNavigatorFragment = ({
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
     storage.attachmentMap,
   ])
+
+  const noteCount = useMemo(
+    () =>
+      Object.values(storage.noteMap).filter((note) => !note!.trashed).length,
+    [storage.noteMap]
+  )
   const trashed = useMemo(
     () => Object.values(storage.noteMap).filter((note) => note!.trashed),
     [storage.noteMap]
@@ -340,6 +346,7 @@ const StorageNavigatorFragment = ({
             label='All Notes'
             iconPath={mdiBookOpen}
             active={allNotesPageIsActive}
+            count={noteCount}
             onClick={() => push(allNotesPagePathname)}
             onContextMenu={openAllNotesContextMenu}
             control={
@@ -362,6 +369,7 @@ const StorageNavigatorFragment = ({
               label={t('general.attachments')}
               iconPath={mdiPaperclip}
               active={attachmentsPageIsActive}
+              count={attachments.length}
               onClick={() => push(attachmentsPagePathname)}
               onContextMenu={(event) => {
                 event.preventDefault()
@@ -374,6 +382,7 @@ const StorageNavigatorFragment = ({
               label={t('general.trash')}
               iconPath={mdiTrashCanOutline}
               active={trashcanPageIsActive}
+              count={trashed.length}
               onClick={() => push(trashcanPagePathname)}
               onContextMenu={(event) => {
                 event.preventDefault()
