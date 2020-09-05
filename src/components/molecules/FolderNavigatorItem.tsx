@@ -16,6 +16,7 @@ interface FolderNavigatorItemProps {
   storageId: string
   folderPathname: string
   folderSetWithSubFolders: Set<string>
+  noteCount?: number
   createNoteInFolderAndRedirect: (folderPathname: string) => void
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
@@ -26,6 +27,7 @@ const FolderNavigatorItem = ({
   storageId,
   folderPathname,
   folderSetWithSubFolders,
+  noteCount = 0,
   createNoteInFolderAndRedirect,
   showPromptToCreateFolder,
   showPromptToRenameFolder,
@@ -245,6 +247,7 @@ const FolderNavigatorItem = ({
       active={active}
       iconPath={active ? mdiFolderOpen : mdiFolder}
       label={folderName}
+      count={noteCount}
       onClick={openFolder}
       onDoubleClick={showRenamePrompt}
       onContextMenu={openContextMenu}
