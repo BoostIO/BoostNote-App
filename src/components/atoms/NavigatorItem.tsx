@@ -172,7 +172,7 @@ const NavigatorItem = ({
           </IconContainer>
         )}
         <Label>{label}</Label>
-        {count && (
+        {count !== undefined && (
           <ItemCounter className={control ? 'counter' : ''}>
             {count}
           </ItemCounter>
