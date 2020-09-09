@@ -8,9 +8,12 @@ import Footer from './organisms/Footer'
 const DefaultLayout: React.FC = ({ children }) => (
   <>
     <Head>
-      <title>Boost Note | Boost Happiness, Productivity, and Creativity.</title>
+      <title>Boost Note - An open sourced markdown editor for developers</title>
 
       <meta charSet='utf-8' />
+
+      <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+
       <meta
         name='viewport'
         content='width=device-width, initial-scale=1, maximum-scale=1'
@@ -22,7 +25,7 @@ const DefaultLayout: React.FC = ({ children }) => (
       />
       <meta
         name='keyword'
-        content='note app,note-taking,snippet,code,engineer,development,tool,programmer,evernote,markdown,open source'
+        content='markdown editor, note app,note-taking,typora,stackedit,development,programmer,evernote,open source,hackmd'
       />
       <meta name='author' content='BoostIO, kazz@boostio.co' />
       <meta name='robots' content='INDEX,FOLLOW' />
