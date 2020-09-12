@@ -159,6 +159,7 @@
     "remark-math": "^2.0.1",
     "remark-parse": "^8.0.3",
     "remark-rehype": "^7.0.0",
+    "remark-slug": "^6.0.0",
     "remark-stringify": "^8.1.1",
     "shortid": "^2.2.15",
     "styled-components": "^4.3.2",
