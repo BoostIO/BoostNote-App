@@ -19,6 +19,11 @@ export default {
       subtitle:
         'Een intuïtieve en stijlvolle markdown notitie-app voor ontwikkelaars. Volledig open-source.',
     },
+    newsletter: {
+      // title: 'Also, please join our newsletter to get the latest news and update notes.',
+      // buttonText: 'Subscribe',
+      // subscribed: 'Thanks for the subscription!'
+    },
     boostHub: {
       title: 'Kent u Boost Hub al?',
       description:

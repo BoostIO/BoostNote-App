@@ -189,8 +189,7 @@ const HeroSection = () => {
             fontSize={[3]}
             fontWeight={'normal'}
           >
-            Also, please join our news letters to get the latest news and update
-            notes.
+            {t('newsletter.title')}
           </Text>
           <SubscribeNewsLettersForm />
         </Box>
