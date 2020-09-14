@@ -197,7 +197,7 @@ const HeroSection = () => {
             fontSize={[3]}
             fontWeight={'normal'}
           >
-            Stay up to date with our latest news and products
+            {t('newsletter.title')}
           </Text>
           <SubscribeNewsLettersForm />
         </Box>

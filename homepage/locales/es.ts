@@ -18,6 +18,11 @@ export default {
       // subtitle:
       //   "Boost Note is an intuitive and stylish markdown editor. It's fully open-source, and used by 1 million developers!",
     },
+    newsletter: {
+      // title: 'Also, please join our newsletter to get the latest news and update notes.',
+      // buttonText: 'Subscribe',
+      // subscribed: 'Thanks for the subscription!'
+    },
     boostHub: {
       // title: 'Boost Hub, the team version of Boost Note',
       // description1: 'We’ve developed a collaborative workspace app called “Boost Hub” for developer teams.',

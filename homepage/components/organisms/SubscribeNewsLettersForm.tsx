@@ -1,5 +1,6 @@
 import React, { useState, useCallback, FormEvent, ChangeEvent } from 'react'
 import ky from 'ky-universal'
+import { useTranslation } from 'react-i18next'
 
 import styled from '../../lib/styled'
 import { SpaceProps, space } from 'styled-system'
@@ -28,6 +29,7 @@ const SubscribeNewsLettersForm = () => {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [email, setEmail] = useState('')
+  const { t } = useTranslation()
 
   const subscribe = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -64,7 +66,7 @@ const SubscribeNewsLettersForm = () => {
     <>
       {status === 'done' ? (
         <FlexBox justifyContent='center' mt={2}>
-          <Text as='p'>Thanks for the subscription!</Text>
+          <Text as='p'>{t('newsletter.subscribed')}</Text>
         </FlexBox>
       ) : (
         <>
@@ -85,7 +87,7 @@ const SubscribeNewsLettersForm = () => {
                   fontSize={1}
                   disabled={status === 'sending'}
                 >
-                  Subscribe
+                  {t('newsletter.buttonText')}
                 </Button>
               </div>
             </form>
