@@ -7,6 +7,7 @@ import ko from '../locales/ko'
 import nl from '../locales/nl'
 import zh from '../locales/zh'
 import pt from '../locales/pt'
+import ptBR from '../locales/ptBR'
 import ru from '../locales/ru'
 import es from '../locales/es'
 import de from '../locales/de'
@@ -20,6 +21,7 @@ const resources = {
   nl,
   zh,
   pt,
+  ptBR,
   ru,
   es,
   de,
