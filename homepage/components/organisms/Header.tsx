@@ -307,6 +307,7 @@ const Header = () => {
               <option value='ko'>🇰🇷</option>
               <option value='nl'>🇳🇱</option>
               <option value='pt'>🇵🇹</option>
+              <option value='ptBR'>🇧🇷</option>
               <option value='ru'>🇷🇺</option>
               <option value='vn'>🇻🇳</option>
               <option value='zh'>🇨🇳</option>
