@@ -7,12 +7,11 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiHammerWrench, mdiBookPlusMultiple } from '@mdi/js'
+import { mdiHammerWrench } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
-import { usePathnameWithoutNoteId } from '../../lib/router'
-import { borderBottom } from '../../lib/styled/styleFunctions'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
+import { NoteStorage } from '../../lib/db/types'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -25,7 +24,6 @@ const TopControl = styled.div`
   display: flex;
   align-items: center;
   height: 40px;
-  ${borderBottom}
   -webkit-app-region: drag;
 `
 
@@ -56,14 +54,15 @@ const ScrollableContainer = styled.div`
   overflow: auto;
 `
 
-const Navigator = () => {
+interface StorageNavigatorProps {
+  storage: NoteStorage
+}
+
+const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
   const { createStorage, storageMap } = useDb()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
   const { push } = useRouter()
-  const storageEntries = useMemo(() => {
-    return entries(storageMap)
-  }, [storageMap])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -90,19 +89,12 @@ const Navigator = () => {
     },
     [popup, prompt, createStorage, push]
   )
-  const pathname = usePathnameWithoutNoteId()
   const { toggleClosed } = usePreferences()
 
   return (
     <NavigatorContainer>
       <TopControl onContextMenu={openSideNavContextMenu}>
         <Spacer />
-        <NavigatorButton
-          iconPath={mdiBookPlusMultiple}
-          title='New Storage'
-          active={pathname === '/app/storages'}
-          onClick={() => push('/app/storages')}
-        />
         <NavigatorButton
           iconPath={mdiHammerWrench}
           title='Preferences'
@@ -111,21 +103,12 @@ const Navigator = () => {
       </TopControl>
 
       <ScrollableContainer>
-        <BookmarkNavigatorFragment storageEntries={storageEntries} />
-        {storageEntries.map(([, storage]) => (
-          <StorageNavigatorFragment key={storage.id} storage={storage} />
-        ))}
-        {storageEntries.length === 0 && (
-          <Empty onClick={() => push('/app/storages')}>
-            There are no storages.
-            <br />
-            Click here to create one.
-          </Empty>
-        )}
+        <BookmarkNavigatorFragment storage={storage} />
+        <StorageNavigatorFragment storage={storage} />
         <Spacer onContextMenu={openSideNavContextMenu} />
       </ScrollableContainer>
     </NavigatorContainer>
   )
 }
 
-export default Navigator
+export default StorageNavigator

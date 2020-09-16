@@ -30,6 +30,7 @@ import { values } from '../../lib/db/utils'
 import IdleNoteDetail from '../organisms/IdleNoteDetail'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { bookmarkItemId } from '../../lib/nav'
+import StorageLayout from '../atoms/StorageLayout'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -59,6 +60,7 @@ const NotePage = ({ storage }: NotePageProps) => {
   const [lastCreatedNoteId, setLastCreatedNoteId] = useState<string>('')
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
+  const showSubFolderContents = preferences['general.showSubfolderContents']
   const { report } = useAnalytics()
   const { addSideNavOpenedItem } = useGeneralStatus()
 
@@ -119,7 +121,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         const folder = storage.folderMap[folderPathname]
         if (folder == null) return []
         return noteEntries.reduce<NoteDoc[]>((notes, [_id, note]) => {
-          if (preferences['general.showSubfolderContents']) {
+          if (showSubFolderContents) {
             if (
               (note!.folderPathname + '/').startsWith(folder.pathname + '/') &&
               !note!.trashed
@@ -127,10 +129,7 @@ const NotePage = ({ storage }: NotePageProps) => {
               notes.push(note)
             }
           } else {
-            if (
-              note!.folderPathname === folder.pathname &&
-              !note!.trashed
-            ) {
+            if (note!.folderPathname === folder.pathname && !note!.trashed) {
               notes.push(note)
             }
           }
@@ -150,7 +149,7 @@ const NotePage = ({ storage }: NotePageProps) => {
       default:
         return []
     }
-  }, [storage, routeParams, preferences['general.showSubfolderContents']])
+  }, [storage, routeParams, showSubFolderContents])
 
   const filteredNotes = useMemo(() => {
     let filteredNotes = notes
@@ -305,52 +304,54 @@ const NotePage = ({ storage }: NotePageProps) => {
   })
 
   return (
-    <TwoPaneLayout
-      style={{ height: '100%' }}
-      defaultLeftWidth={generalStatus.noteListWidth}
-      left={
-        <NoteNavigator
-          search={search}
-          setSearchInput={setSearchInput}
-          storageId={storage.id}
-          notes={filteredNotes}
-          noteSorting={noteSorting}
-          setNoteSorting={setNoteSorting}
-          createNote={showCreateNoteInList ? createQuickNote : undefined}
-          basePathname={currentPathnameWithoutNoteId}
-          navigateDown={navigateDown}
-          navigateUp={navigateUp}
-          currentNote={currentNote}
-          lastCreatedNoteId={lastCreatedNoteId}
-          trashNote={trashNoteAndReport}
-          purgeNote={showPurgeNoteDialog}
-        />
-      }
-      right={
-        currentNote == null ? (
-          <IdleNoteDetail />
-        ) : (
-          <NoteDetail
-            storage={storage}
-            currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
-            note={currentNote}
-            updateNote={updateNoteAndReport}
+    <StorageLayout storage={storage}>
+      <TwoPaneLayout
+        style={{ height: '100%' }}
+        defaultLeftWidth={generalStatus.noteListWidth}
+        left={
+          <NoteNavigator
+            search={search}
+            setSearchInput={setSearchInput}
+            storageId={storage.id}
+            notes={filteredNotes}
+            noteSorting={noteSorting}
+            setNoteSorting={setNoteSorting}
+            createNote={showCreateNoteInList ? createQuickNote : undefined}
+            basePathname={currentPathnameWithoutNoteId}
+            navigateDown={navigateDown}
+            navigateUp={navigateUp}
+            currentNote={currentNote}
+            lastCreatedNoteId={lastCreatedNoteId}
             trashNote={trashNoteAndReport}
-            untrashNote={untrashNote}
-            addAttachments={addAttachments}
             purgeNote={showPurgeNoteDialog}
-            viewMode={generalStatus.noteViewMode}
-            selectViewMode={selectViewMode}
-            push={push}
-            checkFeature={checkFeature}
-            bookmarkNote={bookmarkNote}
-            unbookmarkNote={unbookmarkNote}
-            openBookmarkNavItem={openBookmarkNavItem}
           />
-        )
-      }
-      onResizeEnd={updateNoteListWidth}
-    />
+        }
+        right={
+          currentNote == null ? (
+            <IdleNoteDetail />
+          ) : (
+            <NoteDetail
+              storage={storage}
+              currentPathnameWithoutNoteId={currentPathnameWithoutNoteId}
+              note={currentNote}
+              updateNote={updateNoteAndReport}
+              trashNote={trashNoteAndReport}
+              untrashNote={untrashNote}
+              addAttachments={addAttachments}
+              purgeNote={showPurgeNoteDialog}
+              viewMode={generalStatus.noteViewMode}
+              selectViewMode={selectViewMode}
+              push={push}
+              checkFeature={checkFeature}
+              bookmarkNote={bookmarkNote}
+              unbookmarkNote={unbookmarkNote}
+              openBookmarkNavItem={openBookmarkNavItem}
+            />
+          )
+        }
+        onResizeEnd={updateNoteListWidth}
+      />
+    </StorageLayout>
   )
 }
 

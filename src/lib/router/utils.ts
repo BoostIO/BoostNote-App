@@ -152,3 +152,16 @@ export const usePathnameWithoutNoteId = () => {
     return pathname
   }, [routeParams, pathname])
 }
+
+export const useActiveStorageId = () => {
+  const routeParams = useRouteParams()
+  return useMemo(() => {
+    switch (routeParams.name) {
+      default:
+        return routeParams.storageId
+      case 'storages.create':
+      case 'unknown':
+        return null
+    }
+  }, [routeParams])
+}

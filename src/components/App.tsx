@@ -1,5 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
-import Navigator from './organisms/Navigator'
+import React, { useMemo } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -11,18 +10,17 @@ import { solarizedDarkTheme } from '../themes/solarizedDark'
 import ContextMenu from './organisms/ContextMenu'
 import Dialog from './organisms/Dialog'
 import { useDb } from '../lib/db'
-import TwoPaneLayout from './atoms/TwoPaneLayout'
 import PreferencesModal from './PreferencesModal/PreferencesModal'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../lib/keyboard'
 import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
-import { useGeneralStatus } from '../lib/generalStatus'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
 import FeatureCheckListPopup from './organisms/FeatureCheckListPopup'
+import StorageNavigator from './organisms/AppNavigator'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -77,15 +75,7 @@ const App = () => {
     }
   }, [toggleClosed])
   useGlobalKeyDownHandler(keyboardHandler)
-  const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const updateNavWidth = useCallback(
-    (leftWidth: number) => {
-      setGeneralStatus({
-        sideBarWidth: leftWidth,
-      })
-    },
-    [setGeneralStatus]
-  )
+
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
       <AppContainer
@@ -94,12 +84,10 @@ const App = () => {
         }}
       >
         {initialized ? (
-          <TwoPaneLayout
-            defaultLeftWidth={generalStatus.sideBarWidth}
-            left={<Navigator />}
-            right={<Router />}
-            onResizeEnd={updateNavWidth}
-          />
+          <>
+            <StorageNavigator />
+            <Router />
+          </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>
         )}

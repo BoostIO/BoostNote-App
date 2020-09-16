@@ -29,8 +29,14 @@ export default () => {
       }
       return <NotePage storage={storage} noteId={noteId} />
     }
-    case 'storages.attachments':
-      return <AttachmentsPage />
+    case 'storages.attachments': {
+      const { storageId } = routeParams
+      const storage = db.storageMap[storageId]
+      if (storage == null) {
+        break
+      }
+      return <AttachmentsPage storage={storage} />
+    }
     case 'storages.create':
       return <StorageCreatePage />
     case 'storages.settings':
