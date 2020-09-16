@@ -162,19 +162,19 @@ const GeneralTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Note List view</SectionHeader>
+            <SectionHeader>{t('preferences.notesView')}</SectionHeader>
         <SectionControl>
           <SectionSelect
             value={preferences['general.noteListView']}
             onChange={selectNoteListView}
           >
-            <option value='default'>Default</option>
-            <option value='compact'>Compact</option>
+            <option value='default'>{t('preferences.notesViewDefault')}</option>
+            <option value='compact'>{t('preferences.notesViewCompact')}</option>
           </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Enable auto sync</SectionHeader>
+            <SectionHeader>{t('preferences.autoSync')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-enable-auto-sync'
@@ -182,12 +182,12 @@ const GeneralTab = () => {
             checked={preferences['general.enableAutoSync']}
             onChange={toggleEnableAutoSync}
           >
-            Enable auto sync
+            {t('preferences.autoSync')}
           </FormCheckItem>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Subfolders</SectionHeader>
+        <SectionHeader>{t('preferences.subfolders')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-show-subfolder-content'
@@ -195,7 +195,7 @@ const GeneralTab = () => {
             checked={preferences['general.showSubfolderContents']}
             onChange={toggleShowSubfolderContents}
           >
-            Show content of all subfolders
+            {t('preferences.subfoldersView')}
           </FormCheckItem>
         </SectionControl>
       </Section>

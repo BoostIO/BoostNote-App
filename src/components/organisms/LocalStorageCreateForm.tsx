@@ -44,7 +44,7 @@ const LocalStorageCreateForm = () => {
       </FormGroup>
       <FormGroup>
         <FormPrimaryButton onClick={createStorageCallback}>
-          Create Storage
+          {t('storage.create')}
         </FormPrimaryButton>
       </FormGroup>
     </>

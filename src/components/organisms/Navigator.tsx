@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
@@ -61,6 +62,7 @@ const Navigator = () => {
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
   const { push } = useRouter()
+  const { t } = useTranslation()
   const storageEntries = useMemo(() => {
     return entries(storageMap)
   }, [storageMap])
@@ -117,9 +119,9 @@ const Navigator = () => {
         ))}
         {storageEntries.length === 0 && (
           <Empty onClick={() => push('/app/storages')}>
-            There are no storages.
+            {t('navigator.noStorage')}
             <br />
-            Click here to create one.
+            {t('navigator.createStorage')}
           </Empty>
         )}
         <Spacer onContextMenu={openSideNavContextMenu} />

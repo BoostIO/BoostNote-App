@@ -145,19 +145,19 @@ const PreferencesModal = () => {
         <ModalBody>
           <TabNav>
             <TabButton
-              label='About'
+              label={t('about.about')}
               tab='about'
               active={tab === 'about'}
               setTab={setTab}
             />
             <TabButton
-              label='General'
+              label={t('general.general')}
               tab='general'
               active={tab === 'general'}
               setTab={setTab}
             />
             <TabButton
-              label='Editor'
+              label={t('editor.editor')}
               tab='editor'
               active={tab === 'editor'}
               setTab={setTab}
@@ -169,7 +169,7 @@ const PreferencesModal = () => {
               setTab={setTab}
             />
             <TabButton
-              label='Billing'
+              label={t('billing.billing')}
               tab='billing'
               active={tab === 'billing'}
               setTab={setTab}

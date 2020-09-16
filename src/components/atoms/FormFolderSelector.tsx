@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from '../../lib/styled'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { getHomePath, showOpenDialog } from '../../lib/electronOnly'
@@ -42,6 +43,7 @@ interface FormFolderSelector {
 
 const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
+  const {t} = useTranslation()
   const openDialog = useCallback(async () => {
     if (dialogIsOpen) {
       return
@@ -50,7 +52,7 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
     try {
       const result = await showOpenDialog({
         properties: ['openDirectory', 'createDirectory'],
-        buttonLabel: 'Select Folder',
+        buttonLabel: t('folder.select'),
         defaultPath: getHomePath(),
       })
       if (result.canceled) {
@@ -74,7 +76,7 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
         type='text'
         onClick={openDialog}
         readOnly
-        value={value.trim().length === 0 ? 'No location selected' : value}
+        value={value.trim().length === 0 ? t('folder.noLocationSelected') : value}
       />
       <FormFolderSelectorButton onClick={openDialog}>
         Select Folder
