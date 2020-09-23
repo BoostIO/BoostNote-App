@@ -10,7 +10,9 @@ import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { useRouter, useActiveStorageId } from '../../lib/router'
-import { NoteStorage } from '../../lib/db/types'
+import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
+import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { useDialog, DialogIconTypes } from '../../lib/dialog'
 
 const Container = styled.div`
   width: 50px;
@@ -28,9 +30,12 @@ const StoragesContainer = styled.div`
   align-items: center;
 `
 
-const ControlContainer = styled.div``
+const ControlContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
-const NaviagtorItemContainer = styled.button`
+const NavigatorButton = styled.button`
   ${secondaryButtonStyle}
   height: 40px;
   width: 40px;
@@ -44,33 +49,6 @@ const NaviagtorItemContainer = styled.button`
     margin-top: 5px;
   }
 `
-
-interface AppNavigatorItemProps {
-  active: boolean
-  storage: NoteStorage
-  href?: string
-}
-
-const AppNavigatorItem = ({ active, storage, href }: AppNavigatorItemProps) => {
-  const { push } = useRouter()
-
-  const goToStorage = useCallback(() => {
-    if (href == null) {
-      return
-    }
-    push(href)
-  }, [push, href])
-
-  return (
-    <NaviagtorItemContainer
-      className={active ? 'active' : ''}
-      title={storage.name}
-      onClick={goToStorage}
-    >
-      {storage.name.slice(0, 1)}
-    </NaviagtorItemContainer>
-  )
-}
 
 const StorageNavigator = () => {
   const { storageMap } = useDb()
@@ -99,7 +77,7 @@ const StorageNavigator = () => {
           ? lastStoragePathnameMapRef.current.get(storageId)
           : `/app/storages/${storageId}/notes`
       return (
-        <AppNavigatorItem
+        <AppNavigatorStorageItem
           key={storageId}
           href={href}
           active={active}
@@ -113,13 +91,45 @@ const StorageNavigator = () => {
     push(`/app/storages`)
   }, [push])
 
+  const { createStorage } = useDb()
+  const { popup } = useContextMenu()
+  const { prompt } = useDialog()
+
+  const openSideNavContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'New Storage',
+          onClick: async () => {
+            prompt({
+              title: 'Create a Storage',
+              message: 'Enter name of a storage to create',
+              iconType: DialogIconTypes.Question,
+              submitButtonLabel: 'Create Storage',
+              onClose: async (value: string | null) => {
+                if (value == null) return
+                const storage = await createStorage(value)
+                push(`/app/storages/${storage.id}/notes`)
+              },
+            })
+          },
+        },
+      ])
+    },
+    [popup, prompt, createStorage, push]
+  )
+
   return (
     <Container>
-      <StoragesContainer>{storages}</StoragesContainer>
+      <StoragesContainer onContextMenu={openSideNavContextMenu}>
+        {storages}
+      </StoragesContainer>
       <ControlContainer>
-        <NaviagtorItemContainer onClick={goToStorageCreatePage}>
+        <NavigatorButton onClick={goToStorageCreatePage}>
           <Icon path={mdiPlus} />
-        </NaviagtorItemContainer>
+        </NavigatorButton>
       </ControlContainer>
     </Container>
   )
