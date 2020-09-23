@@ -298,7 +298,7 @@ const StorageNavigatorFragment = ({
   return (
     <>
       <NavigatorHeader
-        label={storage.name}
+        label='Workspace'
         onContextMenu={openContextMenu}
         control={
           <>
@@ -364,7 +364,6 @@ const StorageNavigatorFragment = ({
           }}
         />
       )}
-      <NavigatorSeparator />
     </>
   )
 }

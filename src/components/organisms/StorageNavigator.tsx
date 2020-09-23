@@ -1,7 +1,6 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
-import { entries } from '../../lib/db/utils'
 import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
@@ -27,27 +26,6 @@ const TopControl = styled.div`
   -webkit-app-region: drag;
 `
 
-const Empty = styled.button`
-  width: 100%;
-  border: none;
-  text-decoration: underline;
-  padding: 0.25em;
-  text-align: center;
-  background-color: transparent;
-  cursor: pointer;
-
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
-  &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  .active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
-  }
-`
-
 const ScrollableContainer = styled.div`
   flex: 1;
   padding: 0 0 10px;
@@ -59,7 +37,7 @@ interface StorageNavigatorProps {
 }
 
 const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
-  const { createStorage, storageMap } = useDb()
+  const { createStorage } = useDb()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
   const { push } = useRouter()
