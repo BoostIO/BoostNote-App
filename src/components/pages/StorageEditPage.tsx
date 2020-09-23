@@ -23,6 +23,7 @@ import PageScrollableContent from '../atoms/PageScrollableContent'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
 import { appIsElectron } from '../../lib/platform'
+import StorageLayout from '../atoms/StorageLayout'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -88,94 +89,96 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   }, [])
 
   return (
-    <PageContainer>
-      <PageDraggableHeader iconPath={mdiBook} label='Storage Settings' />
-      <PageScrollableContent>
-        <FormGroup>
-          <FormLabel>{t('storage.name')}</FormLabel>
-          <FormTextInput
-            type='text'
-            value={name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setName(e.target.value)
-            }
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormPrimaryButton onClick={updateStorageName}>
-            Update storage name
-          </FormPrimaryButton>
-        </FormGroup>
-        {storage.type === 'fs' && (
-          <>
-            <hr />
-            <FormHeading depth={2}>
-              Import Notes from Legacy BoostNote
-            </FormHeading>
-            {importLegacyFormIsFolded ? (
-              <FormGroup>
-                <FormSecondaryButton onClick={openImportLegacyForm}>
-                  Import
-                </FormSecondaryButton>
-              </FormGroup>
-            ) : (
-              <ImportLegacyNotesForm
-                storageId={storage.id}
-                onCancel={foldImportLegacyForm}
-              />
-            )}
-          </>
-        )}
+    <StorageLayout storage={storage}>
+      <PageContainer>
+        <PageDraggableHeader iconPath={mdiBook} label='Storage Settings' />
+        <PageScrollableContent>
+          <FormGroup>
+            <FormLabel>{t('storage.name')}</FormLabel>
+            <FormTextInput
+              type='text'
+              value={name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
+              }
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormPrimaryButton onClick={updateStorageName}>
+              Update storage name
+            </FormPrimaryButton>
+          </FormGroup>
+          {storage.type === 'fs' && (
+            <>
+              <hr />
+              <FormHeading depth={2}>
+                Import Notes from Legacy BoostNote
+              </FormHeading>
+              {importLegacyFormIsFolded ? (
+                <FormGroup>
+                  <FormSecondaryButton onClick={openImportLegacyForm}>
+                    Import
+                  </FormSecondaryButton>
+                </FormGroup>
+              ) : (
+                <ImportLegacyNotesForm
+                  storageId={storage.id}
+                  onCancel={foldImportLegacyForm}
+                />
+              )}
+            </>
+          )}
 
-        {storage.type === 'pouch' && appIsElectron && (
-          <>
-            <hr />
+          {storage.type === 'pouch' && appIsElectron && (
+            <>
+              <hr />
 
-            <FormHeading depth={2}>
-              Convert File System based Storage
-            </FormHeading>
-            {convertPouchFormIsFolded ? (
-              <FormGroup>
-                <FormSecondaryButton onClick={openConvertPouchForm}>
-                  Convert
-                </FormSecondaryButton>
-              </FormGroup>
-            ) : (
-              <ConvertPouchStorageForm
-                storageId={storage.id}
-                storageName={storage.name}
-                onCancel={foldConvertPouchForm}
-              />
-            )}
-          </>
-        )}
-        <hr />
-        <FormHeading depth={2}>Remove Storage</FormHeading>
-        {storage.type !== 'fs' && storage.cloudStorage != null && (
-          <FormBlockquote>
-            Your cloud storage will not be deleted by clicking this button. To
-            delete cloud storage too, check cloud storage info section.
-          </FormBlockquote>
-        )}
-        <FormGroup>
-          <FormSecondaryButton onClick={removeCallback}>
-            Remove Storage
-          </FormSecondaryButton>
-        </FormGroup>
+              <FormHeading depth={2}>
+                Convert File System based Storage
+              </FormHeading>
+              {convertPouchFormIsFolded ? (
+                <FormGroup>
+                  <FormSecondaryButton onClick={openConvertPouchForm}>
+                    Convert
+                  </FormSecondaryButton>
+                </FormGroup>
+              ) : (
+                <ConvertPouchStorageForm
+                  storageId={storage.id}
+                  storageName={storage.name}
+                  onCancel={foldConvertPouchForm}
+                />
+              )}
+            </>
+          )}
+          <hr />
+          <FormHeading depth={2}>Remove Storage</FormHeading>
+          {storage.type !== 'fs' && storage.cloudStorage != null && (
+            <FormBlockquote>
+              Your cloud storage will not be deleted by clicking this button. To
+              delete cloud storage too, check cloud storage info section.
+            </FormBlockquote>
+          )}
+          <FormGroup>
+            <FormSecondaryButton onClick={removeCallback}>
+              Remove Storage
+            </FormSecondaryButton>
+          </FormGroup>
 
-        {storage.type !== 'fs' && (
-          <>
-            <hr />
-            <FormHeading depth={2}>Cloud Storage info</FormHeading>
-            {storage.cloudStorage == null ? (
-              <LinkCloudStorageForm storage={storage} />
-            ) : (
-              <ManageCloudStorageForm storage={storage as any} />
-            )}
-          </>
-        )}
-      </PageScrollableContent>
-    </PageContainer>
+          {storage.type !== 'fs' && (
+            <>
+              <hr />
+              <FormHeading depth={2}>Cloud Storage info</FormHeading>
+              {storage.cloudStorage == null ? (
+                <LinkCloudStorageForm storage={storage} />
+              ) : (
+                <ManageCloudStorageForm storage={storage as any} />
+              )}
+            </>
+          )}
+        </PageScrollableContent>
+      </PageContainer>
+    </StorageLayout>
   )
 }
 
