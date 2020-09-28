@@ -12,6 +12,7 @@ const TagItem = styled.li`
   ${flexCenter}
   background-color: #404040;
   border-radius: 12px;
+  white-space: nowrap;
 `
 
 const TagItemAnchor = styled.button`
