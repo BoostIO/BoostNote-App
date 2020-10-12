@@ -13,6 +13,7 @@ import ja from '../locales/ja'
 import ko from '../locales/ko'
 import ptBR from '../locales/ptBR'
 import ukUA from '../locales/ukUA'
+import ruRU from '../locales/ruRU'
 
 const resources = {
   de,
@@ -25,6 +26,7 @@ const resources = {
   ko,
   'pt-BR': ptBR,
   ukUA,
+  ruRU,
   'zh-CN': zhCN,
   'zh-HK': zhHK,
   'zh-TW': zhTW,
