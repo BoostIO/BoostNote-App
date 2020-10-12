@@ -2,7 +2,7 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#2c2c2c'
 const base2Color = '#1e2022'
-const primaryColor = '#02A47E'
+const primaryColor = '#5580DC'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
