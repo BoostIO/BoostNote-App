@@ -24,7 +24,7 @@ const resources = {
   ko,
   'pt-BR': ptBR,
   ukUA,
-  ruRU,
+  'ru-RU': ruRU,
   'zh-CN': zhCN,
   'zh-HK': zhHK,
   'zh-TW': zhTW,
