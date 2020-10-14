@@ -10,50 +10,16 @@ import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { useRouter, useActiveStorageId } from '../../lib/router'
-import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
+import AppNavigatorStorageItem from '../molecules/StorageNavigatorItem'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
+import { usePreferences } from '../../lib/preferences'
 
-const Container = styled.div`
-  width: 50px;
-  height: 100%;
-  ${borderRight}
-  display: flex;
-  flex-direction: column;
-`
-
-const StoragesContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-items: center;
-  align-items: center;
-`
-
-const ControlContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`
-
-const NavigatorButton = styled.button`
-  ${secondaryButtonStyle}
-  height: 40px;
-  width: 40px;
-  ${border}
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  &:first-child {
-    margin-top: 5px;
-  }
-`
-
-const StorageNavigator = () => {
+const TopLevelNavigator = () => {
   const { storageMap } = useDb()
   const { push, pathname } = useRouter()
   const previousStorageIdRef = useRef<string>()
+  const { setPreferences } = usePreferences()
 
   const activeStorageId = useActiveStorageId()
 
@@ -116,16 +82,28 @@ const StorageNavigator = () => {
             })
           },
         },
+        {
+          type: MenuTypes.Separator,
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Hide App Navigator',
+          onClick: () => {
+            setPreferences({
+              'general.showTopLevelNavigator': false,
+            })
+          },
+        },
       ])
     },
-    [popup, prompt, createStorage, push]
+    [popup, prompt, createStorage, push, setPreferences]
   )
 
   return (
     <Container>
-      <StoragesContainer onContextMenu={openSideNavContextMenu}>
+      <ListContainer onContextMenu={openSideNavContextMenu}>
         {storages}
-      </StoragesContainer>
+      </ListContainer>
       <ControlContainer>
         <NavigatorButton onClick={goToStorageCreatePage}>
           <Icon path={mdiPlus} />
@@ -135,4 +113,41 @@ const StorageNavigator = () => {
   )
 }
 
-export default StorageNavigator
+export default TopLevelNavigator
+
+const Container = styled.div`
+  width: 68px;
+  height: 100%;
+  ${borderRight}
+  display: flex;
+  flex-direction: column;
+`
+
+const ListContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  margin-top: 20px;
+`
+
+const ControlContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const NavigatorButton = styled.button`
+  ${secondaryButtonStyle}
+  height: 50px;
+  width: 50px;
+  ${border}
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:first-child {
+    margin-top: 5px;
+  }
+`

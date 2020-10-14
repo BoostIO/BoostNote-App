@@ -32,11 +32,11 @@ const ScrollableContainer = styled.div`
   overflow: auto;
 `
 
-interface StorageNavigatorProps {
+interface NoteStorageNavigatorProps {
   storage: NoteStorage
 }
 
-const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
+const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const { createStorage } = useDb()
   const { popup } = useContextMenu()
   const { prompt } = useDialog()
@@ -67,7 +67,25 @@ const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
     },
     [popup, prompt, createStorage, push]
   )
-  const { toggleClosed } = usePreferences()
+  const { toggleClosed, setPreferences } = usePreferences()
+
+  const openContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Show App Navigator',
+          onClick: () => {
+            setPreferences({
+              'general.showTopLevelNavigator': true,
+            })
+          },
+        },
+      ])
+    },
+    [popup, setPreferences]
+  )
 
   return (
     <NavigatorContainer>
@@ -80,6 +98,10 @@ const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
         />
       </TopControl>
 
+      <button onClick={openContextMenu}>{storage.name}</button>
+
+      <button>New Doc</button>
+
       <ScrollableContainer>
         <BookmarkNavigatorFragment storage={storage} />
         <StorageNavigatorFragment storage={storage} />
@@ -89,4 +111,4 @@ const StorageNavigator = ({ storage }: StorageNavigatorProps) => {
   )
 }
 
-export default StorageNavigator
+export default NoteStorageNavigator

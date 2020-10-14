@@ -1,23 +1,18 @@
 import React, { useCallback, useRef } from 'react'
 import NoteItem from '../molecules/NoteItem'
 import styled from '../../lib/styled'
-import {
-  borderBottom,
-  noteListIconColor,
-  flexCenter,
-} from '../../lib/styled/styleFunctions'
+import { borderBottom } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
 import { isWithGeneralCtrlKey } from '../../lib/keyboard'
 import { osName } from '../../lib/platform'
-import Icon from '../atoms/Icon'
-import { mdiPlus, mdiMagnify, mdiClose } from '@mdi/js'
 import { NoteDoc } from '../../lib/db/types'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { usePreferences } from '../../lib/preferences'
 import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
+import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 
-const NoteNavigatorContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -29,104 +24,6 @@ const EmptyItem = styled.li`
   user-select: none;
   padding: 10px;
   color: ${({ theme }) => theme.noteNavEmptyItemColor};
-`
-
-const Toolbar = styled.div`
-  height: 40px;
-  display: flex;
-  padding: 0 0 0 8px;
-  align-items: center;
-  -webkit-app-region: drag;
-  ${borderBottom}
-  .newNoteButton {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-    background-color: transparent;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-
-    transition: color 200ms ease-in-out;
-    ${flexCenter}
-
-    color: ${({ theme }) => theme.navButtonColor};
-    &:hover {
-      color: ${({ theme }) => theme.navButtonHoverColor};
-    }
-
-    &:active,
-    .active {
-      color: ${({ theme }) => theme.navButtonActiveColor};
-    }
-  }
-
-  .clearButton {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    background-color: transparent;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-
-    transition: color 200ms ease-in-out;
-    ${flexCenter}
-
-    color: ${({ theme }) => theme.navButtonColor};
-    &:hover {
-      color: ${({ theme }) => theme.navButtonHoverColor};
-    }
-
-    &:active,
-    .active {
-      color: ${({ theme }) => theme.navButtonActiveColor};
-    }
-  }
-`
-
-const Search = styled.div`
-  background-color: ${({ theme }) => theme.inputBackground};
-  border: 1px solid ${({ theme }) => theme.borderColor};
-  border-radius: 4px;
-  color: ${({ theme }) => theme.textColor};
-  flex: 1;
-  position: relative;
-  height: 32px;
-  color: ${({ theme }) => theme.navButtonColor};
-  border-radius: 4px;
-  overflow: hidden;
-  &:focus {
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryColor};
-  }
-  .icon {
-    position: absolute;
-    top: 6px;
-    left: 10px;
-    font-size: 18px;
-    z-index: 0;
-    pointer-events: none;
-    ${noteListIconColor}
-  }
-  .input {
-    background-color: transparent;
-    position: relative;
-    color: ${({ theme }) => theme.uiTextColor};
-    width: 100%;
-    height: 30px;
-    padding-left: 35px;
-    box-sizing: border-box;
-    border: none;
-    &:focus {
-      box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryColor};
-    }
-    &::placeholder {
-      color: ${({ theme }) => theme.uiTextColor};
-    }
-  }
 `
 
 const NoteListControl = styled.div`
@@ -150,43 +47,38 @@ const NoteList = styled.ul`
   overflow-y: auto;
 `
 
-type NoteNavigatorProps = {
+type NoteListNavigatorProps = {
   storageId: string
   currentNote?: NoteDoc
-  search: string
+  currentNoteIndex: number
   notes: NoteDoc[]
   noteSorting: NoteSortingOptions
   setNoteSorting: (noteSorting: NoteSortingOptions) => void
   createNote?: () => Promise<void>
-  setSearchInput: (input: string) => void
-  navigateDown: () => void
-  navigateUp: () => void
   basePathname: string
   lastCreatedNoteId: string
   trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
   purgeNote: (storageId: string, noteId: string) => void
 }
 
-const NoteNavigator = ({
+const NoteListNavigator = ({
   currentNote,
+  currentNoteIndex,
   notes,
   noteSorting,
   setNoteSorting,
   createNote,
   storageId,
   basePathname,
-  search,
-  setSearchInput,
-  navigateDown,
-  navigateUp,
-  lastCreatedNoteId,
   trashNote,
   purgeNote,
-}: NoteNavigatorProps) => {
+  lastCreatedNoteId,
+}: NoteListNavigatorProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { t } = useTranslation()
   const { popup } = useContextMenu()
 
+  const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const noteListView = preferences['general.noteListView']
 
   const applyDefaultNoteListing = useCallback(() => {
@@ -197,34 +89,25 @@ const NoteNavigator = ({
     setPreferences({ ['general.noteListView']: 'compact' })
   }, [setPreferences])
 
-  const updateSearchInput: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      setSearchInput(event.target.value)
-    },
-    [setSearchInput]
-  )
-
-  const clearSearchInput = useCallback(() => {
-    setSearchInput('')
-  }, [setSearchInput])
-
-  const handleSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      switch (event.key) {
-        case 'Escape':
-          clearSearchInput()
-          break
-      }
-    },
-    [clearSearchInput]
-  )
-
   const listRef = useRef<HTMLUListElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
   const focusList = useCallback(() => {
     listRef.current!.focus()
   }, [])
+
+  const { push } = useRouter()
+  const navigateUp = useCallback(() => {
+    if (currentNoteIndex > 0) {
+      push(currentPathnameWithoutNoteId + `/${notes[currentNoteIndex - 1]._id}`)
+    }
+  }, [notes, currentNoteIndex, push, currentPathnameWithoutNoteId])
+
+  const navigateDown = useCallback(() => {
+    if (currentNoteIndex < notes.length - 1) {
+      push(currentPathnameWithoutNoteId + `/${notes[currentNoteIndex + 1]._id}`)
+    }
+  }, [notes, currentNoteIndex, push, currentPathnameWithoutNoteId])
 
   const trashOrPurgeCurrentNote = useCallback(() => {
     if (currentNote == null) {
@@ -302,30 +185,7 @@ const NoteNavigator = ({
   )
 
   return (
-    <NoteNavigatorContainer>
-      <Toolbar>
-        <Search>
-          <input
-            ref={searchRef}
-            className='input'
-            value={search}
-            onChange={updateSearchInput}
-            onKeyDown={handleSearchInputKeyDown}
-            placeholder={t('note.search')}
-          />
-          <Icon className='icon' path={mdiMagnify} />
-          {search.length > 0 && (
-            <button className='clearButton' onClick={clearSearchInput}>
-              <Icon path={mdiClose} />
-            </button>
-          )}
-        </Search>
-        {storageId != null && createNote != null && (
-          <button className='newNoteButton' onClick={createNote}>
-            <Icon className='icon' path={mdiPlus} />
-          </button>
-        )}
-      </Toolbar>
+    <Container>
       <NoteListControl>
         <NoteSortingSelect
           value={noteSorting}
@@ -353,7 +213,6 @@ const NoteNavigator = ({
                 note={note}
                 basePathname={basePathname}
                 focusList={focusList}
-                search={search}
                 recentlyCreated={lastCreatedNoteId === note._id}
                 noteListView={noteListView}
                 applyDefaultNoteListing={applyDefaultNoteListing}
@@ -362,16 +221,10 @@ const NoteNavigator = ({
             </li>
           )
         })}
-        {notes.length === 0 ? (
-          search.trim() === '' ? (
-            <EmptyItem>{t('note.nothing')}</EmptyItem>
-          ) : (
-            <EmptyItem>{t('note.nothingMessage')}</EmptyItem>
-          )
-        ) : null}
+        {notes.length === 0 && <EmptyItem>{t('note.nothing')}</EmptyItem>}
       </NoteList>
-    </NoteNavigatorContainer>
+    </Container>
   )
 }
 
-export default NoteNavigator
+export default NoteListNavigator

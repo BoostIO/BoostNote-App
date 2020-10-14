@@ -14,17 +14,17 @@ import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   position: relative;
-  height: 40px;
-  width: 40px;
-  margin-bottom: 5px;
+  height: 50px;
+  width: 50px;
+  margin-bottom: 8px;
   &:first-child {
     margin-top: 5px;
   }
 `
 
 const MainButton = styled.button`
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
   ${secondaryButtonStyle}
   ${border}
   cursor: pointer;

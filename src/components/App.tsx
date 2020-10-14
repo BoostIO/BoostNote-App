@@ -20,7 +20,7 @@ import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
 import FeatureCheckListPopup from './organisms/FeatureCheckListPopup'
-import StorageNavigator from './organisms/AppNavigator'
+import TopLevelNavigator from './organisms/TopLevelNavigator'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -37,6 +37,7 @@ const AppContainer = styled.div`
 
 const App = () => {
   const { initialize, initialized, queueSyncingAllStorage } = useDb()
+
   useEffectOnce(() => {
     initialize()
       .then(() => {
@@ -85,7 +86,9 @@ const App = () => {
       >
         {initialized ? (
           <>
-            <StorageNavigator />
+            {preferences['general.showTopLevelNavigator'] && (
+              <TopLevelNavigator />
+            )}
             <Router />
           </>
         ) : (

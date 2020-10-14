@@ -1,12 +1,10 @@
 import React from 'react'
-import { includes } from 'ramda'
 import {
   NoteDoc,
   NoteDocEditibleProps,
   Attachment,
   NoteStorage,
 } from '../../lib/db/types'
-import { isTagNameValid } from '../../lib/db/utils'
 import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
@@ -16,12 +14,11 @@ import {
   borderRight,
   backgroundColor,
 } from '../../lib/styled/styleFunctions'
-import { ViewModeType, FeatureType } from '../../lib/generalStatus'
+import { ViewModeType } from '../../lib/generalStatus'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../lib/events'
-import NoteDetailToolbar from '../molecules/NoteDetailToolbar'
 import {
   convertItemListToArray,
   inspectDataTransfer,
@@ -88,7 +85,6 @@ const ContentSection = styled.div`
 `
 
 type NoteDetailProps = {
-  currentPathnameWithoutNoteId: string
   note: NoteDoc
   storage: NoteStorage
   updateNote: (
@@ -96,26 +92,8 @@ type NoteDetailProps = {
     noteId: string,
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
-  trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
-  untrashNote: (
-    storageId: string,
-    noteId: string
-  ) => Promise<NoteDoc | undefined>
-  purgeNote: (storageId: string, noteId: string) => void
-  bookmarkNote: (
-    storageId: string,
-    noteId: string
-  ) => Promise<NoteDoc | undefined>
-  unbookmarkNote: (
-    storageId: string,
-    noteId: string
-  ) => Promise<NoteDoc | undefined>
-  openBookmarkNavItem: () => void
   viewMode: ViewModeType
-  selectViewMode: (mode: ViewModeType) => void
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
-  push: (path: string) => void
-  checkFeature: (featureName: FeatureType) => void
 }
 
 type NoteDetailState = {
@@ -126,10 +104,7 @@ type NoteDetailState = {
   tags: string[]
 }
 
-export default class NoteDetail extends React.Component<
-  NoteDetailProps,
-  NoteDetailState
-> {
+class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   state: NoteDetailState = {
     prevStorageId: '',
     prevNoteId: '',
@@ -165,11 +140,10 @@ export default class NoteDetail extends React.Component<
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
       if (this.queued) {
-        const { title, content, tags } = prevState
+        const { title, content } = prevState
         this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
           title,
           content,
-          tags,
         })
       }
     }
@@ -178,11 +152,10 @@ export default class NoteDetail extends React.Component<
 
   componentWillUnmount() {
     if (this.queued) {
-      const { title, content, tags, prevStorageId, prevNoteId } = this.state
+      const { title, content, prevStorageId, prevNoteId } = this.state
       this.saveNote(prevStorageId, prevNoteId, {
         title,
         content,
-        tags,
       })
     }
     unlistenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
@@ -222,24 +195,6 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  appendTagByName = (tagName: string) => {
-    const trimmedTagName = tagName.trim()
-    if (includes(trimmedTagName, this.state.tags)) {
-      return
-    }
-    if (!isTagNameValid(trimmedTagName)) {
-      return
-    }
-    this.setState(
-      (prevState) => ({
-        tags: [...new Set([...prevState.tags, trimmedTagName])],
-      }),
-      () => {
-        this.queueToSave()
-      }
-    )
-  }
-
   removeTagByName = (tagName: string) => {
     this.setState(
       (prevState) => ({
@@ -255,49 +210,12 @@ export default class NoteDetail extends React.Component<
     const { note, storage } = this.props
 
     if (this.queued) {
-      const { title, content, tags } = this.state
+      const { title, content } = this.state
       await this.saveNote(storage.id, note._id, {
         title,
         content,
-        tags,
       })
     }
-  }
-
-  trashNote = async () => {
-    const { note, storage } = this.props
-
-    await this.executeSaveQueue()
-    await this.props.trashNote(storage.id, note._id)
-  }
-
-  untrashNote = async () => {
-    const { note, storage } = this.props
-
-    await this.executeSaveQueue()
-    await this.props.untrashNote(storage.id, note._id)
-  }
-
-  purgeNote = async () => {
-    const { note, storage } = this.props
-
-    await this.executeSaveQueue()
-    this.props.purgeNote(storage.id, note._id)
-  }
-
-  bookmarkNote = async () => {
-    const { note, storage } = this.props
-
-    await this.executeSaveQueue()
-    this.props.bookmarkNote(storage.id, note._id)
-    this.props.openBookmarkNavItem()
-  }
-
-  unbookmarkNote = async () => {
-    const { note, storage } = this.props
-
-    await this.executeSaveQueue()
-    this.props.unbookmarkNote(storage.id, note._id)
   }
 
   queued = false
@@ -310,12 +228,11 @@ export default class NoteDetail extends React.Component<
     }
     this.timer = setTimeout(() => {
       const { note, storage } = this.props
-      const { title, content, tags } = this.state
+      const { title, content } = this.state
 
       this.saveNote(storage.id, note._id, {
         title,
         content,
-        tags,
       })
     }, 3000)
   }
@@ -323,7 +240,7 @@ export default class NoteDetail extends React.Component<
   async saveNote(
     storageId: string,
     noteId: string,
-    { title, content, tags }: { title: string; content: string; tags: string[] }
+    { title, content }: { title: string; content: string }
   ) {
     clearTimeout(this.timer)
     this.queued = false
@@ -332,7 +249,6 @@ export default class NoteDetail extends React.Component<
     await updateNote(storageId, noteId, {
       title,
       content,
-      tags,
     })
   }
 
@@ -417,13 +333,8 @@ export default class NoteDetail extends React.Component<
     )
   }
 
-  navigateToFolder = (folderPathname: string) => () => {
-    const { storage } = this.props
-    this.props.push(`/app/storages/${storage.id}/notes${folderPathname}`)
-  }
-
   render() {
-    const { note, storage, viewMode, selectViewMode } = this.props
+    const { note, storage, viewMode } = this.props
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -446,42 +357,32 @@ export default class NoteDetail extends React.Component<
     )
 
     return (
-      <StyledNoteDetailContainer>
-        <NoteDetailToolbar
-          storage={storage}
-          note={note}
-          tags={this.state.tags}
-          viewMode={viewMode}
-          selectViewMode={selectViewMode}
-          trashNote={this.trashNote}
-          untrashNote={this.untrashNote}
-          purgeNote={this.purgeNote}
-          appendTagByName={this.appendTagByName}
-          removeTagByName={this.removeTagByName}
-          bookmarkNote={this.bookmarkNote}
-          unbookmarkNote={this.unbookmarkNote}
-        />
-        <TitleSection>
-          <input
-            ref={this.titleInputRef}
-            value={this.state.title}
-            onChange={this.updateTitle}
-            placeholder='Title'
-          />
-        </TitleSection>
-        <ContentSection>
-          {viewMode === 'preview' ? (
-            markdownPreviewer
-          ) : viewMode === 'split' ? (
-            <>
-              <div className='splitLeft'>{codeEditor}</div>
-              <div className='splitRight'>{markdownPreviewer}</div>
-            </>
-          ) : (
-            codeEditor
-          )}
-        </ContentSection>
-      </StyledNoteDetailContainer>
+      <>
+        <StyledNoteDetailContainer>
+          <TitleSection>
+            <input
+              ref={this.titleInputRef}
+              value={this.state.title}
+              onChange={this.updateTitle}
+              placeholder='Title'
+            />
+          </TitleSection>
+          <ContentSection>
+            {viewMode === 'preview' ? (
+              markdownPreviewer
+            ) : viewMode === 'split' ? (
+              <>
+                <div className='splitLeft'>{codeEditor}</div>
+                <div className='splitRight'>{markdownPreviewer}</div>
+              </>
+            ) : (
+              codeEditor
+            )}
+          </ContentSection>
+        </StyledNoteDetailContainer>
+      </>
     )
   }
 }
+
+export default NoteDetail

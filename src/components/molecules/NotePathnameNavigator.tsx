@@ -4,7 +4,6 @@ import { mdiBookOpen, mdiSlashForward } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { useRouter, useRouteParams } from '../../lib/router'
 import { flexCenter } from '../../lib/styled/styleFunctions'
-import { useTranslation } from 'react-i18next'
 import NoteDetailNavigatorItem from '../atoms/NoteDetailNavigatorItem'
 
 const Container = styled.div`
@@ -23,10 +22,10 @@ const IconContainer = styled.div`
   color: ${({ theme }) => theme.navButtonColor};
 `
 
-interface NoteDetailFolderNavigatorProps {
+interface NotePathnameNavigatorProps {
   storageId: string
   storageName: string
-  noteId: string
+  noteId?: string
   noteFolderPathname: string
 }
 
@@ -41,7 +40,7 @@ interface FolderNavItemProps {
   storageName: string
   folderName: string
   folderPathname: string
-  noteId: string
+  noteId?: string
 }
 
 const NavigatorFolderItem: React.FC<FolderNavItemProps> = ({
@@ -59,7 +58,11 @@ const NavigatorFolderItem: React.FC<FolderNavItemProps> = ({
       title={`${storageName}${folderPathname}`}
       onClick={(event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
-        push(`/app/storages/${storageId}/notes${folderPathname}/${noteId}`)
+        push(
+          noteId == null
+            ? `/app/storages/${storageId}/notes${folderPathname}`
+            : `/app/storages/${storageId}/notes${folderPathname}/${noteId}`
+        )
       }}
       className={active ? 'active' : ''}
     >
@@ -68,12 +71,12 @@ const NavigatorFolderItem: React.FC<FolderNavItemProps> = ({
   )
 }
 
-const NoteDetailFolderNavigator = ({
+const NotePathnameNavigator = ({
   storageId,
   storageName,
   noteId,
   noteFolderPathname,
-}: NoteDetailFolderNavigatorProps) => {
+}: NotePathnameNavigatorProps) => {
   const { push } = useRouter()
   const routeParams = useRouteParams()
 
@@ -110,7 +113,11 @@ const NoteDetailFolderNavigator = ({
         title={storageName}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault()
-          push(`/app/storages/${storageId}/notes/${noteId}`)
+          push(
+            noteId == null
+              ? `/app/storages/${storageId}/notes`
+              : `/app/storages/${storageId}/notes/${noteId}`
+          )
         }}
         className={currentFolderPathname === '/' ? 'active' : ''}
       >
@@ -136,4 +143,4 @@ const NoteDetailFolderNavigator = ({
   )
 }
 
-export default NoteDetailFolderNavigator
+export default NotePathnameNavigator

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import TwoPaneLayout from './TwoPaneLayout'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import Navigator from '../organisms/StorageNavigator'
+import NoteStorageNavigator from '../organisms/NoteStorageNavigator'
 import { NoteStorage } from '../../lib/db/types'
 
 interface StorageLayoutProps {
@@ -23,7 +23,7 @@ const StorageLayout = ({ storage, children }: StorageLayoutProps) => {
   return (
     <TwoPaneLayout
       defaultLeftWidth={generalStatus.sideBarWidth}
-      left={<Navigator storage={storage} />}
+      left={<NoteStorageNavigator storage={storage} />}
       right={children}
       onResizeEnd={updateNavWidth}
     />
