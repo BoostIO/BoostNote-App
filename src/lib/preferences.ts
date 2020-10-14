@@ -27,15 +27,19 @@ export type GeneralLanguageOptions =
   | 'zh-HK'
   | 'zh-TW'
 export type GeneralNoteListViewOptions = 'default' | 'compact'
+export type GeneralNavigationModeOptions = 'note' | 'wiki'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
+export type EditorControlModeOptions = '2-toggles' | '3-buttons'
 
 export interface Preferences {
   // General
   'general.accounts': User[]
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
+  'general.showTopLevelNavigator': boolean
+  'general.navigationMode': GeneralNavigationModeOptions
   'general.noteSorting': NoteSortingOptions
   'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
@@ -49,6 +53,7 @@ export interface Preferences {
   'editor.indentType': EditorIndentTypeOptions
   'editor.indentSize': EditorIndentSizeOptions
   'editor.keyMap': EditorKeyMapOptions
+  'editor.controlMode': EditorControlModeOptions
 
   // Markdown
   'markdown.previewStyle': string
@@ -76,8 +81,10 @@ const initialPreferences = loadPreferences()
 const basePreferences: Preferences = {
   // General
   'general.accounts': [],
+  'general.showTopLevelNavigator': true,
   'general.language': 'en-US',
   'general.theme': 'dark',
+  'general.navigationMode': 'wiki',
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
   'general.enableAutoSync': true,
@@ -86,6 +93,7 @@ const basePreferences: Preferences = {
 
   // Editor
   'editor.theme': 'material-darker',
+  'editor.controlMode': '2-toggles',
   'editor.fontSize': 15,
   'editor.fontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
