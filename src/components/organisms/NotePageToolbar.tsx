@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import {
@@ -13,7 +13,7 @@ import {
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
-import { ViewModeType } from '../../lib/generalStatus'
+import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NoteDetailNavigator from '../molecules/NotePathnameNavigator'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/router'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
 
 const Container = styled.div`
   display: flex;
@@ -66,6 +67,14 @@ const NotePageToolbar = ({
     unbookmarkNote,
   } = useDb()
   const { report } = useAnalytics()
+  const { setPreferences, preferences } = usePreferences()
+
+  const editorControlMode = preferences['editor.controlMode']
+
+  const { popup } = useContextMenu()
+  const { previewStyle } = usePreviewStyle()
+  const { generalStatus } = useGeneralStatus()
+  const { noteViewMode, preferredEditingViewMode } = generalStatus
 
   const storageId = storage.id
   const storageName = storage.name
@@ -142,10 +151,6 @@ const NotePageToolbar = ({
     return values(storage.tagMap).map((tag) => tag.name)
   }, [storage])
 
-  const { popup } = useContextMenu()
-  const { preferences } = usePreferences()
-  const { previewStyle } = usePreviewStyle()
-
   const selectEditMode = useCallback(() => {
     selectViewMode('edit')
   }, [selectViewMode])
@@ -158,7 +163,7 @@ const NotePageToolbar = ({
     selectViewMode('preview')
   }, [selectViewMode])
 
-  const openContextMenu = useCallback(
+  const openExportContextMenu = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
       if (note == null) {
@@ -192,6 +197,33 @@ const NotePageToolbar = ({
         : '/'
       : note.folderPathname
 
+  const openTopbarSwitchSelectorContextMenu: MouseEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      event.preventDefault()
+      popup(event, [
+        {
+          type: MenuTypes.Normal,
+          label: 'Use 2 toggles layout',
+          onClick: () => {
+            setPreferences({
+              'editor.controlMode': '2-toggles',
+            })
+          },
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Use 3 buttons layout',
+          onClick: () => {
+            setPreferences({
+              'editor.controlMode': '3-buttons',
+            })
+          },
+        },
+      ])
+    },
+    [popup, setPreferences]
+  )
+
   return (
     <Container>
       <NoteDetailNavigator
@@ -213,8 +245,8 @@ const NotePageToolbar = ({
         />
       )}
       {note != null && (
-        <Control>
-          {preferences['editor.controlMode'] === '3-buttons' ? (
+        <Control onContextMenu={openTopbarSwitchSelectorContextMenu}>
+          {editorControlMode === '3-buttons' ? (
             <>
               <ToolbarIconButton
                 active={viewMode === 'edit'}
@@ -239,12 +271,35 @@ const NotePageToolbar = ({
             <>
               {viewMode !== 'preview' && (
                 <ToolbarIconButton
-                  active={viewMode === 'edit'}
-                  title='Toggle split'
+                  active={viewMode === 'split'}
+                  title='Toggle Split'
                   iconPath={mdiViewSplitVertical}
-                  onClick={selectSplitMode}
+                  onClick={
+                    viewMode === 'edit' ? selectSplitMode : selectEditMode
+                  }
                 />
               )}
+              <TopbarSwitchSelector
+                onClick={
+                  noteViewMode === 'preview'
+                    ? preferredEditingViewMode === 'edit'
+                      ? selectEditMode
+                      : selectSplitMode
+                    : selectPreviewMode
+                }
+                items={[
+                  {
+                    active: noteViewMode !== 'preview',
+                    label: 'Edit',
+                    title: 'Select Edit Mode',
+                  },
+                  {
+                    active: noteViewMode === 'preview',
+                    label: 'Preview',
+                    title: 'Select Preview Mode',
+                  },
+                ]}
+              />
             </>
           )}
           <ToolbarSeparator />
@@ -276,7 +331,7 @@ const NotePageToolbar = ({
           )}
           <ToolbarIconButton
             title={t('note.export')}
-            onClick={openContextMenu}
+            onClick={openExportContextMenu}
             iconPath={mdiDotsVertical}
           />
         </Control>
