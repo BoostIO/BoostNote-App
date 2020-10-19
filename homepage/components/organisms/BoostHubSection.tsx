@@ -7,6 +7,8 @@ import styled from '../../lib/styled'
 import { space, SpaceProps } from 'styled-system'
 import { useTranslation } from 'react-i18next'
 import ButtonLink from '../atoms/ButtonLink'
+import { mdiOpenInNew } from '@mdi/js'
+import Icon from '../atoms/Icon'
 
 const Container = styled.div<SpaceProps>`
   max-width: 70em;
@@ -58,7 +60,7 @@ const BoostHubSection = () => {
             <Column width={1}>
               <BoostHubTitle>
                 <Text as='h2' fontSize={[3, 4, 5]} mt={0} mb={4}>
-                  🤝 {t('boostHub.title')}
+                  {t('boostHub.title')}
                 </Text>
               </BoostHubTitle>
             </Column>
@@ -76,7 +78,7 @@ const BoostHubSection = () => {
                   py={2}
                   href='https://boosthub.io'
                 >
-                  {t('common.boostHub')}
+                  {t('common.boostHub')} <Icon path={mdiOpenInNew} />
                 </ButtonLink>
               </Column>
             </Row>
