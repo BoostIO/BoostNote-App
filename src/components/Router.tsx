@@ -7,27 +7,34 @@ import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import useRedirectHandler from '../lib/router/redirect'
 import styled from '../lib/styled'
+import { usePreferences } from '../lib/preferences'
+import WikiNotePage from './pages/WikiNotePage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
 `
 
-export default () => {
+const Router = () => {
   const routeParams = useRouteParams()
   const db = useDb()
-
+  const { preferences } = usePreferences()
+  const navigationMode = preferences['general.navigationMode']
   useRedirectHandler()
 
   switch (routeParams.name) {
     case 'storages.notes':
     case 'storages.trashCan':
     case 'storages.tags.show': {
-      const { storageId, noteId } = routeParams
+      const { storageId } = routeParams
       const storage = db.storageMap[storageId]
       if (storage == null) {
         break
       }
-      return <NotePage storage={storage} noteId={noteId} />
+
+      if (navigationMode === 'note') {
+        return <NotePage storage={storage} />
+      }
+      return <WikiNotePage storage={storage} />
     }
     case 'storages.attachments': {
       const { storageId } = routeParams
@@ -53,3 +60,5 @@ export default () => {
     </NotFoundPageContainer>
   )
 }
+
+export default Router
