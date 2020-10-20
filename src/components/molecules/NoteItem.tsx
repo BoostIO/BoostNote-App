@@ -8,7 +8,6 @@ import {
 } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../lib/dnd'
-import HighlightText from '../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../lib/styled'
 import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
@@ -100,7 +99,6 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   recentlyCreated?: boolean
-  search: string
   basePathname: string
   focusList: () => void
   noteListView: GeneralNoteListViewOptions
@@ -113,7 +111,6 @@ const NoteItem = ({
   note,
   active,
   basePathname,
-  search,
   recentlyCreated,
   noteListView,
   applyDefaultNoteListing,
@@ -276,25 +273,9 @@ const NoteItem = ({
 
   const contentPreview = useMemo(() => {
     const trimmedContent = note.content.trim()
-    const searchFirstIndex = trimmedContent
-      .toLowerCase()
-      .indexOf(search.toLowerCase())
-
-    if (search !== '' && searchFirstIndex !== -1) {
-      const contentToHighlight = trimmedContent
-        .substring(searchFirstIndex)
-        .split('\n')
-        .shift()
-
-      return contentToHighlight == null ? (
-        t('note.empty')
-      ) : (
-        <HighlightText text={contentToHighlight} search={search} />
-      )
-    }
 
     return trimmedContent.split('\n').shift() || t('note.empty')
-  }, [note.content, search, t])
+  }, [note.content, t])
 
   const loadTransferrableNoteData = useCallback(
     (event: React.DragEvent) => {
@@ -318,11 +299,7 @@ const NoteItem = ({
       onClick={navigateToNote}
     >
       <TitleSection>
-        {note.title.length === 0 ? (
-          t('note.noTitle')
-        ) : (
-          <HighlightText text={note.title} search={search} />
-        )}
+        {note.title.length === 0 ? t('note.noTitle') : note.title}
       </TitleSection>
       {noteListView !== 'compact' && (
         <>
@@ -333,9 +310,7 @@ const NoteItem = ({
           {note.tags.length > 0 && (
             <TagListSection>
               {note.tags.map((tag) => (
-                <TagListItem key={tag}>
-                  <HighlightText text={tag} search={search} />
-                </TagListItem>
+                <TagListItem key={tag}>{tag}</TagListItem>
               ))}
             </TagListSection>
           )}
