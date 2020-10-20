@@ -4,7 +4,7 @@ import styled from '../../lib/styled'
 
 interface TopbarSwitchSelectorItem {
   active?: boolean
-  label: string
+  label: React.ReactNode
   title: string
   onClick?: MouseEventHandler<HTMLButtonElement>
 }
