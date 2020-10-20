@@ -30,15 +30,26 @@ const ToolbarButtonContainer = styled.button`
 
 interface ToolbarButtonProps {
   iconPath: string
-  active?: boolean,
-  title?: string,
+  active?: boolean
+  title?: string
+  onContextMenu?: React.MouseEventHandler
   onClick: React.MouseEventHandler
 }
 
 const ToolbarButton = React.forwardRef(
-  ({ iconPath, onClick, active = false, title }: ToolbarButtonProps, ref) => (
+  (
+    {
+      iconPath,
+      onClick,
+      onContextMenu,
+      active = false,
+      title,
+    }: ToolbarButtonProps,
+    ref
+  ) => (
     <ToolbarButtonContainer
       onClick={onClick}
+      onContextMenu={onContextMenu}
       className={active ? 'active' : ''}
       ref={ref}
       title={title}
