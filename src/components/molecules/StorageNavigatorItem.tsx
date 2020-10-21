@@ -12,6 +12,7 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
+import { useStorageRouter } from '../../lib/storageRouter'
 
 const Container = styled.div`
   position: relative;
@@ -53,13 +54,11 @@ const SyncButton = styled.button`
 interface AppNavigatorStorageItemProps {
   active: boolean
   storage: NoteStorage
-  href?: string
 }
 
 const AppNavigatorStorageItem = ({
   active,
   storage,
-  href,
 }: AppNavigatorStorageItemProps) => {
   const { push } = useRouter()
   const { syncStorage, renameStorage, removeStorage } = useDb()
@@ -67,13 +66,11 @@ const AppNavigatorStorageItem = ({
   const { pushMessage } = useToast()
   const { prompt, messageBox } = useDialog()
   const { t } = useTranslation()
+  const { navigate } = useStorageRouter()
 
-  const goToStorage = useCallback(() => {
-    if (href == null) {
-      return
-    }
-    push(href)
-  }, [push, href])
+  const navigateToStorage = useCallback(() => {
+    navigate(storage.id)
+  }, [navigate, storage.id])
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
@@ -155,10 +152,13 @@ const AppNavigatorStorageItem = ({
   return (
     <Container
       title={storage.name}
-      onClick={goToStorage}
+      onClick={navigateToStorage}
       onContextMenu={openStorageContextMenu}
     >
-      <MainButton className={active ? 'active' : ''} onClick={goToStorage}>
+      <MainButton
+        className={active ? 'active' : ''}
+        onClick={navigateToStorage}
+      >
         {storage.name.slice(0, 1)}
       </MainButton>
       {storage.type === 'pouch' && storage.cloudStorage != null && (

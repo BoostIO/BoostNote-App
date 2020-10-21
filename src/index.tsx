@@ -10,6 +10,7 @@ import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
 import { AnalyticsProvider } from './lib/analytics'
+import { StorageRouterProvider } from './lib/storageRouter'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -18,6 +19,7 @@ const CombinedProvider = combineProviders(
   DbProvider,
   AnalyticsProvider,
   PreferencesProvider,
+  StorageRouterProvider,
   RouterProvider,
   ToastProvider
 )

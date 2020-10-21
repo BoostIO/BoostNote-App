@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import styled from '../../lib/styled'
 import {
   borderRight,
@@ -18,35 +18,17 @@ import { openContextMenu } from '../../lib/electronOnly'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
-  const { push, pathname } = useRouter()
-  const previousStorageIdRef = useRef<string>()
+  const { push } = useRouter()
   const { setPreferences } = usePreferences()
 
   const activeStorageId = useActiveStorageId()
 
-  const lastStoragePathnameMapRef = useRef<Map<string, string>>(new Map())
-  useEffect(() => {
-    previousStorageIdRef.current =
-      activeStorageId != null ? activeStorageId : undefined
-    if (previousStorageIdRef.current != null) {
-      lastStoragePathnameMapRef.current.set(
-        previousStorageIdRef.current,
-        pathname
-      )
-    }
-  }, [activeStorageId, pathname])
-
   const storages = useMemo(() => {
     return entries(storageMap).map(([storageId, storage]) => {
       const active = activeStorageId === storageId
-      const href =
-        !active && lastStoragePathnameMapRef.current.has(storageId)
-          ? lastStoragePathnameMapRef.current.get(storageId)
-          : `/app/storages/${storageId}/notes`
       return (
         <AppNavigatorStorageItem
           key={storageId}
-          href={href}
           active={active}
           storage={storage}
         />
