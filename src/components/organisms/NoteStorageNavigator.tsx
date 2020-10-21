@@ -77,10 +77,15 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         menuItems: [
           {
             type: 'normal',
-            label: 'Show App Navigator',
+            label: 'Toggle Top Level Navigator',
             click: () => {
-              setPreferences({
-                'general.showTopLevelNavigator': true,
+              setPreferences((prevPreferences) => {
+                return {
+                  ...prevPreferences,
+                  'general.showTopLevelNavigator': !prevPreferences[
+                    'general.showTopLevelNavigator'
+                  ],
+                }
               })
             },
           },
