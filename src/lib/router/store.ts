@@ -6,7 +6,9 @@ import { createBrowserHistory, createHashHistory } from 'history'
 import { parse as parseQuery } from 'querystring'
 import { appIsElectron } from '../platform'
 
-const bhistory = appIsElectron ? createHashHistory() : createBrowserHistory()
+const browserHistory = appIsElectron
+  ? createHashHistory()
+  : createBrowserHistory()
 
 export interface RouterStore extends Location {
   push: (path: string) => void
@@ -17,31 +19,31 @@ export interface RouterStore extends Location {
 }
 
 const initialLocation = normalizeLocation({
-  pathname: appIsElectron ? '/app' : bhistory.location.pathname,
-  hash: bhistory.location.hash,
-  query: parseQuery(bhistory.location.search),
+  pathname: appIsElectron ? '/app' : browserHistory.location.pathname,
+  hash: browserHistory.location.hash,
+  query: parseQuery(browserHistory.location.search),
 })
 
 function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
   const push = useCallback((urlStr: string) => {
-    bhistory.push(urlStr)
+    browserHistory.push(urlStr)
   }, [])
 
   const replace = useCallback((urlStr: string) => {
-    bhistory.replace(urlStr)
+    browserHistory.replace(urlStr)
   }, [])
 
   const go = useCallback((count: number) => {
-    bhistory.go(count)
+    browserHistory.go(count)
   }, [])
 
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
   useEffect(() => {
-    return bhistory.listen((blocation) => {
+    return browserHistory.listen((blocation) => {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,
