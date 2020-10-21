@@ -5,8 +5,6 @@ import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import { mdiHammerWrench } from '@mdi/js'
-import NavigatorButton from '../atoms/NavigatorButton'
 import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
@@ -15,26 +13,8 @@ import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useActiveStorageId } from '../../lib/routeParams'
-
-const NavigatorContainer = styled.nav`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: ${({ theme }) => theme.navBackgroundColor};
-`
-
-const TopControl = styled.div`
-  display: flex;
-  align-items: center;
-  height: 40px;
-  -webkit-app-region: drag;
-`
-
-const ScrollableContainer = styled.div`
-  flex: 1;
-  padding: 0 0 10px;
-  overflow: auto;
-`
+import { mdiChevronDown } from '@mdi/js'
+import Icon from '../atoms/Icon'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -83,6 +63,14 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       const storages = values(storageMap)
       openContextMenu({
         menuItems: [
+          {
+            type: 'normal',
+            label: 'Preferences',
+            click: () => {
+              togglePreferencesModal()
+            },
+          },
+          { type: 'separator' },
           ...storages
             .filter((storage) => {
               return storage.id !== activeStorageId
@@ -116,21 +104,21 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         ],
       })
     },
-    [activeStorageId, setPreferences, navigate, storageMap]
+    [
+      activeStorageId,
+      setPreferences,
+      navigate,
+      togglePreferencesModal,
+      storageMap,
+    ]
   )
 
   return (
     <NavigatorContainer>
-      <TopControl onContextMenu={openSideNavContextMenu}>
-        <Spacer />
-        <NavigatorButton
-          iconPath={mdiHammerWrench}
-          title='Preferences'
-          onClick={togglePreferencesModal}
-        />
-      </TopControl>
-
-      <button onClick={openStorageContextMenu}>{storage.name}</button>
+      <TopButton onClick={openStorageContextMenu}>
+        <StorageName>{storage.name}</StorageName>
+        <Icon path={mdiChevronDown} />
+      </TopButton>
 
       <button>New Doc</button>
 
@@ -144,3 +132,39 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 }
 
 export default NoteStorageNavigator
+
+const NavigatorContainer = styled.nav`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: ${({ theme }) => theme.navBackgroundColor};
+`
+
+const ScrollableContainer = styled.div`
+  flex: 1;
+  padding: 0 0 10px;
+  overflow: auto;
+`
+
+const TopButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  text-align: left;
+  padding: 0 8px;
+  height: 40px;
+  border: none;
+  color: ${({ theme }) => theme.navLabelColor};
+  background-color: ${({ theme }) => theme.navItemBackgroundColor};
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+  }
+`
+
+const StorageName = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  padding-right: 10px;
+`
