@@ -8,9 +8,10 @@ import { mdiSync } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useFirstUser } from '../../lib/preferences'
 import { useToast } from '../../lib/toast'
-import { useContextMenu, MenuItem, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
+import { MenuItemConstructorOptions } from 'electron'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const Container = styled.div`
   position: relative;
@@ -64,7 +65,6 @@ const AppNavigatorStorageItem = ({
   const { syncStorage, renameStorage, removeStorage } = useDb()
   const user = useFirstUser()
   const { pushMessage } = useToast()
-  const { popup } = useContextMenu()
   const { prompt, messageBox } = useDialog()
   const { t } = useTranslation()
 
@@ -88,15 +88,15 @@ const AppNavigatorStorageItem = ({
     syncStorage(storage.id)
   }, [user, pushMessage, syncStorage, storage.id])
 
-  const openContextMenu = useCallback(
+  const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
       event.stopPropagation()
-      const menuItems: MenuItem[] = [
+      const menuItems: MenuItemConstructorOptions[] = [
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: t('storage.rename'),
-          onClick: async () => {
+          click: async () => {
             prompt({
               title: `Rename "${storage.name}" storage`,
               message: t('storage.renameMessage'),
@@ -111,9 +111,9 @@ const AppNavigatorStorageItem = ({
           },
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: t('storage.remove'),
-          onClick: async () => {
+          click: async () => {
             messageBox({
               title: `Remove "${storage.name}" storage`,
               message:
@@ -133,40 +133,30 @@ const AppNavigatorStorageItem = ({
           },
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Configure Storage',
-          onClick: () => push(`/app/storages/${storage.id}/settings`),
+          click: () => push(`/app/storages/${storage.id}/settings`),
         },
       ]
 
       if (storage.type !== 'fs' && storage.cloudStorage != null) {
         menuItems.unshift({
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Sync Storage',
-          onClick: sync,
+          click: sync,
         })
       }
 
-      popup(event, menuItems)
+      openContextMenu({ menuItems })
     },
-    [
-      popup,
-      messageBox,
-      prompt,
-      renameStorage,
-      removeStorage,
-      storage,
-      push,
-      sync,
-      t,
-    ]
+    [messageBox, prompt, renameStorage, removeStorage, storage, push, sync, t]
   )
 
   return (
     <Container
       title={storage.name}
       onClick={goToStorage}
-      onContextMenu={openContextMenu}
+      onContextMenu={openStorageContextMenu}
     >
       <MainButton className={active ? 'active' : ''} onClick={goToStorage}>
         {storage.name.slice(0, 1)}

@@ -6,7 +6,6 @@ import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import { useFirstUser } from '../../lib/preferences'
-import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import {
@@ -23,6 +22,8 @@ import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { MenuItemConstructorOptions } from 'electron'
+import { openContextMenu } from '../../lib/electronOnly'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -46,7 +47,6 @@ const StorageNavigatorFragment = ({
   const { pushMessage } = useToast()
   const currentPathname = usePathnameWithoutNoteId()
   const user = useFirstUser()
-  const { popup } = useContextMenu()
   const { report } = useAnalytics()
 
   const createNoteInFolderAndRedirect = useCallback(
@@ -138,31 +138,31 @@ const StorageNavigatorFragment = ({
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
   const attachmentsPageIsActive = currentPathname === attachmentsPagePathname
 
-  const openContextMenu: MouseEventHandler = useCallback(
+  const openWorkspaceContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
-      const contentMenuItems: MenuItem[] = [
+      const contentMenuItems: MenuItemConstructorOptions[] = [
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'New Note',
-          onClick: async () => {
+          click: async () => {
             createNoteInFolderAndRedirect('/')
           },
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: t('folder.create'),
-          onClick: async () => {
+          click: async () => {
             showPromptToCreateFolder('/')
           },
         },
       ]
 
-      const storageMenuItems: MenuItem[] = [
+      const storageMenuItems: MenuItemConstructorOptions[] = [
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: t('storage.rename'),
-          onClick: async () => {
+          click: async () => {
             prompt({
               title: `Rename "${storage.name}" storage`,
               message: t('storage.renameMessage'),
@@ -177,9 +177,9 @@ const StorageNavigatorFragment = ({
           },
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: t('storage.remove'),
-          onClick: async () => {
+          click: async () => {
             messageBox({
               title: `Remove "${storage.name}" storage`,
               message:
@@ -199,31 +199,30 @@ const StorageNavigatorFragment = ({
           },
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Configure Storage',
-          onClick: () => push(`/app/storages/${storage.id}/settings`),
+          click: () => push(`/app/storages/${storage.id}/settings`),
         },
       ]
       if (storage.type !== 'fs' && storage.cloudStorage != null) {
         storageMenuItems.unshift({
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Sync Storage',
-          onClick: sync,
+          click: sync,
         })
       }
 
-      const menuItems: MenuItem[] = [
+      const menuItems: MenuItemConstructorOptions[] = [
         ...contentMenuItems,
         {
-          type: MenuTypes.Separator,
+          type: 'separator',
         },
         ...storageMenuItems,
       ]
-      popup(event, menuItems)
+      openContextMenu({ menuItems })
     },
     [
       storage,
-      popup,
       prompt,
       messageBox,
       createNoteInFolderAndRedirect,
@@ -238,47 +237,52 @@ const StorageNavigatorFragment = ({
 
   const openNewContextMenu: MouseEventHandler = useCallback(
     (event) => {
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Note',
-          onClick: async () => {
-            createNoteInFolderAndRedirect('/')
+      event.preventDefault()
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async () => {
+              createNoteInFolderAndRedirect('/')
+            },
           },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'New Folder',
-          onClick: async () => {
-            showPromptToCreateFolder('/')
+          {
+            type: 'normal',
+            label: 'New Folder',
+            click: async () => {
+              showPromptToCreateFolder('/')
+            },
           },
-        },
-      ])
+        ],
+      })
     },
-    [popup, createNoteInFolderAndRedirect, showPromptToCreateFolder]
+    [createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
   const openAllNotesContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Note',
-          onClick: async () => {
-            createNoteInFolderAndRedirect('/')
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async () => {
+              createNoteInFolderAndRedirect('/')
+            },
           },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.create'),
-          onClick: async () => {
-            showPromptToCreateFolder('/')
+          {
+            type: 'normal',
+            label: t('folder.create'),
+            click: async () => {
+              showPromptToCreateFolder('/')
+            },
           },
-        },
-      ])
+        ],
+      })
     },
-    [t, popup, createNoteInFolderAndRedirect, showPromptToCreateFolder]
+    [t, createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
@@ -296,7 +300,7 @@ const StorageNavigatorFragment = ({
     <>
       <NavigatorHeader
         label='Workspace'
-        onContextMenu={openContextMenu}
+        onContextMenu={openWorkspaceContextMenu}
         control={
           <>
             <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />

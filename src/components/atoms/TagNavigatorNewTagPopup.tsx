@@ -17,7 +17,6 @@ import {
 } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
-import { menuZIndex } from '../../lib/contextMenu'
 import { mdiPound } from '@mdi/js'
 import Icon from './Icon'
 
@@ -29,7 +28,7 @@ const Container = styled.div`
 
   ${backgroundColor}
   ${border}
-  z-index: ${menuZIndex};
+  z-index: 9000;
   ${backgroundColor}
   ${borderColor}
   ${contextMenuShadow}

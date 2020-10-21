@@ -11,9 +11,9 @@ import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { useRouter, useActiveStorageId } from '../../lib/router'
 import AppNavigatorStorageItem from '../molecules/StorageNavigatorItem'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -58,45 +58,46 @@ const TopLevelNavigator = () => {
   }, [push])
 
   const { createStorage } = useDb()
-  const { popup } = useContextMenu()
   const { prompt } = useDialog()
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Storage',
-          onClick: async () => {
-            prompt({
-              title: 'Create a Storage',
-              message: 'Enter name of a storage to create',
-              iconType: DialogIconTypes.Question,
-              submitButtonLabel: 'Create Storage',
-              onClose: async (value: string | null) => {
-                if (value == null) return
-                const storage = await createStorage(value)
-                push(`/app/storages/${storage.id}/notes`)
-              },
-            })
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'New Storage',
+            click: async () => {
+              prompt({
+                title: 'Create a Storage',
+                message: 'Enter name of a storage to create',
+                iconType: DialogIconTypes.Question,
+                submitButtonLabel: 'Create Storage',
+                onClose: async (value: string | null) => {
+                  if (value == null) return
+                  const storage = await createStorage(value)
+                  push(`/app/storages/${storage.id}/notes`)
+                },
+              })
+            },
           },
-        },
-        {
-          type: MenuTypes.Separator,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Hide App Navigator',
-          onClick: () => {
-            setPreferences({
-              'general.showTopLevelNavigator': false,
-            })
+          {
+            type: 'separator',
           },
-        },
-      ])
+          {
+            type: 'normal',
+            label: 'Hide App Navigator',
+            click: () => {
+              setPreferences({
+                'general.showTopLevelNavigator': false,
+              })
+            },
+          },
+        ],
+      })
     },
-    [popup, prompt, createStorage, push, setPreferences]
+    [prompt, createStorage, push, setPreferences]
   )
 
   return (

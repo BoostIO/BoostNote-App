@@ -18,7 +18,6 @@ import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NoteDetailNavigator from '../molecules/NotePathnameNavigator'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
 import { values } from '../../lib/db/utils'
-import { MenuTypes, useContextMenu } from '../../lib/contextMenu'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
@@ -30,6 +29,7 @@ import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/router'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const Container = styled.div`
   display: flex;
@@ -71,7 +71,6 @@ const NotePageToolbar = ({
 
   const editorControlMode = preferences['editor.controlMode']
 
-  const { popup } = useContextMenu()
   const { previewStyle } = usePreviewStyle()
   const { generalStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
@@ -169,24 +168,26 @@ const NotePageToolbar = ({
       if (note == null) {
         return
       }
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'HTML export',
-          onClick: async () =>
-            await exportNoteAsHtmlFile(note, preferences, previewStyle),
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Markdown export',
-          onClick: async () =>
-            await exportNoteAsMarkdownFile(note, {
-              includeFrontMatter: preferences['markdown.includeFrontMatter'],
-            }),
-        },
-      ])
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'HTML export',
+            click: async () =>
+              await exportNoteAsHtmlFile(note, preferences, previewStyle),
+          },
+          {
+            type: 'normal',
+            label: 'Markdown export',
+            click: async () =>
+              await exportNoteAsMarkdownFile(note, {
+                includeFrontMatter: preferences['markdown.includeFrontMatter'],
+              }),
+          },
+        ],
+      })
     },
-    [popup, note, preferences, previewStyle]
+    [note, preferences, previewStyle]
   )
 
   const routeParams = useRouteParams()
@@ -200,28 +201,30 @@ const NotePageToolbar = ({
   const openTopbarSwitchSelectorContextMenu: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'Use 2 toggles layout',
-          onClick: () => {
-            setPreferences({
-              'editor.controlMode': '2-toggles',
-            })
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'Use 2 toggles layout',
+            click: () => {
+              setPreferences({
+                'editor.controlMode': '2-toggles',
+              })
+            },
           },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Use 3 buttons layout',
-          onClick: () => {
-            setPreferences({
-              'editor.controlMode': '3-buttons',
-            })
+          {
+            type: 'normal',
+            label: 'Use 3 buttons layout',
+            click: () => {
+              setPreferences({
+                'editor.controlMode': '3-buttons',
+              })
+            },
           },
-        },
-      ])
+        ],
+      })
     },
-    [popup, setPreferences]
+    [setPreferences]
   )
 
   return (

@@ -139,6 +139,16 @@
           return CSON.stringify(value)
         }
 
+        function openNewWindow(options) {
+          return new electron.remote.BrowserWindow(options)
+        }
+
+        function openContextMenu(options) {
+          const { Menu } = electron.remote
+          const menu = Menu.buildFromTemplate(options.menuItems)
+          menu.popup()
+        }
+
         window.__ELECTRON_ONLY__ = {}
         window.__ELECTRON_ONLY__.openExternal = openExternal
         window.__ELECTRON_ONLY__.readFile = readFile
@@ -153,6 +163,8 @@
         window.__ELECTRON_ONLY__.readFileTypeFromBuffer = readFileTypeFromBuffer
         window.__ELECTRON_ONLY__.parseCSON = parseCSON
         window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
+        window.__ELECTRON_ONLY__.openNewWindow = openNewWindow
+        window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
       })()
     </script>
   </body>

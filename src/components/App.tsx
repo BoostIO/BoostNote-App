@@ -7,7 +7,6 @@ import { darkTheme } from '../themes/dark'
 import { lightTheme } from '../themes/light'
 import { sepiaTheme } from '../themes/sepia'
 import { solarizedDarkTheme } from '../themes/solarizedDark'
-import ContextMenu from './organisms/ContextMenu'
 import Dialog from './organisms/Dialog'
 import { useDb } from '../lib/db'
 import PreferencesModal from './PreferencesModal/PreferencesModal'
@@ -95,7 +94,6 @@ const App = () => {
           <LoadingText>Loading Data...</LoadingText>
         )}
         <GlobalStyle />
-        <ContextMenu />
         <Dialog />
         <PreferencesModal />
         <ToastList />

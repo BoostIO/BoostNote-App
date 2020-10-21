@@ -9,8 +9,9 @@ import { NoteDoc } from '../../lib/db/types'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { usePreferences } from '../../lib/preferences'
-import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
+import { MenuItemConstructorOptions } from 'electron'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const Container = styled.div`
   display: flex;
@@ -76,7 +77,6 @@ const NoteListNavigator = ({
 }: NoteListNavigatorProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { t } = useTranslation()
-  const { popup } = useContextMenu()
 
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const noteListView = preferences['general.noteListView']
@@ -153,35 +153,35 @@ const NoteListNavigator = ({
     (event) => {
       event.preventDefault()
 
-      const menuItems: MenuItem[] = [
+      const menuItems: MenuItemConstructorOptions[] = [
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Default View',
-          onClick: applyDefaultNoteListing,
+          click: applyDefaultNoteListing,
         },
         {
-          type: MenuTypes.Normal,
+          type: 'normal',
           label: 'Compact View',
-          onClick: applyCompactListing,
+          click: applyCompactListing,
         },
       ]
 
       if (createNote != null) {
         menuItems.unshift(
           {
-            type: MenuTypes.Normal,
+            type: 'normal',
             label: 'New Note',
-            onClick: createNote,
+            click: createNote,
           },
           {
-            type: MenuTypes.Separator,
+            type: 'separator',
           }
         )
       }
 
-      popup(event, menuItems)
+      openContextMenu({ menuItems })
     },
-    [createNote, popup, applyDefaultNoteListing, applyCompactListing]
+    [createNote, applyDefaultNoteListing, applyCompactListing]
   )
 
   return (

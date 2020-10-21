@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
@@ -10,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { mdiFolderOpen, mdiFolder, mdiDotsVertical, mdiPlus } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
+import { openContextMenu } from '../../lib/electronOnly'
 
 interface FolderNavigatorItemProps {
   active: boolean
@@ -32,7 +32,6 @@ const FolderNavigatorItem = ({
 }: FolderNavigatorItemProps) => {
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
   const { push } = useRouter()
-  const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { t } = useTranslation()
   const {
@@ -95,44 +94,45 @@ const FolderNavigatorItem = ({
     showPromptToRenameFolder(folderPathname)
   }, [folderPathname, showPromptToRenameFolder])
 
-  const openContextMenu = useCallback(
+  const openFolderContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Note',
-          onClick: async () => {
-            createNoteInFolderAndRedirect(folderPathname)
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async () => {
+              createNoteInFolderAndRedirect(folderPathname)
+            },
           },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'New Subfolder',
-          onClick: async () => {
-            showPromptToCreateFolder(folderPathname)
+          {
+            type: 'normal',
+            label: 'New Subfolder',
+            click: async () => {
+              showPromptToCreateFolder(folderPathname)
+            },
           },
-        },
-        {
-          type: MenuTypes.Separator,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.rename'),
-          enabled: folderPathname !== '/',
-          onClick: showRenamePrompt,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.remove'),
-          enabled: folderPathname !== '/',
-          onClick: showFolderRemoveMessageBox,
-        },
-      ])
+          {
+            type: 'separator',
+          },
+          {
+            type: 'normal',
+            label: t('folder.rename'),
+            enabled: folderPathname !== '/',
+            click: showRenamePrompt,
+          },
+          {
+            type: 'normal',
+            label: t('folder.remove'),
+            enabled: folderPathname !== '/',
+            click: showFolderRemoveMessageBox,
+          },
+        ],
+      })
     },
     [
       folderPathname,
-      popup,
       t,
       createNoteInFolderAndRedirect,
       showPromptToCreateFolder,
@@ -144,50 +144,49 @@ const FolderNavigatorItem = ({
   const openPlusContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'New Note',
-          onClick: async () => {
-            createNoteInFolderAndRedirect(folderPathname)
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async () => {
+              createNoteInFolderAndRedirect(folderPathname)
+            },
           },
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'New Subfolder',
-          onClick: async () => {
-            showPromptToCreateFolder(folderPathname)
+          {
+            type: 'normal',
+            label: 'New Subfolder',
+            click: async () => {
+              showPromptToCreateFolder(folderPathname)
+            },
           },
-        },
-      ])
+        ],
+      })
     },
-    [
-      folderPathname,
-      popup,
-      createNoteInFolderAndRedirect,
-      showPromptToCreateFolder,
-    ]
+    [folderPathname, createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
   const openMoreContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.rename'),
-          enabled: folderPathname !== '/',
-          onClick: showRenamePrompt,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: t('folder.remove'),
-          enabled: folderPathname !== '/',
-          onClick: showFolderRemoveMessageBox,
-        },
-      ])
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: t('folder.rename'),
+            enabled: folderPathname !== '/',
+            click: showRenamePrompt,
+          },
+          {
+            type: 'normal',
+            label: t('folder.remove'),
+            enabled: folderPathname !== '/',
+            click: showFolderRemoveMessageBox,
+          },
+        ],
+      })
     },
-    [folderPathname, popup, t, showRenamePrompt, showFolderRemoveMessageBox]
+    [folderPathname, t, showRenamePrompt, showFolderRemoveMessageBox]
   )
 
   const handleDrop = async (event: React.DragEvent) => {
@@ -247,7 +246,7 @@ const FolderNavigatorItem = ({
       label={folderName}
       onClick={openFolder}
       onDoubleClick={showRenamePrompt}
-      onContextMenu={openContextMenu}
+      onContextMenu={openFolderContextMenu}
       onFoldButtonClick={toggleFolded}
       control={
         <>

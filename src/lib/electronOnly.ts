@@ -1,5 +1,10 @@
 import { Stats, Dirent } from 'fs'
 import { JsonValue } from 'type-fest'
+import {
+  BrowserWindowConstructorOptions,
+  BrowserWindow,
+  MenuItemConstructorOptions,
+} from 'electron'
 
 const __ELECTRON_ONLY__: {
   readFile(pathname: string): Promise<string | Buffer>
@@ -23,6 +28,8 @@ const __ELECTRON_ONLY__: {
   openExternal(url: string): void
   parseCSON(value: string): JsonValue
   stringifyCSON(value: any): string
+  openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
+  openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -39,6 +46,7 @@ const {
   openExternal,
   parseCSON,
   stringifyCSON,
+  openContextMenu,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -80,4 +88,5 @@ export {
   openExternal,
   parseCSON,
   stringifyCSON,
+  openContextMenu,
 }
