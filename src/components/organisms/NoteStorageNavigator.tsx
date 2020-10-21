@@ -13,7 +13,7 @@ import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useActiveStorageId } from '../../lib/routeParams'
-import { mdiChevronDown } from '@mdi/js'
+import { mdiChevronDown, mdiPlus } from '@mdi/js'
 import Icon from '../atoms/Icon'
 
 interface NoteStorageNavigatorProps {
@@ -120,7 +120,10 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <Icon path={mdiChevronDown} />
       </TopButton>
 
-      <button>New Doc</button>
+      <NewDocButton>
+        <Icon path={mdiPlus} />
+        New Doc
+      </NewDocButton>
 
       <ScrollableContainer>
         <BookmarkNavigatorFragment storage={storage} />
@@ -151,7 +154,7 @@ const TopButton = styled.button`
   flex-direction: row;
   background-color: transparent;
   text-align: left;
-  padding: 0 8px;
+  padding: 0 16px;
   height: 40px;
   border: none;
   color: ${({ theme }) => theme.navLabelColor};
@@ -159,7 +162,7 @@ const TopButton = styled.button`
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    color: ${({ theme }) => theme.textColor};
   }
 `
 
@@ -167,4 +170,22 @@ const StorageName = styled.div`
   font-size: 18px;
   font-weight: 600;
   padding-right: 10px;
+`
+
+const NewDocButton = styled.button`
+  margin: 8px 8px;
+  height: 34px;
+  padding: 0;
+  color: ${({ theme }) => theme.primaryButtonLabelColor};
+  background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  align-items: center;
+  display: flex;
+  padding: 0 8px;
+  &:hover {
+    background-color: ${({ theme }) => theme.primaryButtonHoverBackgroundColor};
+  }
 `
