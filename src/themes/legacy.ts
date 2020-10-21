@@ -65,6 +65,7 @@ export const legacyTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
+  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: dark100Color,
   secondaryButtonBackgroundColor: 'transparent',
 

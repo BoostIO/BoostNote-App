@@ -66,6 +66,7 @@ export const sepiaTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
+  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: base3Color,
   secondaryButtonBackgroundColor: 'transparent',
 

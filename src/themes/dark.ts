@@ -62,6 +62,7 @@ export const darkTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
+  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: light100Color,
   secondaryButtonBackgroundColor: 'transparent',
 

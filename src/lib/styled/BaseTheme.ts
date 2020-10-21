@@ -42,6 +42,7 @@ export interface BaseTheme {
   // Button
   primaryButtonLabelColor: string
   primaryButtonBackgroundColor: string
+  primaryButtonHoverBackgroundColor: string
   secondaryButtonLabelColor: string
   secondaryButtonBackgroundColor: string
 
