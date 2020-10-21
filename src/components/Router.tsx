@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import NotePage from './pages/NotePage'
-import { useRouteParams } from '../lib/router'
+import { useRouteParams, useRouter } from '../lib/router'
 import StorageCreatePage from './pages/StorageCreatePage'
 import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
-import useRedirectHandler from '../lib/router/redirect'
 import styled from '../lib/styled'
 import { usePreferences } from '../lib/preferences'
 import WikiNotePage from './pages/WikiNotePage'
+import { values } from '../lib/db/utils'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -19,7 +19,7 @@ const Router = () => {
   const db = useDb()
   const { preferences } = usePreferences()
   const navigationMode = preferences['general.navigationMode']
-  useRedirectHandler()
+  useRedirect()
 
   switch (routeParams.name) {
     case 'storages.notes':
@@ -62,3 +62,28 @@ const Router = () => {
 }
 
 export default Router
+
+function useRedirect() {
+  const { pathname, replace } = useRouter()
+  const { storageMap } = useDb()
+
+  const firstStorageId = useMemo<string | null>(() => {
+    const storages = values(storageMap)
+    if (storages.length > 0) {
+      return storages[0].id
+    }
+    return null
+  }, [storageMap])
+
+  useEffect(() => {
+    if (pathname !== '/app') {
+      return
+    }
+
+    if (firstStorageId == null) {
+      replace('/app/storages')
+    } else {
+      replace(`/app/storages/${firstStorageId}`)
+    }
+  }, [pathname, replace, firstStorageId])
+}
