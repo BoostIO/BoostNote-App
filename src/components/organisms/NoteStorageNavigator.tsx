@@ -68,7 +68,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     },
     [prompt, createStorage, push]
   )
-  const { toggleClosed, setPreferences } = usePreferences()
+  const { togglePreferencesModal, setPreferences } = usePreferences()
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -97,7 +97,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <NavigatorButton
           iconPath={mdiHammerWrench}
           title='Preferences'
-          onClick={toggleClosed}
+          onClick={togglePreferencesModal}
         />
       </TopControl>
 

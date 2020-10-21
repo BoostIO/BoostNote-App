@@ -123,7 +123,7 @@ function usePreferencesStore() {
   }, [preferences])
 
   const [closed, setClosed] = useState(true)
-  const toggleClosed = useCallback(() => {
+  const togglePreferencesModal = useCallback(() => {
     if (closed) {
       setClosed(false)
     } else {
@@ -140,7 +140,7 @@ function usePreferencesStore() {
   return {
     closed,
     setClosed,
-    toggleClosed,
+    togglePreferencesModal,
     preferences: mergedPreferences,
     setPreferences,
   }

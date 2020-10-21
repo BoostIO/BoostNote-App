@@ -47,13 +47,13 @@ const App = () => {
       })
   })
 
-  const { toggleClosed, preferences } = usePreferences()
+  const { togglePreferencesModal, preferences } = usePreferences()
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       switch (event.key) {
         case ',':
           if (isWithGeneralCtrlKey(event)) {
-            toggleClosed()
+            togglePreferencesModal()
           }
           break
         case 'a':
@@ -73,7 +73,7 @@ const App = () => {
           break
       }
     }
-  }, [toggleClosed])
+  }, [togglePreferencesModal])
   useGlobalKeyDownHandler(keyboardHandler)
 
   return (

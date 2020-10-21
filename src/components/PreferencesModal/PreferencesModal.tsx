@@ -98,16 +98,16 @@ const CloseButton = styled.button`
 
 const PreferencesModal = () => {
   const { t } = useTranslation()
-  const { closed, toggleClosed } = usePreferences()
+  const { closed, togglePreferencesModal } = usePreferences()
   const [tab, setTab] = useState('about')
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {
-        toggleClosed()
+        togglePreferencesModal()
       }
     }
-  }, [closed, toggleClosed])
+  }, [closed, togglePreferencesModal])
   useGlobalKeyDownHandler(keydownHandler)
 
   const content = useMemo(() => {
@@ -138,7 +138,7 @@ const PreferencesModal = () => {
             <Icon size={24} path={mdiHammerWrench} />
             {t('preferences.general')}
           </ModalTitle>
-          <CloseButton onClick={toggleClosed}>
+          <CloseButton onClick={togglePreferencesModal}>
             <Icon path={mdiClose} />
           </CloseButton>
         </ModalHeader>
@@ -178,7 +178,7 @@ const PreferencesModal = () => {
           <TabContent>{content}</TabContent>
         </ModalBody>
       </ContentContainer>
-      <BackgroundShadow onClick={toggleClosed} />
+      <BackgroundShadow onClick={togglePreferencesModal} />
     </FullScreenContainer>
   )
 }
