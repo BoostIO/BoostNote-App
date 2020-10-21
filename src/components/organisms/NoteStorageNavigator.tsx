@@ -25,7 +25,29 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const { prompt } = useDialog()
   const { push } = useRouter()
   const { navigate } = useStorageRouter()
+  const {
+    togglePreferencesModal,
+    setPreferences,
+    preferences,
+  } = usePreferences()
   const activeStorageId = useActiveStorageId()
+
+  const generalShowTopLevelNavigator =
+    preferences['general.showTopLevelNavigator']
+
+  const openCreateStorageDialog = useCallback(() => {
+    prompt({
+      title: 'Create a Storage',
+      message: 'Enter name of a storage to create',
+      iconType: DialogIconTypes.Question,
+      submitButtonLabel: 'Create Storage',
+      onClose: async (value: string | null) => {
+        if (value == null) return
+        const storage = await createStorage(value)
+        push(`/app/storages/${storage.id}/notes`)
+      },
+    })
+  }, [prompt, createStorage, push])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -36,25 +58,14 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             type: 'normal',
             label: 'New Storage',
             click: async () => {
-              prompt({
-                title: 'Create a Storage',
-                message: 'Enter name of a storage to create',
-                iconType: DialogIconTypes.Question,
-                submitButtonLabel: 'Create Storage',
-                onClose: async (value: string | null) => {
-                  if (value == null) return
-                  const storage = await createStorage(value)
-                  push(`/app/storages/${storage.id}/notes`)
-                },
-              })
+              openCreateStorageDialog()
             },
           },
         ],
       })
     },
-    [prompt, createStorage, push]
+    [openCreateStorageDialog]
   )
-  const { togglePreferencesModal, setPreferences } = usePreferences()
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -63,14 +74,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       const storages = values(storageMap)
       openContextMenu({
         menuItems: [
-          {
-            type: 'normal',
-            label: 'Preferences',
-            click: () => {
-              togglePreferencesModal()
-            },
-          },
-          { type: 'separator' },
           ...storages
             .filter((storage) => {
               return storage.id !== activeStorageId
@@ -85,11 +88,25 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
               }
             }),
           {
+            type: 'normal',
+            label: 'New Storage',
+            click: () => {
+              openCreateStorageDialog()
+            },
+          },
+          {
             type: 'separator',
           },
           {
             type: 'normal',
-            label: 'Toggle Top Level Navigator',
+            label: 'Preferences',
+            click: () => {
+              togglePreferencesModal()
+            },
+          },
+          {
+            type: 'normal',
+            label: 'Toggle App Navigator',
             click: () => {
               setPreferences((prevPreferences) => {
                 return {
@@ -108,6 +125,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       activeStorageId,
       setPreferences,
       navigate,
+      openCreateStorageDialog,
       togglePreferencesModal,
       storageMap,
     ]
@@ -115,6 +133,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
   return (
     <NavigatorContainer>
+      {!generalShowTopLevelNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <StorageName>{storage.name}</StorageName>
         <Icon path={mdiChevronDown} />
@@ -148,19 +167,24 @@ const ScrollableContainer = styled.div`
   padding: 0 0 10px;
   overflow: auto;
 `
+const WindowControlSpacer = styled.div`
+  height: 20px;
+  -webkit-app-region: drag;
+`
 
 const TopButton = styled.button`
+  height: 40px;
   display: flex;
   flex-direction: row;
-  background-color: transparent;
-  text-align: left;
-  padding: 0 16px;
-  height: 40px;
-  border: none;
-  color: ${({ theme }) => theme.navLabelColor};
-  background-color: ${({ theme }) => theme.navItemBackgroundColor};
   align-items: center;
   cursor: pointer;
+  -webkit-app-region: drag;
+  text-align: left;
+  padding: 0 16px;
+  border: none;
+  color: ${({ theme }) => theme.navLabelColor};
+  background-color: transparent;
+  background-color: ${({ theme }) => theme.navItemBackgroundColor};
   &:hover {
     color: ${({ theme }) => theme.textColor};
   }
