@@ -68,18 +68,18 @@ module.exports = (env, argv) => {
         'AMPLIFY_PINPOINT_REGION',
         'BOOST_NOTE_BASE_URL',
       ]),
-      new CopyPlugin([
-        {
-          from: path.join(__dirname, 'node_modules/codemirror/theme'),
-          to: 'app/codemirror/theme',
-        },
-      ]),
-      new CopyPlugin([
-        {
-          from: path.join(__dirname, 'static'),
-          to: 'app/static',
-        },
-      ]),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, 'node_modules/codemirror/theme'),
+            to: 'app/codemirror/theme',
+          },
+          {
+            from: path.join(__dirname, 'static'),
+            to: 'app/static',
+          },
+        ],
+      }),
     ],
 
     devServer: {
