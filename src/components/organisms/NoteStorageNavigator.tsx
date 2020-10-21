@@ -13,6 +13,8 @@ import { NoteStorage } from '../../lib/db/types'
 import { openContextMenu } from '../../lib/electronOnly'
 import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
+import { useStorageRouter } from '../../lib/storageRouter'
+import { useActiveStorageId } from '../../lib/routeParams'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -42,6 +44,8 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const { createStorage, storageMap } = useDb()
   const { prompt } = useDialog()
   const { push } = useRouter()
+  const { navigate } = useStorageRouter()
+  const activeStorageId = useActiveStorageId()
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -79,15 +83,19 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       const storages = values(storageMap)
       openContextMenu({
         menuItems: [
-          ...storages.map<MenuItemConstructorOptions>((storage) => {
-            return {
-              type: 'normal',
-              label: `Switch to ${storage.name} storage`,
-              click: () => {
-                push(`/app/storages/${storage.id}`)
-              },
-            }
-          }),
+          ...storages
+            .filter((storage) => {
+              return storage.id !== activeStorageId
+            })
+            .map<MenuItemConstructorOptions>((storage) => {
+              return {
+                type: 'normal',
+                label: `Switch to ${storage.name} storage`,
+                click: () => {
+                  navigate(storage.id)
+                },
+              }
+            }),
           {
             type: 'separator',
           },
@@ -108,7 +116,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         ],
       })
     },
-    [setPreferences, push, storageMap]
+    [activeStorageId, setPreferences, navigate, storageMap]
   )
 
   return (
