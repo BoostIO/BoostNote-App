@@ -11,6 +11,8 @@ import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
 import { openContextMenu } from '../../lib/electronOnly'
+import { values } from '../../lib/db/utils'
+import { MenuItemConstructorOptions } from 'electron'
 
 const NavigatorContainer = styled.nav`
   display: flex;
@@ -37,7 +39,7 @@ interface NoteStorageNavigatorProps {
 }
 
 const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
-  const { createStorage } = useDb()
+  const { createStorage, storageMap } = useDb()
   const { prompt } = useDialog()
   const { push } = useRouter()
 
@@ -73,8 +75,22 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
+
+      const storages = values(storageMap)
       openContextMenu({
         menuItems: [
+          ...storages.map<MenuItemConstructorOptions>((storage) => {
+            return {
+              type: 'normal',
+              label: `Switch to ${storage.name} storage`,
+              click: () => {
+                push(`/app/storages/${storage.id}`)
+              },
+            }
+          }),
+          {
+            type: 'separator',
+          },
           {
             type: 'normal',
             label: 'Toggle Top Level Navigator',
@@ -92,7 +108,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         ],
       })
     },
-    [setPreferences]
+    [setPreferences, push, storageMap]
   )
 
   return (

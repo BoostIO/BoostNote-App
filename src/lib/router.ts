@@ -1,9 +1,9 @@
-import { createStoreContext } from '../context'
+import { createStoreContext } from './context'
 import { useState, useCallback, useEffect } from 'react'
-import { Location, normalizeLocation } from '../url'
+import { Location, normalizeLocation } from './url'
 import { createBrowserHistory, createHashHistory } from 'history'
 import { parse as parseQuery } from 'querystring'
-import { appIsElectron } from '../platform'
+import { appIsElectron } from './platform'
 
 const browserHistory = appIsElectron
   ? createHashHistory()

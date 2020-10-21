@@ -1,5 +1,9 @@
 import React from 'react'
-import { StorageAttachmentsRouteParams, useRouteParams } from '../../lib/router'
+
+import {
+  StorageAttachmentsRouteParams,
+  useRouteParams,
+} from '../../lib/routeParams'
 import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
 import { getFileList } from '../../lib/dnd'

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import NotePage from './pages/NotePage'
-import { useRouteParams, useRouter } from '../lib/router'
+import { useRouter } from '../lib/router'
+import { useRouteParams } from '../lib/routeParams'
 import StorageCreatePage from './pages/StorageCreatePage'
 import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'

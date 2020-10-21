@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { NoteStorage } from '../../lib/db/types'
-import { usePathnameWithoutNoteId } from '../../lib/router'
+import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import FolderNavigatorItem from './FolderNavigatorItem'

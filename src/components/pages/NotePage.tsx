@@ -1,13 +1,13 @@
 import React, { useMemo, useCallback } from 'react'
 import NoteDetail from '../organisms/NoteDetail'
+import { useRouter } from '../../lib/router'
 import {
   useRouteParams,
   StorageNotesRouteParams,
   StorageTrashCanRouteParams,
   StorageTagsRouteParams,
   usePathnameWithoutNoteId,
-  useRouter,
-} from '../../lib/router'
+} from '../../lib/routeParams'
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage, NoteDocEditibleProps } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
