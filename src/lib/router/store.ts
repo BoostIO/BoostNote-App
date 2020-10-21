@@ -1,7 +1,6 @@
 import { createStoreContext } from '../context'
-import { normalizeLocation } from './utils'
 import { useState, useCallback, useEffect } from 'react'
-import { Location } from './types'
+import { Location, normalizeLocation } from '../url'
 import { createBrowserHistory, createHashHistory } from 'history'
 import { parse as parseQuery } from 'querystring'
 import { appIsElectron } from '../platform'
