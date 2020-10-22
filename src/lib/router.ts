@@ -1,20 +1,26 @@
 import { createStoreContext } from './context'
 import { useState, useCallback, useEffect } from 'react'
 import { Location, normalizeLocation } from './url'
-import { createBrowserHistory, createHashHistory } from 'history'
+import {
+  createBrowserHistory,
+  createHashHistory,
+  LocationDescriptorObject,
+  LocationState,
+} from 'history'
 import { parse as parseQuery } from 'querystring'
 import { appIsElectron } from './platform'
 
 const browserHistory = appIsElectron
-  ? createHashHistory()
-  : createBrowserHistory()
+  ? createHashHistory<unknown>()
+  : createBrowserHistory<unknown>()
 
 export interface RouterStore extends Location {
-  push: (path: string) => void
-  replace: (path: string) => void
-  go: (count: number) => void
-  goBack: () => void
-  goForward: () => void
+  push(path: string, state?: LocationState): void
+  push(location: LocationDescriptorObject): void
+  replace(path: string): void
+  go(count: number): void
+  goBack(): void
+  goForward(): void
 }
 
 const initialLocation = normalizeLocation({
@@ -26,9 +32,7 @@ const initialLocation = normalizeLocation({
 function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
-  const push = useCallback((urlStr: string) => {
-    browserHistory.push(urlStr)
-  }, [])
+  const push = browserHistory.push
 
   const replace = useCallback((urlStr: string) => {
     browserHistory.replace(urlStr)
