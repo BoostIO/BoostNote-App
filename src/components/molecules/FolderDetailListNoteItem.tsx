@@ -16,13 +16,17 @@ const FolderDetailListNoteItem = ({
   const { push } = useRouter()
 
   const navigateToFolder = useCallback(() => {
-    push(`/app/storages/${storageId}/notes${note.folderPathname}/${note._id}`)
+    push(
+      `/app/storages/${storageId}/notes${
+        note.folderPathname === '/' ? '' : note.folderPathname
+      }/${note._id}`
+    )
   }, [push, storageId, note._id, note.folderPathname])
 
   return (
     <FolderDetailListItem
       iconPath={mdiTextBoxOutline}
-      label={note.title.trim().length === 0 ? 'Untitled' : note.title}
+      label={note.title}
       onClick={navigateToFolder}
     />
   )

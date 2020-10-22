@@ -6,6 +6,7 @@ import {
   flexCenter,
 } from '../../lib/styled/styleFunctions'
 import Icon from '../atoms/Icon'
+import cc from 'classcat'
 
 interface FolderDetailListItemProps {
   iconPath: string
@@ -26,7 +27,9 @@ const FolderDetailListItem = ({
         <div className='icon'>
           <Icon path={iconPath} />
         </div>
-        <div className='label'>{label}</div>
+        <div className={cc(['label', label.trim().length === 0 && 'subtle'])}>
+          {label.trim().length === 0 ? 'Untitled' : label}
+        </div>
       </div>
       <div>{control}</div>
     </Container>
@@ -57,5 +60,8 @@ const Container = styled.li`
   .label {
     flex: 1;
     ${textOverflow}
+    &.subtle {
+      color: ${({ theme }) => theme.disabledUiTextColor};
+    }
   }
 `
