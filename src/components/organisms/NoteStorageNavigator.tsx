@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
@@ -12,25 +12,28 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
-import { useActiveStorageId } from '../../lib/routeParams'
+import { useRouteParams } from '../../lib/routeParams'
 import { mdiChevronDown, mdiPlus } from '@mdi/js'
 import Icon from '../atoms/Icon'
+import { flexCenter } from '../../lib/styled/styleFunctions'
+import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
 }
 
 const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
-  const { createStorage, storageMap } = useDb()
+  const { createStorage, storageMap, createNote } = useDb()
   const { prompt } = useDialog()
-  const { push } = useRouter()
+  const { push, hash } = useRouter()
   const { navigate } = useStorageRouter()
   const {
     togglePreferencesModal,
     setPreferences,
     preferences,
   } = usePreferences()
-  const activeStorageId = useActiveStorageId()
+  const routeParams = useRouteParams()
+  const storageId = storage.id
 
   const generalShowTopLevelNavigator =
     preferences['general.showTopLevelNavigator']
@@ -52,6 +55,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
+
       openContextMenu({
         menuItems: [
           {
@@ -76,7 +80,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         menuItems: [
           ...storages
             .filter((storage) => {
-              return storage.id !== activeStorageId
+              return storage.id !== storageId
             })
             .map<MenuItemConstructorOptions>((storage) => {
               return {
@@ -122,7 +126,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       })
     },
     [
-      activeStorageId,
+      storageId,
       setPreferences,
       navigate,
       openCreateStorageDialog,
@@ -130,6 +134,43 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       storageMap,
     ]
   )
+
+  const createNoteByRoute = useCallback(async () => {
+    let folderPathname = '/'
+    let tags: string[] = []
+    let baseHrefAfterCreate = `/app/storages/${storageId}/notes`
+    switch (routeParams.name) {
+      case 'storages.tags.show':
+        tags = [routeParams.tagName]
+        baseHrefAfterCreate = `/app/storages/${storageId}/tags/${routeParams.tagName}`
+        break
+      case 'storages.notes':
+        if (routeParams.folderPathname !== '/') {
+          folderPathname = routeParams.folderPathname
+          baseHrefAfterCreate = `/app/storages/${storageId}/notes${folderPathname}`
+        }
+        break
+    }
+
+    const note = await createNote(storageId, {
+      folderPathname,
+      tags,
+    })
+    if (note == null) {
+      return
+    }
+
+    push(`${baseHrefAfterCreate}/${note._id}#new`)
+  }, [storageId, routeParams, push, createNote])
+
+  useEffect(() => {
+    if (hash === '#new') {
+      push({ hash: '' })
+      setImmediate(() => {
+        dispatchNoteDetailFocusTitleInputEvent()
+      })
+    }
+  }, [push, hash])
 
   return (
     <NavigatorContainer>
@@ -139,8 +180,10 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <Icon path={mdiChevronDown} />
       </TopButton>
 
-      <NewDocButton>
-        <Icon path={mdiPlus} />
+      <NewDocButton onClick={createNoteByRoute}>
+        <NewDocButtonIcon>
+          <Icon path={mdiPlus} />
+        </NewDocButtonIcon>
         New Doc
       </NewDocButton>
 
@@ -208,8 +251,15 @@ const NewDocButton = styled.button`
   text-align: left;
   align-items: center;
   display: flex;
-  padding: 0 8px;
+  padding: 0 8px 0 4px;
+  font-size: 14px;
   &:hover {
     background-color: ${({ theme }) => theme.primaryButtonHoverBackgroundColor};
   }
+`
+
+const NewDocButtonIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  ${flexCenter}
 `

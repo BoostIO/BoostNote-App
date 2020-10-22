@@ -16,6 +16,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
   const routeParams = useRouteParams()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const noteViewMode = generalStatus.noteViewMode
+
   const selectViewMode = useCallback(
     (newMode: ViewModeType) => {
       setGeneralStatus({
