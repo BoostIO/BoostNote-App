@@ -1,9 +1,15 @@
 import React, { useMemo } from 'react'
 import { NoteStorage, NoteDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
-import { values } from '../../lib/db/utils'
-import { mdiFolder, mdiNote } from '@mdi/js'
+import {
+  values,
+  isDirectSubPathname,
+  getFolderNameFromPathname,
+} from '../../lib/db/utils'
+import { mdiNote } from '@mdi/js'
 import Icon from '../atoms/Icon'
+import PageContainer from '../atoms/PageContainer'
+import FolderDetailListFolderItem from '../molecules/FolderDetailListFolderItem'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -16,7 +22,7 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
   const subFolders = useMemo(() => {
     const folders = values(storage.folderMap)
     return folders.filter((folder) => {
-      return folder.pathname.includes(folderPathname + '/')
+      return isDirectSubPathname(folderPathname, folder.pathname)
     })
   }, [storage.folderMap, folderPathname])
 
@@ -36,21 +42,20 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
   }, [storage, folderPathname])
 
   return (
-    <div>
-      <h1>{folderPathname}</h1>
+    <PageContainer>
+      <h1>
+        {folderPathname === '/'
+          ? 'Workspace'
+          : getFolderNameFromPathname(folderPathname)}
+      </h1>
       <ul>
         {subFolders.map((folder) => {
           return (
-            <li key={folder._id}>
-              <button
-                onClick={() => {
-                  push(`/app/storages/${storage.id}/notes${folder.pathname}`)
-                }}
-              >
-                <Icon path={mdiFolder} />
-                {folder.pathname}
-              </button>
-            </li>
+            <FolderDetailListFolderItem
+              key={folder._id}
+              storageId={storage.id}
+              folder={folder}
+            />
           )
         })}
         {notes.map((note) => {
@@ -70,7 +75,7 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
           )
         })}
       </ul>
-    </div>
+    </PageContainer>
   )
 }
 
