@@ -79,6 +79,7 @@ const NotePathnameNavigator = ({
   const { push } = useRouter()
   const routeParams = useRouteParams()
   const { preferences } = usePreferences()
+  const generalNavigationMode = preferences['general.navigationMode']
 
   const folderDataList = useMemo<FolderData[]>(() => {
     if (noteFolderPathname === '/') {
@@ -113,7 +114,7 @@ const NotePathnameNavigator = ({
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault()
           push(
-            noteId == null
+            generalNavigationMode === 'wiki' || noteId == null
               ? `/app/storages/${storageId}/notes`
               : `/app/storages/${storageId}/notes/${noteId}`
           )
@@ -124,19 +125,24 @@ const NotePathnameNavigator = ({
           <Icon path={mdiBookOpen} />
         </IconContainer>
       </NoteDetailNavigatorItem>
-      {workspaceIsActive && <Icon path={mdiSlashForward} />}
+      {folderDataList.length === 0 && <Icon path={mdiSlashForward} />}
 
       {folderDataList.map((folderData) => {
         return (
           <React.Fragment key={folderData.pathname}>
             <Icon path={mdiSlashForward} />
             <NavigatorFolderItem
-              active={currentFolderPathname === folderData.pathname}
+              active={
+                generalNavigationMode === 'wiki'
+                  ? currentFolderPathname === folderData.pathname &&
+                    noteId == null
+                  : currentFolderPathname === folderData.pathname
+              }
               storageId={storageId}
               storageName={storageName}
               folderName={folderData.name}
               folderPathname={folderData.pathname}
-              noteId={noteId}
+              noteId={generalNavigationMode === 'wiki' ? undefined : noteId}
             />
           </React.Fragment>
         )
