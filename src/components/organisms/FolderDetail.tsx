@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, ChangeEventHandler, useCallback } from 'react'
 import { NoteStorage, NoteDoc } from '../../lib/db/types'
 import {
   values,
@@ -9,6 +9,8 @@ import PageContainer from '../atoms/PageContainer'
 import FolderDetailListFolderItem from '../molecules/FolderDetailListFolderItem'
 import FolderDetailListNoteItem from '../molecules/FolderDetailListNoteItem'
 import { usePreferences } from '../../lib/preferences'
+import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
+import { NoteSortingOptions } from '../../lib/sort'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -16,7 +18,7 @@ interface FolderDetailProps {
 }
 
 const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
-  const { preferences } = usePreferences()
+  const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
   const subFolders = useMemo(() => {
     const folders = values(storage.folderMap)
@@ -62,6 +64,15 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
       })
   }, [storage, folderPathname, noteSorting])
 
+  const selectNoteSorting: ChangeEventHandler<HTMLSelectElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'general.noteSorting': event.target.value as NoteSortingOptions,
+      })
+    },
+    [setPreferences]
+  )
+
   return (
     <PageContainer>
       <h1>
@@ -69,6 +80,11 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
           ? 'Workspace'
           : getFolderNameFromPathname(folderPathname)}
       </h1>
+      <div>
+        <select onChange={selectNoteSorting}>
+          {<NoteSortingOptionsFragment />}
+        </select>
+      </div>
       <ul>
         {subFolders.map((folder) => {
           return (
