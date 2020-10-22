@@ -15,7 +15,7 @@ import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import NoteDetailNavigator from '../molecules/NotePathnameNavigator'
+import NotePathnameNavigator from '../molecules/NotePathnameNavigator'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
 import { values } from '../../lib/db/utils'
 import {
@@ -229,23 +229,25 @@ const NotePageToolbar = ({
 
   return (
     <Container>
-      <NoteDetailNavigator
+      <NotePathnameNavigator
         storageId={storageId}
         storageName={storageName}
         noteId={note?._id}
         noteFolderPathname={folderPathname}
       />
-      <ToolbarSeparator />
 
       {note != null && (
-        <NoteDetailTagNavigator
-          storageId={storageId}
-          storageTags={storageTags}
-          noteId={note._id}
-          tags={note.tags}
-          appendTagByName={appendTagByName}
-          removeTagByName={removeTagByName}
-        />
+        <>
+          <ToolbarSeparator />
+          <NoteDetailTagNavigator
+            storageId={storageId}
+            storageTags={storageTags}
+            noteId={note._id}
+            tags={note.tags}
+            appendTagByName={appendTagByName}
+            removeTagByName={removeTagByName}
+          />
+        </>
       )}
       {note != null && (
         <Control onContextMenu={openTopbarSwitchSelectorContextMenu}>

@@ -6,6 +6,7 @@ import { useRouter } from '../../lib/router'
 import { useRouteParams } from '../../lib/routeParams'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 import NoteDetailNavigatorItem from '../atoms/NoteDetailNavigatorItem'
+import { usePreferences } from '../../lib/preferences'
 
 const Container = styled.div`
   display: flex;
@@ -18,9 +19,6 @@ const IconContainer = styled.div`
   width: 24px;
   height: 24px;
   ${flexCenter}
-  background-color: transparent;
-  border: none;
-  color: ${({ theme }) => theme.navButtonColor};
 `
 
 interface NotePathnameNavigatorProps {
@@ -80,6 +78,7 @@ const NotePathnameNavigator = ({
 }: NotePathnameNavigatorProps) => {
   const { push } = useRouter()
   const routeParams = useRouteParams()
+  const { preferences } = usePreferences()
 
   const folderDataList = useMemo<FolderData[]>(() => {
     if (noteFolderPathname === '/') {
@@ -105,11 +104,10 @@ const NotePathnameNavigator = ({
     return routeParams.folderPathname
   }, [routeParams])
 
+  const workspaceIsActive = currentFolderPathname === '/'
+
   return (
     <Container>
-      <IconContainer>
-        <Icon path={mdiBookOpen} />
-      </IconContainer>
       <NoteDetailNavigatorItem
         title={storageName}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
@@ -120,10 +118,13 @@ const NotePathnameNavigator = ({
               : `/app/storages/${storageId}/notes/${noteId}`
           )
         }}
-        className={currentFolderPathname === '/' ? 'active' : ''}
+        className={workspaceIsActive ? 'active' : ''}
       >
-        {storageName}
+        <IconContainer>
+          <Icon path={mdiBookOpen} />
+        </IconContainer>
       </NoteDetailNavigatorItem>
+      {workspaceIsActive && <Icon path={mdiSlashForward} />}
 
       {folderDataList.map((folderData) => {
         return (
