@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react'
 import { NoteStorage, NoteDoc } from '../../lib/db/types'
-import { useRouter } from '../../lib/router'
 import {
   values,
   isDirectSubPathname,
   getFolderNameFromPathname,
 } from '../../lib/db/utils'
-import { mdiNote } from '@mdi/js'
-import Icon from '../atoms/Icon'
 import PageContainer from '../atoms/PageContainer'
 import FolderDetailListFolderItem from '../molecules/FolderDetailListFolderItem'
+import FolderDetailListNoteItem from '../molecules/FolderDetailListNoteItem'
+import { usePreferences } from '../../lib/preferences'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -17,13 +16,17 @@ interface FolderDetailProps {
 }
 
 const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
-  const { push } = useRouter()
-
+  const { preferences } = usePreferences()
+  const noteSorting = preferences['general.noteSorting']
   const subFolders = useMemo(() => {
     const folders = values(storage.folderMap)
-    return folders.filter((folder) => {
-      return isDirectSubPathname(folderPathname, folder.pathname)
-    })
+    return folders
+      .filter((folder) => {
+        return isDirectSubPathname(folderPathname, folder.pathname)
+      })
+      .sort((a, b) => {
+        return a.pathname.localeCompare(b.pathname)
+      })
   }, [storage.folderMap, folderPathname])
 
   const notes = useMemo(() => {
@@ -32,14 +35,32 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
       return []
     }
 
-    return [...folder.noteIdSet].reduce((notes, noteId) => {
-      const note = storage.noteMap[noteId]
-      if (note != null && !note.trashed) {
-        notes.push(note)
-      }
-      return notes
-    }, [] as NoteDoc[])
-  }, [storage, folderPathname])
+    return [...folder.noteIdSet]
+      .reduce((notes, noteId) => {
+        const note = storage.noteMap[noteId]
+        if (note != null && !note.trashed) {
+          notes.push(note)
+        }
+        return notes
+      }, [] as NoteDoc[])
+      .sort((a, b) => {
+        switch (noteSorting) {
+          case 'created-date-asc':
+            return a.createdAt.localeCompare(b.createdAt)
+          case 'created-date-dsc':
+            return -a.createdAt.localeCompare(b.createdAt)
+          case 'title-asc':
+            return a.title.localeCompare(b.title)
+          case 'title-dsc':
+            return -a.title.localeCompare(b.title)
+          case 'updated-date-asc':
+            return a.updatedAt.localeCompare(b.updatedAt)
+          case 'updated-date-dsc':
+          default:
+            return -a.updatedAt.localeCompare(b.updatedAt)
+        }
+      })
+  }, [storage, folderPathname, noteSorting])
 
   return (
     <PageContainer>
@@ -60,18 +81,11 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
         })}
         {notes.map((note) => {
           return (
-            <li key={note._id}>
-              <button
-                onClick={() => {
-                  push(
-                    `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
-                  )
-                }}
-              >
-                <Icon path={mdiNote} />
-                {note.title}
-              </button>
-            </li>
+            <FolderDetailListNoteItem
+              key={note._id}
+              storageId={storage.id}
+              note={note}
+            />
           )
         })}
       </ul>
