@@ -9,7 +9,7 @@ import Icon from '../atoms/Icon'
 import cc from 'classcat'
 
 interface FolderDetailListItemProps {
-  iconPath: string
+  iconPath?: string
   label: string
   onClick?: MouseEventHandler<HTMLDivElement>
   control?: ReactNode
@@ -25,7 +25,7 @@ const FolderDetailListItem = ({
     <Container>
       <div className='clickable' onClick={onClick}>
         <div className='icon'>
-          <Icon path={iconPath} />
+          {iconPath != null && <Icon path={iconPath} />}
         </div>
         <div className={cc(['label', label.trim().length === 0 && 'subtle'])}>
           {label.trim().length === 0 ? 'Untitled' : label}

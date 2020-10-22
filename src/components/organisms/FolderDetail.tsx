@@ -4,6 +4,7 @@ import {
   values,
   isDirectSubPathname,
   getFolderNameFromPathname,
+  getParentFolderPathname,
 } from '../../lib/db/utils'
 import PageContainer from '../atoms/PageContainer'
 import FolderDetailListFolderItem from '../molecules/FolderDetailListFolderItem'
@@ -11,6 +12,8 @@ import FolderDetailListNoteItem from '../molecules/FolderDetailListNoteItem'
 import { usePreferences } from '../../lib/preferences'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
+import FolderDetailListItem from '../molecules/FolderDetailListItem'
+import { useRouter } from '../../lib/router'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -20,6 +23,8 @@ interface FolderDetailProps {
 const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
+  const { push } = useRouter()
+
   const subFolders = useMemo(() => {
     const folders = values(storage.folderMap)
     return folders
@@ -73,12 +78,24 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
     [setPreferences]
   )
 
+  const navigatorToParentFolder = useCallback(() => {
+    if (folderPathname === '/') {
+      return
+    }
+
+    push(
+      `/app/storages/${storage.id}/notes${getParentFolderPathname(
+        folderPathname
+      )}`
+    )
+  }, [folderPathname, storage.id, push])
+
+  const folderIsRoot = folderPathname === '/'
+
   return (
     <PageContainer>
       <h1>
-        {folderPathname === '/'
-          ? 'Workspace'
-          : getFolderNameFromPathname(folderPathname)}
+        {folderIsRoot ? 'Workspace' : getFolderNameFromPathname(folderPathname)}
       </h1>
       <div>
         <select onChange={selectNoteSorting}>
@@ -86,6 +103,9 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
         </select>
       </div>
       <ul>
+        {!folderIsRoot && (
+          <FolderDetailListItem label='..' onClick={navigatorToParentFolder} />
+        )}
         {subFolders.map((folder) => {
           return (
             <FolderDetailListFolderItem
