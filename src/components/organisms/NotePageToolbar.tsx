@@ -21,6 +21,7 @@ import { values, isTagNameValid } from '../../lib/db/utils'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
+  exportNoteAsPdfFile
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -28,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { useToast } from '../../lib/toast'
 import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
 import { openContextMenu } from '../../lib/electronOnly'
 
@@ -76,6 +78,7 @@ const NotePageToolbar = ({
   const { previewStyle } = usePreviewStyle()
   const { generalStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
+  const { pushMessage } = useToast()
 
   const storageId = storage.id
   const storageName = storage.name
@@ -180,20 +183,26 @@ const NotePageToolbar = ({
             type: 'normal',
             label: 'HTML export',
             click: async () =>
-              await exportNoteAsHtmlFile(note, preferences, previewStyle),
+              await exportNoteAsHtmlFile(note, preferences, pushMessage, previewStyle),
           },
           {
             type: 'normal',
             label: 'Markdown export',
             click: async () =>
-              await exportNoteAsMarkdownFile(note, {
+              await exportNoteAsMarkdownFile(note, pushMessage, {
                 includeFrontMatter: preferences['markdown.includeFrontMatter'],
               }),
+          },
+          {
+            type: 'normal',
+            label: 'PDF export',
+            click: async () =>
+              await exportNoteAsPdfFile(note, preferences, pushMessage, previewStyle),
           },
         ],
       })
     },
-    [note, preferences, previewStyle]
+    [note, preferences, previewStyle, pushMessage]
   )
 
   const routeParams = useRouteParams()
