@@ -14,6 +14,10 @@ import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
 import FolderDetailListItem from '../molecules/FolderDetailListItem'
 import { useRouter } from '../../lib/router'
+import Icon from '../atoms/Icon'
+import { mdiBookOpen, mdiFolder } from '@mdi/js'
+import styled from '../../lib/styled'
+import { flexCenter, borderBottom } from '../../lib/styled/styleFunctions'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -94,15 +98,21 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
 
   return (
     <PageContainer>
-      <h1>
+      <Header>
+        <div className='icon'>
+          <Icon path={folderIsRoot ? mdiBookOpen : mdiFolder} />
+        </div>
         {folderIsRoot ? 'Workspace' : getFolderNameFromPathname(folderPathname)}
-      </h1>
-      <div>
-        <select onChange={selectNoteSorting}>
-          {<NoteSortingOptionsFragment />}
-        </select>
-      </div>
-      <ul>
+      </Header>
+      <Control>
+        <div className='left'></div>
+        <div className='right'>
+          <select onChange={selectNoteSorting}>
+            {<NoteSortingOptionsFragment />}
+          </select>
+        </div>
+      </Control>
+      <List>
         {!folderIsRoot && (
           <FolderDetailListItem label='..' onClick={navigatorToParentFolder} />
         )}
@@ -124,9 +134,40 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
             />
           )
         })}
-      </ul>
+      </List>
     </PageContainer>
   )
 }
 
 export default FolderDetail
+
+const Header = styled.h1`
+  display: flex;
+  align-items: center;
+  .icon {
+    font-size: 25px;
+    width: 25px;
+    height: 25px;
+    ${flexCenter}
+    margin-right: 4px;
+  }
+`
+
+const Control = styled.div`
+  display: flex;
+  height: 40px;
+  ${borderBottom}
+  .left {
+    flex: 1;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+  }
+`
+
+const List = styled.ul`
+  padding: 0;
+  list-style: none;
+  margin: 0;
+`
