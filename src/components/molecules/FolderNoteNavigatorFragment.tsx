@@ -5,7 +5,7 @@ import {
   PopulatedFolderDoc,
   ObjectMap,
 } from '../../lib/db/types'
-import { usePathnameWithoutNoteId } from '../../lib/routeParams'
+import { useRouteParams, StorageNotesRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import FolderNavigatorItem from './FolderNavigatorItem'
@@ -28,7 +28,7 @@ const FolderNoteNavigatorFragment = ({
 
   const { sideNavOpenedItemSet } = useGeneralStatus()
 
-  const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
+  const routeParams = useRouteParams() as StorageNotesRouteParams
 
   const folderPathnames = useMemo(() => {
     return Object.keys(folderMap).sort((a, b) => a.localeCompare(b))
@@ -63,7 +63,7 @@ const FolderNoteNavigatorFragment = ({
     storage.folderMap,
     storage.noteMap,
   ])
-
+  console.log(routeParams.noteId)
   return (
     <>
       {openedFolderPathnameList.map((item) => {
@@ -72,8 +72,8 @@ const FolderNoteNavigatorFragment = ({
             <FolderNavigatorItem
               key={`folder:${item.pathname}`}
               active={
-                currentPathnameWithoutNoteId ===
-                `/app/storages/${storageId}/notes${item.pathname}`
+                routeParams.noteId == null &&
+                routeParams.folderPathname === item.pathname
               }
               folderName={item.name}
               depth={item.depth}
@@ -90,6 +90,7 @@ const FolderNoteNavigatorFragment = ({
         return (
           <NoteNavigatorItem
             key={item.id}
+            active={routeParams.noteId === item.id}
             storageId={storage.id}
             noteTitle={item.title}
             noteId={item.id}

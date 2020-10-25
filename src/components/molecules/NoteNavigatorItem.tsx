@@ -8,6 +8,7 @@ interface NoteNavigatorItemProps {
   noteId: string
   noteTitle: string
   noteFolderPath: string
+  active: boolean
   depth: number
 }
 
@@ -16,6 +17,7 @@ const NoteNavigatorItem = ({
   noteId,
   noteTitle,
   noteFolderPath,
+  active,
   depth,
 }: NoteNavigatorItemProps) => {
   const emptyTitle = noteTitle.trim().length === 0
@@ -27,6 +29,7 @@ const NoteNavigatorItem = ({
 
   return (
     <NavigatorItem
+      active={active}
       iconPath={mdiTextBoxOutline}
       label={emptyTitle ? 'Untitled' : noteTitle}
       depth={depth}
