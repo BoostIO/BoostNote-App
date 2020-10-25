@@ -18,7 +18,7 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
-import FeatureCheckListPopup from './organisms/FeatureCheckListPopup'
+
 import TopLevelNavigator from './organisms/TopLevelNavigator'
 
 const LoadingText = styled.div`
@@ -98,7 +98,6 @@ const App = () => {
         <PreferencesModal />
         <ToastList />
         <CodeMirrorStyle />
-        <FeatureCheckListPopup />
       </AppContainer>
     </ThemeProvider>
   )
