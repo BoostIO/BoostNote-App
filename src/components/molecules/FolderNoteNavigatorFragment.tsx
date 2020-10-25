@@ -9,8 +9,7 @@ import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import FolderNavigatorItem from './FolderNavigatorItem'
-import NavigatorItem from '../atoms/NavigatorItem'
-import { mdiTextBoxOutline } from '@mdi/js'
+import NoteNavigatorItem from './NoteNavigatorItem'
 
 interface FolderNoteNavigatorFragment {
   storage: NoteStorage
@@ -89,10 +88,12 @@ const FolderNoteNavigatorFragment = ({
         }
 
         return (
-          <NavigatorItem
+          <NoteNavigatorItem
             key={item.id}
-            iconPath={mdiTextBoxOutline}
-            label={item.title}
+            storageId={storage.id}
+            noteTitle={item.title}
+            noteId={item.id}
+            noteFolderPath={item.folderPathname}
             depth={item.depth}
           />
         )

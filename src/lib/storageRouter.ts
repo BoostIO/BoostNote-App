@@ -26,6 +26,17 @@ function useStorageRouterStore() {
     [activeStorageId, push]
   )
 
+  const navigateToNote = useCallback(
+    (storageId: string, noteId: string, noteFolderPathname = '/') => {
+      push(
+        `/app/storages/${storageId}/notes${
+          noteFolderPathname === '/' ? '' : noteFolderPathname
+        }/${noteId}`
+      )
+    },
+    [push]
+  )
+
   useEffect(() => {
     if (activeStorageId != null) {
       lastStoragePathnameMapRef.current.set(activeStorageId, pathname)
@@ -34,6 +45,7 @@ function useStorageRouterStore() {
 
   return {
     navigate,
+    navigateToNote,
   }
 }
 

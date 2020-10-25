@@ -70,11 +70,18 @@ const ClickableContainer = styled.button`
   &:hover.active {
     background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
   }
+
+  &.subtle {
+    color: ${({ theme }) => theme.disabledUiTextColor};
+  }
 `
 
 const Label = styled.div`
   ${textOverflow}
   flex: 1;
+  &.subtle {
+    color: ${({ theme }) => theme.disabledUiTextColor};
+  }
 `
 
 const Control = styled.div`
@@ -102,6 +109,7 @@ interface NavigatorItemProps {
   className?: string
   folded?: boolean
   active?: boolean
+  subtle?: boolean
   onFoldButtonClick?: (event: React.MouseEvent) => void
   onClick?: (event: React.MouseEvent) => void
   onContextMenu?: (event: React.MouseEvent) => void
@@ -119,6 +127,7 @@ const NavigatorItem = ({
   className,
   folded,
   active,
+  subtle,
   onFoldButtonClick,
   onClick,
   onDoubleClick,
@@ -157,7 +166,7 @@ const NavigatorItem = ({
             <Icon path={iconPath} />
           </IconContainer>
         )}
-        <Label>{label}</Label>
+        <Label className={cc([subtle && 'subtle'])}>{label}</Label>
       </ClickableContainer>
       {control && <Control className='control'>{control}</Control>}
     </Container>
