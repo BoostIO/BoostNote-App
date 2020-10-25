@@ -14,6 +14,8 @@ import { openContextMenu } from '../../lib/electronOnly'
 interface FolderNavigatorItemProps {
   active: boolean
   storageId: string
+  folderName: string
+  depth: number
   folderPathname: string
   folderSetWithSubFolders: Set<string>
   createNoteInFolderAndRedirect: (folderPathname: string) => void
@@ -23,6 +25,8 @@ interface FolderNavigatorItemProps {
 
 const FolderNavigatorItem = ({
   active,
+  folderName,
+  depth,
   storageId,
   folderPathname,
   folderSetWithSubFolders,
@@ -40,17 +44,6 @@ const FolderNavigatorItem = ({
     removeFolder,
     moveNoteToOtherStorage,
   } = useDb()
-
-  const { folderName, depth } = useMemo(() => {
-    const nameElements = folderPathname.split('/').slice(1)
-    const folderName = nameElements[nameElements.length - 1]
-    const depth = nameElements.length - 1
-    return {
-      nameElements,
-      folderName,
-      depth,
-    }
-  }, [folderPathname])
 
   const itemId = useMemo(() => {
     return getFolderItemId(storageId, folderPathname)

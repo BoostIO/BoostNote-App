@@ -6,7 +6,7 @@ import { useRouter } from '../../lib/router'
 import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
-import { useFirstUser } from '../../lib/preferences'
+import { useFirstUser, usePreferences } from '../../lib/preferences'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import {
@@ -17,7 +17,7 @@ import {
   mdiSync,
   mdiPlus,
 } from '@mdi/js'
-import FolderListFragment from './FolderNavigatorFragment'
+import FolderNavigatorFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
@@ -25,6 +25,7 @@ import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
+import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -49,6 +50,7 @@ const StorageNavigatorFragment = ({
   const currentPathname = usePathnameWithoutNoteId()
   const user = useFirstUser()
   const { report } = useAnalytics()
+  const { preferences } = usePreferences()
 
   const createNoteInFolderAndRedirect = useCallback(
     async (folderPathname: string) => {
@@ -296,6 +298,8 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
+  const generalNavigationMode = preferences['general.navigationMode']
+
   // TODO: Extract bottom content so it won't be rendered when storage is folded
   return (
     <>
@@ -334,12 +338,22 @@ const StorageNavigatorFragment = ({
           />
         }
       />
-      <FolderListFragment
-        storage={storage}
-        createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-        showPromptToCreateFolder={showPromptToCreateFolder}
-        showPromptToRenameFolder={showPromptToRenameFolder}
-      />
+      {generalNavigationMode === 'note' ? (
+        <FolderNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+        />
+      ) : (
+        <FolderNoteNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+        />
+      )}
+
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (
         <NavigatorItem

@@ -1,23 +1,30 @@
 import React, { useMemo } from 'react'
-import { NoteStorage } from '../../lib/db/types'
+import {
+  NoteStorage,
+  NoteDoc,
+  PopulatedFolderDoc,
+  ObjectMap,
+} from '../../lib/db/types'
 import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import FolderNavigatorItem from './FolderNavigatorItem'
+import NavigatorItem from '../atoms/NavigatorItem'
+import { mdiTextBoxOutline } from '@mdi/js'
 
-interface FolderListFragmentProps {
+interface FolderNoteNavigatorFragment {
   storage: NoteStorage
   createNoteInFolderAndRedirect: (folderPathname: string) => void
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
 }
 
-const FolderListFragment = ({
+const FolderNoteNavigatorFragment = ({
   storage,
   showPromptToCreateFolder,
   showPromptToRenameFolder,
   createNoteInFolderAndRedirect,
-}: FolderListFragmentProps) => {
+}: FolderNoteNavigatorFragment) => {
   const { folderMap, id: storageId } = storage
 
   const { sideNavOpenedItemSet } = useGeneralStatus()
@@ -46,28 +53,47 @@ const FolderListFragment = ({
       tree,
       storageId,
       sideNavOpenedItemSet,
-      '/'
+      '/',
+      storage.folderMap,
+      storage.noteMap
     )
-  }, [folderPathnames, storageId, sideNavOpenedItemSet])
+  }, [
+    folderPathnames,
+    storageId,
+    sideNavOpenedItemSet,
+    storage.folderMap,
+    storage.noteMap,
+  ])
 
   return (
     <>
       {openedFolderPathnameList.map((item) => {
+        if (item.type === 'folder') {
+          return (
+            <FolderNavigatorItem
+              key={`folder:${item.pathname}`}
+              active={
+                currentPathnameWithoutNoteId ===
+                `/app/storages/${storageId}/notes${item.pathname}`
+              }
+              folderName={item.name}
+              depth={item.depth}
+              storageId={storage.id}
+              folderPathname={item.pathname}
+              folderSetWithSubFolders={folderSetWithSubFolders}
+              createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+              showPromptToCreateFolder={showPromptToCreateFolder}
+              showPromptToRenameFolder={showPromptToRenameFolder}
+            />
+          )
+        }
+
         return (
-          <FolderNavigatorItem
-            key={`folder:${item.pathname}`}
-            active={
-              currentPathnameWithoutNoteId ===
-              `/app/storages/${storageId}/notes${item.pathname}`
-            }
-            storageId={storage.id}
+          <NavigatorItem
+            key={item.id}
+            iconPath={mdiTextBoxOutline}
+            label={item.title}
             depth={item.depth}
-            folderName={item.name}
-            folderPathname={item.pathname}
-            folderSetWithSubFolders={folderSetWithSubFolders}
-            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
           />
         )
       })}
@@ -92,43 +118,82 @@ function getFolderNameElementTree(folderPathnameList: string[]) {
 }
 
 interface FolderNavItem {
+  type: 'folder'
   name: string
   pathname: string
   depth: number
 }
 
+interface NoteNavItem {
+  type: 'note'
+  id: string
+  title: string
+  folderPathname: string
+  depth: number
+}
+
+type NavItem = FolderNavItem | NoteNavItem
+
 function getOpenedFolderPathnameList(
   tree: {},
   storageId: string,
   openItemIdSet: Set<string>,
-  parentPathname: string
-): FolderNavItem[] {
+  parentPathname: string,
+  folderMap: ObjectMap<PopulatedFolderDoc>,
+  noteMap: ObjectMap<NoteDoc>
+): NavItem[] {
   const names = Object.keys(tree)
-  const pathnameList: FolderNavItem[] = []
+  const itemList: NavItem[] = []
   for (const name of names) {
     const pathname =
       parentPathname === '/' ? `/${name}` : `${parentPathname}/${name}`
     if (pathname === '/') {
       continue
     }
-    const depth = pathname.split('/').slice(0).length + 1
-    pathnameList.push({
-      name,
+    const nameElements = pathname.split('/').slice(1)
+    const depth = nameElements.length - 1
+    itemList.push({
+      type: 'folder',
       pathname,
+      name,
       depth,
     })
-    if (openItemIdSet.has(getFolderItemId(storageId, pathname))) {
-      pathnameList.push(
+
+    const folderIsOpened = openItemIdSet.has(
+      getFolderItemId(storageId, pathname)
+    )
+    if (folderIsOpened) {
+      itemList.push(
         ...getOpenedFolderPathnameList(
           tree[name],
           storageId,
           openItemIdSet,
-          pathname
+          pathname,
+          folderMap,
+          noteMap
         )
       )
+
+      const folderDoc = folderMap[pathname]
+      if (folderIsOpened && folderDoc != null) {
+        const noteIds = [...folderDoc.noteIdSet]
+        noteIds.forEach((noteId) => {
+          const noteDoc = noteMap[noteId]
+          if (noteDoc == null) {
+            return
+          }
+          itemList.push({
+            type: 'note',
+            id: noteDoc._id,
+            title: noteDoc.title,
+            folderPathname: noteDoc.folderPathname,
+            depth: depth + 1,
+          })
+        })
+      }
     }
   }
-  return pathnameList
+  return itemList
 }
 
-export default FolderListFragment
+export default FolderNoteNavigatorFragment
