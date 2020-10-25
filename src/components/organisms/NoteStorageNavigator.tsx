@@ -35,8 +35,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const routeParams = useRouteParams()
   const storageId = storage.id
 
-  const generalShowTopLevelNavigator =
-    preferences['general.showTopLevelNavigator']
+  const generalShowAppNavigator = preferences['general.showAppNavigator']
 
   const openCreateStorageDialog = useCallback(() => {
     prompt({
@@ -115,8 +114,8 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
               setPreferences((prevPreferences) => {
                 return {
                   ...prevPreferences,
-                  'general.showTopLevelNavigator': !prevPreferences[
-                    'general.showTopLevelNavigator'
+                  'general.showAppNavigator': !prevPreferences[
+                    'general.showAppNavigator'
                   ],
                 }
               })
@@ -174,7 +173,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
   return (
     <NavigatorContainer>
-      {!generalShowTopLevelNavigator && <WindowControlSpacer />}
+      {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <StorageName>{storage.name}</StorageName>
         <Icon path={mdiChevronDown} />

@@ -19,7 +19,7 @@ const Router = () => {
   const routeParams = useRouteParams()
   const db = useDb()
   const { preferences } = usePreferences()
-  const navigationMode = preferences['general.navigationMode']
+  const appMode = preferences['general.appMode']
   useRedirect()
 
   switch (routeParams.name) {
@@ -32,7 +32,7 @@ const Router = () => {
         break
       }
 
-      if (navigationMode === 'note') {
+      if (appMode === 'note') {
         return <NotePage storage={storage} />
       }
       return <WikiNotePage storage={storage} />

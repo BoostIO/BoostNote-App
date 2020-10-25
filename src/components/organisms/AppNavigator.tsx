@@ -73,7 +73,7 @@ const TopLevelNavigator = () => {
             label: 'Hide App Navigator',
             click: () => {
               setPreferences({
-                'general.showTopLevelNavigator': false,
+                'general.showAppNavigator': false,
               })
             },
           },

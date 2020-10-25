@@ -298,7 +298,7 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
-  const generalNavigationMode = preferences['general.navigationMode']
+  const generalAppMode = preferences['general.appMode']
 
   // TODO: Extract bottom content so it won't be rendered when storage is folded
   return (
@@ -338,7 +338,7 @@ const StorageNavigatorFragment = ({
           />
         }
       />
-      {generalNavigationMode === 'note' ? (
+      {generalAppMode === 'note' ? (
         <FolderNavigatorFragment
           storage={storage}
           createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}

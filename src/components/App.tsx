@@ -18,8 +18,7 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
-
-import TopLevelNavigator from './organisms/TopLevelNavigator'
+import AppNavigator from './organisms/AppNavigator'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -85,9 +84,7 @@ const App = () => {
       >
         {initialized ? (
           <>
-            {preferences['general.showTopLevelNavigator'] && (
-              <TopLevelNavigator />
-            )}
+            {preferences['general.showAppNavigator'] && <AppNavigator />}
             <Router />
           </>
         ) : (
