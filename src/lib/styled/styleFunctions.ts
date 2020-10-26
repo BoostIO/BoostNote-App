@@ -131,7 +131,7 @@ font-size: 13px;
 `
 
 export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
-background-color: ${theme.inputBackground};
+background-color: ${theme.secondaryButtonBackgroundColor};
 color: ${theme.secondaryButtonLabelColor};
 border: 1px solid ${theme.borderColor};
 font-size: 13px;
@@ -140,6 +140,7 @@ font-size: 13px;
 &:active,
 &.active {
   cursor: pointer;
+  color: ${theme.secondaryButtonHoverLabelColor};
   background-color: ${theme.primaryColor};
 }
 &:focus {
