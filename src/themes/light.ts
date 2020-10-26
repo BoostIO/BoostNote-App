@@ -3,6 +3,8 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 const base1Color = '#ECECEC'
 const base2Color = '#F9F9F9'
 const primaryColor = '#5580DC'
+const primaryDarkerColor = '#4070D8'
+const dangerColor = '#DC3545'
 
 const dark87Color = 'rgba(0,0,0,0.87)'
 const dark54Color = 'rgba(0,0,0,0.54)'
@@ -36,7 +38,8 @@ export const lightTheme: BaseTheme = {
   disabledUiTextColor: dark26Color,
 
   primaryColor: primaryColor,
-  dangerColor: '#dc3545',
+  primaryDarkerColor: primaryDarkerColor,
+  dangerColor: dangerColor,
   borderColor: dark12Color,
 
   noteListIconColor: dark26Color,
@@ -72,7 +75,7 @@ export const lightTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
-  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
+  primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: dark100Color,
   secondaryButtonBackgroundColor: uiVividBackgroundColor,
   secondaryButtonHoverBackgroundColor: uiVivid2BackgroundColor,
