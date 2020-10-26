@@ -78,6 +78,7 @@ export const lightTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: dark100Color,
+  secondaryButtonHoverLabelColor: light100Color,
   secondaryButtonBackgroundColor: uiVividBackgroundColor,
   secondaryButtonHoverBackgroundColor: uiVivid2BackgroundColor,
 
