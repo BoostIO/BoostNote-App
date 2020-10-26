@@ -11,10 +11,10 @@ import BillingTab from './BillingTab'
 import {
   backgroundColor,
   closeIconColor,
-  borderLeft,
   border,
   flexCenter,
   borderBottom,
+  borderLeft,
 } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
 import Icon from '../atoms/Icon'
@@ -72,6 +72,7 @@ const ModalTitle = styled.h1`
 const ModalBody = styled.div`
   display: flex;
   overflow: hidden;
+  height: 100%;
 `
 
 const TabNav = styled.nav`
@@ -82,7 +83,6 @@ const TabContent = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 1em;
-
   ${borderLeft}
 `
 
