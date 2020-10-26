@@ -44,7 +44,7 @@ const Container = styled.li`
   height: 40px;
   ${borderBottom}
   &:hover {
-    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.noteNavItemBackgroundColor};
   }
   .clickable {
     flex: 1;
