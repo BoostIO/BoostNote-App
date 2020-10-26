@@ -171,7 +171,7 @@ const Control = styled.div`
     select {
       ${selectStyle}
       width: 120px;
-      height: 30px;
+      height: 25px;
       margin-bottom: 10px;
       font-size: 14px;
     }
