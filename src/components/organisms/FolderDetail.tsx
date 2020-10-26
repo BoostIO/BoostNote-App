@@ -17,7 +17,11 @@ import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
 import { mdiBookOpen, mdiFolder } from '@mdi/js'
 import styled from '../../lib/styled'
-import { flexCenter, borderBottom } from '../../lib/styled/styleFunctions'
+import {
+  flexCenter,
+  borderBottom,
+  selectStyle,
+} from '../../lib/styled/styleFunctions'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -163,6 +167,14 @@ const Control = styled.div`
   .right {
     display: flex;
     align-items: center;
+
+    select {
+      ${selectStyle}
+      width: 120px;
+      height: 30px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
   }
 `
 
