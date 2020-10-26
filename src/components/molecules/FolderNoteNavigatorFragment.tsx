@@ -46,9 +46,9 @@ const FolderNoteNavigatorFragment = ({
     }, new Set<string>())
   }, [folderPathnames])
 
-  const openedFolderPathnameList = useMemo(() => {
+  const openedNavItemList = useMemo(() => {
     const tree = getFolderNameElementTree(folderPathnames)
-    return getOpenedFolderPathnameList(
+    const navItemList = getOpenedFolderPathnameList(
       tree,
       storageId,
       sideNavOpenedItemSet,
@@ -56,6 +56,37 @@ const FolderNoteNavigatorFragment = ({
       storage.folderMap,
       storage.noteMap
     )
+    const rootFolderNoteIds =
+      storage.folderMap['/'] == null
+        ? []
+        : [...storage.folderMap['/'].noteIdSet] || []
+    const rootFolderNotes = rootFolderNoteIds.reduce((list, noteId) => {
+      const note = storage.noteMap[noteId]
+      if (note != null) {
+        list.push(note)
+      }
+      return list
+    }, [] as NoteDoc[])
+    rootFolderNotes
+      .sort((a, b) => {
+        if (a.title.trim() === '' && b.title.trim() !== '') {
+          return 1
+        }
+        if (b.title.trim() === '' && a.title.trim() !== '') {
+          return -1
+        }
+        return a.title.trim().localeCompare(b.title.trim())
+      })
+      .forEach((note) => {
+        navItemList.push({
+          type: 'note',
+          id: note._id,
+          title: note.title,
+          folderPathname: note.folderPathname,
+          depth: 1,
+        })
+      })
+    return navItemList
   }, [
     folderPathnames,
     storageId,
@@ -63,10 +94,10 @@ const FolderNoteNavigatorFragment = ({
     storage.folderMap,
     storage.noteMap,
   ])
-  console.log(routeParams.noteId)
+
   return (
     <>
-      {openedFolderPathnameList.map((item) => {
+      {openedNavItemList.map((item) => {
         if (item.type === 'folder') {
           return (
             <FolderNavigatorItem
@@ -153,7 +184,7 @@ function getOpenedFolderPathnameList(
       continue
     }
     const nameElements = pathname.split('/').slice(1)
-    const depth = nameElements.length - 1
+    const depth = nameElements.length
     itemList.push({
       type: 'folder',
       pathname,
@@ -195,6 +226,7 @@ function getOpenedFolderPathnameList(
       }
     }
   }
+
   return itemList
 }
 

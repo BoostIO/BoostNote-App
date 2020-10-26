@@ -13,19 +13,18 @@ import {
   mdiTrashCanOutline,
   mdiPaperclip,
   mdiBookOpen,
-  mdiTuneVertical,
   mdiSync,
   mdiPlus,
 } from '@mdi/js'
 import FolderNavigatorFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
-import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
+import { getFolderItemId } from '../../lib/nav'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -34,7 +33,11 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
-  const { openSideNavFolderItemRecursively } = useGeneralStatus()
+  const {
+    openSideNavFolderItemRecursively,
+    sideNavOpenedItemSet,
+    toggleSideNavOpenedItem,
+  } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
     createNote,
@@ -132,8 +135,8 @@ const StorageNavigatorFragment = ({
     syncStorage(storage.id)
   }, [user, storage.id, pushMessage, syncStorage])
 
-  const allNotesPagePathname = `/app/storages/${storage.id}/notes`
-  const allNotesPageIsActive = currentPathname === allNotesPagePathname
+  const rootFolderPathname = `/app/storages/${storage.id}/notes`
+  const rootFolderIsActive = currentPathname === rootFolderPathname
 
   const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
   const trashcanPageIsActive = currentPathname === trashcanPagePathname
@@ -263,31 +266,6 @@ const StorageNavigatorFragment = ({
     [createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
-  const openAllNotesContextMenu: MouseEventHandler = useCallback(
-    (event) => {
-      event.preventDefault()
-      openContextMenu({
-        menuItems: [
-          {
-            type: 'normal',
-            label: 'New Note',
-            click: async () => {
-              createNoteInFolderAndRedirect('/')
-            },
-          },
-          {
-            type: 'normal',
-            label: t('folder.create'),
-            click: async () => {
-              showPromptToCreateFolder('/')
-            },
-          },
-        ],
-      })
-    },
-    [t, createNoteInFolderAndRedirect, showPromptToCreateFolder]
-  )
-
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
     storage.attachmentMap,
   ])
@@ -300,12 +278,22 @@ const StorageNavigatorFragment = ({
 
   const generalAppMode = preferences['general.appMode']
 
-  // TODO: Extract bottom content so it won't be rendered when storage is folded
+  const rootFolderNavId = getFolderItemId(storage.id, '/')
+  const rootFolderIsOpened = sideNavOpenedItemSet.has(rootFolderNavId)
+
   return (
     <>
-      <NavigatorHeader
+      <NavigatorItem
+        depth={0}
+        iconPath={mdiBookOpen}
         label='Workspace'
+        active={rootFolderIsActive}
+        onClick={() => push(rootFolderPathname)}
         onContextMenu={openWorkspaceContextMenu}
+        folded={!sideNavOpenedItemSet.has(rootFolderNavId)}
+        onFoldButtonClick={() => {
+          toggleSideNavOpenedItem(rootFolderNavId)
+        }}
         control={
           <>
             <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />
@@ -317,42 +305,25 @@ const StorageNavigatorFragment = ({
                 spin={syncing}
               />
             )}
-            <NavigatorButton
-              onClick={() => push(`/app/storages/${storage.id}/settings`)}
-              iconPath={mdiTuneVertical}
-            />
           </>
         }
       />
-      <NavigatorItem
-        depth={0}
-        label='All Notes'
-        iconPath={mdiBookOpen}
-        active={allNotesPageIsActive}
-        onClick={() => push(allNotesPagePathname)}
-        onContextMenu={openAllNotesContextMenu}
-        control={
-          <NavigatorButton
-            iconPath={mdiPlus}
-            onClick={openAllNotesContextMenu}
+      {rootFolderIsOpened &&
+        (generalAppMode === 'note' ? (
+          <FolderNavigatorFragment
+            storage={storage}
+            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+            showPromptToCreateFolder={showPromptToCreateFolder}
+            showPromptToRenameFolder={showPromptToRenameFolder}
           />
-        }
-      />
-      {generalAppMode === 'note' ? (
-        <FolderNavigatorFragment
-          storage={storage}
-          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-          showPromptToCreateFolder={showPromptToCreateFolder}
-          showPromptToRenameFolder={showPromptToRenameFolder}
-        />
-      ) : (
-        <FolderNoteNavigatorFragment
-          storage={storage}
-          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-          showPromptToCreateFolder={showPromptToCreateFolder}
-          showPromptToRenameFolder={showPromptToRenameFolder}
-        />
-      )}
+        ) : (
+          <FolderNoteNavigatorFragment
+            storage={storage}
+            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+            showPromptToCreateFolder={showPromptToCreateFolder}
+            showPromptToRenameFolder={showPromptToRenameFolder}
+          />
+        ))}
 
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (
