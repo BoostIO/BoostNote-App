@@ -41,8 +41,9 @@ const TopbarSwitchSelector = ({
 export default TopbarSwitchSelector
 
 const Container = styled.div`
-  height: 28px;
   ${border}
+  height: 28px;
+  margin-left: 10px;
   border-radius: 4px;
   overflow: hidden;
 `
@@ -61,6 +62,7 @@ const ItemButton = styled.button`
     border-right: none;
   }
   &.active {
+    color: ${({ theme }) => theme.primaryButtonLabelColor};
     background-color: ${({ theme }) => theme.primaryColor};
   }
 `
