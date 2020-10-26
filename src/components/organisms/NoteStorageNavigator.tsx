@@ -255,7 +255,7 @@ const WindowControlSpacer = styled.div`
 `
 
 const TopButton = styled.button`
-  height: 40px;
+  height: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -264,11 +264,11 @@ const TopButton = styled.button`
   text-align: left;
   padding: 0 16px;
   border: none;
-  color: ${({ theme }) => theme.navLabelColor};
+  color: ${({ theme }) => theme.navItemColor};
   background-color: transparent;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
   &:hover {
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }) => theme.navItemActiveColor};
   }
 `
 
@@ -279,7 +279,7 @@ const StorageName = styled.div`
 `
 
 const SearchButton = styled.button`
-  margin: 8px 8px 0;
+  margin: 0 8px;
   height: 34px;
   padding: 0;
   color: ${({ theme }) => theme.secondaryButtonLabelColor};
