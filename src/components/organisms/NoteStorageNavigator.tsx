@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
@@ -9,13 +9,13 @@ import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
 import { openContextMenu } from '../../lib/electronOnly'
-import { values } from '../../lib/db/utils'
+import { values, getFolderNameFromPathname } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
-import { mdiChevronDown, mdiPlus } from '@mdi/js'
+import { mdiChevronDown, mdiPlus, mdiFolder, mdiPound } from '@mdi/js'
 import Icon from '../atoms/Icon'
-import { flexCenter } from '../../lib/styled/styleFunctions'
+import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 
 interface NoteStorageNavigatorProps {
@@ -134,6 +134,29 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     ]
   )
 
+  const extraNewNoteLabel = useMemo<React.ReactNode | null>(() => {
+    switch (routeParams.name) {
+      case 'storages.notes':
+        if (routeParams.folderPathname !== '/') {
+          return (
+            <>
+              in <Icon className='icon' path={mdiFolder} />{' '}
+              {getFolderNameFromPathname(routeParams.folderPathname)}
+            </>
+          )
+        }
+        break
+      case 'storages.tags.show':
+        return (
+          <>
+            with <Icon className='icon' path={mdiPound} />
+            {routeParams.tagName}
+          </>
+        )
+    }
+    return null
+  }, [routeParams])
+
   const createNoteByRoute = useCallback(async () => {
     let folderPathname = '/'
     let tags: string[] = []
@@ -179,12 +202,15 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <Icon path={mdiChevronDown} />
       </TopButton>
 
-      <NewDocButton onClick={createNoteByRoute}>
-        <NewDocButtonIcon>
+      <NewNoteButton onClick={createNoteByRoute}>
+        <div className='icon'>
           <Icon path={mdiPlus} />
-        </NewDocButtonIcon>
-        New Doc
-      </NewDocButton>
+        </div>
+        <div className='label'>New Note</div>
+        {extraNewNoteLabel != null && (
+          <div className='extra'>{extraNewNoteLabel}</div>
+        )}
+      </NewNoteButton>
 
       <ScrollableContainer>
         <BookmarkNavigatorFragment storage={storage} />
@@ -238,7 +264,7 @@ const StorageName = styled.div`
   padding-right: 10px;
 `
 
-const NewDocButton = styled.button`
+const NewNoteButton = styled.button`
   margin: 8px 8px;
   height: 34px;
   padding: 0;
@@ -254,11 +280,30 @@ const NewDocButton = styled.button`
   font-size: 14px;
   &:hover {
     background-color: ${({ theme }) => theme.primaryButtonHoverBackgroundColor};
+    .extra {
+      display: flex;
+    }
   }
-`
 
-const NewDocButtonIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  ${flexCenter}
+  & > .icon {
+    width: 24px;
+    height: 24px;
+    ${flexCenter}
+    flex-shrink: 0;
+  }
+  & > .label {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  & > .extra {
+    display: none;
+    font-size: 12px;
+    margin-left: 5px;
+    ${textOverflow}
+    align-items: center;
+    & > .icon {
+      flex-shrink: 0;
+      margin: 0 4px;
+    }
+  }
 `
