@@ -87,7 +87,7 @@ export const contextMenuShadow = ({ theme }: StyledProps) =>
 export const inputStyle = ({ theme }: StyledProps) =>
   `background-color: ${theme.inputBackground};
 border: 1px solid ${theme.borderColor};
-border-radius: 4px;
+border-radius: 2px;
 color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
@@ -155,7 +155,7 @@ export const selectStyle = ({
   theme,
 }: StyledProps) => `background-color: ${theme.inputBackground};
 border: 1px solid ${theme.borderColor};
-border-radius: 4px;
+border-radius: 2px;
 color: ${theme.textColor};
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
