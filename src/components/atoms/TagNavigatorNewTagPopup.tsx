@@ -14,6 +14,7 @@ import {
   uiTextColor,
   activeBackgroundColor,
   textOverflow,
+  inputStyle,
 } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
@@ -35,6 +36,7 @@ const Container = styled.div`
 `
 
 const TagNameInput = styled.input`
+  ${inputStyle}
   width: 100%;
   height: 30px;
   padding: 0 0.25em;
