@@ -1,8 +1,10 @@
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#1d3f48'
-const base2Color = '#18353d'
+const base2Color = '#162f36'
 const primaryColor = '#34a198'
+const primaryDarkerColor = '#2e8e86'
+const dangerColor = '#DC3545'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
@@ -26,7 +28,8 @@ export const solarizedDarkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  dangerColor: '#dc3545',
+  primaryDarkerColor: primaryDarkerColor,
+  dangerColor: dangerColor,
   borderColor: dark26Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
@@ -61,7 +64,7 @@ export const solarizedDarkTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
-  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
+  primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: light100Color,
   secondaryButtonBackgroundColor: 'transparent',
 

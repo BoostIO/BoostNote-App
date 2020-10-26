@@ -1,9 +1,11 @@
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#fdf6e4'
-const base2Color = '#efe8d6'
+const base2Color = '#fbebc3'
 const base3Color = '#393733'
 const primaryColor = '#b38925'
+const primaryDarkerColor = '#9e7921'
+const dangerColor = '#DC3545'
 
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
@@ -30,7 +32,8 @@ export const sepiaTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  dangerColor: '#dc3545',
+  primaryDarkerColor: primaryDarkerColor,
+  dangerColor: dangerColor,
   borderColor: dark12Color,
 
   noteListIconColor: dark26Color,
@@ -66,7 +69,7 @@ export const sepiaTheme: BaseTheme = {
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
-  primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
+  primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: base3Color,
   secondaryButtonBackgroundColor: 'transparent',
 
