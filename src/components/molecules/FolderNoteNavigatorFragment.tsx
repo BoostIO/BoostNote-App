@@ -210,19 +210,32 @@ function getOpenedFolderPathnameList(
       const folderDoc = folderMap[pathname]
       if (folderIsOpened && folderDoc != null) {
         const noteIds = [...folderDoc.noteIdSet]
-        noteIds.forEach((noteId) => {
+        const folderNotes = noteIds.reduce((list, noteId) => {
           const noteDoc = noteMap[noteId]
-          if (noteDoc == null) {
-            return
+          if (noteDoc != null) {
+            list.push(noteDoc)
           }
-          itemList.push({
-            type: 'note',
-            id: noteDoc._id,
-            title: noteDoc.title,
-            folderPathname: noteDoc.folderPathname,
-            depth: depth + 1,
+          return list
+        }, [] as NoteDoc[])
+        folderNotes
+          .sort((a, b) => {
+            if (a.title.trim() === '' && b.title.trim() !== '') {
+              return 1
+            }
+            if (b.title.trim() === '' && a.title.trim() !== '') {
+              return -1
+            }
+            return a.title.trim().localeCompare(b.title.trim())
           })
-        })
+          .forEach((noteDoc) => {
+            itemList.push({
+              type: 'note',
+              id: noteDoc._id,
+              title: noteDoc.title,
+              folderPathname: noteDoc.folderPathname,
+              depth: depth + 1,
+            })
+          })
       }
     }
   }
