@@ -65,6 +65,7 @@ export const sepiaTheme: BaseTheme = {
 
   // NotePage
   noteNavEmptyItemColor: '#777',
+  noteNavItemBackgroundColor: '#eee8d6',
 
   // Button
   primaryButtonLabelColor: light100Color,

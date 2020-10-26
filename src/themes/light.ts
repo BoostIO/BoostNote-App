@@ -71,6 +71,7 @@ export const lightTheme: BaseTheme = {
 
   // NotePage
   noteNavEmptyItemColor: uiDimColor,
+  noteNavItemBackgroundColor: uiVividBackgroundColor,
 
   // Button
   primaryButtonLabelColor: light100Color,
