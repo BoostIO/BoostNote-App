@@ -63,7 +63,8 @@ export const solarizedDarkTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: light100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonBackgroundColor: '#0E404D',
+  secondaryButtonHoverBackgroundColor: '#104B59',
 
   // Input
   inputBackground: light12Color,

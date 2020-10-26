@@ -45,6 +45,7 @@ export interface BaseTheme {
   primaryButtonHoverBackgroundColor: string
   secondaryButtonLabelColor: string
   secondaryButtonBackgroundColor: string
+  secondaryButtonHoverBackgroundColor: string
 
   // Input
   inputBackground: string

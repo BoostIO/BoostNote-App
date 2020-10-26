@@ -74,7 +74,8 @@ export const lightTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: dark100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonBackgroundColor: uiVividBackgroundColor,
+  secondaryButtonHoverBackgroundColor: uiVivid2BackgroundColor,
 
   // Input
   inputBackground: '#fff',

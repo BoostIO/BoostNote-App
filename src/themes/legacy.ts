@@ -67,7 +67,8 @@ export const legacyTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: dark100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonBackgroundColor: '#444',
+  secondaryButtonHoverBackgroundColor: '#555',
 
   // Input
   inputBackground: dark12Color,

@@ -64,7 +64,8 @@ export const darkTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: light100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonBackgroundColor: '#444',
+  secondaryButtonHoverBackgroundColor: '#555',
 
   // Input
   inputBackground: light12Color,

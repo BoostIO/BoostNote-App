@@ -68,7 +68,8 @@ export const sepiaTheme: BaseTheme = {
   primaryButtonBackgroundColor: primaryColor,
   primaryButtonHoverBackgroundColor: 'rgb(34, 89, 199)',
   secondaryButtonLabelColor: base3Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonBackgroundColor: '#eee8d6',
+  secondaryButtonHoverBackgroundColor: '#e0e0e0',
 
   // Input
   inputBackground: dark12Color,

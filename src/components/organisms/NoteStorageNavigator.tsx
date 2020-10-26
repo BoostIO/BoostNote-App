@@ -13,10 +13,17 @@ import { values, getFolderNameFromPathname } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
-import { mdiChevronDown, mdiPlus, mdiFolder, mdiPound } from '@mdi/js'
+import {
+  mdiChevronDown,
+  mdiPlus,
+  mdiFolder,
+  mdiPound,
+  mdiMagnify,
+} from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { osName } from '../../lib/platform'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -202,6 +209,13 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <Icon path={mdiChevronDown} />
       </TopButton>
 
+      <SearchButton>
+        <div className='icon'>
+          <Icon path={mdiMagnify} />
+        </div>
+        <div className='label'>Search</div>
+        <div className='kbd'>{osName === 'macos' ? '⌘P' : 'Ctrl P'}</div>
+      </SearchButton>
       <NewNoteButton onClick={createNoteByRoute}>
         <div className='icon'>
           <Icon path={mdiPlus} />
@@ -262,6 +276,48 @@ const StorageName = styled.div`
   font-size: 18px;
   font-weight: 600;
   padding-right: 10px;
+`
+
+const SearchButton = styled.button`
+  margin: 8px 8px 0;
+  height: 34px;
+  padding: 0;
+  color: ${({ theme }) => theme.secondaryButtonLabelColor};
+  background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  align-items: center;
+  display: flex;
+  padding: 0 8px 0 4px;
+  font-size: 14px;
+  &:hover {
+    background-color: ${({ theme }) =>
+      theme.secondaryButtonHoverBackgroundColor};
+    & > .kbd {
+      display: flex;
+    }
+  }
+  & > .icon {
+    width: 24px;
+    height: 24px;
+    ${flexCenter}
+    flex-shrink: 0;
+  }
+  & > .label {
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  & > .kbd {
+    display: none;
+    font-size: 12px;
+    margin-left: 5px;
+    ${textOverflow}
+    align-items: center;
+    flex-shrink: 0;
+  }
 `
 
 const NewNoteButton = styled.button`
