@@ -39,6 +39,7 @@ export interface BaseTheme {
 
   // NotePage
   noteNavEmptyItemColor: string
+  noteNavItemBackgroundColor: string
 
   // Button
   primaryButtonLabelColor: string

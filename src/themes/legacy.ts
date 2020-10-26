@@ -64,6 +64,7 @@ export const legacyTheme: BaseTheme = {
 
   // NotePage
   noteNavEmptyItemColor: '#999',
+  noteNavItemBackgroundColor: base2Color,
 
   // Button
   primaryButtonLabelColor: light100Color,

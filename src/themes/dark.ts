@@ -61,6 +61,7 @@ export const darkTheme: BaseTheme = {
 
   // NotePage
   noteNavEmptyItemColor: '#999',
+  noteNavItemBackgroundColor: '#444',
 
   // Button
   primaryButtonLabelColor: light100Color,
