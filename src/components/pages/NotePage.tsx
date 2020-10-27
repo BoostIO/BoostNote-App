@@ -236,7 +236,7 @@ const NotePage = ({ storage }: NotePageProps) => {
           left={
             <NoteListNavigator
               storageId={storage.id}
-              notes={notes}
+              notes={sortedNotes}
               currentNoteIndex={currentNoteIndex}
               noteSorting={preferences['general.noteSorting']}
               setNoteSorting={setNoteSorting}
