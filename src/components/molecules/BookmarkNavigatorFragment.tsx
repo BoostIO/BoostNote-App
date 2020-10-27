@@ -3,12 +3,10 @@ import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
 import NavigatorItem from '../atoms/NavigatorItem'
 import NavigatorButton from '../atoms/NavigatorButton'
-import NavigatorHeader from '../atoms/NavigatorHeader'
-import { mdiTextBoxOutline, mdiClose } from '@mdi/js'
+import { mdiTextBoxOutline, mdiClose, mdiStar } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import NavigatorSeparator from '../atoms/NavigatorSeparator'
 import { bookmarkItemId } from '../../lib/nav'
 
 interface BookmarkNavigatorFragmentProps {
@@ -40,9 +38,12 @@ const BookmarkNavigatorFragment = ({
 
   return (
     <>
-      <NavigatorHeader
+      <NavigatorItem
+        iconPath={mdiStar}
+        depth={0}
         label='Bookmarks'
         folded={!opened}
+        onFoldButtonClick={toggleBookmarks}
         onClick={toggleBookmarks}
       />
       {opened && (
@@ -55,7 +56,7 @@ const BookmarkNavigatorFragment = ({
             return (
               <NavigatorItem
                 iconPath={mdiTextBoxOutline}
-                depth={0}
+                depth={1}
                 key={storage.id + note._id}
                 label={note.title}
                 active={active}
@@ -78,7 +79,6 @@ const BookmarkNavigatorFragment = ({
               />
             )
           })}
-          <NavigatorSeparator />
         </>
       )}
     </>
