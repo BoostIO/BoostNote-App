@@ -7,6 +7,7 @@ import { useRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDb } from '../../lib/db'
 import FolderDetail from '../organisms/FolderDetail'
+import TagDetail from '../organisms/TagDetail'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -84,6 +85,8 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
             storage={storage}
             folderPathname={routeParams.folderPathname}
           />
+        ) : routeParams.name === 'storages.tags.show' ? (
+          <TagDetail storage={storage} tagName={routeParams.tagName} />
         ) : (
           <div>Idle</div>
         )

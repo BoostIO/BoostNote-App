@@ -70,6 +70,7 @@ const NotePageToolbar = ({
   const { setPreferences, preferences } = usePreferences()
 
   const editorControlMode = preferences['editor.controlMode']
+  const generalAppMode = preferences['general.appMode']
 
   const { previewStyle } = usePreviewStyle()
   const { generalStatus } = useGeneralStatus()
@@ -242,7 +243,7 @@ const NotePageToolbar = ({
           <NoteDetailTagNavigator
             storageId={storageId}
             storageTags={storageTags}
-            noteId={note._id}
+            noteId={generalAppMode === 'note' ? note._id : undefined}
             tags={note.tags}
             appendTagByName={appendTagByName}
             removeTagByName={removeTagByName}

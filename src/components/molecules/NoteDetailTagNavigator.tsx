@@ -35,7 +35,7 @@ const TagNavigatorList = styled.ul`
 interface NoteDetailTagNavigatorProps {
   storageId: string
   storageTags: string[]
-  noteId: string
+  noteId?: string
   tags: string[]
   appendTagByName: (tagName: string) => void
   removeTagByName: (tagName: string) => void

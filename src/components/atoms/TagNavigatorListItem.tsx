@@ -38,7 +38,7 @@ const TagRemoveButton = styled.button`
 interface TagNavigatorListItemProps {
   storageId: string
   tag: string
-  noteId: string
+  noteId?: string
   currentTagName: string | null
   removeTagByName: (tagName: string) => void
 }
@@ -58,6 +58,10 @@ const TagNavigatorListItem = ({
       <TagItemAnchor
         title={`#${tag}`}
         onClick={() => {
+          if (noteId == null) {
+            push(`/app/storages/${storageId}/tags/${tag}`)
+            return
+          }
           push(`/app/storages/${storageId}/tags/${tag}/${noteId}`)
         }}
         className={currentTagName === tag ? 'active' : ''}
