@@ -103,6 +103,9 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
               }
             }),
           {
+            type: 'separator',
+          },
+          {
             type: 'normal',
             label: 'New Storage',
             click: () => {
@@ -118,6 +121,9 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             click: () => {
               togglePreferencesModal()
             },
+          },
+          {
+            type: 'separator',
           },
           {
             type: 'normal',
