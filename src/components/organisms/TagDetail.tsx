@@ -44,8 +44,20 @@ const TagDetail = ({ storage, tagName }: TagDetailProps) => {
           case 'created-date-dsc':
             return -a.createdAt.localeCompare(b.createdAt)
           case 'title-asc':
+            if (a.title.trim() === '' && b.title.trim() !== '') {
+              return 1
+            }
+            if (b.title.trim() === '' && a.title.trim() !== '') {
+              return -1
+            }
             return a.title.localeCompare(b.title)
           case 'title-dsc':
+            if (a.title.trim() === '' && b.title.trim() !== '') {
+              return 1
+            }
+            if (b.title.trim() === '' && a.title.trim() !== '') {
+              return -1
+            }
             return -a.title.localeCompare(b.title)
           case 'updated-date-asc':
             return a.updatedAt.localeCompare(b.updatedAt)
