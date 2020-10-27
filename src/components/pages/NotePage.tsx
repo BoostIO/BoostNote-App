@@ -30,6 +30,7 @@ import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import NotePageToolbar from '../organisms/NotePageToolbar'
 import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
+import styled from '../../lib/styled'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -222,48 +223,56 @@ const NotePage = ({ storage }: NotePageProps) => {
   return (
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
-      <NotePageToolbar
-        storage={storage}
-        note={currentNote}
-        viewMode={generalStatus.noteViewMode}
-        selectViewMode={selectViewMode}
-      />
-      <TwoPaneLayout
-        style={{ height: '100%' }}
-        defaultLeftWidth={generalStatus.noteListWidth}
-        left={
-          <NoteListNavigator
-            storageId={storage.id}
-            notes={notes}
-            currentNoteIndex={currentNoteIndex}
-            noteSorting={preferences['general.noteSorting']}
-            setNoteSorting={setNoteSorting}
-            createNote={createQuickNote}
-            basePathname={currentPathnameWithoutNoteId}
-            currentNote={currentNote}
-            // TODO: Fix to show new doc animation
-            lastCreatedNoteId={''}
-            trashNote={trashNote}
-            purgeNote={purgeNote}
-          />
-        }
-        right={
-          currentNote == null ? (
-            <IdleNoteDetail />
-          ) : (
-            <NoteDetail
-              storage={storage}
-              note={currentNote}
-              updateNote={updateNoteAndReport}
-              addAttachments={addAttachments}
-              viewMode={generalStatus.noteViewMode}
+      <Conatiner>
+        <NotePageToolbar
+          storage={storage}
+          note={currentNote}
+          viewMode={generalStatus.noteViewMode}
+          selectViewMode={selectViewMode}
+        />
+        <TwoPaneLayout
+          style={{ flex: 1 }}
+          defaultLeftWidth={generalStatus.noteListWidth}
+          left={
+            <NoteListNavigator
+              storageId={storage.id}
+              notes={notes}
+              currentNoteIndex={currentNoteIndex}
+              noteSorting={preferences['general.noteSorting']}
+              setNoteSorting={setNoteSorting}
+              createNote={createQuickNote}
+              basePathname={currentPathnameWithoutNoteId}
+              currentNote={currentNote}
+              // TODO: Fix to show new doc animation
+              lastCreatedNoteId={''}
+              trashNote={trashNote}
+              purgeNote={purgeNote}
             />
-          )
-        }
-        onResizeEnd={updateNoteListWidth}
-      />
+          }
+          right={
+            currentNote == null ? (
+              <IdleNoteDetail />
+            ) : (
+              <NoteDetail
+                storage={storage}
+                note={currentNote}
+                updateNote={updateNoteAndReport}
+                addAttachments={addAttachments}
+                viewMode={generalStatus.noteViewMode}
+              />
+            )
+          }
+          onResizeEnd={updateNoteListWidth}
+        />
+      </Conatiner>
     </StorageLayout>
   )
 }
 
 export default NotePage
+
+const Conatiner = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
