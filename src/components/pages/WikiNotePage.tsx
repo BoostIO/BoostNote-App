@@ -9,6 +9,9 @@ import { useDb } from '../../lib/db'
 import FolderDetail from '../organisms/FolderDetail'
 import TagDetail from '../organisms/TagDetail'
 import TrashDetail from '../organisms/TrashDetail'
+import SearchModal from '../organisms/SearchModal'
+import { useSearchModal } from '../../lib/searchModal'
+import styled from '../../lib/styled'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -72,38 +75,55 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
 
   const { updateNote, addAttachments } = useDb()
 
+  const { showSearchModal } = useSearchModal()
+
   return (
     <StorageLayout storage={storage}>
-      <NotePageToolbar
-        note={note}
-        storage={storage}
-        selectViewMode={selectViewMode}
-        viewMode={noteViewMode}
-      />
-      {note == null ? (
-        routeParams.name === 'storages.notes' ? (
-          <FolderDetail
-            storage={storage}
-            folderPathname={routeParams.folderPathname}
-          />
-        ) : routeParams.name === 'storages.tags.show' ? (
-          <TagDetail storage={storage} tagName={routeParams.tagName} />
-        ) : routeParams.name === 'storages.trashCan' ? (
-          <TrashDetail storage={storage} />
-        ) : (
-          <div>Idle</div>
-        )
-      ) : (
-        <NoteDetail
+      {showSearchModal && <SearchModal storage={storage} />}
+      <Container>
+        <NotePageToolbar
           note={note}
           storage={storage}
-          updateNote={updateNote}
-          addAttachments={addAttachments}
+          selectViewMode={selectViewMode}
           viewMode={noteViewMode}
         />
-      )}
+        <div className='detail'>
+          {note == null ? (
+            routeParams.name === 'storages.notes' ? (
+              <FolderDetail
+                storage={storage}
+                folderPathname={routeParams.folderPathname}
+              />
+            ) : routeParams.name === 'storages.tags.show' ? (
+              <TagDetail storage={storage} tagName={routeParams.tagName} />
+            ) : routeParams.name === 'storages.trashCan' ? (
+              <TrashDetail storage={storage} />
+            ) : (
+              <div>Idle</div>
+            )
+          ) : (
+            <NoteDetail
+              note={note}
+              storage={storage}
+              updateNote={updateNote}
+              addAttachments={addAttachments}
+              viewMode={noteViewMode}
+            />
+          )}
+        </div>
+      </Container>
     </StorageLayout>
   )
 }
 
 export default WikiNotePage
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .detail {
+    flex: 1;
+    overflow: hidden;
+  }
+`

@@ -34,6 +34,7 @@ import { openContextMenu } from '../../lib/electronOnly'
 const Container = styled.div`
   display: flex;
   height: 40px;
+  flex-shrink: 0;
   -webkit-app-region: drag;
   padding: 0 8px;
   ${borderBottom}
