@@ -24,6 +24,11 @@ import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { osName } from '../../lib/platform'
+import { useSearchModal } from '../../lib/searchModal'
+import {
+  useGlobalKeyDownHandler,
+  isWithGeneralCtrlKey,
+} from '../../lib/keyboard'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -201,6 +206,14 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     }
   }, [push, hash])
 
+  const { toggleShowSearchModal } = useSearchModal()
+
+  useGlobalKeyDownHandler((event) => {
+    if (isWithGeneralCtrlKey(event) && event.key === 'p') {
+      toggleShowSearchModal()
+    }
+  })
+
   return (
     <NavigatorContainer>
       {!generalShowAppNavigator && <WindowControlSpacer />}
@@ -209,7 +222,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <Icon path={mdiChevronDown} />
       </TopButton>
 
-      <SearchButton>
+      <SearchButton onClick={toggleShowSearchModal}>
         <div className='icon'>
           <Icon path={mdiMagnify} />
         </div>

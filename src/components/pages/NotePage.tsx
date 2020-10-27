@@ -28,6 +28,8 @@ import StorageLayout from '../atoms/StorageLayout'
 import NoteListNavigator from '../organisms/NoteListNavigator'
 import TwoPaneLayout from '../atoms/TwoPaneLayout'
 import NotePageToolbar from '../organisms/NotePageToolbar'
+import SearchModal from '../organisms/SearchModal'
+import { useSearchModal } from '../../lib/searchModal'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -215,8 +217,11 @@ const NotePage = ({ storage }: NotePageProps) => {
     }
   })
 
+  const { showSearchModal } = useSearchModal()
+
   return (
     <StorageLayout storage={storage}>
+      {showSearchModal && <SearchModal storage={storage} />}
       <NotePageToolbar
         storage={storage}
         note={currentNote}

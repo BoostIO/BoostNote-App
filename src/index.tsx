@@ -11,8 +11,10 @@ import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
 import { AnalyticsProvider } from './lib/analytics'
 import { StorageRouterProvider } from './lib/storageRouter'
+import { SearchModalProvider } from './lib/searchModal'
 
 const CombinedProvider = combineProviders(
+  SearchModalProvider,
   PreviewStyleProvider,
   GeneralStatusProvider,
   DialogProvider,
