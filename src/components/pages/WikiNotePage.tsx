@@ -8,6 +8,7 @@ import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDb } from '../../lib/db'
 import FolderDetail from '../organisms/FolderDetail'
 import TagDetail from '../organisms/TagDetail'
+import TrashDetail from '../organisms/TrashDetail'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -87,6 +88,8 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
           />
         ) : routeParams.name === 'storages.tags.show' ? (
           <TagDetail storage={storage} tagName={routeParams.tagName} />
+        ) : routeParams.name === 'storages.trashCan' ? (
+          <TrashDetail storage={storage} />
         ) : (
           <div>Idle</div>
         )
