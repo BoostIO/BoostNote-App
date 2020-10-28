@@ -30,6 +30,7 @@ const __ELECTRON_ONLY__: {
   stringifyCSON(value: any): string
   openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
   openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
+  getPathByName(name: string): string
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -47,6 +48,7 @@ const {
   parseCSON,
   stringifyCSON,
   openContextMenu,
+  getPathByName,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -89,4 +91,5 @@ export {
   parseCSON,
   stringifyCSON,
   openContextMenu,
+  getPathByName,
 }

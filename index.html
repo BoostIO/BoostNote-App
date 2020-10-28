@@ -149,6 +149,11 @@
           menu.popup()
         }
 
+        function getPathByName(name) {
+          const { app } = electron.remote
+          return app.getPath(name)
+        }
+
         window.__ELECTRON_ONLY__ = {}
         window.__ELECTRON_ONLY__.openExternal = openExternal
         window.__ELECTRON_ONLY__.readFile = readFile
@@ -165,6 +170,7 @@
         window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
         window.__ELECTRON_ONLY__.openNewWindow = openNewWindow
         window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
+        window.__ELECTRON_ONLY__.getPathByName = getPathByName
       })()
     </script>
   </body>
