@@ -53,12 +53,14 @@ const BookmarkNavigatorFragment = ({
               params.name === 'storages.notes' &&
               params.storageId === storage.id &&
               params.noteId === note._id
+            const emptyTitle = note.title.trim().length === 0
             return (
               <NavigatorItem
                 iconPath={mdiTextBoxOutline}
                 depth={1}
                 key={storage.id + note._id}
-                label={note.title}
+                label={!emptyTitle ? note.title : 'Untitled'}
+                subtle={emptyTitle}
                 active={active}
                 onClick={() => {
                   push(
