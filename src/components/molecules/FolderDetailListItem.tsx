@@ -12,6 +12,7 @@ interface FolderDetailListItemProps {
   iconPath?: string
   label: string
   onClick?: MouseEventHandler<HTMLDivElement>
+  meta?: ReactNode
   control?: ReactNode
 }
 
@@ -19,6 +20,7 @@ const FolderDetailListItem = ({
   iconPath,
   label,
   onClick,
+  meta,
   control,
 }: FolderDetailListItemProps) => {
   return (
@@ -31,7 +33,8 @@ const FolderDetailListItem = ({
           {label.trim().length === 0 ? 'Untitled' : label}
         </div>
       </div>
-      <div>{control}</div>
+      <div className='meta'>{meta}</div>
+      <div className='control'>{control}</div>
     </Container>
   )
 }
@@ -45,6 +48,12 @@ const Container = styled.li`
   ${borderBottom}
   &:hover {
     background-color: ${({ theme }) => theme.noteNavItemBackgroundColor};
+    & > .control {
+      display: flex;
+    }
+    & > .meta {
+      display: none;
+    }
   }
   .clickable {
     flex: 1;
@@ -63,5 +72,12 @@ const Container = styled.li`
     &.subtle {
       color: ${({ theme }) => theme.disabledUiTextColor};
     }
+  }
+  & > .control {
+    display: none;
+  }
+  & > .meta {
+    color: ${({ theme }) => theme.disabledUiTextColor};
+    ${textOverflow}
   }
 `
