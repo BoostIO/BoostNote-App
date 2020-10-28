@@ -3,7 +3,6 @@ import NotePage from './pages/NotePage'
 import { useRouter } from '../lib/router'
 import { useRouteParams } from '../lib/routeParams'
 import StorageCreatePage from './pages/StorageCreatePage'
-import StorageEditPage from './pages/StorageEditPage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import styled from '../lib/styled'
@@ -47,12 +46,6 @@ const Router = () => {
     }
     case 'storages.create':
       return <StorageCreatePage />
-    case 'storages.settings':
-      const storage = db.storageMap[routeParams.storageId]
-      if (storage == null) {
-        break
-      }
-      return <StorageEditPage key={routeParams.storageId} storage={storage} />
   }
   return (
     <NotFoundPageContainer>

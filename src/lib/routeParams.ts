@@ -9,11 +9,6 @@ export interface StorageCreate extends BaseRouteParams {
   name: 'storages.create'
 }
 
-export interface StorageSettings extends BaseRouteParams {
-  name: 'storages.settings'
-  storageId: string
-}
-
 export interface StorageNotesRouteParams extends BaseRouteParams {
   name: 'storages.notes'
   storageId: string
@@ -45,7 +40,6 @@ export interface UnknownRouteparams extends BaseRouteParams {
 
 export type AllRouteParams =
   | StorageCreate
-  | StorageSettings
   | StorageNotesRouteParams
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
@@ -74,13 +68,6 @@ export const useRouteParams = () => {
         name: 'storages.notes',
         storageId,
         folderPathname: '/',
-      }
-    }
-
-    if (names[2] === 'settings') {
-      return {
-        name: 'storages.settings',
-        storageId,
       }
     }
 
