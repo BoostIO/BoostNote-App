@@ -123,7 +123,7 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
       <Control>
         <div className='left'></div>
         <div className='right'>
-          <select onChange={selectNoteSorting}>
+          <select onChange={selectNoteSorting} value={noteSorting}>
             {<NoteSortingOptionsFragment />}
           </select>
         </div>
