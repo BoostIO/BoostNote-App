@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -19,6 +19,16 @@ import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
 import AppNavigator from './organisms/AppNavigator'
+import { useRouter } from '../lib/router'
+import { values } from '../lib/db/utils'
+import { localLiteStorage } from 'ltstrg'
+import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
+import { getPathByName } from '../lib/electronOnly'
+import { generateId } from '../lib/string'
+import FSNoteDb from '../lib/db/FSNoteDb'
+import path from 'path'
+import { useGeneralStatus } from '../lib/generalStatus'
+import { getFolderItemId } from '../lib/nav'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -34,12 +44,56 @@ const AppContainer = styled.div`
 `
 
 const App = () => {
-  const { initialize, initialized, queueSyncingAllStorage } = useDb()
+  const { initialize, queueSyncingAllStorage, createStorage } = useDb()
+  const { replace } = useRouter()
+  const [initialized, setInitialized] = useState(false)
+  const { addSideNavOpenedItem } = useGeneralStatus()
 
   useEffectOnce(() => {
     initialize()
-      .then(() => {
-        queueSyncingAllStorage(0)
+      .then(async (storageMap) => {
+        const storages = values(storageMap)
+        if (storages.length > 0) {
+          queueSyncingAllStorage(0)
+        }
+
+        const defaultStorageCreated = localLiteStorage.getItem(
+          defaultStorageCreatedKey
+        )
+        if (defaultStorageCreated !== 'true') {
+          if (values(storageMap).length === 0) {
+            try {
+              const defaultStoragePath = path.join(
+                getPathByName('userData'),
+                'default-storage'
+              )
+              const db = new FSNoteDb(
+                generateId(),
+                'My Notes',
+                defaultStoragePath
+              )
+              await db.init()
+
+              const note = await db.createNote({
+                title: 'Welcome!',
+                // TODO: Initial notes
+                content: '',
+              })
+
+              const storage = await createStorage('My Notes', {
+                type: 'fs',
+                location: defaultStoragePath,
+              })
+              addSideNavOpenedItem(getFolderItemId(storage.id, '/'))
+              replace(`/app/storages/${storage.id}/notes/${note._id}`)
+            } catch (error) {
+              console.warn('Failed to create default storage')
+              console.warn(error)
+            }
+          }
+          localLiteStorage.setItem(defaultStorageCreatedKey, 'true')
+        }
+        setInitialized(true)
       })
       .catch((error) => {
         console.error(error)
