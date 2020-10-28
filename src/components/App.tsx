@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useCallback } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -22,13 +22,17 @@ import AppNavigator from './organisms/AppNavigator'
 import { useRouter } from '../lib/router'
 import { values } from '../lib/db/utils'
 import { localLiteStorage } from 'ltstrg'
-import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
+import {
+  defaultStorageCreatedKey,
+  appModeChosen as appModeChosenKey,
+} from '../lib/localStorageKeys'
 import { getPathByName } from '../lib/electronOnly'
 import { generateId } from '../lib/string'
 import FSNoteDb from '../lib/db/FSNoteDb'
 import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
+import AppModeModal from './organisms/AppModeModal'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -41,6 +45,27 @@ const AppContainer = styled.div`
   bottom: 0;
   right: 0;
   display: flex;
+`
+
+const defaultNoteContent = `BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Boostnote).
+Thanks for downloading our app!
+
+# [Boost Note for Teams](https://boosthub.io/)
+
+We've developed a collaborative workspace app called "Boost Hub" for developer teams.
+
+It's customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!
+
+# Community
+
+Please check out.
+
+- [GitHub](https://github.com/BoostIO/BoostNote.next)
+- [Facebook Group](https://www.facebook.com/groups/boostnote/)
+- [Twitter](https://twitter.com/boostnoteapp)
+- [Slack Group](https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw)
+- [Blog](https://medium.com/boostnote)
+- [Reddit](https://www.reddit.com/r/Boostnote/)
 `
 
 const App = () => {
@@ -75,9 +100,8 @@ const App = () => {
               await db.init()
 
               const note = await db.createNote({
-                title: 'Welcome!',
-                // TODO: Initial notes
-                content: '',
+                title: 'Welcome to BoostNote.next!',
+                content: defaultNoteContent,
               })
 
               const storage = await createStorage('My Notes', {
@@ -97,6 +121,13 @@ const App = () => {
       })
       .catch((error) => {
         console.error(error)
+      })
+      .then(() => {
+        const appModeChosen = localLiteStorage.getItem(appModeChosenKey)
+        if (appModeChosen !== 'true') {
+          setShowAppModeModal(true)
+        }
+        localLiteStorage.setItem(appModeChosenKey, 'true')
       })
   })
 
@@ -129,6 +160,12 @@ const App = () => {
   }, [togglePreferencesModal])
   useGlobalKeyDownHandler(keyboardHandler)
 
+  const [showAppModeModal, setShowAppModeModal] = useState(false)
+
+  const closeAppModeModal = useCallback(() => {
+    setShowAppModeModal(false)
+  }, [])
+
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
       <AppContainer
@@ -144,6 +181,7 @@ const App = () => {
         ) : (
           <LoadingText>Loading Data...</LoadingText>
         )}
+        {showAppModeModal && <AppModeModal closeModal={closeAppModeModal} />}
         <GlobalStyle />
         <Dialog />
         <PreferencesModal />

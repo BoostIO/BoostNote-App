@@ -67,7 +67,7 @@ const ContentSection = styled.div`
     width: 100%;
     height: 100%;
     overflow: auto;
-    padding: 0 10px;
+    padding: 10px 10px;
     box-sizing: border-box;
   }
   .splitLeft {

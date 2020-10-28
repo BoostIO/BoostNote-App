@@ -3,7 +3,6 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useRouter } from '../../lib/router'
-import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import { useFirstUser, usePreferences } from '../../lib/preferences'
@@ -25,6 +24,7 @@ import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 import { getFolderItemId } from '../../lib/nav'
+import { useRouteParams } from '../../lib/routeParams'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -50,7 +50,7 @@ const StorageNavigatorFragment = ({
   const { push } = useRouter()
   const { t } = useTranslation()
   const { pushMessage } = useToast()
-  const currentPathname = usePathnameWithoutNoteId()
+  const routeParams = useRouteParams()
   const user = useFirstUser()
   const { report } = useAnalytics()
   const { preferences } = usePreferences()
@@ -135,14 +135,22 @@ const StorageNavigatorFragment = ({
     syncStorage(storage.id)
   }, [user, storage.id, pushMessage, syncStorage])
 
+  const generalAppMode = preferences['general.appMode']
+
+  const rootFolderNavId = getFolderItemId(storage.id, '/')
+  const rootFolderIsOpened = sideNavOpenedItemSet.has(rootFolderNavId)
+
   const rootFolderPathname = `/app/storages/${storage.id}/notes`
-  const rootFolderIsActive = currentPathname === rootFolderPathname
+  const rootFolderIsActive =
+    routeParams.name === 'storages.notes' &&
+    routeParams.folderPathname === '/' &&
+    (generalAppMode === 'note' || routeParams.noteId == null)
 
   const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
-  const trashcanPageIsActive = currentPathname === trashcanPagePathname
+  const trashcanPageIsActive = routeParams.name === 'storages.trashCan'
 
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
-  const attachmentsPageIsActive = currentPathname === attachmentsPagePathname
+  const attachmentsPageIsActive = routeParams.name === 'storages.attachments'
 
   const openWorkspaceContextMenu: MouseEventHandler = useCallback(
     (event) => {
@@ -275,11 +283,6 @@ const StorageNavigatorFragment = ({
   )
 
   const syncing = storage.type !== 'fs' && storage.sync != null
-
-  const generalAppMode = preferences['general.appMode']
-
-  const rootFolderNavId = getFolderItemId(storage.id, '/')
-  const rootFolderIsOpened = sideNavOpenedItemSet.has(rootFolderNavId)
 
   return (
     <>
