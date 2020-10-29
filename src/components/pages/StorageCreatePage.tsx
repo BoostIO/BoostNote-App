@@ -41,11 +41,11 @@ const StorageCreatePage = () => {
     <PageContainer>
       <PageDraggableHeader
         iconPath={mdiBookPlusMultiple}
-        label={t('Create new storage')}
+        label={t('storage.create')}
       />
       <PageScrollableContent>
         <FormGroup>
-          <FormLabel>Storage Type</FormLabel>
+          <FormLabel>{t('storage.type')}</FormLabel>
           <FormCheckList>
             {appIsElectron && (
               <FormCheckInlineItem

@@ -55,7 +55,7 @@ const FSStorageCreateForm = () => {
           onClick={createStorageCallback}
           disabled={name.trim().length === 0 || location.trim().length === 0}
         >
-          Create Storage
+          {t('storage.create')}
         </FormPrimaryButton>
       </FormGroup>
     </>

@@ -1,6 +1,7 @@
 export default {
   translation: {
     //General
+    'general.general': 'General',
     'general.error': 'Error',
     'general.cancel': 'Cancel',
     'general.attachments': 'Attachments',
@@ -12,6 +13,14 @@ export default {
     'general.default': 'Default',
     'general.networkError': 'Network Error',
 
+    // Navigator
+    'navigator.noStorage': 'There are no storages',
+    'navigator.createStorage': 'Click here to create one.',
+
+    // Newsletter
+    'newsletter.subscribe': 'Subscribe',
+    'newsletter.heading': 'Subscribe Update Notes',
+    'newsletter.subscribed': 'Thanks for the subscription!',
     // Storage
     'storage.storage': 'Storage',
     'storage.name': 'Storage Name',
@@ -29,6 +38,7 @@ export default {
     'storage.moveMessage':
       'You are trying to move a note to different storage.',
     'storage.copy': 'Copy Note',
+    'storage.type': 'Storage Type',
     'storage.typeLocal': 'Local',
     'storage.typeCloud': 'Cloud',
     'storage.needSignIn': 'You need to sign in to create a cloud storage.',
@@ -43,6 +53,8 @@ export default {
     'folder.renameErrorMessage': 'You could not rename the folder',
     'folder.remove': 'Remove Folder',
     'folder.removeMessage': 'All notes and subfolders will be deleted.',
+    'folder.select': 'Select Folder',
+    'folder.noLocationSelected': 'No location selected',
 
     //Tag
     'tag.tags': 'Tags',
@@ -115,6 +127,8 @@ export default {
       '* If you need more cloud storage, you can add it at any time by paying $5 (USD) for every 5GB. Click the "Add Extra Storage" button below.',
     'billing.addStorage': 'Add Extra Storage',
 
+    'editor.editor': 'Editor',
+
     // Preferences
     'preferences.general': 'Preferences',
 
@@ -140,6 +154,12 @@ export default {
       'You can choose to enable or disable this option.',
     'preferences.analyticsLabel': 'Enable analytics to help improve Boostnote',
     'preferences.displayTutorialsLabel': 'Tutorials and FAQ',
+    'preferences.notesView': 'Note List View',
+    'preferences.notesViewDefault': 'Default',
+    'preferences.notesViewCompact': 'Compact',
+    'preferences.autoSync': 'Enable auto sync',
+    'preferences.subfolders': 'Subfolders',
+    'preferences.subfoldersView': 'Show content of all subfolders',
 
     // Preferences EditorTab
     'preferences.editorTheme': 'Editor Theme',
@@ -157,6 +177,8 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Code Block Theme',
     'preferences.defaultTheme': 'Use default style',
     'preferences.markdownPreview': 'Markdown Preview',
+    'preferences.markdownExport': 'Export',
+    'preferences.markdownExportOption': 'Include Front Matter',
 
     // Preferences ImportTab
     'preferences.import': 'Import',

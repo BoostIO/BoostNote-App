@@ -38,7 +38,8 @@ export default {
     'folder.folder': 'Папка',
     'folder.create': 'Новая папка',
     'folder.rename': 'Переименовать папку',
-    'folder.renameMessage': 'Введите новое имя папки. Пути заметок и подпапок будут обновлены.',
+    'folder.renameMessage':
+      'Введите новое имя папки. Пути заметок и подпапок будут обновлены.',
     'folder.renameErrorMessage': 'Ошибка переименования папки',
     'folder.remove': 'Удалить папку',
     'folder.removeMessage': 'Все заметки и подпапки будут удалены.',
@@ -133,8 +134,10 @@ export default {
     'preferences.dateCreated': 'Дата создания',
     'preferences.title': 'Название',
     'preferences.analytics': 'Аналитика',
-    'preferences.analyticsDescription1': 'Boost Note собирает ананимные данные исключительно для улучшения приложения. Сбор персональых данных включая Ваши заметки строго исключен. Открытый исходный код доступен на GitHub.',
-    'preferences.analyticsDescription2': 'Эту функцию можно включить или выключить',
+    'preferences.analyticsDescription1':
+      'Boost Note собирает ананимные данные исключительно для улучшения приложения. Сбор персональых данных включая Ваши заметки строго исключен. Открытый исходный код доступен на GitHub.',
+    'preferences.analyticsDescription2':
+      'Эту функцию можно включить или выключить',
     'preferences.analyticsLabel': 'Включить аналитику для улучшения Boostnote',
     'preferences.displayTutorialsLabel': 'Уроки и ЧаВо',
 
@@ -157,10 +160,13 @@ export default {
 
     // Preferences ImportTab
     'preferences.import': 'Импорт',
-    'preferences.description': 'Импортировать файлы .cson из старой версии Boostnote.',
-    'preferences.importFlow1': '1. Откройте папку старого Boostnote на своем ПК.',
+    'preferences.description':
+      'Импортировать файлы .cson из старой версии Boostnote.',
+    'preferences.importFlow1':
+      '1. Откройте папку старого Boostnote на своем ПК.',
     'preferences.importFlow2': '2. Перетащите файлы .cson на форму ниже.',
-    'preferences.importFlow3': '3. Выберите Хранилище и Папку куда переместить старые данные.',
+    'preferences.importFlow3':
+      '3. Выберите Хранилище и Папку куда переместить старые данные.',
     'preferences.importFlow4': '4. Upload!',
     'preferences.importRemove': 'Удалить',
     'preferences.importUpload': 'Загрузить',
