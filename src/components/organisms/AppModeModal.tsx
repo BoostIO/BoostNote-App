@@ -3,6 +3,7 @@ import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { FormBlockquote } from '../atoms/form'
+import Image from '../atoms/Image'
 
 interface AppModeModalProps {
   closeModal: () => void
@@ -32,7 +33,7 @@ const AppModeModal = ({ closeModal }: AppModeModalProps) => {
           <h1 className='header'>Choose App Mode</h1>
           <div className='optionGroup'>
             <button className='option' onClick={chooseWikiAppMode}>
-              <img src='/static/wiki-app-mode.png' />
+              <Image src='/app/static/wiki-app-mode.png' />
               <h2>
                 Wiki App Mode <small>(New)</small>
               </h2>
@@ -41,7 +42,7 @@ const AppModeModal = ({ closeModal }: AppModeModalProps) => {
               </p>
             </button>
             <button className='option' onClick={chooseNoteAppMode}>
-              <img src='/static/note-app-mode.png' />
+              <Image src='/app/static/note-app-mode.png' />
               <h2>Note App Mode</h2>
               <p>Notes are listed in a separated list navigator.</p>
             </button>
