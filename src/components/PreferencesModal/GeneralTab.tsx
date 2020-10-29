@@ -180,7 +180,7 @@ const GeneralTab = () => {
         </SectionControl>
       </Section>
       <Section>
-            <SectionHeader>{t('preferences.notesView')}</SectionHeader>
+        <SectionHeader>{t('preferences.notesView')}</SectionHeader>
         <SectionControl>
           <SectionSelect
             value={preferences['general.noteListView']}
@@ -192,7 +192,7 @@ const GeneralTab = () => {
         </SectionControl>
       </Section>
       <Section>
-            <SectionHeader>{t('preferences.autoSync')}</SectionHeader>
+        <SectionHeader>{t('preferences.autoSync')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-enable-auto-sync'

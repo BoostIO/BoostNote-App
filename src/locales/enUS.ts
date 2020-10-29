@@ -14,7 +14,7 @@ export default {
     'general.networkError': 'Network Error',
 
     // Navigator
-    'navigator.noStorage':'There are no storages',
+    'navigator.noStorage': 'There are no storages',
     'navigator.createStorage': 'Click here to create one.',
 
     // Newsletter
@@ -128,7 +128,7 @@ export default {
     'billing.addStorage': 'Add Extra Storage',
 
     'editor.editor': 'Editor',
-    
+
     // Preferences
     'preferences.general': 'Preferences',
 

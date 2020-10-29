@@ -43,7 +43,7 @@ interface FormFolderSelector {
 
 const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const openDialog = useCallback(async () => {
     if (dialogIsOpen) {
       return
@@ -76,7 +76,9 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
         type='text'
         onClick={openDialog}
         readOnly
-        value={value.trim().length === 0 ? t('folder.noLocationSelected') : value}
+        value={
+          value.trim().length === 0 ? t('folder.noLocationSelected') : value
+        }
       />
       <FormFolderSelectorButton onClick={openDialog}>
         Select Folder
