@@ -1,13 +1,17 @@
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#1d3f48'
-const base2Color = '#18353d'
+const base2Color = '#162f36'
 const primaryColor = '#34a198'
+const primaryDarkerColor = '#2e8e86'
+const dangerColor = '#DC3545'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
 const light12Color = 'rgba(255,255,255,0.12)'
+const light18Color = 'rgba(255,255,255,0.18)'
+const light24Color = 'rgba(255,255,255,0.24)'
 const light100Color = '#FFF'
 
 export const solarizedDarkTheme: BaseTheme = {
@@ -26,7 +30,8 @@ export const solarizedDarkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  dangerColor: '#dc3545',
+  primaryDarkerColor: primaryDarkerColor,
+  dangerColor: dangerColor,
   borderColor: dark26Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
@@ -50,19 +55,23 @@ export const solarizedDarkTheme: BaseTheme = {
   navButtonActiveColor: primaryColor,
   navItemColor: '#bbb',
   navItemBackgroundColor: 'transparent',
-  navItemHoverBackgroundColor: '#0E404D',
+  navItemHoverBackgroundColor: light12Color,
   navItemActiveColor: '#eee',
-  navItemActiveBackgroundColor: '#0E404D',
-  navItemHoverActiveBackgroundColor: '#104B59',
+  navItemActiveBackgroundColor: light24Color,
+  navItemHoverActiveBackgroundColor: light18Color,
 
   // NotePage
   noteNavEmptyItemColor: '#bbb',
+  noteNavItemBackgroundColor: light12Color,
 
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
+  primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: light100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonHoverLabelColor: light100Color,
+  secondaryButtonBackgroundColor: light12Color,
+  secondaryButtonHoverBackgroundColor: '#104B59',
 
   // Input
   inputBackground: light12Color,

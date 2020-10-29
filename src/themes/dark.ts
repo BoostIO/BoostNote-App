@@ -2,7 +2,9 @@ import { BaseTheme } from '../lib/styled/BaseTheme'
 
 const base1Color = '#2c2c2c'
 const base2Color = '#1e2022'
-const primaryColor = '#02A47E'
+const primaryColor = '#5580DC'
+const primaryDarkerColor = '#4070D8'
+const dangerColor = '#DC3545'
 
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
@@ -27,8 +29,9 @@ export const darkTheme: BaseTheme = {
   disabledUiTextColor: light30Color,
 
   primaryColor: primaryColor,
-  dangerColor: '#dc3545',
-  borderColor: '#202020',
+  primaryDarkerColor: primaryDarkerColor,
+  dangerColor: dangerColor,
+  borderColor: '#505050',
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
@@ -58,12 +61,16 @@ export const darkTheme: BaseTheme = {
 
   // NotePage
   noteNavEmptyItemColor: '#999',
+  noteNavItemBackgroundColor: '#444',
 
   // Button
   primaryButtonLabelColor: light100Color,
   primaryButtonBackgroundColor: primaryColor,
+  primaryButtonHoverBackgroundColor: primaryDarkerColor,
   secondaryButtonLabelColor: light100Color,
-  secondaryButtonBackgroundColor: 'transparent',
+  secondaryButtonHoverLabelColor: light100Color,
+  secondaryButtonBackgroundColor: '#444',
+  secondaryButtonHoverBackgroundColor: '#555',
 
   // Input
   inputBackground: light12Color,

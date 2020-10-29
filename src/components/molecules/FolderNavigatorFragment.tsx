@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { NoteStorage } from '../../lib/db/types'
-import { usePathnameWithoutNoteId } from '../../lib/router'
+import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import FolderNavigatorItem from './FolderNavigatorItem'
@@ -52,16 +52,18 @@ const FolderListFragment = ({
 
   return (
     <>
-      {openedFolderPathnameList.map((folderPathname: string) => {
+      {openedFolderPathnameList.map((item) => {
         return (
           <FolderNavigatorItem
-            key={`folder:${folderPathname}`}
+            key={`folder:${item.pathname}`}
             active={
               currentPathnameWithoutNoteId ===
-              `/app/storages/${storageId}/notes${folderPathname}`
+              `/app/storages/${storageId}/notes${item.pathname}`
             }
             storageId={storage.id}
-            folderPathname={folderPathname}
+            depth={item.depth}
+            folderName={item.name}
+            folderPathname={item.pathname}
             folderSetWithSubFolders={folderSetWithSubFolders}
             createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
             showPromptToCreateFolder={showPromptToCreateFolder}
@@ -89,21 +91,32 @@ function getFolderNameElementTree(folderPathnameList: string[]) {
   }, {})
 }
 
+interface FolderNavItem {
+  name: string
+  pathname: string
+  depth: number
+}
+
 function getOpenedFolderPathnameList(
   tree: {},
   storageId: string,
   openItemIdSet: Set<string>,
   parentPathname: string
-) {
+): FolderNavItem[] {
   const names = Object.keys(tree)
-  const pathnameList: string[] = []
+  const pathnameList: FolderNavItem[] = []
   for (const name of names) {
     const pathname =
       parentPathname === '/' ? `/${name}` : `${parentPathname}/${name}`
     if (pathname === '/') {
       continue
     }
-    pathnameList.push(pathname)
+    const depth = pathname.split('/').slice(0).length - 1
+    pathnameList.push({
+      name,
+      pathname,
+      depth,
+    })
     if (openItemIdSet.has(getFolderItemId(storageId, pathname))) {
       pathnameList.push(
         ...getOpenedFolderPathnameList(

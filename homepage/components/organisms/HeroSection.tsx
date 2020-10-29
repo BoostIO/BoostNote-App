@@ -38,6 +38,9 @@ const HeroTitle = styled.h1<TypographyProps>`
 const HeroSubTitle = styled.h2<TypographyProps | ColorProps>`
   ${typography}
   ${color}
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 const DownloadButtonLinksFragment = () => {
@@ -115,10 +118,15 @@ const MobileAppLink = styled.a<SpaceProps>`
     transform: translateY(-3px);
     transition: 0.2s cubic-bezier(0, 0, 0.25, 1);
   }
+
+  @media only screen and (min-width: 768px) {
+    display: none;
+  }
 `
 
 const HeroImage = styled.img`
   max-width: 100%;
+  margin-bottom: -10px;
 `
 
 const HeroSection = () => {
@@ -141,7 +149,7 @@ const HeroSection = () => {
 
           <FlexBox
             justifyContent='center'
-            mt={5}
+            mt={[5, 7, 8]}
             flexDirection={['column', 'row']}
           >
             <DownloadButtonLinksFragment />
@@ -181,7 +189,7 @@ const HeroSection = () => {
             </MobileAppLink>
           </FlexBox>
         </Box>
-        <Box>
+        <Box mt={[5, 7, 7]}>
           <Text
             as='p'
             textAlign='center'
@@ -189,12 +197,11 @@ const HeroSection = () => {
             fontSize={[3]}
             fontWeight={'normal'}
           >
-            Also, please join our news letters to get the latest news and update
-            notes.
+            Stay up to date with our latest news and products
           </Text>
           <SubscribeNewsLettersForm />
         </Box>
-        <Box>
+        <Box mt={[7, 9, 9]}>
           <HeroImage src='/static/hero.png' />
         </Box>
       </Container>

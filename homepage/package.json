@@ -8,27 +8,27 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@mdi/js": "^5.1.45",
+    "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.4.0",
     "axios": "^0.19.2",
-    "i18next": "^19.4.4",
+    "i18next": "^19.8.3",
     "ky": "^0.23.0",
-    "ky-universal": "^0.8.1",
-    "next": "^9.3.6",
-    "next-i18next": "^4.4.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-i18next": "^11.4.0",
-    "react-use": "^14.2.0",
-    "styled-components": "^5.1.0",
+    "ky-universal": "^0.8.2",
+    "next": "^9.5.5",
+    "next-i18next": "^4.5.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-i18next": "^11.7.3",
+    "react-use": "^14.3.0",
+    "styled-components": "^5.2.0",
     "styled-system": "^5.1.5"
   },
   "devDependencies": {
-    "@types/react": "^16.9.34",
-    "@types/react-dom": "^16.9.7",
-    "@types/styled-components": "^5.1.0",
-    "@types/styled-system": "^5.1.9",
-    "babel-plugin-styled-components": "^1.10.7",
-    "typescript": "^3.8.3"
+    "@types/react": "^16.9.55",
+    "@types/react-dom": "^16.9.9",
+    "@types/styled-components": "^5.1.4",
+    "@types/styled-system": "^5.1.10",
+    "babel-plugin-styled-components": "^1.11.1",
+    "typescript": "^3.9.7"
   }
 }

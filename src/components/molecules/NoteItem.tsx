@@ -8,10 +8,8 @@ import {
 } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../lib/dnd'
-import HighlightText from '../atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../lib/styled'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +18,7 @@ import { useRouter } from '../../lib/router'
 import { GeneralNoteListViewOptions } from '../../lib/preferences'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { bookmarkItemId } from '../../lib/nav'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const Container = styled.button`
   margin: 0;
@@ -100,7 +99,6 @@ type NoteItemProps = {
   note: NoteDoc
   active: boolean
   recentlyCreated?: boolean
-  search: string
   basePathname: string
   focusList: () => void
   noteListView: GeneralNoteListViewOptions
@@ -113,14 +111,12 @@ const NoteItem = ({
   note,
   active,
   basePathname,
-  search,
   recentlyCreated,
   noteListView,
   applyDefaultNoteListing,
   applyCompactListing,
 }: NoteItemProps) => {
   const href = `${basePathname}/${note._id}`
-  const { popup } = useContextMenu()
   const {
     createNote,
     trashNote,
@@ -140,63 +136,64 @@ const NoteItem = ({
       event.stopPropagation()
       event.preventDefault()
 
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'Duplicate Note',
-          onClick: async () => {
-            createNote(storageId, {
-              title: note.title,
-              content: note.content,
-              folderPathname: note.folderPathname,
-              tags: note.tags,
-              data: note.data,
-            })
-          },
-        },
-        { type: MenuTypes.Separator },
-        {
-          type: MenuTypes.Normal,
-          label: 'Trash Note',
-          onClick: async () => {
-            if (note.trashed) {
-              return
-            }
-            trashNote(storageId, note._id)
-          },
-        },
-        { type: MenuTypes.Separator },
-        !note.data.bookmarked
-          ? {
-              type: MenuTypes.Normal,
-              label: 'Bookmark',
-              onClick: () => {
-                bookmarkNote(storageId, note._id)
-                addSideNavOpenedItem(bookmarkItemId)
-              },
-            }
-          : {
-              type: MenuTypes.Normal,
-              label: 'Unbookmark',
-              onClick: () => {
-                unbookmarkNote(storageId, note._id)
-              },
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'Duplicate Note',
+            click: async () => {
+              createNote(storageId, {
+                title: note.title,
+                content: note.content,
+                folderPathname: note.folderPathname,
+                tags: note.tags,
+                data: note.data,
+              })
             },
-        { type: MenuTypes.Separator },
-        {
-          type: MenuTypes.Normal,
-          label: 'Default View',
-          onClick: applyDefaultNoteListing,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Compact View',
-          onClick: applyCompactListing,
-        },
-      ])
+          },
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Trash Note',
+            click: async () => {
+              if (note.trashed) {
+                return
+              }
+              trashNote(storageId, note._id)
+            },
+          },
+          { type: 'separator' },
+          !note.data.bookmarked
+            ? {
+                type: 'normal',
+                label: 'Bookmark',
+                click: () => {
+                  bookmarkNote(storageId, note._id)
+                  addSideNavOpenedItem(bookmarkItemId)
+                },
+              }
+            : {
+                type: 'normal',
+                label: 'Unbookmark',
+                click: () => {
+                  unbookmarkNote(storageId, note._id)
+                },
+              },
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Default View',
+            click: applyDefaultNoteListing,
+          },
+          {
+            type: 'normal',
+            label: 'Compact View',
+            click: applyCompactListing,
+          },
+        ],
+      })
     },
     [
-      popup,
       createNote,
       storageId,
       note.title,
@@ -220,52 +217,53 @@ const NoteItem = ({
       event.stopPropagation()
       event.preventDefault()
 
-      popup(event, [
-        {
-          type: MenuTypes.Normal,
-          label: 'Restore Note',
-          onClick: async () => {
-            untrashNote(storageId, note._id)
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: 'Restore Note',
+            click: async () => {
+              untrashNote(storageId, note._id)
+            },
           },
-        },
-        { type: MenuTypes.Separator },
-        {
-          type: MenuTypes.Normal,
-          label: 'Delete Note',
-          onClick: async () => {
-            messageBox({
-              title: 'Delete Note',
-              message: t('note.deleteMessage'),
-              iconType: DialogIconTypes.Warning,
-              buttons: [t('note.delete2'), t('general.cancel')],
-              defaultButtonIndex: 0,
-              cancelButtonIndex: 1,
-              onClose: (value: number | null) => {
-                if (value === 0) {
-                  purgeNote(storageId, note._id)
-                }
-              },
-            })
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Delete Note',
+            click: async () => {
+              messageBox({
+                title: 'Delete Note',
+                message: t('note.deleteMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('note.delete2'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    purgeNote(storageId, note._id)
+                  }
+                },
+              })
+            },
           },
-        },
-        { type: MenuTypes.Separator },
-        {
-          type: MenuTypes.Normal,
-          label: 'Default View',
-          onClick: applyDefaultNoteListing,
-        },
-        {
-          type: MenuTypes.Normal,
-          label: 'Compact View',
-          onClick: applyCompactListing,
-        },
-      ])
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Default View',
+            click: applyDefaultNoteListing,
+          },
+          {
+            type: 'normal',
+            label: 'Compact View',
+            click: applyCompactListing,
+          },
+        ],
+      })
     },
     [
       storageId,
       note._id,
       t,
-      popup,
       untrashNote,
       purgeNote,
       messageBox,
@@ -276,25 +274,9 @@ const NoteItem = ({
 
   const contentPreview = useMemo(() => {
     const trimmedContent = note.content.trim()
-    const searchFirstIndex = trimmedContent
-      .toLowerCase()
-      .indexOf(search.toLowerCase())
-
-    if (search !== '' && searchFirstIndex !== -1) {
-      const contentToHighlight = trimmedContent
-        .substring(searchFirstIndex)
-        .split('\n')
-        .shift()
-
-      return contentToHighlight == null ? (
-        t('note.empty')
-      ) : (
-        <HighlightText text={contentToHighlight} search={search} />
-      )
-    }
 
     return trimmedContent.split('\n').shift() || t('note.empty')
-  }, [note.content, search, t])
+  }, [note.content, t])
 
   const loadTransferrableNoteData = useCallback(
     (event: React.DragEvent) => {
@@ -318,11 +300,7 @@ const NoteItem = ({
       onClick={navigateToNote}
     >
       <TitleSection>
-        {note.title.length === 0 ? (
-          t('note.noTitle')
-        ) : (
-          <HighlightText text={note.title} search={search} />
-        )}
+        {note.title.length === 0 ? t('note.noTitle') : note.title}
       </TitleSection>
       {noteListView !== 'compact' && (
         <>
@@ -333,9 +311,7 @@ const NoteItem = ({
           {note.tags.length > 0 && (
             <TagListSection>
               {note.tags.map((tag) => (
-                <TagListItem key={tag}>
-                  <HighlightText text={tag} search={search} />
-                </TagListItem>
+                <TagListItem key={tag}>{tag}</TagListItem>
               ))}
             </TagListSection>
           )}

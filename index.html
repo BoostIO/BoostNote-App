@@ -139,6 +139,36 @@
           return CSON.stringify(value)
         }
 
+        function openNewWindow(options) {
+          return new electron.remote.BrowserWindow(options)
+        }
+
+        function openContextMenu(options) {
+          const { Menu } = electron.remote
+          const menu = Menu.buildFromTemplate(options.menuItems)
+          menu.popup()
+        }
+
+        function getPathByName(name) {
+          const { app } = electron.remote
+          return app.getPath(name)
+        }
+
+        function addIpcListener(channel, listener) {
+          const { ipcRenderer } = electron
+          ipcRenderer.on(channel, listener)
+        }
+
+        function removeIpcListener(channel, listener) {
+          const { ipcRenderer } = electron
+          ipcRenderer.removeListener(channel, listener)
+        }
+
+        function removeAllIpcListeners(channel) {
+          const { ipcRenderer } = electron
+          ipcRenderer.removeListener(channel)
+        }
+
         window.__ELECTRON_ONLY__ = {}
         window.__ELECTRON_ONLY__.openExternal = openExternal
         window.__ELECTRON_ONLY__.readFile = readFile
@@ -153,6 +183,12 @@
         window.__ELECTRON_ONLY__.readFileTypeFromBuffer = readFileTypeFromBuffer
         window.__ELECTRON_ONLY__.parseCSON = parseCSON
         window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
+        window.__ELECTRON_ONLY__.openNewWindow = openNewWindow
+        window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
+        window.__ELECTRON_ONLY__.getPathByName = getPathByName
+        window.__ELECTRON_ONLY__.addIpcListener = addIpcListener
+        window.__ELECTRON_ONLY__.removeIpcListener = removeIpcListener
+        window.__ELECTRON_ONLY__.removeAllIpcListeners = removeAllIpcListeners
       })()
     </script>
   </body>

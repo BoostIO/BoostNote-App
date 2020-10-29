@@ -2,17 +2,10 @@ import React from 'react'
 import Image from '../atoms/Image'
 import styled from '../../lib/styled'
 import { useTranslation } from 'react-i18next'
-import { borderBottom } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
   user-select: none;
   position: relative;
-`
-
-const DraggableArea = styled.div`
-  height: 40px;
-  ${borderBottom}
-  -webkit-app-region: drag;
 `
 
 const Content = styled.div`
@@ -73,7 +66,6 @@ const IdleNoteDetail = () => {
   const { t } = useTranslation()
   return (
     <Container>
-      <DraggableArea />
       <Content>
         <Image src={'/app/static/logo_index.svg'} />
         <h3>{t('note.createkeymessage1')}</h3>

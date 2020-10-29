@@ -48,6 +48,7 @@ export const SectionSelect = styled.select`
   width: 200px;
   height: 40px;
   border-radius: 2px;
+  font-size: 14px;
 
   option {
     color: initial;
@@ -79,6 +80,7 @@ export const SectionInput = styled.input`
   width: 200px;
   height: 40px;
   border-radius: 2px;
+  font-size: 14px;
 `
 
 export const SectionTable = styled.table`

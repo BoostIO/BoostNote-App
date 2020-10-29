@@ -8,7 +8,7 @@ import {
 import HighlightText from '../../../components/atoms/HighlightText'
 import { formatDistanceToNow } from 'date-fns'
 import { scaleAndTransformFromLeft } from '../../../lib/styled'
-import { useContextMenu, MenuTypes, MenuItem } from '../../../lib/contextMenu'
+import { useContextMenu, MenuTypes, MenuItem } from '../../lib/contextMenu'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useTranslation } from 'react-i18next'
