@@ -4,7 +4,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
 module.exports = (env, argv) => {
@@ -134,13 +133,6 @@ module.exports = (env, argv) => {
   if (argv.mode === 'production') {
     config.optimization = {
       minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/,
-          },
-        }),
-      ],
     }
     if (process.env.TARGET === 'electron') {
       config.output.path = path.resolve(__dirname, 'electron/compiled')
