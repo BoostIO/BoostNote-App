@@ -49,7 +49,8 @@ const MenuButton = styled.button`
   ${uiTextColor};
   background-color: transparent;
   border: none;
-  text-align: left;
+  display: flex;
+  align-items: center;
   padding: 0 20px;
   ${textOverflow}
   &:hover,
@@ -237,7 +238,8 @@ const TagNavigatorNewTagPopup = ({
               inputRef.current?.focus()
             }}
           >
-            <span>Create</span> <Icon path={mdiPound} />
+            <span>Create</span>&nbsp;
+            <Icon path={mdiPound} />
             <span>{newTagName}</span>
           </MenuButton>
         )}
