@@ -1,7 +1,8 @@
 import { createStoreContext } from '../context'
 import { localLiteStorage } from 'ltstrg'
 
-import { useRouter, usePathnameWithoutNoteId } from '../router'
+import { useRouter } from '../router'
+import { usePathnameWithoutNoteId } from '../routeParams'
 import { createDbStoreCreator } from './createStore'
 
 export const {

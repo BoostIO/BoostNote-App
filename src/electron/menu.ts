@@ -1,10 +1,17 @@
-import { app, shell } from 'electron'
+import { app, shell, MenuItemConstructorOptions } from 'electron'
 import { checkForUpdates } from './updater'
 
 const mac = process.platform === 'darwin'
 // const linux = process.platform === 'linux'
+const preferencesMenuOption: MenuItemConstructorOptions = {
+  label: 'Preferences',
+  accelerator: 'Command+,',
+  click: async (_menuItem, browserWindow) => {
+    browserWindow.webContents.send('preferences')
+  },
+}
 
-export const template: any[] = [
+export const template: MenuItemConstructorOptions[] = [
   // { role: 'appMenu' }
   ...(mac
     ? [
@@ -12,6 +19,8 @@ export const template: any[] = [
           label: app.getName(),
           submenu: [
             { role: 'about' },
+            { type: 'separator' },
+            preferencesMenuOption,
             { type: 'separator' },
             {
               label: 'Check For Updates',
@@ -25,7 +34,7 @@ export const template: any[] = [
             { role: 'unhide' },
             { type: 'separator' },
             { role: 'quit' },
-          ],
+          ] as MenuItemConstructorOptions[],
         },
       ]
     : []),
@@ -34,11 +43,13 @@ export const template: any[] = [
     label: 'File',
     submenu: mac
       ? [{ role: 'close' }]
-      : [
+      : ([
           {
             label: 'Check For Updates',
             click: checkForUpdates,
           },
+          { type: 'separator' },
+          preferencesMenuOption,
           { type: 'separator' },
           {
             label: 'For Team',
@@ -48,7 +59,7 @@ export const template: any[] = [
           },
           { type: 'separator' },
           { role: 'quit' },
-        ],
+        ] as MenuItemConstructorOptions[]),
   },
   // { role: 'editMenu' }
   {
@@ -72,7 +83,7 @@ export const template: any[] = [
             },
           ]
         : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
-    ],
+    ] as MenuItemConstructorOptions[],
   },
   // { role: 'viewMenu' }
   {
@@ -87,7 +98,7 @@ export const template: any[] = [
       { role: 'zoomout' },
       { type: 'separator' },
       { role: 'togglefullscreen' },
-    ],
+    ] as MenuItemConstructorOptions[],
   },
   // { role: 'windowMenu' }
   {
@@ -103,7 +114,7 @@ export const template: any[] = [
             { role: 'window' },
           ]
         : [{ role: 'close' }]),
-    ],
+    ] as MenuItemConstructorOptions[],
   },
   {
     label: 'Community',
@@ -148,7 +159,7 @@ export const template: any[] = [
           await shell.openExternal('https://www.reddit.com/r/Boostnote/')
         },
       },
-    ],
+    ] as MenuItemConstructorOptions[],
   },
 
   {
@@ -160,7 +171,7 @@ export const template: any[] = [
           await shell.openExternal('https://boosthub.io/')
         },
       },
-    ],
+    ] as MenuItemConstructorOptions[],
   },
   {
     role: 'help',
@@ -171,6 +182,6 @@ export const template: any[] = [
           await shell.openExternal('https://boosthub.io')
         },
       },
-    ],
+    ] as MenuItemConstructorOptions[],
   },
 ]

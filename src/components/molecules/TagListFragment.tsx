@@ -3,12 +3,13 @@ import SideNavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../lib/nav'
-import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
+import { useRouter } from '../../lib/router'
+import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
 import { mdiPound, mdiTagMultiple } from '@mdi/js'
+import { openContextMenu } from '../../lib/electronOnly'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -18,7 +19,6 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
   const { id: storageId, tagMap } = storage
   const { push } = useRouter()
-  const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { removeTag } = useDb()
   const { t } = useTranslation()
@@ -43,41 +43,34 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
           active={tagIsActive}
           onContextMenu={(event) => {
             event.preventDefault()
-            popup(event, [
-              {
-                type: MenuTypes.Normal,
-                label: t('tag.remove'),
-                onClick: () => {
-                  messageBox({
-                    title: `Remove "${tagName}" tag`,
-                    message: t('tag.removeMessage'),
-                    iconType: DialogIconTypes.Warning,
-                    buttons: [t('tag.remove'), t('general.cancel')],
-                    defaultButtonIndex: 0,
-                    cancelButtonIndex: 1,
-                    onClose: (value: number | null) => {
-                      if (value === 0) {
-                        removeTag(storageId, tagName)
-                      }
-                    },
-                  })
+            openContextMenu({
+              menuItems: [
+                {
+                  type: 'normal',
+                  label: t('tag.remove'),
+                  click: () => {
+                    messageBox({
+                      title: `Remove "${tagName}" tag`,
+                      message: t('tag.removeMessage'),
+                      iconType: DialogIconTypes.Warning,
+                      buttons: [t('tag.remove'), t('general.cancel')],
+                      defaultButtonIndex: 0,
+                      cancelButtonIndex: 1,
+                      onClose: (value: number | null) => {
+                        if (value === 0) {
+                          removeTag(storageId, tagName)
+                        }
+                      },
+                    })
+                  },
                 },
-              },
-            ])
+              ],
+            })
           }}
         />
       )
     })
-  }, [
-    storageId,
-    tagMap,
-    push,
-    currentPathname,
-    popup,
-    messageBox,
-    removeTag,
-    t,
-  ])
+  }, [storageId, tagMap, push, currentPathname, messageBox, removeTag, t])
 
   if (tagList.length === 0) {
     return null

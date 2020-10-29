@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import styled from '../../lib/styled'
 import { NoteStorage, Attachment, AttachmentData } from '../../lib/db/types'
-import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { values } from '../../lib/db/utils'
 import { downloadBlob } from '../../lib/download'
 import { openNew } from '../../lib/platform'
+import { openContextMenu } from '../../lib/electronOnly'
 
 const ListContainer = styled.div`
   display: flex;
@@ -30,7 +30,6 @@ const AttachmentListItem = ({
   storageId,
   attachment,
 }: AttachmentListItemProps) => {
-  const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { removeAttachment } = useDb()
   const [data, setData] = useState<AttachmentData | null>(null)
@@ -69,42 +68,44 @@ const AttachmentListItem = ({
       onContextMenu={(event: React.MouseEvent) => {
         event.preventDefault()
 
-        popup(event, [
-          data.type === 'blob'
-            ? {
-                type: MenuTypes.Normal,
-                label: 'Download',
-                onClick: () => {
-                  downloadBlob(data.blob, attachment.name)
+        openContextMenu({
+          menuItems: [
+            data.type === 'blob'
+              ? {
+                  type: 'normal',
+                  label: 'Download',
+                  click: () => {
+                    downloadBlob(data.blob, attachment.name)
+                  },
+                }
+              : {
+                  type: 'normal',
+                  label: 'Open',
+                  click: () => {
+                    openNew(data.src)
+                  },
                 },
-              }
-            : {
-                type: MenuTypes.Normal,
-                label: 'Open',
-                onClick: () => {
-                  openNew(data.src)
-                },
+            {
+              type: 'normal',
+              label: 'Remove Attachment',
+              click: () => {
+                messageBox({
+                  title: `Remove Attachment`,
+                  message: 'The attachment will be deleted permanently.',
+                  iconType: DialogIconTypes.Warning,
+                  buttons: ['Delete Attachment', 'Cancel'],
+                  defaultButtonIndex: 0,
+                  cancelButtonIndex: 1,
+                  onClose: (value: number | null) => {
+                    if (value === 0) {
+                      removeAttachment(storageId, attachment.name)
+                    }
+                  },
+                })
               },
-          {
-            type: MenuTypes.Normal,
-            label: 'Remove Attachment',
-            onClick: () => {
-              messageBox({
-                title: `Remove Attachment`,
-                message: 'The attachment will be deleted permanently.',
-                iconType: DialogIconTypes.Warning,
-                buttons: ['Delete Attachment', 'Cancel'],
-                defaultButtonIndex: 0,
-                cancelButtonIndex: 1,
-                onClose: (value: number | null) => {
-                  if (value === 0) {
-                    removeAttachment(storageId, attachment.name)
-                  }
-                },
-              })
             },
-          },
-        ])
+          ],
+        })
       }}
     />
   )

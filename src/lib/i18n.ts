@@ -4,6 +4,7 @@ import de from '../locales/de'
 import enUS from '../locales/enUS'
 import esES from '../locales/esES'
 import frFR from '../locales/frFR'
+import fi from '../locales/fi'
 import itIT from '../locales/itIT'
 import zhCN from '../locales/zhCN'
 import zhHK from '../locales/zhHK'
@@ -13,6 +14,7 @@ import ko from '../locales/ko'
 import ptBR from '../locales/ptBR'
 import ukUA from '../locales/ukUA'
 import csCZ from '../locales/csCZ'
+import ruRU from '../locales/ruRU'
 
 const resources = {
   'cs-CZ': csCZ,
@@ -20,11 +22,13 @@ const resources = {
   'en-US': enUS,
   'es-ES': esES,
   'fr-FR': frFR,
+  fi,
   'it-IT': itIT,
   ja,
   ko,
   'pt-BR': ptBR,
   ukUA,
+  ruRU,
   'zh-CN': zhCN,
   'zh-HK': zhHK,
   'zh-TW': zhTW,

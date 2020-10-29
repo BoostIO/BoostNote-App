@@ -2,12 +2,14 @@ import React, { useMemo, useCallback } from 'react'
 import NoteList from '../organisms/NoteList'
 import {
   useRouteParams,
-  StorageNotesRouteParams,
-  StorageTrashCanRouteParams,
-  StorageTagsRouteParams,
   usePathnameWithoutNoteId,
   useRouter,
 } from '../../lib/router'
+import {
+  StorageNotesRouteParams,
+  StorageTrashCanRouteParams,
+  StorageTagsRouteParams,
+} from '../../../lib/routeParams'
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage } from '../../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
@@ -27,7 +29,7 @@ import {
 } from '@mdi/js'
 import TopBarButton from '../atoms/TopBarButton'
 import TopBarToggleNavButton from '../atoms/TopBarToggleNavButton'
-import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useContextMenu, MenuTypes } from '../../../mobile/lib/contextMenu'
 import { values, getFolderNameFromPathname } from '../../../lib/db/utils'
 
 const NotePageContainer = styled.div`

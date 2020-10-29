@@ -1,15 +1,19 @@
 import { createStoreContext } from '../../lib/context'
-import { normalizeLocation } from '../../lib/router/utils'
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { Location, AllRouteParams } from '../../lib/router/types'
-import { createHashHistory } from 'history'
+import { Location, normalizeLocation } from '../../lib/url'
+import { AllRouteParams } from '../../lib/routeParams'
+import {
+  createHashHistory,
+  LocationState,
+  LocationDescriptorObject,
+} from 'history'
 import { parse as parseQuery } from 'querystring'
-export * from '../../lib/router/types'
 
-const bhistory = createHashHistory()
+const browserHistory = createHashHistory()
 
 export interface RouterStore extends Location {
-  push: (path: string) => void
+  push(path: string, state?: LocationState): void
+  push(location: LocationDescriptorObject): void
   replace: (path: string) => void
   go: (count: number) => void
   goBack: () => void
@@ -17,31 +21,29 @@ export interface RouterStore extends Location {
 }
 
 const initialLocation = normalizeLocation({
-  pathname: bhistory.location.pathname,
-  hash: bhistory.location.hash,
-  query: parseQuery(bhistory.location.search),
+  pathname: browserHistory.location.pathname,
+  hash: browserHistory.location.hash,
+  query: parseQuery(browserHistory.location.search),
 })
 
 function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
-  const push = useCallback((urlStr: string) => {
-    bhistory.push(urlStr)
-  }, [])
+  const push = browserHistory.push
 
   const replace = useCallback((urlStr: string) => {
-    bhistory.replace(urlStr)
+    browserHistory.replace(urlStr)
   }, [])
 
   const go = useCallback((count: number) => {
-    bhistory.go(count)
+    browserHistory.go(count)
   }, [])
 
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
   useEffect(() => {
-    return bhistory.listen((blocation) => {
+    return browserHistory.listen((blocation) => {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,
@@ -88,13 +90,6 @@ export const useRouteParams = () => {
         name: 'storages.notes',
         storageId,
         folderPathname: '/',
-      }
-    }
-
-    if (names[2] == 'settings') {
-      return {
-        name: 'storages.settings',
-        storageId,
       }
     }
 

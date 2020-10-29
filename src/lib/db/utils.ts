@@ -82,8 +82,19 @@ export function isTagNameValid(name: string): boolean {
   return !/[\s#<>:"\/\\|?*\x00-\x1F]/g.test(name)
 }
 
-export function isSubPathname(pathname: string, newPathname: string) {
-  return new RegExp(`^${escapeRegExp(pathname)}/.+`).test(newPathname)
+export function isSubPathname(rootPathname: string, targetPathname: string) {
+  return new RegExp(`^${escapeRegExp(rootPathname)}/.+`).test(targetPathname)
+}
+
+export function isDirectSubPathname(
+  rootPathname: string,
+  targetPathname: string
+) {
+  return new RegExp(
+    `^${
+      rootPathname === '/' ? '' : escapeRegExp(rootPathname)
+    }/[^<>:"\/\\|?*\x00-\x1F]+$`
+  ).test(targetPathname)
 }
 
 enum DbClientErrorCode {

@@ -37,6 +37,8 @@ const PreviewContainer = styled.div`
   ${border}
   .panel {
     width: 50%;
+    padding: 15px;
+
     &:first-child {
       ${borderRight}
     }
