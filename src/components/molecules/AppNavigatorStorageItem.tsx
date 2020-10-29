@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import { NoteStorage } from '../../lib/db/types'
 import { secondaryButtonStyle, border } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
-import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
 import { mdiSync } from '@mdi/js'
 import { useDb } from '../../lib/db'
@@ -62,7 +61,6 @@ const AppNavigatorStorageItem = ({
   active,
   storage,
 }: AppNavigatorStorageItemProps) => {
-  const { push } = useRouter()
   const { syncStorage, renameStorage, removeStorage } = useDb()
   const user = useFirstUser()
   const { pushMessage } = useToast()
@@ -109,6 +107,7 @@ const AppNavigatorStorageItem = ({
             })
           },
         },
+        { type: 'separator' },
         {
           type: 'normal',
           label: t('storage.remove'),
@@ -131,11 +130,6 @@ const AppNavigatorStorageItem = ({
             })
           },
         },
-        {
-          type: 'normal',
-          label: 'Configure Storage',
-          click: () => push(`/app/storages/${storage.id}/settings`),
-        },
       ]
 
       if (storage.type !== 'fs' && storage.cloudStorage != null) {
@@ -148,7 +142,7 @@ const AppNavigatorStorageItem = ({
 
       openContextMenu({ menuItems })
     },
-    [messageBox, prompt, renameStorage, removeStorage, storage, push, sync, t]
+    [messageBox, prompt, renameStorage, removeStorage, storage, sync, t]
   )
 
   return (
