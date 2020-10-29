@@ -46,6 +46,9 @@ const StorageNavigatorFragment = ({
     renameStorage,
     removeStorage,
     syncStorage,
+    bookmarkNote,
+    unbookmarkNote,
+    trashNote,
   } = useDb()
   const { push } = useRouter()
   const { t } = useTranslation()
@@ -325,6 +328,9 @@ const StorageNavigatorFragment = ({
             createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
             showPromptToCreateFolder={showPromptToCreateFolder}
             showPromptToRenameFolder={showPromptToRenameFolder}
+            bookmarkNote={bookmarkNote}
+            unbookmarkNote={unbookmarkNote}
+            trashNote={trashNote}
           />
         ))}
 

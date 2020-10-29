@@ -16,6 +16,15 @@ interface FolderNoteNavigatorFragment {
   createNoteInFolderAndRedirect: (folderPathname: string) => void
   showPromptToCreateFolder: (folderPathname: string) => void
   showPromptToRenameFolder: (folderPathname: string) => void
+  bookmarkNote: (
+    storageId: string,
+    noteId: string
+  ) => Promise<NoteDoc | undefined>
+  unbookmarkNote: (
+    storageId: string,
+    noteId: string
+  ) => Promise<NoteDoc | undefined>
+  trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
 }
 
 const FolderNoteNavigatorFragment = ({
@@ -23,6 +32,9 @@ const FolderNoteNavigatorFragment = ({
   showPromptToCreateFolder,
   showPromptToRenameFolder,
   createNoteInFolderAndRedirect,
+  bookmarkNote,
+  unbookmarkNote,
+  trashNote,
 }: FolderNoteNavigatorFragment) => {
   const { folderMap, id: storageId } = storage
 
@@ -83,6 +95,7 @@ const FolderNoteNavigatorFragment = ({
           id: note._id,
           title: note.title,
           folderPathname: note.folderPathname,
+          bookmarked: !!note.data.bookmarked,
           depth: 1,
         })
       })
@@ -126,7 +139,11 @@ const FolderNoteNavigatorFragment = ({
             noteTitle={item.title}
             noteId={item.id}
             noteFolderPath={item.folderPathname}
+            noteBookmarked={item.bookmarked}
             depth={item.depth}
+            bookmarkNote={bookmarkNote}
+            unbookmarkNote={unbookmarkNote}
+            trashNote={trashNote}
           />
         )
       })}
@@ -163,6 +180,7 @@ interface NoteNavItem {
   title: string
   folderPathname: string
   depth: number
+  bookmarked: boolean
 }
 
 type NavItem = FolderNavItem | NoteNavItem
@@ -233,6 +251,7 @@ function getOpenedFolderPathnameList(
               id: noteDoc._id,
               title: noteDoc.title,
               folderPathname: noteDoc.folderPathname,
+              bookmarked: !!noteDoc.data.bookmarked,
               depth: depth + 1,
             })
           })
