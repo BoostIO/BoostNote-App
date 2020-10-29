@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import {
   borderRight,
@@ -14,7 +14,7 @@ import { useActiveStorageId } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu } from '../../lib/electronOnly'
+import { openContextMenu, openExternal } from '../../lib/electronOnly'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -83,13 +83,31 @@ const TopLevelNavigator = () => {
     [prompt, createStorage, push, setPreferences]
   )
 
+  const openNewStorageContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) => {
+      event.preventDefault()
+      openContextMenu({
+        menuItems: [
+          { label: 'Create a new storage', click: goToStorageCreatePage },
+          {
+            label: 'Try team collaboration',
+            click: () => {
+              openExternal('https://boosthub.io')
+            },
+          },
+        ],
+      })
+    },
+    [goToStorageCreatePage]
+  )
+
   return (
     <Container>
       <ListContainer onContextMenu={openSideNavContextMenu}>
         {storages}
       </ListContainer>
       <ControlContainer>
-        <NavigatorButton onClick={goToStorageCreatePage}>
+        <NavigatorButton onClick={openNewStorageContextMenu}>
           <Icon path={mdiPlus} />
         </NavigatorButton>
       </ControlContainer>
