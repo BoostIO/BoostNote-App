@@ -28,7 +28,7 @@ const PreferencesModalContainer = styled.div`
 `
 
 const PreferencesModal = () => {
-  const { closed, toggleClosed } = usePreferences()
+  const { closed, togglePreferencesModal } = usePreferences()
   const [tab, setTab] = useState<null | 'general' | 'editor' | 'billing'>(null)
 
   const unselectTab = useCallback(() => {
@@ -72,7 +72,7 @@ const PreferencesModal = () => {
       <TopBarLayout
         titleLabel='Preferences'
         leftControl={
-          <TopBarButton onClick={toggleClosed}>
+          <TopBarButton onClick={togglePreferencesModal}>
             <Icon path={mdiClose} />
           </TopBarButton>
         }

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
-import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useContextMenu, MenuTypes } from '../../../mobile/lib/contextMenu'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../../lib/db/types'
 import { usePathnameWithoutNoteId, useRouter } from '../../lib/router'
