@@ -20,6 +20,7 @@ import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import { mdiPound } from '@mdi/js'
 import Icon from './Icon'
+import { isTagNameValid } from '../../lib/db/utils'
 
 const Container = styled.div`
   position: fixed;
@@ -154,7 +155,9 @@ const TagNavigatorNewTagPopup = ({
 
           if (menuIndex === filteredStorageTags.length) {
             setNewTagName('')
-            appendTagByName(trimmedNewTagName)
+            if (isTagNameValid(trimmedNewTagName)) {
+              appendTagByName(trimmedNewTagName)
+            }
             close()
             return
           }

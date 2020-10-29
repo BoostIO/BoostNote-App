@@ -17,7 +17,7 @@ import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NotePathnameNavigator from '../molecules/NotePathnameNavigator'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
-import { values } from '../../lib/db/utils'
+import { values, isTagNameValid } from '../../lib/db/utils'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
@@ -121,13 +121,15 @@ const NotePageToolbar = ({
 
   const appendTagByName = useCallback(
     async (tagName: string) => {
-      if (note == null) {
+      if (note == null || !isTagNameValid(tagName)) {
         return
       }
       const tagNameSet = new Set(note.tags)
       tagNameSet.add(tagName)
       await updateNote(storage.id, note._id, {
-        tags: [...tagNameSet],
+        tags: [...tagNameSet].filter((noteTagName) =>
+          isTagNameValid(noteTagName)
+        ),
       })
     },
     [storage.id, note, updateNote]
@@ -141,7 +143,9 @@ const NotePageToolbar = ({
       const tagNameSet = new Set(note.tags)
       tagNameSet.delete(tagName)
       await updateNote(storage.id, note._id, {
-        tags: [...tagNameSet],
+        tags: [...tagNameSet].filter((noteTagName) =>
+          isTagNameValid(noteTagName)
+        ),
       })
     },
     [storage.id, note, updateNote]
