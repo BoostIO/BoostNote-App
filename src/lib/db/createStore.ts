@@ -1214,94 +1214,103 @@ export function createDbStoreCreator(
       ]
     )
 
-    const addAttachments = async (
-      storageId: string,
-      files: File[]
-    ): Promise<Attachment[]> => {
-      const storage = storageMap[storageId]
-      if (storage == null) {
-        return []
-      }
-      const attachments = await storage.db.upsertAttachments(files)
+    const addAttachments = useCallback(
+      async (storageId: string, files: File[]): Promise<Attachment[]> => {
+        const storage = storageMapRef.current[storageId]
+        if (storage == null) {
+          return []
+        }
+        const attachments = await storage.db.upsertAttachments(files)
 
-      setStorageMap(
-        produce((draft: ObjectMap<NoteStorage>) => {
-          attachments.forEach((attachment) => {
-            draft[storageId]!.attachmentMap[attachment.name] = attachment
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            attachments.forEach((attachment) => {
+              draft[storageId]!.attachmentMap[attachment.name] = attachment
+            })
           })
-        })
-      )
+        )
 
-      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
 
-      return attachments
-    }
+        return attachments
+      },
+      [storageMapRef, queueSyncingStorage, setStorageMap]
+    )
 
-    const removeAttachment = async (storageId: string, fileName: string) => {
-      const storage = storageMap[storageId]
-      if (storage == null) {
-        return
-      }
-      await storage.db.removeAttachment(fileName)
+    const removeAttachment = useCallback(
+      async (storageId: string, fileName: string) => {
+        const storage = storageMapRef.current[storageId]
+        if (storage == null) {
+          return
+        }
+        await storage.db.removeAttachment(fileName)
 
-      setStorageMap(
-        produce((draft: ObjectMap<NoteStorage>) => {
-          delete draft[storageId]!.attachmentMap[fileName]
-        })
-      )
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            delete draft[storageId]!.attachmentMap[fileName]
+          })
+        )
 
-      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
-    }
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+      },
+      [storageMapRef, queueSyncingStorage, setStorageMap]
+    )
 
-    const bookmarkNote = async (storageId: string, noteId: string) => {
-      const storage = storageMap[storageId]
-      if (storage == null) {
-        return
-      }
-      const noteDoc = await storage.db.bookmarkNote(noteId)
-      if (noteDoc == null) {
-        return
-      }
+    const bookmarkNote = useCallback(
+      async (storageId: string, noteId: string) => {
+        const storage = storageMapRef.current[storageId]
+        if (storage == null) {
+          return
+        }
+        const noteDoc = await storage.db.bookmarkNote(noteId)
+        if (noteDoc == null) {
+          return
+        }
 
-      setStorageMap(
-        produce((draft: ObjectMap<NoteStorage>) => {
-          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
-          bookmarkedItemIdSet.add(noteDoc._id)
-          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+            bookmarkedItemIdSet.add(noteDoc._id)
+            draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
 
-          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
-        })
-      )
+            draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+          })
+        )
 
-      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
 
-      return noteDoc
-    }
+        return noteDoc
+      },
+      [queueSyncingStorage, setStorageMap, storageMapRef]
+    )
 
-    const unbookmarkNote = async (storageId: string, noteId: string) => {
-      const storage = storageMap[storageId]
-      if (storage == null) {
-        return
-      }
-      const noteDoc = await storage.db.unbookmarkNote(noteId)
-      if (noteDoc == null) {
-        return
-      }
+    const unbookmarkNote = useCallback(
+      async (storageId: string, noteId: string) => {
+        const storage = storageMapRef.current[storageId]
+        if (storage == null) {
+          return
+        }
+        const noteDoc = await storage.db.unbookmarkNote(noteId)
+        if (noteDoc == null) {
+          return
+        }
 
-      setStorageMap(
-        produce((draft: ObjectMap<NoteStorage>) => {
-          const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
-          bookmarkedItemIdSet.delete(noteDoc._id)
-          draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            const bookmarkedItemIdSet = new Set(storage.bookmarkedItemIds)
+            bookmarkedItemIdSet.delete(noteDoc._id)
+            draft[storageId]!.bookmarkedItemIds = [...bookmarkedItemIdSet]
 
-          draft[storageId]!.noteMap[noteDoc._id] = noteDoc
-        })
-      )
+            draft[storageId]!.noteMap[noteDoc._id] = noteDoc
+          })
+        )
 
-      queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
 
-      return noteDoc
-    }
+        return noteDoc
+      },
+      [queueSyncingStorage, setStorageMap, storageMapRef]
+    )
 
     return {
       initialized,
