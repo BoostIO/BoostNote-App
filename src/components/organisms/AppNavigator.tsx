@@ -15,6 +15,7 @@ import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
+import { osName } from '../../lib/platform'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -103,6 +104,7 @@ const TopLevelNavigator = () => {
 
   return (
     <Container>
+      {osName === 'macos' && <Spacer />}
       <ListContainer onContextMenu={openSideNavContextMenu}>
         {storages}
       </ListContainer>
@@ -116,6 +118,10 @@ const TopLevelNavigator = () => {
 }
 
 export default TopLevelNavigator
+
+const Spacer = styled.div`
+  height: 12px;
+`
 
 const Container = styled.div`
   width: 68px;
@@ -132,7 +138,7 @@ const ListContainer = styled.div`
   flex-direction: column;
   justify-items: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 8px;
 `
 
 const ControlContainer = styled.div`
