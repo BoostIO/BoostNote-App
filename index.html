@@ -154,6 +154,21 @@
           return app.getPath(name)
         }
 
+        function addIpcListener(channel, listener) {
+          const { ipcRenderer } = electron
+          ipcRenderer.on(channel, listener)
+        }
+
+        function removeIpcListener(channel, listener) {
+          const { ipcRenderer } = electron
+          ipcRenderer.removeListener(channel, listener)
+        }
+
+        function removeAllIpcListeners(channel) {
+          const { ipcRenderer } = electron
+          ipcRenderer.removeListener(channel)
+        }
+
         window.__ELECTRON_ONLY__ = {}
         window.__ELECTRON_ONLY__.openExternal = openExternal
         window.__ELECTRON_ONLY__.readFile = readFile
@@ -171,6 +186,9 @@
         window.__ELECTRON_ONLY__.openNewWindow = openNewWindow
         window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
         window.__ELECTRON_ONLY__.getPathByName = getPathByName
+        window.__ELECTRON_ONLY__.addIpcListener = addIpcListener
+        window.__ELECTRON_ONLY__.removeIpcListener = removeIpcListener
+        window.__ELECTRON_ONLY__.removeAllIpcListeners = removeAllIpcListeners
       })()
     </script>
   </body>

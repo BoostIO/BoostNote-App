@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react'
+import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -26,7 +26,11 @@ import {
   defaultStorageCreatedKey,
   appModeChosen as appModeChosenKey,
 } from '../lib/localStorageKeys'
-import { getPathByName } from '../lib/electronOnly'
+import {
+  getPathByName,
+  addIpcListener,
+  removeIpcListener,
+} from '../lib/electronOnly'
 import { generateId } from '../lib/string'
 import FSNoteDb from '../lib/db/FSNoteDb'
 import path from 'path'
@@ -132,14 +136,17 @@ const App = () => {
   })
 
   const { togglePreferencesModal, preferences } = usePreferences()
+
+  useEffect(() => {
+    addIpcListener('preferences', togglePreferencesModal)
+    return () => {
+      removeIpcListener('preferences', togglePreferencesModal)
+    }
+  }, [togglePreferencesModal])
+
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       switch (event.key) {
-        case ',':
-          if (isWithGeneralCtrlKey(event)) {
-            togglePreferencesModal()
-          }
-          break
         case 'a':
           if (isWithGeneralCtrlKey(event) && event.target != null) {
             const targetElement = event.target as HTMLElement
@@ -157,7 +164,7 @@ const App = () => {
           break
       }
     }
-  }, [togglePreferencesModal])
+  }, [])
   useGlobalKeyDownHandler(keyboardHandler)
 
   const [showAppModeModal, setShowAppModeModal] = useState(false)

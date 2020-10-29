@@ -4,6 +4,7 @@ import {
   BrowserWindowConstructorOptions,
   BrowserWindow,
   MenuItemConstructorOptions,
+  IpcRendererEvent,
 } from 'electron'
 
 const __ELECTRON_ONLY__: {
@@ -31,6 +32,15 @@ const __ELECTRON_ONLY__: {
   openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
   openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
   getPathByName(name: string): string
+  addIpcListener(
+    channel: string,
+    listener: (event: IpcRendererEvent, ...args: any[]) => void
+  ): void
+  removeIpcListener(
+    channel: string,
+    listener: (event: IpcRendererEvent, ...args: any[]) => void
+  ): void
+  removeAllIpcListeners(channel: string): void
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -49,6 +59,9 @@ const {
   stringifyCSON,
   openContextMenu,
   getPathByName,
+  addIpcListener,
+  removeIpcListener,
+  removeAllIpcListeners,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -92,4 +105,7 @@ export {
   stringifyCSON,
   openContextMenu,
   getPathByName,
+  addIpcListener,
+  removeIpcListener,
+  removeAllIpcListeners,
 }
