@@ -104,6 +104,7 @@ const Container = styled.div`
   height: 100%;
   ${borderRight}
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
 `
 
