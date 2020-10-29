@@ -13,9 +13,11 @@ import ja from '../locales/ja'
 import ko from '../locales/ko'
 import ptBR from '../locales/ptBR'
 import ukUA from '../locales/ukUA'
+import csCZ from '../locales/csCZ'
 import ruRU from '../locales/ruRU'
 
 const resources = {
+  'cs-CZ': csCZ,
   de,
   'en-US': enUS,
   'es-ES': esES,
