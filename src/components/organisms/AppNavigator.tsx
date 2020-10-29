@@ -132,6 +132,7 @@ const NavigatorButton = styled.button`
   justify-content: center;
   cursor: pointer;
   font-size: 22px;
+  border-radius: 5px;
   &:first-child {
     margin-top: 5px;
   }

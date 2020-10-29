@@ -27,6 +27,7 @@ const Container = styled.div`
 const MainButton = styled.button`
   height: 50px;
   width: 50px;
+  border-radius: 5px;
   ${secondaryButtonStyle}
   ${border}
   cursor: pointer;
