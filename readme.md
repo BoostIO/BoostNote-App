@@ -2,7 +2,7 @@
 >
 > We've developed a collaborative workspace app called "Boost Hub" for developer teams.
 >
-> It's customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!
+> It's customizable and easy to optimize for your team like lego blocks and even lets you edit documents together in real-time!
 
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
