@@ -284,11 +284,11 @@ const Header = () => {
                   color='teal'
                   fontSize={1}
                   py={2}
-                  href='https://note.boostio.co'
+                  href='https://note.boostio.co/app'
                   onClick={(event) => {
                     event.preventDefault()
                     sendGAEvent('open-in-browser')
-                    queueNavigateToGA('https://note.boostio.co')
+                    queueNavigateToGA('https://note.boostio.co/app')
                   }}
                 >
                   <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}

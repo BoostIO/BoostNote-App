@@ -159,11 +159,11 @@ const HeroSection = () => {
               mx={1}
               py={2}
               my={[1, 0]}
-              href='https://note.boostio.co'
+              href='https://note.boostio.co/app'
               onClick={(event) => {
                 event.preventDefault()
                 sendGAEvent('open-in-browser')
-                queueNavigateToGA('https://note.boostio.co')
+                queueNavigateToGA('https://note.boostio.co/app')
               }}
             >
               <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
