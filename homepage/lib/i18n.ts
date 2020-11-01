@@ -11,6 +11,7 @@ import ru from '../locales/ru'
 import es from '../locales/es'
 import de from '../locales/de'
 import vn from '../locales/vn'
+import hr from '../locales/hr'
 
 const resources = {
   en,
@@ -24,6 +25,7 @@ const resources = {
   es,
   de,
   vn,
+  hr
 }
 
 i18n
