@@ -3,7 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "target": "es2018",
+    "target": "es2019",
     "downlevelIteration": true,
     "importHelpers": true,
     "sourceMap": true,
@@ -12,7 +12,7 @@
     "jsx": "react",
     "allowJs": true,
     "checkJs": false,
-    "lib": ["dom", "esnext", "es2020"],
+    "lib": ["dom", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
