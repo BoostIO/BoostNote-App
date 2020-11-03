@@ -12,7 +12,7 @@
     "jsx": "react",
     "allowJs": true,
     "checkJs": false,
-    "lib": ["dom", "esnext"],
+    "lib": ["dom", "esnext", "es2020"],
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
