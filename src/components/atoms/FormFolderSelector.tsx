@@ -68,7 +68,7 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
     } finally {
       setDialogIsOpen(false)
     }
-  }, [dialogIsOpen, setValue])
+  }, [dialogIsOpen, setValue, t])
 
   return (
     <FormFolderSelectorContainer>
