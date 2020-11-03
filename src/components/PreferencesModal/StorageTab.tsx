@@ -147,7 +147,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             <ConvertPouchStorageForm
               storageId={storage.id}
               storageName={storage.name}
-              onCancel={foldConvertPouchForm}
+              closeForm={foldConvertPouchForm}
             />
           )}
         </>
