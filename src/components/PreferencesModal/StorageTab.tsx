@@ -69,16 +69,6 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
     setEditingName(false)
   }, [storage.id, db, newName])
 
-  const [importLegacyFormIsFolded, setImportLegacyFormIsFolded] = useState(true)
-
-  const openImportLegacyForm = useCallback(() => {
-    setImportLegacyFormIsFolded(false)
-  }, [])
-
-  const foldImportLegacyForm = useCallback(() => {
-    setImportLegacyFormIsFolded(true)
-  }, [])
-
   const [convertPouchFormIsFolded, setConvertPouchFormIsFolded] = useState(true)
 
   const openConvertPouchForm = useCallback(() => {
@@ -138,21 +128,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
       {storage.type === 'fs' && (
         <>
           <hr />
-          <FormHeading depth={2}>
-            Import Notes from Legacy BoostNote
-          </FormHeading>
-          {importLegacyFormIsFolded ? (
-            <FormGroup>
-              <FormSecondaryButton onClick={openImportLegacyForm}>
-                Import
-              </FormSecondaryButton>
-            </FormGroup>
-          ) : (
-            <ImportLegacyNotesForm
-              storageId={storage.id}
-              onCancel={foldImportLegacyForm}
-            />
-          )}
+          <ImportLegacyNotesForm storageId={storage.id} />
         </>
       )}
 
