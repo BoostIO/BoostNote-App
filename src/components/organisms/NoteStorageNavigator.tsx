@@ -224,7 +224,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     <NavigatorContainer>
       {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
-        <StorageName>{storage.name}</StorageName>
+        <div className='topButtonLabel'>{storage.name}</div>
         <Icon path={mdiChevronDown} />
       </TopButton>
 
@@ -286,15 +286,15 @@ const TopButton = styled.button`
   color: ${({ theme }) => theme.navItemColor};
   background-color: transparent;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
+  & > .topButtonLabel {
+    font-size: 18px;
+    font-weight: 600;
+    padding-right: 10px;
+    ${textOverflow}
+  }
   &:hover {
     color: ${({ theme }) => theme.navItemActiveColor};
   }
-`
-
-const StorageName = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  padding-right: 10px;
 `
 
 const SearchButton = styled.button`
