@@ -69,16 +69,6 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
     setEditingName(false)
   }, [storage.id, db, newName])
 
-  const [convertPouchFormIsFolded, setConvertPouchFormIsFolded] = useState(true)
-
-  const openConvertPouchForm = useCallback(() => {
-    setConvertPouchFormIsFolded(false)
-  }, [])
-
-  const foldConvertPouchForm = useCallback(() => {
-    setConvertPouchFormIsFolded(true)
-  }, [])
-
   return (
     <div>
       <h2>Storage Name</h2>
@@ -135,21 +125,10 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
       {storage.type === 'pouch' && appIsElectron && (
         <>
           <hr />
-
-          <FormHeading depth={2}>Convert File System based Storage</FormHeading>
-          {convertPouchFormIsFolded ? (
-            <FormGroup>
-              <FormSecondaryButton onClick={openConvertPouchForm}>
-                Convert
-              </FormSecondaryButton>
-            </FormGroup>
-          ) : (
-            <ConvertPouchStorageForm
-              storageId={storage.id}
-              storageName={storage.name}
-              closeForm={foldConvertPouchForm}
-            />
-          )}
+          <ConvertPouchStorageForm
+            storageId={storage.id}
+            storageName={storage.name}
+          />
         </>
       )}
       <hr />
