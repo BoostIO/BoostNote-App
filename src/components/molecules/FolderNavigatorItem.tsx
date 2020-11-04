@@ -6,7 +6,13 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
-import { mdiFolderOpen, mdiFolder, mdiDotsVertical, mdiPlus } from '@mdi/js'
+import {
+  mdiFolderOpen,
+  mdiFolder,
+  mdiDotsVertical,
+  mdiTextBoxPlusOutline,
+  mdiFolderMultiplePlusOutline,
+} from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
 import { openContextMenu } from '../../lib/electronOnly'
@@ -75,6 +81,14 @@ const FolderNavigatorItem = ({
     )
   }, [storageId, folderPathname, push])
 
+  const createNoteInFolder = useCallback(() => {
+    createNoteInFolderAndRedirect(folderPathname)
+  }, [createNoteInFolderAndRedirect, folderPathname])
+
+  const createSubFolder = useCallback(() => {
+    showPromptToCreateFolder(folderPathname)
+  }, [showPromptToCreateFolder, folderPathname])
+
   const showFolderRemoveMessageBox = useCallback(() => {
     messageBox({
       title: `Remove "${folderPathname}" folder`,
@@ -103,16 +117,12 @@ const FolderNavigatorItem = ({
           {
             type: 'normal',
             label: 'New Note',
-            click: async () => {
-              createNoteInFolderAndRedirect(folderPathname)
-            },
+            click: createNoteInFolder,
           },
           {
             type: 'normal',
             label: 'New Subfolder',
-            click: async () => {
-              showPromptToCreateFolder(folderPathname)
-            },
+            click: createSubFolder,
           },
           {
             type: 'separator',
@@ -135,36 +145,11 @@ const FolderNavigatorItem = ({
     [
       folderPathname,
       t,
-      createNoteInFolderAndRedirect,
-      showPromptToCreateFolder,
+      createNoteInFolder,
+      createSubFolder,
       showRenamePrompt,
       showFolderRemoveMessageBox,
     ]
-  )
-
-  const openPlusContextMenu = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault()
-      openContextMenu({
-        menuItems: [
-          {
-            type: 'normal',
-            label: 'New Note',
-            click: async () => {
-              createNoteInFolderAndRedirect(folderPathname)
-            },
-          },
-          {
-            type: 'normal',
-            label: 'New Subfolder',
-            click: async () => {
-              showPromptToCreateFolder(folderPathname)
-            },
-          },
-        ],
-      })
-    },
-    [folderPathname, createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
   const openMoreContextMenu = useCallback(
@@ -251,7 +236,16 @@ const FolderNavigatorItem = ({
       onFoldButtonClick={toggleFolded}
       control={
         <>
-          <NavigatorButton onClick={openPlusContextMenu} iconPath={mdiPlus} />
+          <NavigatorButton
+            title='New Note'
+            onClick={createNoteInFolder}
+            iconPath={mdiTextBoxPlusOutline}
+          />
+          <NavigatorButton
+            title='New Subfolder'
+            onClick={createSubFolder}
+            iconPath={mdiFolderMultiplePlusOutline}
+          />
           <NavigatorButton
             onClick={openMoreContextMenu}
             iconPath={mdiDotsVertical}
