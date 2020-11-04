@@ -136,6 +136,10 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     return state
   }
 
+  componentDidMount() {
+    listenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
+  }
+
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
@@ -147,7 +151,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         })
       }
     }
-    listenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
   }
 
   componentWillUnmount() {
