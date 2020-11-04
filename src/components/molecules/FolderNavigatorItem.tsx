@@ -16,6 +16,7 @@ interface FolderNavigatorItemProps {
   storageId: string
   folderName: string
   depth: number
+  noteCount?: number
   folderPathname: string
   folderSetWithSubFolders: Set<string>
   createNoteInFolderAndRedirect: (folderPathname: string) => void
@@ -30,6 +31,7 @@ const FolderNavigatorItem = ({
   storageId,
   folderPathname,
   folderSetWithSubFolders,
+  noteCount = 0,
   createNoteInFolderAndRedirect,
   showPromptToCreateFolder,
   showPromptToRenameFolder,
@@ -50,10 +52,16 @@ const FolderNavigatorItem = ({
   }, [storageId, folderPathname])
 
   const folded = useMemo(() => {
-    return folderSetWithSubFolders.has(folderPathname)
+    return folderSetWithSubFolders.has(folderPathname) || noteCount > 0
       ? !sideNavOpenedItemSet.has(itemId)
       : undefined
-  }, [folderPathname, itemId, folderSetWithSubFolders, sideNavOpenedItemSet])
+  }, [
+    folderPathname,
+    itemId,
+    folderSetWithSubFolders,
+    sideNavOpenedItemSet,
+    noteCount,
+  ])
 
   const toggleFolded = useCallback(() => {
     toggleSideNavOpenedItem(itemId)
