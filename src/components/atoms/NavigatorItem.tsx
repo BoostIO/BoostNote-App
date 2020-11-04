@@ -20,6 +20,12 @@ const Container = styled.div`
       opacity: 1;
     }
   }
+
+  &.visibleControl {
+    .control {
+      opacity: 1;
+    }
+  }
 `
 
 const FoldButton = styled.button`
@@ -106,6 +112,7 @@ interface NavigatorItemProps {
   iconPath?: string
   depth: number
   control?: React.ReactNode
+  visibleControl?: boolean
   className?: string
   folded?: boolean
   active?: boolean
@@ -124,6 +131,7 @@ const NavigatorItem = ({
   iconPath,
   depth,
   control,
+  visibleControl = false,
   className,
   folded,
   active,
@@ -138,7 +146,11 @@ const NavigatorItem = ({
 }: NavigatorItemProps) => {
   return (
     <Container
-      className={cc([className, active && 'active'])}
+      className={cc([
+        className,
+        active && 'active',
+        visibleControl && 'visibleControl',
+      ])}
       onContextMenu={onContextMenu}
       onDrop={onDrop}
       onDragOver={onDragOver}
