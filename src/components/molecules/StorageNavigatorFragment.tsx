@@ -13,7 +13,8 @@ import {
   mdiPaperclip,
   mdiBookOpen,
   mdiSync,
-  mdiPlus,
+  mdiTextBoxPlusOutline,
+  mdiFolderMultiplePlusOutline,
 } from '@mdi/js'
 import FolderNavigatorFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
@@ -155,6 +156,14 @@ const StorageNavigatorFragment = ({
   const attachmentsPagePathname = `/app/storages/${storage.id}/attachments`
   const attachmentsPageIsActive = routeParams.name === 'storages.attachments'
 
+  const createNewNoteInRootFolder = useCallback(() => {
+    createNoteInFolderAndRedirect('/')
+  }, [createNoteInFolderAndRedirect])
+
+  const createNewFolderInRootFolder = useCallback(() => {
+    showPromptToCreateFolder('/')
+  }, [showPromptToCreateFolder])
+
   const openWorkspaceContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
@@ -162,16 +171,12 @@ const StorageNavigatorFragment = ({
         {
           type: 'normal',
           label: 'New Note',
-          click: async () => {
-            createNoteInFolderAndRedirect('/')
-          },
+          click: createNewNoteInRootFolder,
         },
         {
           type: 'normal',
           label: t('folder.create'),
-          click: async () => {
-            showPromptToCreateFolder('/')
-          },
+          click: createNewFolderInRootFolder,
         },
       ]
 
@@ -188,7 +193,7 @@ const StorageNavigatorFragment = ({
               submitButtonLabel: t('storage.rename'),
               onClose: async (value: string | null) => {
                 if (value == null) return
-                await renameStorage(storage.id, value)
+                renameStorage(storage.id, value)
               },
             })
           },
@@ -242,39 +247,14 @@ const StorageNavigatorFragment = ({
       storage,
       prompt,
       messageBox,
-      createNoteInFolderAndRedirect,
-      showPromptToCreateFolder,
+      createNewNoteInRootFolder,
+      createNewFolderInRootFolder,
       sync,
       t,
       push,
       renameStorage,
       removeStorage,
     ]
-  )
-
-  const openNewContextMenu: MouseEventHandler = useCallback(
-    (event) => {
-      event.preventDefault()
-      openContextMenu({
-        menuItems: [
-          {
-            type: 'normal',
-            label: 'New Note',
-            click: async () => {
-              createNoteInFolderAndRedirect('/')
-            },
-          },
-          {
-            type: 'normal',
-            label: 'New Folder',
-            click: async () => {
-              showPromptToCreateFolder('/')
-            },
-          },
-        ],
-      })
-    },
-    [createNoteInFolderAndRedirect, showPromptToCreateFolder]
   )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
@@ -287,6 +267,10 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
+  const folded = useMemo(() => {
+    return !sideNavOpenedItemSet.has(rootFolderNavId)
+  }, [sideNavOpenedItemSet, rootFolderNavId])
+
   return (
     <>
       <NavigatorItem
@@ -296,13 +280,24 @@ const StorageNavigatorFragment = ({
         active={rootFolderIsActive}
         onClick={() => push(rootFolderPathname)}
         onContextMenu={openWorkspaceContextMenu}
-        folded={!sideNavOpenedItemSet.has(rootFolderNavId)}
+        folded={folded}
+        visibleControl={true}
         onFoldButtonClick={() => {
           toggleSideNavOpenedItem(rootFolderNavId)
         }}
         control={
           <>
-            <NavigatorButton onClick={openNewContextMenu} iconPath={mdiPlus} />
+            <NavigatorButton
+              onClick={createNewNoteInRootFolder}
+              iconPath={mdiTextBoxPlusOutline}
+              title='New Note'
+            />
+            <NavigatorButton
+              onClick={createNewFolderInRootFolder}
+              iconPath={mdiFolderMultiplePlusOutline}
+              title='New Folder'
+            />
+
             {storage.type !== 'fs' && storage.cloudStorage != null && (
               <NavigatorButton
                 active={syncing}
