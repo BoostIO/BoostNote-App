@@ -68,7 +68,11 @@ const StorageNavigatorFragment = ({
       if (note == null) {
         return
       }
-      push(`/app/storages/${storage.id}/notes${folderPathname}/${note._id}`)
+      push(
+        `/app/storages/${storage.id}/notes${
+          folderPathname === '/' ? '' : folderPathname
+        }/${note._id}`
+      )
       dispatchNoteDetailFocusTitleInputEvent()
     },
     [storage.id, createNote, push, report]
