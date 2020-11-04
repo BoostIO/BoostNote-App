@@ -37,6 +37,8 @@ const PreviewContainer = styled.div`
   ${border}
   .panel {
     width: 50%;
+    padding: 15px;
+
     &:first-child {
       ${borderRight}
     }
@@ -143,7 +145,7 @@ const MarkdownTab = () => {
         </PreviewContainer>
       </Section>
       <Section>
-        <SectionHeader>Export</SectionHeader>
+        <SectionHeader>{t('preferences.markdownExport')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-include-front-matter'
@@ -151,7 +153,7 @@ const MarkdownTab = () => {
             checked={preferences['markdown.includeFrontMatter']}
             onChange={toggleFrontMatterExport}
           >
-            Include Front Matter
+            {t('preferences.markdownExportOption')}
           </FormCheckItem>
         </SectionControl>
       </Section>

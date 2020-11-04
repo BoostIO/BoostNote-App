@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import { RouterProvider } from './lib/router'
-import { ContextMenuProvider } from './lib/contextMenu'
 import { DialogProvider } from './lib/dialog'
 import { combineProviders } from './lib/context'
 import { DbProvider } from './lib/db'
@@ -11,15 +10,18 @@ import { GeneralStatusProvider } from './lib/generalStatus'
 import { PreviewStyleProvider } from './lib/preview'
 import { ToastProvider } from './lib/toast'
 import { AnalyticsProvider } from './lib/analytics'
+import { StorageRouterProvider } from './lib/storageRouter'
+import { SearchModalProvider } from './lib/searchModal'
 
 const CombinedProvider = combineProviders(
+  SearchModalProvider,
   PreviewStyleProvider,
   GeneralStatusProvider,
   DialogProvider,
-  ContextMenuProvider,
   DbProvider,
   AnalyticsProvider,
   PreferencesProvider,
+  StorageRouterProvider,
   RouterProvider,
   ToastProvider
 )

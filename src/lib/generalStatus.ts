@@ -7,20 +7,12 @@ import { getFolderItemId, getStorageItemId } from './nav'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'
 
-export type FeatureType =
-  | 'createNote'
-  | 'createFolder'
-  | 'changeAppTheme'
-  | 'changeEditorTheme'
-  | 'checkOutMobileApp'
-
 export interface GeneralStatus {
   sideBarWidth: number
   noteListWidth: number
   noteViewMode: ViewModeType
+  preferredEditingViewMode: Exclude<ViewModeType, 'preview'>
   sideNavOpenedItemList: string[]
-  checkedFeatures: FeatureType[]
-  hiddenCheckedFeatures: boolean
 }
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
@@ -44,10 +36,9 @@ const initialGeneralStatus = loadGeneralStatus()
 const baseGeneralStatus: GeneralStatus = {
   sideBarWidth: 160,
   noteListWidth: 250,
-  noteViewMode: 'edit',
+  noteViewMode: 'split',
+  preferredEditingViewMode: 'split',
   sideNavOpenedItemList: [],
-  checkedFeatures: [],
-  hiddenCheckedFeatures: false,
 }
 
 function useGeneralStatusStore() {
@@ -62,7 +53,7 @@ function useGeneralStatusStore() {
     }
   }, [generalStatus])
 
-  const { sideNavOpenedItemList, checkedFeatures } = mergedGeneralStatus
+  const { sideNavOpenedItemList } = mergedGeneralStatus
   const sideNavOpenedItemSet = useMemo(() => {
     return new Set(sideNavOpenedItemList)
   }, [sideNavOpenedItemList])
@@ -113,26 +104,6 @@ function useGeneralStatusStore() {
     [addSideNavOpenedItem]
   )
 
-  const checkFeature = useCallback(
-    (featureName: FeatureType) => {
-      const checkedFeatureSet = new Set(checkedFeatures)
-      if (checkedFeatureSet.has(featureName)) {
-        return
-      }
-      checkedFeatureSet.add(featureName)
-      setGeneralStatus({
-        checkedFeatures: [...checkedFeatureSet],
-      })
-    },
-    [checkedFeatures, setGeneralStatus]
-  )
-
-  const hideFeatureCheckList = useCallback(() => {
-    setGeneralStatus({
-      hiddenCheckedFeatures: true,
-    })
-  }, [setGeneralStatus])
-
   useEffect(() => {
     saveGeneralStatus(generalStatus)
   }, [generalStatus])
@@ -144,8 +115,6 @@ function useGeneralStatusStore() {
     toggleSideNavOpenedItem,
     addSideNavOpenedItem,
     openSideNavFolderItemRecursively,
-    checkFeature,
-    hideFeatureCheckList,
   }
 }
 

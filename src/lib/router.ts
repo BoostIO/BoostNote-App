@@ -1,47 +1,52 @@
-import { createStoreContext } from '../context'
-import { normalizeLocation } from './utils'
+import { createStoreContext } from './context'
 import { useState, useCallback, useEffect } from 'react'
-import { Location } from './types'
-import { createBrowserHistory, createHashHistory } from 'history'
+import { Location, normalizeLocation } from './url'
+import {
+  createBrowserHistory,
+  createHashHistory,
+  LocationDescriptorObject,
+  LocationState,
+} from 'history'
 import { parse as parseQuery } from 'querystring'
-import { appIsElectron } from '../platform'
+import { appIsElectron } from './platform'
 
-const bhistory = appIsElectron ? createHashHistory() : createBrowserHistory()
+const browserHistory = appIsElectron
+  ? createHashHistory<unknown>()
+  : createBrowserHistory<unknown>()
 
 export interface RouterStore extends Location {
-  push: (path: string) => void
-  replace: (path: string) => void
-  go: (count: number) => void
-  goBack: () => void
-  goForward: () => void
+  push(path: string, state?: LocationState): void
+  push(location: LocationDescriptorObject): void
+  replace(path: string): void
+  go(count: number): void
+  goBack(): void
+  goForward(): void
 }
 
 const initialLocation = normalizeLocation({
-  pathname: appIsElectron ? '/app' : bhistory.location.pathname,
-  hash: bhistory.location.hash,
-  query: parseQuery(bhistory.location.search),
+  pathname: appIsElectron ? '/app' : browserHistory.location.pathname,
+  hash: browserHistory.location.hash,
+  query: parseQuery(browserHistory.location.search),
 })
 
 function useRouteStore(): RouterStore {
   const [location, setLocation] = useState(initialLocation)
 
-  const push = useCallback((urlStr: string) => {
-    bhistory.push(urlStr)
-  }, [])
+  const push = browserHistory.push
 
   const replace = useCallback((urlStr: string) => {
-    bhistory.replace(urlStr)
+    browserHistory.replace(urlStr)
   }, [])
 
   const go = useCallback((count: number) => {
-    bhistory.go(count)
+    browserHistory.go(count)
   }, [])
 
   const goBack = useCallback(() => go(-1), [go])
   const goForward = useCallback(() => go(1), [go])
 
   useEffect(() => {
-    return bhistory.listen((blocation) => {
+    return browserHistory.listen((blocation) => {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,

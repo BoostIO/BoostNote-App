@@ -4,7 +4,7 @@ import { useDb } from '../../lib/db'
 import { entries } from '../../../lib/db/utils'
 import styled from '../../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
-import { useContextMenu, MenuTypes } from '../../../lib/contextMenu'
+import { useContextMenu, MenuTypes } from '../../lib/contextMenu'
 import { usePreferences } from '../../../lib/preferences'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useTranslation } from 'react-i18next'
@@ -134,7 +134,7 @@ export default ({ toggle }: NavigatorProps) => {
     [popup, prompt, createStorage, push]
   )
 
-  const { toggleClosed } = usePreferences()
+  const { togglePreferencesModal } = usePreferences()
   const { toggleNav } = useGeneralStatus()
 
   const { t } = useTranslation()
@@ -155,7 +155,7 @@ export default ({ toggle }: NavigatorProps) => {
         >
           <Icon path={mdiPlus} />
         </button>
-        <button className='button' onClick={toggleClosed}>
+        <button className='button' onClick={togglePreferencesModal}>
           <Icon path={mdiTuneVertical} />
         </button>
       </div>

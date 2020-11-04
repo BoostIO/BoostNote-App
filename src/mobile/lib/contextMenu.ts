@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { createStoreContext } from './context'
+import { createStoreContext } from '../../lib/context'
 
 export enum MenuTypes {
   Normal = 'Normal',

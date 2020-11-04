@@ -3,7 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "target": "es2018",
+    "target": "es2019",
     "downlevelIteration": true,
     "importHelpers": true,
     "sourceMap": true,

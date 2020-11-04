@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import PageContainer from '../atoms/PageContainer'
 import {
   FormGroup,
   FormCheckInlineItem,
@@ -14,6 +13,7 @@ import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiBookPlusMultiple } from '@mdi/js'
 import PageScrollableContent from '../atoms/PageScrollableContent'
 import { appIsElectron } from '../../lib/platform'
+import styled from '../../lib/styled'
 
 type StorageType = 'cloud' | 'local' | 'fs'
 
@@ -41,11 +41,11 @@ const StorageCreatePage = () => {
     <PageContainer>
       <PageDraggableHeader
         iconPath={mdiBookPlusMultiple}
-        label={t('Create new storage')}
+        label={t('storage.create')}
       />
       <PageScrollableContent>
         <FormGroup>
-          <FormLabel>Storage Type</FormLabel>
+          <FormLabel>{t('storage.type')}</FormLabel>
           <FormCheckList>
             {appIsElectron && (
               <FormCheckInlineItem
@@ -85,3 +85,10 @@ const StorageCreatePage = () => {
 }
 
 export default StorageCreatePage
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`

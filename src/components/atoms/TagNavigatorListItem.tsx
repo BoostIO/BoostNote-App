@@ -10,8 +10,9 @@ const TagItem = styled.li`
   margin-right: 5px;
   height: 24px;
   ${flexCenter}
-  background-color: #404040;
+  background-color: ${({ theme }) => theme.secondaryBackgroundColor};
   border-radius: 12px;
+  white-space: nowrap;
 `
 
 const TagItemAnchor = styled.button`
@@ -21,14 +22,6 @@ const TagItemAnchor = styled.button`
   padding-left: 0.75em;
   text-decoration: none;
   color: ${({ theme }) => theme.textColor};
-  &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  &.active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
-  }
 `
 
 const TagRemoveButton = styled.button`
@@ -37,15 +30,7 @@ const TagRemoveButton = styled.button`
   padding: 0 0.25em;
   border: none;
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
-  &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  &.active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
-  }
+  color: ${({ theme }) => theme.textColor};
   width: 24px;
   height: 24px;
   ${flexCenter}
@@ -54,7 +39,7 @@ const TagRemoveButton = styled.button`
 interface TagNavigatorListItemProps {
   storageId: string
   tag: string
-  noteId: string
+  noteId?: string
   currentTagName: string | null
   removeTagByName: (tagName: string) => void
 }
@@ -74,6 +59,10 @@ const TagNavigatorListItem = ({
       <TagItemAnchor
         title={`#${tag}`}
         onClick={() => {
+          if (noteId == null) {
+            push(`/app/storages/${storageId}/tags/${tag}`)
+            return
+          }
           push(`/app/storages/${storageId}/tags/${tag}/${noteId}`)
         }}
         className={currentTagName === tag ? 'active' : ''}

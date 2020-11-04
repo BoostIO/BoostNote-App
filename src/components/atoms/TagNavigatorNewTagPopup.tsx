@@ -14,12 +14,13 @@ import {
   uiTextColor,
   activeBackgroundColor,
   textOverflow,
+  inputStyle,
 } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
-import { menuZIndex } from '../../lib/contextMenu'
 import { mdiPound } from '@mdi/js'
 import Icon from './Icon'
+import { isTagNameValid } from '../../lib/db/utils'
 
 const Container = styled.div`
   position: fixed;
@@ -29,13 +30,14 @@ const Container = styled.div`
 
   ${backgroundColor}
   ${border}
-  z-index: ${menuZIndex};
+  z-index: 9000;
   ${backgroundColor}
   ${borderColor}
   ${contextMenuShadow}
 `
 
 const TagNameInput = styled.input`
+  ${inputStyle}
   width: 100%;
   height: 30px;
   padding: 0 0.25em;
@@ -47,7 +49,8 @@ const MenuButton = styled.button`
   ${uiTextColor};
   background-color: transparent;
   border: none;
-  text-align: left;
+  display: flex;
+  align-items: center;
   padding: 0 20px;
   ${textOverflow}
   &:hover,
@@ -153,7 +156,9 @@ const TagNavigatorNewTagPopup = ({
 
           if (menuIndex === filteredStorageTags.length) {
             setNewTagName('')
-            appendTagByName(trimmedNewTagName)
+            if (isTagNameValid(trimmedNewTagName)) {
+              appendTagByName(trimmedNewTagName)
+            }
             close()
             return
           }
@@ -233,7 +238,8 @@ const TagNavigatorNewTagPopup = ({
               inputRef.current?.focus()
             }}
           >
-            <span>Create</span> <Icon path={mdiPound} />
+            <span>Create</span>&nbsp;
+            <Icon path={mdiPound} />
             <span>{newTagName}</span>
           </MenuButton>
         )}

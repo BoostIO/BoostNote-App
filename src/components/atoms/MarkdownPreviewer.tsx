@@ -3,6 +3,7 @@ import unified, { Plugin } from 'unified'
 import remarkEmoji from 'remark-emoji'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import slug from 'remark-slug'
 import remarkMath from 'remark-math'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -180,6 +181,7 @@ const MarkdownPreviewer = ({
   const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
+      .use(slug)
       .use(remarkEmoji, { emoticon: false })
       .use([remarkRehype, { allowDangerousHTML: true }])
       .use(rehypeRaw)

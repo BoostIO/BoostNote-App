@@ -4,7 +4,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
 import packageJson from './package.json'
 
 module.exports = (env, argv) => {
@@ -68,18 +67,18 @@ module.exports = (env, argv) => {
         'AMPLIFY_PINPOINT_REGION',
         'BOOST_NOTE_BASE_URL',
       ]),
-      new CopyPlugin([
-        {
-          from: path.join(__dirname, 'node_modules/codemirror/theme'),
-          to: 'app/codemirror/theme',
-        },
-      ]),
-      new CopyPlugin([
-        {
-          from: path.join(__dirname, 'static'),
-          to: 'app/static',
-        },
-      ]),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, 'node_modules/codemirror/theme'),
+            to: 'app/codemirror/theme',
+          },
+          {
+            from: path.join(__dirname, 'static'),
+            to: 'app/static',
+          },
+        ],
+      }),
     ],
 
     devServer: {
@@ -134,13 +133,6 @@ module.exports = (env, argv) => {
   if (argv.mode === 'production') {
     config.optimization = {
       minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            keep_fnames: /Block|Value|Bool|BooleanLiteral|Null|NullLiteral|Literal|NumberLiteral|StringLiteral|RegexLiteral|Arr|Obj|Op|Parens/,
-          },
-        }),
-      ],
     }
     if (process.env.TARGET === 'electron') {
       config.output.path = path.resolve(__dirname, 'electron/compiled')

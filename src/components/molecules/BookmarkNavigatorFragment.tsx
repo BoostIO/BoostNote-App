@@ -1,21 +1,20 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
 import NavigatorItem from '../atoms/NavigatorItem'
 import NavigatorButton from '../atoms/NavigatorButton'
-import NavigatorHeader from '../atoms/NavigatorHeader'
-import { mdiTextBoxOutline, mdiClose } from '@mdi/js'
-import { useRouter, useRouteParams } from '../../lib/router'
+import { mdiTextBoxOutline, mdiClose, mdiStar } from '@mdi/js'
+import { useRouter } from '../../lib/router'
+import { useRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import NavigatorSeparator from '../atoms/NavigatorSeparator'
 import { bookmarkItemId } from '../../lib/nav'
 
 interface BookmarkNavigatorFragmentProps {
-  storageEntries: [string, NoteStorage][]
+  storage: NoteStorage
 }
 
 const BookmarkNavigatorFragment = ({
-  storageEntries,
+  storage,
 }: BookmarkNavigatorFragmentProps) => {
   const { unbookmarkNote } = useDb()
   const { push } = useRouter()
@@ -27,55 +26,47 @@ const BookmarkNavigatorFragment = ({
   }, [toggleSideNavOpenedItem])
 
   const params = useRouteParams()
+  const bookmarkedNoteList = storage.bookmarkedItemIds
+    .map((id) => {
+      return storage.noteMap[id]
+    })
+    .filter((note) => note != null) as NoteDoc[]
 
-  const bookmarkedList = useMemo(() => {
-    return storageEntries.reduce<[string, NoteDoc][]>((list, entry) => {
-      const storage = entry[1]
-      const bookmarkedNoteList = storage.bookmarkedItemIds
-        .map((id) => {
-          return storage.noteMap[id]
-        })
-        .filter((note) => note != null) as NoteDoc[]
-
-      return [
-        ...list,
-        ...bookmarkedNoteList.map(
-          (note) => [storage.id, note] as [string, NoteDoc]
-        ),
-      ]
-    }, [])
-  }, [storageEntries])
-
-  if (bookmarkedList.length === 0) {
+  if (bookmarkedNoteList.length === 0) {
     return null
   }
 
   return (
     <>
-      <NavigatorHeader
+      <NavigatorItem
+        iconPath={mdiStar}
+        depth={0}
         label='Bookmarks'
         folded={!opened}
+        onFoldButtonClick={toggleBookmarks}
         onClick={toggleBookmarks}
       />
       {opened && (
         <>
-          {bookmarkedList.map(([storageId, note]) => {
+          {bookmarkedNoteList.map((note) => {
             const active =
               params.name === 'storages.notes' &&
-              params.storageId === storageId &&
+              params.storageId === storage.id &&
               params.noteId === note._id
+            const emptyTitle = note.title.trim().length === 0
             return (
               <NavigatorItem
                 iconPath={mdiTextBoxOutline}
-                depth={0}
-                key={storageId + note._id}
-                label={note.title}
+                depth={1}
+                key={storage.id + note._id}
+                label={!emptyTitle ? note.title : 'Untitled'}
+                subtle={emptyTitle}
                 active={active}
                 onClick={() => {
                   push(
                     note.folderPathname === '/'
-                      ? `/app/storages/${storageId}/notes/${note._id}`
-                      : `/app/storages/${storageId}/notes${note.folderPathname}/${note._id}`
+                      ? `/app/storages/${storage.id}/notes/${note._id}`
+                      : `/app/storages/${storage.id}/notes${note.folderPathname}/${note._id}`
                   )
                 }}
                 control={
@@ -83,14 +74,13 @@ const BookmarkNavigatorFragment = ({
                     iconPath={mdiClose}
                     title='Unbookmark'
                     onClick={() => {
-                      unbookmarkNote(storageId, note._id)
+                      unbookmarkNote(storage.id, note._id)
                     }}
                   />
                 }
               />
             )
           })}
-          <NavigatorSeparator />
         </>
       )}
     </>

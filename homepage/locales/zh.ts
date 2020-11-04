@@ -8,7 +8,7 @@ export default {
       webApp: '网页软件',
       desktopApp: '桌面软件',
       mobileApp: '手机软件',
-      boostHub: 'Learn More About Boost Hub',
+      boostHub: 'Create an Account for Free',
     },
     header: {
       forTeams: '团队版',
@@ -17,13 +17,13 @@ export default {
     hero: {
       // title: 'Boost Happiness, Productivity and Creativity.',
       // subtitle:
-      //   "Boost Note is an intuitive and stylish markdown note app. It's fully open-source, and used by 1 million developers!",
+      //   "Boost Note is an intuitive and stylish markdown editor. It's fully open-source, and used by 1 million developers!",
     },
     boostHub: {
-      // title: 'Looking for Team Version?',
-      // description1: 'Boost Hub is more than just a markdown editor or a wiki.',
+      // title: 'Boost Hub, the team version of Boost Note',
+      // description1: 'We’ve developed a collaborative workspace app called “Boost Hub” for developer teams.',
       // description2:
-      //   'You can collaborate with your team members in real-time, from anywhere.',
+      //   'It is more than just a markdown editor or a wiki. You can collaborate with your team members in real-time, from anywhere.',
       // feature1Name: 'Real-time Coauthoring',
       // feature1Detail:
       //   'Write and edit documents as a team and sharing your knowledge and ideas in real-time. No one will be left behind.',

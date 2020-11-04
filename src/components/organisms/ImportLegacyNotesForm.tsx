@@ -7,6 +7,7 @@ import {
   FormCheckItem,
   FormLabel,
   FormTextInput,
+  FormHeading,
 } from '../atoms/form'
 import FormFolderSelector from '../atoms/FormFolderSelector'
 import {
@@ -22,27 +23,35 @@ import { NoteDocEditibleProps } from '../../lib/db/types'
 import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
-import { useRouter } from '../../lib/router'
 import { filenamify } from '../../lib/string'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
-  onCancel: () => void
 }
 
-const ImportLegacyNotesForm = ({
-  storageId,
-  onCancel,
-}: ImportLegacyNotesFormProps) => {
+const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
+  const { addAttachments, createFolder, createNote } = useDb()
+
   const [location, setLocation] = useState('')
+  const [opened, setOpened] = useState(false)
+  const [doneMessage, setDoneMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [convertingSnippetNotes, setConvertingSnippetNotes] = useState(true)
   const [destinationFolderPathname, setDestinationFolderPathname] = useState(
     '/imported'
   )
   const [importing, setImporting] = useState(false)
-  const { addAttachments, createFolder, createNote } = useDb()
-  const { push } = useRouter()
+  const openForm = useCallback(() => {
+    setOpened(true)
+    setDoneMessage(null)
+    setErrorMessage(null)
+    setConvertingSnippetNotes(true)
+    setDestinationFolderPathname('/imported')
+  }, [])
+
+  const closeForm = useCallback(() => {
+    setOpened(false)
+  }, [])
 
   const importNotes = useCallback(async () => {
     if (importing) {
@@ -68,17 +77,22 @@ const ImportLegacyNotesForm = ({
         )
       )
 
-      const noteFileNames = await readdir(join(location, 'notes'))
+      const noteFileNames = (
+        await readdir(join(location, 'notes'))
+      ).filter((fileName) => fileName.match(/\.cson$/))
+
+      const invalidCsonFilePathnames: string[] = []
       const parsedNotes: [string, JsonObject | null][] = await Promise.all(
         noteFileNames.map(async (noteFileName) => {
           const noteFilePathname = join(location, 'notes', noteFileName)
-          const rawCson = await readFileAsString(noteFilePathname)
           try {
+            const rawCson = await readFileAsString(noteFilePathname)
             const noteCson = parseCSON(rawCson)
             return [noteFileName, noteCson] as [string, JsonObject]
           } catch (error) {
-            console.error(`Failed to parse ${noteFilePathname}`)
-            console.error(error)
+            console.warn(`Failed to parse ${noteFilePathname}`)
+            console.warn(error)
+            invalidCsonFilePathnames.push(noteFilePathname)
             return [noteFileName, null] as [string, null]
           }
         })
@@ -113,15 +127,28 @@ const ImportLegacyNotesForm = ({
               const attachmentNameTupleList: [string, string][] = []
               await Promise.all(
                 attachmentFileNames.map(async (fileName) => {
-                  const result = await readFile(
-                    join(noteAttachmentsFolderPathname, fileName)
+                  const attachmentPathname = join(
+                    noteAttachmentsFolderPathname,
+                    fileName
                   )
+                  try {
+                    const result = await readFile(attachmentPathname)
 
-                  const file = await convertBufferToFile(result, fileName)
+                    const file = await convertBufferToFile(result, fileName)
 
-                  const [attachment] = await addAttachments(storageId, [file])
+                    const [attachment] = await addAttachments(storageId, [file])
 
-                  attachmentNameTupleList.push([fileName, attachment.name])
+                    attachmentNameTupleList.push([fileName, attachment.name])
+                  } catch (error) {
+                    switch (error.code) {
+                      case 'EISDIR':
+                        break
+                      default:
+                        console.warn(
+                          `Failed to add ${attachmentPathname} attachment`
+                        )
+                    }
+                  }
                 })
               )
 
@@ -187,11 +214,14 @@ const ImportLegacyNotesForm = ({
         await createNote(storageId, note)
       }
 
-      push(
-        `/app/storages/${storageId}/notes${
-          destinationFolderPathname === '/' ? '' : destinationFolderPathname
+      setDoneMessage(
+        `The notes are imported to ${destinationFolderPathname}${
+          invalidCsonFilePathnames.length > 0
+            ? ` (${invalidCsonFilePathnames.length} invalid file(s). Please check console in developer tool to know more)`
+            : ''
         }`
       )
+      setOpened(false)
     } catch (error) {
       setErrorMessage(error.message)
       console.error(error)
@@ -206,7 +236,6 @@ const ImportLegacyNotesForm = ({
     createFolder,
     createNote,
     importing,
-    push,
   ])
 
   const updateConvertingSnippetNotes = useCallback(
@@ -225,34 +254,48 @@ const ImportLegacyNotesForm = ({
 
   return (
     <>
-      {errorMessage != null && (
-        <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
+      <FormHeading depth={2}>Import Notes from Legacy BoostNote</FormHeading>
+      {opened ? (
+        <>
+          {errorMessage != null && (
+            <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
+          )}
+          <FormGroup>
+            <FormLabel>Legacy Storage Location</FormLabel>
+            <FormFolderSelector value={location} setValue={setLocation} />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel>Destination Folder</FormLabel>
+            <FormTextInput
+              value={destinationFolderPathname}
+              onChange={updateDestinationFolderPathname}
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormCheckItem
+              id='convertingSnippetNotes-checkbox'
+              type='checkbox'
+              checked={convertingSnippetNotes}
+              onChange={updateConvertingSnippetNotes}
+            >
+              Converting snippet notes
+            </FormCheckItem>
+          </FormGroup>
+          <FormGroup>
+            <FormPrimaryButton onClick={importNotes}>Import</FormPrimaryButton>
+            <FormSecondaryButton onClick={closeForm}>
+              Cancel
+            </FormSecondaryButton>
+          </FormGroup>
+        </>
+      ) : (
+        <FormGroup>
+          {doneMessage != null && (
+            <FormBlockquote variant='primary'>{doneMessage}</FormBlockquote>
+          )}
+          <FormSecondaryButton onClick={openForm}>Import</FormSecondaryButton>
+        </FormGroup>
       )}
-      <FormGroup>
-        <FormLabel>Legacy Storage Location</FormLabel>
-        <FormFolderSelector value={location} setValue={setLocation} />
-      </FormGroup>
-      <FormGroup>
-        <FormLabel>Destination Folder</FormLabel>
-        <FormTextInput
-          value={destinationFolderPathname}
-          onChange={updateDestinationFolderPathname}
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormCheckItem
-          id='convertingSnippetNotes-checkbox'
-          type='checkbox'
-          checked={convertingSnippetNotes}
-          onChange={updateConvertingSnippetNotes}
-        >
-          Converting snippet notes
-        </FormCheckItem>
-      </FormGroup>
-      <FormGroup>
-        <FormPrimaryButton onClick={importNotes}>Import</FormPrimaryButton>
-        <FormSecondaryButton onClick={onCancel}>Cancel</FormSecondaryButton>
-      </FormGroup>
     </>
   )
 }

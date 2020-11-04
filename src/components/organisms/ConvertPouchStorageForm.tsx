@@ -6,6 +6,7 @@ import {
   FormPrimaryButton,
   FormBlockquote,
   FormSecondaryButton,
+  FormHeading,
 } from '../atoms/form'
 import FormFolderSelector from '../atoms/FormFolderSelector'
 import { useDb } from '../../lib/db'
@@ -14,25 +15,35 @@ import { join } from 'path'
 import { writeFile, prepareDirectory } from '../../lib/electronOnly'
 import { entries } from '../../lib/db/utils'
 import { useRouter } from '../../lib/router'
+import { usePreferences } from '../../lib/preferences'
 
 interface ConvertPouchStorageProps {
   storageId: string
   storageName: string
-  onCancel: () => void
 }
 
 const ConvertPouchStorage = ({
   storageId,
   storageName,
-  onCancel,
 }: ConvertPouchStorageProps) => {
-  const [newStorageName, setNewStorageName] = useState(
-    `${storageName} - Converted`
-  )
-  const [newStorageLocation, setNewStorageLocation] = useState('')
-  const { storageMap, createStorage } = useDb()
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { push } = useRouter()
+  const { setClosed } = usePreferences()
+  const { storageMap, createStorage } = useDb()
+  const [newStorageLocation, setNewStorageLocation] = useState('')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [newStorageName, setNewStorageName] = useState('')
+  const [opened, setOpened] = useState(false)
+
+  const openForm = useCallback(() => {
+    setNewStorageName(`${storageName} - Converted`)
+    setNewStorageLocation('')
+    setErrorMessage(null)
+    setOpened(true)
+  }, [storageName])
+
+  const closeForm = useCallback(() => {
+    setOpened(false)
+  }, [])
 
   const updateNewStorageName = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +104,7 @@ const ConvertPouchStorage = ({
         type: 'fs',
         location: newStorageLocation,
       })
-
+      setClosed(true)
       push(`/app/storages/${newStorage.id}`)
     } catch (error) {
       console.error(error)
@@ -105,34 +116,49 @@ const ConvertPouchStorage = ({
     newStorageLocation,
     newStorageName,
     createStorage,
+    setClosed,
     push,
   ])
-  console.log(errorMessage)
+
   return (
     <>
-      <FormBlockquote variant={errorMessage == null ? 'primary' : 'danger'}>
-        {errorMessage == null
-          ? 'This operation will clone data to File System based Storage.'
-          : errorMessage}
-      </FormBlockquote>
+      <FormHeading depth={2}>Convert File System based Storage</FormHeading>
+      {!opened ? (
+        <FormGroup>
+          <FormSecondaryButton onClick={openForm}>Convert</FormSecondaryButton>
+        </FormGroup>
+      ) : (
+        <>
+          <FormBlockquote variant={errorMessage == null ? 'primary' : 'danger'}>
+            {errorMessage == null
+              ? 'This operation will clone data to File System based Storage.'
+              : errorMessage}
+          </FormBlockquote>
 
-      <FormGroup>
-        <FormLabel>Converted Storage Name</FormLabel>
-        <FormTextInput value={newStorageName} onChange={updateNewStorageName} />
-      </FormGroup>
-      <FormGroup>
-        <FormLabel>Converted Storage Location</FormLabel>
-        <FormFolderSelector
-          value={newStorageLocation}
-          setValue={setNewStorageLocation}
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormPrimaryButton onClick={cloneAndConvertStorage}>
-          Convert to File System based Storage
-        </FormPrimaryButton>
-        <FormSecondaryButton onClick={onCancel}>Cancel</FormSecondaryButton>
-      </FormGroup>
+          <FormGroup>
+            <FormLabel>Converted Storage Name</FormLabel>
+            <FormTextInput
+              value={newStorageName}
+              onChange={updateNewStorageName}
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormLabel>Converted Storage Location</FormLabel>
+            <FormFolderSelector
+              value={newStorageLocation}
+              setValue={setNewStorageLocation}
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormPrimaryButton onClick={cloneAndConvertStorage}>
+              Convert to File System based Storage
+            </FormPrimaryButton>
+            <FormSecondaryButton onClick={closeForm}>
+              Cancel
+            </FormSecondaryButton>
+          </FormGroup>
+        </>
+      )}
     </>
   )
 }

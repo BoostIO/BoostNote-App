@@ -18,29 +18,6 @@ import Icon from '../atoms/Icon'
 import { mdiDownload, mdiOpenInApp, mdiChevronDown } from '@mdi/js'
 import { sendGAEvent, queueNavigateToGA } from '../../lib/analytics'
 
-const HeaderAlert = styled.div`
-  background-color: #0091ad;
-  font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
-  color: #fff;
-  text-decoration-color: #fff !important;
-
-  p {
-    margin: 0;
-    padding: 15px 0;
-    text-align: center;
-  }
-  a {
-    color: #fff;
-  }
-  span {
-    font-weight: bold;
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
 const HeaderContainer = styled.header`
   position: sticky;
   top: 0;
@@ -209,21 +186,6 @@ const Header = () => {
 
   return (
     <>
-      <a href='#boosthub'>
-        <HeaderAlert>
-          <p>
-            <a
-              href='https://boosthub.io/'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <span>Boost Hub</span>, the workspace app for developer teams, has
-              arrived!
-            </a>
-          </p>
-        </HeaderAlert>
-      </a>
-
       <HeaderContainer>
         <Container>
           <HeaderNavigator mx={2} py={2}>
@@ -322,11 +284,11 @@ const Header = () => {
                   color='teal'
                   fontSize={1}
                   py={2}
-                  href='https://note.boostio.co'
+                  href='https://note.boostio.co/app'
                   onClick={(event) => {
                     event.preventDefault()
                     sendGAEvent('open-in-browser')
-                    queueNavigateToGA('https://note.boostio.co')
+                    queueNavigateToGA('https://note.boostio.co/app')
                   }}
                 >
                   <Icon path={mdiOpenInApp} /> {t('common.openInBrowser')}
