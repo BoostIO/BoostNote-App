@@ -106,7 +106,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@mdi/js": "^5.1.45",
+    "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.2.1",
     "aws-amplify": "^1.2.4",
     "classcat": "^4.0.2",
