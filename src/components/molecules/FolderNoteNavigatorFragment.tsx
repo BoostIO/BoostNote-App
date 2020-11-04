@@ -123,6 +123,7 @@ const FolderNoteNavigatorFragment = ({
               depth={item.depth}
               storageId={storage.id}
               folderPathname={item.pathname}
+              noteCount={item.noteCount}
               folderSetWithSubFolders={folderSetWithSubFolders}
               createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
               showPromptToCreateFolder={showPromptToCreateFolder}
@@ -171,6 +172,7 @@ interface FolderNavItem {
   type: 'folder'
   name: string
   pathname: string
+  noteCount: number
   depth: number
 }
 
@@ -201,6 +203,8 @@ function getOpenedFolderPathnameList(
     if (pathname === '/') {
       continue
     }
+    const folderDoc = folderMap[pathname]
+    const noteCount = folderDoc?.noteIdSet.size || 0
     const nameElements = pathname.split('/').slice(1)
     const depth = nameElements.length
     itemList.push({
@@ -208,6 +212,7 @@ function getOpenedFolderPathnameList(
       pathname,
       name,
       depth,
+      noteCount,
     })
 
     const folderIsOpened = openItemIdSet.has(
@@ -225,7 +230,6 @@ function getOpenedFolderPathnameList(
         )
       )
 
-      const folderDoc = folderMap[pathname]
       if (folderIsOpened && folderDoc != null) {
         const noteIds = [...folderDoc.noteIdSet]
         const folderNotes = noteIds.reduce((list, noteId) => {
