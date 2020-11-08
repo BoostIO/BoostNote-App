@@ -3,6 +3,7 @@ import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   Menu,
+  protocol,
 } from 'electron'
 import path from 'path'
 import url from 'url'
@@ -102,6 +103,11 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  /* This file protocol registration will be needed from v9.x.x for PDF export feature */
+  protocol.registerFileProtocol('file', (request, callback) => {
+    const pathname = decodeURI(request.url.replace('file:///', ''))
+    callback(pathname)
+  })
   mainWindow = createMainWindow()
 
   app.on('open-url', (_event, url) => {

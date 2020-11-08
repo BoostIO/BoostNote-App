@@ -21,7 +21,7 @@ import { values, isTagNameValid } from '../../lib/db/utils'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
-  exportNoteAsPdfFile
+  exportNoteAsPdfFile,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -181,12 +181,6 @@ const NotePageToolbar = ({
         menuItems: [
           {
             type: 'normal',
-            label: 'HTML export',
-            click: async () =>
-              await exportNoteAsHtmlFile(note, preferences, pushMessage, previewStyle),
-          },
-          {
-            type: 'normal',
             label: 'Markdown export',
             click: async () =>
               await exportNoteAsMarkdownFile(note, pushMessage, {
@@ -195,9 +189,29 @@ const NotePageToolbar = ({
           },
           {
             type: 'normal',
+            label: 'HTML export',
+            click: async () =>
+              await exportNoteAsHtmlFile(
+                note,
+                preferences,
+                pushMessage,
+                previewStyle
+              ),
+          },
+          {
+            type: 'normal',
             label: 'PDF export',
             click: async () =>
-              await exportNoteAsPdfFile(note, preferences, pushMessage, previewStyle),
+              await exportNoteAsPdfFile(
+                note,
+                preferences,
+                pushMessage,
+                {
+                  includeFrontMatter:
+                    preferences['markdown.includeFrontMatter'],
+                },
+                previewStyle
+              ),
           },
         ],
       })
