@@ -19,10 +19,21 @@ import React from 'react'
 import remarkEmoji from 'remark-emoji'
 import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
-import {getGlobalCss, selectTheme } from './styled/styleUtil'
+import { getGlobalCss, selectTheme } from './styled/styleUtil'
 
 const sanitizeNoteName = function (rawNoteName: string): string {
   return filenamify(rawNoteName.toLowerCase().replace(/\s+/g, '-'))
+}
+
+const getFrontMatter = (note: NoteDoc): string => {
+  return [
+    '---',
+    `title: "${note.title}"`,
+    `tags: "${note.tags.join()}"`,
+    '---',
+    '',
+    '',
+  ].join('\n')
 }
 
 const sanitizeSchema = mergeDeepRight(gh, {
@@ -33,7 +44,7 @@ export const exportNoteAsHtmlFile = async (
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
-  previewStyle?: string,
+  previewStyle?: string
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
@@ -88,18 +99,7 @@ export const exportNoteAsMarkdownFile = async (
         return
       }
       let content = file.toString().trim() + '\n'
-      if (includeFrontMatter) {
-        content =
-          [
-            '---',
-            `title: "${note.title}"`,
-            `tags: "${note.tags.join()}"`,
-            '---',
-            '',
-            '',
-          ].join('\n') + content
-      }
-
+      content += includeFrontMatter ? getFrontMatter(note) : ''
       downloadString(
         content,
         `${sanitizeNoteName(note.title)}.md`,
@@ -118,23 +118,26 @@ const schema = mergeDeepRight(gh, {
   },
 })
 
-const getCssLinks = (preferences : Preferences) => {
-  let cssHrefs : string[] = []
-  const app = window.require('electron').remote.app;
+const fetchCorrectMdThemeName = (theme: string) => {
+  return theme === 'solarized-dark' ? 'solarized' : theme
+}
+
+const getCssLinks = (preferences: Preferences) => {
+  const cssHrefs: string[] = []
+  const app = window.require('electron').remote.app
   const isProd = app.isPackaged
-  const parentPathTheme = app.getAppPath() + ((isProd === true) ? "/compiled/app" : "/../node_modules")
-  let editorTheme = preferences['editor.theme']
-  let markdownCodeBlockTheme = preferences['markdown.codeBlockTheme']
-  if (editorTheme === 'solarized-dark') {
-    editorTheme = 'solarized'
-  }
+  const pathPrefix = 'file://' + app.getAppPath()
+  const parentPathTheme =
+    pathPrefix + (isProd === true ? '/compiled/app' : '/../node_modules')
+  const editorTheme = fetchCorrectMdThemeName(preferences['editor.theme'])
+  const markdownCodeBlockTheme = fetchCorrectMdThemeName(
+    preferences['markdown.codeBlockTheme']
+  )
+
   const editorThemePath = `${parentPathTheme}/codemirror/theme/${editorTheme}.css`
   cssHrefs.push(editorThemePath)
   if (editorTheme !== markdownCodeBlockTheme) {
     if (markdownCodeBlockTheme) {
-      if (markdownCodeBlockTheme === 'solarized-dark') {
-        markdownCodeBlockTheme = 'solarized'
-      }
       const markdownCodeBlockThemePath = `${parentPathTheme}/codemirror/theme/${markdownCodeBlockTheme}.css`
       cssHrefs.push(markdownCodeBlockThemePath)
     }
@@ -142,96 +145,153 @@ const getCssLinks = (preferences : Preferences) => {
   return cssHrefs
 }
 
+const cssStyleLinkGenerator = (href: string) =>
+  `<link rel="stylesheet" href="${href}" type="text/css"/>`
+
+const getPrintStyle = () => `
+  <style media="print">
+    pre code {
+      white-space: pre-wrap;
+    }
+  </style>
+`
+
+const generatePrintToPdfHTML = (
+  markdownHTML: string | Uint8Array,
+  preferences: Preferences,
+  previewStyle?: string
+) => {
+  const cssHrefs: string[] = getCssLinks(preferences)
+  const generalThemeName = preferences['general.theme']
+  const cssLinks = cssHrefs
+    .map((href) => cssStyleLinkGenerator(href))
+    .join('\n')
+  const appThemeCss = getGlobalCss(selectTheme(generalThemeName))
+  const previewStyleCssEl = previewStyle ? `<style>${previewStyle}</style>` : ''
+  const appThemeCssEl = appThemeCss ? `<style>${appThemeCss}</style>` : ''
+
+  return `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+        <!-- Preview styles -->
+        ${appThemeCssEl}
+        ${previewStyleCssEl}
+
+        <!-- Link tag styles -->
+        ${cssStyleLinkGenerator(
+          'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css'
+        )}
+        ${cssLinks}
+
+        <!-- Print Styles -->
+        ${getPrintStyle()}
+      </head>
+      <body>
+        <div class="${generalThemeName}">
+          ${markdownHTML}
+        </div>
+      </body>
+    </html>
+  `
+}
+
 export const exportNoteAsPdfFile = async (
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
-  previewStyle?: string,
+  { includeFrontMatter }: { includeFrontMatter: boolean },
+  previewStyle?: string
 ): Promise<void> => {
   await unified()
     .use(remarkParse)
-    .use(remarkStringify)
+    .use(remarkEmoji, { emoticon: false })
+    .use([remarkRehype, { allowDangerousHTML: true }])
+    .use(rehypeRaw)
+    .use(rehypeSanitize, schema)
+    .use(remarkMath)
+    .use(rehypeCodeMirror, {
+      ignoreMissing: true,
+      theme: preferences['markdown.codeBlockTheme'],
+    })
+    .use(rehypeKatex, { output: 'htmlAndMathml' })
+    .use(rehypeReact, {
+      createElement: React.createElement,
+      components: {
+        pre: CodeFence,
+      },
+    })
+    .use(rehypeStringify)
     .process(note.content, (err, file) => {
       if (err != null) {
         pushMessage({
           title: 'Note processing failed',
           description: 'Please check markdown syntax and try again later.',
         })
+        return
       }
-      let content = file.toString().trim() + '\n'
-      const markdownProcessor = unified()
-        .use(remarkParse)
-        .use(remarkEmoji, { emoticon: false })
-        .use([remarkRehype, { allowDangerousHTML: true }])
-        .use(rehypeRaw)
-        .use(rehypeSanitize, schema)
-        .use(remarkMath)
-        .use(rehypeCodeMirror, {
-          ignoreMissing: true,
-          theme: preferences['markdown.codeBlockTheme'],
-        })
-        .use(rehypeKatex)
-        .use(rehypeReact, {
-          createElement: React.createElement,
-          components: {
-            pre: CodeFence,
-          },
-        })
-        .use(rehypeStringify)
 
-      // Process note-markdown content into react string
-      let resultObj = markdownProcessor.processSync(content)
-
-      // Create new window (hidden)
+      const stringifiedMdContent = file.toString().trim() + '\n'
       const { BrowserWindow } = window.require('electron').remote
-      const app = window.require('electron').remote.app;
-      const ipcMain = window.require('electron').remote.ipcMain;
-      const isProd = app.isPackaged === true
-      const parentPathHTML = app.getAppPath() + ((isProd === true) ? "/compiled/app/static" : "/../static")
       const windowOptions = {
-        webPreferences: { nodeIntegration: true, webSecurity: false },
-        show: false
+        webPreferences: {
+          nodeIntegration: true,
+          webSecurity: false,
+          javascript: false,
+        },
+        show: false,
       }
       const win = new BrowserWindow(windowOptions)
-
-      // Load HTML for rendering react string for markdown content created earlier
-      win.loadFile(`${parentPathHTML}/render_md_to_pdf.html`)
+      const htmlStr = generatePrintToPdfHTML(
+        stringifiedMdContent,
+        preferences,
+        previewStyle
+      )
+      const encodedStr = encodeURIComponent(htmlStr)
+      win.loadURL('data:text/html;charset=UTF-8,' + encodedStr)
       win.webContents.on('did-finish-load', function () {
-        // Fetch needed CSS styles
-        const generalThemeName = preferences['general.theme']
-        const appThemeCss = getGlobalCss(selectTheme(generalThemeName))
-        let cssHrefs: string[] = getCssLinks(preferences)
-        if (previewStyle) {
-          win.webContents.insertCSS(previewStyle)
-          win.webContents.insertCSS(appThemeCss)
+        // Enable when newer version of electron is available
+        const tagsStr =
+          note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
+        const headerFooter: Record<string, string> = {
+          title: `${note.title}${tagsStr}`,
+          url: `file://${sanitizeNoteName(note.title)}.pdf`,
         }
-        // Do not show the window while exporting (for debugging purposes only)
-        // win.show()
-        setTimeout(() => {
-          // Send message to window to render the markdown content with the applied css and theme class
-          win.webContents.send('render-markdown-to-pdf', resultObj.contents, cssHrefs, generalThemeName)
-        }, 500)
-      })
-
-      // When PDF rendered, notify me (doing this only once removes it for further messages)
-      // this way no need to remove it manually after receving the message
-      // another click on PDF export would once again bind the current note markdown to HTML rendered page
-      ipcMain.once('pdf-notify-export-data', (_: object, data: string, error: any) => {
-        if (data && !error) {
-          // We got the PDF offer user to save it
-          const pdfName = `${sanitizeNoteName(note.title)}.pdf`
-          const pdfBlob = new Blob([data], {
-            type: "application/pdf" // application/octet-stream
-          })
-          downloadBlob(pdfBlob, pdfName)
-        } else {
-          pushMessage({
-            title: 'PDF export failed',
-            description: 'Please try again later.' + " Error: " + JSON.stringify(error),
-          })
+        const printOpts = {
+          // Needed for codemirorr themes (backgrounds)
+          printBackground: true,
+          // Enable margins if header footer is printed
+          // No margins 1, default margins 0, 2 - minimum margins
+          marginsType: includeFrontMatter ? 0 : 1,
+          pageSize: 'A4', // This could be chosen by user,
+          headerFooter: includeFrontMatter ? headerFooter : undefined,
         }
-        // Close window (it's hidden anyway, but dispose it)
-        win.close()
+        win.webContents
+          .printToPDF(printOpts)
+          .then((data) => {
+            if (data) {
+              // We got the PDF - offer the user to save it
+              const pdfName = `${sanitizeNoteName(note.title)}.pdf`
+              const pdfBlob = new Blob([data], {
+                type: 'application/pdf', // application/octet-stream
+              })
+              downloadBlob(pdfBlob, pdfName)
+            } else {
+              pushMessage({
+                title: 'PDF export failed',
+                description: 'Please try again later. Reason: Unknown',
+              })
+            }
+            // Destroy window (not shown but disposes it)
+            win.destroy()
+          })
+          .catch((err) => {
+            pushMessage({
+              title: 'PDF export failed',
+              description: 'Please try again later.' + (err ? err : 'Unknown'),
+            })
+          })
       })
       return
     })
