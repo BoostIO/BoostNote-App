@@ -20,6 +20,12 @@ const Container = styled.div`
       opacity: 1;
     }
   }
+
+  &.visibleControl {
+    .control {
+      opacity: 1;
+    }
+  }
 `
 
 const FoldButton = styled.button`
@@ -70,11 +76,18 @@ const ClickableContainer = styled.button`
   &:hover.active {
     background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
   }
+
+  &.subtle {
+    color: ${({ theme }) => theme.disabledUiTextColor};
+  }
 `
 
 const Label = styled.div`
   ${textOverflow}
   flex: 1;
+  &.subtle {
+    color: ${({ theme }) => theme.disabledUiTextColor};
+  }
 `
 
 const Control = styled.div`
@@ -99,9 +112,11 @@ interface NavigatorItemProps {
   iconPath?: string
   depth: number
   control?: React.ReactNode
+  visibleControl?: boolean
   className?: string
   folded?: boolean
   active?: boolean
+  subtle?: boolean
   onFoldButtonClick?: (event: React.MouseEvent) => void
   onClick?: (event: React.MouseEvent) => void
   onContextMenu?: (event: React.MouseEvent) => void
@@ -116,9 +131,11 @@ const NavigatorItem = ({
   iconPath,
   depth,
   control,
+  visibleControl = false,
   className,
   folded,
   active,
+  subtle,
   onFoldButtonClick,
   onClick,
   onDoubleClick,
@@ -129,7 +146,11 @@ const NavigatorItem = ({
 }: NavigatorItemProps) => {
   return (
     <Container
-      className={cc([className, active && 'active'])}
+      className={cc([
+        className,
+        active && 'active',
+        visibleControl && 'visibleControl',
+      ])}
       onContextMenu={onContextMenu}
       onDrop={onDrop}
       onDragOver={onDragOver}
@@ -157,7 +178,7 @@ const NavigatorItem = ({
             <Icon path={iconPath} />
           </IconContainer>
         )}
-        <Label>{label}</Label>
+        <Label className={cc([subtle && 'subtle'])}>{label}</Label>
       </ClickableContainer>
       {control && <Control className='control'>{control}</Control>}
     </Container>

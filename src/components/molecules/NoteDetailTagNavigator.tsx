@@ -3,7 +3,7 @@ import Icon from '../atoms/Icon'
 import styled from '../../lib/styled'
 import { mdiTagMultiple, mdiPlus } from '@mdi/js'
 import { flexCenter } from '../../lib/styled/styleFunctions'
-import { useRouteParams } from '../../lib/router'
+import { useRouteParams } from '../../lib/routeParams'
 import ToolbarButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
@@ -35,7 +35,7 @@ const TagNavigatorList = styled.ul`
 interface NoteDetailTagNavigatorProps {
   storageId: string
   storageTags: string[]
-  noteId: string
+  noteId?: string
   tags: string[]
   appendTagByName: (tagName: string) => void
   removeTagByName: (tagName: string) => void

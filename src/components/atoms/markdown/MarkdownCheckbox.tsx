@@ -30,7 +30,7 @@ const MarkdownCheckbox = ({
           if (current === index) {
             const checked = /^(\s*>?)*\s*[+\-*] \[x]/i.test(matches[0])
             lines[lineIndex] = checked
-              ? line.replace('[x]', '[ ]')
+              ? line.replace(/\[x\]/i, '[ ]')
               : line.replace('[ ]', '[x]')
 
             // Bail out early since we're done

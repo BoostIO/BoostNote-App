@@ -8,7 +8,6 @@ import NotePage from './pages/NotePage'
 import TopBarToggleNavButton from './atoms/TopBarToggleNavButton'
 import TopBarLayout from './layouts/TopBarLayout'
 import StorageCreatePage from './pages/StorageCreatePage'
-import StorageEditPage from './pages/StorageEditPage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -32,13 +31,6 @@ export default () => {
     }
     case 'storages.create':
       return <StorageCreatePage />
-    case 'storages.settings': {
-      const storage = db.storageMap[routeParams.storageId]
-      if (storage == null) {
-        break
-      }
-      return <StorageEditPage key={storage.id} storage={storage} />
-    }
   }
   return (
     <TopBarLayout leftControl={<TopBarToggleNavButton />}>

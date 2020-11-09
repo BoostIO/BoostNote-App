@@ -12,11 +12,16 @@ const SubscribeInput = styled.input<SpaceProps>`
   ${space}
   padding: 1em;
   display: inline-block;
+  height: 41px;
   border-radius: 4px;
   border: solid 1px ${({ theme }) => theme.colors.gray};
   white-space: nowrap;
   font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
   margin-right: 0.5em;
+
+  @media only screen and (min-width: 768px) {
+    width: 400px;
+  }
 `
 
 const SubscribeNewsLettersForm = () => {

@@ -11,6 +11,7 @@ import {
   GeneralThemeOptions,
   GeneralLanguageOptions,
   GeneralNoteListViewOptions,
+  GeneralAppModeOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -21,23 +22,20 @@ import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../atoms/form'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
-import { useGeneralStatus } from '../../lib/generalStatus'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const [users, { removeUser }] = useUsers()
   const { report } = useAnalytics()
-  const { checkFeature } = useGeneralStatus()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
     (event) => {
       setPreferences({
         'general.theme': event.target.value as GeneralThemeOptions,
       })
-      checkFeature('changeAppTheme')
       report(analyticsEvents.updateUiTheme)
     },
-    [setPreferences, checkFeature, report]
+    [setPreferences, report]
   )
 
   const selectLanguage: SelectChangeEventHandler = useCallback(
@@ -85,6 +83,16 @@ const GeneralTab = () => {
     },
     [setPreferences]
   )
+
+  const selectNavigationMode: React.ChangeEventHandler<HTMLSelectElement> = useCallback(
+    (event) => {
+      setPreferences({
+        'general.appMode': event.target.value as GeneralAppModeOptions,
+      })
+    },
+    [setPreferences]
+  )
+
   const { t } = useTranslation()
 
   return (
@@ -110,6 +118,16 @@ const GeneralTab = () => {
             </LoginButton>
           )}
         </div>
+      </Section>
+      <Section>
+        <SectionHeader>App Mode</SectionHeader>
+        <SectionSelect
+          value={preferences['general.appMode']}
+          onChange={selectNavigationMode}
+        >
+          <option value='wiki'>Wiki</option>
+          <option value='note'>Note</option>
+        </SectionSelect>
       </Section>
       <Section>
         <SectionHeader>{t('preferences.interfaceLanguage')}</SectionHeader>
@@ -162,19 +180,19 @@ const GeneralTab = () => {
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Note List view</SectionHeader>
+        <SectionHeader>{t('preferences.notesView')}</SectionHeader>
         <SectionControl>
           <SectionSelect
             value={preferences['general.noteListView']}
             onChange={selectNoteListView}
           >
-            <option value='default'>Default</option>
-            <option value='compact'>Compact</option>
+            <option value='default'>{t('preferences.notesViewDefault')}</option>
+            <option value='compact'>{t('preferences.notesViewCompact')}</option>
           </SectionSelect>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Enable auto sync</SectionHeader>
+        <SectionHeader>{t('preferences.autoSync')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-enable-auto-sync'
@@ -182,12 +200,12 @@ const GeneralTab = () => {
             checked={preferences['general.enableAutoSync']}
             onChange={toggleEnableAutoSync}
           >
-            Enable auto sync
+            {t('preferences.autoSync')}
           </FormCheckItem>
         </SectionControl>
       </Section>
       <Section>
-        <SectionHeader>Subfolders</SectionHeader>
+        <SectionHeader>{t('preferences.subfolders')}</SectionHeader>
         <SectionControl>
           <FormCheckItem
             id='checkbox-show-subfolder-content'
@@ -195,7 +213,7 @@ const GeneralTab = () => {
             checked={preferences['general.showSubfolderContents']}
             onChange={toggleShowSubfolderContents}
           >
-            Show content of all subfolders
+            {t('preferences.subfoldersView')}
           </FormCheckItem>
         </SectionControl>
       </Section>

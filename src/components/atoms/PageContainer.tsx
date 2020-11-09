@@ -1,11 +1,10 @@
 import styled from '../../lib/styled'
 
 const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 100%;
-  max-width: 720px;
+  padding: 0 16px;
 `
 
 export default PageContainer

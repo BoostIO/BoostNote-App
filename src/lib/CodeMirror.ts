@@ -120,4 +120,4 @@ export const themes = [
   'shadowfox',
   'ttcn',
   'yonce',
-]
+].sort()

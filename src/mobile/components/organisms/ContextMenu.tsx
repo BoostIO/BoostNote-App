@@ -5,7 +5,7 @@ import {
   ContextMenuContext,
   menuVerticalPadding,
   menuZIndex,
-} from '../../../lib/contextMenu'
+} from '../../../mobile/lib/contextMenu'
 import styled from '../../../lib/styled'
 import {
   uiTextColor,

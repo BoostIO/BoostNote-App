@@ -1,4 +1,5 @@
 import React, { useState, useCallback, FormEvent, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   SectionHeader,
   SectionInput,
@@ -13,7 +14,7 @@ const SubscribeNewsLettersForm = () => {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [email, setEmail] = useState('')
-
+  const { t } = useTranslation()
   const subscribe = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
@@ -44,9 +45,9 @@ const SubscribeNewsLettersForm = () => {
 
   return (
     <div>
-      <SectionHeader>Subscribe Update Notes</SectionHeader>
+      <SectionHeader>{t('newsletter.heading')}</SectionHeader>
       {status === 'done' ? (
-        <FormBlockquote>Thanks for the subscription!</FormBlockquote>
+        <FormBlockquote>{t('newsletter.subscribed')}</FormBlockquote>
       ) : (
         <>
           {errorMessage != null && (
@@ -63,7 +64,7 @@ const SubscribeNewsLettersForm = () => {
                 type='submit'
                 disabled={status === 'sending'}
               >
-                Subscribe
+                {t('newsletter.subscribe')}
               </SectionPrimaryButton>
             </div>
           </form>

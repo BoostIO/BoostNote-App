@@ -7,6 +7,7 @@ export interface BaseTheme {
   disabledUiTextColor: string
 
   primaryColor: string
+  primaryDarkerColor: string
   dangerColor: string
   borderColor: string
 
@@ -38,12 +39,16 @@ export interface BaseTheme {
 
   // NotePage
   noteNavEmptyItemColor: string
+  noteNavItemBackgroundColor: string
 
   // Button
   primaryButtonLabelColor: string
   primaryButtonBackgroundColor: string
+  primaryButtonHoverBackgroundColor: string
   secondaryButtonLabelColor: string
+  secondaryButtonHoverLabelColor: string
   secondaryButtonBackgroundColor: string
+  secondaryButtonHoverBackgroundColor: string
 
   // Input
   inputBackground: string

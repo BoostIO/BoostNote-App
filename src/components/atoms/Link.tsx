@@ -6,7 +6,7 @@ import React, {
   FocusEventHandler,
   DragEventHandler,
 } from 'react'
-import { useRouter } from '../../lib/router/store'
+import { useRouter } from '../../lib/router'
 
 export interface LinkProps {
   href?: string
