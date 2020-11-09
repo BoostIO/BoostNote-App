@@ -8,7 +8,7 @@ export default {
       webApp: 'Aplicación Web',
       desktopApp: 'Aplicación de Escritorio',
       mobileApp: 'Aplicación móvil',
-      boostHub: 'Aprende Más Sobre Boost Hub',
+      boostHub: 'Crea una cuenta gratis',
     },
     header: {
       forTeam: 'Para equipos',
@@ -16,7 +16,7 @@ export default {
     hero: {
       title: 'Impulsa la felicidad, la productividad y la creatividad.',
       subtitle:
-        'Boost Note es un editor de Markdown intuitivo y estilizado. ¡Es completamente open-source, y es utilizado por 1 million de desarrolladores!',
+        'Boost Note es un editor de Markdown intuitivo y estilizado. ¡Es completamente open-source, y es utilizado por 1 millón de desarrolladores!',
     },
     boostHub: {
       title: '¿Buscas una versión para equipos?',
