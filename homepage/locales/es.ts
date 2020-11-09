@@ -3,7 +3,7 @@ export default {
     common: {
       openInBrowser: 'Abrir en el navegador',
       downloadApp: 'Descargar Aplicación',
-      fileSystemBasedStorage: 'Almacenamiento basaado en Sistema de Archivos',
+      fileSystemBasedStorage: 'Almacenamiento basado en Sistema de Archivos',
       comingSoon: 'Próximamente',
       webApp: 'Aplicación Web',
       desktopApp: 'Aplicación de Escritorio',
