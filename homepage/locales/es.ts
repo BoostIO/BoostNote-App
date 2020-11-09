@@ -26,7 +26,7 @@ export default {
         'Puedes colaborar con los miembros de tu equipo en tiempo real, desde cualquier lugar.',
       feature1Name: 'Coautoría en tiempo real',
       feature1Detail:
-        'Escribe y edita documentos como un equipo compartiendo conocimientos e ideas en Tiempo-real. Nadie será dejado atrás.',
+        'Escribe y edita documentos como un equipo compartiendo conocimientos e ideas en tiempo real. Nadie será dejado atrás.',
       feature2Name: 'Crea diagramas como un profesional',
       feature2Detail:
         'Soporta Charts.js, Mermaid, y PlantUML, lo que significa que puedes colocar diagramas a tu documento.',
@@ -41,7 +41,7 @@ export default {
         'Las notas en almacenamiento en la nube serán guardadas de forma segura y accesibles desde otros dispositivos.',
       multiplePlatforms: 'Multiples Platformas',
       multiplePlatformsDescription:
-        'La aplicación Boost Note está disponible en navegadores, aplicación de escritorio y aplicación Móvil.',
+        'La aplicación Boost Note está disponible en navegadores, aplicación de escritorio y aplicación móvil.',
       syntaxHighlight: 'Resaltado Sintáxis',
       syntaxHighlightDescription:
         'Boost Note puede resaltar más de 100 lenguajes de programación.',
@@ -55,7 +55,7 @@ export default {
         'Puedes tener control completo de todos tus datos. Comparte tus notas con tu servicio en la nube favorito',
       extensibleMarkdown: 'Markdown Extensible',
       extensibleMarkdownDescription:
-        'Puedes introducir sintaxis personalizada de Markdown y configurar como renderizarla.',
+        'Puedes introducir sintaxis personalizada de Markdown y configurar cómo renderizarla.',
     },
     pricing: {
       title: 'Planes de pago',
@@ -74,20 +74,20 @@ export default {
     download: {
       legacyApp: 'Legacy App',
       legacyAppDescription:
-        'Vamos a seguir manteniendo la vieja aplicación hasta que la actual Boost Note.next soporte la mayoria de las caracteristicas de la vieja aplicación como el sistema de almacenamiento basado en sistema de archivos y extensiones para Markdown. Así que por favor no se fuerce demasiado usted mismo a migrar a la nueva aplicación.',
+        'Vamos a seguir manteniendo la aplicación vieja hasta que la actual Boost Note.next soporte la mayoría de las características de la aplicación vieja, cómo el sistema de almacenamiento basado en sistema de archivos y extensiones para Markdown. Así que por favor no se fuerce demasiado usted mismo a migrar a la nueva aplicación.',
       legacyDownloadLinks: 'Enlaces de descargas Legacy',
       legacyRepository: 'Repositorio Legacy',
     },
     community: {
       title: 'Se parte de la comunidad',
       description:
-        'Nuestra comunidad de desarrolladores destras de Boost note. Ha ganado un montón de atención en Github y estan contribuyendo mucha gente. Nuestra comunidad siempre le recivira. ¡Únete!',
+        'Nuestra comunidad de desarrolladores detrás de Boost note. Ha ganado un montón de atención en Github y están contribuyendo mucha gente. Nuestra comunidad siempre le recibirá. ¡Únete!',
     },
     footer: {
       mission: 'Misión',
       pressKit: 'Kit de prensa',
       backers: 'Patrocinadores',
-      userTerms: 'Terminos para usuario',
+      userTerms: 'Términos para usuario',
       privacyPolicy: 'Política de privacidad',
     },
   },
