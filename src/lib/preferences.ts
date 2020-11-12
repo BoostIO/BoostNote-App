@@ -46,6 +46,13 @@ export interface Preferences {
   'general.enableAutoSync': boolean
   'general.showSubfolderContents': boolean
 
+  // BoostHub
+  'boosthub.user': {
+    id: string
+    uniqueName: string
+    displayName: string
+  } | null
+
   // Editor
   'editor.theme': string
   'editor.fontSize': number
@@ -91,6 +98,9 @@ const basePreferences: Preferences = {
   'general.noteListView': 'default',
   'general.showSubfolderContents': true,
 
+  // BoostHub
+  'boosthub.user': null,
+
   // Editor
   'editor.theme': 'material-darker',
   'editor.controlMode': '2-toggles',
@@ -111,6 +121,7 @@ function usePreferencesStore() {
   const [preferences, setPreferences] = useSetState<Preferences>(
     initialPreferences
   )
+  const [tab, setTab] = useState('about')
   useEffect(() => {
     savePreferences(preferences)
   }, [preferences])
@@ -125,11 +136,22 @@ function usePreferencesStore() {
   const [closed, setClosed] = useState(true)
   const togglePreferencesModal = useCallback(() => {
     if (closed) {
+      setTab('about')
       setClosed(false)
     } else {
       setClosed(true)
     }
   }, [closed, setClosed])
+
+  const openTab = useCallback(
+    (tab: string) => {
+      setTab(tab)
+      if (closed) {
+        setClosed(false)
+      }
+    },
+    [closed]
+  )
 
   const currentLanguage = mergedPreferences['general.language']
   const { i18n } = useTranslation('preferences')
@@ -138,6 +160,8 @@ function usePreferencesStore() {
   }, [i18n, currentLanguage])
 
   return {
+    tab,
+    openTab,
     closed,
     setClosed,
     togglePreferencesModal,
