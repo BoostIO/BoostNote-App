@@ -9,6 +9,8 @@ import styled from '../lib/styled'
 import { usePreferences } from '../lib/preferences'
 import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
+import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
+import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -22,6 +24,10 @@ const Router = () => {
   useRedirect()
 
   switch (routeParams.name) {
+    case 'boosthub.teams.create':
+      return <BoostHubTeamsCreatePage />
+    case 'boosthub.teams.show':
+      return <BoostHubTeamsShowPage domain={routeParams.domain} />
     case 'storages.notes':
     case 'storages.trashCan':
     case 'storages.tags.show': {
@@ -70,14 +76,12 @@ function useRedirect() {
   }, [storageMap])
 
   useEffect(() => {
-    if (pathname !== '/app') {
-      return
-    }
-
-    if (firstStorageId == null) {
-      replace('/app/storages')
-    } else {
-      replace(`/app/storages/${firstStorageId}`)
+    if (pathname === '/app') {
+      if (firstStorageId == null) {
+        replace('/app/storages')
+      } else {
+        replace(`/app/storages/${firstStorageId}`)
+      }
     }
   }, [pathname, replace, firstStorageId])
 }
