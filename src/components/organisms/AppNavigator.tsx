@@ -10,17 +10,21 @@ import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { useRouter } from '../../lib/router'
-import { useActiveStorageId } from '../../lib/routeParams'
+import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu, openExternal } from '../../lib/electronOnly'
+import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
   const { push } = useRouter()
   const { setPreferences } = usePreferences()
+  const { generalStatus } = useGeneralStatus()
+  const routeParams = useRouteParams()
 
   const activeStorageId = useActiveStorageId()
 
@@ -36,6 +40,26 @@ const TopLevelNavigator = () => {
       )
     })
   }, [storageMap, activeStorageId])
+
+  const activeBoostHubTeamDomain = useMemo<string | null>(() => {
+    if (routeParams.name !== 'boosthub.teams.show') {
+      return null
+    }
+    return routeParams.domain
+  }, [routeParams])
+
+  const boostHubTeams = useMemo(() => {
+    return generalStatus.boostHubTeams.map((boostHubTeam) => {
+      return (
+        <AppNavigatorBoostHubTeamItem
+          key={`boost-hub-team-${boostHubTeam.domain}`}
+          active={activeBoostHubTeamDomain === boostHubTeam.domain}
+          name={boostHubTeam.name}
+          domain={boostHubTeam.domain}
+        />
+      )
+    })
+  }, [generalStatus.boostHubTeams, activeBoostHubTeamDomain])
 
   const goToStorageCreatePage = useCallback(() => {
     push(`/app/storages`)
@@ -91,15 +115,15 @@ const TopLevelNavigator = () => {
         menuItems: [
           { label: 'Create a new storage', click: goToStorageCreatePage },
           {
-            label: 'Try team collaboration',
+            label: 'Create a Boost Hub team',
             click: () => {
-              openExternal('https://boosthub.io')
+              push('/app/boosthub/teams')
             },
           },
         ],
       })
     },
-    [goToStorageCreatePage]
+    [goToStorageCreatePage, push]
   )
 
   return (
@@ -107,6 +131,7 @@ const TopLevelNavigator = () => {
       {osName === 'macos' && <Spacer />}
       <ListContainer onContextMenu={openSideNavContextMenu}>
         {storages}
+        {boostHubTeams}
       </ListContainer>
       <ControlContainer>
         <NavigatorButton onClick={openNewStorageContextMenu}>
