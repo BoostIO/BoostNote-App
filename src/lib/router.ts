@@ -24,7 +24,7 @@ export interface RouterStore extends Location {
 }
 
 const initialLocation = normalizeLocation({
-  pathname: appIsElectron ? '/app' : browserHistory.location.pathname,
+  pathname: browserHistory.location.pathname,
   hash: browserHistory.location.hash,
   query: parseQuery(browserHistory.location.search),
 })
