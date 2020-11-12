@@ -62,6 +62,7 @@ function createMainWindow() {
   window.on('closed', () => {
     mainWindow = null
   })
+
   return window
 }
 
@@ -98,4 +99,8 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   mainWindow = createMainWindow()
+
+  app.on('open-url', (_event, url) => {
+    mainWindow!.webContents.send('open-boostnote-url', url)
+  })
 })
