@@ -13,6 +13,11 @@ export interface GeneralStatus {
   noteViewMode: ViewModeType
   preferredEditingViewMode: Exclude<ViewModeType, 'preview'>
   sideNavOpenedItemList: string[]
+  boostHubTeams: {
+    id: string
+    name: string
+    domain: string
+  }[]
 }
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
@@ -39,6 +44,7 @@ const baseGeneralStatus: GeneralStatus = {
   noteViewMode: 'split',
   preferredEditingViewMode: 'split',
   sideNavOpenedItemList: [],
+  boostHubTeams: [],
 }
 
 function useGeneralStatusStore() {

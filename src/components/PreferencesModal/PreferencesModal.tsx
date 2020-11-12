@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
@@ -101,8 +101,7 @@ const CloseButton = styled.button`
 
 const PreferencesModal = () => {
   const { t } = useTranslation()
-  const { closed, togglePreferencesModal } = usePreferences()
-  const [tab, setTab] = useState('about')
+  const { closed, togglePreferencesModal, tab, openTab } = usePreferences()
   const { storageMap } = useDb()
   const routeParams = useRouteParams()
 
@@ -173,39 +172,39 @@ const PreferencesModal = () => {
               label={t('about.about')}
               tab='about'
               active={tab === 'about'}
-              setTab={setTab}
+              setTab={openTab}
             />
             <TabButton
               label={t('general.general')}
               tab='general'
               active={tab === 'general'}
-              setTab={setTab}
+              setTab={openTab}
             />
             {currentStorage != null && (
               <TabButton
                 label='Storage'
                 tab='storage'
                 active={tab === 'storage'}
-                setTab={setTab}
+                setTab={openTab}
               />
             )}
             <TabButton
               label={t('editor.editor')}
               tab='editor'
               active={tab === 'editor'}
-              setTab={setTab}
+              setTab={openTab}
             />
             <TabButton
               label='Markdown'
               tab='markdown'
               active={tab === 'markdown'}
-              setTab={setTab}
+              setTab={openTab}
             />
             <TabButton
               label={t('billing.billing')}
               tab='billing'
               active={tab === 'billing'}
-              setTab={setTab}
+              setTab={openTab}
             />
           </TabNav>
           <TabContent>{content}</TabContent>
