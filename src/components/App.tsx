@@ -37,6 +37,8 @@ import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import AppModeModal from './organisms/AppModeModal'
+import { useBoostNoteProtocol } from '../lib/protocol'
+import { fetchDesktopGlobalData } from '../lib/boosthub'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -76,9 +78,15 @@ const App = () => {
   const { initialize, queueSyncingAllStorage, createStorage } = useDb()
   const { replace } = useRouter()
   const [initialized, setInitialized] = useState(false)
-  const { addSideNavOpenedItem } = useGeneralStatus()
+  const { addSideNavOpenedItem, setGeneralStatus } = useGeneralStatus()
+  const {
+    togglePreferencesModal,
+    preferences,
+    setPreferences,
+  } = usePreferences()
 
   useEffectOnce(() => {
+    const boostHubUserInfo = preferences['boosthub.user']
     initialize()
       .then(async (storageMap) => {
         const storages = values(storageMap)
@@ -133,9 +141,32 @@ const App = () => {
         }
         localLiteStorage.setItem(appModeChosenKey, 'true')
       })
+      .then(async () => {
+        if (boostHubUserInfo == null) {
+          return
+        }
+        const { user, teams } = await fetchDesktopGlobalData()
+        setPreferences((previousPreferences) => {
+          return {
+            ...previousPreferences,
+            'boosthub.user': {
+              id: user.id,
+              uniqueName: user.uniqueName,
+              displayName: user.displayName,
+            },
+          }
+        })
+        setGeneralStatus({
+          boostHubTeams: teams.map((team) => {
+            return {
+              id: team.id,
+              name: team.name,
+              domain: team.domain,
+            }
+          }),
+        })
+      })
   })
-
-  const { togglePreferencesModal, preferences } = usePreferences()
 
   useEffect(() => {
     addIpcListener('preferences', togglePreferencesModal)
@@ -143,6 +174,8 @@ const App = () => {
       removeIpcListener('preferences', togglePreferencesModal)
     }
   }, [togglePreferencesModal])
+
+  useBoostNoteProtocol()
 
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
