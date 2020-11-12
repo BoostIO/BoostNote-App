@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from '../../lib/styled'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
-import { getHomePath, showOpenDialog } from '../../lib/electronOnly'
+import { getPathByName, showOpenDialog } from '../../lib/electronOnly'
 
 const FormFolderSelectorInput = styled.input`
   display: block;
@@ -53,7 +53,7 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
       const result = await showOpenDialog({
         properties: ['openDirectory', 'createDirectory'],
         buttonLabel: t('folder.select'),
-        defaultPath: getHomePath(),
+        defaultPath: getPathByName('home'),
       })
       if (result.canceled) {
         return

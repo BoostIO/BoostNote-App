@@ -25,7 +25,6 @@ const __ELECTRON_ONLY__: {
   showOpenDialog(
     options: Electron.OpenDialogOptions
   ): Promise<Electron.OpenDialogReturnValue>
-  getHomePath(): string
   openExternal(url: string): void
   parseCSON(value: string): JsonValue
   stringifyCSON(value: any): string
@@ -41,6 +40,9 @@ const __ELECTRON_ONLY__: {
     listener: (event: IpcRendererEvent, ...args: any[]) => void
   ): void
   removeAllIpcListeners(channel: string): void
+  setAsDefaultProtocolClient(protocol: string): boolean
+  removeAsDefaultProtocolClient(protocol: string): boolean
+  isDefaultProtocolClient(protocol: string): boolean
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -53,7 +55,6 @@ const {
   readFileType,
   readFileTypeFromBuffer,
   showOpenDialog,
-  getHomePath,
   openExternal,
   parseCSON,
   stringifyCSON,
@@ -63,6 +64,9 @@ const {
   addIpcListener,
   removeIpcListener,
   removeAllIpcListeners,
+  setAsDefaultProtocolClient,
+  removeAsDefaultProtocolClient,
+  isDefaultProtocolClient,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -100,7 +104,6 @@ export {
   readFileType,
   readFileTypeFromBuffer,
   showOpenDialog,
-  getHomePath,
   openExternal,
   parseCSON,
   stringifyCSON,
@@ -110,4 +113,7 @@ export {
   addIpcListener,
   removeIpcListener,
   removeAllIpcListeners,
+  setAsDefaultProtocolClient,
+  removeAsDefaultProtocolClient,
+  isDefaultProtocolClient,
 }

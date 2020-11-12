@@ -151,6 +151,9 @@
 
         function getPathByName(name) {
           const { app } = electron.remote
+          if (name === 'app') {
+            return app.getAppPath()
+          }
           return app.getPath(name)
         }
 
@@ -167,6 +170,18 @@
         function removeAllIpcListeners(channel) {
           const { ipcRenderer } = electron
           ipcRenderer.removeListener(channel)
+        }
+
+        function setAsDefaultProtocolClient(protocol) {
+          return electron.remote.app.setAsDefaultProtocolClient(protocol)
+        }
+
+        function removeAsDefaultProtocolClient(protocol) {
+          return electron.remote.app.removeAsDefaultProtocolClient(protocol)
+        }
+
+        function isDefaultProtocolClient(protocol) {
+          return electron.remote.app.isDefaultProtocolClient(protocol)
         }
 
         window.__ELECTRON_ONLY__ = {}
@@ -189,6 +204,9 @@
         window.__ELECTRON_ONLY__.addIpcListener = addIpcListener
         window.__ELECTRON_ONLY__.removeIpcListener = removeIpcListener
         window.__ELECTRON_ONLY__.removeAllIpcListeners = removeAllIpcListeners
+        window.__ELECTRON_ONLY__.setAsDefaultProtocolClient = setAsDefaultProtocolClient
+        window.__ELECTRON_ONLY__.removeAsDefaultProtocolClient = removeAsDefaultProtocolClient
+        window.__ELECTRON_ONLY__.isDefaultProtocolClient = isDefaultProtocolClient
       })()
     </script>
   </body>
