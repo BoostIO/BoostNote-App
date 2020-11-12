@@ -197,6 +197,14 @@
         ]
       }
     },
+    "protocols": [
+      {
+        "name": "Boost Note",
+        "schemes": [
+          "boostnote"
+        ]
+      }
+    ],
     "publish": "github"
   }
 }
