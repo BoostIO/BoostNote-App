@@ -39,6 +39,12 @@ import { getFolderItemId } from '../lib/nav'
 import AppModeModal from './organisms/AppModeModal'
 import { useBoostNoteProtocol } from '../lib/protocol'
 import { fetchDesktopGlobalData } from '../lib/boosthub'
+import { useDialog, DialogIconTypes } from '../lib/dialog'
+import {
+  listenBoostHubTeamCreateEvent,
+  unlistenBoostHubTeamCreateEvent,
+  BoostHubTeamCreateEvent,
+} from '../lib/events'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -76,7 +82,7 @@ Please check out.
 
 const App = () => {
   const { initialize, queueSyncingAllStorage, createStorage } = useDb()
-  const { replace } = useRouter()
+  const { replace, push } = useRouter()
   const [initialized, setInitialized] = useState(false)
   const { addSideNavOpenedItem, setGeneralStatus } = useGeneralStatus()
   const {
@@ -84,6 +90,7 @@ const App = () => {
     preferences,
     setPreferences,
   } = usePreferences()
+  const { messageBox } = useDialog()
 
   useEffectOnce(() => {
     const boostHubUserInfo = preferences['boosthub.user']
@@ -146,6 +153,36 @@ const App = () => {
           return
         }
         const { user, teams } = await fetchDesktopGlobalData()
+        if (user == null) {
+          setPreferences({
+            'boosthub.user': undefined,
+          })
+          setGeneralStatus({
+            boostHubTeams: [],
+          })
+          return
+          // User's auth is invalidated. Should go to auth page
+          messageBox({
+            title: 'Boost Hub login is required',
+            message: 'Your BoostHub session has been expired.',
+            buttons: ['Sign In Again', 'Cancel'],
+            defaultButtonIndex: 0,
+            iconType: DialogIconTypes.Warning,
+            onClose: (value: number | null) => {
+              if (value === 0) {
+                return
+              }
+
+              setPreferences({
+                'boosthub.user': undefined,
+              })
+              setGeneralStatus({
+                boostHubTeams: [],
+              })
+            },
+          })
+          return
+        }
         setPreferences((previousPreferences) => {
           return {
             ...previousPreferences,
@@ -174,6 +211,22 @@ const App = () => {
       removeIpcListener('preferences', togglePreferencesModal)
     }
   }, [togglePreferencesModal])
+
+  useEffect(() => {
+    const boosthubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
+      const team = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        return {
+          boostHubTeams: [...previousGeneralStatus.boostHubTeams!, team],
+        }
+      })
+      push(`/app/boosthub/teams/${team.domain}`)
+    }
+    listenBoostHubTeamCreateEvent(boosthubTeamCreateEventHandler)
+    return () => {
+      unlistenBoostHubTeamCreateEvent(boosthubTeamCreateEventHandler)
+    }
+  }, [push, setGeneralStatus])
 
   useBoostNoteProtocol()
 

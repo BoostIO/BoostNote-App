@@ -11,6 +11,13 @@ import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
 import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
+import {
+  BoostHubNavigateRequestEvent,
+  listenBoostHubNavigateRequestEvent,
+  unlistenBoostHubNavigateRequestEvent,
+} from '../lib/events'
+import { parse as parseUrl } from 'url'
+import { openNew } from '../lib/platform'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -21,6 +28,54 @@ const Router = () => {
   const db = useDb()
   const { preferences } = usePreferences()
   const appMode = preferences['general.appMode']
+  const { push } = useRouter()
+
+  useEffect(() => {
+    const boostHubNavigateRequestHandler = (
+      event: BoostHubNavigateRequestEvent
+    ) => {
+      const url = event.detail.url
+      const { pathname, host } = parseUrl(url)
+      if (host != null) {
+        openNew(url)
+        return
+      }
+      const firstPathname = pathname!.slice(1).split('/')[0]
+      switch (firstPathname) {
+        case 'account':
+          // TODO: Handle account delete
+          break
+        case '':
+        case 'api':
+        case 'desktop':
+        case 'integration':
+        case 'settings':
+        case 'oauth':
+        case 'oauth2':
+        case 'shared':
+        case 'features':
+        case 'gdpr-policy':
+        case 'invite':
+        case 'login_complete':
+        case 'policy':
+        case 'pricing':
+        case 'signin':
+        case 'signup':
+        case 'terms':
+          openNew(url)
+          break
+        default:
+          push(`/app/boosthub/teams/${firstPathname}`)
+          break
+      }
+    }
+    listenBoostHubNavigateRequestEvent(boostHubNavigateRequestHandler)
+
+    return () => {
+      unlistenBoostHubNavigateRequestEvent(boostHubNavigateRequestHandler)
+    }
+  }, [push])
+
   useRedirect()
 
   switch (routeParams.name) {
