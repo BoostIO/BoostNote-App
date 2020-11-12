@@ -24,6 +24,10 @@ import Icon from './Icon'
 import { mdiLoading } from '@mdi/js'
 import { openNew } from '../../lib/platform'
 import { FormSecondaryButton } from './form'
+import {
+  dispatchBoostHubNavigateRequestEvent,
+  dispatchBoostHubTeamCreateEvent,
+} from '../../lib/events'
 
 export interface WebviewControl {
   reload(): void
@@ -130,7 +134,17 @@ const BoostHubWebview = ({
     webview.addEventListener('did-stop-loading', didStopLoadingEventHandler)
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
-      console.log(event.channel, event.args)
+      switch (event.channel) {
+        case 'request-app-navigate':
+          dispatchBoostHubNavigateRequestEvent({ url: event.args[0] })
+          break
+        case 'team-create':
+          dispatchBoostHubTeamCreateEvent({ team: event.args[0] })
+          break
+        default:
+          console.log('Unhandled ipc message event', event.channel, event.args)
+          break
+      }
     }
     webview.addEventListener('ipc-message', ipcMessageEventHandler)
 
@@ -142,7 +156,7 @@ const BoostHubWebview = ({
 
     const didFailLoadEventHandler = (event: DidFailLoadEvent) => {
       switch (event.errorCode) {
-        case 102:
+        case -102:
           setError({
             code: event.errorCode,
             description: event.errorDescription,
@@ -169,6 +183,17 @@ const BoostHubWebview = ({
     }
     webview.addEventListener('did-finish-load', didFinishLoadEventHandler)
 
+    const willNavigateWebContentsEventHandler = (event: Event) => {
+      console.log('prevent default', event)
+
+      event.preventDefault()
+    }
+    const webContents = webview.getWebContents()
+    webContents.addListener(
+      'will-navigate',
+      willNavigateWebContentsEventHandler
+    )
+
     return () => {
       webview.removeEventListener(
         'did-start-loading',
@@ -183,6 +208,9 @@ const BoostHubWebview = ({
       webview.removeEventListener('did-fail-load', didFailLoadEventHandler)
       webview.removeEventListener('load-commit', loadCommitEventHandler)
       webview.removeEventListener('did-finish-load', didFinishLoadEventHandler)
+      webview
+        .getWebContents()
+        .removeListener('will-navigate', willNavigateWebContentsEventHandler)
     }
   })
 
