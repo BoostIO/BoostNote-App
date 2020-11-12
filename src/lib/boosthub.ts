@@ -1,8 +1,7 @@
 import ky from 'ky'
 import { openNew } from './platform'
 
-// export const boosthubBaseUrl = process.env.BOOST_HUB_BASE_URL
-export const boostHubBaseUrl = 'http://localhost:3001'
+export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL
 
 export const boostHubWebViewUserAgent = `${navigator.userAgent} BoostNote ${process.env.VERSION}`
 
