@@ -1,6 +1,7 @@
 import React from 'react'
 import CodeMirror, { getCodeMirrorTheme } from '../../lib/CodeMirror'
 import styled from '../../lib/styled'
+import { borderRight } from '../../lib/styled/styleFunctions'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
@@ -10,6 +11,27 @@ import {
 const StyledContainer = styled.div`
   .CodeMirror {
     font-family: inherit;
+  }
+
+  .CodeMirror-dialog button {
+    // font-size: 70%;
+    background-color: transparent;
+    cursor: pointer;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 15px;
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.primaryDarkerColor};
+    border: none;
+    ${borderRight}
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  .CodeMirror-dialog button:hover {
+    color: ${({ theme }) => theme.primaryButtonLabelColor};
+    background-color: ${({ theme }) => theme.primaryColor};
   }
 `
 
@@ -60,6 +82,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
+        'Alt-F': 'findPersistent',
+        Esc: 'clearSearch',
       },
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
