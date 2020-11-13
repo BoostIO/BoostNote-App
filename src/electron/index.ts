@@ -22,6 +22,10 @@ function createMainWindow() {
       nodeIntegration: true,
       webSecurity: !dev,
       webviewTag: true,
+      enableRemoteModule: true,
+      preload: dev
+        ? path.join(app.getAppPath(), '../static/main-preload.js')
+        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
     },
     width: 1200,
     height: 800,
