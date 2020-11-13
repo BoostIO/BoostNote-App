@@ -183,16 +183,7 @@ const BoostHubWebview = ({
     }
     webview.addEventListener('did-finish-load', didFinishLoadEventHandler)
 
-    const willNavigateWebContentsEventHandler = (event: Event) => {
-      console.log('prevent default', event)
-
-      event.preventDefault()
-    }
-    const webContents = webview.getWebContents()
-    webContents.addListener(
-      'will-navigate',
-      willNavigateWebContentsEventHandler
-    )
+    // TODO: intercept webcontents's navigate event
 
     return () => {
       webview.removeEventListener(
@@ -208,9 +199,6 @@ const BoostHubWebview = ({
       webview.removeEventListener('did-fail-load', didFailLoadEventHandler)
       webview.removeEventListener('load-commit', loadCommitEventHandler)
       webview.removeEventListener('did-finish-load', didFinishLoadEventHandler)
-      webview
-        .getWebContents()
-        .removeListener('will-navigate', willNavigateWebContentsEventHandler)
     }
   })
 
@@ -226,7 +214,6 @@ const BoostHubWebview = ({
         <div className='container'>
           <div className='error'>
             <h1>Failed to load</h1>
-            {console.log(error)}
             <p>{error.description}</p>
             <FormSecondaryButton onClick={reload}>
               Reload page
