@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
   IpcRendererEvent,
+  WebContents,
 } from 'electron'
 
 const __ELECTRON_ONLY__: {
@@ -43,6 +44,7 @@ const __ELECTRON_ONLY__: {
   setAsDefaultProtocolClient(protocol: string): boolean
   removeAsDefaultProtocolClient(protocol: string): boolean
   isDefaultProtocolClient(protocol: string): boolean
+  getWebContentsById(id: number): WebContents
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -67,6 +69,7 @@ const {
   setAsDefaultProtocolClient,
   removeAsDefaultProtocolClient,
   isDefaultProtocolClient,
+  getWebContentsById,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -116,4 +119,5 @@ export {
   setAsDefaultProtocolClient,
   removeAsDefaultProtocolClient,
   isDefaultProtocolClient,
+  getWebContentsById,
 }
