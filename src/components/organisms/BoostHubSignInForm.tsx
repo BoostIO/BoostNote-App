@@ -30,12 +30,16 @@ const BoostHubSignInForm = () => {
   const [requesting, setRequesting] = useState(false)
   const [manualFormOpened, setManualFormOpened] = useState(false)
 
-  const openLoginRequestPage = useCallback(async () => {
+  const startLoginRequest = useCallback(async () => {
     setRequesting(true)
     setAsDefaultProtocolClient('boostnote')
     const authState = generateId()
     authStateRef.current = authState
     openLoginPage(authState)
+  }, [])
+
+  const openLoginRequestPage = useCallback(() => {
+    openLoginPage(authStateRef.current)
   }, [])
 
   const updateCode: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -47,23 +51,30 @@ const BoostHubSignInForm = () => {
 
   const login = useCallback(
     async (code: string) => {
-      const { user, teams } = await sendLoginRequest(authStateRef.current, code)
-      setPreferences({
-        'boosthub.user': {
-          id: user.id,
-          uniqueName: user.uniqueName,
-          displayName: user.displayName,
-        },
-      })
-      setGeneralStatus({
-        boostHubTeams: teams.map((team) => {
-          return {
-            id: team.id,
-            name: team.name,
-            domain: team.domain,
-          }
-        }),
-      })
+      try {
+        const { user, teams } = await sendLoginRequest(
+          authStateRef.current,
+          code
+        )
+        setPreferences({
+          'boosthub.user': {
+            id: user.id,
+            uniqueName: user.uniqueName,
+            displayName: user.displayName,
+          },
+        })
+        setGeneralStatus({
+          boostHubTeams: teams.map((team) => {
+            return {
+              id: team.id,
+              name: team.name,
+              domain: team.domain,
+            }
+          }),
+        })
+      } catch (error) {
+        console.error('Failed to log in', error)
+      }
     },
     [setPreferences, setGeneralStatus]
   )
@@ -84,6 +95,11 @@ const BoostHubSignInForm = () => {
       {requesting ? (
         <>
           <p>Waiting for signing in from browser...</p>
+          <FormGroup>
+            <FormPrimaryButton onClick={openLoginRequestPage}>
+              Open sign in page again
+            </FormPrimaryButton>
+          </FormGroup>
           {manualFormOpened ? (
             <>
               <FormGroup>
@@ -95,7 +111,7 @@ const BoostHubSignInForm = () => {
                     login(code)
                   }}
                 >
-                  Log In
+                  Sign In
                 </FormPrimaryButton>
               </FormGroup>
             </>
@@ -117,7 +133,7 @@ const BoostHubSignInForm = () => {
         </>
       ) : (
         <FormGroup>
-          <FormPrimaryButton onClick={openLoginRequestPage}>
+          <FormPrimaryButton onClick={startLoginRequest}>
             Sign Up/In
           </FormPrimaryButton>
         </FormGroup>
