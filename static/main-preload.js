@@ -153,6 +153,10 @@
     return electron.remote.webContents.fromId(id)
   }
 
+  function setTrafficLightPosition(position) {
+    electron.remote.getCurrentWindow().setTrafficLightPosition(position)
+  }
+
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.readFile = readFile
@@ -177,4 +181,5 @@
   window.__ELECTRON_ONLY__.removeAsDefaultProtocolClient = removeAsDefaultProtocolClient
   window.__ELECTRON_ONLY__.isDefaultProtocolClient = isDefaultProtocolClient
   window.__ELECTRON_ONLY__.getWebContentsById
+  window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
 })()
