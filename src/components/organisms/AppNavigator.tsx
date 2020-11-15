@@ -97,22 +97,30 @@ const TopLevelNavigator = () => {
           {
             type: 'separator',
           },
-          {
-            type: 'normal',
-            label: 'Log Out',
-            click: async () => {
-              await logOut()
-              if (routeParams.name === 'boosthub.teams.show') {
-                push('/app/boosthub/login')
+          boostHubUserInfo == null
+            ? {
+                type: 'normal',
+                label: 'Create a Team Account',
+                click: () => {
+                  push('/app/boosthub/login')
+                },
               }
-              setPreferences({
-                'boosthub.user': null,
-              })
-              setGeneralStatus({
-                boostHubTeams: [],
-              })
-            },
-          },
+            : {
+                type: 'normal',
+                label: 'Log out Boost Hub',
+                click: async () => {
+                  await logOut()
+                  if (routeParams.name === 'boosthub.teams.show') {
+                    push('/app/boosthub/login')
+                  }
+                  setPreferences({
+                    'boosthub.user': null,
+                  })
+                  setGeneralStatus({
+                    boostHubTeams: [],
+                  })
+                },
+              },
           {
             type: 'separator',
           },
@@ -129,6 +137,7 @@ const TopLevelNavigator = () => {
       })
     },
     [
+      boostHubUserInfo,
       prompt,
       createStorage,
       push,
