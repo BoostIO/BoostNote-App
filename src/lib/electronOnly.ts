@@ -45,6 +45,7 @@ const __ELECTRON_ONLY__: {
   removeAsDefaultProtocolClient(protocol: string): boolean
   isDefaultProtocolClient(protocol: string): boolean
   getWebContentsById(id: number): WebContents
+  setTrafficLightPosition(position: { x: number; y: number }): void
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -70,6 +71,7 @@ const {
   removeAsDefaultProtocolClient,
   isDefaultProtocolClient,
   getWebContentsById,
+  setTrafficLightPosition,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -120,4 +122,5 @@ export {
   removeAsDefaultProtocolClient,
   isDefaultProtocolClient,
   getWebContentsById,
+  setTrafficLightPosition,
 }
