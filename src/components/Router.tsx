@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react'
 import NotePage from './pages/NotePage'
 import { useRouter } from '../lib/router'
-import { useRouteParams } from '../lib/routeParams'
+import { useRouteParams, AllRouteParams } from '../lib/routeParams'
 import StorageCreatePage from './pages/StorageCreatePage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import styled from '../lib/styled'
-import { usePreferences } from '../lib/preferences'
+import { usePreferences, GeneralAppModeOptions } from '../lib/preferences'
 import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
@@ -19,6 +19,8 @@ import {
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
 import BoostHubLoginPage from './pages/BoostHubLoginPage'
+import { ObjectMap, NoteStorage } from '../lib/db/types'
+import { useGeneralStatus } from '../lib/generalStatus'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -26,10 +28,11 @@ const NotFoundPageContainer = styled.div`
 
 const Router = () => {
   const routeParams = useRouteParams()
-  const db = useDb()
+  const { storageMap } = useDb()
   const { preferences } = usePreferences()
   const appMode = preferences['general.appMode']
   const { push } = useRouter()
+  const { generalStatus } = useGeneralStatus()
 
   useEffect(() => {
     const boostHubNavigateRequestHandler = (
@@ -79,18 +82,44 @@ const Router = () => {
 
   useRedirect()
 
+  return (
+    <>
+      {renderContent(routeParams, appMode, storageMap)}
+      {generalStatus.boostHubTeams.map((team) => {
+        const active =
+          routeParams.name === 'boosthub.teams.show' &&
+          routeParams.domain === team.domain
+        return (
+          <BoostHubTeamsShowPage
+            active={active}
+            key={team.domain}
+            domain={team.domain}
+          />
+        )
+      })}
+    </>
+  )
+}
+
+export default Router
+
+function renderContent(
+  routeParams: AllRouteParams,
+  appMode: GeneralAppModeOptions,
+  storageMap: ObjectMap<NoteStorage>
+) {
   switch (routeParams.name) {
     case 'boosthub.login':
       return <BoostHubLoginPage />
     case 'boosthub.teams.create':
       return <BoostHubTeamsCreatePage />
     case 'boosthub.teams.show':
-      return <BoostHubTeamsShowPage domain={routeParams.domain} />
+      return null
     case 'storages.notes':
     case 'storages.trashCan':
     case 'storages.tags.show': {
       const { storageId } = routeParams
-      const storage = db.storageMap[storageId]
+      const storage = storageMap[storageId]
       if (storage == null) {
         break
       }
@@ -102,7 +131,7 @@ const Router = () => {
     }
     case 'storages.attachments': {
       const { storageId } = routeParams
-      const storage = db.storageMap[storageId]
+      const storage = storageMap[storageId]
       if (storage == null) {
         break
       }
@@ -118,8 +147,6 @@ const Router = () => {
     </NotFoundPageContainer>
   )
 }
-
-export default Router
 
 function useRedirect() {
   const { pathname, replace } = useRouter()
