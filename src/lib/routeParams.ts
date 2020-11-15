@@ -33,6 +33,11 @@ export interface StorageAttachmentsRouteParams extends BaseRouteParams {
   name: 'storages.attachments'
   storageId: string
 }
+
+export interface BoostHubLoginRouteParams extends BaseRouteParams {
+  name: 'boosthub.login'
+}
+
 export interface BoostHubTeamsShowRouteParams extends BaseRouteParams {
   name: 'boosthub.teams.show'
   domain: string
@@ -55,23 +60,32 @@ export type AllRouteParams =
   | UnknownRouteParams
   | BoostHubTeamsShowRouteParams
   | BoostHubTeamsCreateRouteParams
+  | BoostHubLoginRouteParams
 
 export const useRouteParams = () => {
   const { pathname } = useRouter()
   return useMemo((): AllRouteParams => {
     const names = pathname.slice('/app'.length).split('/').slice(1)
 
-    if (names[0] === 'boosthub' && names[1] === 'teams') {
-      const domain = names[2]
-      if (domain != null) {
-        return {
-          name: 'boosthub.teams.show',
-          domain: domain,
-        }
-      } else {
-        return {
-          name: 'boosthub.teams.create',
-        }
+    if (names[0] === 'boosthub') {
+      switch (names[1]) {
+        case 'login':
+          return {
+            name: 'boosthub.login',
+          }
+        default:
+        case 'teams':
+          const domain = names[2]
+          if (domain != null) {
+            return {
+              name: 'boosthub.teams.show',
+              domain: domain,
+            }
+          } else {
+            return {
+              name: 'boosthub.teams.create',
+            }
+          }
       }
     }
 
@@ -186,6 +200,7 @@ export const useActiveStorageId = () => {
         return routeParams.storageId
       case 'boosthub.teams.create':
       case 'boosthub.teams.show':
+      case 'boosthub.login':
       case 'storages.create':
       case 'unknown':
         return null

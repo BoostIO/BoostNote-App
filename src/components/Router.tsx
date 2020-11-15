@@ -18,6 +18,7 @@ import {
 } from '../lib/events'
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
+import BoostHubLoginPage from './pages/BoostHubLoginPage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -79,6 +80,8 @@ const Router = () => {
   useRedirect()
 
   switch (routeParams.name) {
+    case 'boosthub.login':
+      return <BoostHubLoginPage />
     case 'boosthub.teams.create':
       return <BoostHubTeamsCreatePage />
     case 'boosthub.teams.show':
