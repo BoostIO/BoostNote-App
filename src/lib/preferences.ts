@@ -6,6 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
+import { setTrafficLightPosition } from './electronOnly'
+import { platform } from 'os'
+import { osName } from './platform'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -158,6 +161,18 @@ function usePreferencesStore() {
   useEffect(() => {
     i18n.changeLanguage(currentLanguage)
   }, [i18n, currentLanguage])
+
+  const generalShowAppNavigator = preferences['general.showAppNavigator']
+  useEffect(() => {
+    if (osName !== 'macos') {
+      return
+    }
+    if (generalShowAppNavigator) {
+      setTrafficLightPosition({ x: 8, y: 8 })
+    } else {
+      setTrafficLightPosition({ x: 8, y: 24 })
+    }
+  }, [generalShowAppNavigator])
 
   return {
     tab,

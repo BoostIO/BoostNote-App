@@ -183,6 +183,7 @@ export default TopLevelNavigator
 
 const Spacer = styled.div`
   height: 12px;
+  flex-shrink: 0;
 `
 
 const Container = styled.div`
@@ -192,6 +193,7 @@ const Container = styled.div`
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
+  overflow-y: auto;
 `
 
 const ListContainer = styled.div`
