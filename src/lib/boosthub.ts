@@ -78,3 +78,9 @@ export function getBoostHubTeamPageUrl(teamName: string) {
 }
 
 export const boostHubTeamsCreatePageUrl = `${boostHubBaseUrl}/cooperate`
+
+const boostHubLogOutUrl = `${boostHubBaseUrl}/api/oauth/signout`
+
+export async function logOut() {
+  await ky.get(boostHubLogOutUrl)
+}
