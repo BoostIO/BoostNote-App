@@ -12,11 +12,15 @@ import Icon from '../atoms/Icon'
 import { parse as parseUrl } from 'url'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 
-interface BoostHubPageProps {
+interface BoostHubTeamsShowPageProps {
+  active: boolean
   domain: string
 }
 
-const BoostHubPage = ({ domain }: BoostHubPageProps) => {
+const BoostHubTeamsShowPage = ({
+  active,
+  domain,
+}: BoostHubTeamsShowPageProps) => {
   const webviewControlRef = useRef<WebviewControl>()
   const teamPageUrl = getBoostHubTeamPageUrl(domain)
   const [url, setUrl] = useState(teamPageUrl)
@@ -74,7 +78,7 @@ const BoostHubPage = ({ domain }: BoostHubPageProps) => {
   )
 
   return (
-    <Container key={domain}>
+    <Container key={domain} className={active ? 'active' : ''}>
       <div className={cc(['toolbar'])} onContextMenu={openToolbarContextMenu}>
         {!generalShowAppNavigator && osName === 'macos' && <Spacer />}
         <button onClick={goBackWebview}>
@@ -103,7 +107,7 @@ const BoostHubPage = ({ domain }: BoostHubPageProps) => {
   )
 }
 
-export default BoostHubPage
+export default BoostHubTeamsShowPage
 
 const Spacer = styled.div`
   height: 24px;
@@ -111,7 +115,10 @@ const Spacer = styled.div`
   flex-shrink: 0;
 `
 const Container = styled.div`
-  display: flex;
+  display: none;
+  &.active {
+    display: flex;
+  }
   flex-direction: column;
   width: 100%;
   .toolbar {
