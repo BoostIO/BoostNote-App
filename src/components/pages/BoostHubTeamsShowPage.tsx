@@ -1,16 +1,24 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
 import styled from '../../lib/styled'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
 import { usePreferences } from '../../lib/preferences'
-import cc from 'classcat'
 import { osName } from '../../lib/platform'
-import { borderBottom } from '../../lib/styled/styleFunctions'
-import { mdiChevronLeft, mdiChevronRight, mdiRefresh } from '@mdi/js'
+import {
+  borderBottom,
+  border,
+  uiTextColor,
+} from '../../lib/styled/styleFunctions'
+import {
+  mdiChevronLeft,
+  mdiChevronRight,
+  mdiRefresh,
+  mdiContentCopy,
+} from '@mdi/js'
 import Icon from '../atoms/Icon'
-import { parse as parseUrl } from 'url'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
+import copy from 'copy-to-clipboard'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -56,10 +64,6 @@ const BoostHubTeamsShowPage = ({
     })
   }, [generalShowAppNavigator, setPreferences])
 
-  const pathname = useMemo(() => {
-    return '/' + parseUrl(url).pathname!.split('/').slice(2).join('/')
-  }, [url])
-
   const reloadWebview = useCallback(() => {
     webviewControlRef.current!.reload()
   }, [])
@@ -77,9 +81,13 @@ const BoostHubTeamsShowPage = ({
     []
   )
 
+  const copyUrl = useCallback(() => {
+    copy(url)
+  }, [url])
+
   return (
     <Container key={domain} className={active ? 'active' : ''}>
-      <div className={cc(['toolbar'])} onContextMenu={openToolbarContextMenu}>
+      <div className='toolbar' onContextMenu={openToolbarContextMenu}>
         {!generalShowAppNavigator && osName === 'macos' && <Spacer />}
         <button onClick={goBackWebview}>
           <Icon path={mdiChevronLeft} />
@@ -90,10 +98,10 @@ const BoostHubTeamsShowPage = ({
         <button onClick={reloadWebview}>
           <Icon path={mdiRefresh} />
         </button>
-        <div>
-          /{domain}
-          {pathname}
-        </div>
+        <div className='url'>{url}</div>
+        <button onClick={copyUrl} title='Copy URL'>
+          <Icon path={mdiContentCopy} />
+        </button>
       </div>
       <div className='webview'>
         <BoostHubWebview
@@ -122,12 +130,46 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   .toolbar {
+    height: 40px;
     flex-shrink: 0;
-    height: 24px;
+    height: px;
     -webkit-app-region: drag;
     display: flex;
     align-items: center;
     ${borderBottom}
+    justify-content: center;
+    .url {
+      width: 300px;
+      ${border}
+      height: 24px;
+      padding: 0 4px;
+      border-radius: 4px;
+      ${uiTextColor}
+    }
+    & > button {
+      width: 24px;
+      height: 24px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: transparent;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+
+      transition: color 200ms ease-in-out;
+      color: ${({ theme }) => theme.navButtonColor};
+      &:hover {
+        color: ${({ theme }) => theme.navButtonHoverColor};
+      }
+
+      &:active,
+      &.active {
+        color: ${({ theme }) => theme.navButtonActiveColor};
+      }
+    }
   }
   .webview {
     flex: 1;
