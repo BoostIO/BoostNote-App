@@ -21,6 +21,7 @@ import { openNew } from '../lib/platform'
 import BoostHubLoginPage from './pages/BoostHubLoginPage'
 import { ObjectMap, NoteStorage } from '../lib/db/types'
 import { useGeneralStatus } from '../lib/generalStatus'
+import { openContextMenu } from '../lib/electronOnly'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -84,7 +85,7 @@ const Router = () => {
 
   return (
     <>
-      {renderContent(routeParams, appMode, storageMap)}
+      {useContent(routeParams, appMode, storageMap)}
       {generalStatus.boostHubTeams.map((team) => {
         const active =
           routeParams.name === 'boosthub.teams.show' &&
@@ -103,11 +104,12 @@ const Router = () => {
 
 export default Router
 
-function renderContent(
+function useContent(
   routeParams: AllRouteParams,
   appMode: GeneralAppModeOptions,
   storageMap: ObjectMap<NoteStorage>
 ) {
+  const { preferences, setPreferences } = usePreferences()
   switch (routeParams.name) {
     case 'boosthub.login':
       return <BoostHubLoginPage />
@@ -141,7 +143,27 @@ function renderContent(
       return <StorageCreatePage />
   }
   return (
-    <NotFoundPageContainer>
+    <NotFoundPageContainer
+      onContextMenu={
+        preferences['general.accounts.general.showAppNavigator']
+          ? () => {
+              openContextMenu({
+                menuItems: [
+                  {
+                    type: 'normal',
+                    label: 'Show App Navigator',
+                    click: () => {
+                      setPreferences({
+                        'general.showAppNavigator': true,
+                      })
+                    },
+                  },
+                ],
+              })
+            }
+          : undefined
+      }
+    >
       <h1>Page not found</h1>
       <p>Check the URL or click other link in the left side navigation.</p>
     </NotFoundPageContainer>
@@ -161,7 +183,7 @@ function useRedirect() {
   }, [storageMap])
 
   useEffect(() => {
-    if (pathname === '/app') {
+    if (pathname === '' || pathname === '/' || pathname === '/app') {
       if (firstStorageId == null) {
         replace('/app/storages')
       } else {
