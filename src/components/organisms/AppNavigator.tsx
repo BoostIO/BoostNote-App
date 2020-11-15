@@ -22,9 +22,11 @@ import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamI
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
   const { push } = useRouter()
-  const { setPreferences } = usePreferences()
+  const { setPreferences, preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
+
+  const boostHubUserInfo = preferences['boosthub.user']
 
   const activeStorageId = useActiveStorageId()
 
@@ -114,16 +116,23 @@ const TopLevelNavigator = () => {
       openContextMenu({
         menuItems: [
           { label: 'Create a new storage', click: goToStorageCreatePage },
-          {
-            label: 'Create a Boost Hub team',
-            click: () => {
-              push('/app/boosthub/teams')
-            },
-          },
+          boostHubUserInfo == null
+            ? {
+                label: 'Create a team account',
+                click: () => {
+                  push('/app/boosthub/login')
+                },
+              }
+            : {
+                label: 'Create a team',
+                click: () => {
+                  push('/app/boosthub/teams')
+                },
+              },
         ],
       })
     },
-    [goToStorageCreatePage, push]
+    [goToStorageCreatePage, push, boostHubUserInfo]
   )
 
   return (
