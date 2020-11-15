@@ -221,7 +221,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   })
 
   return (
-    <NavigatorContainer>
+    <NavigatorContainer onContextMenu={openStorageContextMenu}>
       {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <div className='topButtonLabel'>{storage.name}</div>
@@ -269,7 +269,7 @@ const ScrollableContainer = styled.div`
   overflow: auto;
 `
 const WindowControlSpacer = styled.div`
-  height: 20px;
+  height: 40px;
   -webkit-app-region: drag;
 `
 
