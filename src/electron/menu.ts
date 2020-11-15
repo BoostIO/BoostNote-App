@@ -7,7 +7,7 @@ const preferencesMenuOption: MenuItemConstructorOptions = {
   label: 'Preferences',
   accelerator: 'Command+,',
   click: async (_menuItem, browserWindow) => {
-    browserWindow.webContents.send('preferences')
+    browserWindow!.webContents.send('preferences')
   },
 }
 
@@ -157,18 +157,6 @@ export const template: MenuItemConstructorOptions[] = [
         label: 'Reddit',
         click: async () => {
           await shell.openExternal('https://www.reddit.com/r/Boostnote/')
-        },
-      },
-    ] as MenuItemConstructorOptions[],
-  },
-
-  {
-    label: 'For Team',
-    submenu: [
-      {
-        label: 'BoostHub',
-        click: async () => {
-          await shell.openExternal('https://boosthub.io/')
         },
       },
     ] as MenuItemConstructorOptions[],
