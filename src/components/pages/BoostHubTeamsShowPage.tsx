@@ -9,6 +9,7 @@ import {
   borderBottom,
   border,
   uiTextColor,
+  textOverflow,
 } from '../../lib/styled/styleFunctions'
 import {
   mdiChevronLeft,
@@ -145,6 +146,7 @@ const Container = styled.div`
       padding: 0 4px;
       border-radius: 4px;
       ${uiTextColor}
+      ${textOverflow}
     }
     & > button {
       width: 24px;
