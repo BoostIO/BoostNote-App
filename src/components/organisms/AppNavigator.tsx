@@ -221,8 +221,8 @@ const ControlContainer = styled.div`
 
 const NavigatorButton = styled.button`
   ${secondaryButtonStyle}
-  height: 50px;
-  width: 50px;
+  height: 36px;
+  width: 36px;
   ${border}
   margin-bottom: 8px;
   display: flex;
@@ -230,7 +230,7 @@ const NavigatorButton = styled.button`
   justify-content: center;
   cursor: pointer;
   font-size: 22px;
-  border-radius: 5px;
+  border-radius: 8px;
   &:first-child {
     margin-top: 5px;
   }
