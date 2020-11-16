@@ -14,7 +14,7 @@ import {
   FormBlockquote,
 } from '../atoms/form'
 import { generateId } from '../../lib/string'
-import { sendLoginRequest, openLoginPage } from '../../lib/boosthub'
+import { openLoginPage, useBoostHub } from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
@@ -36,6 +36,7 @@ const BoostHubSignInForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [manualFormOpened, setManualFormOpened] = useState(false)
   const { push } = useRouter()
+  const { sendSignInRequest } = useBoostHub()
 
   const startLoginRequest = useCallback(async () => {
     setStatus('requesting')
@@ -62,7 +63,7 @@ const BoostHubSignInForm = () => {
       setStatus('logging-in')
       setErrorMessage(null)
       try {
-        const { user, teams } = await sendLoginRequest(
+        const { user, teams } = await sendSignInRequest(
           authStateRef.current,
           code
         )
@@ -95,7 +96,7 @@ const BoostHubSignInForm = () => {
         )
       }
     },
-    [setPreferences, setGeneralStatus, push]
+    [setPreferences, setGeneralStatus, push, sendSignInRequest]
   )
 
   useEffect(() => {

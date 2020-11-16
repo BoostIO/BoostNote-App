@@ -38,7 +38,7 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import AppModeModal from './organisms/AppModeModal'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import { fetchDesktopGlobalData } from '../lib/boosthub'
+import { useBoostHub } from '../lib/boosthub'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
 import {
   listenBoostHubTeamCreateEvent,
@@ -91,6 +91,7 @@ const App = () => {
     setPreferences,
   } = usePreferences()
   const { messageBox } = useDialog()
+  const { fetchDesktopGlobalData } = useBoostHub()
 
   useEffectOnce(() => {
     const boostHubUserInfo = preferences['boosthub.user']

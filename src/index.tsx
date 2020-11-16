@@ -13,6 +13,7 @@ import { AnalyticsProvider } from './lib/analytics'
 import { StorageRouterProvider } from './lib/storageRouter'
 import { SearchModalProvider } from './lib/searchModal'
 import { CheckedFeaturesProvider } from './lib/checkedFeatures'
+import { BoostHubStoreProvider } from './lib/boosthub'
 
 const CombinedProvider = combineProviders(
   SearchModalProvider,
@@ -25,7 +26,8 @@ const CombinedProvider = combineProviders(
   StorageRouterProvider,
   RouterProvider,
   ToastProvider,
-  CheckedFeaturesProvider
+  CheckedFeaturesProvider,
+  BoostHubStoreProvider
 )
 
 function render(Component: typeof App) {
