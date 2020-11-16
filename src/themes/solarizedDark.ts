@@ -32,7 +32,7 @@ export const solarizedDarkTheme: BaseTheme = {
   primaryColor: primaryColor,
   primaryDarkerColor: primaryDarkerColor,
   dangerColor: dangerColor,
-  borderColor: dark26Color,
+  borderColor: light12Color,
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
@@ -59,6 +59,13 @@ export const solarizedDarkTheme: BaseTheme = {
   navItemActiveColor: '#eee',
   navItemActiveBackgroundColor: light24Color,
   navItemHoverActiveBackgroundColor: light18Color,
+
+  // Team Switcher
+  teamSwitcherBackgroundColor: light12Color,
+  teamSwitcherBorderColor: dark26Color,
+  teamSwitcherTextColor: light100Color,
+  teamSwitcherHoverBackgroundColor: primaryColor,
+  teamSwitcherHoverTextColor: light100Color,
 
   // NotePage
   noteNavEmptyItemColor: '#bbb',
