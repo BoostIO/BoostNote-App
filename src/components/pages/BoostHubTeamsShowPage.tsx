@@ -143,7 +143,7 @@ const Container = styled.div`
       width: 300px;
       ${border}
       height: 24px;
-      padding: 0 4px;
+      padding: 0 5px;
       border-radius: 4px;
       ${uiTextColor}
       ${textOverflow}
