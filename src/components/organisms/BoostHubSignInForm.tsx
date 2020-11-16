@@ -22,18 +22,24 @@ import {
   unlistenBoostHubLoginEvent,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
+import Icon from '../atoms/Icon'
+import { mdiLoading } from '@mdi/js'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
   const { setGeneralStatus } = useGeneralStatus()
   const authStateRef = useRef('')
   const [code, setCode] = useState('')
-  const [requesting, setRequesting] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'requesting' | 'logging-in'>(
+    'idle'
+  )
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [manualFormOpened, setManualFormOpened] = useState(false)
   const { push } = useRouter()
 
   const startLoginRequest = useCallback(async () => {
-    setRequesting(true)
+    setStatus('requesting')
+    setErrorMessage(null)
     setAsDefaultProtocolClient('boostnote')
     const authState = generateId()
     authStateRef.current = authState
@@ -53,6 +59,8 @@ const BoostHubSignInForm = () => {
 
   const login = useCallback(
     async (code: string) => {
+      setStatus('logging-in')
+      setErrorMessage(null)
       try {
         const { user, teams } = await sendLoginRequest(
           authStateRef.current,
@@ -81,6 +89,10 @@ const BoostHubSignInForm = () => {
         }
       } catch (error) {
         console.error('Failed to log in', error)
+        setStatus('requesting')
+        setErrorMessage(
+          error.response != null ? await error.response.text() : error.message
+        )
       }
     },
     [setPreferences, setGeneralStatus, push]
@@ -99,18 +111,43 @@ const BoostHubSignInForm = () => {
 
   return (
     <>
-      {requesting ? (
+      {status === 'idle' ? (
+        <FormGroup>
+          <FormPrimaryButton onClick={startLoginRequest}>
+            Sign Up/In
+          </FormPrimaryButton>
+        </FormGroup>
+      ) : status === 'logging-in' ? (
         <>
-          <p>Waiting for signing in from browser...</p>
+          <p>
+            <Icon path={mdiLoading} spin />
+            &nbsp;Signing In...
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            <Icon path={mdiLoading} spin />
+            &nbsp;Waiting for signing in from browser...
+          </p>
           <FormGroup>
             <FormPrimaryButton onClick={openLoginRequestPage}>
-              Open sign in page again
+              Open request signing in page again
             </FormPrimaryButton>
           </FormGroup>
+          {errorMessage != null && (
+            <FormGroup>
+              <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
+            </FormGroup>
+          )}
           {manualFormOpened ? (
             <>
               <FormGroup>
-                <FormTextInput value={code} onChange={updateCode} />
+                <FormTextInput
+                  placeholder='Insert Code from the browser'
+                  value={code}
+                  onChange={updateCode}
+                />
               </FormGroup>
               <FormGroup>
                 <FormPrimaryButton
@@ -143,12 +180,6 @@ const BoostHubSignInForm = () => {
             </FormGroup>
           )}
         </>
-      ) : (
-        <FormGroup>
-          <FormPrimaryButton onClick={startLoginRequest}>
-            Sign Up/In
-          </FormPrimaryButton>
-        </FormGroup>
       )}
     </>
   )
