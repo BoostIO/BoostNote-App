@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react'
 import { NoteStorage } from '../../lib/db/types'
-import { secondaryButtonStyle, border } from '../../lib/styled/styleFunctions'
+import {
+  secondaryButtonStyle,
+  border,
+  flexCenter,
+} from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import { mdiSync } from '@mdi/js'
@@ -15,25 +19,48 @@ import { useStorageRouter } from '../../lib/storageRouter'
 
 const Container = styled.div`
   position: relative;
-  height: 50px;
-  width: 50px;
-  margin-bottom: 8px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 4px;
   &:first-child {
-    margin-top: 5px;
+    margin-top: 10px;
+  }
+  ${flexCenter}
+  border-radius: 14px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: transparent;
+  &.active {
+    border-color: ${({ theme }) => theme.textColor};
   }
 `
 
 const MainButton = styled.button`
-  height: 50px;
-  width: 50px;
-  border-radius: 5px;
-  ${secondaryButtonStyle}
+  height: 36px;
+  width: 36px;
+  border-radius: 8px;
   ${border}
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
   font-size: 18px;
+  border: none;
+  background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
+  color: ${({ theme }) => theme.secondaryButtonLabelColor};
+  border: 1px solid ${({ theme }) => theme.borderColor};
+  font-size: 13px;
+
+  &:hover,
+  &:active,
+  &.active {
+    cursor: pointer;
+    color: ${({ theme }) => theme.secondaryButtonHoverLabelColor};
+    background-color: ${({ theme }) => theme.primaryColor};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 `
 
 const SyncButton = styled.button`
@@ -148,6 +175,7 @@ const AppNavigatorStorageItem = ({
   return (
     <Container
       title={storage.name}
+      className={active ? 'active' : ''}
       onClick={navigateToStorage}
       onContextMenu={openStorageContextMenu}
     >
