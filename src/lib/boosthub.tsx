@@ -38,7 +38,7 @@ export const boostHubPreloadUrl = formatUrl({
 
 const boostHubDesktopLoginApiUrl = `${boostHubBaseUrl}/api/desktop/login`
 const boostHubDesktopGlobalDataUrl = `${boostHubBaseUrl}/api/desktop`
-const boostHubSignOutUrl = `${boostHubBaseUrl}/api/oauth/signout`
+const boostHubSignOutUrl = `${boostHubBaseUrl}/api/desktop/signout`
 
 function useBoostHubStore() {
   const webviewRef = useRef<WebviewTag>(null)
