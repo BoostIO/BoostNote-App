@@ -112,33 +112,33 @@ const BillingTab = () => {
           <tbody>
             <tr>
               <th>{t('billing.browser')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.desktop')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.mobile')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.sync')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.local')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.cloud')}</th>
-              <td>〇</td>
-              <td>〇</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
             </tr>
             <tr>
               <th>{t('billing.storageSize')}</th>
