@@ -12,6 +12,7 @@ import { ToastProvider } from './lib/toast'
 import { AnalyticsProvider } from './lib/analytics'
 import { StorageRouterProvider } from './lib/storageRouter'
 import { SearchModalProvider } from './lib/searchModal'
+import { CheckedFeaturesProvider } from './lib/checkedFeatures'
 
 const CombinedProvider = combineProviders(
   SearchModalProvider,
@@ -23,7 +24,8 @@ const CombinedProvider = combineProviders(
   PreferencesProvider,
   StorageRouterProvider,
   RouterProvider,
-  ToastProvider
+  ToastProvider,
+  CheckedFeaturesProvider
 )
 
 function render(Component: typeof App) {

@@ -4,7 +4,8 @@ export const generalStatusKey = 'note.boostio.co:generalStatusKey'
 export const previewStyleKey = 'note.boostio.co:previewStyleKey'
 export const defaultStorageCreatedKey =
   'note.boostio.co:defaultStorageCreatedKey'
-export const appModeChosen = 'note.boostio.co:appModeChosen'
+export const appModeChosenKey = 'note.boostio.co:appModeChosen'
+export const checkedFeaturesKey = 'note.boostio.co:checkedFeaturesKey'
 
 // Deprecated
 export const introDataKey = 'note.boostio.co:introDataKey'
