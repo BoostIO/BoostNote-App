@@ -7,7 +7,7 @@ import styled from '../../lib/styled'
 const BoostHubLoginPage = () => {
   return (
     <PageContainer>
-      <PageDraggableHeader label='Log In Boost Hub' />
+      <PageDraggableHeader label='Sign up/in to Boost Hub' />
       <PageScrollableContent>
         <BoostHubSignInForm />
       </PageScrollableContent>
