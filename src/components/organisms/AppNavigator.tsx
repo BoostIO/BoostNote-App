@@ -2,7 +2,6 @@ import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import {
   borderRight,
-  border,
   secondaryButtonStyle,
   flexCenter,
 } from '../../lib/styled/styleFunctions'
@@ -238,11 +237,10 @@ const ControlContainer = styled.div`
 `
 
 const NavigatorButton = styled.button`
-  position: relative;
   ${secondaryButtonStyle}
+  position: relative;
   height: 36px;
   width: 36px;
-  ${border}
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -250,6 +248,8 @@ const NavigatorButton = styled.button`
   cursor: pointer;
   font-size: 22px;
   border-radius: 8px;
+  border: none;
+
   &:first-child {
     margin-top: 5px;
   }
