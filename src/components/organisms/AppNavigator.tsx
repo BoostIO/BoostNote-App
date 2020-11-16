@@ -19,7 +19,7 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
-import { logOut } from '../../lib/boosthub'
+import { useBoostHub } from '../../lib/boosthub'
 import {
   useCheckedFeatures,
   featureBoostHubSignIn,
@@ -77,6 +77,7 @@ const TopLevelNavigator = () => {
   const { createStorage } = useDb()
   const { prompt } = useDialog()
   const { setGeneralStatus } = useGeneralStatus()
+  const { signOut } = useBoostHub()
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -115,7 +116,6 @@ const TopLevelNavigator = () => {
                 type: 'normal',
                 label: 'Log out Boost Hub',
                 click: async () => {
-                  await logOut()
                   if (routeParams.name === 'boosthub.teams.show') {
                     push('/app/boosthub/login')
                   }
@@ -125,6 +125,11 @@ const TopLevelNavigator = () => {
                   setGeneralStatus({
                     boostHubTeams: [],
                   })
+                  try {
+                    await signOut()
+                  } catch (error) {
+                    console.warn('Failed to send signing out request', error)
+                  }
                 },
               },
           {
@@ -146,6 +151,7 @@ const TopLevelNavigator = () => {
       boostHubUserInfo,
       prompt,
       createStorage,
+      signOut,
       push,
       setPreferences,
       setGeneralStatus,

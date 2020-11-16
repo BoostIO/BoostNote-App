@@ -5,7 +5,10 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import { boostHubWebViewUserAgent } from '../../lib/boosthub'
+import {
+  boostHubWebViewUserAgent,
+  boostHubPreloadUrl,
+} from '../../lib/boosthub'
 import {
   WebviewTag,
   DidNavigateEvent,
@@ -17,9 +20,6 @@ import {
 } from 'electron'
 import { useEffectOnce } from 'react-use'
 import styled from '../../lib/styled'
-import { format as formatUrl } from 'url'
-import { join } from 'path'
-import { getPathByName } from '../../lib/electronOnly'
 import Icon from './Icon'
 import { mdiLoading } from '@mdi/js'
 import { openNew } from '../../lib/platform'
@@ -44,15 +44,6 @@ interface BoostHubWebviewProps {
   onDidNavigate?: (event: DidNavigateEvent) => void
   onDidNavigateInPage?: (event: DidNavigateInPageEvent) => void
 }
-
-const preloadUrl = formatUrl({
-  pathname:
-    process.env.NODE_ENV === 'production'
-      ? join(getPathByName('app'), './compiled/static/boosthub-preload.js')
-      : join(getPathByName('app'), '../static/boosthub-preload.js'),
-  protocol: 'file',
-  slashes: true,
-})
 
 interface WebviewError {
   code: number
@@ -225,7 +216,7 @@ const BoostHubWebview = ({
         ref={webviewRef}
         src={src}
         useragent={boostHubWebViewUserAgent}
-        preload={preloadUrl}
+        preload={boostHubPreloadUrl}
       />
     </Container>
   )
