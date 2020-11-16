@@ -4,11 +4,12 @@ import {
   borderRight,
   border,
   secondaryButtonStyle,
+  flexCenter,
 } from '../../lib/styled/styleFunctions'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
-import { mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiCircleMedium } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
@@ -19,6 +20,10 @@ import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
 import { logOut } from '../../lib/boosthub'
+import {
+  useCheckedFeatures,
+  featureBoostHubSignIn,
+} from '../../lib/checkedFeatures'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -26,6 +31,7 @@ const TopLevelNavigator = () => {
   const { setPreferences, preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
+  const { isChecked, checkFeature } = useCheckedFeatures()
 
   const boostHubUserInfo = preferences['boosthub.user']
 
@@ -79,7 +85,7 @@ const TopLevelNavigator = () => {
         menuItems: [
           {
             type: 'normal',
-            label: 'New Storage',
+            label: 'Create a Note Storage',
             click: async () => {
               prompt({
                 title: 'Create a Storage',
@@ -152,16 +158,19 @@ const TopLevelNavigator = () => {
       event.preventDefault()
       openContextMenu({
         menuItems: [
-          { label: 'Create a new storage', click: goToStorageCreatePage },
+          { label: 'Create a Note Storage', click: goToStorageCreatePage },
           boostHubUserInfo == null
             ? {
-                label: 'Create a team account',
+                label: isChecked(featureBoostHubSignIn)
+                  ? 'Create a Team Account'
+                  : 'Create a Team Account (New)',
                 click: () => {
+                  checkFeature(featureBoostHubSignIn)
                   push('/app/boosthub/login')
                 },
               }
             : {
-                label: 'Create a team',
+                label: 'Create a Team',
                 click: () => {
                   push('/app/boosthub/teams')
                 },
@@ -169,7 +178,7 @@ const TopLevelNavigator = () => {
         ],
       })
     },
-    [goToStorageCreatePage, push, boostHubUserInfo]
+    [goToStorageCreatePage, isChecked, checkFeature, push, boostHubUserInfo]
   )
 
   return (
@@ -182,6 +191,9 @@ const TopLevelNavigator = () => {
       <ControlContainer>
         <NavigatorButton onClick={openNewStorageContextMenu}>
           <Icon path={mdiPlus} />
+          {!isChecked(featureBoostHubSignIn) && (
+            <Icon className='redDot' path={mdiCircleMedium} />
+          )}
         </NavigatorButton>
       </ControlContainer>
     </Container>
@@ -220,6 +232,7 @@ const ControlContainer = styled.div`
 `
 
 const NavigatorButton = styled.button`
+  position: relative;
   ${secondaryButtonStyle}
   height: 36px;
   width: 36px;
@@ -233,5 +246,12 @@ const NavigatorButton = styled.button`
   border-radius: 8px;
   &:first-child {
     margin-top: 5px;
+  }
+  .redDot {
+    position: absolute;
+    color: ${({ theme }) => theme.dangerColor};
+    top: -3px;
+    right: -3px;
+    ${flexCenter}
   }
 `
