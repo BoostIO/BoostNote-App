@@ -24,7 +24,7 @@ import { values } from '../lib/db/utils'
 import { localLiteStorage } from 'ltstrg'
 import {
   defaultStorageCreatedKey,
-  appModeChosen as appModeChosenKey,
+  appModeChosenKey,
 } from '../lib/localStorageKeys'
 import {
   getPathByName,
