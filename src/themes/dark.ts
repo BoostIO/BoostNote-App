@@ -6,6 +6,7 @@ const primaryColor = '#5580DC'
 const primaryDarkerColor = '#4070D8'
 const dangerColor = '#DC3545'
 
+const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
@@ -58,6 +59,13 @@ export const darkTheme: BaseTheme = {
   navItemActiveColor: '#eee',
   navItemActiveBackgroundColor: '#444',
   navItemHoverActiveBackgroundColor: '#555',
+
+  // Team Switcher
+  teamSwitcherBackgroundColor: light100Color,
+  teamSwitcherBorderColor: 'transparent',
+  teamSwitcherTextColor: dark54Color,
+  teamSwitcherHoverBackgroundColor: light100Color,
+  teamSwitcherHoverTextColor: dark54Color,
 
   // NotePage
   noteNavEmptyItemColor: '#999',

@@ -69,6 +69,13 @@ export const lightTheme: BaseTheme = {
   navItemActiveBackgroundColor: uiVividBackgroundColor,
   navItemHoverActiveBackgroundColor: uiVivid2BackgroundColor,
 
+  // Team Switcher
+  teamSwitcherBackgroundColor: light100Color,
+  teamSwitcherBorderColor: dark12Color,
+  teamSwitcherTextColor: dark54Color,
+  teamSwitcherHoverBackgroundColor: light100Color,
+  teamSwitcherHoverTextColor: dark54Color,
+
   // NotePage
   noteNavEmptyItemColor: uiDimColor,
   noteNavItemBackgroundColor: uiVividBackgroundColor,
