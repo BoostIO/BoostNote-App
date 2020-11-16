@@ -2,22 +2,22 @@ export default {
   translation: {
     common: {
       openInBrowser: '用浏览器打开',
-      downloadApp: '下载 软件',
-      // fileSystemBasedStorage: 'File System Based Storage',
-      // comingSoon: 'Coming Soon',
+      downloadApp: '下载软件',
+      fileSystemBasedStorage: '基于文件系统储存',
+      comingSoon: '敬请期待',
       webApp: '网页软件',
       desktopApp: '桌面软件',
       mobileApp: '手机软件',
-      boostHub: 'Create an Account for Free',
+      boostHub: '免费创建一个账号',
     },
     header: {
       forTeams: '团队版',
-      community: 'Community',
+      community: '社区',
     },
     hero: {
-      // title: 'Boost Happiness, Productivity and Creativity.',
-      // subtitle:
-      //   "Boost Note is an intuitive and stylish markdown editor. It's fully open-source, and used by 1 million developers!",
+      title: '提高幸福感、生产力和创造力',
+      subtitle:
+        "Boost Note 是一个富有内涵和个性的 markdown 编辑器，完全开源，并为一百万的开发者所使用！",
     },
     newsletter: {
       // title: 'Also, please join our newsletter to get the latest news and update notes.',
@@ -63,7 +63,7 @@ export default {
       //   'You can introduce custom markdown syntax and configure how to render it.',
     },
     pricing: {
-      // title: 'Pricing Plans',
+      title: '定价套餐',
       feature: '功能',
       basic: '基本套餐',
       premium: '黄金套餐',
