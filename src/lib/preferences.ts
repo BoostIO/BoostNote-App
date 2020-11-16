@@ -7,7 +7,6 @@ import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
 import { setTrafficLightPosition } from './electronOnly'
-import { platform } from 'os'
 import { osName } from './platform'
 
 export type GeneralThemeOptions =
