@@ -63,6 +63,13 @@ export const sepiaTheme: BaseTheme = {
   navItemActiveBackgroundColor: '#eee8d6',
   navItemHoverActiveBackgroundColor: '#e0e0e0',
 
+  // Team Switcher
+  teamSwitcherBackgroundColor: '#eee8d6',
+  teamSwitcherBorderColor: 'transparent',
+  teamSwitcherTextColor: base3Color,
+  teamSwitcherHoverBackgroundColor: primaryColor,
+  teamSwitcherHoverTextColor: light100Color,
+
   // NotePage
   noteNavEmptyItemColor: '#777',
   noteNavItemBackgroundColor: '#eee8d6',

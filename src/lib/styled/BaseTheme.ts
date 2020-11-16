@@ -41,6 +41,13 @@ export interface BaseTheme {
   noteNavEmptyItemColor: string
   noteNavItemBackgroundColor: string
 
+  // Team Switcher
+  teamSwitcherBackgroundColor: string
+  teamSwitcherBorderColor: string
+  teamSwitcherTextColor: string
+  teamSwitcherHoverBackgroundColor: string
+  teamSwitcherHoverTextColor: string
+
   // Button
   primaryButtonLabelColor: string
   primaryButtonBackgroundColor: string
