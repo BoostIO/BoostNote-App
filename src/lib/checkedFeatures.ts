@@ -1,15 +1,26 @@
 import { useState, useCallback, useEffect } from 'react'
 import { localLiteStorage } from 'ltstrg'
-import { checkedFeaturesKey } from './localStorageKeys'
+import { checkedFeaturesKey, appModeChosenKey } from './localStorageKeys'
 import { createStoreContext } from './context'
 
+export const featureBoostHubIntro = 'boostHubIntro'
 export const featureBoostHubSignIn = 'boostHubSignIn'
+export const featureAppModeSelect = 'boostNoteAppModeSelect'
 
 function loadCheckedFeatures(): string[] {
-  const stringifiedGeneralStatus = localLiteStorage.getItem(checkedFeaturesKey)
-  if (stringifiedGeneralStatus == null) return []
+  const stringifiedCheckedFeatures = localLiteStorage.getItem(
+    checkedFeaturesKey
+  )
+  if (stringifiedCheckedFeatures == null) return []
   try {
-    return JSON.parse(stringifiedGeneralStatus)
+    const checkedFeatures = JSON.parse(stringifiedCheckedFeatures) as string[]
+
+    const legacyAppModeChosenFlag = localLiteStorage.getItem(appModeChosenKey)
+    if (legacyAppModeChosenFlag != null) {
+      checkedFeatures.push(featureAppModeSelect)
+      localLiteStorage.removeItem(appModeChosenKey)
+    }
+    return checkedFeatures
   } catch (error) {
     console.warn('Failed to load checked features')
     console.warn(error.message)

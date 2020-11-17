@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -22,10 +22,7 @@ import AppNavigator from './organisms/AppNavigator'
 import { useRouter } from '../lib/router'
 import { values } from '../lib/db/utils'
 import { localLiteStorage } from 'ltstrg'
-import {
-  defaultStorageCreatedKey,
-  appModeChosenKey,
-} from '../lib/localStorageKeys'
+import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
 import {
   getPathByName,
   addIpcListener,
@@ -45,6 +42,12 @@ import {
   unlistenBoostHubTeamCreateEvent,
   BoostHubTeamCreateEvent,
 } from '../lib/events'
+import {
+  useCheckedFeatures,
+  featureAppModeSelect,
+  featureBoostHubIntro,
+} from '../lib/checkedFeatures'
+import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -94,7 +97,6 @@ const App = () => {
   const { fetchDesktopGlobalData } = useBoostHub()
 
   useEffectOnce(() => {
-    const boostHubUserInfo = preferences['boosthub.user']
     initialize()
       .then(async (storageMap) => {
         const storages = values(storageMap)
@@ -142,68 +144,66 @@ const App = () => {
       .catch((error) => {
         console.error(error)
       })
-      .then(() => {
-        const appModeChosen = localLiteStorage.getItem(appModeChosenKey)
-        if (appModeChosen !== 'true') {
-          setShowAppModeModal(true)
-        }
-        localLiteStorage.setItem(appModeChosenKey, 'true')
-      })
-      .then(async () => {
-        if (boostHubUserInfo == null) {
-          return
-        }
-        const { user, teams } = await fetchDesktopGlobalData()
-        if (user == null) {
-          setPreferences({
-            'boosthub.user': undefined,
-          })
-          setGeneralStatus({
-            boostHubTeams: [],
-          })
-          return
-          // User's auth is invalidated. Should go to auth page
-          messageBox({
-            title: 'Boost Hub login is required',
-            message: 'Your BoostHub session has been expired.',
-            buttons: ['Sign In Again', 'Cancel'],
-            defaultButtonIndex: 0,
-            iconType: DialogIconTypes.Warning,
-            onClose: (value: number | null) => {
-              if (value === 0) {
-                return
-              }
+  })
 
-              setPreferences({
-                'boosthub.user': undefined,
-              })
-              setGeneralStatus({
-                boostHubTeams: [],
-              })
-            },
-          })
-          return
-        }
-        setPreferences((previousPreferences) => {
-          return {
-            ...previousPreferences,
-            'boosthub.user': {
-              id: user.id,
-              uniqueName: user.uniqueName,
-              displayName: user.displayName,
-            },
-          }
+  useEffectOnce(() => {
+    const run = async () => {
+      const boostHubUserInfo = preferences['boosthub.user']
+      if (boostHubUserInfo == null) {
+        return
+      }
+      const { user, teams } = await fetchDesktopGlobalData()
+      if (user == null) {
+        setPreferences({
+          'boosthub.user': undefined,
         })
         setGeneralStatus({
-          boostHubTeams: teams.map((team) => {
-            return {
-              id: team.id,
-              name: team.name,
-              domain: team.domain,
-            }
-          }),
+          boostHubTeams: [],
         })
+        return
+        // User's auth is invalidated. Should go to auth page
+        messageBox({
+          title: 'Boost Hub login is required',
+          message: 'Your BoostHub session has been expired.',
+          buttons: ['Sign In Again', 'Cancel'],
+          defaultButtonIndex: 0,
+          iconType: DialogIconTypes.Warning,
+          onClose: (value: number | null) => {
+            if (value === 0) {
+              return
+            }
+
+            setPreferences({
+              'boosthub.user': undefined,
+            })
+            setGeneralStatus({
+              boostHubTeams: [],
+            })
+          },
+        })
+        return
+      }
+      setPreferences((previousPreferences) => {
+        return {
+          ...previousPreferences,
+          'boosthub.user': {
+            id: user.id,
+            uniqueName: user.uniqueName,
+            displayName: user.displayName,
+          },
+        }
       })
+      setGeneralStatus({
+        boostHubTeams: teams.map((team) => {
+          return {
+            id: team.id,
+            name: team.name,
+            domain: team.domain,
+          }
+        }),
+      })
+    }
+    run()
   })
 
   useEffect(() => {
@@ -254,11 +254,7 @@ const App = () => {
   }, [])
   useGlobalKeyDownHandler(keyboardHandler)
 
-  const [showAppModeModal, setShowAppModeModal] = useState(false)
-
-  const closeAppModeModal = useCallback(() => {
-    setShowAppModeModal(false)
-  }, [])
+  const { isChecked } = useCheckedFeatures()
 
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
@@ -271,11 +267,15 @@ const App = () => {
           <>
             {preferences['general.showAppNavigator'] && <AppNavigator />}
             <Router />
+            {!isChecked(featureAppModeSelect) ? (
+              <AppModeModal />
+            ) : (
+              !isChecked(featureBoostHubIntro) && <BoostHubIntroModal />
+            )}
           </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>
         )}
-        {showAppModeModal && <AppModeModal closeModal={closeAppModeModal} />}
         <GlobalStyle />
         <Dialog />
         <PreferencesModal />

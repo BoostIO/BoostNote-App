@@ -1,16 +1,12 @@
 import React from 'react'
-import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import BoostHubSignInForm from '../organisms/BoostHubSignInForm'
-import PageScrollableContent from '../atoms/PageScrollableContent'
 import styled from '../../lib/styled'
+import { flexCenter } from '../../lib/styled/styleFunctions'
 
 const BoostHubLoginPage = () => {
   return (
     <PageContainer>
-      <PageDraggableHeader label='Sign up/in to Boost Hub' />
-      <PageScrollableContent>
-        <BoostHubSignInForm />
-      </PageScrollableContent>
+      <BoostHubSignInForm />
     </PageContainer>
   )
 }
@@ -18,8 +14,7 @@ const BoostHubLoginPage = () => {
 export default BoostHubLoginPage
 
 const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100%;
+  ${flexCenter}
 `

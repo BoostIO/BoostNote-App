@@ -12,6 +12,7 @@ import {
   FormGroup,
   FormTextInput,
   FormBlockquote,
+  FormSecondaryButton,
 } from '../atoms/form'
 import { generateId } from '../../lib/string'
 import { openLoginPage, useBoostHub } from '../../lib/boosthub'
@@ -20,10 +21,14 @@ import {
   BoostHubLoginEvent,
   listenBoostHubLoginEvent,
   unlistenBoostHubLoginEvent,
+  listenBoostHubLoginRequestEvent,
+  unlistenBoostHubLoginRequestEvent,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
 import { mdiLoading } from '@mdi/js'
+import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
+import styled from '../../lib/styled'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -110,47 +115,67 @@ const BoostHubSignInForm = () => {
     }
   }, [login])
 
+  useEffect(() => {
+    const handler = () => {
+      startLoginRequest()
+    }
+    listenBoostHubLoginRequestEvent(handler)
+
+    return () => {
+      unlistenBoostHubLoginRequestEvent(handler)
+    }
+  }, [startLoginRequest])
+
   return (
-    <>
+    <Container>
+      <h1 className='heading'>Craete Team Account</h1>
       {status === 'idle' ? (
-        <FormGroup>
-          <FormPrimaryButton onClick={startLoginRequest}>
-            Sign Up/In
-          </FormPrimaryButton>
-        </FormGroup>
-      ) : status === 'logging-in' ? (
         <>
-          <p>
-            <Icon path={mdiLoading} spin />
-            &nbsp;Signing In...
-          </p>
+          <div style={{ maxWidth: '1020px' }}>
+            <BoostHubFeatureIntro />
+          </div>
+          <div className='control'>
+            <FormPrimaryButton onClick={startLoginRequest}>
+              Sign Up
+            </FormPrimaryButton>
+
+            <FormSecondaryButton onClick={startLoginRequest}>
+              Sign In
+            </FormSecondaryButton>
+          </div>
         </>
+      ) : status === 'logging-in' ? (
+        <p>
+          <Icon path={mdiLoading} spin />
+          &nbsp;Signing In...
+        </p>
       ) : (
         <>
-          <p>
+          <p style={{ textAlign: 'center' }}>
             <Icon path={mdiLoading} spin />
             &nbsp;Waiting for signing in from browser...
           </p>
-          <FormGroup>
+          <FormGroup style={{ textAlign: 'center' }}>
             <FormPrimaryButton onClick={openLoginRequestPage}>
               Open request signing in page again
             </FormPrimaryButton>
           </FormGroup>
           {errorMessage != null && (
-            <FormGroup>
+            <FormGroup style={{ textAlign: 'center' }}>
               <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
             </FormGroup>
           )}
           {manualFormOpened ? (
             <>
-              <FormGroup>
+              <hr />
+              <FormGroup style={{ textAlign: 'center' }}>
                 <FormTextInput
                   placeholder='Insert Code from the browser'
                   value={code}
                   onChange={updateCode}
                 />
               </FormGroup>
-              <FormGroup>
+              <FormGroup style={{ textAlign: 'center' }}>
                 <FormPrimaryButton
                   onClick={() => {
                     login(code)
@@ -161,7 +186,7 @@ const BoostHubSignInForm = () => {
               </FormGroup>
             </>
           ) : (
-            <FormGroup>
+            <FormGroup style={{ textAlign: 'center' }}>
               <FormBlockquote>
                 Click{' '}
                 <a
@@ -182,8 +207,32 @@ const BoostHubSignInForm = () => {
           )}
         </>
       )}
-    </>
+    </Container>
   )
 }
 
 export default BoostHubSignInForm
+
+const Container = styled.div`
+  & > .heading {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 36px;
+  }
+
+  & > .control {
+    margin: 10px auto;
+    text-align: center;
+    & > button {
+      padding-right: 30px;
+      padding-left: 30px;
+
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+  blockquote {
+    margin-right: 0;
+  }
+`

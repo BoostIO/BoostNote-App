@@ -127,7 +127,10 @@ const TopLevelNavigator = () => {
                 type: 'normal',
                 label: 'Log out Boost Hub',
                 click: async () => {
-                  if (routeParams.name === 'boosthub.teams.show') {
+                  if (
+                    routeParams.name === 'boosthub.teams.show' ||
+                    routeParams.name === 'boosthub.teams.create'
+                  ) {
                     push('/app/boosthub/login')
                   }
                   setPreferences({

@@ -26,7 +26,7 @@ export interface RouterStore extends Location {
 const initialLocation = normalizeLocation({
   pathname: browserHistory.location.pathname,
   hash: browserHistory.location.hash,
-  query: parseQuery(browserHistory.location.search),
+  query: parseQuery(browserHistory.location.search.slice(1)),
 })
 
 function useRouteStore(): RouterStore {
