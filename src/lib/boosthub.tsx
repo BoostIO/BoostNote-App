@@ -56,9 +56,15 @@ function useBoostHubStore() {
         method: 'get',
         ...options,
       }
-      return webviewRef.current!.executeJavaScript(
-        `fetch("${url}", {method: "${method}"}).then(response => response.json())`
+      const rawText = await webviewRef.current!.executeJavaScript(
+        `fetch("${url}", {method: "${method}"}).then(response => response.text())`
       )
+      try {
+        return JSON.parse(rawText)
+      } catch (error) {
+        console.warn('Invalid json body', error)
+        throw new Error(rawText)
+      }
     },
     []
   )
