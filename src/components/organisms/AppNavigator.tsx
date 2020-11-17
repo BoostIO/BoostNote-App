@@ -24,6 +24,7 @@ import {
   useCheckedFeatures,
   featureBoostHubSignIn,
 } from '../../lib/checkedFeatures'
+import { MenuItemConstructorOptions } from 'electron/main'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -101,6 +102,17 @@ const TopLevelNavigator = () => {
               })
             },
           },
+          ...(boostHubUserInfo != null
+            ? ([
+                {
+                  type: 'normal',
+                  label: 'Create a Team',
+                  click: async () => {
+                    push('/app/boosthub/teams')
+                  },
+                },
+              ] as MenuItemConstructorOptions[])
+            : ([] as MenuItemConstructorOptions[])),
           {
             type: 'separator',
           },
