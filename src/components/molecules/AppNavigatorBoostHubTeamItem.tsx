@@ -30,17 +30,17 @@ const MainButton = styled.button`
   ${flexCenter}
   font-size: 18px;
   border: none;
-  background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
-  color: ${({ theme }) => theme.secondaryButtonLabelColor};
-  border: 1px solid ${({ theme }) => theme.borderColor};
+  background-color: ${({ theme }) => theme.teamSwitcherBackgroundColor};
+  border: 1px solid ${({ theme }) => theme.teamSwitcherBorderColor};
+  color: ${({ theme }) => theme.teamSwitcherTextColor};
   font-size: 13px;
 
   &:hover,
   &:active,
   &.active {
     cursor: pointer;
-    color: ${({ theme }) => theme.secondaryButtonHoverLabelColor};
-    background-color: ${({ theme }) => theme.primaryColor};
+    background-color: ${({ theme }) => theme.teamSwitcherHoverBackgroundColor};
+    color: ${({ theme }) => theme.teamSwitcherHoverTextColor};
   }
 
   &:disabled {
