@@ -62,6 +62,13 @@ export const legacyTheme: BaseTheme = {
   navItemActiveBackgroundColor: '#444',
   navItemHoverActiveBackgroundColor: '#555',
 
+  // Team Switcher
+  teamSwitcherBackgroundColor: light100Color,
+  teamSwitcherBorderColor: 'transparent',
+  teamSwitcherTextColor: dark54Color,
+  teamSwitcherHoverBackgroundColor: light100Color,
+  teamSwitcherHoverTextColor: dark54Color,
+
   // NotePage
   noteNavEmptyItemColor: '#999',
   noteNavItemBackgroundColor: base2Color,
