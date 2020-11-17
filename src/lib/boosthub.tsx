@@ -13,6 +13,8 @@ export const boostHubWebViewUserAgent = `${navigator.userAgent} BoostNote ${proc
 
 const boostHubDesktopLoginPageUrl = `${boostHubBaseUrl}/desktop/login`
 
+export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/features`
+
 export function openLoginPage(state: string) {
   const loginPageUrl = `${boostHubDesktopLoginPageUrl}?state=${state}`
 

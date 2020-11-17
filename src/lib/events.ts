@@ -37,6 +37,13 @@ export const {
   unlisten: unlistenNoteDetailFocusTitleInputEvent,
 } = createCustomEventHelper(NoteDetailFocusTitleInputEventName)
 
+const BoostHubLoginRequestEventName = 'BoostHub:loginRequest'
+export const {
+  dispatch: dispatchBoostHubLoginRequestEvent,
+  listen: listenBoostHubLoginRequestEvent,
+  unlisten: unlistenBoostHubLoginRequestEvent,
+} = createCustomEventHelper(BoostHubLoginRequestEventName)
+
 const BoostHubLoginEventName = 'BoostHub:login'
 interface BoostHubLoginEventDetail {
   code: string
