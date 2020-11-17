@@ -90,17 +90,19 @@ const BoostHubTeamsShowPage = ({
     <Container key={domain} className={active ? 'active' : ''}>
       <div className='toolbar' onContextMenu={openToolbarContextMenu}>
         {!generalShowAppNavigator && osName === 'macos' && <Spacer />}
-        <button onClick={goBackWebview}>
+        <button title='Go Back' onClick={goBackWebview}>
           <Icon path={mdiChevronLeft} />
         </button>
-        <button onClick={goForwardWebview}>
+        <button title='Go Forward' onClick={goForwardWebview}>
           <Icon path={mdiChevronRight} />
         </button>
-        <button onClick={reloadWebview}>
+        <button title='Reload' onClick={reloadWebview}>
           <Icon path={mdiRefresh} />
         </button>
-        <div className='url'>{url}</div>
-        <button onClick={copyUrl} title='Copy URL'>
+        <div title={url} className='url'>
+          {url}
+        </div>
+        <button title='Copy URL' onClick={copyUrl}>
           <Icon path={mdiContentCopy} />
         </button>
       </div>
