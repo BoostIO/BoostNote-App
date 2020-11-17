@@ -6,6 +6,7 @@ import { WebviewTag } from 'electron'
 import React, { useRef, useCallback, FC } from 'react'
 import { createStoreContext } from './context'
 import querystring from 'querystring'
+import { useEffectOnce } from 'react-use'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -25,6 +26,10 @@ export function getBoostHubTeamPageUrl(teamName: string) {
   return `${boostHubBaseUrl}/${teamName}`
 }
 
+export function getBoostHubTeamIconUrl(location: string) {
+  return `${boostHubBaseUrl}/api/files/icons/${location}`
+}
+
 export const boostHubTeamsCreatePageUrl = `${boostHubBaseUrl}/cooperate`
 
 export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
@@ -41,9 +46,40 @@ export const boostHubPreloadUrl = formatUrl({
 const boostHubDesktopLoginApiUrl = `${boostHubBaseUrl}/api/desktop/login`
 const boostHubDesktopGlobalDataUrl = `${boostHubBaseUrl}/api/desktop`
 const boostHubSignOutUrl = `${boostHubBaseUrl}/api/desktop/signout`
+let domReady = false
+const domReadyQueue = [] as { resolve?: () => void; reject?: () => void }[]
+
+function waitDomReady() {
+  const queue: { resolve?: () => void; reject?: () => void } = {}
+  const promise = new Promise((resolve, reject) => {
+    if (domReady) {
+      console.log('dom ready no wait')
+      resolve()
+      return
+    }
+    queue.resolve = resolve
+    queue.reject = reject
+    domReadyQueue.push(queue)
+  })
+
+  return promise
+}
 
 function useBoostHubStore() {
   const webviewRef = useRef<WebviewTag>(null)
+
+  useEffectOnce(() => {
+    webviewRef.current!.addEventListener('dom-ready', () => {
+      domReady = true
+      let queue = domReadyQueue.shift()
+      while (queue != null) {
+        if (queue.resolve != null) {
+          queue.resolve()
+        }
+        queue = domReadyQueue.shift()
+      }
+    })
+  })
 
   const fetchJson = useCallback(
     async (
@@ -52,6 +88,7 @@ function useBoostHubStore() {
         method: string
       }
     ) => {
+      await waitDomReady()
       const { method } = {
         method: 'get',
         ...options,
@@ -72,13 +109,30 @@ function useBoostHubStore() {
   const fetchDesktopGlobalData = useCallback(async () => {
     const data = await fetchJson(boostHubDesktopGlobalDataUrl)
 
-    return data as {
+    return {
+      user: {
+        id: data.user.id,
+        uniqueName: data.user.uniqueName,
+        displayName: data.user.displayName,
+      },
+      teams: data.teams.map((team: any) => {
+        return {
+          id: team.id,
+          name: team.name,
+          domain: team.domain,
+          iconUrl:
+            team.icon != null
+              ? getBoostHubTeamIconUrl(team.icon.location)
+              : undefined,
+        }
+      }),
+    } as {
       user: {
         id: string
         uniqueName: string
         displayName: string
       }
-      teams: { id: string; domain: string; name: string }[]
+      teams: { id: string; name: string; domain: string; iconUrl?: string }[]
     }
   }, [fetchJson])
 
@@ -88,13 +142,30 @@ function useBoostHubStore() {
       { method: 'post' }
     )
 
-    return data as {
+    return {
+      user: {
+        id: data.user.id,
+        uniqueName: data.user.uniqueName,
+        displayName: data.user.displayName,
+      },
+      teams: data.teams.map((team: any) => {
+        return {
+          id: team.id,
+          name: team.name,
+          domain: team.domain,
+          iconUrl:
+            team.icon != null
+              ? getBoostHubTeamIconUrl(team.icon.location)
+              : undefined,
+        }
+      }),
+    } as {
       user: {
         id: string
         uniqueName: string
         displayName: string
       }
-      teams: { id: string; domain: string; name: string }[]
+      teams: { id: string; name: string; domain: string; iconUrl?: string }[]
     }
   }
   const signOut = useCallback(async () => {

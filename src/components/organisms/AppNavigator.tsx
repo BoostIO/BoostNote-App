@@ -65,6 +65,7 @@ const TopLevelNavigator = () => {
           active={activeBoostHubTeamDomain === boostHubTeam.domain}
           name={boostHubTeam.name}
           domain={boostHubTeam.domain}
+          iconUrl={boostHubTeam.iconUrl}
         />
       )
     })

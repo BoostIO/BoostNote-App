@@ -17,6 +17,7 @@ export interface GeneralStatus {
     id: string
     name: string
     domain: string
+    iconUrl?: string
   }[]
 }
 

@@ -85,6 +85,7 @@ const BoostHubSignInForm = () => {
               id: team.id,
               name: team.name,
               domain: team.domain,
+              iconUrl: team.iconUrl,
             }
           }),
         })
