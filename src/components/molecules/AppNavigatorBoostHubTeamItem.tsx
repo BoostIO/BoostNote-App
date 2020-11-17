@@ -66,17 +66,11 @@ const AppNavigatorBoostHubTeamItem = ({
     push(`/app/boosthub/teams/${domain}`)
   }, [push, domain])
 
-  const openStorageContextMenu = useCallback((event: React.MouseEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-  }, [])
-
   return (
     <Container
       title={name}
       className={active ? 'active' : ''}
       onClick={navigateToTeam}
-      onContextMenu={openStorageContextMenu}
     >
       <MainButton className={active ? 'active' : ''} onClick={navigateToTeam}>
         {name.slice(0, 1)}
