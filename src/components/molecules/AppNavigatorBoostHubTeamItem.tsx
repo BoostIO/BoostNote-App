@@ -16,6 +16,9 @@ const Container = styled.div`
   border-width: 3px;
   border-style: solid;
   border-color: transparent;
+  &:hover {
+    border-color: ${({ theme }) => theme.borderColor};
+  }
   &.active {
     border-color: ${({ theme }) => theme.textColor};
   }
@@ -34,6 +37,11 @@ const MainButton = styled.button`
   border: 1px solid ${({ theme }) => theme.teamSwitcherBorderColor};
   color: ${({ theme }) => theme.teamSwitcherTextColor};
   font-size: 13px;
+  & > .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
 
   &:hover,
   &:active,
@@ -53,12 +61,14 @@ interface AppNavigatorBoostHubTeamItemProps {
   domain: string
   name: string
   active: boolean
+  iconUrl?: string
 }
 
 const AppNavigatorBoostHubTeamItem = ({
   active,
   domain,
   name,
+  iconUrl,
 }: AppNavigatorBoostHubTeamItemProps) => {
   const { push } = useRouter()
 
@@ -73,7 +83,11 @@ const AppNavigatorBoostHubTeamItem = ({
       onClick={navigateToTeam}
     >
       <MainButton className={active ? 'active' : ''} onClick={navigateToTeam}>
-        {name.slice(0, 1)}
+        {iconUrl == null ? (
+          name.slice(0, 1)
+        ) : (
+          <img className='icon' src={iconUrl} />
+        )}
       </MainButton>
     </Container>
   )
