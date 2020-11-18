@@ -129,7 +129,7 @@ const BoostHubSignInForm = () => {
 
   return (
     <Container>
-      <h1 className='heading'>Craete Team Account</h1>
+      <h1 className='heading'>Create Team Account</h1>
       {status === 'idle' ? (
         <>
           <div style={{ maxWidth: '1020px' }}>
