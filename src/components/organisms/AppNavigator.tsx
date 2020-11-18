@@ -2,25 +2,38 @@ import React, { useMemo, useCallback, MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import {
   borderRight,
-  border,
   secondaryButtonStyle,
+  flexCenter,
 } from '../../lib/styled/styleFunctions'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
-import { mdiPlus } from '@mdi/js'
+import { mdiPlus, mdiCircleMedium } from '@mdi/js'
 import { useRouter } from '../../lib/router'
-import { useActiveStorageId } from '../../lib/routeParams'
+import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu, openExternal } from '../../lib/electronOnly'
+import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
+import { useBoostHub } from '../../lib/boosthub'
+import {
+  useCheckedFeatures,
+  featureBoostHubSignIn,
+} from '../../lib/checkedFeatures'
+import { MenuItemConstructorOptions } from 'electron/main'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
   const { push } = useRouter()
-  const { setPreferences } = usePreferences()
+  const { setPreferences, preferences } = usePreferences()
+  const { generalStatus } = useGeneralStatus()
+  const routeParams = useRouteParams()
+  const { isChecked, checkFeature } = useCheckedFeatures()
+
+  const boostHubUserInfo = preferences['boosthub.user']
 
   const activeStorageId = useActiveStorageId()
 
@@ -37,12 +50,55 @@ const TopLevelNavigator = () => {
     })
   }, [storageMap, activeStorageId])
 
+  const activeBoostHubTeamDomain = useMemo<string | null>(() => {
+    if (routeParams.name !== 'boosthub.teams.show') {
+      return null
+    }
+    return routeParams.domain
+  }, [routeParams])
+
+  const boostHubTeams = useMemo(() => {
+    return generalStatus.boostHubTeams.map((boostHubTeam) => {
+      return (
+        <AppNavigatorBoostHubTeamItem
+          key={`boost-hub-team-${boostHubTeam.domain}`}
+          active={activeBoostHubTeamDomain === boostHubTeam.domain}
+          name={boostHubTeam.name}
+          domain={boostHubTeam.domain}
+          iconUrl={boostHubTeam.iconUrl}
+        />
+      )
+    })
+  }, [generalStatus.boostHubTeams, activeBoostHubTeamDomain])
+
   const goToStorageCreatePage = useCallback(() => {
     push(`/app/storages`)
   }, [push])
 
   const { createStorage } = useDb()
   const { prompt } = useDialog()
+  const { setGeneralStatus } = useGeneralStatus()
+  const { requestSignOut } = useBoostHub()
+
+  const signOut = useCallback(async () => {
+    if (
+      routeParams.name === 'boosthub.teams.show' ||
+      routeParams.name === 'boosthub.teams.create'
+    ) {
+      push('/app/boosthub/login')
+    }
+    setPreferences({
+      'boosthub.user': null,
+    })
+    setGeneralStatus({
+      boostHubTeams: [],
+    })
+    try {
+      await requestSignOut()
+    } catch (error) {
+      console.warn('Failed to send signing out request', error)
+    }
+  }, [routeParams.name, setPreferences, setGeneralStatus, requestSignOut, push])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -51,7 +107,7 @@ const TopLevelNavigator = () => {
         menuItems: [
           {
             type: 'normal',
-            label: 'New Storage',
+            label: 'Create a Note Storage',
             click: async () => {
               prompt({
                 title: 'Create a Storage',
@@ -66,6 +122,33 @@ const TopLevelNavigator = () => {
               })
             },
           },
+          ...(boostHubUserInfo != null
+            ? ([
+                {
+                  type: 'normal',
+                  label: 'Create a Team',
+                  click: async () => {
+                    push('/app/boosthub/teams')
+                  },
+                },
+              ] as MenuItemConstructorOptions[])
+            : ([] as MenuItemConstructorOptions[])),
+          {
+            type: 'separator',
+          },
+          boostHubUserInfo == null
+            ? {
+                type: 'normal',
+                label: 'Create a Team Account',
+                click: () => {
+                  push('/app/boosthub/login')
+                },
+              }
+            : {
+                type: 'normal',
+                label: 'Sign Out Boost Hub',
+                click: signOut,
+              },
           {
             type: 'separator',
           },
@@ -81,7 +164,7 @@ const TopLevelNavigator = () => {
         ],
       })
     },
-    [prompt, createStorage, push, setPreferences]
+    [boostHubUserInfo, prompt, createStorage, push, setPreferences, signOut]
   )
 
   const openNewStorageContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback(
@@ -89,17 +172,49 @@ const TopLevelNavigator = () => {
       event.preventDefault()
       openContextMenu({
         menuItems: [
-          { label: 'Create a new storage', click: goToStorageCreatePage },
-          {
-            label: 'Try team collaboration',
-            click: () => {
-              openExternal('https://boosthub.io')
-            },
-          },
+          { label: 'Create a Note Storage', click: goToStorageCreatePage },
+          ...(boostHubUserInfo == null
+            ? ([
+                {
+                  type: 'separator',
+                },
+                {
+                  label: isChecked(featureBoostHubSignIn)
+                    ? 'Create a Team Account'
+                    : 'Create a Team Account (New)',
+                  click: () => {
+                    checkFeature(featureBoostHubSignIn)
+                    push('/app/boosthub/login')
+                  },
+                },
+              ] as MenuItemConstructorOptions[])
+            : ([
+                {
+                  label: 'Create a Team',
+                  click: () => {
+                    push('/app/boosthub/teams')
+                  },
+                },
+                {
+                  type: 'separator',
+                },
+                {
+                  type: 'normal',
+                  label: 'Sign Out Boost Hub',
+                  click: signOut,
+                },
+              ] as MenuItemConstructorOptions[])),
         ],
       })
     },
-    [goToStorageCreatePage]
+    [
+      goToStorageCreatePage,
+      isChecked,
+      checkFeature,
+      push,
+      boostHubUserInfo,
+      signOut,
+    ]
   )
 
   return (
@@ -107,10 +222,14 @@ const TopLevelNavigator = () => {
       {osName === 'macos' && <Spacer />}
       <ListContainer onContextMenu={openSideNavContextMenu}>
         {storages}
+        {boostHubTeams}
       </ListContainer>
       <ControlContainer>
         <NavigatorButton onClick={openNewStorageContextMenu}>
           <Icon path={mdiPlus} />
+          {!isChecked(featureBoostHubSignIn) && (
+            <Icon className='redDot' path={mdiCircleMedium} />
+          )}
         </NavigatorButton>
       </ControlContainer>
     </Container>
@@ -121,6 +240,7 @@ export default TopLevelNavigator
 
 const Spacer = styled.div`
   height: 12px;
+  flex-shrink: 0;
 `
 
 const Container = styled.div`
@@ -130,6 +250,7 @@ const Container = styled.div`
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
+  overflow-y: auto;
 `
 
 const ListContainer = styled.div`
@@ -148,17 +269,26 @@ const ControlContainer = styled.div`
 
 const NavigatorButton = styled.button`
   ${secondaryButtonStyle}
-  height: 50px;
-  width: 50px;
-  ${border}
-  margin-bottom: 8px;
+  position: relative;
+  height: 36px;
+  width: 36px;
+  margin-bottom: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 22px;
-  border-radius: 5px;
+  border-radius: 8px;
+  border: none;
+
   &:first-child {
     margin-top: 5px;
+  }
+  .redDot {
+    position: absolute;
+    color: ${({ theme }) => theme.dangerColor};
+    top: -3px;
+    right: -3px;
+    ${flexCenter}
   }
 `

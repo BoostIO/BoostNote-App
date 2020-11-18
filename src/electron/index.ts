@@ -22,6 +22,10 @@ function createMainWindow() {
       nodeIntegration: true,
       webSecurity: !dev,
       webviewTag: true,
+      enableRemoteModule: true,
+      preload: dev
+        ? path.join(app.getAppPath(), '../static/main-preload.js')
+        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
     },
     width: 1200,
     height: 800,
@@ -62,6 +66,7 @@ function createMainWindow() {
   window.on('closed', () => {
     mainWindow = null
   })
+
   return window
 }
 
@@ -98,4 +103,8 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   mainWindow = createMainWindow()
+
+  app.on('open-url', (_event, url) => {
+    mainWindow!.webContents.send('open-boostnote-url', url)
+  })
 })

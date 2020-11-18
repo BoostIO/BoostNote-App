@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -22,10 +22,7 @@ import AppNavigator from './organisms/AppNavigator'
 import { useRouter } from '../lib/router'
 import { values } from '../lib/db/utils'
 import { localLiteStorage } from 'ltstrg'
-import {
-  defaultStorageCreatedKey,
-  appModeChosen as appModeChosenKey,
-} from '../lib/localStorageKeys'
+import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
 import {
   getPathByName,
   addIpcListener,
@@ -37,6 +34,29 @@ import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import AppModeModal from './organisms/AppModeModal'
+import { useBoostNoteProtocol } from '../lib/protocol'
+import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
+import { useDialog, DialogIconTypes } from '../lib/dialog'
+import {
+  listenBoostHubTeamCreateEvent,
+  unlistenBoostHubTeamCreateEvent,
+  BoostHubTeamCreateEvent,
+  BoostHubTeamUpdateEvent,
+  listenBoostHubTeamUpdateEvent,
+  unlistenBoostHubTeamUpdateEvent,
+  BoostHubTeamDeleteEvent,
+  listenBoostHubTeamDeleteEvent,
+  unlistenBoostHubTeamDeleteEvent,
+  dispatchBoostHubLoginRequestEvent,
+  listenBoostHubAccountDeleteEvent,
+  unlistenBoostHubAccountDeleteEvent,
+} from '../lib/events'
+import {
+  useCheckedFeatures,
+  featureAppModeSelect,
+  featureBoostHubIntro,
+} from '../lib/checkedFeatures'
+import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -74,9 +94,16 @@ Please check out.
 
 const App = () => {
   const { initialize, queueSyncingAllStorage, createStorage } = useDb()
-  const { replace } = useRouter()
+  const { replace, push } = useRouter()
   const [initialized, setInitialized] = useState(false)
-  const { addSideNavOpenedItem } = useGeneralStatus()
+  const { addSideNavOpenedItem, setGeneralStatus } = useGeneralStatus()
+  const {
+    togglePreferencesModal,
+    preferences,
+    setPreferences,
+  } = usePreferences()
+  const { messageBox } = useDialog()
+  const { fetchDesktopGlobalData } = useBoostHub()
 
   useEffectOnce(() => {
     initialize()
@@ -126,16 +153,64 @@ const App = () => {
       .catch((error) => {
         console.error(error)
       })
-      .then(() => {
-        const appModeChosen = localLiteStorage.getItem(appModeChosenKey)
-        if (appModeChosen !== 'true') {
-          setShowAppModeModal(true)
-        }
-        localLiteStorage.setItem(appModeChosenKey, 'true')
-      })
   })
 
-  const { togglePreferencesModal, preferences } = usePreferences()
+  useEffectOnce(() => {
+    const run = async () => {
+      const boostHubUserInfo = preferences['boosthub.user']
+      if (boostHubUserInfo == null) {
+        return
+      }
+      const { user, teams } = await fetchDesktopGlobalData()
+      if (user == null) {
+        messageBox({
+          title: 'Boost Hub login is required',
+          message: 'Your BoostHub session has been expired.',
+          buttons: ['Sign In Again', 'Cancel'],
+          defaultButtonIndex: 0,
+          iconType: DialogIconTypes.Warning,
+          onClose: (value: number | null) => {
+            if (value === 0) {
+              push(`/app/boosthub/login`)
+              setTimeout(() => {
+                dispatchBoostHubLoginRequestEvent()
+              }, 1000)
+              return
+            }
+
+            setPreferences({
+              'boosthub.user': undefined,
+            })
+            setGeneralStatus({
+              boostHubTeams: [],
+            })
+          },
+        })
+        return
+      }
+      setPreferences((previousPreferences) => {
+        return {
+          ...previousPreferences,
+          'boosthub.user': {
+            id: user.id,
+            uniqueName: user.uniqueName,
+            displayName: user.displayName,
+          },
+        }
+      })
+      setGeneralStatus({
+        boostHubTeams: teams.map((team) => {
+          return {
+            id: team.id,
+            name: team.name,
+            domain: team.domain,
+            iconUrl: team.iconUrl,
+          }
+        }),
+      })
+    }
+    run()
+  })
 
   useEffect(() => {
     addIpcListener('preferences', togglePreferencesModal)
@@ -143,6 +218,94 @@ const App = () => {
       removeIpcListener('preferences', togglePreferencesModal)
     }
   }, [togglePreferencesModal])
+
+  useEffect(() => {
+    const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
+      const createdTeam = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.set(createdTeam.id, {
+          id: createdTeam.id,
+          name: createdTeam.name,
+          domain: createdTeam.domain,
+          iconUrl:
+            createdTeam.icon != null
+              ? getBoostHubTeamIconUrl(createdTeam.icon.location)
+              : undefined,
+        })
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+      push(`/app/boosthub/teams/${createdTeam.domain}`)
+    }
+
+    const boostHubTeamUpdateEventHandler = (event: BoostHubTeamUpdateEvent) => {
+      const updatedTeam = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.set(updatedTeam.id, {
+          id: updatedTeam.id,
+          name: updatedTeam.name,
+          domain: updatedTeam.domain,
+          iconUrl:
+            updatedTeam.icon != null
+              ? getBoostHubTeamIconUrl(updatedTeam.icon.location)
+              : undefined,
+        })
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+    }
+
+    const boostHubTeamDeleteEventHandler = (event: BoostHubTeamDeleteEvent) => {
+      push(`/app`)
+      const deletedTeam = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.delete(deletedTeam.id)
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+    }
+
+    const boostHubAccountDeleteEventHandler = () => {
+      push(`/app`)
+      setPreferences({
+        'boosthub.user': undefined,
+      })
+      setGeneralStatus({
+        boostHubTeams: [],
+      })
+    }
+
+    listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+    listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+    listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
+    listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+    return () => {
+      unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+      unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+      unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
+      unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+    }
+  }, [push, setPreferences, setGeneralStatus])
+
+  useBoostNoteProtocol()
 
   const keyboardHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -167,11 +330,7 @@ const App = () => {
   }, [])
   useGlobalKeyDownHandler(keyboardHandler)
 
-  const [showAppModeModal, setShowAppModeModal] = useState(false)
-
-  const closeAppModeModal = useCallback(() => {
-    setShowAppModeModal(false)
-  }, [])
+  const { isChecked } = useCheckedFeatures()
 
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
@@ -184,11 +343,15 @@ const App = () => {
           <>
             {preferences['general.showAppNavigator'] && <AppNavigator />}
             <Router />
+            {!isChecked(featureAppModeSelect) ? (
+              <AppModeModal />
+            ) : (
+              !isChecked(featureBoostHubIntro) && <BoostHubIntroModal />
+            )}
           </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>
         )}
-        {showAppModeModal && <AppModeModal closeModal={closeAppModeModal} />}
         <GlobalStyle />
         <Dialog />
         <PreferencesModal />

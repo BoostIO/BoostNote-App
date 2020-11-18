@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
+import { setTrafficLightPosition } from './electronOnly'
+import { osName } from './platform'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -45,6 +47,13 @@ export interface Preferences {
   'general.enableAnalytics': boolean
   'general.enableAutoSync': boolean
   'general.showSubfolderContents': boolean
+
+  // BoostHub
+  'boosthub.user': {
+    id: string
+    uniqueName: string
+    displayName: string
+  } | null
 
   // Editor
   'editor.theme': string
@@ -91,6 +100,9 @@ const basePreferences: Preferences = {
   'general.noteListView': 'default',
   'general.showSubfolderContents': true,
 
+  // BoostHub
+  'boosthub.user': null,
+
   // Editor
   'editor.theme': 'material-darker',
   'editor.controlMode': '2-toggles',
@@ -111,6 +123,7 @@ function usePreferencesStore() {
   const [preferences, setPreferences] = useSetState<Preferences>(
     initialPreferences
   )
+  const [tab, setTab] = useState('about')
   useEffect(() => {
     savePreferences(preferences)
   }, [preferences])
@@ -125,11 +138,22 @@ function usePreferencesStore() {
   const [closed, setClosed] = useState(true)
   const togglePreferencesModal = useCallback(() => {
     if (closed) {
+      setTab('about')
       setClosed(false)
     } else {
       setClosed(true)
     }
   }, [closed, setClosed])
+
+  const openTab = useCallback(
+    (tab: string) => {
+      setTab(tab)
+      if (closed) {
+        setClosed(false)
+      }
+    },
+    [closed]
+  )
 
   const currentLanguage = mergedPreferences['general.language']
   const { i18n } = useTranslation('preferences')
@@ -137,7 +161,21 @@ function usePreferencesStore() {
     i18n.changeLanguage(currentLanguage)
   }, [i18n, currentLanguage])
 
+  const generalShowAppNavigator = preferences['general.showAppNavigator']
+  useEffect(() => {
+    if (osName !== 'macos') {
+      return
+    }
+    if (generalShowAppNavigator) {
+      setTrafficLightPosition({ x: 8, y: 8 })
+    } else {
+      setTrafficLightPosition({ x: 8, y: 24 })
+    }
+  }, [generalShowAppNavigator])
+
   return {
+    tab,
+    openTab,
     closed,
     setClosed,
     togglePreferencesModal,

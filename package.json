@@ -77,7 +77,7 @@
     "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^6.0.0",
     "css-loader": "^3.2.0",
-    "electron": "^6.1.5",
+    "electron": "^10.1.5",
     "electron-builder": "^22.8.1",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
@@ -197,6 +197,14 @@
         ]
       }
     },
+    "protocols": [
+      {
+        "name": "Boost Note",
+        "schemes": [
+          "boostnote"
+        ]
+      }
+    ],
     "publish": "github"
   }
 }

@@ -4,13 +4,21 @@ import { usePreferences } from '../../lib/preferences'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { FormBlockquote } from '../atoms/form'
 import Image from '../atoms/Image'
+import {
+  useCheckedFeatures,
+  featureAppModeSelect,
+} from '../../lib/checkedFeatures'
+import ModalContainer from '../molecules/ModalContainer'
+import Icon from '../atoms/Icon'
+import { mdiClose } from '@mdi/js'
 
-interface AppModeModalProps {
-  closeModal: () => void
-}
-
-const AppModeModal = ({ closeModal }: AppModeModalProps) => {
+const AppModeModal = () => {
   const { setPreferences } = usePreferences()
+  const { checkFeature } = useCheckedFeatures()
+
+  const closeModal = useCallback(() => {
+    checkFeature(featureAppModeSelect)
+  }, [checkFeature])
 
   const chooseNoteAppMode = useCallback(() => {
     setPreferences({
@@ -27,8 +35,11 @@ const AppModeModal = ({ closeModal }: AppModeModalProps) => {
   }, [setPreferences, closeModal])
 
   return (
-    <Container>
-      <div className='container'>
+    <ModalContainer onShadowClick={closeModal}>
+      <Container>
+        <button className='closeButton' onClick={closeModal}>
+          <Icon path={mdiClose} />
+        </button>
         <div className='scrollable'>
           <h1 className='header'>Choose App Mode</h1>
           <div className='optionGroup'>
@@ -51,69 +62,72 @@ const AppModeModal = ({ closeModal }: AppModeModalProps) => {
             You can always switch the app mode again from the Preferences modal.
           </FormBlockquote>
         </div>
-      </div>
-
-      <div className='shadow' onClick={closeModal} />
-    </Container>
+      </Container>
+    </ModalContainer>
   )
 }
 
 export default AppModeModal
 
 const Container = styled.div`
-  z-index: 6000;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  -webkit-app-region: drag;
+  position: relative;
+  margin: 50px auto;
+  background-color: ${({ theme }) => theme.navBackgroundColor};
+  max-width: 800px;
+  max-height: 500px;
+  z-index: 6002;
+  ${border}
+  border-radius: 10px;
+  overflow: hidden;
+  & > .closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 18px;
+    outline: none;
 
-  & > .container {
-    position: relative;
-    margin: 50px auto;
-    background-color: ${({ theme }) => theme.navBackgroundColor};
-    max-width: 800px;
-    max-height: 500px;
-    z-index: 6002;
-    ${border}
-    border-radius: 10px;
-    overflow: hidden;
-    .scrollable {
-      padding: 0 10px;
-      overflow-y: auto;
-      height: 100%;
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.navButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.navButtonHoverColor};
     }
-    .header {
-      margin: 5 0 15px;
-      text-align: center;
-    }
-    .optionGroup {
-      display: flex;
-    }
-    .option {
-      ${secondaryButtonStyle}
-      border-radius: 10px;
-      margin-right: 10px;
-      overflow: hidden;
-      & > img {
-        width: 100%;
-      }
-      & > h2 {
-        margin: 0 10px;
-      }
-      &:last-child {
-        margin-right: 0;
-      }
+
+    &:active,
+    &.active {
+      color: ${({ theme }) => theme.navButtonActiveColor};
     }
   }
-  & > .shadow {
-    position: absolute;
-    z-index: 6001;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+  .scrollable {
+    padding: 0 10px;
+    overflow-y: auto;
+    height: 100%;
+  }
+  .header {
+    margin: 5 0 15px;
+    text-align: center;
+  }
+  .optionGroup {
+    display: flex;
+  }
+  .option {
+    ${secondaryButtonStyle}
+    border-radius: 10px;
+    margin-right: 10px;
+    overflow: hidden;
+    & > img {
+      width: 100%;
+    }
+    & > h2 {
+      margin: 0 10px;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `
