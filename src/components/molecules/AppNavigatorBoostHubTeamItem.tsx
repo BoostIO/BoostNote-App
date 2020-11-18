@@ -1,9 +1,5 @@
 import React, { useCallback } from 'react'
-import {
-  border,
-  flexCenter,
-  secondaryButtonStyle,
-} from '../../lib/styled/styleFunctions'
+import { border, flexCenter } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
