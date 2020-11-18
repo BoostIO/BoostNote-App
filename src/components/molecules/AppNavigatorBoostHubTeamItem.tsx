@@ -1,7 +1,13 @@
 import React, { useCallback } from 'react'
-import { border, flexCenter } from '../../lib/styled/styleFunctions'
+import {
+  border,
+  flexCenter,
+  secondaryButtonStyle,
+} from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useRouter } from '../../lib/router'
+import Icon from '../atoms/Icon'
+import { mdiAccountMultiple } from '@mdi/js'
 
 const Container = styled.div`
   position: relative;
@@ -16,11 +22,27 @@ const Container = styled.div`
   border-width: 3px;
   border-style: solid;
   border-color: transparent;
+  cursor: pointer;
   &:hover {
     border-color: ${({ theme }) => theme.borderColor};
   }
   &.active {
     border-color: ${({ theme }) => theme.textColor};
+  }
+
+  & > .teamIcon {
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.navBackgroundColor};
+    ${border}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    z-index: 1;
   }
 `
 
@@ -82,13 +104,17 @@ const AppNavigatorBoostHubTeamItem = ({
       className={active ? 'active' : ''}
       onClick={navigateToTeam}
     >
-      <MainButton className={active ? 'active' : ''} onClick={navigateToTeam}>
+      <MainButton className={active ? 'active' : ''}>
         {iconUrl == null ? (
           name.slice(0, 1)
         ) : (
           <img className='icon' src={iconUrl} />
         )}
       </MainButton>
+
+      <div className='teamIcon'>
+        <Icon path={mdiAccountMultiple} />
+      </div>
     </Container>
   )
 }
