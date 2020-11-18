@@ -112,11 +112,14 @@ function useBoostHubStore() {
     const data = await fetchJson(boostHubDesktopGlobalDataUrl)
 
     return {
-      user: {
-        id: data.user.id,
-        uniqueName: data.user.uniqueName,
-        displayName: data.user.displayName,
-      },
+      user:
+        data.user == null
+          ? undefined
+          : {
+              id: data.user.id,
+              uniqueName: data.user.uniqueName,
+              displayName: data.user.displayName,
+            },
       teams: data.teams.map((team: any) => {
         return {
           id: team.id,
@@ -129,7 +132,7 @@ function useBoostHubStore() {
         }
       }),
     } as {
-      user: {
+      user?: {
         id: string
         uniqueName: string
         displayName: string
