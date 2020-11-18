@@ -257,7 +257,7 @@ const NavigatorButton = styled.button`
   position: relative;
   height: 36px;
   width: 36px;
-  margin-bottom: 8px;
+  margin-bottom: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
