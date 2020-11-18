@@ -11,6 +11,8 @@ import { FormPrimaryButton } from '../atoms/form'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import { useRouter } from '../../lib/router'
 import { dispatchBoostHubLoginRequestEvent } from '../../lib/events'
+import { mdiClose } from '@mdi/js'
+import Icon from '../atoms/Icon'
 
 const BoostHubIntroModal = () => {
   const { checkFeature } = useCheckedFeatures()
@@ -32,6 +34,9 @@ const BoostHubIntroModal = () => {
   return (
     <ModalContainer onShadowClick={close}>
       <Container>
+        <button className='closeButton' onClick={close}>
+          <Icon path={mdiClose} />
+        </button>
         <h1 className='heading'>Start Collaborating</h1>
         <p className='description'>
           We&apos;re very excited to release the collaboration feature. You can
@@ -65,6 +70,30 @@ const Container = styled.div`
   border-radius: 10px;
   overflow-x: hidden;
   overflow-y: auto;
+  & > .closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 18px;
+    outline: none;
+
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.navButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.navButtonHoverColor};
+    }
+
+    &:active,
+    &.active {
+      color: ${({ theme }) => theme.navButtonActiveColor};
+    }
+  }
   & > .heading {
     text-align: center;
     text-transform: uppercase;
