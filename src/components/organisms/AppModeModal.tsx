@@ -9,6 +9,8 @@ import {
   featureAppModeSelect,
 } from '../../lib/checkedFeatures'
 import ModalContainer from '../molecules/ModalContainer'
+import Icon from '../atoms/Icon'
+import { mdiClose } from '@mdi/js'
 
 const AppModeModal = () => {
   const { setPreferences } = usePreferences()
@@ -35,6 +37,9 @@ const AppModeModal = () => {
   return (
     <ModalContainer onShadowClick={closeModal}>
       <Container>
+        <button className='closeButton' onClick={closeModal}>
+          <Icon path={mdiClose} />
+        </button>
         <div className='scrollable'>
           <h1 className='header'>Choose App Mode</h1>
           <div className='optionGroup'>
@@ -74,6 +79,30 @@ const Container = styled.div`
   ${border}
   border-radius: 10px;
   overflow: hidden;
+  & > .closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 18px;
+    outline: none;
+
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.navButtonColor};
+    &:hover {
+      color: ${({ theme }) => theme.navButtonHoverColor};
+    }
+
+    &:active,
+    &.active {
+      color: ${({ theme }) => theme.navButtonActiveColor};
+    }
+  }
   .scrollable {
     padding: 0 10px;
     overflow-y: auto;
