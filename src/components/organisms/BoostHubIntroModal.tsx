@@ -26,7 +26,6 @@ const BoostHubIntroModal = () => {
     checkFeature(featureBoostHubIntro)
     push(`/app/boosthub/login`)
     setTimeout(() => {
-      console.log('reqqq')
       dispatchBoostHubLoginRequestEvent()
     }, 1000)
   }, [checkFeature, push])

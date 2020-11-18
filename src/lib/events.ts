@@ -128,3 +128,11 @@ export const {
 } = createCustomEventHelper<BoostHubTeamDeleteEventDetail>(
   BoostHubTeamDeleteEventName
 )
+
+const BoostHubAccountDeleteEventName = 'BoostHub:accountDelete'
+export type BoostHubAccountDeleteEvent = CustomEvent
+export const {
+  dispatch: dispatchBoostHubAccountDeleteEvent,
+  listen: listenBoostHubAccountDeleteEvent,
+  unlisten: unlistenBoostHubAccountDeleteEvent,
+} = createCustomEventHelper(BoostHubAccountDeleteEventName)

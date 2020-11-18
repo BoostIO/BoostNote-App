@@ -47,6 +47,10 @@ export interface BoostHubTeamsCreateRouteParams extends BaseRouteParams {
   name: 'boosthub.teams.create'
 }
 
+export interface BoostHubAccountDeleteRouteParams extends BaseRouteParams {
+  name: 'boosthub.account.delete'
+}
+
 export interface UnknownRouteParams extends BaseRouteParams {
   name: 'unknown'
 }
@@ -60,6 +64,7 @@ export type AllRouteParams =
   | UnknownRouteParams
   | BoostHubTeamsShowRouteParams
   | BoostHubTeamsCreateRouteParams
+  | BoostHubAccountDeleteRouteParams
   | BoostHubLoginRouteParams
 
 export const useRouteParams = () => {
@@ -73,6 +78,13 @@ export const useRouteParams = () => {
           return {
             name: 'boosthub.login',
           }
+        case 'account':
+          if (names[2] === 'delete') {
+            return {
+              name: 'boosthub.account.delete',
+            }
+          }
+          break
         default:
         case 'teams':
           const domain = names[2]
@@ -198,6 +210,7 @@ export const useActiveStorageId = () => {
     switch (routeParams.name) {
       default:
         return routeParams.storageId
+      case 'boosthub.account.delete':
       case 'boosthub.teams.create':
       case 'boosthub.teams.show':
       case 'boosthub.login':
