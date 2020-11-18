@@ -44,6 +44,9 @@ import {
   BoostHubTeamUpdateEvent,
   listenBoostHubTeamUpdateEvent,
   unlistenBoostHubTeamUpdateEvent,
+  BoostHubTeamDeleteEvent,
+  listenBoostHubTeamDeleteEvent,
+  unlistenBoostHubTeamDeleteEvent,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -219,24 +222,27 @@ const App = () => {
 
   useEffect(() => {
     const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
-      const team = event.detail.team
+      const createdTeam = event.detail.team
       setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.set(createdTeam.id, {
+          id: createdTeam.id,
+          name: createdTeam.name,
+          domain: createdTeam.domain,
+          iconUrl:
+            createdTeam.icon != null
+              ? getBoostHubTeamIconUrl(createdTeam.icon.location)
+              : undefined,
+        })
         return {
-          boostHubTeams: [
-            ...previousGeneralStatus.boostHubTeams!,
-            {
-              id: team.id,
-              name: team.name,
-              domain: team.domain,
-              iconUrl:
-                team.icon != null
-                  ? getBoostHubTeamIconUrl(team.icon.location)
-                  : undefined,
-            },
-          ],
+          boostHubTeams: [...teamMap.values()],
         }
       })
-      push(`/app/boosthub/teams/${team.domain}`)
+      push(`/app/boosthub/teams/${createdTeam.domain}`)
     }
 
     const boostHubTeamUpdateEventHandler = (event: BoostHubTeamUpdateEvent) => {
@@ -262,11 +268,29 @@ const App = () => {
       })
     }
 
+    const boostHubTeamDeleteEventHandler = (event: BoostHubTeamDeleteEvent) => {
+      const deletedTeam = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.delete(deletedTeam.id)
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+      push(`/app`)
+    }
+
     listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
     listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+    listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
     return () => {
       unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
       unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+      unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
     }
   }, [push, setGeneralStatus])
 

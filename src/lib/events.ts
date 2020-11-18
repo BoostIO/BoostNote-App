@@ -89,7 +89,7 @@ export const {
   BoostHubTeamCreateEventName
 )
 
-const BoostHubTeamUpdateEventName = 'BoostHub:teamCreate'
+const BoostHubTeamUpdateEventName = 'BoostHub:teamUpdate'
 interface BoostHubTeamUpdateEventDetail {
   team: {
     id: string
@@ -100,11 +100,31 @@ interface BoostHubTeamUpdateEventDetail {
     }
   }
 }
-export type BoostHubTeamUpdateEvent = CustomEvent<BoostHubTeamCreateEventDetail>
+export type BoostHubTeamUpdateEvent = CustomEvent<BoostHubTeamUpdateEventDetail>
 export const {
   dispatch: dispatchBoostHubTeamUpdateEvent,
   listen: listenBoostHubTeamUpdateEvent,
   unlisten: unlistenBoostHubTeamUpdateEvent,
 } = createCustomEventHelper<BoostHubTeamUpdateEventDetail>(
   BoostHubTeamUpdateEventName
+)
+
+const BoostHubTeamDeleteEventName = 'BoostHub:teamDelete'
+interface BoostHubTeamDeleteEventDetail {
+  team: {
+    id: string
+    name: string
+    domain: string
+    icon?: {
+      location: string
+    }
+  }
+}
+export type BoostHubTeamDeleteEvent = CustomEvent<BoostHubTeamDeleteEventDetail>
+export const {
+  dispatch: dispatchBoostHubTeamDeleteEvent,
+  listen: listenBoostHubTeamDeleteEvent,
+  unlisten: unlistenBoostHubTeamDeleteEvent,
+} = createCustomEventHelper<BoostHubTeamDeleteEventDetail>(
+  BoostHubTeamDeleteEventName
 )
