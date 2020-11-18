@@ -27,6 +27,7 @@ import { FormSecondaryButton } from './form'
 import {
   dispatchBoostHubNavigateRequestEvent,
   dispatchBoostHubTeamCreateEvent,
+  dispatchBoostHubTeamUpdateEvent,
 } from '../../lib/events'
 
 export interface WebviewControl {
@@ -131,6 +132,9 @@ const BoostHubWebview = ({
           break
         case 'team-create':
           dispatchBoostHubTeamCreateEvent({ team: event.args[0] })
+          break
+        case 'team-update':
+          dispatchBoostHubTeamUpdateEvent({ team: event.args[0] })
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
