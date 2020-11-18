@@ -64,6 +64,7 @@ export default BoostHubFeatureIntro
 
 const Container = styled.div`
   display: flex;
+  padding: 0 10px;
   .featureList {
     list-style: none;
     width: 300px;
@@ -83,7 +84,7 @@ const Container = styled.div`
     ${border}
     display: flex;
     padding: 0 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border-radius: 5px;
     padding: 10px 5px 10px 10px;
     background-color: ${({ theme }) => theme.navItemBackgroundColor};
