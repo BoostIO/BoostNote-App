@@ -75,6 +75,9 @@ interface BoostHubTeamCreateEventDetail {
     id: string
     name: string
     domain: string
+    icon?: {
+      location: string
+    }
   }
 }
 export type BoostHubTeamCreateEvent = CustomEvent<BoostHubTeamCreateEventDetail>
@@ -84,4 +87,24 @@ export const {
   unlisten: unlistenBoostHubTeamCreateEvent,
 } = createCustomEventHelper<BoostHubTeamCreateEventDetail>(
   BoostHubTeamCreateEventName
+)
+
+const BoostHubTeamUpdateEventName = 'BoostHub:teamCreate'
+interface BoostHubTeamUpdateEventDetail {
+  team: {
+    id: string
+    name: string
+    domain: string
+    icon?: {
+      location: string
+    }
+  }
+}
+export type BoostHubTeamUpdateEvent = CustomEvent<BoostHubTeamCreateEventDetail>
+export const {
+  dispatch: dispatchBoostHubTeamUpdateEvent,
+  listen: listenBoostHubTeamUpdateEvent,
+  unlisten: unlistenBoostHubTeamUpdateEvent,
+} = createCustomEventHelper<BoostHubTeamUpdateEventDetail>(
+  BoostHubTeamUpdateEventName
 )

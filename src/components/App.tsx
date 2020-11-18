@@ -35,12 +35,15 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import AppModeModal from './organisms/AppModeModal'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import { useBoostHub } from '../lib/boosthub'
+import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
 import {
   listenBoostHubTeamCreateEvent,
   unlistenBoostHubTeamCreateEvent,
   BoostHubTeamCreateEvent,
+  BoostHubTeamUpdateEvent,
+  listenBoostHubTeamUpdateEvent,
+  unlistenBoostHubTeamUpdateEvent,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -215,18 +218,55 @@ const App = () => {
   }, [togglePreferencesModal])
 
   useEffect(() => {
-    const boosthubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
+    const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
       const team = event.detail.team
       setGeneralStatus((previousGeneralStatus) => {
         return {
-          boostHubTeams: [...previousGeneralStatus.boostHubTeams!, team],
+          boostHubTeams: [
+            ...previousGeneralStatus.boostHubTeams!,
+            {
+              id: team.id,
+              name: team.name,
+              domain: team.domain,
+              iconUrl:
+                team.icon != null
+                  ? getBoostHubTeamIconUrl(team.icon.location)
+                  : undefined,
+            },
+          ],
         }
       })
       push(`/app/boosthub/teams/${team.domain}`)
     }
-    listenBoostHubTeamCreateEvent(boosthubTeamCreateEventHandler)
+
+    const boostHubTeamUpdateEventHandler = (event: BoostHubTeamUpdateEvent) => {
+      const updatedTeam = event.detail.team
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        teamMap.set(updatedTeam.id, {
+          id: updatedTeam.id,
+          name: updatedTeam.name,
+          domain: updatedTeam.domain,
+          iconUrl:
+            updatedTeam.icon != null
+              ? getBoostHubTeamIconUrl(updatedTeam.icon.location)
+              : undefined,
+        })
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+    }
+
+    listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+    listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
     return () => {
-      unlistenBoostHubTeamCreateEvent(boosthubTeamCreateEventHandler)
+      unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+      unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
     }
   }, [push, setGeneralStatus])
 
