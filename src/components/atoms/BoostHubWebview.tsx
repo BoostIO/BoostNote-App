@@ -28,6 +28,7 @@ import {
   dispatchBoostHubNavigateRequestEvent,
   dispatchBoostHubTeamCreateEvent,
   dispatchBoostHubTeamUpdateEvent,
+  dispatchBoostHubTeamDeleteEvent,
 } from '../../lib/events'
 
 export interface WebviewControl {
@@ -136,6 +137,8 @@ const BoostHubWebview = ({
         case 'team-update':
           dispatchBoostHubTeamUpdateEvent({ team: event.args[0] })
           break
+        case 'team-delete':
+          dispatchBoostHubTeamDeleteEvent({ team: event.args[0] })
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
           break
