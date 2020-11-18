@@ -49,7 +49,7 @@ const StorageCreatePage = () => {
           <FormCheckList>
             {appIsElectron && (
               <FormCheckInlineItem
-                id='radio-localStorageType'
+                id='radio-fsStorageType'
                 type='radio'
                 checked={storageType === 'fs'}
                 onChange={() => setStorageType('fs')}
