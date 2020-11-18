@@ -11,6 +11,7 @@ import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
 import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
+import BoostHubAccountDeletePage from './pages/BoostHubAccountDeletePage'
 import {
   BoostHubNavigateRequestEvent,
   listenBoostHubNavigateRequestEvent,
@@ -45,10 +46,15 @@ const Router = () => {
         openNew(url)
         return
       }
-      const firstPathname = pathname!.slice(1).split('/')[0]
-      switch (firstPathname) {
+      const pathnameElements = pathname!.slice(1).split('/')
+      const firstPathnameElement = pathnameElements[0]
+      switch (firstPathnameElement) {
         case 'account':
-          // TODO: Handle account delete
+          if (pathnameElements[1] === 'delete') {
+            push('/app/boosthub/account/delete')
+          } else {
+            openNew(url)
+          }
           break
         case '':
         case 'api':
@@ -70,7 +76,7 @@ const Router = () => {
           openNew(url)
           break
         default:
-          push(`/app/boosthub/teams/${firstPathname}`)
+          push(`/app/boosthub/teams/${firstPathnameElement}`)
           break
       }
     }
@@ -115,6 +121,8 @@ function useContent(
       return <BoostHubLoginPage />
     case 'boosthub.teams.create':
       return <BoostHubTeamsCreatePage />
+    case 'boosthub.account.delete':
+      return <BoostHubAccountDeletePage />
     case 'boosthub.teams.show':
       return null
     case 'storages.notes':

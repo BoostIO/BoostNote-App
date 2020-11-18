@@ -47,6 +47,9 @@ import {
   BoostHubTeamDeleteEvent,
   listenBoostHubTeamDeleteEvent,
   unlistenBoostHubTeamDeleteEvent,
+  dispatchBoostHubLoginRequestEvent,
+  listenBoostHubAccountDeleteEvent,
+  unlistenBoostHubAccountDeleteEvent,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -160,14 +163,6 @@ const App = () => {
       }
       const { user, teams } = await fetchDesktopGlobalData()
       if (user == null) {
-        setPreferences({
-          'boosthub.user': undefined,
-        })
-        setGeneralStatus({
-          boostHubTeams: [],
-        })
-        return
-        // User's auth is invalidated. Should go to auth page
         messageBox({
           title: 'Boost Hub login is required',
           message: 'Your BoostHub session has been expired.',
@@ -176,6 +171,10 @@ const App = () => {
           iconType: DialogIconTypes.Warning,
           onClose: (value: number | null) => {
             if (value === 0) {
+              push(`/app/boosthub/login`)
+              setTimeout(() => {
+                dispatchBoostHubLoginRequestEvent()
+              }, 1000)
               return
             }
 
@@ -269,6 +268,7 @@ const App = () => {
     }
 
     const boostHubTeamDeleteEventHandler = (event: BoostHubTeamDeleteEvent) => {
+      push(`/app`)
       const deletedTeam = event.detail.team
       setGeneralStatus((previousGeneralStatus) => {
         const teamMap =
@@ -281,18 +281,29 @@ const App = () => {
           boostHubTeams: [...teamMap.values()],
         }
       })
+    }
+
+    const boostHubAccountDeleteEventHandler = () => {
       push(`/app`)
+      setPreferences({
+        'boosthub.user': undefined,
+      })
+      setGeneralStatus({
+        boostHubTeams: [],
+      })
     }
 
     listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
     listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
     listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
+    listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
     return () => {
       unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
       unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
       unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
+      unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
     }
-  }, [push, setGeneralStatus])
+  }, [push, setPreferences, setGeneralStatus])
 
   useBoostNoteProtocol()
 
