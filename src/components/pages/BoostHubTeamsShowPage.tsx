@@ -135,14 +135,14 @@ const Container = styled.div`
   .toolbar {
     height: 40px;
     flex-shrink: 0;
-    height: px;
     -webkit-app-region: drag;
     display: flex;
     align-items: center;
     ${borderBottom}
     justify-content: center;
     .url {
-      width: 300px;
+      width: 100%;
+      max-width: 450px;
       ${border}
       height: 24px;
       padding: 0 5px;
