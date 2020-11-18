@@ -170,7 +170,7 @@ function useBoostHubStore() {
       teams: { id: string; name: string; domain: string; iconUrl?: string }[]
     }
   }
-  const signOut = useCallback(async () => {
+  const requestSignOut = useCallback(async () => {
     await fetchJson(boostHubSignOutUrl)
   }, [fetchJson])
 
@@ -182,7 +182,7 @@ function useBoostHubStore() {
     webviewRef,
     fetchDesktopGlobalData,
     sendSignInRequest,
-    signOut,
+    requestSignOut,
     openDevTools,
   }
 }
