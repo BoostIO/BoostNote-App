@@ -78,7 +78,27 @@ const TopLevelNavigator = () => {
   const { createStorage } = useDb()
   const { prompt } = useDialog()
   const { setGeneralStatus } = useGeneralStatus()
-  const { signOut } = useBoostHub()
+  const { requestSignOut } = useBoostHub()
+
+  const signOut = useCallback(async () => {
+    if (
+      routeParams.name === 'boosthub.teams.show' ||
+      routeParams.name === 'boosthub.teams.create'
+    ) {
+      push('/app/boosthub/login')
+    }
+    setPreferences({
+      'boosthub.user': null,
+    })
+    setGeneralStatus({
+      boostHubTeams: [],
+    })
+    try {
+      await requestSignOut()
+    } catch (error) {
+      console.warn('Failed to send signing out request', error)
+    }
+  }, [routeParams.name, setPreferences, setGeneralStatus, requestSignOut, push])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -126,26 +146,8 @@ const TopLevelNavigator = () => {
               }
             : {
                 type: 'normal',
-                label: 'Log out Boost Hub',
-                click: async () => {
-                  if (
-                    routeParams.name === 'boosthub.teams.show' ||
-                    routeParams.name === 'boosthub.teams.create'
-                  ) {
-                    push('/app/boosthub/login')
-                  }
-                  setPreferences({
-                    'boosthub.user': null,
-                  })
-                  setGeneralStatus({
-                    boostHubTeams: [],
-                  })
-                  try {
-                    await signOut()
-                  } catch (error) {
-                    console.warn('Failed to send signing out request', error)
-                  }
-                },
+                label: 'Sign Out Boost Hub',
+                click: signOut,
               },
           {
             type: 'separator',
@@ -162,16 +164,7 @@ const TopLevelNavigator = () => {
         ],
       })
     },
-    [
-      boostHubUserInfo,
-      prompt,
-      createStorage,
-      signOut,
-      push,
-      setPreferences,
-      setGeneralStatus,
-      routeParams.name,
-    ]
+    [boostHubUserInfo, prompt, createStorage, push, setPreferences, signOut]
   )
 
   const openNewStorageContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback(
@@ -180,26 +173,48 @@ const TopLevelNavigator = () => {
       openContextMenu({
         menuItems: [
           { label: 'Create a Note Storage', click: goToStorageCreatePage },
-          boostHubUserInfo == null
-            ? {
-                label: isChecked(featureBoostHubSignIn)
-                  ? 'Create a Team Account'
-                  : 'Create a Team Account (New)',
-                click: () => {
-                  checkFeature(featureBoostHubSignIn)
-                  push('/app/boosthub/login')
+          ...(boostHubUserInfo == null
+            ? ([
+                {
+                  type: 'separator',
                 },
-              }
-            : {
-                label: 'Create a Team',
-                click: () => {
-                  push('/app/boosthub/teams')
+                {
+                  label: isChecked(featureBoostHubSignIn)
+                    ? 'Create a Team Account'
+                    : 'Create a Team Account (New)',
+                  click: () => {
+                    checkFeature(featureBoostHubSignIn)
+                    push('/app/boosthub/login')
+                  },
                 },
-              },
+              ] as MenuItemConstructorOptions[])
+            : ([
+                {
+                  label: 'Create a Team',
+                  click: () => {
+                    push('/app/boosthub/teams')
+                  },
+                },
+                {
+                  type: 'separator',
+                },
+                {
+                  type: 'normal',
+                  label: 'Sign Out Boost Hub',
+                  click: signOut,
+                },
+              ] as MenuItemConstructorOptions[])),
         ],
       })
     },
-    [goToStorageCreatePage, isChecked, checkFeature, push, boostHubUserInfo]
+    [
+      goToStorageCreatePage,
+      isChecked,
+      checkFeature,
+      push,
+      boostHubUserInfo,
+      signOut,
+    ]
   )
 
   return (
