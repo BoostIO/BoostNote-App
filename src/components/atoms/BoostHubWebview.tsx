@@ -140,8 +140,10 @@ const BoostHubWebview = ({
           break
         case 'team-delete':
           dispatchBoostHubTeamDeleteEvent({ team: event.args[0] })
+          break
         case 'account-delete':
           dispatchBoostHubAccountDeleteEvent()
+          break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
           break
