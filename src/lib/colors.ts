@@ -1,8 +1,4 @@
-interface RGBColor {
-  r: number
-  g: number
-  b: number
-}
+import { RGBColor } from 'react-color'
 
 export function convertHexStringToRgbString(hex: string): RGBColor {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -20,8 +16,9 @@ export function convertHexStringToRgbString(hex: string): RGBColor {
 }
 
 const brightnessDefaultThreshold = 110
+export const defaultTagColor = '#ffffff'
 
-export function getColorBrightness(color: RGBColor | string) {
+export function getColorBrightness(color: RGBColor | string): number {
   if (color == '') {
     return 0
   }
@@ -35,6 +32,6 @@ export function getColorBrightness(color: RGBColor | string) {
 export function isColorBright(
   color: RGBColor | string,
   threshold: number = brightnessDefaultThreshold
-) {
+): boolean {
   return getColorBrightness(color) > threshold
 }

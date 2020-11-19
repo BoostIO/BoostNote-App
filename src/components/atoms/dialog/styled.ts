@@ -5,6 +5,7 @@ import {
   inputStyle,
   secondaryButtonStyle,
 } from '../../../lib/styled/styleFunctions'
+import { getColorBrightness } from '../../../lib/colors'
 
 const dialogZIndex = 8000
 
@@ -75,4 +76,62 @@ export const DialogButton = styled.button`
   margin-left: 8px;
   user-select: none;
   ${secondaryButtonStyle}
+`
+
+export const tagItemHeightSize = `18px`
+
+export const DialogColorPickerContainer = styled.div`
+  display: flex;
+  margin-top: ${tagItemHeightSize};
+  z-index: 6000;
+`
+
+export const DialogColorMessage = styled.p`
+  margin: auto 0;
+`
+
+export const DialogColorPickerButton = styled.button`
+  width: 64px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.12);
+  display: inline-block;
+  cursor: pointer;
+`
+
+export const DialogColorPreview = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  border-radius: 2px;
+  color: ${({ theme }) =>
+    getColorBrightness(theme.backgroundColor) > 125 ? 'black' : 'white'};
+`
+
+export const DialogColorIndicator = styled.p`
+  margin: auto;
+`
+
+interface DialogColorPickerPopoverLocationProps {
+  offsetLeft: number
+}
+
+export const DialogColorPickerPopover = styled.div<
+  DialogColorPickerPopoverLocationProps
+>`
+  position: absolute;
+  z-index: 6000;
+  .sketch-picker {
+    margin-top: 3px;
+  }
+`
+
+export const DialogColorPickerCover = styled.div`
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
 `

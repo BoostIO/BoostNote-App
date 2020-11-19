@@ -508,6 +508,13 @@ export default class PouchNoteDb implements NoteDb {
     await this.pouchDb.remove(note)
   }
 
+  async updateTagByName(
+    tagName: string,
+    props?: Partial<TagDocEditibleProps>
+  ): Promise<void> {
+    await this.upsertTag(tagName, props)
+  }
+
   async removeTag(tagName: string): Promise<void> {
     const notes = await this.findNotesByTag(tagName)
     await Promise.all(
@@ -520,7 +527,7 @@ export default class PouchNoteDb implements NoteDb {
 
     const tag = await this.getTag(tagName)
     if (tag != null) {
-      this.pouchDb.remove(tag as any)
+      await this.pouchDb.remove(tag as any)
     }
   }
 

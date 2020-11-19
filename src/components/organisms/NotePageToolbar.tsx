@@ -22,7 +22,7 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NotePageToolbarNoteHeader from '../molecules/NotePageToolbarNoteHeader'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
-import { values, isTagNameValid } from '../../lib/db/utils'
+import { isTagNameValid, values } from '../../lib/db/utils'
 import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
@@ -87,6 +87,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     untrashNote,
     bookmarkNote,
     unbookmarkNote,
+    updateTagByName,
   } = useDb()
   const { report } = useAnalytics()
   const { setPreferences, preferences } = usePreferences()
@@ -173,6 +174,28 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     [storage.id, note, updateNote]
   )
 
+  const storageTags = useMemo(() => {
+    if (storage == null) return []
+    return [...values(storage.tagMap)]
+  }, [storage])
+
+  const updateTagColorByName = useCallback(
+    async (tagName: string, color: string) => {
+      if (note == null || tagName == null) {
+        // Notify user of failed tag color update
+        pushMessage({
+          title: 'Cannot update tag color.',
+          description: 'Invalid note or tag.',
+        })
+        return
+      }
+      await updateTagByName(storage.id, tagName, {
+        data: { color: color },
+      })
+    },
+    [storage.id, note, updateTagByName, pushMessage]
+  )
+
   const getAttachmentData = useCallback(
     async (src: string) => {
       if (note == null) {
@@ -186,11 +209,6 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     },
     [note, storage.attachmentMap]
   )
-
-  const storageTags = useMemo(() => {
-    if (storage == null) return []
-    return values(storage.tagMap).map((tag) => tag.name)
-  }, [storage])
 
   const selectEditMode = useCallback(() => {
     setGeneralStatus({
@@ -556,6 +574,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
           tags={note.tags}
           appendTagByName={appendTagByName}
           removeTagByName={removeTagByName}
+          updateTagColorByName={updateTagColorByName}
         />
       )}
     </>

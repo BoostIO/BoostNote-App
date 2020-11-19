@@ -85,6 +85,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
+      event.stopPropagation()
 
       const storages = values(storageMap)
       openContextMenu({

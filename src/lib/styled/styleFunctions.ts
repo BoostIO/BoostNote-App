@@ -1,7 +1,12 @@
 import { BaseTheme } from './BaseTheme'
+import { isColorBright } from '../colors'
 
 interface StyledProps {
   theme: BaseTheme
+}
+
+export interface TagStyleProps {
+  color: string
 }
 
 export const backgroundColor = ({ theme }: StyledProps) =>
@@ -199,3 +204,17 @@ export const flexCenter = () => `display: flex;
 align-items: center;
 justify-content: center;
 `
+
+export const tagBackgroundColor = ({
+  theme,
+  color,
+}: StyledProps & TagStyleProps) => `
+background-color: ${color || theme.secondaryBackgroundColor};
+  &:hover {
+    filter: brightness(${
+      isColorBright(color || theme.secondaryBackgroundColor) ? 85 : 115
+    }%
+    );
+    background-color: ${color || theme.secondaryBackgroundColor};
+  }
+}`

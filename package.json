@@ -119,6 +119,7 @@
   "dependencies": {
     "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.2.1",
+    "@types/react-color": "^3.0.4",
     "aws-amplify": "^1.2.4",
     "classcat": "^4.0.2",
     "codemirror": "^5.58.2",
@@ -156,6 +157,7 @@
     "ramda": "^0.26.1",
     "raw-loader": "^4.0.0",
     "react": "^16.9.0",
+    "react-color": "^2.19.3",
     "react-dom": "^16.9.0",
     "react-i18next": "^11.0.1",
     "react-use": "^12.10.0",
