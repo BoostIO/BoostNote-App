@@ -112,6 +112,7 @@ const FolderNavigatorItem = ({
   const openFolderContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
+      event.stopPropagation()
       openContextMenu({
         menuItems: [
           {

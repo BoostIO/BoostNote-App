@@ -5,6 +5,7 @@ import {
   uiTextColor,
   secondaryBackgroundColor,
   textOverflow,
+  TagStyleProps,
 } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { setTransferrableNoteData } from '../../lib/dnd'
@@ -13,12 +14,14 @@ import { scaleAndTransformFromLeft } from '../../lib/styled'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
-import { NoteDoc } from '../../lib/db/types'
+import { NoteDoc, PopulatedTagDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { GeneralNoteListViewOptions } from '../../lib/preferences'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { bookmarkItemId } from '../../lib/nav'
 import { openContextMenu } from '../../lib/electronOnly'
+import { BaseTheme } from '../../lib/styled/BaseTheme'
+import { isColorBright } from '../../lib/colors'
 
 const Container = styled.button`
   margin: 0;
@@ -28,7 +31,7 @@ const Container = styled.button`
   background-color: transparent;
   text-align: left;
   padding: 8px 10px 8px 8px;
-  ${uiTextColor}
+  ${uiTextColor};
 
   border-color: transparent;
   border-style: solid;
@@ -43,7 +46,7 @@ const Container = styled.button`
   &.active {
     border-left-color: ${({ theme }) => theme.primaryColor};
   }
-  ${borderBottom}
+  ${borderBottom};
   transition: 200ms background-color;
 
   &.new {
@@ -82,21 +85,34 @@ const TagListSection = styled.div`
   display: flex;
 `
 
-const TagListItem = styled.div`
+const TagListItem = styled.div<BaseTheme & TagStyleProps>`
   height: 20px;
   padding: 0 8px;
   margin-right: 2px;
   border-radius: 10px;
-  background-color: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme, color }) =>
+    color || theme.secondaryBackgroundColor};
+
   font-size: 12px;
   line-height: 20px;
   ${textOverflow}
 `
 
+const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  color: #fff;
+  filter: invert(
+    ${({ theme, color }) =>
+      isColorBright(color || theme.secondaryBackgroundColor) ? 100 : 0}%
+  );
+`
+
 type NoteItemProps = {
   storageId: string
   note: NoteDoc
+  noteTags: PopulatedTagDoc[]
   active: boolean
   recentlyCreated?: boolean
   basePathname: string
@@ -109,6 +125,7 @@ type NoteItemProps = {
 const NoteItem = ({
   storageId,
   note,
+  noteTags,
   active,
   basePathname,
   recentlyCreated,
@@ -223,7 +240,7 @@ const NoteItem = ({
             type: 'normal',
             label: 'Restore Note',
             click: async () => {
-              untrashNote(storageId, note._id)
+              await untrashNote(storageId, note._id)
             },
           },
           { type: 'separator' },
@@ -308,10 +325,14 @@ const NoteItem = ({
             {formatDistanceToNow(new Date(note.updatedAt))} {t('note.date')}
           </DateSection>
           <PreviewSection>{contentPreview}</PreviewSection>
-          {note.tags.length > 0 && (
+          {noteTags.length > 0 && (
             <TagListSection>
-              {note.tags.map((tag) => (
-                <TagListItem key={tag}>{tag}</TagListItem>
+              {noteTags.map((tag) => (
+                <TagListItem color={tag.data.color} key={tag.name}>
+                  <TagItemAnchor color={tag.data.color}>
+                    {tag.name}
+                  </TagItemAnchor>
+                </TagListItem>
               ))}
             </TagListSection>
           )}

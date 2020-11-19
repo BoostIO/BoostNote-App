@@ -38,7 +38,7 @@ const Container = styled.div`
 `
 
 const TagNameInput = styled.input`
-  ${inputStyle}
+  ${inputStyle};
   width: 100%;
   height: 30px;
   padding: 0 0.25em;

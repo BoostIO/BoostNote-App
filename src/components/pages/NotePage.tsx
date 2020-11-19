@@ -201,6 +201,11 @@ const NotePage = ({ storage }: NotePageProps) => {
 
   const { showSearchModal } = useSearchModal()
 
+  const storageTags = useMemo(() => {
+    if (storage == null) return []
+    return [...values(storage.tagMap)]
+  }, [storage])
+
   return (
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
@@ -212,6 +217,7 @@ const NotePage = ({ storage }: NotePageProps) => {
           left={
             <NoteListNavigator
               storageId={storage.id}
+              storageTags={storageTags}
               notes={sortedNotes}
               currentNoteIndex={currentNoteIndex}
               noteSorting={preferences['general.noteSorting']}

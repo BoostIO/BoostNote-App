@@ -379,7 +379,7 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
     position: relative;
     margin: 50px auto 0;
     background-color: ${({ theme }) => theme.navBackgroundColor};
-    width: calc(100% -15px);
+    width: calc(100% - 15px);
     max-width: 720px;
     overflow: hidden;
     z-index: 6002;
@@ -494,7 +494,7 @@ const EditorPreview = styled.div`
       padding: 0 5px;
 
       background-color: transparent;
-      ${flexCenter}
+      ${flexCenter};
 
       border: none;
       cursor: pointer;

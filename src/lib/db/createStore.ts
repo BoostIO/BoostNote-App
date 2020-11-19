@@ -12,6 +12,7 @@ import {
   TagDoc,
   NoteStorageData,
   PouchNoteStorage,
+  TagDocEditibleProps,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import ow from 'ow'
@@ -85,6 +86,11 @@ export interface DbStore {
     storageId: string,
     currentTagName: string,
     newTagName: string
+  ): Promise<void>
+  updateTagByName(
+    storageId: string,
+    tag: string,
+    props?: Partial<TagDocEditibleProps>
   ): Promise<void>
   moveNoteToOtherStorage(
     originalStorageId: string,
@@ -1168,6 +1174,32 @@ export function createDbStoreCreator(
       [storageMap, setStorageMap, queueSyncingStorage]
     )
 
+    const updateTagByName = useCallback(
+      async (
+        storageId: string,
+        tag: string,
+        props?: Partial<TagDocEditibleProps>
+      ) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+
+        await storage.db.updateTagByName(tag, props)
+        const newTagMap = { ...storageMap[storageId]!.tagMap }
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.tagMap = newTagMap
+          })
+        )
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+        return
+      },
+      [queueSyncingStorage, setStorageMap, storageMap]
+    )
+
     const removeTag = useCallback(
       async (storageId: string, tag: string) => {
         const storage = storageMap[storageId]
@@ -1404,6 +1436,7 @@ export function createDbStoreCreator(
       moveNoteToOtherStorage,
       removeTag,
       renameTag,
+      updateTagByName,
       addAttachments,
       removeAttachment,
       bookmarkNote,
@@ -1508,7 +1541,11 @@ async function prepareStorage(
   }, {})
   const populatedTagMap = entries(tagMap).reduce<ObjectMap<PopulatedTagDoc>>(
     (map, [name, tagDoc]) => {
-      map[name] = { ...tagDoc, name, noteIdSet: new Set() }
+      map[name] = {
+        ...tagDoc,
+        name,
+        noteIdSet: new Set(),
+      }
       return map
     },
     {}

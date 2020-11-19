@@ -81,6 +81,7 @@ const TagListItem = ({ tagName, storageId }: TagListItemProps) => {
   const openTagContextMenu = useCallback(
     (event: React.MouseEvent<Element, MouseEvent>) => {
       event.preventDefault()
+      event.stopPropagation()
       openContextMenu({
         menuItems: [
           {

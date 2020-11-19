@@ -5,7 +5,7 @@ import { borderBottom } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
 import { isWithGeneralCtrlKey } from '../../lib/keyboard'
 import { osName } from '../../lib/platform'
-import { NoteDoc } from '../../lib/db/types'
+import { NoteDoc, PopulatedTagDoc } from '../../lib/db/types'
 import { NoteSortingOptions } from '../../lib/sort'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { usePreferences } from '../../lib/preferences'
@@ -50,6 +50,7 @@ const NoteList = styled.ul`
 `
 
 type NoteListNavigatorProps = {
+  storageTags: PopulatedTagDoc[]
   storageId: string
   currentNote?: NoteDoc
   currentNoteIndex: number
@@ -70,6 +71,7 @@ const NoteListNavigator = ({
   noteSorting,
   setNoteSorting,
   createNote,
+  storageTags,
   storageId,
   basePathname,
   trashNote,
@@ -205,10 +207,22 @@ const NoteListNavigator = ({
       >
         {notes.map((note) => {
           const noteIsCurrentNote = note._id === currentNote?._id
-
+          const noteTags = note.tags.reduce(
+            (result: PopulatedTagDoc[], tagName) => {
+              const tagElement = storageTags.find(
+                (storageTag) => storageTag.name == tagName
+              )
+              if (tagElement !== undefined) {
+                result.push(tagElement)
+              }
+              return result
+            },
+            []
+          )
           return (
             <li key={note._id}>
               <NoteItem
+                noteTags={noteTags}
                 storageId={storageId}
                 active={noteIsCurrentNote}
                 note={note}

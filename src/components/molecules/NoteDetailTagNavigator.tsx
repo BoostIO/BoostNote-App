@@ -8,6 +8,7 @@ import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
 import { useTranslation } from 'react-i18next'
+import { PopulatedTagDoc } from '../../lib/db/types'
 
 const Container = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const Container = styled.div`
 const IconContainer = styled.div`
   width: 24px;
   height: 24px;
-  ${flexCenter}
+  ${flexCenter};
   background-color: transparent;
   border: none;
   color: ${({ theme }) => theme.navButtonColor};
@@ -35,11 +36,12 @@ const TagNavigatorList = styled.ul`
 
 interface NoteDetailTagNavigatorProps {
   storageId: string
-  storageTags: string[]
+  storageTags: PopulatedTagDoc[]
   noteId?: string
   tags: string[]
   appendTagByName: (tagName: string) => void
   removeTagByName: (tagName: string) => void
+  updateTagColorByName: (tagName: string, color: string) => void
 }
 
 const NoteDetailTagNavigator = ({
@@ -49,6 +51,7 @@ const NoteDetailTagNavigator = ({
   tags,
   appendTagByName,
   removeTagByName,
+  updateTagColorByName,
 }: NoteDetailTagNavigatorProps) => {
   const { t } = useTranslation()
 
@@ -82,6 +85,12 @@ const NoteDetailTagNavigator = ({
     }
   }, [setNewTagPopupPosition])
 
+  const noteTags = useMemo(() => {
+    return tags.map((tagName) =>
+      storageTags.find((storageTag) => storageTag.name == tagName)
+    )
+  }, [tags, storageTags])
+
   useEffect(() => {
     const resizeHandler = () => {
       if (newTagPopupPosition == null) {
@@ -102,16 +111,19 @@ const NoteDetailTagNavigator = ({
           <Icon path={mdiTagMultiple} />{' '}
         </IconContainer>
         <TagNavigatorList>
-          {tags.map((tag) => {
+          {noteTags.map((tag) => {
             return (
-              <TagNavigatorListItem
-                key={tag}
-                storageId={storageId}
-                noteId={noteId}
-                currentTagName={currentTagName}
-                tag={tag}
-                removeTagByName={removeTagByName}
-              />
+              tag && (
+                <TagNavigatorListItem
+                  key={tag.name}
+                  storageId={storageId}
+                  noteId={noteId}
+                  currentTagName={currentTagName}
+                  tag={tag}
+                  removeTagByName={removeTagByName}
+                  updateTagColorByName={updateTagColorByName}
+                />
+              )
             )
           })}
         </TagNavigatorList>
@@ -126,7 +138,7 @@ const NoteDetailTagNavigator = ({
         <TagNavigatorNewTagPopup
           position={newTagPopupPosition}
           tags={tags}
-          storageTags={storageTags}
+          storageTags={storageTags.map((tagDetail) => tagDetail.name)}
           close={closeNewTagPopup}
           appendTagByName={appendTagByName}
         />

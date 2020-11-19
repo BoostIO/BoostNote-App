@@ -193,6 +193,7 @@ const StorageNavigatorFragment = ({
   const openWorkspaceContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
+      event.stopPropagation()
       const contentMenuItems: MenuItemConstructorOptions[] = [
         {
           type: 'normal',
