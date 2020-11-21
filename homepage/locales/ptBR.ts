@@ -37,7 +37,7 @@ export default {
           'Suporta Charts.js, Mermaid, e PlantUML, ou seja, você pode incluir diagramas no seu documento.',
         feature3Name: 'Linguagem Matemática Elegante',
         feature3Detail:
-          'Para uma representação clara de equações matemáticas, utilize LaTex no editor do Boost Hub.'
+          'Para uma representação clara de equações matemáticas, utilize LaTeX no editor do Boost Hub.'
       },
       features: {
         title: 'Recursos',
@@ -97,4 +97,3 @@ export default {
       },
     },
   }
-  

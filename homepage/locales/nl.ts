@@ -33,7 +33,7 @@ export default {
       feature2Name: 'Real-time Samenwerken',
       feature2Detail: 'Bewerk documenten gelijktijdig met teamleden',
       feature3Name: 'Veelzijdige Markdown',
-      feature3Detail: 'Ondersteund LaTex, PlantUML, enz.',
+      feature3Detail: 'Ondersteund LaTeX, PlantUML, enz.',
       feature4Name: 'Sneltoetsen',
       feature4Detail: 'Meer dan 20 sneltoetsen beschikbaar',
     },
