@@ -8,36 +8,36 @@ export default {
       webApp: 'Web App',
       desktopApp: 'Desktop App',
       mobileApp: 'Mobile App',
-      boostHub: 'Create an Account for Free',
+      boostHub: 'Kostenlosen Account erstellen',
     },
     header: {
       forTeams: 'Für Teams',
       community: 'Community',
     },
     hero: {
-      title: 'Boost Happiness, Productivity and Creativity.',
+      title: 'Boost Fröhlichkeit, Produktivität und Kreativität.',
       subtitle:
-        "Boost Note is an intuitive and stylish markdown editor. It's fully open-source, and used by 1 million developers!",
+        "Boost Note ist ein intuitiver und stilvoller Markdown Editor. Er ist vollständig Open-Source und wird von 1 Million Entwicklern verwendet!",
     },
     newsletter: {
-      // title: 'Also, please join our newsletter to get the latest news and update notes.',
-      // buttonText: 'Subscribe',
-      // subscribed: 'Thanks for the subscription!'
+      // title: 'Tragen dich in unseren Newsletter ein, um die neuesten Nachrichten und Updates zu erhalten.',
+      // buttonText: 'Abonnieren',
+      // subscribed: 'Vielen Dank fürs Abonnieren!'
     },
     boostHub: {
-      // title: 'Boost Hub, the team version of Boost Note',
-      // description1: 'We’ve developed a collaborative workspace app called “Boost Hub” for developer teams.',
+      // title: 'Boost Hub, die Team Version von Boost Note',
+      // description1: 'Wir entwickeln eine kollaborative Workspace App namens „Boost Hub“ für Entwicklungsteams.',
       // description2:
-      //   'It is more than just a markdown editor or a wiki. You can collaborate with your team members in real-time, from anywhere.',
+      //   'Es ist mehr als nur ein Markdown-Editor oder ein Wiki. Sie können von überall und in Echtzeit mit Ihren Teammitgliedern zusammenarbeiten.',
       // feature1Name: 'Real-time Coauthoring',
       // feature1Detail:
-      //   'Write and edit documents as a team and sharing your knowledge and ideas in real-time. No one will be left behind.',
-      // feature2Name: 'Create Diagrams Like a Pro',
+      //   'Schreiben und bearbeiten Sie Dokumente als Team und teilen Sie Ihr Wissen und Ihre Ideen in Echtzeit. Niemand wird zurückgelassen.',
+      // feature2Name: 'Erstelle Diagramme wie ein Profi',
       // feature2Detail:
-      //   'Supports Charts.js, Mermaid, andPlantUML, which means you can put diagrams in your document.',
-      // feature3Name: 'Beautiful Mathematical Script',
+      //   'Unterstützt Charts.js, Mermaid, und PlantUML, was bedeutet, dass Sie Diagramme in Ihr Dokument einfügen können.',
+      // feature3Name: 'Schöne mathematische Gleichungen',
       // feature3Detail:
-      //   'For clean representation of maths equations it is time to use LaTex in the Boost Hub editor.',
+      //   'Für eine saubere Darstellung von mathematischen Gleichungen ist es an der Zeit, LaTeX im Boost Hub Editor zu verwenden.',
     },
     features: {
       title: 'Funktionen',
