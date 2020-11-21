@@ -7,6 +7,7 @@ import {
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
 } from '../../lib/preferences'
+import { osName } from '../../lib/platform'
 
 const StyledContainer = styled.div`
   .CodeMirror {
@@ -14,7 +15,6 @@ const StyledContainer = styled.div`
   }
 
   .CodeMirror-dialog button {
-    // font-size: 70%;
     background-color: transparent;
     cursor: pointer;
     height: 26px;
@@ -82,7 +82,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
-        'Alt-F': 'findPersistent',
+        [osName === 'macos' ? 'Cmd-Alt-F' : 'Ctrl-Alt-F']: 'findPersistent',
         Esc: 'clearSearch',
       },
     })
