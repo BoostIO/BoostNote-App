@@ -10,6 +10,7 @@ import {
   mdiDotsVertical,
   mdiStarOutline,
   mdiStar,
+  mdiExportVariant,
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
@@ -344,6 +345,11 @@ const NotePageToolbar = ({
             onClick={!note.data.bookmarked ? bookmark : unbookmark}
             iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
           />
+          <ToolbarIconButton
+            title={t('note.export')}
+            onClick={openExportContextMenu}
+            iconPath={mdiExportVariant}
+          />
           {note.trashed ? (
             <>
               <ToolbarIconButton
@@ -364,11 +370,6 @@ const NotePageToolbar = ({
               iconPath={mdiTrashCan}
             />
           )}
-          <ToolbarIconButton
-            title={t('note.export')}
-            onClick={openExportContextMenu}
-            iconPath={mdiDotsVertical}
-          />
         </Control>
       )}
     </Container>
