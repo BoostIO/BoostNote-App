@@ -1,7 +1,6 @@
 import unified from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import remarkStringify from 'remark-stringify'
 import remarkMath from 'remark-math'
 import rehypeDocument from 'rehype-document'
 import rehypeRaw from 'rehype-raw'
@@ -20,6 +19,7 @@ import remarkEmoji from 'remark-emoji'
 import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
 import { getGlobalCss, selectTheme } from './styled/styleUtil'
+import yaml from 'yaml'
 
 const filenamifyNoteTitle = function (noteTitle: string): string {
   return filenamify(noteTitle.toLowerCase().replace(/\s+/g, '-'))
@@ -28,10 +28,13 @@ const filenamifyNoteTitle = function (noteTitle: string): string {
 const getFrontMatter = (note: NoteDoc): string => {
   return [
     '---',
-    `title: "${note.title}"`,
-    `tags: "${note.tags.join()}"`,
+    yaml
+      .stringify({
+        title: note.title,
+        tags: note.tags,
+      })
+      .trim(),
     '---',
-    '',
     '',
   ].join('\n')
 }
@@ -84,29 +87,17 @@ export const exportNoteAsHtmlFile = async (
 
 export const exportNoteAsMarkdownFile = async (
   note: NoteDoc,
-  pushMessage: (context: any) => any,
   { includeFrontMatter }: { includeFrontMatter: boolean }
 ): Promise<void> => {
-  await unified()
-    .use(remarkParse)
-    .use(remarkStringify)
-    .process(note.content, (err, file) => {
-      if (err != null) {
-        pushMessage({
-          title: 'Note processing failed',
-          description: 'Please check markdown syntax and try again later.',
-        })
-        return
-      }
-      let content = file.toString().trim() + '\n'
-      content += includeFrontMatter ? getFrontMatter(note) : ''
-      downloadString(
-        content,
-        `${filenamifyNoteTitle(note.title)}.md`,
-        'text/markdown'
-      )
-      return
-    })
+  let content = note.content.trim() + '\n'
+  if (includeFrontMatter) {
+    content = getFrontMatter(note) + '\n' + content
+  }
+  downloadString(
+    content,
+    `${filenamifyNoteTitle(note.title)}.md`,
+    'text/markdown'
+  )
   return
 }
 

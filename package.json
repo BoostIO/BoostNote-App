@@ -165,7 +165,8 @@
     "styled-components": "^4.3.2",
     "unified": "^9.1.0",
     "unist-util-visit": "^2.0.3",
-    "use-force-update": "^1.0.7"
+    "use-force-update": "^1.0.7",
+    "yaml": "^1.10.0"
   },
   "build": {
     "appId": "com.boostio.boostnote",

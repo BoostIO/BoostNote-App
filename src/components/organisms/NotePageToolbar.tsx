@@ -171,6 +171,8 @@ const NotePageToolbar = ({
     selectViewMode('preview')
   }, [selectViewMode])
 
+  const includeFrontMatter = preferences['markdown.includeFrontMatter']
+
   const openExportContextMenu = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
@@ -183,8 +185,8 @@ const NotePageToolbar = ({
             type: 'normal',
             label: 'Markdown export',
             click: async () =>
-              await exportNoteAsMarkdownFile(note, pushMessage, {
-                includeFrontMatter: preferences['markdown.includeFrontMatter'],
+              await exportNoteAsMarkdownFile(note, {
+                includeFrontMatter,
               }),
           },
           {
@@ -207,8 +209,7 @@ const NotePageToolbar = ({
                 preferences,
                 pushMessage,
                 {
-                  includeFrontMatter:
-                    preferences['markdown.includeFrontMatter'],
+                  includeFrontMatter,
                 },
                 previewStyle
               ),
@@ -216,7 +217,7 @@ const NotePageToolbar = ({
         ],
       })
     },
-    [note, preferences, previewStyle, pushMessage]
+    [note, preferences, includeFrontMatter, previewStyle, pushMessage]
   )
 
   const routeParams = useRouteParams()
