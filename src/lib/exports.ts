@@ -21,8 +21,8 @@ import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
 import { getGlobalCss, selectTheme } from './styled/styleUtil'
 
-const sanitizeNoteName = function (rawNoteName: string): string {
-  return filenamify(rawNoteName.toLowerCase().replace(/\s+/g, '-'))
+const filenamifyNoteTitle = function (noteTitle: string): string {
+  return filenamify(noteTitle.toLowerCase().replace(/\s+/g, '-'))
 }
 
 const getFrontMatter = (note: NoteDoc): string => {
@@ -75,7 +75,7 @@ export const exportNoteAsHtmlFile = async (
 
       downloadString(
         file.toString(),
-        `${sanitizeNoteName(note.title)}.html`,
+        `${filenamifyNoteTitle(note.title)}.html`,
         'text/html'
       )
       return
@@ -102,7 +102,7 @@ export const exportNoteAsMarkdownFile = async (
       content += includeFrontMatter ? getFrontMatter(note) : ''
       downloadString(
         content,
-        `${sanitizeNoteName(note.title)}.md`,
+        `${filenamifyNoteTitle(note.title)}.md`,
         'text/markdown'
       )
       return
@@ -256,7 +256,7 @@ export const exportNoteAsPdfFile = async (
           note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
         const headerFooter: Record<string, string> = {
           title: `${note.title}${tagsStr}`,
-          url: `file://${sanitizeNoteName(note.title)}.pdf`,
+          url: `file://${filenamifyNoteTitle(note.title)}.pdf`,
         }
         const printOpts = {
           // Needed for codemirorr themes (backgrounds)
@@ -272,7 +272,7 @@ export const exportNoteAsPdfFile = async (
           .then((data) => {
             if (data) {
               // We got the PDF - offer the user to save it
-              const pdfName = `${sanitizeNoteName(note.title)}.pdf`
+              const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
               const pdfBlob = new Blob([data], {
                 type: 'application/pdf', // application/octet-stream
               })
