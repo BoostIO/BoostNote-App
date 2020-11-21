@@ -34,10 +34,10 @@ export default {
       //   'Write and edit documents as a team and sharing your knowledge and ideas in real-time. No one will be left behind.',
       // feature2Name: 'Create Diagrams Like a Pro',
       // feature2Detail:
-      //   'Supports Charts.js, Mermaid, andPlantUML, which means you can put diagrams in your document.',
+      //   'Supports Charts.js, Mermaid, and PlantUML, which means you can put diagrams in your document.',
       // feature3Name: 'Beautiful Mathematical Script',
       // feature3Detail:
-      //   'For clean representation of maths equations it is time to use LaTex in the Boost Hub editor.',
+      //   'For clean representation of maths equations it is time to use LaTeX in the Boost Hub editor.',
     },
     features: {
       // title: 'Features',

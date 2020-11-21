@@ -32,7 +32,7 @@ export default {
           'Dostupna je podrška za Charts.js, Mermaid i PlantUML, što znači da u dokument možete staviti dijagrame.',
         feature3Name: 'Prekrasan prikaz matematičkih bilježaka',
         feature3Detail:
-          'Za preglednu reprezentaciju matematičkih jednadžbi, vrijeme je da koristite LaTex unutar vašeg Boost Hub uređivača.',
+          'Za preglednu reprezentaciju matematičkih jednadžbi, vrijeme je da koristite LaTeX unutar vašeg Boost Hub uređivača.',
       },
       features: {
         title: 'Značajke',
