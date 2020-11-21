@@ -20,24 +20,24 @@ export default {
         "Boost Note ist ein intuitiver und stilvoller Markdown Editor. Er ist vollständig Open-Source und wird von 1 Million Entwicklern verwendet!",
     },
     newsletter: {
-      // title: 'Tragen dich in unseren Newsletter ein, um die neuesten Nachrichten und Updates zu erhalten.',
-      // buttonText: 'Abonnieren',
-      // subscribed: 'Vielen Dank fürs Abonnieren!'
+      title: 'Tragen dich in unseren Newsletter ein, um die neuesten Nachrichten und Updates zu erhalten.',
+      buttonText: 'Abonnieren',
+      subscribed: 'Vielen Dank fürs Abonnieren!'
     },
     boostHub: {
-      // title: 'Boost Hub, die Team Version von Boost Note',
-      // description1: 'Wir entwickeln eine kollaborative Workspace App namens „Boost Hub“ für Entwicklungsteams.',
-      // description2:
-      //   'Es ist mehr als nur ein Markdown-Editor oder ein Wiki. Sie können von überall und in Echtzeit mit Ihren Teammitgliedern zusammenarbeiten.',
-      // feature1Name: 'Real-time Coauthoring',
-      // feature1Detail:
-      //   'Schreiben und bearbeiten Sie Dokumente als Team und teilen Sie Ihr Wissen und Ihre Ideen in Echtzeit. Niemand wird zurückgelassen.',
-      // feature2Name: 'Erstelle Diagramme wie ein Profi',
-      // feature2Detail:
-      //   'Unterstützt Charts.js, Mermaid, und PlantUML, was bedeutet, dass Sie Diagramme in Ihr Dokument einfügen können.',
-      // feature3Name: 'Schöne mathematische Gleichungen',
-      // feature3Detail:
-      //   'Für eine saubere Darstellung von mathematischen Gleichungen ist es an der Zeit, LaTeX im Boost Hub Editor zu verwenden.',
+      title: 'Boost Hub, die Team Version von Boost Note',
+      description1: 'Wir entwickeln eine kollaborative Workspace App namens „Boost Hub“ für Entwicklungsteams.',
+      description2:
+        'Es ist mehr als nur ein Markdown-Editor oder ein Wiki. Sie können von überall und in Echtzeit mit Ihren Teammitgliedern zusammenarbeiten.',
+      feature1Name: 'Real-time Coauthoring',
+      feature1Detail:
+        'Schreiben und bearbeiten Sie Dokumente als Team und teilen Sie Ihr Wissen und Ihre Ideen in Echtzeit. Niemand wird zurückgelassen.',
+      feature2Name: 'Erstelle Diagramme wie ein Profi',
+      feature2Detail:
+        'Unterstützt Charts.js, Mermaid, und PlantUML, was bedeutet, dass Sie Diagramme in Ihr Dokument einfügen können.',
+      feature3Name: 'Schöne mathematische Gleichungen',
+      feature3Detail:
+        'Für eine saubere Darstellung von mathematischen Gleichungen ist es an der Zeit, LaTeX im Boost Hub Editor zu verwenden.',
     },
     features: {
       title: 'Funktionen',
