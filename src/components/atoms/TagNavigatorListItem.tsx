@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next'
 
 const TagItem = styled.li`
   margin-right: 5px;
-  height: 24px;
+  height: 18px;
+  font-size: 14px;
   ${flexCenter}
   background-color: ${({ theme }) => theme.secondaryBackgroundColor};
-  border-radius: 12px;
+  border-radius: 9px;
   white-space: nowrap;
 `
 

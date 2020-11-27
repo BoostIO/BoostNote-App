@@ -7,7 +7,6 @@ import {
   mdiViewSplitVertical,
   mdiTrashCan,
   mdiRestore,
-  mdiDotsVertical,
   mdiStarOutline,
   mdiStar,
   mdiExportVariant,
@@ -16,7 +15,7 @@ import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
-import NotePathnameNavigator from '../molecules/NotePathnameNavigator'
+import NotePageToolbarNoteHeader from '../molecules/NotePageToolbarNoteHeader'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
 import { values, isTagNameValid } from '../../lib/db/utils'
 import {
@@ -33,15 +32,23 @@ import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { useToast } from '../../lib/toast'
 import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
 import { openContextMenu } from '../../lib/electronOnly'
+import NotePageToolbarFolderHeader from '../molecules/NotePageToolbarFolderHeader'
 
 const Container = styled.div`
   display: flex;
+  overflow: hidden;
   height: 40px;
   flex-shrink: 0;
   -webkit-app-region: drag;
   padding: 0 8px;
   ${borderBottom}
   align-items: center;
+  & > .left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
 `
 
 const Control = styled.div`
@@ -259,120 +266,129 @@ const NotePageToolbar = ({
   )
 
   return (
-    <Container>
-      <NotePathnameNavigator
-        storageId={storageId}
-        storageName={storageName}
-        noteId={note?._id}
-        noteFolderPathname={folderPathname}
-      />
-
-      {note != null && (
-        <>
-          <ToolbarSeparator />
-          <NoteDetailTagNavigator
-            storageId={storageId}
-            storageTags={storageTags}
-            noteId={generalAppMode === 'note' ? note._id : undefined}
-            tags={note.tags}
-            appendTagByName={appendTagByName}
-            removeTagByName={removeTagByName}
-          />
-        </>
-      )}
-      {note != null && (
-        <Control onContextMenu={openTopbarSwitchSelectorContextMenu}>
-          {editorControlMode === '3-buttons' ? (
-            <>
-              <ToolbarIconButton
-                active={viewMode === 'edit'}
-                title={t('note.edit')}
-                onClick={selectEditMode}
-                iconPath={mdiCodeTags}
-              />
-              <ToolbarIconButton
-                active={viewMode === 'split'}
-                title={t('note.splitView')}
-                onClick={selectSplitMode}
-                iconPath={mdiViewSplitVertical}
-              />
-              <ToolbarIconButton
-                active={viewMode === 'preview'}
-                title={t('note.preview')}
-                onClick={selectPreviewMode}
-                iconPath={mdiTextSubject}
-              />
-            </>
+    <>
+      <Container>
+        <div className='left'>
+          {note == null ? (
+            <NotePageToolbarFolderHeader
+              storageId={storageId}
+              folderPathname={folderPathname}
+            />
           ) : (
-            <>
-              {viewMode !== 'preview' && (
-                <ToolbarIconButton
-                  active={viewMode === 'split'}
-                  title='Toggle Split'
-                  iconPath={mdiViewSplitVertical}
-                  onClick={
-                    viewMode === 'edit' ? selectSplitMode : selectEditMode
-                  }
-                />
-              )}
-              <TopbarSwitchSelector
-                onClick={
-                  noteViewMode === 'preview'
-                    ? preferredEditingViewMode === 'edit'
-                      ? selectEditMode
-                      : selectSplitMode
-                    : selectPreviewMode
-                }
-                items={[
-                  {
-                    active: noteViewMode !== 'preview',
-                    label: 'Edit',
-                    title: 'Select Edit Mode',
-                  },
-                  {
-                    active: noteViewMode === 'preview',
-                    label: 'Preview',
-                    title: 'Select Preview Mode',
-                  },
-                ]}
-              />
-            </>
-          )}
-          <ToolbarSeparator />
-          <ToolbarIconButton
-            active={!!note.data.bookmarked}
-            title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
-            onClick={!note.data.bookmarked ? bookmark : unbookmark}
-            iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
-          />
-          <ToolbarIconButton
-            title={t('note.export')}
-            onClick={openExportContextMenu}
-            iconPath={mdiExportVariant}
-          />
-          {note.trashed ? (
-            <>
-              <ToolbarIconButton
-                title={t('note.restore')}
-                onClick={untrash}
-                iconPath={mdiRestore}
-              />
-              <ToolbarIconButton
-                title={t('note.delete')}
-                onClick={purge}
-                iconPath={mdiTrashCan}
-              />
-            </>
-          ) : (
-            <ToolbarIconButton
-              title={t('note.trash')}
-              onClick={trash}
-              iconPath={mdiTrashCan}
+            <NotePageToolbarNoteHeader
+              storageId={storageId}
+              storageName={storageName}
+              noteId={note?._id}
+              noteTitle={note?.title}
+              noteFolderPathname={folderPathname}
             />
           )}
-        </Control>
+        </div>
+
+        {note != null && (
+          <Control onContextMenu={openTopbarSwitchSelectorContextMenu}>
+            {editorControlMode === '3-buttons' ? (
+              <>
+                <ToolbarIconButton
+                  active={viewMode === 'edit'}
+                  title={t('note.edit')}
+                  onClick={selectEditMode}
+                  iconPath={mdiCodeTags}
+                />
+                <ToolbarIconButton
+                  active={viewMode === 'split'}
+                  title={t('note.splitView')}
+                  onClick={selectSplitMode}
+                  iconPath={mdiViewSplitVertical}
+                />
+                <ToolbarIconButton
+                  active={viewMode === 'preview'}
+                  title={t('note.preview')}
+                  onClick={selectPreviewMode}
+                  iconPath={mdiTextSubject}
+                />
+              </>
+            ) : (
+              <>
+                {viewMode !== 'preview' && (
+                  <ToolbarIconButton
+                    active={viewMode === 'split'}
+                    title='Toggle Split'
+                    iconPath={mdiViewSplitVertical}
+                    onClick={
+                      viewMode === 'edit' ? selectSplitMode : selectEditMode
+                    }
+                  />
+                )}
+                <TopbarSwitchSelector
+                  onClick={
+                    noteViewMode === 'preview'
+                      ? preferredEditingViewMode === 'edit'
+                        ? selectEditMode
+                        : selectSplitMode
+                      : selectPreviewMode
+                  }
+                  items={[
+                    {
+                      active: noteViewMode !== 'preview',
+                      label: 'Edit',
+                      title: 'Select Edit Mode',
+                    },
+                    {
+                      active: noteViewMode === 'preview',
+                      label: 'Preview',
+                      title: 'Select Preview Mode',
+                    },
+                  ]}
+                />
+              </>
+            )}
+            <ToolbarSeparator />
+            <ToolbarIconButton
+              active={!!note.data.bookmarked}
+              title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
+              onClick={!note.data.bookmarked ? bookmark : unbookmark}
+              iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
+            />
+            <ToolbarIconButton
+              title={t('note.export')}
+              onClick={openExportContextMenu}
+              iconPath={mdiExportVariant}
+            />
+            {note.trashed ? (
+              <>
+                <ToolbarIconButton
+                  title={t('note.restore')}
+                  onClick={untrash}
+                  iconPath={mdiRestore}
+                />
+                <ToolbarIconButton
+                  title={t('note.delete')}
+                  onClick={purge}
+                  iconPath={mdiTrashCan}
+                />
+              </>
+            ) : (
+              <ToolbarIconButton
+                title={t('note.trash')}
+                onClick={trash}
+                iconPath={mdiTrashCan}
+              />
+            )}
+          </Control>
+        )}
+      </Container>
+      {note != null && (
+        <NoteDetailTagNavigator
+          storageId={storageId}
+          storageTags={storageTags}
+          noteId={generalAppMode === 'note' ? note._id : undefined}
+          tags={note.tags}
+          appendTagByName={appendTagByName}
+          removeTagByName={removeTagByName}
+        />
       )}
-    </Container>
+    </>
   )
 }
 

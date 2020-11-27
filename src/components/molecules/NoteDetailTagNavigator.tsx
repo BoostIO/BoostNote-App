@@ -2,18 +2,19 @@ import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import Icon from '../atoms/Icon'
 import styled from '../../lib/styled'
 import { mdiTagMultiple, mdiPlus } from '@mdi/js'
-import { flexCenter } from '../../lib/styled/styleFunctions'
+import { flexCenter, borderBottom } from '../../lib/styled/styleFunctions'
 import { useRouteParams } from '../../lib/routeParams'
-import ToolbarButton from '../atoms/ToolbarIconButton'
+import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
 import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
-  flex-grow: 1;
+  height: 24px;
   align-items: center;
   overflow: hidden;
+  ${borderBottom}
 `
 
 const IconContainer = styled.div`
@@ -114,7 +115,7 @@ const NoteDetailTagNavigator = ({
             )
           })}
         </TagNavigatorList>
-        <ToolbarButton
+        <ToolbarIconButton
           title={t('tag.add')}
           iconPath={mdiPlus}
           ref={buttonRef}
