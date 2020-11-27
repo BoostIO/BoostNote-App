@@ -8,9 +8,10 @@ import { textOverflow } from '../../lib/styled/styleFunctions'
 const Container = styled.div`
   position: relative;
   user-select: none;
-  height: 34px;
+  height: 28px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
 
   font-size: 1em;
@@ -35,7 +36,7 @@ const FoldButton = styled.button`
   border: none;
   background-color: transparent;
   border-radius: 50%;
-  top: 5px;
+  top: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,6 +55,7 @@ const FoldButton = styled.button`
 
 const ClickableContainer = styled.button`
   background-color: transparent;
+  height: 28px;
   border: none;
   display: flex;
   align-items: center;
@@ -93,7 +95,7 @@ const Label = styled.div`
 const Control = styled.div`
   position: absolute;
   right: 0;
-  top: 5px;
+  top: 2px;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
   display: flex;
