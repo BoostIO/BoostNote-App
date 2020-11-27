@@ -3,12 +3,13 @@ import styled from '../../lib/styled'
 import Icon from './Icon'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 
-const ToolbarButtonContainer = styled.button`
-  height: 24px;
-  width: 24px;
+const Container = styled.button`
+  height: 34px;
+  width: 34px;
   box-sizing: border-box;
   font-size: 18px;
   outline: none;
+  padding: 0 5px;
 
   background-color: transparent;
   ${flexCenter}
@@ -17,7 +18,7 @@ const ToolbarButtonContainer = styled.button`
   cursor: pointer;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
+  color: ${({ theme }) => theme.navItemColor};
   &:hover {
     color: ${({ theme }) => theme.navButtonHoverColor};
   }
@@ -36,7 +37,7 @@ interface ToolbarButtonProps {
   onClick: React.MouseEventHandler
 }
 
-const ToolbarButton = React.forwardRef(
+const ToolbarIconButton = React.forwardRef(
   (
     {
       iconPath,
@@ -47,7 +48,7 @@ const ToolbarButton = React.forwardRef(
     }: ToolbarButtonProps,
     ref
   ) => (
-    <ToolbarButtonContainer
+    <Container
       onClick={onClick}
       onContextMenu={onContextMenu}
       className={active ? 'active' : ''}
@@ -55,8 +56,8 @@ const ToolbarButton = React.forwardRef(
       title={title}
     >
       <Icon path={iconPath} />
-    </ToolbarButtonContainer>
+    </Container>
   )
 )
 
-export default ToolbarButton
+export default ToolbarIconButton

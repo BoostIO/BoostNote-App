@@ -3,7 +3,6 @@ import { NoteStorage, NoteDoc } from '../../lib/db/types'
 import {
   values,
   isDirectSubPathname,
-  getFolderNameFromPathname,
   getParentFolderPathname,
 } from '../../lib/db/utils'
 import PageContainer from '../atoms/PageContainer'
@@ -14,14 +13,8 @@ import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
 import FolderDetailListItem from '../molecules/FolderDetailListItem'
 import { useRouter } from '../../lib/router'
-import Icon from '../atoms/Icon'
-import { mdiBookOpen, mdiFolder } from '@mdi/js'
 import styled from '../../lib/styled'
-import {
-  flexCenter,
-  borderBottom,
-  selectStyle,
-} from '../../lib/styled/styleFunctions'
+import { borderBottom, selectStyle } from '../../lib/styled/styleFunctions'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -114,12 +107,6 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
 
   return (
     <PageContainer>
-      <Header>
-        <div className='icon'>
-          <Icon path={folderIsRoot ? mdiBookOpen : mdiFolder} />
-        </div>
-        {folderIsRoot ? 'Workspace' : getFolderNameFromPathname(folderPathname)}
-      </Header>
       <Control>
         <div className='left'></div>
         <div className='right'>
@@ -157,21 +144,10 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
 
 export default FolderDetail
 
-const Header = styled.h1`
-  display: flex;
-  align-items: center;
-  .icon {
-    font-size: 25px;
-    width: 25px;
-    height: 25px;
-    ${flexCenter}
-    margin-right: 4px;
-  }
-`
-
 const Control = styled.div`
   display: flex;
   height: 40px;
+  margin-top: 10px;
   ${borderBottom}
   .left {
     flex: 1;

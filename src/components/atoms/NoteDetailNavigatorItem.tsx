@@ -3,9 +3,10 @@ import styled from '../../lib/styled'
 const NoteDetailNavigatorItem = styled.button`
   background-color: transparent;
   border: none;
+  display: flex;
   white-space: nowrap;
+  align-items: center;
   cursor: pointer;
-  max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 200ms ease-in-out;

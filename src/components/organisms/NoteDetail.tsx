@@ -8,17 +8,8 @@ import {
 import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import {
-  textColor,
-  borderBottom,
-  borderRight,
-  backgroundColor,
-} from '../../lib/styled/styleFunctions'
+import { borderRight, backgroundColor } from '../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
-import {
-  listenNoteDetailFocusTitleInputEvent,
-  unlistenNoteDetailFocusTitleInputEvent,
-} from '../../lib/events'
 import {
   convertItemListToArray,
   inspectDataTransfer,
@@ -30,23 +21,6 @@ const StyledNoteDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`
-
-const TitleSection = styled.div`
-  display: flex;
-  height: 50px;
-  border-width: 0 0 1px;
-  ${borderBottom}
-
-  input {
-    font-size: 24px;
-    border: none;
-    height: 100%;
-    padding: 0 12px;
-    flex: 1;
-    background-color: transparent;
-    ${textColor}
-  }
 `
 
 const ContentSection = styled.div`
@@ -112,7 +86,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     content: '',
     tags: [],
   }
-  titleInputRef = React.createRef<HTMLInputElement>()
   newTagNameInputRef = React.createRef<HTMLInputElement>()
   codeMirror?: CodeMirror.EditorFromTextArea
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
@@ -136,10 +109,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     return state
   }
 
-  componentDidMount() {
-    listenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
-  }
-
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
@@ -161,22 +130,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         content,
       })
     }
-    unlistenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
-  }
-
-  focusTitleInput = () => {
-    this.titleInputRef.current!.focus()
-  }
-
-  updateTitle = () => {
-    this.setState(
-      {
-        title: this.titleInputRef.current!.value,
-      },
-      () => {
-        this.queueToSave()
-      }
-    )
   }
 
   updateContent = (
@@ -360,30 +313,20 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     )
 
     return (
-      <>
-        <StyledNoteDetailContainer>
-          <TitleSection>
-            <input
-              ref={this.titleInputRef}
-              value={this.state.title}
-              onChange={this.updateTitle}
-              placeholder='Title'
-            />
-          </TitleSection>
-          <ContentSection>
-            {viewMode === 'preview' ? (
-              markdownPreviewer
-            ) : viewMode === 'split' ? (
-              <>
-                <div className='splitLeft'>{codeEditor}</div>
-                <div className='splitRight'>{markdownPreviewer}</div>
-              </>
-            ) : (
-              codeEditor
-            )}
-          </ContentSection>
-        </StyledNoteDetailContainer>
-      </>
+      <StyledNoteDetailContainer>
+        <ContentSection>
+          {viewMode === 'preview' ? (
+            markdownPreviewer
+          ) : viewMode === 'split' ? (
+            <>
+              <div className='splitLeft'>{codeEditor}</div>
+              <div className='splitRight'>{markdownPreviewer}</div>
+            </>
+          ) : (
+            codeEditor
+          )}
+        </ContentSection>
+      </StyledNoteDetailContainer>
     )
   }
 }
