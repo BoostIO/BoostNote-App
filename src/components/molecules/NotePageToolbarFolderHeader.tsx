@@ -57,7 +57,6 @@ const NotePageToolbarFolderHeader = ({
               onClick={() => {
                 push(`/app/storages/${storageId}/notes${pathname}`)
               }}
-              active={index === folderDataList.length - 1}
               label={name}
               limitWidth={index !== folderDataList.length - 1}
             />
