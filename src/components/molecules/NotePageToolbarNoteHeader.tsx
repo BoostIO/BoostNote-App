@@ -5,18 +5,25 @@ import React, {
   KeyboardEvent,
   useRef,
   useEffect,
+  MouseEventHandler,
 } from 'react'
-import { mdiTextBoxOutline, mdiFolder, mdiPencil } from '@mdi/js'
+import { mdiTextBoxOutline, mdiFolder, mdiPencilOutline } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import ToolbarButton from '../atoms/ToolbarButton'
 import ToolbarSlashSeparator from '../atoms/ToolbarSlashSeparator'
 import { useDb } from '../../lib/db'
 import styled from '../../lib/styled'
-import { inputStyle } from '../../lib/styled/styleFunctions'
+import {
+  inputStyle,
+  flexCenter,
+  textOverflow,
+} from '../../lib/styled/styleFunctions'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
 } from '../../lib/events'
+import Icon from '../atoms/Icon'
+import cc from 'classcat'
 
 interface NotePageToolbarNoteHeaderProps {
   storageId: string
@@ -135,17 +142,7 @@ const NotePageToolbarNoteHeader = ({
           placeholder='Title'
         />
       ) : (
-        <>
-          <ToolbarButton
-            iconPath={mdiTextBoxOutline}
-            label={
-              noteTitle != null && noteTitle.trim().length > 0
-                ? noteTitle
-                : 'Untitled'
-            }
-          />
-          <ToolbarButton onClick={startEditingTitle} iconPath={mdiPencil} />
-        </>
+        <NoteTitleButton title={noteTitle} onClick={startEditingTitle} />
       )}
     </>
   )
@@ -158,4 +155,80 @@ const TitleInput = styled.input`
   flex: 1;
   margin: 0 5px;
   display: block;
+`
+
+interface NoteTitleButtonProps {
+  title?: string
+  onClick: MouseEventHandler<HTMLButtonElement>
+}
+
+const NoteTitleButton = ({ title, onClick }: NoteTitleButtonProps) => {
+  const titleIsEmpty = title == null || title.trim().length === 0
+
+  return (
+    <NoteTitleButtonContainer className={cc([])} onClick={onClick}>
+      <Icon className='icon' path={mdiTextBoxOutline} />
+      <div className={cc(['label', titleIsEmpty && 'empty'])}>
+        {titleIsEmpty ? 'Untitled' : title}
+      </div>
+      <Icon className='hoverIcon' path={mdiPencilOutline} />
+    </NoteTitleButtonContainer>
+  )
+}
+
+const NoteTitleButtonContainer = styled.button`
+  height: 34px;
+  min-width: 28px;
+
+  box-sizing: border-box;
+  outline: none;
+
+  background-color: transparent;
+  ${flexCenter}
+  overflow: hidden;
+
+  border: none;
+  cursor: pointer;
+  padding: 0 5px;
+
+  & > .icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  & > .label {
+    font-size: 14px;
+    ${textOverflow}
+    &.empty {
+      color: ${({ theme }) => theme.disabledUiTextColor};
+    }
+  }
+
+  & > .icon + .label {
+    margin-left: 2px;
+  }
+
+  & > .hoverIcon {
+    margin-left: 2px;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  transition: color 200ms ease-in-out;
+  color: ${({ theme }) => theme.navItemColor};
+  &:hover {
+    color: ${({ theme }) => theme.navButtonHoverColor};
+
+    & > .hoverIcon {
+      opacity: 1;
+    }
+  }
+
+  &:active,
+  &.active {
+    color: ${({ theme }) => theme.navButtonActiveColor};
+    & > .hoverIcon {
+      opacity: 1;
+    }
+  }
 `
