@@ -8,55 +8,19 @@ import {
 import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import { borderRight, backgroundColor } from '../../lib/styled/styleFunctions'
+import {
+  borderRight,
+  backgroundColor,
+  borderTop,
+} from '../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
 import {
   convertItemListToArray,
   inspectDataTransfer,
   convertFileListToArray,
 } from '../../lib/dom'
-
-const StyledNoteDetailContainer = styled.div`
-  ${backgroundColor};
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`
-
-const ContentSection = styled.div`
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  .editor .CodeMirror {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .MarkdownPreviewer {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    padding: 10px 10px;
-    box-sizing: border-box;
-  }
-  .splitLeft {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    ${borderRight}
-  }
-  .splitRight {
-    position: absolute;
-    left: 50%;
-    width: 50%;
-    height: 100%;
-  }
-`
+import { EditorPosition } from '../../lib/CodeMirror'
+import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -75,6 +39,11 @@ type NoteDetailState = {
   prevNoteId: string
   title: string
   content: string
+  currentCursor: EditorPosition
+  currentSelections: {
+    head: EditorPosition
+    anchor: EditorPosition
+  }[]
 }
 
 class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
@@ -83,6 +52,22 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     prevNoteId: '',
     title: '',
     content: '',
+    currentCursor: {
+      line: 0,
+      ch: 0,
+    },
+    currentSelections: [
+      {
+        head: {
+          line: 0,
+          ch: 0,
+        },
+        anchor: {
+          line: 0,
+          ch: 0,
+        },
+      },
+    ],
   }
   codeMirror?: CodeMirror.EditorFromTextArea
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
@@ -100,6 +85,22 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         prevNoteId: note._id,
         title: note.title,
         content: note.content,
+        currentCursor: {
+          line: 0,
+          ch: 0,
+        },
+        currentSelections: [
+          {
+            head: {
+              line: 0,
+              ch: 0,
+            },
+            anchor: {
+              line: 0,
+              ch: 0,
+            },
+          },
+        ],
       }
     }
     return state
@@ -274,8 +275,23 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     )
   }
 
+  handleCursorActivity = (codeMirror: CodeMirror.Editor) => {
+    const doc = codeMirror.getDoc()
+    const { line, ch } = doc.getCursor()
+    const selections = doc.listSelections()
+
+    this.setState({
+      currentCursor: {
+        line,
+        ch,
+      },
+      currentSelections: selections,
+    })
+  }
+
   render() {
     const { note, storage, viewMode } = this.props
+    const { currentCursor, currentSelections } = this.state
 
     const codeEditor = (
       <CustomizedCodeEditor
@@ -286,6 +302,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         onChange={this.updateContent}
         onPaste={this.handlePaste}
         onDrop={this.handleDrop}
+        onCursorActivity={this.handleCursorActivity}
       />
     )
 
@@ -298,7 +315,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     )
 
     return (
-      <StyledNoteDetailContainer>
+      <Container>
         <ContentSection>
           {viewMode === 'preview' ? (
             markdownPreviewer
@@ -311,9 +328,60 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
             codeEditor
           )}
         </ContentSection>
-      </StyledNoteDetailContainer>
+        <div className='bottomBar'>
+          <EditorSelectionStatus
+            cursor={currentCursor}
+            selections={currentSelections}
+          />
+        </div>
+      </Container>
     )
   }
 }
 
 export default NoteDetail
+
+const Container = styled.div`
+  ${backgroundColor};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  & > .bottomBar {
+    ${borderTop}
+  }
+`
+
+const ContentSection = styled.div`
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  .editor .CodeMirror {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .MarkdownPreviewer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 10px 10px;
+    box-sizing: border-box;
+  }
+  .splitLeft {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    ${borderRight}
+  }
+  .splitRight {
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+  }
+`
