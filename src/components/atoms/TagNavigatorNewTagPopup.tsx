@@ -24,7 +24,7 @@ import { isTagNameValid } from '../../lib/db/utils'
 
 const Container = styled.div`
   position: fixed;
-  top: 40px;
+  top: 70px;
   background-color: white;
   width: 200px;
 
