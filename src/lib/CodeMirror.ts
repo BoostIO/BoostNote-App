@@ -126,3 +126,8 @@ export const themes = [
   'ttcn',
   'yonce',
 ].sort()
+
+export interface EditorPosition {
+  line: number
+  ch: number
+}
