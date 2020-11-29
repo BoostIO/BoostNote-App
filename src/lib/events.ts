@@ -2,6 +2,23 @@ import { ChangeEventHandler } from 'react'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
+export function isChildNode(
+  parent?: Node | null,
+  child?: Node | null
+): boolean {
+  if (parent == null || child == null) {
+    return false
+  }
+  let target: Node | null = child
+  while (target != null) {
+    target = target.parentNode
+    if (parent === target) {
+      return true
+    }
+  }
+  return false
+}
+
 function createCustomEventHelper(
   name: string
 ): {
