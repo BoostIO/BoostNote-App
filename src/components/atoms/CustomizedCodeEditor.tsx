@@ -14,6 +14,7 @@ interface CustomizedCodeEditorProps {
   readonly?: boolean
   onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
   onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
+  onCursorActivity?: (codeMirror: CodeMirror.Editor) => void
 }
 
 const CustomizedCodeEditor = ({
@@ -25,6 +26,7 @@ const CustomizedCodeEditor = ({
   readonly,
   onPaste,
   onDrop,
+  onCursorActivity,
 }: CustomizedCodeEditorProps) => {
   const { preferences } = usePreferences()
   return (
@@ -43,6 +45,7 @@ const CustomizedCodeEditor = ({
       readonly={readonly}
       onPaste={onPaste}
       onDrop={onDrop}
+      onCursorActivity={onCursorActivity}
     />
   )
 }
