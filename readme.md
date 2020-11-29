@@ -56,7 +56,7 @@ BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Bo
 
 ### Build
 
-You have to create a file named `.env` in the root of the project directory, or the build will fail.
+You have copy `.env.default` file and create a file named `.env` in the root of the project directory, or the build will fail.
 
 #### Web app
 
