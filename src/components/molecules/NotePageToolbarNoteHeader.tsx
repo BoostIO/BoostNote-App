@@ -13,7 +13,6 @@ import {
   mdiFolder,
   mdiPencilOutline,
   mdiBookOpen,
-  mdiSubdirectoryArrowRight,
   mdiDotsHorizontal,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
@@ -34,6 +33,7 @@ import {
 } from '../../lib/events'
 import Icon from '../atoms/Icon'
 import cc from 'classcat'
+import FolderTreeListItem from '../atoms/FolderTreeListItem'
 
 interface NotePageToolbarNoteHeaderProps {
   storageId: string
@@ -186,29 +186,13 @@ const NotePageToolbarNoteHeader = ({
                   .slice(0, folderDataList.length - 1)
                   .map((folderData, index) => {
                     return (
-                      <li key={folderData.pathname}>
-                        <button
-                          title={`Navigate to ${folderData.pathname}`}
-                          style={{
-                            paddingLeft:
-                              index > 1 ? `${index * 5 + 5}px` : '5px',
-                          }}
-                          onClick={() => {
-                            push(
-                              `/app/storages/${storageId}/notes${folderData.pathname}`
-                            )
-                          }}
-                        >
-                          {index > 0 && (
-                            <Icon
-                              className='icon'
-                              path={mdiSubdirectoryArrowRight}
-                            />
-                          )}
-                          <Icon className='icon folderIcon' path={mdiFolder} />
-                          <div className='label'>{folderData.name}</div>
-                        </button>
-                      </li>
+                      <FolderTreeListItem
+                        key={folderData.pathname}
+                        storageId={storageId}
+                        name={folderData.name}
+                        pathname={folderData.pathname}
+                        depth={index}
+                      />
                     )
                   })}
               </ul>
@@ -354,36 +338,5 @@ const ParentFolderListPopup = styled.div`
     padding: 0;
     margin: 0;
     list-style: none;
-  }
-
-  & > ul > li > button {
-    width: 100%;
-    height: 24px;
-    text-align: left;
-    background-color: ${({ theme }) => theme.navItemBackgroundColor};
-    color: ${({ theme }) => theme.navButtonColor};
-    border: none;
-    padding-right: 4px;
-    display: flex;
-    align-items: center;
-    & > .icon {
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    & > .folderIcon {
-      margin-right: 4px;
-    }
-    & > .label {
-      max-width: 100px;
-      ${textOverflow}
-    }
-    cursor: pointer;
-    &:hover {
-      background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
-    }
-    &:active,
-    &.active {
-      background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
-    }
   }
 `
