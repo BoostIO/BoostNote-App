@@ -161,11 +161,16 @@ const NotePageToolbarNoteHeader = ({
 
   return (
     <>
-      <ToolbarButton onClick={navigateToWorkspace} iconPath={mdiBookOpen} />
+      <ToolbarButton
+        title='Navigate to Workspace'
+        onClick={navigateToWorkspace}
+        iconPath={mdiBookOpen}
+      />
       {folderDataList.length > 1 && (
         <>
           <ToolbarSlashSeparator />
           <ToolbarButton
+            title='All Parent Folders'
             iconPath={mdiDotsHorizontal}
             active={showingParentFolderListPopup}
             onClick={showParentFolderListPopup}
@@ -183,6 +188,7 @@ const NotePageToolbarNoteHeader = ({
                     return (
                       <li key={folderData.pathname}>
                         <button
+                          title={`Navigate to ${folderData.pathname}`}
                           style={{
                             paddingLeft:
                               index > 1 ? `${index * 5 + 5}px` : '5px',
@@ -215,8 +221,18 @@ const NotePageToolbarNoteHeader = ({
           <ToolbarSlashSeparator />
           <ToolbarButton
             iconPath={mdiFolder}
+            title={`Navigate to ${
+              folderDataList[folderDataList.length - 1].pathname
+            }`}
             label={folderDataList[folderDataList.length - 1].name}
             limitWidth={true}
+            onClick={() => {
+              push(
+                `/app/storages/${storageId}/notes${
+                  folderDataList[folderDataList.length - 1].pathname
+                }`
+              )
+            }}
           />
         </>
       )}
@@ -256,7 +272,7 @@ const NoteTitleButton = ({ title, onClick }: NoteTitleButtonProps) => {
   const titleIsEmpty = title == null || title.trim().length === 0
 
   return (
-    <NoteTitleButtonContainer className={cc([])} onClick={onClick}>
+    <NoteTitleButtonContainer title='Edit Title' onClick={onClick}>
       <Icon className='icon' path={mdiTextBoxOutline} />
       <div className={cc(['label', titleIsEmpty && 'empty'])}>
         {titleIsEmpty ? 'Untitled' : title}
