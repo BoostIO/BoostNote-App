@@ -58,6 +58,7 @@ interface CodeEditorProps {
   readonly?: boolean
   onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
   onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
+  onCursorActivity?: (codeMirror: CodeMirror.Editor) => void
 }
 
 class CodeEditor extends React.Component<CodeEditorProps> {
@@ -93,6 +94,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     }
     this.codeMirror.on('paste', this.handlePaste as any)
     this.codeMirror.on('drop', this.handleDrop)
+    this.codeMirror.on('cursorActivity', this.handleCursorActivity)
   }
 
   reloadMode = () => {
@@ -143,6 +145,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.codeMirror.toTextArea()
       this.codeMirror.off('paste', this.handlePaste as any)
       this.codeMirror.off('drop', this.handleDrop)
+      this.codeMirror.off('cursorActivity', this.handleCursorActivity)
     }
     window.removeEventListener('codemirror-mode-load', this.reloadMode)
   }
@@ -171,6 +174,12 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   ) => {
     if (change.origin !== 'setValue' && this.props.onChange != null) {
       this.props.onChange(editor.getValue(), change)
+    }
+  }
+
+  handleCursorActivity = (editor: CodeMirror.Editor) => {
+    if (this.props.onCursorActivity != null) {
+      this.props.onCursorActivity(editor)
     }
   }
 
