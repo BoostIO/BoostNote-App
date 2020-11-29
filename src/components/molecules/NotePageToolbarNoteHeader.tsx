@@ -6,8 +6,16 @@ import React, {
   useRef,
   useEffect,
   MouseEventHandler,
+  FocusEventHandler,
 } from 'react'
-import { mdiTextBoxOutline, mdiFolder, mdiPencilOutline } from '@mdi/js'
+import {
+  mdiTextBoxOutline,
+  mdiFolder,
+  mdiPencilOutline,
+  mdiBookOpen,
+  mdiSubdirectoryArrowRight,
+  mdiDotsHorizontal,
+} from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import ToolbarButton from '../atoms/ToolbarButton'
 import ToolbarSlashSeparator from '../atoms/ToolbarSlashSeparator'
@@ -17,10 +25,12 @@ import {
   inputStyle,
   flexCenter,
   textOverflow,
+  border,
 } from '../../lib/styled/styleFunctions'
 import {
   listenNoteDetailFocusTitleInputEvent,
   unlistenNoteDetailFocusTitleInputEvent,
+  isChildNode,
 } from '../../lib/events'
 import Icon from '../atoms/Icon'
 import cc from 'classcat'
@@ -117,9 +127,89 @@ const NotePageToolbarNoteHeader = ({
     }
   }, [startEditingTitle])
 
+  const [
+    showingParentFolderListPopup,
+    setShowingParentFolderPathnamePopup,
+  ] = useState(false)
+  const showParentFolderListPopup = useCallback(() => {
+    setShowingParentFolderPathnamePopup(true)
+  }, [])
+  const hideParentFolderListPopup: FocusEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      if (
+        parentFolderListPopupRef.current != null &&
+        !isChildNode(
+          parentFolderListPopupRef.current,
+          event.relatedTarget as HTMLElement | null
+        )
+      ) {
+        setShowingParentFolderPathnamePopup(false)
+      }
+    },
+    []
+  )
+  const parentFolderListPopupRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (
+      showingParentFolderListPopup &&
+      parentFolderListPopupRef.current != null
+    ) {
+      parentFolderListPopupRef.current.focus()
+    }
+  }, [showingParentFolderListPopup])
+
   return (
     <>
-      <ToolbarButton onClick={navigateToWorkspace} label='..' />
+      <ToolbarButton onClick={navigateToWorkspace} iconPath={mdiBookOpen} />
+      {folderDataList.length > 1 && (
+        <>
+          <ToolbarSlashSeparator />
+          <ToolbarButton
+            iconPath={mdiDotsHorizontal}
+            active={showingParentFolderListPopup}
+            onClick={showParentFolderListPopup}
+          />
+          {showingParentFolderListPopup && (
+            <ParentFolderListPopup
+              tabIndex={-1}
+              ref={parentFolderListPopupRef}
+              onBlur={hideParentFolderListPopup}
+            >
+              <ul>
+                {folderDataList
+                  .slice(0, folderDataList.length - 1)
+                  .map((folderData, index) => {
+                    return (
+                      <li key={folderData.pathname}>
+                        <button
+                          style={{
+                            paddingLeft:
+                              index > 1 ? `${index * 5 + 5}px` : '5px',
+                          }}
+                          onClick={() => {
+                            push(
+                              `/app/storages/${storageId}/notes${folderData.pathname}`
+                            )
+                          }}
+                        >
+                          {index > 0 && (
+                            <Icon
+                              className='icon'
+                              path={mdiSubdirectoryArrowRight}
+                            />
+                          )}
+                          <Icon className='icon folderIcon' path={mdiFolder} />
+                          <div className='label'>{folderData.name}</div>
+                        </button>
+                      </li>
+                    )
+                  })}
+              </ul>
+            </ParentFolderListPopup>
+          )}
+        </>
+      )}
       {folderDataList.length > 0 && (
         <>
           <ToolbarSlashSeparator />
@@ -229,6 +319,55 @@ const NoteTitleButtonContainer = styled.button`
     color: ${({ theme }) => theme.navButtonActiveColor};
     & > .hoverIcon {
       opacity: 1;
+    }
+  }
+`
+
+const ParentFolderListPopup = styled.div`
+  position: fixed;
+  z-index: 1000;
+  max-height: 300px;
+  top: 30px;
+  ${({ theme }) => theme.shadow};
+  background-color: ${({ theme }) => theme.backgroundColor};
+  ${border};
+  border-radius: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  & > ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  & > ul > li > button {
+    width: 100%;
+    height: 24px;
+    text-align: left;
+    background-color: ${({ theme }) => theme.navItemBackgroundColor};
+    color: ${({ theme }) => theme.navButtonColor};
+    border: none;
+    padding-right: 4px;
+    display: flex;
+    align-items: center;
+    & > .icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    & > .folderIcon {
+      margin-right: 4px;
+    }
+    & > .label {
+      max-width: 100px;
+      ${textOverflow}
+    }
+    cursor: pointer;
+    &:hover {
+      background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    }
+    &:active,
+    &.active {
+      background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
     }
   }
 `
