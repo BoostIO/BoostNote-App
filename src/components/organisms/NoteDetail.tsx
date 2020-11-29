@@ -75,7 +75,6 @@ type NoteDetailState = {
   prevNoteId: string
   title: string
   content: string
-  tags: string[]
 }
 
 class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
@@ -84,9 +83,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     prevNoteId: '',
     title: '',
     content: '',
-    tags: [],
   }
-  newTagNameInputRef = React.createRef<HTMLInputElement>()
   codeMirror?: CodeMirror.EditorFromTextArea
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
     this.codeMirror = codeMirror
@@ -103,7 +100,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         prevNoteId: note._id,
         title: note.title,
         content: note.content,
-        tags: note.tags,
       }
     }
     return state
@@ -145,17 +141,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
           content: updater(prevState.content),
         }
       },
-      () => {
-        this.queueToSave()
-      }
-    )
-  }
-
-  removeTagByName = (tagName: string) => {
-    this.setState(
-      (prevState) => ({
-        tags: prevState.tags.filter((aTagName) => aTagName !== tagName),
-      }),
       () => {
         this.queueToSave()
       }
