@@ -30,7 +30,7 @@ interface ImportLegacyNotesFormProps {
 }
 
 const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
-  const { addAttachments, createFolder, createNote } = useDb()
+  const { addAttachments, createFolder, createNote, initialize } = useDb()
 
   const [location, setLocation] = useState('')
   const [opened, setOpened] = useState(false)
@@ -227,7 +227,9 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
             : ''
         }`
       )
-      setOpened(false)
+      initialize().then(() => {
+        setOpened(false)
+      })
     } catch (error) {
       setErrorMessage(error.message)
       console.error(error)
@@ -242,6 +244,7 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
     createFolder,
     createNote,
     importing,
+    initialize,
   ])
 
   const updateConvertingSnippetNotes = useCallback(
