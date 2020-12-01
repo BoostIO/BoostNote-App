@@ -43,6 +43,11 @@ export type NoteDocEditibleProps = {
   data: JsonObject
 }
 
+export type NoteDocImportableProps = {
+  createdAt: string
+  updatedAt: string
+} & NoteDocEditibleProps
+
 export type NoteDoc = {
   _id: string
   createdAt: string
