@@ -15,7 +15,7 @@ export default {
         community: 'Topluluk',
       },
       hero: {
-        title: 'Mutluluğunu, Verimliliğini ve Yaratıcılığını Arttır.',
+        title: 'Mutluluğu, Verimliliği ve Yaratıcılığı Arttır.',
         subtitle:
           "Boost Note sezgisel ve şık bir markdown editörüdür. Tamamen açık kaynaktır, ve 1 milyon yazılımcı tarafından kullanılmaktadır!",
       },
@@ -26,10 +26,10 @@ export default {
       },
       boostHub: {
         title: 'Boost Hub, Boost Note\'un ekip versiyonu',
-        description1: 'Yazılım ekipleri için “Boost Hub adında işbirlikçi bir çalışma alanı uygulaması geliştirdik.',
+        description1: 'Yazılım ekipleri için “Boost Hub“ adında işbirlikçi bir çalışma alanı uygulaması geliştirdik.',
         description2:
           'Bir markdown editöründen veya wiki sayfasından fazlası. Ekibinle her yerden gerçek zamanlı çalışabilirsin.',
-        feature1Name: 'Gerçek zamanlı Eşyazarlık',
+        feature1Name: 'Gerçek Zamanlı Eşyazarlık',
         feature1Detail:
           'Ekibinle birlikte döküman yaz ve düzenle. Bilgini ve fikirlerini gerçek zamanlı bir şekilde aktar. Kimse geride kalmayacak.',
         feature2Name: 'Bir Profesyonel gibi Şablonlar Oluştur.',
@@ -52,7 +52,7 @@ export default {
           'Boost Note 100\'den fazla yazılım dilini vurgulayabilir.',
         mathEquations: 'Matematik Denklemleri',
         mathEquationsDescription:
-          'Boost Note matematik denklemlerini destekler. Bloklar içinde LateX sözdizimini kullanalarak matematik denklemleri yazabilirsin.',
+          'Boost Note matematik denklemlerini destekler. Bloklar içinde LateX sözdizimini kullanarak matematik denklemleri yazabilirsin.',
         customizableTheme: 'Özelleştirilebilir Tema',
         customizableThemeDescription:
           'Uygulama arayüzünün, editörün, ve sunulan markdown içeriğinin tarzını özelleştirebilirsin',
@@ -80,7 +80,7 @@ export default {
         legacyApp: 'Eski Uygulama',
         legacyAppDescription:
           "Şu anki Boost Note.next eski uygulamamızın sahip olduğu dosya sistemi tabanlı depolama ve markdown uzantıları gibi çoğu niteliği destekleyene kadar eski uygumalamızı desteklemeye devam edeceğiz. O yüzden lütfen kendinizi yeni uygulamaya geçmek için çok zorlamayın.",
-        legacyDownloadLinks: 'Eski Uygulama İndirme Bağlantıları',
+        legacyDownloadLinks: 'Eski Uygulamayı İndirme Bağlantıları',
         legacyRepository: 'Eski Uygulama Kod Deposu',
       },
       community: {
