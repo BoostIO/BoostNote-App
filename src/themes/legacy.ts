@@ -84,4 +84,8 @@ export const legacyTheme: BaseTheme = {
 
   // Input
   inputBackground: dark12Color,
+
+  // Search Highlight
+  searchHighlightBackgroundColor: '#1362ac',
+  searchItemSelectionBackgroundColor: '#942fca',
 }

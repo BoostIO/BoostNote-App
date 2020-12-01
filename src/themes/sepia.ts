@@ -85,4 +85,8 @@ export const sepiaTheme: BaseTheme = {
 
   // Input
   inputBackground: dark12Color,
+
+  // Search Highlight
+  searchHighlightBackgroundColor: '#1362ac',
+  searchItemSelectionBackgroundColor: '#45c4c0',
 }

@@ -8,50 +8,139 @@ import {
   borderBottom,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
+import {
+  getSearchResultKey,
+  MAX_SEARCH_PREVIEW_LINE_LENGTH,
+  SearchResult,
+} from '../../lib/search/search'
+import { isColorBright } from '../../lib/colors'
+import { SearchMatchHighlight } from '../PreferencesModal/styled'
+import { escapeRegExp } from '../../lib/string'
 
 interface SearchModalNoteResultItemProps {
   note: NoteDoc
+  selectedItemId: string
+  searchResults: SearchResult[]
   navigateToNote: (noteId: string) => void
+  updateSelectedItem: (note: NoteDoc, selectedId: string) => void
+  navigateToEditorFocused: (
+    noteId: string,
+    lineNum: number,
+    lineColumn?: number
+  ) => void
 }
 
 const SearchModalNoteResultItem = ({
   note,
+  searchResults,
   navigateToNote,
+  selectedItemId,
+  updateSelectedItem,
+  navigateToEditorFocused,
 }: SearchModalNoteResultItemProps) => {
   const navigate = useCallback(() => {
     navigateToNote(note._id)
   }, [navigateToNote, note._id])
 
-  return (
-    <Container onClick={navigate}>
-      <div className='header'>
-        <div className='icon'>
-          <Icon path={mdiTextBoxOutline} />
-        </div>
-        <div className='title'>{note.title}</div>
-      </div>
-      <div className='meta'>
-        <div className='folderPathname'>
-          <Icon className='icon' path={mdiFolder} />
-          {note.folderPathname}
-        </div>
-        {note.tags.length > 0 && (
-          <div className='tags'>
-            <Icon className='icon' path={mdiTagMultiple} />{' '}
-            {note.tags.map((tag) => tag).join(', ')}
-          </div>
+  const highlightMatchedTerm = useCallback((line, matchStr) => {
+    const parts = line.split(new RegExp(`(${escapeRegExp(matchStr)})`, 'gi'))
+    return (
+      <span>
+        {parts.map((part: string, i: number) =>
+          part.toLowerCase() === matchStr.toLowerCase() ? (
+            <SearchMatchHighlight key={i}>{matchStr}</SearchMatchHighlight>
+          ) : (
+            part
+          )
         )}
-      </div>
+      </span>
+    )
+  }, [])
+  const beautifyPreviewLine = useCallback(
+    (line, matchStr) => {
+      const multiline = matchStr.indexOf('\n') != -1
+      const beautifiedLine =
+        line.substring(0, MAX_SEARCH_PREVIEW_LINE_LENGTH) +
+        (line.length > MAX_SEARCH_PREVIEW_LINE_LENGTH ? '...' : '')
+      if (multiline) {
+        return (
+          <span>
+            <SearchMatchHighlight>{line}</SearchMatchHighlight>
+          </span>
+        )
+      } else {
+        return highlightMatchedTerm(beautifiedLine, matchStr)
+      }
+    },
+    [highlightMatchedTerm]
+  )
+
+  return (
+    <Container>
+      <MetaContainer onClick={navigate}>
+        <div className='header'>
+          <div className='icon'>
+            <Icon path={mdiTextBoxOutline} />
+          </div>
+          <div className='title'>{note.title}</div>
+        </div>
+        <div className='meta'>
+          <div className='folderPathname'>
+            <Icon className='icon' path={mdiFolder} />
+            {note.folderPathname}
+          </div>
+          {note.tags.length > 0 && (
+            <div className='tags'>
+              <Icon className='icon' path={mdiTagMultiple} />{' '}
+              {note.tags.map((tag) => tag).join(', ')}
+            </div>
+          )}
+        </div>
+      </MetaContainer>
+
+      <SearchResultContainer>
+        {searchResults.length > 0 &&
+          searchResults.map((result) => (
+            <SearchResultItem
+              className={
+                selectedItemId == result.id ? 'search-result-selected' : ''
+              }
+              key={getSearchResultKey(note._id, result.id)}
+              onClick={() => updateSelectedItem(note, result.id)}
+              onDoubleClick={() =>
+                navigateToEditorFocused(
+                  note._id,
+                  result.lineNum - 1,
+                  result.matchColumn
+                )
+              }
+            >
+              <SearchResultLeft title={result.lineStr}>
+                {beautifyPreviewLine(result.lineStr, result.matchStr)}
+              </SearchResultLeft>
+              <SearchResultRight>{result.lineNum}</SearchResultRight>
+            </SearchResultItem>
+          ))}
+      </SearchResultContainer>
     </Container>
   )
 }
 
 export default SearchModalNoteResultItem
 
-const Container = styled.div`
+const Container = styled.div``
+
+const SearchResultContainer = styled.div`
   padding: 10px;
   cursor: pointer;
-  ${borderBottom}
+  ${borderBottom};
+  user-select: none;
+`
+
+const MetaContainer = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  ${borderBottom};
   user-select: none;
 
   &:hover {
@@ -60,6 +149,7 @@ const Container = styled.div`
   &:hover:active {
     background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
   }
+
   & > .header {
     font-size: 18px;
     display: flex;
@@ -86,7 +176,7 @@ const Container = styled.div`
     & > .folderPathname {
       display: flex;
       align-items: center;
-      max-width: 150px;
+      max-width: 350px;
       ${textOverflow}
       &>.icon {
         margin-right: 4px;
@@ -97,7 +187,7 @@ const Container = styled.div`
       margin-left: 8px;
       display: flex;
       align-items: center;
-      max-width: 150px;
+      max-width: 350px;
       ${textOverflow}
       &>.icon {
         margin-right: 4px;
@@ -108,4 +198,51 @@ const Container = styled.div`
   &:last-child {
     border-bottom: none;
   }
+`
+
+const SearchResultItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+
+  margin-top: 0.3em;
+
+  &.search-result-selected {
+    border-radius: 4px;
+    padding: 2px;
+    background-color: ${({ theme }) =>
+      theme.searchItemSelectionBackgroundColor};
+    filter: brightness(
+      ${({ theme }) => (isColorBright(theme.activeBackgroundColor) ? 85 : 115)}%
+    );
+    }
+  }
+
+  &:hover {
+    border-radius: 4px;
+    background-color: ${({ theme }) =>
+      theme.secondaryButtonHoverBackgroundColor};
+    filter: brightness(
+      ${({ theme }) =>
+        isColorBright(theme.secondaryButtonHoverBackgroundColor) ? 85 : 115}%
+    );
+  }
+`
+
+const SearchResultLeft = styled.div`
+  align-self: flex-start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:before {
+    content: attr(content);
+  }
+`
+
+const SearchResultRight = styled.div`
+  align-self: flex-end;
 `

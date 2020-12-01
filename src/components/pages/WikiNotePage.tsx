@@ -3,7 +3,12 @@ import { NoteStorage } from '../../lib/db/types'
 import StorageLayout from '../atoms/StorageLayout'
 import NotePageToolbar from '../organisms/NotePageToolbar'
 import NoteDetail from '../organisms/NoteDetail'
-import { useRouteParams } from '../../lib/routeParams'
+import {
+  StorageNotesRouteParams,
+  StorageTagsRouteParams,
+  StorageTrashCanRouteParams,
+  useRouteParams,
+} from '../../lib/routeParams'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
 import { useDb } from '../../lib/db'
 import FolderDetail from '../organisms/FolderDetail'
@@ -12,13 +17,19 @@ import TrashDetail from '../organisms/TrashDetail'
 import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
+import { useRouter } from '../../lib/router'
+import { getNumberFromStr } from '../../lib/string'
 
 interface WikiNotePageProps {
   storage: NoteStorage
 }
 
 const WikiNotePage = ({ storage }: WikiNotePageProps) => {
-  const routeParams = useRouteParams()
+  const routeParams = useRouteParams() as
+    | StorageNotesRouteParams
+    | StorageTrashCanRouteParams
+    | StorageTagsRouteParams
+  const { hash } = useRouter()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const noteViewMode = generalStatus.noteViewMode
 
@@ -77,6 +88,25 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
 
   const { showSearchModal } = useSearchModal()
 
+  const getCurrentPositionFromRoute = useCallback(() => {
+    let focusLine = 0
+    let focusColumn = 0
+    if (hash.startsWith('#L')) {
+      const focusData = hash.substring(2).split(',')
+      if (focusData.length == 2) {
+        focusLine = getNumberFromStr(focusData[0])
+        focusColumn = getNumberFromStr(focusData[1])
+      } else if (focusData.length == 1) {
+        focusLine = getNumberFromStr(focusData[0])
+      }
+    }
+
+    return {
+      line: focusLine,
+      ch: focusColumn,
+    }
+  }, [hash])
+
   return (
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
@@ -108,6 +138,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
               updateNote={updateNote}
               addAttachments={addAttachments}
               viewMode={noteViewMode}
+              initialCursorPosition={getCurrentPositionFromRoute()}
             />
           )}
         </div>

@@ -22,3 +22,14 @@ export function isWithGeneralCtrlKey(
       return event.ctrlKey
   }
 }
+
+export function isWithGeneralCtrlShiftKeys(
+  event: KeyboardEvent | React.KeyboardEvent
+) {
+  switch (osName) {
+    case 'macos':
+      return event.metaKey && event.shiftKey
+    default:
+      return event.ctrlKey && event.shiftKey
+  }
+}

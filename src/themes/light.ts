@@ -91,4 +91,8 @@ export const lightTheme: BaseTheme = {
 
   // Input
   inputBackground: '#fff',
+
+  // Search Highlight
+  searchHighlightBackgroundColor: '#1362ac',
+  searchItemSelectionBackgroundColor: '#45c4c0',
 }
