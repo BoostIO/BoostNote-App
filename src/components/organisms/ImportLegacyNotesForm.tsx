@@ -19,7 +19,7 @@ import {
   readFileTypeFromBuffer,
 } from '../../lib/electronOnly'
 import { join } from 'path'
-import { NoteDocEditibleProps } from '../../lib/db/types'
+import { NoteDocImportableProps } from '../../lib/db/types'
 import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
@@ -112,6 +112,8 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
           const title = normalizeString(note.title)
           const tags = normalizeTags(note.tags)
           const data = {}
+          const createdAt = normalizeString(note.createdAt)
+          const updatedAt = normalizeString(note.updatedAt)
           switch (note.type) {
             case 'MARKDOWN_NOTE': {
               const legacyNoteId = noteFileName.replace(/.cson$/, '')
@@ -164,12 +166,14 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
                 )
               }
 
-              const noteProps: NoteDocEditibleProps = {
+              const noteProps: NoteDocImportableProps = {
                 folderPathname,
                 title,
                 content,
                 tags,
                 data,
+                createdAt,
+                updatedAt,
               }
               return noteProps
             }
@@ -186,12 +190,14 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
                 .map(stringifySnippet)
                 .join('\n\n')}`
 
-              const noteProps: NoteDocEditibleProps = {
+              const noteProps: NoteDocImportableProps = {
                 folderPathname,
                 title,
                 content,
                 tags,
                 data,
+                createdAt,
+                updatedAt,
               }
               return noteProps
             }

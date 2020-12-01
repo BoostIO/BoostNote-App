@@ -7,6 +7,7 @@ import {
   Attachment,
   FolderDocEditibleProps,
   NoteDocEditibleProps,
+  NoteDocImportableProps,
   TagDocEditibleProps,
   TagDoc,
   PopulatedFolderDoc,
@@ -257,7 +258,7 @@ class FSNoteDb implements NoteDb {
     await unlinkFile(attachmentPathname)
   }
 
-  async createNote(noteProps: Partial<NoteDocEditibleProps>) {
+  async createNote(noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>) {
     const now = getNow()
     const noteDoc: NoteDoc = {
       _id: generateNoteId(),
@@ -266,9 +267,9 @@ class FSNoteDb implements NoteDb {
       tags: [],
       folderPathname: '/',
       data: {},
-      ...noteProps,
       createdAt: now,
       updatedAt: now,
+      ...noteProps,
       trashed: false,
       _rev: generateId(),
     }

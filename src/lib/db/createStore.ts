@@ -4,6 +4,7 @@ import {
   ObjectMap,
   NoteDoc,
   NoteDocEditibleProps,
+  NoteDocImportableProps,
   PopulatedFolderDoc,
   PopulatedTagDoc,
   Attachment,
@@ -262,7 +263,7 @@ export function createDbStoreCreator(
       [setStorageMap, syncStorage]
     )
     const createNote = useCallback(
-      async (storageId: string, noteProps: Partial<NoteDocEditibleProps>) => {
+      async (storageId: string, noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>) => {
         const storage = storageMap[storageId]
         if (storage == null) {
           return
