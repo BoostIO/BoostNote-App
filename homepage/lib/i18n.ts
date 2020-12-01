@@ -13,6 +13,7 @@ import es from '../locales/es'
 import de from '../locales/de'
 import vn from '../locales/vn'
 import hr from '../locales/hr'
+import tr from '../locales/tr'
 
 const resources = {
   en,
@@ -27,7 +28,8 @@ const resources = {
   es,
   de,
   vn,
-  hr
+  hr,
+  tr
 }
 
 i18n
