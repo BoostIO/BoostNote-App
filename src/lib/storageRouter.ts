@@ -26,15 +26,27 @@ function useStorageRouterStore() {
     [activeStorageId, push]
   )
 
-  const navigateToNote = useCallback(
-    (storageId: string, noteId: string, noteFolderPathname = '/') => {
+  const navigateToNoteWithEditorFocus = useCallback(
+    (
+      storageId: string,
+      noteId: string,
+      noteFolderPathname = '/',
+      focusEditorPosition = '0,0'
+    ) => {
       push(
         `/app/storages/${storageId}/notes${
           noteFolderPathname === '/' ? '' : noteFolderPathname
-        }/${noteId}`
+        }/${noteId}/#L${focusEditorPosition}`
       )
     },
     [push]
+  )
+
+  const navigateToNote = useCallback(
+    (storageId: string, noteId: string, noteFolderPathname = '/') => {
+      navigateToNoteWithEditorFocus(storageId, noteId, noteFolderPathname)
+    },
+    [navigateToNoteWithEditorFocus]
   )
 
   useEffect(() => {
@@ -46,6 +58,7 @@ function useStorageRouterStore() {
   return {
     navigate,
     navigateToNote,
+    navigateToNoteWithEditorFocus,
   }
 }
 

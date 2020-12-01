@@ -82,4 +82,8 @@ export const solarizedDarkTheme: BaseTheme = {
 
   // Input
   inputBackground: light12Color,
+
+  // Search Highlight
+  searchHighlightBackgroundColor: '#1362ac',
+  searchItemSelectionBackgroundColor: '#942fca',
 }

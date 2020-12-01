@@ -31,6 +31,7 @@ import NotePageToolbar from '../organisms/NotePageToolbar'
 import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
+import { getNumberFromStr } from '../../lib/string'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -49,7 +50,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
   const { noteId } = routeParams
-  const { push } = useRouter()
+  const { push, hash } = useRouter()
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
@@ -86,6 +87,25 @@ const NotePage = ({ storage }: NotePageProps) => {
     },
     [updateNote, report]
   )
+
+  const getCurrentPositionFromRoute = useCallback(() => {
+    let focusLine = 0
+    let focusColumn = 0
+    if (hash.startsWith('#L')) {
+      const focusData = hash.substring(2).split(',')
+      if (focusData.length == 2) {
+        focusLine = getNumberFromStr(focusData[0])
+        focusColumn = getNumberFromStr(focusData[1])
+      } else if (focusData.length == 1) {
+        focusLine = getNumberFromStr(focusData[0])
+      }
+    }
+
+    return {
+      line: focusLine,
+      ch: focusColumn,
+    }
+  }, [hash])
 
   const notes = useMemo((): NoteDoc[] => {
     switch (routeParams.name) {
@@ -254,6 +274,7 @@ const NotePage = ({ storage }: NotePageProps) => {
                 updateNote={updateNoteAndReport}
                 addAttachments={addAttachments}
                 viewMode={generalStatus.noteViewMode}
+                initialCursorPosition={getCurrentPositionFromRoute()}
               />
             )
           }

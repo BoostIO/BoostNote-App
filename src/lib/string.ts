@@ -23,3 +23,11 @@ export function filenamify(value: string) {
 export function getHexatrigesimalString(value: number) {
   return value.toString(36)
 }
+
+export function getNumberFromStr(str: string): number {
+  if (!Number.isNaN(parseInt(str))) {
+    return parseInt(str)
+  } else {
+    return 0
+  }
+}
