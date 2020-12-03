@@ -40,7 +40,6 @@ type NoteDetailProps = {
 type NoteDetailState = {
   prevStorageId: string
   prevNoteId: string
-  title: string
   content: string
   currentCursor: EditorPosition
   currentSelections: {
@@ -53,7 +52,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   state: NoteDetailState = {
     prevStorageId: '',
     prevNoteId: '',
-    title: '',
     content: '',
     currentCursor: {
       line: 0,
@@ -86,7 +84,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
       return {
         prevStorageId: storage.id,
         prevNoteId: note._id,
-        title: note.title,
         content: note.content,
         currentCursor: {
           line: 0,
@@ -113,9 +110,8 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
       if (this.queued) {
-        const { title, content } = prevState
+        const { content } = prevState
         this.saveNote(prevState.prevStorageId, prevState.prevNoteId, {
-          title,
           content,
         })
       }
@@ -124,9 +120,8 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
 
   componentWillUnmount() {
     if (this.queued) {
-      const { title, content, prevStorageId, prevNoteId } = this.state
+      const { content, prevStorageId, prevNoteId } = this.state
       this.saveNote(prevStorageId, prevNoteId, {
-        title,
         content,
       })
     }
@@ -155,9 +150,8 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     const { note, storage } = this.props
 
     if (this.queued) {
-      const { title, content } = this.state
+      const { content } = this.state
       await this.saveNote(storage.id, note._id, {
-        title,
         content,
       })
     }
@@ -173,10 +167,9 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     }
     this.timer = setTimeout(() => {
       const { note, storage } = this.props
-      const { title, content } = this.state
+      const { content } = this.state
 
       this.saveNote(storage.id, note._id, {
-        title,
         content,
       })
     }, 3000)
@@ -185,14 +178,13 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   async saveNote(
     storageId: string,
     noteId: string,
-    { title, content }: { title: string; content: string }
+    { content }: { content: string }
   ) {
     clearTimeout(this.timer)
     this.queued = false
 
     const { updateNote } = this.props
     await updateNote(storageId, noteId, {
-      title,
       content,
     })
   }
