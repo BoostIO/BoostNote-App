@@ -5,6 +5,18 @@ function sendToHost(channel, ...args) {
   ipcRenderer.sendToHost(channel, ...args)
 }
 
+function addHostListener(channel, listener) {
+  ipcRenderer.addListener(channel, listener)
+}
+
+function removeHostListener(channel, listener) {
+  ipcRenderer.removeListener(channel, listener)
+}
+
+function removeAllHostListeners(channel) {
+  ipcRenderer.removeAllListeners(channel)
+}
+
 function convertHtmlStringToPdfBlob(htmlString, printOptions) {
   return new Promise((resolve, reject) => {
     const encodedStr = encodeURIComponent(htmlString)
@@ -40,3 +52,7 @@ function convertHtmlStringToPdfBlob(htmlString, printOptions) {
 window.__ELECTRON_ONLY__ = {}
 window.__ELECTRON_ONLY__.sendToHost = sendToHost
 window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
+
+window.__ELECTRON_ONLY__.addHostListener = addHostListener
+window.__ELECTRON_ONLY__.removeHostListener = removeHostListener
+window.__ELECTRON_ONLY__.removeAllHostListeners = removeAllHostListeners
