@@ -21,6 +21,9 @@ import {
 } from '../../lib/dom'
 import { EditorPosition } from '../../lib/CodeMirror'
 import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
+import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
+import EditorThemeSelect from '../molecules/EditorThemeSelect'
+import EditorKeyMapSelect from '../molecules/EditorKeymapSelect'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -333,6 +336,9 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
             cursor={currentCursor}
             selections={currentSelections}
           />
+          <EditorKeyMapSelect />
+          <EditorThemeSelect />
+          <EditorIndentationStatus />
         </div>
       </Container>
     )
@@ -347,7 +353,12 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   & > .bottomBar {
+    display: flex;
     ${borderTop}
+    height: 24px;
+    & > :first-child {
+      flex: 1;
+    }
   }
 `
 
