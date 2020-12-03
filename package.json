@@ -189,6 +189,7 @@
     },
     "win": {
       "verifyUpdateCodeSignature": false,
+      "certificateSubjectName": "BOOST IO K.K.",
       "icon": "static/icon.ico",
       "target": {
         "target": "nsis",
