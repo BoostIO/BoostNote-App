@@ -24,8 +24,12 @@ const dispatchModeLoad = debounce(() => {
 }, 300)
 
 export async function requireMode(mode: string) {
-  await import(`codemirror/mode/${mode}/${mode}.js`)
-  dispatchModeLoad()
+  try {
+    await import(`codemirror/mode/${mode}/${mode}.js`)
+    dispatchModeLoad()
+  } catch (error) {
+    console.warn(error)
+  }
 }
 
 export function getCodeMirrorTheme(theme?: string) {
