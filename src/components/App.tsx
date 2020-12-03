@@ -50,6 +50,7 @@ import {
   dispatchBoostHubLoginRequestEvent,
   listenBoostHubAccountDeleteEvent,
   unlistenBoostHubAccountDeleteEvent,
+  dispatchBoostHubToggleSettingsEvent,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -57,6 +58,7 @@ import {
   featureBoostHubIntro,
 } from '../lib/checkedFeatures'
 import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
+import { useRouteParams } from '../lib/routeParams'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -104,6 +106,7 @@ const App = () => {
   } = usePreferences()
   const { messageBox } = useDialog()
   const { fetchDesktopGlobalData } = useBoostHub()
+  const routeParams = useRouteParams()
 
   useEffectOnce(() => {
     initialize()
@@ -212,12 +215,22 @@ const App = () => {
     run()
   })
 
+  const boostHubTeamsShowPageIsActive =
+    routeParams.name === 'boosthub.teams.show'
+
   useEffect(() => {
-    addIpcListener('preferences', togglePreferencesModal)
-    return () => {
-      removeIpcListener('preferences', togglePreferencesModal)
+    const handler = () => {
+      if (boostHubTeamsShowPageIsActive) {
+        dispatchBoostHubToggleSettingsEvent()
+      } else {
+        togglePreferencesModal()
+      }
     }
-  }, [togglePreferencesModal])
+    addIpcListener('preferences', handler)
+    return () => {
+      removeIpcListener('preferences', handler)
+    }
+  }, [togglePreferencesModal, boostHubTeamsShowPageIsActive])
 
   useEffect(() => {
     const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {

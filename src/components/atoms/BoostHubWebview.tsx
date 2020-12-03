@@ -37,6 +37,7 @@ export interface WebviewControl {
   goBack(): void
   goForward(): void
   openDevTools(): void
+  sendMessage(channel: string, ...args: any[]): void
 }
 
 interface BoostHubWebviewProps {
@@ -82,6 +83,10 @@ const BoostHubWebview = ({
     webviewRef.current!.openDevTools()
   }, [])
 
+  const sendMessage = useCallback((channel: string, ...args: any[]) => {
+    webviewRef.current!.send(channel, ...args)
+  }, [])
+
   useEffect(() => {
     if (controlRef == null) {
       return
@@ -91,8 +96,9 @@ const BoostHubWebview = ({
       goBack,
       goForward,
       openDevTools,
+      sendMessage,
     }
-  }, [controlRef, reload, goBack, goForward, openDevTools])
+  }, [controlRef, reload, goBack, goForward, openDevTools, sendMessage])
 
   useEffect(() => {
     const webview = webviewRef.current!

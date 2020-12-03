@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
 import styled from '../../lib/styled'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
@@ -20,6 +20,10 @@ import {
 import Icon from '../atoms/Icon'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import copy from 'copy-to-clipboard'
+import {
+  listenBoostHubToggleSettingsEvent,
+  unlistenBoostHubToggleSettingsEvent,
+} from '../../lib/events'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -85,6 +89,20 @@ const BoostHubTeamsShowPage = ({
   const copyUrl = useCallback(() => {
     copy(url)
   }, [url])
+
+  useEffect(() => {
+    if (!active) {
+      return
+    }
+
+    const handler = () => {
+      webviewControlRef.current!.sendMessage('toggle-settings')
+    }
+    listenBoostHubToggleSettingsEvent(handler)
+    return () => {
+      unlistenBoostHubToggleSettingsEvent(handler)
+    }
+  }, [active])
 
   return (
     <Container key={domain} className={active ? 'active' : ''}>

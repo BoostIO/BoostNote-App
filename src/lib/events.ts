@@ -153,3 +153,11 @@ export const {
   listen: listenBoostHubAccountDeleteEvent,
   unlisten: unlistenBoostHubAccountDeleteEvent,
 } = createCustomEventHelper(BoostHubAccountDeleteEventName)
+
+const BoostHubToggleSettingsEventName = 'BoostHub:toggleSettings'
+export type BoostHubToggleSettingsEvent = CustomEvent
+export const {
+  dispatch: dispatchBoostHubToggleSettingsEvent,
+  listen: listenBoostHubToggleSettingsEvent,
+  unlisten: unlistenBoostHubToggleSettingsEvent,
+} = createCustomEventHelper(BoostHubToggleSettingsEventName)
