@@ -6,6 +6,7 @@ import {
   MenuItemConstructorOptions,
   IpcRendererEvent,
   WebContents,
+  PrintToPDFOptions,
 } from 'electron'
 
 const __ELECTRON_ONLY__: {
@@ -46,6 +47,10 @@ const __ELECTRON_ONLY__: {
   isDefaultProtocolClient(protocol: string): boolean
   getWebContentsById(id: number): WebContents
   setTrafficLightPosition(position: { x: number; y: number }): void
+  convertHtmlStringToPdfBlob(
+    htmlString: string,
+    printOptions: PrintToPDFOptions
+  ): Promise<Blob>
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -72,6 +77,7 @@ const {
   isDefaultProtocolClient,
   getWebContentsById,
   setTrafficLightPosition,
+  convertHtmlStringToPdfBlob,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -123,4 +129,5 @@ export {
   isDefaultProtocolClient,
   getWebContentsById,
   setTrafficLightPosition,
+  convertHtmlStringToPdfBlob,
 }
