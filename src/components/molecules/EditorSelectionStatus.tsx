@@ -44,6 +44,8 @@ export default EditorSelectionStatus
 
 const Container = styled.div`
   padding: 0 5px;
+  height: 24px;
+  font-size: 14px;
   color: ${({ theme }) => theme.uiTextColor};
   user-select: none;
 `
