@@ -49,7 +49,7 @@ const NotePageToolbarFolderHeader = ({
       />
       {folderDataList.map(({ name, pathname }, index) => {
         return (
-          <>
+          <React.Fragment key={pathname}>
             <ToolbarSlashSeparator />
             <ToolbarButton
               key={pathname}
@@ -60,7 +60,7 @@ const NotePageToolbarFolderHeader = ({
               label={name}
               limitWidth={index !== folderDataList.length - 1}
             />
-          </>
+          </React.Fragment>
         )
       })}
     </>
