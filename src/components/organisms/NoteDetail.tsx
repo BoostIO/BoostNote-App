@@ -23,7 +23,7 @@ import { EditorPosition } from '../../lib/CodeMirror'
 import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
 import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
 import EditorThemeSelect from '../molecules/EditorThemeSelect'
-import EditorKeyMapSelect from '../molecules/EditorKeymapSelect'
+import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
 
 type NoteDetailProps = {
   note: NoteDoc
