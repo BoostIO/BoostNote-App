@@ -16,7 +16,7 @@ const boostHubDesktopLoginPageUrl = `${boostHubBaseUrl}/desktop/login`
 
 export const boostHubAccountDeletePageUrl = `${boostHubBaseUrl}/account/delete`
 
-export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/features`
+export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/for-teams/features`
 
 export function openLoginPage(state: string) {
   const loginPageUrl = `${boostHubDesktopLoginPageUrl}?state=${state}`
