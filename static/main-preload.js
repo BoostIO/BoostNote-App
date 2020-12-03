@@ -157,6 +157,39 @@
     electron.remote.getCurrentWindow().setTrafficLightPosition(position)
   }
 
+  function convertHtmlStringToPdfBlob(htmlString, printOptions) {
+    return new Promise((resolve, reject) => {
+      const encodedStr = encodeURIComponent(htmlString)
+      const { BrowserWindow } = remote
+      const windowOptions = {
+        webPreferences: {
+          nodeIntegration: false,
+          webSecurity: false,
+          javascript: false,
+        },
+        show: false,
+      }
+      const browserWindow = new BrowserWindow(windowOptions)
+      browserWindow.loadURL('data:text/html;charset=UTF-8,' + encodedStr)
+
+      browserWindow.webContents.on('did-finish-load', async () => {
+        try {
+          const pdfFileBuffer = await browserWindow.webContents.printToPDF(
+            printOptions
+          )
+          const blob = new Blob([pdfFileBuffer], {
+            type: 'application/pdf',
+          })
+          resolve(blob)
+        } catch (error) {
+          reject(error)
+        } finally {
+          browserWindow.destroy()
+        }
+      })
+    })
+  }
+
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.readFile = readFile

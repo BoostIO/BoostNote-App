@@ -216,9 +216,6 @@ const NotePageToolbar = ({
                 note,
                 preferences,
                 pushMessage,
-                {
-                  includeFrontMatter,
-                },
                 previewStyle
               ),
           },

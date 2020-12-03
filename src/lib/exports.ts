@@ -20,8 +20,9 @@ import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
 import { getGlobalCss, selectTheme } from './styled/styleUtil'
 import yaml from 'yaml'
+import { convertHtmlStringToPdfBlob } from './electronOnly'
 
-const filenamifyNoteTitle = function (noteTitle: string): string {
+export function filenamifyNoteTitle(noteTitle: string): string {
   return filenamify(noteTitle.toLowerCase().replace(/\s+/g, '-'))
 }
 
@@ -192,99 +193,59 @@ export const exportNoteAsPdfFile = async (
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
-  { includeFrontMatter }: { includeFrontMatter: boolean },
   previewStyle?: string
 ): Promise<void> => {
-  await unified()
-    .use(remarkParse)
-    .use(remarkEmoji, { emoticon: false })
-    .use([remarkRehype, { allowDangerousHTML: true }])
-    .use(rehypeRaw)
-    .use(rehypeSanitize, schema)
-    .use(remarkMath)
-    .use(rehypeCodeMirror, {
-      ignoreMissing: true,
-      theme: preferences['markdown.codeBlockTheme'],
-    })
-    .use(rehypeKatex, { output: 'htmlAndMathml' })
-    .use(rehypeReact, {
-      createElement: React.createElement,
-      components: {
-        pre: CodeFence,
-      },
-    })
-    .use(rehypeStringify)
-    .process(note.content, (err, file) => {
-      if (err != null) {
-        pushMessage({
-          title: 'Note processing failed',
-          description: 'Please check markdown syntax and try again later.',
-        })
-        return
-      }
-
-      const stringifiedMdContent = file.toString().trim() + '\n'
-      const { BrowserWindow } = window.require('electron').remote
-      const windowOptions = {
-        webPreferences: {
-          nodeIntegration: true,
-          webSecurity: false,
-          javascript: false,
-        },
-        show: false,
-      }
-      const win = new BrowserWindow(windowOptions)
-      const htmlStr = generatePrintToPdfHTML(
-        stringifiedMdContent,
-        preferences,
-        previewStyle
-      )
-      const encodedStr = encodeURIComponent(htmlStr)
-      win.loadURL('data:text/html;charset=UTF-8,' + encodedStr)
-      win.webContents.on('did-finish-load', function () {
-        // Enable when newer version of electron is available
-        const tagsStr =
-          note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
-        const headerFooter: Record<string, string> = {
-          title: `${note.title}${tagsStr}`,
-          url: `file://${filenamifyNoteTitle(note.title)}.pdf`,
-        }
-        const printOpts = {
-          // Needed for codemirorr themes (backgrounds)
-          printBackground: true,
-          // Enable margins if header footer is printed
-          // No margins 1, default margins 0, 2 - minimum margins
-          marginsType: includeFrontMatter ? 0 : 1,
-          pageSize: 'A4', // This could be chosen by user,
-          headerFooter: includeFrontMatter ? headerFooter : undefined,
-        }
-        win.webContents
-          .printToPDF(printOpts)
-          .then((data) => {
-            if (data) {
-              // We got the PDF - offer the user to save it
-              const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
-              const pdfBlob = new Blob([data], {
-                type: 'application/pdf', // application/octet-stream
-              })
-              downloadBlob(pdfBlob, pdfName)
-            } else {
-              pushMessage({
-                title: 'PDF export failed',
-                description: 'Please try again later. Reason: Unknown',
-              })
-            }
-            // Destroy window (not shown but disposes it)
-            win.destroy()
-          })
-          .catch((err) => {
-            pushMessage({
-              title: 'PDF export failed',
-              description: 'Please try again later.' + (err ? err : 'Unknown'),
-            })
-          })
+  try {
+    const output = await unified()
+      .use(remarkParse)
+      .use(remarkEmoji, { emoticon: false })
+      .use([remarkRehype, { allowDangerousHTML: true }])
+      .use(rehypeRaw)
+      .use(rehypeSanitize, schema)
+      .use(remarkMath)
+      .use(rehypeCodeMirror, {
+        ignoreMissing: true,
+        theme: preferences['markdown.codeBlockTheme'],
       })
-      return
+      .use(rehypeKatex, { output: 'htmlAndMathml' })
+      .use(rehypeReact, {
+        createElement: React.createElement,
+        components: {
+          pre: CodeFence,
+        },
+      })
+      .use(rehypeStringify)
+      .process(note.content)
+    const markdownContent = output.toString('utf-8').trim() + '\n'
+    const htmlString = generatePrintToPdfHTML(
+      markdownContent,
+      preferences,
+      previewStyle
+    )
+
+    // Enable when newer version of electron is available
+    // const tagsStr =
+    //   note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
+    // const headerFooter: Record<string, string> = {
+    //   title: `${note.title}${tagsStr}`,
+    //   url: `file://${filenamifyNoteTitle(note.title)}.pdf`,
+    // }
+    const printOpts = {
+      // Needed for codemirorr themes (backgrounds)
+      printBackground: true,
+      // Enable margins if header footer is printed
+      // No margins 1, default margins 0, 2 - minimum margins
+      // marginsType: includeFrontMatter ? 0 : 1,
+      pageSize: 'A4', // This could be chosen by user,
+      // headerFooter: includeFrontMatter ? headerFooter : undefined,
+    }
+    const pdfBlob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
+    const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
+    downloadBlob(pdfBlob, pdfName)
+  } catch (error) {
+    pushMessage({
+      title: 'PDF export failed',
+      description: error.message,
     })
-  return
+  }
 }
