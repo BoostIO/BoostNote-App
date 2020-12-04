@@ -75,10 +75,26 @@ function createMainWindow() {
 if (!singleInstance) {
   app.quit()
 } else {
-  app.on('second-instance', () => {
+  app.on('second-instance', (_event, argv) => {
     if (mainWindow) {
       if (!mainWindow.isVisible()) mainWindow.show()
       mainWindow.focus()
+    }
+
+    if (!MAC) {
+      let urlWithBoostNoteProtocol
+      for (const arg of argv) {
+        if (/^boostnote:\/\//.test(arg)) {
+          urlWithBoostNoteProtocol = arg
+          break
+        }
+      }
+      if (urlWithBoostNoteProtocol != null && mainWindow != null) {
+        mainWindow.webContents.send(
+          'open-boostnote-url',
+          urlWithBoostNoteProtocol
+        )
+      }
     }
   })
 }
