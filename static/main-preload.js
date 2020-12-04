@@ -160,7 +160,7 @@
   function convertHtmlStringToPdfBlob(htmlString, printOptions) {
     return new Promise((resolve, reject) => {
       const encodedStr = encodeURIComponent(htmlString)
-      const { BrowserWindow } = remote
+      const { BrowserWindow } = electron.remote
       const windowOptions = {
         webPreferences: {
           nodeIntegration: false,
@@ -215,4 +215,5 @@
   window.__ELECTRON_ONLY__.isDefaultProtocolClient = isDefaultProtocolClient
   window.__ELECTRON_ONLY__.getWebContentsById
   window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
+  window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
 })()
