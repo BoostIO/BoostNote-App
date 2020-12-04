@@ -39,7 +39,7 @@ export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
 export const boostHubPreloadUrl = formatUrl({
   pathname:
     process.env.NODE_ENV === 'production'
-      ? join(getPathByName('app'), './compiled/static/boosthub-preload.js')
+      ? join(getPathByName('app'), './compiled/app/static/boosthub-preload.js')
       : join(getPathByName('app'), '../static/boosthub-preload.js'),
   protocol: 'file',
   slashes: true,
