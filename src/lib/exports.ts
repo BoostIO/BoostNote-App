@@ -243,6 +243,7 @@ export const exportNoteAsPdfFile = async (
     const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
     downloadBlob(pdfBlob, pdfName)
   } catch (error) {
+    console.warn(error)
     pushMessage({
       title: 'PDF export failed',
       description: error.message,
