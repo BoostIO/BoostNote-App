@@ -87,4 +87,8 @@ export const analyticsEvents = {
   createFolder: 'folders.create',
   updateUiTheme: 'preferences.updateUiTheme',
   updateEditorTheme: 'preferences.updateEditorTheme',
+  appendNoteTag: 'notes.tags.create',
+  removeNoteTag: 'notes.tags.destroy',
+  addTag: 'tags.create',
+  removeTag: 'tags.destroy',
 }

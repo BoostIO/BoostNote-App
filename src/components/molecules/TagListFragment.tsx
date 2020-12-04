@@ -10,6 +10,7 @@ import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
 import { mdiPound, mdiTagMultiple } from '@mdi/js'
 import { openContextMenu } from '../../lib/electronOnly'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -23,6 +24,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { removeTag } = useDb()
   const { t } = useTranslation()
   const currentPathname = usePathnameWithoutNoteId()
+  const { report } = useAnalytics()
 
   const tagListNavItemId = getTagListItemId(storage.id)
   const tagListIsFolded = !sideNavOpenedItemSet.has(tagListNavItemId)
@@ -59,6 +61,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                       onClose: (value: number | null) => {
                         if (value === 0) {
                           removeTag(storageId, tagName)
+                          report(analyticsEvents.removeTag)
                         }
                       },
                     })
@@ -70,7 +73,16 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         />
       )
     })
-  }, [storageId, tagMap, push, currentPathname, messageBox, removeTag, t])
+  }, [
+    storageId,
+    tagMap,
+    push,
+    currentPathname,
+    messageBox,
+    removeTag,
+    t,
+    report,
+  ])
 
   if (tagList.length === 0) {
     return null

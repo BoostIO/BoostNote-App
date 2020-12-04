@@ -5,6 +5,7 @@ import { mdiClose } from '@mdi/js'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 import { useRouter } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const TagItem = styled.li`
   margin-right: 5px;
@@ -54,6 +55,7 @@ const TagNavigatorListItem = ({
 }: TagNavigatorListItemProps) => {
   const { t } = useTranslation()
   const { push } = useRouter()
+  const { report } = useAnalytics()
 
   return (
     <TagItem>
@@ -74,6 +76,7 @@ const TagNavigatorListItem = ({
         title={t('tag.removeX', { tag })}
         onClick={() => {
           removeTagByName(tag)
+          report(analyticsEvents.removeNoteTag)
         }}
       >
         <Icon path={mdiClose} />

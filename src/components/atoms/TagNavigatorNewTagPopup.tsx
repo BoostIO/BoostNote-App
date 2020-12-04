@@ -21,6 +21,7 @@ import { useEffectOnce } from 'react-use'
 import { mdiPound } from '@mdi/js'
 import Icon from './Icon'
 import { isTagNameValid } from '../../lib/db/utils'
+import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
 const Container = styled.div`
   position: fixed;
@@ -81,6 +82,7 @@ const TagNavigatorNewTagPopup = ({
 }: TagNavigatorNewTagPopupProps) => {
   const [newTagName, setNewTagName] = useState('')
   const [menuIndex, setMenuIndex] = useState(0)
+  const { report } = useAnalytics()
 
   const trimmedNewTagName = useMemo(() => {
     return newTagName.trim()
@@ -220,6 +222,7 @@ const TagNavigatorNewTagPopup = ({
               appendTagByName(storageTag)
               setNewTagName('')
               inputRef.current?.focus()
+              report(analyticsEvents.appendNoteTag)
             }}
           >
             <Icon path={mdiPound} />
@@ -236,6 +239,8 @@ const TagNavigatorNewTagPopup = ({
               appendTagByName(trimmedNewTagName)
               setNewTagName('')
               inputRef.current?.focus()
+              report(analyticsEvents.appendNoteTag)
+              report(analyticsEvents.addTag)
             }}
           >
             <span>Create</span>&nbsp;
