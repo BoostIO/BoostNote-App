@@ -29,6 +29,7 @@ import Icon from '../atoms/Icon'
 import { mdiLoading } from '@mdi/js'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import styled from '../../lib/styled'
+import { osName } from '../../lib/platform'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -39,7 +40,17 @@ const BoostHubSignInForm = () => {
     'idle'
   )
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [manualFormOpened, setManualFormOpened] = useState(false)
+  const [manualFormOpened, setManualFormOpened] = useState(() => {
+    switch (osName) {
+      case 'macos':
+      case 'windows':
+        return false
+      case 'linux':
+      case 'unix':
+      default:
+        return true
+    }
+  })
   const { push } = useRouter()
   const { sendSignInRequest } = useBoostHub()
 
