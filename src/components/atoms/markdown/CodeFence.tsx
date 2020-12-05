@@ -9,37 +9,10 @@ const CodeFenceContainer = styled.div`
   position: relative;
 `
 
-const CodeFenceCopyButton = styled.button`
+const CodeFenceButton = styled.button`
   position: absolute;
   top: 0;
   right: 0;
-  height: 30px;
-  width: 30px;
-  box-sizing: border-box;
-  font-size: 18px;
-  outline: none;
-
-  background-color: rgba(0, 0, 0, 0.3);
-  ${flexCenter}
-
-  border: none;
-  cursor: pointer;
-
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
-  &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  &.active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
-  }
-`
-const CodeFenceSaveButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 30px;
   height: 30px;
   width: 30px;
   box-sizing: border-box;
@@ -71,24 +44,27 @@ const CodeFence = (props: React.HTMLProps<HTMLPreElement> = {}) => {
     return (
       <CodeFenceContainer>
         <pre {...otherProps} />
-        <CodeFenceCopyButton
+        <CodeFenceButton
           onClick={() => {
             copy(rawContent)
           }}
           title='Copy to Clipboard'
         >
           <Icon path={mdiContentCopy} />
-        </CodeFenceCopyButton>
-        {rawContent && <CodeFenceSaveButton
+        </CodeFenceButton>
+        {rawContent && <CodeFenceButton
           onClick={() => {
-            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, "hello world.txt");
+            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });            
+            var ext = "";
+            if(props.className!.includes('language-'))
+              ext="."+/language-(.+?)$/.exec(props.className!)![1]
+            saveAs(blob, "snippet" + ext);
           }}
-
           title='Save to File'
+          style={{ right: '30px' }}
         >
           <Icon path={mdiContentSave} />
-        </CodeFenceSaveButton>}
+        </CodeFenceButton>}
       </CodeFenceContainer>
     )
   }
