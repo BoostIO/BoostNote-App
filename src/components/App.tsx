@@ -2,11 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
-import { legacyTheme } from '../themes/legacy'
-import { darkTheme } from '../themes/dark'
-import { lightTheme } from '../themes/light'
-import { sepiaTheme } from '../themes/sepia'
-import { solarizedDarkTheme } from '../themes/solarizedDark'
+import { selectTheme } from '../themes'
 import Dialog from './organisms/Dialog'
 import { useDb } from '../lib/db'
 import PreferencesModal from './PreferencesModal/PreferencesModal'
@@ -373,21 +369,6 @@ const App = () => {
       </AppContainer>
     </ThemeProvider>
   )
-}
-function selectTheme(theme: string) {
-  switch (theme) {
-    case 'legacy':
-      return legacyTheme
-    case 'light':
-      return lightTheme
-    case 'sepia':
-      return sepiaTheme
-    case 'solarizedDark':
-      return solarizedDarkTheme
-    case 'dark':
-    default:
-      return darkTheme
-  }
 }
 
 export default App
