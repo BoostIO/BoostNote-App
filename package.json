@@ -29,7 +29,9 @@
     "test": "jest -c jest.json",
     "test:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit",
-    "ico": "png2icons static/logo.png static/icon -allwe"
+    "ico": "png2icons static/logo.png static/icon -allwe",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [
     "markdown",
@@ -42,9 +44,15 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-private-methods": "^7.12.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.12.1",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
+    "@storybook/addon-actions": "^6.1.10",
+    "@storybook/addon-essentials": "^6.1.10",
+    "@storybook/addon-links": "^6.1.10",
+    "@storybook/react": "^6.1.10",
     "@testing-library/react-hooks": "^2.0.1",
     "@types/codemirror": "0.0.98",
     "@types/dashify": "^1.0.0",
@@ -73,6 +81,7 @@
     "@types/webpack-env": "^1.14.0",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
+    "babel-loader": "^8.2.2",
     "chalk": "^4.0.0",
     "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^6.0.0",
