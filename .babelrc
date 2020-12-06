@@ -1,8 +1,15 @@
 {
   "presets": [
-    ["@babel/preset-env", { "targets": "last 2 Chrome versions" }],
+    [
+      "@babel/preset-env",
+      { "targets": "last 2 Chrome versions", "loose": true }
+    ],
     "@babel/preset-typescript",
     "@babel/preset-react"
   ],
-  "plugins": ["@babel/plugin-proposal-class-properties"]
+  "plugins": [
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    ["@babel/plugin-proposal-private-methods", { "loose": true }],
+    ["@babel/plugin-proposal-private-property-in-object", { "loose": true }]
+  ]
 }
