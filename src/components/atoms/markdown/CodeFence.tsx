@@ -4,7 +4,6 @@ import copy from 'copy-to-clipboard'
 import Icon from '../Icon'
 import { mdiContentCopy, mdiContentSave } from '@mdi/js'
 import { flexCenter } from '../../../lib/styled/styleFunctions'
-import { saveAs } from 'file-saver';
 const CodeFenceContainer = styled.div`
   position: relative;
 `
@@ -54,11 +53,14 @@ const CodeFence = (props: React.HTMLProps<HTMLPreElement> = {}) => {
         </CodeFenceButton>
         {rawContent && <CodeFenceButton
           onClick={() => {
-            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });            
+            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
             var ext = "";
             if(props.className!.includes('language-'))
               ext="."+/language-(.+?)$/.exec(props.className!)![1]
-            saveAs(blob, "snippet" + ext);
+            link.download = "snippet" + ext;
+            link.click();
           }}
           title='Save to File'
           style={{ right: '30px' }}
