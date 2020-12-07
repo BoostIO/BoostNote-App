@@ -2,14 +2,14 @@ import React from 'react'
 import styled from '../../../lib/styled'
 import copy from 'copy-to-clipboard'
 import Icon from '../Icon'
-import { mdiContentCopy } from '@mdi/js'
+import { mdiContentCopy, mdiContentSave } from '@mdi/js'
 import { flexCenter } from '../../../lib/styled/styleFunctions'
-
+import { downloadBlob } from '../../../lib/download';
 const CodeFenceContainer = styled.div`
   position: relative;
 `
 
-const CodeFenceCopyButton = styled.button`
+const CodeFenceButton = styled.button`
   position: absolute;
   top: 0;
   right: 0;
@@ -36,7 +36,6 @@ const CodeFenceCopyButton = styled.button`
     color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
-
 const CodeFence = (props: React.HTMLProps<HTMLPreElement> = {}) => {
   if (props.className != null && props.className!.includes('CodeMirror')) {
     const otherProps = { ...props }
@@ -45,14 +44,27 @@ const CodeFence = (props: React.HTMLProps<HTMLPreElement> = {}) => {
     return (
       <CodeFenceContainer>
         <pre {...otherProps} />
-        <CodeFenceCopyButton
+        <CodeFenceButton
           onClick={() => {
             copy(rawContent)
           }}
           title='Copy to Clipboard'
         >
           <Icon path={mdiContentCopy} />
-        </CodeFenceCopyButton>
+        </CodeFenceButton>
+        {rawContent && <CodeFenceButton
+          onClick={() => {
+            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });
+            var ext = "";
+            if (props.className!.includes('language-'))
+              ext = "." + /language-(.+?)$/.exec(props.className!)![1]
+            downloadBlob(blob, "snippet" + ext);
+          }}
+          title='Save to File'
+          style={{ right: '30px' }}
+        >
+          <Icon path={mdiContentSave} />
+        </CodeFenceButton>}
       </CodeFenceContainer>
     )
   }
