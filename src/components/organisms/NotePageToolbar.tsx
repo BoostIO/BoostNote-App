@@ -162,6 +162,20 @@ const NotePageToolbar = ({
     [storage.id, note, updateNote]
   )
 
+  const getAttachmentData = useCallback(
+    async (src: string) => {
+      if (note == null) {
+        return
+      }
+      if (storage.attachmentMap[src] != undefined) {
+        return storage.attachmentMap[src]?.getData()
+      } else {
+        return Promise.reject('Attachment not in map.')
+      }
+    },
+    [note, storage.attachmentMap]
+  )
+
   const storageTags = useMemo(() => {
     if (storage == null) return []
     return values(storage.tagMap).map((tag) => tag.name)
@@ -205,6 +219,7 @@ const NotePageToolbar = ({
                 note,
                 preferences,
                 pushMessage,
+                getAttachmentData,
                 previewStyle
               ),
           },
@@ -216,6 +231,7 @@ const NotePageToolbar = ({
                 note,
                 preferences,
                 pushMessage,
+                getAttachmentData,
                 previewStyle
               ),
           },
