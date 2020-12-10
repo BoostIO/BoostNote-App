@@ -9,9 +9,9 @@ import rehypeStringify from 'rehype-stringify'
 import rehypeKatex from 'rehype-katex'
 import { mergeDeepRight } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
-import { rehypeCodeMirror } from './../components/atoms/MarkdownPreviewer'
+import { rehypeCodeMirror } from '../components/atoms/MarkdownPreviewer'
 import { downloadBlob, downloadString } from './download'
-import { NoteDoc } from './db/types'
+import { AttachmentData, NoteDoc } from './db/types'
 import { Preferences } from './preferences'
 import { filenamify } from './string'
 import React from 'react'
@@ -48,6 +48,7 @@ export const exportNoteAsHtmlFile = async (
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
+  getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   previewStyle?: string
 ): Promise<void> => {
   await unified()
@@ -68,7 +69,7 @@ export const exportNoteAsHtmlFile = async (
     })
     .use(rehypeStringify)
     .use(rehypeKatex)
-    .process(note.content, (err, file) => {
+    .process(note.content, async (err, file) => {
       if (err != null) {
         pushMessage({
           title: 'Note processing failed',
@@ -76,9 +77,17 @@ export const exportNoteAsHtmlFile = async (
         })
         return
       }
-
-      downloadString(
+      const [htmlString, attachmentUrls] = await updateNoteLinks(
         file.toString(),
+        pushMessage,
+        getAttachmentData,
+        true
+      )
+      if (attachmentUrls.length != 0) {
+        console.log('HTML export tried to export blobs as object URLs')
+      }
+      downloadString(
+        htmlString,
         `${filenamifyNoteTitle(note.title)}.html`,
         'text/html'
       )
@@ -148,8 +157,14 @@ const getPrintStyle = () => `
   </style>
 `
 
+interface ImageData {
+  name: string
+  src?: string
+  blob?: Blob
+}
+
 const generatePrintToPdfHTML = (
-  markdownHTML: string | Uint8Array,
+  markdownHTML: string,
   preferences: Preferences,
   previewStyle?: string
 ) => {
@@ -189,10 +204,108 @@ const generatePrintToPdfHTML = (
   `
 }
 
+const blobToBase64 = async (blob: Blob) => {
+  const reader = new FileReader()
+  reader.readAsDataURL(blob)
+  return new Promise<string | ArrayBuffer | null>((resolve) => {
+    reader.onloadend = () => {
+      resolve(reader.result)
+    }
+  })
+}
+
+const updateNoteLinks = async (
+  content: string,
+  pushMessage: (context: any) => any,
+  getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
+  htmlExport = false
+): Promise<[string, string[]]> => {
+  // How name is stored:
+  //  const fileName = `${dashify(name)}-${getHexatrigesimalString(time++)
+  // todo: [komediruzecki-11/12/2020] Is regex correct,
+  //   can we improve it, do we support other file types/attachments?
+  const attachmentGroups = [
+    ...content.matchAll(/src="([0-9a-zA-Z-]*-[0-9a-zA-Z]{8,14}\.png)"/g),
+  ]
+  let contentWithValidImgSrc = content
+  const attachmentErrors: string[] = []
+  const attachmentUrls: string[] = []
+  for (const group of attachmentGroups) {
+    if (group.length <= 0) {
+      continue
+    }
+    const attachment: string = group[1]
+    const imageData: ImageData | undefined = await getAttachmentData(attachment)
+      .then((value) => {
+        if (!value) {
+          return
+        }
+        switch (value.type) {
+          case 'blob':
+            return { name: attachment, blob: value.blob }
+          case 'src':
+            return { name: attachment, src: value.src }
+        }
+      })
+      .catch((error) => {
+        console.log(
+          `Error during loading attachment ${attachment}, reason: ${
+            error ? error.message : 'Unknown'
+          }`
+        )
+        return undefined
+      })
+
+    if (imageData) {
+      let srcUrl = ''
+      if (imageData.src) {
+        srcUrl = imageData.src
+      } else if (imageData.blob) {
+        if (htmlExport) {
+          // Set url as base64 encoded image
+          const base64EncodedImage = await blobToBase64(imageData.blob)
+          if (base64EncodedImage !== null) {
+            srcUrl = base64EncodedImage.toString()
+          }
+        } else {
+          srcUrl = window.URL.createObjectURL(imageData.blob)
+          // save attachment url for revoking
+          attachmentUrls.push(srcUrl)
+        }
+      }
+
+      if (srcUrl) {
+        contentWithValidImgSrc = contentWithValidImgSrc.replace(
+          imageData.name,
+          srcUrl
+        )
+      }
+    } else {
+      attachmentErrors.push(attachment)
+    }
+  }
+  if (attachmentErrors.length > 0) {
+    pushMessage({
+      title: `PDF export cannot find attachment data for attachments.`,
+      description: `Cannot find attachments: [${attachmentErrors.join(
+        ', '
+      )}],\nPlease check is such exists to properly export the PDF with attachments.`,
+    })
+  }
+  return [contentWithValidImgSrc, attachmentUrls]
+}
+
+const revokeAttachmentsUrls = (attachments: string[]) => {
+  attachments.forEach((attachment) => {
+    window.URL.revokeObjectURL(attachment)
+  })
+}
+
 export const exportNoteAsPdfFile = async (
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
+  getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   previewStyle?: string
 ): Promise<void> => {
   try {
@@ -216,14 +329,20 @@ export const exportNoteAsPdfFile = async (
       })
       .use(rehypeStringify)
       .process(note.content)
+
     const markdownContent = output.toString('utf-8').trim() + '\n'
-    const htmlString = generatePrintToPdfHTML(
+    const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
       markdownContent,
+      pushMessage,
+      getAttachmentData
+    )
+    const htmlString = generatePrintToPdfHTML(
+      mdContentWithValidLinks,
       preferences,
       previewStyle
     )
 
-    // Enable when newer version of electron is available
+    // Enable if we want tags inside PDF export
     // const tagsStr =
     //   note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
     // const headerFooter: Record<string, string> = {
@@ -233,15 +352,15 @@ export const exportNoteAsPdfFile = async (
     const printOpts = {
       // Needed for codemirorr themes (backgrounds)
       printBackground: true,
-      // Enable margins if header footer is printed
+      // Enable margins if header and footer is printed!
       // No margins 1, default margins 0, 2 - minimum margins
-      // marginsType: includeFrontMatter ? 0 : 1,
-      pageSize: 'A4', // This could be chosen by user,
+      marginsType: 0, // This could be chosen by user.
+      pageSize: 'A4', // This could be chosen by user.
       // headerFooter: includeFrontMatter ? headerFooter : undefined,
     }
     const pdfBlob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
     const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
-    downloadBlob(pdfBlob, pdfName)
+    downloadBlob(pdfBlob, pdfName, () => revokeAttachmentsUrls(attachmentUrls))
   } catch (error) {
     console.warn(error)
     pushMessage({
