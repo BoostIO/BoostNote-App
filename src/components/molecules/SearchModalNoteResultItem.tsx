@@ -75,6 +75,30 @@ const SearchModalNoteResultItem = ({
     [highlightMatchedTerm]
   )
 
+  const updateSelectedItemAndFocus = useCallback(
+    (target, note, id) => {
+      {
+        updateSelectedItem(note, id)
+
+        setTimeout(() => {
+          if (target) {
+            target.scrollIntoView(
+              {
+                // todo: [komediruzecki-12/12/2020] Smooth looks nice,
+                //  do we want instant (as now) or slowly auto scrolling to element?
+                behavior: 'auto',
+                block: 'nearest',
+                inline: 'nearest',
+              },
+              20
+            )
+          }
+        })
+      }
+    },
+    [updateSelectedItem]
+  )
+
   return (
     <Container>
       <MetaContainer onClick={navigate}>
@@ -106,7 +130,9 @@ const SearchModalNoteResultItem = ({
                 selectedItemId == result.id ? 'search-result-selected' : ''
               }
               key={getSearchResultKey(note._id, result.id)}
-              onClick={() => updateSelectedItem(note, result.id)}
+              onClick={(event: MouseEvent) =>
+                updateSelectedItemAndFocus(event.target, note, result.id)
+              }
               onDoubleClick={() =>
                 navigateToEditorFocused(
                   note._id,
