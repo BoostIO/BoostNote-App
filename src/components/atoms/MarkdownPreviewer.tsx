@@ -98,25 +98,27 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
       const cmResult = [] as Node[]
       if (lang != null) {
         const mime = getMime(lang)
-        if (mime != null) {
-          CodeMirror.runMode(rawContent, mime, (text, style) => {
-            cmResult.push(
-              h(
-                'span',
-                {
-                  className: style
-                    ? 'cm-' + style.replace(/ +/g, ' cm-')
-                    : undefined,
-                },
-                text
-              )
-            )
-          })
-        } else if (!ignoreMissing) {
+        if (mime == null) {
+          if (ignoreMissing){
+            return
+          }
+
           throw new Error(`Unknown language: \`${lang}\` is not registered`)
-        } else {
-          return;
         }
+
+        CodeMirror.runMode(rawContent, mime, (text, style) => {
+          cmResult.push(
+            h(
+              'span',
+              {
+                className: style
+                  ? 'cm-' + style.replace(/ +/g, ' cm-')
+                  : undefined,
+              },
+              text
+            )
+          )
+        })
       }
 
       node.children = cmResult
