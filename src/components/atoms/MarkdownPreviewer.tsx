@@ -114,6 +114,8 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
           })
         } else if (!ignoreMissing) {
           throw new Error(`Unknown language: \`${lang}\` is not registered`)
+        } else {
+          return;
         }
       }
 
