@@ -167,7 +167,7 @@ export default {
     'preferences.importFlow2': '2. Перетащите файлы .cson на форму ниже.',
     'preferences.importFlow3':
       '3. Выберите Хранилище и Папку куда переместить старые данные.',
-    'preferences.importFlow4': '4. Upload!',
+    'preferences.importFlow4': '4. Загрузить!',
     'preferences.importRemove': 'Удалить',
     'preferences.importUpload': 'Загрузить',
   },
