@@ -31,7 +31,7 @@ import {
   values,
   isSubPathname,
 } from './utils'
-import { FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
+import { TAG_ID_PREFIX, FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
 import PouchDB from './PouchDB'
 import { buildCloudSyncUrl, User } from '../accounts'
 import { setHeader } from '../http'
@@ -525,18 +525,22 @@ export default class PouchNoteDb implements NoteDb {
   }
 
   async renameTag(currentTagName: string, newTagName: string): Promise<void> {
-    const notes = await this.findNotesByTag(tagName)
+    const notes = await this.findNotesByTag(currentTagName)
     await Promise.all(
       notes.map((note) => {
         return this.updateNote(note._id, {
-          tags: note.tags.filter((tag) => tag !== tagName),
+          tags: note.tags.flatMap((tag) => tag === currentTagName ? [newTagName] : [tag]),
         })
       })
     )
 
-    const tag = await this.getTag(tagName)
+    const tag = await this.getTag(currentTagName)
     if (tag != null) {
-      this.pouchDb.remove(tag as any)
+      const renamedTag = {
+        ...tag,
+        _id: TAG_ID_PREFIX + newTagName,
+      }
+      this.pouchDb.put(renamedTag)
     }
   }
 
