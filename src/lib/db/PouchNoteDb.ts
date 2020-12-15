@@ -524,6 +524,22 @@ export default class PouchNoteDb implements NoteDb {
     }
   }
 
+  async renameTag(currentTagName: string, newTagName: string): Promise<void> {
+    const notes = await this.findNotesByTag(tagName)
+    await Promise.all(
+      notes.map((note) => {
+        return this.updateNote(note._id, {
+          tags: note.tags.filter((tag) => tag !== tagName),
+        })
+      })
+    )
+
+    const tag = await this.getTag(tagName)
+    if (tag != null) {
+      this.pouchDb.remove(tag as any)
+    }
+  }
+
   async removeFolder(folderPathname: string): Promise<void> {
     const foldersToDelete = await this.getAllFolderUnderPathname(folderPathname)
 
