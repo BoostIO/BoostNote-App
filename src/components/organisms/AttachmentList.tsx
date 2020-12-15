@@ -7,6 +7,7 @@ import { values } from '../../lib/db/utils'
 import { downloadBlob } from '../../lib/download'
 import { openNew } from '../../lib/platform'
 import { openContextMenu } from '../../lib/electronOnly'
+import copy from 'copy-to-clipboard'
 
 const ListContainer = styled.div`
   display: flex;
@@ -85,6 +86,13 @@ const AttachmentListItem = ({
                     openNew(data.src)
                   },
                 },
+            {
+              type: 'normal',
+              label: 'Copy Attachment Name',
+              click: () => {
+                copy(attachment.name);
+              },
+            },
             {
               type: 'normal',
               label: 'Remove Attachment',
