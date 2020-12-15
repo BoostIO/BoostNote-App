@@ -461,19 +461,20 @@ class FSNoteDb implements NoteDb {
     await this.saveBoostNoteJSON()
   }
 
-  async renameTag(tagName: string): Promise<void> {
+  async renameTag(currentTagName: string, newTagName: string): Promise<void> {
     const notes = await this.loadAllNotes()
     const notesWithTags = notes.filter((note) => {
-      return note.tags.indexOf(tagName) > -1
+      return note.tags.indexOf(currentTagName) > -1
     })
     for (const note of notesWithTags) {
       await this.updateNote(note._id, {
         ...note,
-        tags: note.tags.filter((tag) => tag !== tagName),
+        tags: note.tags.flatMap((tag) => tag === currentTagName ? [newTagName] : [tag]),
       })
     }
 
-    delete this.data?.tagMap[tagName]
+    this.data!.tagMap[newTagName] = this.data?.tagMap[currentTagName]
+    delete this.data?.tagMap[currentTagName]
 
     await this.saveBoostNoteJSON()
   }

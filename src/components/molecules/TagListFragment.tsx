@@ -81,6 +81,8 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                       onClose: (value: string | null) => {
                         if (value == null || !isTagNameValid(value)) return
                         renameTag(storageId, tagName, value);
+                        // TODO: # character not displaying in details page
+                        // TODO: Test rename on cloud storage
                         // TODO: Add analytic Event.
                         // TODO: Mobile component.
                         // TODO: Look at where else delete is present.

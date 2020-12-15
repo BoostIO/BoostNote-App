@@ -1225,29 +1225,31 @@ export function createDbStoreCreator(
 
         await storage.db.renameTag(currentTagName, newTagName)
 
-        if (
-          currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/tags/${tag}`
-        ) {
-          router.replace(`/app/storages/${storageId}/notes`)
-        }
+        router.replace(`/app/storages/${storageId}/tags/${newTagName}`)
 
         const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
-          if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(tag)) {
+          if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(currentTagName)) {
             acc[noteId] = {
               ...storageMap[storageId]!.noteMap[noteId]!,
-              tags: storageMap[storageId]!.noteMap[noteId]!.tags.filter(
-                (noteTag) => noteTag !== tag
-              ),
+              tags: storageMap[storageId]!.noteMap[noteId]!.tags.flatMap(
+                (tag) => tag === currentTagName ? [newTagName] : [tag]),
             }
           }
           return acc
         }, {})
 
-        const newTagMap = { ...storageMap[storageId]!.tagMap }
-        delete newTagMap[tag]
+        const currentTagMap = storageMap[storageId]!.tagMap
+        const updatedTagMap = {
+          ...currentTagMap,
+          [newTagName]: {
+            ...currentTagMap[currentTagName],
+            _id: TAG_ID_PREFIX + newTagName,
+            name: newTagName,
+          } as PopulatedTagDoc,
+        }
+        delete updatedTagMap[currentTagName]
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
@@ -1255,7 +1257,7 @@ export function createDbStoreCreator(
               ...draft[storageId]!.noteMap,
               ...modifiedNotes,
             }
-            draft[storageId]!.tagMap = newTagMap
+            draft[storageId]!.tagMap = updatedTagMap
           })
         )
         queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
