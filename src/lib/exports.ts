@@ -204,7 +204,7 @@ const generatePrintToPdfHTML = (
   `
 }
 
-const blobToBase64 = async (blob: Blob) => {
+async function convertBlobToBase64(blob: Blob) {
   const reader = new FileReader()
   reader.readAsDataURL(blob)
   return new Promise<string | ArrayBuffer | null>((resolve) => {
@@ -214,12 +214,12 @@ const blobToBase64 = async (blob: Blob) => {
   })
 }
 
-const updateNoteLinks = async (
+async function updateNoteLinks(
   content: string,
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   htmlExport = false
-): Promise<[string, string[]]> => {
+): Promise<[string, string[]]> {
   // How name is stored:
   //  const fileName = `${dashify(name)}-${getHexatrigesimalString(time++)
   // todo: [komediruzecki-11/12/2020] Is regex correct,
@@ -263,7 +263,7 @@ const updateNoteLinks = async (
       } else if (imageData.blob) {
         if (htmlExport) {
           // Set url as base64 encoded image
-          const base64EncodedImage = await blobToBase64(imageData.blob)
+          const base64EncodedImage = await convertBlobToBase64(imageData.blob)
           if (base64EncodedImage !== null) {
             srcUrl = base64EncodedImage.toString()
           }
@@ -295,7 +295,7 @@ const updateNoteLinks = async (
   return [contentWithValidImgSrc, attachmentUrls]
 }
 
-const revokeAttachmentsUrls = (attachments: string[]) => {
+function revokeAttachmentsUrls(attachments: string[]) {
   attachments.forEach((attachment) => {
     window.URL.revokeObjectURL(attachment)
   })
@@ -360,7 +360,8 @@ export const exportNoteAsPdfFile = async (
     }
     const pdfBlob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
     const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
-    downloadBlob(pdfBlob, pdfName, () => revokeAttachmentsUrls(attachmentUrls))
+    downloadBlob(pdfBlob, pdfName)
+    revokeAttachmentsUrls(attachmentUrls)
   } catch (error) {
     console.warn(error)
     pushMessage({

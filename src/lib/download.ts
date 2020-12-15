@@ -13,15 +13,7 @@ export function downloadString(
   document.body.removeChild(anchor)
 }
 
-interface DownloadBlobCallback {
-  (): void
-}
-
-export function downloadBlob(
-  blob: Blob,
-  fileName: string,
-  callback?: DownloadBlobCallback
-) {
+export function downloadBlob(blob: Blob, fileName: string) {
   const anchor = document.createElement('a')
   anchor.style.display = 'none'
   document.body.appendChild(anchor)
@@ -30,9 +22,6 @@ export function downloadBlob(
   anchor.click()
   window.URL.revokeObjectURL(anchor.href)
   document.body.removeChild(anchor)
-  if (callback) {
-    callback()
-  }
 }
 
 export function getAppLinkFromUserAgent() {
