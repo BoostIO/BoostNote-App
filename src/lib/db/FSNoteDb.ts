@@ -461,6 +461,23 @@ class FSNoteDb implements NoteDb {
     await this.saveBoostNoteJSON()
   }
 
+  async renameTag(tagName: string): Promise<void> {
+    const notes = await this.loadAllNotes()
+    const notesWithTags = notes.filter((note) => {
+      return note.tags.indexOf(tagName) > -1
+    })
+    for (const note of notesWithTags) {
+      await this.updateNote(note._id, {
+        ...note,
+        tags: note.tags.filter((tag) => tag !== tagName),
+      })
+    }
+
+    delete this.data?.tagMap[tagName]
+
+    await this.saveBoostNoteJSON()
+  }
+
   async renameFolder(pathname: string, newPathname: string) {
     if (!isFolderPathnameValid(pathname)) {
       throw createUnprocessableEntityError(

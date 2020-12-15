@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import SideNavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
+import { isTagNameValid } from '../../lib/db/utils'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../lib/nav'
 import { useRouter } from '../../lib/router'
@@ -20,8 +21,8 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
   const { id: storageId, tagMap } = storage
   const { push } = useRouter()
-  const { messageBox } = useDialog()
-  const { removeTag } = useDb()
+  const { prompt, messageBox } = useDialog()
+  const { removeTag, renameTag } = useDb()
   const { t } = useTranslation()
   const currentPathname = usePathnameWithoutNoteId()
   const { report } = useAnalytics()
@@ -67,6 +68,27 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                     })
                   },
                 },
+                {
+                  type: 'normal',
+                  label: t('tag.rename'),
+                  click: () => {
+                    prompt({
+                      title: `tag.rename`,
+                      message: t('tag.renameMessage', { tagName }),
+                      iconType: DialogIconTypes.Question,
+                      defaultValue: tagName,
+                      submitButtonLabel: t('tag.rename'),
+                      onClose: (value: string | null) => {
+                        if (value == null || !isTagNameValid(value)) return
+                        renameTag(storageId, tagName, value);
+                        // TODO: Add analytic Event.
+                        // TODO: Mobile component.
+                        // TODO: Look at where else delete is present.
+                        // TODO: Add tests, manual test both pouch and fsnote.
+                      },
+                    })
+                  },
+                },
               ],
             })
           }}
@@ -82,6 +104,9 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     removeTag,
     t,
     report,
+    prompt,
+    isTagNameValid,
+    renameTag,
   ])
 
   if (tagList.length === 0) {

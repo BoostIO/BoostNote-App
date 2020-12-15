@@ -81,6 +81,7 @@ export interface DbStore {
   ): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
   removeTag(storageId: string, tag: string): Promise<void>
+  renameTag(storageId: string, currentTagName: string, newTagName: string): Promise<void>
   moveNoteToOtherStorage(
     originalStorageId: string,
     noteId: string,
@@ -1215,6 +1216,61 @@ export function createDbStoreCreator(
       ]
     )
 
+    const renameTag = useCallback(
+      async (storageId: string, currentTagName: string, newTagName: string) => {
+        const storage = storageMap[storageId]
+        if (storage == null) {
+          return
+        }
+
+        await storage.db.renameTag(currentTagName, newTagName)
+
+        if (
+          currentPathnameWithoutNoteId ===
+          `/app/storages/${storageId}/tags/${tag}`
+        ) {
+          router.replace(`/app/storages/${storageId}/notes`)
+        }
+
+        const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
+          storageMap[storageId]!.noteMap
+        ).reduce((acc, noteId) => {
+          if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(tag)) {
+            acc[noteId] = {
+              ...storageMap[storageId]!.noteMap[noteId]!,
+              tags: storageMap[storageId]!.noteMap[noteId]!.tags.filter(
+                (noteTag) => noteTag !== tag
+              ),
+            }
+          }
+          return acc
+        }, {})
+
+        const newTagMap = { ...storageMap[storageId]!.tagMap }
+        delete newTagMap[tag]
+
+        setStorageMap(
+          produce((draft: ObjectMap<NoteStorage>) => {
+            draft[storageId]!.noteMap = {
+              ...draft[storageId]!.noteMap,
+              ...modifiedNotes,
+            }
+            draft[storageId]!.tagMap = newTagMap
+          })
+        )
+        queueSyncingStorage(storageId, autoSyncDebounceWaitingTime)
+
+        return
+      },
+      [
+        storageMap,
+        currentPathnameWithoutNoteId,
+        setStorageMap,
+        queueSyncingStorage,
+        router,
+      ]
+    )
+
     const addAttachments = useCallback(
       async (storageId: string, files: File[]): Promise<Attachment[]> => {
         const storage = storageMapRef.current[storageId]
@@ -1337,6 +1393,7 @@ export function createDbStoreCreator(
       purgeNote,
       moveNoteToOtherStorage,
       removeTag,
+      renameTag,
       addAttachments,
       removeAttachment,
       bookmarkNote,

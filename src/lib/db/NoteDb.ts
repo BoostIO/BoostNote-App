@@ -33,6 +33,7 @@ export default interface NoteDb {
   unbookmarkNote(noteId: string): Promise<NoteDoc>
   purgeNote(noteId: string): Promise<void>
   removeTag(tagName: string): Promise<void>
+  renameTag(currentTagName: string, newTagName: string): Promise<void>
   removeFolder(folerPathname: string): Promise<void>
   renameFolder(
     pathname: string,
