@@ -166,6 +166,7 @@
     "rehype-react": "^6.1.0",
     "rehype-sanitize": "^3.0.1",
     "rehype-stringify": "^8.0.0",
+    "remark-admonitions": "^1.2.1",
     "remark-emoji": "^2.1.0",
     "remark-math": "^2.0.1",
     "remark-parse": "^8.0.3",
