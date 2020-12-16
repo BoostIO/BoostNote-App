@@ -17,7 +17,7 @@ const DialogIcon = ({ icon }: DialogIconProps) => (
 
 export default DialogIcon
 
-function getEmoji(icon: DialogIconTypes): string {
+export function getEmoji(icon: DialogIconTypes): string {
   switch (icon) {
     case DialogIconTypes.Info:
       return 'ℹ️'

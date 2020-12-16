@@ -1,6 +1,7 @@
 declare module 'remark-emoji'
 declare module 'remark-math'
 declare module 'remark-slug'
+declare module 'remark-admonitions'
 declare module 'rehype-raw'
 declare module 'rehype-sanitize'
 declare module 'rehype-react'
