@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useRef,
   useMemo,
+  useEffect,
 } from 'react'
 import {
   FormGroup,
@@ -16,13 +17,20 @@ import {
 } from '../atoms/form'
 import { PouchNoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
-import { renameStorage, deleteStorage } from '../../lib/accounts'
+import {
+  renameStorage,
+  deleteStorage,
+  getSubscription,
+  Subscription,
+} from '../../lib/accounts'
 import { useFirstUser } from '../../lib/preferences'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { useToast } from '../../lib/toast'
 import Spinner from '../atoms/Spinner'
 import LoginButton from '../atoms/LoginButton'
+import { SectionPrimaryButton } from '../PreferencesModal/styled'
+import { openNew } from '../../lib/platform'
 
 interface ManageCloudStorageFormProps {
   storage: PouchNoteStorage
@@ -103,6 +111,19 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
   const syncing = useMemo(() => {
     return storage.sync != null
   }, [storage.sync])
+
+  const [subscription, setSubscription] = useState<Subscription | undefined>(
+    undefined
+  )
+
+  useEffect(() => {
+    if (user != null) {
+      getSubscription(user).then((subscription) => {
+        setSubscription(subscription)
+      })
+    }
+  }, [user])
+
   if (user == null) {
     return (
       <>
@@ -172,6 +193,16 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
           {updating ? 'Updating...' : 'Update cloud storage name'}
         </FormPrimaryButton>
       </FormGroup>
+
+      <FormHeading depth={3}>Billing</FormHeading>
+      <FormGroup>
+        <SectionPrimaryButton
+          onClick={() => openNew('https://note.boostio.co/subscription')}
+        >
+          {subscription != null ? 'Manage' : 'Upgrade'}
+        </SectionPrimaryButton>
+      </FormGroup>
+
       <FormHeading depth={3}>Unlink / Remove cloud storage</FormHeading>
       {foldedDestructiveButtons ? (
         <FormGroup>

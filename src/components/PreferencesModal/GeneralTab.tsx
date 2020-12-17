@@ -1,11 +1,5 @@
 import React, { useCallback } from 'react'
-import {
-  Section,
-  SectionHeader,
-  SectionControl,
-  SectionSelect,
-  SectionPrimaryButton,
-} from './styled'
+import { Section, SectionHeader, SectionControl, SectionSelect } from './styled'
 import {
   usePreferences,
   GeneralThemeOptions,
@@ -15,9 +9,6 @@ import {
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
-import { useUsers } from '../../lib/accounts'
-import UserInfo from './UserInfo'
-import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { FormCheckItem } from '../atoms/form'
 import { NoteSortingOptions } from '../../lib/sort'
@@ -25,7 +16,6 @@ import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 
 const GeneralTab = () => {
   const { preferences, setPreferences } = usePreferences()
-  const [users, { removeUser }] = useUsers()
   const { report } = useAnalytics()
 
   const selectTheme: SelectChangeEventHandler = useCallback(
@@ -97,28 +87,6 @@ const GeneralTab = () => {
 
   return (
     <div>
-      <Section>
-        <SectionHeader>{t('preferences.account')}</SectionHeader>
-        <div>
-          {users.map((user) => (
-            <UserInfo key={user.id} user={user} signout={removeUser} />
-          ))}
-          {users.length === 0 && (
-            <LoginButton
-              onErr={console.error /* TODO: Toast error */}
-              ButtonComponent={SectionPrimaryButton}
-            >
-              {(loginState) =>
-                loginState !== 'logging-in' ? (
-                  <>{t('preferences.addAccount')}</>
-                ) : (
-                  <>{t('preferences.loginWorking')}</>
-                )
-              }
-            </LoginButton>
-          )}
-        </div>
-      </Section>
       <Section>
         <SectionHeader>App Mode</SectionHeader>
         <SectionSelect

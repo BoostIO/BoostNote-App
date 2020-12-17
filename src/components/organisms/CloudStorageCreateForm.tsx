@@ -17,6 +17,7 @@ import {
   getStorages,
   CloudStorage,
   createStorage as createCloudStorage,
+  useUsers,
 } from '../../lib/accounts'
 import { useFirstUser } from '../../lib/preferences'
 import { useEffectOnce } from 'react-use'
@@ -32,6 +33,7 @@ const CloudStorageCreateForm = () => {
   const { pushMessage } = useToast()
   const [creating, setCreating] = useState(false)
   const user = useFirstUser()
+  const [, { removeUser }] = useUsers()
 
   const [fetching, setFetching] = useState(false)
   const [remoteStorageList, setRemoteStorageList] = useState<CloudStorage[]>([])
@@ -198,6 +200,13 @@ const CloudStorageCreateForm = () => {
       <FormGroup>
         <FormSecondaryButton onClick={fetchRemoteStorage} disabled={fetching}>
           Fetch cloud storage
+        </FormSecondaryButton>
+        <FormSecondaryButton
+          onClick={() => {
+            removeUser(user)
+          }}
+        >
+          Sign Out
         </FormSecondaryButton>
       </FormGroup>
 

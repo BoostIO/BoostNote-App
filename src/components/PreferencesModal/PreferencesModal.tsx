@@ -7,7 +7,6 @@ import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
-import BillingTab from './BillingTab'
 import {
   backgroundColor,
   closeIconColor,
@@ -138,8 +137,6 @@ const PreferencesModal = () => {
         return <MarkdownTab />
       case 'about':
         return <AboutTab />
-      case 'billing':
-        return <BillingTab />
       case 'storage':
         if (currentStorage != null) {
           return <StorageTab storage={currentStorage} />
@@ -198,12 +195,6 @@ const PreferencesModal = () => {
               label='Markdown'
               tab='markdown'
               active={tab === 'markdown'}
-              setTab={openTab}
-            />
-            <TabButton
-              label={t('billing.billing')}
-              tab='billing'
-              active={tab === 'billing'}
               setTab={openTab}
             />
           </TabNav>
