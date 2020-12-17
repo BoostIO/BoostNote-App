@@ -8,7 +8,11 @@ import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
 import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
-import { openContextMenu } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  addIpcListener,
+  removeIpcListener,
+} from '../../lib/electronOnly'
 import { values, getFolderNameFromPathname } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
@@ -25,10 +29,6 @@ import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
-import {
-  useGlobalKeyDownHandler,
-  isWithGeneralCtrlKey,
-} from '../../lib/keyboard'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -214,11 +214,35 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
   const { toggleShowSearchModal } = useSearchModal()
 
-  useGlobalKeyDownHandler((event) => {
-    if (isWithGeneralCtrlKey(event) && event.key === 'p') {
+  useEffect(() => {
+    const handler = () => {
       toggleShowSearchModal()
     }
-  })
+    addIpcListener('search', handler)
+    return () => {
+      removeIpcListener('search', handler)
+    }
+  }, [toggleShowSearchModal])
+
+  useEffect(() => {
+    const handler = () => {
+      createNoteByRoute()
+    }
+    addIpcListener('new-note', handler)
+    return () => {
+      removeIpcListener('new-note', handler)
+    }
+  }, [createNoteByRoute])
+
+  useEffect(() => {
+    const handler = () => {
+      createNoteByRoute()
+    }
+    addIpcListener('new-folder', handler)
+    return () => {
+      removeIpcListener('new-folder', handler)
+    }
+  }, [createNoteByRoute])
 
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>

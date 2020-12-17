@@ -194,11 +194,6 @@ const NotePage = ({ storage }: NotePageProps) => {
 
   useGlobalKeyDownHandler((e) => {
     switch (e.key) {
-      case 'n':
-        if (isWithGeneralCtrlKey(e)) {
-          createQuickNote()
-        }
-        break
       case 'T':
       case 't':
         if (isWithGeneralCtrlKey(e) && e.shiftKey) {
