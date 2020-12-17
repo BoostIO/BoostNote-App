@@ -22,7 +22,7 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import ToastList from './Toast'
 import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
-import FeatureCheckListPopup from './organisms/FeatureCheckListPopup'
+import DeprecationNoticeModal from './organisms/DeprecationNoticeModal'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -86,6 +86,7 @@ const App = () => {
     },
     [setGeneralStatus]
   )
+
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
       <AppContainer
@@ -94,12 +95,15 @@ const App = () => {
         }}
       >
         {initialized ? (
-          <TwoPaneLayout
-            defaultLeftWidth={generalStatus.sideBarWidth}
-            left={<Navigator />}
-            right={<Router />}
-            onResizeEnd={updateNavWidth}
-          />
+          <>
+            <TwoPaneLayout
+              defaultLeftWidth={generalStatus.sideBarWidth}
+              left={<Navigator />}
+              right={<Router />}
+              onResizeEnd={updateNavWidth}
+            />
+            <DeprecationNoticeModal />
+          </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>
         )}
@@ -109,7 +113,6 @@ const App = () => {
         <PreferencesModal />
         <ToastList />
         <CodeMirrorStyle />
-        <FeatureCheckListPopup />
       </AppContainer>
     </ThemeProvider>
   )
