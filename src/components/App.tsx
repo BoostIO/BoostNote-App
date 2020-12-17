@@ -29,7 +29,6 @@ import FSNoteDb from '../lib/db/FSNoteDb'
 import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
-import AppModeModal from './organisms/AppModeModal'
 import { useBoostNoteProtocol } from '../lib/protocol'
 import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
@@ -50,11 +49,12 @@ import {
 } from '../lib/events'
 import {
   useCheckedFeatures,
-  featureAppModeSelect,
   featureBoostHubIntro,
 } from '../lib/checkedFeatures'
 import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
 import { useRouteParams } from '../lib/routeParams'
+import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
+import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -341,6 +341,11 @@ const App = () => {
 
   const { isChecked } = useCheckedFeatures()
 
+  const {
+    showCreateWorkspaceModal,
+    toggleShowCreateWorkspaceModal,
+  } = useCreateWorkspaceModal()
+
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
       <AppContainer
@@ -352,10 +357,11 @@ const App = () => {
           <>
             {preferences['general.showAppNavigator'] && <AppNavigator />}
             <Router />
-            {!isChecked(featureAppModeSelect) ? (
-              <AppModeModal />
-            ) : (
-              !isChecked(featureBoostHubIntro) && <BoostHubIntroModal />
+            {!isChecked(featureBoostHubIntro) && <BoostHubIntroModal />}
+            {showCreateWorkspaceModal && (
+              <CreateWorkspaceModal
+                closeModal={toggleShowCreateWorkspaceModal}
+              />
             )}
           </>
         ) : (

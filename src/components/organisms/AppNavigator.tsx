@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, MouseEventHandler } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import styled from '../../lib/styled'
 import {
   borderRight,
@@ -12,7 +12,6 @@ import { mdiPlus, mdiCircleMedium } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
@@ -24,6 +23,7 @@ import {
   featureBoostHubSignIn,
 } from '../../lib/checkedFeatures'
 import { MenuItemConstructorOptions } from 'electron/main'
+import { useCreateWorkspaceModal } from '../../lib/createWorkspaceModal'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -31,7 +31,7 @@ const TopLevelNavigator = () => {
   const { setPreferences, preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
-  const { isChecked, checkFeature } = useCheckedFeatures()
+  const { isChecked } = useCheckedFeatures()
 
   const boostHubUserInfo = preferences['boosthub.user']
 
@@ -71,12 +71,6 @@ const TopLevelNavigator = () => {
     })
   }, [generalStatus.boostHubTeams, activeBoostHubTeamDomain])
 
-  const goToStorageCreatePage = useCallback(() => {
-    push(`/app/storages`)
-  }, [push])
-
-  const { createStorage } = useDb()
-  const { prompt } = useDialog()
   const { setGeneralStatus } = useGeneralStatus()
   const { requestSignOut } = useBoostHub()
 
@@ -107,26 +101,16 @@ const TopLevelNavigator = () => {
         menuItems: [
           {
             type: 'normal',
-            label: 'Create a Note Storage',
+            label: 'Create a Local Workspace',
             click: async () => {
-              prompt({
-                title: 'Create a Storage',
-                message: 'Enter name of a storage to create',
-                iconType: DialogIconTypes.Question,
-                submitButtonLabel: 'Create Storage',
-                onClose: async (value: string | null) => {
-                  if (value == null) return
-                  const storage = await createStorage(value)
-                  push(`/app/storages/${storage.id}/notes`)
-                },
-              })
+              push(`/app/storages`)
             },
           },
           ...(boostHubUserInfo != null
             ? ([
                 {
                   type: 'normal',
-                  label: 'Create a Team',
+                  label: 'Create a Team Workspace',
                   click: async () => {
                     push('/app/boosthub/teams')
                   },
@@ -146,7 +130,7 @@ const TopLevelNavigator = () => {
               }
             : {
                 type: 'normal',
-                label: 'Sign Out Boost Hub',
+                label: 'Sign Out Team Account',
                 click: signOut,
               },
           {
@@ -164,58 +148,10 @@ const TopLevelNavigator = () => {
         ],
       })
     },
-    [boostHubUserInfo, prompt, createStorage, push, setPreferences, signOut]
+    [boostHubUserInfo, push, setPreferences, signOut]
   )
 
-  const openNewStorageContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
-      event.preventDefault()
-      openContextMenu({
-        menuItems: [
-          { label: 'Create a Note Storage', click: goToStorageCreatePage },
-          ...(boostHubUserInfo == null
-            ? ([
-                {
-                  type: 'separator',
-                },
-                {
-                  label: isChecked(featureBoostHubSignIn)
-                    ? 'Create a Team Account'
-                    : 'Create a Team Account (New)',
-                  click: () => {
-                    checkFeature(featureBoostHubSignIn)
-                    push('/app/boosthub/login')
-                  },
-                },
-              ] as MenuItemConstructorOptions[])
-            : ([
-                {
-                  label: 'Create a Team',
-                  click: () => {
-                    push('/app/boosthub/teams')
-                  },
-                },
-                {
-                  type: 'separator',
-                },
-                {
-                  type: 'normal',
-                  label: 'Sign Out Boost Hub',
-                  click: signOut,
-                },
-              ] as MenuItemConstructorOptions[])),
-        ],
-      })
-    },
-    [
-      goToStorageCreatePage,
-      isChecked,
-      checkFeature,
-      push,
-      boostHubUserInfo,
-      signOut,
-    ]
-  )
+  const { toggleShowCreateWorkspaceModal } = useCreateWorkspaceModal()
 
   return (
     <Container>
@@ -225,7 +161,10 @@ const TopLevelNavigator = () => {
         {boostHubTeams}
       </ListContainer>
       <ControlContainer>
-        <NavigatorButton onClick={openNewStorageContextMenu}>
+        <NavigatorButton
+          title='Create Workspace'
+          onClick={toggleShowCreateWorkspaceModal}
+        >
           <Icon path={mdiPlus} />
           {!isChecked(featureBoostHubSignIn) && (
             <Icon className='redDot' path={mdiCircleMedium} />
