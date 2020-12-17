@@ -75,6 +75,8 @@ export type TagDoc = {
 } & TagDocEditibleProps
 
 export type TagDocEditibleProps = {
+  createdAt: string
+  updatedAt: string
   data: JsonObject
 }
 
