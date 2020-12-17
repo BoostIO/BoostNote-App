@@ -5,7 +5,6 @@ import {
   FormCheckInlineItem,
   FormCheckList,
   FormLabel,
-  FormBlockquote,
 } from '../atoms/form'
 import LocalStorageCreateForm from '../organisms/LocalStorageCreateForm'
 import CloudStorageCreateForm from '../organisms/CloudStorageCreateForm'
@@ -42,7 +41,7 @@ const StorageCreatePage = () => {
     <PageContainer>
       <PageDraggableHeader
         iconPath={mdiBookPlusMultiple}
-        label='Create Local Storage'
+        label='Create Local Workspace'
       />
       <PageScrollableContent>
         <FormGroup>
@@ -64,7 +63,7 @@ const StorageCreatePage = () => {
               checked={storageType === 'local'}
               onChange={() => setStorageType('local')}
             >
-              {t('storage.typeLocal')}*
+              {t('storage.typeLocal')}
             </FormCheckInlineItem>
             <FormCheckInlineItem
               id='radio-cloudStorageType'
@@ -74,14 +73,10 @@ const StorageCreatePage = () => {
                 setStorageType('cloud')
               }}
             >
-              {t('storage.typeCloud')}*
+              {t('storage.typeCloud')} (Legacy)
             </FormCheckInlineItem>
           </FormCheckList>
         </FormGroup>
-        <FormBlockquote>
-          * Local and cloud storage type option will be deprecated. Please
-          consider to use file system option or create a cloud workspace.
-        </FormBlockquote>
 
         <StorageCreateForm storageType={storageType} />
       </PageScrollableContent>

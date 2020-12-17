@@ -19,7 +19,7 @@ import {
   createStorage as createCloudStorage,
   useUsers,
 } from '../../lib/accounts'
-import { useFirstUser } from '../../lib/preferences'
+import { useFirstUser, usePreferences } from '../../lib/preferences'
 import { useEffectOnce } from 'react-use'
 import LoginButton from '../atoms/LoginButton'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
@@ -34,6 +34,7 @@ const CloudStorageCreateForm = () => {
   const [creating, setCreating] = useState(false)
   const user = useFirstUser()
   const [, { removeUser }] = useUsers()
+  const { preferences } = usePreferences()
 
   const [fetching, setFetching] = useState(false)
   const [remoteStorageList, setRemoteStorageList] = useState<CloudStorage[]>([])
@@ -131,9 +132,39 @@ const CloudStorageCreateForm = () => {
     }
   })
 
+  const boosthubUserInfo = preferences['boosthub.user']
+
+  const cloudWorkspaceNotice = (
+    <FormBlockquote>
+      <p style={{ marginTop: 0 }}>
+        Please consider to use{' '}
+        <strong>
+          <a
+            href='/app/boosthub/login'
+            onClick={(event) => {
+              event.preventDefault()
+              if (boosthubUserInfo == null) {
+                push('/app/boosthub/login')
+              } else {
+                push('/app/boosthub/teams')
+              }
+            }}
+          >
+            new cloud workspace feature
+          </a>
+        </strong>{' '}
+        instead of the legacy cloud storage.
+      </p>
+      <p style={{ marginTop: 0, marginBottom: 0 }}>
+        It supports <strong>realtime collaboration editing</strong> and more
+        other features for teams so you can use Boost Note with your coworkers.
+      </p>
+    </FormBlockquote>
+  )
   if (user == null) {
     return (
       <>
+        {cloudWorkspaceNotice}
         <LoginButton
           onErr={() => {
             pushMessage({
@@ -144,13 +175,13 @@ const CloudStorageCreateForm = () => {
           }}
           ButtonComponent={FormPrimaryButton}
         />
-        <FormBlockquote>{t('storage.needSignIn')}</FormBlockquote>
       </>
     )
   }
 
   return (
     <>
+      {cloudWorkspaceNotice}
       <FormGroup>
         <FormLabel>Remote Storage</FormLabel>
         <FormCheckItem
