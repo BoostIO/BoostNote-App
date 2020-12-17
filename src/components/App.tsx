@@ -316,29 +316,6 @@ const App = () => {
 
   useBoostNoteProtocol()
 
-  const keyboardHandler = useMemo(() => {
-    return (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'a':
-          if (isWithGeneralCtrlKey(event) && event.target != null) {
-            const targetElement = event.target as HTMLElement
-            const windowSelection = window.getSelection()
-            if (
-              targetElement.classList.contains('MarkdownPreviewer') &&
-              windowSelection != null
-            ) {
-              event.preventDefault()
-              const range = document.createRange()
-              range.selectNode(targetElement)
-              windowSelection.addRange(range)
-            }
-          }
-          break
-      }
-    }
-  }, [])
-  useGlobalKeyDownHandler(keyboardHandler)
-
   const { isChecked } = useCheckedFeatures()
 
   return (

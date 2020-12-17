@@ -7,7 +7,11 @@ const preferencesMenuOption: MenuItemConstructorOptions = {
   label: 'Preferences',
   accelerator: 'Command+,',
   click: async (_menuItem, browserWindow) => {
-    browserWindow!.webContents.send('preferences')
+    if (browserWindow == null) {
+      console.warn('Browser window for the menu item does not exist.')
+      return
+    }
+    browserWindow.webContents.send('preferences')
   },
 }
 
@@ -42,21 +46,42 @@ export const template: MenuItemConstructorOptions[] = [
   {
     label: 'File',
     submenu: mac
-      ? [{ role: 'close' }]
+      ? [
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async (_menuItem, browserWindow) => {
+              if (browserWindow == null) {
+                console.warn('Browser window for the menu item does not exist.')
+                return
+              }
+              browserWindow.webContents.send('new-note')
+            },
+            accelerator: 'Cmd + N',
+          },
+          { type: 'separator' },
+          { role: 'close' },
+        ]
       : ([
+          {
+            type: 'normal',
+            label: 'New Note',
+            click: async (_menuItem, browserWindow) => {
+              if (browserWindow == null) {
+                console.warn('Browser window for the menu item does not exist.')
+                return
+              }
+              browserWindow.webContents.send('new-note')
+            },
+            accelerator: 'Ctrl + N',
+          },
+          { type: 'separator' },
           {
             label: 'Check For Updates',
             click: checkForUpdates,
           },
           { type: 'separator' },
           preferencesMenuOption,
-          { type: 'separator' },
-          {
-            label: 'For Team',
-            click: async () => {
-              await shell.openExternal('https://hub.boostio.co/')
-            },
-          },
           { type: 'separator' },
           { role: 'quit' },
         ] as MenuItemConstructorOptions[]),
@@ -71,6 +96,20 @@ export const template: MenuItemConstructorOptions[] = [
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
+      { type: 'separator' },
+      {
+        type: 'normal',
+        label: 'Search',
+        click: async (_menuItem, browserWindow) => {
+          if (browserWindow == null) {
+            console.warn('Browser window for the menu item does not exist.')
+            return
+          }
+          browserWindow.webContents.send('search')
+        },
+        accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
+      },
+      { type: 'separator' },
       ...(mac
         ? [
             { role: 'pasteAndMatchStyle' },
