@@ -79,7 +79,7 @@ export function isFolderPathnameValid(pathname: string): boolean {
 
 export function isTagNameValid(name: string): boolean {
   if (name.length === 0) return false
-  return !/[\s<>:"\/\\|?*\x00-\x1F]/g.test(name)
+  return !/[\s#<>:"\/\\|?*\x00-\x1F]/g.test(name)
 }
 
 export function isSubPathname(rootPathname: string, targetPathname: string) {

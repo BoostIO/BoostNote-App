@@ -31,7 +31,7 @@ import {
   values,
   isSubPathname,
 } from './utils'
-import { TAG_ID_PREFIX, FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
+import { FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
 import PouchDB from './PouchDB'
 import { buildCloudSyncUrl, User } from '../accounts'
 import { setHeader } from '../http'
@@ -271,6 +271,7 @@ export default class PouchNoteDb implements NoteDb {
       ...props,
       updatedAt: now,
     }
+
     const { rev } = await this.pouchDb.put(tagDocProps)
 
     return {
@@ -535,13 +536,17 @@ export default class PouchNoteDb implements NoteDb {
     )
 
     const tag = await this.getTag(currentTagName)
-    if (tag != null) {
-      const renamedTag = {
-        ...tag,
-        _id: TAG_ID_PREFIX + newTagName,
-      }
-      this.pouchDb.put(renamedTag)
+    if (tag == null) 
+      return
+
+    await this.pouchDb.remove(tag as any)
+
+    const renamedTagProps = {
+      createdAt: tag.createdAt,
+      updatedAt: getNow(),
     }
+
+    this.upsertTag(newTagName, renamedTagProps)
   }
 
   async removeFolder(folderPathname: string): Promise<void> {
