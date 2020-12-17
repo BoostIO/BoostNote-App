@@ -10,6 +10,7 @@ import {
   useCheckedFeatures,
   featureBoostHubSignIn,
 } from '../../lib/checkedFeatures'
+import { usePreferences } from '../../lib/preferences'
 
 interface CreateWorkspaceModalProps {
   closeModal: () => void
@@ -17,16 +18,22 @@ interface CreateWorkspaceModalProps {
 
 const CreateWorkspaceModal = ({ closeModal }: CreateWorkspaceModalProps) => {
   const { push } = useRouter()
+  const { preferences } = usePreferences()
   const { checkFeature } = useCheckedFeatures()
   const chooseLocalWorkspace = useCallback(() => {
     closeModal()
     push(`/app/storages`)
   }, [push, closeModal])
+  const boosthubUserInfo = preferences['boosthub.user']
   const chooseCloudWorkspace = useCallback(() => {
     checkFeature(featureBoostHubSignIn)
     closeModal()
-    push('/app/boosthub/teams')
-  }, [push, checkFeature, closeModal])
+    if (boosthubUserInfo == null) {
+      push('/app/boosthub/login')
+    } else {
+      push('/app/boosthub/teams')
+    }
+  }, [push, checkFeature, closeModal, boosthubUserInfo])
 
   return (
     <ModalContainer onShadowClick={closeModal}>
