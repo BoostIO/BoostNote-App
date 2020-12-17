@@ -10,7 +10,7 @@ const BoostHubTeamsCreatePage = () => {
     <PageContainer>
       <PageDraggableHeader
         iconPath={mdiAccountGroup}
-        label='Create Boost Hub Team'
+        label='Create a cloud workspace'
       />
       <WebViewContainer>
         <BoostHubWebview src={boostHubTeamsCreatePageUrl} />
