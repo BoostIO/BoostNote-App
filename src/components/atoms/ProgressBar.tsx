@@ -3,10 +3,11 @@ import styled from '../../lib/styled'
 
 interface ProgressBarProps {
   progress: number
+  className?: string
 }
 
-const ProgressBar = ({ progress }: ProgressBarProps) => {
-  return <ProgressBarStyled progress={progress} />
+const ProgressBar = ({ progress, className }: ProgressBarProps) => {
+  return <ProgressBarStyled className={className} progress={progress} />
 }
 
 const ProgressBarStyled = styled.div`

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, MouseEvent } from 'react'
+import React, { useCallback, useMemo, MouseEvent, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import NavigatorItem from '../atoms/NavigatorItem'
@@ -16,6 +16,9 @@ import {
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
 import { openContextMenu } from '../../lib/electronOnly'
+import { MenuItemConstructorOptions } from 'electron'
+import ExportProgressItem from './ExportProgressItem'
+import { getExportAsMenuItems } from '../../lib/exports'
 
 interface FolderNavigatorItemProps {
   active: boolean
@@ -109,6 +112,62 @@ const FolderNavigatorItem = ({
     showPromptToRenameFolder(folderPathname)
   }, [folderPathname, showPromptToRenameFolder])
 
+  const [exportSettings, setExportSettings] = useState({
+    folderName: '',
+    folderPathname: '',
+    exportType: '',
+    recursive: false,
+    exportingStorage: false,
+  })
+
+  const [exportProcedureRunning, setExportProcedure] = useState(false)
+
+  const startFolderExport = useCallback(
+    (folderName, folderPathname, exportType, recursive) => {
+      setExportSettings({
+        folderName: folderName,
+        folderPathname: folderPathname,
+        exportType: exportType,
+        recursive: recursive,
+        exportingStorage: false,
+      })
+      setExportProcedure(true)
+    },
+    []
+  )
+
+  const getExportMenu = useCallback(
+    (menuLabel: string): MenuItemConstructorOptions => {
+      return {
+        type: 'submenu',
+        label: menuLabel,
+        submenu: [
+          {
+            type: 'submenu',
+            label: 'Recursive',
+            submenu: getExportAsMenuItems(
+              folderName,
+              folderPathname,
+              true,
+              startFolderExport
+            ),
+          },
+          {
+            type: 'submenu',
+            label: 'Non-recursive',
+            submenu: getExportAsMenuItems(
+              folderName,
+              folderPathname,
+              false,
+              startFolderExport
+            ),
+          },
+        ],
+      }
+    },
+    [folderName, folderPathname, startFolderExport]
+  )
+
   const openFolderContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
@@ -128,6 +187,11 @@ const FolderNavigatorItem = ({
           {
             type: 'separator',
           },
+          getExportMenu('Export Folder'),
+          {
+            type: 'separator',
+          },
+
           {
             type: 'normal',
             label: t('folder.rename'),
@@ -144,10 +208,11 @@ const FolderNavigatorItem = ({
       })
     },
     [
-      folderPathname,
-      t,
       createNoteInFolder,
       createSubFolder,
+      getExportMenu,
+      t,
+      folderPathname,
       showRenamePrompt,
       showFolderRemoveMessageBox,
     ]
@@ -225,37 +290,46 @@ const FolderNavigatorItem = ({
   }
 
   return (
-    <NavigatorItem
-      folded={folded}
-      depth={depth}
-      active={active}
-      iconPath={active ? mdiFolderOpenOutline : mdiFolderOutline}
-      label={folderName}
-      onClick={openFolder}
-      onDoubleClick={showRenamePrompt}
-      onContextMenu={openFolderContextMenu}
-      onFoldButtonClick={toggleFolded}
-      control={
-        <>
-          <NavigatorButton
-            title='New Note'
-            onClick={createNoteInFolder}
-            iconPath={mdiTextBoxPlusOutline}
-          />
-          <NavigatorButton
-            title='New Subfolder'
-            onClick={createSubFolder}
-            iconPath={mdiFolderMultiplePlusOutline}
-          />
-          <NavigatorButton
-            onClick={openMoreContextMenu}
-            iconPath={mdiDotsVertical}
-          />
-        </>
-      }
-      onDragOver={preventDefault}
-      onDrop={handleDrop}
-    />
+    <>
+      <NavigatorItem
+        folded={folded}
+        depth={depth}
+        active={active}
+        iconPath={active ? mdiFolderOpenOutline : mdiFolderOutline}
+        label={folderName}
+        onClick={openFolder}
+        onDoubleClick={showRenamePrompt}
+        onContextMenu={openFolderContextMenu}
+        onFoldButtonClick={toggleFolded}
+        control={
+          <>
+            <NavigatorButton
+              title='New Note'
+              onClick={createNoteInFolder}
+              iconPath={mdiTextBoxPlusOutline}
+            />
+            <NavigatorButton
+              title='New Subfolder'
+              onClick={createSubFolder}
+              iconPath={mdiFolderMultiplePlusOutline}
+            />
+            <NavigatorButton
+              onClick={openMoreContextMenu}
+              iconPath={mdiDotsVertical}
+            />
+          </>
+        }
+        onDragOver={preventDefault}
+        onDrop={handleDrop}
+      />
+      {exportProcedureRunning && (
+        <ExportProgressItem
+          storageId={storageId}
+          exportSettings={exportSettings}
+          onFinish={() => setExportProcedure(false)}
+        />
+      )}
+    </>
   )
 }
 
