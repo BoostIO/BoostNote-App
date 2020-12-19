@@ -82,10 +82,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                         if (value == null || !isTagNameValid(value) || value == tagName) return
                         renameTag(storageId, tagName, value);
                         report(analyticsEvents.renameTag)
-                        // TODO: Test rename on cloud storage
-                        // TODO: Mobile component.
-                        // TODO: Look at where else delete is present.
-                        // TODO: Add tests, manual test both pouch and fsnote.
+                        // TODO: Test Mobile component in android studio.
                       },
                     })
                   },
