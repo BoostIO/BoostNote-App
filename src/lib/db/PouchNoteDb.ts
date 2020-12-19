@@ -526,6 +526,18 @@ export default class PouchNoteDb implements NoteDb {
   }
 
   async renameTag(currentTagName: string, newTagName: string): Promise<void> {
+    const currentTag = await this.getTag(currentTagName)
+    if (currentTag == null) 
+      return 
+
+    const renamedTagProps = {
+      data: currentTag.data,
+      createdAt: currentTag.createdAt,
+      updatedAt: getNow(),
+    }
+
+    await this.upsertTag(newTagName, renamedTagProps)
+
     const notes = await this.findNotesByTag(currentTagName)
     await Promise.all(
       notes.map((note) => {
@@ -534,19 +546,8 @@ export default class PouchNoteDb implements NoteDb {
         })
       })
     )
-
-    const tag = await this.getTag(currentTagName)
-    if (tag == null) 
-      return
-
-    await this.pouchDb.remove(tag as any)
-
-    const renamedTagProps = {
-      createdAt: tag.createdAt,
-      updatedAt: getNow(),
-    }
-
-    this.upsertTag(newTagName, renamedTagProps)
+    
+    await this.pouchDb.remove(currentTag as any)
   }
 
   async removeFolder(folderPathname: string): Promise<void> {

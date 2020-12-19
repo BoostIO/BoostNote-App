@@ -697,6 +697,81 @@ describe('DbStore', () => {
     })
   })
 
+  describe('#renameTag', () => {
+    it('removes previous tag from tag map', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        await result.current.createNote(storage.id, {
+          tags: ['tagTest'],
+        })
+
+        // When
+        await result.current.renameTag(storage.id, 'tagTest', 'tagTestRenamed')
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.tagMap['tagTest']
+        ).toBeUndefined()
+      })
+    })
+
+    it('removes previous tag from tagged notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let note: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        note = await result.current.createNote(storage.id, {
+          tags: ['tagTest'],
+        })
+
+        // When
+        await result.current.renameTag(storage.id, 'tagTest', 'tagTestRenamed')
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.noteMap[
+            note!._id
+          ]!.tags.includes('tagTest')
+        ).toEqual(false)
+      })
+    })
+
+    it('adds new tag to previously tagged notes', async () => {
+      // Given
+      const { result } = prepareDbStore()
+      let storage: NoteStorage
+      let note: NoteDoc | undefined
+      await act(async () => {
+        await result.current.initialize()
+        storage = await result.current.createStorage('test')
+        await result.current.createFolder(storage.id, '/test')
+        note = await result.current.createNote(storage.id, {
+          title: 'testNote',
+          tags: ['tagTest'],
+        })
+
+        // When
+        await result.current.renameTag(storage.id, 'tagTest', 'tagTestRenamed')
+
+        // Then
+        expect(
+          result.current.storageMap[storage!.id]!.noteMap[
+            note!._id
+          ]!.tags.includes('tagTestRenamed')
+        ).toEqual(true)
+      })
+    })
+  })
+
   describe('#renameFolder', () => {
     it('removes a folder previous path', async () => {
       // Given

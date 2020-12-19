@@ -91,5 +91,5 @@ export const analyticsEvents = {
   removeNoteTag: 'notes.tags.destroy',
   addTag: 'tags.create',
   removeTag: 'tags.destroy',
-  renameTag: 'tags.destroy',
+  renameTag: 'tags.rename',
 }

@@ -895,6 +895,40 @@ describe('PouchNoteDb', () => {
     })
   })
 
+  describe('renameTag', () => {
+    it('removes previous tag name and updates notes with the tag name', async () => {
+      // Given
+      const noteDb = await prepareNoteDb()
+      await noteDb.init()
+      const note1 = await noteDb.createNote({
+        title: 'test title1',
+        content: 'test content1',
+        folderPathname: '/',
+        tags: ['tag1'],
+      })
+      const note2 = await noteDb.createNote({
+        title: 'test title2',
+        content: 'test content2',
+        folderPathname: '/',
+        tags: ['tag1', 'tag2'],
+      })
+
+      // When
+      await noteDb.renameTag('tag1', 'tag3')
+
+      // Then
+      const storedNote1 = await noteDb.getNote(note1._id)
+      expect(storedNote1).toMatchObject({
+        tags: ['tag3'],
+      })
+
+      const storedNote2 = await noteDb.getNote(note2._id)
+      expect(storedNote2).toMatchObject({
+        tags: ['tag3', 'tag2'],
+      })
+    })
+  })
+
   describe('removeFolder', () => {
     it('removes a folder and its notes', async () => {
       // Given
