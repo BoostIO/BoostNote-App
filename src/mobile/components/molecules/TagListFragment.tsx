@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../../lib/db/types'
-import { isTagNameValid } from '../../../lib/db/utils'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getTagListItemId } from '../../../lib/nav'
 import { useRouter, usePathnameWithoutNoteId } from '../../lib/router'
@@ -20,8 +19,8 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const { id: storageId, tagMap } = storage
   const { push } = useRouter()
   const { popup } = useContextMenu()
-  const { messageBox, prompt } = useDialog()
-  const { removeTag, renameTag } = useDb()
+  const { messageBox } = useDialog()
+  const { removeTag } = useDb()
   const { t } = useTranslation()
   const currentPathname = usePathnameWithoutNoteId()
 
@@ -67,23 +66,6 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
                   })
                 },
               },
-              {
-                type: MenuTypes.Normal,
-                label: t('tag.rename'),
-                onClick: () => {
-                  prompt({
-                    title: t('tag.rename'),
-                    message: t('folder.renameMessage'),
-                    iconType: DialogIconTypes.Question,
-                    defaultValue: tagName,
-                    submitButtonLabel: t('tag.rename'),
-                    onClose: (value: string | null) => {
-                      if (value == null || !isTagNameValid(value) || value == tagName) return
-                      renameTag(storageId, tagName, value);
-                      },
-                  })
-                },
-              },
             ])
           }}
         />
@@ -99,9 +81,6 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
     removeTag,
     t,
     toggleNav,
-    prompt,
-    isTagNameValid,
-    renameTag,
   ])
 
   if (tagList.length === 0) {
