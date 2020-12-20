@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import SideNavigatorItem from '../atoms/NavigatorItem'
+import NavigatorButton from '../atoms/NavigatorButton'
 import { NoteStorage } from '../../lib/db/types'
 import { isTagNameValid } from '../../lib/db/utils'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -9,7 +10,7 @@ import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
-import { mdiPound, mdiTagMultiple } from '@mdi/js'
+import { mdiPound, mdiTagMultiple, mdiDotsVertical } from '@mdi/js'
 import { openContextMenu } from '../../lib/electronOnly'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
@@ -30,6 +31,54 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
   const tagListNavItemId = getTagListItemId(storage.id)
   const tagListIsFolded = !sideNavOpenedItemSet.has(tagListNavItemId)
 
+  const openTagContextMenu = (tagName: string) => {
+    return (event: React.MouseEvent<Element, MouseEvent>) => {
+      event.preventDefault()
+      openContextMenu({
+        menuItems: [
+          {
+            type: 'normal',
+            label: t('tag.remove'),
+            click: () => {
+              messageBox({
+                title: `Remove "${tagName}" tag`,
+                message: t('tag.removeMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('tag.remove'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    removeTag(storageId, tagName)
+                    report(analyticsEvents.removeTag)
+                  }
+                },
+              })
+            },
+          },
+          {
+            type: 'normal',
+            label: t('tag.rename'),
+            click: () => {
+              prompt({
+                title: `tag.rename`,
+                message: t('tag.renameMessage', { tagName }),
+                iconType: DialogIconTypes.Question,
+                defaultValue: tagName,
+                submitButtonLabel: t('tag.rename'),
+                onClose: (value: string | null) => {
+                  if (value == null || !isTagNameValid(value) || value == tagName) return
+                  renameTag(storageId, tagName, value);
+                  report(analyticsEvents.renameTag)
+                },
+              })
+            },
+          },
+        ],
+      })
+    }
+  }
+
   const tagList = useMemo(() => {
     return Object.keys(tagMap).map((tagName) => {
       const tagPathname = `/app/storages/${storageId}/tags/${tagName}`
@@ -44,52 +93,13 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
             push(tagPathname)
           }}
           active={tagIsActive}
-          onContextMenu={(event) => {
-            event.preventDefault()
-            openContextMenu({
-              menuItems: [
-                {
-                  type: 'normal',
-                  label: t('tag.remove'),
-                  click: () => {
-                    messageBox({
-                      title: `Remove "${tagName}" tag`,
-                      message: t('tag.removeMessage'),
-                      iconType: DialogIconTypes.Warning,
-                      buttons: [t('tag.remove'), t('general.cancel')],
-                      defaultButtonIndex: 0,
-                      cancelButtonIndex: 1,
-                      onClose: (value: number | null) => {
-                        if (value === 0) {
-                          removeTag(storageId, tagName)
-                          report(analyticsEvents.removeTag)
-                        }
-                      },
-                    })
-                  },
-                },
-                {
-                  type: 'normal',
-                  label: t('tag.rename'),
-                  click: () => {
-                    prompt({
-                      title: `tag.rename`,
-                      message: t('tag.renameMessage', { tagName }),
-                      iconType: DialogIconTypes.Question,
-                      defaultValue: tagName,
-                      submitButtonLabel: t('tag.rename'),
-                      onClose: (value: string | null) => {
-                        if (value == null || !isTagNameValid(value) || value == tagName) return
-                        renameTag(storageId, tagName, value);
-                        report(analyticsEvents.renameTag)
-                        // TODO: Test Mobile component in android studio.
-                      },
-                    })
-                  },
-                },
-              ],
-            })
-          }}
+          onContextMenu={openTagContextMenu(tagName)}
+          control={
+            <NavigatorButton
+              iconPath={mdiDotsVertical}
+              onClick={openTagContextMenu(tagName)}
+          />
+          }
         />
       )
     })

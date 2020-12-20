@@ -271,7 +271,6 @@ export default class PouchNoteDb implements NoteDb {
       ...props,
       updatedAt: now,
     }
-
     const { rev } = await this.pouchDb.put(tagDocProps)
 
     return {
