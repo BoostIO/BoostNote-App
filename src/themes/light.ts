@@ -6,7 +6,7 @@ const primaryColor = '#5580DC'
 const primaryDarkerColor = '#4070D8'
 const dangerColor = '#DC3545'
 
-const dark87Color = 'rgba(0,0,0,0.87)'
+const dark87Color = '#212121'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
 const dark12Color = '#bbb'
@@ -93,6 +93,10 @@ export const lightTheme: BaseTheme = {
   inputBackground: '#fff',
 
   // Search Highlight
-  searchHighlightBackgroundColor: '#1362ac',
-  searchItemSelectionBackgroundColor: '#45c4c0',
+  searchHighlightBackgroundColor: '#ffc107',
+  searchHighlightSubtleBackgroundColor: '#ffdb70',
+  searchItemSelectionTextColor: light100Color,
+  searchItemSelectionBackgroundColor: primaryColor,
+  searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
+  searchHighlightTextColor: dark87Color,
 }

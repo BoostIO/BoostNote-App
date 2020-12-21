@@ -1,5 +1,4 @@
 import { BaseTheme } from './BaseTheme'
-import { isColorBright } from '../colors'
 
 interface StyledProps {
   theme: BaseTheme
@@ -199,34 +198,4 @@ white-space: nowrap;
 export const flexCenter = () => `display: flex;
 align-items: center;
 justify-content: center;
-`
-
-export const searchMatchHighlightStyle = ({ theme }: StyledProps) => `
-background-color: ${theme.searchHighlightBackgroundColor};
-color: ${
-  isColorBright(theme.searchHighlightBackgroundColor) ? '#000000' : '#FFF'
-};
-
-border-radius: 4px;
-padding: 1px 2px;
-`
-
-export const searchMatchHighlightEditorStyle = ({ theme }: StyledProps) => `
-background-color: ${theme.searchHighlightBackgroundColor};
-color: ${
-  isColorBright(theme.searchHighlightBackgroundColor) ? '#000000' : '#FFF'
-};
-&.cm-variable {
-  color: ${
-    isColorBright(theme.searchHighlightBackgroundColor) ? '#000000' : '#FFF'
-  };
-}
-// better to remove, because if any border radius is added
-// the searched elements all include their radius and it looks blocky instead of one
-// search string (anything separated with space, or other character is one block)
-// border-radius: 4px; 
-padding-left: 0.1em;
-padding-right: 0.1em;
-padding-bottom: 0.05em;
-padding-top: 0.1em;
 `

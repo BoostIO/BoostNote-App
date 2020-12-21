@@ -6,6 +6,7 @@ const primaryColor = '#34a198'
 const primaryDarkerColor = '#2e8e86'
 const dangerColor = '#DC3545'
 
+const dark87Color = '#212121'
 const dark26Color = 'rgba(0,0,0,0.26)'
 const light70Color = 'rgba(255,255,255,0.7)'
 const light30Color = 'rgba(255,255,255,0.3)'
@@ -84,6 +85,10 @@ export const solarizedDarkTheme: BaseTheme = {
   inputBackground: light12Color,
 
   // Search Highlight
-  searchHighlightBackgroundColor: '#1362ac',
-  searchItemSelectionBackgroundColor: '#942fca',
+  searchHighlightBackgroundColor: '#ffc107',
+  searchHighlightSubtleBackgroundColor: '#ffdb70',
+  searchItemSelectionTextColor: light100Color,
+  searchItemSelectionBackgroundColor: primaryColor,
+  searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
+  searchHighlightTextColor: dark87Color,
 }

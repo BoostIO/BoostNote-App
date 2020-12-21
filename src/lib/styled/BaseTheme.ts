@@ -62,5 +62,9 @@ export interface BaseTheme {
 
   // Search Highlight
   searchHighlightBackgroundColor: string
+  searchHighlightSubtleBackgroundColor: string
+  searchItemSelectionTextColor: string
   searchItemSelectionBackgroundColor: string
+  searchItemSelectionHoverBackgroundColor: string
+  searchHighlightTextColor: string
 }

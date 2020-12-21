@@ -14,7 +14,6 @@ import { useSearchModal } from '../../lib/searchModal'
 import {
   border,
   borderBottom,
-  searchMatchHighlightEditorStyle,
   borderTop,
   flexCenter,
 } from '../../lib/styled/styleFunctions'
@@ -173,9 +172,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
           codeEditor.markText(from, to, {
             className:
-              currentItemId == selectedItemId
-                ? 'codeMirrorSelectedTextStyle'
-                : 'codeMirrorMarkedTextStyle',
+              currentItemId == selectedItemId ? 'marked selected' : 'marked',
           })
 
           if (!MERGE_SAME_LINE_RESULTS_INTO_ONE) {
@@ -402,14 +399,20 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
 `
 
 const EditorPreview = styled.div`
-  .codeMirrorMarkedTextStyle {
-    ${searchMatchHighlightEditorStyle};
-    opacity: 0.9;
+  .marked {
+    background-color: ${({ theme }) =>
+      theme.searchHighlightSubtleBackgroundColor};
+    color: ${({ theme }) => theme.searchHighlightTextColor} !important;
+    padding: 3px;
   }
 
-  .codeMirrorSelectedTextStyle {
-    ${searchMatchHighlightEditorStyle};
-    filter: brightness(125%);
+  .marked + .marked {
+    margin-left: -3px;
+    padding-left: 0;
+  }
+
+  .selected {
+    background-color: ${({ theme }) => theme.searchHighlightBackgroundColor};
   }
 
   background-color: ${({ theme }) => theme.navBackgroundColor};
