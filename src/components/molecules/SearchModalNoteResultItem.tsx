@@ -13,7 +13,6 @@ import {
   MAX_SEARCH_PREVIEW_LINE_LENGTH,
   SearchResult,
 } from '../../lib/search/search'
-import { isColorBright } from '../../lib/colors'
 import { SearchMatchHighlight } from '../PreferencesModal/styled'
 import { escapeRegExp } from '../../lib/string'
 
@@ -154,12 +153,16 @@ const SearchModalNoteResultItem = ({
 
 export default SearchModalNoteResultItem
 
-const Container = styled.div``
+const Container = styled.div`
+  ${borderBottom};
+  &:last-child {
+    border-bottom: none;
+  }
+`
 
 const SearchResultContainer = styled.div`
   padding: 10px;
   cursor: pointer;
-  ${borderBottom};
   user-select: none;
 `
 
@@ -233,28 +236,20 @@ const SearchResultItem = styled.div`
   height: 100%;
   justify-content: space-between;
   overflow: hidden;
+  padding: 2px 4px;
 
   margin-top: 0.3em;
 
   &.search-result-selected {
     border-radius: 4px;
-    padding: 2px;
     background-color: ${({ theme }) =>
       theme.searchItemSelectionBackgroundColor};
-    filter: brightness(
-      ${({ theme }) => (isColorBright(theme.activeBackgroundColor) ? 85 : 115)}%
-    );
-    }
   }
 
   &:hover {
     border-radius: 4px;
     background-color: ${({ theme }) =>
       theme.secondaryButtonHoverBackgroundColor};
-    filter: brightness(
-      ${({ theme }) =>
-        isColorBright(theme.secondaryButtonHoverBackgroundColor) ? 85 : 115}%
-    );
   }
 `
 

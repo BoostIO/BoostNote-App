@@ -15,6 +15,7 @@ import {
   border,
   borderBottom,
   searchMatchHighlightEditorStyle,
+  borderTop,
 } from '../../lib/styled/styleFunctions'
 import { mdiMagnify } from '@mdi/js'
 import Icon from '../atoms/Icon'
@@ -110,6 +111,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
         }
       })
 
+      setSelectedItemId('')
       setResultList(searchResultData)
       setSearching(false)
     },
@@ -299,7 +301,6 @@ const SearchModal = ({ storage }: SearchModalProps) => {
                 codeMirrorRef={updateCodeMirrorMarks}
                 value={selectedNote.content}
                 readonly={true}
-                // todo: [komediruzecki-04/12/2020] Maybe implement onChange and update the content directly?
               />
             </EditorPreview>
           )}
@@ -322,17 +323,17 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
   left: 0;
   bottom: 0;
   right: 0;
-  -webkit-app-region: drag;
 
   & > .container {
     position: relative;
     margin: 50px auto 0;
     background-color: ${({ theme }) => theme.navBackgroundColor};
-    width: 45%;
+    width: calc(100% -15px);
+    max-width: 720px;
     z-index: 6002;
     ${border};
     border-radius: 10px;
-    max-height: 65%;
+    max-height: calc(100% - 100px);
     display: flex;
     flex-direction: column;
     & > .search {
@@ -353,9 +354,9 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
       }
     }
     & > .list {
-      flex: 1;
       overflow-x: hidden;
       overflow-y: auto;
+      flex: 1;
       & > .searching {
         text-align: center;
         color: ${({ theme }) => theme.disabledUiTextColor};
@@ -393,8 +394,11 @@ const EditorPreview = styled.div`
   }
 
   background-color: ${({ theme }) => theme.navBackgroundColor};
-  z-index: 6002;
 
+  ${borderTop};
   width: 100%;
-  height: 100%;
+  flex: 1;
+  .CodeMirror {
+    height: 100%;
+  }
 `
