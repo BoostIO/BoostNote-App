@@ -126,34 +126,38 @@ const SearchModalNoteResultItem = ({
         </div>
       </MetaContainer>
 
-      <SearchResultContainer>
-        {searchResults.length > 0 &&
-          searchResults.map((result) => (
-            <SearchResultItem
-              className={selectedItemId === result.id ? 'selected' : ''}
-              key={getSearchResultKey(note._id, result.id)}
-              onClick={(event: MouseEvent) =>
-                updateSelectedItemAndFocus(event.target, note, result.id)
-              }
-              onDoubleClick={() =>
-                navigateToEditorFocused(
-                  note._id,
-                  result.lineNum - 1,
-                  result.matchColumn
-                )
-              }
-            >
-              <SearchResultLeft title={result.lineStr}>
-                <code>
-                  {beautifyPreviewLine(result.lineStr, result.matchStr)}
-                </code>
-              </SearchResultLeft>
-              <SearchResultRight>
-                <code>{result.lineNum}</code>
-              </SearchResultRight>
-            </SearchResultItem>
-          ))}
-      </SearchResultContainer>
+      {searchResults.length > 0 && (
+        <>
+          <hr className='separator' />
+          <SearchResultContainer>
+            {searchResults.map((result) => (
+              <SearchResultItem
+                className={selectedItemId === result.id ? 'selected' : ''}
+                key={getSearchResultKey(note._id, result.id)}
+                onClick={(event: MouseEvent) =>
+                  updateSelectedItemAndFocus(event.target, note, result.id)
+                }
+                onDoubleClick={() =>
+                  navigateToEditorFocused(
+                    note._id,
+                    result.lineNum - 1,
+                    result.matchColumn
+                  )
+                }
+              >
+                <SearchResultLeft title={result.lineStr}>
+                  <code>
+                    {beautifyPreviewLine(result.lineStr, result.matchStr)}
+                  </code>
+                </SearchResultLeft>
+                <SearchResultRight>
+                  <code>{result.lineNum}</code>
+                </SearchResultRight>
+              </SearchResultItem>
+            ))}
+          </SearchResultContainer>
+        </>
+      )}
     </Container>
   )
 }
@@ -165,18 +169,25 @@ const Container = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  .separator {
+    border: none;
+
+    ${borderBottom};
+    margin: 0 10px 2px;
+  }
 `
 
 const SearchResultContainer = styled.div`
-  padding: 5px;
+  padding: 0 5px;
+  margin-bottom: 5px;
   cursor: pointer;
   user-select: none;
 `
 
 const MetaContainer = styled.div`
-  padding: 5px 10px;
+  padding: 10px 10px;
   cursor: pointer;
-  ${borderBottom};
   user-select: none;
 
   &:hover {
@@ -200,6 +211,7 @@ const MetaContainer = styled.div`
 
     & > .title {
       flex: 1;
+      font-size: 18px;
       ${textOverflow}
       &.empty {
         color: ${({ theme }) => theme.disabledUiTextColor};
@@ -250,7 +262,7 @@ const SearchResultItem = styled.div`
   border-radius: 4px;
   margin-bottom: 2px;
   &:last-child {
-    margin-bottom: 0;
+    margin-bottom: 10px;
   }
 
   &.selected {
