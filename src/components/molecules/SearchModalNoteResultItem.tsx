@@ -15,6 +15,7 @@ import {
 } from '../../lib/search/search'
 import { SearchMatchHighlight } from '../PreferencesModal/styled'
 import { escapeRegExp } from '../../lib/string'
+import cc from 'classcat'
 
 interface SearchModalNoteResultItemProps {
   note: NoteDoc
@@ -98,6 +99,8 @@ const SearchModalNoteResultItem = ({
     [updateSelectedItem]
   )
 
+  const titleIsEmpty = note.title.trim().length === 0
+
   return (
     <Container>
       <MetaContainer onClick={navigate}>
@@ -105,7 +108,9 @@ const SearchModalNoteResultItem = ({
           <div className='icon'>
             <Icon path={mdiTextBoxOutline} />
           </div>
-          <div className='title'>{note.title}</div>
+          <div className={cc(['title', titleIsEmpty && 'empty'])}>
+            {titleIsEmpty ? 'Untitled' : note.title}
+          </div>
         </div>
         <div className='meta'>
           <div className='folderPathname'>
@@ -182,13 +187,13 @@ const MetaContainer = styled.div`
   }
 
   & > .header {
-    font-size: 18px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     margin-bottom: 5px;
     & > .icon {
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       margin-right: 4px;
       ${flexCenter}
     }
@@ -196,6 +201,9 @@ const MetaContainer = styled.div`
     & > .title {
       flex: 1;
       ${textOverflow}
+      &.empty {
+        color: ${({ theme }) => theme.disabledUiTextColor};
+      }
     }
   }
   & > .meta {

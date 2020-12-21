@@ -16,6 +16,7 @@ import {
   borderBottom,
   borderTop,
   flexCenter,
+  textOverflow,
 } from '../../lib/styled/styleFunctions'
 import { mdiMagnify, mdiClose, mdiTextBoxOutline } from '@mdi/js'
 import Icon from '../atoms/Icon'
@@ -32,6 +33,7 @@ import {
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CodeMirror from 'codemirror'
 import { BaseTheme } from '../../lib/styled/BaseTheme'
+import cc from 'classcat'
 
 interface SearchModalProps {
   storage: NoteStorage
@@ -302,7 +304,16 @@ const SearchModal = ({ storage }: SearchModalProps) => {
               <div className='preview-control'>
                 <div className='preview-control__location'>
                   <Icon path={mdiTextBoxOutline} className='icon' />
-                  {selectedNote.title}
+                  <span
+                    className={cc([
+                      'label',
+                      selectedNote.title.trim().length === 0 && 'empty',
+                    ])}
+                  >
+                    {selectedNote.title.trim().length > 0
+                      ? selectedNote.title
+                      : 'Untitled'}
+                  </span>
                 </div>
                 <button
                   className='preview-control__close-button'
@@ -431,11 +442,20 @@ const EditorPreview = styled.div`
     display: flex;
     ${borderBottom}
     & > .preview-control__location {
+      overflow: hidden;
       flex: 1;
       display: flex;
       align-items: center;
-      padding: 0 5px;
+      padding-left: 10px;
+      & > .label {
+        flex: 1;
+        ${textOverflow}
+        &.empty {
+          color: ${({ theme }) => theme.disabledUiTextColor};
+        }
+      }
       & > .icon {
+        flex-shrink: 0;
         margin-right: 2px;
       }
     }
