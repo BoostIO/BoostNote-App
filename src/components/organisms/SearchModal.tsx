@@ -417,7 +417,10 @@ const EditorPreview = styled.div`
   ${borderTop};
   width: 100%;
   flex: 1;
+  flex-shrink: 0;
+  height: 324px;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   & > .preview-control {
     flex-shrink: 0;
@@ -462,6 +465,7 @@ const EditorPreview = styled.div`
   }
   & > .editor {
     flex: 1;
+    overflow-y: auto;
   }
   .CodeMirror {
     height: 100%;
