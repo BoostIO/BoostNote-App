@@ -125,9 +125,7 @@ const SearchModalNoteResultItem = ({
         {searchResults.length > 0 &&
           searchResults.map((result) => (
             <SearchResultItem
-              className={
-                selectedItemId == result.id ? 'search-result-selected' : ''
-              }
+              className={selectedItemId === result.id ? 'selected' : ''}
               key={getSearchResultKey(note._id, result.id)}
               onClick={(event: MouseEvent) =>
                 updateSelectedItemAndFocus(event.target, note, result.id)
@@ -141,9 +139,13 @@ const SearchModalNoteResultItem = ({
               }
             >
               <SearchResultLeft title={result.lineStr}>
-                {beautifyPreviewLine(result.lineStr, result.matchStr)}
+                <code>
+                  {beautifyPreviewLine(result.lineStr, result.matchStr)}
+                </code>
               </SearchResultLeft>
-              <SearchResultRight>{result.lineNum}</SearchResultRight>
+              <SearchResultRight>
+                <code>{result.lineNum}</code>
+              </SearchResultRight>
             </SearchResultItem>
           ))}
       </SearchResultContainer>
@@ -161,13 +163,13 @@ const Container = styled.div`
 `
 
 const SearchResultContainer = styled.div`
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
   user-select: none;
 `
 
 const MetaContainer = styled.div`
-  padding: 10px;
+  padding: 5px 10px;
   cursor: pointer;
   ${borderBottom};
   user-select: none;
@@ -236,18 +238,24 @@ const SearchResultItem = styled.div`
   height: 100%;
   justify-content: space-between;
   overflow: hidden;
-  padding: 2px 4px;
+  padding: 3px 5px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 
-  margin-top: 0.3em;
-
-  &.search-result-selected {
-    border-radius: 4px;
+  &.selected {
+    color: ${({ theme }) => theme.searchItemSelectionTextColor};
     background-color: ${({ theme }) =>
       theme.searchItemSelectionBackgroundColor};
   }
+  &.selected:hover {
+    background-color: ${({ theme }) =>
+      theme.searchItemSelectionHoverBackgroundColor};
+  }
 
   &:hover {
-    border-radius: 4px;
     background-color: ${({ theme }) =>
       theme.secondaryButtonHoverBackgroundColor};
   }
@@ -258,10 +266,6 @@ const SearchResultLeft = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
-  &:before {
-    content: attr(content);
-  }
 `
 
 const SearchResultRight = styled.div`

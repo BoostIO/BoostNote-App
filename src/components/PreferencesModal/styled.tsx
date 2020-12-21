@@ -7,7 +7,6 @@ import {
   tableStyle,
   disabledUiTextColor,
   PrimaryTextColor,
-  searchMatchHighlightStyle,
 } from '../../lib/styled/styleFunctions'
 
 export const Section = styled.section`
@@ -116,5 +115,8 @@ export const SectionListSelect = styled.div`
 `
 
 export const SearchMatchHighlight = styled.span`
-  ${searchMatchHighlightStyle}
+  background-color: ${({ theme }) => theme.searchHighlightBackgroundColor};
+  color: ${({ theme }) => theme.searchHighlightTextColor};
+
+  padding: 2px;
 `
