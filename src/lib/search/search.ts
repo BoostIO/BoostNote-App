@@ -30,15 +30,15 @@ function getMatchDataFromGlobalColumn(
   lines: string[],
   position: number
 ): EditorPosition {
-  let current_position = 0
+  let currentPosition = 0
   let lineColumn = 0
   let lineNum = 0
 
-  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
-    current_position += lines[lineIdx].length + 1
-    if (current_position > position) {
-      lineNum = lineIdx
-      lineColumn = position - (current_position - (lines[lineIdx].length + 1))
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+    currentPosition += lines[lineIndex].length + 1
+    if (currentPosition > position) {
+      lineNum = lineIndex
+      lineColumn = position - (currentPosition - (lines[lineIndex].length + 1))
       break
     }
   }
@@ -61,17 +61,16 @@ export function getMatchData(text: string, searchTerm: RegExp) {
   }
   const matches: IterableIterator<RegExpMatchArray> = text.matchAll(searchTerm)
 
-  let previousLineNum = 0
+  let previousLineNumber = -1
   for (const match of matches) {
     const matchStr = match[0]
     const matchIndex: number = match.index ? match.index : 0
     const pos = getMatchDataFromGlobalColumn(lines, matchIndex)
     if (MERGE_SAME_LINE_RESULTS_INTO_ONE) {
-      if (pos.line == previousLineNum) {
-        // same result at a line, skip this one
+      if (pos.line == previousLineNumber) {
         continue
       } else {
-        previousLineNum = pos.line
+        previousLineNumber = pos.line
       }
     }
     data.push({
