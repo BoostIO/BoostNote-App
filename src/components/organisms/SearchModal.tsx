@@ -346,6 +346,7 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
     background-color: ${({ theme }) => theme.navBackgroundColor};
     width: calc(100% -15px);
     max-width: 720px;
+    overflow: hidden;
     z-index: 6002;
     ${border};
     border-radius: 10px;
