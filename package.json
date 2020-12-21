@@ -88,6 +88,7 @@
     "css-loader": "^3.2.0",
     "electron": "^10.1.5",
     "electron-builder": "^22.8.1",
+    "electron-notarize": "^1.0.0",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.1",
     "eslint": "^6.4.0",
@@ -185,8 +186,12 @@
       "app": "electron"
     },
     "asar": false,
+    "afterSign": "build-utils/afterSignHook.js",
     "mac": {
-      "icon": "static/icon.icns"
+      "icon": "static/icon.icns",
+      "hardenedRuntime": true,
+      "entitlementsInherit": "macOs/entitlements.mac.plist",
+      "entitlements": "macOs/entitlements.mac.plist"
     },
     "linux": {
       "icon": "static/icon.icns",
