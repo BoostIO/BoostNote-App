@@ -16,8 +16,9 @@ import {
   borderBottom,
   searchMatchHighlightEditorStyle,
   borderTop,
+  flexCenter,
 } from '../../lib/styled/styleFunctions'
-import { mdiMagnify } from '@mdi/js'
+import { mdiMagnify, mdiClose, mdiTextBoxOutline } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import SearchModalNoteResultItem from '../molecules/SearchModalNoteResultItem'
 import { useStorageRouter } from '../../lib/storageRouter'
@@ -39,7 +40,7 @@ interface SearchModalProps {
 
 const SearchModal = ({ storage }: SearchModalProps) => {
   const [noteToSearchResultMap] = useState({})
-  const [selectedNote, setSelectedNote] = useState({ _id: '', content: '' })
+  const [selectedNote, setSelectedNote] = useState<NoteDoc | null>(null)
   const [selectedItemId, setSelectedItemId] = useState('')
   const [searchValue, setSearchValue] = useState('')
   const [resultList, setResultList] = useState<NoteSearchData[]>([])
@@ -255,6 +256,10 @@ const SearchModal = ({ storage }: SearchModalProps) => {
     return searchNumLines == 0 || searchNumLines == 1 ? 1 : searchNumLines + 1
   }, [searchValue])
 
+  const closePreview = useCallback(() => {
+    setSelectedItemId('')
+  }, [])
+
   return (
     <Container numRows={textAreaRows()}>
       <div className='container' onClick={focusTextAreaInput}>
@@ -280,7 +285,9 @@ const SearchModal = ({ storage }: SearchModalProps) => {
                   key={result.note._id}
                   note={result.note}
                   selectedItemId={
-                    selectedNote._id == result.note._id ? selectedItemId : '-1'
+                    selectedNote != null && selectedNote._id == result.note._id
+                      ? selectedItemId
+                      : '-1'
                   }
                   searchResults={result.results}
                   updateSelectedItem={updateSelectedItems}
@@ -291,10 +298,22 @@ const SearchModal = ({ storage }: SearchModalProps) => {
             })}
         </div>
         {selectedItemId &&
-          selectedNote._id &&
+          selectedNote != null &&
           !searching &&
           resultList.length > 0 && (
             <EditorPreview>
+              <div className='preview-control'>
+                <div className='preview-control__location'>
+                  <Icon path={mdiTextBoxOutline} className='icon' />
+                  {selectedNote.title}
+                </div>
+                <button
+                  className='preview-control__close-button'
+                  onClick={closePreview}
+                >
+                  <Icon path={mdiClose} />
+                </button>
+              </div>
               <CustomizedCodeEditor
                 className='editor'
                 key={getSearchResultKey(selectedNote._id, selectedItemId)}
@@ -398,6 +417,52 @@ const EditorPreview = styled.div`
   ${borderTop};
   width: 100%;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  & > .preview-control {
+    flex-shrink: 0;
+    display: flex;
+    ${borderBottom}
+    & > .preview-control__location {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      & > .icon {
+        margin-right: 2px;
+      }
+    }
+    & > .preview-control__close-button {
+      flex-shrink: 0;
+
+      height: 24px;
+      width: 24px;
+      box-sizing: border-box;
+      font-size: 18px;
+      outline: none;
+      padding: 0 5px;
+
+      background-color: transparent;
+      ${flexCenter}
+
+      border: none;
+      cursor: pointer;
+
+      transition: color 200ms ease-in-out;
+      color: ${({ theme }) => theme.navItemColor};
+      &:hover {
+        color: ${({ theme }) => theme.navButtonHoverColor};
+      }
+
+      &:active,
+      &.active {
+        color: ${({ theme }) => theme.navButtonActiveColor};
+      }
+    }
+  }
+  & > .editor {
+    flex: 1;
+  }
   .CodeMirror {
     height: 100%;
   }
