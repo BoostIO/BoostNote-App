@@ -51,11 +51,9 @@ function getMatchDataFromGlobalColumn(
 export function getMatchData(text: string, searchTerm: RegExp) {
   const data: SearchResult[] = []
 
-  // Split text
   let resultId = 0
   const lines: string[] = text.split('\n')
 
-  // Use only first N lines
   if (text.length > MAX_SEARCH_CONTENT_LENGTH_PER_NOTE) {
     text = text.substring(0, MAX_SEARCH_PREVIEW_LINE_LENGTH)
   }
