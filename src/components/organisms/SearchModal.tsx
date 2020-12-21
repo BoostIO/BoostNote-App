@@ -129,7 +129,6 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
   const handleSearchInputKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
-      console.log(event.key)
       if (event.key === 'Escape') {
         // TODO: Focus back after modal closed
         toggleShowSearchModal()
@@ -192,7 +191,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
       selectedIdx: number
     ) => {
       if (selectedIdx >= searchResults.length) {
-        console.log(
+        console.warn(
           'Cannot focus editor on selected idx.',
           selectedIdx,
           searchResults.length
@@ -216,29 +215,28 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
   const updateCodeMirrorMarks = useCallback(
     (codeMirror: CodeMirror.EditorFromTextArea) => {
-      if (codeMirror) {
-        // Get search result from selected note
-        if (selectedNote != null && selectedNote._id && selectedItemId != '') {
-          const noteResultKey = excludeNoteIdPrefix(selectedNote._id)
-          const searchResults: SearchResult[] =
-            noteToSearchResultMap[noteResultKey]
-          if (searchResults.length > 0) {
-            const selectedItemIdNum =
-              selectedItemId && !Number.isNaN(parseInt(selectedItemId))
-                ? parseInt(selectedItemId)
-                : -1
-            addMarkers(codeMirror, searchResults[0].matchStr, selectedItemIdNum)
-            if (selectedItemIdNum != -1) {
-              focusEditorOnSelectedItem(
-                codeMirror,
-                searchResults,
-                selectedItemIdNum
-              )
-            }
-          }
-        }
-      } else {
-        console.log('code mirror was null, cannot highlight text')
+      if (codeMirror == null) {
+        console.warn('code mirror was null, cannot highlight text')
+        return
+      }
+
+      if (selectedNote?._id == null || selectedItemId == null) {
+        return
+      }
+
+      const noteResultKey = excludeNoteIdPrefix(selectedNote._id)
+      const searchResults: SearchResult[] = noteToSearchResultMap[noteResultKey]
+      if (searchResults.length === 0) {
+        return
+      }
+
+      const selectedItemIdNum =
+        selectedItemId && !Number.isNaN(parseInt(selectedItemId))
+          ? parseInt(selectedItemId)
+          : -1
+      addMarkers(codeMirror, searchResults[0].matchStr, selectedItemIdNum)
+      if (selectedItemIdNum != -1) {
+        focusEditorOnSelectedItem(codeMirror, searchResults, selectedItemIdNum)
       }
     },
     [
