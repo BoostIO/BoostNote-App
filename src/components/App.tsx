@@ -32,8 +32,7 @@ import { useBoostNoteProtocol } from '../lib/protocol'
 import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
 import {
-  listenBoostHubTeamCreateEvent,
-  unlistenBoostHubTeamCreateEvent,
+  boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
   BoostHubTeamUpdateEvent,
   listenBoostHubTeamUpdateEvent,
@@ -301,12 +300,12 @@ const App = () => {
       })
     }
 
-    listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+    boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
     listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
     listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
     listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
     return () => {
-      unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
+      boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
       unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
       unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
       unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)

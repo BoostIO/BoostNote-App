@@ -26,7 +26,7 @@ import { openNew } from '../../lib/platform'
 import { FormSecondaryButton } from './form'
 import {
   boostHubNavigateRequestEventEmitter,
-  dispatchBoostHubTeamCreateEvent,
+  boostHubTeamCreateEventEmitter,
   dispatchBoostHubTeamUpdateEvent,
   dispatchBoostHubTeamDeleteEvent,
   dispatchBoostHubAccountDeleteEvent,
@@ -139,7 +139,7 @@ const BoostHubWebview = ({
           boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
           break
         case 'team-create':
-          dispatchBoostHubTeamCreateEvent({ team: event.args[0] })
+          boostHubTeamCreateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-update':
           dispatchBoostHubTeamUpdateEvent({ team: event.args[0] })
