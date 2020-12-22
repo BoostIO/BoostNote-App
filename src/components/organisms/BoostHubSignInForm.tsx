@@ -19,8 +19,7 @@ import { openLoginPage, useBoostHub } from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
-  listenBoostHubLoginEvent,
-  unlistenBoostHubLoginEvent,
+  boostHubLoginEventEmitter,
   boostHubLoginRequestEventEmitter,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
@@ -119,10 +118,10 @@ const BoostHubSignInForm = () => {
     const handler = (event: BoostHubLoginEvent) => {
       login(event.detail.code)
     }
-    listenBoostHubLoginEvent(handler)
+    boostHubLoginEventEmitter.listen(handler)
 
     return () => {
-      unlistenBoostHubLoginEvent(handler)
+      boostHubLoginEventEmitter.unlisten(handler)
     }
   }, [login])
 
