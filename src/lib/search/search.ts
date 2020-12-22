@@ -3,14 +3,21 @@ import { EditorPosition } from '../CodeMirror'
 
 export interface SearchResult {
   id: string
-  lineStr: string
-  matchStr: string
+  lineString: string
+  matchString: string
   matchColumn: number
   matchLength: number
-  lineNum: number
+  lineNumber: number
+}
+
+export interface TagSearchResult {
+  tagName: string
+  matchString: string
 }
 
 export interface NoteSearchData {
+  titleSearchResult: string | null
+  tagSearchResults: TagSearchResult[]
   results: SearchResult[]
   note: NoteDoc
 }
@@ -48,7 +55,7 @@ function getMatchDataFromGlobalColumn(
   }
 }
 
-export function getMatchData(text: string, searchTerm: RegExp) {
+export function getMatchData(text: string, searchTerm: RegExp): SearchResult[] {
   const data: SearchResult[] = []
 
   let resultId = 0
@@ -73,11 +80,11 @@ export function getMatchData(text: string, searchTerm: RegExp) {
     }
     data.push({
       id: `${resultId++}`,
-      lineStr: lines[pos.line],
-      lineNum: pos.line + 1,
+      lineString: lines[pos.line],
+      lineNumber: pos.line + 1,
       matchLength: matchStr.length,
       matchColumn: pos.ch,
-      matchStr: matchStr,
+      matchString: matchStr,
     })
   }
   return data
