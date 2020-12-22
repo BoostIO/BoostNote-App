@@ -28,7 +28,7 @@ import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
   boostHubTeamUpdateEventEmitter,
-  dispatchBoostHubTeamDeleteEvent,
+  boostHubTeamDeleteEventEmitter,
   dispatchBoostHubAccountDeleteEvent,
 } from '../../lib/events'
 
@@ -145,7 +145,7 @@ const BoostHubWebview = ({
           boostHubTeamUpdateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-delete':
-          dispatchBoostHubTeamDeleteEvent({ team: event.args[0] })
+          boostHubTeamDeleteEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'account-delete':
           dispatchBoostHubAccountDeleteEvent()
