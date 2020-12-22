@@ -27,8 +27,7 @@ import {
   border,
 } from '../../lib/styled/styleFunctions'
 import {
-  listenNoteDetailFocusTitleInputEvent,
-  unlistenNoteDetailFocusTitleInputEvent,
+  noteDetailFocusTitleInputEventEmitter,
   isChildNode,
 } from '../../lib/events'
 import Icon from '../atoms/Icon'
@@ -121,9 +120,9 @@ const NotePageToolbarNoteHeader = ({
   )
 
   useEffect(() => {
-    listenNoteDetailFocusTitleInputEvent(startEditingTitle)
+    noteDetailFocusTitleInputEventEmitter.listen(startEditingTitle)
     return () => {
-      unlistenNoteDetailFocusTitleInputEvent(startEditingTitle)
+      noteDetailFocusTitleInputEventEmitter.unlisten(startEditingTitle)
     }
   }, [startEditingTitle])
 

@@ -15,7 +15,7 @@ import {
   useGlobalKeyDownHandler,
   isWithGeneralCtrlKey,
 } from '../../lib/keyboard'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import {
   sortNotesByNoteSortingOption,
@@ -209,7 +209,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         ? `/app/storages/${storage.id}/notes/${note._id}`
         : `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
     )
-    dispatchNoteDetailFocusTitleInputEvent()
+    noteDetailFocusTitleInputEventEmitter.dispatch()
   }, [createNote, push, routeParams, storage.id, report])
 
   useGlobalKeyDownHandler((e) => {

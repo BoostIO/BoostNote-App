@@ -13,7 +13,7 @@ import { useToast } from '../../../lib/toast'
 import { useTranslation } from 'react-i18next'
 import { mdiTrashCan, mdiBookOpen, mdiSync, mdiDotsVertical } from '@mdi/js'
 import { NoteStorage } from '../../../lib/db/types'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../../lib/events'
 import { getStorageItemId } from '../../../lib/nav'
 
 interface StorageNavigatorFragmentProps {
@@ -134,7 +134,7 @@ const StorageNavigatorFragment = ({
           : `/m/storages/${storage.id}/notes${newNote.folderPathname}/${newNote._id}`
       push(notePathname)
       toggleNav()
-      dispatchNoteDetailFocusTitleInputEvent()
+      noteDetailFocusTitleInputEventEmitter.dispatch()
     },
     [createNote, push, toggleNav, storage.id]
   )
