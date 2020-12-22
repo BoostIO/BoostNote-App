@@ -40,7 +40,7 @@ import {
   boostHubTeamDeleteEventEmitter,
   boostHubLoginRequestEventEmitter,
   boostHubAccountDeleteEventEmitter,
-  dispatchBoostHubToggleSettingsEvent,
+  boostHubToggleSettingsEventEmitter,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -212,7 +212,7 @@ const App = () => {
   useEffect(() => {
     const handler = () => {
       if (boostHubTeamsShowPageIsActive) {
-        dispatchBoostHubToggleSettingsEvent()
+        boostHubToggleSettingsEventEmitter.dispatch()
       } else {
         togglePreferencesModal()
       }

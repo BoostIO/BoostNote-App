@@ -20,10 +20,7 @@ import {
 import Icon from '../atoms/Icon'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import copy from 'copy-to-clipboard'
-import {
-  listenBoostHubToggleSettingsEvent,
-  unlistenBoostHubToggleSettingsEvent,
-} from '../../lib/events'
+import { boostHubToggleSettingsEventEmitter } from '../../lib/events'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -98,9 +95,9 @@ const BoostHubTeamsShowPage = ({
     const handler = () => {
       webviewControlRef.current!.sendMessage('toggle-settings')
     }
-    listenBoostHubToggleSettingsEvent(handler)
+    boostHubToggleSettingsEventEmitter.listen(handler)
     return () => {
-      unlistenBoostHubToggleSettingsEvent(handler)
+      boostHubToggleSettingsEventEmitter.unlisten(handler)
     }
   }, [active])
 
