@@ -26,10 +26,8 @@ import {
   textOverflow,
   border,
 } from '../../lib/styled/styleFunctions'
-import {
-  noteDetailFocusTitleInputEventEmitter,
-  isChildNode,
-} from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
+import { isChildNode } from '../../lib/dom'
 import Icon from '../atoms/Icon'
 import cc from 'classcat'
 import FolderTreeListItem from '../atoms/FolderTreeListItem'
