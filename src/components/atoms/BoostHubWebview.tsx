@@ -27,7 +27,7 @@ import { FormSecondaryButton } from './form'
 import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
-  dispatchBoostHubTeamUpdateEvent,
+  boostHubTeamUpdateEventEmitter,
   dispatchBoostHubTeamDeleteEvent,
   dispatchBoostHubAccountDeleteEvent,
 } from '../../lib/events'
@@ -142,7 +142,7 @@ const BoostHubWebview = ({
           boostHubTeamCreateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-update':
-          dispatchBoostHubTeamUpdateEvent({ team: event.args[0] })
+          boostHubTeamUpdateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-delete':
           dispatchBoostHubTeamDeleteEvent({ team: event.args[0] })

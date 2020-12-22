@@ -35,8 +35,7 @@ import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
   BoostHubTeamUpdateEvent,
-  listenBoostHubTeamUpdateEvent,
-  unlistenBoostHubTeamUpdateEvent,
+  boostHubTeamUpdateEventEmitter,
   BoostHubTeamDeleteEvent,
   listenBoostHubTeamDeleteEvent,
   unlistenBoostHubTeamDeleteEvent,
@@ -301,12 +300,12 @@ const App = () => {
     }
 
     boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
-    listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+    boostHubTeamUpdateEventEmitter.listen(boostHubTeamUpdateEventHandler)
     listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
     listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
     return () => {
       boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
-      unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
+      boostHubTeamUpdateEventEmitter.unlisten(boostHubTeamUpdateEventHandler)
       unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
       unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
     }
