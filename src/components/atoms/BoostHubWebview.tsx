@@ -25,7 +25,7 @@ import { mdiLoading } from '@mdi/js'
 import { openNew } from '../../lib/platform'
 import { FormSecondaryButton } from './form'
 import {
-  dispatchBoostHubNavigateRequestEvent,
+  boostHubNavigateRequestEventEmitter,
   dispatchBoostHubTeamCreateEvent,
   dispatchBoostHubTeamUpdateEvent,
   dispatchBoostHubTeamDeleteEvent,
@@ -136,7 +136,7 @@ const BoostHubWebview = ({
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
         case 'request-app-navigate':
-          dispatchBoostHubNavigateRequestEvent({ url: event.args[0] })
+          boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
           break
         case 'team-create':
           dispatchBoostHubTeamCreateEvent({ team: event.args[0] })
