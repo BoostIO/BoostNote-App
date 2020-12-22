@@ -24,7 +24,7 @@ export function getHexatrigesimalString(value: number) {
   return value.toString(36)
 }
 
-export function getNumberFromStr(str: string): number {
+export function parseNumberStringOrReturnZero(str: string): number {
   if (!Number.isNaN(parseInt(str))) {
     return parseInt(str)
   } else {

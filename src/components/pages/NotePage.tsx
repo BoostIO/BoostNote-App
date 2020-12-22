@@ -31,7 +31,7 @@ import NotePageToolbar from '../organisms/NotePageToolbar'
 import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
-import { getNumberFromStr } from '../../lib/string'
+import { parseNumberStringOrReturnZero } from '../../lib/string'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -94,10 +94,10 @@ const NotePage = ({ storage }: NotePageProps) => {
     if (hash.startsWith('#L')) {
       const focusData = hash.substring(2).split(',')
       if (focusData.length == 2) {
-        focusLine = getNumberFromStr(focusData[0])
-        focusColumn = getNumberFromStr(focusData[1])
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
+        focusColumn = parseNumberStringOrReturnZero(focusData[1])
       } else if (focusData.length == 1) {
-        focusLine = getNumberFromStr(focusData[0])
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
       }
     }
 
