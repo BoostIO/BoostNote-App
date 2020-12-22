@@ -26,7 +26,7 @@ import {
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
 
@@ -207,7 +207,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     if (hash === '#new') {
       push({ hash: '' })
       setImmediate(() => {
-        dispatchNoteDetailFocusTitleInputEvent()
+        noteDetailFocusTitleInputEventEmitter.dispatch()
       })
     }
   }, [push, hash])

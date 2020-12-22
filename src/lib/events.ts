@@ -19,21 +19,21 @@ export function isChildNode(
   return false
 }
 
-function createCustomEventHelper(
+function createCustomEventEmitter(
   name: string
 ): {
   dispatch: () => void
   listen: (handler: (event: CustomEvent) => void) => void
   unlisten: (handler: (event: CustomEvent) => void) => void
 }
-function createCustomEventHelper<D = any>(
+function createCustomEventEmitter<D = any>(
   name: string
 ): {
   dispatch: (detail: D) => void
   listen: (handler: (event: CustomEvent<D>) => void) => void
   unlisten: (handler: (event: CustomEvent<D>) => void) => void
 }
-function createCustomEventHelper<D = any>(name: string) {
+function createCustomEventEmitter<D = any>(name: string) {
   return {
     dispatch(detail: D) {
       window.dispatchEvent(new CustomEvent(name, { detail }))
@@ -47,19 +47,16 @@ function createCustomEventHelper<D = any>(name: string) {
   }
 }
 
-const NoteDetailFocusTitleInputEventName = 'NoteDetail:focusTitleInput'
-export const {
-  dispatch: dispatchNoteDetailFocusTitleInputEvent,
-  listen: listenNoteDetailFocusTitleInputEvent,
-  unlisten: unlistenNoteDetailFocusTitleInputEvent,
-} = createCustomEventHelper(NoteDetailFocusTitleInputEventName)
+export const noteDetailFocusTitleInputEventEmitter = createCustomEventEmitter(
+  'NoteDetail:focusTitleInput'
+)
 
 const BoostHubLoginRequestEventName = 'BoostHub:loginRequest'
 export const {
   dispatch: dispatchBoostHubLoginRequestEvent,
   listen: listenBoostHubLoginRequestEvent,
   unlisten: unlistenBoostHubLoginRequestEvent,
-} = createCustomEventHelper(BoostHubLoginRequestEventName)
+} = createCustomEventEmitter(BoostHubLoginRequestEventName)
 
 const BoostHubLoginEventName = 'BoostHub:login'
 interface BoostHubLoginEventDetail {
@@ -70,7 +67,7 @@ export const {
   dispatch: dispatchBoostHubLoginEvent,
   listen: listenBoostHubLoginEvent,
   unlisten: unlistenBoostHubLoginEvent,
-} = createCustomEventHelper<BoostHubLoginEventDetail>(BoostHubLoginEventName)
+} = createCustomEventEmitter<BoostHubLoginEventDetail>(BoostHubLoginEventName)
 
 const BoostHubNavigateRequestEventName = 'BoostHub:navigateRequest'
 interface BoostHubNavigateRequestEventDetail {
@@ -83,7 +80,7 @@ export const {
   dispatch: dispatchBoostHubNavigateRequestEvent,
   listen: listenBoostHubNavigateRequestEvent,
   unlisten: unlistenBoostHubNavigateRequestEvent,
-} = createCustomEventHelper<BoostHubNavigateRequestEventDetail>(
+} = createCustomEventEmitter<BoostHubNavigateRequestEventDetail>(
   BoostHubNavigateRequestEventName
 )
 const BoostHubTeamCreateEventName = 'BoostHub:teamCreate'
@@ -102,7 +99,7 @@ export const {
   dispatch: dispatchBoostHubTeamCreateEvent,
   listen: listenBoostHubTeamCreateEvent,
   unlisten: unlistenBoostHubTeamCreateEvent,
-} = createCustomEventHelper<BoostHubTeamCreateEventDetail>(
+} = createCustomEventEmitter<BoostHubTeamCreateEventDetail>(
   BoostHubTeamCreateEventName
 )
 
@@ -122,7 +119,7 @@ export const {
   dispatch: dispatchBoostHubTeamUpdateEvent,
   listen: listenBoostHubTeamUpdateEvent,
   unlisten: unlistenBoostHubTeamUpdateEvent,
-} = createCustomEventHelper<BoostHubTeamUpdateEventDetail>(
+} = createCustomEventEmitter<BoostHubTeamUpdateEventDetail>(
   BoostHubTeamUpdateEventName
 )
 
@@ -142,7 +139,7 @@ export const {
   dispatch: dispatchBoostHubTeamDeleteEvent,
   listen: listenBoostHubTeamDeleteEvent,
   unlisten: unlistenBoostHubTeamDeleteEvent,
-} = createCustomEventHelper<BoostHubTeamDeleteEventDetail>(
+} = createCustomEventEmitter<BoostHubTeamDeleteEventDetail>(
   BoostHubTeamDeleteEventName
 )
 
@@ -152,7 +149,7 @@ export const {
   dispatch: dispatchBoostHubAccountDeleteEvent,
   listen: listenBoostHubAccountDeleteEvent,
   unlisten: unlistenBoostHubAccountDeleteEvent,
-} = createCustomEventHelper(BoostHubAccountDeleteEventName)
+} = createCustomEventEmitter(BoostHubAccountDeleteEventName)
 
 const BoostHubToggleSettingsEventName = 'BoostHub:toggleSettings'
 export type BoostHubToggleSettingsEvent = CustomEvent
@@ -160,4 +157,4 @@ export const {
   dispatch: dispatchBoostHubToggleSettingsEvent,
   listen: listenBoostHubToggleSettingsEvent,
   unlisten: unlistenBoostHubToggleSettingsEvent,
-} = createCustomEventHelper(BoostHubToggleSettingsEventName)
+} = createCustomEventEmitter(BoostHubToggleSettingsEventName)

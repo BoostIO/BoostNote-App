@@ -19,7 +19,7 @@ import {
 import FolderNavigatorFragment from './FolderNavigatorFragment'
 import TagListFragment from './TagListFragment'
 import NavigatorButton from '../atoms/NavigatorButton'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
@@ -73,7 +73,7 @@ const StorageNavigatorFragment = ({
           folderPathname === '/' ? '' : folderPathname
         }/${note._id}`
       )
-      dispatchNoteDetailFocusTitleInputEvent()
+      noteDetailFocusTitleInputEventEmitter.dispatch()
     },
     [storage.id, createNote, push, report]
   )
