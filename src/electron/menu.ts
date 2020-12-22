@@ -1,8 +1,9 @@
 import { app, shell, MenuItemConstructorOptions } from 'electron'
 import { checkForUpdates } from './updater'
+import { createEmitIpcMenuItemHandler } from './ipc'
 
 const mac = process.platform === 'darwin'
-// const linux = process.platform === 'linux'
+
 const preferencesMenuOption: MenuItemConstructorOptions = {
   label: 'Preferences',
   accelerator: 'Command+,',
@@ -16,7 +17,6 @@ const preferencesMenuOption: MenuItemConstructorOptions = {
 }
 
 export const template: MenuItemConstructorOptions[] = [
-  // { role: 'appMenu' }
   ...(mac
     ? [
         {
@@ -42,7 +42,6 @@ export const template: MenuItemConstructorOptions[] = [
         },
       ]
     : []),
-  // { role: 'fileMenu' }
   {
     label: 'File',
     submenu: mac
@@ -50,14 +49,21 @@ export const template: MenuItemConstructorOptions[] = [
           {
             type: 'normal',
             label: 'New Note',
-            click: async (_menuItem, browserWindow) => {
-              if (browserWindow == null) {
-                console.warn('Browser window for the menu item does not exist.')
-                return
-              }
-              browserWindow.webContents.send('new-note')
-            },
+            click: createEmitIpcMenuItemHandler('new-note'),
             accelerator: 'Cmd + N',
+          },
+          {
+            type: 'normal',
+            label: 'New Folder',
+            click: createEmitIpcMenuItemHandler('new-folder'),
+            accelerator: 'Cmd + Shift + N',
+          },
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Save As',
+            click: createEmitIpcMenuItemHandler('save-as'),
+            accelerator: 'Cmd + S',
           },
           { type: 'separator' },
           { role: 'close' },
@@ -66,14 +72,21 @@ export const template: MenuItemConstructorOptions[] = [
           {
             type: 'normal',
             label: 'New Note',
-            click: async (_menuItem, browserWindow) => {
-              if (browserWindow == null) {
-                console.warn('Browser window for the menu item does not exist.')
-                return
-              }
-              browserWindow.webContents.send('new-note')
-            },
+            click: createEmitIpcMenuItemHandler('new-note'),
             accelerator: 'Ctrl + N',
+          },
+          {
+            type: 'normal',
+            label: 'New Folder',
+            click: createEmitIpcMenuItemHandler('new-folder'),
+            accelerator: 'Ctrl + Shift + N',
+          },
+          { type: 'separator' },
+          {
+            type: 'normal',
+            label: 'Save As',
+            click: createEmitIpcMenuItemHandler('save-as'),
+            accelerator: 'Ctrl + S',
           },
           { type: 'separator' },
           {
@@ -86,7 +99,6 @@ export const template: MenuItemConstructorOptions[] = [
           { role: 'quit' },
         ] as MenuItemConstructorOptions[]),
   },
-  // { role: 'editMenu' }
   {
     label: 'Edit',
     submenu: [
@@ -100,14 +112,14 @@ export const template: MenuItemConstructorOptions[] = [
       {
         type: 'normal',
         label: 'Search',
-        click: async (_menuItem, browserWindow) => {
-          if (browserWindow == null) {
-            console.warn('Browser window for the menu item does not exist.')
-            return
-          }
-          browserWindow.webContents.send('search')
-        },
+        click: createEmitIpcMenuItemHandler('search'),
         accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
+      },
+      {
+        type: 'normal',
+        label: 'Bookmark',
+        click: createEmitIpcMenuItemHandler('bookmark'),
+        accelerator: mac ? 'Cmd + D' : 'Ctrl + D',
       },
       { type: 'separator' },
       ...(mac
@@ -124,22 +136,64 @@ export const template: MenuItemConstructorOptions[] = [
         : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
     ] as MenuItemConstructorOptions[],
   },
-  // { role: 'viewMenu' }
   {
     label: 'View',
     submenu: [
+      {
+        type: 'submenu',
+        label: 'Switch Workspace',
+        submenu: [],
+      },
+      {
+        type: 'normal',
+        label: 'Focus On Side Navigator',
+        click: createEmitIpcMenuItemHandler('focus-side-navigator'),
+        accelerator: mac ? 'Cmd + 0' : 'Ctrl + 0',
+      },
+      {
+        type: 'normal',
+        label: 'Toggle Side Navigator',
+        click: createEmitIpcMenuItemHandler('toggle-side-navigator'),
+        accelerator: mac ? 'Cmd + Shift + 0' : 'Ctrl + Shift + 0',
+      },
+      { type: 'separator' },
+      {
+        type: 'normal',
+        label: 'Focus On Editor',
+        click: createEmitIpcMenuItemHandler('focus-editor'),
+        accelerator: mac ? 'Cmd + J' : 'Ctrl + J',
+      },
+      {
+        type: 'normal',
+        label: 'Focus On Title',
+        click: createEmitIpcMenuItemHandler('focus-title'),
+        accelerator: mac ? 'Cmd +Shift+ J' : 'Ctrl+Shift + J',
+      },
+      { type: 'separator' },
+      {
+        type: 'normal',
+        label: 'Toggle Preview Mode',
+        click: createEmitIpcMenuItemHandler('toggle-preview-mode'),
+        accelerator: mac ? 'Cmd + E' : 'Ctrl + E',
+      },
+      {
+        type: 'normal',
+        label: 'Toggle Split Edit Mode',
+        click: createEmitIpcMenuItemHandler('toggle-split-edit-mode'),
+        accelerator: mac ? 'Cmd + \\' : 'Ctrl + \\',
+      },
+      { type: 'separator' },
       { role: 'reload' },
       { role: 'forcereload' },
       { role: 'toggledevtools' },
       { type: 'separator' },
-      { role: 'resetzoom' },
-      { role: 'zoomin' },
-      { role: 'zoomout' },
-      { type: 'separator' },
+      // { role: 'resetzoom' },
+      // { role: 'zoomin' },
+      // { role: 'zoomout' },
+      // { type: 'separator' },
       { role: 'togglefullscreen' },
     ] as MenuItemConstructorOptions[],
   },
-  // { role: 'windowMenu' }
   {
     label: 'Window',
     submenu: [
