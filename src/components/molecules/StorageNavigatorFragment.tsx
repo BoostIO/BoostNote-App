@@ -1,4 +1,9 @@
-import React, { useMemo, useCallback, MouseEventHandler } from 'react'
+import React, {
+  useMemo,
+  useCallback,
+  MouseEventHandler,
+  useEffect,
+} from 'react'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
@@ -22,7 +27,11 @@ import NavigatorButton from '../atoms/NavigatorButton'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { MenuItemConstructorOptions } from 'electron'
-import { openContextMenu } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  addIpcListener,
+  removeIpcListener,
+} from '../../lib/electronOnly'
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 import { getFolderItemId } from '../../lib/nav'
 import { useRouteParams } from '../../lib/routeParams'
@@ -58,6 +67,7 @@ const StorageNavigatorFragment = ({
   const user = useFirstUser()
   const { report } = useAnalytics()
   const { preferences } = usePreferences()
+  const storageId = storage.id
 
   const createNoteInFolderAndRedirect = useCallback(
     async (folderPathname: string) => {
@@ -111,6 +121,18 @@ const StorageNavigatorFragment = ({
       report,
     ]
   )
+
+  useEffect(() => {
+    const handler = () => {
+      const folderPathname =
+        routeParams.name === 'storages.notes' ? routeParams.folderPathname : '/'
+      showPromptToCreateFolder(folderPathname)
+    }
+    addIpcListener('new-folder', handler)
+    return () => {
+      removeIpcListener('new-folder', handler)
+    }
+  }, [storageId, routeParams, showPromptToCreateFolder])
 
   const showPromptToRenameFolder = (folderPathname: string) => {
     prompt({
