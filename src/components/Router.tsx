@@ -14,8 +14,7 @@ import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
 import BoostHubAccountDeletePage from './pages/BoostHubAccountDeletePage'
 import {
   BoostHubNavigateRequestEvent,
-  listenBoostHubNavigateRequestEvent,
-  unlistenBoostHubNavigateRequestEvent,
+  boostHubNavigateRequestEventEmitter,
 } from '../lib/events'
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
@@ -80,10 +79,12 @@ const Router = () => {
           break
       }
     }
-    listenBoostHubNavigateRequestEvent(boostHubNavigateRequestHandler)
+    boostHubNavigateRequestEventEmitter.listen(boostHubNavigateRequestHandler)
 
     return () => {
-      unlistenBoostHubNavigateRequestEvent(boostHubNavigateRequestHandler)
+      boostHubNavigateRequestEventEmitter.unlisten(
+        boostHubNavigateRequestHandler
+      )
     }
   }, [push])
 
