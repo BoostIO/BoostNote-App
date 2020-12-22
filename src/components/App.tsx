@@ -39,8 +39,7 @@ import {
   BoostHubTeamDeleteEvent,
   boostHubTeamDeleteEventEmitter,
   boostHubLoginRequestEventEmitter,
-  listenBoostHubAccountDeleteEvent,
-  unlistenBoostHubAccountDeleteEvent,
+  boostHubAccountDeleteEventEmitter,
   dispatchBoostHubToggleSettingsEvent,
 } from '../lib/events'
 import {
@@ -301,12 +300,14 @@ const App = () => {
     boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
     boostHubTeamUpdateEventEmitter.listen(boostHubTeamUpdateEventHandler)
     boostHubTeamDeleteEventEmitter.listen(boostHubTeamDeleteEventHandler)
-    listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+    boostHubAccountDeleteEventEmitter.listen(boostHubAccountDeleteEventHandler)
     return () => {
       boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
       boostHubTeamUpdateEventEmitter.unlisten(boostHubTeamUpdateEventHandler)
       boostHubTeamDeleteEventEmitter.unlisten(boostHubTeamDeleteEventHandler)
-      unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+      boostHubAccountDeleteEventEmitter.unlisten(
+        boostHubAccountDeleteEventHandler
+      )
     }
   }, [push, setPreferences, setGeneralStatus])
 

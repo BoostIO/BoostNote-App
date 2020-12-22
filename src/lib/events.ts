@@ -101,13 +101,9 @@ export const boostHubTeamDeleteEventEmitter = createCustomEventEmitter<
   BoostHubTeamDeleteEventDetail
 >('BoostHub:teamDelete')
 
-const BoostHubAccountDeleteEventName = 'BoostHub:accountDelete'
-export type BoostHubAccountDeleteEvent = CustomEvent
-export const {
-  dispatch: dispatchBoostHubAccountDeleteEvent,
-  listen: listenBoostHubAccountDeleteEvent,
-  unlisten: unlistenBoostHubAccountDeleteEvent,
-} = createCustomEventEmitter(BoostHubAccountDeleteEventName)
+export const boostHubAccountDeleteEventEmitter = createCustomEventEmitter(
+  'BoostHub:accountDelete'
+)
 
 const BoostHubToggleSettingsEventName = 'BoostHub:toggleSettings'
 export type BoostHubToggleSettingsEvent = CustomEvent

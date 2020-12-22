@@ -29,7 +29,7 @@ import {
   boostHubTeamCreateEventEmitter,
   boostHubTeamUpdateEventEmitter,
   boostHubTeamDeleteEventEmitter,
-  dispatchBoostHubAccountDeleteEvent,
+  boostHubAccountDeleteEventEmitter,
 } from '../../lib/events'
 
 export interface WebviewControl {
@@ -148,7 +148,7 @@ const BoostHubWebview = ({
           boostHubTeamDeleteEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'account-delete':
-          dispatchBoostHubAccountDeleteEvent()
+          boostHubAccountDeleteEventEmitter.dispatch()
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
