@@ -41,7 +41,7 @@ import {
   BoostHubTeamDeleteEvent,
   listenBoostHubTeamDeleteEvent,
   unlistenBoostHubTeamDeleteEvent,
-  dispatchBoostHubLoginRequestEvent,
+  boostHubLoginRequestEventEmitter,
   listenBoostHubAccountDeleteEvent,
   unlistenBoostHubAccountDeleteEvent,
   dispatchBoostHubToggleSettingsEvent,
@@ -171,7 +171,7 @@ const App = () => {
             if (value === 0) {
               push(`/app/boosthub/login`)
               setTimeout(() => {
-                dispatchBoostHubLoginRequestEvent()
+                boostHubLoginRequestEventEmitter.dispatch()
               }, 1000)
               return
             }

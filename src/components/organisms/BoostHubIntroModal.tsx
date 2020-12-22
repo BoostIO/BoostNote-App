@@ -10,7 +10,7 @@ import { border } from '../../lib/styled/styleFunctions'
 import { FormPrimaryButton } from '../atoms/form'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import { useRouter } from '../../lib/router'
-import { dispatchBoostHubLoginRequestEvent } from '../../lib/events'
+import { boostHubLoginRequestEventEmitter } from '../../lib/events'
 import { mdiClose } from '@mdi/js'
 import Icon from '../atoms/Icon'
 
@@ -26,7 +26,7 @@ const BoostHubIntroModal = () => {
     checkFeature(featureBoostHubIntro)
     push(`/app/boosthub/login`)
     setTimeout(() => {
-      dispatchBoostHubLoginRequestEvent()
+      boostHubLoginRequestEventEmitter.dispatch()
     }, 1000)
   }, [checkFeature, push])
 

@@ -21,8 +21,7 @@ import {
   BoostHubLoginEvent,
   listenBoostHubLoginEvent,
   unlistenBoostHubLoginEvent,
-  listenBoostHubLoginRequestEvent,
-  unlistenBoostHubLoginRequestEvent,
+  boostHubLoginRequestEventEmitter,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
@@ -131,10 +130,10 @@ const BoostHubSignInForm = () => {
     const handler = () => {
       startLoginRequest()
     }
-    listenBoostHubLoginRequestEvent(handler)
+    boostHubLoginRequestEventEmitter.listen(handler)
 
     return () => {
-      unlistenBoostHubLoginRequestEvent(handler)
+      boostHubLoginRequestEventEmitter.unlisten(handler)
     }
   }, [startLoginRequest])
 

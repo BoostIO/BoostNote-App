@@ -51,12 +51,9 @@ export const noteDetailFocusTitleInputEventEmitter = createCustomEventEmitter(
   'NoteDetail:focusTitleInput'
 )
 
-const BoostHubLoginRequestEventName = 'BoostHub:loginRequest'
-export const {
-  dispatch: dispatchBoostHubLoginRequestEvent,
-  listen: listenBoostHubLoginRequestEvent,
-  unlisten: unlistenBoostHubLoginRequestEvent,
-} = createCustomEventEmitter(BoostHubLoginRequestEventName)
+export const boostHubLoginRequestEventEmitter = createCustomEventEmitter(
+  'BoostHub:loginRequest'
+)
 
 const BoostHubLoginEventName = 'BoostHub:login'
 interface BoostHubLoginEventDetail {
