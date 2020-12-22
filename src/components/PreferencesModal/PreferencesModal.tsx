@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import TabButton from './TabButton'
@@ -120,13 +120,14 @@ const PreferencesModal = () => {
     return storage != null ? storage : null
   }, [storageMap, routeParams])
 
-  const keydownHandler = useMemo(() => {
-    return (event: KeyboardEvent) => {
+  const keydownHandler = useCallback(
+    (event: KeyboardEvent) => {
       if (!closed && event.key === 'Escape') {
         togglePreferencesModal()
       }
-    }
-  }, [closed, togglePreferencesModal])
+    },
+    [closed, togglePreferencesModal]
+  )
   useGlobalKeyDownHandler(keydownHandler)
 
   const content = useMemo(() => {
