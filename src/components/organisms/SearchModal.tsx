@@ -29,6 +29,7 @@ import {
   SearchResult,
   SEARCH_DEBOUNCE_TIMEOUT,
   MERGE_SAME_LINE_RESULTS_INTO_ONE,
+  TagSearchResult,
 } from '../../lib/search/search'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CodeMirror from 'codemirror'
@@ -99,14 +100,35 @@ const SearchModal = ({ storage }: SearchModalProps) => {
           return
         }
         const matchDataContent = getMatchData(note.content, regex)
-        // todo: [komediruzecki-04/12/2020] Use title and tag search to find those elements too, once found
-        //  we can highlight them too
-        // const matchDataTitle = getMatchData(note.title, regex)
-        // const matchDataTags = getMatchData(note.tags.join(), regex)
-        if (matchDataContent && matchDataContent.length > 0) {
+
+        const titleMatchResult = note.title.match(regex)
+
+        const titleSearchResult =
+          titleMatchResult != null ? titleMatchResult[0] : null
+        const tagSearchResults = note.tags.reduce<TagSearchResult[]>(
+          (searchResults, tagName) => {
+            const matchResult = tagName.match(regex)
+            if (matchResult != null) {
+              searchResults.push({
+                tagName,
+                matchString: matchResult[0],
+              })
+            }
+            return searchResults
+          },
+          []
+        )
+
+        if (
+          titleSearchResult ||
+          tagSearchResults.length > 0 ||
+          matchDataContent.length > 0
+        ) {
           const noteResultKey = excludeNoteIdPrefix(note._id)
           noteToSearchResultMap[noteResultKey] = matchDataContent
           searchResultData.push({
+            titleSearchResult,
+            tagSearchResults,
             note: note,
             results: matchDataContent,
           })
@@ -201,7 +223,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
         return
       }
       const focusLocation = {
-        line: searchResults[selectedIdx].lineNum - 1,
+        line: searchResults[selectedIdx].lineNumber - 1,
         ch:
           searchResults[selectedIdx].matchColumn +
           searchResults[selectedIdx].matchLength,
@@ -236,7 +258,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
         selectedItemId && !Number.isNaN(parseInt(selectedItemId))
           ? parseInt(selectedItemId)
           : -1
-      addMarkers(codeMirror, searchResults[0].matchStr, selectedItemIdNum)
+      addMarkers(codeMirror, searchResults[0].matchString, selectedItemIdNum)
       if (selectedItemIdNum != -1) {
         focusEditorOnSelectedItem(codeMirror, searchResults, selectedItemIdNum)
       }
@@ -288,6 +310,8 @@ const SearchModal = ({ storage }: SearchModalProps) => {
                       ? selectedItemId
                       : '-1'
                   }
+                  titleSearchResult={result.titleSearchResult}
+                  tagSearchResults={result.tagSearchResults}
                   searchResults={result.results}
                   updateSelectedItem={updateSelectedItems}
                   navigateToNote={navigateToNote}

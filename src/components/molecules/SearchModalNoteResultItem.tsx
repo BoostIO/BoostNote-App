@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from '../../lib/styled'
 import { NoteDoc } from '../../lib/db/types'
 import Icon from '../atoms/Icon'
@@ -12,6 +12,7 @@ import {
   getSearchResultKey,
   MAX_SEARCH_PREVIEW_LINE_LENGTH,
   SearchResult,
+  TagSearchResult,
 } from '../../lib/search/search'
 import { SearchMatchHighlight } from '../PreferencesModal/styled'
 import { escapeRegExp } from '../../lib/string'
@@ -19,6 +20,8 @@ import cc from 'classcat'
 
 interface SearchModalNoteResultItemProps {
   note: NoteDoc
+  titleSearchResult: string | null
+  tagSearchResults: TagSearchResult[]
   selectedItemId: string
   searchResults: SearchResult[]
   navigateToNote: (noteId: string) => void
@@ -32,6 +35,8 @@ interface SearchModalNoteResultItemProps {
 
 const SearchModalNoteResultItem = ({
   note,
+  titleSearchResult,
+  tagSearchResults,
   searchResults,
   navigateToNote,
   selectedItemId,
@@ -42,7 +47,7 @@ const SearchModalNoteResultItem = ({
     navigateToNote(note._id)
   }, [navigateToNote, note._id])
 
-  const highlightMatchedTerm = useCallback((line, matchStr) => {
+  const highlightMatchedTerm = useCallback((line: string, matchStr: string) => {
     const parts = line.split(new RegExp(`(${escapeRegExp(matchStr)})`, 'gi'))
     return (
       <span>
@@ -57,7 +62,7 @@ const SearchModalNoteResultItem = ({
     )
   }, [])
   const beautifyPreviewLine = useCallback(
-    (line, matchStr) => {
+    (line: string, matchStr: string) => {
       const multiline = matchStr.indexOf('\n') != -1
       const beautifiedLine =
         line.substring(0, MAX_SEARCH_PREVIEW_LINE_LENGTH) +
@@ -101,6 +106,13 @@ const SearchModalNoteResultItem = ({
 
   const titleIsEmpty = note.title.trim().length === 0
 
+  const searchedTagNameMatchStringMap = useMemo(() => {
+    return tagSearchResults.reduce<Map<string, string>>((map, searchResult) => {
+      map.set(searchResult.tagName, searchResult.matchString)
+      return map
+    }, new Map())
+  }, [tagSearchResults])
+
   return (
     <Container>
       <MetaContainer onClick={navigate}>
@@ -109,7 +121,11 @@ const SearchModalNoteResultItem = ({
             <Icon path={mdiTextBoxOutline} />
           </div>
           <div className={cc(['title', titleIsEmpty && 'empty'])}>
-            {titleIsEmpty ? 'Untitled' : note.title}
+            {titleIsEmpty
+              ? 'Untitled'
+              : titleSearchResult != null
+              ? highlightMatchedTerm(note.title, titleSearchResult)
+              : note.title}
           </div>
         </div>
         <div className='meta'>
@@ -120,7 +136,21 @@ const SearchModalNoteResultItem = ({
           {note.tags.length > 0 && (
             <div className='tags'>
               <Icon className='icon' path={mdiTagMultiple} />{' '}
-              {note.tags.map((tag) => tag).join(', ')}
+              {note.tags.map((tag) => {
+                const matchedString = searchedTagNameMatchStringMap.get(tag)
+                if (matchedString == null) {
+                  return (
+                    <span className='tags__item' key={tag}>
+                      {tag}
+                    </span>
+                  )
+                }
+                return (
+                  <span className='tags__item' key={tag}>
+                    {highlightMatchedTerm(tag, matchedString)}
+                  </span>
+                )
+              })}
             </div>
           )}
         </div>
@@ -140,18 +170,18 @@ const SearchModalNoteResultItem = ({
                 onDoubleClick={() =>
                   navigateToEditorFocused(
                     note._id,
-                    result.lineNum - 1,
+                    result.lineNumber - 1,
                     result.matchColumn
                   )
                 }
               >
-                <SearchResultLeft title={result.lineStr}>
+                <SearchResultLeft title={result.lineString}>
                   <code>
-                    {beautifyPreviewLine(result.lineStr, result.matchStr)}
+                    {beautifyPreviewLine(result.lineString, result.matchString)}
                   </code>
                 </SearchResultLeft>
                 <SearchResultRight>
-                  <code>{result.lineNum}</code>
+                  <code>{result.lineNumber}</code>
                 </SearchResultRight>
               </SearchResultItem>
             ))}
@@ -243,6 +273,12 @@ const MetaContainer = styled.div`
       &>.icon {
         margin-right: 4px;
         flex-shrink: 0;
+      }
+      & > .tags__item {
+        margin-right: 5px;
+        &:not(:last-child)::after {
+          content: ',';
+        }
       }
     }
   }
