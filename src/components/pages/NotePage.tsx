@@ -11,10 +11,6 @@ import {
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage, NoteDocEditibleProps } from '../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
-import {
-  useGlobalKeyDownHandler,
-  isWithGeneralCtrlKey,
-} from '../../lib/keyboard'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import {
@@ -211,27 +207,6 @@ const NotePage = ({ storage }: NotePageProps) => {
     )
     noteDetailFocusTitleInputEventEmitter.dispatch()
   }, [createNote, push, routeParams, storage.id, report])
-
-  useGlobalKeyDownHandler((e) => {
-    switch (e.key) {
-      case 'T':
-      case 't':
-        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
-          switch (generalStatus['noteViewMode']) {
-            case 'edit':
-              selectViewMode('split')
-              break
-            case 'split':
-              selectViewMode('preview')
-              break
-            default:
-              selectViewMode('edit')
-              break
-          }
-        }
-        break
-    }
-  })
 
   const { showSearchModal } = useSearchModal()
 
