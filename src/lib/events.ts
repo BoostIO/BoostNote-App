@@ -73,7 +73,6 @@ export const boostHubNavigateRequestEventEmitter = createCustomEventEmitter<
   BoostHubNavigateRequestEventDetail
 >('BoostHub:navigateRequest')
 
-const BoostHubTeamCreateEventName = 'BoostHub:teamCreate'
 interface BoostHubTeamCreateEventDetail {
   team: {
     id: string
@@ -85,13 +84,9 @@ interface BoostHubTeamCreateEventDetail {
   }
 }
 export type BoostHubTeamCreateEvent = CustomEvent<BoostHubTeamCreateEventDetail>
-export const {
-  dispatch: dispatchBoostHubTeamCreateEvent,
-  listen: listenBoostHubTeamCreateEvent,
-  unlisten: unlistenBoostHubTeamCreateEvent,
-} = createCustomEventEmitter<BoostHubTeamCreateEventDetail>(
-  BoostHubTeamCreateEventName
-)
+export const boostHubTeamCreateEventEmitter = createCustomEventEmitter<
+  BoostHubTeamCreateEventDetail
+>('BoostHub:teamCreate')
 
 const BoostHubTeamUpdateEventName = 'BoostHub:teamUpdate'
 interface BoostHubTeamUpdateEventDetail {
