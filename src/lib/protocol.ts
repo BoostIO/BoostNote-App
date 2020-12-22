@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { addIpcListener, removeIpcListener } from './electronOnly'
 import { parse as parseUrl } from 'url'
 import { IpcRendererEvent } from 'electron'
-import { dispatchBoostHubLoginEvent } from './events'
+import { boostHubLoginEventEmitter } from './events'
 
 export function useBoostNoteProtocol() {
   useEffect(() => {
@@ -16,7 +16,7 @@ export function useBoostNoteProtocol() {
             console.warn('`code` is missing')
             return
           }
-          dispatchBoostHubLoginEvent({ code })
+          boostHubLoginEventEmitter.dispatch({ code })
           break
         default:
           console.warn(`Not supported URL: ${url}`)

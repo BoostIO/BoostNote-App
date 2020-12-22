@@ -55,16 +55,13 @@ export const boostHubLoginRequestEventEmitter = createCustomEventEmitter(
   'BoostHub:loginRequest'
 )
 
-const BoostHubLoginEventName = 'BoostHub:login'
 interface BoostHubLoginEventDetail {
   code: string
 }
 export type BoostHubLoginEvent = CustomEvent<BoostHubLoginEventDetail>
-export const {
-  dispatch: dispatchBoostHubLoginEvent,
-  listen: listenBoostHubLoginEvent,
-  unlisten: unlistenBoostHubLoginEvent,
-} = createCustomEventEmitter<BoostHubLoginEventDetail>(BoostHubLoginEventName)
+export const boostHubLoginEventEmitter = createCustomEventEmitter<
+  BoostHubLoginEventDetail
+>('BoostHub:login')
 
 const BoostHubNavigateRequestEventName = 'BoostHub:navigateRequest'
 interface BoostHubNavigateRequestEventDetail {
