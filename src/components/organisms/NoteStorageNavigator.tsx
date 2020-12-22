@@ -234,16 +234,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     }
   }, [createNoteByRoute])
 
-  useEffect(() => {
-    const handler = () => {
-      createNoteByRoute()
-    }
-    addIpcListener('new-folder', handler)
-    return () => {
-      removeIpcListener('new-folder', handler)
-    }
-  }, [createNoteByRoute])
-
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
       {!generalShowAppNavigator && <WindowControlSpacer />}
