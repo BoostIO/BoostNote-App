@@ -86,7 +86,6 @@ export const boostHubTeamUpdateEventEmitter = createCustomEventEmitter<
   BoostHubTeamUpdateEventDetail
 >('BoostHub:teamUpdate')
 
-const BoostHubTeamDeleteEventName = 'BoostHub:teamDelete'
 interface BoostHubTeamDeleteEventDetail {
   team: {
     id: string
@@ -98,13 +97,9 @@ interface BoostHubTeamDeleteEventDetail {
   }
 }
 export type BoostHubTeamDeleteEvent = CustomEvent<BoostHubTeamDeleteEventDetail>
-export const {
-  dispatch: dispatchBoostHubTeamDeleteEvent,
-  listen: listenBoostHubTeamDeleteEvent,
-  unlisten: unlistenBoostHubTeamDeleteEvent,
-} = createCustomEventEmitter<BoostHubTeamDeleteEventDetail>(
-  BoostHubTeamDeleteEventName
-)
+export const boostHubTeamDeleteEventEmitter = createCustomEventEmitter<
+  BoostHubTeamDeleteEventDetail
+>('BoostHub:teamDelete')
 
 const BoostHubAccountDeleteEventName = 'BoostHub:accountDelete'
 export type BoostHubAccountDeleteEvent = CustomEvent
