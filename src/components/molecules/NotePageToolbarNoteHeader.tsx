@@ -31,6 +31,7 @@ import { isChildNode } from '../../lib/dom'
 import Icon from '../atoms/Icon'
 import cc from 'classcat'
 import FolderTreeListItem from '../atoms/FolderTreeListItem'
+import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 
 interface NotePageToolbarNoteHeaderProps {
   storageId: string
@@ -84,6 +85,10 @@ const NotePageToolbarNoteHeader = ({
   }, [noteTitle])
 
   useEffect(() => {
+    setNewTitle(noteTitle)
+  }, [noteTitle])
+
+  useEffect(() => {
     if (editingTitle && titleInputRef.current != null) {
       titleInputRef.current.focus()
     }
@@ -121,6 +126,13 @@ const NotePageToolbarNoteHeader = ({
     noteDetailFocusTitleInputEventEmitter.listen(startEditingTitle)
     return () => {
       noteDetailFocusTitleInputEventEmitter.unlisten(startEditingTitle)
+    }
+  }, [startEditingTitle])
+
+  useEffect(() => {
+    addIpcListener('focus-title', startEditingTitle)
+    return () => {
+      removeIpcListener('focus-title', startEditingTitle)
     }
   }, [startEditingTitle])
 
