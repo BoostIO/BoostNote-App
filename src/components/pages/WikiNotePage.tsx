@@ -9,7 +9,7 @@ import {
   StorageTrashCanRouteParams,
   useRouteParams,
 } from '../../lib/routeParams'
-import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
+import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDb } from '../../lib/db'
 import FolderDetail from '../organisms/FolderDetail'
 import TagDetail from '../organisms/TagDetail'
@@ -30,17 +30,8 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
   const { hash } = useRouter()
-  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const { generalStatus } = useGeneralStatus()
   const noteViewMode = generalStatus.noteViewMode
-
-  const selectViewMode = useCallback(
-    (newMode: ViewModeType) => {
-      setGeneralStatus({
-        noteViewMode: newMode,
-      })
-    },
-    [setGeneralStatus]
-  )
 
   const note = useMemo(() => {
     switch (routeParams.name) {
@@ -111,12 +102,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Container>
-        <NotePageToolbar
-          note={note}
-          storage={storage}
-          selectViewMode={selectViewMode}
-          viewMode={noteViewMode}
-        />
+        <NotePageToolbar note={note} storage={storage} />
         <div className='detail'>
           {note == null ? (
             routeParams.name === 'storages.notes' ? (
