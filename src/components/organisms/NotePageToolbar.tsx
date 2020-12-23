@@ -212,11 +212,15 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
   }, [setGeneralStatus])
 
   const togglePreviewMode = useCallback(() => {
-    noteViewMode === 'preview'
-      ? preferredEditingViewMode === 'edit'
-        ? selectEditMode()
-        : selectSplitMode()
-      : selectPreviewMode()
+    if (noteViewMode === 'preview') {
+      if (preferredEditingViewMode === 'edit') {
+        selectEditMode()
+      } else {
+        selectSplitMode()
+      }
+    } else {
+      selectPreviewMode()
+    }
   }, [
     noteViewMode,
     preferredEditingViewMode,
@@ -422,6 +426,22 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     [setPreferences]
   )
 
+  const toggleBookmark = useCallback(() => {
+    if (note == null) {
+      return
+    }
+    if (note.data.bookmarked) {
+      unbookmark()
+    } else {
+      bookmark()
+    }
+  }, [note, unbookmark, bookmark])
+  useEffect(() => {
+    addIpcListener('toggle-bookmark', toggleBookmark)
+    return () => {
+      removeIpcListener('toggle-bookmark', toggleBookmark)
+    }
+  })
   return (
     <>
       <Container>
@@ -496,7 +516,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
             <ToolbarIconButton
               active={!!note.data.bookmarked}
               title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
-              onClick={!note.data.bookmarked ? bookmark : unbookmark}
+              onClick={toggleBookmark}
               iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
             />
             <ToolbarIconButton

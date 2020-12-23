@@ -115,12 +115,12 @@ export const template: MenuItemConstructorOptions[] = [
         click: createEmitIpcMenuItemHandler('search'),
         accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
       },
-      {
-        type: 'normal',
-        label: 'Bookmark',
-        click: createEmitIpcMenuItemHandler('bookmark'),
-        accelerator: mac ? 'Cmd + D' : 'Ctrl + D',
-      },
+      // {
+      //   type: 'normal',
+      //   label: 'Toggle Bookmark',
+      //   click: createEmitIpcMenuItemHandler('toggle-bookmark'),
+      //   accelerator: mac ? 'Cmd + D' : 'Ctrl + D',
+      // },
       { type: 'separator' },
       ...(mac
         ? [
