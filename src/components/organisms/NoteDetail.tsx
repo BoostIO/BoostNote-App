@@ -24,6 +24,7 @@ import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
 import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
 import EditorThemeSelect from '../molecules/EditorThemeSelect'
 import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
+import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -127,6 +128,17 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     }
   }
 
+  focusOnEditor = () => {
+    if (this.codeMirror == null) {
+      return
+    }
+    this.codeMirror.focus()
+  }
+
+  componentDidMount() {
+    addIpcListener('focus-editor', this.focusOnEditor)
+  }
+
   componentWillUnmount() {
     if (this.queued) {
       const { content, prevStorageId, prevNoteId } = this.state
@@ -134,6 +146,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         content,
       })
     }
+    removeIpcListener('focus-editor', this.focusOnEditor)
   }
 
   updateContent = (
