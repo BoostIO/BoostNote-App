@@ -10,7 +10,7 @@ import {
 } from '../../lib/routeParams'
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage, NoteDocEditibleProps } from '../../lib/db/types'
-import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
+import { useGeneralStatus } from '../../lib/generalStatus'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import {
@@ -172,15 +172,6 @@ const NotePage = ({ storage }: NotePageProps) => {
       : undefined
   }, [sortedNotes, currentNoteIndex])
 
-  const selectViewMode = useCallback(
-    (newMode: ViewModeType) => {
-      setGeneralStatus({
-        noteViewMode: newMode,
-      })
-    },
-    [setGeneralStatus]
-  )
-
   const createQuickNote = useCallback(async () => {
     if (storage.id == null || routeParams.name === 'storages.trashCan') {
       return
@@ -214,12 +205,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Conatiner>
-        <NotePageToolbar
-          storage={storage}
-          note={currentNote}
-          viewMode={generalStatus.noteViewMode}
-          selectViewMode={selectViewMode}
-        />
+        <NotePageToolbar storage={storage} note={currentNote} />
         <TwoPaneLayout
           style={{ flex: 1 }}
           defaultLeftWidth={generalStatus.noteListWidth}
