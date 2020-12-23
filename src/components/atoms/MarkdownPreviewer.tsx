@@ -187,7 +187,7 @@ const MarkdownPreviewer = ({
       .use(remarkParse)
       .use(slug)
       .use(remarkEmoji, { emoticon: false })
-      .use([remarkRehype, { allowDangerousHTML: true }])
+      .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
       .use(remarkMath)
