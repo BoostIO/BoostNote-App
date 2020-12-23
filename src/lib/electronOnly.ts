@@ -27,6 +27,9 @@ const __ELECTRON_ONLY__: {
   showOpenDialog(
     options: Electron.OpenDialogOptions
   ): Promise<Electron.OpenDialogReturnValue>
+  showSaveDialog(
+    options: Electron.SaveDialogOptions
+  ): Promise<Electron.SaveDialogReturnValue>
   openExternal(url: string): void
   parseCSON(value: string): JsonValue
   stringifyCSON(value: any): string
@@ -47,10 +50,10 @@ const __ELECTRON_ONLY__: {
   isDefaultProtocolClient(protocol: string): boolean
   getWebContentsById(id: number): WebContents
   setTrafficLightPosition(position: { x: number; y: number }): void
-  convertHtmlStringToPdfBlob(
+  convertHtmlStringToPdfBuffer(
     htmlString: string,
     printOptions: PrintToPDFOptions
-  ): Promise<Blob>
+  ): Promise<Buffer>
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -63,6 +66,7 @@ const {
   readFileType,
   readFileTypeFromBuffer,
   showOpenDialog,
+  showSaveDialog,
   openExternal,
   parseCSON,
   stringifyCSON,
@@ -77,7 +81,7 @@ const {
   isDefaultProtocolClient,
   getWebContentsById,
   setTrafficLightPosition,
-  convertHtmlStringToPdfBlob,
+  convertHtmlStringToPdfBuffer,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -115,6 +119,7 @@ export {
   readFileType,
   readFileTypeFromBuffer,
   showOpenDialog,
+  showSaveDialog,
   openExternal,
   parseCSON,
   stringifyCSON,
@@ -129,5 +134,5 @@ export {
   isDefaultProtocolClient,
   getWebContentsById,
   setTrafficLightPosition,
-  convertHtmlStringToPdfBlob,
+  convertHtmlStringToPdfBuffer,
 }

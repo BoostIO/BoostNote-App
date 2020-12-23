@@ -39,12 +39,15 @@
   function showOpenDialog(options) {
     return electron.remote.dialog.showOpenDialog(options)
   }
+  function showSaveDialog(options) {
+    return electron.remote.dialog.showSaveDialog(options)
+  }
   function getHomePath() {
     return electron.remote.app.getPath('home')
   }
-  function writeFile(pathname, blob) {
+  function writeFile(pathname, buffer) {
     return new Promise((resolve, reject) => {
-      fs.writeFile(pathname, blob, (error) => {
+      fs.writeFile(pathname, buffer, (error) => {
         if (error != null) {
           reject(error)
           return
@@ -157,7 +160,7 @@
     electron.remote.getCurrentWindow().setTrafficLightPosition(position)
   }
 
-  function convertHtmlStringToPdfBlob(htmlString, printOptions) {
+  function convertHtmlStringToPdfBuffer(htmlString, printOptions) {
     return new Promise((resolve, reject) => {
       const encodedStr = encodeURIComponent(htmlString)
       const { BrowserWindow } = electron.remote
@@ -177,10 +180,7 @@
           const pdfFileBuffer = await browserWindow.webContents.printToPDF(
             printOptions
           )
-          const blob = new Blob([pdfFileBuffer], {
-            type: 'application/pdf',
-          })
-          resolve(blob)
+          resolve(pdfFileBuffer)
         } catch (error) {
           reject(error)
         } finally {
@@ -194,6 +194,7 @@
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.readFile = readFile
   window.__ELECTRON_ONLY__.showOpenDialog = showOpenDialog
+  window.__ELECTRON_ONLY__.showSaveDialog = showSaveDialog
   window.__ELECTRON_ONLY__.getHomePath = getHomePath
   window.__ELECTRON_ONLY__.writeFile = writeFile
   window.__ELECTRON_ONLY__.unlinkFile = unlinkFile
@@ -215,5 +216,5 @@
   window.__ELECTRON_ONLY__.isDefaultProtocolClient = isDefaultProtocolClient
   window.__ELECTRON_ONLY__.getWebContentsById
   window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
-  window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
+  window.__ELECTRON_ONLY__.convertHtmlStringToPdfBuffer = convertHtmlStringToPdfBuffer
 })()
