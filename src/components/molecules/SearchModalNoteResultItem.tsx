@@ -2,7 +2,12 @@ import React, { useCallback, useMemo } from 'react'
 import styled from '../../lib/styled'
 import { NoteDoc } from '../../lib/db/types'
 import Icon from '../atoms/Icon'
-import { mdiTextBoxOutline, mdiTagMultiple, mdiFolder } from '@mdi/js'
+import {
+  mdiTextBoxOutline,
+  mdiTagMultiple,
+  mdiFolder,
+  mdiChevronRight,
+} from '@mdi/js'
 import {
   flexCenter,
   borderBottom,
@@ -182,6 +187,18 @@ const SearchModalNoteResultItem = ({
                 </SearchResultLeft>
                 <SearchResultRight>
                   <code>{result.lineNumber}</code>
+                  <button
+                    className='button'
+                    onClick={() => {
+                      navigateToEditorFocused(
+                        note._id,
+                        result.lineNumber - 1,
+                        result.matchColumn
+                      )
+                    }}
+                  >
+                    <Icon path={mdiChevronRight} />
+                  </button>
                 </SearchResultRight>
               </SearchResultItem>
             ))}
@@ -326,4 +343,27 @@ const SearchResultLeft = styled.div`
 
 const SearchResultRight = styled.div`
   align-self: flex-end;
+  flex-shrink: 0;
+  ${flexCenter}
+
+  & > .button {
+    height: 24px;
+    width: 24px;
+    ${flexCenter}
+
+    background-color: transparent;
+    overflow: hidden;
+    border: none;
+
+    transition: color 200ms ease-in-out;
+    color: ${({ theme }) => theme.navItemColor};
+    &:hover {
+      color: ${({ theme }) => theme.navButtonHoverColor};
+    }
+
+    &:active,
+    &.active {
+      color: ${({ theme }) => theme.navButtonActiveColor};
+    }
+  }
 `
