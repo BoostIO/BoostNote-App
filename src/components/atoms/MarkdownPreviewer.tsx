@@ -203,7 +203,7 @@ const MarkdownPreviewer = ({
             if (src != null && !src.match('/')) {
               const attachment = attachmentMap[src]
               if (attachment != null) {
-                return <AttachmentImage attachment={attachment} />
+                return <AttachmentImage attachment={attachment} {...props}/>
               }
             }
 
