@@ -306,17 +306,11 @@ const MetaContainer = styled.div`
 
 const SearchResultItem = styled.div`
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  justify-content: space-between;
+  align-items: center;
   overflow: hidden;
   padding: 3px 5px;
   border-radius: 4px;
   margin-bottom: 2px;
-  &:last-child {
-    margin-bottom: 10px;
-  }
 
   &.selected {
     color: ${({ theme }) => theme.searchItemSelectionTextColor};
@@ -335,14 +329,13 @@ const SearchResultItem = styled.div`
 `
 
 const SearchResultLeft = styled.div`
-  align-self: flex-start;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  flex: 1;
 `
 
 const SearchResultRight = styled.div`
-  align-self: flex-end;
   flex-shrink: 0;
   ${flexCenter}
 
