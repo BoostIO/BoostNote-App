@@ -18,7 +18,7 @@ import {
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
-import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
+import { useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NotePageToolbarNoteHeader from '../molecules/NotePageToolbarNoteHeader'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
@@ -75,16 +75,9 @@ const Control = styled.div`
 interface NotePageToolbarProps {
   storage: NoteStorage
   note?: NoteDoc
-  viewMode: ViewModeType
-  selectViewMode: (mode: ViewModeType) => void
 }
 
-const NotePageToolbar = ({
-  storage,
-  note,
-  viewMode,
-  selectViewMode,
-}: NotePageToolbarProps) => {
+const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
   const { t } = useTranslation()
   const {
     purgeNote,
@@ -101,7 +94,7 @@ const NotePageToolbar = ({
   const generalAppMode = preferences['general.appMode']
 
   const { previewStyle } = usePreviewStyle()
-  const { generalStatus } = useGeneralStatus()
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
   const { pushMessage } = useToast()
 
@@ -199,16 +192,60 @@ const NotePageToolbar = ({
   }, [storage])
 
   const selectEditMode = useCallback(() => {
-    selectViewMode('edit')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'edit',
+      preferredEditingViewMode: 'edit',
+    })
+  }, [setGeneralStatus])
 
   const selectSplitMode = useCallback(() => {
-    selectViewMode('split')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'split',
+      preferredEditingViewMode: 'split',
+    })
+  }, [setGeneralStatus])
 
   const selectPreviewMode = useCallback(() => {
-    selectViewMode('preview')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'preview',
+    })
+  }, [setGeneralStatus])
+
+  const togglePreviewMode = useCallback(() => {
+    noteViewMode === 'preview'
+      ? preferredEditingViewMode === 'edit'
+        ? selectEditMode()
+        : selectSplitMode()
+      : selectPreviewMode()
+  }, [
+    noteViewMode,
+    preferredEditingViewMode,
+    selectEditMode,
+    selectSplitMode,
+    selectPreviewMode,
+  ])
+
+  useEffect(() => {
+    addIpcListener('toggle-preview-mode', togglePreviewMode)
+    return () => {
+      removeIpcListener('toggle-preview-mode', togglePreviewMode)
+    }
+  }, [togglePreviewMode])
+
+  const toggleSplitEditMode = useCallback(() => {
+    if (noteViewMode === 'edit') {
+      selectSplitMode()
+    } else {
+      selectEditMode()
+    }
+  }, [noteViewMode, selectSplitMode, selectEditMode])
+
+  useEffect(() => {
+    addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+    return () => {
+      removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+    }
+  }, [toggleSplitEditMode])
 
   const includeFrontMatter = preferences['markdown.includeFrontMatter']
 
@@ -410,19 +447,19 @@ const NotePageToolbar = ({
             {editorControlMode === '3-buttons' ? (
               <>
                 <ToolbarIconButton
-                  active={viewMode === 'edit'}
+                  active={noteViewMode === 'edit'}
                   title={t('note.edit')}
                   onClick={selectEditMode}
                   iconPath={mdiCodeTags}
                 />
                 <ToolbarIconButton
-                  active={viewMode === 'split'}
+                  active={noteViewMode === 'split'}
                   title={t('note.splitView')}
                   onClick={selectSplitMode}
                   iconPath={mdiViewSplitVertical}
                 />
                 <ToolbarIconButton
-                  active={viewMode === 'preview'}
+                  active={noteViewMode === 'preview'}
                   title={t('note.preview')}
                   onClick={selectPreviewMode}
                   iconPath={mdiTextSubject}
@@ -430,24 +467,16 @@ const NotePageToolbar = ({
               </>
             ) : (
               <>
-                {viewMode !== 'preview' && (
+                {noteViewMode !== 'preview' && (
                   <ToolbarIconButton
-                    active={viewMode === 'split'}
+                    active={noteViewMode === 'split'}
                     title='Toggle Split'
                     iconPath={mdiViewSplitVertical}
-                    onClick={
-                      viewMode === 'edit' ? selectSplitMode : selectEditMode
-                    }
+                    onClick={toggleSplitEditMode}
                   />
                 )}
                 <TopbarSwitchSelector
-                  onClick={
-                    noteViewMode === 'preview'
-                      ? preferredEditingViewMode === 'edit'
-                        ? selectEditMode
-                        : selectSplitMode
-                      : selectPreviewMode
-                  }
+                  onClick={togglePreviewMode}
                   items={[
                     {
                       active: noteViewMode !== 'preview',
