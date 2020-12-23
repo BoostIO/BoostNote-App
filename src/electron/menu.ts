@@ -4,18 +4,6 @@ import { createEmitIpcMenuItemHandler } from './ipc'
 
 const mac = process.platform === 'darwin'
 
-const preferencesMenuOption: MenuItemConstructorOptions = {
-  label: 'Preferences',
-  accelerator: 'Command+,',
-  click: async (_menuItem, browserWindow) => {
-    if (browserWindow == null) {
-      console.warn('Browser window for the menu item does not exist.')
-      return
-    }
-    browserWindow.webContents.send('preferences')
-  },
-}
-
 export const template: MenuItemConstructorOptions[] = [
   ...(mac
     ? [
@@ -24,7 +12,11 @@ export const template: MenuItemConstructorOptions[] = [
           submenu: [
             { role: 'about' },
             { type: 'separator' },
-            preferencesMenuOption,
+            {
+              label: 'Preferences',
+              accelerator: 'Cmd+,',
+              click: createEmitIpcMenuItemHandler('preferences'),
+            },
             { type: 'separator' },
             {
               label: 'Check For Updates',
@@ -94,7 +86,11 @@ export const template: MenuItemConstructorOptions[] = [
             click: checkForUpdates,
           },
           { type: 'separator' },
-          preferencesMenuOption,
+          {
+            label: 'Preferences',
+            accelerator: 'Ctrl+,',
+            click: createEmitIpcMenuItemHandler('preferences'),
+          },
           { type: 'separator' },
           { role: 'quit' },
         ] as MenuItemConstructorOptions[]),
