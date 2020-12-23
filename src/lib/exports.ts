@@ -20,11 +20,7 @@ import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
 import { getGlobalCss, selectTheme } from './styled/styleUtil'
 import yaml from 'yaml'
-import { convertHtmlStringToPdfBlob } from './electronOnly'
-
-export function filenamifyNoteTitle(noteTitle: string): string {
-  return filenamify(noteTitle.toLowerCase().replace(/\s+/g, '-'))
-}
+import { convertHtmlStringToPdfBuffer } from './electronOnly'
 
 const getFrontMatter = (note: NoteDoc): string => {
   return [
@@ -44,14 +40,14 @@ const sanitizeSchema = mergeDeepRight(gh, {
   attributes: { '*': ['className'] },
 })
 
-export const exportNoteAsHtmlFile = async (
+export async function convertNoteDocToHtmlString(
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   previewStyle?: string
-): Promise<void> => {
-  await unified()
+) {
+  const file = await unified()
     .use(remarkParse)
     .use(remarkMath)
     .use([remarkRehype, { allowDangerousHTML: false }])
@@ -69,45 +65,61 @@ export const exportNoteAsHtmlFile = async (
     })
     .use(rehypeStringify)
     .use(rehypeKatex)
-    .process(note.content, async (err, file) => {
-      if (err != null) {
-        pushMessage({
-          title: 'Note processing failed',
-          description: 'Please check markdown syntax and try again later.',
-        })
-        return
-      }
-      const [htmlString, attachmentUrls] = await updateNoteLinks(
-        file.toString(),
-        pushMessage,
-        getAttachmentData,
-        true
-      )
-      if (attachmentUrls.length != 0) {
-        console.log('HTML export tried to export blobs as object URLs')
-      }
-      downloadString(
-        htmlString,
-        `${filenamifyNoteTitle(note.title)}.html`,
-        'text/html'
-      )
-      return
-    })
+    .process(note.content)
+
+  const [htmlString, attachmentUrls] = await updateNoteLinks(
+    file.toString(),
+    pushMessage,
+    getAttachmentData,
+    true
+  )
+  if (attachmentUrls.length != 0) {
+    console.info('HTML export tried to export blobs as object URLs')
+  }
+  return htmlString
 }
 
-export const exportNoteAsMarkdownFile = async (
+export const exportNoteAsHtmlFile = async (
   note: NoteDoc,
-  { includeFrontMatter }: { includeFrontMatter: boolean }
+  preferences: Preferences,
+  pushMessage: (context: any) => any,
+  getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
+  previewStyle?: string
 ): Promise<void> => {
+  try {
+    const htmlString = await convertNoteDocToHtmlString(
+      note,
+      preferences,
+      pushMessage,
+      getAttachmentData,
+      previewStyle
+    )
+    downloadString(htmlString, `${filenamify(note.title)}.html`, 'text/html')
+  } catch (error) {
+    pushMessage({
+      title: 'Note processing failed',
+      description: 'Please check markdown syntax and try again later.',
+    })
+  }
+}
+
+export function convertNoteDocToMarkdownString(
+  note: NoteDoc,
+  includeFrontMatter: boolean
+) {
   let content = note.content.trim() + '\n'
   if (includeFrontMatter) {
     content = getFrontMatter(note) + '\n' + content
   }
-  downloadString(
-    content,
-    `${filenamifyNoteTitle(note.title)}.md`,
-    'text/markdown'
-  )
+  return content
+}
+
+export const exportNoteAsMarkdownFile = async (
+  note: NoteDoc,
+  includeFrontMatter: boolean
+): Promise<void> => {
+  const content = convertNoteDocToMarkdownString(note, includeFrontMatter)
+  downloadString(content, `${filenamify(note.title)}.md`, 'text/markdown')
   return
 }
 
@@ -301,41 +313,42 @@ function revokeAttachmentsUrls(attachments: string[]) {
   })
 }
 
-export const exportNoteAsPdfFile = async (
+export async function convertNoteDocToPdfBuffer(
   note: NoteDoc,
   preferences: Preferences,
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   previewStyle?: string
-): Promise<void> => {
-  try {
-    const output = await unified()
-      .use(remarkParse)
-      .use(remarkEmoji, { emoticon: false })
-      .use([remarkRehype, { allowDangerousHTML: true }])
-      .use(rehypeRaw)
-      .use(rehypeSanitize, schema)
-      .use(remarkMath)
-      .use(rehypeCodeMirror, {
-        ignoreMissing: true,
-        theme: preferences['markdown.codeBlockTheme'],
-      })
-      .use(rehypeKatex, { output: 'htmlAndMathml' })
-      .use(rehypeReact, {
-        createElement: React.createElement,
-        components: {
-          pre: CodeFence,
-        },
-      })
-      .use(rehypeStringify)
-      .process(note.content)
+) {
+  const output = await unified()
+    .use(remarkParse)
+    .use(remarkEmoji, { emoticon: false })
+    .use([remarkRehype, { allowDangerousHTML: true }])
+    .use(rehypeRaw)
+    .use(rehypeSanitize, schema)
+    .use(remarkMath)
+    .use(rehypeCodeMirror, {
+      ignoreMissing: true,
+      theme: preferences['markdown.codeBlockTheme'],
+    })
+    .use(rehypeKatex, { output: 'htmlAndMathml' })
+    .use(rehypeReact, {
+      createElement: React.createElement,
+      components: {
+        pre: CodeFence,
+      },
+    })
+    .use(rehypeStringify)
+    .process(note.content)
 
-    const markdownContent = output.toString('utf-8').trim() + '\n'
-    const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
-      markdownContent,
-      pushMessage,
-      getAttachmentData
-    )
+  const markdownContent = output.toString('utf-8').trim() + '\n'
+  const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
+    markdownContent,
+    pushMessage,
+    getAttachmentData
+  )
+
+  try {
     const htmlString = generatePrintToPdfHTML(
       mdContentWithValidLinks,
       preferences,
@@ -358,10 +371,30 @@ export const exportNoteAsPdfFile = async (
       pageSize: 'A4', // This could be chosen by user.
       // headerFooter: includeFrontMatter ? headerFooter : undefined,
     }
-    const pdfBlob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
-    const pdfName = `${filenamifyNoteTitle(note.title)}.pdf`
-    downloadBlob(pdfBlob, pdfName)
+    return convertHtmlStringToPdfBuffer(htmlString, printOpts)
+  } finally {
     revokeAttachmentsUrls(attachmentUrls)
+  }
+}
+
+export const exportNoteAsPdfFile = async (
+  note: NoteDoc,
+  preferences: Preferences,
+  pushMessage: (context: any) => any,
+  getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
+  previewStyle?: string
+): Promise<void> => {
+  try {
+    const pdfBuffer = await convertNoteDocToPdfBuffer(
+      note,
+      preferences,
+      pushMessage,
+      getAttachmentData,
+      previewStyle
+    )
+    const pdfName = `${filenamify(note.title)}.pdf`
+
+    downloadBlob(new Blob([pdfBuffer]), pdfName)
   } catch (error) {
     console.warn(error)
     pushMessage({

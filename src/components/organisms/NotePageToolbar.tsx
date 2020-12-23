@@ -1,4 +1,9 @@
-import React, { useMemo, useCallback, MouseEventHandler } from 'react'
+import React, {
+  useMemo,
+  useCallback,
+  MouseEventHandler,
+  useEffect,
+} from 'react'
 import styled from '../../lib/styled'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import {
@@ -22,6 +27,9 @@ import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
   exportNoteAsPdfFile,
+  convertNoteDocToHtmlString,
+  convertNoteDocToMarkdownString,
+  convertNoteDocToPdfBuffer,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -31,8 +39,17 @@ import { useRouteParams } from '../../lib/routeParams'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { useToast } from '../../lib/toast'
 import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
-import { openContextMenu } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  showSaveDialog,
+  getPathByName,
+  addIpcListener,
+  removeIpcListener,
+  writeFile,
+} from '../../lib/electronOnly'
 import NotePageToolbarFolderHeader from '../molecules/NotePageToolbarFolderHeader'
+import path from 'path'
+import { filenamify } from '../../lib/string'
 
 const Container = styled.div`
   display: flex;
@@ -207,9 +224,7 @@ const NotePageToolbar = ({
             type: 'normal',
             label: 'Markdown export',
             click: async () =>
-              await exportNoteAsMarkdownFile(note, {
-                includeFrontMatter,
-              }),
+              await exportNoteAsMarkdownFile(note, includeFrontMatter),
           },
           {
             type: 'normal',
@@ -238,8 +253,100 @@ const NotePageToolbar = ({
         ],
       })
     },
-    [note, preferences, includeFrontMatter, previewStyle, pushMessage]
+    [
+      note,
+      preferences,
+      includeFrontMatter,
+      previewStyle,
+      pushMessage,
+      getAttachmentData,
+    ]
   )
+
+  useEffect(() => {
+    const handler = () => {
+      if (note == null) {
+        return
+      }
+      showSaveDialog({
+        properties: ['createDirectory', 'showOverwriteConfirmation'],
+        buttonLabel: 'Save',
+        defaultPath: path.join(
+          getPathByName('home'),
+          filenamify(note.title) + '.md'
+        ),
+        filters: [
+          {
+            name: 'Markdown',
+            extensions: ['md'],
+          },
+          {
+            name: 'HTML',
+            extensions: ['html'],
+          },
+          {
+            name: 'PDF',
+            extensions: ['pdf'],
+          },
+        ],
+      }).then(async (result) => {
+        if (result.canceled || result.filePath == null) {
+          return
+        }
+        const parsedFilePath = path.parse(result.filePath)
+        switch (parsedFilePath.ext) {
+          case '.html':
+            const htmlString = await convertNoteDocToHtmlString(
+              note,
+              preferences,
+              pushMessage,
+              getAttachmentData,
+              previewStyle
+            )
+            await writeFile(result.filePath, htmlString)
+            return
+          case '.pdf':
+            try {
+              const pdfBuffer = await convertNoteDocToPdfBuffer(
+                note,
+                preferences,
+                pushMessage,
+                getAttachmentData,
+                previewStyle
+              )
+
+              await writeFile(result.filePath, pdfBuffer)
+            } catch (error) {
+              console.error(error)
+              pushMessage({
+                title: 'PDF export failed',
+                description: error.message,
+              })
+            }
+            return
+          case '.md':
+          default:
+            const markdownString = convertNoteDocToMarkdownString(
+              note,
+              includeFrontMatter
+            )
+            await writeFile(result.filePath, markdownString)
+            return
+        }
+      })
+    }
+    addIpcListener('save-as', handler)
+    return () => {
+      removeIpcListener('save-as', handler)
+    }
+  }, [
+    note,
+    getAttachmentData,
+    includeFrontMatter,
+    preferences,
+    previewStyle,
+    pushMessage,
+  ])
 
   const routeParams = useRouteParams()
   const folderPathname =
