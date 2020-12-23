@@ -25,11 +25,11 @@ import { mdiLoading } from '@mdi/js'
 import { openNew } from '../../lib/platform'
 import { FormSecondaryButton } from './form'
 import {
-  dispatchBoostHubNavigateRequestEvent,
-  dispatchBoostHubTeamCreateEvent,
-  dispatchBoostHubTeamUpdateEvent,
-  dispatchBoostHubTeamDeleteEvent,
-  dispatchBoostHubAccountDeleteEvent,
+  boostHubNavigateRequestEventEmitter,
+  boostHubTeamCreateEventEmitter,
+  boostHubTeamUpdateEventEmitter,
+  boostHubTeamDeleteEventEmitter,
+  boostHubAccountDeleteEventEmitter,
 } from '../../lib/events'
 
 export interface WebviewControl {
@@ -136,19 +136,19 @@ const BoostHubWebview = ({
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
         case 'request-app-navigate':
-          dispatchBoostHubNavigateRequestEvent({ url: event.args[0] })
+          boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
           break
         case 'team-create':
-          dispatchBoostHubTeamCreateEvent({ team: event.args[0] })
+          boostHubTeamCreateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-update':
-          dispatchBoostHubTeamUpdateEvent({ team: event.args[0] })
+          boostHubTeamUpdateEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'team-delete':
-          dispatchBoostHubTeamDeleteEvent({ team: event.args[0] })
+          boostHubTeamDeleteEventEmitter.dispatch({ team: event.args[0] })
           break
         case 'account-delete':
-          dispatchBoostHubAccountDeleteEvent()
+          boostHubAccountDeleteEventEmitter.dispatch()
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)

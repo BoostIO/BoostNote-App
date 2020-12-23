@@ -10,6 +10,7 @@ const dangerColor = '#DC3545'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
 const dark12Color = 'rgba(0,0,0,0.12)'
+const dark87Color = '#212121'
 
 const light100Color = '#FFF'
 const light30Color = 'rgba(255,255,255,0.3)'
@@ -85,4 +86,12 @@ export const sepiaTheme: BaseTheme = {
 
   // Input
   inputBackground: dark12Color,
+
+  // Search Highlight
+  searchHighlightBackgroundColor: '#ffc107',
+  searchHighlightSubtleBackgroundColor: '#ffdb70',
+  searchItemSelectionTextColor: light100Color,
+  searchItemSelectionBackgroundColor: primaryColor,
+  searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
+  searchHighlightTextColor: dark87Color,
 }

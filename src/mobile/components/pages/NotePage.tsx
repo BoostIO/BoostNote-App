@@ -13,7 +13,7 @@ import {
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage } from '../../../lib/db/types'
 import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../../lib/events'
 import TopBarLayout from '../layouts/TopBarLayout'
 import NoteDetail from '../organisms/NoteDetail'
 import styled from '../../../lib/styled'
@@ -148,7 +148,7 @@ const NotePage = ({ storage }: NotePageProps) => {
         : `/m/storages/${storageId}/notes/${note._id}`
     replace(notePathname)
     toggleViewMode('edit')
-    dispatchNoteDetailFocusTitleInputEvent()
+    noteDetailFocusTitleInputEventEmitter.dispatch()
   }, [createNote, replace, routeParams, storageId, toggleViewMode])
 
   const showCreateNoteInList = routeParams.name === 'storages.notes'

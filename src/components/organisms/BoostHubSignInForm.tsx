@@ -19,10 +19,8 @@ import { openLoginPage, useBoostHub } from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
-  listenBoostHubLoginEvent,
-  unlistenBoostHubLoginEvent,
-  listenBoostHubLoginRequestEvent,
-  unlistenBoostHubLoginRequestEvent,
+  boostHubLoginEventEmitter,
+  boostHubLoginRequestEventEmitter,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
 import Icon from '../atoms/Icon'
@@ -120,10 +118,10 @@ const BoostHubSignInForm = () => {
     const handler = (event: BoostHubLoginEvent) => {
       login(event.detail.code)
     }
-    listenBoostHubLoginEvent(handler)
+    boostHubLoginEventEmitter.listen(handler)
 
     return () => {
-      unlistenBoostHubLoginEvent(handler)
+      boostHubLoginEventEmitter.unlisten(handler)
     }
   }, [login])
 
@@ -131,10 +129,10 @@ const BoostHubSignInForm = () => {
     const handler = () => {
       startLoginRequest()
     }
-    listenBoostHubLoginRequestEvent(handler)
+    boostHubLoginRequestEventEmitter.listen(handler)
 
     return () => {
-      unlistenBoostHubLoginRequestEvent(handler)
+      boostHubLoginRequestEventEmitter.unlisten(handler)
     }
   }, [startLoginRequest])
 

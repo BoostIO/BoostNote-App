@@ -32,19 +32,15 @@ import { useBoostNoteProtocol } from '../lib/protocol'
 import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
 import {
-  listenBoostHubTeamCreateEvent,
-  unlistenBoostHubTeamCreateEvent,
+  boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
   BoostHubTeamUpdateEvent,
-  listenBoostHubTeamUpdateEvent,
-  unlistenBoostHubTeamUpdateEvent,
+  boostHubTeamUpdateEventEmitter,
   BoostHubTeamDeleteEvent,
-  listenBoostHubTeamDeleteEvent,
-  unlistenBoostHubTeamDeleteEvent,
-  dispatchBoostHubLoginRequestEvent,
-  listenBoostHubAccountDeleteEvent,
-  unlistenBoostHubAccountDeleteEvent,
-  dispatchBoostHubToggleSettingsEvent,
+  boostHubTeamDeleteEventEmitter,
+  boostHubLoginRequestEventEmitter,
+  boostHubAccountDeleteEventEmitter,
+  boostHubToggleSettingsEventEmitter,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -171,7 +167,7 @@ const App = () => {
             if (value === 0) {
               push(`/app/boosthub/login`)
               setTimeout(() => {
-                dispatchBoostHubLoginRequestEvent()
+                boostHubLoginRequestEventEmitter.dispatch()
               }, 1000)
               return
             }
@@ -216,7 +212,7 @@ const App = () => {
   useEffect(() => {
     const handler = () => {
       if (boostHubTeamsShowPageIsActive) {
-        dispatchBoostHubToggleSettingsEvent()
+        boostHubToggleSettingsEventEmitter.dispatch()
       } else {
         togglePreferencesModal()
       }
@@ -301,15 +297,17 @@ const App = () => {
       })
     }
 
-    listenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
-    listenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
-    listenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
-    listenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+    boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
+    boostHubTeamUpdateEventEmitter.listen(boostHubTeamUpdateEventHandler)
+    boostHubTeamDeleteEventEmitter.listen(boostHubTeamDeleteEventHandler)
+    boostHubAccountDeleteEventEmitter.listen(boostHubAccountDeleteEventHandler)
     return () => {
-      unlistenBoostHubTeamCreateEvent(boostHubTeamCreateEventHandler)
-      unlistenBoostHubTeamUpdateEvent(boostHubTeamUpdateEventHandler)
-      unlistenBoostHubTeamDeleteEvent(boostHubTeamDeleteEventHandler)
-      unlistenBoostHubAccountDeleteEvent(boostHubAccountDeleteEventHandler)
+      boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
+      boostHubTeamUpdateEventEmitter.unlisten(boostHubTeamUpdateEventHandler)
+      boostHubTeamDeleteEventEmitter.unlisten(boostHubTeamDeleteEventHandler)
+      boostHubAccountDeleteEventEmitter.unlisten(
+        boostHubAccountDeleteEventHandler
+      )
     }
   }, [push, setPreferences, setGeneralStatus])
 

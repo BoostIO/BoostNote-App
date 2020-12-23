@@ -46,3 +46,20 @@ export function inspectDataTransfer(dataTransfer: DataTransfer) {
     files,
   })
 }
+
+export function isChildNode(
+  parent?: Node | null,
+  child?: Node | null | EventTarget
+): boolean {
+  if (parent == null || child == null) {
+    return false
+  }
+  let target = child as Node | null
+  while (target != null) {
+    target = target.parentNode
+    if (parent === target) {
+      return true
+    }
+  }
+  return false
+}

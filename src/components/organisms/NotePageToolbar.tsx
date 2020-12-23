@@ -1,4 +1,9 @@
-import React, { useMemo, useCallback, MouseEventHandler } from 'react'
+import React, {
+  useMemo,
+  useCallback,
+  MouseEventHandler,
+  useEffect,
+} from 'react'
 import styled from '../../lib/styled'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import {
@@ -13,7 +18,7 @@ import {
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
-import { ViewModeType, useGeneralStatus } from '../../lib/generalStatus'
+import { useGeneralStatus } from '../../lib/generalStatus'
 import ToolbarSeparator from '../atoms/ToolbarSeparator'
 import NotePageToolbarNoteHeader from '../molecules/NotePageToolbarNoteHeader'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
@@ -22,6 +27,9 @@ import {
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
   exportNoteAsPdfFile,
+  convertNoteDocToHtmlString,
+  convertNoteDocToMarkdownString,
+  convertNoteDocToPdfBuffer,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -31,8 +39,17 @@ import { useRouteParams } from '../../lib/routeParams'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { useToast } from '../../lib/toast'
 import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
-import { openContextMenu } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  showSaveDialog,
+  getPathByName,
+  addIpcListener,
+  removeIpcListener,
+  writeFile,
+} from '../../lib/electronOnly'
 import NotePageToolbarFolderHeader from '../molecules/NotePageToolbarFolderHeader'
+import path from 'path'
+import { filenamify } from '../../lib/string'
 
 const Container = styled.div`
   display: flex;
@@ -58,16 +75,9 @@ const Control = styled.div`
 interface NotePageToolbarProps {
   storage: NoteStorage
   note?: NoteDoc
-  viewMode: ViewModeType
-  selectViewMode: (mode: ViewModeType) => void
 }
 
-const NotePageToolbar = ({
-  storage,
-  note,
-  viewMode,
-  selectViewMode,
-}: NotePageToolbarProps) => {
+const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
   const { t } = useTranslation()
   const {
     purgeNote,
@@ -84,7 +94,7 @@ const NotePageToolbar = ({
   const generalAppMode = preferences['general.appMode']
 
   const { previewStyle } = usePreviewStyle()
-  const { generalStatus } = useGeneralStatus()
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
   const { pushMessage } = useToast()
 
@@ -182,16 +192,64 @@ const NotePageToolbar = ({
   }, [storage])
 
   const selectEditMode = useCallback(() => {
-    selectViewMode('edit')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'edit',
+      preferredEditingViewMode: 'edit',
+    })
+  }, [setGeneralStatus])
 
   const selectSplitMode = useCallback(() => {
-    selectViewMode('split')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'split',
+      preferredEditingViewMode: 'split',
+    })
+  }, [setGeneralStatus])
 
   const selectPreviewMode = useCallback(() => {
-    selectViewMode('preview')
-  }, [selectViewMode])
+    setGeneralStatus({
+      noteViewMode: 'preview',
+    })
+  }, [setGeneralStatus])
+
+  const togglePreviewMode = useCallback(() => {
+    if (noteViewMode === 'preview') {
+      if (preferredEditingViewMode === 'edit') {
+        selectEditMode()
+      } else {
+        selectSplitMode()
+      }
+    } else {
+      selectPreviewMode()
+    }
+  }, [
+    noteViewMode,
+    preferredEditingViewMode,
+    selectEditMode,
+    selectSplitMode,
+    selectPreviewMode,
+  ])
+
+  useEffect(() => {
+    addIpcListener('toggle-preview-mode', togglePreviewMode)
+    return () => {
+      removeIpcListener('toggle-preview-mode', togglePreviewMode)
+    }
+  }, [togglePreviewMode])
+
+  const toggleSplitEditMode = useCallback(() => {
+    if (noteViewMode === 'edit') {
+      selectSplitMode()
+    } else {
+      selectEditMode()
+    }
+  }, [noteViewMode, selectSplitMode, selectEditMode])
+
+  useEffect(() => {
+    addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+    return () => {
+      removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+    }
+  }, [toggleSplitEditMode])
 
   const includeFrontMatter = preferences['markdown.includeFrontMatter']
 
@@ -207,9 +265,7 @@ const NotePageToolbar = ({
             type: 'normal',
             label: 'Markdown export',
             click: async () =>
-              await exportNoteAsMarkdownFile(note, {
-                includeFrontMatter,
-              }),
+              await exportNoteAsMarkdownFile(note, includeFrontMatter),
           },
           {
             type: 'normal',
@@ -238,8 +294,100 @@ const NotePageToolbar = ({
         ],
       })
     },
-    [note, preferences, includeFrontMatter, previewStyle, pushMessage]
+    [
+      note,
+      preferences,
+      includeFrontMatter,
+      previewStyle,
+      pushMessage,
+      getAttachmentData,
+    ]
   )
+
+  useEffect(() => {
+    const handler = () => {
+      if (note == null) {
+        return
+      }
+      showSaveDialog({
+        properties: ['createDirectory', 'showOverwriteConfirmation'],
+        buttonLabel: 'Save',
+        defaultPath: path.join(
+          getPathByName('home'),
+          filenamify(note.title) + '.md'
+        ),
+        filters: [
+          {
+            name: 'Markdown',
+            extensions: ['md'],
+          },
+          {
+            name: 'HTML',
+            extensions: ['html'],
+          },
+          {
+            name: 'PDF',
+            extensions: ['pdf'],
+          },
+        ],
+      }).then(async (result) => {
+        if (result.canceled || result.filePath == null) {
+          return
+        }
+        const parsedFilePath = path.parse(result.filePath)
+        switch (parsedFilePath.ext) {
+          case '.html':
+            const htmlString = await convertNoteDocToHtmlString(
+              note,
+              preferences,
+              pushMessage,
+              getAttachmentData,
+              previewStyle
+            )
+            await writeFile(result.filePath, htmlString)
+            return
+          case '.pdf':
+            try {
+              const pdfBuffer = await convertNoteDocToPdfBuffer(
+                note,
+                preferences,
+                pushMessage,
+                getAttachmentData,
+                previewStyle
+              )
+
+              await writeFile(result.filePath, pdfBuffer)
+            } catch (error) {
+              console.error(error)
+              pushMessage({
+                title: 'PDF export failed',
+                description: error.message,
+              })
+            }
+            return
+          case '.md':
+          default:
+            const markdownString = convertNoteDocToMarkdownString(
+              note,
+              includeFrontMatter
+            )
+            await writeFile(result.filePath, markdownString)
+            return
+        }
+      })
+    }
+    addIpcListener('save-as', handler)
+    return () => {
+      removeIpcListener('save-as', handler)
+    }
+  }, [
+    note,
+    getAttachmentData,
+    includeFrontMatter,
+    preferences,
+    previewStyle,
+    pushMessage,
+  ])
 
   const routeParams = useRouteParams()
   const folderPathname =
@@ -278,6 +426,22 @@ const NotePageToolbar = ({
     [setPreferences]
   )
 
+  const toggleBookmark = useCallback(() => {
+    if (note == null) {
+      return
+    }
+    if (note.data.bookmarked) {
+      unbookmark()
+    } else {
+      bookmark()
+    }
+  }, [note, unbookmark, bookmark])
+  useEffect(() => {
+    addIpcListener('toggle-bookmark', toggleBookmark)
+    return () => {
+      removeIpcListener('toggle-bookmark', toggleBookmark)
+    }
+  })
   return (
     <>
       <Container>
@@ -303,19 +467,19 @@ const NotePageToolbar = ({
             {editorControlMode === '3-buttons' ? (
               <>
                 <ToolbarIconButton
-                  active={viewMode === 'edit'}
+                  active={noteViewMode === 'edit'}
                   title={t('note.edit')}
                   onClick={selectEditMode}
                   iconPath={mdiCodeTags}
                 />
                 <ToolbarIconButton
-                  active={viewMode === 'split'}
+                  active={noteViewMode === 'split'}
                   title={t('note.splitView')}
                   onClick={selectSplitMode}
                   iconPath={mdiViewSplitVertical}
                 />
                 <ToolbarIconButton
-                  active={viewMode === 'preview'}
+                  active={noteViewMode === 'preview'}
                   title={t('note.preview')}
                   onClick={selectPreviewMode}
                   iconPath={mdiTextSubject}
@@ -323,24 +487,16 @@ const NotePageToolbar = ({
               </>
             ) : (
               <>
-                {viewMode !== 'preview' && (
+                {noteViewMode !== 'preview' && (
                   <ToolbarIconButton
-                    active={viewMode === 'split'}
+                    active={noteViewMode === 'split'}
                     title='Toggle Split'
                     iconPath={mdiViewSplitVertical}
-                    onClick={
-                      viewMode === 'edit' ? selectSplitMode : selectEditMode
-                    }
+                    onClick={toggleSplitEditMode}
                   />
                 )}
                 <TopbarSwitchSelector
-                  onClick={
-                    noteViewMode === 'preview'
-                      ? preferredEditingViewMode === 'edit'
-                        ? selectEditMode
-                        : selectSplitMode
-                      : selectPreviewMode
-                  }
+                  onClick={togglePreviewMode}
                   items={[
                     {
                       active: noteViewMode !== 'preview',
@@ -360,7 +516,7 @@ const NotePageToolbar = ({
             <ToolbarIconButton
               active={!!note.data.bookmarked}
               title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
-              onClick={!note.data.bookmarked ? bookmark : unbookmark}
+              onClick={toggleBookmark}
               iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
             />
             <ToolbarIconButton

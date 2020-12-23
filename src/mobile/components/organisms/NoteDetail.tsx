@@ -20,10 +20,7 @@ import {
   backgroundColor,
 } from '../../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
-import {
-  listenNoteDetailFocusTitleInputEvent,
-  unlistenNoteDetailFocusTitleInputEvent,
-} from '../../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../../lib/events'
 import Icon from '../../../components/atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 
@@ -193,7 +190,7 @@ export default class NoteDetail extends React.Component<
         })
       }
     }
-    listenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
+    noteDetailFocusTitleInputEventEmitter.listen(this.focusTitleInput)
   }
 
   componentWillUnmount() {
@@ -205,7 +202,7 @@ export default class NoteDetail extends React.Component<
         tags,
       })
     }
-    unlistenNoteDetailFocusTitleInputEvent(this.focusTitleInput)
+    noteDetailFocusTitleInputEventEmitter.unlisten(this.focusTitleInput)
   }
 
   focusTitleInput = () => {

@@ -2,38 +2,21 @@ import { ChangeEventHandler } from 'react'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
-export function isChildNode(
-  parent?: Node | null,
-  child?: Node | null
-): boolean {
-  if (parent == null || child == null) {
-    return false
-  }
-  let target: Node | null = child
-  while (target != null) {
-    target = target.parentNode
-    if (parent === target) {
-      return true
-    }
-  }
-  return false
-}
-
-function createCustomEventHelper(
+function createCustomEventEmitter(
   name: string
 ): {
   dispatch: () => void
   listen: (handler: (event: CustomEvent) => void) => void
   unlisten: (handler: (event: CustomEvent) => void) => void
 }
-function createCustomEventHelper<D = any>(
+function createCustomEventEmitter<D = any>(
   name: string
 ): {
   dispatch: (detail: D) => void
   listen: (handler: (event: CustomEvent<D>) => void) => void
   unlisten: (handler: (event: CustomEvent<D>) => void) => void
 }
-function createCustomEventHelper<D = any>(name: string) {
+function createCustomEventEmitter<D = any>(name: string) {
   return {
     dispatch(detail: D) {
       window.dispatchEvent(new CustomEvent(name, { detail }))
@@ -47,46 +30,32 @@ function createCustomEventHelper<D = any>(name: string) {
   }
 }
 
-const NoteDetailFocusTitleInputEventName = 'NoteDetail:focusTitleInput'
-export const {
-  dispatch: dispatchNoteDetailFocusTitleInputEvent,
-  listen: listenNoteDetailFocusTitleInputEvent,
-  unlisten: unlistenNoteDetailFocusTitleInputEvent,
-} = createCustomEventHelper(NoteDetailFocusTitleInputEventName)
+export const noteDetailFocusTitleInputEventEmitter = createCustomEventEmitter(
+  'NoteDetail:focusTitleInput'
+)
 
-const BoostHubLoginRequestEventName = 'BoostHub:loginRequest'
-export const {
-  dispatch: dispatchBoostHubLoginRequestEvent,
-  listen: listenBoostHubLoginRequestEvent,
-  unlisten: unlistenBoostHubLoginRequestEvent,
-} = createCustomEventHelper(BoostHubLoginRequestEventName)
+export const boostHubLoginRequestEventEmitter = createCustomEventEmitter(
+  'BoostHub:loginRequest'
+)
 
-const BoostHubLoginEventName = 'BoostHub:login'
 interface BoostHubLoginEventDetail {
   code: string
 }
 export type BoostHubLoginEvent = CustomEvent<BoostHubLoginEventDetail>
-export const {
-  dispatch: dispatchBoostHubLoginEvent,
-  listen: listenBoostHubLoginEvent,
-  unlisten: unlistenBoostHubLoginEvent,
-} = createCustomEventHelper<BoostHubLoginEventDetail>(BoostHubLoginEventName)
+export const boostHubLoginEventEmitter = createCustomEventEmitter<
+  BoostHubLoginEventDetail
+>('BoostHub:login')
 
-const BoostHubNavigateRequestEventName = 'BoostHub:navigateRequest'
 interface BoostHubNavigateRequestEventDetail {
   url: string
 }
 export type BoostHubNavigateRequestEvent = CustomEvent<
   BoostHubNavigateRequestEventDetail
 >
-export const {
-  dispatch: dispatchBoostHubNavigateRequestEvent,
-  listen: listenBoostHubNavigateRequestEvent,
-  unlisten: unlistenBoostHubNavigateRequestEvent,
-} = createCustomEventHelper<BoostHubNavigateRequestEventDetail>(
-  BoostHubNavigateRequestEventName
-)
-const BoostHubTeamCreateEventName = 'BoostHub:teamCreate'
+export const boostHubNavigateRequestEventEmitter = createCustomEventEmitter<
+  BoostHubNavigateRequestEventDetail
+>('BoostHub:navigateRequest')
+
 interface BoostHubTeamCreateEventDetail {
   team: {
     id: string
@@ -98,15 +67,10 @@ interface BoostHubTeamCreateEventDetail {
   }
 }
 export type BoostHubTeamCreateEvent = CustomEvent<BoostHubTeamCreateEventDetail>
-export const {
-  dispatch: dispatchBoostHubTeamCreateEvent,
-  listen: listenBoostHubTeamCreateEvent,
-  unlisten: unlistenBoostHubTeamCreateEvent,
-} = createCustomEventHelper<BoostHubTeamCreateEventDetail>(
-  BoostHubTeamCreateEventName
-)
+export const boostHubTeamCreateEventEmitter = createCustomEventEmitter<
+  BoostHubTeamCreateEventDetail
+>('BoostHub:teamCreate')
 
-const BoostHubTeamUpdateEventName = 'BoostHub:teamUpdate'
 interface BoostHubTeamUpdateEventDetail {
   team: {
     id: string
@@ -118,15 +82,10 @@ interface BoostHubTeamUpdateEventDetail {
   }
 }
 export type BoostHubTeamUpdateEvent = CustomEvent<BoostHubTeamUpdateEventDetail>
-export const {
-  dispatch: dispatchBoostHubTeamUpdateEvent,
-  listen: listenBoostHubTeamUpdateEvent,
-  unlisten: unlistenBoostHubTeamUpdateEvent,
-} = createCustomEventHelper<BoostHubTeamUpdateEventDetail>(
-  BoostHubTeamUpdateEventName
-)
+export const boostHubTeamUpdateEventEmitter = createCustomEventEmitter<
+  BoostHubTeamUpdateEventDetail
+>('BoostHub:teamUpdate')
 
-const BoostHubTeamDeleteEventName = 'BoostHub:teamDelete'
 interface BoostHubTeamDeleteEventDetail {
   team: {
     id: string
@@ -138,26 +97,14 @@ interface BoostHubTeamDeleteEventDetail {
   }
 }
 export type BoostHubTeamDeleteEvent = CustomEvent<BoostHubTeamDeleteEventDetail>
-export const {
-  dispatch: dispatchBoostHubTeamDeleteEvent,
-  listen: listenBoostHubTeamDeleteEvent,
-  unlisten: unlistenBoostHubTeamDeleteEvent,
-} = createCustomEventHelper<BoostHubTeamDeleteEventDetail>(
-  BoostHubTeamDeleteEventName
+export const boostHubTeamDeleteEventEmitter = createCustomEventEmitter<
+  BoostHubTeamDeleteEventDetail
+>('BoostHub:teamDelete')
+
+export const boostHubAccountDeleteEventEmitter = createCustomEventEmitter(
+  'BoostHub:accountDelete'
 )
 
-const BoostHubAccountDeleteEventName = 'BoostHub:accountDelete'
-export type BoostHubAccountDeleteEvent = CustomEvent
-export const {
-  dispatch: dispatchBoostHubAccountDeleteEvent,
-  listen: listenBoostHubAccountDeleteEvent,
-  unlisten: unlistenBoostHubAccountDeleteEvent,
-} = createCustomEventHelper(BoostHubAccountDeleteEventName)
-
-const BoostHubToggleSettingsEventName = 'BoostHub:toggleSettings'
-export type BoostHubToggleSettingsEvent = CustomEvent
-export const {
-  dispatch: dispatchBoostHubToggleSettingsEvent,
-  listen: listenBoostHubToggleSettingsEvent,
-  unlisten: unlistenBoostHubToggleSettingsEvent,
-} = createCustomEventHelper(BoostHubToggleSettingsEventName)
+export const boostHubToggleSettingsEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSettings'
+)

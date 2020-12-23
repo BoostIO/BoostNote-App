@@ -24,6 +24,7 @@ import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
 import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
 import EditorThemeSelect from '../molecules/EditorThemeSelect'
 import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
+import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -34,6 +35,7 @@ type NoteDetailProps = {
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
   viewMode: ViewModeType
+  initialCursorPosition: EditorPosition
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
 }
 
@@ -73,6 +75,12 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   codeMirror?: CodeMirror.EditorFromTextArea
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
     this.codeMirror = codeMirror
+
+    // Update cursor if needed
+    if (this.props.initialCursorPosition) {
+      this.codeMirror.focus()
+      this.codeMirror.setCursor(this.props.initialCursorPosition)
+    }
   }
 
   static getDerivedStateFromProps(
@@ -86,8 +94,10 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         prevNoteId: note._id,
         content: note.content,
         currentCursor: {
-          line: 0,
-          ch: 0,
+          line: props.initialCursorPosition
+            ? props.initialCursorPosition.line
+            : 0,
+          ch: props.initialCursorPosition ? props.initialCursorPosition.ch : 0,
         },
         currentSelections: [
           {
@@ -118,6 +128,17 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     }
   }
 
+  focusOnEditor = () => {
+    if (this.codeMirror == null) {
+      return
+    }
+    this.codeMirror.focus()
+  }
+
+  componentDidMount() {
+    addIpcListener('focus-editor', this.focusOnEditor)
+  }
+
   componentWillUnmount() {
     if (this.queued) {
       const { content, prevStorageId, prevNoteId } = this.state
@@ -125,6 +146,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         content,
       })
     }
+    removeIpcListener('focus-editor', this.focusOnEditor)
   }
 
   updateContent = (
@@ -285,13 +307,13 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   }
 
   render() {
-    const { note, storage, viewMode } = this.props
+    const { note, storage, viewMode, initialCursorPosition } = this.props
     const { currentCursor, currentSelections } = this.state
 
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
-        key={note._id}
+        key={note._id + initialCursorPosition.line}
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}

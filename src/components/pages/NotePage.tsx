@@ -10,12 +10,8 @@ import {
 } from '../../lib/routeParams'
 import { useDb } from '../../lib/db'
 import { NoteDoc, NoteStorage, NoteDocEditibleProps } from '../../lib/db/types'
-import { useGeneralStatus, ViewModeType } from '../../lib/generalStatus'
-import {
-  useGlobalKeyDownHandler,
-  isWithGeneralCtrlKey,
-} from '../../lib/keyboard'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import {
   sortNotesByNoteSortingOption,
@@ -31,6 +27,7 @@ import NotePageToolbar from '../organisms/NotePageToolbar'
 import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
+import { parseNumberStringOrReturnZero } from '../../lib/string'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -49,7 +46,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     | StorageTrashCanRouteParams
     | StorageTagsRouteParams
   const { noteId } = routeParams
-  const { push } = useRouter()
+  const { push, hash } = useRouter()
   const currentPathnameWithoutNoteId = usePathnameWithoutNoteId()
   const { preferences, setPreferences } = usePreferences()
   const noteSorting = preferences['general.noteSorting']
@@ -86,6 +83,25 @@ const NotePage = ({ storage }: NotePageProps) => {
     },
     [updateNote, report]
   )
+
+  const getCurrentPositionFromRoute = useCallback(() => {
+    let focusLine = 0
+    let focusColumn = 0
+    if (hash.startsWith('#L')) {
+      const focusData = hash.substring(2).split(',')
+      if (focusData.length == 2) {
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
+        focusColumn = parseNumberStringOrReturnZero(focusData[1])
+      } else if (focusData.length == 1) {
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
+      }
+    }
+
+    return {
+      line: focusLine,
+      ch: focusColumn,
+    }
+  }, [hash])
 
   const notes = useMemo((): NoteDoc[] => {
     switch (routeParams.name) {
@@ -156,15 +172,6 @@ const NotePage = ({ storage }: NotePageProps) => {
       : undefined
   }, [sortedNotes, currentNoteIndex])
 
-  const selectViewMode = useCallback(
-    (newMode: ViewModeType) => {
-      setGeneralStatus({
-        noteViewMode: newMode,
-      })
-    },
-    [setGeneralStatus]
-  )
-
   const createQuickNote = useCallback(async () => {
     if (storage.id == null || routeParams.name === 'storages.trashCan') {
       return
@@ -189,29 +196,8 @@ const NotePage = ({ storage }: NotePageProps) => {
         ? `/app/storages/${storage.id}/notes/${note._id}`
         : `/app/storages/${storage.id}/notes${folderPathname}/${note._id}`
     )
-    dispatchNoteDetailFocusTitleInputEvent()
+    noteDetailFocusTitleInputEventEmitter.dispatch()
   }, [createNote, push, routeParams, storage.id, report])
-
-  useGlobalKeyDownHandler((e) => {
-    switch (e.key) {
-      case 'T':
-      case 't':
-        if (isWithGeneralCtrlKey(e) && e.shiftKey) {
-          switch (generalStatus['noteViewMode']) {
-            case 'edit':
-              selectViewMode('split')
-              break
-            case 'split':
-              selectViewMode('preview')
-              break
-            default:
-              selectViewMode('edit')
-              break
-          }
-        }
-        break
-    }
-  })
 
   const { showSearchModal } = useSearchModal()
 
@@ -219,12 +205,7 @@ const NotePage = ({ storage }: NotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Conatiner>
-        <NotePageToolbar
-          storage={storage}
-          note={currentNote}
-          viewMode={generalStatus.noteViewMode}
-          selectViewMode={selectViewMode}
-        />
+        <NotePageToolbar storage={storage} note={currentNote} />
         <TwoPaneLayout
           style={{ flex: 1 }}
           defaultLeftWidth={generalStatus.noteListWidth}
@@ -254,6 +235,7 @@ const NotePage = ({ storage }: NotePageProps) => {
                 updateNote={updateNoteAndReport}
                 addAttachments={addAttachments}
                 viewMode={generalStatus.noteViewMode}
+                initialCursorPosition={getCurrentPositionFromRoute()}
               />
             )
           }

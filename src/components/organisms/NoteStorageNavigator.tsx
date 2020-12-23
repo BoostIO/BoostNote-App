@@ -26,7 +26,7 @@ import {
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
-import { dispatchNoteDetailFocusTitleInputEvent } from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
 
@@ -207,7 +207,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     if (hash === '#new') {
       push({ hash: '' })
       setImmediate(() => {
-        dispatchNoteDetailFocusTitleInputEvent()
+        noteDetailFocusTitleInputEventEmitter.dispatch()
       })
     }
   }, [push, hash])
@@ -231,16 +231,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     addIpcListener('new-note', handler)
     return () => {
       removeIpcListener('new-note', handler)
-    }
-  }, [createNoteByRoute])
-
-  useEffect(() => {
-    const handler = () => {
-      createNoteByRoute()
-    }
-    addIpcListener('new-folder', handler)
-    return () => {
-      removeIpcListener('new-folder', handler)
     }
   }, [createNoteByRoute])
 
@@ -324,7 +314,6 @@ const TopButton = styled.button`
 const SearchButton = styled.button`
   margin: 0 8px;
   height: 34px;
-  padding: 0;
   color: ${({ theme }) => theme.secondaryButtonLabelColor};
   background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
   border: none;
@@ -345,7 +334,7 @@ const SearchButton = styled.button`
   & > .icon {
     width: 24px;
     height: 24px;
-    ${flexCenter}
+    ${flexCenter};
     flex-shrink: 0;
   }
   & > .label {
@@ -357,7 +346,7 @@ const SearchButton = styled.button`
     display: none;
     font-size: 12px;
     margin-left: 5px;
-    ${textOverflow}
+    ${textOverflow};
     align-items: center;
     flex-shrink: 0;
   }
@@ -366,7 +355,6 @@ const SearchButton = styled.button`
 const NewNoteButton = styled.button`
   margin: 8px 8px;
   height: 34px;
-  padding: 0;
   color: ${({ theme }) => theme.primaryButtonLabelColor};
   background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
   border: none;
@@ -387,7 +375,7 @@ const NewNoteButton = styled.button`
   & > .icon {
     width: 24px;
     height: 24px;
-    ${flexCenter}
+    ${flexCenter};
     flex-shrink: 0;
   }
   & > .label {
@@ -398,7 +386,7 @@ const NewNoteButton = styled.button`
     display: none;
     font-size: 12px;
     margin-left: 5px;
-    ${textOverflow}
+    ${textOverflow};
     align-items: center;
     & > .icon {
       flex-shrink: 0;

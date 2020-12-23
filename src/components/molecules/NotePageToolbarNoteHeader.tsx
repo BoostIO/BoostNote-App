@@ -26,14 +26,12 @@ import {
   textOverflow,
   border,
 } from '../../lib/styled/styleFunctions'
-import {
-  listenNoteDetailFocusTitleInputEvent,
-  unlistenNoteDetailFocusTitleInputEvent,
-  isChildNode,
-} from '../../lib/events'
+import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
+import { isChildNode } from '../../lib/dom'
 import Icon from '../atoms/Icon'
 import cc from 'classcat'
 import FolderTreeListItem from '../atoms/FolderTreeListItem'
+import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 
 interface NotePageToolbarNoteHeaderProps {
   storageId: string
@@ -87,6 +85,10 @@ const NotePageToolbarNoteHeader = ({
   }, [noteTitle])
 
   useEffect(() => {
+    setNewTitle(noteTitle)
+  }, [noteTitle])
+
+  useEffect(() => {
     if (editingTitle && titleInputRef.current != null) {
       titleInputRef.current.focus()
     }
@@ -121,9 +123,16 @@ const NotePageToolbarNoteHeader = ({
   )
 
   useEffect(() => {
-    listenNoteDetailFocusTitleInputEvent(startEditingTitle)
+    noteDetailFocusTitleInputEventEmitter.listen(startEditingTitle)
     return () => {
-      unlistenNoteDetailFocusTitleInputEvent(startEditingTitle)
+      noteDetailFocusTitleInputEventEmitter.unlisten(startEditingTitle)
+    }
+  }, [startEditingTitle])
+
+  useEffect(() => {
+    addIpcListener('focus-title', startEditingTitle)
+    return () => {
+      removeIpcListener('focus-title', startEditingTitle)
     }
   }, [startEditingTitle])
 
