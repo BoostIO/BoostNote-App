@@ -1,8 +1,20 @@
 import { app, shell, MenuItemConstructorOptions } from 'electron'
 import { checkForUpdates } from './updater'
 import { createEmitIpcMenuItemHandler } from './ipc'
-
+import { MenuItem, BrowserWindow } from 'electron'
 const mac = process.platform === 'darwin'
+
+function createSwitchWorkspaceHandler(index: number) {
+  return (_menu: MenuItem, browserWindow?: BrowserWindow) => {
+    if (browserWindow == null) {
+      console.warn(
+        `Failed to emit \`switch-workspace\` ipc event because the browser window for menu item is missing`
+      )
+      return
+    }
+    browserWindow.webContents.send('switch-workspace', index)
+  }
+}
 
 export const template: MenuItemConstructorOptions[] = [
   ...(mac
@@ -157,7 +169,62 @@ export const template: MenuItemConstructorOptions[] = [
       {
         type: 'submenu',
         label: 'Switch Workspace',
-        submenu: [],
+        submenu: [
+          {
+            type: 'normal',
+            label: 'Switch to First Workspace',
+            accelerator: mac ? 'Cmd + 1' : 'Ctrl + 1',
+            click: createSwitchWorkspaceHandler(0),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to Second Workspace',
+            accelerator: mac ? 'Cmd + 2' : 'Ctrl + 2',
+            click: createSwitchWorkspaceHandler(1),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to Third Workspace',
+            accelerator: mac ? 'Cmd + 3' : 'Ctrl + 3',
+            click: createSwitchWorkspaceHandler(2),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 4th Workspace',
+            accelerator: mac ? 'Cmd + 4' : 'Ctrl + 4',
+            click: createSwitchWorkspaceHandler(3),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 5th Workspace',
+            accelerator: mac ? 'Cmd + 5' : 'Ctrl + 5',
+            click: createSwitchWorkspaceHandler(4),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 6th Workspace',
+            accelerator: mac ? 'Cmd + 6' : 'Ctrl + 6',
+            click: createSwitchWorkspaceHandler(5),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 7th Workspace',
+            accelerator: mac ? 'Cmd + 7' : 'Ctrl + 7',
+            click: createSwitchWorkspaceHandler(6),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 8th Workspace',
+            accelerator: mac ? 'Cmd + 8' : 'Ctrl + 8',
+            click: createSwitchWorkspaceHandler(7),
+          },
+          {
+            type: 'normal',
+            label: 'Switch to 9th Workspace',
+            accelerator: mac ? 'Cmd + 9' : 'Ctrl + 9',
+            click: createSwitchWorkspaceHandler(8),
+          },
+        ],
       },
       // {
       //   type: 'normal',

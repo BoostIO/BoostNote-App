@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Router from './Router'
 import GlobalStyle from './GlobalStyle'
 import { ThemeProvider } from 'styled-components'
@@ -15,7 +15,7 @@ import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
 import AppNavigator from './organisms/AppNavigator'
 import { useRouter } from '../lib/router'
-import { values } from '../lib/db/utils'
+import { values, keys } from '../lib/db/utils'
 import { localLiteStorage } from 'ltstrg'
 import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
 import {
@@ -50,6 +50,7 @@ import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
 import { useRouteParams } from '../lib/routeParams'
 import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
 import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
+import { useStorageRouter } from '../lib/storageRouter'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -86,10 +87,19 @@ Please check out.
 `
 
 const App = () => {
-  const { initialize, queueSyncingAllStorage, createStorage } = useDb()
+  const {
+    initialize,
+    queueSyncingAllStorage,
+    createStorage,
+    storageMap,
+  } = useDb()
   const { replace, push } = useRouter()
   const [initialized, setInitialized] = useState(false)
-  const { addSideNavOpenedItem, setGeneralStatus } = useGeneralStatus()
+  const {
+    addSideNavOpenedItem,
+    setGeneralStatus,
+    generalStatus,
+  } = useGeneralStatus()
   const {
     togglePreferencesModal,
     preferences,
@@ -98,6 +108,7 @@ const App = () => {
   const { messageBox } = useDialog()
   const { fetchDesktopGlobalData } = useBoostHub()
   const routeParams = useRouteParams()
+  const { navigate: navigateToStorage } = useStorageRouter()
 
   useEffectOnce(() => {
     initialize()
@@ -310,6 +321,32 @@ const App = () => {
       )
     }
   }, [push, setPreferences, setGeneralStatus])
+  const { boostHubTeams } = generalStatus
+  const switchWorkspaceHandler = useCallback(
+    (_event: any, index: number) => {
+      const storageIds = keys(storageMap)
+      const boostHubDomains = boostHubTeams.map((team) => team.domain)
+
+      if (storageIds.length > index) {
+        const targetStorageId = storageIds[index]
+        navigateToStorage(targetStorageId)
+      } else {
+        const targetDomain = boostHubDomains[index - storageIds.length]
+        if (targetDomain == null) {
+          return
+        }
+
+        push(`/app/boosthub/teams/${targetDomain}`)
+      }
+    },
+    [storageMap, boostHubTeams, navigateToStorage, push]
+  )
+  useEffect(() => {
+    addIpcListener('switch-workspace', switchWorkspaceHandler)
+    return () => {
+      removeIpcListener('switch-workspace', switchWorkspaceHandler)
+    }
+  }, [switchWorkspaceHandler])
 
   useBoostNoteProtocol()
 
