@@ -98,6 +98,25 @@ export const template: MenuItemConstructorOptions[] = [
   {
     label: 'Edit',
     submenu: [
+      {
+        label: 'Format',
+        type: 'submenu',
+        submenu: [
+          {
+            type: 'normal',
+            label: 'Bold',
+            click: createEmitIpcMenuItemHandler('apply-bold-style'),
+            accelerator: mac ? 'Cmd + B' : 'Ctrl + B',
+          },
+          {
+            type: 'normal',
+            label: 'Italic',
+            click: createEmitIpcMenuItemHandler('apply-italic-style'),
+            accelerator: mac ? 'Cmd + I' : 'Ctrl + I',
+          },
+        ],
+      },
+      { type: 'separator' },
       { role: 'undo' },
       { role: 'redo' },
       { type: 'separator' },

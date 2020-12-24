@@ -131,6 +131,12 @@ const BoostHubTeamsShowPage = ({
     const toggleSplitEditMode = () => {
       webviewControlRef.current!.sendMessage('toggle-split-edit-mode')
     }
+    const applyBoldStyle = () => {
+      webviewControlRef.current!.sendMessage('apply-bold-style')
+    }
+    const applyItalicStyle = () => {
+      webviewControlRef.current!.sendMessage('apply-italic-style')
+    }
     addIpcListener('new-note', newNoteHandler)
     addIpcListener('new-folder', newFolderHandler)
     addIpcListener('save-as', saveAsHandler)
@@ -141,6 +147,8 @@ const BoostHubTeamsShowPage = ({
     addIpcListener('focus-title', focusTitle)
     addIpcListener('toggle-preview-mode', togglePreviewMode)
     addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+    addIpcListener('apply-bold-style', applyBoldStyle)
+    addIpcListener('apply-italic-style', applyItalicStyle)
 
     return () => {
       boostHubToggleSettingsEventEmitter.unlisten(toggleSettingsHandler)
@@ -154,6 +162,8 @@ const BoostHubTeamsShowPage = ({
       removeIpcListener('focus-title', focusTitle)
       removeIpcListener('toggle-preview-mode', togglePreviewMode)
       removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+      removeIpcListener('apply-bold-style', applyBoldStyle)
+      removeIpcListener('apply-italic-style', applyItalicStyle)
     }
   }, [active])
 
