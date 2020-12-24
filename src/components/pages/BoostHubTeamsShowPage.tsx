@@ -2,7 +2,11 @@ import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
 import styled from '../../lib/styled'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
-import { openContextMenu } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  addIpcListener,
+  removeIpcListener,
+} from '../../lib/electronOnly'
 import { usePreferences } from '../../lib/preferences'
 import { osName } from '../../lib/platform'
 import {
@@ -92,12 +96,64 @@ const BoostHubTeamsShowPage = ({
       return
     }
 
-    const handler = () => {
+    const toggleSettingsHandler = () => {
       webviewControlRef.current!.sendMessage('toggle-settings')
     }
-    boostHubToggleSettingsEventEmitter.listen(handler)
+    boostHubToggleSettingsEventEmitter.listen(toggleSettingsHandler)
+
+    const newNoteHandler = () => {
+      webviewControlRef.current!.sendMessage('new-note')
+    }
+    const newFolderHandler = () => {
+      webviewControlRef.current!.sendMessage('new-folder')
+    }
+    const saveAsHandler = () => {
+      webviewControlRef.current!.sendMessage('save-as')
+    }
+    const searchHandler = () => {
+      webviewControlRef.current!.sendMessage('search')
+    }
+    const focusSideNavigatorHandler = () => {
+      webviewControlRef.current!.sendMessage('focus-side-navigator')
+    }
+    const toggleSideNavigatorHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-side-navigator')
+    }
+    const focusEditorHandler = () => {
+      webviewControlRef.current!.sendMessage('focus-editor')
+    }
+    const focusTitle = () => {
+      webviewControlRef.current!.sendMessage('focus-title')
+    }
+    const togglePreviewMode = () => {
+      webviewControlRef.current!.sendMessage('toggle-preview-mode')
+    }
+    const toggleSplitEditMode = () => {
+      webviewControlRef.current!.sendMessage('toggle-split-edit-mode')
+    }
+    addIpcListener('new-note', newNoteHandler)
+    addIpcListener('new-folder', newFolderHandler)
+    addIpcListener('save-as', saveAsHandler)
+    addIpcListener('search', searchHandler)
+    addIpcListener('focus-side-navigator', focusSideNavigatorHandler)
+    addIpcListener('toggle-side-navigator', toggleSideNavigatorHandler)
+    addIpcListener('focus-editor', focusEditorHandler)
+    addIpcListener('focus-title', focusTitle)
+    addIpcListener('toggle-preview-mode', togglePreviewMode)
+    addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
+
     return () => {
-      boostHubToggleSettingsEventEmitter.unlisten(handler)
+      boostHubToggleSettingsEventEmitter.unlisten(toggleSettingsHandler)
+      removeIpcListener('new-note', newNoteHandler)
+      removeIpcListener('new-folder', newFolderHandler)
+      removeIpcListener('save-as', saveAsHandler)
+      removeIpcListener('search', searchHandler)
+      removeIpcListener('focus-side-navigator', focusSideNavigatorHandler)
+      removeIpcListener('toggle-side-navigator', toggleSideNavigatorHandler)
+      removeIpcListener('focus-editor', focusEditorHandler)
+      removeIpcListener('focus-title', focusTitle)
+      removeIpcListener('toggle-preview-mode', togglePreviewMode)
+      removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
     }
   }, [active])
 
