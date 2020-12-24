@@ -140,12 +140,12 @@ export const template: MenuItemConstructorOptions[] = [
         label: 'Switch Workspace',
         submenu: [],
       },
-      {
-        type: 'normal',
-        label: 'Focus On Side Navigator',
-        click: createEmitIpcMenuItemHandler('focus-side-navigator'),
-        accelerator: mac ? 'Cmd + 0' : 'Ctrl + 0',
-      },
+      // {
+      //   type: 'normal',
+      //   label: 'Focus On Side Navigator',
+      //   click: createEmitIpcMenuItemHandler('focus-side-navigator'),
+      //   accelerator: mac ? 'Cmd + 0' : 'Ctrl + 0',
+      // },
       {
         type: 'normal',
         label: 'Toggle Side Navigator',
