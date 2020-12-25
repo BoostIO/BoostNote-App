@@ -49,6 +49,7 @@ import {
 } from '../../lib/electronOnly'
 import NotePageToolbarFolderHeader from '../molecules/NotePageToolbarFolderHeader'
 import path from 'path'
+import parsePath from 'path-parse'
 import { filenamify } from '../../lib/string'
 
 const Container = styled.div`
@@ -58,7 +59,7 @@ const Container = styled.div`
   flex-shrink: 0;
   -webkit-app-region: drag;
   padding: 0 8px;
-  ${borderBottom}
+  ${borderBottom};
   align-items: center;
   & > .left {
     flex: 1;
@@ -334,7 +335,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
         if (result.canceled || result.filePath == null) {
           return
         }
-        const parsedFilePath = path.parse(result.filePath)
+        const parsedFilePath = parsePath(result.filePath)
         switch (parsedFilePath.ext) {
           case '.html':
             const htmlString = await convertNoteDocToHtmlString(
