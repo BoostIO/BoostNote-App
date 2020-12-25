@@ -30,6 +30,7 @@ import {
   convertNoteDocToHtmlString,
   convertNoteDocToMarkdownString,
   convertNoteDocToPdfBuffer,
+  revokeAttachmentsUrls,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -49,6 +50,7 @@ import {
 } from '../../lib/electronOnly'
 import NotePageToolbarFolderHeader from '../molecules/NotePageToolbarFolderHeader'
 import path from 'path'
+import pathParse from 'path-parse'
 import { filenamify } from '../../lib/string'
 
 const Container = styled.div`
@@ -58,7 +60,7 @@ const Container = styled.div`
   flex-shrink: 0;
   -webkit-app-region: drag;
   padding: 0 8px;
-  ${borderBottom}
+  ${borderBottom};
   align-items: center;
   & > .left {
     flex: 1;
@@ -334,7 +336,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
         if (result.canceled || result.filePath == null) {
           return
         }
-        const parsedFilePath = path.parse(result.filePath)
+        const parsedFilePath = pathParse(result.filePath)
         switch (parsedFilePath.ext) {
           case '.html':
             const htmlString = await convertNoteDocToHtmlString(
@@ -348,15 +350,18 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
             return
           case '.pdf':
             try {
+              const attachmentUrls: string[] = []
               const pdfBuffer = await convertNoteDocToPdfBuffer(
                 note,
                 preferences,
                 pushMessage,
                 getAttachmentData,
+                attachmentUrls,
                 previewStyle
               )
 
               await writeFile(result.filePath, pdfBuffer)
+              revokeAttachmentsUrls(attachmentUrls)
             } catch (error) {
               console.error(error)
               pushMessage({
