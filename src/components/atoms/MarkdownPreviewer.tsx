@@ -187,7 +187,7 @@ const MarkdownPreviewer = ({
       .use(remarkParse)
       .use(slug)
       .use(remarkEmoji, { emoticon: false })
-      .use([remarkRehype, { allowDangerousHTML: true }])
+      .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
       .use(remarkMath)
@@ -203,7 +203,7 @@ const MarkdownPreviewer = ({
             if (src != null && !src.match('/')) {
               const attachment = attachmentMap[src]
               if (attachment != null) {
-                return <AttachmentImage attachment={attachment} />
+                return <AttachmentImage attachment={attachment} {...props}/>
               }
             }
 
