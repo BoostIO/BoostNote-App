@@ -248,7 +248,7 @@ async function updateNoteLinks(
     ),
   ]
 
-  let contentWithValidImgSrc = content
+  let contentWithValidImageSource = content
   const attachmentErrors: string[] = []
   const attachmentUrls: string[] = []
   for (const attachment of attachmentMatches) {
@@ -292,7 +292,7 @@ async function updateNoteLinks(
       }
 
       if (srcUrl) {
-        contentWithValidImgSrc = contentWithValidImgSrc.replace(
+        contentWithValidImageSource = contentWithValidImageSource.replace(
           new RegExp(imageData.name, 'g'),
           srcUrl
         )
@@ -310,11 +310,11 @@ async function updateNoteLinks(
       )}],\nPlease check is such exists to properly export the PDF with attachments.`,
     })
   }
-  return [contentWithValidImgSrc, attachmentUrls]
+  return [contentWithValidImageSource, attachmentUrls]
 }
 
-function revokeAttachmentsUrls(attachmentsUrls: string[]) {
-  attachmentsUrls.forEach((attachmentUrl) => {
+function revokeAttachmentsUrls(attachmentUrls: string[]) {
+  attachmentUrls.forEach((attachmentUrl) => {
     window.URL.revokeObjectURL(attachmentUrl)
   })
 }
@@ -348,7 +348,7 @@ export async function convertNoteDocToPdfBuffer(
     .process(note.content)
 
   const markdownContent = output.toString('utf-8').trim() + '\n'
-  const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
+  const [markdownContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
     markdownContent,
     pushMessage,
     getAttachmentData
@@ -356,7 +356,7 @@ export async function convertNoteDocToPdfBuffer(
 
   try {
     const htmlString = generatePrintToPdfHTML(
-      mdContentWithValidLinks,
+      markdownContentWithValidLinks,
       preferences,
       previewStyle
     )
