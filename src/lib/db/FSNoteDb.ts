@@ -29,7 +29,7 @@ import {
   isSubPathname,
   keys,
 } from './utils'
-import { generateId, getHexatrigesimalString } from '../string'
+import { escapeRegExp, generateId, getHexatrigesimalString } from '../string'
 import {
   prepareDirectory,
   readFileAsString,
@@ -258,7 +258,9 @@ class FSNoteDb implements NoteDb {
     await unlinkFile(attachmentPathname)
   }
 
-  async createNote(noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>) {
+  async createNote(
+    noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>
+  ) {
     const now = getNow()
     const noteDoc: NoteDoc = {
       _id: generateNoteId(),
@@ -493,7 +495,10 @@ class FSNoteDb implements NoteDb {
     const allFoldersToRename = this.getAllFolderUnderPathname(pathname).sort()
 
     const replacePathname = (folderPathname: string) => {
-      return folderPathname.replace(new RegExp(`^${pathname}`), newPathname)
+      return folderPathname.replace(
+        new RegExp(`^${escapeRegExp(pathname)}`, 'g'),
+        newPathname
+      )
     }
     await Promise.all(
       allFoldersToRename.map(async (folderPathname) => {
@@ -564,7 +569,7 @@ class FSNoteDb implements NoteDb {
 
   getAllFolderUnderPathname(pathname: string) {
     const allFolderPathnames = keys(this.data!.folderMap)
-    const pathnameRegexp = new RegExp(`^${pathname}/`)
+    const pathnameRegexp = new RegExp(`^${escapeRegExp(pathname)}/`, 'g')
     const subFolderPathnames = allFolderPathnames.filter((pathname) => {
       return pathnameRegexp.test(pathname)
     })

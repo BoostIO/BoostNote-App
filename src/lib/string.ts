@@ -13,7 +13,7 @@ export function generateId(): string {
 export const generateRandomHex = () => randomBytes(32).toString('hex')
 
 export function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return value.replace(/[.*+?^${}()|\[\]\\]/g, '\\$&')
 }
 
 export function filenamify(value: string) {
