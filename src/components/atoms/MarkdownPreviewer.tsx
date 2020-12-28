@@ -25,9 +25,6 @@ import 'remark-admonitions/styles/classic.css'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 import AttachmentImage from './markdown/AttachmentImage'
 import CodeFence from './markdown/CodeFence'
-import { getEmoji } from './dialog/DialogIcon'
-import { DialogIconTypes } from '../../lib/dialog'
-import { admonitionStyle } from '../../lib/styled/styleFunctions'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -183,36 +180,9 @@ const MarkdownPreviewer = ({
   const [renderedContent, setRenderedContent] = useState<React.ReactNode>([])
 
   const checkboxIndexRef = useRef<number>(0)
-  const customTypes = {
-    boost_note: {
-      keyword: 'boost_note',
-      emoji: getEmoji(DialogIconTypes.Info),
-      svg: '',
-    },
-    boost_info: {
-      keyword: 'boost_important',
-      emoji: getEmoji(DialogIconTypes.Info),
-      svg: '',
-    },
-    boost_warning: {
-      keyword: 'boost_warning',
-      emoji: getEmoji(DialogIconTypes.Warning),
-      svg: '',
-    },
-    boost_error: {
-      keyword: 'boost_error',
-      emoji: getEmoji(DialogIconTypes.Error),
-      svg: '',
-    },
-    boost_question: {
-      keyword: 'boost_question',
-      emoji: getEmoji(DialogIconTypes.Question),
-      svg: '',
-    },
-  }
+
   const admonitionOptions = {
-    customTypes: customTypes,
-    tag: '!!!', // the tag to be used for creating admonitions (default ":::")
+    tag: '!!!',
     icons: 'emoji',
     infima: false,
   }
@@ -318,8 +288,6 @@ const MarkdownPreviewer = ({
       .CodeMirror {
         height: inherit;
       }
-
-      ${admonitionStyle}
 
       ${style}
     `
