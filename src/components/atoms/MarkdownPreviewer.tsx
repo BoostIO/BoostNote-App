@@ -288,7 +288,6 @@ const MarkdownPreviewer = ({
       .CodeMirror {
         height: inherit;
       }
-
       ${style}
     `
   }, [style])
