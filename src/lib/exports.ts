@@ -67,12 +67,10 @@ export async function convertNoteDocToHtmlString(
     .use(rehypeKatex)
     .process(note.content)
 
-  const attachmentUrls: string[] = []
-  const htmlString = await updateNoteLinks(
+  const [htmlString, attachmentUrls] = await updateNoteLinks(
     file.toString(),
     pushMessage,
     getAttachmentData,
-    attachmentUrls,
     true
   )
   if (attachmentUrls.length != 0) {
@@ -232,9 +230,8 @@ async function updateNoteLinks(
   content: string,
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
-  attachmentUrls: string[],
   htmlExport = false
-): Promise<string> {
+): Promise<[string, string[]]> {
   // How name is stored:
   //  const fileName = `${dashify(name)}-${getHexatrigesimalString(time++)
   // todo: [komediruzecki-11/12/2020] Is regex correct,
@@ -253,6 +250,7 @@ async function updateNoteLinks(
 
   let contentWithValidImgSrc = content
   const attachmentErrors: string[] = []
+  const attachmentUrls: string[] = []
   for (const attachment of attachmentMatches) {
     const imageData: ImageData | undefined = await getAttachmentData(attachment)
       .then((value) => {
@@ -312,12 +310,12 @@ async function updateNoteLinks(
       )}],\nPlease check is such exists to properly export the PDF with attachments.`,
     })
   }
-  return contentWithValidImgSrc
+  return [contentWithValidImgSrc, attachmentUrls]
 }
 
-export function revokeAttachmentsUrls(attachments: string[]) {
-  attachments.forEach((attachment) => {
-    window.URL.revokeObjectURL(attachment)
+function revokeAttachmentsUrls(attachmentsUrls: string[]) {
+  attachmentsUrls.forEach((attachmentUrl) => {
+    window.URL.revokeObjectURL(attachmentUrl)
   })
 }
 
@@ -326,7 +324,6 @@ export async function convertNoteDocToPdfBuffer(
   preferences: Preferences,
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
-  attachmentUrls: string[],
   previewStyle?: string
 ): Promise<Buffer> {
   const output = await unified()
@@ -351,36 +348,39 @@ export async function convertNoteDocToPdfBuffer(
     .process(note.content)
 
   const markdownContent = output.toString('utf-8').trim() + '\n'
-  const mdContentWithValidLinks = await updateNoteLinks(
+  const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
     markdownContent,
     pushMessage,
-    getAttachmentData,
-    attachmentUrls
+    getAttachmentData
   )
 
-  const htmlString = generatePrintToPdfHTML(
-    mdContentWithValidLinks,
-    preferences,
-    previewStyle
-  )
+  try {
+    const htmlString = generatePrintToPdfHTML(
+      mdContentWithValidLinks,
+      preferences,
+      previewStyle
+    )
 
-  // Enable if we want tags inside PDF export
-  // const tagsStr =
-  //   note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
-  // const headerFooter: Record<string, string> = {
-  //   title: `${note.title}${tagsStr}`,
-  //   url: `file://${filenamifyNoteTitle(note.title)}.pdf`,
-  // }
-  const printOpts = {
-    // Needed for codemirorr themes (backgrounds)
-    printBackground: true,
-    // Enable margins if header and footer is printed!
-    // No margins 1, default margins 0, 2 - minimum margins
-    marginsType: 0, // This could be chosen by user.
-    pageSize: 'A4', // This could be chosen by user.
-    // headerFooter: includeFrontMatter ? headerFooter : undefined,
+    // Enable if we want tags inside PDF export
+    // const tagsStr =
+    //   note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
+    // const headerFooter: Record<string, string> = {
+    //   title: `${note.title}${tagsStr}`,
+    //   url: `file://${filenamify(note.title)}.pdf`,
+    // }
+    const printOpts = {
+      // Needed for codemirorr themes (backgrounds)
+      printBackground: true,
+      // Enable margins if header and footer is printed!
+      // No margins 1, default margins 0, 2 - minimum margins
+      marginsType: 0, // This could be chosen by user.
+      pageSize: 'A4', // This could be chosen by user.
+      // headerFooter: headerFooter,
+    }
+    return await convertHtmlStringToPdfBuffer(htmlString, printOpts)
+  } finally {
+    revokeAttachmentsUrls(attachmentUrls)
   }
-  return convertHtmlStringToPdfBuffer(htmlString, printOpts)
 }
 
 export const exportNoteAsPdfFile = async (
@@ -391,19 +391,16 @@ export const exportNoteAsPdfFile = async (
   previewStyle?: string
 ): Promise<void> => {
   try {
-    const attachmentUrls: string[] = []
     const pdfBuffer = await convertNoteDocToPdfBuffer(
       note,
       preferences,
       pushMessage,
       getAttachmentData,
-      attachmentUrls,
       previewStyle
     )
     const pdfName = `${filenamify(note.title)}.pdf`
 
     downloadBlob(new Blob([pdfBuffer]), pdfName)
-    revokeAttachmentsUrls(attachmentUrls)
   } catch (error) {
     console.warn(error)
     pushMessage({

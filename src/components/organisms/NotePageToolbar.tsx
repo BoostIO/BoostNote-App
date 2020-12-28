@@ -30,7 +30,6 @@ import {
   convertNoteDocToHtmlString,
   convertNoteDocToMarkdownString,
   convertNoteDocToPdfBuffer,
-  revokeAttachmentsUrls,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -350,18 +349,15 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
             return
           case '.pdf':
             try {
-              const attachmentUrls: string[] = []
               const pdfBuffer = await convertNoteDocToPdfBuffer(
                 note,
                 preferences,
                 pushMessage,
                 getAttachmentData,
-                attachmentUrls,
                 previewStyle
               )
 
               await writeFile(result.filePath, pdfBuffer)
-              revokeAttachmentsUrls(attachmentUrls)
             } catch (error) {
               console.error(error)
               pushMessage({
