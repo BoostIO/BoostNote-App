@@ -87,19 +87,19 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
       }
       parent.properties.className = classNames
 
-      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
-        return
-      }
-
       const rawContent = node.children[0].value as string
       // TODO: Stop using html attribute after exposing HAST Node is shipped
       parent.properties['data-raw'] = rawContent
+
+      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
+        return
+      }
 
       const cmResult = [] as Node[]
       if (lang != null) {
         const mime = getMime(lang)
         if (mime == null) {
-          if (ignoreMissing){
+          if (ignoreMissing) {
             return
           }
 
@@ -203,7 +203,7 @@ const MarkdownPreviewer = ({
             if (src != null && !src.match('/')) {
               const attachment = attachmentMap[src]
               if (attachment != null) {
-                return <AttachmentImage attachment={attachment} {...props}/>
+                return <AttachmentImage attachment={attachment} {...props} />
               }
             }
 
