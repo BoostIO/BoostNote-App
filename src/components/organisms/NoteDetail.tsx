@@ -26,6 +26,7 @@ import EditorThemeSelect from '../molecules/EditorThemeSelect'
 import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import { Position } from 'codemirror'
+import ClipboardStatus from '../molecules/ClipboardStatus'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -482,6 +483,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
             cursor={currentCursor}
             selections={currentSelections}
           />
+          <ClipboardStatus />
           <EditorKeyMapSelect />
           <EditorThemeSelect />
           <EditorIndentationStatus />
