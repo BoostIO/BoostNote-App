@@ -239,14 +239,19 @@ async function updateNoteLinks(
   const attachmentGroups = [
     ...content.matchAll(/src="([0-9a-zA-Z-]*-[0-9a-zA-Z]{8,14}\.png)"/g),
   ]
-  let contentWithValidImgSrc = content
+
+  const attachmentMatches = [
+    ...new Set(
+      attachmentGroups
+        .filter((group) => group.length > 0)
+        .map((group) => group[1])
+    ),
+  ]
+
+  let contentWithValidImageSource = content
   const attachmentErrors: string[] = []
   const attachmentUrls: string[] = []
-  for (const group of attachmentGroups) {
-    if (group.length <= 0) {
-      continue
-    }
-    const attachment: string = group[1]
+  for (const attachment of attachmentMatches) {
     const imageData: ImageData | undefined = await getAttachmentData(attachment)
       .then((value) => {
         if (!value) {
@@ -287,8 +292,8 @@ async function updateNoteLinks(
       }
 
       if (srcUrl) {
-        contentWithValidImgSrc = contentWithValidImgSrc.replace(
-          imageData.name,
+        contentWithValidImageSource = contentWithValidImageSource.replace(
+          new RegExp(imageData.name, 'g'),
           srcUrl
         )
       }
@@ -296,6 +301,7 @@ async function updateNoteLinks(
       attachmentErrors.push(attachment)
     }
   }
+
   if (attachmentErrors.length > 0) {
     pushMessage({
       title: `PDF export cannot find attachment data for attachments.`,
@@ -304,12 +310,12 @@ async function updateNoteLinks(
       )}],\nPlease check is such exists to properly export the PDF with attachments.`,
     })
   }
-  return [contentWithValidImgSrc, attachmentUrls]
+  return [contentWithValidImageSource, attachmentUrls]
 }
 
-function revokeAttachmentsUrls(attachments: string[]) {
-  attachments.forEach((attachment) => {
-    window.URL.revokeObjectURL(attachment)
+function revokeAttachmentsUrls(attachmentUrls: string[]) {
+  attachmentUrls.forEach((attachmentUrl) => {
+    window.URL.revokeObjectURL(attachmentUrl)
   })
 }
 
@@ -319,7 +325,7 @@ export async function convertNoteDocToPdfBuffer(
   pushMessage: (context: any) => any,
   getAttachmentData: (src: string) => Promise<undefined | AttachmentData>,
   previewStyle?: string
-) {
+): Promise<Buffer> {
   const output = await unified()
     .use(remarkParse)
     .use(remarkEmoji, { emoticon: false })
@@ -342,7 +348,7 @@ export async function convertNoteDocToPdfBuffer(
     .process(note.content)
 
   const markdownContent = output.toString('utf-8').trim() + '\n'
-  const [mdContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
+  const [markdownContentWithValidLinks, attachmentUrls] = await updateNoteLinks(
     markdownContent,
     pushMessage,
     getAttachmentData
@@ -350,7 +356,7 @@ export async function convertNoteDocToPdfBuffer(
 
   try {
     const htmlString = generatePrintToPdfHTML(
-      mdContentWithValidLinks,
+      markdownContentWithValidLinks,
       preferences,
       previewStyle
     )
@@ -360,7 +366,7 @@ export async function convertNoteDocToPdfBuffer(
     //   note.tags.length > 0 ? `, tags: [${note.tags.join(' ')}]` : ''
     // const headerFooter: Record<string, string> = {
     //   title: `${note.title}${tagsStr}`,
-    //   url: `file://${filenamifyNoteTitle(note.title)}.pdf`,
+    //   url: `file://${filenamify(note.title)}.pdf`,
     // }
     const printOpts = {
       // Needed for codemirorr themes (backgrounds)
@@ -369,9 +375,9 @@ export async function convertNoteDocToPdfBuffer(
       // No margins 1, default margins 0, 2 - minimum margins
       marginsType: 0, // This could be chosen by user.
       pageSize: 'A4', // This could be chosen by user.
-      // headerFooter: includeFrontMatter ? headerFooter : undefined,
+      // headerFooter: headerFooter,
     }
-    return convertHtmlStringToPdfBuffer(htmlString, printOpts)
+    return await convertHtmlStringToPdfBuffer(htmlString, printOpts)
   } finally {
     revokeAttachmentsUrls(attachmentUrls)
   }
