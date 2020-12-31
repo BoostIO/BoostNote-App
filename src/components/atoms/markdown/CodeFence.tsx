@@ -4,7 +4,8 @@ import copy from 'copy-to-clipboard'
 import Icon from '../Icon'
 import { mdiContentCopy, mdiContentSave } from '@mdi/js'
 import { flexCenter } from '../../../lib/styled/styleFunctions'
-import { downloadBlob } from '../../../lib/download';
+import { downloadBlob } from '../../../lib/download'
+
 const CodeFenceContainer = styled.div`
   position: relative;
 `
@@ -20,7 +21,7 @@ const CodeFenceButton = styled.button`
   outline: none;
 
   background-color: rgba(0, 0, 0, 0.3);
-  ${flexCenter}
+  ${flexCenter};
 
   border: none;
   cursor: pointer;
@@ -36,35 +37,56 @@ const CodeFenceButton = styled.button`
     color: ${({ theme }) => theme.navButtonActiveColor};
   }
 `
-const CodeFence = (props: React.HTMLProps<HTMLPreElement> = {}) => {
+
+const CodeFence = (
+  props: React.HTMLProps<HTMLPreElement> & {
+    'data-raw'?: unknown
+    'data-ext'?: unknown
+    'data-mime'?: unknown
+  } = {}
+) => {
   if (props.className != null && props.className!.includes('CodeMirror')) {
-    const otherProps = { ...props }
-    const rawContent = props['data-raw']
-    delete otherProps['data-raw']
+    const {
+      'data-raw': dataRaw,
+      'data-ext': dataExt,
+      'data-mime': dataMime,
+      ...otherProps
+    } = props
     return (
       <CodeFenceContainer>
         <pre {...otherProps} />
-        <CodeFenceButton
-          onClick={() => {
-            copy(rawContent)
-          }}
-          title='Copy to Clipboard'
-        >
-          <Icon path={mdiContentCopy} />
-        </CodeFenceButton>
-        {rawContent && <CodeFenceButton
-          onClick={() => {
-            var blob = new Blob([rawContent], { type: "text/plain;charset=utf-8" });
-            var ext = "";
-            if (props.className!.includes('language-'))
-              ext = "." + /language-(.+?)$/.exec(props.className!)![1]
-            downloadBlob(blob, "snippet" + ext);
-          }}
-          title='Save to File'
-          style={{ right: '30px' }}
-        >
-          <Icon path={mdiContentSave} />
-        </CodeFenceButton>}
+        {typeof dataRaw === 'string' && dataRaw.length > 0 && (
+          <>
+            <CodeFenceButton
+              onClick={() => {
+                copy(dataRaw)
+              }}
+              title='Copy to Clipboard'
+            >
+              <Icon path={mdiContentCopy} />
+            </CodeFenceButton>
+            <CodeFenceButton
+              onClick={() => {
+                let filename = 'snippet'
+                if (typeof dataExt === 'string' && dataExt.length > 0) {
+                  filename += `.${dataExt}`
+                }
+                const mime =
+                  typeof dataMime === 'string' && dataMime.length > 0
+                    ? dataMime
+                    : 'text/plain;charset=utf-8'
+                const blob = new Blob([dataRaw], {
+                  type: mime,
+                })
+                downloadBlob(blob, filename)
+              }}
+              title='Save to File'
+              style={{ right: '30px' }}
+            >
+              <Icon path={mdiContentSave} />
+            </CodeFenceButton>
+          </>
+        )}
       </CodeFenceContainer>
     )
   }
