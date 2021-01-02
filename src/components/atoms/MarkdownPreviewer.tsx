@@ -3,9 +3,9 @@ import unified, { Plugin } from 'unified'
 import remarkEmoji from 'remark-emoji'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import slug from 'remark-slug'
+import remarkSlug from 'remark-slug'
 import remarkMath from 'remark-math'
-import admonitions from 'remark-admonitions'
+import remarkAbmonitions from 'remark-admonitions'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeReact from 'rehype-react'
@@ -181,8 +181,8 @@ const MarkdownPreviewer = ({
 
   const checkboxIndexRef = useRef<number>(0)
 
-  const admonitionOptions = {
-    tag: '!!!',
+  const remarkAdmonitionOptions = {
+    tag: ':::',
     icons: 'emoji',
     infima: false,
   }
@@ -190,13 +190,13 @@ const MarkdownPreviewer = ({
   const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
-      .use(slug)
+      .use(remarkSlug)
       .use(remarkEmoji, { emoticon: false })
+      .use(remarkAbmonitions, remarkAdmonitionOptions)
+      .use(remarkMath)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
       .use(rehypeSanitize, schema)
-      .use(admonitions, admonitionOptions)
-      .use(remarkMath)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
         theme: codeBlockTheme,
@@ -246,7 +246,7 @@ const MarkdownPreviewer = ({
           pre: CodeFence,
         },
       })
-  }, [admonitionOptions, codeBlockTheme, attachmentMap, updateContent])
+  }, [remarkAdmonitionOptions, codeBlockTheme, attachmentMap, updateContent])
 
   const renderContent = useCallback(async () => {
     const content = previousContentRef.current
