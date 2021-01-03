@@ -1,6 +1,5 @@
 import React from 'react'
 import { usePreferences } from '../lib/preferences'
-import isElectron from 'is-electron'
 
 interface ThemeLinkProps {
   theme: string
@@ -13,16 +12,7 @@ const ThemeLink = ({ theme }: ThemeLinkProps) => {
   if (theme === 'solarized-dark') {
     theme = 'solarized'
   }
-  return (
-    <link
-      href={
-        isElectron()
-          ? `app/codemirror/theme/${theme}.css`
-          : `/app/codemirror/theme/${theme}.css`
-      }
-      rel='stylesheet'
-    />
-  )
+  return <link href={`app/codemirror/theme/${theme}.css`} rel='stylesheet' />
 }
 
 const CodeMirrorStyle = () => {
