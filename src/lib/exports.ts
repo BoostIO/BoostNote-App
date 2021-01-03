@@ -50,7 +50,7 @@ export async function convertNoteDocToHtmlString(
   const file = await unified()
     .use(remarkParse)
     .use(remarkMath)
-    .use([remarkRehype, { allowDangerousHTML: false }])
+    .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
       theme: preferences['markdown.codeBlockTheme'],
@@ -329,7 +329,7 @@ export async function convertNoteDocToPdfBuffer(
   const output = await unified()
     .use(remarkParse)
     .use(remarkEmoji, { emoticon: false })
-    .use([remarkRehype, { allowDangerousHTML: true }])
+    .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, schema)
     .use(remarkMath)
