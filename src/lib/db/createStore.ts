@@ -1278,13 +1278,7 @@ export function createDbStoreCreator(
 
         return
       },
-      [
-        storageMap,
-        currentPathnameWithoutNoteId,
-        setStorageMap,
-        queueSyncingStorage,
-        router,
-      ]
+      [storageMap, setStorageMap, queueSyncingStorage, router]
     )
 
     const addAttachments = useCallback(
