@@ -88,4 +88,4 @@ export function selectTheme(theme: string): BaseTheme {
     default:
       return darkTheme
   }
-};
+}

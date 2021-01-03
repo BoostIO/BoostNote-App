@@ -469,7 +469,9 @@ class FSNoteDb implements NoteDb {
     for (const note of notesWithTags) {
       await this.updateNote(note._id, {
         ...note,
-        tags: note.tags.flatMap((tag) => tag === currentTagName ? [newTagName] : [tag]),
+        tags: note.tags.flatMap((tag) =>
+          tag === currentTagName ? [newTagName] : [tag]
+        ),
       })
     }
 

@@ -526,8 +526,7 @@ export default class PouchNoteDb implements NoteDb {
 
   async renameTag(currentTagName: string, newTagName: string): Promise<void> {
     const currentTag = await this.getTag(currentTagName)
-    if (currentTag == null) 
-      return 
+    if (currentTag == null) return
 
     const renamedTagProps = {
       data: currentTag.data,
@@ -541,11 +540,13 @@ export default class PouchNoteDb implements NoteDb {
     await Promise.all(
       notes.map((note) => {
         return this.updateNote(note._id, {
-          tags: note.tags.flatMap((tag) => tag === currentTagName ? [newTagName] : [tag]),
+          tags: note.tags.flatMap((tag) =>
+            tag === currentTagName ? [newTagName] : [tag]
+          ),
         })
       })
     )
-    
+
     await this.pouchDb.remove(currentTag as any)
   }
 

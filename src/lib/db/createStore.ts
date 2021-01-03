@@ -81,7 +81,11 @@ export interface DbStore {
   ): Promise<NoteDoc | undefined>
   purgeNote(storageId: string, noteId: string): Promise<void>
   removeTag(storageId: string, tag: string): Promise<void>
-  renameTag(storageId: string, currentTagName: string, newTagName: string): Promise<void>
+  renameTag(
+    storageId: string,
+    currentTagName: string,
+    newTagName: string
+  ): Promise<void>
   moveNoteToOtherStorage(
     originalStorageId: string,
     noteId: string,
@@ -264,7 +268,10 @@ export function createDbStoreCreator(
       [setStorageMap, syncStorage]
     )
     const createNote = useCallback(
-      async (storageId: string, noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>) => {
+      async (
+        storageId: string,
+        noteProps: Partial<NoteDocEditibleProps | NoteDocImportableProps>
+      ) => {
         const storage = storageMap[storageId]
         if (storage == null) {
           return
@@ -1230,11 +1237,18 @@ export function createDbStoreCreator(
         const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
-          if (storageMap[storageId]!.noteMap[noteId]!.tags.includes(currentTagName)) {
+          if (
+            storageMap[storageId]!.noteMap[noteId]!.tags.includes(
+              currentTagName
+            )
+          ) {
             acc[noteId] = {
               ...storageMap[storageId]!.noteMap[noteId]!,
-              tags: storageMap[storageId]!.noteMap[noteId]!.tags.flatMap(
-                (tag) => tag === currentTagName ? [newTagName] : [tag]),
+              tags: storageMap[storageId]!.noteMap[
+                noteId
+              ]!.tags.flatMap((tag) =>
+                tag === currentTagName ? [newTagName] : [tag]
+              ),
             }
           }
           return acc

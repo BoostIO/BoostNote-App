@@ -31,7 +31,8 @@ export default {
     'storage.copy': 'Kopírovat poznámku',
     'storage.typeLocal': 'Lokální',
     'storage.typeCloud': 'Cloud',
-    'storage.needSignIn': 'Pro vytvoření cloudového úložiště se musíte přihlásit.',
+    'storage.needSignIn':
+      'Pro vytvoření cloudového úložiště se musíte přihlásit.',
     'storage.syncDate': 'Naposledy synchronizováno',
 
     //Folder
@@ -138,7 +139,8 @@ export default {
       'Boost Note sbírá anonymní data výhradně pro účely zlepšování aplikace a v žádném případě nesbírá žádné osobní údaje jako například obsah vašich poznámek. Na GitHubu si můžete ověřit jak funguje.',
     'preferences.analyticsDescription2':
       'Tuto možnost můžete povolit nebo zakázat.',
-    'preferences.analyticsLabel': 'Povolit analytiku a pomoci zlepšit Boostnote',
+    'preferences.analyticsLabel':
+      'Povolit analytiku a pomoci zlepšit Boostnote',
     'preferences.displayTutorialsLabel': 'Návody a FAQ',
 
     // Preferences EditorTab
@@ -161,7 +163,8 @@ export default {
     // Preferences ImportTab
     'preferences.import': 'Import',
     'preferences.description': 'Import .cson souborů ze starého Boostnote.',
-    'preferences.importFlow1': '1. Otevřete složku starého Boostnote ve vašem PC.',
+    'preferences.importFlow1':
+      '1. Otevřete složku starého Boostnote ve vašem PC.',
     'preferences.importFlow2':
       '2. Přetáhněte .cson soubory do níže uvedeného formuláře.',
     'preferences.importFlow3':

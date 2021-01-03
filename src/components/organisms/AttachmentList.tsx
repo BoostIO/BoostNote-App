@@ -90,7 +90,7 @@ const AttachmentListItem = ({
               type: 'normal',
               label: 'Copy Attachment Name',
               click: () => {
-                copy(attachment.name);
+                copy(attachment.name)
               },
             },
             {
