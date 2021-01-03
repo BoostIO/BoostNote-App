@@ -51,6 +51,7 @@ import { useRouteParams } from '../lib/routeParams'
 import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
 import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
+import ExternalStyle from './ExternalStyle'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -383,6 +384,7 @@ const App = () => {
         <PreferencesModal />
         <ToastList />
         <CodeMirrorStyle />
+        <ExternalStyle />
       </AppContainer>
     </ThemeProvider>
   )

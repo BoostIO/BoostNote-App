@@ -78,6 +78,17 @@ module.exports = (env, argv) => {
             from: path.join(__dirname, 'static'),
             to: 'app/static',
           },
+          {
+            from: path.join(__dirname, 'node_modules/katex/dist/katex.min.css'),
+            to: 'app/katex/katex.min.css',
+          },
+          {
+            from: path.join(
+              __dirname,
+              'node_modules/remark-admonitions/styles/classic.css'
+            ),
+            to: 'app/remark-admonitions/classic.css',
+          },
         ],
       }),
     ],
@@ -106,6 +117,21 @@ module.exports = (env, argv) => {
         app.use(
           '/app/codemirror/theme',
           express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
+        )
+        app.use(
+          '/app/katex/katex.min.css',
+          express.static(
+            path.join(__dirname, 'node_modules/katex/dist/katex.min.css')
+          )
+        )
+        app.use(
+          '/app/remark-admonitions/classic.css',
+          express.static(
+            path.join(
+              __dirname,
+              'node_modules/remark-admonitions/styles/classic.css'
+            )
+          )
         )
         app.use('/app/static', express.static(path.join(__dirname, 'static')))
       },
