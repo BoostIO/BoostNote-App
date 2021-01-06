@@ -15,8 +15,8 @@ import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import NotePageToolbarNoteHeader from '../molecules/NotePageToolbarNoteHeader'
 import {
-  convertNoteDocToHtmlString,
-  convertNoteDocToMarkdownString,
+  exportNoteAsHtmlFile,
+  exportNoteAsMarkdownFile,
   convertNoteDocToPdfBuffer,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
@@ -94,20 +94,6 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     }
     await unbookmarkNote(storageId, noteId)
   }, [storageId, noteId, unbookmarkNote])
-
-  const getAttachmentData = useCallback(
-    async (src: string) => {
-      if (note == null) {
-        return
-      }
-      if (storage.attachmentMap[src] != undefined) {
-        return storage.attachmentMap[src]?.getData()
-      } else {
-        return Promise.reject('Attachment not in map.')
-      }
-    },
-    [note, storage.attachmentMap]
-  )
 
   const selectEditMode = useCallback(() => {
     setGeneralStatus({
@@ -204,25 +190,31 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
         const parsedFilePath = pathParse(result.filePath)
         switch (parsedFilePath.ext) {
           case '.html':
-            const htmlString = await convertNoteDocToHtmlString(
+            await exportNoteAsHtmlFile(
+              parsedFilePath.dir,
+              parsedFilePath.name,
               note,
-              preferences,
+              preferences['markdown.codeBlockTheme'],
+              preferences['general.theme'],
               pushMessage,
-              getAttachmentData,
+              storage.attachmentMap,
               previewStyle
             )
-            await writeFile(result.filePath, htmlString)
+            pushMessage({
+              title: 'HTML export',
+              description: 'HTML file exported successfully.',
+            })
             return
           case '.pdf':
             try {
               const pdfBuffer = await convertNoteDocToPdfBuffer(
                 note,
-                preferences,
+                preferences['markdown.codeBlockTheme'],
+                preferences['general.theme'],
                 pushMessage,
-                getAttachmentData,
+                storage.attachmentMap,
                 previewStyle
               )
-
               await writeFile(result.filePath, pdfBuffer)
             } catch (error) {
               console.error(error)
@@ -234,11 +226,17 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
             return
           case '.md':
           default:
-            const markdownString = convertNoteDocToMarkdownString(
+            await exportNoteAsMarkdownFile(
+              parsedFilePath.dir,
+              parsedFilePath.name,
               note,
+              storage.attachmentMap,
               includeFrontMatter
             )
-            await writeFile(result.filePath, markdownString)
+            pushMessage({
+              title: 'Markdown export',
+              description: 'Markdown file exported successfully.',
+            })
             return
         }
       })
@@ -249,11 +247,11 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
     }
   }, [
     note,
-    getAttachmentData,
     includeFrontMatter,
     preferences,
     previewStyle,
     pushMessage,
+    storage.attachmentMap,
   ])
 
   const routeParams = useRouteParams()
