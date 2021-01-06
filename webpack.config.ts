@@ -83,6 +83,10 @@ module.exports = (env, argv) => {
             to: 'app/katex/katex.min.css',
           },
           {
+            from: path.join(__dirname, 'node_modules/katex/dist/fonts/'),
+            to: 'app/katex/fonts/',
+          },
+          {
             from: path.join(
               __dirname,
               'node_modules/remark-admonitions/styles/classic.css'

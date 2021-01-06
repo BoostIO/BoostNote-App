@@ -33,6 +33,10 @@ export function excludeNoteIdPrefix(noteId: string): string {
   return noteId.replace(new RegExp(`^${NOTE_ID_PREFIX}`), '')
 }
 
+export function excludeFileProtocol(src: string) {
+  return src.replace('file://', '')
+}
+
 export function prependNoteIdPrefix(noteId: string): string {
   if (new RegExp(`^${NOTE_ID_PREFIX}`).test(noteId)) {
     return `${NOTE_ID_PREFIX}${noteId}`

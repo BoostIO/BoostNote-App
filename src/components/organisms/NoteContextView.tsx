@@ -26,6 +26,7 @@ import {
   exportNoteAsMarkdownFile,
   exportNoteAsHtmlFile,
   exportNoteAsPdfFile,
+  openDialog,
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
@@ -134,43 +135,55 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
     await untrashNote(storageId, noteId)
   }, [storageId, noteId, untrashNote])
 
-  const getAttachmentData = useCallback(
-    async (src: string) => {
-      if (note == null) {
-        return
-      }
-      if (storage.attachmentMap[src] != undefined) {
-        return storage.attachmentMap[src]?.getData()
-      } else {
-        return Promise.reject('Attachment not in map.')
-      }
-    },
-    [note, storage.attachmentMap]
-  )
-
   const exportAsMarkdown = useCallback(async () => {
-    await exportNoteAsMarkdownFile(note, includeFrontMatter)
-  }, [note, includeFrontMatter])
+    const savePathname = await openDialog()
+    if (!savePathname) {
+      return
+    }
+    await exportNoteAsMarkdownFile(
+      savePathname,
+      note.title,
+      note,
+      storage.attachmentMap,
+      includeFrontMatter
+    )
+    pushMessage({
+      title: 'Markdown export',
+      description: 'Markdown file exported successfully.',
+    })
+  }, [note, storage.attachmentMap, includeFrontMatter, pushMessage])
 
   const exportAsHtml = useCallback(async () => {
+    const savePathname = await openDialog()
+    if (!savePathname) {
+      return
+    }
     await exportNoteAsHtmlFile(
+      savePathname,
+      note.title,
       note,
-      preferences,
+      preferences['markdown.codeBlockTheme'],
+      preferences['general.theme'],
       pushMessage,
-      getAttachmentData,
+      storage.attachmentMap,
       previewStyle
     )
-  }, [note, preferences, pushMessage, getAttachmentData, previewStyle])
+    pushMessage({
+      title: 'HTML export',
+      description: 'HTML file exported successfully.',
+    })
+  }, [note, preferences, pushMessage, storage.attachmentMap, previewStyle])
 
   const exportAsPdf = useCallback(async () => {
     await exportNoteAsPdfFile(
       note,
-      preferences,
+      preferences['markdown.codeBlockTheme'],
+      preferences['general.theme'],
       pushMessage,
-      getAttachmentData,
+      storage.attachmentMap,
       previewStyle
     )
-  }, [note, preferences, pushMessage, getAttachmentData, previewStyle])
+  }, [note, preferences, pushMessage, storage.attachmentMap, previewStyle])
 
   return (
     <Container>
