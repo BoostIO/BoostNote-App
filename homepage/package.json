@@ -10,7 +10,7 @@
   "dependencies": {
     "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.4.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "i18next": "^19.8.3",
     "ky": "^0.23.0",
     "ky-universal": "^0.8.2",
