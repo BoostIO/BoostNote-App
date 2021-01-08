@@ -22,8 +22,8 @@ import {
   mdiChevronLeft,
   mdiEyeOutline,
   mdiDotsVertical,
-  mdiFolderOpen,
-  mdiPound,
+  mdiFolderOpenOutline,
+  mdiTag,
   mdiTrashCan,
   mdiBookOpen,
 } from '@mdi/js'
@@ -183,12 +183,12 @@ const NotePage = ({ storage }: NotePageProps) => {
           }
         }
         return {
-          titleIconPath: mdiFolderOpen,
+          titleIconPath: mdiFolderOpenOutline,
           titleLabel: <code>{folderName}</code>,
         }
       case 'storages.tags.show':
         return {
-          titleIconPath: mdiPound,
+          titleIconPath: mdiTag,
           titleLabel: <code>{routeParams.tagName}</code>,
         }
       case 'storages.trashCan':

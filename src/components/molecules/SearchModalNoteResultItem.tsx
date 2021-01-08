@@ -5,7 +5,7 @@ import Icon from '../atoms/Icon'
 import {
   mdiTextBoxOutline,
   mdiTagMultiple,
-  mdiFolder,
+  mdiFolderOutline,
   mdiChevronRight,
 } from '@mdi/js'
 import {
@@ -135,7 +135,7 @@ const SearchModalNoteResultItem = ({
         </div>
         <div className='meta'>
           <div className='folderPathname'>
-            <Icon className='icon' path={mdiFolder} />
+            <Icon className='icon' path={mdiFolderOutline} />
             {note.folderPathname}
           </div>
           {note.tags.length > 0 && (

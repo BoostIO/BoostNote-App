@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from '../../lib/styled'
-import { mdiFolder, mdiSubdirectoryArrowRight } from '@mdi/js'
+import { mdiFolderOutline, mdiSubdirectoryArrowRight } from '@mdi/js'
 import Icon from './Icon'
 import { useRouter } from '../../lib/router'
 import { textOverflow } from '../../lib/styled/styleFunctions'
@@ -36,7 +36,7 @@ const FolderTreeListItem = ({
         {depth > 0 && (
           <Icon className='icon' path={mdiSubdirectoryArrowRight} />
         )}
-        <Icon className='icon folderIcon' path={mdiFolder} />
+        <Icon className='icon folderIcon' path={mdiFolderOutline} />
         <div className='label'>{name}</div>
       </button>
     </Container>
