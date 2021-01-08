@@ -1,7 +1,7 @@
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
-const base1Color = '#2c2c2c'
-const base2Color = '#1e2022'
+const base1Color = '#1E2024'
+const base2Color = '#757980'
 const primaryColor = '#5580DC'
 const primaryDarkerColor = '#4070D8'
 const dangerColor = '#DC3545'
@@ -49,17 +49,17 @@ export const darkTheme: BaseTheme = {
   scrollBarThumbColor: '#555',
 
   // SideBar
-  navBackgroundColor: '#2c2c2c',
-  navLabelColor: '#bbb',
-  navButtonColor: '#999',
-  navButtonHoverColor: '#bbb',
-  navButtonActiveColor: primaryColor,
-  navItemColor: '#bbb',
+  navBackgroundColor: base1Color,
+  navLabelColor: '#D2D3D6',
+  navButtonColor: '#D2D3D6',
+  navButtonHoverColor: '#FFF',
+  navButtonActiveColor: '#FFF',
+  navItemColor: '#D2D3D6',
   navItemBackgroundColor: 'transparent',
-  navItemHoverBackgroundColor: '#444',
-  navItemActiveColor: '#eee',
-  navItemActiveBackgroundColor: '#444',
-  navItemHoverActiveBackgroundColor: '#555',
+  navItemHoverBackgroundColor: '#45474B',
+  navItemActiveColor: '#D2D3D6',
+  navItemActiveBackgroundColor: '#5D6066',
+  navItemHoverActiveBackgroundColor: '#5D6066',
 
   // Team Switcher
   teamSwitcherBackgroundColor: light100Color,
