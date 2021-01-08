@@ -8,7 +8,7 @@ import { useContextMenu, MenuTypes } from '../../../mobile/lib/contextMenu'
 import { useDialog, DialogIconTypes } from '../../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
-import { mdiTagMultiple, mdiPound } from '@mdi/js'
+import { mdiTagMultiple, mdiTag } from '@mdi/js'
 
 interface TagListFragmentProps {
   storage: NoteStorage
@@ -37,7 +37,7 @@ const TagListFragment = ({ storage }: TagListFragmentProps) => {
         <NavigatorItem
           key={`storage:${storageId}/tags:${tagName}`}
           depth={2}
-          iconPath={mdiPound}
+          iconPath={mdiTag}
           label={tagName}
           onClick={() => {
             push(tagPathname)

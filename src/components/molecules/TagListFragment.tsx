@@ -10,7 +10,7 @@ import { usePathnameWithoutNoteId } from '../../lib/routeParams'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useTranslation } from 'react-i18next'
-import { mdiPound, mdiTagMultiple, mdiDotsVertical } from '@mdi/js'
+import { mdiTag, mdiTagMultiple, mdiDotsVertical } from '@mdi/js'
 import { openContextMenu } from '../../lib/electronOnly'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 
@@ -139,7 +139,7 @@ const TagListItem = ({ tagName, storageId }: TagListItemProps) => {
     <SideNavigatorItem
       key={`storage:${storageId}/tags:${tagName}`}
       depth={1}
-      iconPath={mdiPound}
+      iconPath={mdiTag}
       label={tagName}
       onClick={() => {
         push(tagPathname)

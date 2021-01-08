@@ -6,7 +6,7 @@ import { usePreferences } from '../../lib/preferences'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
 import Icon from '../atoms/Icon'
-import { mdiPound } from '@mdi/js'
+import { mdiTag } from '@mdi/js'
 import styled from '../../lib/styled'
 import {
   flexCenter,
@@ -81,7 +81,7 @@ const TagDetail = ({ storage, tagName }: TagDetailProps) => {
     <PageContainer>
       <Header>
         <div className='icon'>
-          <Icon path={mdiPound} />
+          <Icon path={mdiTag} />
         </div>
         {tagName}
       </Header>
