@@ -7,11 +7,11 @@ import { getFolderItemId } from '../../lib/nav'
 import { getTransferrableNoteData } from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
 import {
-  mdiFolderOpen,
-  mdiFolder,
+  mdiFolderOpenOutline,
   mdiDotsVertical,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
+  mdiFolderOutline,
 } from '@mdi/js'
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
@@ -229,7 +229,7 @@ const FolderNavigatorItem = ({
       folded={folded}
       depth={depth}
       active={active}
-      iconPath={active ? mdiFolderOpen : mdiFolder}
+      iconPath={active ? mdiFolderOpenOutline : mdiFolderOutline}
       label={folderName}
       onClick={openFolder}
       onDoubleClick={showRenamePrompt}

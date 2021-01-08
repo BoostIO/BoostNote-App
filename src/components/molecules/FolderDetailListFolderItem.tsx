@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import FolderDetailListItem from './FolderDetailListItem'
-import { mdiFolder } from '@mdi/js'
+import { mdiFolderOutline } from '@mdi/js'
 import { PopulatedFolderDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { getFolderNameFromPathname } from '../../lib/db/utils'
@@ -22,7 +22,7 @@ const FolderDetailListFolderItem = ({
 
   return (
     <FolderDetailListItem
-      iconPath={mdiFolder}
+      iconPath={mdiFolderOutline}
       label={getFolderNameFromPathname(folder.pathname) || ''}
       onClick={navigateToFolder}
     />

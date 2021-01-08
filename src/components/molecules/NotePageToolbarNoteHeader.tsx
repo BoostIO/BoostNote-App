@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import {
   mdiTextBoxOutline,
-  mdiFolder,
+  mdiFolderOutline,
   mdiPencilOutline,
   mdiBookOpen,
   mdiDotsHorizontal,
@@ -213,7 +213,7 @@ const NotePageToolbarNoteHeader = ({
         <>
           <ToolbarSlashSeparator />
           <ToolbarButton
-            iconPath={mdiFolder}
+            iconPath={mdiFolderOutline}
             title={`Navigate to ${
               folderDataList[folderDataList.length - 1].pathname
             }`}

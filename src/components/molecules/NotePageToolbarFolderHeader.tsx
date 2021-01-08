@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { mdiBookOpen, mdiFolder } from '@mdi/js'
+import { mdiBookOpen, mdiFolderOutline } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import ToolbarSlashSeparator from '../atoms/ToolbarSlashSeparator'
 import ToolbarButton from '../atoms/ToolbarButton'
@@ -53,7 +53,7 @@ const NotePageToolbarFolderHeader = ({
             <ToolbarSlashSeparator />
             <ToolbarButton
               key={pathname}
-              iconPath={mdiFolder}
+              iconPath={mdiFolderOutline}
               onClick={() => {
                 push(`/app/storages/${storageId}/notes${pathname}`)
               }}

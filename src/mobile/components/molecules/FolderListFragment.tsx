@@ -9,7 +9,11 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import ControlButton from '../atoms/ControlButton'
 import { getFolderItemId } from '../../../lib/nav'
 import { useTranslation } from 'react-i18next'
-import { mdiFolder, mdiFolderOpen, mdiDotsVertical } from '@mdi/js'
+import {
+  mdiFolderOutline,
+  mdiFolderOpenOutline,
+  mdiDotsVertical,
+} from '@mdi/js'
 
 interface FolderListFragmentProps {
   storage: NoteStorage
@@ -151,7 +155,7 @@ const FolderListFragment = ({
             folded={folded}
             depth={depth}
             active={folderIsActive}
-            iconPath={folderIsActive ? mdiFolderOpen : mdiFolder}
+            iconPath={folderIsActive ? mdiFolderOpenOutline : mdiFolderOutline}
             label={folderName}
             onClick={createOnFolderItemClickHandler(folderPathname)}
             onFoldButtonClick={() => toggleSideNavOpenedItem(itemId)}
