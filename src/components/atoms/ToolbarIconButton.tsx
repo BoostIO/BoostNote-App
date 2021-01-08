@@ -4,8 +4,8 @@ import Icon from './Icon'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 
 const Container = styled.button`
-  height: 34px;
-  width: 34px;
+  height: 30px;
+  width: 30px;
   box-sizing: border-box;
   font-size: 18px;
   outline: none;
@@ -15,14 +15,15 @@ const Container = styled.button`
   ${flexCenter}
 
   border: none;
+  border-radius: 3px;
   cursor: pointer;
 
   transition: color 200ms ease-in-out;
   color: ${({ theme }) => theme.navItemColor};
   &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
+    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
   }
-
+  &:hover,
   &:active,
   &.active {
     color: ${({ theme }) => theme.navButtonActiveColor};

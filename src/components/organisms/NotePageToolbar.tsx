@@ -7,14 +7,14 @@ import React, {
 import styled from '../../lib/styled'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import {
-  mdiTextSubject,
-  mdiCodeTags,
   mdiViewSplitVertical,
   mdiTrashCan,
   mdiRestore,
   mdiStarOutline,
   mdiStar,
   mdiExportVariant,
+  mdiEye,
+  mdiPencil,
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
@@ -38,7 +38,6 @@ import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { useToast } from '../../lib/toast'
-import TopbarSwitchSelector from '../atoms/TopbarSwitchSelector'
 import {
   openContextMenu,
   showSaveDialog,
@@ -489,7 +488,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
                   active={noteViewMode === 'edit'}
                   title={t('note.edit')}
                   onClick={selectEditMode}
-                  iconPath={mdiCodeTags}
+                  iconPath={mdiPencil}
                 />
                 <ToolbarIconButton
                   active={noteViewMode === 'split'}
@@ -501,7 +500,7 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
                   active={noteViewMode === 'preview'}
                   title={t('note.preview')}
                   onClick={selectPreviewMode}
-                  iconPath={mdiTextSubject}
+                  iconPath={mdiEye}
                 />
               </>
             ) : (
@@ -514,21 +513,17 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
                     onClick={toggleSplitEditMode}
                   />
                 )}
-                <TopbarSwitchSelector
-                  onClick={togglePreviewMode}
-                  items={[
-                    {
-                      active: noteViewMode !== 'preview',
-                      label: 'Edit',
-                      title: 'Select Edit Mode',
-                    },
-                    {
-                      active: noteViewMode === 'preview',
-                      label: 'Preview',
-                      title: 'Select Preview Mode',
-                    },
-                  ]}
-                />
+                {noteViewMode !== 'preview' ? (
+                  <ToolbarIconButton
+                    iconPath={mdiEye}
+                    onClick={selectPreviewMode}
+                  />
+                ) : (
+                  <ToolbarIconButton
+                    iconPath={mdiPencil}
+                    onClick={selectEditMode}
+                  />
+                )}
               </>
             )}
             <ToolbarSeparator />
