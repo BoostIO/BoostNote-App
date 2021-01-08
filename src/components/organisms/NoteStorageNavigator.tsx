@@ -315,7 +315,7 @@ const TopButton = styled.button`
 const SearchButton = styled.button`
   margin: 0 8px;
   height: 28px;
-  color: ${({ theme }) => theme.secondaryButtonLabelColor};
+  color: ${({ theme }) => theme.uiTextColor};
   background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
   border: none;
   border-radius: 3px;

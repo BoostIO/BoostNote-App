@@ -72,7 +72,6 @@ const ClickableContainer = styled.button`
   }
   &:active,
   &.active {
-    color: ${({ theme }) => theme.navItemActiveColor};
     background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
   }
   &:hover:active,
@@ -184,8 +183,8 @@ const NavigatorItem = ({
           </IconContainer>
         )}
         <Label className={cc([subtle && 'subtle'])}>{label}</Label>
+        {control && <Control className='control'>{control}</Control>}
       </ClickableContainer>
-      {control && <Control className='control'>{control}</Control>}
     </Container>
   )
 }
