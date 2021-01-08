@@ -57,6 +57,7 @@ const ClickableContainer = styled.button`
   background-color: transparent;
   height: 28px;
   border: none;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   text-align: left;
@@ -87,6 +88,8 @@ const ClickableContainer = styled.button`
 const Label = styled.div`
   ${textOverflow}
   flex: 1;
+  font-size: 14px;
+
   &.subtle {
     color: ${({ theme }) => theme.disabledUiTextColor};
   }
@@ -106,7 +109,7 @@ const IconContainer = styled.div`
   height: 24px;
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 16px;
 `
 
 interface NavigatorItemProps {

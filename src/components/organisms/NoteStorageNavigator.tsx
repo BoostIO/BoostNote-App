@@ -20,8 +20,8 @@ import { useRouteParams } from '../../lib/routeParams'
 import {
   mdiChevronDown,
   mdiPlus,
-  mdiFolder,
-  mdiPound,
+  mdiFolderOutline,
+  mdiTag,
   mdiMagnify,
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
@@ -159,7 +159,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         if (routeParams.folderPathname !== '/') {
           return (
             <>
-              in <Icon className='icon' path={mdiFolder} />{' '}
+              in <Icon className='icon' path={mdiFolderOutline} />{' '}
               {getFolderNameFromPathname(routeParams.folderPathname)}
             </>
           )
@@ -168,7 +168,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       case 'storages.tags.show':
         return (
           <>
-            with <Icon className='icon' path={mdiPound} />
+            with <Icon className='icon' path={mdiTag} />
             {routeParams.tagName}
           </>
         )
@@ -280,7 +280,7 @@ const NavigatorContainer = styled.nav`
 
 const ScrollableContainer = styled.div`
   flex: 1;
-  padding: 0 0 10px;
+  padding: 8px;
   overflow: auto;
 `
 const WindowControlSpacer = styled.div`
@@ -314,11 +314,11 @@ const TopButton = styled.button`
 
 const SearchButton = styled.button`
   margin: 0 8px;
-  height: 34px;
+  height: 28px;
   color: ${({ theme }) => theme.secondaryButtonLabelColor};
   background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   text-align: left;
   align-items: center;
@@ -333,10 +333,11 @@ const SearchButton = styled.button`
     }
   }
   & > .icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     ${flexCenter};
     flex-shrink: 0;
+    font-size: 20px;
   }
   & > .label {
     white-space: nowrap;
@@ -354,12 +355,12 @@ const SearchButton = styled.button`
 `
 
 const NewNoteButton = styled.button`
-  margin: 8px 8px;
-  height: 34px;
+  margin: 4px 8px;
+  height: 28px;
   color: ${({ theme }) => theme.primaryButtonLabelColor};
   background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   text-align: left;
   align-items: center;
@@ -374,10 +375,11 @@ const NewNoteButton = styled.button`
   }
 
   & > .icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     ${flexCenter};
     flex-shrink: 0;
+    font-size: 20px;
   }
   & > .label {
     white-space: nowrap;
