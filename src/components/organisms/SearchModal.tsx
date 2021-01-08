@@ -18,7 +18,7 @@ import {
   flexCenter,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
-import { mdiMagnify, mdiClose, mdiTextBoxOutline } from '@mdi/js'
+import { mdiMagnify, mdiClose, mdiCardTextOutline } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import SearchModalNoteResultItem from '../molecules/SearchModalNoteResultItem'
 import { useStorageRouter } from '../../lib/storageRouter'
@@ -327,7 +327,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
             <EditorPreview>
               <div className='preview-control'>
                 <div className='preview-control__location'>
-                  <Icon path={mdiTextBoxOutline} className='icon' />
+                  <Icon path={mdiCardTextOutline} className='icon' />
                   <span
                     className={cc([
                       'label',
