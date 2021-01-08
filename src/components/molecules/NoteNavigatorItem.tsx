@@ -1,6 +1,6 @@
 import React, { useCallback, MouseEventHandler } from 'react'
 import NavigatorItem from '../atoms/NavigatorItem'
-import { mdiTextBoxOutline, mdiDotsVertical } from '@mdi/js'
+import { mdiCardTextOutline, mdiDotsVertical } from '@mdi/js'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { NoteDoc } from '../../lib/db/types'
 import NavigatorButton from '../atoms/NavigatorButton'
@@ -78,7 +78,7 @@ const NoteNavigatorItem = ({
   return (
     <NavigatorItem
       active={active}
-      iconPath={mdiTextBoxOutline}
+      iconPath={mdiCardTextOutline}
       label={emptyTitle ? 'Untitled' : noteTitle}
       depth={depth}
       subtle={emptyTitle}

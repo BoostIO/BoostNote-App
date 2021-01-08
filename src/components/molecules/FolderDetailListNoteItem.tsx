@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import FolderDetailListItem from './FolderDetailListItem'
 import {
-  mdiTextBoxOutline,
+  mdiCardTextOutline,
   mdiTrashCanOutline,
   mdiStar,
   mdiStarOutline,
@@ -67,7 +67,7 @@ const FolderDetailListNoteItem = ({
 
   return (
     <FolderDetailListItem
-      iconPath={mdiTextBoxOutline}
+      iconPath={mdiCardTextOutline}
       label={note.title}
       onClick={navigateToFolder}
       meta={meta}
