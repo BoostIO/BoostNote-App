@@ -18,7 +18,7 @@ import {
 } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
-import { mdiPound } from '@mdi/js'
+import { mdiTag } from '@mdi/js'
 import Icon from './Icon'
 import { isTagNameValid } from '../../lib/db/utils'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
@@ -225,7 +225,7 @@ const TagNavigatorNewTagPopup = ({
               report(analyticsEvents.appendNoteTag)
             }}
           >
-            <Icon path={mdiPound} />
+            <Icon path={mdiTag} />
             <span>{storageTag}</span>
           </MenuButton>
         ))}
@@ -244,13 +244,13 @@ const TagNavigatorNewTagPopup = ({
             }}
           >
             <span>Create</span>&nbsp;
-            <Icon path={mdiPound} />
+            <Icon path={mdiTag} />
             <span>{newTagName}</span>
           </MenuButton>
         )}
       {tags.includes(trimmedNewTagName) && (
         <MenuButton disabled={true}>
-          <Icon path={mdiPound} />
+          <Icon path={mdiTag} />
           <span>{newTagName} is already added</span>
         </MenuButton>
       )}
