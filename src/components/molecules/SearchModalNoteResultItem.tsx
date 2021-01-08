@@ -3,7 +3,7 @@ import styled from '../../lib/styled'
 import { NoteDoc } from '../../lib/db/types'
 import Icon from '../atoms/Icon'
 import {
-  mdiTextBoxOutline,
+  mdiCardTextOutline,
   mdiTagMultiple,
   mdiFolderOutline,
   mdiChevronRight,
@@ -123,7 +123,7 @@ const SearchModalNoteResultItem = ({
       <MetaContainer onClick={navigate}>
         <div className='header'>
           <div className='icon'>
-            <Icon path={mdiTextBoxOutline} />
+            <Icon path={mdiCardTextOutline} />
           </div>
           <div className={cc(['title', titleIsEmpty && 'empty'])}>
             {titleIsEmpty

@@ -9,7 +9,7 @@ import React, {
   FocusEventHandler,
 } from 'react'
 import {
-  mdiTextBoxOutline,
+  mdiCardTextOutline,
   mdiFolderOutline,
   mdiPencilOutline,
   mdiBookOpen,
@@ -266,7 +266,7 @@ const NoteTitleButton = ({ title, onClick }: NoteTitleButtonProps) => {
 
   return (
     <NoteTitleButtonContainer title='Edit Title' onClick={onClick}>
-      <Icon className='icon' path={mdiTextBoxOutline} />
+      <Icon className='icon' path={mdiCardTextOutline} />
       <div className={cc(['label', titleIsEmpty && 'empty'])}>
         {titleIsEmpty ? 'Untitled' : title}
       </div>

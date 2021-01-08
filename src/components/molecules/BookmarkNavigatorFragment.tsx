@@ -3,7 +3,7 @@ import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useDb } from '../../lib/db'
 import NavigatorItem from '../atoms/NavigatorItem'
 import NavigatorButton from '../atoms/NavigatorButton'
-import { mdiTextBoxOutline, mdiClose, mdiStar } from '@mdi/js'
+import { mdiCardTextOutline, mdiClose, mdiStar } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -56,7 +56,7 @@ const BookmarkNavigatorFragment = ({
             const emptyTitle = note.title.trim().length === 0
             return (
               <NavigatorItem
-                iconPath={mdiTextBoxOutline}
+                iconPath={mdiCardTextOutline}
                 depth={1}
                 key={storage.id + note._id}
                 label={!emptyTitle ? note.title : 'Untitled'}
