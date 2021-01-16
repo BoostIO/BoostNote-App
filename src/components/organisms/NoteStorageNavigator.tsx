@@ -307,9 +307,6 @@ const TopButton = styled.button`
     padding-right: 4px;
     ${textOverflow}
   }
-  &:hover {
-    color: ${({ theme }) => theme.navItemActiveColor};
-  }
 `
 
 const SearchButton = styled.button`
