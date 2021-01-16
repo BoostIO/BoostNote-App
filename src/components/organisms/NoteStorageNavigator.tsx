@@ -301,10 +301,10 @@ const TopButton = styled.button`
   color: ${({ theme }) => theme.navItemColor};
   background-color: transparent;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
+  margin: 4px 0;
   & > .topButtonLabel {
-    font-size: 18px;
-    font-weight: 600;
-    padding-right: 10px;
+    font-size: 14px;
+    padding-right: 4px;
     ${textOverflow}
   }
   &:hover {
