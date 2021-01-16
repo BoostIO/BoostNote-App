@@ -50,7 +50,7 @@ export const darkTheme: BaseTheme = {
 
   // SideBar
   navBackgroundColor: base1Color,
-  navLabelColor: '#D2D3D6',
+  navLabelColor: '#FAFAFA',
   navButtonColor: '#D2D3D6',
   navButtonHoverColor: '#FFF',
   navButtonActiveColor: '#FFF',

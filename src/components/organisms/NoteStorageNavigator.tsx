@@ -298,7 +298,7 @@ const TopButton = styled.button`
   text-align: left;
   padding: 0 16px;
   border: none;
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.navLabelColor};
   background-color: transparent;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
   margin: 4px 0;
