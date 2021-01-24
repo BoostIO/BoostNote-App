@@ -74,14 +74,11 @@ npm run dev
 # Install dependencies
 npm i
 
-# Run webpack
-npm run dev:webpack
-
-# Run electron (You have to open another terminal to run this)
-npm run dev:electron
+# Run webpack and electron
+npm run dev:start
 ```
 
-> For Windows users, If `npm run dev:electron` doesn't spawn an electron window, please try again after removing `%APPDATA%\electron` directory.
+> **For Windows users**, If `npm run dev:start` or `npm run dev:electron` doesn't spawn an electron window, please try again after removing `%APPDATA%\electron` directory.
 
 #### Mobile app
 
