@@ -29,6 +29,7 @@ import { WindowProvider } from '../lib/stores/window'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
 import { lightTheme, darkTheme } from '../lib/styled/themes'
 import { PageDataProvider } from '../lib/stores/pageStore'
+import DesktopLoginPage from '../pages/desktop/login'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -49,13 +50,19 @@ interface PageInfo {
   pageProps: any
 }
 
+export interface GetInitialPropsParameters {
+  pathname: string
+  search: string
+  signal: AbortSignal
+}
+
 interface PageSpec {
   Component: React.ComponentType<any>
-  getInitialProps?: (
-    pathname: string,
-    search: string,
-    abortController: AbortController
-  ) => Promise<any>
+  getInitialProps?: ({
+    pathname,
+    search,
+    signal,
+  }: GetInitialPropsParameters) => Promise<any>
 }
 
 const Router = () => {
@@ -84,7 +91,7 @@ const Router = () => {
     const abortController = new AbortController()
     if (pageSpec.getInitialProps != null) {
       pageSpec
-        .getInitialProps(pathname, search, abortController)
+        .getInitialProps({ pathname, search, signal: abortController.signal })
         .then((data) => {
           setPageInfo({
             Component: pageSpec.Component,
@@ -217,8 +224,12 @@ function getPageComponent(pathname: string): PageSpec | null {
     return {
       Component: AccountDeletePage,
     }
-    return null
   }
 
+  if (splittedPathnames[0] === 'desktop' && splittedPathnames[1] === 'login') {
+    return {
+      Component: DesktopLoginPage,
+    }
+  }
   return null
 }
