@@ -132,20 +132,16 @@ const Router = () => {
       </ThemeProvider>
     )
   }
-  const [, ...pathnameElements] = pathname.split('/')
-
-  if (pathnameElements[0] === 'account') {
-    if (pathnameElements[1] === 'delete') {
-      return (
-        <PageDataProvider pageProps={pageInfo.pageProps as any}>
-          <CombinedProvider>
-            <CustomThemeProvider>
-              {<pageInfo.Component {...pageInfo.pageProps} />}
-            </CustomThemeProvider>
-          </CombinedProvider>
-        </PageDataProvider>
-      )
-    }
+  if (pageInfo != null) {
+    return (
+      <PageDataProvider pageProps={pageInfo.pageProps as any}>
+        <CombinedProvider>
+          <CustomThemeProvider>
+            {<pageInfo.Component {...pageInfo.pageProps} />}
+          </CustomThemeProvider>
+        </CombinedProvider>
+      </PageDataProvider>
+    )
   }
 
   return (
@@ -217,10 +213,11 @@ function isHomepagePathname(pathname: string) {
 
 function getPageComponent(pathname: string): PageSpec | null {
   const [, ...splittedPathnames] = pathname.split('/')
-  if (splittedPathnames[0] === 'account' && splittedPathnames[1]) {
+  if (splittedPathnames[0] === 'account' && splittedPathnames[1] === 'delete') {
     return {
       Component: AccountDeletePage,
     }
+    return null
   }
 
   return null
