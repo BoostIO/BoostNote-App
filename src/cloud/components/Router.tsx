@@ -9,10 +9,6 @@ import { useEffectOnce } from 'react-use'
 import nProgress from 'nprogress'
 import AccountDeletePage from '../pages/account/delete'
 
-const NotFoundPageContainer = styled.div`
-  padding: 15px 25px;
-`
-
 import { SidebarCollapseProvider } from '../lib/stores/sidebarCollapse'
 import { combineProviders } from '../lib/utils/context'
 import { ElectronProvider } from '../lib/stores/electron'
@@ -30,7 +26,13 @@ import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
 import { lightTheme, darkTheme } from '../lib/styled/themes'
 import { PageDataProvider } from '../lib/stores/pageStore'
 import DesktopLoginPage from '../pages/desktop/login'
+import { Mixpanel } from 'mixpanel-browser'
+import * as intercom from '../lib/intercom'
+import { intercomAppId } from '../lib/consts'
 
+const NotFoundPageContainer = styled.div`
+  padding: 15px 25px;
+`
 const CombinedProvider = combineProviders(
   ElectronProvider,
   SidebarCollapseProvider,
@@ -69,13 +71,47 @@ const Router = () => {
   const { pathname, search } = useRouter()
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
 
-  const { initGlobalData, initialized } = useGlobalData()
+  const { initGlobalData, initialized, globalData } = useGlobalData()
   useEffectOnce(() => {
     ;(async () => {
       const data = await getGlobalData()
 
       initGlobalData(data)
     })()
+  })
+  const { currentUser } = globalData
+
+  useEffect(() => {
+    if (currentUser == null) {
+      return
+    }
+    const mixpanel = (window as any).mixpanel as Mixpanel
+
+    if (mixpanel != null) {
+      mixpanel.identify(currentUser.id)
+      mixpanel.people.set({
+        $first_name: currentUser.displayName,
+        $last_name: '',
+        $last_login: new Date(),
+      })
+    }
+
+    if (intercomAppId != null) {
+      intercom.boot(intercomAppId, {
+        name: currentUser.displayName,
+        user_id: currentUser.id,
+      })
+    }
+  }, [currentUser])
+
+  useEffectOnce(() => {
+    if (intercomAppId == null) {
+      return
+    }
+    intercom.load(intercomAppId)
+    return () => {
+      intercom.shutdown()
+    }
   })
 
   useEffect(() => {
@@ -115,6 +151,8 @@ const Router = () => {
       })
       nProgress.done()
     }
+
+    intercom.update()
 
     return () => {
       abortController.abort()
