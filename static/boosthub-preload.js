@@ -9,6 +9,10 @@ function addHostListener(channel, listener) {
   ipcRenderer.addListener(channel, listener)
 }
 
+function addHostListenerOnce(channel, listener) {
+  ipcRenderer.once(channel, listener)
+}
+
 function removeHostListener(channel, listener) {
   ipcRenderer.removeListener(channel, listener)
 }
@@ -56,3 +60,4 @@ window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
 window.__ELECTRON_ONLY__.addHostListener = addHostListener
 window.__ELECTRON_ONLY__.removeHostListener = removeHostListener
 window.__ELECTRON_ONLY__.removeAllHostListeners = removeAllHostListeners
+window.__ELECTRON_ONLY__.addHostListenerOnce = addHostListenerOnce
