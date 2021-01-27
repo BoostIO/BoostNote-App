@@ -6,6 +6,7 @@ import { GlobalDataProvider } from '../lib/stores/globalData'
 import { ToastProvider } from '../lib/stores/toast'
 import { useEffectOnce } from 'react-use'
 import { gaTrackingId, baseUrl, nodeEnv } from '../lib/consts'
+import '../lib/i18n'
 
 const App = () => {
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
