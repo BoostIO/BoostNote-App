@@ -48,11 +48,12 @@ export interface Preferences {
   'general.enableAutoSync': boolean
   'general.showSubfolderContents': boolean
 
-  // BoostHub
-  'boosthub.user': {
+  // Cloud Workspace
+  'cloud.user': {
     id: string
     uniqueName: string
     displayName: string
+    accessToken: string
   } | null
 
   // Editor
@@ -101,7 +102,7 @@ const basePreferences: Preferences = {
   'general.showSubfolderContents': true,
 
   // BoostHub
-  'boosthub.user': null,
+  'cloud.user': null,
 
   // Editor
   'editor.theme': 'material-darker',

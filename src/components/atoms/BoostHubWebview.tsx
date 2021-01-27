@@ -3,7 +3,7 @@ import React, {
   useRef,
   useCallback,
   useEffect,
-  useState,
+  useMemo,
 } from 'react'
 import {
   boostHubWebViewUserAgent,
@@ -15,15 +15,10 @@ import {
   IpcMessageEvent,
   DidNavigateInPageEvent,
   NewWindowEvent,
-  DidFailLoadEvent,
-  LoadCommitEvent,
 } from 'electron'
 import { useEffectOnce } from 'react-use'
 import styled from '../../lib/styled'
-import Icon from './Icon'
-import { mdiLoading } from '@mdi/js'
 import { openNew } from '../../lib/platform'
-import { FormSecondaryButton } from './form'
 import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
@@ -31,6 +26,7 @@ import {
   boostHubTeamDeleteEventEmitter,
   boostHubAccountDeleteEventEmitter,
 } from '../../lib/events'
+import { usePreferences } from '../../lib/preferences'
 
 export interface WebviewControl {
   reload(): void
@@ -49,12 +45,6 @@ interface BoostHubWebviewProps {
   onDidNavigateInPage?: (event: DidNavigateInPageEvent) => void
 }
 
-interface WebviewError {
-  code: number
-  description: string
-  validatedUrl: string
-}
-
 const BoostHubWebview = ({
   src,
   style,
@@ -64,8 +54,15 @@ const BoostHubWebview = ({
   onDidNavigateInPage,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<WebviewError | null>(null)
+  const { preferences } = usePreferences()
+  const cloudUser = preferences['cloud.user']
+
+  const accessToken = useMemo(() => {
+    if (cloudUser == null) {
+      return null
+    }
+    return cloudUser.accessToken
+  }, [cloudUser])
 
   const reload = useCallback(() => {
     webviewRef.current!.reload()
@@ -124,14 +121,6 @@ const BoostHubWebview = ({
 
   useEffectOnce(() => {
     const webview = webviewRef.current!
-    const didStartLoadingEventHandler = () => {
-      setLoading(true)
-    }
-    const didStopLoadingEventHandler = () => {
-      setLoading(false)
-    }
-    webview.addEventListener('did-start-loading', didStartLoadingEventHandler)
-    webview.addEventListener('did-stop-loading', didStopLoadingEventHandler)
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
@@ -150,6 +139,9 @@ const BoostHubWebview = ({
         case 'account-delete':
           boostHubAccountDeleteEventEmitter.dispatch()
           break
+        case 'request-access-token':
+          webview.send('update-access-token', accessToken)
+          break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
           break
@@ -163,73 +155,14 @@ const BoostHubWebview = ({
     }
     webview.addEventListener('new-window', newWindowEventHandler)
 
-    const didFailLoadEventHandler = (event: DidFailLoadEvent) => {
-      switch (event.errorCode) {
-        case -102:
-          setError({
-            code: event.errorCode,
-            description: event.errorDescription,
-            validatedUrl: event.validatedURL,
-          })
-          break
-        case -3:
-          // Skip
-          break
-        default:
-          console.warn('unhandled did fail load event:', event)
-          break
-      }
-    }
-    webview.addEventListener('did-fail-load', didFailLoadEventHandler)
-
-    const loadCommitEventHandler = (_event: LoadCommitEvent) => {
-      setError(null)
-    }
-    webview.addEventListener('load-commit', loadCommitEventHandler)
-
-    const didFinishLoadEventHandler = () => {
-      setError(null)
-    }
-    webview.addEventListener('did-finish-load', didFinishLoadEventHandler)
-
-    // TODO: intercept webcontents's navigate event
-
     return () => {
-      webview.removeEventListener(
-        'did-start-loading',
-        didStartLoadingEventHandler
-      )
-      webview.removeEventListener(
-        'did-stop-loading',
-        didStopLoadingEventHandler
-      )
       webview.removeEventListener('ipc-message', ipcMessageEventHandler)
       webview.removeEventListener('new-window', newWindowEventHandler)
-      webview.removeEventListener('did-fail-load', didFailLoadEventHandler)
-      webview.removeEventListener('load-commit', loadCommitEventHandler)
-      webview.removeEventListener('did-finish-load', didFinishLoadEventHandler)
     }
   })
 
   return (
     <Container className={className} style={style}>
-      {loading && (
-        <div className='container'>
-          <Icon path={mdiLoading} spin />
-          &nbsp; Loading...
-        </div>
-      )}
-      {!loading && error != null && (
-        <div className='container'>
-          <div className='error'>
-            <h1>Failed to load</h1>
-            <p>{error.description}</p>
-            <FormSecondaryButton onClick={reload}>
-              Reload page
-            </FormSecondaryButton>
-          </div>
-        </div>
-      )}
       <webview
         ref={webviewRef}
         src={src}

@@ -15,7 +15,7 @@ import {
   FormSecondaryButton,
 } from '../atoms/form'
 import { generateId } from '../../lib/string'
-import { openLoginPage, useBoostHub } from '../../lib/boosthub'
+import { openLoginPage, createDesktopAccessToken } from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
@@ -28,6 +28,7 @@ import { mdiLoading } from '@mdi/js'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
+import { fetchDesktopGlobalData } from '../../lib/boosthub'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -50,7 +51,6 @@ const BoostHubSignInForm = () => {
     }
   })
   const { push } = useRouter()
-  const { sendSignInRequest } = useBoostHub()
 
   const startLoginRequest = useCallback(async () => {
     setStatus('requesting')
@@ -77,15 +77,22 @@ const BoostHubSignInForm = () => {
       setStatus('logging-in')
       setErrorMessage(null)
       try {
-        const { user, teams } = await sendSignInRequest(
+        const { token } = await createDesktopAccessToken(
           authStateRef.current,
           code
         )
+
+        const { user, teams } = await fetchDesktopGlobalData(token)
+        if (user == null) {
+          // Handle when token is invalidated
+          return
+        }
         setPreferences({
-          'boosthub.user': {
+          'cloud.user': {
             id: user.id,
             uniqueName: user.uniqueName,
             displayName: user.displayName,
+            accessToken: token,
           },
         })
         setGeneralStatus({
@@ -111,7 +118,7 @@ const BoostHubSignInForm = () => {
         )
       }
     },
-    [setPreferences, setGeneralStatus, push, sendSignInRequest]
+    [setPreferences, setGeneralStatus, push]
   )
 
   useEffect(() => {

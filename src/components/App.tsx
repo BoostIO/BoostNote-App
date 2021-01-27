@@ -30,7 +30,6 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import { useBoostNoteProtocol } from '../lib/protocol'
 import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
-import { useDialog, DialogIconTypes } from '../lib/dialog'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -38,9 +37,9 @@ import {
   boostHubTeamUpdateEventEmitter,
   BoostHubTeamDeleteEvent,
   boostHubTeamDeleteEventEmitter,
-  boostHubLoginRequestEventEmitter,
   boostHubAccountDeleteEventEmitter,
   boostHubToggleSettingsEventEmitter,
+  boostHubLoginRequestEventEmitter,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -52,6 +51,7 @@ import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
 import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
+import { useDialog, DialogIconTypes } from '../lib/dialog'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -106,10 +106,10 @@ const App = () => {
     preferences,
     setPreferences,
   } = usePreferences()
-  const { messageBox } = useDialog()
   const { fetchDesktopGlobalData } = useBoostHub()
   const routeParams = useRouteParams()
   const { navigate: navigateToStorage } = useStorageRouter()
+  const { messageBox } = useDialog()
 
   useEffectOnce(() => {
     initialize()
@@ -163,15 +163,18 @@ const App = () => {
 
   useEffectOnce(() => {
     const run = async () => {
-      const boostHubUserInfo = preferences['boosthub.user']
-      if (boostHubUserInfo == null) {
+      const cloudUserInfo = preferences['cloud.user']
+      if (cloudUserInfo == null) {
         return
       }
-      const { user, teams } = await fetchDesktopGlobalData()
-      if (user == null) {
+
+      const desktopGlobalData = await fetchDesktopGlobalData(
+        cloudUserInfo.accessToken
+      )
+      if (desktopGlobalData.user == null) {
         messageBox({
-          title: 'Boost Hub login is required',
-          message: 'Your BoostHub session has been expired.',
+          title: 'Sign In',
+          message: 'Your cloud access token has been expired.',
           buttons: ['Sign In Again', 'Cancel'],
           defaultButtonIndex: 0,
           iconType: DialogIconTypes.Warning,
@@ -185,7 +188,7 @@ const App = () => {
             }
 
             setPreferences({
-              'boosthub.user': undefined,
+              'cloud.user': undefined,
             })
             setGeneralStatus({
               boostHubTeams: [],
@@ -194,25 +197,14 @@ const App = () => {
         })
         return
       }
-      setPreferences((previousPreferences) => {
-        return {
-          ...previousPreferences,
-          'boosthub.user': {
-            id: user.id,
-            uniqueName: user.uniqueName,
-            displayName: user.displayName,
-          },
-        }
-      })
-      setGeneralStatus({
-        boostHubTeams: teams.map((team) => {
-          return {
-            id: team.id,
-            name: team.name,
-            domain: team.domain,
-            iconUrl: team.iconUrl,
-          }
-        }),
+      const user = desktopGlobalData.user
+      setPreferences({
+        'cloud.user': {
+          ...cloudUserInfo,
+          id: user.id,
+          uniqueName: user.uniqueName,
+          displayName: user.displayName,
+        },
       })
     }
     run()
@@ -302,7 +294,7 @@ const App = () => {
     const boostHubAccountDeleteEventHandler = () => {
       push(`/app`)
       setPreferences({
-        'boosthub.user': undefined,
+        'cloud.user': null,
       })
       setGeneralStatus({
         boostHubTeams: [],

@@ -189,7 +189,7 @@ const BoostHubTeamsShowPage = ({
       </div>
       <div className='webview'>
         <BoostHubWebview
-          src={teamPageUrl}
+          src={url}
           onDidNavigate={updateUrl}
           onDidNavigateInPage={updateUrl}
           controlRef={webviewControlRef}
