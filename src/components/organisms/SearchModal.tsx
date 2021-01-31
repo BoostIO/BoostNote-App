@@ -28,7 +28,7 @@ import {
   NoteSearchData,
   SearchResult,
   SEARCH_DEBOUNCE_TIMEOUT,
-  MERGE_SAME_LINE_RESULTS_INTO_ONE,
+  GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE,
   TagSearchResult,
 } from '../../lib/search/search'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
@@ -188,7 +188,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
           lineChanged = from.line != previousLine
           previousLine = from.line
-          if (MERGE_SAME_LINE_RESULTS_INTO_ONE) {
+          if (GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
             if (lineChanged) {
               currentItemId++
             }
@@ -199,7 +199,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
               currentItemId == selectedItemId ? 'marked selected' : 'marked',
           })
 
-          if (!MERGE_SAME_LINE_RESULTS_INTO_ONE) {
+          if (!GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
             currentItemId++
           }
         }
