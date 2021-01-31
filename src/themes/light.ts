@@ -20,6 +20,7 @@ const uiVividColor = '#555'
 const uiBackgroundColor = '#fff'
 const uiVividBackgroundColor = '#e4e4e4'
 const uiVivid2BackgroundColor = '#d4d4d4'
+const lightSearchBackgroundColor = 'f4f4f4'
 
 export const lightTheme: BaseTheme = {
   colors: {
@@ -99,6 +100,9 @@ export const lightTheme: BaseTheme = {
   searchItemSelectionBackgroundColor: primaryColor,
   searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
   searchHighlightTextColor: dark87Color,
+
+  // Local Search
+  searchSecondaryBackgroundColor: lightSearchBackgroundColor,
 
   // Tooltip
   tooltipBackgroundColor: 'rgba(0,0,0,0.8)',
