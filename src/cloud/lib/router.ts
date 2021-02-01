@@ -10,9 +10,10 @@ import {
 } from 'history'
 import { parse as parseQuery } from 'querystring'
 import { appIsElectron } from '../../lib/platform'
+import { nodeEnv } from './consts'
 
 const browserHistory =
-  appIsElectron && process.env.NODE_ENV === 'production'
+  appIsElectron && nodeEnv === 'production'
     ? createHashHistory<unknown>()
     : createBrowserHistory<unknown>()
 

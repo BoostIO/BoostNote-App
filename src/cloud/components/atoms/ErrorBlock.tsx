@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { AxiosError } from 'axios'
 import ColoredBlock from './ColoredBlock'
+import { nodeEnv } from '../../lib/consts'
 
 interface ErrorAlertProps {
   error: unknown
@@ -11,7 +12,7 @@ const ErrorBlock = ({ error, style }: ErrorAlertProps) => {
   const errorMessage = useMemo(() => {
     try {
       const rawMessage = getErrorMessage(error)
-      if (process.env.APP_ENV === 'development') {
+      if (nodeEnv === 'development') {
         return rawMessage.split('\n').map((message, index) => {
           return <li key={index}>{message}</li>
         })

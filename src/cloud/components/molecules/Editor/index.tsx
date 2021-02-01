@@ -75,6 +75,7 @@ import {
   focusEditorEventEmitter,
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
+import { realtimeUrl } from '../../../lib/consts'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -164,7 +165,7 @@ const Editor = ({
 
   const [realtime, connState, connectedUsers] = useRealtime({
     documentID: doc.id,
-    url: process.env.REALTIME_URL as string,
+    url: realtimeUrl,
     userInfo,
   })
 

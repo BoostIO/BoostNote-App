@@ -45,8 +45,9 @@ import styled from '../../../lib/styled'
 import Flexbox from '../../atoms/Flexbox'
 import { mdiOpenInNew } from '@mdi/js'
 import IconMdi from '../../atoms/IconMdi'
+import { stripePublishableKey } from '../../../lib/consts'
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY as string)
+const stripePromise = loadStripe(stripePublishableKey)
 
 type SubscriptionFormTabs = 'method' | 'email'
 

@@ -1,5 +1,6 @@
 import { getAccessToken, usingElectron } from './stores/electron'
 import ky from 'ky'
+import { boostHubBaseUrl } from './consts'
 
 interface CallCloudJsonApiParameter {
   headers?: any
@@ -39,13 +40,14 @@ export async function callApi<T = any>(
     mergedHeaders['Authorization'] = `Bearer ${accessToken}`
   }
   return ky(pathname, {
-    prefixUrl: process.env.BOOST_HUB_BASE_URL,
+    prefixUrl: boostHubBaseUrl,
     headers: mergedHeaders,
     method,
     searchParams: search,
     signal,
     json,
     body,
+    timeout: 60 * 1000,
     credentials: usingElectron ? undefined : 'include',
   }).json() as Promise<T>
 }

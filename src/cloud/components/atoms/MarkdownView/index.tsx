@@ -30,6 +30,7 @@ import Shortcode from '../../molecules/Shortcode'
 import LinkableHeader from '../LinkableHeader'
 import { rehypePosition } from '../../../lib/rehypePosition'
 import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -109,7 +110,7 @@ const MarkdownView = ({
           if (
             (href || '')
               .toLocaleLowerCase()
-              .startsWith((process.env.BASE_URL || '').toLocaleLowerCase())
+              .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
           ) {
             return <a href={href}>{children}</a>
           }

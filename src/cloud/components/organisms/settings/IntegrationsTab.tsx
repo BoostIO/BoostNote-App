@@ -19,6 +19,7 @@ import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import FeedbackModal from '../Modal/contents/FeedbackModal'
 import { useModal } from '../../../lib/stores/modal'
+import { githubOauthId } from '../../../lib/consts'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
@@ -57,7 +58,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -87,7 +88,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/github'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -112,7 +113,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/trello'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -137,7 +138,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/slack'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -162,7 +163,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/gmail'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -190,7 +191,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/google-calendar'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -218,7 +219,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/google-drive'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -243,7 +244,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/jira-software'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -268,7 +269,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/miro'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -293,7 +294,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/dropbox'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -318,7 +319,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/airtable'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -343,7 +344,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/clickup'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -369,7 +370,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/aws-lambda'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -394,7 +395,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/mailchimp'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -419,7 +420,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/intercom'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -444,7 +445,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/stripe'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -466,7 +467,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations/asana'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -485,7 +486,7 @@ const IntegrationsTab = () => {
               <a
                 href='https://zapier.com/apps/boost-hub/integrations'
                 target='_blank'
-                rel='noreferrer'
+                rel='noreferrer noopener'
               >
                 <CustomButton
                   variant='inverse-secondary'
@@ -513,8 +514,8 @@ const IntegrationsTab = () => {
                     Manage access via GitHub{' '}
                     <a
                       target='_blank'
-                      rel='noreferrer'
-                      href={`https://github.com/settings/connections/applications/${process.env.GITHUB_OAUTH_ID}`}
+                      rel='noreferrer noopener'
+                      href={`https://github.com/settings/connections/applications/${githubOauthId}`}
                     >
                       here
                     </a>

@@ -1,3 +1,5 @@
+import { boostHubBaseUrl } from '../../consts'
+
 export type OnFileCallback = (file: File) => Promise<FileNode | null>
 
 type FileNode =
@@ -86,11 +88,11 @@ export const stringifyFileNode = (fileNode: FileNode) => {
   switch (fileNode.type) {
     case 'file': {
       const { url, title = '' } = fileNode
-      return `[${title}](${process.env.BASE_URL + encodeURI(url)})`
+      return `[${title}](${boostHubBaseUrl + encodeURI(url)})`
     }
     case 'img': {
       const { url, alt = '', title } = fileNode
-      return `![${alt}](${process.env.BASE_URL + encodeURI(url)}${
+      return `![${alt}](${boostHubBaseUrl + encodeURI(url)}${
         title != null ? ` "${title}"` : ''
       })`
     }

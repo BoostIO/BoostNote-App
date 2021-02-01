@@ -16,6 +16,7 @@ import { filenamify } from './utils/string'
 import { UserSettings } from './stores/settings/types'
 import { getGlobalCss } from '../components/GlobalStyle'
 import { selectTheme } from './styled'
+import { boostHubBaseUrl } from './consts'
 
 export function filenamifyTitle(title: string): string {
   return filenamify(title.toLowerCase().replace(/\s+/g, '-'))
@@ -104,12 +105,12 @@ const getCssLinks = (settings: UserSettings) => {
   const editorTheme = fetchCorrectMdThemeName(settings['general.editorTheme'])
 
   const editorThemePath =
-    process.env.BASE_URL + `/static/codemirror/theme/${editorTheme}.css`
+    boostHubBaseUrl + `/static/codemirror/theme/${editorTheme}.css`
 
   cssHrefs.push(editorThemePath)
   if (markdownCodeBlockTheme !== editorTheme && markdownCodeBlockTheme) {
     cssHrefs.push(
-      process.env.BASE_URL +
+      boostHubBaseUrl +
         `/static/codemirror/theme/${markdownCodeBlockTheme}.css`
     )
   }

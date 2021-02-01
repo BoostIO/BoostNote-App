@@ -10,6 +10,7 @@ import Spinner from '../../../components/atoms/CustomSpinner'
 import ColoredBlock from '../../../components/atoms/ColoredBlock'
 import SharePageTopbar from '../../../components/organisms/SharePageTopBar'
 import { SerializedDoc } from '../../../interfaces/db/doc'
+import { realtimeUrl } from '../../../lib/consts'
 
 const MarkdownView = dynamic(
   () => import('../../../components/atoms/MarkdownView'),
@@ -36,7 +37,7 @@ const SharedDocPage = ({ doc }: SharedDocPageProps) => {
 
   const [realtime, connState, otherUsers] = useRealtime({
     documentID: doc.id,
-    url: process.env.REALTIME_URL as string,
+    url: realtimeUrl,
     userInfo: userInfo,
   })
 

@@ -18,6 +18,7 @@ import { useGlobalData } from '../../lib/stores/globalData'
 import { focusFirstChildFromElement, isChildNode } from '../../lib/dom'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import { trackEvent } from '../../api/track'
+import { intercomAppId } from '../../lib/consts'
 
 const Helper = () => {
   const [showHelp, setShowHelp] = useState(false)
@@ -64,13 +65,13 @@ const Helper = () => {
             className='help__list__item'
             href='https://intercom.help/boostnote-for-teams/en/'
             target='_blank'
-            rel='noreferrer'
+            rel='noreferrer noopener'
             id='helper-guide'
           >
             <Icon path={mdiBookOpenOutline} className='icon' />
             <span>Help &amp; support guide</span>
           </a>
-          {process.env.INTERCOM_APP_ID != null && (
+          {intercomAppId != null && (
             <button className='help__list__item' id='helper-message'>
               <Icon path={mdiChatProcessingOutline} className='icon' />
               <span>Send us a message</span>

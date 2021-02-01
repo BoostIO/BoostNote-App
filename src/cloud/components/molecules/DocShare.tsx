@@ -37,6 +37,7 @@ import { isArray } from 'util'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useSettings } from '../../lib/stores/settings'
 import IconMdi from '../atoms/IconMdi'
+import { boostHubBaseUrl } from '../../lib/consts'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -81,7 +82,7 @@ const DocShare = ({ currentDoc }: DocShareProps) => {
     if (currentDoc.shareLink == null) {
       return ''
     }
-    return `${process.env.BASE_URL}/shared/${currentDoc.shareLink.id}`
+    return `${boostHubBaseUrl}/shared/${currentDoc.shareLink.id}`
   }, [currentDoc.shareLink])
 
   const updatePasswordText: React.ChangeEventHandler<HTMLInputElement> = useCallback(

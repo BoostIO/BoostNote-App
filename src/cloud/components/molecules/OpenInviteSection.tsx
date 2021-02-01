@@ -22,6 +22,7 @@ import Switch from 'react-switch'
 import styled from '../../lib/styled'
 import CopyReadInput from '../atoms/CopyReadInput'
 import { getTeamURL, getOpenInviteURL } from '../../lib/utils/patterns'
+import { boostHubBaseUrl } from '../../lib/consts'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -155,7 +156,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       return undefined
     }
 
-    return `${process.env.BASE_URL}${getTeamURL(team)}${getOpenInviteURL(
+    return `${boostHubBaseUrl}${getTeamURL(team)}${getOpenInviteURL(
       openInvite
     )}`
   }, [team, openInvite])

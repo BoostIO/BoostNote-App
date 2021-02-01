@@ -22,8 +22,9 @@ import ColoredBlock from '../../atoms/ColoredBlock'
 import { freePlanDocLimit } from '../../../lib/subscription'
 import Tooltip from '../../atoms/Tooltip'
 import FreeTrialPopup from '../FreeTrialPopup'
+import { stripePublishableKey } from '../../../lib/consts'
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY as string)
+const stripePromise = loadStripe(stripePublishableKey)
 
 type UpgradeTabs = 'plans' | 'form'
 

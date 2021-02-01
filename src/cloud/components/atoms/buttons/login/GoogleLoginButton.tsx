@@ -6,6 +6,7 @@ import { postGoogleLoginCallback } from '../../../../api/auth/google'
 import { useRouter } from '../../../../lib/router'
 import IconMdi from '../../IconMdi'
 import { mdiGoogle } from '@mdi/js'
+import { googleClientId } from '../../../../lib/consts'
 
 interface GoogleLoginButtonProps {
   redirectTo?: string
@@ -71,13 +72,13 @@ const GoogleLoginButton = ({
     setError(response.error)
   }
 
-  if (process.env.GOOGLE_CLIENT_ID == null) {
+  if (googleClientId == null) {
     return null
   }
 
   return (
     <GoogleLogin
-      clientId={process.env.GOOGLE_CLIENT_ID}
+      clientId={googleClientId}
       render={(renderProps) => (
         <StyledGoogleButton
           onClick={renderProps.onClick}

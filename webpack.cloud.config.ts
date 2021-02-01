@@ -67,6 +67,13 @@ module.exports = (env, argv) => {
         'AMPLIFY_PINPOINT_REGION',
         'BOOST_NOTE_BASE_URL',
         'BOOST_HUB_BASE_URL',
+        'SSE_URL',
+        'REALTIME_URL',
+        'GA_TRACKING_ID',
+        'GITHUB_OAUTH_ID',
+        'GOOGLE_CLIENT_ID',
+        'INTERCOM_APP_ID',
+        'STRIPE_PUBLISHABLE_KEY',
       ]),
       new CopyPlugin({
         patterns: [

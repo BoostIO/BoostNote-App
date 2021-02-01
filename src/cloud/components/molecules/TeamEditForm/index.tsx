@@ -7,6 +7,7 @@ import cc from 'classcat'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight } from '@mdi/js'
 import { useRouter } from 'next/router'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 interface TeamEditFormProps {
   name: string
@@ -37,10 +38,10 @@ const TeamEditForm = ({
 
   const slugDomain = useMemo(() => {
     if (domain == null) {
-      return process.env.BASE_URL + '/'
+      return boostHubBaseUrl + '/'
     }
     return (
-      process.env.BASE_URL +
+      boostHubBaseUrl +
       '/' +
       slugify(domain.trim().replace(/[^a-zA-Z0-9\-]/g, ''), {
         replacement: '-',
