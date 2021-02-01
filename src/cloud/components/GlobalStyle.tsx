@@ -3,6 +3,7 @@ import { BaseTheme } from '../lib/styled/themes/types'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export const getGlobalCss = (theme: BaseTheme) => `
+${console.log('bg-color', theme.baseBackgroundColor)}
 body {
   margin: 0;
   padding: 10px 15px;

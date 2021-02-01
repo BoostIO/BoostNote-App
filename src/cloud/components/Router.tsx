@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from '../lib/router'
-import styled from '../lib/styled'
-import ButtonLink from './atoms/ButtonLink'
+import { selectTheme, darkTheme } from '../lib/styled'
 import { ThemeProvider } from 'styled-components'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getGlobalData } from '../api/global'
@@ -23,16 +22,27 @@ import { DialogProvider } from '../lib/stores/dialog'
 import { SearchProvider } from '../lib/stores/search'
 import { WindowProvider } from '../lib/stores/window'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
-import { lightTheme, darkTheme } from '../lib/styled/themes'
 import { PageDataProvider } from '../lib/stores/pageStore'
-import DesktopLoginPage from '../pages/desktop/login'
+// import DesktopLoginPage from '../pages/desktop/login'
 import { Mixpanel } from 'mixpanel-browser'
 import * as intercom from '../lib/intercom'
 import { intercomAppId } from '../lib/consts'
 
-const NotFoundPageContainer = styled.div`
-  padding: 15px 25px;
-`
+import GlobalStyle from './GlobalStyle'
+import CodeMirrorStyle from './atoms/CodeMirrorStyle'
+import Modal from './organisms/Modal'
+import ToastList from './molecules/Toast'
+import SettingsComponent from './organisms/settings/SettingsComponent'
+import ContextMenu from './molecules/ContextMenu'
+import EmojiPicker from './molecules/EmojiPicker'
+import Dialog from './molecules/Dialog/Dialog'
+import SearchModal from './organisms/SearchModal'
+import { GetInitialPropsParameters } from '../interfaces/pages'
+import ResourceIndex from '../pages/[teamId]/[resourceId]'
+import TeamIndex from '../pages/[teamId]'
+import ErrorPage from './organisms/error/ErrorPage'
+import { NavProvider } from '../lib/stores/nav'
+
 const CombinedProvider = combineProviders(
   ElectronProvider,
   SidebarCollapseProvider,
@@ -50,12 +60,6 @@ const CombinedProvider = combineProviders(
 interface PageInfo {
   Component: React.ComponentType<any>
   pageProps: any
-}
-
-export interface GetInitialPropsParameters {
-  pathname: string
-  search: string
-  signal: AbortSignal
 }
 
 interface PageSpec {
@@ -136,12 +140,21 @@ const Router = () => {
           nProgress.done()
         })
         .catch((error: Error) => {
-          if (error.name) {
+          if (error.name === 'AbortError') {
             console.warn('Navigation aborted')
             console.warn(error)
           } else {
             console.error(error)
+
+            setPageInfo({
+              Component: ErrorPage,
+              pageProps: {
+                error,
+              },
+            })
+            nProgress.done()
           }
+
           // Show error page
         })
     } else {
@@ -165,38 +178,30 @@ const Router = () => {
   if (!initialized) {
     return <div>Fetching global data...</div>
   }
-
   if (pageInfo == null) {
-    return (
-      <ThemeProvider theme={darkTheme}>
-        <NotFoundPageContainer>
-          <ButtonLink href='/account/delete'>Go</ButtonLink>
-          <h1>Page not found</h1>
-          <p>Check the URL or click other link in the left side navigation.</p>
-        </NotFoundPageContainer>
-      </ThemeProvider>
-    )
-  }
-  if (pageInfo != null) {
-    return (
-      <PageDataProvider pageProps={pageInfo.pageProps as any}>
-        <CombinedProvider>
-          <CustomThemeProvider>
-            {<pageInfo.Component {...pageInfo.pageProps} />}
-          </CustomThemeProvider>
-        </CombinedProvider>
-      </PageDataProvider>
-    )
+    return <div>Fetching page data...</div>
   }
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <NotFoundPageContainer>
-        <ButtonLink href='/account/delete'>Go</ButtonLink>
-        <h1>Page not found</h1>
-        <p>Check the URL or click other link in the left side navigation.</p>
-      </NotFoundPageContainer>
-    </ThemeProvider>
+    <PageDataProvider pageProps={pageInfo.pageProps as any}>
+      <CombinedProvider>
+        <NavProvider pageProps={pageInfo.pageProps as any}>
+          <CustomThemeProvider>
+            {<pageInfo.Component {...pageInfo.pageProps} />}
+
+            <GlobalStyle />
+            <CodeMirrorStyle />
+            <Modal />
+            <ToastList />
+            <SettingsComponent />
+            <ContextMenu />
+            <EmojiPicker />
+            <Dialog />
+            <SearchModal />
+          </CustomThemeProvider>
+        </NavProvider>
+      </CombinedProvider>
+    </PageDataProvider>
   )
 }
 
@@ -216,16 +221,6 @@ const CustomThemeProvider: React.FC = ({ children }) => {
       {children}
     </ThemeProvider>
   )
-}
-
-function selectTheme(theme: string) {
-  switch (theme) {
-    case 'dark':
-      return darkTheme
-    case 'light':
-    default:
-      return lightTheme
-  }
 }
 
 function isHomepagePathname(pathname: string) {
@@ -264,10 +259,19 @@ function getPageComponent(pathname: string): PageSpec | null {
     }
   }
 
-  if (splittedPathnames[0] === 'desktop' && splittedPathnames[1] === 'login') {
+  if (splittedPathnames.length >= 2) {
     return {
-      Component: DesktopLoginPage,
+      Component: ResourceIndex,
+      getInitialProps: ResourceIndex.getInitialProps,
     }
   }
+
+  if (splittedPathnames.length >= 1) {
+    return {
+      Component: TeamIndex,
+      getInitialProps: TeamIndex.getInitialProps,
+    }
+  }
+
   return null
 }
