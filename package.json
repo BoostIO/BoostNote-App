@@ -151,6 +151,7 @@
     "electron-log": "^4.0.0",
     "electron-updater": "^4.2.0",
     "emoji-mart": "^3.0.0",
+    "event-source-polyfill": "^1.0.22",
     "file-loader": "^5.0.2",
     "file-type": "^14.6.2",
     "filenamify": "^4.1.0",

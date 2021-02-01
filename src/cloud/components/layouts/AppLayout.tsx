@@ -50,6 +50,9 @@ import {
   newFolderEventEmitter,
   searchEventEmitter,
 } from '../../lib/utils/events'
+import { EventSourcePolyfill } from 'event-source-polyfill'
+import { getAccessToken, usingElectron } from '../../lib/stores/electron'
+import { sseUrl } from '../../lib/consts'
 
 interface AppLayoutProps {
   rightLayout: RightLayoutWithTopBarProps
@@ -260,7 +263,15 @@ const AppLayout = ({
       if (eventSourceRef.current != null) {
         eventSourceRef.current.close()
       }
-      const newEventSource = new EventSource(url, { withCredentials: true })
+      console.log('setup event source', url)
+      const newEventSource = new EventSourcePolyfill(url, {
+        withCredentials: true,
+        headers: usingElectron
+          ? {
+              ['Authorization']: `Bearer ${getAccessToken()}`,
+            }
+          : {},
+      })
       newEventSource.onerror = () => {
         newEventSource.close()
         setTimeout(() => {
@@ -282,7 +293,7 @@ const AppLayout = ({
     if (teamId == null) {
       return
     }
-    setupEventSource(`${process.env.SSE_URL}/events/${teamId}`)
+    setupEventSource(`${sseUrl}/events/${teamId}`)
     return () => {
       try {
         eventSourceRef.current!.close()
