@@ -6,12 +6,6 @@ export interface SerializableFolderPositionsProps {
   orderedIds: string[]
 }
 
-export interface UnserializableFolderPositionsProps {
-  parentFolder?: Folder | string
-  team: Team | string
-  updatedAt: Date
-}
-
 export interface SerializedUnserializableFolderPositionsProps {
   parentFolder?: SerializedFolder | string
   team: SerializedTeam | string
