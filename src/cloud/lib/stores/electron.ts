@@ -13,7 +13,7 @@ import {
   applyItalicStyleEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
-import { IpcRendererEvent } from 'electron/main'
+import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 
 export function sendToHost(channel: string, ...args: any[]) {

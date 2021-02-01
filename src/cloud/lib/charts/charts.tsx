@@ -23,7 +23,7 @@ export const Chart = ({ config, isYml = false }: ChartProps) => {
 
     try {
       setErr(false)
-      const parsed = isYml ? YAML.safeLoad(config) : JSON.parse(config)
+      const parsed = isYml ? YAML.load(config) : JSON.parse(config)
       chartRef.current = new _Chart(eleRef.current.getContext('2d'), parsed)
     } catch (err) {
       setErr(true)
