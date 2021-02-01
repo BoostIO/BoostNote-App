@@ -1,4 +1,4 @@
-import { createClient } from '../lib/client'
+import { callApi } from '../lib/client'
 import { SerializedUser, UserOnboardingState } from '../interfaces/db/user'
 import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUserSettings } from '../interfaces/db/userSettings'
@@ -19,10 +19,9 @@ export interface GlobalData extends GlobalDataResponseBody {
 }
 
 export async function getGlobalData() {
-  const client = createClient()
-  const response = await client.get('/api/global')
+  const data = await callApi('api/global')
 
   return {
-    ...response.data,
+    ...data,
   } as GlobalData
 }
