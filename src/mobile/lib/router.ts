@@ -7,7 +7,6 @@ import {
   LocationState,
   LocationDescriptorObject,
 } from 'history'
-import { parse as parseQuery } from 'querystring'
 
 const browserHistory = createHashHistory()
 
