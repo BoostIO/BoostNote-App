@@ -42,6 +42,7 @@ import ResourceIndex from '../pages/[teamId]/[resourceId]'
 import TeamIndex from '../pages/[teamId]'
 import ErrorPage from './organisms/error/ErrorPage'
 import { NavProvider } from '../lib/stores/nav'
+import ArchivedPage from '../pages/[teamId]/archived'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -260,6 +261,13 @@ function getPageComponent(pathname: string): PageSpec | null {
   }
 
   if (splittedPathnames.length >= 2) {
+    if (splittedPathnames[1] === 'archived') {
+      return {
+        Component: ArchivedPage,
+        getInitialProps: ArchivedPage.getInitialProps,
+      }
+    }
+
     return {
       Component: ResourceIndex,
       getInitialProps: ResourceIndex.getInitialProps,
