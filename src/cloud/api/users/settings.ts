@@ -11,9 +11,12 @@ export interface SaveUserSettingsResponseBody {
 }
 
 export async function saveUserSettings(body: SaveUserSettingsRequestBody) {
-  const response = await callApi(`api/users/settings`, {
-    json: body,
-    method: 'put',
-  })
-  return response.data as SaveUserSettingsResponseBody
+  const data = await callApi<SaveUserSettingsResponseBody>(
+    `api/users/settings`,
+    {
+      json: body,
+      method: 'put',
+    }
+  )
+  return data
 }
