@@ -1,10 +1,6 @@
 import React from 'react'
-import dynamic from 'next/dynamic'
 import { ModalContainer, SectionHeader2 } from '../styled'
-
-const MarkdownView = dynamic(() => import('../../../../atoms/MarkdownView'), {
-  ssr: false,
-})
+import MarkdownView from '../../../../atoms/MarkdownView'
 
 const CustomBlocksModal = () => {
   return (

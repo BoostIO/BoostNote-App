@@ -42,7 +42,6 @@ import MoveItemModal from '../../../../Modal/contents/Forms/MoveItemModal'
 import DocTagsList from '../../../../../molecules/DocTagsList'
 import DocLink from '../../../../../atoms/Link/DocLink'
 import { getDocTitle } from '../../../../../../lib/utils/patterns'
-import dynamic from 'next/dynamic'
 import { usePreferences } from '../../../../../../lib/stores/preferences'
 import {
   focusFirstChildFromElement,
@@ -63,6 +62,7 @@ import DocShare from '../../../../../molecules/DocShare'
 import plur from 'plur'
 import styled from '../../../../../../lib/styled'
 import IconMdi from '../../../../../atoms/IconMdi'
+import DynamicExports from './DynamicExports'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -78,10 +78,6 @@ interface DocContextMenuProps {
   }
   restoreRevision?: (revision: SerializedRevision) => void
 }
-
-const DynamicExports = dynamic(() => import('./DynamicExports'), {
-  ssr: false,
-})
 
 const DocContextMenu = ({
   team,

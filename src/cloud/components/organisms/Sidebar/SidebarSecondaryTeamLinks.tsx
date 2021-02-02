@@ -8,13 +8,13 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { getTeamLinkHref } from '../../atoms/Link/TeamLink'
-import { useRouter } from 'next/router'
 import { useModal } from '../../../lib/stores/modal'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
 import ImportModal from '../Modal/contents/Import/ImportModal'
 import { OnboardingPastille } from '../Onboarding/styled'
 import { updateTeam } from '../../../api/teams'
 import SideNavigatorItem from './SideNavigator/SideNavigatorItem'
+import { useRouter } from '../../../lib/router'
 
 const SidebarSecondaryTeamLinks = () => {
   const { team, setPartialPageData } = usePage()

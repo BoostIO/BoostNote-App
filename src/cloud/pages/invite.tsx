@@ -7,13 +7,13 @@ import { useGlobalData } from '../lib/stores/globalData'
 import CustomButton from '../components/atoms/buttons/CustomButton'
 import ErrorBlock from '../components/atoms/ErrorBlock'
 import { cancelTeamInvite } from '../api/teams/invites'
-import { useRouter } from 'next/router'
 import { createPermissions } from '../api/teams/permissions'
 import { getTeamURL } from '../lib/utils/patterns'
 import SignInForm from '../components/molecules/SignInForm'
 import { callApi } from '../lib/client'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { GetInitialPropsParameters } from '../interfaces/pages'
+import { useRouter } from '../lib/router'
 
 const InvitePage = ({ invite }: InvitePageResponseBody) => {
   const {
@@ -27,7 +27,7 @@ const InvitePage = ({ invite }: InvitePageResponseBody) => {
     setSending(true)
     try {
       await cancelTeamInvite(invite.team, invite)
-      router.push({ pathname: '/index' }, '/')
+      router.push('/')
     } catch (error) {
       setError(error)
       setSending(false)
@@ -46,10 +46,7 @@ const InvitePage = ({ invite }: InvitePageResponseBody) => {
         inviteId: invite.id,
         type: 'invite',
       })
-      router.push(
-        { pathname: '/[teamId]', query: { teamId: userPermissions.team.id } },
-        getTeamURL(userPermissions.team)
-      )
+      router.push(getTeamURL(userPermissions.team))
     } catch (error) {
       setError(error)
       setSending(false)

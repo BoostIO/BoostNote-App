@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { getColorFromString } from '../../../lib/utils/string'
-import dynamic from 'next/dynamic'
 import styled from '../../../lib/styled'
 import {
   SerializedDoc,
@@ -32,7 +31,6 @@ import {
   baseIconStyle,
   rightSidePageLayout,
 } from '../../../lib/styled/styleFunctions'
-import { useRouter } from 'next/router'
 import {
   pasteFormatPlugin,
   PositionRange,
@@ -76,17 +74,11 @@ import {
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import { realtimeUrl } from '../../../lib/consts'
+import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
+import MarkdownView from '../../atoms/MarkdownView'
+import { useRouter } from '../../../lib/router'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
-
-const CodeMirrorEditor = dynamic(
-  () => import('../../../lib/editor/components/CodeMirrorEditor'),
-  { ssr: false }
-)
-
-const MarkdownView = dynamic(() => import('../../atoms/MarkdownView'), {
-  ssr: false,
-})
 
 interface EditorProps {
   doc: SerializedDocWithBookmark

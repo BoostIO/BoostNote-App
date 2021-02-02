@@ -10,12 +10,7 @@ import {
   MarkdownWrapper,
   StyledRevisionTitle,
 } from './styled'
-import dynamic from 'next/dynamic'
-
-const CodeMirrorEditor = dynamic(
-  () => import('../../../../../../lib/editor/components/CodeMirrorEditor'),
-  { ssr: false }
-)
+import CodeMirrorEditor from '../../../../../../lib/editor/components/CodeMirrorEditor'
 
 interface RevisionModalDetailProps {
   rev: SerializedRevision

@@ -12,7 +12,6 @@ import { useToast } from '../../../lib/stores/toast'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import TeamEditForm from '../../molecules/TeamEditForm'
-import { useRouter } from 'next/router'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { updateTeam, updateTeamIcon } from '../../../api/teams'
 import CustomButton from '../../atoms/buttons/CustomButton'
@@ -24,6 +23,7 @@ import { buildIconUrl } from '../../../api/files'
 import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import { useElectron } from '../../../lib/stores/electron'
+import { useRouter } from '../../../lib/router'
 
 const TeamInfoTab = () => {
   const { team, setPartialPageData } = usePage<PageStoreWithTeam>()
@@ -66,17 +66,7 @@ const TeamInfoTab = () => {
       if (usingElectron) {
         sendToElectron('team-update', team)
       }
-      const routeRegex = new RegExp('(^/[^/]+)')
-      router.replace(
-        router.pathname,
-        router.asPath.replace(
-          routeRegex,
-          `/${
-            team.domain != null && team.domain !== '' ? team.domain : team.id
-          }`
-        ),
-        { shallow: true }
-      )
+      router.replace(router.pathname)
     } catch (error) {
       pushMessage({
         title: 'Error',

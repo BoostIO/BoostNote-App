@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import useRealtime from '../../../lib/editor/hooks/useRealtime'
-import dynamic from 'next/dynamic'
 import { getRandomColor } from '../../../lib/utils/string'
 import { StyledDocPage } from '../../../components/organisms/DocPage/styles'
 import styled from '../../../lib/styled'
@@ -11,13 +10,7 @@ import ColoredBlock from '../../../components/atoms/ColoredBlock'
 import SharePageTopbar from '../../../components/organisms/SharePageTopBar'
 import { SerializedDoc } from '../../../interfaces/db/doc'
 import { realtimeUrl } from '../../../lib/consts'
-
-const MarkdownView = dynamic(
-  () => import('../../../components/atoms/MarkdownView'),
-  {
-    ssr: false,
-  }
-)
+import MarkdownView from '../../atoms/MarkdownView'
 
 interface SharedDocPageProps {
   doc: SerializedDoc

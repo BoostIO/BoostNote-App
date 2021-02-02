@@ -6,7 +6,6 @@ import styled from '../../../lib/styled'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import CustomButton from '../../../components/atoms/buttons/CustomButton'
 import ErrorBlock from '../../../components/atoms/ErrorBlock'
-import { useRouter } from 'next/router'
 import { createPermissions } from '../../../api/teams/permissions'
 import { getTeamURL } from '../../../lib/utils/patterns'
 import SignInForm from '../../../components/molecules/SignInForm'
@@ -15,6 +14,7 @@ import {
   getTeamOpenInvitePageData,
 } from '../../../api/pages/teams/invite'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
+import { useRouter } from '../../../lib/router'
 
 const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
   const {
@@ -36,10 +36,7 @@ const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
         inviteId: invite.slug,
         type: 'open',
       })
-      router.push(
-        { pathname: '/[teamId]', query: { teamId: userPermissions.team.id } },
-        getTeamURL(userPermissions.team)
-      )
+      router.push(getTeamURL(userPermissions.team))
     } catch (error) {
       setError(error)
       setSending(false)

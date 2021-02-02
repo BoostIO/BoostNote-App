@@ -6,8 +6,8 @@ import { StyledTeamEditForm } from './styled'
 import cc from 'classcat'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight } from '@mdi/js'
-import { useRouter } from 'next/router'
 import { boostHubBaseUrl } from '../../../lib/consts'
+import { useRouter } from '../../../lib/router'
 
 interface TeamEditFormProps {
   name: string
@@ -93,7 +93,7 @@ const TeamEditForm = ({
           <CustomButton
             variant='secondary'
             className='go-back'
-            onClick={() => router.back()}
+            onClick={() => router.goBack()}
           >
             <IconMdi path={mdiChevronRight} /> Go Back
           </CustomButton>

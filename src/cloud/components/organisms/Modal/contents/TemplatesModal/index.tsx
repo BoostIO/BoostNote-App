@@ -20,7 +20,6 @@ import {
 import { focusFirstChildFromElement } from '../../../../../lib/dom'
 import Spinner from '../../../../atoms/CustomSpinner'
 import { getHexFromUUID } from '../../../../../lib/utils/string'
-import dynamic from 'next/dynamic'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
 import { useModal } from '../../../../../lib/stores/modal'
 import { trackEvent } from '../../../../../api/track'
@@ -49,15 +48,8 @@ import { useSettings } from '../../../../../lib/stores/settings'
 import cc from 'classcat'
 import { useEmojiPicker } from '../../../../../lib/stores/emoji'
 import Tooltip from '../../../../atoms/Tooltip'
-
-const CodeMirrorEditor = dynamic(
-  () => import('../../../../../lib/editor/components/CodeMirrorEditor'),
-  { ssr: false }
-)
-
-const MarkdownView = dynamic(() => import('../../../../atoms/MarkdownView'), {
-  ssr: false,
-})
+import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
+import MarkdownView from '../../../../atoms/MarkdownView'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void

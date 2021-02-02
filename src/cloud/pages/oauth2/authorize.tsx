@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { getOAuthPageData, OAuthPageData } from '../../api/pages/oauth'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { stringify } from 'querystring'
-import { useRouter } from 'next/router'
 import CustomButton from '../../components/atoms/buttons/CustomButton'
 import styled from '../../lib/styled'
 import TeamIcon from '../../components/atoms/TeamIcon'
@@ -16,6 +15,7 @@ import {
 } from '@mdi/js'
 import UserIcon from '../../components/atoms/UserIcon'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { useRouter } from '../../lib/router'
 
 const OAuthAuthorizePage = (data: OAuthPageData) => {
   const router = useRouter()

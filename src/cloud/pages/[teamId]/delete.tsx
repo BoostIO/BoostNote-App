@@ -4,7 +4,6 @@ import Container from '../../components/layouts/Container'
 import Page from '../../components/Page'
 import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
 import { useToast } from '../../lib/stores/toast'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import CustomButton from '../../components/atoms/buttons/CustomButton'
 import { Spinner } from '../../components/atoms/Spinner'
@@ -18,6 +17,7 @@ import { destroyTeam } from '../../api/teams'
 import { sendFeedback } from '../../api/feedback'
 import { useElectron } from '../../lib/stores/electron'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { useRouter } from '../../lib/router'
 
 const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const [sendingRemoval, setSendingRemoval] = useState<boolean>(false)
@@ -67,7 +67,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
                 if (usingElectron) {
                   sendToElectron('team-delete', team)
                 } else {
-                  push(redirectTo.href, redirectTo.as)
+                  push(redirectTo)
                 }
               }
             } catch (error) {

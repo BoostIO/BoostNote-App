@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
-import { useRouter } from 'next/router'
-import { getTeamURL, getDocURL, getDocTitle } from '../../../lib/utils/patterns'
+import { getDocTitle } from '../../../lib/utils/patterns'
 import { useNav } from '../../../lib/stores/nav'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import EditPage from './Edit'
@@ -22,6 +21,7 @@ import {
 import AppLayout from '../../layouts/AppLayout'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedRevision } from '../../../interfaces/db/revision'
+import { useRouter } from '../../../lib/router'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -29,8 +29,6 @@ interface DocPageProps {
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]
 }
-
-const docIdRegex = new RegExp(`(((?:^\/[A-z0-9]*-)([A-z0-9]*)$)|([A-z0-9]*)$)`)
 
 const DocPage = ({
   doc,
@@ -77,37 +75,6 @@ const DocPage = ({
       setCurrentPath(currentDoc.folderPathname)
     }
   }, [currentDoc, setCurrentPath])
-
-  const currentAsPath = useMemo(() => {
-    if (team == null) {
-      return '/'
-    }
-
-    if (currentDoc == null) {
-      return getTeamURL(team)
-    } else {
-      return `${getTeamURL(team)}${getDocURL(currentDoc)}`
-    }
-  }, [team, currentDoc])
-
-  useEffect(() => {
-    if (router.asPath === currentAsPath) {
-      return
-    }
-
-    const prevPathMatch = router.asPath.match(docIdRegex)
-    const currentPathMatch = currentAsPath.match(docIdRegex)
-    if (
-      prevPathMatch == null ||
-      currentPathMatch == null ||
-      prevPathMatch[1] !== currentPathMatch[1]
-    ) {
-      return
-    }
-    router.replace('/[teamId]/[resourceId]', currentAsPath, {
-      shallow: true,
-    })
-  }, [currentAsPath, router, setCurrentPath])
 
   const docIsEditable = useMemo(() => {
     if (subscription == null) {

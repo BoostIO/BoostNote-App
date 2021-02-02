@@ -5,7 +5,7 @@ import Spinner from '../../../components/atoms/CustomSpinner'
 import styled from '../../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import ErrorPage from '../../../components/organisms/error/ErrorPage'
-import { useRouter } from 'next/router'
+import { useRouter } from '../../../lib/router'
 
 const AuthCallbackPage = () => {
   const [error, setError] = useState<any>()
