@@ -2,8 +2,6 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedIcon } from '../../interfaces/db/icon'
 import report from '../../lib/analytics'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
-import { UrlLike } from '../../components/atoms/Link/CustomLink'
-import { UrlObject } from 'url'
 import { callApi } from '../../lib/client'
 
 export interface ListTeamsResponseBody {
@@ -49,7 +47,7 @@ export interface UpdateTeamResponseBody {
 }
 
 export interface DestroyTeamResponseBody {
-  redirectTo: { href: UrlLike; as?: UrlObject | string }
+  redirectTo: string
 }
 
 export async function updateTeam(id: string, body: UpdateTeamRequestBody) {
