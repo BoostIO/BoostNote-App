@@ -9,12 +9,14 @@ export type UploadsListPageResponseBody = GeneralAppProps & {
 }
 
 export async function getUploadsListPageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<UploadsListPageResponseBody>(
     'api/pages/teams/uploads/list',
     {
-      search,
+      search: search + `&teamId=${teamId}`,
     }
   )
 

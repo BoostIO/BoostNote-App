@@ -8,10 +8,12 @@ export type TimelinePageData = GeneralAppProps & {
 }
 
 export async function getTimelinePageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<TimelinePageData>('/api/pages/teams/timeline', {
-    search,
+    search: search + `&teamId=${teamId}`,
   })
 
   return data

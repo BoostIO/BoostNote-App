@@ -5,12 +5,14 @@ import { callApi } from '../../../lib/client'
 export type ArchivedDocsListResponseBody = GeneralAppProps
 
 export async function getArchivedDocsListPageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<ArchivedDocsListResponseBody>(
     'api/pages/teams/archived/list',
     {
-      search,
+      search: search + `&teamId=${teamId}`,
     }
   )
 

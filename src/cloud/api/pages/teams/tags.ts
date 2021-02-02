@@ -8,12 +8,14 @@ export type TagsShowPageResponseBody = GeneralAppProps & {
 }
 
 export async function getTagsShowPageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<TagsShowPageResponseBody>(
     'api/pages/teams/labels/show',
     {
-      search,
+      search: search + `&teamId=${teamId}`,
     }
   )
 

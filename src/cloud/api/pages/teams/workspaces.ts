@@ -8,12 +8,14 @@ export type WorkspacesShowPageResponseBody = GeneralAppProps & {
 }
 
 export async function getWorkspaceShowPageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<WorkspacesShowPageResponseBody>(
     'api/pages/teams/workspaces/show',
     {
-      search,
+      search: search + `&teamId=${teamId}`,
     }
   )
 

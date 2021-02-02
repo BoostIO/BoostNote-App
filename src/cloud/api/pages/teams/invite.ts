@@ -7,12 +7,14 @@ export interface TeamOpenInvitePageData {
 }
 
 export async function getTeamOpenInvitePageData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, teamId] = pathname.split('/')
   const data = await callApi<TeamOpenInvitePageData>(
     'api/pages/teams/open-invites/show',
     {
-      search,
+      search: search + `&teamId=${teamId}`,
     }
   )
 
