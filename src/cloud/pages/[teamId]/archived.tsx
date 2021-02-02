@@ -2,24 +2,22 @@ import React from 'react'
 import Page from '../../components/Page'
 import { LazyDefaultLayout } from '../../components/layouts/DefaultLayout'
 import { getArchivedDocsListPageData } from '../../api/pages/teams/deleted'
-import ArchivedPage from '../../components/organisms/ArchivedPage'
+import ArchivedPageContent from '../../components/organisms/ArchivedPageContent'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
-const DeletedDocsListPage = () => {
+const ArchivedPage = () => {
   return (
     <Page>
       <LazyDefaultLayout>
-        <ArchivedPage />
+        <ArchivedPageContent />
       </LazyDefaultLayout>
     </Page>
   )
 }
 
-DeletedDocsListPage.getInitialProps = async (
-  params: GetInitialPropsParameters
-) => {
+ArchivedPage.getInitialProps = async (params: GetInitialPropsParameters) => {
   const result = await getArchivedDocsListPageData(params)
   return result
 }
 
-export default DeletedDocsListPage
+export default ArchivedPage
