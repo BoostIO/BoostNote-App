@@ -1,6 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
 import { BaseTheme } from '../lib/styled/themes/types'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 export const getGlobalCss = (theme: BaseTheme) => `
 ${console.log('bg-color', theme.baseBackgroundColor)}
