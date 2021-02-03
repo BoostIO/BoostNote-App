@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useCallback, MouseEvent } from 'react'
 import querystring from 'querystring'
 import { getDocURL, getTeamURL } from '../../../lib/utils/patterns'
 import { SerializedDoc } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedRevision } from '../../../interfaces/db/revision'
+import { useRouter } from '../../../lib/router'
 
 interface RevisionLinkProps {
   doc: SerializedDoc
@@ -32,12 +33,21 @@ const RevisionLink = ({
   onFocus,
   id,
 }: RevisionLinkProps) => {
+  const href = getHref(doc, team, revision, query)
+  const { push } = useRouter()
+  const navigate = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      push(href)
+    },
+    [push, href]
+  )
   return (
     <a
-      href={getHref(doc, team, revision, query)}
+      href={href}
       className={className}
       style={style}
-      onClick={onClick}
+      onClick={onClick != null ? onClick : navigate}
       draggable={draggable}
       onFocus={onFocus}
       id={id}

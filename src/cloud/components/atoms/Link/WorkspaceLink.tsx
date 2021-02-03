@@ -51,7 +51,7 @@ const WorkspaceLink = ({
       href={href}
       className={className}
       style={style}
-      onClick={onClick != null ? navigate : onClick}
+      onClick={onClick != null ? onClick : navigate}
       draggable={draggable}
       onFocus={onFocus}
       tabIndex={tabIndex}

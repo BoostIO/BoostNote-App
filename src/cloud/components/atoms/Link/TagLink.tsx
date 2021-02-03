@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { MouseEvent, useCallback } from 'react'
 import querystring from 'querystring'
 import { getTeamURL } from '../../../lib/utils/patterns'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedTeam } from '../../../interfaces/db/team'
+import { useRouter } from '../../../lib/router'
 
 export type TagLinkIntent = 'index'
 
@@ -35,12 +36,22 @@ const TagLink = ({
   tabIndex,
   id,
 }: TagLinkProps) => {
+  const href = getHref(tag, team, intent, query)
+  const { push } = useRouter()
+  const navigate = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      push(href)
+    },
+    [push, href]
+  )
+
   return (
     <a
-      href={getHref(tag, team, intent, query)}
+      href={href}
       className={className}
       style={style}
-      onClick={onClick}
+      onClick={onClick != null ? onClick : navigate}
       draggable={draggable}
       onFocus={onFocus}
       tabIndex={tabIndex}
