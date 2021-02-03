@@ -51,7 +51,6 @@ const BoostHubWebview = ({
   className,
   controlRef,
   onDidNavigate,
-  onDidNavigateInPage,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
   const { preferences } = usePreferences()
@@ -107,17 +106,6 @@ const BoostHubWebview = ({
       webview.removeEventListener('did-navigate', onDidNavigate)
     }
   }, [onDidNavigate])
-
-  useEffect(() => {
-    const webview = webviewRef.current!
-    if (onDidNavigateInPage == null) {
-      return
-    }
-    webview.addEventListener('did-navigate-in-page', onDidNavigateInPage)
-    return () => {
-      webview.removeEventListener('did-navigate-in-page', onDidNavigateInPage)
-    }
-  }, [onDidNavigateInPage])
 
   useEffectOnce(() => {
     const webview = webviewRef.current!
