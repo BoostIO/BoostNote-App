@@ -43,6 +43,7 @@ import TeamIndex from '../pages/[teamId]'
 import ErrorPage from './organisms/error/ErrorPage'
 import { NavProvider } from '../lib/stores/nav'
 import ArchivedPage from '../pages/[teamId]/archived'
+import SharedDocsListPage from '../pages/[teamId]/shared'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -265,6 +266,12 @@ function getPageComponent(pathname: string): PageSpec | null {
       return {
         Component: ArchivedPage,
         getInitialProps: ArchivedPage.getInitialProps,
+      }
+    }
+    if (splittedPathnames[1] === 'shared') {
+      return {
+        Component: SharedDocsListPage,
+        getInitialProps: SharedDocsListPage.getInitialProps,
       }
     }
 
