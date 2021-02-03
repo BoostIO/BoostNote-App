@@ -10,12 +10,12 @@ import {
 } from 'history'
 import { parse as parseQuery } from 'querystring'
 import { appIsElectron } from '../../lib/platform'
-import { nodeEnv } from './consts'
 
-const browserHistory =
-  appIsElectron && nodeEnv === 'production'
-    ? createHashHistory<unknown>()
-    : createBrowserHistory<unknown>()
+const browserHistory = appIsElectron
+  ? createHashHistory<unknown>()
+  : createBrowserHistory<unknown>({
+      forceRefresh: false,
+    })
 
 export type Url = UrlObject | string
 
@@ -34,7 +34,6 @@ function useRouterStore() {
 
   const push = useCallback((url: Url) => {
     const parsedUrl = typeof url === 'string' ? parseUrl(url) : url
-
     browserHistory.push({
       pathname: parsedUrl.pathname,
       search: parsedUrl.search,
