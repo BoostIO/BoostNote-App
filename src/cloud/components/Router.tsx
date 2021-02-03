@@ -44,6 +44,10 @@ import ErrorPage from './organisms/error/ErrorPage'
 import { NavProvider } from '../lib/stores/nav'
 import ArchivedPage from '../pages/[teamId]/archived'
 import SharedDocsListPage from '../pages/[teamId]/shared'
+import DeleteTeamPage from '../pages/[teamId]/delete'
+import TimelinePage from '../pages/[teamId]/timeline'
+import UploadListPage from '../pages/[teamId]/uploads'
+import BookmarksListPage from '../pages/[teamId]/bookmarks'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -262,22 +266,42 @@ function getPageComponent(pathname: string): PageSpec | null {
   }
 
   if (splittedPathnames.length >= 2) {
-    if (splittedPathnames[1] === 'archived') {
-      return {
-        Component: ArchivedPage,
-        getInitialProps: ArchivedPage.getInitialProps,
-      }
-    }
-    if (splittedPathnames[1] === 'shared') {
-      return {
-        Component: SharedDocsListPage,
-        getInitialProps: SharedDocsListPage.getInitialProps,
-      }
-    }
-
-    return {
-      Component: ResourceIndex,
-      getInitialProps: ResourceIndex.getInitialProps,
+    switch (splittedPathnames[1]) {
+      case 'archived':
+        return {
+          Component: ArchivedPage,
+          getInitialProps: ArchivedPage.getInitialProps,
+        }
+      case 'shared':
+        return {
+          Component: SharedDocsListPage,
+          getInitialProps: SharedDocsListPage.getInitialProps,
+        }
+      case 'delete':
+        return {
+          Component: DeleteTeamPage,
+          getInitialProps: DeleteTeamPage.getInitialProps,
+        }
+      case 'timeline':
+        return {
+          Component: TimelinePage,
+          getInitialProps: TimelinePage.getInitialProps,
+        }
+      case 'uploads':
+        return {
+          Component: UploadListPage,
+          getInitialProps: UploadListPage.getInitialProps,
+        }
+      case 'bookmarks':
+        return {
+          Component: BookmarksListPage,
+          getInitialProps: BookmarksListPage.getInitialProps,
+        }
+      default:
+        return {
+          Component: ResourceIndex,
+          getInitialProps: ResourceIndex.getInitialProps,
+        }
     }
   }
 
