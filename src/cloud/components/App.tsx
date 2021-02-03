@@ -5,7 +5,7 @@ import { ElectronProvider, initAccessToken } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { ToastProvider } from '../lib/stores/toast'
 import { useEffectOnce } from 'react-use'
-import { gaTrackingId, baseUrl, nodeEnv } from '../lib/consts'
+import { gaTrackingId, nodeEnv, boostHubBaseUrl } from '../lib/consts'
 import '../lib/i18n'
 
 const App = () => {
@@ -49,7 +49,10 @@ const App = () => {
         }}
       />
       {nodeEnv === 'production' && (
-        <script type='text/javascript' src={`${baseUrl}/static/mixpanel.js`} />
+        <script
+          type='text/javascript'
+          src={`${boostHubBaseUrl}/static/mixpanel.js`}
+        />
       )}
     </>
   )
