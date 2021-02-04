@@ -1,19 +1,27 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { boostHubTeamsCreatePageUrl } from '../../lib/boosthub'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiAccountGroup } from '@mdi/js'
 import styled from '../../lib/styled'
-import BoostHubWebview from '../atoms/BoostHubWebview'
+import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 
 const BoostHubTeamsCreatePage = () => {
+  const controlRef = useRef<WebviewControl>()
+
   return (
     <PageContainer>
       <PageDraggableHeader
+        onDoubleClick={() => {
+          controlRef.current!.openDevTools()
+        }}
         iconPath={mdiAccountGroup}
         label='Create a cloud workspace'
       />
       <WebViewContainer>
-        <BoostHubWebview src={boostHubTeamsCreatePageUrl} />
+        <BoostHubWebview
+          controlRef={controlRef}
+          src={boostHubTeamsCreatePageUrl}
+        />
       </WebViewContainer>
     </PageContainer>
   )

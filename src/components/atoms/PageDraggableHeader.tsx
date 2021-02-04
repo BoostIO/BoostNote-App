@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
 import Icon from './Icon'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
@@ -28,11 +28,18 @@ const Label = styled.div`
 interface PageDraggableHeaderProps {
   iconPath?: string
   label: string
+  onClick?: MouseEventHandler
+  onDoubleClick?: MouseEventHandler
 }
 
-const PageDraggableHeader = ({ iconPath, label }: PageDraggableHeaderProps) => {
+const PageDraggableHeader = ({
+  iconPath,
+  label,
+  onClick,
+  onDoubleClick,
+}: PageDraggableHeaderProps) => {
   return (
-    <Container>
+    <Container onClick={onClick} onDoubleClick={onDoubleClick}>
       {iconPath != null && (
         <IconContainer>
           <Icon path={iconPath} />
