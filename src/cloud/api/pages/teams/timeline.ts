@@ -12,7 +12,7 @@ export async function getTimelinePageData({
   search,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
-  const data = await callApi<TimelinePageData>('/api/pages/teams/timeline', {
+  const data = await callApi<TimelinePageData>('api/pages/teams/timeline', {
     search: search + `&teamId=${teamId}`,
   })
 
