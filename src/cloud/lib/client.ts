@@ -36,7 +36,7 @@ export async function callApi<T = any>(
     ...headers,
   }
   const accessToken = getAccessToken()
-  if (accessToken != null) {
+  if (usingElectron && accessToken != null) {
     mergedHeaders['Authorization'] = `Bearer ${accessToken}`
   }
   return ky(pathname, {
