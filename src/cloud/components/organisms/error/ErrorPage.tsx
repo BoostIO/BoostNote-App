@@ -1,11 +1,10 @@
 import React from 'react'
 import Page from '../../Page'
 import ErrorSection from './ErrorSection'
-import styled, { darkTheme } from '../../../lib/styled'
+import { darkTheme } from '../../../lib/styled'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { useRouter } from '../../../lib/router'
-import SignInForm from '../../molecules/SignInForm'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { ThemeProvider } from 'styled-components'
 import ButtonLink from '../../atoms/ButtonLink'
@@ -18,7 +17,7 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
   const {
     globalData: { currentUser, teams },
   } = useGlobalData()
-  const { pathname, query } = useRouter()
+  const { query } = useRouter()
   const { response } = error as any
   const statusCode = response != null ? response.status : null
 
@@ -62,7 +61,7 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           {currentUser == null && statusCode === 401 && (
             <div className='text-center' style={{ marginTop: 20 }}>
               <h3>Or Sign in</h3>
-              <SignInForm redirectTo={pathname} />
+              {/* <SignInForm redirectTo={pathname} /> */}
             </div>
           )}
         </DefaultLayout>
@@ -72,9 +71,3 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
 }
 
 export default ErrorPage
-
-
-const ErrorPageContainer = styled.div`
-
-
-`
