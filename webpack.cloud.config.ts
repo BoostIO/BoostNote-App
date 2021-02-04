@@ -82,7 +82,7 @@ module.exports = (env, argv) => {
             to: 'app/codemirror/theme',
           },
           {
-            from: path.join(__dirname, 'static'),
+            from: path.join(__dirname, 'cloud-static'),
             to: 'app/static',
           },
           {
@@ -156,7 +156,7 @@ module.exports = (env, argv) => {
             )
           )
         )
-        app.use('/app/static', express.static(path.join(__dirname, 'static')))
+        app.use('/static', express.static(path.join(__dirname, 'cloud-static')))
       },
     },
 
