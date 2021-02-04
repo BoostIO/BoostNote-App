@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 import { BaseTheme } from '../lib/styled/themes/types'
+import 'emoji-mart/css/emoji-mart.css'
 
 export const getGlobalCss = (theme: BaseTheme) => `
 ${console.log('bg-color', theme.baseBackgroundColor)}
