@@ -37,7 +37,6 @@ const App = () => {
         async={true}
         src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`}
       />
-      <script src='/static/eventsource.min.js' />
       <script
         dangerouslySetInnerHTML={{
           __html: `(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
