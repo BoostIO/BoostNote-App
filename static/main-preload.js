@@ -190,6 +190,10 @@
     })
   }
 
+  function setCookie(cookieDetails) {
+    return electron.remote.session.defaultSession.cookies.set(cookieDetails)
+  }
+
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.readFile = readFile
@@ -217,4 +221,5 @@
   window.__ELECTRON_ONLY__.getWebContentsById
   window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
   window.__ELECTRON_ONLY__.convertHtmlStringToPdfBuffer = convertHtmlStringToPdfBuffer
+  window.__ELECTRON_ONLY__.setCookie = setCookie
 })()
