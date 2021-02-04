@@ -48,6 +48,7 @@ import DeleteTeamPage from '../pages/[teamId]/delete'
 import TimelinePage from '../pages/[teamId]/timeline'
 import UploadListPage from '../pages/[teamId]/uploads'
 import BookmarksListPage from '../pages/[teamId]/bookmarks'
+import CooperatePage from '../pages/cooperate'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -306,6 +307,13 @@ function getPageComponent(pathname: string): PageSpec | null {
   }
 
   if (splittedPathnames.length >= 1) {
+    switch (splittedPathnames[0]) {
+      case 'cooperate':
+        return {
+          Component: CooperatePage,
+        }
+    }
+
     return {
       Component: TeamIndex,
       getInitialProps: TeamIndex.getInitialProps,
