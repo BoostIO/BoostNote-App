@@ -24,11 +24,10 @@ export interface CreateTeamResponseBody {
 }
 
 export async function createTeam(body: CreateTeamRequestBody) {
-  const response = await callApi(`api/teams`, {
+  const data = await callApi<CreateTeamResponseBody>(`api/teams`, {
     json: body,
     method: 'post',
   })
-  const data = response.data as CreateTeamResponseBody
   report('create_team', { team: data.team })
   return data
 }
@@ -51,12 +50,12 @@ export interface DestroyTeamResponseBody {
 }
 
 export async function updateTeam(id: string, body: UpdateTeamRequestBody) {
-  const response = await callApi(`api/teams/${id}`, {
+  const data = await callApi<UpdateTeamResponseBody>(`api/teams/${id}`, {
     json: body,
     method: 'put',
   })
   report('update_team_profile')
-  return response.data as UpdateTeamResponseBody
+  return data
 }
 
 export async function destroyTeam(id: string) {
