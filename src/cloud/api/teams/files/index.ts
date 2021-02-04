@@ -22,14 +22,14 @@ export async function uploadFile(
     formData.append('attachTo', doc.id)
   }
 
-  const response = await callApi(`api/teams/${team.id}/files`, {
-    body: formData,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    method: 'post',
-  })
-  return response.data as UploadFileResponseBody
+  const data = await callApi<UploadFileResponseBody>(
+    `api/teams/${team.id}/files`,
+    {
+      body: formData,
+      method: 'post',
+    }
+  )
+  return data
 }
 
 export async function deleteFile(team: SerializedTeam, filename: string) {

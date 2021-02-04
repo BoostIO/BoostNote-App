@@ -35,9 +35,6 @@ export async function importDocs(teamId: string, body: ImportDocsRequestBody) {
     `api/teams/${teamId}/docs/import`,
     {
       body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       method: 'post',
     }
   )
