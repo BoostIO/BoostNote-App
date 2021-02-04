@@ -5,7 +5,7 @@ import React, {
   ChangeEventHandler,
   useEffect,
 } from 'react'
-import { setAsDefaultProtocolClient } from '../../lib/electronOnly'
+import { setAsDefaultProtocolClient, setCookie } from '../../lib/electronOnly'
 import { usePreferences } from '../../lib/preferences'
 import {
   FormPrimaryButton,
@@ -29,6 +29,7 @@ import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
 import { fetchDesktopGlobalData } from '../../lib/boosthub'
+import { boostHubBaseUrl } from '../../cloud/lib/consts'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -81,6 +82,13 @@ const BoostHubSignInForm = () => {
           authStateRef.current,
           code
         )
+
+        setCookie({
+          url: boostHubBaseUrl,
+          name: 'desktop_access_token',
+          value: token,
+          expirationDate: 4766076898395,
+        })
 
         const { user, teams } = await fetchDesktopGlobalData(token)
         if (user == null) {
