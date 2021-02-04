@@ -35,7 +35,10 @@ export function getBoostHubTeamIconUrl(location: string) {
   return `${boostHubBaseUrl}/api/files/icons/${location}`
 }
 
-export const boostHubTeamsCreatePageUrl = `${boostHubBaseUrl}/cooperate`
+export const boostHubTeamsCreatePageUrl =
+  process.env.NODE_ENV !== 'production'
+    ? `http://localhost:3003/#/cooperate`
+    : join(getPathByName('app'), `./compiled/cloud/index.html#/cooperate`)
 
 export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
 
