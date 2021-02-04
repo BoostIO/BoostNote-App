@@ -8,7 +8,7 @@ export interface GetOpenInviteResponseBody {
 
 export async function getOpenInvite(team: SerializedTeam) {
   const data = await callApi<GetOpenInviteResponseBody>(
-    `/api/teams/${team.id}/open-invites`
+    `api/teams/${team.id}/open-invites`
   )
   return data
 }
@@ -19,7 +19,7 @@ export interface CreateOpenInviteResponseBody {
 
 export async function createOpenInvite(team: SerializedTeam) {
   const data = await callApi<CreateOpenInviteResponseBody>(
-    `/api/teams/${team.id}/open-invites`,
+    `api/teams/${team.id}/open-invites`,
     {
       method: 'post',
     }
@@ -36,7 +36,7 @@ export async function resetOpenInvite(
   invite: SerializedOpenInvite
 ) {
   const data = await callApi<ResetOpenInviteResponseBody>(
-    `/api/teams/${team.id}/open-invites/${invite.id}`,
+    `api/teams/${team.id}/open-invites/${invite.id}`,
     { method: 'put' }
   )
   return data
@@ -47,7 +47,7 @@ export async function cancelOpenInvite(
   invite: SerializedOpenInvite
 ) {
   const data = await callApi<CreateOpenInviteResponseBody>(
-    `/api/teams/${team.id}/open-invites/${invite.id}`,
+    `api/teams/${team.id}/open-invites/${invite.id}`,
     { method: 'delete' }
   )
   return data
