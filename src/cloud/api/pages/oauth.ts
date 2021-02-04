@@ -30,9 +30,13 @@ export interface OAuthPageData {
   scope: string[]
 }
 
-export async function getOAuthPageData({ search }: GetInitialPropsParameters) {
+export async function getOAuthPageData({
+  search,
+  signal,
+}: GetInitialPropsParameters) {
   const data = await callApi<OAuthPageData>('api/pages/oauth2/authorize', {
     search,
+    signal,
   })
 
   return data

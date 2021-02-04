@@ -9,12 +9,14 @@ export type DeleteTeamPageResponseBody = {
 export async function getDeleteTeamPageData({
   pathname,
   search,
+  signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
   const data = await callApi<DeleteTeamPageResponseBody>(
     'api/pages/teams/delete',
     {
       search: search + `&teamId=${teamId}`,
+      signal,
     }
   )
 

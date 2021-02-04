@@ -7,12 +7,14 @@ export type SharedDocsListResponseBody = GeneralAppProps
 export async function getSharedDocsListData({
   pathname,
   search,
+  signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
   const data = await callApi<SharedDocsListResponseBody>(
     'api/pages/teams/shared/list',
     {
       search: search + `&teamId=${teamId}`,
+      signal,
     }
   )
 

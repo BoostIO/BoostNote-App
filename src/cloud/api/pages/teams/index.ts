@@ -20,10 +20,12 @@ export type TeamShowPageResponseBody = GeneralAppProps & {
 export async function getTeamIndexPageData({
   pathname,
   search,
+  signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
   const data = await callApi<TeamShowPageResponseBody>('api/pages/teams/show', {
     search: search + `&teamId=${teamId}`,
+    signal,
   })
 
   return data
@@ -49,6 +51,7 @@ export type ResourceShowPageResponseBody = GeneralAppProps & ResourceSplitProps
 export async function getResourceShowPageData({
   pathname,
   search,
+  signal,
 }: GetInitialPropsParameters) {
   const [, teamId, ...otherPathnames] = pathname.split('/')
 
@@ -62,6 +65,7 @@ export async function getResourceShowPageData({
         teamId,
         resourceId,
       },
+      signal,
     }
   )
 
