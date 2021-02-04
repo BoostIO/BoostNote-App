@@ -110,8 +110,7 @@ const getCssLinks = (settings: UserSettings) => {
   cssHrefs.push(editorThemePath)
   if (markdownCodeBlockTheme !== editorTheme && markdownCodeBlockTheme) {
     cssHrefs.push(
-      boostHubBaseUrl +
-        `/static/codemirror/theme/${markdownCodeBlockTheme}.css`
+      boostHubBaseUrl + `/static/codemirror/theme/${markdownCodeBlockTheme}.css`
     )
   }
   return cssHrefs
