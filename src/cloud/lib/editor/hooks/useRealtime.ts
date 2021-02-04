@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Doc } from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { uniqWith } from 'ramda'
+import { getAccessToken, usingElectron } from '../../stores/electron'
 
 export type PresenceChange<T> =
   | { type: 'connected'; sessionId: number; userInfo: T }
@@ -32,7 +33,13 @@ const useRealtime = <T extends { id: string }>({
 
   useEffect(() => {
     const doc = new Doc()
-    const provider = new WebsocketProvider(url, documentID, doc)
+    const provider = new WebsocketProvider(url, documentID, doc, {
+      params: usingElectron
+        ? {
+            desktop_access_token: getAccessToken()!,
+          }
+        : {},
+    })
     provider.on('status', ({ status }: any) => {
       const connected = status === 'connected'
       setConnState(connected ? 'connected' : 'reconnecting')
