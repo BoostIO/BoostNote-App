@@ -29,7 +29,6 @@ const HeaderContainer = styled.header`
 `
 
 const Label = styled.div`
-  color: ${({ theme }) => theme.navSubtleLabelColor};
   flex: 1;
   ${textOverflow}
   &:first-child {
@@ -55,14 +54,16 @@ const ClickableContainer = styled.div`
   flex: 1;
   overflow: hidden;
   cursor: pointer;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.disabledUiTextColor};
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
   &:hover {
     background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    color: ${({ theme }) => theme.navItemColor};
   }
   &:active,
   &.active {
     background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
+    color: ${({ theme }) => theme.navItemColor};
   }
   &:hover:active,
   &:hover.active {
@@ -76,6 +77,7 @@ const ClickableContainer = styled.div`
 
 interface NavigatorHeaderProps {
   label: string
+  active?: boolean
   control?: React.ReactNode
   onContextMenu?: React.MouseEventHandler<HTMLDivElement>
   folded?: boolean
@@ -85,13 +87,14 @@ interface NavigatorHeaderProps {
 const NavigatorHeader = ({
   folded,
   label,
+  active = false,
   onContextMenu,
   onClick,
   control,
 }: NavigatorHeaderProps) => {
   return (
     <HeaderContainer onContextMenu={onContextMenu}>
-      <ClickableContainer onClick={onClick}>
+      <ClickableContainer onClick={onClick} className={active ? 'active' : ''}>
         {folded != null && (
           <Icon path={folded ? mdiChevronRight : mdiChevronDown} size={18} />
         )}
