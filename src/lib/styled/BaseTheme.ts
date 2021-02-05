@@ -27,7 +27,6 @@ export interface BaseTheme {
   // SideBar
   navBackgroundColor: string
   navLabelColor: string
-  navSubtleLabelColor: string
   navButtonColor: string
   navButtonHoverColor: string
   navButtonActiveColor: string

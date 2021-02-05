@@ -52,7 +52,6 @@ export const legacyTheme: BaseTheme = {
   // SideBar
   navBackgroundColor: '#2c2c2c',
   navLabelColor: '#bbb',
-  navSubtleLabelColor: '#75797F',
   navButtonColor: '#999',
   navButtonHoverColor: '#bbb',
   navButtonActiveColor: primaryColor,
