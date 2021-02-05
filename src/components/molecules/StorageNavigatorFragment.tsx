@@ -34,6 +34,7 @@ import {
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 import { useRouteParams } from '../../lib/routeParams'
 import NavigatorHeader from '../atoms/NavigatorHeader'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -330,6 +331,8 @@ const StorageNavigatorFragment = ({
           trashNote={trashNote}
         />
       )}
+
+      <NavigatorSeparator />
 
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (
