@@ -16,7 +16,6 @@ import { NoteStorage } from '../../lib/db/types'
 import {
   mdiTrashCanOutline,
   mdiPaperclip,
-  mdiBookOpen,
   mdiSync,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
@@ -33,8 +32,8 @@ import {
   removeIpcListener,
 } from '../../lib/electronOnly'
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
-import { getFolderItemId } from '../../lib/nav'
 import { useRouteParams } from '../../lib/routeParams'
+import NavigatorHeader from '../atoms/NavigatorHeader'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -43,11 +42,7 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
-  const {
-    openSideNavFolderItemRecursively,
-    sideNavOpenedItemSet,
-    toggleSideNavOpenedItem,
-  } = useGeneralStatus()
+  const { openSideNavFolderItemRecursively } = useGeneralStatus()
   const { prompt, messageBox } = useDialog()
   const {
     createNote,
@@ -167,14 +162,7 @@ const StorageNavigatorFragment = ({
 
   const generalAppMode = preferences['general.appMode']
 
-  const rootFolderNavId = getFolderItemId(storage.id, '/')
-  const rootFolderIsOpened = sideNavOpenedItemSet.has(rootFolderNavId)
-
   const rootFolderPathname = `/app/storages/${storage.id}/notes`
-  const rootFolderIsActive =
-    routeParams.name === 'storages.notes' &&
-    routeParams.folderPathname === '/' &&
-    (generalAppMode === 'note' || routeParams.noteId == null)
 
   const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
   const trashcanPageIsActive = routeParams.name === 'storages.trashCan'
@@ -294,24 +282,12 @@ const StorageNavigatorFragment = ({
 
   const syncing = storage.type !== 'fs' && storage.sync != null
 
-  const folded = useMemo(() => {
-    return !sideNavOpenedItemSet.has(rootFolderNavId)
-  }, [sideNavOpenedItemSet, rootFolderNavId])
-
   return (
     <>
-      <NavigatorItem
-        depth={0}
-        iconPath={mdiBookOpen}
+      <NavigatorHeader
         label='Workspace'
-        active={rootFolderIsActive}
         onClick={() => push(rootFolderPathname)}
         onContextMenu={openWorkspaceContextMenu}
-        folded={folded}
-        visibleControl={true}
-        onFoldButtonClick={() => {
-          toggleSideNavOpenedItem(rootFolderNavId)
-        }}
         control={
           <>
             <NavigatorButton
@@ -336,25 +312,24 @@ const StorageNavigatorFragment = ({
           </>
         }
       />
-      {rootFolderIsOpened &&
-        (generalAppMode === 'note' ? (
-          <FolderNavigatorFragment
-            storage={storage}
-            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
-          />
-        ) : (
-          <FolderNoteNavigatorFragment
-            storage={storage}
-            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
-            bookmarkNote={bookmarkNote}
-            unbookmarkNote={unbookmarkNote}
-            trashNote={trashNote}
-          />
-        ))}
+      {generalAppMode === 'note' ? (
+        <FolderNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+        />
+      ) : (
+        <FolderNoteNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+          bookmarkNote={bookmarkNote}
+          unbookmarkNote={unbookmarkNote}
+          trashNote={trashNote}
+        />
+      )}
 
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (
