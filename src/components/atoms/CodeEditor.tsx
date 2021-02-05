@@ -86,6 +86,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
         [osName === 'macos' ? 'Cmd-Alt-F' : 'Ctrl-Alt-F']: 'findPersistent',
         Esc: 'clearSearch',
       },
+      scrollPastEnd: true,
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
     window.addEventListener('codemirror-mode-load', this.reloadMode)
