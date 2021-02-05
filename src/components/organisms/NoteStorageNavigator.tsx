@@ -23,12 +23,14 @@ import {
   mdiFolderOutline,
   mdiTag,
   mdiMagnify,
+  mdiCogOutline,
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
+import NavigatorItem from '../atoms/NavigatorItem'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -261,6 +263,12 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       </NewNoteButton>
 
       <ScrollableContainer>
+        <NavigatorItem
+          iconPath={mdiCogOutline}
+          depth={0}
+          label='Settings'
+          onClick={togglePreferencesModal}
+        />
         <BookmarkNavigatorFragment storage={storage} />
         <StorageNavigatorFragment storage={storage} />
         <Spacer onContextMenu={openSideNavContextMenu} />
