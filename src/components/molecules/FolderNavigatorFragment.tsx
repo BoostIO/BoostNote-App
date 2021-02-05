@@ -111,7 +111,7 @@ function getOpenedFolderPathnameList(
     if (pathname === '/') {
       continue
     }
-    const depth = pathname.split('/').slice(0).length - 1
+    const depth = pathname.split('/').slice(0).length - 2
     pathnameList.push({
       name,
       pathname,

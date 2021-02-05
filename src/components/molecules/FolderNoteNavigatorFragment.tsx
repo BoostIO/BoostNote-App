@@ -206,7 +206,7 @@ function getOpenedFolderPathnameList(
     const folderDoc = folderMap[pathname]
     const noteCount = folderDoc?.noteIdSet.size || 0
     const nameElements = pathname.split('/').slice(1)
-    const depth = nameElements.length
+    const depth = nameElements.length - 1
     itemList.push({
       type: 'folder',
       pathname,
