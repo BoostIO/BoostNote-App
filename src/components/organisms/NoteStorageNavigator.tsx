@@ -32,14 +32,21 @@ import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
 import NavigatorItem from '../atoms/NavigatorItem'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
+import { useTranslation } from 'react-i18next'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
 }
 
 const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
-  const { createStorage, storageMap, createNote } = useDb()
-  const { prompt } = useDialog()
+  const {
+    createStorage,
+    storageMap,
+    createNote,
+    renameStorage,
+    removeStorage,
+  } = useDb()
+  const { prompt, messageBox } = useDialog()
   const { push, hash } = useRouter()
   const { navigate } = useStorageRouter()
   const {
@@ -49,6 +56,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   } = usePreferences()
   const routeParams = useRouteParams()
   const storageId = storage.id
+  const { t } = useTranslation()
 
   const generalShowAppNavigator = preferences['general.showAppNavigator']
 
@@ -93,6 +101,58 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       const storages = values(storageMap)
       openContextMenu({
         menuItems: [
+          {
+            type: 'normal',
+            label: t('storage.rename'),
+            click: async () => {
+              prompt({
+                title: `Rename "${storage.name}" storage`,
+                message: t('storage.renameMessage'),
+                iconType: DialogIconTypes.Question,
+                defaultValue: storage.name,
+                submitButtonLabel: t('storage.rename'),
+                onClose: async (value: string | null) => {
+                  if (value == null) return
+                  renameStorage(storage.id, value)
+                },
+              })
+            },
+          },
+          {
+            type: 'normal',
+            label: t('storage.remove'),
+            click: async () => {
+              messageBox({
+                title: `Remove "${storage.name}" storage`,
+                message:
+                  storage.type === 'fs'
+                    ? "This operation won't delete the actual storage folder. You can add it to the app again."
+                    : t('storage.removeMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('storage.remove'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    removeStorage(storage.id)
+                  }
+                },
+              })
+            },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            type: 'normal',
+            label: 'Preferences',
+            click: () => {
+              togglePreferencesModal()
+            },
+          },
+          {
+            type: 'separator',
+          },
           ...storages
             .filter((storage) => {
               return storage.id !== storageId
@@ -121,16 +181,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
           },
           {
             type: 'normal',
-            label: 'Preferences',
-            click: () => {
-              togglePreferencesModal()
-            },
-          },
-          {
-            type: 'separator',
-          },
-          {
-            type: 'normal',
             label: 'Toggle App Navigator',
             click: () => {
               setPreferences((prevPreferences) => {
@@ -147,12 +197,20 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       })
     },
     [
+      storageMap,
+      t,
+      prompt,
+      storage.name,
+      storage.id,
+      storage.type,
+      renameStorage,
+      messageBox,
+      togglePreferencesModal,
       storageId,
-      setPreferences,
       navigate,
       openCreateStorageDialog,
-      togglePreferencesModal,
-      storageMap,
+      setPreferences,
+      removeStorage,
     ]
   )
 
