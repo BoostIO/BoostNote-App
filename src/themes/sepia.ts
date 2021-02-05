@@ -54,6 +54,7 @@ export const sepiaTheme: BaseTheme = {
   // SideBar
   navBackgroundColor: '#fdf6e4',
   navLabelColor: '#555',
+  navSubtleLabelColor: '#9DA0A5',
   navButtonColor: '#777',
   navButtonHoverColor: '#555',
   navButtonActiveColor: primaryColor,

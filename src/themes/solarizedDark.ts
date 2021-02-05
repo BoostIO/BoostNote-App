@@ -51,6 +51,7 @@ export const solarizedDarkTheme: BaseTheme = {
   // SideBar
   navBackgroundColor: '#0c3641',
   navLabelColor: '#bbb',
+  navSubtleLabelColor: '#75797F',
   navButtonColor: '#bbb',
   navButtonHoverColor: '#eee',
   navButtonActiveColor: primaryColor,

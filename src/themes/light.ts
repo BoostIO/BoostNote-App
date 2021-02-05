@@ -59,6 +59,7 @@ export const lightTheme: BaseTheme = {
   // SideBar
   navBackgroundColor: uiBackgroundColor,
   navLabelColor: uiColor,
+  navSubtleLabelColor: '#9DA0A5',
   navButtonColor: uiDimColor,
   navButtonHoverColor: uiColor,
   navButtonActiveColor: primaryColor,
