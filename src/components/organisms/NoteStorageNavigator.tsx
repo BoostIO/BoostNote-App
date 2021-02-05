@@ -31,6 +31,7 @@ import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
 import NavigatorItem from '../atoms/NavigatorItem'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -270,6 +271,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
           onClick={togglePreferencesModal}
         />
         <BookmarkNavigatorFragment storage={storage} />
+        <NavigatorSeparator />
         <StorageNavigatorFragment storage={storage} />
         <Spacer onContextMenu={openSideNavContextMenu} />
       </ScrollableContainer>
