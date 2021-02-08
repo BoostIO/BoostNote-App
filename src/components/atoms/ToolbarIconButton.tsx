@@ -4,8 +4,8 @@ import Icon from './Icon'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 
 const Container = styled.button`
-  height: 30px;
-  width: 30px;
+  height: 32px;
+  width: 32px;
   box-sizing: border-box;
   font-size: 18px;
   outline: none;
@@ -56,7 +56,7 @@ const ToolbarIconButton = React.forwardRef(
       ref={ref}
       title={title}
     >
-      <Icon path={iconPath} />
+      <Icon size={18} path={iconPath} />
     </Container>
   )
 )

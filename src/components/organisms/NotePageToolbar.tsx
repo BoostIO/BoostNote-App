@@ -41,7 +41,7 @@ import { filenamify } from '../../lib/string'
 const Container = styled.div`
   display: flex;
   overflow: hidden;
-  height: 40px;
+  height: 44px;
   flex-shrink: 0;
   -webkit-app-region: drag;
   padding: 0 8px;
