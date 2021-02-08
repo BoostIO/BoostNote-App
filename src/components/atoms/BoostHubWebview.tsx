@@ -27,6 +27,7 @@ import {
   boostHubAccountDeleteEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
+import { openContextMenu } from '../../lib/electronOnly'
 
 export interface WebviewControl {
   reload(): void
@@ -129,6 +130,35 @@ const BoostHubWebview = ({
           break
         case 'request-access-token':
           webview.send('update-access-token', accessToken)
+          break
+        case 'open-context-menu':
+          openContextMenu({
+            menuItems: [
+              {
+                type: 'normal',
+                label: 'Back',
+                click: goBack,
+              },
+              {
+                type: 'normal',
+                label: 'Forward',
+                click: goForward,
+              },
+              {
+                type: 'normal',
+                label: 'Reload',
+                click: reload,
+              },
+              {
+                type: 'separator',
+              },
+              {
+                type: 'normal',
+                label: 'Open Dev Tools',
+                click: openDevTools,
+              },
+            ],
+          })
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)

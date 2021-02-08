@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import Router from './Router'
 import { RouterProvider } from '../lib/router'
-import { ElectronProvider, initAccessToken } from '../lib/stores/electron'
+import {
+  ElectronProvider,
+  initAccessToken,
+  usingElectron,
+  sendToHost,
+} from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { ToastProvider } from '../lib/stores/toast'
 import { useEffectOnce } from 'react-use'
@@ -16,6 +21,21 @@ const App = () => {
       await initAccessToken()
       setAccessTokenInitialized(true)
     })()
+  })
+
+  useEffectOnce(() => {
+    if (!usingElectron) {
+      return
+    }
+    const handler = (event: MouseEvent) => {
+      event.preventDefault()
+      sendToHost('open-context-menu')
+    }
+    window.addEventListener('contextmenu', handler)
+
+    return () => {
+      window.removeEventListener('contextmenu', handler)
+    }
   })
 
   if (!accessTokenInitialized) {
