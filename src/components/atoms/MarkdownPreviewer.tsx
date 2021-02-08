@@ -99,8 +99,8 @@ function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
 
           throw new Error(`Unknown language: \`${lang}\` is not registered`)
         }
-        const mime = modeInfo.mime || modeInfo.mimes![0]
-        parent.properties['data-ext'] = modeInfo.ext[0]
+        const mime = modeInfo.mime || modeInfo.mimes?.[0]
+        parent.properties['data-ext'] = modeInfo.ext?.[0]
         parent.properties['data-mime'] = mime
 
         CodeMirror.runMode(rawContent, mime, (text, style) => {
