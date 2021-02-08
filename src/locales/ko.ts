@@ -41,9 +41,9 @@ export default {
     'folder.removeMessage': '모든 폴더와 하위폴더가 삭제됩니다.',
 
     //Tag
-    'tag.tags': '태그',
-    'tag.remove': '태그 제거',
-    'tag.removeMessage': '해당 태그가 모든 노트에서 제거됩니다.',
+    'tag.tags': '라벨',
+    'tag.remove': '라벨 제거',
+    'tag.removeMessage': '해당 라벨이 모든 노트에서 제거됩니다.',
 
     //Note
     'note.duplicate': '중복 생성',

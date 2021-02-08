@@ -204,7 +204,7 @@ const TagNavigatorNewTagPopup = ({
       <TagNameInput
         ref={inputRef}
         value={newTagName}
-        placeholder='Tag Name...'
+        placeholder='Label Name...'
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setMenuIndex(0)
           setNewTagName(event.target.value)

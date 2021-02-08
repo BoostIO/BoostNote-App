@@ -42,9 +42,9 @@ export default {
     'folder.removeMessage': 'フォルダを削除すると全てのノートも削除されます',
 
     //Tag
-    'tag.tags': 'タグ',
-    'tag.remove': 'タグを削除する',
-    'tag.removeMessage': '全てのノートからタグが削除されます',
+    'tag.tags': 'ラベル',
+    'tag.remove': 'ラベルを削除する',
+    'tag.removeMessage': '全てのノートからラベルが削除されます',
 
     //Note
     'note.duplicate': 'コピー',

@@ -43,9 +43,9 @@ export default {
     'folder.removeMessage': 'Alle Notizen und Unterordner werden gelöscht.',
 
     //Tag
-    'tag.tags': 'Tag',
-    'tag.remove': 'Tag löschen',
-    'tag.removeMessage': 'Das Tag wird von allen Notizen entfernt.',
+    'tag.tags': 'Label',
+    'tag.remove': 'Label löschen',
+    'tag.removeMessage': 'Das Label wird von allen Notizen entfernt.',
 
     //Note
     'note.duplicate': 'Duplizieren',

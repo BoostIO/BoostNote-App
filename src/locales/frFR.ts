@@ -45,9 +45,9 @@ export default {
       'Toutes les notes et sous-dossiers seront supprimés.',
 
     //Tag
-    'tag.tags': 'Tags',
-    'tag.remove': 'Supprimer Tag',
-    'tag.removeMessage': 'Le tag sera retiré de toutes les notes.',
+    'tag.tags': 'Labels',
+    'tag.remove': 'Supprimer Label',
+    'tag.removeMessage': 'Le label sera retiré de toutes les notes.',
 
     //Note
     'note.duplicate': 'Dupliquer',

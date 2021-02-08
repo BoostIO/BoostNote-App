@@ -57,14 +57,14 @@ export default {
     'folder.noLocationSelected': 'No location selected',
 
     //Tag
-    'tag.tags': 'Tags',
-    'tag.add': 'Add Tag',
-    'tag.remove': 'Remove Tag',
-    'tag.rename': 'Rename Tag',
+    'tag.tags': 'Labels',
+    'tag.add': 'Add Label',
+    'tag.remove': 'Remove Label',
+    'tag.rename': 'Rename Label',
     'tag.removeX': 'Remove #{{tag}}',
-    'tag.removeMessage': 'The tag will be untagged from all notes.',
+    'tag.removeMessage': 'The label will be untagged from all notes.',
     'tag.renameMessage':
-      'Enter the new tag name. Notes with tag "{{tagName}}" will be updated to reflect the change.',
+      'Enter the new label name. Notes with the label "{{tagName}}" will be updated to reflect the change.',
 
     //Note
     'note.duplicate': 'Duplicate',
