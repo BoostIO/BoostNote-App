@@ -298,17 +298,14 @@ const TopButton = styled.button`
   text-align: left;
   padding: 0 16px;
   border: none;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.navLabelColor};
   background-color: transparent;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
+  margin: 4px 0;
   & > .topButtonLabel {
-    font-size: 18px;
-    font-weight: 600;
-    padding-right: 10px;
+    font-size: 14px;
+    padding-right: 4px;
     ${textOverflow}
-  }
-  &:hover {
-    color: ${({ theme }) => theme.navItemActiveColor};
   }
 `
 
