@@ -104,7 +104,9 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
       {showSearchModal && <SearchModal storage={storage} />}
       <Container>
         <ContentContainer
-          className={generalStatus.showingNoteContextMenu ? '' : 'expand'}
+          className={
+            note != null && generalStatus.showingNoteContextMenu ? '' : 'expand'
+          }
         >
           <NotePageToolbar note={note} storage={storage} />
           <div className='detail'>
