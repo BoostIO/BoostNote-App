@@ -103,7 +103,9 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Container>
-        <ContentContainer>
+        <ContentContainer
+          className={generalStatus.showingNoteContextMenu ? '' : 'expand'}
+        >
           <NotePageToolbar note={note} storage={storage} />
           <div className='detail'>
             {note == null ? (
@@ -131,7 +133,9 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
             )}
           </div>
         </ContentContainer>
-        {note != null && <NoteContextView storage={storage} note={note} />}
+        {note != null && generalStatus.showingNoteContextMenu && (
+          <NoteContextView storage={storage} note={note} />
+        )}
       </Container>
     </StorageLayout>
   )
@@ -152,6 +156,9 @@ const ContentContainer = styled.div`
   left: 0;
   bottom: 0;
   right: 350px;
+  &.expand {
+    right: 0;
+  }
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -19,6 +19,7 @@ export interface GeneralStatus {
     domain: string
     iconUrl?: string
   }[]
+  showingNoteContextMenu: boolean
 }
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
@@ -46,6 +47,7 @@ const baseGeneralStatus: GeneralStatus = {
   preferredEditingViewMode: 'split',
   sideNavOpenedItemList: [],
   boostHubTeams: [],
+  showingNoteContextMenu: false,
 }
 
 function useGeneralStatusStore() {

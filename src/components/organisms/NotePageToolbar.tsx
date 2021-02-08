@@ -7,6 +7,8 @@ import {
   mdiStar,
   mdiEye,
   mdiPencil,
+  mdiChevronRight,
+  mdiChevronLeft,
 } from '@mdi/js'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
@@ -301,12 +303,21 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
       bookmark()
     }
   }, [note, unbookmark, bookmark])
+
   useEffect(() => {
     addIpcListener('toggle-bookmark', toggleBookmark)
     return () => {
       removeIpcListener('toggle-bookmark', toggleBookmark)
     }
   })
+
+  const toggleContextView = useCallback(() => {
+    setGeneralStatus((previousGeneralStatus) => {
+      return {
+        showingNoteContextMenu: !previousGeneralStatus.showingNoteContextMenu,
+      }
+    })
+  }, [setGeneralStatus])
 
   return (
     <Container>
@@ -378,6 +389,16 @@ const NotePageToolbar = ({ storage, note }: NotePageToolbarProps) => {
             title={t(`bookmark.${!note.data.bookmarked ? 'add' : 'remove'}`)}
             onClick={toggleBookmark}
             iconPath={note.data.bookmarked ? mdiStar : mdiStarOutline}
+          />
+          <ToolbarIconButton
+            active={generalStatus.showingNoteContextMenu}
+            title='Open Context View'
+            onClick={toggleContextView}
+            iconPath={
+              generalStatus.showingNoteContextMenu
+                ? mdiChevronRight
+                : mdiChevronLeft
+            }
           />
         </Control>
       )}
