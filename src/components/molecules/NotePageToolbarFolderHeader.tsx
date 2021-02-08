@@ -44,7 +44,7 @@ const NotePageToolbarFolderHeader = ({
     <>
       <ToolbarButton
         iconPath={mdiBookOpen}
-        label={folderDataList.length === 0 ? 'Workspace' : undefined}
+        label='Workspace'
         onClick={navigateToWorkspace}
       />
       {folderDataList.map(({ name, pathname }, index) => {

@@ -174,6 +174,7 @@ const NotePageToolbarNoteHeader = ({
         title='Navigate to Workspace'
         onClick={navigateToWorkspace}
         iconPath={mdiBookOpen}
+        label='Workspace'
       />
       {folderDataList.length > 1 && (
         <>
