@@ -32,7 +32,7 @@ const TopLevelNavigator = () => {
   const routeParams = useRouteParams()
   const { isChecked } = useCheckedFeatures()
 
-  const boostHubUserInfo = preferences['boosthub.user']
+  const boostHubUserInfo = preferences['cloud.user']
 
   const activeStorageId = useActiveStorageId()
 
