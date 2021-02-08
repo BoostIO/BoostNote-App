@@ -19,6 +19,7 @@ import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
 import { useRouter } from '../../lib/router'
 import { parseNumberStringOrReturnZero } from '../../lib/string'
+import NoteContextView from '../organisms/NoteContextView'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -102,32 +103,35 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Container>
-        <NotePageToolbar note={note} storage={storage} />
-        <div className='detail'>
-          {note == null ? (
-            routeParams.name === 'storages.notes' ? (
-              <FolderDetail
-                storage={storage}
-                folderPathname={routeParams.folderPathname}
-              />
-            ) : routeParams.name === 'storages.tags.show' ? (
-              <TagDetail storage={storage} tagName={routeParams.tagName} />
-            ) : routeParams.name === 'storages.trashCan' ? (
-              <TrashDetail storage={storage} />
+        <ContentContainer>
+          <NotePageToolbar note={note} storage={storage} />
+          <div className='detail'>
+            {note == null ? (
+              routeParams.name === 'storages.notes' ? (
+                <FolderDetail
+                  storage={storage}
+                  folderPathname={routeParams.folderPathname}
+                />
+              ) : routeParams.name === 'storages.tags.show' ? (
+                <TagDetail storage={storage} tagName={routeParams.tagName} />
+              ) : routeParams.name === 'storages.trashCan' ? (
+                <TrashDetail storage={storage} />
+              ) : (
+                <div>Idle</div>
+              )
             ) : (
-              <div>Idle</div>
-            )
-          ) : (
-            <NoteDetail
-              note={note}
-              storage={storage}
-              updateNote={updateNote}
-              addAttachments={addAttachments}
-              viewMode={noteViewMode}
-              initialCursorPosition={getCurrentPositionFromRoute()}
-            />
-          )}
-        </div>
+              <NoteDetail
+                note={note}
+                storage={storage}
+                updateNote={updateNote}
+                addAttachments={addAttachments}
+                viewMode={noteViewMode}
+                initialCursorPosition={getCurrentPositionFromRoute()}
+              />
+            )}
+          </div>
+        </ContentContainer>
+        {note != null && <NoteContextView storage={storage} note={note} />}
       </Container>
     </StorageLayout>
   )
@@ -136,6 +140,18 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
 export default WikiNotePage
 
 const Container = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+  position: relative;
+`
+
+const ContentContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 350px;
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -14,16 +14,13 @@ import DialogColorPicker from './dialog/DialogColorPicker'
 import { PopulatedTagDoc } from '../../lib/db/types'
 import { BaseTheme } from '../../lib/styled/BaseTheme'
 import { isColorBright } from '../../lib/colors'
-import { tagItemHeightSize } from './dialog/styled'
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
-  border-radius: 9px;
+  border-radius: 4px;
   white-space: nowrap;
   position: relative;
   ${tagBackgroundColor};
-
-  margin-right: 5px;
-  height: ${tagItemHeightSize};
+  height: 24px;
   font-size: 14px;
   ${flexCenter};
 `

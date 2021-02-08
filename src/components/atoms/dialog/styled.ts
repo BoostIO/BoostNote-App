@@ -122,6 +122,7 @@ export const DialogColorPickerPopover = styled.div<
   DialogColorPickerPopoverLocationProps
 >`
   position: absolute;
+  right: 10px;
   z-index: 6000;
   .sketch-picker {
     margin-top: 3px;
