@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 import { NoteStorage } from '../../lib/db/types'
 import {
   secondaryButtonStyle,
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { MenuItemConstructorOptions } from 'electron'
 import { openContextMenu } from '../../lib/electronOnly'
 import { useStorageRouter } from '../../lib/storageRouter'
+import { osName } from '../../cloud/lib/utils/platform'
 
 const Container = styled.div`
   ${flexCenter}
@@ -36,6 +37,28 @@ const Container = styled.div`
   }
   &.active {
     border-color: ${({ theme }) => theme.textColor};
+  }
+
+  & > .tooltip {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    padding: 0 10px;
+    border-radius: 4px;
+    height: 36px;
+    z-index: 1000;
+    color: ${({ theme }) => theme.tooltipTextColor};
+    background-color: ${({ theme }) => theme.tooltipBackgroundColor};
+    user-select: none;
+
+    .tooltip__icon {
+      margin-right: 5px;
+    }
+    .tooltip__name {
+      margin-right: 10px;
+    }
+    .tooltip__key {
+    }
   }
 `
 
@@ -84,11 +107,18 @@ const SyncButton = styled.button`
 interface AppNavigatorStorageItemProps {
   active: boolean
   storage: NoteStorage
+  index: number
+}
+
+interface Position {
+  top: number
+  left: number
 }
 
 const AppNavigatorStorageItem = ({
   active,
   storage,
+  index,
 }: AppNavigatorStorageItemProps) => {
   const { syncStorage, renameStorage, removeStorage } = useDb()
   const user = useFirstUser()
@@ -96,6 +126,23 @@ const AppNavigatorStorageItem = ({
   const { prompt, messageBox } = useDialog()
   const { t } = useTranslation()
   const { navigate } = useStorageRouter()
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [tooltipPosition, setTooltipPosition] = useState<Position | null>(null)
+
+  const showTooltip = useCallback(() => {
+    if (buttonRef.current == null) {
+      return
+    }
+    const rect = buttonRef.current.getBoundingClientRect()
+    setTooltipPosition({
+      top: rect.top,
+      left: rect.left + rect.width + 10,
+    })
+  }, [])
+
+  const hideTooltip = useCallback(() => {
+    setTooltipPosition(null)
+  }, [])
 
   const navigateToStorage = useCallback(() => {
     navigate(storage.id)
@@ -176,14 +223,16 @@ const AppNavigatorStorageItem = ({
 
   return (
     <Container
-      title={storage.name}
       className={active ? 'active' : ''}
       onClick={navigateToStorage}
       onContextMenu={openStorageContextMenu}
     >
       <MainButton
         className={active ? 'active' : ''}
+        ref={buttonRef}
         onClick={navigateToStorage}
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
       >
         {storage.name.slice(0, 1)}
       </MainButton>
@@ -191,6 +240,14 @@ const AppNavigatorStorageItem = ({
         <SyncButton className={syncing ? 'active' : ''} onClick={sync}>
           <Icon spin={syncing} path={mdiSync} />
         </SyncButton>
+      )}
+      {tooltipPosition != null && (
+        <div className='tooltip' style={tooltipPosition}>
+          <span className='tooltip__name'>{storage.name}</span>
+          <span className='tooltip__key'>
+            {osName === 'macos' ? '⌘' : 'Ctrl'} {index + 1}
+          </span>
+        </div>
       )}
     </Container>
   )

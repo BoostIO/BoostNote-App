@@ -37,13 +37,14 @@ const TopLevelNavigator = () => {
   const activeStorageId = useActiveStorageId()
 
   const storages = useMemo(() => {
-    return entries(storageMap).map(([storageId, storage]) => {
+    return entries(storageMap).map(([storageId, storage], index) => {
       const active = activeStorageId === storageId
       return (
         <AppNavigatorStorageItem
           key={storageId}
           active={active}
           storage={storage}
+          index={index}
         />
       )
     })
@@ -57,7 +58,7 @@ const TopLevelNavigator = () => {
   }, [routeParams])
 
   const boostHubTeams = useMemo(() => {
-    return generalStatus.boostHubTeams.map((boostHubTeam) => {
+    return generalStatus.boostHubTeams.map((boostHubTeam, index) => {
       return (
         <AppNavigatorBoostHubTeamItem
           key={`boost-hub-team-${boostHubTeam.domain}`}
@@ -65,10 +66,11 @@ const TopLevelNavigator = () => {
           name={boostHubTeam.name}
           domain={boostHubTeam.domain}
           iconUrl={boostHubTeam.iconUrl}
+          index={index + storages.length}
         />
       )
     })
-  }, [generalStatus.boostHubTeams, activeBoostHubTeamDomain])
+  }, [storages.length, generalStatus.boostHubTeams, activeBoostHubTeamDomain])
 
   const { setGeneralStatus } = useGeneralStatus()
 
@@ -183,6 +185,9 @@ const Container = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const ListContainer = styled.div`
