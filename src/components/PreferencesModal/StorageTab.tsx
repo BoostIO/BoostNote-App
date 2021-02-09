@@ -42,7 +42,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
       title: t('storage.delete', { storage: storage.name }),
       message:
         storage.type === 'fs'
-          ? "This operation won't delete the actual storage folder. You can add it to the app again."
+          ? "This operation won't delete the actual data files in your disk. You can add it to the app again."
           : t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
       buttons: [t('storage.remove'), t('general.cancel')],
@@ -56,7 +56,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           } catch {
             pushMessage({
               title: t('general.networkError'),
-              description: `An error occurred while deleting storage (id: ${storage.id})`,
+              description: `An error occurred while deleting space (id: ${storage.id})`,
             })
           }
         }
@@ -106,11 +106,11 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           </FormGroup>
         </>
       )}
-      <h2>Storage Type</h2>
+      <h2>Local Space Type</h2>
       <p>{storage.type === 'fs' ? 'File System' : 'PouchDB'}</p>
       {storage.type === 'fs' && (
         <>
-          <h2>Storage Location</h2>
+          <h2>Space Location</h2>
           <p>{storage.location}</p>
         </>
       )}
@@ -132,23 +132,23 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </>
       )}
       <hr />
-      <FormHeading depth={2}>Remove Storage</FormHeading>
+      <FormHeading depth={2}>Remove Space</FormHeading>
       {storage.type !== 'fs' && storage.cloudStorage != null && (
         <FormBlockquote>
-          Your cloud storage will not be deleted. To delete cloud storage too,
-          check cloud storage info section.
+          Your space in the legacy cloud server will not be deleted. To delete
+          data in the server, check cloud info section.
         </FormBlockquote>
       )}
       <FormGroup>
         <FormSecondaryButton onClick={removeCallback}>
-          Remove Storage
+          Remove Space
         </FormSecondaryButton>
       </FormGroup>
 
       {storage.type !== 'fs' && (
         <>
           <hr />
-          <FormHeading depth={2}>Cloud Storage info</FormHeading>
+          <FormHeading depth={2}>Cloud Info</FormHeading>
           {storage.cloudStorage == null ? (
             <LinkCloudStorageForm storage={storage} />
           ) : (

@@ -127,13 +127,15 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
   if (user == null) {
     return (
       <>
-        <FormBlockquote>Sign in to manage the cloud storage</FormBlockquote>
+        <FormBlockquote>
+          Sign in to manage the legacy cloud space
+        </FormBlockquote>
         <LoginButton
           onErr={() => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage',
+                'An error occured while attempting to create a legacy cloud space',
             })
           }}
           ButtonComponent={FormPrimaryButton}
@@ -190,7 +192,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
       </FormGroup>
       <FormGroup>
         <FormPrimaryButton onClick={updateCloudStorageName} disabled={updating}>
-          {updating ? 'Updating...' : 'Update cloud storage name'}
+          {updating ? 'Updating...' : 'Update legacy cloud space name'}
         </FormPrimaryButton>
       </FormGroup>
 
@@ -203,7 +205,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
         </SectionPrimaryButton>
       </FormGroup>
 
-      <FormHeading depth={3}>Unlink / Remove cloud storage</FormHeading>
+      <FormHeading depth={3}>Unlink / Remove legacy cloud space</FormHeading>
       {foldedDestructiveButtons ? (
         <FormGroup>
           <FormSecondaryButton
@@ -211,7 +213,7 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
               setFoldedDestructiveButtons(false)
             }}
           >
-            Unlink / Remove cloud storage
+            Unlink / Remove legacy cloud space
           </FormSecondaryButton>
         </FormGroup>
       ) : (
@@ -226,29 +228,30 @@ const ManageCloudStorageForm = ({ storage }: ManageCloudStorageFormProps) => {
             </FormSecondaryButton>
           </FormGroup>
           <FormBlockquote>
-            Simply removing the link between the storage in this device(or
-            browser) and the cloud storage. This action will not any data from
-            both side, local device and cloud. Once it is done, you can always
-            link the storage to any cloud storage.
+            Simply removing the link between the spaces in this device and the
+            legacy cloud space. This action will not any data from both side,
+            local device and cloud. Once it is done, you can always link the
+            space to any legacy cloud space.
           </FormBlockquote>
           <FormGroup>
             <FormSecondaryButton
               disabled={deleting}
               onClick={unlinkCloudStorage}
             >
-              Unlink cloud storage
+              Unlink legacy cloud space
             </FormSecondaryButton>
           </FormGroup>
           <FormBlockquote>
-            Removing and unlinking cloud storage. This action will delete the
-            cloud storage only. So the storage will become a local storage.
+            Removing and unlinking legacy cloud storage. This action will delete
+            the legacy cloud space only. So the space will become a local
+            storage.
           </FormBlockquote>
           <FormGroup>
             <FormSecondaryButton
               disabled={deleting}
               onClick={removeAndUnlinkCloudStorage}
             >
-              Remove cloud storage
+              Remove legacy cloud space
             </FormSecondaryButton>
           </FormGroup>
         </>

@@ -5,7 +5,6 @@ import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
 import {
@@ -62,10 +61,10 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
   const openCreateStorageDialog = useCallback(() => {
     prompt({
-      title: 'Create a Storage',
-      message: 'Enter name of a storage to create',
+      title: 'Create a Space',
+      message: 'Enter name of a space to create',
       iconType: DialogIconTypes.Question,
-      submitButtonLabel: 'Create Storage',
+      submitButtonLabel: 'Create Space',
       onClose: async (value: string | null) => {
         if (value == null) return
         const storage = await createStorage(value)
@@ -73,25 +72,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       },
     })
   }, [prompt, createStorage, push])
-
-  const openSideNavContextMenu = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault()
-
-      openContextMenu({
-        menuItems: [
-          {
-            type: 'normal',
-            label: 'New Storage',
-            click: async () => {
-              openCreateStorageDialog()
-            },
-          },
-        ],
-      })
-    },
-    [openCreateStorageDialog]
-  )
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -106,7 +86,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             label: t('storage.rename'),
             click: async () => {
               prompt({
-                title: `Rename "${storage.name}" storage`,
+                title: `Rename "${storage.name}" Space`,
                 message: t('storage.renameMessage'),
                 iconType: DialogIconTypes.Question,
                 defaultValue: storage.name,
@@ -123,10 +103,10 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             label: t('storage.remove'),
             click: async () => {
               messageBox({
-                title: `Remove "${storage.name}" storage`,
+                title: `Remove "${storage.name}" Space`,
                 message:
                   storage.type === 'fs'
-                    ? "This operation won't delete the actual storage folder. You can add it to the app again."
+                    ? "This operation won't delete the actual space folder. You can add it to the app again."
                     : t('storage.removeMessage'),
                 iconType: DialogIconTypes.Warning,
                 buttons: [t('storage.remove'), t('general.cancel')],
@@ -171,7 +151,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
           },
           {
             type: 'normal',
-            label: 'New Storage',
+            label: 'New Space',
             click: () => {
               openCreateStorageDialog()
             },
@@ -331,7 +311,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <BookmarkNavigatorFragment storage={storage} />
         <NavigatorSeparator />
         <StorageNavigatorFragment storage={storage} />
-        <Spacer onContextMenu={openSideNavContextMenu} />
       </ScrollableContainer>
     </NavigatorContainer>
   )

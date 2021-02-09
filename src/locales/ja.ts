@@ -148,18 +148,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'コードブロックテーマ',
     'preferences.defaultTheme': 'Use default style',
     'preferences.markdownPreview': 'Markdown Preview',
-
-    // Preferences ImportTab
-    'preferences.import': 'データ移行',
-    'preferences.description': '旧Boost Noteアプリからデータを移行する',
-    'preferences.importFlow1':
-      '1. あなたのPCで、Boost Noteのファイルが入っているフォルダを選択します',
-    'preferences.importFlow2':
-      '2. .csonファイルを選択し、下のフォームにドラッグ&ドロップしてください',
-    'preferences.importFlow3':
-      '3. どのストレージ・フォルダにデータを移行させるか選択してください',
-    'preferences.importFlow4': '4. アップロード',
-    'preferences.importRemove': '削除',
-    'preferences.importUpload': 'アップロード',
   },
 }

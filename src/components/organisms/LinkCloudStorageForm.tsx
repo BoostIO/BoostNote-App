@@ -74,7 +74,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
       pushMessage({
         title: 'Cloud Error',
         description:
-          'An error occured while attempting to fetch cloud storage list',
+          'An error occured while attempting to fetch legacy cloud space list',
       })
     }
 
@@ -114,7 +114,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
         pushMessage({
           title: 'Subscription Required',
           description:
-            'Please update subscription to create more cloud storage.',
+            'Please update subscription to create more legacy cloud space.',
         })
         return
       }
@@ -152,7 +152,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage',
+                'An error occured while attempting to create a legacy cloud space',
             })
           }}
           ButtonComponent={FormPrimaryButton}
@@ -166,11 +166,11 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
     return (
       <>
         <FormBlockquote>
-          This storage has not been linked to cloud storage.
+          This space has not been linked to any legacy cloud space.
         </FormBlockquote>
         <FormGroup>
           <FormPrimaryButton onClick={openForm}>
-            Link to cloud storage
+            Link to legacy cloud space
           </FormPrimaryButton>
         </FormGroup>
       </>
@@ -180,7 +180,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
   return (
     <>
       <FormGroup>
-        <FormLabel>Cloud storage to link</FormLabel>
+        <FormLabel>Legacy cloud space to link</FormLabel>
         <FormCheckItem
           id='radio-remote-storage-new'
           type='radio'
@@ -191,7 +191,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
             }
           }}
         >
-          New Storage
+          New Legacy Cloud Space
         </FormCheckItem>
       </FormGroup>
       <FormGroup>
@@ -206,11 +206,11 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
               }}
               disabled={targetRemoteStorage != null}
             >
-              Use same name of the local storage
+              Use same name of the space in this device
             </FormCheckItem>
           </FormGroup>
           <FormGroup>
-            <FormLabel>Cloud storage name</FormLabel>
+            <FormLabel>Space name in the legacy cloud</FormLabel>
             <FormTextInput
               disabled={targetRemoteStorage != null || usingSameName}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -224,7 +224,7 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
       <FormGroup>
         <hr />
         {!fetching && remoteStorageList.length === 0 && (
-          <p>Remote storage does not exist.</p>
+          <p>No space has been fetched. Click refresh button to try again.</p>
         )}
         {remoteStorageList.map((cloudStorage) => {
           const cloudStorageId = cloudStorage.id.toString()
@@ -248,27 +248,28 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
       </FormGroup>
       {fetching && (
         <FormGroup>
-          <Spinner /> Fetching cloud storage...
+          <Spinner /> Fetching spaces in the legacy cloud...
         </FormGroup>
       )}
 
       <FormGroup>
         <FormSecondaryButton onClick={fetchRemoteStorage} disabled={fetching}>
-          Fetch cloud storage
+          Refresh spaces in the legacy cloud
         </FormSecondaryButton>
       </FormGroup>
 
       {targetRemoteStorage != null && (
         <FormBlockquote>
-          <strong>CAUTION!</strong> Your storage will be merged into the cloud
-          storage. <strong>THIS ACTION IS NOT REVERTIBLE.</strong> We are highly
-          recommending to create a new storage from the existing cloud storage
-          to prevent merging storage into wrong one.
+          <strong>CAUTION!</strong> Your local space will be merged into the
+          legacy cloud storage. <strong>THIS ACTION IS NOT REVERTIBLE.</strong>{' '}
+          We are highly recommending to create a new local space from the
+          existing legacy cloud space to prevent merging the space into wrong
+          one.
         </FormBlockquote>
       )}
       <FormGroup>
         <FormPrimaryButton onClick={linkStorage} disabled={linking}>
-          {linking ? 'Linking...' : 'Link to cloud storage'}
+          {linking ? 'Linking...' : 'Link to the legacy cloud space'}
         </FormPrimaryButton>
         <FormSecondaryButton onClick={closeForm} disabled={linking}>
           Cancel

@@ -151,19 +151,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Tema para el bloque de código',
     'preferences.defaultTheme': 'Usar tema por defecto',
     'preferences.markdownPreview': 'Vista previa del Markdown',
-
-    // Preferences ImportTab
-    'preferences.import': 'Importar',
-    'preferences.description':
-      'Importar .archivos cson desde la versión antigua de Boostnote.',
-    'preferences.importFlow1':
-      '1. Abre la  antigua carpeta de Boostnote donde se almacenaban los archivos en tu ordenador.',
-    'preferences.importFlow2':
-      '2. Arrastra y suelta los archivos .cson en la forma abajo.',
-    'preferences.importFlow3':
-      '3. Selecciona el almacenamiento y la carpeta para importar el almacenamiento',
-    'preferences.importFlow4': '4. Cargar!',
-    'preferences.importRemove': 'Eliminar',
-    'preferences.importUpload': 'Subir',
   },
 }

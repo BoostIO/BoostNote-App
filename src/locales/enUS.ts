@@ -14,7 +14,7 @@ export default {
     'general.networkError': 'Network Error',
 
     // Navigator
-    'navigator.noStorage': 'There are no storages',
+    'navigator.noStorage': 'There are no spaces',
     'navigator.createStorage': 'Click here to create one.',
 
     // Newsletter
@@ -22,26 +22,25 @@ export default {
     'newsletter.heading': 'Subscribe Update Notes',
     'newsletter.subscribed': 'Thanks for the subscription!',
     // Storage
-    'storage.storage': 'Storage',
-    'storage.name': 'Storage Name',
-    'storage.noStorage': 'No storages',
-    'storage.create': 'Create Storage',
-    'storage.edit': 'Edit Storage',
-    'storage.rename': 'Rename Storage',
-    'storage.renameMessage': 'Enter new storage name',
-    'storage.remove': 'Remove Storage',
+    'storage.storage': 'Space',
+    'storage.name': 'Space Name',
+    'storage.noStorage': 'No Spaces',
+    'storage.create': 'Create Space',
+    'storage.edit': 'Edit Space',
+    'storage.rename': 'Rename Space',
+    'storage.renameMessage': 'Enter new space name',
+    'storage.remove': 'Remove Space',
     'storage.removeMessage':
       'Warning! This will permanently remove all notes locally stored on this location.',
-    'storage.delete': 'Delete {{storage}} storage',
+    'storage.delete': 'Delete {{storage}} Space',
     'storage.move': 'Move Note',
-    'storage.moveTitle': 'Move Note to Other storage',
-    'storage.moveMessage':
-      'You are trying to move a note to different storage.',
+    'storage.moveTitle': 'Move Note to Other Space',
+    'storage.moveMessage': 'You are trying to move a note to different space.',
     'storage.copy': 'Copy Note',
-    'storage.type': 'Storage Type',
+    'storage.type': 'Space Type',
     'storage.typeLocal': 'Local',
     'storage.typeCloud': 'Cloud',
-    'storage.needSignIn': 'You need to sign in to create a cloud storage.',
+    'storage.needSignIn': 'You need to sign in to create a cloud space.',
     'storage.syncDate': 'Last synced at',
 
     //Folder
@@ -83,7 +82,7 @@ export default {
     'note.createKeyMac': 'on Mac',
     'note.createKeyWinLin': 'on Windows/Linux',
     'note.createkeymessage1': 'To create a new note, press',
-    'note.createkeymessage2': 'Select a storage',
+    'note.createkeymessage2': 'Select a space',
     'note.createkeymessage3': 'to create a new note',
     'note.restore': 'Restore',
     'note.edit': 'Edit',
@@ -182,17 +181,5 @@ export default {
     'preferences.markdownPreview': 'Markdown Preview',
     'preferences.markdownExport': 'Export',
     'preferences.markdownExportOption': 'Include Front Matter',
-
-    // Preferences ImportTab
-    'preferences.import': 'Import',
-    'preferences.description': 'Import .cson files from old Boostnote.',
-    'preferences.importFlow1': '1. Open old Boostnote folder in your PC.',
-    'preferences.importFlow2':
-      '2. Drag and drop .cson files to the form below.',
-    'preferences.importFlow3':
-      '3. Choose the Storage and Folder that you want to move your old data.',
-    'preferences.importFlow4': '4. Upload!',
-    'preferences.importRemove': 'remove',
-    'preferences.importUpload': 'Upload',
   },
 }

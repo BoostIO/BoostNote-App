@@ -145,15 +145,5 @@ export default {
     'preferences.markdownCodeBlockTheme': '代碼塊主題',
     'preferences.defaultTheme': '使用預設主題',
     'preferences.markdownPreview': 'Markdown 預覽',
-
-    // Preferences ImportTab
-    'preferences.import': '導入',
-    'preferences.description': '從舊版 Boostnote 導入 .cson 文件.',
-    'preferences.importFlow1': '1. 在你的電腦打開舊版 Boostnote 資料夾.',
-    'preferences.importFlow2': '2. 拖拽 .cson 檔到以下表單.',
-    'preferences.importFlow3': '3. 選擇你想要移動舊資料的存儲和資料夾.',
-    'preferences.importFlow4': '4. 上傳!',
-    'preferences.importRemove': '移除',
-    'preferences.importUpload': '上傳',
   },
 }
