@@ -31,6 +31,7 @@ import {
   baseIconStyle,
   rightSidePageLayout,
 } from '../../../lib/styled/styleFunctions'
+import { useRouter } from '../../../lib/router'
 import {
   pasteFormatPlugin,
   PositionRange,
@@ -73,10 +74,8 @@ import {
   focusEditorEventEmitter,
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
-import { realtimeUrl } from '../../../lib/consts'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../atoms/MarkdownView'
-import { useRouter } from '../../../lib/router'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -156,11 +155,10 @@ const Editor = ({
   }, [user, color])
 
   const [realtime, connState, connectedUsers] = useRealtime({
-    documentID: doc.id,
-    url: realtimeUrl,
+    token: doc.collaborationToken || doc.id,
     userInfo,
   })
-
+  console.log(doc, new Date())
   useEffect(() => {
     setTitle(getDocTitle(doc))
   }, [doc])
@@ -748,10 +746,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-
   width: 100%;
   height: 100%;
-
   @media screen and (min-width: 1020px) {
     &.with__context {
       max-width: calc(100% - ${docContextWidth}px) !important;
@@ -784,7 +780,6 @@ const StyledShortcodeConvertMenu = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.small}px;
   text-align: center;
   height: 125px;
-
   & > a {
     cursor: pointer;
     &:first-child {
@@ -806,7 +801,6 @@ const StyledMenuCloseButton = styled.button`
 
 const StyledLayoutDimensions = styled.div`
   width: 100%;
-
   &.preview,
   .preview {
     ${rightSidePageLayout}
@@ -821,7 +815,6 @@ const StyledLoadingView = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-
   & span {
     width: 100%;
     height: 38px;
@@ -841,11 +834,9 @@ const StyledEditorWrapper = styled.div`
   position: relative;
   height: auto;
   width: 50%;
-
   &.layout-editor {
     width: 100%;
   }
-
   &.layout-preview {
     display: none;
   }
@@ -854,23 +845,19 @@ const StyledEditorWrapper = styled.div`
 const StyledPreview = styled.div`
   height: 100%;
   width: 50%;
-
   &.layout-split {
     width: 50%;
-
     .scroller {
       height: 100%;
       overflow: auto;
       border-left: 1px solid ${({ theme }) => theme.baseBorderColor};
     }
   }
-
   &.layout-preview {
     padding-top: ${({ theme }) => theme.space.small}px;
     margin: 0 auto;
     width: 100%;
   }
-
   &.layout-editor {
     display: none;
   }
@@ -886,44 +873,36 @@ const StyledEditor = styled.div`
   width: 100%;
   height: auto;
   min-height: 0;
-
   &.preview,
   .preview {
     ${rightSidePageLayout}
     margin: auto;
     padding: 0 ${({ theme }) => theme.space.xlarge}px;
   }
-
   & .CodeMirrorWrapper {
     height: 100%;
     word-break: break-word;
   }
-
   & .CodeMirror {
     width: 100%;
     height: 100%;
     position: relative;
-
     .CodeMirror-hints {
       position: absolute;
       z-index: 10;
       overflow: auto;
-
       max-width: 90%;
       max-height: 20em;
       margin: 0;
       padding: 0;
-
       border-radius: 3px;
       border: 1px solid ${({ theme }) => theme.baseBorderColor};
       background: ${({ theme }) => theme.baseBackgroundColor};
-
       color: ${({ theme }) => theme.baseTextColor};
       font-size: 90%;
       font-family: monospace;
       list-style: none;
     }
-
     .CodeMirror-hint {
       position: relative;
       margin: 0;
@@ -934,10 +913,8 @@ const StyledEditor = styled.div`
       cursor: pointer;
       font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
     }
-
     li.CodeMirror-hint-active {
       color: ${({ theme }) => theme.primaryTextColor};
-
       &:before {
         content: '';
         display: block;
@@ -949,18 +926,15 @@ const StyledEditor = styled.div`
         background-color: ${({ theme }) => theme.primaryBackgroundColor};
       }
     }
-
     & .remote-caret {
       position: relative;
       border-left: 1px solid black;
       margin-left: -1px;
       box-sizing: border-box;
-
       &:hover > div {
         opacity: 1;
         transition-delay: 0s;
       }
-
       & > div {
         position: absolute;
         left: -1px;
@@ -982,17 +956,14 @@ const StyledEditor = styled.div`
       }
     }
   }
-
   .CodeMirror-scroll {
     position: relative;
     z-index: 0;
   }
-
   .CodeMirror-code,
   .CodeMirror-gutters {
     padding-bottom: ${({ theme }) => theme.space.xxxlarge}px;
   }
-
   & .file-loading-widget {
     transform: translate3d(0, -100%, 0);
   }

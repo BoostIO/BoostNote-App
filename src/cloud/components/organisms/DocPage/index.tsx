@@ -44,7 +44,11 @@ const DocPage = ({
   const router = useRouter()
 
   const currentDoc = useMemo(() => {
-    return docsMap.get(doc.id)
+    const mapDoc = docsMap.get(doc.id)
+    if (mapDoc != null && doc.collaborationToken != null) {
+      mapDoc.collaborationToken = doc.collaborationToken
+    }
+    return mapDoc
   }, [docsMap, doc])
 
   const currentBacklinks = useMemo(() => {
@@ -60,12 +64,6 @@ const DocPage = ({
   }, [currentDoc, team])
 
   useTitle(pageTitle)
-
-  useEffect(() => {
-    if (currentDoc == null) {
-      return
-    }
-  }, [currentDoc])
 
   useEffect(() => {
     if (currentDoc == null) {

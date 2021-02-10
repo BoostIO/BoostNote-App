@@ -10,6 +10,7 @@ export interface GlobalDataResponseBody {
   currentUserOnboarding?: UserOnboardingState
   teams: SerializedTeam[]
   invites: SerializedTeamInvite[]
+  realtimeAuth?: string
 }
 
 /// CURRENT USER INFORMATION

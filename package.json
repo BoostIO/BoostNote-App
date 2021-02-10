@@ -214,6 +214,7 @@
     "remark-shortcodes": "^0.3.1",
     "remark-slug": "^6.0.0",
     "remark-stringify": "^8.1.1",
+    "rxjs": "^6.6.3",
     "shortid": "^2.2.15",
     "slugify": "^1.4.6",
     "styled-components": "^4.3.2",

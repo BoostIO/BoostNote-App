@@ -109,7 +109,7 @@ module.exports = (env, argv) => {
 
     devServer: {
       host: 'localhost',
-      port: 3003,
+      port: 3004,
 
       historyApiFallback: {
         index: '/',
@@ -173,11 +173,11 @@ module.exports = (env, argv) => {
 
     config.entry = [
       'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:3003',
+      'webpack-dev-server/client?http://localhost:3004',
       'webpack/hot/only-dev-server',
       ...(config.entry as string[]),
     ]
-    config.output.publicPath = 'http://localhost:3003/'
+    config.output.publicPath = 'http://localhost:3004/'
   }
 
   if (argv.mode === 'production') {

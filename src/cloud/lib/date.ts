@@ -1,4 +1,4 @@
-import { format, formatDistanceToNowStrict } from 'date-fns'
+import { format, formatDistanceToNowStrict, isValid } from 'date-fns'
 
 export function getDateString(date: Date) {
   return format(date, 'yyyy-MM-dd')
@@ -34,6 +34,10 @@ export function getFormattedDateTime(
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
 
+  if (!isValid(converted)) {
+    return 'Invalid Date'
+  }
+
   switch (converted > yesterday) {
     case true:
       return `${formatDistanceToNowStrict(converted)} ago`
@@ -50,14 +54,15 @@ export function getFormattedBoosthubDateTime(date: string, prefixed = false) {
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
 
+  if (!isValid(converted)) {
+    return 'Invalid Date'
+  }
+
   switch (converted > yesterday) {
     case true:
       return `${formatDistanceToNowStrict(converted)} ago`
     default:
-      return `${prefixed ? 'on ' : ''}${format(
-        new Date(converted),
-        'HH:mm, dd MMMM u'
-      )}`
+      return `${prefixed ? 'on ' : ''}${format(converted, 'HH:mm, dd MMMM u')}`
   }
 }
 

@@ -13,6 +13,7 @@ import { useEffectOnce } from 'react-use'
 import { gaTrackingId, nodeEnv, boostHubBaseUrl } from '../lib/consts'
 import '../lib/i18n'
 
+import { RealtimeConnProvider } from '../lib/stores/realtimeConn'
 const App = () => {
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
 
@@ -45,11 +46,13 @@ const App = () => {
     <>
       <ToastProvider>
         <GlobalDataProvider>
-          <ElectronProvider>
-            <RouterProvider>
-              <Router />
-            </RouterProvider>
-          </ElectronProvider>
+          <RealtimeConnProvider>
+            <ElectronProvider>
+              <RouterProvider>
+                <Router />
+              </RouterProvider>
+            </ElectronProvider>
+          </RealtimeConnProvider>
         </GlobalDataProvider>
       </ToastProvider>
 

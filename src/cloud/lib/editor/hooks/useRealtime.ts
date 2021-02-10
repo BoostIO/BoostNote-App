@@ -2,15 +2,14 @@ import { useEffect, useState, useRef } from 'react'
 import { Doc } from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { uniqWith } from 'ramda'
-import { getAccessToken, usingElectron } from '../../stores/electron'
+import { useRealtimeConn } from '../../stores/realtimeConn'
 
 export type PresenceChange<T> =
   | { type: 'connected'; sessionId: number; userInfo: T }
   | { type: 'disconnected'; sessionId: number }
 
 export interface RealtimeArgs<T extends { id: string }> {
-  documentID: string
-  url: string
+  token: string
   userInfo?: T
 }
 
@@ -22,24 +21,25 @@ export type ConnectionState =
   | 'disconnected'
 
 const useRealtime = <T extends { id: string }>({
-  documentID,
-  url,
+  token,
   userInfo,
 }: RealtimeArgs<T>) => {
+  const { constructor } = useRealtimeConn()
   const [provider, setProvider] = useState<WebsocketProvider | undefined>()
   const [connState, setConnState] = useState<ConnectionState>('initialising')
   const [users, setUsers] = useState<T[]>([])
   const timeoutRef = useRef<number>()
 
   useEffect(() => {
+    if (constructor == null) {
+      return
+    }
+
     const doc = new Doc()
-    const provider = new WebsocketProvider(url, documentID, doc, {
-      params: usingElectron
-        ? {
-            desktop_access_token: getAccessToken()!,
-          }
-        : {},
+    const provider = new WebsocketProvider('', token, doc, {
+      WebSocketPolyfill: constructor,
     })
+
     provider.on('status', ({ status }: any) => {
       const connected = status === 'connected'
       setConnState(connected ? 'connected' : 'reconnecting')
@@ -56,7 +56,7 @@ const useRealtime = <T extends { id: string }>({
     })
 
     provider.on('sync', (synced: boolean) => {
-      setConnState(synced ? 'synced' : 'connected')
+      setConnState((prev) => (synced ? 'synced' : prev))
     })
 
     provider.awareness.on('change', () => {
@@ -90,10 +90,10 @@ const useRealtime = <T extends { id: string }>({
       setUsers([])
       setConnState('disconnected')
     }
-  }, [documentID, url])
+  }, [token, constructor])
 
   useEffect(() => {
-    if (provider != null) {
+    if (provider != null && userInfo != null) {
       provider.awareness.setLocalStateField('user', userInfo)
     }
   }, [userInfo, provider])

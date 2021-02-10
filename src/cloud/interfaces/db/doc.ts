@@ -26,6 +26,7 @@ export interface SerializedUnserializableDocProps {
   head?: SerializedRevision
   workspace?: SerializedWorkspace
   shareLink?: SerializedShareLink
+  collaborationToken?: string
 }
 
 export type SerializedDoc = SerializedUnserializableDocProps &

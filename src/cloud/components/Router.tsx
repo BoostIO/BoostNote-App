@@ -23,7 +23,7 @@ import { SearchProvider } from '../lib/stores/search'
 import { WindowProvider } from '../lib/stores/window'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
 import { PageDataProvider } from '../lib/stores/pageStore'
-// import DesktopLoginPage from '../pages/desktop/login'
+
 import { Mixpanel } from 'mixpanel-browser'
 import * as intercom from '../lib/intercom'
 import { intercomAppId } from '../lib/consts'
@@ -49,6 +49,7 @@ import TimelinePage from '../pages/[teamId]/timeline'
 import UploadListPage from '../pages/[teamId]/uploads'
 import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
+import { useRealtimeConn } from '../lib/stores/realtimeConn'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -81,6 +82,7 @@ interface PageSpec {
 const Router = () => {
   const { pathname, search } = useRouter()
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
+  const { connect } = useRealtimeConn()
 
   const { initGlobalData, initialized, globalData } = useGlobalData()
   useEffectOnce(() => {
@@ -90,8 +92,13 @@ const Router = () => {
       initGlobalData(data)
     })()
   })
-  const { currentUser } = globalData
+  const { currentUser, realtimeAuth } = globalData
 
+  useEffect(() => {
+    if (realtimeAuth != null) {
+      connect(process.env.REALTIME_URL as string, realtimeAuth)
+    }
+  }, [realtimeAuth, connect])
   useEffect(() => {
     if (currentUser == null) {
       return
