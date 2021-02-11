@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
 
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'compiled'),
+      path: path.resolve(__dirname, 'compiled-cloud'),
     },
 
     devtool: 'inline-source-map',
@@ -185,9 +185,9 @@ module.exports = (env, argv) => {
       minimize: true,
     }
     if (process.env.TARGET === 'electron') {
-      config.output.path = path.resolve(__dirname, 'electron/compiled')
+      config.output.path = path.resolve(__dirname, 'electron/compiled-cloud')
     } else {
-      config.output.publicPath = '/'
+      config.output.publicPath = '/compiled-cloud'
     }
   }
 

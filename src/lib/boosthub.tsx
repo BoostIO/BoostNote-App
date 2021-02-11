@@ -28,7 +28,7 @@ export function getBoostHubTeamPageUrl(teamName: string) {
   if (process.env.NODE_ENV !== 'production') {
     return `http://localhost:3004/#/${teamName}`
   }
-  return join(getPathByName('app'), `./compiled/cloud/index.html#/${teamName}`)
+  return join(getPathByName('app'), `./compiled-cloud/index.html#/${teamName}`)
 }
 
 export function getBoostHubTeamIconUrl(location: string) {
@@ -38,7 +38,7 @@ export function getBoostHubTeamIconUrl(location: string) {
 export const boostHubTeamsCreatePageUrl =
   process.env.NODE_ENV !== 'production'
     ? `http://localhost:3004/#/cooperate`
-    : join(getPathByName('app'), `./compiled/cloud/index.html#/cooperate`)
+    : join(getPathByName('app'), `./compiled-cloud/index.html#/cooperate`)
 
 export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
 

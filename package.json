@@ -20,6 +20,8 @@
     "build:electron": "npm run build:electron-renderer && npm run build:electron-main",
     "build:electron-renderer": "rimraf electron/compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
     "build:electron-main": "rimraf electron/index.js && env-cmd ts-node -P tsconfig-webpack.json scripts/build-electron-main",
+    "build:electron-cloud": "env-cmd cross-env NODE_ENV=production TARGET=electron TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.cloud.config.ts",
+    "build:cloud": "env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.cloud.config.ts",
     "build:android": "rimraf android/app/src/main/assets/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=android webpack --config webpack.mobile.config.ts --mode production",
     "build:ios": "rimraf ios/BoostNote/BoostNote/compiled && env-cmd cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=ios webpack --config webpack.mobile.config.ts --mode production",
     "meta": "node scripts/meta.js",
