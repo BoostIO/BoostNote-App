@@ -219,6 +219,8 @@ const StyledEditableInput = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 0;
+      display: flex;
+      align-items: center;
     }
   }
 `

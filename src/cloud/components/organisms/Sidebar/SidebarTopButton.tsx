@@ -139,6 +139,9 @@ const StyledSidebarTopButton = styled.button`
     text-align: center;
     flex: 0 0 auto;
     padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .flex {

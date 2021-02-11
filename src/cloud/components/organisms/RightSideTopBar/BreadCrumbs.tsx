@@ -225,9 +225,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
       {isTabletOrMobile ? (
         <Flexbox flex='0 0 auto' className='padded'>
           <div className='bread-crumb-link' onClick={showParentFolderListPopup}>
-            <span>
-              <Icon className='icon' path={mdiDotsHorizontal} size={18} />
-            </span>
+            <Icon className='icon' path={mdiDotsHorizontal} size={18} />
           </div>
           {addedNodes != null && <ToolbarSlashSeparator />}
         </Flexbox>
@@ -241,14 +239,12 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   intent='index'
                   className='bread-crumb-link'
                 >
-                  <span>
-                    <Icon
-                      className='icon'
-                      path={mdiFolderAccountOutline}
-                      size={18}
-                    />
-                    {currentWorkspace.name}
-                  </span>
+                  <Icon
+                    className='icon'
+                    path={mdiFolderAccountOutline}
+                    size={18}
+                  />
+                  {currentWorkspace.name}
                 </TeamLink>
               ) : (
                 <WorkspaceLink
@@ -291,10 +287,8 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   team={team!}
                   className='bread-crumb-link'
                 >
-                  <span>
-                    <Icon className='icon' path={mdiFolderOutline} size={18} />
-                    {directParentFolder.name}
-                  </span>
+                  <Icon className='icon' path={mdiFolderOutline} size={18} />
+                  {directParentFolder.name}
                 </FolderLink>
               ) : (
                 <span>{directParentBreadCrumb.folderLabel}</span>
