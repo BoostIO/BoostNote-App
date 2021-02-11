@@ -8,7 +8,6 @@ import { useRouter } from '../../../lib/router'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { ThemeProvider } from 'styled-components'
 import ButtonLink from '../../atoms/ButtonLink'
-import Button from '../../atoms/Button'
 
 interface ErrorPageProps {
   error: Error
