@@ -158,7 +158,7 @@ const Editor = ({
     token: doc.collaborationToken || doc.id,
     userInfo,
   })
-  console.log(doc, new Date())
+
   useEffect(() => {
     setTitle(getDocTitle(doc))
   }, [doc])

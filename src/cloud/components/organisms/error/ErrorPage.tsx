@@ -8,6 +8,7 @@ import { useRouter } from '../../../lib/router'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { ThemeProvider } from 'styled-components'
 import ButtonLink from '../../atoms/ButtonLink'
+import Button from '../../atoms/Button'
 
 interface ErrorPageProps {
   error: Error
@@ -41,23 +42,39 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
             message={error.message}
             stack={error.stack}
           />
-          <ButtonLink
-            variant='primary'
-            href={
-              currentUser == null
-                ? '/'
-                : teams.length > 0
-                ? `/${teams[0].domain}`
-                : '/cooperate'
-            }
-            style={{
-              display: 'flex',
-              margin: '40px auto 20px',
-              width: 200,
-            }}
-          >
-            {currentUser == null ? 'Go to homepage' : 'Go to workspace'}
-          </ButtonLink>
+
+          {statusCode == null ? (
+            <ButtonLink
+              onClick={() => {
+                location.reload()
+              }}
+              style={{
+                display: 'flex',
+                margin: '40px auto 20px',
+                width: 200,
+              }}
+            >
+              Reload
+            </ButtonLink>
+          ) : (
+            <ButtonLink
+              variant='primary'
+              href={
+                currentUser == null
+                  ? '/'
+                  : teams.length > 0
+                  ? `/${teams[0].domain}`
+                  : '/cooperate'
+              }
+              style={{
+                display: 'flex',
+                margin: '40px auto 20px',
+                width: 200,
+              }}
+            >
+              {currentUser == null ? 'Go to homepage' : 'Go to workspace'}
+            </ButtonLink>
+          )}
           {currentUser == null && statusCode === 401 && (
             <div className='text-center' style={{ marginTop: 20 }}>
               <h3>Or Sign in</h3>

@@ -35,6 +35,7 @@ export interface ButtonProps {
 
   type?: string
   className?: string
+  style?: React.CSSProperties
   disabled?: boolean
   title?: string
   align?: 'left' | 'center' | 'right'
@@ -74,6 +75,7 @@ const Button = React.forwardRef<
       title,
       disabled,
       className,
+      style,
       tabIndex,
       align = 'center',
       id,
@@ -107,6 +109,7 @@ const Button = React.forwardRef<
           align !== 'center' && `button--align-${align}`,
         ])}
         id={id}
+        style={style}
         title={title}
         disabled={disabled}
         tabIndex={tabIndex}

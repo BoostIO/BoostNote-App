@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from '../lib/router'
 import { selectTheme, darkTheme } from '../lib/styled'
 import { ThemeProvider } from 'styled-components'
@@ -83,15 +83,10 @@ const Router = () => {
   const { pathname, search } = useRouter()
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
   const { connect } = useRealtimeConn()
+  const previousPathnameRef = useRef<string | null>(null)
+  const previousSearchRef = useRef<string | null>(null)
 
   const { initGlobalData, initialized, globalData } = useGlobalData()
-  useEffectOnce(() => {
-    ;(async () => {
-      const data = await getGlobalData()
-
-      initGlobalData(data)
-    })()
-  })
   const { currentUser, realtimeAuth } = globalData
 
   useEffect(() => {
@@ -99,6 +94,7 @@ const Router = () => {
       connect(process.env.REALTIME_URL as string, realtimeAuth)
     }
   }, [realtimeAuth, connect])
+
   useEffect(() => {
     if (currentUser == null) {
       return
@@ -133,8 +129,17 @@ const Router = () => {
   })
 
   useEffect(() => {
+    if (
+      previousPathnameRef.current === pathname &&
+      previousSearchRef.current === search
+    ) {
+      return
+    }
     console.info('navigate to ', pathname, search)
+    previousPathnameRef.current = pathname
+    previousSearchRef.current = search
     nProgress.start()
+
     const pageSpec = getPageComponent(pathname)
     if (pageSpec == null) {
       setPageInfo(null)
@@ -144,12 +149,21 @@ const Router = () => {
 
     const abortController = new AbortController()
     if (pageSpec.getInitialProps != null) {
-      pageSpec
-        .getInitialProps({ pathname, search, signal: abortController.signal })
-        .then((data) => {
+      Promise.all([
+        initialized ? null : getGlobalData(),
+        pageSpec.getInitialProps({
+          pathname,
+          search,
+          signal: abortController.signal,
+        }),
+      ])
+        .then(([globalData, pageData]) => {
+          if (globalData != null) {
+            initGlobalData(globalData)
+          }
           setPageInfo({
             Component: pageSpec.Component,
-            pageProps: data,
+            pageProps: pageData,
           })
           nProgress.done()
         })
@@ -159,6 +173,12 @@ const Router = () => {
             console.warn(error)
           } else {
             console.error(error)
+            if (!initialized) {
+              initGlobalData({
+                teams: [],
+                invites: [],
+              })
+            }
 
             setPageInfo({
               Component: ErrorPage,
@@ -168,8 +188,6 @@ const Router = () => {
             })
             nProgress.done()
           }
-
-          // Show error page
         })
     } else {
       setPageInfo({
@@ -187,7 +205,7 @@ const Router = () => {
     // Determine which page to show and how to fetch it
 
     // How to fetch does exist in get initial props so we need to determine the component
-  }, [pathname, search])
+  }, [pathname, search, initialized, initGlobalData])
 
   if (!initialized) {
     return <div>Fetching global data...</div>
