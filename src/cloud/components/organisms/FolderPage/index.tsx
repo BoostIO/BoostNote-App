@@ -2,7 +2,6 @@ import React, { useMemo, useEffect, useCallback, useState } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import ColoredBlock from '../../atoms/ColoredBlock'
-import { getTeamURL, getFolderURL } from '../../../lib/utils/patterns'
 import { useTitle } from 'react-use'
 import { useModal } from '../../../lib/stores/modal'
 import {
@@ -30,9 +29,6 @@ import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import AppLayout from '../../layouts/AppLayout'
 import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
-import { useRouter } from '../../../lib/router'
-
-const folderIdRegex = new RegExp('(?:/[A-z0-9]*-)([A-z0-9]*)$')
 
 enum FolderHeaderActions {
   newDoc = 0,
@@ -50,7 +46,6 @@ const FolderPage = () => {
     createDocHandler,
     createFolderHandler,
   } = useNav()
-  const router = useRouter()
   const { openModal } = useModal()
   const { openEmojiPicker } = useEmojiPicker()
   const [sending, setSending] = useState<number>()
@@ -93,18 +88,6 @@ const FolderPage = () => {
 
   useTitle(pageTitle)
 
-  const currentAsPath = useMemo(() => {
-    if (team == null) {
-      return '/'
-    }
-
-    if (currentFolder == null) {
-      return getTeamURL(team)
-    } else {
-      return `${getTeamURL(team)}${getFolderURL(currentFolder)}`
-    }
-  }, [team, currentFolder])
-
   const onEmojiClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       openEmojiPicker(event, {
@@ -114,26 +97,6 @@ const FolderPage = () => {
     },
     [currentFolder, openEmojiPicker]
   )
-
-  // useEffect(() => {
-  //   if (router.asPath === currentAsPath) {
-  //     return
-  //   }
-
-  //   const prevPathMatch = router.asPath.match(folderIdRegex)
-  //   const currentPathMatch = currentAsPath.match(folderIdRegex)
-  //   if (
-  //     prevPathMatch == null ||
-  //     currentPathMatch == null ||
-  //     prevPathMatch[1] !== currentPathMatch[1]
-  //   ) {
-  //     return
-  //   }
-
-  //   router.replace('/[teamId]/[resourceId]', currentAsPath, {
-  //     shallow: true,
-  //   })
-  // }, [currentAsPath, router, setCurrentPath])
 
   useEffect(() => {
     if (currentFolder == null) {

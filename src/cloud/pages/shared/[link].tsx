@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   SharePageDataResponseBody,
   getSharedPagedData,
@@ -13,11 +13,19 @@ import { inputStyle, primaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { getSharedLink } from '../../api/share'
 import { Spinner } from '../../components/atoms/Spinner'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { useRealtimeConn } from '../../lib/stores/realtimeConn'
 
 const SharedPage = (props: SharePageDataResponseBody) => {
   const [fetching, setFetching] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+
+  const { connect } = useRealtimeConn()
+  useEffect(() => {
+    if ('auth' in props) {
+      connect(process.env.REALTIME_URL as string, props.auth)
+    }
+  }, [props, connect])
 
   const [currentDoc, setCurrentDoc] = useState(() => {
     if ('doc' in props) {
@@ -61,10 +69,9 @@ const SharedPage = (props: SharePageDataResponseBody) => {
     [fetching, password, props.link]
   )
 
-  if (currentDoc != null) {
-    return <SharedDocPage doc={currentDoc} />
+  if (currentDoc != null && 'token' in props) {
+    return <SharedDocPage doc={currentDoc} token={props.token} />
   }
-
   return (
     <StyledDocPage>
       <SharePageTopbar />

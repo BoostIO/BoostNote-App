@@ -6,6 +6,8 @@ export type SharePageDataResponseBody =
   | {
       link: string
       doc: SerializedDoc
+      auth: string
+      token: string
     }
   | { link: string; requireAction: 'password' }
 

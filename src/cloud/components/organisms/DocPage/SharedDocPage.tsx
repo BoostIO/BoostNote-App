@@ -9,14 +9,14 @@ import Spinner from '../../../components/atoms/CustomSpinner'
 import ColoredBlock from '../../../components/atoms/ColoredBlock'
 import SharePageTopbar from '../../../components/organisms/SharePageTopBar'
 import { SerializedDoc } from '../../../interfaces/db/doc'
-import { realtimeUrl } from '../../../lib/consts'
 import MarkdownView from '../../atoms/MarkdownView'
 
 interface SharedDocPageProps {
   doc: SerializedDoc
+  token: string
 }
 
-const SharedDocPage = ({ doc }: SharedDocPageProps) => {
+const SharedDocPage = ({ token }: SharedDocPageProps) => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userInfo] = useState(() => ({
@@ -29,8 +29,7 @@ const SharedDocPage = ({ doc }: SharedDocPageProps) => {
   const [timedOut, setTimedOut] = useState(false)
 
   const [realtime, connState, otherUsers] = useRealtime({
-    documentID: doc.id,
-    url: realtimeUrl,
+    token,
     userInfo: userInfo,
   })
 

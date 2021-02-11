@@ -97,7 +97,7 @@ const AccountDeletePage = () => {
     return (
       <ErrorPage
         error={{
-          statusCode: 403,
+          name: 'Forbidden',
           message: 'You need to login in order to access this content.',
         }}
       />
