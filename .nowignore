@@ -1,5 +1,0 @@
-.env.production
-.env
-.env.build
-.env.staging
-dist
