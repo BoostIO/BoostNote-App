@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
     entry: ['./src/cloud/index.tsx'],
 
     output: {
-      filename: '[name].[contenthash].js',
+      filename: '[name].[hash].js',
       path: path.resolve(__dirname, 'compiled-cloud'),
     },
 
@@ -120,6 +120,23 @@ module.exports = (env, argv) => {
       // enable HMR on the server
 
       before: function (app, server) {
+        app.use((req, res, next) => {
+          res.setHeader(
+            'Access-Control-Allow-Origin',
+            process.env.BOOST_HUB_BASE_URL
+          )
+          res.setHeader(
+            'Access-Control-Allow-Methods',
+            'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+          )
+          res.setHeader(
+            'Access-Control-Allow-Headers',
+            'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Cookie, Set-Cookie'
+          )
+          res.setHeader('Access-Control-Allow-Credentials', 'true')
+          next()
+        })
+
         app.use(
           '/app/codemirror/mode',
           express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
@@ -177,7 +194,7 @@ module.exports = (env, argv) => {
       'webpack/hot/only-dev-server',
       ...(config.entry as string[]),
     ]
-    config.output.publicPath = 'http://localhost:3004/'
+    config.output.publicPath = '/'
   }
 
   if (argv.mode === 'production') {
@@ -187,7 +204,7 @@ module.exports = (env, argv) => {
     if (process.env.TARGET === 'electron') {
       config.output.path = path.resolve(__dirname, 'electron/compiled-cloud')
     } else {
-      config.output.publicPath = '/compiled-cloud'
+      config.output.publicPath = '/'
     }
   }
 

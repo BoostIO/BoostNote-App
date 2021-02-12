@@ -3,19 +3,12 @@ import { UrlObject, parse as parseUrl } from 'url'
 import { createStoreContext } from '../../lib/context'
 import { useState, useCallback, useEffect } from 'react'
 import { normalizeLocation } from '../../lib/url'
-import {
-  createBrowserHistory,
-  createHashHistory,
-  LocationDescriptorObject,
-} from 'history'
+import { createBrowserHistory, LocationDescriptorObject } from 'history'
 import { parse as parseQuery } from 'querystring'
-import { appIsElectron } from '../../lib/platform'
 
-const browserHistory = appIsElectron
-  ? createHashHistory<unknown>()
-  : createBrowserHistory<unknown>({
-      forceRefresh: false,
-    })
+const browserHistory = createBrowserHistory<unknown>({
+  forceRefresh: false,
+})
 
 export type Url = UrlObject | string
 
