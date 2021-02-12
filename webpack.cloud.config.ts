@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
     entry: ['./src/cloud/index.tsx'],
 
     output: {
-      filename: 'bundle.js',
+      filename: '[name].[contenthash].js',
       path: path.resolve(__dirname, 'compiled-cloud'),
     },
 
