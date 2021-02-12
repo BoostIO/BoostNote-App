@@ -10,7 +10,7 @@ const ThemeLink = ({ codeMirrorTheme, appTheme }: ThemeLinkProps) => {
   if (codeMirrorTheme === 'default') {
     return appTheme === 'light' ? null : (
       <link
-        href={`app/codemirror/theme/material-darker.css`}
+        href={`/app/codemirror/theme/material-darker.css`}
         rel='stylesheet'
       />
     )
@@ -21,7 +21,7 @@ const ThemeLink = ({ codeMirrorTheme, appTheme }: ThemeLinkProps) => {
   }
   return (
     <link
-      href={`app/codemirror/theme/${codeMirrorTheme}.css`}
+      href={`/app/codemirror/theme/${codeMirrorTheme}.css`}
       rel='stylesheet'
     />
   )

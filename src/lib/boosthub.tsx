@@ -25,20 +25,21 @@ export function openLoginPage(state: string) {
 }
 
 export function getBoostHubTeamPageUrl(teamName: string) {
-  if (process.env.NODE_ENV !== 'production') {
-    return `http://localhost:3004/#/${teamName}`
-  }
-  return join(getPathByName('app'), `./compiled-cloud/index.html#/${teamName}`)
+  return `${process.env.BOOST_HUB_BASE_URL}/${teamName}`
+  // if (process.env.NODE_ENV !== 'production') {
+  //   return `http://localhost:3004/#/${teamName}`
+  // }
+  // return join(getPathByName('app'), `./compiled-cloud/index.html#/${teamName}`)
 }
 
 export function getBoostHubTeamIconUrl(location: string) {
   return `${boostHubBaseUrl}/api/files/icons/${location}`
 }
 
-export const boostHubTeamsCreatePageUrl =
-  process.env.NODE_ENV !== 'production'
-    ? `http://localhost:3004/#/cooperate`
-    : join(getPathByName('app'), `./compiled-cloud/index.html#/cooperate`)
+export const boostHubTeamsCreatePageUrl = `${process.env.BOOST_HUB_BASE_URL}/cooperate`
+// process.env.NODE_ENV !== 'production'
+//   ? `http://localhost:3004/#/cooperate`
+//   : join(getPathByName('app'), `./compiled-cloud/index.html#/cooperate`)
 
 export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
 
