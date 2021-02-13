@@ -14,6 +14,8 @@ import { moreHeaderId } from '../components/organisms/Sidebar/SidebarMore'
 import { mdiDomain } from '@mdi/js'
 import Icon from '../components/atoms/Icon'
 import { baseIconStyle } from '../lib/styled/styleFunctions'
+import { useGlobalData } from '../lib/stores/globalData'
+import { GetInitialPropsParameters } from '../interfaces/pages'
 
 const CooperatePage = () => {
   const [name, setName] = useState<string>('')
@@ -24,6 +26,7 @@ const CooperatePage = () => {
   const navigateToTeam = useNavigateToTeam()
   const navigateToDoc = useNavigateToDoc()
   const { updateDocsMap } = useNav()
+  const { setTeamInGlobal } = useGlobalData()
   const { setPartialPageData } = usePage()
   const { setToLocalStorage } = useSidebarCollapse()
   const [iconFile, setIconFile] = useState<File | null>(null)
@@ -66,6 +69,7 @@ const CooperatePage = () => {
           const { icon } = await updateTeamIcon(team, iconFile)
           team.icon = icon
         }
+        setTeamInGlobal(team)
 
         if (doc != null) {
           updateDocsMap([doc.id, doc])
@@ -96,6 +100,7 @@ const CooperatePage = () => {
       updateDocsMap,
       setPartialPageData,
       setToLocalStorage,
+      setTeamInGlobal,
       iconFile,
     ]
   )
@@ -143,6 +148,10 @@ const CooperatePage = () => {
       </Container>
     </Page>
   )
+}
+
+CooperatePage.getInitialProps = async (_params: GetInitialPropsParameters) => {
+  return {}
 }
 
 export default CooperatePage

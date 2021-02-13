@@ -345,6 +345,7 @@ function getPageComponent(pathname: string): PageSpec | null {
       case 'cooperate':
         return {
           Component: CooperatePage,
+          getInitialProps: CooperatePage.getInitialProps,
         }
       case 'settings':
         return {

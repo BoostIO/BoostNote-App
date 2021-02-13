@@ -18,7 +18,7 @@ import Flexbox from '../atoms/Flexbox'
 import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
 import { useToast } from '../../lib/stores/toast'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
