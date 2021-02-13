@@ -38,7 +38,11 @@ function useGlobalDataStore() {
     (team: SerializedTeam) => {
       const { teams } = globalData
       const teamIndex = teams.findIndex((t) => t.id === team.id)
-      teams[teamIndex] = team
+      if (teamIndex === -1) {
+        teams.push(team)
+      } else {
+        teams[teamIndex] = team
+      }
       setPartialGlobalData({ teams })
     },
     [globalData, setPartialGlobalData]
