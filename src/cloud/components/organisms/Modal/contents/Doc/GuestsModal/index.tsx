@@ -10,6 +10,7 @@ import Icon from '../../../../../atoms/Icon'
 import { guestsPerMember } from '../../../../../../lib/subscription'
 import plur from 'plur'
 import GuestInvitesSection from '../../../../../molecules/GuestInvitesSection'
+import { PrimaryAnchor } from '../../../../settings/styled'
 
 interface GuestsModalProps {
   docId: string
@@ -59,13 +60,13 @@ const GuestsModal = ({ docId, teamId }: GuestsModalProps) => {
                 permissions.length * guestsPerMember - guestsMap.size
               } remaining ${plur('seat', permissions.length)}. `
             : 'No Remaining seats. '}
-          <a
+          <PrimaryAnchor
             target='_blank'
             rel='noreferrer'
-            href='https://intercom.help/boostnote-for-teams/en/articles/4874279'
+            href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
           >
             See how it works <Icon path={mdiArrowRight} />
-          </a>
+          </PrimaryAnchor>
         </p>
         <GuestInvitesSection teamId={teamId} docId={docId} />
       </Container>

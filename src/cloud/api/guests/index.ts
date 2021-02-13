@@ -13,7 +13,7 @@ export interface CreateGuestResponseBody {
 }
 
 export async function createGuest(body: CreateGuestRequestBody) {
-  const data = await callApi<CreateGuestResponseBody>(`/api/guests`, {
+  const data = await callApi<CreateGuestResponseBody>(`api/guests`, {
     json: body,
     method: 'post',
   })
@@ -30,7 +30,7 @@ export interface GetGuestsResponseBody {
 }
 
 export async function getGuests(filters: GetGuestsRequestBody) {
-  return callApi<GetGuestsResponseBody>(`/api/guests?${stringify(filters)}`)
+  return callApi<GetGuestsResponseBody>(`api/guests?${stringify(filters)}`)
 }
 
 export interface DeleteGuestDocResponseBody {
@@ -39,7 +39,7 @@ export interface DeleteGuestDocResponseBody {
 
 export async function deleteGuestDoc(guestId: string, docId: string) {
   return callApi<DeleteGuestDocResponseBody>(
-    `/api/guests/${guestId}/docs/${docId}`,
+    `api/guests/${guestId}/docs/${docId}`,
     {
       method: 'delete',
     }
@@ -57,6 +57,6 @@ export interface GetGuestsEmailsResponseBody {
 
 export async function getGuestsEmails(filters: GetGuestsEmailsRequestBody) {
   return callApi<GetGuestsEmailsResponseBody>(
-    `/api/guests/emails?${stringify(filters)}`
+    `api/guests/emails?${stringify(filters)}`
   )
 }

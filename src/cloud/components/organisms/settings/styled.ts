@@ -93,7 +93,12 @@ export const SectionSubtleText = styled.p`
 `
 
 export const PrimaryAnchor = styled.a`
-  color: ${({ theme }) => theme.primaryTextColor};
+  color: ${({ theme }) => theme.primaryBackgroundColor};
+  text-decoration: none;
+  &:hover {
+    color: ${({ theme }) => theme.darkerPrimaryBackgroundColor};
+    text-decoration: underline;
+  }
 `
 
 export const SectionMargin = styled.section`
