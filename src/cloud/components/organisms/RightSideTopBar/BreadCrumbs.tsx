@@ -26,6 +26,7 @@ import { isChildNode } from '../../../lib/dom'
 import Flexbox from '../../atoms/Flexbox'
 import { useContextMenuKeydownHandler } from '../../../lib/keyboard'
 import { useMediaQuery } from 'react-responsive'
+import { usePage } from '../../../lib/stores/pageStore'
 
 interface BreadCrumbsProps {
   team: SerializedTeam
@@ -52,6 +53,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
   ] = useState(false)
   const parentFolderListPopupRef = useRef<HTMLDivElement>(null)
   const [contextOffset, setContextOffset] = useState(0)
+  const { currentUserPermissions } = usePage()
 
   useEffect(() => {
     if (parentFolderListPopupRef.current != null) {
@@ -129,6 +131,18 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
   useContextMenuKeydownHandler(parentFolderListPopupRef)
 
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1080 })
+
+  if (currentUserPermissions == null) {
+    return (
+      <StyledBreadCrumbs>
+        <Flexbox flex='0 0 auto' className='padded'>
+          <span>Shared</span>
+          {addedNodes != null && <ToolbarSlashSeparator />}
+        </Flexbox>
+        {addedNodes}
+      </StyledBreadCrumbs>
+    )
+  }
 
   return (
     <StyledBreadCrumbs>

@@ -24,6 +24,8 @@ export type SseEventType =
   | 'teamUpdate'
   | 'templateUpdate'
   | 'templateDelete'
+  | 'guestUpdate'
+  | 'guestRemoval'
 
 export interface SerializableAppEventProps {
   id: string

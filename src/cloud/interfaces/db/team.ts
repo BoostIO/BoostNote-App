@@ -11,6 +11,7 @@ export interface SerializableTeamProps {
   creationsCounter: number
   icon?: SerializedIcon
   state: TeamOnboardingState
+  personal: boolean
 }
 
 export interface SerializedUnserializableTeamProps {

@@ -43,7 +43,7 @@ const ViewPage = ({
 }: ViewPageProps) => {
   const { hoverSidebarOn } = usePreferences()
   const { updateDocsMap, deleteDocHandler } = useNav()
-  const { setPartialPageData } = usePage()
+  const { setPartialPageData, currentUserPermissions } = usePage()
   const { pushMessage } = useToast()
 
   const unarchiveHandler = useCallback(async () => {
@@ -73,7 +73,9 @@ const ViewPage = ({
           right: (
             <>
               <StyledTopbarVerticalSplit className='transparent' />
-              <DocBookmark currentDoc={doc} />
+              {currentUserPermissions != null && (
+                <DocBookmark currentDoc={doc} />
+              )}
               <StyledTopbarVerticalSplit className='transparent' />
               <DocContextMenu
                 currentDoc={doc}
@@ -89,10 +91,14 @@ const ViewPage = ({
       {doc.archivedAt != null && (
         <ColoredBlock variant='warning' className='float-on-top'>
           <p>The document has been archived.</p>
-          <CustomButton onClick={unarchiveHandler}>Unarchive</CustomButton>
-          <CustomButton onClick={() => deleteDocHandler(doc)}>
-            Delete
-          </CustomButton>
+          {currentUserPermissions != null && (
+            <>
+              <CustomButton onClick={unarchiveHandler}>Unarchive</CustomButton>
+              <CustomButton onClick={() => deleteDocHandler(doc)}>
+                Delete
+              </CustomButton>
+            </>
+          )}
         </ColoredBlock>
       )}
       <StyledViewDocLayout>

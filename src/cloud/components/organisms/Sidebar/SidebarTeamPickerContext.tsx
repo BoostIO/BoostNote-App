@@ -49,6 +49,9 @@ const SidebarTeamPickerContext = ({
   useUpDownNavigationListener(pickerRef)
 
   const teamsList = useMemo(() => {
+    if (currentUser == null) {
+      return null
+    }
     const currentTeamId = team != null ? team.id : ''
     return (
       <Scrollable tabIndex={-1}>
@@ -73,6 +76,9 @@ const SidebarTeamPickerContext = ({
                   <TeamSubtitle>
                     - {team.permissions.length}{' '}
                     {plur('Member', team.permissions.length)}
+                    {!team.permissions
+                      .map((p) => p.userId)
+                      .includes(currentUser.id) && ` ( Guest )`}
                   </TeamSubtitle>
                 </TeamLabel>
               </TeamContainer>
@@ -114,7 +120,7 @@ const SidebarTeamPickerContext = ({
         </CustomLink>
       </Scrollable>
     )
-  }, [teams, team, setClosed, invites])
+  }, [teams, team, setClosed, invites, currentUser])
 
   if (currentUser == null) {
     return null

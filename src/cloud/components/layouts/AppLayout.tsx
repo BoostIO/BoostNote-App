@@ -53,6 +53,7 @@ import {
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { getAccessToken, usingElectron } from '../../lib/stores/electron'
 import { sseUrl } from '../../lib/consts'
+import { SerializedGuest } from '../../interfaces/db/guest'
 
 interface AppLayoutProps {
   rightLayout: RightLayoutWithTopBarProps
@@ -82,6 +83,9 @@ const AppLayout = ({
     updateSinglePermission,
     removeSinglePermission,
     setPartialPageData,
+    updateGuestsMap,
+    setGuestsMap,
+    currentUserPermissions,
   } = usePage()
   const eventSourceRef = useRef<EventSource | undefined>()
   const {
@@ -199,20 +203,24 @@ const AppLayout = ({
   const openCreateFolderModal = useCallback(() => {
     openModal(<CreateFolderModal parentFolderId={currentParentFolderId} />)
   }, [openModal, currentParentFolderId])
-  const teamIsNull = team == null
+
   useEffect(() => {
-    if (teamIsNull) {
+    if (team == null || currentUserPermissions == null) {
       return
     }
     newFolderEventEmitter.listen(openCreateFolderModal)
     return () => {
       newFolderEventEmitter.unlisten(openCreateFolderModal)
     }
-  }, [teamIsNull, openCreateFolderModal])
+  }, [team, currentUserPermissions, openCreateFolderModal])
 
   useEffect(() => {
     const handler = () => {
-      if (!settingsModalIsClosed || modalContent != null) {
+      if (
+        !settingsModalIsClosed ||
+        modalContent != null ||
+        currentUserPermissions == null
+      ) {
         return
       }
       if (showGlobalSearch) {
@@ -226,6 +234,7 @@ const AppLayout = ({
       searchEventEmitter.unlisten(handler)
     }
   }, [
+    currentUserPermissions,
     modalContent,
     settingsModalIsClosed,
     setShowGlobalSearch,
@@ -333,6 +342,32 @@ const AppLayout = ({
       }
     },
     [updateUserInPermissions]
+  )
+
+  const guestChangeEventHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      const { guest } = event.data as { guest?: SerializedGuest | string }
+      if (guest == null) {
+        return
+      }
+
+      if (event.type === 'guestRemoval') {
+        setGuestsMap((prevMap) => {
+          const newMap = new Map(prevMap)
+          newMap.delete(typeof guest === 'string' ? guest : guest!.id)
+          return newMap
+        })
+        return
+      }
+
+      if (typeof guest === 'string') {
+        return
+      }
+
+      updateGuestsMap([guest.id, guest])
+      return
+    },
+    [setGuestsMap, updateGuestsMap]
   )
 
   const subscriptionChangeEventHandler = useCallback(
@@ -510,11 +545,16 @@ const AppLayout = ({
           case 'workspaceUpdate':
             workspaceChangeEventHandler(event)
             break
+          case 'guestRemoval':
+          case 'guestUpdate':
+            guestChangeEventHandler(event)
+            break
         }
       }
     }
     return
   }, [
+    guestChangeEventHandler,
     eventSourceResourceUpdateHandler,
     eventSourceSetupCounter,
     userRemovalEventHandler,

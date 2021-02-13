@@ -2,6 +2,7 @@ import styled from '../../../lib/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 
 export const StyledTeamEditForm = styled.form`
+  text-align: left;
   margin: 0 auto;
   color: ${({ theme }) => theme.baseTextColor};
 
@@ -73,7 +74,7 @@ export const StyledTeamEditForm = styled.form`
   .submit-row {
     display: flex;
     width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-top: ${({ theme }) => theme.space.xlarge}px;
   }

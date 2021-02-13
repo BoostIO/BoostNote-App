@@ -215,6 +215,7 @@ const StyledButton = styled.button`
   }
 
   &.button--variant-outline-primary {
+    background-color: transparent;
     border-color: ${({ theme }) => theme.primaryBackgroundColor};
     color: ${({ theme }) => theme.primaryTextColor};
 
@@ -228,7 +229,8 @@ const StyledButton = styled.button`
   }
 
   &.button--variant-outline-secondary {
-    border-color: ${({ theme }) => theme.whiteTextColor};
+    background-color: transparent;
+    border-color: ${({ theme }) => theme.secondaryBackgroundColor};
     color: ${({ theme }) => theme.whiteTextColor};
 
     &:hover:not(:disabled),

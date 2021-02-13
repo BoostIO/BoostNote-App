@@ -18,11 +18,13 @@ import { format } from 'date-fns'
 import { useUpDownNavigationListener } from '../../../../../../lib/keyboard'
 import Button from '../../../../../atoms/Button'
 import styled from '../../../../../../lib/styled'
+import { SerializedUserTeamPermissions } from '../../../../../../interfaces/db/userTeamPermissions'
 
 interface RevisionModalNavigatorProps {
   revisions: SerializedRevision[]
   revisionIndex?: number
   fetching: boolean
+  currentUserPermissions?: SerializedUserTeamPermissions
   menuRef: React.RefObject<HTMLDivElement>
   setRevisionIndex: (index: number) => void
   subscription?: SerializedSubscription
@@ -41,6 +43,7 @@ const RevisionModalNavigator = ({
   currentPage,
   totalPages,
   fetchRevisions,
+  currentUserPermissions,
 }: RevisionModalNavigatorProps) => {
   useUpDownNavigationListener(menuRef)
 
@@ -64,7 +67,7 @@ const RevisionModalNavigator = ({
           <StyledRevisionItem
             key={rev.id}
             id={`rev-${rev.id}`}
-            disabled={subscription == null}
+            disabled={subscription == null && currentUserPermissions != null}
             className={cc([revisionIndex === rev.id && 'active'])}
             onClick={() => setRevisionIndex(rev.id)}
           >
@@ -78,7 +81,7 @@ const RevisionModalNavigator = ({
               </StyledRevisionCreators>
             </StyledWrapper>
             <StyledRevisionDateTime>
-              {format(new Date(rev.createdAt), 'HH:mm, dd MMMM u')}
+              {format(new Date(rev.created), 'HH:mm, dd MMMM u')}
             </StyledRevisionDateTime>
           </StyledRevisionItem>
         ))}
