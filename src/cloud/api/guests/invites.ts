@@ -13,7 +13,7 @@ export interface GetGuestInvitesResponseBody {
 
 export async function getGuestInvites(filters: GetGuestInvitesRequestBody) {
   return callApi<GetGuestInvitesResponseBody>(
-    `/api/guests/invites?${stringify(filters)}`
+    `api/guests/invites?${stringify(filters)}`
   )
 }
 
@@ -28,7 +28,7 @@ export interface CreateGuestInviteResponseBody {
 }
 
 export async function createGuestInvite(body: CreateInviteRequestBody) {
-  const data = callApi<CreateGuestInviteResponseBody>(`/api/guests/invites`, {
+  const data = callApi<CreateGuestInviteResponseBody>(`api/guests/invites`, {
     json: body,
     method: 'post',
   })
@@ -36,5 +36,5 @@ export async function createGuestInvite(body: CreateInviteRequestBody) {
 }
 
 export async function cancelGuestInvite(inviteId: string) {
-  return callApi<any>(`/api/guests/invites/${inviteId}`, { method: 'delete' })
+  return callApi<any>(`api/guests/invites/${inviteId}`, { method: 'delete' })
 }

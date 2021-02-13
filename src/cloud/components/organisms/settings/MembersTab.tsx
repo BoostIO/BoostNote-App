@@ -8,6 +8,7 @@ import {
   StyledMembername,
   SectionSelect,
   SectionDescription,
+  PrimaryAnchor,
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
@@ -600,13 +601,13 @@ const MembersTab = () => {
                   team who you want to work with on specific documents.
                   <br /> They can be invited to individual documents but not an
                   entire workspace.{` `}
-                  <a
+                  <PrimaryAnchor
                     target='_blank'
                     rel='noreferrer'
-                    href='https://intercom.help/boostnote-for-teams/en/articles/4874279'
+                    href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
                   >
                     See how it works <Icon path={mdiArrowRight} />
-                  </a>
+                  </PrimaryAnchor>
                 </SectionDescription>
                 <CustomButton
                   variant='primary'
