@@ -11,7 +11,7 @@ import Icon from '../../components/atoms/Icon'
 import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline } from '@mdi/js'
 import { createTeam } from '../../api/teams'
 import { useNavigateToTeam } from '../../components/atoms/Link/TeamLink'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
 const SettingsUsePage = () => {
