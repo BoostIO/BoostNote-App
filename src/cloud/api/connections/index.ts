@@ -35,10 +35,12 @@ export interface GetUserConnectionFiltersResponseBody {
 export async function getUserServiceConnections(
   query?: GetConnectionFilterQuery
 ) {
-  const { data } = await callApi(`api/users/connections`, {
-    search: query as any,
-  })
-  return data as GetUserConnectionFiltersResponseBody
+  return callApi<GetUserConnectionFiltersResponseBody>(
+    `api/users/connections`,
+    {
+      search: query as any,
+    }
+  )
 }
 
 export async function deleteUserServiceConnection(

@@ -19,6 +19,7 @@ import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
 import { useToast } from '../../lib/stores/toast'
 import { useRouter } from '../../lib/router'
+import { getTeamURL } from '../../lib/utils/patterns'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -105,11 +106,10 @@ const SettingsTeamForm = ({
         console.log(router.pathname)
         const subPath = router.pathname.split('/')
         subPath.splice(0, 2)
-        console.log(subPath)
-        const newUrl = `/${updatedTeam.id}${
+        const newUrl = `${getTeamURL(updatedTeam)}${
           subPath.length > 0 ? `/${subPath.join('/')}` : ''
         }`
-        router.replace(newUrl)
+        router.push(newUrl)
       } catch (error) {
         pushMessage({
           title: 'Error',
