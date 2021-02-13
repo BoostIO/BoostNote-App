@@ -126,6 +126,12 @@ const StyledSidebarTeamSubLimit = styled.div`
     text-decoration: none;
   }
 
+  h6 {
+    font-size: ${({ theme }) => theme.fontSizes.default}px;
+    margin: 0;
+    color: ${({ theme }) => theme.primaryTextColor};
+  }
+
   .progress-label {
     position: absolute;
     top: 0;
