@@ -50,6 +50,8 @@ import UploadListPage from '../pages/[teamId]/uploads'
 import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
+import SettingsPage from '../pages/settings'
+import SettingsUsePage from '../pages/settings/use'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -291,6 +293,13 @@ function getPageComponent(pathname: string): PageSpec | null {
     }
   }
 
+  if (splittedPathnames[0] === 'settings' && splittedPathnames[1] === 'use') {
+    return {
+      Component: SettingsUsePage,
+      getInitialProps: SettingsUsePage.getInitialProps,
+    }
+  }
+
   if (splittedPathnames.length >= 2) {
     switch (splittedPathnames[1]) {
       case 'archived':
@@ -336,6 +345,11 @@ function getPageComponent(pathname: string): PageSpec | null {
       case 'cooperate':
         return {
           Component: CooperatePage,
+        }
+      case 'settings':
+        return {
+          Component: SettingsPage,
+          getInitialProps: SettingsPage.getInitialProps,
         }
     }
 

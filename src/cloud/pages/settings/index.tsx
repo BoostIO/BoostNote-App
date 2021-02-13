@@ -17,7 +17,7 @@ import { buildIconUrl } from '../../api/files'
 import Icon from '../../components/atoms/Icon'
 import { mdiAccountCircleOutline } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
-import { useRouter } from '../../../lib/router'
+import { useRouter } from '../../lib/router'
 import { parse as parseQuery } from 'querystring'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
@@ -27,15 +27,15 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
   )
   const [sending, setSending] = useState<boolean>(false)
   const [error, setError] = useState<unknown>()
-  const { push, search } = useRouter()
   const {
     globalData: { teams },
+    setPartialGlobalData,
   } = useGlobalData()
-
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(
     currentUser.icon != null ? buildIconUrl(currentUser.icon.location) : null
   )
+  const { push, search } = useRouter()
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -69,12 +69,15 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
       const query = parseQuery(search.slice(1))
       try {
         await saveUserInfo({ displayName })
+        const user = { ...currentUser!, displayName }
         if (iconFile != null) {
-          await updateUserIcon(iconFile)
+          const { icon } = await updateUserIcon(iconFile)
+          user.icon = icon
         }
+        setPartialGlobalData({ currentUser: user })
         const finalRedirect =
-          typeof query['redirect'] === 'string'
-            ? query['redirect']
+          typeof query.redirect === 'string'
+            ? query.redirect
             : teams.length > 0
             ? getTeamURL(teams[0])
             : `/settings/use`
@@ -85,7 +88,15 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
       }
       setSending(false)
     },
-    [currentUser, displayName, teams, push, iconFile, search]
+    [
+      currentUser,
+      displayName,
+      teams,
+      push,
+      setPartialGlobalData,
+      iconFile,
+      search,
+    ]
   )
 
   return (
