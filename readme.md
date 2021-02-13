@@ -65,7 +65,7 @@ Please copy .env.default file and create a file named `.env` in the root of the 
 npm i
 
 # Run webpack and open browser
-npm run dev
+npm run dev:cloud
 ```
 
 #### Electron app
