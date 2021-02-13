@@ -44,9 +44,9 @@ export async function deleteUserIcon() {
 }
 
 export async function deleteUser(id: string, body: UserFeedbackFormData) {
-  const data = await callApi<DeleteUserResponseBody>(`api/users/${id}/delete`, {
+  const data = await callApi<DeleteUserResponseBody>(`api/users/${id}`, {
     json: body,
-    method: 'put',
+    method: 'delete',
   })
   report('delete_user')
   return data
