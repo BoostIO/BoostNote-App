@@ -13,6 +13,7 @@ import {
   mdiAccountGroupOutline,
   mdiClockOutline,
   mdiLabelMultipleOutline,
+  mdiAccountMultiplePlusOutline,
 } from '@mdi/js'
 import { useToast } from '../../../../../../lib/stores/toast'
 import { zIndexModalsBackground } from '../styled'
@@ -63,6 +64,8 @@ import plur from 'plur'
 import styled from '../../../../../../lib/styled'
 import IconMdi from '../../../../../atoms/IconMdi'
 import DynamicExports from './DynamicExports'
+import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
+import Button from '../../../../../atoms/Button'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -98,7 +101,13 @@ const DocContextMenu = ({
     updateDocHandler,
     updateTemplatesMap,
   } = useNav()
-  const { setPartialPageData, subscription, permissions = [] } = usePage()
+  const {
+    guestsMap,
+    setPartialPageData,
+    subscription,
+    permissions = [],
+    currentUserPermissions,
+  } = usePage()
   const { pushMessage, pushAxiosErrorMessage } = useToast()
   const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
@@ -106,11 +115,20 @@ const DocContextMenu = ({
   const menuRef = useRef<HTMLDivElement>(null)
 
   const usersMap = useMemo(() => {
-    return permissions.reduce((acc, val) => {
+    const users = permissions.reduce((acc, val) => {
       acc.set(val.user.id, val.user)
       return acc
     }, new Map<string, SerializedUser>())
-  }, [permissions])
+
+    guestsMap.forEach((val) => users.set(val.user.id, val.user))
+    return users
+  }, [permissions, guestsMap])
+
+  const guestsOnThisDoc = useMemo(() => {
+    return [...guestsMap.values()].filter((guest) =>
+      (guest.docsIds || []).includes(currentDoc.id)
+    )
+  }, [currentDoc, guestsMap])
 
   const contributorsState = useMemo(() => {
     let allContributors = contributors
@@ -355,113 +373,186 @@ const DocContextMenu = ({
                       ) : (
                         ''
                       )}
-                      {getFormattedDateTime(currentDoc.head.createdAt)}
+                      {getFormattedDateTime(currentDoc.head.created)}
                     </Flexbox>
                   )}
                 </div>
               </div>
               <div className='context__break' />
-              <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiLabelMultipleOutline}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  Labels
-                </label>
-                <div className='context__content'>
-                  <DocTagsList team={team} doc={currentDoc} />
-                </div>
-              </div>
-              <div className='context__break' />
-              <DocShare currentDoc={currentDoc} />
-              <div className='context__break' />
-              {backLinks.length > 0 && (
+              {currentUserPermissions != null && (
                 <>
-                  <div className='context__column'>
+                  <div className='context__row'>
                     <label className='context__label'>
-                      {backLinks.length} {plur('Backlink', backLinks.length)}
+                      <IconMdi
+                        path={mdiLabelMultipleOutline}
+                        size={18}
+                        className='context__icon'
+                      />{' '}
+                      Labels
                     </label>
-                    <ul className='context__list'>
-                      {backLinks.map((doc) => (
-                        <li key={doc.id}>
-                          <DocLink
-                            doc={doc}
-                            team={team}
-                            className='context__backlink'
-                            id={`context__backlink__${doc.id}`}
-                          >
-                            <Icon
-                              path={mdiFileDocumentOutline}
-                              size={18}
-                              className='context__icon'
-                            />
-                            {getDocTitle(doc)}
-                          </DocLink>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className='context__content'>
+                      <DocTagsList team={team} doc={currentDoc} />
+                    </div>
                   </div>
+                  <div className='context__break' />
+                  <DocShare currentDoc={currentDoc} />
+                  <div className='context__row'>
+                    {guestsOnThisDoc.length === 0 ? (
+                      <label className='context__label'>
+                        <Icon
+                          path={mdiAccountMultiplePlusOutline}
+                          className='context__icon'
+                          size={18}
+                        />
+                        Guests
+                        <div className='context__tooltip'>
+                          <div className='context__tooltip__text'>
+                            Guests are outsiders who you want to work with on
+                            specific documents. They can be invited to
+                            individual documents but not entire workspaces.
+                          </div>
+                          ?
+                        </div>
+                      </label>
+                    ) : (
+                      <label className='context__label'>
+                        <Icon
+                          path={mdiAccountMultiplePlusOutline}
+                          className='context__icon'
+                          size={18}
+                        />
+                        {guestsOnThisDoc.length}{' '}
+                        {plur('Guest', guestsOnThisDoc.length)}
+                      </label>
+                    )}
+                    {subscription == null ? (
+                      <button
+                        className='context__badge'
+                        onClick={() =>
+                          openModal(
+                            <GuestsModal
+                              teamId={team.id}
+                              docId={currentDoc.id}
+                            />,
+                            {
+                              classNames: 'largeW fixed-height-large',
+                            }
+                          )
+                        }
+                      >
+                        Upgrade
+                      </button>
+                    ) : (
+                      <Button
+                        size='sm'
+                        onClick={() =>
+                          openModal(
+                            <GuestsModal
+                              teamId={team.id}
+                              docId={currentDoc.id}
+                            />,
+                            {
+                              classNames: 'largeW fixed-height-large',
+                            }
+                          )
+                        }
+                        variant='transparent'
+                      >
+                        {guestsOnThisDoc.length > 0 ? 'Manage' : 'Invite'}
+                      </Button>
+                    )}
+                  </div>
+                  <div className='context__break' />
+                  {backLinks.length > 0 && (
+                    <>
+                      <div className='context__column'>
+                        <label className='context__label'>
+                          {backLinks.length}{' '}
+                          {plur('Backlink', backLinks.length)}
+                        </label>
+                        <ul className='context__list'>
+                          {backLinks.map((doc) => (
+                            <li key={doc.id}>
+                              <DocLink
+                                doc={doc}
+                                team={team}
+                                className='context__backlink'
+                                id={`context__backlink__${doc.id}`}
+                              >
+                                <Icon
+                                  path={mdiFileDocumentOutline}
+                                  size={18}
+                                  className='context__icon'
+                                />
+                                {getDocTitle(doc)}
+                              </DocLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className='context__break' />
+                    </>
+                  )}
+                  <button
+                    className='context__row context__button'
+                    id='dc-context-top-move'
+                    onClick={() => openMoveForm(currentDoc)}
+                    disabled={updating}
+                  >
+                    <Icon
+                      path={mdiArrowRight}
+                      size={18}
+                      className='context__icon'
+                    />
+                    <span>{sendingMove ? '...' : 'Move'}</span>
+                  </button>
+                  <button
+                    className='context__row context__button'
+                    id='dc-context-top-template'
+                    onClick={toggleTemplate}
+                    disabled={sendingTemplate || sendingArchive}
+                  >
+                    <Icon
+                      path={mdiPlusBoxMultipleOutline}
+                      size={18}
+                      className='context__icon'
+                    />
+                    <span>{sendingMove ? '...' : 'Save as a template'}</span>
+                  </button>
+                  <button
+                    className='context__row context__button'
+                    id='dc-context-top-archive'
+                    onClick={toggleArchived}
+                    disabled={
+                      sendingTemplate || sendingTemplate || sendingArchive
+                    }
+                  >
+                    <Icon
+                      path={mdiArchiveOutline}
+                      size={18}
+                      className='context__icon'
+                    />
+                    <span>
+                      {currentDoc.archivedAt != null ? 'Unarchive' : 'Archive'}
+                    </span>
+                  </button>
+                  {currentDoc.archivedAt != null && (
+                    <button
+                      className='context__row context__button'
+                      onClick={() => deleteDocHandler(currentDoc)}
+                      id='dc-context-top-delete'
+                    >
+                      <Icon
+                        path={mdiTrashCan}
+                        size={18}
+                        className='context__icon'
+                      />
+                      <span>{'Delete permanently'}</span>
+                    </button>
+                  )}
                   <div className='context__break' />
                 </>
               )}
-              <button
-                className='context__row context__button'
-                id='dc-context-top-move'
-                onClick={() => openMoveForm(currentDoc)}
-                disabled={updating}
-              >
-                <Icon
-                  path={mdiArrowRight}
-                  size={18}
-                  className='context__icon'
-                />
-                <span>{sendingMove ? '...' : 'Move'}</span>
-              </button>
-              <button
-                className='context__row context__button'
-                id='dc-context-top-template'
-                onClick={toggleTemplate}
-                disabled={sendingTemplate || sendingArchive}
-              >
-                <Icon
-                  path={mdiPlusBoxMultipleOutline}
-                  size={18}
-                  className='context__icon'
-                />
-                <span>{sendingMove ? '...' : 'Save as a template'}</span>
-              </button>
-              <button
-                className='context__row context__button'
-                id='dc-context-top-archive'
-                onClick={toggleArchived}
-                disabled={sendingTemplate || sendingTemplate || sendingArchive}
-              >
-                <Icon
-                  path={mdiArchiveOutline}
-                  size={18}
-                  className='context__icon'
-                />
-                <span>
-                  {currentDoc.archivedAt != null ? 'Unarchive' : 'Archive'}
-                </span>
-              </button>
-              {currentDoc.archivedAt != null && (
-                <button
-                  className='context__row context__button'
-                  onClick={() => deleteDocHandler(currentDoc)}
-                  id='dc-context-top-delete'
-                >
-                  <Icon
-                    path={mdiTrashCan}
-                    size={18}
-                    className='context__icon'
-                  />
-                  <span>{'Delete permanently'}</span>
-                </button>
-              )}
-              <div className='context__break' />
               <div className='context__row'>
                 <label className='context__label'>
                   {contributorsState.contributors.length}{' '}
@@ -529,7 +620,7 @@ const DocContextMenu = ({
                                   'Doc has been updated'
                                 )}
                                 <span className='context__revision__date'>
-                                  {getFormattedDateTime(rev.createdAt)}
+                                  {getFormattedDateTime(rev.created)}
                                 </span>
                               </li>
                             )
@@ -550,9 +641,10 @@ const DocContextMenu = ({
                         size={18}
                       />
                       See full revisions
-                      {subscription == null && (
-                        <div className='context__badge'>Upgrade</div>
-                      )}
+                      {subscription == null &&
+                        currentUserPermissions != null && (
+                          <div className='context__badge'>Upgrade</div>
+                        )}
                     </button>
                   </div>
                   <div className='context__break' />
@@ -578,6 +670,37 @@ const Container = styled.div`
   .placeholder {
     width: 45px;
     flex: 0 0 auto;
+  }
+
+  .context__tooltip {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${({ theme }) => theme.subtleBackgroundColor};
+    color: ${({ theme }) => theme.baseTextColor};
+    width: 20px;
+    height: 20px;
+    margin-left: ${({ theme }) => theme.space.xxsmall}px;
+
+    .context__tooltip__text {
+      display: none;
+      border-radius: 3px;
+      position: absolute;
+      bottom: 100%;
+      background: ${({ theme }) => theme.baseBackgroundColor};
+      width: ${docContextWidth - 40}px;
+      padding: ${({ theme }) => theme.space.xsmall}px;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: ${({ theme }) => theme.fontSizes.medium}px;
+    }
+
+    &:hover {
+      .context__tooltip__text {
+        display: block;
+      }
+    }
   }
 
   .context__menu {
@@ -737,6 +860,10 @@ const Container = styled.div`
     height: auto;
     line-height: 26px;
     height: 26px;
+  }
+
+  .context__label + .context__badge {
+    margin-left: 0;
   }
 
   .context__list {

@@ -13,13 +13,13 @@ import { useTranslation } from 'react-i18next'
 import Icon from '../../atoms/IconMdi'
 import {
   mdiClose,
-  mdiHandshake,
+  mdiDomain,
   mdiAccountGroup,
   mdiProfessionalHexagon,
-  mdiAccount,
   mdiThemeLightDark,
   mdiFlash,
   mdiKey,
+  mdiAccountCircleOutline,
 } from '@mdi/js'
 import {
   StyledModals,
@@ -42,7 +42,6 @@ import {
 import IntegrationsTab from './IntegrationsTab'
 import PreferencesTab from './PreferencesTab'
 import ApiTab from './ApiTab'
-import { useGlobalData } from '../../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 
 const SettingsComponent = () => {
@@ -50,10 +49,9 @@ const SettingsComponent = () => {
   const { closed, toggleClosed, settingsTab } = useSettings()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
-  const {
-    globalData: { currentUser },
-  } = useGlobalData()
-  const { team, subscription, permissions = [] } = usePage<PageStoreWithTeam>()
+  const { team, subscription, currentUserPermissions } = usePage<
+    PageStoreWithTeam
+  >()
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -82,6 +80,20 @@ const SettingsComponent = () => {
   useUpDownNavigationListener(menuRef, { inactive: closed })
 
   const content = useMemo(() => {
+    if (
+      currentUserPermissions == null &&
+      [
+        'teamInfo',
+        'teamMembers',
+        'teamUpgrade',
+        'teamSubscription',
+        'integrations',
+        'api',
+      ].includes(settingsTab)
+    ) {
+      return null
+    }
+
     switch (settingsTab) {
       case 'personalInfo':
         return <PersonalInfoTab />
@@ -102,7 +114,7 @@ const SettingsComponent = () => {
       default:
         return
     }
-  }, [settingsTab])
+  }, [settingsTab, currentUserPermissions])
 
   const backgroundClickHandler = useMemo(() => {
     return (event: MouseEvent) => {
@@ -110,16 +122,6 @@ const SettingsComponent = () => {
       toggleClosed()
     }
   }, [toggleClosed])
-
-  const currentUserPermissions = useMemo(() => {
-    if (currentUser == null) {
-      return undefined
-    }
-
-    return permissions.find(
-      (permission) => permission.user.id === currentUser.id
-    )
-  }, [currentUser, permissions])
 
   useEffect(() => {
     if (closed) {
@@ -138,13 +140,13 @@ const SettingsComponent = () => {
       <StyledModalsContainer className='largeW fixed-height-large'>
         <StyledSideNavModal>
           <TabNav ref={menuRef}>
-            <Subtitle>{t('settings.title')}</Subtitle>
+            <Subtitle>Account</Subtitle>
             <TabButton
               label={t('settings.personalInfo')}
               active={settingsTab === 'personalInfo'}
               tab='personalInfo'
               id='settings-personalInfoTab-btn'
-              prependIcon={mdiAccount}
+              prependIcon={mdiAccountCircleOutline}
             />
             <TabButton
               label={t('settings.preferences')}
@@ -153,14 +155,15 @@ const SettingsComponent = () => {
               id='settings-personalInfoTab-btn'
               prependIcon={mdiThemeLightDark}
             />
-            {team != null && (
+            <Subtitle>Space</Subtitle>
+            {currentUserPermissions != null && (
               <>
                 <TabButton
                   label={t('settings.teamInfo')}
                   active={settingsTab === 'teamInfo'}
                   tab='teamInfo'
                   id='settings-teamInfoTab-btn'
-                  prependIcon={mdiHandshake}
+                  prependIcon={mdiDomain}
                 />
                 <TabButton
                   label={t('settings.teamMembers')}
@@ -169,22 +172,22 @@ const SettingsComponent = () => {
                   id='settings-teamMembersTab-btn'
                   prependIcon={mdiAccountGroup}
                 />
+                <TabButton
+                  label={t('settings.integrations')}
+                  active={settingsTab === 'integrations'}
+                  tab='integrations'
+                  id='settings-integrationsTab-btn'
+                  prependIcon={mdiFlash}
+                />
+                <TabButton
+                  label='API'
+                  active={settingsTab === 'api'}
+                  tab='api'
+                  id='settings-apiTab-btn'
+                  prependIcon={mdiKey}
+                />
               </>
             )}
-            <TabButton
-              label={t('settings.integrations')}
-              active={settingsTab === 'integrations'}
-              tab='integrations'
-              id='settings-integrationsTab-btn'
-              prependIcon={mdiFlash}
-            />
-            <TabButton
-              label='API'
-              active={settingsTab === 'api'}
-              tab='api'
-              id='settings-apiTab-btn'
-              prependIcon={mdiKey}
-            />
             {team != null &&
               currentUserPermissions != null &&
               currentUserPermissions.role === 'admin' && (
@@ -242,8 +245,9 @@ const Subtitle = styled.div`
   margin: ${({ theme }) => theme.space.default}px
     ${({ theme }) => theme.space.default}px
     ${({ theme }) => theme.space.xsmall}px;
-  color: ${({ theme }) => theme.primaryTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.default}px;
+  color: ${({ theme }) => theme.baseTextColor};
+  font-size: ${({ theme }) => theme.fontSizes.large}px;
+  text-transform: uppercase;
   font-weight: 500;
 `
 

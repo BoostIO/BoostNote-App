@@ -6,7 +6,7 @@ export interface SerializedRevision {
   title: string
   content: string
   message: string
-  createdAt: string
+  created: string
   creators: SerializedUser[]
   docId: string
   doc?: SerializedDoc

@@ -24,6 +24,8 @@ export function getAdminAnalyticsStatsPropertyFromIndex(index: number) {
       return 'newFolders'
     case 11:
       return 'deletedFolders'
+    case 12:
+      return 'newPersonalTeams'
     default:
       return 'misc'
   }

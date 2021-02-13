@@ -48,7 +48,7 @@ const RevisionsModal = ({
     Map<number, SerializedRevision>
   >(new Map())
   const [error, setError] = useState<unknown>()
-  const { subscription } = usePage()
+  const { subscription, currentUserPermissions } = usePage()
   const { closeModal } = useModal()
   const { openSettingsTab } = useSettings()
   const [revisionIndex, setRevisionIndex] = useState<number>()
@@ -185,7 +185,7 @@ const RevisionsModal = ({
       )
     }
 
-    if (subscription == null) {
+    if (subscription == null && currentUserPermissions != null) {
       return (
         <StyledNoSubContent>
           <IconMdi
@@ -213,6 +213,7 @@ const RevisionsModal = ({
 
     return <StyledContent>{preview}</StyledContent>
   }, [
+    currentUserPermissions,
     error,
     subscription,
     closeModal,
@@ -225,7 +226,7 @@ const RevisionsModal = ({
 
   const orderedRevisions = useMemo(() => {
     return [...revisionsMap.values()].sort((a, b) => {
-      return compareDateString(b.createdAt, a.createdAt)
+      return compareDateString(b.created, a.created)
     })
   }, [revisionsMap])
 
@@ -252,6 +253,7 @@ const RevisionsModal = ({
           currentPage={currentPage}
           totalPages={totalPages}
           fetchRevisions={fetchRevisions}
+          currentUserPermissions={currentUserPermissions}
         />
         <div className='right' ref={contentSideRef}>
           {rightSideContent}

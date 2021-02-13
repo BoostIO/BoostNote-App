@@ -49,7 +49,7 @@ const RevisionModalDetail = ({
     <>
       <StyledHeader className='align-left'>
         <StyledHeaderTitle>
-          Updated at {format(new Date(rev.createdAt), 'HH:mm, dd MMMM u')}
+          Updated at {format(new Date(rev.created), 'HH:mm, dd MMMM u')}
         </StyledHeaderTitle>
         <StyledHeaderDescription>
           {rev.creators.length === 0 ? (

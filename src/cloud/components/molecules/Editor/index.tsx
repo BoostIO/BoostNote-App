@@ -76,6 +76,7 @@ import {
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../atoms/MarkdownView'
+import { usePage } from '../../../lib/stores/pageStore'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -109,6 +110,7 @@ const Editor = ({
   backLinks,
   revisionHistory,
 }: EditorProps) => {
+  const { currentUserPermissions } = usePage()
   const { pushMessage, pushAxiosErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -641,7 +643,9 @@ const Editor = ({
                 teamId={team.id}
                 docId={doc.id}
               />
-              <DocBookmark currentDoc={doc} />
+              {currentUserPermissions != null && (
+                <DocBookmark currentDoc={doc} />
+              )}
               <DocContextMenu
                 currentDoc={doc}
                 contributors={contributors}

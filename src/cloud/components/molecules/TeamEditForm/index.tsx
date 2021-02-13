@@ -1,6 +1,5 @@
 import React, { useMemo, FormEvent } from 'react'
 import slugify from 'slugify'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import { Spinner } from '../../atoms/Spinner'
 import { StyledTeamEditForm } from './styled'
 import cc from 'classcat'
@@ -8,6 +7,7 @@ import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight } from '@mdi/js'
 import { boostHubBaseUrl } from '../../../lib/consts'
 import { useRouter } from '../../../lib/router'
+import Button from '../../atoms/Button'
 
 interface TeamEditFormProps {
   name: string
@@ -90,23 +90,24 @@ const TeamEditForm = ({
 
       <div className='submit-row'>
         {backButton && (
-          <CustomButton
-            variant='secondary'
+          <Button
+            variant='transparent'
             className='go-back'
+            type='button'
             onClick={() => router.goBack()}
           >
             <IconMdi path={mdiChevronRight} /> Go Back
-          </CustomButton>
+          </Button>
         )}
         {showSubmitButton && (
-          <CustomButton
+          <Button
             type='submit'
             variant='primary'
             className='submit-team'
             disabled={disabled}
           >
-            {sending ? <Spinner /> : 'Create'}
-          </CustomButton>
+            {sending ? <Spinner style={{ top: 1 }} /> : 'Create'}
+          </Button>
         )}
       </div>
       <div className='clear' />

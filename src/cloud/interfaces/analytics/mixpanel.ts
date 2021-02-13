@@ -15,6 +15,10 @@ export enum MixpanelActionTrackTypes {
   DocUnarchive = 'doc.unarchive',
   DocShareCreate = 'doc.share.create',
   DocTagAdd = 'doc.tags.add',
+  GuestCreate = 'guest.create',
+  GuestDelete = 'guest.delete',
+  GuestInviteCreate = 'guest.invite.create',
+  GuestInviteDelete = 'guest.invite.delete',
   ExportHtml = 'doc.export.html',
   ExportMd = 'doc.export.md',
   ExportPdf = 'doc.export.pdf',
@@ -37,6 +41,7 @@ export enum MixpanelActionTrackTypes {
   OpenInviteReset = 'invite.open.reset',
   RevisionHistoryOpen = 'revision.history.open',
   SearchOpen = 'search.open',
+  PersonalCreate = 'personal.create',
   TeamCreate = 'team.create',
   TeamDelete = 'team.delete',
   ThemeChangeApp = 'theme.change.app',
@@ -85,6 +90,7 @@ export type MixpanelTemplateEvent =
 export type MixpanelTeamEvent =
   | MixpanelActionTrackTypes.TeamCreate
   | MixpanelActionTrackTypes.TeamDelete
+  | MixpanelActionTrackTypes.PersonalCreate
 
 export type MixpanelDocEvent =
   | MixpanelActionTrackTypes.DocOpen

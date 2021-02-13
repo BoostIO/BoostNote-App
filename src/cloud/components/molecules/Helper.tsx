@@ -19,12 +19,21 @@ import { focusFirstChildFromElement, isChildNode } from '../../lib/dom'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import { trackEvent } from '../../api/track'
 import { intercomAppId } from '../../lib/consts'
+import { useRouter } from '../../lib/router'
+
+const forbiddenRoutes = [
+  '\\/cooperate',
+  '\\/settings',
+  '\\/settings\\/use',
+  '\\/[A-z0-9]+\\/invites',
+]
 
 const Helper = () => {
   const [showHelp, setShowHelp] = useState(false)
   const helperRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const { openModal } = useModal()
+  const { pathname } = useRouter()
   const {
     globalData: { currentUser },
   } = useGlobalData()
@@ -53,7 +62,10 @@ const Helper = () => {
 
   useContextMenuKeydownHandler(helperRef)
 
-  if (currentUser == null) {
+  if (
+    currentUser == null ||
+    new RegExp(forbiddenRoutes.join('|'), 'i').test(pathname)
+  ) {
     return null
   }
 

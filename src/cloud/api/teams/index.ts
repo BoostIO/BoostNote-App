@@ -14,7 +14,8 @@ export async function listTeams() {
 }
 
 export interface CreateTeamRequestBody {
-  name: string
+  personal?: boolean
+  name?: string
   domain?: string
 }
 
