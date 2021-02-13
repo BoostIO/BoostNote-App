@@ -22,33 +22,32 @@ export interface DeleteUserResponseBody {}
 export interface SaveUserResponseBody {}
 
 export async function saveUserInfo(body: SaveUserRequestBody) {
-  const response = await callApi(`api/users`, {
+  return callApi<SaveUserResponseBody>(`api/users`, {
     json: body,
     method: 'put',
   })
-  return response.data as SaveUserResponseBody
 }
 
 export async function updateUserIcon(file: File) {
   const formData = new FormData()
   formData.set('icon', file)
-  const response = await callApi('api/users/icon', {
+  return callApi<UpdateUserIconResponseBody>('api/users/icon', {
     body: formData,
     method: 'post',
   })
-  return response.data as UpdateUserIconResponseBody
 }
 
 export async function deleteUserIcon() {
-  const response = await callApi('api/users/icon', { method: 'delete' })
-  return response.data as DeleteUserIconResponseBody
+  return callApi<DeleteUserIconResponseBody>('api/users/icon', {
+    method: 'delete',
+  })
 }
 
 export async function deleteUser(id: string, body: UserFeedbackFormData) {
-  const response = await callApi(`api/users/${id}/delete`, {
+  const data = await callApi<DeleteUserResponseBody>(`api/users/${id}/delete`, {
     json: body,
     method: 'put',
   })
   report('delete_user')
-  return response.data as DeleteUserResponseBody
+  return data
 }

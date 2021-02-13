@@ -50,11 +50,13 @@ export async function createTeamInvitesInBulk(
   team: SerializedTeam,
   body: CreateBulkInvitesRequestBody
 ) {
-  const response = await callApi(`api/teams/${team.id}/invites/bulk`, {
-    json: body,
-    method: 'post',
-  })
-  const data = response.data as CreateBulkInvitesResponseBody
+  const data = await callApi<CreateBulkInvitesResponseBody>(
+    `api/teams/${team.id}/invites/bulk`,
+    {
+      json: body,
+      method: 'post',
+    }
+  )
   data.invites.forEach((invite) =>
     report('create_invite', { team, invite: invite })
   )
