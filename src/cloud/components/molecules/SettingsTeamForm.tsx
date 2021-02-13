@@ -50,10 +50,10 @@ const SettingsTeamForm = ({
 
   const slugDomain = useMemo(() => {
     if (domain == null) {
-      return process.env.BASE_URL + '/'
+      return process.env.BOOST_HUB_BASE_URL + '/'
     }
     return (
-      process.env.BASE_URL +
+      process.env.BOOST_HUB_BASE_URL +
       '/' +
       slugify(domain.trim().replace(/[^a-zA-Z0-9\-]/g, ''), {
         replacement: '-',
