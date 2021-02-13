@@ -10,9 +10,8 @@ export async function deleteTagFromDoc(
   docId: string,
   tagId: string
 ) {
-  const response = await callApi(
-    `/api/teams/${teamId}/docs/${docId}/tags/${tagId}`,
+  return callApi<DeleteTagFromDocResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/tags/${tagId}`,
     { method: 'delete' }
   )
-  return response.data as DeleteTagFromDocResponseBody
 }

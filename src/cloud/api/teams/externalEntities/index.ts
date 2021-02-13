@@ -6,7 +6,7 @@ export async function getExternalEntity(
   id: string,
   refresh: boolean
 ) {
-  const response = await callApi(`/api/teams/${team}/externalEntity`, {
+  return callApi(`/api/teams/${team}/externalEntity`, {
     search: {
       type,
       id,
@@ -16,5 +16,4 @@ export async function getExternalEntity(
       Accept: 'application/json',
     },
   })
-  return response.data
 }

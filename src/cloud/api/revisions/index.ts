@@ -18,10 +18,10 @@ export async function createDocRevision(
   doc: SerializedDoc,
   body: CreateRevisionRequestBody
 ) {
-  const response = await callApi(
+  const data = await callApi<CreateRevisionResponseBody>(
     `api/teams/${team.id}/docs/${doc.id}/revisions`,
     { method: 'post', json: body }
   )
   report('update_doc')
-  return response.data as CreateRevisionResponseBody
+  return data as CreateRevisionResponseBody
 }

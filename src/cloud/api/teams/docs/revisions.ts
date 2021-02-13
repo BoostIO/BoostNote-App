@@ -12,11 +12,10 @@ export async function getAllRevisionsFromDoc(
   docId: string,
   page = 1
 ) {
-  const response = await callApi(
-    `/api/teams/${teamId}/docs/${docId}/revisions`,
+  return callApi<GetAllDocRevisionsResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/revisions`,
     {
       search: { page },
     }
   )
-  return response.data as GetAllDocRevisionsResponseBody
 }

@@ -6,10 +6,9 @@ export async function trackEvent(
   data?: Record<string, any>
 ) {
   try {
-    const response = await callApi('api/track', {
+    return callApi('api/track', {
       json: { ...data, eventName },
       method: 'post',
     })
-    return response.data
   } catch (err) {}
 }
