@@ -102,7 +102,14 @@ const SettingsTeamForm = ({
         if (usingElectron) {
           sendToElectron('team-update', updatedTeam)
         }
-        router.replace(router.pathname)
+        console.log(router.pathname)
+        const subPath = router.pathname.split('/')
+        subPath.splice(0, 2)
+        console.log(subPath)
+        const newUrl = `/${updatedTeam.id}${
+          subPath.length > 0 ? `/${subPath.join('/')}` : ''
+        }`
+        router.replace(newUrl)
       } catch (error) {
         pushMessage({
           title: 'Error',
