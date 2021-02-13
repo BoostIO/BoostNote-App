@@ -708,6 +708,7 @@ const StyledMembersTable = styled.table`
   width: 100%;
 
   .table-header {
+    text-align: left;
     border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
 
     th {
