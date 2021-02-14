@@ -563,7 +563,9 @@ const StyledTemplatesModal = styled.div`
 
         > div {
           line-height: 18px;
-          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
     }
