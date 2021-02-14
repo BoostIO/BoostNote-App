@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { ipcRenderer, remote } = require('electron')
+const { parse } = require('url')
 
 function sendToHost(channel, ...args) {
   ipcRenderer.sendToHost(channel, ...args)
@@ -19,6 +20,18 @@ function removeHostListener(channel, listener) {
 
 function removeAllHostListeners(channel) {
   ipcRenderer.removeAllListeners(channel)
+}
+
+function openInBrowser(url) {
+  const { protocol } = parse(url)
+  switch (protocol) {
+    case 'http:':
+    case 'https:':
+      remote.shell.openExternal(url)
+      return
+    default:
+      console.warn(`${protocol} protocol is not supported`)
+  }
 }
 
 function convertHtmlStringToPdfBlob(htmlString, printOptions) {
@@ -61,3 +74,4 @@ window.__ELECTRON_ONLY__.addHostListener = addHostListener
 window.__ELECTRON_ONLY__.removeHostListener = removeHostListener
 window.__ELECTRON_ONLY__.removeAllHostListeners = removeAllHostListeners
 window.__ELECTRON_ONLY__.addHostListenerOnce = addHostListenerOnce
+window.__ELECTRON_ONLY__.openInBrowser = openInBrowser

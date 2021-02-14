@@ -34,6 +34,14 @@ function removeAllHostListeners(channel?: string) {
 
 export const usingElectron = /BoostNote/.test(navigator.userAgent)
 
+export function openInBrowser(url: string) {
+  if (!usingElectron) {
+    console.warn('openInBrowser is not supported in web app')
+    return
+  }
+  ;(window as any).__ELECTRON_ONLY__.openInBrowser(url)
+}
+
 let accessTokenHasBeenInitialized = false
 let accessToken: string | null = null
 export function setAccessToken(newAccessToken: string | null) {
