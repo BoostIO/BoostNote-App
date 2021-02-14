@@ -224,6 +224,9 @@ const StyledResetLinkButton = styled.button`
   background-color: transparent;
   padding: 0;
   color: ${({ theme }) => theme.primaryTextColor};
+  font-size: 16px;
+  display: inline;
+  cursor: pointer;
 
   &:hover,
   &:focus {
