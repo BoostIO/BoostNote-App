@@ -116,6 +116,11 @@ const StyledSortingOption = styled.div`
   .select__menu {
     right: 0;
     width: 180px;
+    background-color: ${({ theme }) => theme.baseBackgroundColor};
+    box-shadow: ${({ theme }) => theme.baseShadowColor};
+  }
+  .select__option:hover {
+    background-color: ${({ theme }) => theme.emphasizedBackgroundColor};
   }
 `
 
