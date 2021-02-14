@@ -27,7 +27,7 @@ const Tooltip = ({
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       onClick={() => setOpen(false)}
-      style={{ position: 'relative', cursor: 'pointer' }}
+      style={{ position: 'relative', cursor: 'pointer', display: 'flex' }}
       className={className}
     >
       {children}

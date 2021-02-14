@@ -14,7 +14,8 @@ export const StyledContentControls = styled.div`
 
 export const StyledContentButton = styled.button`
   ${baseIconStyle}
-  display: block;
+  display: flex;
+  align-items: center;
   line-height: 18px;
   background: none;
   border: 0;

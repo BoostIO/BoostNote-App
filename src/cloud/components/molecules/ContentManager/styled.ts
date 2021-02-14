@@ -158,6 +158,6 @@ export const StyledRowActionIcon = styled.button`
   }
 
   &.valign-super {
-    vertical-align: super;
+    vertical-align: middle;
   }
 `
