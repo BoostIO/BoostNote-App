@@ -30,7 +30,7 @@ function useRouterStore() {
     browserHistory.push({
       pathname: parsedUrl.pathname,
       search: parsedUrl.search,
-      hash: parsedUrl.slashes,
+      hash: parsedUrl.hash,
     } as LocationDescriptorObject)
   }, [])
 
