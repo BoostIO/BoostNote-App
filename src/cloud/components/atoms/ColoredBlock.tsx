@@ -34,7 +34,7 @@ const StyledColoredBlock = styled.div`
     > ul,
     > ol,
     > p {
-      margin-bottom: 0;
+      margin: 0;
     }
 
     button {
