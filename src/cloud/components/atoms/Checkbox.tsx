@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import Flexbox from './Flexbox'
@@ -20,8 +20,6 @@ const Checkbox = ({
   className,
   style,
 }: CheckboxProps) => {
-  const [elementId] = useState(() => btoa(Math.random().toString()).slice(0, 8))
-
   const onClick = useCallback(() => {
     if (onChange == null || disabled) {
       return
@@ -64,16 +62,7 @@ const Checkbox = ({
 
   return (
     <Flexbox flex='0 0 auto' style={style}>
-      <input
-        type='checkbox'
-        id={elementId}
-        style={{ display: 'none' }}
-        checked={checked}
-        disabled={disabled}
-        onChange={undefined}
-      />
       <StyledLabel
-        htmlFor={elementId}
         onClick={onClick}
         className={cc([disabled && 'disabled', className])}
       >
