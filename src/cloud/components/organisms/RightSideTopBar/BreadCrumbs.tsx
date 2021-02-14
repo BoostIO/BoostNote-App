@@ -258,7 +258,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                     path={mdiFolderAccountOutline}
                     size={18}
                   />
-                  {currentWorkspace.name}
+                  <span className='label'>{currentWorkspace.name}</span>
                 </TeamLink>
               ) : (
                 <WorkspaceLink
@@ -267,14 +267,12 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   team={team!}
                   className='bread-crumb-link'
                 >
-                  <span>
-                    <Icon
-                      className='icon'
-                      path={mdiFolderAccountOutline}
-                      size={18}
-                    />
-                    {currentWorkspace.name}
-                  </span>
+                  <Icon
+                    className='icon'
+                    path={mdiFolderAccountOutline}
+                    size={18}
+                  />
+                  <span className='label'>{currentWorkspace.name}</span>
                 </WorkspaceLink>
               )}
             </>
@@ -286,9 +284,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                 className='bread-crumb-link'
                 onClick={showParentFolderListPopup}
               >
-                <span>
-                  <Icon className='icon' path={mdiDotsHorizontal} size={18} />
-                </span>
+                <Icon className='icon' path={mdiDotsHorizontal} size={18} />
               </div>
             </>
           )}
@@ -302,7 +298,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   className='bread-crumb-link'
                 >
                   <Icon className='icon' path={mdiFolderOutline} size={18} />
-                  {directParentFolder.name}
+                  <span className='label'>{directParentFolder.name}</span>
                 </FolderLink>
               ) : (
                 <span>{directParentBreadCrumb.folderLabel}</span>
@@ -334,7 +330,7 @@ const StyledBreadCrumbs = styled.div`
   .bread-crumb-link {
     display: flex;
     align-items: center;
-    padding: 2px 5px;
+    padding: 2px 4px;
     border-radius: 3px;
     white-space: nowrap;
     background-color: transparent;
@@ -342,8 +338,8 @@ const StyledBreadCrumbs = styled.div`
     cursor: pointer;
     text-decoration: none !important;
 
-    .icon {
-      margin-right: 4px;
+    .label {
+      margin-left: 4px;
     }
     .hoverIcon {
       margin-left: 4px;
