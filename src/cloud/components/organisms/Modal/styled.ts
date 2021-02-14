@@ -76,9 +76,10 @@ export const StyledModalsContainer = styled.div`
   }
 
   &.fullscreen {
-    height: auto;
-    background: none;
-    box-shadow: none;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 `
 

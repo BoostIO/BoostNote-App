@@ -137,7 +137,7 @@ const SettingsComponent = () => {
   return (
     <StyledModals>
       <StyledModalsBackground onClick={backgroundClickHandler} />
-      <StyledModalsContainer className='largeW fixed-height-large'>
+      <StyledModalsContainer className='fullscreen'>
         <StyledSideNavModal>
           <TabNav ref={menuRef}>
             <Subtitle>Account</Subtitle>
