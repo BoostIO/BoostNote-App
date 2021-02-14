@@ -31,6 +31,8 @@ import LinkableHeader from '../LinkableHeader'
 import { rehypePosition } from '../../../lib/rehypePosition'
 import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../../lib/consts'
+import { usingElectron } from '../../../lib/stores/electron'
+import { useRouter } from '../../../lib/router'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -89,6 +91,7 @@ const MarkdownView = ({
   const { settings } = useSettings()
   const checkboxIndexRef = useRef<number>(0)
   const onRenderRef = useRef(onRender)
+  const { push } = useRouter()
 
   useEffect(() => {
     onRenderRef.current = onRender
@@ -186,8 +189,6 @@ const MarkdownView = ({
       .use(rehypeSlug)
       .use(rehypePosition)
       .use(rehypeSanitize, schema)
-
-    parser
       .use(rehypeKatex)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
@@ -211,6 +212,16 @@ const MarkdownView = ({
         document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
           trigger.addEventListener('click', triggerCollapse)
         })
+        if (usingElectron) {
+          document
+            .querySelectorAll('.doc-embed-header a')
+            .forEach((docEmbedLink) => {
+              docEmbedLink.addEventListener('click', (event) => {
+                event.preventDefault()
+                push((event.target as HTMLAnchorElement).href)
+              })
+            })
+        }
         if (onRenderRef.current != null) {
           onRenderRef.current()
         }
@@ -220,7 +231,7 @@ const MarkdownView = ({
     }
     modeLoadCallbackRef.current = renderContentCallback
     renderContentCallback()
-  }, [content, markdownProcessor])
+  }, [content, markdownProcessor, push])
 
   useEffectOnce(() => {
     const callback = () => {
