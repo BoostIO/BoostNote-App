@@ -27,6 +27,7 @@ function useRouterStore() {
 
   const push = useCallback((url: Url) => {
     const parsedUrl = typeof url === 'string' ? parseUrl(url) : url
+
     browserHistory.push({
       pathname: parsedUrl.pathname,
       search: parsedUrl.search,

@@ -17,6 +17,7 @@ import { BoostHubStoreProvider } from './lib/boosthub'
 import { CreateWorkspaceModalProvider } from './lib/createWorkspaceModal'
 
 const CombinedProvider = combineProviders(
+  BoostHubStoreProvider,
   SearchModalProvider,
   PreviewStyleProvider,
   GeneralStatusProvider,
@@ -28,7 +29,6 @@ const CombinedProvider = combineProviders(
   RouterProvider,
   ToastProvider,
   CheckedFeaturesProvider,
-  BoostHubStoreProvider,
   CreateWorkspaceModalProvider
 )
 

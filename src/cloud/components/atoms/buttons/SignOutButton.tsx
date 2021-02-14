@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useCallback, MouseEvent } from 'react'
 import CustomLink from '../Link/CustomLink'
 import { useTranslation } from 'react-i18next'
+import { usingElectron, sendToHost } from '../../../lib/stores/electron'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 interface SignOutButton {
   redirectTo?: string
@@ -8,13 +10,28 @@ interface SignOutButton {
 
 const SignOutButton = ({ redirectTo }: SignOutButton) => {
   const { t } = useTranslation()
+
+  const signOutUrl =
+    redirectTo == null
+      ? '/api/oauth/signout'
+      : `/api/oauth/signout?redirectTo=${redirectTo}`
+
+  const signOut = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      if (usingElectron) {
+        sendToHost('sign-out')
+      } else {
+        window.location.href = `${boostHubBaseUrl}${signOutUrl}`
+      }
+    },
+    [signOutUrl]
+  )
+
   return (
     <CustomLink
-      href={
-        redirectTo == null
-          ? '/api/oauth/signout'
-          : `/api/oauth/signout?redirectTo=${redirectTo}`
-      }
+      href={signOutUrl}
+      onClick={signOut}
       variant='primary'
       block={true}
     >

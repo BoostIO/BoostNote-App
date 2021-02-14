@@ -23,6 +23,8 @@ import {
   isSingleKeyEventOutsideOfInput,
   preventKeyboardEventPropagation,
 } from '../../../lib/keyboard'
+import { usingElectron, sendToHost } from '../../../lib/stores/electron'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 interface SidebarTeamPickerContextProps {
   setClosed: (val: boolean) => void
@@ -131,6 +133,14 @@ const SidebarTeamPickerContext = ({
       {teamsList}
       <CustomLink
         href='/api/oauth/signout'
+        onClick={(event) => {
+          event.preventDefault()
+          if (usingElectron) {
+            sendToHost('sign-out')
+          } else {
+            window.location.href = `${boostHubBaseUrl}/api/oauth/signout`
+          }
+        }}
         isReactLink={false}
         block={true}
         className='team-link team-link-cstm signout-btn'

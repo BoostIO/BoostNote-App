@@ -8,6 +8,7 @@ import React, {
 import {
   boostHubWebViewUserAgent,
   boostHubPreloadUrl,
+  useBoostHub,
 } from '../../lib/boosthub'
 import {
   WebviewTag,
@@ -55,6 +56,7 @@ const BoostHubWebview = ({
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
   const { preferences } = usePreferences()
+  const { signOut } = useBoostHub()
   const cloudUser = preferences['cloud.user']
 
   const accessToken = useMemo(() => {
@@ -154,11 +156,22 @@ const BoostHubWebview = ({
               },
               {
                 type: 'normal',
+                label: 'Sign Out',
+                click: signOut,
+              },
+              {
+                type: 'separator',
+              },
+              {
+                type: 'normal',
                 label: 'Open Dev Tools',
                 click: openDevTools,
               },
             ],
           })
+          break
+        case 'sign-out':
+          signOut()
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)

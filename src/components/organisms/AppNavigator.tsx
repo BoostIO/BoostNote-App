@@ -23,6 +23,7 @@ import {
 } from '../../lib/checkedFeatures'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useCreateWorkspaceModal } from '../../lib/createWorkspaceModal'
+import { useBoostHub } from '../../lib/boosthub'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -31,6 +32,7 @@ const TopLevelNavigator = () => {
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
   const { isChecked } = useCheckedFeatures()
+  const { signOut } = useBoostHub()
 
   const boostHubUserInfo = preferences['cloud.user']
 
@@ -71,23 +73,6 @@ const TopLevelNavigator = () => {
       )
     })
   }, [storages.length, generalStatus.boostHubTeams, activeBoostHubTeamDomain])
-
-  const { setGeneralStatus } = useGeneralStatus()
-
-  const signOut = useCallback(async () => {
-    if (
-      routeParams.name === 'boosthub.teams.show' ||
-      routeParams.name === 'boosthub.teams.create'
-    ) {
-      push('/app/boosthub/login')
-    }
-    setPreferences({
-      'cloud.user': null,
-    })
-    setGeneralStatus({
-      boostHubTeams: [],
-    })
-  }, [routeParams.name, setPreferences, setGeneralStatus, push])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {

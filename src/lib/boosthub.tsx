@@ -1,10 +1,14 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import { getPathByName } from './electronOnly'
-import React, { FC } from 'react'
+import { getPathByName, setCookie } from './electronOnly'
+import React, { FC, useCallback } from 'react'
 import { createStoreContext } from './context'
 import ky from 'ky'
+import { useRouteParams } from './routeParams'
+import { useGeneralStatus } from './generalStatus'
+import { usePreferences } from './preferences'
+import { useRouter } from './router'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -90,8 +94,36 @@ export async function createDesktopAccessToken(
 }
 
 function useBoostHubStore() {
+  const { push } = useRouter()
+  const { setPreferences } = usePreferences()
+  const { setGeneralStatus } = useGeneralStatus()
+  const routeParams = useRouteParams()
+
+  const signOut = useCallback(async () => {
+    if (
+      routeParams.name === 'boosthub.teams.show' ||
+      routeParams.name === 'boosthub.teams.create'
+    ) {
+      push('/app/boosthub/login')
+    }
+    setPreferences({
+      'cloud.user': null,
+    })
+    setGeneralStatus({
+      boostHubTeams: [],
+    })
+
+    setCookie({
+      url: boostHubBaseUrl,
+      name: 'desktop_access_token',
+      value: '',
+      expirationDate: 0,
+    })
+  }, [routeParams.name, setPreferences, setGeneralStatus, push])
+
   return {
     fetchDesktopGlobalData,
+    signOut,
   }
 }
 
