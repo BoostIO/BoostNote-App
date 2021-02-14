@@ -8,7 +8,6 @@ interface TooltipProps {
   side?: 'top' | 'left' | 'right' | 'bottom' | 'bottom-right'
   tooltip: React.ReactNode
   tagName?: 'span' | 'div' | 'p' | 'li'
-  key?: string | number
 }
 
 const Tooltip = ({
@@ -17,7 +16,6 @@ const Tooltip = ({
   style,
   className,
   tagName = 'div',
-  key,
   side = 'bottom',
 }: TooltipProps) => {
   const [open, setOpen] = useState(false)
@@ -31,7 +29,6 @@ const Tooltip = ({
       onClick={() => setOpen(false)}
       style={{ position: 'relative', cursor: 'pointer' }}
       className={className}
-      key={key}
     >
       {children}
       {open && (
