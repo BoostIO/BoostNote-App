@@ -38,9 +38,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useSettings } from '../../lib/stores/settings'
 import IconMdi from '../atoms/IconMdi'
 import { boostHubBaseUrl } from '../../lib/consts'
+import { SerializedTeam } from '../../interfaces/db/team'
+import { getDocLinkHref } from '../atoms/Link/DocLink'
+import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
+  team: SerializedTeam
 }
 
 type SendingState =
@@ -50,7 +54,7 @@ type SendingState =
   | 'password'
   | 'expireDate'
 
-const DocShare = ({ currentDoc }: DocShareProps) => {
+const DocShare = ({ currentDoc, team }: DocShareProps) => {
   const [sending, setSending] = useState<SendingState>('idle')
   const { updateDocsMap } = useNav()
   const { setPartialPageData, subscription } = usePage()
@@ -305,43 +309,75 @@ const DocShare = ({ currentDoc }: DocShareProps) => {
   )
 
   const shareLink = currentDoc.shareLink
+
+  const docUrl = `${boostHubBaseUrl}${getDocLinkHref(
+    currentDoc,
+    team,
+    'index'
+  )}`
+
+  const [docUrlCopied, setDocUrlCopied] = useState(false)
+
+  const copyDocUrl = useCallback(() => {
+    copy(docUrl)
+    setDocUrlCopied(true)
+    setTimeout(() => {
+      setDocUrlCopied(false)
+    }, 600)
+  }, [docUrl])
+
+  const openNew = useCallback(() => {
+    openInBrowser(docUrl)
+  }, [docUrl])
+
   return (
     <>
-      <Container className='context__column'>
-        <Flexbox className='share__row'>
-          <label className='share__row__label'>
-            <IconMdi
-              path={mdiLinkVariant}
-              size={18}
-              className='context__icon'
-            />
-            URL
-          </label>
-        </Flexbox>
-        <Flexbox className='share__row'>
-          <input
-            readOnly={true}
-            className='share__link__input'
-            value={'http://localhost:3001/test/learn-how-'}
-            tabIndex={-1}
-          />
-          <button
-            onClick={copyButtonHandler}
-            tabIndex={0}
-            className='share__link__copy'
-          >
-            <IconMdi path={mdiClipboardTextOutline} size={16} />
-          </button>
-          <button
-            onClick={copyButtonHandler}
-            tabIndex={0}
-            className='share__link__copy'
-          >
-            <IconMdi path={mdiOpenInNew} size={16} />
-          </button>
-        </Flexbox>
-      </Container>
-      <div className='context__break' />
+      {usingElectron && (
+        <>
+          <Container className='context__column'>
+            <Flexbox className='share__row'>
+              <label className='share__row__label'>
+                <IconMdi
+                  path={mdiLinkVariant}
+                  size={18}
+                  className='context__icon'
+                />
+                URL
+              </label>
+            </Flexbox>
+            <Flexbox className='share__row'>
+              <input
+                readOnly={true}
+                className='share__link__input'
+                value={docUrl}
+                tabIndex={-1}
+              />
+              <button
+                onClick={copyDocUrl}
+                tabIndex={0}
+                className='share__link__copy'
+              >
+                <IconMdi
+                  path={
+                    docUrlCopied
+                      ? mdiClipboardCheckOutline
+                      : mdiClipboardTextOutline
+                  }
+                  size={16}
+                />
+              </button>
+              <button
+                onClick={openNew}
+                tabIndex={0}
+                className='share__link__copy'
+              >
+                <IconMdi path={mdiOpenInNew} size={16} />
+              </button>
+            </Flexbox>
+          </Container>
+          <div className='context__break' />
+        </>
+      )}
       <Container className='context__column'>
         <Flexbox className='share__row'>
           <label className='share__row__label'>
@@ -575,6 +611,8 @@ const Container = styled.div`
   }
 
   .share__row__label {
+    display: flex;
+    align-items: center;
     white-space: none;
     flex: 0 0 auto;
     min-width: 110px;
@@ -616,6 +654,7 @@ const Container = styled.div`
     width: 26px;
     padding: 0;
     text-align: center;
+    cursor:pointer;
     &:last-child {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;

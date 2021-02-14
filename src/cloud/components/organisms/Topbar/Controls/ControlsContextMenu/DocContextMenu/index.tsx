@@ -395,7 +395,7 @@ const DocContextMenu = ({
                     </div>
                   </div>
                   <div className='context__break' />
-                  <DocShare currentDoc={currentDoc} />
+                  <DocShare currentDoc={currentDoc} team={team} />
                   <div className='context__row'>
                     {guestsOnThisDoc.length === 0 ? (
                       <label className='context__label'>
