@@ -131,19 +131,22 @@ const Container = styled.div`
     position: fixed;
     bottom: 90px;
     right: 20px;
-    padding: ${({ theme }) => theme.space.small}px;
+    padding: ${({ theme }) => theme.space.xsmall}px;
     background: ${({ theme }) => theme.baseBackgroundColor};
     ${baseShadowColor};
   }
 
   .help__list__item {
     display: flex;
+    font-size: 14px;
+    height: 28px;
+    width: 100%;
     background: none;
     border: none;
     text-decoration: none;
     align-items: center;
     color: ${({ theme }) => theme.baseTextColor};
-    padding: 2px ${({ theme }) => theme.space.xsmall}px;
+    padding: 0 ${({ theme }) => theme.space.xxsmall}px;
     border-radius: 3px;
 
     &:hover {
@@ -157,7 +160,7 @@ const Container = styled.div`
 
     .icon {
       flex: 0 0 auto;
-      margin: 0 ${({ theme }) => theme.space.xsmall}px;
+      margin-right: ${({ theme }) => theme.space.xxsmall}px;
     }
   }
 

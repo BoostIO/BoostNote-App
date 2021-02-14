@@ -52,6 +52,7 @@ import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
 import SettingsPage from '../pages/settings'
 import SettingsUsePage from '../pages/settings/use'
+import Helper from './molecules/Helper'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -232,6 +233,7 @@ const Router = () => {
             <EmojiPicker />
             <Dialog />
             <SearchModal />
+            <Helper />
           </CustomThemeProvider>
         </NavProvider>
       </CombinedProvider>
