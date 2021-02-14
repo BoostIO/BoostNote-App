@@ -11,11 +11,11 @@ export async function getTeamOpenInvitePageData({
   search,
   signal,
 }: GetInitialPropsParameters) {
-  const [, teamId] = pathname.split('/')
+  const [, teamId, , inviteId] = pathname.split('/')
   const data = await callApi<TeamOpenInvitePageData>(
     'api/pages/teams/open-invites/show',
     {
-      search: search + `&teamId=${teamId}`,
+      search: search + `&teamId=${teamId}&inviteId=${inviteId}`,
       signal,
     }
   )

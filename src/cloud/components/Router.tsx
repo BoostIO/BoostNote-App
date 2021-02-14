@@ -53,6 +53,7 @@ import { useRealtimeConn } from '../lib/stores/realtimeConn'
 import SettingsPage from '../pages/settings'
 import SettingsUsePage from '../pages/settings/use'
 import Helper from './molecules/Helper'
+import OpenInvitePage from '../pages/[teamId]/invite'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -333,6 +334,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: BookmarksListPage,
           getInitialProps: BookmarksListPage.getInitialProps,
+        }
+      case 'invite':
+        return {
+          Component: OpenInvitePage,
+          getInitialProps: OpenInvitePage.getInitialProps,
         }
       default:
         return {
