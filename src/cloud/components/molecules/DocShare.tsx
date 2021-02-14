@@ -692,7 +692,8 @@ const Container = styled.div`
     ${primaryButtonStyle}
     font-size: ${({ theme }) => theme.fontSizes.xxsmall}px;
     border-radius: 3px;
-    padding: 0 ${({ theme }) => theme.space.xsmall}px;
+    height: 26px;
+    padding: 0 5px;
     text-transform: uppercase;
     margin-left: ${({ theme }) => theme.space.xsmall}px;
   }
