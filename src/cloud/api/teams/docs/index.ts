@@ -108,7 +108,7 @@ export async function archiveDoc(teamId: string, docId: string) {
 
 export async function unarchiveDoc(teamId: string, docId: string) {
   const data = await callApi<ArchiveDocResponseBody>(
-    `/api/teams/${teamId}/docs/${docId}/archive`,
+    `api/teams/${teamId}/docs/${docId}/archive`,
     {
       method: 'delete',
     }
