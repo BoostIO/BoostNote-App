@@ -367,6 +367,7 @@ const ContentManagerBulkActions = ({
             onClick: bulkArchiveCallback,
             tooltip: 'Archive',
           }}
+          key='archive'
           disabled={selectedDocsAreUpdating}
           sending={sending === BulkActions.archive}
         />
@@ -381,6 +382,7 @@ const ContentManagerBulkActions = ({
             onClick: bulkUnarchiveCallback,
             tooltip: 'Unarchive',
           }}
+          key='unarchive'
           disabled={selectedDocsAreUpdating}
           sending={sending === BulkActions.unarchive}
         />
