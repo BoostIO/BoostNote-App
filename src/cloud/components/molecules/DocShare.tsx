@@ -696,6 +696,7 @@ const Container = styled.div`
     padding: 0 5px;
     text-transform: uppercase;
     margin-left: ${({ theme }) => theme.space.xsmall}px;
+    cursor: pointer;
   }
 
   .share__row__label span {

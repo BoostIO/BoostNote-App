@@ -672,6 +672,10 @@ const Container = styled.div`
     flex: 0 0 auto;
   }
 
+  .context__badge {
+    cursor: pointer;
+  }
+
   .context__tooltip {
     border-radius: 50%;
     display: flex;
