@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from '../lib/router'
-import { selectTheme, darkTheme } from '../lib/styled'
+import styled, { selectTheme, darkTheme } from '../lib/styled'
 import { ThemeProvider } from 'styled-components'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getGlobalData } from '../api/global'
@@ -54,6 +54,7 @@ import SettingsPage from '../pages/settings'
 import SettingsUsePage from '../pages/settings/use'
 import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
+import Spinner from './atoms/CustomSpinner'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -212,10 +213,20 @@ const Router = () => {
   }, [pathname, search, initialized, initGlobalData])
 
   if (!initialized) {
-    return <div>Fetching global data...</div>
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <LoadingScreen message='Fetching global data...' />
+        <GlobalStyle />
+      </ThemeProvider>
+    )
   }
   if (pageInfo == null) {
-    return <div>Fetching page data...</div>
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <LoadingScreen message='Fetching page data...' />
+        <GlobalStyle />
+      </ThemeProvider>
+    )
   }
 
   return (
@@ -243,6 +254,38 @@ const Router = () => {
 }
 
 export default Router
+
+interface LoadingScreenProps {
+  message?: string
+}
+
+const LoadingScreenContainer = styled.div`
+  background-color: ${({ theme }) => theme.baseBackgroundColor};
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: ${({ theme }) => theme.baseTextColor};
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .message {
+    margin-left: 5px;
+  }
+`
+
+const LoadingScreen = ({ message }: LoadingScreenProps) => {
+  return (
+    <LoadingScreenContainer>
+      <Spinner />
+      <p className='message'>{message == null ? 'Loading...' : message}</p>
+    </LoadingScreenContainer>
+  )
+}
 
 const CustomThemeProvider: React.FC = ({ children }) => {
   const { settings } = useSettings()
