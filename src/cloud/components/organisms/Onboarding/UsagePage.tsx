@@ -12,7 +12,6 @@ import Flexbox from '../../atoms/Flexbox'
 import Button from '../../atoms/Button'
 import Spinner from '../../../../components/atoms/Spinner'
 import Icon from '../../../../components/atoms/Icon'
-import IconMdi from '../../atoms/IconMdi'
 import { useRouter } from '../../../lib/router'
 import { useElectron } from '../../../lib/stores/electron'
 
@@ -104,7 +103,10 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                   variant='transparent'
                   onClick={() => router.goBack()}
                 >
-                  <IconMdi path={mdiChevronRight} /> Go Back
+                  <Flexbox alignItems='center'>
+                    <Icon path={mdiChevronRight} />
+                    <span>Go Back</span>
+                  </Flexbox>
                 </Button>
               )}
             </Flexbox>
