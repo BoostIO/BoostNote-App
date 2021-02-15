@@ -36,7 +36,7 @@ interface UpdateTokenResponseBody {
 
 export async function updateToken(token: SerializedApiToken) {
   const result = await callApi<UpdateTokenResponseBody>(
-    `/api/tokens/${token.id}`,
+    `api/tokens/${token.id}`,
     {
       method: 'put',
       json: {
@@ -48,7 +48,7 @@ export async function updateToken(token: SerializedApiToken) {
 }
 
 export async function deleteToken(token: SerializedApiToken) {
-  await callApi(`/api/tokens/${token.id}`, {
+  await callApi(`api/tokens/${token.id}`, {
     method: 'delete',
   })
 }
