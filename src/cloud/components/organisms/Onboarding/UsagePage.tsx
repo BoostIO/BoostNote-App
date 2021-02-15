@@ -18,28 +18,6 @@ interface UsagePageProps {
 const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
 
-  /*
-  const setAccount = useCallback(
-    async (e: any) => {
-      e.preventDefault()
-      setSending(true)
-      if (type === 'team') {
-        push('/cooperate?welcome=true')
-        return
-      }
-      try {
-        const { team } = await createTeam({ personal: true })
-        navigateToTeam(team, 'index', { onboarding: true })
-        return
-      } catch (error) {
-        setError(error)
-      }
-      setSending(false)
-    },
-    [push, type, navigateToTeam]
-  )
-  */
-
   return (
     <Page>
       <Container>
