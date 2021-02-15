@@ -49,6 +49,7 @@ const DocLink = ({
 
   return (
     <a
+      href={href}
       className={className}
       style={style}
       onClick={onClick != null ? onClick : navigate}
