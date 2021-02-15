@@ -10,7 +10,6 @@ import AccountDeletePage from '../pages/account/delete'
 
 import { SidebarCollapseProvider } from '../lib/stores/sidebarCollapse'
 import { combineProviders } from '../lib/utils/context'
-import { ElectronProvider } from '../lib/stores/electron'
 import { EmojiPickerProvider } from '../lib/stores/emoji'
 import { OnboardingProvider } from '../lib/stores/onboarding'
 import { ContextMenuProvider } from '../lib/stores/contextMenu'
@@ -58,7 +57,6 @@ import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
 
 const CombinedProvider = combineProviders(
-  ElectronProvider,
   SidebarCollapseProvider,
   EmojiPickerProvider,
   OnboardingProvider,
