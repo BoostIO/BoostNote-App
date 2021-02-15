@@ -3,11 +3,18 @@ import Page from '../../Page'
 import cc from 'classcat'
 import styled from '../../../lib/styled'
 import ErrorBlock from '../../atoms/ErrorBlock'
-import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline } from '@mdi/js'
+import {
+  mdiCheckboxBlankCircleOutline,
+  mdiCheckCircleOutline,
+  mdiChevronRight,
+} from '@mdi/js'
 import Flexbox from '../../atoms/Flexbox'
 import Button from '../../atoms/Button'
 import Spinner from '../../../../components/atoms/Spinner'
 import Icon from '../../../../components/atoms/Icon'
+import IconMdi from '../../atoms/IconMdi'
+import { useRouter } from '../../../lib/router'
+import { useElectron } from '../../../lib/stores/electron'
 
 interface UsagePageProps {
   onUsage: (val: 'personal' | 'team') => void
@@ -17,6 +24,8 @@ interface UsagePageProps {
 
 const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
+  const router = useRouter()
+  const { usingElectron } = useElectron()
 
   return (
     <Page>
@@ -80,7 +89,7 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
             {error != null && (
               <ErrorBlock error={error} style={{ marginBottom: 32 }} />
             )}
-            <Flexbox justifyContent='center'>
+            <Flexbox justifyContent='center' direction='column'>
               <Button type='submit' disabled={sending} variant='primary'>
                 {sending ? (
                   <Spinner style={{ position: 'relative', top: 0, left: 0 }} />
@@ -88,6 +97,16 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                   'Get started for free'
                 )}
               </Button>
+              {!usingElectron && (
+                <Button
+                  type='button'
+                  disabled={sending}
+                  variant='transparent'
+                  onClick={() => router.goBack()}
+                >
+                  <IconMdi path={mdiChevronRight} /> Go Back
+                </Button>
+              )}
             </Flexbox>
           </form>
         </div>
