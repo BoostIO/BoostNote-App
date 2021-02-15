@@ -31,6 +31,7 @@ const StyledErrorSection = styled.div`
   color: #fff;
   padding: ${({ theme }) => theme.space.xsmall}px 2%;
   border-radius: 5px;
+  width: 100%;
   margin-bottom: 15px;
 
   h1 {

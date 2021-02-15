@@ -59,12 +59,13 @@ const SignInForm = ({
           setDisabled={setDisabled}
           query={loginQuery}
           setError={setError}
-          style={{ marginBottom: 10 }}
+          style={{ margin: '0 auto 10px', display: 'block' }}
         />
         <GithubLoginButton
           disabled={disabled || preventAction}
           setDisabled={setDisabled}
           query={loginQuery}
+          style={{ margin: '0 auto 10px', display: 'block' }}
         />
         <hr />
         <EmailForm

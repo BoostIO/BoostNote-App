@@ -1,13 +1,13 @@
 import React from 'react'
 import Page from '../../Page'
 import ErrorSection from './ErrorSection'
-import { darkTheme } from '../../../lib/styled'
-import DefaultLayout from '../../layouts/DefaultLayout'
+import styled, { darkTheme } from '../../../lib/styled'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { useRouter } from '../../../lib/router'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { ThemeProvider } from 'styled-components'
 import ButtonLink from '../../atoms/ButtonLink'
+import SignInForm from '../../molecules/SignInForm'
 
 interface ErrorPageProps {
   error: Error
@@ -17,7 +17,7 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
   const {
     globalData: { currentUser, teams },
   } = useGlobalData()
-  const { query } = useRouter()
+  const { query, pathname, search } = useRouter()
   const { response } = error as any
   const statusCode = response != null ? response.status : null
 
@@ -28,7 +28,7 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           statusCode != null ? `${statusCode} Error` : 'Error'
         } - Boost Note`}
       >
-        <DefaultLayout>
+        <Container>
           {query.fromBoostHubDomain === 'true' && (
             <ColoredBlock variant='info'>
               We&apos;ve changed the Boost Hub domain to
@@ -77,13 +77,20 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           {currentUser == null && statusCode === 401 && (
             <div className='text-center' style={{ marginTop: 20 }}>
               <h3>Or Sign in</h3>
-              {/* <SignInForm redirectTo={pathname} /> */}
+              <SignInForm redirectTo={pathname + search} />
             </div>
           )}
-        </DefaultLayout>
+        </Container>
       </Page>
     </ThemeProvider>
   )
 }
 
 export default ErrorPage
+
+const Container = styled.div`
+  max-width: 720px;
+  padding: 10px;
+  margin: 0 auto;
+  position: relative;
+`
