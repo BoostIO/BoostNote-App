@@ -41,7 +41,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.notion.so/'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Notion
                 </a>
@@ -58,7 +58,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.notion.so/'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Notion
                 </a>
@@ -84,7 +84,11 @@ const ImportModalGuide = ({
             <ol>
               <li>
                 In{' '}
-                <a href='https://quip.com/' target='_blank' rel='noreferrer'>
+                <a
+                  href='https://quip.com/'
+                  target='_blank'
+                  rel='noreferrer noopener'
+                >
                   Quip
                 </a>
                 , select the document icon at the top left of the screen and
@@ -112,7 +116,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.atlassian.com/software/confluence'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Confluence
                 </a>
@@ -129,7 +133,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.atlassian.com/software/confluence'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Confluence
                 </a>
@@ -157,7 +161,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://evernote.com/'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Evernote
                 </a>
@@ -174,7 +178,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://evernote.com/'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Evernote
                 </a>
@@ -202,7 +206,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.google.com/intl/en/docs/about/'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Google Docs
                 </a>
@@ -230,7 +234,7 @@ const ImportModalGuide = ({
                 <a
                   href='https://www.dropbox.com/paper'
                   target='_blank'
-                  rel='noreferrer'
+                  rel='noreferrer noopener'
                 >
                   Dropbox Paper
                 </a>
