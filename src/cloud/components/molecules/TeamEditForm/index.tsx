@@ -6,7 +6,6 @@ import cc from 'classcat'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight } from '@mdi/js'
 import { boostHubBaseUrl } from '../../../lib/consts'
-import { useRouter } from '../../../lib/router'
 import Button from '../../atoms/Button'
 
 interface TeamEditFormProps {
@@ -19,7 +18,7 @@ interface TeamEditFormProps {
   disabled?: boolean
   sending?: boolean
   fullPage?: boolean
-  backButton?: boolean
+  goBack?: () => void
 }
 
 const TeamEditForm = ({
@@ -32,10 +31,8 @@ const TeamEditForm = ({
   disabled = false,
   sending = false,
   fullPage = false,
-  backButton = false,
+  goBack,
 }: TeamEditFormProps) => {
-  const router = useRouter()
-
   const slugDomain = useMemo(() => {
     if (domain == null) {
       return boostHubBaseUrl + '/'
@@ -89,12 +86,12 @@ const TeamEditForm = ({
       )}
 
       <div className='submit-row'>
-        {backButton && (
+        {goBack != null && (
           <Button
             variant='transparent'
             className='go-back'
             type='button'
-            onClick={() => router.goBack()}
+            onClick={goBack}
           >
             <IconMdi path={mdiChevronRight} /> Go Back
           </Button>

@@ -1,26 +1,24 @@
-import React, { useCallback, useState } from 'react'
-import Page from '../../components/Page'
-import styled from '../../lib/styled'
-import { getSettingsUsePageData } from '../../api/pages/settings'
-import ErrorBlock from '../../components/atoms/ErrorBlock'
+import React, { useState } from 'react'
+import Page from '../../Page'
 import cc from 'classcat'
-import { Spinner } from '../../components/atoms/Spinner'
-import Button from '../../components/atoms/Button'
-import Flexbox from '../../components/atoms/Flexbox'
-import Icon from '../../components/atoms/Icon'
+import styled from '../../../lib/styled'
+import ErrorBlock from '../../atoms/ErrorBlock'
 import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline } from '@mdi/js'
-import { createTeam } from '../../api/teams'
-import { useNavigateToTeam } from '../../components/atoms/Link/TeamLink'
-import { useRouter } from '../../lib/router'
-import { GetInitialPropsParameters } from '../../interfaces/pages'
+import Flexbox from '../../atoms/Flexbox'
+import Button from '../../atoms/Button'
+import Spinner from '../../../../components/atoms/Spinner'
+import Icon from '../../../../components/atoms/Icon'
 
-const SettingsUsePage = () => {
-  const [sending, setSending] = useState<boolean>(false)
-  const [error, setError] = useState<unknown>()
-  const { push } = useRouter()
+interface UsagePageProps {
+  onUsage: (val: 'personal' | 'team') => void
+  sending: boolean
+  error: unknown
+}
+
+const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
-  const navigateToTeam = useNavigateToTeam()
 
+  /*
   const setAccount = useCallback(
     async (e: any) => {
       e.preventDefault()
@@ -40,6 +38,7 @@ const SettingsUsePage = () => {
     },
     [push, type, navigateToTeam]
   )
+  */
 
   return (
     <Page>
@@ -48,7 +47,12 @@ const SettingsUsePage = () => {
           <h1>How are you planning to use Boost Note?</h1>
           <p>We&apos;ll streamline your setup experience accordingly</p>
 
-          <form onSubmit={setAccount}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              onUsage(type)
+            }}
+          >
             <Flexbox justifyContent='space-between' className='row'>
               <div
                 className={cc([
@@ -183,9 +187,4 @@ const Container = styled.div`
   }
 `
 
-SettingsUsePage.getInitialProps = async (params: GetInitialPropsParameters) => {
-  const result = await getSettingsUsePageData(params)
-  return result
-}
-
-export default SettingsUsePage
+export default UsagePage
