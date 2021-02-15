@@ -5,7 +5,7 @@ import { CreateSubscriptionResponseBody } from '.'
 
 export async function startTeamFreeTrial(team: SerializedTeam) {
   const data = await callApi<CreateSubscriptionResponseBody>(
-    `/api/teams/${team.id}/subscription/trial`,
+    `api/teams/${team.id}/subscription/trial`,
     {
       method: 'post',
     }

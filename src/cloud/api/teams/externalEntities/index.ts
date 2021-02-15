@@ -6,7 +6,7 @@ export async function getExternalEntity(
   id: string,
   refresh: boolean
 ) {
-  return callApi(`/api/teams/${team}/externalEntity`, {
+  return callApi(`api/teams/${team}/externalEntity`, {
     search: {
       type,
       id,

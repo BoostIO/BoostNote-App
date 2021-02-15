@@ -9,7 +9,7 @@ export interface CreateUserAppFeedbackRequestBody {
 export async function registerAppFeedback(
   body: CreateUserAppFeedbackRequestBody
 ) {
-  const result = await callApi(`/api/users/feedback`, {
+  const result = await callApi(`api/users/feedback`, {
     json: body,
     method: 'post',
   })

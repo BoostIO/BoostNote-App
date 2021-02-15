@@ -17,7 +17,7 @@ export async function createWorkspace(
   body: CreateWorkspaceRequestBody
 ) {
   const data = await callApi<CreateWorkspaceResponseBody>(
-    `/api/teams/${team.id}/workspaces`,
+    `api/teams/${team.id}/workspaces`,
     {
       json: body,
       method: 'post',
@@ -42,7 +42,7 @@ export async function updateWorkspace(
   body: UpdateWorkspaceRequestBody
 ) {
   const data = await callApi<UpdateWorkspaceResponseBody>(
-    `/api/teams/${team.id}/workspaces/${workspaceId}`,
+    `api/teams/${team.id}/workspaces/${workspaceId}`,
     {
       json: body,
       method: 'put',
@@ -61,7 +61,7 @@ export async function destroyWorkspace(
   destroyContent = false
 ) {
   const data = await callApi<DestroyWorkspaceResponseBody>(
-    `/api/teams/${team.id}/workspaces/${workspace.id}}`,
+    `api/teams/${team.id}/workspaces/${workspace.id}}`,
     {
       search: {
         destroyContent,
