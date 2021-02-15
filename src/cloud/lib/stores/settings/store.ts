@@ -31,7 +31,7 @@ export type SettingsTab =
 
 function useSettingsStore() {
   const { globalData, setPartialGlobalData } = useGlobalData()
-  const { currentUserSettings } = globalData
+  const { currentUserSettings, currentUser } = globalData
   const [settingsTab, setSettingsTab] = useState<SettingsTab>('personalInfo')
   const { pushMessage } = useToast()
   const { t } = useTranslation()
@@ -49,6 +49,9 @@ function useSettingsStore() {
     if (saveTimer.current != null) {
       clearTimeout(saveTimer.current)
     }
+    if (currentUser == null) {
+      return
+    }
     saveTimer.current = setTimeout(() => {
       saveUserSettings({
         value: JSON.stringify(settings),
@@ -65,7 +68,7 @@ function useSettingsStore() {
           })
         })
     }, 2000)
-  }, [settings, setPartialGlobalData, t, pushMessage])
+  }, [settings, setPartialGlobalData, t, pushMessage, currentUser])
 
   const mergedUserSettings = useMemo(() => {
     return {
