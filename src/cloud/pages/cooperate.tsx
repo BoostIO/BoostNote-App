@@ -16,6 +16,7 @@ import { baseIconStyle } from '../lib/styled/styleFunctions'
 import { useGlobalData } from '../lib/stores/globalData'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import { getDocLinkHref } from '../components/atoms/Link/DocLink'
+import UsagePage from '../components/organisms/Onboarding/UsagePage'
 
 const CooperatePage = () => {
   const [name, setName] = useState<string>('')
@@ -29,6 +30,7 @@ const CooperatePage = () => {
   const { setToLocalStorage } = useSidebarCollapse()
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [showTeamForm, setShowTeamForm] = useState(false)
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -45,12 +47,11 @@ const CooperatePage = () => {
     []
   )
 
-  const handleSubmit = useCallback(
-    async (event: FormEvent) => {
-      event.preventDefault()
+  const createTeamCallback = useCallback(
+    async (personal: boolean) => {
       setSending(true)
       try {
-        const body = { name, domain }
+        const body = personal ? { personal: true } : { name, domain }
 
         const { team, doc } = await createTeam(body)
 
@@ -63,7 +64,7 @@ const CooperatePage = () => {
           return
         }
 
-        if (iconFile != null) {
+        if (!personal && iconFile != null) {
           const { icon } = await updateTeamIcon(team, iconFile)
           team.icon = icon
         }
@@ -104,6 +105,31 @@ const CooperatePage = () => {
     ]
   )
 
+  const handleSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault()
+      createTeamCallback(false)
+    },
+    [createTeamCallback]
+  )
+
+  const onUsageCallback = useCallback(
+    (val: 'personal' | 'team') => {
+      if (val === 'personal') {
+        return createTeamCallback(true)
+      }
+      setShowTeamForm(true)
+      return
+    },
+    [createTeamCallback]
+  )
+
+  if (!showTeamForm) {
+    return (
+      <UsagePage onUsage={onUsageCallback} sending={sending} error={error} />
+    )
+  }
+
   return (
     <Page>
       <Container>
@@ -140,7 +166,7 @@ const CooperatePage = () => {
             disabled={sending}
             onSubmit={handleSubmit}
             showSubmitButton={true}
-            backButton={!usingElectron}
+            goBack={() => setShowTeamForm(false)}
           />
           {error != null && <ErrorBlock error={error} />}
         </div>

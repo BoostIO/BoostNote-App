@@ -50,7 +50,6 @@ import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
 import SettingsPage from '../pages/settings'
-import SettingsUsePage from '../pages/settings/use'
 import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
@@ -335,13 +334,6 @@ function getPageComponent(pathname: string): PageSpec | null {
   if (splittedPathnames[0] === 'account' && splittedPathnames[1] === 'delete') {
     return {
       Component: AccountDeletePage,
-    }
-  }
-
-  if (splittedPathnames[0] === 'settings' && splittedPathnames[1] === 'use') {
-    return {
-      Component: SettingsUsePage,
-      getInitialProps: SettingsUsePage.getInitialProps,
     }
   }
 
