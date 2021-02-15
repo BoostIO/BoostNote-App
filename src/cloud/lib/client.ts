@@ -39,7 +39,7 @@ export async function callApi<T = any>(
   if (usingElectron && accessToken != null) {
     mergedHeaders['Authorization'] = `Bearer ${accessToken}`
   }
-  return ky(pathname, {
+  return ky(pathname.startsWith('/') ? pathname.substring(1) : pathname, {
     prefixUrl: boostHubBaseUrl,
     headers: mergedHeaders,
     method,
