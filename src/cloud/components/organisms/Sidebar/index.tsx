@@ -71,7 +71,7 @@ const Sidebar = ({ setFocused }: SidebarProps) => {
               >
                 <div className='sidebar__footer__button' tabIndex={-1}>
                   <Icon path={mdiPlusCircleOutline} />
-                  Create a New Team
+                  Create a New Space
                 </div>
               </CustomLink>
             </div>
