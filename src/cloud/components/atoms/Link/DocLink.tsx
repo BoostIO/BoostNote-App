@@ -37,8 +37,8 @@ const DocLink = ({
   onFocus,
   id,
 }: DocLinkProps) => {
-  const { push } = useRouter()
   const href = getDocLinkHref(doc, team, intent, query)
+  const { push } = useRouter()
   const navigate = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault()
