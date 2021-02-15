@@ -12,11 +12,11 @@ export async function getTagsShowPageData({
   search,
   signal,
 }: GetInitialPropsParameters) {
-  const [, teamId] = pathname.split('/')
+  const [, teamId, , labelName] = pathname.split('/')
   const data = await callApi<TagsShowPageResponseBody>(
     'api/pages/teams/labels/show',
     {
-      search: search + `&teamId=${teamId}`,
+      search: search + `&teamId=${teamId}&labelId=${labelName}`,
       signal,
     }
   )

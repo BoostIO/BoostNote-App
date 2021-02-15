@@ -55,6 +55,7 @@ import SettingsUsePage from '../pages/settings/use'
 import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
+import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
 
 const CombinedProvider = combineProviders(
   ElectronProvider,
@@ -382,6 +383,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: OpenInvitePage,
           getInitialProps: OpenInvitePage.getInitialProps,
+        }
+      case 'labels':
+        return {
+          Component: TagsShowPage,
+          getInitialProps: TagsShowPage.getInitialProps,
         }
       default:
         return {
