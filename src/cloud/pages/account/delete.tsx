@@ -13,7 +13,7 @@ import { deleteUser } from '../../api/users'
 import FeedbackForm from '../../components/organisms/FeedbackForm'
 import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
 import { useElectron } from '../../lib/stores/electron'
-import { useRouter } from '../../lib/router'
+import { boostHubBaseUrl } from '../../lib/consts'
 
 const AccountDeletePage = () => {
   const { globalData } = useGlobalData()
@@ -23,7 +23,6 @@ const AccountDeletePage = () => {
   const [sendingRemoval, setSendingRemoval] = useState<boolean>(false)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
-  const router = useRouter()
   const { t } = useTranslation()
   const { usingElectron, sendToElectron } = useElectron()
 
@@ -67,7 +66,7 @@ const AccountDeletePage = () => {
               if (usingElectron) {
                 sendToElectron('account-delete')
               } else {
-                router.push('/')
+                window.location.href = `${boostHubBaseUrl}/api/oauth/signout`
               }
             } catch (error) {
               pushMessage({
@@ -87,7 +86,6 @@ const AccountDeletePage = () => {
     t,
     currentUser,
     pushMessage,
-    router,
     feedback,
     usingElectron,
     sendToElectron,
