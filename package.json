@@ -173,7 +173,7 @@
     "mixpanel-browser": "^2.40.1",
     "nprogress": "^0.2.0",
     "ow": "^0.13.2",
-    "pako": "^2.0.3",
+    "pako": "^1.0.11",
     "path-parse": "^1.0.6",
     "path-to-regexp": "^2.4.0",
     "plur": "^4.0.0",
