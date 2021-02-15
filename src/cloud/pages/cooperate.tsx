@@ -4,9 +4,8 @@ import styled from '../lib/styled'
 import { createTeam, updateTeamIcon } from '../api/teams'
 import ErrorBlock from '../components/atoms/ErrorBlock'
 import TeamEditForm from '../components/molecules/TeamEditForm'
-import { useNavigateToTeam } from '../components/atoms/Link/TeamLink'
+import { getTeamLinkHref } from '../components/atoms/Link/TeamLink'
 import { useElectron } from '../lib/stores/electron'
-import { useNavigateToDoc } from '../components/atoms/Link/DocLink'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
 import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
@@ -16,6 +15,7 @@ import Icon from '../components/atoms/Icon'
 import { baseIconStyle } from '../lib/styled/styleFunctions'
 import { useGlobalData } from '../lib/stores/globalData'
 import { GetInitialPropsParameters } from '../interfaces/pages'
+import { getDocLinkHref } from '../components/atoms/Link/DocLink'
 
 const CooperatePage = () => {
   const [name, setName] = useState<string>('')
@@ -23,8 +23,6 @@ const CooperatePage = () => {
   const [sending, setSending] = useState<boolean>(false)
   const [error, setError] = useState<any>(null)
   const { usingElectron, sendToElectron } = useElectron()
-  const navigateToTeam = useNavigateToTeam()
-  const navigateToDoc = useNavigateToDoc()
   const { updateDocsMap } = useNav()
   const { setTeamInGlobal } = useGlobalData()
   const { setPartialPageData } = usePage()
@@ -79,9 +77,14 @@ const CooperatePage = () => {
             workspaces: [doc.workspaceId],
             links: [moreHeaderId],
           })
-          navigateToDoc(doc, team, 'index', { onboarding: true })
+
+          window.location.href = getDocLinkHref(doc, team, 'index', {
+            onboarding: true,
+          })
         } else {
-          navigateToTeam(team, 'invites', { onboarding: true })
+          window.location.href = getTeamLinkHref(team, 'invites', {
+            onboarding: true,
+          })
         }
       } catch (error) {
         setSending(false)
@@ -89,19 +92,15 @@ const CooperatePage = () => {
       }
     },
     [
-      setSending,
-      setError,
-      domain,
       name,
-      navigateToTeam,
-      navigateToDoc,
+      domain,
       usingElectron,
+      iconFile,
+      setTeamInGlobal,
       sendToElectron,
       updateDocsMap,
       setPartialPageData,
       setToLocalStorage,
-      setTeamInGlobal,
-      iconFile,
     ]
   )
 
