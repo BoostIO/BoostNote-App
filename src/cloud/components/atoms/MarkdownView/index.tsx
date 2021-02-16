@@ -212,16 +212,22 @@ const MarkdownView = ({
         document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
           trigger.addEventListener('click', triggerCollapse)
         })
-        if (usingElectron) {
-          document
-            .querySelectorAll('.doc-embed-header a')
-            .forEach((docEmbedLink) => {
-              docEmbedLink.addEventListener('click', (event) => {
-                event.preventDefault()
-                push((event.target as HTMLAnchorElement).href)
-              })
+        document
+          .querySelectorAll('.doc-embed-header a')
+          .forEach((docEmbedLink) => {
+            docEmbedLink.addEventListener('click', (event) => {
+              if (
+                ((event as MouseEvent).ctrlKey ||
+                  (event as MouseEvent).metaKey) &&
+                !usingElectron
+              ) {
+                return
+              }
+
+              event.preventDefault()
+              push((event.target as HTMLAnchorElement).href)
             })
-        }
+          })
         if (onRenderRef.current != null) {
           onRenderRef.current()
         }
