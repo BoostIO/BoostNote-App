@@ -19,6 +19,9 @@ const SharedPage = (props: SharePageDataResponseBody) => {
   const [fetching, setFetching] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [token, setToken] = useState(() => {
+    return 'token' in props ? props.token : null
+  })
 
   const { connect } = useRealtimeConn()
   useEffect(() => {
@@ -55,11 +58,12 @@ const SharedPage = (props: SharePageDataResponseBody) => {
       setError(null)
       setFetching(true)
       try {
-        const { link } = await getSharedLink(props.link, {
+        const { link, token } = await getSharedLink(props.link, {
           password,
         })
         if (link.doc != null) {
           setCurrentDoc(link.doc)
+          setToken(token)
         }
       } catch {
         setError('Password is incorrect')
@@ -69,8 +73,8 @@ const SharedPage = (props: SharePageDataResponseBody) => {
     [fetching, password, props.link]
   )
 
-  if (currentDoc != null && 'token' in props) {
-    return <SharedDocPage doc={currentDoc} token={props.token} />
+  if (currentDoc != null && token != null) {
+    return <SharedDocPage doc={currentDoc} token={token} />
   }
   return (
     <StyledDocPage>
