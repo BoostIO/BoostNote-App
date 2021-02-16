@@ -165,11 +165,7 @@ const Editor = ({
     setTitle(getDocTitle(doc))
   }, [doc])
 
-  const docIsNew =
-    !!query.new &&
-    doc.createdAt === doc.updatedAt &&
-    (title == null || title.length === 0)
-
+  const docIsNew = !!query.new
   useEffect(() => {
     if (docRef.current !== doc.id) {
       if (docIsNew) {
