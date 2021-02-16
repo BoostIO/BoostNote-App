@@ -606,6 +606,10 @@ const StyledServiceListItem = styled.li`
       height: 30px;
       margin-right: ${({ theme }) => theme.space.small}px;
     }
+
+    p {
+      margin-top: 0;
+    }
   }
 
   .item-info-text {
