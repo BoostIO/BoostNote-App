@@ -8,6 +8,7 @@ import ColoredBlock from '../../atoms/ColoredBlock'
 import { ThemeProvider } from 'styled-components'
 import ButtonLink from '../../atoms/ButtonLink'
 import SignInForm from '../../molecules/SignInForm'
+import { nodeEnv } from '../../../lib/consts'
 
 interface ErrorPageProps {
   error: Error
@@ -45,8 +46,8 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           <h2 className='heading'>Something went wrong...</h2>
           <ErrorSection
             statusCode={statusCode}
-            message={error.message}
-            stack={error.stack}
+            message={beautifyErrorMessage(error.message)}
+            stack={nodeEnv === 'production' ? undefined : error.stack}
           />
 
           {statusCode == null ? (
@@ -98,3 +99,16 @@ const Container = styled.div`
   margin: 0 auto;
   position: relative;
 `
+
+function beautifyErrorMessage(errorMessage: string) {
+  switch (errorMessage) {
+    case 'Forbidden':
+      return "You are not allowed to access this resource. The resource might not exist or you don't have a right to access."
+    case 'Unauthorized':
+      return 'Please sign up/in to access the resource.'
+    case 'Failed to fetch':
+      return 'Failed to fetch page data. Please check your internet connection.'
+    default:
+      return errorMessage
+  }
+}
