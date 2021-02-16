@@ -598,7 +598,6 @@ const StyledServiceListItem = styled.li`
 
   .item-info {
     display: flex;
-
     &.zapier {
       align-items: center;
     }
@@ -613,6 +612,7 @@ const StyledServiceListItem = styled.li`
     padding-right: ${({ theme }) => theme.space.default}px;
 
     h3 {
+      margin-top: 0;
       margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
       font-size: ${({ theme }) => theme.fontSizes.default}px;
     }
