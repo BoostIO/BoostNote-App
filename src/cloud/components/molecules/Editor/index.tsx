@@ -165,9 +165,14 @@ const Editor = ({
     setTitle(getDocTitle(doc))
   }, [doc])
 
+  const docIsNew =
+    !!query.new &&
+    doc.createdAt === doc.updatedAt &&
+    (title == null || title.length === 0)
+
   useEffect(() => {
     if (docRef.current !== doc.id) {
-      if (query.new) {
+      if (docIsNew) {
         setEditorLayout(preferences.lastUsedLayout)
         if (titleRef.current != null) {
           titleRef.current.focus()
@@ -177,7 +182,7 @@ const Editor = ({
       }
       docRef.current = doc.id
     }
-  }, [doc.id, query.new, preferences.lastUsedLayout])
+  }, [doc.id, docIsNew, preferences.lastUsedLayout])
 
   useEffect(() => {
     if (editorLayout === 'preview') {
@@ -193,12 +198,12 @@ const Editor = ({
     if (!initialSyncDone) {
       return
     }
-    if (!query.new && editorRef.current != null) {
+    if (!docIsNew && editorRef.current != null) {
       editorRef.current.focus()
     } else if (titleRef.current != null) {
       titleRef.current.focus()
     }
-  }, [initialSyncDone, query.new])
+  }, [initialSyncDone, docIsNew])
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -618,7 +623,7 @@ const Editor = ({
                 addedNodes={
                   <EditableInput
                     focusTitleInputRef={focusTitleInputRef}
-                    editOnStart={query.new != null}
+                    editOnStart={docIsNew}
                     text={title || ''}
                     onTextChange={titleChangeCallback}
                     placeholder='Title'
