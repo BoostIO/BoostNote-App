@@ -54,6 +54,7 @@ import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
+import SharedPage from '../pages/shared/[link]'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -337,6 +338,26 @@ function getPageComponent(pathname: string): PageSpec | null {
     }
   }
 
+  if (splittedPathnames.length >= 1) {
+    switch (splittedPathnames[0]) {
+      case 'cooperate':
+        return {
+          Component: CooperatePage,
+          getInitialProps: CooperatePage.getInitialProps,
+        }
+      case 'settings':
+        return {
+          Component: SettingsPage,
+          getInitialProps: SettingsPage.getInitialProps,
+        }
+      case 'shared':
+        return {
+          Component: SharedPage,
+          getInitialProps: SharedPage.getInitialProps,
+        }
+    }
+  }
+
   if (splittedPathnames.length >= 2) {
     switch (splittedPathnames[1]) {
       case 'archived':
@@ -388,19 +409,6 @@ function getPageComponent(pathname: string): PageSpec | null {
   }
 
   if (splittedPathnames.length >= 1) {
-    switch (splittedPathnames[0]) {
-      case 'cooperate':
-        return {
-          Component: CooperatePage,
-          getInitialProps: CooperatePage.getInitialProps,
-        }
-      case 'settings':
-        return {
-          Component: SettingsPage,
-          getInitialProps: SettingsPage.getInitialProps,
-        }
-    }
-
     return {
       Component: TeamIndex,
       getInitialProps: TeamIndex.getInitialProps,
