@@ -4,6 +4,7 @@ import { SerializedDoc } from '../../interfaces/db/doc'
 
 export interface ShareLinkResponseBody {
   link: SerializedShareLink
+  token: string
 }
 
 export async function createShareLink(doc: SerializedDoc) {
