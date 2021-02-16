@@ -49,10 +49,6 @@ export const SectionSelect = styled.select`
   height: 40px;
   border-radius: 2px;
   font-size: 14px;
-
-  option {
-    color: initial;
-  }
 `
 
 export const SectionPrimaryButton = styled.button`

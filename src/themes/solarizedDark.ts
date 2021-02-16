@@ -82,7 +82,7 @@ export const solarizedDarkTheme: BaseTheme = {
   secondaryButtonHoverBackgroundColor: '#104B59',
 
   // Input
-  inputBackground: light12Color,
+  inputBackground: base2Color,
 
   // Search Highlight
   searchHighlightBackgroundColor: '#ffc107',
