@@ -12,10 +12,12 @@ export type SharePageDataResponseBody =
   | { link: string; requireAction: 'password' }
 
 export async function getSharedPagedData({
+  pathname,
   search,
 }: GetInitialPropsParameters) {
+  const [, , link] = pathname.split('/')
   const data = await callApi<SharePageDataResponseBody>('api/pages/shared', {
-    search,
+    search: search + `&link=${link}`,
   })
 
   return data
