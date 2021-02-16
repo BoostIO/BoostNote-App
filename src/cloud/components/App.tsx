@@ -6,6 +6,7 @@ import {
   initAccessToken,
   usingElectron,
   sendToHost,
+  useElectron,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { ToastProvider } from '../lib/stores/toast'
@@ -15,6 +16,7 @@ import '../lib/i18n'
 
 import { RealtimeConnProvider } from '../lib/stores/realtimeConn'
 const App = () => {
+  useElectron()
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
 
   useEffectOnce(() => {
@@ -47,11 +49,9 @@ const App = () => {
       <ToastProvider>
         <GlobalDataProvider>
           <RealtimeConnProvider>
-            <ElectronProvider>
-              <RouterProvider>
-                <Router />
-              </RouterProvider>
-            </ElectronProvider>
+            <RouterProvider>
+              <Router />
+            </RouterProvider>
           </RealtimeConnProvider>
         </GlobalDataProvider>
       </ToastProvider>

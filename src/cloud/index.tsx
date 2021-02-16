@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import './lib/i18n'
+import { ElectronProvider } from './lib/stores/electron'
 
 function render(Component: typeof App) {
   let rootDiv = document.getElementById('root')
@@ -10,7 +11,13 @@ function render(Component: typeof App) {
     rootDiv.setAttribute('id', 'root')
     document.body.appendChild(rootDiv)
   }
-  ReactDOM.render(<Component />, document.getElementById('root'))
+  ReactDOM.render(
+    <ElectronProvider>
+      <Component />
+    </ElectronProvider>,
+
+    document.getElementById('root')
+  )
 }
 
 if (module.hot != null) {
