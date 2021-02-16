@@ -21,6 +21,13 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
   const { response } = error as any
   const statusCode = response != null ? response.status : null
 
+  const homeUrl =
+    currentUser == null
+      ? '/'
+      : teams.length > 0
+      ? `/${teams[0].domain}`
+      : '/cooperate'
+
   return (
     <ThemeProvider theme={darkTheme}>
       <Page
@@ -58,13 +65,10 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           ) : (
             <ButtonLink
               variant='primary'
-              href={
-                currentUser == null
-                  ? '/'
-                  : teams.length > 0
-                  ? `/${teams[0].domain}`
-                  : '/cooperate'
-              }
+              href={homeUrl}
+              onClick={() => {
+                window.location.href = homeUrl
+              }}
               style={{
                 display: 'flex',
                 margin: '40px auto 20px',
