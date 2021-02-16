@@ -165,7 +165,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             click: () => {
               setPreferences((prevPreferences) => {
                 return {
-                  ...prevPreferences,
                   'general.showAppNavigator': !prevPreferences[
                     'general.showAppNavigator'
                   ],
