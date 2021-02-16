@@ -173,7 +173,6 @@ const BoostHubWebview = ({
                 click: () => {
                   setPreferences((prevPreferences) => {
                     return {
-                      ...prevPreferences,
                       'general.showAppNavigator': !prevPreferences[
                         'general.showAppNavigator'
                       ],
