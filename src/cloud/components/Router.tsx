@@ -55,6 +55,7 @@ import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
 import SharedPage from '../pages/shared/[link]'
+import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -399,6 +400,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: TagsShowPage,
           getInitialProps: TagsShowPage.getInitialProps,
+        }
+      case 'workspaces':
+        return {
+          Component: WorkspaceShowPage,
+          getInitialProps: WorkspaceShowPage.getInitialProps,
         }
       default:
         return {
