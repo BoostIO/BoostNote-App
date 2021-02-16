@@ -52,7 +52,7 @@ const IntegrationsTab = () => {
           <StyledServiceList>
             <StyledServiceListItem>
               <div className='item-info zapier'>
-                <img src='/static/logos/zapier.png' alt='Zapier' />
+                <img src='/app/static/logos/zapier.png' alt='Zapier' />
                 <p>Connect Boost Note for Teams to 2,000+ Apps</p>
               </div>
               <a
@@ -76,7 +76,7 @@ const IntegrationsTab = () => {
           <StyledServiceList>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/github.png' alt='GitHub' />
+                <img src='/app/static/logos/github.png' alt='GitHub' />
                 <div className='item-info-text'>
                   <h3>GitHub</h3>
                   <p>
@@ -101,7 +101,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/trello.png' alt='Trello' />
+                <img src='/app/static/logos/trello.png' alt='Trello' />
                 <div className='item-info-text'>
                   <h3>Trello</h3>
                   <p>
@@ -126,7 +126,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/slack.png' alt='Slack' />
+                <img src='/app/static/logos/slack.png' alt='Slack' />
                 <div className='item-info-text'>
                   <h3>Slack</h3>
                   <p>
@@ -151,7 +151,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/gmail.png' alt='Gmail' />
+                <img src='/app/static/logos/gmail.png' alt='Gmail' />
                 <div className='item-info-text'>
                   <h3>Gmail</h3>
                   <p>
@@ -177,7 +177,7 @@ const IntegrationsTab = () => {
             <StyledServiceListItem>
               <div className='item-info'>
                 <img
-                  src='/static/logos/google_calendar.png'
+                  src='/app/static/logos/google_calendar.png'
                   alt='Google Calendar'
                 />
                 <div className='item-info-text'>
@@ -205,7 +205,7 @@ const IntegrationsTab = () => {
             <StyledServiceListItem>
               <div className='item-info'>
                 <img
-                  src='/static/logos/google_spreadsheet.png'
+                  src='/app/static/logos/google_spreadsheet.png'
                   alt='Google Spreadsheet'
                 />
                 <div className='item-info-text'>
@@ -232,7 +232,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/jira.png' alt='Jira' />
+                <img src='/app/static/logos/jira.png' alt='Jira' />
                 <div className='item-info-text'>
                   <h3>Jira</h3>
                   <p>
@@ -257,7 +257,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/miro.png' alt='Miro' />
+                <img src='/app/static/logos/miro.png' alt='Miro' />
                 <div className='item-info-text'>
                   <h3>Miro</h3>
                   <p>
@@ -282,7 +282,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/dropbox.png' alt='Dropbox' />
+                <img src='/app/static/logos/dropbox.png' alt='Dropbox' />
                 <div className='item-info-text'>
                   <h3>Dropbox</h3>
                   <p>
@@ -307,7 +307,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/airtable.png' alt='Airtable' />
+                <img src='/app/static/logos/airtable.png' alt='Airtable' />
                 <div className='item-info-text'>
                   <h3>Airtable</h3>
                   <p>
@@ -332,7 +332,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/clickup.png' alt='Clickup' />
+                <img src='/app/static/logos/clickup.png' alt='Clickup' />
                 <div className='item-info-text'>
                   <h3>ClickUp</h3>
                   <p>
@@ -357,7 +357,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/aws.png' alt='Amazon Web Service' />
+                <img src='/app/static/logos/aws.png' alt='Amazon Web Service' />
                 <div className='item-info-text'>
                   <h3>Amazon Web Service</h3>
                   <p>
@@ -383,7 +383,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/mailchimp.png' alt='Mailchimp' />
+                <img src='/app/static/logos/mailchimp.png' alt='Mailchimp' />
                 <div className='item-info-text'>
                   <h3>Mailchimp</h3>
                   <p>
@@ -408,7 +408,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/intercom.png' alt='Intercom' />
+                <img src='/app/static/logos/intercom.png' alt='Intercom' />
                 <div className='item-info-text'>
                   <h3>Intercom</h3>
                   <p>
@@ -433,7 +433,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/stripe.jpeg' alt='Stripe' />
+                <img src='/app/static/logos/stripe.jpeg' alt='Stripe' />
                 <div className='item-info-text'>
                   <h3>Stripe</h3>
                   <p>
@@ -458,7 +458,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/asana.png' alt='Asana' />
+                <img src='/app/static/logos/asana.png' alt='Asana' />
                 <div className='item-info-text'>
                   <h3>Asana</h3>
                   <p>e.g., Create documents from new Asana tasks.</p>
@@ -480,7 +480,7 @@ const IntegrationsTab = () => {
             </StyledServiceListItem>
             <StyledServiceListItem>
               <div className='item-info zapier'>
-                <img src='/static/logos/zapier.png' alt='Zapier' />
+                <img src='/app/static/logos/zapier.png' alt='Zapier' />
                 <p>Connect Boost Note for Teams to 2,000+ Apps</p>
               </div>
               <a
@@ -504,7 +504,7 @@ const IntegrationsTab = () => {
           <StyledServiceList>
             <StyledServiceListItem>
               <div className='item-info'>
-                <img src='/static/logos/github.png' alt='GitHub' />
+                <img src='/app/static/logos/github.png' alt='GitHub' />
                 <div className='item-info-text'>
                   <h3>GitHub</h3>
                   <p>

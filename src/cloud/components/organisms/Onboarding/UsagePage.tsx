@@ -47,7 +47,7 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                 ])}
                 onClick={() => setType('personal')}
               >
-                <img src='/static/images/sozai1.svg' />
+                <img src='/app/static/images/sozai1.svg' />
                 <strong>Cloud space for myself</strong>
                 <p>
                   Write fast, think deeply. Organize Your personal wiki with
@@ -67,7 +67,7 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                 className={cc(['account__type', type === 'team' && 'active'])}
                 onClick={() => setType('team')}
               >
-                <img src='/static/images/sozai2.svg' />
+                <img src='/app/static/images/sozai2.svg' />
                 <strong>Cloud space with my team</strong>
                 <p>
                   Collaborate smoothly with real-time markdown co-authoring and

@@ -10,7 +10,7 @@ const SharePageTopbar = ({ children }: React.PropsWithChildren<{}>) => (
           style={{ color: 'white', display: 'flex', alignItems: 'center' }}
         >
           <img
-            src='/static/images/apple-icon-180x180.png'
+            src='/app/static/images/apple-icon-180x180.png'
             alt='Boost Note'
             style={{ marginRight: 10 }}
           />

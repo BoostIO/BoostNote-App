@@ -63,13 +63,13 @@ const ImportModalSelectSource = ({
               <SourceButton
                 title={'Notion'}
                 description={'Follow our migration guide in the next page'}
-                logo={<img src='/static/logos/notion.svg' />}
+                logo={<img src='/app/static/logos/notion.svg' />}
                 onClick={() => showGuide('notion')}
               />
               <SourceButton
                 title={'Evernote'}
                 description={'Follow our migration guide in the next page'}
-                logo={<img src='/static/logos/evernote.svg' />}
+                logo={<img src='/app/static/logos/evernote.svg' />}
                 onClick={() => showGuide('evernote')}
               />
             </StyledSourceRow>
@@ -77,7 +77,7 @@ const ImportModalSelectSource = ({
               <SourceButton
                 title={'Confluence'}
                 description={'Follow our migration guide in the next page'}
-                logo={<img src='/static/logos/confluence.svg' />}
+                logo={<img src='/app/static/logos/confluence.svg' />}
                 onClick={() => showGuide('confluence')}
               />
               <SourceButton
@@ -91,13 +91,13 @@ const ImportModalSelectSource = ({
               <SourceButton
                 title={'Dropbox'}
                 description={'Follow our migration guide in the next page'}
-                logo={<img src='/static/logos/dropboxpaper.svg' />}
+                logo={<img src='/app/static/logos/dropboxpaper.svg' />}
                 onClick={() => showGuide('dropbox')}
               />
               <SourceButton
                 title={'Quip'}
                 description={'Follow our migration guide in the next page'}
-                logo={<img src='/static/logos/quip.svg' />}
+                logo={<img src='/app/static/logos/quip.svg' />}
                 onClick={() => showGuide('quip')}
               />
             </StyledSourceRow>
