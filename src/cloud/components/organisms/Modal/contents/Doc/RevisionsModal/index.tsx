@@ -126,6 +126,7 @@ const RevisionsModal = ({
           currentDoc.id,
           nextPage
         )
+
         const mappedRevisions = revisions.reduce((acc, val) => {
           acc.set(val.id, val)
           return acc
@@ -134,7 +135,7 @@ const RevisionsModal = ({
         setCurrentPage(page)
         setTotalPages(totalPages)
         updateRevisionsMap(...mappedRevisions)
-        if (page === 1) {
+        if (page === 1 && revisions.length > 0) {
           focusFirstChildFromElement(menuRef.current)
           setRevisionIndex(revisions[0].id)
         }
