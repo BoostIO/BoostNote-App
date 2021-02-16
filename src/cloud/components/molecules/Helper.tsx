@@ -24,7 +24,6 @@ import { useRouter } from '../../lib/router'
 const forbiddenRoutes = [
   '\\/cooperate',
   '\\/settings',
-  '\\/settings\\/use',
   '\\/[A-z0-9]+\\/invites',
 ]
 

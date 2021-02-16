@@ -55,7 +55,7 @@ const BoostHubWebview = ({
   onDidNavigate,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
-  const { preferences } = usePreferences()
+  const { preferences, setPreferences } = usePreferences()
   const { signOut } = useBoostHub()
   const cloudUser = preferences['cloud.user']
 
@@ -166,6 +166,19 @@ const BoostHubWebview = ({
                 type: 'normal',
                 label: 'Open Dev Tools',
                 click: openDevTools,
+              },
+              {
+                type: 'normal',
+                label: 'Toggle App Navigator',
+                click: () => {
+                  setPreferences((prevPreferences) => {
+                    return {
+                      'general.showAppNavigator': !prevPreferences[
+                        'general.showAppNavigator'
+                      ],
+                    }
+                  })
+                },
               },
             ],
           })

@@ -17,13 +17,3 @@ export async function getSettingsPageData({
 
   return data
 }
-
-export async function getSettingsUsePageData({
-  search,
-  signal,
-}: GetInitialPropsParameters) {
-  return callApi<SettingsPageResponseBody>('api/pages/settings/use', {
-    search,
-    signal,
-  })
-}

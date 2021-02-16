@@ -1,45 +1,30 @@
-import React, { useCallback, useState } from 'react'
-import Page from '../../components/Page'
-import styled from '../../lib/styled'
-import { getSettingsUsePageData } from '../../api/pages/settings'
-import ErrorBlock from '../../components/atoms/ErrorBlock'
+import React, { useState } from 'react'
+import Page from '../../Page'
 import cc from 'classcat'
-import { Spinner } from '../../components/atoms/Spinner'
-import Button from '../../components/atoms/Button'
-import Flexbox from '../../components/atoms/Flexbox'
-import Icon from '../../components/atoms/Icon'
-import { mdiCheckboxBlankCircleOutline, mdiCheckCircleOutline } from '@mdi/js'
-import { createTeam } from '../../api/teams'
-import { useNavigateToTeam } from '../../components/atoms/Link/TeamLink'
-import { useRouter } from '../../lib/router'
-import { GetInitialPropsParameters } from '../../interfaces/pages'
+import styled from '../../../lib/styled'
+import ErrorBlock from '../../atoms/ErrorBlock'
+import {
+  mdiCheckboxBlankCircleOutline,
+  mdiCheckCircleOutline,
+  mdiChevronRight,
+} from '@mdi/js'
+import Flexbox from '../../atoms/Flexbox'
+import Button from '../../atoms/Button'
+import Spinner from '../../../../components/atoms/Spinner'
+import Icon from '../../../../components/atoms/Icon'
+import { useRouter } from '../../../lib/router'
+import { useElectron } from '../../../lib/stores/electron'
 
-const SettingsUsePage = () => {
-  const [sending, setSending] = useState<boolean>(false)
-  const [error, setError] = useState<unknown>()
-  const { push } = useRouter()
+interface UsagePageProps {
+  onUsage: (val: 'personal' | 'team') => void
+  sending: boolean
+  error: unknown
+}
+
+const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
-  const navigateToTeam = useNavigateToTeam()
-
-  const setAccount = useCallback(
-    async (e: any) => {
-      e.preventDefault()
-      setSending(true)
-      if (type === 'team') {
-        push('/cooperate?welcome=true')
-        return
-      }
-      try {
-        const { team } = await createTeam({ personal: true })
-        navigateToTeam(team, 'index', { onboarding: true })
-        return
-      } catch (error) {
-        setError(error)
-      }
-      setSending(false)
-    },
-    [push, type, navigateToTeam]
-  )
+  const router = useRouter()
+  const { usingElectron } = useElectron()
 
   return (
     <Page>
@@ -48,7 +33,12 @@ const SettingsUsePage = () => {
           <h1>How are you planning to use Boost Note?</h1>
           <p>We&apos;ll streamline your setup experience accordingly</p>
 
-          <form onSubmit={setAccount}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              onUsage(type)
+            }}
+          >
             <Flexbox justifyContent='space-between' className='row'>
               <div
                 className={cc([
@@ -98,7 +88,7 @@ const SettingsUsePage = () => {
             {error != null && (
               <ErrorBlock error={error} style={{ marginBottom: 32 }} />
             )}
-            <Flexbox justifyContent='center'>
+            <Flexbox justifyContent='center' direction='column'>
               <Button type='submit' disabled={sending} variant='primary'>
                 {sending ? (
                   <Spinner style={{ position: 'relative', top: 0, left: 0 }} />
@@ -106,6 +96,19 @@ const SettingsUsePage = () => {
                   'Get started for free'
                 )}
               </Button>
+              {!usingElectron && (
+                <Button
+                  type='button'
+                  disabled={sending}
+                  variant='transparent'
+                  onClick={() => router.goBack()}
+                >
+                  <Flexbox alignItems='center'>
+                    <Icon path={mdiChevronRight} />
+                    <span>Go Back</span>
+                  </Flexbox>
+                </Button>
+              )}
             </Flexbox>
           </form>
         </div>
@@ -183,9 +186,4 @@ const Container = styled.div`
   }
 `
 
-SettingsUsePage.getInitialProps = async (params: GetInitialPropsParameters) => {
-  const result = await getSettingsUsePageData(params)
-  return result
-}
-
-export default SettingsUsePage
+export default UsagePage

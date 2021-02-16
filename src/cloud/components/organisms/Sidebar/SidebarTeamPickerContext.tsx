@@ -117,7 +117,7 @@ const SidebarTeamPickerContext = ({
         >
           <SidebarButton tabIndex={-1}>
             <IconMdi path={mdiPlusCircleOutline} />
-            Create a New Team
+            Create a New Space
           </SidebarButton>
         </CustomLink>
       </Scrollable>

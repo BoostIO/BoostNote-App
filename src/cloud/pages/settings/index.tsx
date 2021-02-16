@@ -80,7 +80,7 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
             ? query.redirect
             : teams.length > 0
             ? getTeamURL(teams[0])
-            : `/settings/use`
+            : `/cooperate`
 
         push(finalRedirect)
       } catch (error) {

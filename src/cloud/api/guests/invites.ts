@@ -28,11 +28,10 @@ export interface CreateGuestInviteResponseBody {
 }
 
 export async function createGuestInvite(body: CreateInviteRequestBody) {
-  const data = callApi<CreateGuestInviteResponseBody>(`api/guests/invites`, {
+  return callApi<CreateGuestInviteResponseBody>(`api/guests/invites`, {
     json: body,
     method: 'post',
   })
-  return data
 }
 
 export async function cancelGuestInvite(inviteId: string) {
