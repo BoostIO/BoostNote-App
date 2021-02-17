@@ -155,30 +155,43 @@ const BoostHubWebview = ({
                 type: 'separator',
               },
               {
-                type: 'normal',
-                label: 'Sign Out',
-                click: signOut,
+                type: 'submenu',
+                label: 'Other Actions',
+                submenu: [
+                  {
+                    type: 'normal',
+                    label: 'Go To Home Page',
+                    click: () => {
+                      webview.loadURL(src)
+                    },
+                  },
+                  {
+                    type: 'normal',
+                    label: 'Toggle App Navigator',
+                    click: () => {
+                      setPreferences((prevPreferences) => {
+                        return {
+                          'general.showAppNavigator': !prevPreferences[
+                            'general.showAppNavigator'
+                          ],
+                        }
+                      })
+                    },
+                  },
+                  {
+                    type: 'normal',
+                    label: 'Open Dev Tools',
+                    click: openDevTools,
+                  },
+                ],
               },
               {
                 type: 'separator',
               },
               {
                 type: 'normal',
-                label: 'Open Dev Tools',
-                click: openDevTools,
-              },
-              {
-                type: 'normal',
-                label: 'Toggle App Navigator',
-                click: () => {
-                  setPreferences((prevPreferences) => {
-                    return {
-                      'general.showAppNavigator': !prevPreferences[
-                        'general.showAppNavigator'
-                      ],
-                    }
-                  })
-                },
+                label: 'Sign Out',
+                click: signOut,
               },
             ],
           })
