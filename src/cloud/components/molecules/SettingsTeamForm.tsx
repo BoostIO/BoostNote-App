@@ -227,6 +227,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 700px;
   .profile__icon {
     width: 50px;
     height: 50px;
