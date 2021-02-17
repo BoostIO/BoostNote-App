@@ -280,7 +280,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <div className='topButtonLabel'>{storage.name}</div>
-        <Icon path={mdiChevronDown} />
       </TopButton>
 
       <SearchButton onClick={toggleShowSearchModal}>
