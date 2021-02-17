@@ -302,6 +302,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
       <ScrollableContainer>
         <NavigatorItem
+          dotPlaceholder={true}
           iconPath={mdiCogOutline}
           depth={0}
           label='Settings'
