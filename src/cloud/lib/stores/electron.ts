@@ -15,6 +15,8 @@ import {
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
+import { nodeEnv } from '../consts'
+import lteSemver from 'semver/functions/lte'
 
 export function sendToHost(channel: string, ...args: any[]) {
   ;(window as any).__ELECTRON_ONLY__.sendToHost(channel, ...args)
@@ -33,6 +35,20 @@ function removeAllHostListeners(channel?: string) {
 }
 
 export const usingElectron = /BoostNote/.test(navigator.userAgent)
+
+function getCurrentDesktopAppVersion() {
+  const matchResult = /BoostNote (\d+\.\d+\.\d+)/.exec(navigator.userAgent)
+  if (matchResult == null) {
+    return null
+  }
+  return matchResult[1]
+}
+
+const currentDesktopAppVersion = getCurrentDesktopAppVersion()
+export const usingLegacyElectron =
+  currentDesktopAppVersion != null
+    ? lteSemver(currentDesktopAppVersion, '0.12.4')
+    : false
 
 export function openInBrowser(url: string) {
   if (!usingElectron) {
@@ -72,6 +88,9 @@ export function initAccessToken(): Promise<string | null> {
 }
 
 export function getAccessToken(): string | null {
+  if (nodeEnv === 'production' && usingLegacyElectron) {
+    return null
+  }
   if (accessTokenHasBeenInitialized) {
     return accessToken
   }

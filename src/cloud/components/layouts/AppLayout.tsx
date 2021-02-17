@@ -273,13 +273,15 @@ const AppLayout = ({
         eventSourceRef.current.close()
       }
       console.log('setup event source', url)
+      const accessToken = usingElectron ? getAccessToken() : null
       const newEventSource = new EventSourcePolyfill(url, {
         withCredentials: true,
-        headers: usingElectron
-          ? {
-              ['Authorization']: `Bearer ${getAccessToken()}`,
-            }
-          : {},
+        headers:
+          accessToken != null
+            ? {
+                ['Authorization']: `Bearer ${accessToken}`,
+              }
+            : {},
       })
       newEventSource.onerror = () => {
         newEventSource.close()

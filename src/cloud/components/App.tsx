@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import Router from './Router'
 import { RouterProvider } from '../lib/router'
 import {
-  ElectronProvider,
   initAccessToken,
   usingElectron,
   sendToHost,
   useElectron,
+  usingLegacyElectron,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { ToastProvider } from '../lib/stores/toast'
@@ -21,7 +21,9 @@ const App = () => {
 
   useEffectOnce(() => {
     ;(async () => {
-      await initAccessToken()
+      if (nodeEnv !== 'production' || !usingLegacyElectron) {
+        await initAccessToken()
+      }
       setAccessTokenInitialized(true)
     })()
   })
