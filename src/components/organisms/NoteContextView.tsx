@@ -15,7 +15,7 @@ import { isTagNameValid } from '../../lib/db/utils'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
 import { useDb } from '../../lib/db'
 import { useToast } from '../../lib/toast'
-import { dateToRelativeString } from '../../lib/time'
+import { getFormattedDateTime } from '../../lib/time'
 import { useTranslation } from 'react-i18next'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import {
@@ -99,8 +99,11 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
   )
 
   const updatedAt = useMemo(() => {
-    return dateToRelativeString(new Date(note.updatedAt))
+    return getFormattedDateTime(note.updatedAt, 'at')
   }, [note.updatedAt])
+  const createdAt = useMemo(() => {
+    return getFormattedDateTime(note.createdAt, 'at')
+  }, [note.createdAt])
 
   const purge = useCallback(async () => {
     if (noteId == null) {
@@ -165,6 +168,15 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
 
   return (
     <Container>
+      <ControlItem>
+        <ControlItemLabel>
+          <LabelIcon path={mdiClockOutline} />
+          Created
+        </ControlItemLabel>
+        <ControlItemContent>
+          <NoWrap>{createdAt}</NoWrap>
+        </ControlItemContent>
+      </ControlItem>
       <ControlItem>
         <ControlItemLabel>
           <LabelIcon path={mdiClockOutline} />
@@ -246,6 +258,7 @@ const Container = styled.div`
   overflow-y: auto;
   border-left: solid 1px ${({ theme }) => theme.borderColor};
   flex-shrink: 0;
+  color: ${({ theme }) => theme.uiTextColor};
 `
 
 const Separator = styled.div`
