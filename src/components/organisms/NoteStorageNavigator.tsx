@@ -17,7 +17,6 @@ import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
 import {
-  mdiChevronDown,
   mdiPlus,
   mdiFolderOutline,
   mdiTag,
