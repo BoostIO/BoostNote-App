@@ -43,13 +43,12 @@ const BackgroundShadow = styled.div`
 
 const ContentContainer = styled.div`
   z-index: 7001;
-  position: relative;
-  height: calc(100% - 90px);
-  width: calc(100% - 2em);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  max-width: 1080px;
-  margin: 45px auto;
   ${backgroundColor}
   ${border}
 `
@@ -100,7 +99,13 @@ const CloseButton = styled.button`
 
 const PreferencesModal = () => {
   const { t } = useTranslation()
-  const { closed, togglePreferencesModal, tab, openTab } = usePreferences()
+  const {
+    closed,
+    togglePreferencesModal,
+    tab,
+    openTab,
+    preferences,
+  } = usePreferences()
   const { storageMap } = useDb()
   const routeParams = useRouteParams()
 
@@ -154,7 +159,11 @@ const PreferencesModal = () => {
 
   return (
     <FullScreenContainer>
-      <ContentContainer>
+      <ContentContainer
+        style={{
+          left: preferences['general.showAppNavigator'] ? 68 : 0,
+        }}
+      >
         <ModalHeader>
           <ModalTitle>
             <Icon size={24} path={mdiHammerWrench} />
