@@ -25,11 +25,11 @@ import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { PopulatedTagDoc } from '../../lib/db/types'
 
 const Container = styled.div`
-  position: absolute;
+  position: fixed;
   background-color: white;
   width: 200px;
-  right: 10px;
-  top: 100%;
+  max-height: 200px;
+  overflow-y: auto;
 
   ${backgroundColor}
   ${border}
@@ -72,6 +72,7 @@ interface TagNavigatorNewTagPopupProps {
   storageTagMap: Map<string, PopulatedTagDoc>
   close: () => void
   appendTagByName: (tagName: string) => void
+  position: { top: number; right: number }
 }
 
 const TagNavigatorNewTagPopup = ({
@@ -79,6 +80,7 @@ const TagNavigatorNewTagPopup = ({
   storageTagMap,
   close,
   appendTagByName,
+  position,
 }: TagNavigatorNewTagPopupProps) => {
   const [newTagName, setNewTagName] = useState('')
   const [menuIndex, setMenuIndex] = useState(0)
@@ -200,7 +202,11 @@ const TagNavigatorNewTagPopup = ({
   )
 
   return (
-    <Container onBlur={handlePopupBlur} ref={containerRef}>
+    <Container
+      onBlur={handlePopupBlur}
+      ref={containerRef}
+      style={{ top: position.top, right: position.right }}
+    >
       <TagNameInput
         ref={inputRef}
         value={newTagName}

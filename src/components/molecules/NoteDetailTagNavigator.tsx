@@ -23,7 +23,7 @@ const TagNavigatorList = styled.ul`
   margin: 0;
   flex-wrap: wrap;
   overflow: hidden;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
 `
 
@@ -60,23 +60,27 @@ const NoteDetailTagNavigator = ({
     return routeParams.tagName
   }, [routeParams])
 
-  const [showingNewTagPopup, setShowingNewTagPopup] = useState(false)
+  const [newTagPopupPosition, setNewTagPopupPosition] = useState<{
+    top: number
+    right: number
+  } | null>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const closeNewTagPopup = useCallback(() => {
-    setShowingNewTagPopup(false)
+    setNewTagPopupPosition(null)
     if (buttonRef.current == null) {
       return
     }
     buttonRef.current.focus()
-  }, [setShowingNewTagPopup])
+  }, [setNewTagPopupPosition])
 
   const showNewTagPopup = useCallback(() => {
-    const rect = buttonRef.current?.getBoundingClientRect()
-    if (rect != null) {
-      setShowingNewTagPopup(true)
-    }
-  }, [setShowingNewTagPopup])
+    const rect = buttonRef.current!.getBoundingClientRect()
+    setNewTagPopupPosition({
+      right: 10,
+      top: rect.bottom,
+    })
+  }, [setNewTagPopupPosition])
 
   const noteTags = useMemo(() => {
     return tags.reduce((list, tagName) => {
@@ -90,7 +94,7 @@ const NoteDetailTagNavigator = ({
 
   useEffect(() => {
     const resizeHandler = () => {
-      if (showingNewTagPopup == null) {
+      if (newTagPopupPosition == null) {
         return
       }
       showNewTagPopup()
@@ -99,7 +103,15 @@ const NoteDetailTagNavigator = ({
     return () => {
       window.removeEventListener('resize', resizeHandler)
     }
-  }, [showingNewTagPopup, showNewTagPopup])
+  }, [newTagPopupPosition, showNewTagPopup])
+
+  const appendTagByNameAndRefreshPopupPosition = useCallback(
+    (tagName: string) => {
+      appendTagByName(tagName)
+      showNewTagPopup()
+    },
+    [appendTagByName, showNewTagPopup]
+  )
 
   return (
     <Container>
@@ -126,12 +138,13 @@ const NoteDetailTagNavigator = ({
           onClick={showNewTagPopup}
         />
       </TagNavigatorList>
-      {showingNewTagPopup && (
+      {newTagPopupPosition != null && (
         <TagNavigatorNewTagPopup
           tags={tags}
           storageTagMap={storageTagMap}
           close={closeNewTagPopup}
-          appendTagByName={appendTagByName}
+          appendTagByName={appendTagByNameAndRefreshPopupPosition}
+          position={newTagPopupPosition}
         />
       )}
     </Container>
