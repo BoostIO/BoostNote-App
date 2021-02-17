@@ -19,11 +19,16 @@ import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import FeedbackModal from '../Modal/contents/FeedbackModal'
 import { useModal } from '../../../lib/stores/modal'
-import { githubOauthId } from '../../../lib/consts'
+import { githubOauthId, boostHubBaseUrl } from '../../../lib/consts'
+import { usingElectron } from '../../../lib/stores/electron'
+import Button from '../../atoms/Button'
+import { openNew } from '../../../lib/utils/platform'
+import { usePage } from '../../../lib/stores/pageStore'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
   const connectionState = useServiceConnections()
+  const { team } = usePage()
 
   const githubConnection = useMemo(() => {
     return connectionState.type !== 'initialising'
@@ -531,14 +536,25 @@ const IntegrationsTab = () => {
               {connectionState.type === 'initialised' && (
                 <>
                   {githubConnection == null ? (
-                    <ServiceConnect
-                      variant='inverse-secondary'
-                      className='item-btn'
-                      service='github'
-                      onConnect={connectionState.actions.addConnection}
-                    >
-                      Enable
-                    </ServiceConnect>
+                    usingElectron ? (
+                      <Button
+                        variant='secondary'
+                        onClick={() => {
+                          openNew(`${boostHubBaseUrl}/${team?.domain}`)
+                        }}
+                      >
+                        Open in Browser to enable GitHub app
+                      </Button>
+                    ) : (
+                      <ServiceConnect
+                        variant='inverse-secondary'
+                        className='item-btn'
+                        service='github'
+                        onConnect={connectionState.actions.addConnection}
+                      >
+                        Enable
+                      </ServiceConnect>
+                    )
                   ) : (
                     <CustomButton
                       variant='danger'
