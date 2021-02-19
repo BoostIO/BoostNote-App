@@ -94,4 +94,8 @@ export const sepiaTheme: BaseTheme = {
   searchItemSelectionBackgroundColor: primaryColor,
   searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
   searchHighlightTextColor: dark87Color,
+
+  // Tooltip
+  tooltipBackgroundColor: 'rgba(0,0,0,0.8)',
+  tooltipTextColor: '#f0f0f0',
 }

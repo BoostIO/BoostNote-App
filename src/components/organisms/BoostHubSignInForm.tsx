@@ -5,7 +5,7 @@ import React, {
   ChangeEventHandler,
   useEffect,
 } from 'react'
-import { setAsDefaultProtocolClient } from '../../lib/electronOnly'
+import { setAsDefaultProtocolClient, setCookie } from '../../lib/electronOnly'
 import { usePreferences } from '../../lib/preferences'
 import {
   FormPrimaryButton,
@@ -15,7 +15,7 @@ import {
   FormSecondaryButton,
 } from '../atoms/form'
 import { generateId } from '../../lib/string'
-import { openLoginPage, useBoostHub } from '../../lib/boosthub'
+import { openLoginPage, createDesktopAccessToken } from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
@@ -28,6 +28,8 @@ import { mdiLoading } from '@mdi/js'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
+import { fetchDesktopGlobalData } from '../../lib/boosthub'
+import { boostHubBaseUrl } from '../../cloud/lib/consts'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -50,7 +52,6 @@ const BoostHubSignInForm = () => {
     }
   })
   const { push } = useRouter()
-  const { sendSignInRequest } = useBoostHub()
 
   const startLoginRequest = useCallback(async () => {
     setStatus('requesting')
@@ -77,15 +78,29 @@ const BoostHubSignInForm = () => {
       setStatus('logging-in')
       setErrorMessage(null)
       try {
-        const { user, teams } = await sendSignInRequest(
+        const { token } = await createDesktopAccessToken(
           authStateRef.current,
           code
         )
+
+        setCookie({
+          url: boostHubBaseUrl,
+          name: 'desktop_access_token',
+          value: token,
+          expirationDate: 4766076898395,
+        })
+
+        const { user, teams } = await fetchDesktopGlobalData(token)
+        if (user == null) {
+          // Handle when token is invalidated
+          return
+        }
         setPreferences({
-          'boosthub.user': {
+          'cloud.user': {
             id: user.id,
             uniqueName: user.uniqueName,
             displayName: user.displayName,
+            accessToken: token,
           },
         })
         setGeneralStatus({
@@ -111,7 +126,7 @@ const BoostHubSignInForm = () => {
         )
       }
     },
-    [setPreferences, setGeneralStatus, push, sendSignInRequest]
+    [setPreferences, setGeneralStatus, push]
   )
 
   useEffect(() => {

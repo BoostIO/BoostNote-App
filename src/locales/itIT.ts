@@ -43,9 +43,9 @@ export default {
     'folder.removeMessage': 'Tutte le note e sottocartelle sarnno eliminate.',
 
     //Tag
-    'tag.tags': 'Tags',
-    'tag.remove': 'Rimuovi Tag',
-    'tag.removeMessage': 'Il tag verrà rimosso da tutte le note',
+    'tag.tags': 'Labels',
+    'tag.remove': 'Rimuovi Label',
+    'tag.removeMessage': 'Il label verrà rimosso da tutte le note',
 
     //Note
     'note.duplicate': 'Duplica',
@@ -149,18 +149,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Tema blocco codice',
     'preferences.defaultTheme': 'Usa lo stile predefinito',
     'preferences.markdownPreview': 'Anteprima Markdown',
-
-    // Preferences ImportTab
-    'preferences.import': 'Importa',
-    'preferences.description': 'Importa i file .cson dal vecchio Boost Note.',
-    'preferences.importFlow1':
-      '1. Apri la cartella del vecchio Boost Note nel tuo pc.',
-    'preferences.importFlow2':
-      '2. Trascina e rilascia i file .cson nel form qui sotto.',
-    'preferences.importFlow3':
-      "3. Scegli l'archivio e la cartella che vuoi importare.",
-    'preferences.importFlow4': '4. Carica!',
-    'preferences.importRemove': 'Rimuovi',
-    'preferences.importUpload': 'Carica',
   },
 }

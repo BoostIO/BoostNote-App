@@ -8,9 +8,7 @@ import {
 } from './styled'
 import { openNew } from '../../lib/platform'
 import Image from '../atoms/Image'
-import AppLink from '../atoms/AppLink'
 import { useTranslation } from 'react-i18next'
-import { primaryButtonStyle } from '../../lib/styled/styleFunctions'
 import SubscribeNewsLettersForm from '../organisms/SubscribeNewsLettersForm'
 
 const AboutContents = styled.div`
@@ -79,22 +77,6 @@ const AboutContents = styled.div`
   }
 `
 
-const MobileLink = styled.button`
-  ${primaryButtonStyle}
-  padding: 0 16px;
-  height: 40px;
-  line-height: 1;
-  border-width: initial;
-  border-style: none;
-  border-color: initial;
-  border-image: initial;
-  border-radius: 2px;
-  margin-bottom: 10px;
-
-  .subtext {
-    font-size: 12px;
-  }
-`
 interface PrimaryLinkProps {
   href: string
   children: string
@@ -136,43 +118,16 @@ const AboutTab = () => {
                   <PrimaryLink href='https://boostnote.io/'>
                     {t('about.website')}
                   </PrimaryLink>
-                  <PrimaryLink href='https://boosthub.io/'>
-                    {t('about.boostWiki')}
-                  </PrimaryLink>
                 </p>
               </div>
             </div>
             <SectionSubtleText className='about-outline-copy'>
-              Copyright (C) 2016 - 2020 BoostIO
+              Copyright (C) 2016 - 2021 BoostIO
               <br />
               License: GPL v3
             </SectionSubtleText>
           </div>
           <SubscribeNewsLettersForm />
-          <div className='about-platform'>
-            <SectionHeader>{t('about.platform')}</SectionHeader>
-            <div>
-              <AppLink />{' '}
-              <MobileLink
-                onClick={() => {
-                  openNew(
-                    'https://apps.apple.com/us/app/boostnote-mobile/id1498182749'
-                  )
-                }}
-              >
-                iOS App
-              </MobileLink>{' '}
-              <MobileLink
-                onClick={() => {
-                  openNew(
-                    'https://play.google.com/store/apps/details?id=com.boostio.boostnote'
-                  )
-                }}
-              >
-                Android
-              </MobileLink>
-            </div>
-          </div>
           <div className='about-community'>
             <SectionHeader>{t('about.community')}</SectionHeader>
             <div className='about-community-links'>

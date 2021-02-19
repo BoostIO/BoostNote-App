@@ -29,8 +29,13 @@ import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
-import { useDialog, DialogIconTypes } from '../lib/dialog'
+import {
+  useBoostHub,
+  getBoostHubTeamIconUrl,
+  getLegacySessionCookie,
+  getDesktopAccessTokenFromSessionKey,
+  flushLegacySessionCookie,
+} from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -38,9 +43,9 @@ import {
   boostHubTeamUpdateEventEmitter,
   BoostHubTeamDeleteEvent,
   boostHubTeamDeleteEventEmitter,
-  boostHubLoginRequestEventEmitter,
   boostHubAccountDeleteEventEmitter,
   boostHubToggleSettingsEventEmitter,
+  boostHubLoginRequestEventEmitter,
 } from '../lib/events'
 import {
   useCheckedFeatures,
@@ -52,6 +57,7 @@ import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
 import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
+import { useDialog, DialogIconTypes } from '../lib/dialog'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -106,10 +112,10 @@ const App = () => {
     preferences,
     setPreferences,
   } = usePreferences()
-  const { messageBox } = useDialog()
   const { fetchDesktopGlobalData } = useBoostHub()
   const routeParams = useRouteParams()
   const { navigate: navigateToStorage } = useStorageRouter()
+  const { messageBox } = useDialog()
 
   useEffectOnce(() => {
     initialize()
@@ -163,15 +169,30 @@ const App = () => {
 
   useEffectOnce(() => {
     const run = async () => {
-      const boostHubUserInfo = preferences['boosthub.user']
-      if (boostHubUserInfo == null) {
-        return
+      const cloudUserInfo = preferences['cloud.user']
+      let accessToken: string
+      if (cloudUserInfo == null) {
+        const legacyCookie = await getLegacySessionCookie()
+        if (legacyCookie == null) {
+          return
+        }
+
+        console.info('Get a new access token from legacy session...')
+        const { token } = await getDesktopAccessTokenFromSessionKey(
+          legacyCookie.value
+        )
+        accessToken = token
+
+        await flushLegacySessionCookie()
+      } else {
+        accessToken = cloudUserInfo.accessToken
       }
-      const { user, teams } = await fetchDesktopGlobalData()
-      if (user == null) {
+
+      const desktopGlobalData = await fetchDesktopGlobalData(accessToken)
+      if (desktopGlobalData.user == null) {
         messageBox({
-          title: 'Boost Hub login is required',
-          message: 'Your BoostHub session has been expired.',
+          title: 'Sign In',
+          message: 'Your cloud access token has been expired.',
           buttons: ['Sign In Again', 'Cancel'],
           defaultButtonIndex: 0,
           iconType: DialogIconTypes.Warning,
@@ -185,7 +206,7 @@ const App = () => {
             }
 
             setPreferences({
-              'boosthub.user': undefined,
+              'cloud.user': undefined,
             })
             setGeneralStatus({
               boostHubTeams: [],
@@ -194,18 +215,17 @@ const App = () => {
         })
         return
       }
-      setPreferences((previousPreferences) => {
-        return {
-          ...previousPreferences,
-          'boosthub.user': {
-            id: user.id,
-            uniqueName: user.uniqueName,
-            displayName: user.displayName,
-          },
-        }
+      const user = desktopGlobalData.user
+      setPreferences({
+        'cloud.user': {
+          id: user.id,
+          uniqueName: user.uniqueName,
+          displayName: user.displayName,
+          accessToken,
+        },
       })
       setGeneralStatus({
-        boostHubTeams: teams.map((team) => {
+        boostHubTeams: desktopGlobalData.teams.map((team) => {
           return {
             id: team.id,
             name: team.name,
@@ -302,7 +322,7 @@ const App = () => {
     const boostHubAccountDeleteEventHandler = () => {
       push(`/app`)
       setPreferences({
-        'boosthub.user': undefined,
+        'cloud.user': null,
       })
       setGeneralStatus({
         boostHubTeams: [],

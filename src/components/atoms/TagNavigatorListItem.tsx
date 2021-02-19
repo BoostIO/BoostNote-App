@@ -6,6 +6,7 @@ import {
   flexCenter,
   tagBackgroundColor,
   TagStyleProps,
+  textOverflow,
 } from '../../lib/styled/styleFunctions'
 import { useRouter } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
@@ -14,16 +15,14 @@ import DialogColorPicker from './dialog/DialogColorPicker'
 import { PopulatedTagDoc } from '../../lib/db/types'
 import { BaseTheme } from '../../lib/styled/BaseTheme'
 import { isColorBright } from '../../lib/colors'
-import { tagItemHeightSize } from './dialog/styled'
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
-  border-radius: 9px;
+  border-radius: 4px;
   white-space: nowrap;
   position: relative;
   ${tagBackgroundColor};
-
-  margin-right: 5px;
-  height: ${tagItemHeightSize};
+  height: 24px;
+  max-width: 140px;
   font-size: 14px;
   ${flexCenter};
 `
@@ -35,6 +34,7 @@ const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
   padding-left: 0.75em;
   text-decoration: none;
   color: #fff;
+  ${textOverflow};
   filter: invert(
     ${({ theme, color }) =>
       isColorBright(color || theme.secondaryBackgroundColor) ? 100 : 0}%

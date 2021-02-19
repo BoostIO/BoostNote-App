@@ -2,28 +2,14 @@ import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
 import styled from '../../lib/styled'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
-import {
-  openContextMenu,
-  addIpcListener,
-  removeIpcListener,
-} from '../../lib/electronOnly'
-import { usePreferences } from '../../lib/preferences'
-import { osName } from '../../lib/platform'
+import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import {
   borderBottom,
   border,
   uiTextColor,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
-import {
-  mdiChevronLeft,
-  mdiChevronRight,
-  mdiRefresh,
-  mdiContentCopy,
-} from '@mdi/js'
-import Icon from '../atoms/Icon'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
-import copy from 'copy-to-clipboard'
 import { boostHubToggleSettingsEventEmitter } from '../../lib/events'
 
 interface BoostHubTeamsShowPageProps {
@@ -38,47 +24,6 @@ const BoostHubTeamsShowPage = ({
   const webviewControlRef = useRef<WebviewControl>()
   const teamPageUrl = getBoostHubTeamPageUrl(domain)
   const [url, setUrl] = useState(teamPageUrl)
-  const { preferences, setPreferences } = usePreferences()
-
-  const generalShowAppNavigator = preferences['general.showAppNavigator']
-
-  const openToolbarContextMenu = useCallback(() => {
-    openContextMenu({
-      menuItems: [
-        {
-          type: 'normal',
-          label: 'Open Dev tool for web view',
-          click: () => {
-            webviewControlRef.current!.openDevTools()
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          type: 'normal',
-          label: generalShowAppNavigator
-            ? 'Hide App Navigator'
-            : 'Show App Navigator',
-          click: () => {
-            setPreferences({
-              'general.showAppNavigator': !generalShowAppNavigator,
-            })
-          },
-        },
-      ],
-    })
-  }, [generalShowAppNavigator, setPreferences])
-
-  const reloadWebview = useCallback(() => {
-    webviewControlRef.current!.reload()
-  }, [])
-  const goForwardWebview = useCallback(() => {
-    webviewControlRef.current!.goForward()
-  }, [])
-  const goBackWebview = useCallback(() => {
-    webviewControlRef.current!.goBack()
-  }, [])
 
   const updateUrl = useCallback(
     (event: DidNavigateInPageEvent | DidNavigateEvent) => {
@@ -86,10 +31,6 @@ const BoostHubTeamsShowPage = ({
     },
     []
   )
-
-  const copyUrl = useCallback(() => {
-    copy(url)
-  }, [url])
 
   useEffect(() => {
     if (!active) {
@@ -169,27 +110,9 @@ const BoostHubTeamsShowPage = ({
 
   return (
     <Container key={domain} className={active ? 'active' : ''}>
-      <div className='toolbar' onContextMenu={openToolbarContextMenu}>
-        {!generalShowAppNavigator && osName === 'macos' && <Spacer />}
-        <button title='Go Back' onClick={goBackWebview}>
-          <Icon path={mdiChevronLeft} />
-        </button>
-        <button title='Go Forward' onClick={goForwardWebview}>
-          <Icon path={mdiChevronRight} />
-        </button>
-        <button title='Reload' onClick={reloadWebview}>
-          <Icon path={mdiRefresh} />
-        </button>
-        <div title={url} className='url'>
-          {url}
-        </div>
-        <button title='Copy URL' onClick={copyUrl}>
-          <Icon path={mdiContentCopy} />
-        </button>
-      </div>
       <div className='webview'>
         <BoostHubWebview
-          src={teamPageUrl}
+          src={url}
           onDidNavigate={updateUrl}
           onDidNavigateInPage={updateUrl}
           controlRef={webviewControlRef}
@@ -201,11 +124,6 @@ const BoostHubTeamsShowPage = ({
 
 export default BoostHubTeamsShowPage
 
-const Spacer = styled.div`
-  height: 24px;
-  width: 70px;
-  flex-shrink: 0;
-`
 const Container = styled.div`
   display: none;
   &.active {

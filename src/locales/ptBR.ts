@@ -44,9 +44,9 @@
     'folder.removeMessage': 'Todas as notas e sub-pastas serão deletadas.',
 
     //Tag
-    'tag.tags': 'Tags',
-    'tag.remove': 'Remover Tag',
-    'tag.removeMessage': 'A Tag será removida de todas as notas.',
+    'tag.tags': 'Labels',
+    'tag.remove': 'Remover Label',
+    'tag.removeMessage': 'A Label será removida de todas as notas.',
 
     //Note
     'note.duplicate': 'Duplicar',
@@ -150,17 +150,5 @@
     'preferences.markdownCodeBlockTheme': 'Code Block Theme',
     'preferences.defaultTheme': 'Usar estilo padrão',
     'preferences.markdownPreview': 'Pré-visualizar Markdown',
-
-    // Preferences ImportTab
-    'preferences.import': 'Import',
-    'preferences.description': 'Importar arquivos .cson do antigo Boostnote.',
-    'preferences.importFlow1': '1. Abrir pasta do antigo Boostnote em seu PC.',
-    'preferences.importFlow2':
-      '2. Arraste e solte os arquivos .cson no formulário abaixo.',
-    'preferences.importFlow3':
-      '3. Escolha o armazenamento e pasta que você quer mover seus arquivos antigos.',
-    'preferences.importFlow4': '4. Upload!',
-    'preferences.importRemove': 'Remover',
-    'preferences.importUpload': 'Upload',
   },
 }

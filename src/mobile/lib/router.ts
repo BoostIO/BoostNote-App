@@ -7,7 +7,6 @@ import {
   LocationState,
   LocationDescriptorObject,
 } from 'history'
-import { parse as parseQuery } from 'querystring'
 
 const browserHistory = createHashHistory()
 
@@ -23,7 +22,7 @@ export interface RouterStore extends Location {
 const initialLocation = normalizeLocation({
   pathname: browserHistory.location.pathname,
   hash: browserHistory.location.hash,
-  query: parseQuery(browserHistory.location.search),
+  search: browserHistory.location.search,
 })
 
 function useRouteStore(): RouterStore {
@@ -47,7 +46,7 @@ function useRouteStore(): RouterStore {
       setLocation({
         pathname: blocation.pathname,
         hash: blocation.hash,
-        query: parseQuery(blocation.search),
+        search: blocation.search,
       })
     })
   }, [])

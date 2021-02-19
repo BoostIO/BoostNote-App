@@ -5,7 +5,6 @@ import styled from '../../lib/styled'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { usePreferences } from '../../lib/preferences'
 import StorageNavigatorFragment from '../molecules/StorageNavigatorFragment'
-import Spacer from '../atoms/Spacer'
 import BookmarkNavigatorFragment from '../molecules/BookmarkNavigatorFragment'
 import { NoteStorage } from '../../lib/db/types'
 import {
@@ -18,25 +17,34 @@ import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
 import {
-  mdiChevronDown,
   mdiPlus,
   mdiFolderOutline,
   mdiTag,
   mdiMagnify,
+  mdiCogOutline,
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { osName } from '../../lib/platform'
 import { useSearchModal } from '../../lib/searchModal'
+import NavigatorItem from '../atoms/NavigatorItem'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
+import { useTranslation } from 'react-i18next'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
 }
 
 const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
-  const { createStorage, storageMap, createNote } = useDb()
-  const { prompt } = useDialog()
+  const {
+    createStorage,
+    storageMap,
+    createNote,
+    renameStorage,
+    removeStorage,
+  } = useDb()
+  const { prompt, messageBox } = useDialog()
   const { push, hash } = useRouter()
   const { navigate } = useStorageRouter()
   const {
@@ -46,15 +54,16 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   } = usePreferences()
   const routeParams = useRouteParams()
   const storageId = storage.id
+  const { t } = useTranslation()
 
   const generalShowAppNavigator = preferences['general.showAppNavigator']
 
   const openCreateStorageDialog = useCallback(() => {
     prompt({
-      title: 'Create a Storage',
-      message: 'Enter name of a storage to create',
+      title: 'Create a Space',
+      message: 'Enter name of a space to create',
       iconType: DialogIconTypes.Question,
-      submitButtonLabel: 'Create Storage',
+      submitButtonLabel: 'Create Space',
       onClose: async (value: string | null) => {
         if (value == null) return
         const storage = await createStorage(value)
@@ -62,25 +71,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       },
     })
   }, [prompt, createStorage, push])
-
-  const openSideNavContextMenu = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault()
-
-      openContextMenu({
-        menuItems: [
-          {
-            type: 'normal',
-            label: 'New Storage',
-            click: async () => {
-              openCreateStorageDialog()
-            },
-          },
-        ],
-      })
-    },
-    [openCreateStorageDialog]
-  )
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -90,6 +80,58 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       const storages = values(storageMap)
       openContextMenu({
         menuItems: [
+          {
+            type: 'normal',
+            label: t('storage.rename'),
+            click: async () => {
+              prompt({
+                title: `Rename "${storage.name}" Space`,
+                message: t('storage.renameMessage'),
+                iconType: DialogIconTypes.Question,
+                defaultValue: storage.name,
+                submitButtonLabel: t('storage.rename'),
+                onClose: async (value: string | null) => {
+                  if (value == null) return
+                  renameStorage(storage.id, value)
+                },
+              })
+            },
+          },
+          {
+            type: 'normal',
+            label: t('storage.remove'),
+            click: async () => {
+              messageBox({
+                title: `Remove "${storage.name}" Space`,
+                message:
+                  storage.type === 'fs'
+                    ? "This operation won't delete the actual space folder. You can add it to the app again."
+                    : t('storage.removeMessage'),
+                iconType: DialogIconTypes.Warning,
+                buttons: [t('storage.remove'), t('general.cancel')],
+                defaultButtonIndex: 0,
+                cancelButtonIndex: 1,
+                onClose: (value: number | null) => {
+                  if (value === 0) {
+                    removeStorage(storage.id)
+                  }
+                },
+              })
+            },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            type: 'normal',
+            label: 'Preferences',
+            click: () => {
+              togglePreferencesModal()
+            },
+          },
+          {
+            type: 'separator',
+          },
           ...storages
             .filter((storage) => {
               return storage.id !== storageId
@@ -108,19 +150,9 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
           },
           {
             type: 'normal',
-            label: 'New Storage',
+            label: 'New Space',
             click: () => {
               openCreateStorageDialog()
-            },
-          },
-          {
-            type: 'separator',
-          },
-          {
-            type: 'normal',
-            label: 'Preferences',
-            click: () => {
-              togglePreferencesModal()
             },
           },
           {
@@ -132,7 +164,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
             click: () => {
               setPreferences((prevPreferences) => {
                 return {
-                  ...prevPreferences,
                   'general.showAppNavigator': !prevPreferences[
                     'general.showAppNavigator'
                   ],
@@ -144,12 +175,20 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       })
     },
     [
+      storageMap,
+      t,
+      prompt,
+      storage.name,
+      storage.id,
+      storage.type,
+      renameStorage,
+      messageBox,
+      togglePreferencesModal,
       storageId,
-      setPreferences,
       navigate,
       openCreateStorageDialog,
-      togglePreferencesModal,
-      storageMap,
+      setPreferences,
+      removeStorage,
     ]
   )
 
@@ -240,7 +279,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <div className='topButtonLabel'>{storage.name}</div>
-        <Icon path={mdiChevronDown} />
       </TopButton>
 
       <SearchButton onClick={toggleShowSearchModal}>
@@ -261,9 +299,16 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       </NewNoteButton>
 
       <ScrollableContainer>
+        <NavigatorItem
+          dotPlaceholder={true}
+          iconPath={mdiCogOutline}
+          depth={0}
+          label='Settings'
+          onClick={togglePreferencesModal}
+        />
         <BookmarkNavigatorFragment storage={storage} />
+        <NavigatorSeparator />
         <StorageNavigatorFragment storage={storage} />
-        <Spacer onContextMenu={openSideNavContextMenu} />
       </ScrollableContainer>
     </NavigatorContainer>
   )

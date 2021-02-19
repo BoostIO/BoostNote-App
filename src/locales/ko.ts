@@ -41,9 +41,9 @@ export default {
     'folder.removeMessage': '모든 폴더와 하위폴더가 삭제됩니다.',
 
     //Tag
-    'tag.tags': '태그',
-    'tag.remove': '태그 제거',
-    'tag.removeMessage': '해당 태그가 모든 노트에서 제거됩니다.',
+    'tag.tags': '라벨',
+    'tag.remove': '라벨 제거',
+    'tag.removeMessage': '해당 라벨이 모든 노트에서 제거됩니다.',
 
     //Note
     'note.duplicate': '중복 생성',
@@ -147,15 +147,5 @@ export default {
     'preferences.markdownCodeBlockTheme': '코드 블록 테마',
     'preferences.defaultTheme': '기본 스타일 사용',
     'preferences.markdownPreview': '마크다운 미리보기',
-
-    // Preferences ImportTab
-    'preferences.import': '불러오기',
-    'preferences.description': '이전 Boostnote에서 .cson 파일들을 불러온다.',
-    'preferences.importFlow1': '1. PC에서 이전 Boostnote 폴더를 연다.',
-    'preferences.importFlow2': '2. .cson 파일을 아래부분에 끌어다 놓는다.',
-    'preferences.importFlow3': '3. 옮기고 싶은 이전 저장소와 폴더를 선택한다.',
-    'preferences.importFlow4': '4. 업로드!',
-    'preferences.importRemove': '삭제',
-    'preferences.importUpload': '업로드',
   },
 }

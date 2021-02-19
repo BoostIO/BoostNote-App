@@ -24,7 +24,7 @@ const CreateWorkspaceModal = ({ closeModal }: CreateWorkspaceModalProps) => {
     closeModal()
     push(`/app/storages`)
   }, [push, closeModal])
-  const boosthubUserInfo = preferences['boosthub.user']
+  const boosthubUserInfo = preferences['cloud.user']
   const chooseCloudWorkspace = useCallback(() => {
     checkFeature(featureBoostHubSignIn)
     closeModal()
@@ -42,14 +42,14 @@ const CreateWorkspaceModal = ({ closeModal }: CreateWorkspaceModalProps) => {
           <Icon path={mdiClose} />
         </button>
         <div>
-          <h1 className='header'>Create Workspace</h1>
+          <h1 className='header'>Create Space</h1>
           <div className='optionGroup'>
             <button className='option' onClick={chooseLocalWorkspace}>
               <Image
                 className='option__image'
                 src='/app/static/local-workspace.svg'
               />
-              <h2>Local Workspace</h2>
+              <h2>Local Space</h2>
               <p>Secure all notes in your local machine</p>
             </button>
             <button className='option' onClick={chooseCloudWorkspace}>
@@ -57,7 +57,7 @@ const CreateWorkspaceModal = ({ closeModal }: CreateWorkspaceModalProps) => {
                 className='option__image'
                 src='/app/static/cloud-workspace.svg'
               />
-              <h2>Cloud Workspace</h2>
+              <h2>Cloud Space</h2>
               <p>Share your notes and edit together in realtime</p>
             </button>
           </div>

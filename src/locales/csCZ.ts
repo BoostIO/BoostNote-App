@@ -159,18 +159,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Téma vzhledu bloku kódu',
     'preferences.defaultTheme': 'Použít defaultní styl',
     'preferences.markdownPreview': 'Markdown náhled',
-
-    // Preferences ImportTab
-    'preferences.import': 'Import',
-    'preferences.description': 'Import .cson souborů ze starého Boostnote.',
-    'preferences.importFlow1':
-      '1. Otevřete složku starého Boostnote ve vašem PC.',
-    'preferences.importFlow2':
-      '2. Přetáhněte .cson soubory do níže uvedeného formuláře.',
-    'preferences.importFlow3':
-      '3. Vyberte úložiště a složku, do které chcete přesunout vaše stará data.',
-    'preferences.importFlow4': '4. Nahrát!',
-    'preferences.importRemove': 'odstranit',
-    'preferences.importUpload': 'Nahrát',
   },
 }

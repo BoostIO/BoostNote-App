@@ -28,6 +28,7 @@ import SearchModal from '../organisms/SearchModal'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../lib/styled'
 import { parseNumberStringOrReturnZero } from '../../lib/string'
+import NoteContextView from '../organisms/NoteContextView'
 
 interface NotePageProps {
   storage: NoteStorage
@@ -210,43 +211,54 @@ const NotePage = ({ storage }: NotePageProps) => {
     <StorageLayout storage={storage}>
       {showSearchModal && <SearchModal storage={storage} />}
       <Conatiner>
-        <NotePageToolbar storage={storage} note={currentNote} />
-        <TwoPaneLayout
-          style={{ flex: 1 }}
-          defaultLeftWidth={generalStatus.noteListWidth}
-          left={
-            <NoteListNavigator
-              storageId={storage.id}
-              storageTags={storageTags}
-              notes={sortedNotes}
-              currentNoteIndex={currentNoteIndex}
-              noteSorting={preferences['general.noteSorting']}
-              setNoteSorting={setNoteSorting}
-              createNote={createQuickNote}
-              basePathname={currentPathnameWithoutNoteId}
-              currentNote={currentNote}
-              // TODO: Fix to show new doc animation
-              lastCreatedNoteId={''}
-              trashNote={trashNote}
-              purgeNote={purgeNote}
-            />
+        <ContentContainer
+          className={
+            currentNote != null && generalStatus.showingNoteContextMenu
+              ? ''
+              : 'expand'
           }
-          right={
-            currentNote == null ? (
-              <IdleNoteDetail />
-            ) : (
-              <NoteDetail
-                storage={storage}
-                note={currentNote}
-                updateNote={updateNoteAndReport}
-                addAttachments={addAttachments}
-                viewMode={generalStatus.noteViewMode}
-                initialCursorPosition={getCurrentPositionFromRoute()}
+        >
+          <NotePageToolbar storage={storage} note={currentNote} />
+          <TwoPaneLayout
+            style={{ flex: 1 }}
+            defaultLeftWidth={generalStatus.noteListWidth}
+            left={
+              <NoteListNavigator
+                storageId={storage.id}
+                storageTags={storageTags}
+                notes={sortedNotes}
+                currentNoteIndex={currentNoteIndex}
+                noteSorting={preferences['general.noteSorting']}
+                setNoteSorting={setNoteSorting}
+                createNote={createQuickNote}
+                basePathname={currentPathnameWithoutNoteId}
+                currentNote={currentNote}
+                // TODO: Fix to show new doc animation
+                lastCreatedNoteId={''}
+                trashNote={trashNote}
+                purgeNote={purgeNote}
               />
-            )
-          }
-          onResizeEnd={updateNoteListWidth}
-        />
+            }
+            right={
+              currentNote == null ? (
+                <IdleNoteDetail />
+              ) : (
+                <NoteDetail
+                  storage={storage}
+                  note={currentNote}
+                  updateNote={updateNoteAndReport}
+                  addAttachments={addAttachments}
+                  viewMode={generalStatus.noteViewMode}
+                  initialCursorPosition={getCurrentPositionFromRoute()}
+                />
+              )
+            }
+            onResizeEnd={updateNoteListWidth}
+          />
+        </ContentContainer>
+        {currentNote != null && generalStatus.showingNoteContextMenu && (
+          <NoteContextView storage={storage} note={currentNote} />
+        )}
       </Conatiner>
     </StorageLayout>
   )
@@ -258,4 +270,22 @@ const Conatiner = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+`
+
+const ContentContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 350px;
+  &.expand {
+    right: 0;
+  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .detail {
+    flex: 1;
+    overflow: hidden;
+  }
 `

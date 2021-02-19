@@ -22,12 +22,14 @@ import { mdiTag } from '@mdi/js'
 import Icon from './Icon'
 import { isTagNameValid } from '../../lib/db/utils'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import { PopulatedTagDoc } from '../../lib/db/types'
 
 const Container = styled.div`
   position: fixed;
-  top: 70px;
   background-color: white;
   width: 200px;
+  max-height: 200px;
+  overflow-y: auto;
 
   ${backgroundColor}
   ${border}
@@ -66,19 +68,19 @@ const MenuButton = styled.button`
 `
 
 interface TagNavigatorNewTagPopupProps {
-  position: { x: number; y: number }
   tags: string[]
-  storageTags: string[]
+  storageTagMap: Map<string, PopulatedTagDoc>
   close: () => void
   appendTagByName: (tagName: string) => void
+  position: { top: number; right: number }
 }
 
 const TagNavigatorNewTagPopup = ({
-  position,
   tags,
-  storageTags,
+  storageTagMap,
   close,
   appendTagByName,
+  position,
 }: TagNavigatorNewTagPopupProps) => {
   const [newTagName, setNewTagName] = useState('')
   const [menuIndex, setMenuIndex] = useState(0)
@@ -99,20 +101,22 @@ const TagNavigatorNewTagPopup = ({
     inputRef.current!.focus()
   })
 
-  const availableTagNames = useMemo(() => {
-    const tagSet = new Set(tags)
+  const tagSet = useMemo(() => {
+    return new Set(tags)
+  }, [tags])
 
-    return storageTags.filter((storageTag) => {
-      return storageTag != null && !tagSet.has(storageTag)
+  const availableTagNames = useMemo(() => {
+    return [...storageTagMap.values()].filter((storageTag) => {
+      return storageTag != null && !tagSet.has(storageTag.name)
     })
-  }, [tags, storageTags])
+  }, [tagSet, storageTagMap])
 
   const filteredStorageTags = useMemo(() => {
     if (newTagNameIsEmpty) {
       return availableTagNames
     }
-    return availableTagNames.filter((tagName) => {
-      return tagName.includes(newTagName)
+    return availableTagNames.filter((tagDoc) => {
+      return tagDoc.name.includes(newTagName)
     })
   }, [newTagNameIsEmpty, availableTagNames, newTagName])
 
@@ -151,7 +155,7 @@ const TagNavigatorNewTagPopup = ({
           }
           if (menuIndex < filteredStorageTags.length) {
             setNewTagName('')
-            appendTagByName(filteredStorageTags[menuIndex])
+            appendTagByName(filteredStorageTags[menuIndex].name)
             close()
             return
           }
@@ -199,14 +203,14 @@ const TagNavigatorNewTagPopup = ({
 
   return (
     <Container
-      style={{ left: position.x - 100 }}
       onBlur={handlePopupBlur}
       ref={containerRef}
+      style={{ top: position.top, right: position.right }}
     >
       <TagNameInput
         ref={inputRef}
         value={newTagName}
-        placeholder='Tag Name...'
+        placeholder='Label Name...'
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setMenuIndex(0)
           setNewTagName(event.target.value)
@@ -216,23 +220,23 @@ const TagNavigatorNewTagPopup = ({
       <>
         {filteredStorageTags.map((storageTag, index) => (
           <MenuButton
-            key={storageTag}
+            key={storageTag.name}
             className={menuIndex === index ? 'active' : ''}
             onClick={() => {
-              appendTagByName(storageTag)
+              appendTagByName(storageTag.name)
               setNewTagName('')
               inputRef.current?.focus()
               report(analyticsEvents.appendNoteTag)
             }}
           >
             <Icon path={mdiTag} />
-            <span>{storageTag}</span>
+            <span>{storageTag.name}</span>
           </MenuButton>
         ))}
       </>
       {!newTagNameIsEmpty &&
-        !tags.includes(trimmedNewTagName) &&
-        !storageTags.includes(trimmedNewTagName) && (
+        !tagSet.has(trimmedNewTagName) &&
+        !storageTagMap.has(trimmedNewTagName) && (
           <MenuButton
             className={menuIndex === filteredStorageTags.length ? 'active' : ''}
             onClick={() => {

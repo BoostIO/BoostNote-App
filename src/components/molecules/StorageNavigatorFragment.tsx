@@ -16,7 +16,6 @@ import { NoteStorage } from '../../lib/db/types'
 import {
   mdiTrashCanOutline,
   mdiPaperclip,
-  mdiBookOpen,
   mdiSync,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
@@ -33,8 +32,9 @@ import {
   removeIpcListener,
 } from '../../lib/electronOnly'
 import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
-import { getFolderItemId } from '../../lib/nav'
-import { useRouteParams } from '../../lib/routeParams'
+import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/routeParams'
+import NavigatorHeader from '../atoms/NavigatorHeader'
+import NavigatorSeparator from '../atoms/NavigatorSeparator'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -43,18 +43,12 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
-  const {
-    openSideNavFolderItemRecursively,
-    sideNavOpenedItemSet,
-    toggleSideNavOpenedItem,
-  } = useGeneralStatus()
-  const { prompt, messageBox } = useDialog()
+  const { openSideNavFolderItemRecursively } = useGeneralStatus()
+  const { prompt } = useDialog()
   const {
     createNote,
     createFolder,
     renameFolder,
-    renameStorage,
-    removeStorage,
     syncStorage,
     bookmarkNote,
     unbookmarkNote,
@@ -167,14 +161,7 @@ const StorageNavigatorFragment = ({
 
   const generalAppMode = preferences['general.appMode']
 
-  const rootFolderNavId = getFolderItemId(storage.id, '/')
-  const rootFolderIsOpened = sideNavOpenedItemSet.has(rootFolderNavId)
-
   const rootFolderPathname = `/app/storages/${storage.id}/notes`
-  const rootFolderIsActive =
-    routeParams.name === 'storages.notes' &&
-    routeParams.folderPathname === '/' &&
-    (generalAppMode === 'note' || routeParams.noteId == null)
 
   const trashcanPagePathname = `/app/storages/${storage.id}/trashcan`
   const trashcanPageIsActive = routeParams.name === 'storages.trashCan'
@@ -194,7 +181,7 @@ const StorageNavigatorFragment = ({
     (event) => {
       event.preventDefault()
       event.stopPropagation()
-      const contentMenuItems: MenuItemConstructorOptions[] = [
+      const menuItems: MenuItemConstructorOptions[] = [
         {
           type: 'normal',
           label: 'New Note',
@@ -207,81 +194,22 @@ const StorageNavigatorFragment = ({
         },
       ]
 
-      const storageMenuItems: MenuItemConstructorOptions[] = [
-        {
-          type: 'normal',
-          label: t('storage.rename'),
-          click: async () => {
-            prompt({
-              title: `Rename "${storage.name}" storage`,
-              message: t('storage.renameMessage'),
-              iconType: DialogIconTypes.Question,
-              defaultValue: storage.name,
-              submitButtonLabel: t('storage.rename'),
-              onClose: async (value: string | null) => {
-                if (value == null) return
-                renameStorage(storage.id, value)
-              },
-            })
-          },
-        },
-        {
-          type: 'normal',
-          label: t('storage.remove'),
-          click: async () => {
-            messageBox({
-              title: `Remove "${storage.name}" storage`,
-              message:
-                storage.type === 'fs'
-                  ? "This operation won't delete the actual storage folder. You can add it to the app again."
-                  : t('storage.removeMessage'),
-              iconType: DialogIconTypes.Warning,
-              buttons: [t('storage.remove'), t('general.cancel')],
-              defaultButtonIndex: 0,
-              cancelButtonIndex: 1,
-              onClose: (value: number | null) => {
-                if (value === 0) {
-                  removeStorage(storage.id)
-                }
-              },
-            })
-          },
-        },
-        {
-          type: 'normal',
-          label: 'Configure Storage',
-          click: () => push(`/app/storages/${storage.id}/settings`),
-        },
-      ]
       if (storage.type !== 'fs' && storage.cloudStorage != null) {
-        storageMenuItems.unshift({
-          type: 'normal',
-          label: 'Sync Storage',
-          click: sync,
-        })
+        menuItems.unshift(
+          {
+            type: 'separator',
+          },
+          {
+            type: 'normal',
+            label: 'Sync Storage',
+            click: sync,
+          }
+        )
       }
 
-      const menuItems: MenuItemConstructorOptions[] = [
-        ...contentMenuItems,
-        {
-          type: 'separator',
-        },
-        ...storageMenuItems,
-      ]
       openContextMenu({ menuItems })
     },
-    [
-      storage,
-      prompt,
-      messageBox,
-      createNewNoteInRootFolder,
-      createNewFolderInRootFolder,
-      sync,
-      t,
-      push,
-      renameStorage,
-      removeStorage,
-    ]
+    [storage, createNewNoteInRootFolder, createNewFolderInRootFolder, sync, t]
   )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
@@ -291,27 +219,18 @@ const StorageNavigatorFragment = ({
     () => Object.values(storage.noteMap).filter((note) => note!.trashed),
     [storage.noteMap]
   )
+  const pathname = usePathnameWithoutNoteId()
 
   const syncing = storage.type !== 'fs' && storage.sync != null
-
-  const folded = useMemo(() => {
-    return !sideNavOpenedItemSet.has(rootFolderNavId)
-  }, [sideNavOpenedItemSet, rootFolderNavId])
+  const rootIsActive = `/app/storages/${storage.id}/notes` === pathname
 
   return (
     <>
-      <NavigatorItem
-        depth={0}
-        iconPath={mdiBookOpen}
+      <NavigatorHeader
         label='Workspace'
-        active={rootFolderIsActive}
+        active={rootIsActive}
         onClick={() => push(rootFolderPathname)}
         onContextMenu={openWorkspaceContextMenu}
-        folded={folded}
-        visibleControl={true}
-        onFoldButtonClick={() => {
-          toggleSideNavOpenedItem(rootFolderNavId)
-        }}
         control={
           <>
             <NavigatorButton
@@ -336,25 +255,26 @@ const StorageNavigatorFragment = ({
           </>
         }
       />
-      {rootFolderIsOpened &&
-        (generalAppMode === 'note' ? (
-          <FolderNavigatorFragment
-            storage={storage}
-            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
-          />
-        ) : (
-          <FolderNoteNavigatorFragment
-            storage={storage}
-            createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
-            showPromptToCreateFolder={showPromptToCreateFolder}
-            showPromptToRenameFolder={showPromptToRenameFolder}
-            bookmarkNote={bookmarkNote}
-            unbookmarkNote={unbookmarkNote}
-            trashNote={trashNote}
-          />
-        ))}
+      {generalAppMode === 'note' ? (
+        <FolderNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+        />
+      ) : (
+        <FolderNoteNavigatorFragment
+          storage={storage}
+          createNoteInFolderAndRedirect={createNoteInFolderAndRedirect}
+          showPromptToCreateFolder={showPromptToCreateFolder}
+          showPromptToRenameFolder={showPromptToRenameFolder}
+          bookmarkNote={bookmarkNote}
+          unbookmarkNote={unbookmarkNote}
+          trashNote={trashNote}
+        />
+      )}
+
+      <NavigatorSeparator />
 
       <TagListFragment storage={storage} />
       {attachments.length > 0 && (

@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 import { backgroundColor, textColor } from '../lib/styled/styleFunctions'
 import { BaseTheme } from '../lib/styled/BaseTheme'
 
-export default createGlobalStyle<{ theme: BaseTheme }>`
+export default createGlobalStyle<BaseTheme>`
   body {
     margin: 0;
     ${backgroundColor}

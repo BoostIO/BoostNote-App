@@ -9,6 +9,7 @@
   const FileType = require('file-type')
   const readChunk = require('read-chunk')
   const CSON = require('cson-parser')
+  const got = require('got')
 
   function openExternal(url) {
     console.log('opening ...', url)
@@ -190,6 +191,18 @@
     })
   }
 
+  function setCookie(cookieDetails) {
+    return electron.remote.session.defaultSession.cookies.set(cookieDetails)
+  }
+
+  function getCookie(cookieDetails) {
+    return electron.remote.session.defaultSession.cookies.get(cookieDetails)
+  }
+
+  function removeCookie(url, name) {
+    return electron.remote.session.defaultSession.cookies.remove(url, name)
+  }
+
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.readFile = readFile
@@ -217,4 +230,8 @@
   window.__ELECTRON_ONLY__.getWebContentsById
   window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
   window.__ELECTRON_ONLY__.convertHtmlStringToPdfBuffer = convertHtmlStringToPdfBuffer
+  window.__ELECTRON_ONLY__.setCookie = setCookie
+  window.__ELECTRON_ONLY__.getCookie = getCookie
+  window.__ELECTRON_ONLY__.removeCookie = removeCookie
+  window.__ELECTRON_ONLY__.got = got
 })()

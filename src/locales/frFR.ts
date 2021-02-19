@@ -45,9 +45,9 @@ export default {
       'Toutes les notes et sous-dossiers seront supprimés.',
 
     //Tag
-    'tag.tags': 'Tags',
-    'tag.remove': 'Supprimer Tag',
-    'tag.removeMessage': 'Le tag sera retiré de toutes les notes.',
+    'tag.tags': 'Labels',
+    'tag.remove': 'Supprimer Label',
+    'tag.removeMessage': 'Le label sera retiré de toutes les notes.',
 
     //Note
     'note.duplicate': 'Dupliquer',
@@ -152,19 +152,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Thème du bloc de code',
     'preferences.defaultTheme': 'Utiliser le style par défaut',
     'preferences.markdownPreview': 'Prévisualisation du markdown',
-
-    // Preferences ImportTab
-    'preferences.import': 'Importer',
-    'preferences.description':
-      "Importer des fichiers .cson depuis l'ancienne version de Boostnote.",
-    'preferences.importFlow1':
-      "1. Ouvrir le dossier de l'ancienne version de Boostnote sur votre ordinateur.",
-    'preferences.importFlow2':
-      '2. Cliquez et déposez les fichiers .cson dans le formulaire ci-dessous.',
-    'preferences.importFlow3':
-      "3. Choisissez l'espace de stockage et le dossier dans lequel vous voulez déplacer vos anciennes données.",
-    'preferences.importFlow4': '4. Télécharger!',
-    'preferences.importRemove': 'supprimer',
-    'preferences.importUpload': 'Télécharger',
   },
 }

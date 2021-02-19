@@ -1,3 +1,5 @@
+import { format, formatDistanceToNowStrict, isValid } from 'date-fns'
+
 const MS_PER_MINUTE = 60 * 1000
 const MS_PER_HOUR = MS_PER_MINUTE * 60
 const MS_PER_DAY = MS_PER_HOUR * 24
@@ -28,4 +30,28 @@ export const dateToRelativeString = (date: Date) => {
   }
 
   return `${Math.floor(diffMS / MS_PER_YEAR)} years ago`
+}
+
+export function getFormattedDateTime(
+  date: string,
+  prefix?: string,
+  timeFormat = 'HH:mm, dd MMM'
+) {
+  const converted = new Date(date)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  if (!isValid(converted)) {
+    return 'Invalid Date'
+  }
+
+  switch (converted > yesterday) {
+    case true:
+      return `${formatDistanceToNowStrict(converted)} ago`
+    default:
+      return `${prefix ? `${prefix} ` : ''}${format(
+        new Date(converted),
+        timeFormat
+      )}`
+  }
 }

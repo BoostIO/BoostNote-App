@@ -2,7 +2,7 @@ import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
 import Icon from './Icon'
-import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import { mdiChevronDown, mdiChevronRight, mdiCircleSmall } from '@mdi/js'
 import { textOverflow } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
@@ -115,6 +115,7 @@ interface NavigatorItemProps {
   label: string
   iconPath?: string
   depth: number
+  dotPlaceholder?: boolean
   control?: React.ReactNode
   visibleControl?: boolean
   className?: string
@@ -138,6 +139,8 @@ const NavigatorItem = ({
   visibleControl = false,
   className,
   folded,
+  // TODO: Delete dot placeholder style
+  dotPlaceholder,
   active,
   subtle,
   onFoldButtonClick,
@@ -160,7 +163,7 @@ const NavigatorItem = ({
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
     >
-      {folded != null && (
+      {!dotPlaceholder && folded != null && (
         <FoldButton
           className={folded ? 'folded' : ''}
           onClick={onFoldButtonClick}
@@ -171,12 +174,27 @@ const NavigatorItem = ({
       )}
       <ClickableContainer
         style={{
-          paddingLeft: `${10 * depth + 24}px`,
+          paddingLeft: dotPlaceholder
+            ? `${10 * depth}px`
+            : `${10 * depth + 24}px`,
         }}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         className={active ? 'active' : ''}
       >
+        {dotPlaceholder && (
+          <div
+            style={{
+              width: 24,
+              height: 24,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icon path={mdiCircleSmall} />
+          </div>
+        )}
         {iconPath != null && (
           <IconContainer>
             <Icon path={iconPath} />

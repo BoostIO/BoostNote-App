@@ -1,12 +1,21 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import { getPathByName } from './electronOnly'
-import { WebviewTag } from 'electron'
-import React, { useRef, useCallback, FC } from 'react'
+import {
+  getPathByName,
+  setCookie,
+  getCookie,
+  removeCookie,
+  got,
+} from './electronOnly'
+import { useCallback } from 'react'
 import { createStoreContext } from './context'
-import querystring from 'querystring'
-import { useEffectOnce } from 'react-use'
+import ky from 'ky'
+import { useRouteParams } from './routeParams'
+import { useGeneralStatus } from './generalStatus'
+import { usePreferences } from './preferences'
+import { useRouter } from './router'
+import { Cookie } from 'electron/main'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -18,6 +27,8 @@ export const boostHubAccountDeletePageUrl = `${boostHubBaseUrl}/account/delete`
 
 export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/for-teams/features`
 
+const boostHubCreateDesktopAccessTokenUrl = `${boostHubBaseUrl}/api/desktop/access-tokens`
+
 export function openLoginPage(state: string) {
   const loginPageUrl = `${boostHubDesktopLoginPageUrl}?state=${state}`
 
@@ -25,14 +36,21 @@ export function openLoginPage(state: string) {
 }
 
 export function getBoostHubTeamPageUrl(teamName: string) {
-  return `${boostHubBaseUrl}/${teamName}`
+  return `${process.env.BOOST_HUB_BASE_URL}/${teamName}`
+  // if (process.env.NODE_ENV !== 'production') {
+  //   return `http://localhost:3004/#/${teamName}`
+  // }
+  // return join(getPathByName('app'), `./compiled-cloud/index.html#/${teamName}`)
 }
 
 export function getBoostHubTeamIconUrl(location: string) {
   return `${boostHubBaseUrl}/api/files/icons/${location}`
 }
 
-export const boostHubTeamsCreatePageUrl = `${boostHubBaseUrl}/cooperate`
+export const boostHubTeamsCreatePageUrl = `${process.env.BOOST_HUB_BASE_URL}/cooperate`
+// process.env.NODE_ENV !== 'production'
+//   ? `http://localhost:3004/#/cooperate`
+//   : join(getPathByName('app'), `./compiled-cloud/index.html#/cooperate`)
 
 export const boostHubIdlePageUrl = `${boostHubBaseUrl}/api/desktop/idle`
 
@@ -45,173 +63,98 @@ export const boostHubPreloadUrl = formatUrl({
   slashes: true,
 })
 
-const boostHubDesktopLoginApiUrl = `${boostHubBaseUrl}/api/desktop/login`
 const boostHubDesktopGlobalDataUrl = `${boostHubBaseUrl}/api/desktop`
-const boostHubSignOutUrl = `${boostHubBaseUrl}/api/desktop/signout`
-let domReady = false
-const domReadyQueue = [] as { resolve?: () => void; reject?: () => void }[]
 
-function waitDomReady() {
-  const queue: { resolve?: () => void; reject?: () => void } = {}
-  const promise = new Promise((resolve, reject) => {
-    if (domReady) {
-      console.log('dom ready no wait')
-      resolve()
-      return
+export async function fetchDesktopGlobalData(token: string) {
+  const data = await ky
+    .get(boostHubDesktopGlobalDataUrl, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
+    .json()
+  return data as {
+    user?: {
+      id: string
+      uniqueName: string
+      displayName: string
     }
-    queue.resolve = resolve
-    queue.reject = reject
-    domReadyQueue.push(queue)
-  })
+    teams: { id: string; name: string; domain: string; iconUrl?: string }[]
+  }
+}
 
-  return promise
+export async function createDesktopAccessToken(
+  state: string,
+  code: string
+): Promise<{ token: string }> {
+  const data = await ky
+    .post(boostHubCreateDesktopAccessTokenUrl, {
+      method: 'post',
+      json: {
+        state,
+        code,
+        deviceName: navigator.userAgent,
+      },
+    })
+    .json()
+  return data as { token: string }
 }
 
 function useBoostHubStore() {
-  const webviewRef = useRef<WebviewTag>(null)
+  const { push } = useRouter()
+  const { setPreferences } = usePreferences()
+  const { setGeneralStatus } = useGeneralStatus()
+  const routeParams = useRouteParams()
 
-  useEffectOnce(() => {
-    webviewRef.current!.addEventListener('dom-ready', () => {
-      domReady = true
-      let queue = domReadyQueue.shift()
-      while (queue != null) {
-        if (queue.resolve != null) {
-          queue.resolve()
-        }
-        queue = domReadyQueue.shift()
-      }
+  const signOut = useCallback(async () => {
+    if (
+      routeParams.name === 'boosthub.teams.show' ||
+      routeParams.name === 'boosthub.teams.create'
+    ) {
+      push('/app/boosthub/login')
+    }
+    setPreferences({
+      'cloud.user': null,
     })
-  })
+    setGeneralStatus({
+      boostHubTeams: [],
+    })
 
-  const fetchJson = useCallback(
-    async (
-      url: string,
-      options?: {
-        method: string
-      }
-    ) => {
-      await waitDomReady()
-      const { method } = {
-        method: 'get',
-        ...options,
-      }
-      const rawText = await webviewRef.current!.executeJavaScript(
-        `fetch("${url}", {method: "${method}"}).then(response => response.text())`
-      )
-      try {
-        return JSON.parse(rawText)
-      } catch (error) {
-        console.warn('Invalid json body', error)
-        throw new Error(rawText)
-      }
-    },
-    []
-  )
-
-  const fetchDesktopGlobalData = useCallback(async () => {
-    const data = await fetchJson(boostHubDesktopGlobalDataUrl)
-
-    return {
-      user:
-        data.user == null
-          ? undefined
-          : {
-              id: data.user.id,
-              uniqueName: data.user.uniqueName,
-              displayName: data.user.displayName,
-            },
-      teams: data.teams.map((team: any) => {
-        return {
-          id: team.id,
-          name: team.name,
-          domain: team.domain,
-          iconUrl:
-            team.icon != null
-              ? getBoostHubTeamIconUrl(team.icon.location)
-              : undefined,
-        }
-      }),
-    } as {
-      user?: {
-        id: string
-        uniqueName: string
-        displayName: string
-      }
-      teams: { id: string; name: string; domain: string; iconUrl?: string }[]
-    }
-  }, [fetchJson])
-
-  const sendSignInRequest = async (state: string, code: string) => {
-    const data = await fetchJson(
-      `${boostHubDesktopLoginApiUrl}?${querystring.encode({ state, code })}`,
-      { method: 'post' }
-    )
-
-    return {
-      user: {
-        id: data.user.id,
-        uniqueName: data.user.uniqueName,
-        displayName: data.user.displayName,
-      },
-      teams: data.teams.map((team: any) => {
-        return {
-          id: team.id,
-          name: team.name,
-          domain: team.domain,
-          iconUrl:
-            team.icon != null
-              ? getBoostHubTeamIconUrl(team.icon.location)
-              : undefined,
-        }
-      }),
-    } as {
-      user: {
-        id: string
-        uniqueName: string
-        displayName: string
-      }
-      teams: { id: string; name: string; domain: string; iconUrl?: string }[]
-    }
-  }
-  const requestSignOut = useCallback(async () => {
-    await fetchJson(boostHubSignOutUrl)
-  }, [fetchJson])
-
-  const openDevTools = useCallback(() => {
-    webviewRef.current!.openDevTools()
-  }, [])
+    removeCookie(boostHubBaseUrl, 'desktop_access_token')
+  }, [routeParams.name, setPreferences, setGeneralStatus, push])
 
   return {
-    webviewRef,
     fetchDesktopGlobalData,
-    sendSignInRequest,
-    requestSignOut,
-    openDevTools,
+    signOut,
   }
 }
 
-export const { StoreProvider, useStore: useBoostHub } = createStoreContext(
-  useBoostHubStore
-)
+export const {
+  StoreProvider: BoostHubStoreProvider,
+  useStore: useBoostHub,
+} = createStoreContext(useBoostHubStore)
 
-export const BoostHubStoreProvider: FC = ({ children }) => {
-  return (
-    <StoreProvider>
-      <BoostHubIdleWebview />
-      {children}
-    </StoreProvider>
-  )
+export async function getLegacySessionCookie(): Promise<Cookie | null> {
+  const cookies = await getCookie({
+    domain: '.boostnote.io',
+    name: 'boostnote.session',
+  })
+  return cookies[0] || null
 }
 
-const BoostHubIdleWebview = () => {
-  const { webviewRef } = useBoostHub()
+export async function getDesktopAccessTokenFromSessionKey(sessionKey: string) {
+  return got
+    .post(`${boostHubBaseUrl}/api/desktop/access-tokens`, {
+      headers: {
+        cookie: `boostnote.session=${sessionKey}`,
+      },
+      json: {
+        deviceName: navigator.userAgent,
+      },
+    })
+    .json<{ token: string }>()
+}
 
-  return (
-    <webview
-      src={boostHubIdlePageUrl}
-      ref={webviewRef}
-      style={{ position: 'fixed', top: -1, left: -1, width: 1, height: 1 }}
-      preload={boostHubPreloadUrl}
-    />
-  )
+export async function flushLegacySessionCookie(): Promise<void> {
+  await removeCookie(`${boostHubBaseUrl}`, 'boostnote.session')
 }

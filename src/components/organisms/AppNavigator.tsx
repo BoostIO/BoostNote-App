@@ -17,13 +17,13 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
-import { useBoostHub } from '../../lib/boosthub'
 import {
   useCheckedFeatures,
   featureBoostHubSignIn,
 } from '../../lib/checkedFeatures'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useCreateWorkspaceModal } from '../../lib/createWorkspaceModal'
+import { useBoostHub } from '../../lib/boosthub'
 
 const TopLevelNavigator = () => {
   const { storageMap } = useDb()
@@ -32,19 +32,21 @@ const TopLevelNavigator = () => {
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
   const { isChecked } = useCheckedFeatures()
+  const { signOut } = useBoostHub()
 
-  const boostHubUserInfo = preferences['boosthub.user']
+  const boostHubUserInfo = preferences['cloud.user']
 
   const activeStorageId = useActiveStorageId()
 
   const storages = useMemo(() => {
-    return entries(storageMap).map(([storageId, storage]) => {
+    return entries(storageMap).map(([storageId, storage], index) => {
       const active = activeStorageId === storageId
       return (
         <AppNavigatorStorageItem
           key={storageId}
           active={active}
           storage={storage}
+          index={index}
         />
       )
     })
@@ -58,7 +60,7 @@ const TopLevelNavigator = () => {
   }, [routeParams])
 
   const boostHubTeams = useMemo(() => {
-    return generalStatus.boostHubTeams.map((boostHubTeam) => {
+    return generalStatus.boostHubTeams.map((boostHubTeam, index) => {
       return (
         <AppNavigatorBoostHubTeamItem
           key={`boost-hub-team-${boostHubTeam.domain}`}
@@ -66,33 +68,11 @@ const TopLevelNavigator = () => {
           name={boostHubTeam.name}
           domain={boostHubTeam.domain}
           iconUrl={boostHubTeam.iconUrl}
+          index={index + storages.length}
         />
       )
     })
-  }, [generalStatus.boostHubTeams, activeBoostHubTeamDomain])
-
-  const { setGeneralStatus } = useGeneralStatus()
-  const { requestSignOut } = useBoostHub()
-
-  const signOut = useCallback(async () => {
-    if (
-      routeParams.name === 'boosthub.teams.show' ||
-      routeParams.name === 'boosthub.teams.create'
-    ) {
-      push('/app/boosthub/login')
-    }
-    setPreferences({
-      'boosthub.user': null,
-    })
-    setGeneralStatus({
-      boostHubTeams: [],
-    })
-    try {
-      await requestSignOut()
-    } catch (error) {
-      console.warn('Failed to send signing out request', error)
-    }
-  }, [routeParams.name, setPreferences, setGeneralStatus, requestSignOut, push])
+  }, [storages.length, generalStatus.boostHubTeams, activeBoostHubTeamDomain])
 
   const openSideNavContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -190,6 +170,9 @@ const Container = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const ListContainer = styled.div`

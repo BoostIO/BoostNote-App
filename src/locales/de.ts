@@ -43,9 +43,9 @@ export default {
     'folder.removeMessage': 'Alle Notizen und Unterordner werden gelöscht.',
 
     //Tag
-    'tag.tags': 'Tag',
-    'tag.remove': 'Tag löschen',
-    'tag.removeMessage': 'Das Tag wird von allen Notizen entfernt.',
+    'tag.tags': 'Label',
+    'tag.remove': 'Label löschen',
+    'tag.removeMessage': 'Das Label wird von allen Notizen entfernt.',
 
     //Note
     'note.duplicate': 'Duplizieren',
@@ -149,18 +149,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Code Block Design',
     'preferences.defaultTheme': 'Verwende Standard-Design',
     'preferences.markdownPreview': 'Markdown Vorschau',
-
-    // Preferences ImportTab
-    'preferences.import': 'Importieren',
-    'preferences.description':
-      'Importiert .cson Dateien vom alten Boostnote Ordner.',
-    'preferences.importFlow1':
-      '1. Öffne den alten Boostnote Ordner auf deinem PC.',
-    'preferences.importFlow2': '2. Ziehe die .cson Dateien in das Feld unten.',
-    'preferences.importFlow3':
-      '3. Wähle den Speicher und den Ordner, in welchen du die Dateien verschieben möchtest.',
-    'preferences.importFlow4': '4. Upload!',
-    'preferences.importRemove': 'Entfernen',
-    'preferences.importUpload': 'Upload',
   },
 }

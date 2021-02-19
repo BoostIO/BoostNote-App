@@ -1,42 +1,34 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import Icon from '../atoms/Icon'
 import styled from '../../lib/styled'
-import { mdiTagMultiple, mdiPlus } from '@mdi/js'
-import { flexCenter, borderBottom } from '../../lib/styled/styleFunctions'
+import { mdiPlus } from '@mdi/js'
 import { useRouteParams } from '../../lib/routeParams'
 import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
 import { useTranslation } from 'react-i18next'
-import { PopulatedTagDoc } from '../../lib/db/types'
+import { PopulatedTagDoc, NoteStorage } from '../../lib/db/types'
+import { entries } from '../../lib/db/utils'
 
 const Container = styled.div`
   display: flex;
-  height: 24px;
   align-items: center;
-  overflow: hidden;
-  ${borderBottom}
-`
-
-const IconContainer = styled.div`
-  width: 24px;
-  height: 24px;
-  ${flexCenter};
-  background-color: transparent;
-  border: none;
-  color: ${({ theme }) => theme.navButtonColor};
+  flex-wrap: wrap;
+  position: relative;
 `
 
 const TagNavigatorList = styled.ul`
   display: flex;
   list-style: none;
   padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
   overflow: hidden;
+  gap: 5px;
+  align-items: center;
 `
 
 interface NoteDetailTagNavigatorProps {
-  storageId: string
-  storageTags: PopulatedTagDoc[]
+  storage: NoteStorage
   noteId?: string
   tags: string[]
   appendTagByName: (tagName: string) => void
@@ -45,8 +37,7 @@ interface NoteDetailTagNavigatorProps {
 }
 
 const NoteDetailTagNavigator = ({
-  storageId,
-  storageTags,
+  storage,
   noteId,
   tags,
   appendTagByName,
@@ -54,6 +45,11 @@ const NoteDetailTagNavigator = ({
   updateTagColorByName,
 }: NoteDetailTagNavigatorProps) => {
   const { t } = useTranslation()
+  const storageId = storage.id
+
+  const storageTagMap = useMemo(() => {
+    return new Map(entries(storage.tagMap))
+  }, [storage.tagMap])
 
   const routeParams = useRouteParams()
 
@@ -65,8 +61,8 @@ const NoteDetailTagNavigator = ({
   }, [routeParams])
 
   const [newTagPopupPosition, setNewTagPopupPosition] = useState<{
-    x: number
-    y: number
+    top: number
+    right: number
   } | null>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -79,17 +75,22 @@ const NoteDetailTagNavigator = ({
   }, [setNewTagPopupPosition])
 
   const showNewTagPopup = useCallback(() => {
-    const rect = buttonRef.current?.getBoundingClientRect()
-    if (rect != null) {
-      setNewTagPopupPosition({ x: rect.x, y: 40 })
-    }
+    const rect = buttonRef.current!.getBoundingClientRect()
+    setNewTagPopupPosition({
+      right: 10,
+      top: rect.bottom,
+    })
   }, [setNewTagPopupPosition])
 
   const noteTags = useMemo(() => {
-    return tags.map((tagName) =>
-      storageTags.find((storageTag) => storageTag.name == tagName)
-    )
-  }, [tags, storageTags])
+    return tags.reduce((list, tagName) => {
+      const tagDoc = storageTagMap.get(tagName)
+      if (tagDoc != null) {
+        list.push(tagDoc)
+      }
+      return list
+    }, [] as PopulatedTagDoc[])
+  }, [tags, storageTagMap])
 
   useEffect(() => {
     const resizeHandler = () => {
@@ -104,46 +105,49 @@ const NoteDetailTagNavigator = ({
     }
   }, [newTagPopupPosition, showNewTagPopup])
 
+  const appendTagByNameAndRefreshPopupPosition = useCallback(
+    (tagName: string) => {
+      appendTagByName(tagName)
+      showNewTagPopup()
+    },
+    [appendTagByName, showNewTagPopup]
+  )
+
   return (
-    <>
-      <Container>
-        <IconContainer title={t('tag.tags')}>
-          <Icon path={mdiTagMultiple} />{' '}
-        </IconContainer>
-        <TagNavigatorList>
-          {noteTags.map((tag) => {
-            return (
-              tag && (
-                <TagNavigatorListItem
-                  key={tag.name}
-                  storageId={storageId}
-                  noteId={noteId}
-                  currentTagName={currentTagName}
-                  tag={tag}
-                  removeTagByName={removeTagByName}
-                  updateTagColorByName={updateTagColorByName}
-                />
-              )
+    <Container>
+      <TagNavigatorList>
+        {noteTags.map((tag) => {
+          return (
+            tag && (
+              <TagNavigatorListItem
+                key={tag.name}
+                storageId={storageId}
+                noteId={noteId}
+                currentTagName={currentTagName}
+                tag={tag}
+                removeTagByName={removeTagByName}
+                updateTagColorByName={updateTagColorByName}
+              />
             )
-          })}
-        </TagNavigatorList>
+          )
+        })}
         <ToolbarIconButton
           title={t('tag.add')}
           iconPath={mdiPlus}
           ref={buttonRef}
           onClick={showNewTagPopup}
         />
-      </Container>
+      </TagNavigatorList>
       {newTagPopupPosition != null && (
         <TagNavigatorNewTagPopup
-          position={newTagPopupPosition}
           tags={tags}
-          storageTags={storageTags.map((tagDetail) => tagDetail.name)}
+          storageTagMap={storageTagMap}
           close={closeNewTagPopup}
-          appendTagByName={appendTagByName}
+          appendTagByName={appendTagByNameAndRefreshPopupPosition}
+          position={newTagPopupPosition}
         />
       )}
-    </>
+    </Container>
   )
 }
 

@@ -119,7 +119,7 @@ const CloudStorageCreateForm = () => {
       }
     } catch (error) {
       pushMessage({
-        title: 'Failed to fetch cloud storage data',
+        title: 'Failed to fetch legacy cloud space list',
         description: error.toString(),
       })
     }
@@ -132,7 +132,7 @@ const CloudStorageCreateForm = () => {
     }
   })
 
-  const boosthubUserInfo = preferences['boosthub.user']
+  const boosthubUserInfo = preferences['cloud.user']
 
   const cloudWorkspaceNotice = (
     <FormBlockquote>
@@ -150,7 +150,7 @@ const CloudStorageCreateForm = () => {
               }
             }}
           >
-            new cloud workspace feature
+            new cloud space feature
           </a>
         </strong>{' '}
         instead of the legacy cloud storage.
@@ -170,7 +170,7 @@ const CloudStorageCreateForm = () => {
             pushMessage({
               title: 'Cloud Error',
               description:
-                'An error occured while attempting to create a cloud storage',
+                'An error occured while attempting to create a legacy cloud space',
             })
           }}
           ButtonComponent={FormPrimaryButton}
@@ -183,7 +183,7 @@ const CloudStorageCreateForm = () => {
     <>
       {cloudWorkspaceNotice}
       <FormGroup>
-        <FormLabel>Remote Storage</FormLabel>
+        <FormLabel>Remote Space</FormLabel>
         <FormCheckItem
           id='radio-remote-storage-new'
           type='radio'
@@ -196,11 +196,11 @@ const CloudStorageCreateForm = () => {
             }
           }}
         >
-          New Storage
+          New Space
         </FormCheckItem>
         <hr />
         {!fetching && remoteStorageList.length === 0 && (
-          <p>Remote storage does not exist.</p>
+          <p>No space has been fetched. Click refresh button to try again.</p>
         )}
         {remoteStorageList.map((cloudStorage) => {
           const cloudStorageId = cloudStorage.id.toString()
@@ -225,12 +225,12 @@ const CloudStorageCreateForm = () => {
       </FormGroup>
       {fetching && (
         <FormGroup>
-          <Spinner /> Fetching cloud storage...
+          <Spinner /> Fetching spaces in the legacy cloud...
         </FormGroup>
       )}
       <FormGroup>
         <FormSecondaryButton onClick={fetchRemoteStorage} disabled={fetching}>
-          Fetch cloud storage
+          Refresh spaces in the legacy cloud
         </FormSecondaryButton>
         <FormSecondaryButton
           onClick={() => {
@@ -267,12 +267,12 @@ const CloudStorageCreateForm = () => {
             setUsingSameName(event.target.checked)
           }}
         >
-          Use the same name for cloud storage
+          Use the same name for legacy cloud space
         </FormCheckItem>
       </FormGroup>
       {!usingSameName && targetRemoteStorage == null && (
         <FormGroup>
-          <FormLabel>Cloud Storage Name</FormLabel>
+          <FormLabel>Space name in the legacy cloud</FormLabel>
           <FormTextInput
             type='text'
             value={cloudStorageName}
@@ -290,8 +290,8 @@ const CloudStorageCreateForm = () => {
           {creating
             ? 'Creating...'
             : fetching
-            ? 'Fetching remote storage...'
-            : 'Create Storage'}
+            ? 'Fetching spaces from the legacy cloud...'
+            : 'Create Space'}
         </FormPrimaryButton>
       </FormGroup>
     </>

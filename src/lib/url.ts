@@ -1,11 +1,10 @@
 import path from 'path'
-import { ParsedUrlQuery } from 'querystring'
 import { parse as _parseUrl } from 'url'
 
 export interface Location {
   pathname: string
   hash: string
-  query: ParsedUrlQuery
+  search: string
 }
 
 export function normalizePathname(pathname: string): string {
@@ -29,6 +28,6 @@ export function parseUrl(urlStr: string): Location {
   return {
     pathname: url.pathname || '',
     hash: url.hash || '',
-    query: url.query,
+    search: url.search || '',
   }
 }

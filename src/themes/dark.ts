@@ -9,9 +9,9 @@ const dangerColor = '#DC3545'
 const dark87Color = '#212121'
 const dark54Color = 'rgba(0,0,0,0.54)'
 const dark26Color = 'rgba(0,0,0,0.26)'
-const light70Color = 'rgba(255,255,255,0.7)'
-const light30Color = 'rgba(255,255,255,0.3)'
-const light12Color = 'rgba(255,255,255,0.12)'
+const light70Color = '#B3B3B3'
+const light30Color = '#4D4D4D'
+const light12Color = '#1F1F1F'
 const light100Color = '#FFF'
 
 export const darkTheme: BaseTheme = {
@@ -91,4 +91,8 @@ export const darkTheme: BaseTheme = {
   searchItemSelectionBackgroundColor: primaryColor,
   searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
   searchHighlightTextColor: dark87Color,
+
+  // Tooltip
+  tooltipBackgroundColor: 'rgba(0,0,0,0.8)',
+  tooltipTextColor: '#f0f0f0',
 }

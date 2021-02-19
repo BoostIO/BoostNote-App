@@ -55,14 +55,14 @@ const ConvertPouchStorage = ({
   const cloneAndConvertStorage = useCallback(async () => {
     try {
       if (newStorageLocation === '') {
-        throw new Error('Converted Storage Location is not selected')
+        throw new Error('Converted Space Location is not selected')
       }
       const storage = storageMap[storageId]
       if (storage == null) {
-        throw new Error(`The storage, \`${storageId}\`, does not exist.`)
+        throw new Error(`The space, \`${storageId}\`, does not exist.`)
       }
       if (storage.type === 'fs') {
-        throw new Error('The storage is not pouch storage.')
+        throw new Error('The space is not pouch space.')
       }
 
       const { noteMap, folderMap, tagMap } = await storage.db.getAllDocsMap()
@@ -131,19 +131,19 @@ const ConvertPouchStorage = ({
         <>
           <FormBlockquote variant={errorMessage == null ? 'primary' : 'danger'}>
             {errorMessage == null
-              ? 'This operation will clone data to File System based Storage.'
+              ? 'This operation will clone data to File System based Space.'
               : errorMessage}
           </FormBlockquote>
 
           <FormGroup>
-            <FormLabel>Converted Storage Name</FormLabel>
+            <FormLabel>Converted Space Name</FormLabel>
             <FormTextInput
               value={newStorageName}
               onChange={updateNewStorageName}
             />
           </FormGroup>
           <FormGroup>
-            <FormLabel>Converted Storage Location</FormLabel>
+            <FormLabel>Converted Space Location</FormLabel>
             <FormFolderSelector
               value={newStorageLocation}
               setValue={setNewStorageLocation}
@@ -151,7 +151,7 @@ const ConvertPouchStorage = ({
           </FormGroup>
           <FormGroup>
             <FormPrimaryButton onClick={cloneAndConvertStorage}>
-              Convert to File System based Storage
+              Convert to File System based Space
             </FormPrimaryButton>
             <FormSecondaryButton onClick={closeForm}>
               Cancel

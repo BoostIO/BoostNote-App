@@ -160,18 +160,5 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Koodilohko teema',
     'preferences.defaultTheme': 'Käytä oletusteemaa',
     'preferences.markdownPreview': 'Markdown esikatselu',
-
-    // Preferences ImportTab
-    'preferences.import': 'Tuo',
-    'preferences.description': 'Tuo .cson tiedostoja vanhasta Boostnotesta.',
-    'preferences.importFlow1':
-      '1. Avaa vanha Boostnote kansio tietokoneellasi.',
-    'preferences.importFlow2':
-      '2. Raahaa ja tiputa .cson tiedostot alla olevaan lomakkeeseen.',
-    'preferences.importFlow3':
-      '3. Valitse tallennustila ja kansio johon haluat siirtää vanhan datasi.',
-    'preferences.importFlow4': '4. Lähetä!',
-    'preferences.importRemove': 'poista',
-    'preferences.importUpload': 'Lähetä',
   },
 }

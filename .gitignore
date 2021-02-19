@@ -11,6 +11,7 @@ dist/*
 .cache
 secrets
 compiled-mobile
+compiled-cloud
 electron/*
 !electron/.gitkeep
 
