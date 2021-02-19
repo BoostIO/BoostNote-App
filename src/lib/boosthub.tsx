@@ -73,7 +73,12 @@ export async function fetchDesktopGlobalData(token: string) {
       uniqueName: string
       displayName: string
     }
-    teams: { id: string; name: string; domain: string; iconUrl?: string }[]
+    teams: {
+      id: string
+      name: string
+      domain: string
+      icon?: { location: string }
+    }[]
   }
 }
 

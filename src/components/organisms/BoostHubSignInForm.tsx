@@ -30,6 +30,7 @@ import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
 import { fetchDesktopGlobalData } from '../../lib/boosthub'
 import { boostHubBaseUrl } from '../../cloud/lib/consts'
+import { buildIconUrl } from '../../cloud/api/files'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -109,7 +110,12 @@ const BoostHubSignInForm = () => {
               id: team.id,
               name: team.name,
               domain: team.domain,
-              iconUrl: team.iconUrl,
+              iconUrl:
+                team.icon != null
+                  ? `${process.env.BOOST_HUB_BASE_URL}${buildIconUrl(
+                      team.icon.location
+                    )}`
+                  : undefined,
             }
           }),
         })
