@@ -189,12 +189,34 @@ const UpgradeTab = () => {
                         <div>per member per month</div>
                       </div>
 
-                      <CustomButton
-                        onClick={onUpgradeCallback}
-                        className='upgrade-btn'
-                      >
-                        Upgrade
-                      </CustomButton>
+                      {permissions.length < 2 ? (
+                        <Tooltip
+                          tooltip={
+                            <div style={{ maxWidth: 250 }}>
+                              The Pro Plan is only available for more than 2
+                              persons use. Your plan will be upgraded
+                              immediately to pro plan if you invite new members
+                              while having an active personal pro plan.
+                            </div>
+                          }
+                          side='top'
+                        >
+                          <CustomButton
+                            disabled={true}
+                            variant='inverse-secondary'
+                            className='upgrade-btn'
+                          >
+                            Upgrade
+                          </CustomButton>
+                        </Tooltip>
+                      ) : (
+                        <CustomButton
+                          onClick={onUpgradeCallback}
+                          className='upgrade-btn'
+                        >
+                          Upgrade
+                        </CustomButton>
+                      )}
                       {freeTrialContent}
                     </td>
                   </tr>
