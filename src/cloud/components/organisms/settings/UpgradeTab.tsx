@@ -556,8 +556,8 @@ const StyledTrialLink = styled.a`
   text-decoration: underline;
   font-size: ${({ theme }) => theme.fontSizes.default}px;
   transition: 200ms color;
-  color: ${({ theme }) => theme.secondaryTextColor};
+  color: ${({ theme }) => theme.primaryTextColor};
   &:hover {
-    color: ${({ theme }) => theme.primaryBackgroundColor};
+    text-decoration: none;
   }
 `
