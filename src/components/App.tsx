@@ -184,6 +184,10 @@ const App = () => {
         accessToken = token
 
         await flushLegacySessionCookie()
+
+        setGeneralStatus({
+          boostHubTeams: [],
+        })
       } else {
         accessToken = cloudUserInfo.accessToken
       }
