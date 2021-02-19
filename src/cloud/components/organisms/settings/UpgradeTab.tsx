@@ -249,31 +249,6 @@ const UpgradeTab = () => {
                   </tr>
 
                   <tr>
-                    <td className='first'>Real-time collaboration</td>
-                    <td>
-                      <div className='perk'>&#x2713;</div>
-                    </td>
-                    <td>
-                      <div className='perk'>&#x2713;</div>
-                    </td>
-                    <td>
-                      <div className='perk'>&#x2713;</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className='first'>Exports</td>
-                    <td>
-                      <div className='perk'>markdown, html, pdf</div>
-                    </td>
-                    <td>
-                      <div className='perk'>markdown, html, pdf</div>
-                    </td>
-                    <td>
-                      <div className='perk'>markdown, html, pdf</div>
-                    </td>
-                  </tr>
-
-                  <tr>
                     <td className='first'>Storage lmit</td>
                     <td>
                       <div className='perk'>1GB per member</div>
@@ -289,13 +264,39 @@ const UpgradeTab = () => {
                   <tr>
                     <td className='first'>Integrations</td>
                     <td>
-                      <div className='perk'>1000+ integrations</div>
+                      <div className='perk'>2000+ integrations</div>
                     </td>
                     <td>
-                      <div className='perk'>1000+ integrations</div>
+                      <div className='perk'>2000+ integrations</div>
                     </td>
                     <td>
-                      <div className='perk'>1000+ integrations</div>
+                      <div className='perk'>2000+ integrations</div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className='first'>Templates</td>
+                    <td>
+                      <div className='perk'>Unlimited</div>
+                    </td>
+                    <td>
+                      <div className='perk'>Unlimited</div>
+                    </td>
+                    <td>
+                      <div className='perk'>Unlimited</div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className='first'>Collaborative workspace</td>
+                    <td>
+                      <div className='perk'>&#x292C;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x292C;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x2713;</div>
                     </td>
                   </tr>
 
@@ -326,15 +327,43 @@ const UpgradeTab = () => {
                   </tr>
 
                   <tr>
-                    <td className='first'>Templates</td>
+                    <td className='first'>Guest invite</td>
                     <td>
-                      <div className='perk'>Unlimited</div>
+                      <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>Unlimited</div>
+                      <div className='perk'>&#x2713;</div>
                     </td>
                     <td>
-                      <div className='perk'>Unlimited</div>
+                      <div className='perk'>&#x2713;</div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className='first'>
+                      Password/Expiration date for sharing
+                    </td>
+                    <td>
+                      <div className='perk'>&#x292C;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x2713;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x2713;</div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className='first'>Priority support</td>
+                    <td>
+                      <div className='perk'>&#x292C;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x292C;</div>
+                    </td>
+                    <td>
+                      <div className='perk'>&#x2713;</div>
                     </td>
                   </tr>
 
