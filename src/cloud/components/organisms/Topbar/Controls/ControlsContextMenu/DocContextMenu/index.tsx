@@ -600,7 +600,7 @@ const DocContextMenu = ({
                             return (
                               <li className='context__revision' key={rev.id}>
                                 {creators.length > 0 ? (
-                                  <>
+                                  <Flexbox alignItems='center' wrap='wrap'>
                                     {creators.map((user) => (
                                       <UserIcon
                                         key={user.id}
@@ -615,7 +615,7 @@ const DocContextMenu = ({
                                         .join(',')}{' '}
                                       updated doc
                                     </span>
-                                  </>
+                                  </Flexbox>
                                 ) : (
                                   'Doc has been updated'
                                 )}
