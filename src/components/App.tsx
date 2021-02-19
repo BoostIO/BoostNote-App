@@ -22,6 +22,7 @@ import {
   getPathByName,
   addIpcListener,
   removeIpcListener,
+  setCookie,
 } from '../lib/electronOnly'
 import { generateId } from '../lib/string'
 import FSNoteDb from '../lib/db/FSNoteDb'
@@ -35,6 +36,7 @@ import {
   getLegacySessionCookie,
   getDesktopAccessTokenFromSessionKey,
   flushLegacySessionCookie,
+  boostHubBaseUrl,
 } from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
@@ -184,6 +186,13 @@ const App = () => {
         accessToken = token
 
         await flushLegacySessionCookie()
+
+        await setCookie({
+          url: boostHubBaseUrl,
+          name: 'desktop_access_token',
+          value: token,
+          expirationDate: 4766076898395,
+        })
 
         setGeneralStatus({
           boostHubTeams: [],
