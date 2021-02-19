@@ -58,6 +58,7 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
         teamId,
         docId: docId,
         guest: false,
+        pending: true,
       })
       setPendingInvites(invites)
     } catch (error) {
