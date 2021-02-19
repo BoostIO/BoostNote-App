@@ -236,7 +236,7 @@ const App = () => {
             domain: team.domain,
             iconUrl:
               team.icon != null
-                ? `${getBoostHubTeamIconUrl(team.icon.location)}`
+                ? getBoostHubTeamIconUrl(team.icon.location)
                 : undefined,
           }
         }),
