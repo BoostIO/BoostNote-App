@@ -24,12 +24,13 @@ export interface SerializableGuestInviteProps {
   email: string
   docId: string
   teamId: string
+  pending: boolean
 }
 
 export interface SerializedUnserializableGuestInviteProps {
   createdAt: string
   inviter: SerializedUser
-  user?: SerializedUser
+  canceller?: SerializedUser
   guest?: SerializedGuest
   team: SerializedTeam
   doc: SerializedDoc
