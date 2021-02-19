@@ -85,7 +85,11 @@ const UpgradeTab = () => {
         return null
       }
 
-      return <p>&#x2713; In free trial</p>
+      return (
+        <p>
+          <span className='check'>&#x2713;</span> In free trial
+        </p>
+      )
     }
 
     if (!team.trial) {
@@ -296,7 +300,9 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
@@ -306,23 +312,33 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
                   <tr>
                     <td className='first'>Private folders</td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
@@ -332,10 +348,14 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
@@ -347,10 +367,14 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
@@ -363,20 +387,28 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                   </tr>
 
                   <tr>
                     <td className='first'>Mobile App</td>
                     <td>
-                      <div className='perk'>&#x2713; (Soon)</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span> (Soon)
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713; (Soon)</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span> (Soon)
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>&#x2713; (Soon)</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span> (Soon)
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -512,6 +544,11 @@ const StyledPlanTables = styled.table`
   .perk {
     line-height: 1.2;
     padding: 6px 0px;
+  }
+
+  .check {
+    color: ${({ theme }) => theme.primaryTextColor};
+    font-weight: bold;
   }
 `
 
