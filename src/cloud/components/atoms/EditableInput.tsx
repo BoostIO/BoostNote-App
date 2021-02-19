@@ -184,6 +184,7 @@ const StyledEditableInput = styled.div`
     background-color: transparent;
     color: ${({ theme }) => theme.baseTextColor};
     cursor: pointer;
+    font-size: ${({ theme }) => theme.fontSizes.small}px;
     text-decoration: none !important;
     flex: 1;
     min-width: 0;
