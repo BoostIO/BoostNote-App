@@ -130,7 +130,7 @@ const UpgradeTab = () => {
                 <thead>
                   <tr>
                     <td className='first' />
-                    <td>
+                    <td className='header'>
                       <label>Free</label>
                       <div className='pricing'>
                         <span>$0</span>
@@ -141,11 +141,11 @@ const UpgradeTab = () => {
                         disabled={true}
                         variant='inverse-secondary'
                       >
-                        Current
+                        Current Plan
                       </CustomButton>
                     </td>
 
-                    <td>
+                    <td className='header'>
                       <label>Personal Pro</label>
                       <div className='pricing'>
                         <span>$3</span>
@@ -182,7 +182,7 @@ const UpgradeTab = () => {
                       {freeTrialContent}
                     </td>
 
-                    <td>
+                    <td className='header'>
                       <label>Pro</label>
                       <div className='pricing'>
                         <span>$8</span>
@@ -451,23 +451,32 @@ const StyledPlanTables = styled.table`
   width: 100%;
   margin-bottom: ${({ theme }) => theme.space.medium}px;
   table-layout: fixed;
-  border-collapse: initial;
-  border-spacing: 0;
+  border-collapse: separate;
+  border-spacing: 30px 0;
 
   .first {
     width: 30%;
   }
 
+  .header {
+    vertical-align: top;
+  }
+
   label {
+    display: block;
+    margin-bottom: ${({ theme }) => theme.space.small}px;
     font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
     font-weight: 600;
   }
 
   .pricing {
     display: flex;
+    align-items: center;
+    margin-bottom: ${({ theme }) => theme.space.xsmall}px;
+
     span {
-      font-size: ${({ theme }) => theme.fontSizes.large}px;
-      margin-right: ${({ theme }) => theme.space.small}px;
+      font-size: ${({ theme }) => theme.fontSizes.xxlarge}px;
+      margin-right: ${({ theme }) => theme.space.xsmall}px;
     }
     div {
       font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
@@ -479,22 +488,23 @@ const StyledPlanTables = styled.table`
   }
 
   .upgrade-btn {
+    width: 100%;
     margin: ${({ theme }) => theme.fontSizes.xsmall}px 0;
   }
 
   tr td {
+    padding-top: ${({ theme }) => theme.space.xsmall}px;
+    padding-bottom: ${({ theme }) => theme.space.xsmall}px;
     border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
-    border-right: 1px solid ${({ theme }) => theme.subtleBorderColor};
     text-align: left;
     min-height: 30px;
-    vertical-align: top;
+
     &:not(.first) {
-      padding: 0 10px;
+      padding: ${({ theme }) => theme.space.xsmall}px
+        ${({ theme }) => theme.space.small}px;
     }
 
     &.first {
-      padding-top: 6px;
-      padding-bottom: 8px;
       color: ${({ theme }) => theme.subtleTextColor};
     }
   }
