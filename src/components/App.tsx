@@ -243,7 +243,10 @@ const App = () => {
             id: team.id,
             name: team.name,
             domain: team.domain,
-            iconUrl: team.iconUrl,
+            iconUrl:
+              team.icon != null
+                ? getBoostHubTeamIconUrl(team.icon.location)
+                : undefined,
           }
         }),
       })
