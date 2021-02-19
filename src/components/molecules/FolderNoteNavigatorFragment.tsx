@@ -96,7 +96,7 @@ const FolderNoteNavigatorFragment = ({
           title: note.title,
           folderPathname: note.folderPathname,
           bookmarked: !!note.data.bookmarked,
-          depth: 1,
+          depth: 0,
         })
       })
     return navItemList

@@ -222,7 +222,12 @@ const StorageNavigatorFragment = ({
   const pathname = usePathnameWithoutNoteId()
 
   const syncing = storage.type !== 'fs' && storage.sync != null
-  const rootIsActive = `/app/storages/${storage.id}/notes` === pathname
+  const rootIsActive =
+    generalAppMode === 'wiki'
+      ? `/app/storages/${storage.id}/notes` === pathname &&
+        routeParams.name === 'storages.notes' &&
+        routeParams.noteId == null
+      : `/app/storages/${storage.id}/notes` === pathname
 
   return (
     <>
