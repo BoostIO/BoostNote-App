@@ -26,6 +26,7 @@ import {
   boostHubTeamUpdateEventEmitter,
   boostHubTeamDeleteEventEmitter,
   boostHubAccountDeleteEventEmitter,
+  boostHubReloadAllWebViewsEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
@@ -183,6 +184,13 @@ const BoostHubWebview = ({
                     label: 'Open Dev Tools',
                     click: openDevTools,
                   },
+                  {
+                    type: 'normal',
+                    label: 'Hard Reload(Ignore Cache)',
+                    click: () => {
+                      webview.reloadIgnoringCache()
+                    },
+                  },
                 ],
               },
               {
@@ -212,9 +220,15 @@ const BoostHubWebview = ({
     }
     webview.addEventListener('new-window', newWindowEventHandler)
 
+    const reloadHandler = () => {
+      webview.reload()
+    }
+    boostHubReloadAllWebViewsEventEmitter.listen(reloadHandler)
+
     return () => {
       webview.removeEventListener('ipc-message', ipcMessageEventHandler)
       webview.removeEventListener('new-window', newWindowEventHandler)
+      boostHubReloadAllWebViewsEventEmitter.unlisten(reloadHandler)
     }
   })
 

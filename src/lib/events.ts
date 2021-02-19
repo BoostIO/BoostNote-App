@@ -108,3 +108,7 @@ export const boostHubAccountDeleteEventEmitter = createCustomEventEmitter(
 export const boostHubToggleSettingsEventEmitter = createCustomEventEmitter(
   'BoostHub:toggleSettings'
 )
+
+export const boostHubReloadAllWebViewsEventEmitter = createCustomEventEmitter(
+  'BoostHub:reloadAllWebViews'
+)
