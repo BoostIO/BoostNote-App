@@ -1,13 +1,7 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import {
-  getPathByName,
-  setCookie,
-  getCookie,
-  removeCookie,
-  got,
-} from './electronOnly'
+import { getPathByName, getCookie, removeCookie, got } from './electronOnly'
 import { useCallback } from 'react'
 import { createStoreContext } from './context'
 import ky from 'ky'
