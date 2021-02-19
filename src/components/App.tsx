@@ -58,7 +58,6 @@ import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
-import { buildIconUrl } from '../cloud/api/files'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -237,9 +236,7 @@ const App = () => {
             domain: team.domain,
             iconUrl:
               team.icon != null
-                ? `${process.env.BOOST_HUB_BASE_URL}${buildIconUrl(
-                    team.icon.location
-                  )}`
+                ? `${getBoostHubTeamIconUrl(team.icon.location)}`
                 : undefined,
           }
         }),

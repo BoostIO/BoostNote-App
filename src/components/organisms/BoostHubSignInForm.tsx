@@ -15,7 +15,11 @@ import {
   FormSecondaryButton,
 } from '../atoms/form'
 import { generateId } from '../../lib/string'
-import { openLoginPage, createDesktopAccessToken } from '../../lib/boosthub'
+import {
+  openLoginPage,
+  createDesktopAccessToken,
+  getBoostHubTeamIconUrl,
+} from '../../lib/boosthub'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import {
   BoostHubLoginEvent,
@@ -30,7 +34,6 @@ import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
 import { fetchDesktopGlobalData } from '../../lib/boosthub'
 import { boostHubBaseUrl } from '../../cloud/lib/consts'
-import { buildIconUrl } from '../../cloud/api/files'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -112,9 +115,7 @@ const BoostHubSignInForm = () => {
               domain: team.domain,
               iconUrl:
                 team.icon != null
-                  ? `${process.env.BOOST_HUB_BASE_URL}${buildIconUrl(
-                      team.icon.location
-                    )}`
+                  ? `${getBoostHubTeamIconUrl(team.icon.location)}`
                   : undefined,
             }
           }),
