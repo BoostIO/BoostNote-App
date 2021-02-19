@@ -12,6 +12,7 @@ const filteredJson = {
     'read-chunk': '^3.2.0',
     'file-type': '^14.6.2',
     'cson-parser': '^4.0.5',
+    got: '^11.8.1',
   },
 }
 

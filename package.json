@@ -157,6 +157,7 @@
     "file-type": "^14.6.2",
     "filenamify": "^4.1.0",
     "flowchart.js": "^1.15.0",
+    "got": "^11.8.1",
     "hast-util-sanitize": "^3.0.0",
     "hastscript": "^5.1.0",
     "history": "^4.10.1",

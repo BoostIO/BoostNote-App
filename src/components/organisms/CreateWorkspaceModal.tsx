@@ -24,7 +24,7 @@ const CreateWorkspaceModal = ({ closeModal }: CreateWorkspaceModalProps) => {
     closeModal()
     push(`/app/storages`)
   }, [push, closeModal])
-  const boosthubUserInfo = preferences['boosthub.user']
+  const boosthubUserInfo = preferences['cloud.user']
   const chooseCloudWorkspace = useCallback(() => {
     checkFeature(featureBoostHubSignIn)
     closeModal()

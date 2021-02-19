@@ -1,14 +1,21 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import { getPathByName, setCookie } from './electronOnly'
-import React, { FC, useCallback } from 'react'
+import {
+  getPathByName,
+  setCookie,
+  getCookie,
+  removeCookie,
+  got,
+} from './electronOnly'
+import { useCallback } from 'react'
 import { createStoreContext } from './context'
 import ky from 'ky'
 import { useRouteParams } from './routeParams'
 import { useGeneralStatus } from './generalStatus'
 import { usePreferences } from './preferences'
 import { useRouter } from './router'
+import { Cookie } from 'electron/main'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -113,12 +120,7 @@ function useBoostHubStore() {
       boostHubTeams: [],
     })
 
-    setCookie({
-      url: boostHubBaseUrl,
-      name: 'desktop_access_token',
-      value: '',
-      expirationDate: 0,
-    })
+    removeCookie(boostHubBaseUrl, 'desktop_access_token')
   }, [routeParams.name, setPreferences, setGeneralStatus, push])
 
   return {
@@ -127,10 +129,32 @@ function useBoostHubStore() {
   }
 }
 
-export const { StoreProvider, useStore: useBoostHub } = createStoreContext(
-  useBoostHubStore
-)
+export const {
+  StoreProvider: BoostHubStoreProvider,
+  useStore: useBoostHub,
+} = createStoreContext(useBoostHubStore)
 
-export const BoostHubStoreProvider: FC = ({ children }) => {
-  return <StoreProvider>{children}</StoreProvider>
+export async function getLegacySessionCookie(): Promise<Cookie | null> {
+  const cookies = await getCookie({
+    domain: '.boostnote.io',
+    name: 'boostnote.session',
+  })
+  return cookies[0] || null
+}
+
+export async function getDesktopAccessTokenFromSessionKey(sessionKey: string) {
+  return got
+    .post(`${boostHubBaseUrl}/api/desktop/access-tokens`, {
+      headers: {
+        cookie: `boostnote.session=${sessionKey}`,
+      },
+      json: {
+        deviceName: navigator.userAgent,
+      },
+    })
+    .json<{ token: string }>()
+}
+
+export async function flushLegacySessionCookie(): Promise<void> {
+  await removeCookie(`${boostHubBaseUrl}`, 'boostnote.session')
 }

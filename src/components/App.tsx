@@ -29,7 +29,13 @@ import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { getFolderItemId } from '../lib/nav'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
+import {
+  useBoostHub,
+  getBoostHubTeamIconUrl,
+  getLegacySessionCookie,
+  getDesktopAccessTokenFromSessionKey,
+  flushLegacySessionCookie,
+} from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -164,13 +170,25 @@ const App = () => {
   useEffectOnce(() => {
     const run = async () => {
       const cloudUserInfo = preferences['cloud.user']
+      let accessToken: string
       if (cloudUserInfo == null) {
-        return
+        const legacyCookie = await getLegacySessionCookie()
+        if (legacyCookie == null) {
+          return
+        }
+
+        console.info('Get a new access token from legacy session...')
+        const { token } = await getDesktopAccessTokenFromSessionKey(
+          legacyCookie.value
+        )
+        accessToken = token
+
+        await flushLegacySessionCookie()
+      } else {
+        accessToken = cloudUserInfo.accessToken
       }
 
-      const desktopGlobalData = await fetchDesktopGlobalData(
-        cloudUserInfo.accessToken
-      )
+      const desktopGlobalData = await fetchDesktopGlobalData(accessToken)
       if (desktopGlobalData.user == null) {
         messageBox({
           title: 'Sign In',
@@ -200,11 +218,21 @@ const App = () => {
       const user = desktopGlobalData.user
       setPreferences({
         'cloud.user': {
-          ...cloudUserInfo,
           id: user.id,
           uniqueName: user.uniqueName,
           displayName: user.displayName,
+          accessToken,
         },
+      })
+      setGeneralStatus({
+        boostHubTeams: desktopGlobalData.teams.map((team) => {
+          return {
+            id: team.id,
+            name: team.name,
+            domain: team.domain,
+            iconUrl: team.iconUrl,
+          }
+        }),
       })
     }
     run()

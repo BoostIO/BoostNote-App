@@ -8,7 +8,8 @@ import {
   WebContents,
   PrintToPDFOptions,
 } from 'electron'
-import { CookiesSetDetails } from 'electron/main'
+import { CookiesSetDetails, CookiesGetFilter, Cookie } from 'electron/main'
+import { Got } from 'got'
 
 const __ELECTRON_ONLY__: {
   readFile(pathname: string): Promise<string | Buffer>
@@ -56,6 +57,9 @@ const __ELECTRON_ONLY__: {
     printOptions: PrintToPDFOptions
   ): Promise<Buffer>
   setCookie(cookieDetails: CookiesSetDetails): Promise<void>
+  getCookie(filter: CookiesGetFilter): Promise<Cookie[]>
+  removeCookie(url: string, name: string): Promise<void>
+  got: Got
 } = (window as any).__ELECTRON_ONLY__
 
 const {
@@ -85,6 +89,9 @@ const {
   setTrafficLightPosition,
   convertHtmlStringToPdfBuffer,
   setCookie,
+  getCookie,
+  removeCookie,
+  got,
 } = __ELECTRON_ONLY__ || {}
 
 async function readFileAsString(pathname: string) {
@@ -139,4 +146,7 @@ export {
   setTrafficLightPosition,
   convertHtmlStringToPdfBuffer,
   setCookie,
+  getCookie,
+  removeCookie,
+  got,
 }
