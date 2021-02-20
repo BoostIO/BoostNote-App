@@ -270,7 +270,11 @@ const Separator = styled.div`
 
 const ControlItem = styled.div`
   display: flex;
+  align-items: center;
   flex-shrink: 0;
+  height: 30px;
+  color: ${({ theme }) => theme.navItemColor};
+  font-size: 14px;
 `
 
 const ControlItemLabelIconContainer = styled.div`
@@ -328,8 +332,8 @@ const ButtonItem = styled.button`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-
   color: ${({ theme }) => theme.navItemColor};
+  font-size: 14px;
   background-color: ${({ theme }) => theme.navItemBackgroundColor};
   &:hover {
     background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};

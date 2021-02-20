@@ -33,7 +33,7 @@ export const darkTheme: BaseTheme = {
   primaryColor: primaryColor,
   primaryDarkerColor: primaryDarkerColor,
   dangerColor: dangerColor,
-  borderColor: '#505050',
+  borderColor: '#45474B',
   noteListIconColor: light30Color,
   noteListActiveIconColor: light70Color,
   noteDetailIconColor: light30Color,
