@@ -57,6 +57,7 @@ export const StyledImportStepSeparator = styled.div`
 
 export const StyledSourceRow = styled.div`
   display: flex;
+  margin-top: ${({ theme }) => theme.space.small}px;
   margin-bottom: ${({ theme }) => theme.space.small}px;
 `
 
@@ -99,6 +100,12 @@ export const StyledSourceButtonTextWrap = styled.div`
   justify-content: space-between;
   flex: 1 1 auto;
   text-align: left;
+  font-size: ${({ theme }) => theme.fontSizes.default}px;
+
+  strong {
+    display: block;
+    margin-bottom: ${({ theme }) => theme.space.xsmall}px;
+  }
 `
 
 export const StyledProgressBarWrapper = styled.div`
