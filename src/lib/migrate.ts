@@ -53,7 +53,6 @@ export function createMigrationJob(
       stopped = false
       try {
         while (!stopped && !complete) {
-          await new Promise((res) => setTimeout(res, 5000))
           const result = await iter.next()
           onProgressSet.forEach((cb) => cb(result.value))
           if (result.done) {
