@@ -137,6 +137,7 @@ const PreferencesModal = () => {
   useGlobalKeyDownHandler(keydownHandler)
 
   const content = useMemo(() => {
+    console.log(tab, currentStorage)
     switch (tab) {
       case 'editor':
         return <EditorTab />
