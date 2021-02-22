@@ -2,6 +2,16 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { callApi } from '../../../lib/client'
 
+export interface GetWorkspaceResponseBody {
+  workspaces: SerializedWorkspace[]
+}
+
+export async function getWorkspaces(teamId?: string) {
+  return callApi<GetWorkspaceResponseBody>(
+    `api/workspaces${teamId != null ? `?teamId=${teamId}` : ''}`
+  )
+}
+
 export interface CreateWorkspaceRequestBody {
   name: string
   permissions: string[]
