@@ -9,7 +9,7 @@ interface UploadFileResponseBody {
 }
 
 export async function uploadFile(
-  team: SerializedTeam,
+  team: SerializedTeam | string,
   file: File,
   doc?: SerializedDoc
 ) {
@@ -22,13 +22,12 @@ export async function uploadFile(
     formData.append('attachTo', doc.id)
   }
 
-  const data = await callApi<UploadFileResponseBody>(
-    `api/teams/${team.id}/files`,
-    {
-      body: formData,
-      method: 'post',
-    }
-  )
+  const id = typeof team === 'string' ? team : team.id
+
+  const data = await callApi<UploadFileResponseBody>(`api/teams/${id}/files`, {
+    body: formData,
+    method: 'post',
+  })
   return data
 }
 
@@ -40,6 +39,10 @@ export async function deleteFile(team: SerializedTeam, filename: string) {
   return data
 }
 
-export function buildTeamFileUrl(team: SerializedTeam, fileId: string) {
-  return `/api/teams/${team.id}/files/${fileId}`
+export function buildTeamFileUrl(
+  team: SerializedTeam | string,
+  fileId: string
+) {
+  const id = typeof team === 'string' ? team : team.id
+  return `/api/teams/${id}/files/${fileId}`
 }
