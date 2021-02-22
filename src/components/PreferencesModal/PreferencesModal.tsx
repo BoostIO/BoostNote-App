@@ -21,6 +21,7 @@ import { mdiClose, mdiHammerWrench } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import StorageTab from './StorageTab'
+import MigrationPage from './MigrationTab'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -142,6 +143,10 @@ const PreferencesModal = () => {
         if (currentStorage != null) {
           return <StorageTab storage={currentStorage} />
         }
+      case 'migration':
+        if (currentStorage != null) {
+          return <MigrationPage storage={currentStorage} />
+        }
       case 'general':
       default:
         return <GeneralTab />
@@ -182,7 +187,7 @@ const PreferencesModal = () => {
               <TabButton
                 label='Storage'
                 tab='storage'
-                active={tab === 'storage'}
+                active={tab === 'storage' || tab === 'migration'}
                 setTab={openTab}
               />
             )}

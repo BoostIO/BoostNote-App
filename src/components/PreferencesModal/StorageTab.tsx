@@ -18,6 +18,7 @@ import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
 import { appIsElectron } from '../../lib/platform'
+import { usePreferences } from '../../lib/preferences'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -31,6 +32,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
   const [editingName, setEditingName] = useState(false)
+  const { openTab } = usePreferences()
 
   const startEditingName = useCallback(() => {
     setNewName(storage.name)
@@ -131,6 +133,11 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           />
         </>
       )}
+      <hr />
+      <FormHeading>Migrate data to cloud space</FormHeading>
+      <FormSecondaryButton onClick={() => openTab('migration')}>
+        Start Migration
+      </FormSecondaryButton>
       <hr />
       <FormHeading depth={2}>Remove Space</FormHeading>
       {storage.type !== 'fs' && storage.cloudStorage != null && (
