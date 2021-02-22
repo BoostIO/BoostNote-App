@@ -21,6 +21,7 @@ import Flexbox from '../../cloud/components/atoms/Flexbox'
 import Icon from '../atoms/Icon'
 import { mdiAlert, mdiCheckCircle, mdiTea } from '@mdi/js'
 import ProgressBar from '../atoms/ProgressBar'
+import { usePreferences } from '../../lib/preferences'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -56,6 +57,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     stateFromTeams(boostHubTeams)
   )
   const [workspaceErr, setWorkspaceErr] = useState<Error | null>(null)
+  const { openTab, setClosed } = usePreferences()
 
   useEffect(() => setMigrationState(stateFromTeams(boostHubTeams)), [
     boostHubTeams,
@@ -143,6 +145,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           </div>
         </Flexbox>
         <Flexbox justifyContent='flex-end'>
+          <SectionSecondaryButton onClick={() => openTab('storage')}>
+            Cancel
+          </SectionSecondaryButton>
           <SectionPrimaryButton
             onClick={pinDestination}
             disabled={migrationState.workspace == null}
@@ -252,6 +257,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <br />
           We hope you enjoy using it!
         </p>
+        <SectionPrimaryButton onClick={() => setClosed(true)}>
+          Close
+        </SectionPrimaryButton>
       </Flexbox>
     </div>
   )
