@@ -23,8 +23,11 @@ import {
 import DocBookmark from '../RightSideTopBar/DocTopbar/DocBookmark'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { SerializedUser } from '../../../interfaces/db/user'
-import DocContextMenu from '../Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import MarkdownView from '../../atoms/MarkdownView'
+import cc from 'classcat'
+import DocContextMenu, {
+  docContextWidth,
+} from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -45,6 +48,7 @@ const ViewPage = ({
   const { updateDocsMap, deleteDocHandler } = useNav()
   const { setPartialPageData, currentUserPermissions } = usePage()
   const { pushMessage } = useToast()
+  const { preferences } = usePreferences()
 
   const unarchiveHandler = useCallback(async () => {
     try {
@@ -88,39 +92,45 @@ const ViewPage = ({
         },
       }}
     >
-      {doc.archivedAt != null && (
-        <ColoredBlock variant='warning' className='float-on-top'>
-          <p>The document has been archived.</p>
-          {currentUserPermissions != null && (
-            <>
-              <CustomButton onClick={unarchiveHandler}>Unarchive</CustomButton>
-              <CustomButton onClick={() => deleteDocHandler(doc)}>
-                Delete
-              </CustomButton>
-            </>
-          )}
-        </ColoredBlock>
-      )}
-      <StyledViewDocLayout>
-        <StyledTitle>{getDocTitle(doc, 'Untitled..')}</StyledTitle>
-        <StyledBannerWrap>
-          {!editable && <DocLimitReachedBanner />}
-        </StyledBannerWrap>
-        <StyledHoverZone onMouseEnter={() => hoverSidebarOn()} />
-        <StyledContent>
-          {doc.head != null ? (
-            <>
-              <MarkdownView content={doc.head.content} />
-            </>
-          ) : (
-            <>
-              <StyledPlaceholderContent>
-                The document is empty
-              </StyledPlaceholderContent>
-            </>
-          )}
-        </StyledContent>
-      </StyledViewDocLayout>
+      <Container
+        className={cc([!preferences.docContextIsHidden && 'with__context'])}
+      >
+        {doc.archivedAt != null && (
+          <ColoredBlock variant='warning' className='float-on-top'>
+            <p>The document has been archived.</p>
+            {currentUserPermissions != null && (
+              <>
+                <CustomButton onClick={unarchiveHandler}>
+                  Unarchive
+                </CustomButton>
+                <CustomButton onClick={() => deleteDocHandler(doc)}>
+                  Delete
+                </CustomButton>
+              </>
+            )}
+          </ColoredBlock>
+        )}
+        <StyledViewDocLayout>
+          <StyledTitle>{getDocTitle(doc, 'Untitled..')}</StyledTitle>
+          <StyledBannerWrap>
+            {!editable && <DocLimitReachedBanner />}
+          </StyledBannerWrap>
+          <StyledHoverZone onMouseEnter={() => hoverSidebarOn()} />
+          <StyledContent>
+            {doc.head != null ? (
+              <>
+                <MarkdownView content={doc.head.content} />
+              </>
+            ) : (
+              <>
+                <StyledPlaceholderContent>
+                  The document is empty
+                </StyledPlaceholderContent>
+              </>
+            )}
+          </StyledContent>
+        </StyledViewDocLayout>
+      </Container>
     </AppLayout>
   )
 }
@@ -173,6 +183,23 @@ const StyledHoverZone = styled.div`
   left: 0px;
   width: 200px;
   transform: translate3d(-100%, 0, 0);
+`
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  @media screen and (min-width: 1020px) {
+    &.with__context {
+      max-width: calc(100% - ${docContextWidth}px + 12px) !important;
+
+      .float-on-top {
+        max-width: calc(100% - ${docContextWidth}px + 12px) !important;
+      }
+    }
+  }
 `
 
 export default ViewPage
