@@ -70,22 +70,20 @@ const CloudWorkspaceSelect = ({
   }, [onChange, workspaces])
 
   return (
-    <>
-      <SectionSelect
-        disabled={state === 'loading'}
-        value={value?.id}
-        onChange={selectWorkspace}
-      >
-        {workspaces != null &&
-          workspaces.map((workspace) => {
-            return (
-              <option value={workspace.id} key={workspace.id}>
-                {workspace.name}
-              </option>
-            )
-          })}
-      </SectionSelect>
-    </>
+    <SectionSelect
+      disabled={state === 'loading'}
+      value={value?.id}
+      onChange={selectWorkspace}
+    >
+      {workspaces != null &&
+        workspaces.map((workspace) => {
+          return (
+            <option value={workspace.id} key={workspace.id}>
+              {workspace.name}
+            </option>
+          )
+        })}
+    </SectionSelect>
   )
 }
 
