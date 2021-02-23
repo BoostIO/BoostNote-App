@@ -15,7 +15,7 @@ interface DocCreateResponseBody {
 }
 
 export function createDocREST(body: DocCreateRequestBody) {
-  return callApi<DocCreateResponseBody>(`/api/docs`, {
+  return callApi<DocCreateResponseBody>(`api/docs`, {
     method: 'post',
     json: body,
   })
