@@ -8,6 +8,7 @@ import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
 import { setTrafficLightPosition } from './electronOnly'
 import { osName } from './platform'
+import { nodeEnv } from '../cloud/lib/consts'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -157,10 +158,14 @@ function usePreferencesStore() {
   )
 
   const currentLanguage = mergedPreferences['general.language']
-  const { i18n } = useTranslation('preferences')
-  useEffect(() => {
-    i18n.changeLanguage(currentLanguage)
-  }, [i18n, currentLanguage])
+  if (nodeEnv !== 'test') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { i18n } = useTranslation('preferences')
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      i18n.changeLanguage(currentLanguage)
+    }, [i18n, currentLanguage])
+  }
 
   const generalShowAppNavigator = preferences['general.showAppNavigator']
   useEffect(() => {
