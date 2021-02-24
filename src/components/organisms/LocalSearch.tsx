@@ -5,6 +5,7 @@ import React, {
   useRef,
   KeyboardEvent,
   useEffect,
+  useMemo,
 } from 'react'
 import { useEffectOnce, useDebounce } from 'react-use'
 import { escapeRegExp } from '../../lib/string'
@@ -12,6 +13,7 @@ import {
   SEARCH_DEBOUNCE_TIMEOUT,
   LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE,
   getMatchData,
+  SearchReplaceOptions,
 } from '../../lib/search/search'
 import CodeMirror, {
   EditorChangeLinkedList,
@@ -30,8 +32,6 @@ import {
 } from '@mdi/js'
 import LocalReplace from './LocalReplace'
 import styled from '../../lib/styled/styled'
-import { BaseTheme } from '../../lib/styled/BaseTheme'
-import { SearchReplaceOptions } from './NoteDetail'
 
 const LOCAL_SEARCH_MAX_RESULTS = 10000
 
@@ -40,8 +40,8 @@ interface LocalSearchProps {
   replaceQuery: string
   searchOptions: SearchReplaceOptions
   codeMirror: CodeMirror.EditorFromTextArea
-  showReplace: boolean
-  onSearchToggle?: (nextState?: boolean) => void
+  showingReplace: boolean
+  onSearchToggle: (showLocalSearch: boolean) => void
   onCursorActivity?: (codeMirror: CodeMirror.EditorFromTextArea) => void
   onSearchQueryChange?: (newSearchQuery: string) => void
   onReplaceToggle?: (nextState?: boolean) => void
@@ -49,20 +49,14 @@ interface LocalSearchProps {
   onUpdateSearchOptions: (searchOptions: Partial<SearchReplaceOptions>) => void
 }
 
-export enum SearchResultNavigationDirection {
-  NEXT,
-  PREVIOUS,
-}
+export type SearchResultNavigationDirection = 'next' | 'previous'
 
-// todo: [komediruzecki-13/02/2021] Would this be better as React.Component
-//  are there any benefits from component or this works fine with hooks -
-//  since we need to save state on close (search/Replace value, selected options)?
 const LocalSearch = ({
   searchQuery,
   replaceQuery,
   searchOptions,
   codeMirror,
-  showReplace,
+  showingReplace,
   onSearchToggle,
   onCursorActivity,
   onSearchQueryChange,
@@ -73,20 +67,20 @@ const LocalSearch = ({
   const searchTextAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const [loadingResults, setLoadingResults] = useState<boolean>(false)
-  const [selectedItemId, setSelectedItemId] = useState<number>(0)
-  const [searchValue, setSearchValue] = useState(searchQuery)
+  const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0)
+  const [searchValue, setSearchValue] = useState<string>(searchQuery)
   const [caseSensitiveSearch, setCaseSensitiveSearch] = useState<boolean>(
     searchOptions.caseSensitiveSearch
   )
   const [regexSearch, setRegexSearch] = useState<boolean>(
     searchOptions.regexSearch
   )
-  const [numFoundItems, setNumFoundItems] = useState<number>(0)
+  const [numberOfFoundItems, setNumberOfFoundItems] = useState<number>(0)
   const [searchResultError, setSearchResultError] = useState<boolean>(false)
 
   const [focusingReplace, setFocusingReplace] = useState<boolean>(false)
 
-  const textAreaRows = useCallback(() => {
+  const getNumberOfTextAreaRows = useMemo(() => {
     const searchNumLines = searchValue ? searchValue.split('\n').length : 0
     return searchNumLines == 0 || searchNumLines == 1 ? 1 : searchNumLines + 1
   }, [searchValue])
@@ -94,7 +88,7 @@ const LocalSearch = ({
   const updateSearchValue: ChangeEventHandler<HTMLTextAreaElement> = useCallback(
     (event) => {
       setSearchValue(event.target.value)
-      if (onSearchQueryChange) {
+      if (onSearchQueryChange != null) {
         onSearchQueryChange(event.target.value)
       }
     },
@@ -102,19 +96,18 @@ const LocalSearch = ({
   )
 
   const focusSearchTextAreaInput = useCallback(
-    (searchValueLength?: number, cursorToEnd = false) => {
+    (searchValueLength = 0, cursorToEnd = false) => {
       if (searchTextAreaRef.current == null) {
         return
       }
       searchTextAreaRef.current.focus()
-      if (searchValueLength && searchValueLength > 0) {
+      if (searchValueLength > 0) {
         searchTextAreaRef.current.selectionEnd += searchValueLength
         if (cursorToEnd) {
           searchTextAreaRef.current.selectionStart =
             searchTextAreaRef.current.selectionEnd
         }
       }
-
       setFocusingReplace(false)
     },
     []
@@ -140,59 +133,59 @@ const LocalSearch = ({
 
   const clearMarkers = useCallback(() => {
     codeMirror.getAllMarks().forEach((mark) => mark.clear())
-    setNumFoundItems(0)
+    setNumberOfFoundItems(0)
   }, [codeMirror])
 
-  const editorJumpToLineCentered = useCallback((editor, lineNumber: number) => {
+  const scrollToLine = useCallback((editor, lineNumber: number) => {
     const t = editor.charCoords({ line: lineNumber, ch: 0 }, 'local').top
     const middleHeight = editor.getScrollerElement().offsetHeight / 2
     editor.scrollTo(null, t - middleHeight - 5)
   }, [])
 
-  const bringSearchItemToFocus = useCallback(
+  const focusSearchItem = useCallback(
     (
       editor: CodeMirror.EditorFromTextArea,
       markers: TextMarker[],
-      selectedIdx: number,
+      selectedIndex: number,
       focusingEditor = false,
       updateCursor = false
     ) => {
-      if (selectedIdx >= markers.length || selectedIdx < 0) {
+      if (selectedIndex >= markers.length || selectedIndex < 0) {
         console.warn(
           'Cannot focus editor on selected item.',
-          selectedIdx,
+          selectedIndex,
           markers.length
         )
         return
       }
 
-      const marker = markers[selectedIdx]
-      if (!marker) {
+      const marker = markers[selectedIndex]
+      if (marker == null) {
         return
       }
-      const markPos: MarkerRange = marker.find() as MarkerRange
-      if (!markPos) {
+      const markerPosition: MarkerRange = marker.find() as MarkerRange
+      if (markerPosition == null) {
         return
       }
       const focusLocation = {
-        line: markPos.to.line,
-        ch: markPos.to.ch,
+        line: markerPosition.to.line,
+        ch: markerPosition.to.ch,
       }
 
       if (!focusingEditor) {
-        editorJumpToLineCentered(editor, focusLocation.line)
+        scrollToLine(editor, focusLocation.line)
       }
       if (updateCursor) {
         editor.focus()
         editor.setCursor(focusLocation.line, focusLocation.ch, {
           scroll: true,
         })
-        if (focusingEditor && onCursorActivity) {
+        if (focusingEditor && onCursorActivity != null) {
           onCursorActivity(editor)
         }
       }
     },
-    [editorJumpToLineCentered, onCursorActivity]
+    [scrollToLine, onCursorActivity]
   )
 
   const markFoundItems = useCallback(
@@ -230,38 +223,41 @@ const LocalSearch = ({
         }
       }
 
-      setNumFoundItems(() => codeEditor.getAllMarks().length)
+      setNumberOfFoundItems(() => codeEditor.getAllMarks().length)
     },
     []
   )
 
   const navigateToNextItem = useCallback(
-    (direction: number, focusingSearchInput = true) => {
+    (
+      direction: SearchResultNavigationDirection,
+      focusingSearchInput = true
+    ) => {
       if (loadingResults) {
         return
       }
-      let newSelectedItemId: number = selectedItemId
+      let newSelectedItemId: number = selectedItemIndex
       const markers = codeMirror.getAllMarks()
-      const numOfMarkers = markers.length
-      if (numOfMarkers === 1) {
+      const numberOfMarkers = markers.length
+      if (numberOfMarkers === 1) {
         // Just focus
-        bringSearchItemToFocus(codeMirror, markers, newSelectedItemId)
+        focusSearchItem(codeMirror, markers, newSelectedItemId)
         if (focusingSearchInput) {
-          focusSearchTextAreaInput(0)
+          focusSearchTextAreaInput()
         }
         return
       }
-      if (direction == SearchResultNavigationDirection.PREVIOUS) {
+      if (direction == 'previous') {
         // Go to previous item
-        if (selectedItemId - 1 >= 0) {
+        if (selectedItemIndex - 1 >= 0) {
           newSelectedItemId--
         } else {
           // go to last (circular motion)
-          newSelectedItemId = numOfMarkers - 1
+          newSelectedItemId = numberOfMarkers - 1
         }
       } else {
         // Go to next item
-        if (selectedItemId + 1 < numOfMarkers) {
+        if (selectedItemIndex + 1 < numberOfMarkers) {
           newSelectedItemId++
         } else {
           // go back to first (circular motion)
@@ -285,7 +281,12 @@ const LocalSearch = ({
       }
 
       if (selectedMarker !== null && newSelectedMarker !== null) {
-        updateMarkerStyle(codeMirror, selectedMarker, 'marked', selectedItemId)
+        updateMarkerStyle(
+          codeMirror,
+          selectedMarker,
+          'marked',
+          selectedItemIndex
+        )
         updateMarkerStyle(
           codeMirror,
           newSelectedMarker,
@@ -293,23 +294,23 @@ const LocalSearch = ({
           newSelectedItemId
         )
       }
-      setSelectedItemId(newSelectedItemId)
+      setSelectedItemIndex(newSelectedItemId)
 
       // Markers are cleared and re-added (but same IDs and positions) so we retrieve new ones
       const newMarkers = codeMirror.getAllMarks()
-      setNumFoundItems(newMarkers.length)
+      setNumberOfFoundItems(newMarkers.length)
       if (markers.length > 0) {
-        bringSearchItemToFocus(codeMirror, newMarkers, newSelectedItemId)
+        focusSearchItem(codeMirror, newMarkers, newSelectedItemId)
         if (focusingSearchInput) {
-          focusSearchTextAreaInput(0)
+          focusSearchTextAreaInput()
         }
       }
     },
     [
       loadingResults,
-      selectedItemId,
+      selectedItemIndex,
       codeMirror,
-      bringSearchItemToFocus,
+      focusSearchItem,
       focusSearchTextAreaInput,
     ]
   )
@@ -317,7 +318,7 @@ const LocalSearch = ({
   const onSearchClose = useCallback(() => {
     const markers = codeMirror.getAllMarks()
     if (markers.length > 0) {
-      bringSearchItemToFocus(codeMirror, markers, selectedItemId, true, true)
+      focusSearchItem(codeMirror, markers, selectedItemIndex, true, true)
       clearMarkers()
     } else {
       codeMirror.focus()
@@ -326,32 +327,32 @@ const LocalSearch = ({
       onSearchToggle(false)
     }
   }, [
-    bringSearchItemToFocus,
+    focusSearchItem,
     clearMarkers,
     codeMirror,
     onSearchToggle,
-    selectedItemId,
+    selectedItemIndex,
   ])
 
   const findClosestItemToFocusOn = useCallback(
     (codeEditor, line: number, regExp: RegExp) => {
-      let currentItemId = 0
-      let closestId = 0
+      let index = 0
+      let closestItemIndex = 0
       let minDistance = Number.MAX_SAFE_INTEGER
 
       const cursor = codeEditor.getSearchCursor(regExp)
-      let markerPos
+      let position
       while (cursor.findNext()) {
-        markerPos = cursor.to()
-        const markerDistance = Math.abs(markerPos.line - line)
+        position = cursor.to()
+        const markerDistance = Math.abs(position.line - line)
         if (markerDistance < minDistance) {
           minDistance = markerDistance
-          closestId = currentItemId
+          closestItemIndex = index
         }
 
-        currentItemId++
+        index++
       }
-      return closestId
+      return closestItemIndex
     },
     []
   )
@@ -374,7 +375,7 @@ const LocalSearch = ({
       if (regExp === null) {
         return
       }
-      const itemToFocusOn =
+      const focusedItemIndex =
         defaultFocusItemId !== null
           ? defaultFocusItemId
           : findClosestItemToFocusOn(
@@ -382,30 +383,30 @@ const LocalSearch = ({
               codeMirror.getCursor().line,
               regExp
             )
-      markFoundItems(codeMirror, itemToFocusOn, regExp)
+      markFoundItems(codeMirror, focusedItemIndex, regExp)
 
       const newMarkers: TextMarker[] = codeMirror.getAllMarks()
-      if (itemToFocusOn !== selectedItemId) {
-        setSelectedItemId(itemToFocusOn)
+      if (focusedItemIndex !== selectedItemIndex) {
+        setSelectedItemIndex(focusedItemIndex)
       }
       if (newMarkers.length > 0) {
-        bringSearchItemToFocus(
+        focusSearchItem(
           codeMirror,
           newMarkers,
-          itemToFocusOn,
+          focusedItemIndex,
           focusingEditor,
           updateCursor
         )
       }
     },
     [
-      bringSearchItemToFocus,
+      focusSearchItem,
       clearMarkers,
       codeMirror,
       findClosestItemToFocusOn,
       getSearchRegex,
       markFoundItems,
-      selectedItemId,
+      selectedItemIndex,
     ]
   )
 
@@ -433,16 +434,17 @@ const LocalSearch = ({
       )
     }
     setSearchValue(searchTextAreaRef.current.value)
-    if (onSearchQueryChange) {
+    if (onSearchQueryChange != null) {
       onSearchQueryChange(searchValue)
     }
-  }, [onSearchQueryChange, searchValue])
+    focusSearchTextAreaInput()
+  }, [focusSearchTextAreaInput, onSearchQueryChange, searchValue])
 
   const toggleCaseSensitiveSearch = useCallback(
     (focusOnInput = true) => {
       setCaseSensitiveSearch(!caseSensitiveSearch)
       if (focusOnInput) {
-        focusSearchTextAreaInput(0)
+        focusSearchTextAreaInput()
       }
     },
     [caseSensitiveSearch, focusSearchTextAreaInput]
@@ -452,14 +454,14 @@ const LocalSearch = ({
     (focusOnInput = true) => {
       setRegexSearch(!regexSearch)
       if (focusOnInput) {
-        focusSearchTextAreaInput(0)
+        focusSearchTextAreaInput()
       }
     },
     [focusSearchTextAreaInput, regexSearch]
   )
 
   const handleOnReplaceToggle = useCallback(() => {
-    if (onReplaceToggle) {
+    if (onReplaceToggle != null) {
       onReplaceToggle()
     }
     focusSearchTextAreaInput(searchValue.length)
@@ -467,7 +469,7 @@ const LocalSearch = ({
 
   const handleOnReplaceClose = useCallback(() => {
     onSearchClose()
-    if (onReplaceToggle) {
+    if (onReplaceToggle != null) {
       onReplaceToggle()
     }
   }, [onReplaceToggle, onSearchClose])
@@ -481,9 +483,11 @@ const LocalSearch = ({
           LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE
         ).length
       : 0
-    const itemToFocusOn = selectedItemId + numFoundItemsInReplaceQuery
+    const itemToFocusOn = selectedItemIndex + numFoundItemsInReplaceQuery
     const numFoundItemsForFocus =
-      numFoundItemsInReplaceQuery === 0 ? numFoundItems - 1 : numFoundItems
+      numFoundItemsInReplaceQuery === 0
+        ? numberOfFoundItems - 1
+        : numberOfFoundItems
     updateSearchResults(
       searchValue,
       regexSearch,
@@ -496,11 +500,11 @@ const LocalSearch = ({
   }, [
     caseSensitiveSearch,
     getSearchRegex,
-    numFoundItems,
+    numberOfFoundItems,
     regexSearch,
     replaceQuery,
     searchValue,
-    selectedItemId,
+    selectedItemIndex,
     updateSearchResults,
   ])
 
@@ -513,11 +517,9 @@ const LocalSearch = ({
           if (event.ctrlKey && event.shiftKey) {
             addNewlineToSearchValue()
           } else {
-            navigateToNextItem(SearchResultNavigationDirection.NEXT)
+            navigateToNextItem('next')
           }
           break
-        // todo: [komediruzecki-14/02/2021] Change this key binding to CTRL+R or
-        //  or something better when codemirror shortcut gets updated
         case 'h':
         case 'H':
           if (event.ctrlKey && onReplaceToggle) {
@@ -543,32 +545,25 @@ const LocalSearch = ({
           }
           break
         case 'Tab':
-          // Focus replace if open
-          if (showReplace) {
+          if (showingReplace) {
             event.preventDefault()
             event.stopPropagation()
             setFocusingReplace(true)
           }
           break
         case 'F3':
-          navigateToNextItem(
-            event.shiftKey
-              ? SearchResultNavigationDirection.PREVIOUS
-              : SearchResultNavigationDirection.NEXT
-          )
+          navigateToNextItem(event.shiftKey ? 'previous' : 'next')
           break
-        case 'Down': // IE/Edge specific value
         case 'ArrowDown':
-          if (textAreaRows() <= 1) {
-            navigateToNextItem(SearchResultNavigationDirection.NEXT)
+          if (getNumberOfTextAreaRows <= 1) {
+            navigateToNextItem('next')
           }
           break
-        case 'Up': // IE/Edge specific value
         case 'ArrowUp':
-          if (textAreaRows() <= 1) {
+          if (getNumberOfTextAreaRows <= 1) {
             event.preventDefault()
             event.stopPropagation()
-            navigateToNextItem(SearchResultNavigationDirection.PREVIOUS)
+            navigateToNextItem('previous')
           }
           break
         case 'Escape':
@@ -583,14 +578,14 @@ const LocalSearch = ({
       }
     },
     [
-      addNewlineToSearchValue,
-      navigateToNextItem,
       onReplaceToggle,
+      showingReplace,
+      navigateToNextItem,
+      getNumberOfTextAreaRows,
       onSearchClose,
-      showReplace,
-      textAreaRows,
-      toggleCaseSensitiveSearch,
+      addNewlineToSearchValue,
       toggleRegexSearch,
+      toggleCaseSensitiveSearch,
     ]
   )
 
@@ -603,51 +598,11 @@ const LocalSearch = ({
         return
       }
 
-      /*
-       * Optimized version: looks at current line and removed text to get info about changes then
-       * if any match is found updates search results (does not work for adding change which removes any match)
-       * Non-optimized version gets whole document and match it and then see if number of found items
-       * changed (does not work for case when change introduces no new items but changes marked range)
-       * No optimization: Update always since only this will keep consistency (works in all cases)
-       */
-      // let lineText
-      // if (changes.from.line === changes.to.line) {
-      //   lineText =
-      //     cm.getLine(changes.from.line) +
-      //     '\n' +
-      //     changes.text.slice(1).join('\n')
-      // } else {
-      //   lineText = changes.text.join('\n')
-      // }
-      // const removed = changes.removed?.join('\n') ?? ''
-      // const changedContent = lineText + removed
-      // let shouldUpdateResults = false
-      // if (regexSearch) {
-      //   shouldUpdateResults = true
-      // } else {
-      //   const changedContent = cm.getValue()
-      //   const regex = getSearchRegex(
-      //     searchValue,
-      //     regexSearch,
-      //     caseSensitiveSearch
-      //   )
-      //   if (!regex) return
-      //   const matchDataContent = getMatchData(
-      //     changedContent,
-      //     regex,
-      //     LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE
-      //   )
-      //   if (matchDataContent.length !== numFoundItems) {
-      //     shouldUpdateResults = true
-      //   }
-      // }
-      // if (!shouldUpdateResults) {
-      //   return
-      // }
-
       // restore replace focus before updating results otherwise it might render
       // out of focus because value don't have time to propagate
-      setFocusingReplace(false)
+      if (focusingReplace) {
+        setFocusingReplace(false)
+      }
       updateSearchResults(
         searchValue,
         regexSearch,
@@ -663,6 +618,7 @@ const LocalSearch = ({
   }, [
     caseSensitiveSearch,
     codeMirror,
+    focusingReplace,
     getSearchRegex,
     regexSearch,
     searchValue,
@@ -671,25 +627,13 @@ const LocalSearch = ({
 
   useEffectOnce(() => {
     updateSearchResults(searchValue, regexSearch, caseSensitiveSearch)
-    if (showReplace && searchValue.length !== 0) {
+    if (showingReplace && searchValue.length !== 0) {
       setFocusingReplace(true)
     } else {
       focusSearchTextAreaInput(searchValue.length, true)
     }
   })
 
-  /* todo: [komediruzecki-13/02/2021] Can this be improved without React.Component?
-   *  the issue is that we want to disable navigation and other buttons while updating search results
-   *  the operations pipeline would be:
-   *    1. Disable UI while updating results
-   *    2. Update search results (set selected item, number of found items, ...)
-   *    3. Enable UI
-   *  the solution used here is done with loading state
-   *  debounce is used to separate frequent request and on dependency list the
-   *  found loading state is updated, after that useEffect is
-   *  listening on dependency and updates the search results
-   *  (this way UI have time to update (disable buttons) and after search results are loaded)
-   */
   useEffect(() => {
     if (loadingResults) {
       updateSearchResults(
@@ -699,7 +643,7 @@ const LocalSearch = ({
         false,
         false
       )
-      if (onUpdateSearchOptions) {
+      if (onUpdateSearchOptions != null) {
         onUpdateSearchOptions({
           caseSensitiveSearch: caseSensitiveSearch,
           regexSearch: regexSearch,
@@ -709,6 +653,7 @@ const LocalSearch = ({
     }
   }, [
     caseSensitiveSearch,
+    focusingReplace,
     loadingResults,
     onUpdateSearchOptions,
     regexSearch,
@@ -728,14 +673,18 @@ const LocalSearch = ({
     <LocalSearchContainer>
       <SearchResultItem>
         <LocalSearchInputLeft>
-          <LocalSearchIcon numRows={textAreaRows}>
+          <LocalSearchIcon
+            className={getNumberOfTextAreaRows != 1 ? 'alignStart' : ''}
+          >
             <Icon path={mdiMagnify} />
           </LocalSearchIcon>
           <textarea
-            onClick={() => focusSearchTextAreaInput(0)}
-            rows={textAreaRows()}
+            onClick={focusSearchTextAreaInput}
+            rows={getNumberOfTextAreaRows}
             value={searchValue}
+            onInput={updateSearchValue}
             onChange={updateSearchValue}
+            // onChange={() => undefined}
             onKeyDown={handleSearchInputKeyDown}
             ref={searchTextAreaRef}
           />
@@ -767,15 +716,17 @@ const LocalSearch = ({
           </SearchOptionsInnerContainer>
         </LocalSearchInputLeft>
         <LocalSearchInputRightContainer>
-          <NumResultsContainer key={numFoundItems}>
-            {numFoundItems > 0 ? (
-              numFoundItems < LOCAL_SEARCH_MAX_RESULTS ? (
-                `${selectedItemId + 1}/${numFoundItems}`
+          <NumResultsContainer>
+            {numberOfFoundItems > 0 ? (
+              numberOfFoundItems < LOCAL_SEARCH_MAX_RESULTS ? (
+                `${selectedItemIndex + 1}/${numberOfFoundItems}`
               ) : (
                 '10,000+'
               )
             ) : (
-              <ResultStatusContainer resultError={searchResultError}>
+              <ResultStatusContainer
+                className={searchResultError ? 'error' : ''}
+              >
                 {regexSearch && searchResultError ? 'Bad pattern' : '0 results'}
               </ResultStatusContainer>
             )}
@@ -783,22 +734,18 @@ const LocalSearch = ({
           <SearchOptionsOuterContainer>
             <SearchNavOptions>
               <LocalSearchStyledButton
-                disabled={numFoundItems === 0}
+                disabled={numberOfFoundItems === 0}
                 title={'Previous occurrence (Shift+F3)'}
                 className={'button'}
-                onClick={() =>
-                  navigateToNextItem(SearchResultNavigationDirection.PREVIOUS)
-                }
+                onClick={() => navigateToNextItem('previous')}
               >
                 <Icon path={mdiArrowUp} />
               </LocalSearchStyledButton>
               <LocalSearchStyledButton
-                disabled={numFoundItems === 0}
+                disabled={numberOfFoundItems === 0}
                 title={'Next occurrence (F3)'}
                 className={'button'}
-                onClick={() =>
-                  navigateToNextItem(SearchResultNavigationDirection.NEXT)
-                }
+                onClick={() => navigateToNextItem('next')}
               >
                 <Icon path={mdiArrowDown} />
               </LocalSearchStyledButton>
@@ -814,13 +761,12 @@ const LocalSearch = ({
           </LocalSearchInputRightClose>
         </LocalSearchInputRightContainer>
       </SearchResultItem>
-      {showReplace && (
+      {showingReplace && (
         <LocalReplace
-          key={focusingReplace + '' + (numFoundItems + '')}
           searchOptions={searchOptions}
           codeMirror={codeMirror}
           replaceQuery={replaceQuery}
-          numFoundItems={numFoundItems}
+          numberOfFoundItems={numberOfFoundItems}
           focusingReplace={focusingReplace}
           navigateToNext={(direction) => {
             navigateToNextItem(direction, false)
@@ -869,8 +815,11 @@ const NumResultsContainer = styled.div`
   padding-right: 4px;
 `
 
-const ResultStatusContainer = styled.div<BaseTheme & { resultError: boolean }>`
-  color: ${({ resultError }) => (resultError === true ? '#FA5A4F' : '#B8B8B6')};
+const ResultStatusContainer = styled.div`
+  color: #b8b8b6;
+  &.error {
+    color: #fa5a4f;
+  }
 `
 
 export const LocalSearchStyledButton = styled.button`
@@ -916,9 +865,12 @@ export const LocalSearchStyledButton = styled.button`
   }
 `
 
-const LocalSearchIcon = styled.div<BaseTheme & LocalSearchTextAreaProps>`
+const LocalSearchIcon = styled.div`
   display: flex;
-  align-items: ${({ numRows }) => (numRows == 1 ? 'center' : 'self-start')};
+  align-items: center;
+  &.alignStart {
+    align-items: self-start;
+  }
 `
 
 export const LocalSearchInputLeft = styled.div`
@@ -965,7 +917,7 @@ function updateMarkerStyle(
   cm: CodeMirror.Editor,
   marker: TextMarker,
   className: string,
-  dataId: number
+  index: number
 ) {
   const markPos: MarkerRange = marker.find() as MarkerRange
   if (!markPos) {
@@ -974,6 +926,6 @@ function updateMarkerStyle(
   marker.clear()
   cm.markText(markPos.from, markPos.to, {
     className: className,
-    attributes: { dataId: dataId + '' },
+    attributes: { dataId: index + '' },
   })
 }

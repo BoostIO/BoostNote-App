@@ -27,12 +27,7 @@ import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import { Position } from 'codemirror'
 import LocalSearch from './LocalSearch'
-
-export interface SearchReplaceOptions {
-  regexSearch: boolean
-  caseSensitiveSearch: boolean
-  preserveCaseReplace: boolean
-}
+import { SearchReplaceOptions } from '../../lib/search/search'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -75,7 +70,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     searchOptions: {
       regexSearch: false,
       caseSensitiveSearch: false,
-      preserveCaseReplace: false,
+      preservingCaseReplace: false,
     },
     showSearch: false,
     showReplace: false,
@@ -125,7 +120,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         searchOptions: {
           regexSearch: false,
           caseSensitiveSearch: false,
-          preserveCaseReplace: false,
+          preservingCaseReplace: false,
         },
         showSearch: false,
         showReplace: false,
@@ -342,7 +337,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     })
   }
 
-  handleSearchOptionUpdate = (options: Partial<SearchReplaceOptions>) => {
+  updateSearchReplaceOptions = (options: Partial<SearchReplaceOptions>) => {
     this.setState((prevState) => {
       return {
         searchOptions: {
@@ -353,12 +348,9 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     })
   }
 
-  handleOnSearchReplaceToggle = (
-    showReplace?: boolean,
-    editor?: CodeMirror.Editor
-  ) => {
+  toggleSearchReplace = (showReplace?: boolean, editor?: CodeMirror.Editor) => {
     if (showReplace) {
-      this.handleOnSearchToggle(true, editor)
+      this.toggleSearch(true, editor)
     }
     this.setState((prevState) => {
       return {
@@ -367,31 +359,29 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     })
   }
 
-  handleOnSearchToggle = (
-    showSearch?: boolean,
+  toggleSearch = (
+    showSearch: boolean,
     editor?: CodeMirror.Editor,
     searchOnly = false
   ) => {
-    if (showSearch != null) {
-      if (showSearch && this.state.showSearch) {
-        // Focus search again
-        this.setState(() => {
-          return {
-            showSearch: false,
-          }
-        })
-      }
-
-      if (showSearch && editor != null && editor.getSelection() !== '') {
-        // fetch selected range to input into search box
-        this.setState(() => {
-          return {
-            searchQuery: editor.getSelection(),
-          }
-        })
-      }
+    if (showSearch && this.state.showSearch) {
+      // Focus search again
+      this.setState(() => {
+        return {
+          showSearch: false,
+        }
+      })
     }
-    if (editor != null && showSearch == false) {
+
+    if (showSearch && editor != null && editor.getSelection() !== '') {
+      // fetch selected range to input into search box
+      this.setState(() => {
+        return {
+          searchQuery: editor.getSelection(),
+        }
+      })
+    }
+    if (editor != null && !showSearch) {
       // Clear marks if any
       editor.getAllMarks().forEach((mark) => mark.clear())
     }
@@ -403,7 +393,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
       },
       () => {
         if (!this.state.showSearch || searchOnly) {
-          this.handleOnSearchReplaceToggle(false)
+          this.toggleSearchReplace(false)
         }
       }
     )
@@ -570,11 +560,11 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         onPaste={this.handlePaste}
         onDrop={this.handleDrop}
         onCursorActivity={this.handleCursorActivity}
-        onLocalSearchToggle={(editor, nextState) =>
-          this.handleOnSearchToggle(nextState, editor, true)
+        onLocalSearchToggle={(editor, showLocalSearch) =>
+          this.toggleSearch(showLocalSearch, editor, true)
         }
-        onLocalSearchReplaceToggle={(editor, nextState) =>
-          this.handleOnSearchReplaceToggle(nextState, editor)
+        onLocalSearchReplaceToggle={(editor, showLocalReplace) =>
+          this.toggleSearchReplace(showLocalReplace, editor)
         }
       />
     )
@@ -592,20 +582,22 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         {viewMode !== 'preview' &&
           this.state.showSearch &&
           this.codeMirror != null && (
-            <SearchBarContainer viewMode={viewMode}>
+            <SearchBarContainer
+              className={viewMode === 'split' ? 'halfWidth' : ''}
+            >
               <LocalSearch
                 key={this.state.showReplace + ''}
                 searchQuery={this.state.searchQuery}
                 replaceQuery={this.state.replaceQuery}
                 searchOptions={this.state.searchOptions}
                 codeMirror={this.codeMirror}
-                showReplace={this.state.showReplace}
-                onSearchToggle={this.handleOnSearchToggle}
+                showingReplace={this.state.showReplace}
+                onSearchToggle={this.toggleSearch}
                 onCursorActivity={this.handleCursorActivity}
                 onSearchQueryChange={this.handleOnSearchQueryChange}
-                onReplaceToggle={this.handleOnSearchReplaceToggle}
+                onReplaceToggle={this.toggleSearchReplace}
                 onReplaceQueryChange={this.handleOnReplaceQueryChange}
-                onUpdateSearchOptions={this.handleSearchOptionUpdate}
+                onUpdateSearchOptions={this.updateSearchReplaceOptions}
               />
             </SearchBarContainer>
           )}
@@ -666,8 +658,11 @@ const Container = styled.div`
  *  for all resolutions. So for now this hack with search bar outside of content section
  *  works well for this absolute positioning.
  */
-const SearchBarContainer = styled.div<{ viewMode: string }>`
-  width: ${({ viewMode }) => (viewMode === 'split' ? 50 : 100)}%;
+const SearchBarContainer = styled.div`
+  width: 100%;
+  &.halfWidth {
+    width: 50%;
+  }
 `
 
 const ContentSection = styled.div`
