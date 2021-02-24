@@ -192,8 +192,9 @@ const LocalSearch = ({
     (codeEditor, selectedItemIdx = -1, regExp) => {
       const cursor = codeEditor.getSearchCursor(regExp)
       let first = true
-      let from, to
-      let currentItemId = 0
+      let from: CodeMirror.Position
+      let to: CodeMirror.Position
+      let currentItemIndex = 0
       let previousLine = -1
       let lineChanged = false
       while (cursor.findNext()) {
@@ -209,17 +210,17 @@ const LocalSearch = ({
         previousLine = from.line
         if (LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
           if (lineChanged) {
-            currentItemId++
+            currentItemIndex++
           }
         }
 
         codeEditor.markText(from, to, {
           className:
-            currentItemId === selectedItemIdx ? 'marked selected' : 'marked',
-          attributes: { dataId: '' + currentItemId },
+            currentItemIndex === selectedItemIdx ? 'marked selected' : 'marked',
+          attributes: { dataId: '' + currentItemIndex },
         })
         if (!LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
-          currentItemId++
+          currentItemIndex++
         }
       }
 
