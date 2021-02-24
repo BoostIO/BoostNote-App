@@ -173,8 +173,9 @@ const SearchModal = ({ storage }: SearchModalProps) => {
       if (codeEditor) {
         const cursor = codeEditor.getSearchCursor(getSearchRegex(searchValue))
         let first = true
-        let from, to
-        let currentItemId = 0
+        let from: CodeMirror.Position
+        let to: CodeMirror.Position
+        let currentItemIndex = 0
         let previousLine = -1
         let lineChanged = false
         while (cursor.findNext()) {
@@ -190,17 +191,17 @@ const SearchModal = ({ storage }: SearchModalProps) => {
           previousLine = from.line
           if (GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
             if (lineChanged) {
-              currentItemId++
+              currentItemIndex++
             }
           }
 
           codeEditor.markText(from, to, {
             className:
-              currentItemId == selectedItemId ? 'marked selected' : 'marked',
+              currentItemIndex == selectedItemId ? 'marked selected' : 'marked',
           })
 
           if (!GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
-            currentItemId++
+            currentItemIndex++
           }
         }
       }

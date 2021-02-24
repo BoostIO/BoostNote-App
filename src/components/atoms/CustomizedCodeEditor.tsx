@@ -18,11 +18,11 @@ interface CustomizedCodeEditorProps {
   onCursorActivity?: (codeMirror: CodeMirror.Editor) => void
   onLocalSearchToggle?: (
     codeMirror: CodeMirror.Editor,
-    nextState?: boolean
+    showLocalSearch: boolean
   ) => void
   onLocalSearchReplaceToggle?: (
     codeMirror: CodeMirror.Editor,
-    nextState?: boolean
+    showLocalReplace: boolean
   ) => void
 }
 

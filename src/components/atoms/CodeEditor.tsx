@@ -79,11 +79,11 @@ interface CodeEditorProps {
   onCursorActivity?: (codeMirror: CodeMirror.Editor) => void
   onLocalSearchToggle?: (
     codeMirror: CodeMirror.Editor,
-    nextState?: boolean
+    showLocalSearch: boolean
   ) => void
   onLocalSearchReplaceToggle?: (
     codeMirror: CodeMirror.Editor,
-    nextState?: boolean
+    showLocalReplace: boolean
   ) => void
 }
 
@@ -209,26 +209,26 @@ class CodeEditor extends React.Component<CodeEditorProps> {
 
   handleOnLocalSearchReplaceToggle = (
     editor: CodeMirror.Editor,
-    nextState: boolean
+    showLocalReplace: boolean
   ) => {
     const { onLocalSearchReplaceToggle } = this.props
     if (onLocalSearchReplaceToggle == null) {
       return
     }
 
-    onLocalSearchReplaceToggle(editor, nextState)
+    onLocalSearchReplaceToggle(editor, showLocalReplace)
   }
 
   handleOnLocalSearchToggle = (
     editor: CodeMirror.Editor,
-    nextState: boolean
+    showLocalSearch: boolean
   ) => {
     const { onLocalSearchToggle } = this.props
     if (onLocalSearchToggle == null) {
       return
     }
 
-    onLocalSearchToggle(editor, nextState)
+    onLocalSearchToggle(editor, showLocalSearch)
   }
 
   handlePaste = (editor: CodeMirror.Editor, event: ClipboardEvent) => {

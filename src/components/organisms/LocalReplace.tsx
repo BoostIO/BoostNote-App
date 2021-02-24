@@ -4,6 +4,8 @@ import React, {
   useCallback,
   useRef,
   KeyboardEvent,
+  useMemo,
+  useEffect,
 } from 'react'
 import CodeMirror, { MarkerRange, TextMarker } from 'codemirror'
 import Icon from '../atoms/Icon'
@@ -16,19 +18,16 @@ import styled from '../../lib/styled/styled'
 import {
   LocalSearchInputLeft,
   LocalSearchStyledButton,
-  LocalSearchTextAreaProps,
   SearchResultItem,
   SearchResultNavigationDirection,
 } from './LocalSearch'
-import { BaseTheme } from '../../lib/styled/BaseTheme'
-import { useEffectOnce } from 'react-use'
-import { SearchReplaceOptions } from './NoteDetail'
+import { SearchReplaceOptions } from '../../lib/search/search'
 
 interface LocalReplaceProps {
   codeMirror: CodeMirror.EditorFromTextArea
   replaceQuery: string
   searchOptions: SearchReplaceOptions
-  numFoundItems: number
+  numberOfFoundItems: number
   focusingReplace: boolean
   navigateToNext: (direction: SearchResultNavigationDirection) => void
   onUpdateSearchOptions: (searchOptions: Partial<SearchReplaceOptions>) => void
@@ -43,7 +42,7 @@ const LocalReplace = ({
   codeMirror,
   replaceQuery,
   searchOptions,
-  numFoundItems,
+  numberOfFoundItems,
   focusingReplace,
   navigateToNext,
   onReplaceToggle,
@@ -55,11 +54,11 @@ const LocalReplace = ({
 }: LocalReplaceProps) => {
   const replaceTextAreaRef = useRef<HTMLTextAreaElement>(null)
   const [replaceValue, setReplaceValue] = useState(replaceQuery)
-  const [preserveCaseReplace, setPreserveCaseReplace] = useState<boolean>(
-    searchOptions.preserveCaseReplace
+  const [preservingCaseReplace, setPreservingCaseReplace] = useState<boolean>(
+    searchOptions.preservingCaseReplace
   )
 
-  const textAreaRows = useCallback(() => {
+  const getNumberOfTextAreaRows = useMemo(() => {
     const replaceNumLines = replaceValue ? replaceValue.split('\n').length : 0
     return replaceNumLines == 0 || replaceNumLines == 1
       ? 1
@@ -69,7 +68,7 @@ const LocalReplace = ({
   const updateReplaceValue: ChangeEventHandler<HTMLTextAreaElement> = useCallback(
     (event) => {
       setReplaceValue(event.target.value)
-      if (onReplaceQueryChange) {
+      if (onReplaceQueryChange != null) {
         onReplaceQueryChange(event.target.value)
       }
     },
@@ -81,6 +80,17 @@ const LocalReplace = ({
       onReplaceClose()
     }
   }, [onReplaceClose])
+
+  const focusReplaceTextAreaInput = useCallback((replaceValueLength = 0) => {
+    if (replaceTextAreaRef.current == null) {
+      return
+    }
+    replaceTextAreaRef.current.focus()
+    if (replaceValueLength > 0) {
+      replaceTextAreaRef.current.selectionEnd += replaceValueLength
+      replaceTextAreaRef.current.selectionStart = replaceValueLength
+    }
+  }, [])
 
   const addNewlineToReplaceValue = useCallback(() => {
     if (replaceTextAreaRef.current === null) {
@@ -106,52 +116,53 @@ const LocalReplace = ({
       )
     }
     setReplaceValue(replaceTextAreaRef.current.value)
-    if (onReplaceQueryChange) {
+    if (onReplaceQueryChange != null) {
       onReplaceQueryChange(replaceValue)
     }
-  }, [onReplaceQueryChange, replaceValue])
-
-  const focusReplaceTextAreaInput = useCallback(
-    (replaceValueLength?: number) => {
-      if (replaceTextAreaRef.current == null) {
-        return
-      }
-      replaceTextAreaRef.current.focus()
-      if (replaceValueLength && replaceValueLength > 0) {
-        replaceTextAreaRef.current.selectionEnd += replaceValueLength
-        replaceTextAreaRef.current.selectionStart = replaceValueLength
-      }
-    },
-    []
-  )
+    focusReplaceTextAreaInput()
+  }, [focusReplaceTextAreaInput, onReplaceQueryChange, replaceValue])
 
   const replaceSingleMarker = useCallback(
     (marker: TextMarker) => {
-      const markerPos: MarkerRange = marker.find() as MarkerRange
-      if (!markerPos) {
+      const markerPosition:
+        | MarkerRange
+        | CodeMirror.Position
+        | undefined = marker.find()
+      if (markerPosition === undefined) {
         return false
       }
-      const foundMarkText = codeMirror.getRange(markerPos.from, markerPos.to)
-      if (foundMarkText.length >= 1 && preserveCaseReplace) {
+
+      let markerRange: MarkerRange
+      if ('from' in markerPosition) {
+        markerRange = markerPosition
+      } else {
+        markerRange = { from: markerPosition, to: markerPosition }
+      }
+
+      const foundMarkText = codeMirror.getRange(
+        markerRange.from,
+        markerRange.to
+      )
+      if (foundMarkText.length >= 1 && preservingCaseReplace) {
         // if first character was upper case - set the replacement to upper case too
         codeMirror.replaceRange(
           foundMarkText.charAt(0) + replaceQuery.substr(1),
-          markerPos.from,
-          markerPos.to,
+          markerRange.from,
+          markerRange.to,
           '@ignore'
         )
       } else {
         codeMirror.replaceRange(
           replaceQuery,
-          markerPos.from,
-          markerPos.to,
+          markerRange.from,
+          markerRange.to,
           '@ignore'
         )
       }
 
       return true
     },
-    [codeMirror, preserveCaseReplace, replaceQuery]
+    [codeMirror, preservingCaseReplace, replaceQuery]
   )
 
   const findSelectedMarker = useCallback(() => {
@@ -170,7 +181,7 @@ const LocalReplace = ({
     }
 
     const replaceSuccessful = replaceSingleMarker(marker)
-    if (onReplacementFinished && replaceSuccessful) {
+    if (onReplacementFinished != null && replaceSuccessful) {
       onReplacementFinished()
     }
     focusReplaceTextAreaInput(replaceQuery.length)
@@ -183,7 +194,7 @@ const LocalReplace = ({
   ])
 
   const onReplaceAll = useCallback(() => {
-    const markers = codeMirror.getAllMarks()
+    const markers: TextMarker[] = codeMirror.getAllMarks()
     if (markers.length <= 0) {
       return
     }
@@ -196,26 +207,21 @@ const LocalReplace = ({
       }
     }
 
-    if (onReplacementFinished && anyReplacementSuccessful) {
+    if (onReplacementFinished != null && anyReplacementSuccessful) {
       onReplacementFinished()
     }
   }, [codeMirror, onReplacementFinished, replaceSingleMarker])
 
   const handleExcludeCurrentItem = useCallback(() => {
-    navigateToNext(SearchResultNavigationDirection.NEXT)
+    navigateToNext('next')
     focusReplaceTextAreaInput(replaceQuery.length)
   }, [focusReplaceTextAreaInput, navigateToNext, replaceQuery.length])
 
-  const toggleCaseSensitiveReplace = useCallback(
-    (focusOnInput = true) => {
-      onUpdateSearchOptions({ preserveCaseReplace: !preserveCaseReplace })
-      setPreserveCaseReplace(!preserveCaseReplace)
-      if (focusOnInput) {
-        focusReplaceTextAreaInput(0)
-      }
-    },
-    [focusReplaceTextAreaInput, onUpdateSearchOptions, preserveCaseReplace]
-  )
+  const toggleCaseSensitiveReplace = useCallback(() => {
+    onUpdateSearchOptions({ preservingCaseReplace: !preservingCaseReplace })
+    setPreservingCaseReplace(!preservingCaseReplace)
+    focusReplaceTextAreaInput()
+  }, [focusReplaceTextAreaInput, onUpdateSearchOptions, preservingCaseReplace])
 
   const handleReplaceInputKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -255,28 +261,26 @@ const LocalReplace = ({
           break
         case 'F3':
           if (event.shiftKey) {
-            navigateToNext(SearchResultNavigationDirection.PREVIOUS)
+            navigateToNext('previous')
             focusReplaceTextAreaInput(replaceQuery.length)
           } else {
-            navigateToNext(SearchResultNavigationDirection.NEXT)
+            navigateToNext('next')
             focusReplaceTextAreaInput(replaceQuery.length)
           }
           break
-        case 'Down': // IE/Edge specific value
         case 'ArrowDown':
-          if (textAreaRows() <= 1) {
+          if (getNumberOfTextAreaRows <= 1) {
             event.preventDefault()
             event.stopPropagation()
-            navigateToNext(SearchResultNavigationDirection.NEXT)
+            navigateToNext('next')
             focusReplaceTextAreaInput(replaceQuery.length)
           }
           break
-        case 'Up': // IE/Edge specific value
         case 'ArrowUp':
-          if (textAreaRows() <= 1) {
+          if (getNumberOfTextAreaRows <= 1) {
             event.preventDefault()
             event.stopPropagation()
-            navigateToNext(SearchResultNavigationDirection.PREVIOUS)
+            navigateToNext('previous')
             focusReplaceTextAreaInput(replaceQuery.length)
           }
           break
@@ -300,29 +304,34 @@ const LocalReplace = ({
       onReplaceCurrentItem,
       onReplaceToggle,
       replaceQuery.length,
-      textAreaRows,
+      getNumberOfTextAreaRows,
       toggleCaseSensitiveReplace,
     ]
   )
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (focusingReplace) {
-      focusReplaceTextAreaInput(replaceQuery.length)
+      // focusReplaceTextAreaInput(replaceQuery.length)
+      focusReplaceTextAreaInput()
     }
-  })
+  }, [focusReplaceTextAreaInput, focusingReplace, replaceQuery.length])
 
   return (
     <LocalReplaceContainer>
       <SearchResultItem>
         <LocalSearchInputLeft>
-          <LocalReplaceIcon numRows={textAreaRows}>
+          <LocalReplaceIcon
+            className={getNumberOfTextAreaRows != 1 ? 'alignStart' : ''}
+          >
             <Icon path={mdiMagnify} />
           </LocalReplaceIcon>
           <textarea
-            onClick={() => focusReplaceTextAreaInput(0)}
-            rows={textAreaRows()}
+            onClick={focusReplaceTextAreaInput}
+            rows={getNumberOfTextAreaRows}
             value={replaceValue}
+            onInput={updateReplaceValue}
             onChange={updateReplaceValue}
+            // onChange={() => undefined}
             onKeyDown={handleReplaceInputKeyDown}
             ref={replaceTextAreaRef}
           />
@@ -338,7 +347,7 @@ const LocalReplace = ({
               title={
                 'Preserve case Alt+E - Use tab to focus on an option and space to toggle'
               }
-              className={preserveCaseReplace ? 'active' : ''}
+              className={preservingCaseReplace ? 'active' : ''}
               onClick={toggleCaseSensitiveReplace}
             >
               <Icon path={mdiAlphabeticalVariant} />
@@ -348,19 +357,19 @@ const LocalReplace = ({
         <ReplaceRightContainer>
           <SearchOptionsOuterContainer>
             <ReplaceStyledButton
-              disabled={numFoundItems == 0}
+              disabled={numberOfFoundItems == 0}
               onClick={onReplaceCurrentItem}
             >
               Replace
             </ReplaceStyledButton>
             <ReplaceStyledButton
-              disabled={numFoundItems == 0}
+              disabled={numberOfFoundItems == 0}
               onClick={onReplaceAll}
             >
               Replace All
             </ReplaceStyledButton>
             <ReplaceStyledButton
-              disabled={numFoundItems == 0}
+              disabled={numberOfFoundItems == 0}
               onClick={handleExcludeCurrentItem}
             >
               Exclude
@@ -419,12 +428,13 @@ const LocalReplaceContainer = styled.div`
 
   background-color: ${({ theme }) => theme.navBackgroundColor};
 `
-
-const LocalReplaceIcon = styled.div<BaseTheme & LocalSearchTextAreaProps>`
+const LocalReplaceIcon = styled.div`
   display: flex;
-  align-items: ${({ numRows }) => (numRows == 1 ? 'center' : 'self-start')};
+  align-items: center;
+  &.alignStart {
+    align-items: self-start;
+  }
 `
-
 const SearchOptionsOuterContainer = styled.div`
   align-content: center;
 `
