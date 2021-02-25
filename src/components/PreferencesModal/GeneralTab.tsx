@@ -5,7 +5,6 @@ import {
   GeneralThemeOptions,
   GeneralLanguageOptions,
   GeneralNoteListViewOptions,
-  GeneralAppModeOptions,
 } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../lib/events'
@@ -74,29 +73,10 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
-  const selectNavigationMode: React.ChangeEventHandler<HTMLSelectElement> = useCallback(
-    (event) => {
-      setPreferences({
-        'general.appMode': event.target.value as GeneralAppModeOptions,
-      })
-    },
-    [setPreferences]
-  )
-
   const { t } = useTranslation()
 
   return (
     <div>
-      <Section>
-        <SectionHeader>App Mode</SectionHeader>
-        <SectionSelect
-          value={preferences['general.appMode']}
-          onChange={selectNavigationMode}
-        >
-          <option value='wiki'>Wiki</option>
-          <option value='note'>Note</option>
-        </SectionSelect>
-      </Section>
       <Section>
         <SectionHeader>{t('preferences.interfaceLanguage')}</SectionHeader>
         <SectionControl>

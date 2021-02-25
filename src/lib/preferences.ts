@@ -30,7 +30,6 @@ export type GeneralLanguageOptions =
   | 'zh-HK'
   | 'zh-TW'
 export type GeneralNoteListViewOptions = 'default' | 'compact'
-export type GeneralAppModeOptions = 'note' | 'wiki'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -42,7 +41,6 @@ export interface Preferences {
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.showAppNavigator': boolean
-  'general.appMode': GeneralAppModeOptions
   'general.noteSorting': NoteSortingOptions
   'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
@@ -95,7 +93,6 @@ const basePreferences: Preferences = {
   'general.showAppNavigator': true,
   'general.language': 'en-US',
   'general.theme': 'dark',
-  'general.appMode': 'wiki',
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
   'general.enableAutoSync': true,
