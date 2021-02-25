@@ -691,7 +691,7 @@ const LocalSearch = ({
           />
           <SearchOptionsInnerContainer>
             <LocalSearchStyledButton
-              title={'Enter newline'}
+              title={'New Line (Ctrl+Shift+Enter)'}
               onClick={addNewlineToSearchValue}
             >
               <Icon path={mdiSubdirectoryArrowLeft} />
@@ -699,7 +699,7 @@ const LocalSearch = ({
             <LocalSearchStyledButton
               className={caseSensitiveSearch ? 'active' : ''}
               title={
-                'Match case Alt+C - Use tab to focus on an option and space to toggle'
+                'Match Case (Alt+C) - Use tab to focus on an option and space to toggle'
               }
               onClick={toggleCaseSensitiveSearch}
             >
@@ -707,7 +707,7 @@ const LocalSearch = ({
             </LocalSearchStyledButton>
             <LocalSearchStyledButton
               title={
-                'Regex Alt+X - Use tab to focus on an option and space to toggle'
+                'Regex (Alt+X) - Use tab to focus on an option and space to toggle'
               }
               className={regexSearch ? 'active' : ''}
               onClick={toggleRegexSearch}
@@ -736,7 +736,7 @@ const LocalSearch = ({
             <SearchNavOptions>
               <LocalSearchStyledButton
                 disabled={numberOfFoundItems === 0}
-                title={'Previous occurrence (Shift+F3)'}
+                title={'Previous Occurrence (Shift+F3)'}
                 className={'button'}
                 onClick={() => navigateToNextItem('previous')}
               >
@@ -744,7 +744,7 @@ const LocalSearch = ({
               </LocalSearchStyledButton>
               <LocalSearchStyledButton
                 disabled={numberOfFoundItems === 0}
-                title={'Next occurrence (F3)'}
+                title={'Next Occurrence (F3)'}
                 className={'button'}
                 onClick={() => navigateToNextItem('next')}
               >
