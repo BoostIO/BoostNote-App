@@ -337,7 +337,7 @@ const LocalReplace = ({
           />
           <SearchOptionsInnerContainer>
             <LocalSearchStyledButton
-              title={'Enter newline'}
+              title={'New Line (Ctrl+Shift+Enter)'}
               className={'button'}
               onClick={addNewlineToReplaceValue}
             >
@@ -345,7 +345,7 @@ const LocalReplace = ({
             </LocalSearchStyledButton>
             <LocalSearchStyledButton
               title={
-                'Preserve case Alt+E - Use tab to focus on an option and space to toggle'
+                'Preserve Case (Alt+E) - Use tab to focus on an option and space to toggle'
               }
               className={preservingCaseReplace ? 'active' : ''}
               onClick={toggleCaseSensitiveReplace}
