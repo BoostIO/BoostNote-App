@@ -4,7 +4,11 @@ import { callApi } from '../../../lib/client'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import report from '../../../lib/analytics'
 
-export interface CreateSubscriptionRequestBody {
+export interface WithPromoCode {
+  code?: string
+}
+
+export interface CreateSubscriptionRequestBody extends WithPromoCode {
   source: string
   email: string
 }
@@ -64,11 +68,21 @@ export async function cancelSubscription(teamId: string) {
   return data
 }
 
-export async function reactivateSubscription(teamId: string) {
+export async function reactivateSubscription(
+  teamId: string,
+  body: WithPromoCode
+) {
   const data = await callApi<ReactivateSubscriptionResponseBody>(
     `api/teams/${teamId}/subscription/reactivate`,
-    { method: 'post' }
+    { method: 'post', json: body }
   )
   report('create_sub')
   return data
+}
+
+export async function redeemPromo(teamId: string, body: WithPromoCode) {
+  await callApi(`api/teams/${teamId}/subscription/promotion`, {
+    method: 'post',
+    json: body,
+  })
 }
