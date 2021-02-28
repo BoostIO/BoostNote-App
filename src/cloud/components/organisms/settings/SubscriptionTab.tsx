@@ -10,10 +10,12 @@ import {
   StyledSmallFont,
   SectionDescription,
   SectionParagraph,
+  SectionInput,
 } from './styled'
 import {
   cancelSubscription,
   reactivateSubscription,
+  redeemPromo,
 } from '../../../api/teams/subscription'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
@@ -63,6 +65,8 @@ const SubscriptionTab = () => {
   const [formtab, setFormTab] = useState<SubscriptionFormTabs | undefined>()
   const [cancelling, setCancelling] = useState<boolean>(false)
   const [activating, setActivating] = useState<boolean>(false)
+  const [applyingCoupon, setApplyingCoupon] = useState<boolean>(false)
+  const [couponCode, setCouponCode] = useState('')
   const [fetching, setFetching] = useState<boolean>(false)
   const {
     globalData: { currentUser },
@@ -126,7 +130,7 @@ const SubscriptionTab = () => {
     }
 
     setActivating(true)
-    reactivateSubscription(subscription.teamId)
+    reactivateSubscription(subscription.teamId, {})
       .then(({ subscription }) => {
         updateTeamSubscription(subscription)
         setActivating(false)
@@ -162,6 +166,39 @@ const SubscriptionTab = () => {
 
     setFetching(false)
   }, [fetching, team, pushAxiosErrorMessage])
+
+  const applyCoupon = useCallback(async () => {
+    if (
+      subscription == null ||
+      subscription.status === 'canceled' ||
+      team == null
+    ) {
+      return
+    }
+
+    try {
+      setApplyingCoupon(true)
+      await redeemPromo(team.id, { code: couponCode })
+      pushMessage({
+        title: 'Promo Code',
+        description: `Applied promo code '${couponCode}' to your subscription`,
+        type: 'success',
+      })
+    } catch (error) {
+      if (error.response.status === 403) {
+        pushMessage({
+          type: 'error',
+          title: 'Error',
+          description: `Promo code ${couponCode} is not available for this account`,
+        })
+      } else {
+        pushAxiosErrorMessage(error)
+      }
+    } finally {
+      setApplyingCoupon(false)
+      setCouponCode('')
+    }
+  }, [couponCode, subscription, team, pushAxiosErrorMessage, pushMessage])
 
   const updateFormContent = useMemo(() => {
     if (formtab == null) {
@@ -234,6 +271,21 @@ const SubscriptionTab = () => {
     )
   }
 
+  if (updateFormContent != null) {
+    return (
+      <Column>
+        <Scrollable>
+          <Section>
+            <StyledSmallFont>
+              <TabHeader>{t('settings.teamSubscription')}</TabHeader>
+              {updateFormContent}
+            </StyledSmallFont>
+          </Section>
+        </Scrollable>
+      </Column>
+    )
+  }
+
   return (
     <Column>
       <Scrollable>
@@ -241,117 +293,111 @@ const SubscriptionTab = () => {
           <StyledSmallFont>
             <TabHeader>{t('settings.teamSubscription')}</TabHeader>
 
-            {updateFormContent == null ? (
-              <StyledBillingContainer>
-                {subscription != null && (
-                  <>
-                    <SectionIntroduction>
-                      {subscription.plan === 'pro' ? (
-                        <SectionParagraph>
-                          <StyledUpgradePlan>
-                            <StyledCalcuration>
-                              <span className='plan-name'>Pro</span>$
-                              {stripeProPlanUnit} &times; {subscription.seats}{' '}
-                              {plur('member', subscription.seats)} &times; 1
-                              month
-                            </StyledCalcuration>
-                            <span>
-                              ${subscription.seats * stripeProPlanUnit}
-                            </span>
-                          </StyledUpgradePlan>
-                          <StyledTotal>
-                            <label>Total Monthly Price</label>
+            <StyledBillingContainer>
+              {subscription != null && (
+                <>
+                  <SectionIntroduction>
+                    {subscription.plan === 'pro' ? (
+                      <SectionParagraph>
+                        <StyledUpgradePlan>
+                          <StyledCalcuration>
+                            <span className='plan-name'>Pro</span>$
+                            {stripeProPlanUnit} &times; {subscription.seats}{' '}
+                            {plur('member', subscription.seats)} &times; 1 month
+                          </StyledCalcuration>
+                          <span>${subscription.seats * stripeProPlanUnit}</span>
+                        </StyledUpgradePlan>
+                        <StyledTotal>
+                          <label>Total Monthly Price</label>
+                          <strong>
+                            ${subscription.seats * stripeProPlanUnit}
+                          </strong>
+                        </StyledTotal>
+                      </SectionParagraph>
+                    ) : subscription.plan === 'personal-pro' ? (
+                      <SectionParagraph>
+                        <SectionDescription style={{ marginBottom: '10px' }}>
+                          Adding new members will automatically upgrade you to
+                          the pro plan ($
+                          {subscription.seats * stripeProPlanUnit} per member)
+                        </SectionDescription>
+                        <StyledUpgradePlan>
+                          <StyledCalcuration>
+                            <span className='plan-name'>Personal Pro</span>$
+                            {stripePersonalProPlanUnit} &times; 1 member &times;
+                            1 month
+                          </StyledCalcuration>
+                          <span>${stripePersonalProPlanUnit}</span>
+                        </StyledUpgradePlan>
+                        <StyledTotal>
+                          <label>Due Today</label>
+                          <strong>${stripePersonalProPlanUnit}</strong>
+                        </StyledTotal>
+                      </SectionParagraph>
+                    ) : null}
+                    <StyledBillingDescription>
+                      {subscription.currentPeriodEnd !== 0 ? (
+                        subscription.status === 'canceled' ? (
+                          <p>
+                            Your subscription will be canceled on{' '}
+                            {getFormattedDateFromUnixTimestamp(
+                              subscription.currentPeriodEnd
+                            )}{' '}
+                            upon reception of your last invoice .
+                          </p>
+                        ) : (
+                          <p>
+                            Will bill to the credit card ending in{' '}
+                            <strong>{subscription.last4}</strong> at{' '}
                             <strong>
-                              ${subscription.seats * stripeProPlanUnit}
-                            </strong>
-                          </StyledTotal>
-                        </SectionParagraph>
-                      ) : subscription.plan === 'personal-pro' ? (
-                        <SectionParagraph>
-                          <SectionDescription style={{ marginBottom: '10px' }}>
-                            Adding new members will automatically upgrade you to
-                            the pro plan ($
-                            {subscription.seats * stripeProPlanUnit} per member)
-                          </SectionDescription>
-                          <StyledUpgradePlan>
-                            <StyledCalcuration>
-                              <span className='plan-name'>Personal Pro</span>$
-                              {stripePersonalProPlanUnit} &times; 1 member
-                              &times; 1 month
-                            </StyledCalcuration>
-                            <span>${stripePersonalProPlanUnit}</span>
-                          </StyledUpgradePlan>
-                          <StyledTotal>
-                            <label>Due Today</label>
-                            <strong>${stripePersonalProPlanUnit}</strong>
-                          </StyledTotal>
-                        </SectionParagraph>
-                      ) : null}
-                      <StyledBillingDescription>
-                        {subscription.currentPeriodEnd !== 0 ? (
-                          subscription.status === 'canceled' ? (
-                            <p>
-                              Your subscription will be canceled on{' '}
                               {getFormattedDateFromUnixTimestamp(
                                 subscription.currentPeriodEnd
-                              )}{' '}
-                              upon reception of your last invoice .
-                            </p>
+                              )}
+                            </strong>
+                            .{' '}
+                            <StyledBillingLink
+                              onClick={() => setFormTab('method')}
+                            >
+                              Edit Card
+                            </StyledBillingLink>
+                          </p>
+                        )
+                      ) : null}
+
+                      <p>
+                        Billing email is <strong>{subscription.email}</strong>.{' '}
+                        <StyledBillingLink onClick={() => setFormTab('email')}>
+                          Edit Billing Email
+                        </StyledBillingLink>
+                      </p>
+
+                      <p>
+                        You can see the{' '}
+                        <StyledBillingLink
+                          disabled={fetching}
+                          onClick={onInvoiceHistory}
+                        >
+                          Billing History
+                          {fetching ? (
+                            <Spinner
+                              style={{
+                                position: 'relative',
+                                left: 0,
+                                top: 0,
+                                transform: 'none',
+                              }}
+                            />
                           ) : (
-                            <p>
-                              Will bill to the credit card ending in{' '}
-                              <strong>{subscription.last4}</strong> at{' '}
-                              <strong>
-                                {getFormattedDateFromUnixTimestamp(
-                                  subscription.currentPeriodEnd
-                                )}
-                              </strong>
-                              .{' '}
-                              <StyledBillingLink
-                                onClick={() => setFormTab('method')}
-                              >
-                                Edit Card
-                              </StyledBillingLink>
-                            </p>
-                          )
-                        ) : null}
+                            <IconMdi path={mdiOpenInNew} />
+                          )}
+                        </StyledBillingLink>
+                      </p>
+                    </StyledBillingDescription>
+                  </SectionIntroduction>
 
-                        <p>
-                          Billing email is <strong>{subscription.email}</strong>
-                          .{' '}
-                          <StyledBillingLink
-                            onClick={() => setFormTab('email')}
-                          >
-                            Edit Billing Email
-                          </StyledBillingLink>
-                        </p>
-
-                        <p>
-                          You can see the{' '}
-                          <StyledBillingLink
-                            disabled={fetching}
-                            onClick={onInvoiceHistory}
-                          >
-                            Billing History
-                            {fetching ? (
-                              <Spinner
-                                style={{
-                                  position: 'relative',
-                                  left: 0,
-                                  top: 0,
-                                  transform: 'none',
-                                }}
-                              />
-                            ) : (
-                              <IconMdi path={mdiOpenInNew} />
-                            )}
-                          </StyledBillingLink>
-                        </p>
-                      </StyledBillingDescription>
-                    </SectionIntroduction>
-
-                    <Flexbox style={{ marginTop: '40px' }}>
-                      {subscription.status !== 'canceled' ? (
+                  <Flexbox style={{ marginTop: '40px' }}>
+                    {subscription.status !== 'canceled' ? (
+                      <>
                         <CustomButton
                           variant='secondary'
                           onClick={cancellingCallback}
@@ -370,49 +416,64 @@ const SubscriptionTab = () => {
                             'Cancel Subscription'
                           )}
                         </CustomButton>
-                      ) : (
-                        <CustomButton
-                          variant='primary'
-                          onClick={reactivateCallback}
-                          disabled={activating}
-                        >
-                          {activating ? (
-                            <Spinner
-                              style={{
-                                position: 'relative',
-                                left: 0,
-                                top: 0,
-                                transform: 'none',
-                              }}
-                            />
-                          ) : (
-                            'Reactivate your subscription'
-                          )}
-                        </CustomButton>
-                      )}
-                    </Flexbox>
-                  </>
-                )}
-                {subscription == null && (
-                  <SectionRow>
-                    <Elements stripe={stripePromise}>
-                      <SubscriptionForm
-                        team={team}
-                        onError={(err) =>
-                          pushMessage({
-                            title: 'Subscription Error',
-                            description: err.message,
-                          })
-                        }
-                        onSuccess={(sub) => updateTeamSubscription(sub)}
-                      />
-                    </Elements>
-                  </SectionRow>
-                )}
-              </StyledBillingContainer>
-            ) : (
-              updateFormContent
-            )}
+                      </>
+                    ) : (
+                      <CustomButton
+                        variant='primary'
+                        onClick={reactivateCallback}
+                        disabled={activating}
+                      >
+                        {activating ? (
+                          <Spinner
+                            style={{
+                              position: 'relative',
+                              left: 0,
+                              top: 0,
+                              transform: 'none',
+                            }}
+                          />
+                        ) : (
+                          'Reactivate your subscription'
+                        )}
+                      </CustomButton>
+                    )}
+                  </Flexbox>
+                </>
+              )}
+              {subscription == null && (
+                <SectionRow>
+                  <Elements stripe={stripePromise}>
+                    <SubscriptionForm
+                      team={team}
+                      onError={(err) =>
+                        pushMessage({
+                          title: 'Subscription Error',
+                          description: err.message,
+                        })
+                      }
+                      onSuccess={(sub) => updateTeamSubscription(sub)}
+                    />
+                  </Elements>
+                </SectionRow>
+              )}
+              <Section>
+                <TabHeader>Promotions</TabHeader>
+                <Flexbox justifyContent='space-between'>
+                  <SectionInput
+                    onChange={(ev: any) => setCouponCode(ev.target.value)}
+                    value={couponCode}
+                    style={{ maxWidth: '50%' }}
+                    type='text'
+                  />
+                  <CustomButton
+                    disabled={applyingCoupon || couponCode.length === 0}
+                    onClick={applyCoupon}
+                  >
+                    Apply Promotion Code
+                  </CustomButton>
+                </Flexbox>
+              </Section>
+            </StyledBillingContainer>
           </StyledSmallFont>
         </Section>
       </Scrollable>
