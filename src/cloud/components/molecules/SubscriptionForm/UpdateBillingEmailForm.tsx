@@ -6,7 +6,7 @@ import {
 } from '../../organisms/settings/styled'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { StyledBillingEmailInput } from '.'
+import { StyledBillingInput } from '.'
 import { Spinner } from '../../atoms/Spinner'
 import { useToast } from '../../../lib/stores/toast'
 import { updateSubEmail } from '../../../api/teams/subscription/update'
@@ -77,7 +77,7 @@ const UpdateBillingEmailForm = ({
           <span className='value'>{sub.email}</span>
         </SectionFlexRow>
 
-        <StyledBillingEmailInput
+        <StyledBillingInput
           style={{ marginTop: 0 }}
           placeholder='Billing Email'
           value={email}
