@@ -45,6 +45,7 @@ const SubscriptionForm = ({
   const stripe = useStripe()
   const elements = useElements()
   const [email, setEmail] = useState('')
+  const [promoCode, setPromoCode] = useState('')
   const [sending, setSending] = useState(false)
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
@@ -63,6 +64,13 @@ const SubscriptionForm = ({
       setEmail(event.target.value)
     },
     [setEmail]
+  )
+
+  const onPromoCodeInputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setPromoCode(event.target.value)
+    },
+    []
   )
 
   const handleSubmit = async (event: FormEvent) => {
@@ -91,6 +99,7 @@ const SubscriptionForm = ({
       } = await createSubscription(team, {
         source: source.id,
         email,
+        code: promoCode.length > 0 ? promoCode : undefined,
       })
 
       if (requiresAction) {
@@ -202,10 +211,16 @@ const SubscriptionForm = ({
           }}
         />
       </StyledCardElementContainer>
-      <StyledBillingEmailInput
+      <StyledBillingInput
         placeholder='Billing Email'
         value={email}
         onChange={onEmailInputChangeHandler}
+      />
+      <StyledBillingInput
+        style={{ marginTop: '0' }}
+        placeholder='Promo Code'
+        value={promoCode}
+        onChange={onPromoCodeInputChangeHandler}
       />
 
       {planDescription.footing}
@@ -281,7 +296,7 @@ export const StyledTotal = styled.div`
   }
 `
 
-export const StyledBillingEmailInput = styled.input`
+export const StyledBillingInput = styled.input`
   ${inputStyle}
   flex-grow: 1;
   flex-shrink: 1;
