@@ -65,8 +65,8 @@ const SubscriptionTab = () => {
   const [formtab, setFormTab] = useState<SubscriptionFormTabs | undefined>()
   const [cancelling, setCancelling] = useState<boolean>(false)
   const [activating, setActivating] = useState<boolean>(false)
-  const [applyingCoupon, setApplyingCoupon] = useState<boolean>(false)
-  const [couponCode, setCouponCode] = useState('')
+  const [applyingPromo, setApplyingPromo] = useState<boolean>(false)
+  const [promoCode, setPromoCode] = useState('')
   const [fetching, setFetching] = useState<boolean>(false)
   const {
     globalData: { currentUser },
@@ -177,11 +177,11 @@ const SubscriptionTab = () => {
     }
 
     try {
-      setApplyingCoupon(true)
-      await redeemPromo(team.id, { code: couponCode })
+      setApplyingPromo(true)
+      await redeemPromo(team.id, { code: promoCode })
       pushMessage({
         title: 'Promo Code',
-        description: `Applied promo code '${couponCode}' to your subscription`,
+        description: `Applied promo code '${promoCode}' to your subscription`,
         type: 'success',
       })
     } catch (error) {
@@ -189,16 +189,16 @@ const SubscriptionTab = () => {
         pushMessage({
           type: 'error',
           title: 'Error',
-          description: `Promo code ${couponCode} is not available for this account`,
+          description: `Promo code ${promoCode} is not available for this account`,
         })
       } else {
         pushAxiosErrorMessage(error)
       }
     } finally {
-      setApplyingCoupon(false)
-      setCouponCode('')
+      setApplyingPromo(false)
+      setPromoCode('')
     }
-  }, [couponCode, subscription, team, pushAxiosErrorMessage, pushMessage])
+  }, [promoCode, subscription, team, pushAxiosErrorMessage, pushMessage])
 
   const updateFormContent = useMemo(() => {
     if (formtab == null) {
@@ -460,13 +460,13 @@ const SubscriptionTab = () => {
                 <TabHeader>Promotions</TabHeader>
                 <Flexbox justifyContent='space-between'>
                   <SectionInput
-                    onChange={(ev: any) => setCouponCode(ev.target.value)}
-                    value={couponCode}
+                    onChange={(ev: any) => setPromoCode(ev.target.value)}
+                    value={promoCode}
                     style={{ maxWidth: '50%' }}
                     type='text'
                   />
                   <CustomButton
-                    disabled={applyingCoupon || couponCode.length === 0}
+                    disabled={applyingPromo || promoCode.length === 0}
                     onClick={applyCoupon}
                   >
                     Apply Promotion Code
