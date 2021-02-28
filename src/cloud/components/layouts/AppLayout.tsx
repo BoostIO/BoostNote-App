@@ -373,8 +373,13 @@ const AppLayout = ({
   )
 
   const subscriptionChangeEventHandler = useCallback(
-    (event: SerializedAppEvent) =>
-      updateTeamSubscription(event.data.subscription),
+    (event: SerializedAppEvent) => {
+      if (event.data.subscription.status === 'inactive') {
+        updateTeamSubscription(undefined)
+      } else {
+        updateTeamSubscription(event.data.subscription)
+      }
+    },
     [updateTeamSubscription]
   )
 
