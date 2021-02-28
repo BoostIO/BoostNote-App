@@ -4,8 +4,6 @@ import { SelectChangeEventHandler } from '../../lib/events'
 import { initAccessToken } from '../../cloud/lib/stores/electron'
 import { getWorkspaces } from '../../cloud/api/teams/workspaces'
 import { SectionSelect } from '../PreferencesModal/styled'
-import Icon from '../atoms/Icon'
-import { mdiRefresh } from '@mdi/js'
 
 interface WorkspaceSelectProps {
   onChange: (workspace: SerializedWorkspace | null) => void
