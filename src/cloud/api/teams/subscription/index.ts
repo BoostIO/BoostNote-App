@@ -3,6 +3,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { callApi } from '../../../lib/client'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import report from '../../../lib/analytics'
+import { UpgradePlans } from '../../../lib/stripe'
 
 export interface WithPromoCode {
   code?: string
@@ -11,6 +12,7 @@ export interface WithPromoCode {
 export interface CreateSubscriptionRequestBody extends WithPromoCode {
   source: string
   email: string
+  plan: UpgradePlans
 }
 
 export interface CreateSubscriptionResponseBody {

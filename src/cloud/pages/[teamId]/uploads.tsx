@@ -18,6 +18,11 @@ import { usePage } from '../../lib/stores/pageStore'
 import { useSettings } from '../../lib/stores/settings'
 import { SerializedFileInfo } from '../../interfaces/db/storage'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import {
+  freePlanStorageMb,
+  proPlanStorageMb,
+  standardPlanStorageMb,
+} from '../../lib/subscription'
 
 const UploadListPage = ({
   files,
@@ -85,24 +90,29 @@ const UploadListPage = ({
             <StorageDescription>
               <span>
                 {sizeInMb}MB of{' '}
-                {permissions.length * (subscription != null ? 10 : 1)}
-                GB used.{' '}
+                {subscription == null
+                  ? `${freePlanStorageMb}MB`
+                  : subscription.plan === 'standard'
+                  ? `${(permissions.length * standardPlanStorageMb) / 1000}GB `
+                  : `${(permissions.length * proPlanStorageMb) / 1000}GB `}
+                used.{' '}
               </span>
-              {subscription == null && (
-                <span>
-                  If you need more than 1GB, please{' '}
-                  <a
-                    className='upgrade-link'
-                    href='#'
-                    onClick={(e: any) => {
-                      e.preventDefault()
-                      openSettingsTab('teamUpgrade')
-                    }}
-                  >
-                    upgrade your plan.
-                  </a>
-                </span>
-              )}
+              {subscription == null ||
+                (subscription.plan !== 'pro' && (
+                  <span>
+                    If you need more space, please{' '}
+                    <a
+                      className='upgrade-link'
+                      href='#'
+                      onClick={(e: any) => {
+                        e.preventDefault()
+                        openSettingsTab('teamUpgrade')
+                      }}
+                    >
+                      upgrade your plan.
+                    </a>
+                  </span>
+                ))}
             </StorageDescription>
           )}
           <FileItemList>

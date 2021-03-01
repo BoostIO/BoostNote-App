@@ -33,10 +33,7 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import UpdateBillingMethodForm from '../../molecules/SubscriptionForm/UpdateBillingMethodForm'
 import { Spinner } from '../../atoms/Spinner'
 import { getFormattedDateFromUnixTimestamp } from '../../../lib/date'
-import {
-  stripeProPlanUnit,
-  stripePersonalProPlanUnit,
-} from '../../../lib/stripe'
+import { stripeProPlanUnit, stripeStandardPlanUnit } from '../../../lib/stripe'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import plur from 'plur'

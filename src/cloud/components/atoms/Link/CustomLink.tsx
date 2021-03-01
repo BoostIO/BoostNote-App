@@ -26,6 +26,8 @@ type CustomLinkProps = {
   external?: boolean
   decoration?: boolean
   isReactLink?: boolean
+  target?: string
+  rel?: string
   href: string | UrlLike
   id?: string
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void
@@ -47,6 +49,8 @@ const CustomLink = (props: CustomLinkProps) => {
     decoration = false,
     style,
     id,
+    rel,
+    target,
     onClick,
   } = props
 
@@ -61,7 +65,7 @@ const CustomLink = (props: CustomLinkProps) => {
   return (
     <StyledInternalLink
       href={stringifyUrl(href)}
-      target={external ? '_blank' : undefined}
+      target={external && target == null ? '_blank' : target}
       className={cc([
         variant != 'link' && 'btn',
         decoration && 'decorate',
@@ -71,6 +75,7 @@ const CustomLink = (props: CustomLinkProps) => {
         block && 'd-block',
         className,
       ])}
+      rel={rel}
       style={style}
       onMouseEnter={() => toggleHover}
       onMouseLeave={() => toggleHover}
@@ -87,7 +92,15 @@ export default CustomLink
 const StyledInternalLink = styled.a`
   &.type-link {
     text-decoration: none;
-    cursor: pointer;
+    transition: 200ms color;
+    color: ${({ theme }) => theme.primaryTextColor};
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      color: ${({ theme }) => theme.darkerPrimaryBackgroundColor};
+    }
   }
 
   &.btn {

@@ -19,10 +19,17 @@ import CustomButton from '../../atoms/buttons/CustomButton'
 import styled from '../../../lib/styled'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
-import { freePlanDocLimit } from '../../../lib/subscription'
-import Tooltip from '../../atoms/Tooltip'
+import {
+  freePlanDocLimit,
+  freePlanStorageMb,
+  standardPlanStorageMb,
+  proPlanStorageMb,
+  revisionHistoryStandardDays,
+} from '../../../lib/subscription'
 import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../../lib/consts'
+import CustomLink from '../../atoms/Link/CustomLink'
+import { formatDistanceToNow } from 'date-fns'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -85,9 +92,11 @@ const UpgradeTab = () => {
         return null
       }
 
+      const trialEndDate = new Date(subscription.currentPeriodEnd * 1000)
       return (
         <p>
-          <span className='check'>&#x2713;</span> In free trial
+          <span className='check'>&#x2713;</span> In free trial ({' '}
+          {formatDistanceToNow(trialEndDate, { includeSeconds: false })} left )
         </p>
       )
     }
@@ -150,40 +159,17 @@ const UpgradeTab = () => {
                     </td>
 
                     <td className='header'>
-                      <label>Personal Pro</label>
+                      <label>Standard</label>
                       <div className='pricing'>
                         <span>$3</span>
-                        <div>per month</div>
+                        <div>per member per month</div>
                       </div>
-
-                      {permissions.length > 1 ? (
-                        <Tooltip
-                          tooltip={
-                            <div style={{ maxWidth: 250 }}>
-                              The Personal Pro Plan is only available for
-                              1-person use. If you would like to use this plan,
-                              please remove the other members in this team.
-                            </div>
-                          }
-                          side='top'
-                        >
-                          <CustomButton
-                            disabled={true}
-                            variant='inverse-secondary'
-                            className='upgrade-btn'
-                          >
-                            Upgrade
-                          </CustomButton>
-                        </Tooltip>
-                      ) : (
-                        <CustomButton
-                          onClick={onUpgradeCallback}
-                          className='upgrade-btn'
-                        >
-                          Upgrade
-                        </CustomButton>
-                      )}
-                      {freeTrialContent}
+                      <CustomButton
+                        onClick={onUpgradeCallback}
+                        className='upgrade-btn'
+                      >
+                        Upgrade
+                      </CustomButton>
                     </td>
 
                     <td className='header'>
@@ -193,34 +179,12 @@ const UpgradeTab = () => {
                         <div>per member per month</div>
                       </div>
 
-                      {permissions.length < 2 ? (
-                        <Tooltip
-                          tooltip={
-                            <div style={{ maxWidth: 250 }}>
-                              The Pro Plan is only available for more than 2
-                              persons use. Your plan will be upgraded
-                              immediately to pro plan if you invite new members
-                              while having an active personal pro plan.
-                            </div>
-                          }
-                          side='top'
-                        >
-                          <CustomButton
-                            disabled={true}
-                            variant='inverse-secondary'
-                            className='upgrade-btn'
-                          >
-                            Upgrade
-                          </CustomButton>
-                        </Tooltip>
-                      ) : (
-                        <CustomButton
-                          onClick={onUpgradeCallback}
-                          className='upgrade-btn'
-                        >
-                          Upgrade
-                        </CustomButton>
-                      )}
+                      <CustomButton
+                        onClick={onUpgradeCallback}
+                        className='upgrade-btn'
+                      >
+                        Upgrade
+                      </CustomButton>
                       {freeTrialContent}
                     </td>
                   </tr>
@@ -232,7 +196,7 @@ const UpgradeTab = () => {
                       <div className='perk'>Unlimited</div>
                     </td>
                     <td>
-                      <div className='perk'>Just you</div>
+                      <div className='perk'>Unlimited</div>
                     </td>
                     <td>
                       <div className='perk'>Unlimited</div>
@@ -253,15 +217,21 @@ const UpgradeTab = () => {
                   </tr>
 
                   <tr>
-                    <td className='first'>Storage lmit</td>
+                    <td className='first'>Storage limit</td>
                     <td>
-                      <div className='perk'>1GB per member</div>
+                      <div className='perk'>
+                        {freePlanStorageMb}MB per member
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>10GB</div>
+                      <div className='perk'>
+                        {standardPlanStorageMb / 100}GB per member
+                      </div>
                     </td>
                     <td>
-                      <div className='perk'>10GB per member</div>
+                      <div className='perk'>
+                        {proPlanStorageMb / 100}GB per member
+                      </div>
                     </td>
                   </tr>
 
@@ -297,7 +267,9 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>&#x292C;</div>
+                      <div className='perk'>
+                        <span className='check'>&#x2713;</span>
+                      </div>
                     </td>
                     <td>
                       <div className='perk'>
@@ -313,7 +285,9 @@ const UpgradeTab = () => {
                     </td>
                     <td>
                       <div className='perk'>
-                        <span className='check'>&#x2713;</span>
+                        <span className='check'>
+                          Last {revisionHistoryStandardDays} days
+                        </span>
                       </div>
                     </td>
                     <td>
@@ -348,9 +322,7 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>
-                        <span className='check'>&#x2713;</span>
-                      </div>
+                      <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
                       <div className='perk'>
@@ -367,9 +339,7 @@ const UpgradeTab = () => {
                       <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
-                      <div className='perk'>
-                        <span className='check'>&#x2713;</span>
-                      </div>
+                      <div className='perk'>&#x292C;</div>
                     </td>
                     <td>
                       <div className='perk'>
@@ -414,19 +384,16 @@ const UpgradeTab = () => {
                 </tbody>
               </StyledPlanTables>
               <p>
-                * The subscription fee will automatically be updated when team
-                members are added and removed.
-              </p>
-              <p>
                 * For larger businesses or those in highly regulated industries,
                 please{' '}
-                <a
+                <CustomLink
                   href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
                   target='_blank'
                   rel='noopener noreferrer'
+                  isReactLink={false}
                 >
                   contact our sales department
-                </a>
+                </CustomLink>
                 .
               </p>
             </StyledSmallFont>
