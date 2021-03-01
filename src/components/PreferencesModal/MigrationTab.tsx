@@ -45,7 +45,12 @@ type MigrationState =
       progress: MigrationProgress | null
       job: MigrationJob
     }
-  | { step: 'complete'; team: Team; workspace: SerializedWorkspace }
+  | {
+      step: 'complete'
+      team: Team
+      workspace: SerializedWorkspace
+      promoCode?: string
+    }
   | { step: 'error'; err: Error }
 
 const MigrationPage = ({ storage }: MigrationPageProps) => {
@@ -75,7 +80,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   )
 
   const pinDestination = useCallback(
-    () => setMigrationState(transitionConfirm),
+    () => setMigrationState(transitionConfirm()),
     []
   )
 
@@ -257,6 +262,12 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <br />
           We hope you enjoy using it!
         </p>
+        {migrationState.promoCode != null && (
+          <>
+            <p>Please use the below promotion code for 3 months free</p>
+            <h1>{migrationState.promoCode}</h1>
+          </>
+        )}
         <SectionPrimaryButton onClick={() => setClosed(true)}>
           Close
         </SectionPrimaryButton>
@@ -328,7 +339,7 @@ function transitionRunning(
         })
       })
       job.on('error', (err) => setState({ step: 'error', err }))
-      job.on('complete', () => setState(transitionComplete))
+      job.on('complete', (code) => setState(transitionComplete(code)))
       job.start()
 
       return {
@@ -342,24 +353,27 @@ function transitionRunning(
   }
 }
 
-function transitionComplete(previousState: MigrationState): MigrationState {
-  return previousState.step === 'running'
-    ? {
-        step: 'complete',
-        team: previousState.team,
-        workspace: previousState.workspace,
-      }
-    : previousState
+function transitionComplete(promoCode?: string) {
+  return (previousState: MigrationState): MigrationState =>
+    previousState.step === 'running'
+      ? {
+          step: 'complete',
+          team: previousState.team,
+          workspace: previousState.workspace,
+          promoCode,
+        }
+      : previousState
 }
 
-function transitionConfirm(previousState: MigrationState): MigrationState {
-  return previousState.step === 'select' && previousState.workspace != null
-    ? {
-        step: 'confirm',
-        team: previousState.team,
-        workspace: previousState.workspace,
-      }
-    : previousState
+function transitionConfirm() {
+  return (previousState: MigrationState): MigrationState =>
+    previousState.step === 'select' && previousState.workspace != null
+      ? {
+          step: 'confirm' as const,
+          team: previousState.team,
+          workspace: previousState.workspace,
+        }
+      : previousState
 }
 
 function transitionCancel(teams: Team[]) {

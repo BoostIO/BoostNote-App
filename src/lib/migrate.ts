@@ -2,11 +2,12 @@ import { NoteStorage, AttachmentData } from './db/types'
 import { SerializedWorkspace } from '../cloud/interfaces/db/workspace'
 import { uploadFile, buildTeamFileUrl } from '../cloud/api/teams/files'
 import { createDocREST } from '../cloud/api/rest/doc'
+import { registerPromo } from '../cloud/api/teams/subscription'
 
 export interface MigrationJob {
   on(ev: 'error', cb: (err: Error) => void): void
   on(ev: 'progress', cb: (progress: MigrationProgress) => void): void
-  on(ev: 'complete', cb: () => void): void
+  on(ev: 'complete', cb: (code?: string) => void): void
   start(): void
   stop(): void
   destroy(): void
@@ -30,7 +31,7 @@ export function createMigrationJob(
   const iter = createMigrationIter(storage, workspace)
   const onErrorSet = new Set<(err: Error) => void>()
   const onProgressSet = new Set<(progress: MigrationProgress) => void>()
-  const onCompleteSet = new Set<() => void>()
+  const onCompleteSet = new Set<(code?: string) => void>()
 
   let stopped = false
   let complete = false
@@ -54,14 +55,15 @@ export function createMigrationJob(
       try {
         while (!stopped && !complete) {
           const result = await iter.next()
-          onProgressSet.forEach((cb) => cb(result.value))
+          onProgressSet.forEach(apply(result.value))
           if (result.done) {
-            onCompleteSet.forEach((cb) => cb())
+            const promotion = await getPromoCode(workspace.teamId)
+            onCompleteSet.forEach(apply(promotion))
             complete = true
           }
         }
       } catch (error) {
-        onErrorSet.forEach((cb) => cb(error))
+        onErrorSet.forEach(apply(error))
       }
     },
     stop() {
@@ -132,6 +134,12 @@ async function* createMigrationIter(
   return { jobCount, jobsCompleted, stage: { name: 'complete' as const } }
 }
 
+function getPromoCode(teamId: string) {
+  return registerPromo(teamId, 'migration')
+    .then((code) => (code.active ? code.code : undefined))
+    .catch(() => undefined)
+}
+
 async function loadFile(data: AttachmentData, name: string) {
   switch (data.type) {
     case 'blob':
@@ -156,4 +164,8 @@ function tupleExists<U, T>(val: [U, T | undefined]): val is [U, T] {
 
 function exists<T>(val: T | undefined): val is T {
   return val != null
+}
+
+function apply<T, U>(...args: T[]) {
+  return (fn: (...args: T[]) => U) => fn(...args)
 }
