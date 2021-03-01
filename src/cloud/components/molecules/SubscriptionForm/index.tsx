@@ -20,13 +20,14 @@ import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../lib/stores/toast'
 import {
   stripeProPlanUnit,
-  stripePersonalProPlanUnit,
+  stripeStandardPlanUnit,
   UpgradePlans,
 } from '../../../lib/stripe'
 import plur from 'plur'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
+  initialPlan?: UpgradePlans
   ongoingTrial?: boolean
   onError: (err: any) => void
   onSuccess: (subscription: SerializedSubscription) => void
@@ -38,6 +39,7 @@ export const maxSeats = 99
 const SubscriptionForm = ({
   team,
   ongoingTrial,
+  initialPlan,
   onError,
   onSuccess,
   onCancel,
@@ -50,14 +52,9 @@ const SubscriptionForm = ({
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
   const { pushAxiosErrorMessage } = useToast()
-
-  const currentPlan: UpgradePlans = useMemo(() => {
-    if (permissions.length > 1) {
-      return 'pro'
-    }
-
-    return 'personal-pro'
-  }, [permissions])
+  const [currentPlan, setCurrentPlan] = useState<UpgradePlans>(
+    initialPlan != null ? initialPlan : 'standard'
+  )
 
   const onEmailInputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,6 +97,7 @@ const SubscriptionForm = ({
         source: source.id,
         email,
         code: promoCode.length > 0 ? promoCode : undefined,
+        plan: currentPlan,
       })
 
       if (requiresAction) {
@@ -133,7 +131,6 @@ const SubscriptionForm = ({
 
   const planDescription: {
     heading: React.ReactNode
-    footing: React.ReactNode
   } = useMemo(() => {
     switch (currentPlan) {
       case 'pro':
@@ -146,53 +143,30 @@ const SubscriptionForm = ({
                   &times; {permissions.length}
                   {plur('member', permissions.length)} &times; 1 month
                 </StyledCalcuration>
-                <span>
-                  $
-                  {currentPlan === 'pro'
-                    ? permissions.length * stripeProPlanUnit
-                    : stripePersonalProPlanUnit}
-                </span>
               </StyledUpgradePlan>
               <StyledTotal>
                 <label>Total Monthly Price</label>
-                <strong>
-                  $
-                  {currentPlan === 'pro'
-                    ? permissions.length * stripeProPlanUnit
-                    : stripePersonalProPlanUnit}
-                </strong>
+                <strong>${permissions.length * stripeProPlanUnit}</strong>
               </StyledTotal>
             </SectionParagraph>
           ),
-          footing: (
-            <SectionDescription>
-              Your subscription fee will be updated automatically everytime a
-              new member is added to your team or, oppositely, removed from it.
-            </SectionDescription>
-          ),
         }
-      case 'personal-pro':
+      case 'standard':
         return {
           heading: (
             <SectionParagraph>
               <StyledUpgradePlan>
                 <StyledCalcuration>
-                  <span className='plan-name'>Personal Pro</span>$
-                  {stripePersonalProPlanUnit} &times; 1 member &times; 1 month
+                  <span className='plan-name'>Standard</span>$
+                  {stripeStandardPlanUnit} &times; {permissions.length}
+                  {plur('member', permissions.length)} &times; 1 month
                 </StyledCalcuration>
-                <span>${stripePersonalProPlanUnit}</span>
               </StyledUpgradePlan>
               <StyledTotal>
-                <label>Due Today</label>
-                <strong>${stripePersonalProPlanUnit}</strong>
+                <label>Total Monthly Price</label>
+                <strong>${permissions.length * stripeStandardPlanUnit}</strong>
               </StyledTotal>
             </SectionParagraph>
-          ),
-          footing: (
-            <SectionDescription>
-              If you add new members, you will be automatically transitioned to
-              the pro plan.
-            </SectionDescription>
           ),
         }
       default:
@@ -222,7 +196,6 @@ const SubscriptionForm = ({
         value={promoCode}
         onChange={onPromoCodeInputChangeHandler}
       />
-
       {planDescription.footing}
       {ongoingTrial != null && (
         <SectionDescription>

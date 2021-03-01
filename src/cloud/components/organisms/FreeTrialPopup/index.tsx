@@ -7,6 +7,7 @@ import { useToast } from '../../../lib/stores/toast'
 import { startTeamFreeTrial } from '../../../api/teams/subscription/trial'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { usePage } from '../../../lib/stores/pageStore'
+import { freeTrialPeriodDays } from '../../../lib/subscription'
 
 interface FreeTrialPopupProps {
   team: SerializedTeam
@@ -50,7 +51,8 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
           <StyledFreeTrialTitle>Try the Pro Plan for free</StyledFreeTrialTitle>
           <p>
             You&apos;ll get access to most features of a paid Pro Plan such as
-            unlimited documents, revision history, etc... for two whole weeks.
+            unlimited documents, revision history, etc... for{' '}
+            {freeTrialPeriodDays} days.
           </p>
           <p>No credit card information is necessary for now.</p>
         </Flexbox>
