@@ -426,7 +426,8 @@ const DocContextMenu = ({
                         {plur('Guest', guestsOnThisDoc.length)}
                       </label>
                     )}
-                    {subscription == null ? (
+                    {subscription == null ||
+                    subscription.plan === 'standard' ? (
                       <button
                         className='context__badge'
                         onClick={() =>

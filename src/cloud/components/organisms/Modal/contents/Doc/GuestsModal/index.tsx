@@ -22,7 +22,7 @@ const GuestsModal = ({ docId, teamId }: GuestsModalProps) => {
   const { closeModal } = useModal()
   const { openSettingsTab } = useSettings()
 
-  if (subscription == null) {
+  if (subscription == null || subscription.plan === 'standard') {
     return (
       <ModalContainer style={{ padding: 0 }}>
         <NonSubContent>
@@ -30,16 +30,20 @@ const GuestsModal = ({ docId, teamId }: GuestsModalProps) => {
           <p>
             Let&apos;s upgrade to the Pro plan now and invite outside
             collaborators to this document.
-            <br /> You can try a two-week trial for free!
+            <br />
           </p>
           <CustomButton
             variant='primary'
             onClick={() => {
-              openSettingsTab('teamUpgrade')
+              if (subscription == null) {
+                openSettingsTab('teamUpgrade')
+              } else {
+                openSettingsTab('teamSubscription')
+              }
               closeModal()
             }}
           >
-            Start Free Trial
+            Upgrade
           </CustomButton>
         </NonSubContent>
       </ModalContainer>
