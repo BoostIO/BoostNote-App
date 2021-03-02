@@ -10,7 +10,7 @@ import { Spinner } from '../../atoms/Spinner'
 import { useToast } from '../../../lib/stores/toast'
 import { redeemPromo } from '../../../api/teams/subscription'
 
-interface UpdateBillingEmailFormProps {
+interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
   onCancel: () => void
 }
@@ -18,7 +18,7 @@ interface UpdateBillingEmailFormProps {
 const UpdateBillingPromoForm = ({
   sub,
   onCancel,
-}: UpdateBillingEmailFormProps) => {
+}: UpdateBillingPromoFormProps) => {
   const { pushAxiosErrorMessage, pushMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [promoCode, setPromoCode] = useState<string>('')
