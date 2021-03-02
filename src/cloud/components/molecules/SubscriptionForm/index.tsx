@@ -196,7 +196,6 @@ const SubscriptionForm = ({
         value={promoCode}
         onChange={onPromoCodeInputChangeHandler}
       />
-      {planDescription.footing}
       {ongoingTrial != null && (
         <SectionDescription>
           Your free trial will be stopped.

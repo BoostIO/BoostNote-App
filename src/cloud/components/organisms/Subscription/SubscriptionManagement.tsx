@@ -32,6 +32,7 @@ interface SubscriptionManagementProps {
   team: SerializedTeam
   onMethodClick: () => void
   onEmailClick: () => void
+  onPromoClick: () => void
 }
 
 const SubscriptionManagement = ({
@@ -39,6 +40,7 @@ const SubscriptionManagement = ({
   team,
   onMethodClick,
   onEmailClick,
+  onPromoClick,
 }: SubscriptionManagementProps) => {
   const [showPlanTables, setShowPlanTables] = useState(false)
   const [sending, setSending] = useState(false)
@@ -199,7 +201,6 @@ const SubscriptionManagement = ({
                 Edit Billing Email
               </StyledBillingButton>
             </p>
-
             <p>
               You can see the{' '}
               <StyledBillingButton
@@ -219,6 +220,11 @@ const SubscriptionManagement = ({
                 ) : (
                   <Icon path={mdiOpenInNew} />
                 )}
+              </StyledBillingButton>
+            </p>
+            <p>
+              <StyledBillingButton onClick={onPromoClick} disabled={sending}>
+                Apply a coupon
               </StyledBillingButton>
             </p>
             <p>
