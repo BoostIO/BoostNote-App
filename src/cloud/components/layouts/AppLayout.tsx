@@ -27,7 +27,7 @@ import {
 } from '../../lib/dom'
 import { useNav } from '../../lib/stores/nav'
 import { SerializedAppEvent } from '../../interfaces/db/appEvents'
-import { useNumber } from 'react-use'
+import { useEffectOnce, useNumber } from 'react-use'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { useModal } from '../../lib/stores/modal'
@@ -54,6 +54,7 @@ import { EventSourcePolyfill } from 'event-source-polyfill'
 import { getAccessToken, usingElectron } from '../../lib/stores/electron'
 import { sseUrl } from '../../lib/consts'
 import { SerializedGuest } from '../../interfaces/db/guest'
+import { useRouter } from '../../lib/router'
 
 interface AppLayoutProps {
   rightLayout: RightLayoutWithTopBarProps
@@ -116,6 +117,7 @@ const AppLayout = ({
   const rightSideContentRef = React.createRef<HTMLDivElement>()
   const [sidebarIsFocused, setSidebarIsFocused] = useState<boolean>(false)
   const { setShowGlobalSearch, showGlobalSearch } = useSearch()
+  const { query } = useRouter()
 
   const leftWidth = useMemo(() => {
     return preferences.sideBarWidth
@@ -155,6 +157,12 @@ const AppLayout = ({
     }, 1000 / 30),
     []
   )
+
+  useEffectOnce(() => {
+    if (query.settings === 'upgrade') {
+      openSettingsTab('teamUpgrade')
+    }
+  })
 
   useEffect(() => {
     if (dragging && !mouseupListenerIsSetRef.current) {
