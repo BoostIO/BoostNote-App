@@ -66,6 +66,7 @@ import IconMdi from '../../../../../atoms/IconMdi'
 import DynamicExports from './DynamicExports'
 import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../atoms/Button'
+import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -640,8 +641,12 @@ const DocContextMenu = ({
                         className='context__icon'
                         size={18}
                       />
-                      See full revisions
-                      {subscription == null &&
+                      {subscription != null && subscription.plan === 'standard'
+                        ? `See revisions ( last ${revisionHistoryStandardDays} days)`
+                        : 'See full revisions'}
+                      {(subscription == null ||
+                        (subscription != null &&
+                          subscription.plan === 'standard')) &&
                         currentUserPermissions != null && (
                           <div className='context__badge'>Upgrade</div>
                         )}
