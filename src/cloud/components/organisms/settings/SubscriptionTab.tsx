@@ -19,10 +19,11 @@ import { useSettings } from '../../../lib/stores/settings'
 import styled from '../../../lib/styled'
 import { stripePublishableKey } from '../../../lib/consts'
 import SubscriptionManagement from '../Subscription/SubscriptionManagement'
+import UpdateBillingPromoForm from '../../molecules/SubscriptionForm/UpdateBillingPromo'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
-type SubscriptionFormTabs = 'method' | 'email'
+type SubscriptionFormTabs = 'method' | 'email' | 'promo'
 
 const SubscriptionTab = () => {
   const { t } = useTranslation()
@@ -93,6 +94,7 @@ const SubscriptionTab = () => {
                 team={team}
                 onEmailClick={() => setFormTab('email')}
                 onMethodClick={() => setFormTab('method')}
+                onPromoClick={() => setFormTab('promo')}
               />
             ) : (
               <StyledBillingContainer>
@@ -102,7 +104,7 @@ const SubscriptionTab = () => {
                     onSuccess={onSuccessHandler}
                     onCancel={() => setFormTab(undefined)}
                   />
-                ) : (
+                ) : formtab === 'method' ? (
                   <Elements stripe={stripePromise}>
                     <UpdateBillingMethodForm
                       sub={subscription}
@@ -110,7 +112,12 @@ const SubscriptionTab = () => {
                       onCancel={() => setFormTab(undefined)}
                     />
                   </Elements>
-                )}
+                ) : formtab === 'promo' ? (
+                  <UpdateBillingPromoForm
+                    sub={subscription}
+                    onCancel={() => setFormTab(undefined)}
+                  />
+                ) : null}
               </StyledBillingContainer>
             )}
           </StyledSmallFont>
