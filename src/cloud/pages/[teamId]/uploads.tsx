@@ -91,28 +91,27 @@ const UploadListPage = ({
               <span>
                 {sizeInMb}MB of{' '}
                 {subscription == null
-                  ? `${freePlanStorageMb}MB`
+                  ? `${freePlanStorageMb}MB `
                   : subscription.plan === 'standard'
                   ? `${(permissions.length * standardPlanStorageMb) / 1000}GB `
                   : `${(permissions.length * proPlanStorageMb) / 1000}GB `}
                 used.{' '}
               </span>
-              {subscription == null ||
-                (subscription.plan !== 'pro' && (
-                  <span>
-                    If you need more space, please{' '}
-                    <a
-                      className='upgrade-link'
-                      href='#'
-                      onClick={(e: any) => {
-                        e.preventDefault()
-                        openSettingsTab('teamUpgrade')
-                      }}
-                    >
-                      upgrade your plan.
-                    </a>
-                  </span>
-                ))}
+              {(subscription == null || subscription.plan !== 'pro') && (
+                <span>
+                  If you need more space, please{' '}
+                  <a
+                    className='upgrade-link'
+                    href='#'
+                    onClick={(e: any) => {
+                      e.preventDefault()
+                      openSettingsTab('teamUpgrade')
+                    }}
+                  >
+                    upgrade your plan.
+                  </a>
+                </span>
+              )}
             </StorageDescription>
           )}
           <FileItemList>

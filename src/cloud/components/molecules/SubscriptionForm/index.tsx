@@ -52,7 +52,7 @@ const SubscriptionForm = ({
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
   const { pushAxiosErrorMessage } = useToast()
-  const [currentPlan, setCurrentPlan] = useState<UpgradePlans>(
+  const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )
 
@@ -139,8 +139,8 @@ const SubscriptionForm = ({
             <SectionParagraph>
               <StyledUpgradePlan>
                 <StyledCalcuration>
-                  <span className='plan-name'>Pro</span>${stripeProPlanUnit}{' '}
-                  &times; {permissions.length}
+                  <span className='plan-name'>Pro</span> ${stripeProPlanUnit}{' '}
+                  &times; {permissions.length}{' '}
                   {plur('member', permissions.length)} &times; 1 month
                 </StyledCalcuration>
               </StyledUpgradePlan>
@@ -157,8 +157,8 @@ const SubscriptionForm = ({
             <SectionParagraph>
               <StyledUpgradePlan>
                 <StyledCalcuration>
-                  <span className='plan-name'>Standard</span>$
-                  {stripeStandardPlanUnit} &times; {permissions.length}
+                  <span className='plan-name'>Standard</span> $
+                  {stripeStandardPlanUnit} &times; {permissions.length}{' '}
                   {plur('member', permissions.length)} &times; 1 month
                 </StyledCalcuration>
               </StyledUpgradePlan>

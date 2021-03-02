@@ -1,6 +1,7 @@
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { callApi } from '../../../lib/client'
 import report from '../../../lib/analytics'
+import { UpgradePlans } from '../../../lib/stripe'
 
 export interface UpdatePaymentInfoResponseBody {
   subscription: SerializedSubscription
@@ -43,6 +44,20 @@ export async function updateSubMethod(
   return data
 }
 
-export interface UpdateSubscriptionSeatsRequestBody {
-  seats: number
+export interface UpdateSubscriptionPlanRequestBody {
+  plan: UpgradePlans
+}
+
+export async function updateSubPlan(
+  teamId: string,
+  body: UpdateSubscriptionPlanRequestBody
+) {
+  const data = await callApi<UpdatePaymentInfoResponseBody>(
+    `api/teams/${teamId}/subscription/plan`,
+    {
+      json: body,
+      method: 'put',
+    }
+  )
+  return data
 }
