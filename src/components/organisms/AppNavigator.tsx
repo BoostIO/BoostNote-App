@@ -8,7 +8,7 @@ import {
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import Icon from '../atoms/Icon'
-import { mdiPlus, mdiCircleMedium } from '@mdi/js'
+import { mdiPlus } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import AppNavigatorStorageItem from '../molecules/AppNavigatorStorageItem'
@@ -17,10 +17,6 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
-import {
-  useCheckedFeatures,
-  featureBoostHubSignIn,
-} from '../../lib/checkedFeatures'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useCreateWorkspaceModal } from '../../lib/createWorkspaceModal'
 import { useBoostHub } from '../../lib/boosthub'
@@ -31,7 +27,6 @@ const TopLevelNavigator = () => {
   const { setPreferences, preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
-  const { isChecked } = useCheckedFeatures()
   const { signOut } = useBoostHub()
 
   const boostHubUserInfo = preferences['cloud.user']
@@ -146,9 +141,6 @@ const TopLevelNavigator = () => {
           onClick={toggleShowCreateWorkspaceModal}
         >
           <Icon path={mdiPlus} />
-          {!isChecked(featureBoostHubSignIn) && (
-            <Icon className='redDot' path={mdiCircleMedium} />
-          )}
         </NavigatorButton>
       </ControlContainer>
     </Container>
