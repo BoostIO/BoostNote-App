@@ -158,9 +158,17 @@ const BoostHubSignInForm = () => {
     }
   }, [startLoginRequest])
 
+  const cancelSigningIn = useCallback(() => {
+    setStatus('idle')
+  }, [])
+
+  const navigateToCreateLocalSpacePage = useCallback(() => {
+    push('/app/storages')
+  }, [push])
+
   return (
     <Container>
-      <h1 className='heading'>Create Team Account</h1>
+      <h1 className='heading'>Create Account</h1>
       {status === 'idle' ? (
         <>
           <div style={{ maxWidth: '1020px' }}>
@@ -174,6 +182,14 @@ const BoostHubSignInForm = () => {
             <FormSecondaryButton onClick={startLoginRequest}>
               Sign In
             </FormSecondaryButton>
+          </div>
+          <div className='control'>
+            <a
+              className='control-link'
+              onClick={navigateToCreateLocalSpacePage}
+            >
+              Create a local space without creating an account
+            </a>
           </div>
         </>
       ) : status === 'logging-in' ? (
@@ -191,6 +207,11 @@ const BoostHubSignInForm = () => {
             <FormPrimaryButton onClick={openLoginRequestPage}>
               Open request signing in page again
             </FormPrimaryButton>
+          </FormGroup>
+          <FormGroup style={{ textAlign: 'center' }}>
+            <a className='control-link' onClick={cancelSigningIn}>
+              Cancel Signing In
+            </a>
           </FormGroup>
           {errorMessage != null && (
             <FormGroup style={{ textAlign: 'center' }}>
@@ -263,6 +284,13 @@ const Container = styled.div`
         margin-right: 10px;
       }
     }
+  }
+  .control-link {
+    color: ${({ theme }) => theme.uiTextColor};
+    &:hover {
+      color: ${({ theme }) => theme.textColor};
+    }
+    cursor: pointer;
   }
   blockquote {
     margin-right: 0;
