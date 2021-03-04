@@ -112,3 +112,7 @@ export const boostHubToggleSettingsEventEmitter = createCustomEventEmitter(
 export const boostHubReloadAllWebViewsEventEmitter = createCustomEventEmitter(
   'BoostHub:reloadAllWebViews'
 )
+
+export const boostHubCreateLocalSpaceEventEmitter = createCustomEventEmitter(
+  'BoostHub:createLocalSpace'
+)

@@ -16,19 +16,12 @@ import { useEffectOnce } from 'react-use'
 import AppNavigator from './organisms/AppNavigator'
 import { useRouter } from '../lib/router'
 import { values, keys } from '../lib/db/utils'
-import { localLiteStorage } from 'ltstrg'
-import { defaultStorageCreatedKey } from '../lib/localStorageKeys'
 import {
-  getPathByName,
   addIpcListener,
   removeIpcListener,
   setCookie,
 } from '../lib/electronOnly'
-import { generateId } from '../lib/string'
-import FSNoteDb from '../lib/db/FSNoteDb'
-import path from 'path'
 import { useGeneralStatus } from '../lib/generalStatus'
-import { getFolderItemId } from '../lib/nav'
 import { useBoostNoteProtocol } from '../lib/protocol'
 import {
   useBoostHub,
@@ -48,12 +41,8 @@ import {
   boostHubAccountDeleteEventEmitter,
   boostHubToggleSettingsEventEmitter,
   boostHubLoginRequestEventEmitter,
+  boostHubCreateLocalSpaceEventEmitter,
 } from '../lib/events'
-import {
-  useCheckedFeatures,
-  featureBoostHubIntro,
-} from '../lib/checkedFeatures'
-import BoostHubIntroModal from '../components/organisms/BoostHubIntroModal'
 import { useRouteParams } from '../lib/routeParams'
 import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
 import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
@@ -74,41 +63,11 @@ const AppContainer = styled.div`
   display: flex;
 `
 
-const defaultNoteContent = `BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Boostnote).
-Thanks for downloading our app!
-
-# [Boost Note for Teams](https://boosthub.io/)
-
-We've developed a collaborative workspace app called "Boost Hub" for developer teams.
-
-It's customizable and easy to optimize for your team like rego blocks and even lets you edit documents together in real-time!
-
-# Community
-
-Please check out.
-
-- [GitHub](https://github.com/BoostIO/BoostNote.next)
-- [Facebook Group](https://www.facebook.com/groups/boostnote/)
-- [Twitter](https://twitter.com/boostnoteapp)
-- [Slack Group](https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw)
-- [Blog](https://medium.com/boostnote)
-- [Reddit](https://www.reddit.com/r/Boostnote/)
-`
-
 const App = () => {
-  const {
-    initialize,
-    queueSyncingAllStorage,
-    createStorage,
-    storageMap,
-  } = useDb()
-  const { replace, push } = useRouter()
+  const { initialize, queueSyncingAllStorage, storageMap } = useDb()
+  const { push } = useRouter()
   const [initialized, setInitialized] = useState(false)
-  const {
-    addSideNavOpenedItem,
-    setGeneralStatus,
-    generalStatus,
-  } = useGeneralStatus()
+  const { setGeneralStatus, generalStatus } = useGeneralStatus()
   const {
     togglePreferencesModal,
     preferences,
@@ -120,57 +79,7 @@ const App = () => {
   const { messageBox } = useDialog()
 
   useEffectOnce(() => {
-    initialize()
-      .then(async (storageMap) => {
-        const storages = values(storageMap)
-        if (storages.length > 0) {
-          queueSyncingAllStorage(0)
-        }
-
-        const defaultStorageCreated = localLiteStorage.getItem(
-          defaultStorageCreatedKey
-        )
-        if (defaultStorageCreated !== 'true') {
-          if (values(storageMap).length === 0) {
-            try {
-              const defaultStoragePath = path.join(
-                getPathByName('userData'),
-                'default-storage'
-              )
-              const db = new FSNoteDb(
-                generateId(),
-                'My Notes',
-                defaultStoragePath
-              )
-              await db.init()
-
-              const note = await db.createNote({
-                title: 'Welcome to BoostNote.next!',
-                content: defaultNoteContent,
-              })
-
-              const storage = await createStorage('My Notes', {
-                type: 'fs',
-                location: defaultStoragePath,
-              })
-              addSideNavOpenedItem(getFolderItemId(storage.id, '/'))
-              replace(`/app/storages/${storage.id}/notes/${note._id}`)
-            } catch (error) {
-              console.warn('Failed to create default storage')
-              console.warn(error)
-            }
-          }
-          localLiteStorage.setItem(defaultStorageCreatedKey, 'true')
-        }
-        setInitialized(true)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  })
-
-  useEffectOnce(() => {
-    const run = async () => {
+    const fetchCurrentCloudSpaceUser = async () => {
       const cloudUserInfo = preferences['cloud.user']
       let accessToken: string
       if (cloudUserInfo == null) {
@@ -250,8 +159,33 @@ const App = () => {
           }
         }),
       })
+      return user
     }
-    run()
+
+    initialize()
+      .then(async (storageMap) => {
+        const storages = values(storageMap)
+        if (storages.length > 0) {
+          queueSyncingAllStorage(0)
+        }
+        // Check global data
+        const user = await fetchCurrentCloudSpaceUser().catch((error) => {
+          console.warn('There was an issue while fetching cloud space data')
+          console.warn(error)
+        })
+        // If there is no page to show, open new doc page
+        if (storages.length === 0) {
+          if (user == null) {
+            push(`/app/boosthub/login`)
+          } else {
+            push(`/app/boosthub/teams`)
+          }
+        }
+        setInitialized(true)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   })
 
   const boostHubTeamsShowPageIsActive =
@@ -345,16 +279,26 @@ const App = () => {
       })
     }
 
+    const boostHubCreateLocalSpaceEventHandler = () => {
+      push(`/app/storages`)
+    }
+
     boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
     boostHubTeamUpdateEventEmitter.listen(boostHubTeamUpdateEventHandler)
     boostHubTeamDeleteEventEmitter.listen(boostHubTeamDeleteEventHandler)
     boostHubAccountDeleteEventEmitter.listen(boostHubAccountDeleteEventHandler)
+    boostHubCreateLocalSpaceEventEmitter.listen(
+      boostHubCreateLocalSpaceEventHandler
+    )
     return () => {
       boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
       boostHubTeamUpdateEventEmitter.unlisten(boostHubTeamUpdateEventHandler)
       boostHubTeamDeleteEventEmitter.unlisten(boostHubTeamDeleteEventHandler)
       boostHubAccountDeleteEventEmitter.unlisten(
         boostHubAccountDeleteEventHandler
+      )
+      boostHubCreateLocalSpaceEventEmitter.unlisten(
+        boostHubCreateLocalSpaceEventHandler
       )
     }
   }, [push, setPreferences, setGeneralStatus])
@@ -387,8 +331,6 @@ const App = () => {
 
   useBoostNoteProtocol()
 
-  const { isChecked } = useCheckedFeatures()
-
   const {
     showCreateWorkspaceModal,
     toggleShowCreateWorkspaceModal,
@@ -405,7 +347,6 @@ const App = () => {
           <>
             {preferences['general.showAppNavigator'] && <AppNavigator />}
             <Router />
-            {!isChecked(featureBoostHubIntro) && <BoostHubIntroModal />}
             {showCreateWorkspaceModal && (
               <CreateWorkspaceModal
                 closeModal={toggleShowCreateWorkspaceModal}
