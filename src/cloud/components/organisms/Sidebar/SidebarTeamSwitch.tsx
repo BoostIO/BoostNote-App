@@ -102,6 +102,7 @@ const StyledContainer = styled.div`
   position: relative;
   height: auto;
   display: flex;
+  -webkit-app-region: drag;
 `
 
 const StyledTwamSwitchButtonWrapper = styled.div`
