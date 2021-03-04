@@ -17,8 +17,6 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import AppNavigatorBoostHubTeamItem from '../molecules/AppNavigatorBoostHubTeamItem'
-import { MenuItemConstructorOptions } from 'electron/main'
-import { useCreateWorkspaceModal } from '../../lib/createWorkspaceModal'
 import { useBoostHub } from '../../lib/boosthub'
 
 const TopLevelNavigator = () => {
@@ -76,29 +74,22 @@ const TopLevelNavigator = () => {
         menuItems: [
           {
             type: 'normal',
-            label: 'Create a Local Workspace',
+            label: 'Create Space',
             click: async () => {
-              push(`/app/storages`)
+              if (boostHubUserInfo == null) {
+                push('/app/boosthub/login')
+              } else {
+                push('/app/boosthub/teams')
+              }
             },
           },
-          ...(boostHubUserInfo != null
-            ? ([
-                {
-                  type: 'normal',
-                  label: 'Create a Team Workspace',
-                  click: async () => {
-                    push('/app/boosthub/teams')
-                  },
-                },
-              ] as MenuItemConstructorOptions[])
-            : ([] as MenuItemConstructorOptions[])),
           {
             type: 'separator',
           },
           boostHubUserInfo == null
             ? {
                 type: 'normal',
-                label: 'Create a Team Account',
+                label: 'Sign In',
                 click: () => {
                   push('/app/boosthub/login')
                 },
@@ -126,7 +117,14 @@ const TopLevelNavigator = () => {
     [boostHubUserInfo, push, setPreferences, signOut]
   )
 
-  const { toggleShowCreateWorkspaceModal } = useCreateWorkspaceModal()
+  const navigateToCreateSpacePage = useCallback(() => {
+    if (boostHubUserInfo == null) {
+      push('/app/boosthub/login')
+      return
+    } else {
+      push('/app/boosthub/teams')
+    }
+  }, [boostHubUserInfo, push])
 
   return (
     <Container>
@@ -137,8 +135,8 @@ const TopLevelNavigator = () => {
       </ListContainer>
       <ControlContainer>
         <NavigatorButton
-          title='Create Workspace'
-          onClick={toggleShowCreateWorkspaceModal}
+          title='Create Space'
+          onClick={navigateToCreateSpacePage}
         >
           <Icon path={mdiPlus} />
         </NavigatorButton>
