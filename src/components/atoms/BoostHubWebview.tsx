@@ -27,9 +27,11 @@ import {
   boostHubTeamDeleteEventEmitter,
   boostHubAccountDeleteEventEmitter,
   boostHubReloadAllWebViewsEventEmitter,
+  boostHubCreateLocalSpaceEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
+import { DidFailLoadEvent } from 'electron/main'
 
 export interface WebviewControl {
   reload(): void
@@ -46,6 +48,7 @@ interface BoostHubWebviewProps {
   controlRef?: React.MutableRefObject<WebviewControl | undefined>
   onDidNavigate?: (event: DidNavigateEvent) => void
   onDidNavigateInPage?: (event: DidNavigateInPageEvent) => void
+  onDidFailLoad?: (event: DidFailLoadEvent) => void
 }
 
 const BoostHubWebview = ({
@@ -54,6 +57,7 @@ const BoostHubWebview = ({
   className,
   controlRef,
   onDidNavigate,
+  onDidFailLoad,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
   const { preferences, setPreferences } = usePreferences()
@@ -111,6 +115,17 @@ const BoostHubWebview = ({
     }
   }, [onDidNavigate])
 
+  useEffect(() => {
+    const webview = webviewRef.current!
+    if (onDidFailLoad == null) {
+      return
+    }
+    webview.addEventListener('did-fail-load', onDidFailLoad)
+    return () => {
+      webview.removeEventListener('did-fail-load', onDidFailLoad)
+    }
+  }, [onDidFailLoad])
+
   useEffectOnce(() => {
     const webview = webviewRef.current!
 
@@ -118,6 +133,9 @@ const BoostHubWebview = ({
       switch (event.channel) {
         case 'request-app-navigate':
           boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
+          break
+        case 'create-local-space':
+          boostHubCreateLocalSpaceEventEmitter.dispatch()
           break
         case 'team-create':
           boostHubTeamCreateEventEmitter.dispatch({ team: event.args[0] })
