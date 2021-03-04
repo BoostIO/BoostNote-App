@@ -17,6 +17,7 @@ export const StyledRightSideTopbar = styled.div`
   min-width: 0;
   font-size: ${({ theme }) => theme.fontSizes.small}px !important;
   flex: 0 0 auto;
+  -webkit-app-region: drag;
 `
 
 export const StyledTopbarLeft = styled.div`
