@@ -26,7 +26,7 @@ const SideNavigatorFolderForm = ({
   const [name, setName] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
   const { createFolderHandler } = useNav()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

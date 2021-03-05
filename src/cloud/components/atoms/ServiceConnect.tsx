@@ -19,7 +19,7 @@ const ServiceConnect = ({
   children = 'Connect',
   ...buttonProps
 }: ServiceConnectProps) => {
-  const { pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
   const childRef = useRef<Window | null>()
 
   useEffect(() => {

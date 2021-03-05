@@ -25,7 +25,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { tagsMap, updateDocsMap, updateTagsMap } = useNav()
   const [sending, setSending] = useState<boolean>(false)
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [tagText, setTagText] = useState<string>('')
 
   useEffect(() => {

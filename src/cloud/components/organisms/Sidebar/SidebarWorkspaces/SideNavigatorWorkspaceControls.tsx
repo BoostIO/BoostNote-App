@@ -54,7 +54,7 @@ const SideNavigatorWorkspaceControls = ({
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const {
-    pushAxiosErrorMessage,
+    pushApiErrorMessage: pushAxiosErrorMessage,
     pushMessage,
     pushDocHandlerErrorMessage,
   } = useToast()

@@ -62,7 +62,7 @@ const MembersTab = () => {
     globalData: { currentUser },
   } = useGlobalData()
   const { messageBox } = useDialog()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { setClosed, openSettingsTab } = useSettings()
   const [sending, setSending] = useState<string>()
   const router = useRouter()

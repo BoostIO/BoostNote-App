@@ -45,7 +45,7 @@ const SidebarNewDocControls = ({ disabled }: SidebarNewDocControlsProps) => {
   const newDocUploader = useRef<HTMLInputElement>(null)
   const uploaderFormRef = useRef<HTMLFormElement>(null)
   const [sending, setSending] = useState(false)
-  const { pushMessage, pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const navigateToTeam = useNavigateToTeam()
   const navigateToWorkspace = useNavigateToWorkspace()
   const navigateToDoc = useNavigateToDoc()

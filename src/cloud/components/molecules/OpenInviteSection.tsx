@@ -37,7 +37,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     SerializedOpenInvite | undefined
   >(undefined)
   const { messageBox } = useDialog()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
 
   useEffectOnce(() => {
     fetchOpenInvite()

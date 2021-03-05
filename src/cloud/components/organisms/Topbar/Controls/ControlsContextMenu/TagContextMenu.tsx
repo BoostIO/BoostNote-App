@@ -41,7 +41,7 @@ const TagContextMenu = ({
   const [sendingRemoval, setSendingRemoval] = useState<boolean>(false)
   const { removeFromTagsMap } = useNav()
   const { setPartialPageData, pageTag } = usePage()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { messageBox } = useDialog()
   const { t } = useTranslation()
 

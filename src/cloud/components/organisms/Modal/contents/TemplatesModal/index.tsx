@@ -65,7 +65,10 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     createDocHandler,
     currentParentFolderId,
   } = useNav()
-  const { pushDocHandlerErrorMessage, pushAxiosErrorMessage } = useToast()
+  const {
+    pushDocHandlerErrorMessage,
+    pushApiErrorMessage: pushAxiosErrorMessage,
+  } = useToast()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
   const [filter, setFilter] = useState<string>('')

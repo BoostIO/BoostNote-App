@@ -22,7 +22,7 @@ type State =
   | { state: 'initialised'; tokens: SerializedApiToken[]; actions: Actions }
 
 export function useApiTokensStore(): State {
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [tokens, setTokens] = useState<SerializedApiToken[]>([])
   const [initialised, setInitialised] = useState(false)
 

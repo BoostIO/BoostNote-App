@@ -111,7 +111,7 @@ const Editor = ({
   revisionHistory,
 }: EditorProps) => {
   const { currentUserPermissions } = usePage()
-  const { pushMessage, pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
   const editorRef = useRef<CodeMirror.Editor | null>(null)

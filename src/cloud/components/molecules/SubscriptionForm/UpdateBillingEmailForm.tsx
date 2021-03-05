@@ -22,7 +22,7 @@ const UpdateBillingEmailForm = ({
   onSuccess,
   onCancel,
 }: UpdateBillingEmailFormProps) => {
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [email, setEmail] = useState<string>(sub != null ? sub.email : '')
 
