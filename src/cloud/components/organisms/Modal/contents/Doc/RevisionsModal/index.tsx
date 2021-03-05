@@ -174,7 +174,7 @@ const RevisionsModal = ({
     if (error != null) {
       return (
         <StyledNoSubContent>
-          <ErrorBlock error={error} />
+          <ErrorBlock error={error} style={{ marginBottom: 20 }} />
           <CustomButton
             variant='secondary'
             disabled={fetching}
