@@ -46,10 +46,11 @@ const useToastStore = (): ToastStore => {
       let description = 'Something wrong happened'
 
       if (error instanceof ky.HTTPError) {
-        title = error.response.status.toString()
-        const errorMessage = await error.response.text()
-        const split = errorMessage.replace('Error: ', '').split('\n')
-        description = split[0]
+        try {
+          title = error.response.status.toString()
+          const errorMessage = await error.response.text()
+          description = errorMessage.split('\n')[0].split(': ')[1]
+        } catch (error) {}
       }
 
       setMessages((prev) => [
