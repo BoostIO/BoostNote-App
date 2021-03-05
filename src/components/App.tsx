@@ -79,7 +79,7 @@ const App = () => {
   const { messageBox } = useDialog()
 
   useEffectOnce(() => {
-    const fetchCurrentCloudSpaceUser = async () => {
+    const fetchDesktopGlobalDataOfCloud = async () => {
       const cloudUserInfo = preferences['cloud.user']
       let accessToken: string
       if (cloudUserInfo == null) {
@@ -159,23 +159,31 @@ const App = () => {
           }
         }),
       })
-      return user
+      return desktopGlobalData
     }
 
     initialize()
       .then(async (storageMap) => {
-        const storages = values(storageMap)
-        if (storages.length > 0) {
+        const localSpaces = values(storageMap)
+        if (localSpaces.length > 0) {
           queueSyncingAllStorage(0)
         }
-        // Check global data
-        const user = await fetchCurrentCloudSpaceUser().catch((error) => {
-          console.warn('There was an issue while fetching cloud space data')
-          console.warn(error)
-        })
-        // If there is no page to show, open new doc page
-        if (storages.length === 0) {
-          if (user == null) {
+
+        const globalData = await fetchDesktopGlobalDataOfCloud().catch(
+          (error) => {
+            console.warn('There was an issue while fetching cloud space data')
+            console.warn(error)
+          }
+        )
+
+        const cloudSpaces = globalData != null ? globalData.teams : []
+
+        if (localSpaces.length > 0) {
+          push(`/app/storages/${localSpaces[0].id}`)
+        } else if (cloudSpaces.length > 0) {
+          push(`/app/boosthub/teams/${cloudSpaces[0].domain}`)
+        } else {
+          if (globalData == null || globalData.user == null) {
             push(`/app/boosthub/login`)
           } else {
             push(`/app/boosthub/teams`)
