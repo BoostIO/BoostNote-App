@@ -4,6 +4,7 @@ import {
   Section,
   TabHeader,
   Column,
+  Container,
   Scrollable,
   SectionSubtleText,
   SectionHeader2,
@@ -43,65 +44,67 @@ const ApiTab = () => {
   return (
     <Column>
       <Scrollable>
-        <Section>
-          <TabHeader>API</TabHeader>
-          <SectionSubtleText>
-            These tokens are available only to{' '}
-            {team != null ? team.name : 'your team'}.
-          </SectionSubtleText>
-        </Section>
-        <Section>
-          <Flexbox justifyContent='space-between' alignItems='start'>
-            <div>
-              <SectionHeader2 style={{ margin: '0' }}>
-                Access Tokens
-              </SectionHeader2>
-              <p>
-                See the{' '}
-                <PrimaryAnchor
-                  href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'
-                  target='_blank'
-                >
-                  documentation for Boost Note for Teams API{' '}
-                  <Icon path={mdiOpenInNew} />
-                </PrimaryAnchor>
-              </p>
-            </div>
-            <CustomButton
-              onClick={() => setTokenCreateMode(!tokenCreateMode)}
-              disabled={apiTokenState.state === 'initialising'}
-            >
-              {tokenCreateMode ? 'Close' : 'Generate Token'}
-            </CustomButton>
-          </Flexbox>
-          {tokenCreateMode && (
-            <StyledServiceList>
-              <StyledServiceListItem>
-                <TokenCreate onCreate={createToken} />
-              </StyledServiceListItem>
-            </StyledServiceList>
-          )}
-          {apiTokenState.state === 'initialising' && (
-            <Flexbox justifyContent='center'>
-              <Spinner />
+        <Container>
+          <Section>
+            <TabHeader>API</TabHeader>
+            <SectionSubtleText>
+              These tokens are available only to{' '}
+              {team != null ? team.name : 'your team'}.
+            </SectionSubtleText>
+          </Section>
+          <Section>
+            <Flexbox justifyContent='space-between' alignItems='start'>
+              <div>
+                <SectionHeader2 style={{ margin: '0' }}>
+                  Access Tokens
+                </SectionHeader2>
+                <p>
+                  See the{' '}
+                  <PrimaryAnchor
+                    href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'
+                    target='_blank'
+                  >
+                    documentation for Boost Note for Teams API{' '}
+                    <Icon path={mdiOpenInNew} />
+                  </PrimaryAnchor>
+                </p>
+              </div>
+              <CustomButton
+                onClick={() => setTokenCreateMode(!tokenCreateMode)}
+                disabled={apiTokenState.state === 'initialising'}
+              >
+                {tokenCreateMode ? 'Close' : 'Generate Token'}
+              </CustomButton>
             </Flexbox>
-          )}
-          {apiTokenState.state === 'initialised' && tokens.length > 0 && (
-            <StyledServiceList>
-              {tokens.map((token) => {
-                return (
-                  <StyledServiceListItem key={token.id}>
-                    <TokenControl
-                      token={token}
-                      onDelete={apiTokenState.actions.deleteToken}
-                      onUpdate={apiTokenState.actions.updateToken}
-                    />
-                  </StyledServiceListItem>
-                )
-              })}
-            </StyledServiceList>
-          )}
-        </Section>
+            {tokenCreateMode && (
+              <StyledServiceList>
+                <StyledServiceListItem>
+                  <TokenCreate onCreate={createToken} />
+                </StyledServiceListItem>
+              </StyledServiceList>
+            )}
+            {apiTokenState.state === 'initialising' && (
+              <Flexbox justifyContent='center'>
+                <Spinner />
+              </Flexbox>
+            )}
+            {apiTokenState.state === 'initialised' && tokens.length > 0 && (
+              <StyledServiceList>
+                {tokens.map((token) => {
+                  return (
+                    <StyledServiceListItem key={token.id}>
+                      <TokenControl
+                        token={token}
+                        onDelete={apiTokenState.actions.deleteToken}
+                        onUpdate={apiTokenState.actions.updateToken}
+                      />
+                    </StyledServiceListItem>
+                  )
+                })}
+              </StyledServiceList>
+            )}
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )

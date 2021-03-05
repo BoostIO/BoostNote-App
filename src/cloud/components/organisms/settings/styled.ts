@@ -18,6 +18,11 @@ export const Column = styled.div`
   height: 100%;
 `
 
+export const Container = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`
+
 export const Scrollable = styled.div`
   flex: 1 1 auto;
   width: 100%;

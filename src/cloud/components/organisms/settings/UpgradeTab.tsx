@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Column,
   Scrollable,
+  Container,
   Section,
   SectionRow,
   TabHeader,
@@ -87,32 +88,34 @@ const UpgradeTab = () => {
           <FreeTrialPopup team={team} close={() => setShowTrialPopup(false)} />
         )}
         <Scrollable>
-          <Section>
-            <StyledSmallFont>
-              <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
-              <PlanTables
-                team={team}
-                subscription={subscription}
-                selectedPlan='free'
-                onStandardCallback={() => onUpgradeCallback('standard')}
-                onProCallback={() => onUpgradeCallback('pro')}
-                onTrialCallback={() => setShowTrialPopup(true)}
-              />
-              <p>
-                * For larger businesses or those in highly regulated industries,
-                please{' '}
-                <CustomLink
-                  href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  isReactLink={false}
-                >
-                  contact our sales department
-                </CustomLink>
-                .
-              </p>
-            </StyledSmallFont>
-          </Section>
+          <Container>
+            <Section>
+              <StyledSmallFont>
+                <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
+                <PlanTables
+                  team={team}
+                  subscription={subscription}
+                  selectedPlan='free'
+                  onStandardCallback={() => onUpgradeCallback('standard')}
+                  onProCallback={() => onUpgradeCallback('pro')}
+                  onTrialCallback={() => setShowTrialPopup(true)}
+                />
+                <p>
+                  * For larger businesses or those in highly regulated
+                  industries, please{' '}
+                  <CustomLink
+                    href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    isReactLink={false}
+                  >
+                    contact our sales department
+                  </CustomLink>
+                  .
+                </p>
+              </StyledSmallFont>
+            </Section>
+          </Container>
         </Scrollable>
       </Column>
     )
@@ -121,40 +124,42 @@ const UpgradeTab = () => {
   return (
     <Column>
       <Scrollable>
-        <Section>
-          <StyledSmallFont>
-            <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
+        <Container>
+          <Section>
+            <StyledSmallFont>
+              <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
 
-            {currentUserPermissions.role !== 'admin' ? (
-              <ColoredBlock variant='danger'>
-                Only admins can access this content.
-              </ColoredBlock>
-            ) : (
-              !(subscription != null && subscription.status === 'active') && (
-                <SectionRow>
-                  <Elements stripe={stripePromise}>
-                    <SubscriptionForm
-                      team={team}
-                      initialPlan={initialPlan}
-                      onError={(err) =>
-                        pushMessage({
-                          title: 'Subscription Error',
-                          description: err.message,
-                        })
-                      }
-                      ongoingTrial={
-                        subscription != null &&
-                        subscription.status === 'trialing'
-                      }
-                      onSuccess={onSuccessCallback}
-                      onCancel={onCancelCallback}
-                    />
-                  </Elements>
-                </SectionRow>
-              )
-            )}
-          </StyledSmallFont>
-        </Section>
+              {currentUserPermissions.role !== 'admin' ? (
+                <ColoredBlock variant='danger'>
+                  Only admins can access this content.
+                </ColoredBlock>
+              ) : (
+                !(subscription != null && subscription.status === 'active') && (
+                  <SectionRow>
+                    <Elements stripe={stripePromise}>
+                      <SubscriptionForm
+                        team={team}
+                        initialPlan={initialPlan}
+                        onError={(err) =>
+                          pushMessage({
+                            title: 'Subscription Error',
+                            description: err.message,
+                          })
+                        }
+                        ongoingTrial={
+                          subscription != null &&
+                          subscription.status === 'trialing'
+                        }
+                        onSuccess={onSuccessCallback}
+                        onCancel={onCancelCallback}
+                      />
+                    </Elements>
+                  </SectionRow>
+                )
+              )}
+            </StyledSmallFont>
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )

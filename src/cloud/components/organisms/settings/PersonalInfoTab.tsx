@@ -6,6 +6,7 @@ import {
   SectionInput,
   SectionProfilePic,
   Column,
+  Container,
   Scrollable,
   SectionFlexLeft,
   SectionSeparator,
@@ -111,78 +112,80 @@ const PersonalInfoTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabHeader className='marginTop'>
-          {t('settings.personalInfo')}
-        </TabHeader>
-        <Section>
-          {currentUser != null && (
-            <>
-              <SectionLabel>Display Name</SectionLabel>
-              <SectionInput value={displayName} onChange={onChangeHandler} />
-              <SectionProfilePic>
-                <SectionLabel>Icon</SectionLabel>
-                <IconInput
-                  shape='square'
-                  defaultUrl={iconUrl}
-                  onChange={setIconFile}
-                />
-              </SectionProfilePic>
-            </>
-          )}
+        <Container>
+          <TabHeader className='marginTop'>
+            {t('settings.personalInfo')}
+          </TabHeader>
+          <Section>
+            {currentUser != null && (
+              <>
+                <SectionLabel>Display Name</SectionLabel>
+                <SectionInput value={displayName} onChange={onChangeHandler} />
+                <SectionProfilePic>
+                  <SectionLabel>Icon</SectionLabel>
+                  <IconInput
+                    shape='square'
+                    defaultUrl={iconUrl}
+                    onChange={setIconFile}
+                  />
+                </SectionProfilePic>
+              </>
+            )}
 
-          {currentUser != null && (
-            <>
-              <TabHeader style={{ marginTop: 20 }}>
-                {t('settings.notifications')}
-              </TabHeader>
-              <Section>
-                <SectionHeader3>
-                  {t('settings.notificationsFrequency')}
-                </SectionHeader3>
-                <SectionSelect
-                  value={currentEmailNotifications}
-                  onChange={selectCurrentEmailNotifications}
-                  disabled={updating}
-                >
-                  <option value={'daily'}>Daily</option>
-                  <option value={'weekly'}>Weekly</option>
-                  <option value={undefined}> Never</option>
-                </SectionSelect>
-              </Section>
-            </>
-          )}
+            {currentUser != null && (
+              <>
+                <TabHeader style={{ marginTop: 20 }}>
+                  {t('settings.notifications')}
+                </TabHeader>
+                <Section>
+                  <SectionHeader3>
+                    {t('settings.notificationsFrequency')}
+                  </SectionHeader3>
+                  <SectionSelect
+                    value={currentEmailNotifications}
+                    onChange={selectCurrentEmailNotifications}
+                    disabled={updating}
+                  >
+                    <option value={'daily'}>Daily</option>
+                    <option value={'weekly'}>Weekly</option>
+                    <option value={undefined}> Never</option>
+                  </SectionSelect>
+                </Section>
+              </>
+            )}
 
-          <SectionFlexLeft>
-            <CustomButton
-              variant='primary'
-              onClick={updateHandler}
-              style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
-              disabled={updating}
-            >
-              {updating ? (
-                <Spinner style={{ fontSize: 16 }} />
-              ) : (
-                t('general.update')
-              )}
-            </CustomButton>
-            <CustomButton onClick={closeSettingsTab} variant='secondary'>
-              {t('general.cancel')}
-            </CustomButton>
-          </SectionFlexLeft>
-        </Section>
-        <SectionSeparator style={{ marginTop: 20 }} />
-        <Section>
-          <SectionDescription>
-            {t('settings.account.delete')}
-          </SectionDescription>
-          <SectionDescription>
-            You may delete your account at any time, note that this is
-            unrecoverable.{' '}
-            <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
-              {t('general.delete')}
-            </AccountLink>
-          </SectionDescription>
-        </Section>
+            <SectionFlexLeft>
+              <CustomButton
+                variant='primary'
+                onClick={updateHandler}
+                style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
+                disabled={updating}
+              >
+                {updating ? (
+                  <Spinner style={{ fontSize: 16 }} />
+                ) : (
+                  t('general.update')
+                )}
+              </CustomButton>
+              <CustomButton onClick={closeSettingsTab} variant='secondary'>
+                {t('general.cancel')}
+              </CustomButton>
+            </SectionFlexLeft>
+          </Section>
+          <SectionSeparator style={{ marginTop: 20 }} />
+          <Section>
+            <SectionDescription>
+              {t('settings.account.delete')}
+            </SectionDescription>
+            <SectionDescription>
+              You may delete your account at any time, note that this is
+              unrecoverable.{' '}
+              <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
+                {t('general.delete')}
+              </AccountLink>
+            </SectionDescription>
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )

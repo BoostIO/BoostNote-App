@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import {
   Column,
   Scrollable,
+  Container,
   Section,
   TabHeader,
   SectionDescription,
@@ -59,11 +60,17 @@ const TeamInfoTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabHeader>{t('settings.teamInfo')}</TabHeader>
-        <Section>
-          <SettingsTeamForm team={team} teamConversion={false} header={false} />
-          {adminContent}
-        </Section>
+        <Container>
+          <TabHeader>{t('settings.teamInfo')}</TabHeader>
+          <Section>
+            <SettingsTeamForm
+              team={team}
+              teamConversion={false}
+              header={false}
+            />
+            {adminContent}
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )
