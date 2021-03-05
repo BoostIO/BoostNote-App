@@ -77,10 +77,10 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
               className: 'reduced-width',
               topbar: {
                 left: (
-                  <>
+                  <StyledTimelineTopbar>
                     <IconMdi path={mdiClockOutline} />
                     <span style={{ marginLeft: '5px' }}>Timeline</span>
-                  </>
+                  </StyledTimelineTopbar>
                 ),
               },
               header: (
@@ -108,10 +108,10 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
             className: 'reduced-width',
             topbar: {
               left: (
-                <>
+                <StyledTimelineTopbar>
                   <IconMdi path={mdiClockOutline} />
                   <span style={{ marginLeft: '5px' }}>Timeline</span>
-                </>
+                </StyledTimelineTopbar>
               ),
             },
             header: (
@@ -175,6 +175,12 @@ export default TimelinePage
 function dateFormatDistanceToNow(date: Date) {
   return `${formatDistanceToNow(date)} ago`
 }
+
+const StyledTimelineTopbar = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 ${({ theme }) => theme.space.small}px;
+`
 
 const StyledTimelinePage = styled.div`
   padding-bottom: ${({ theme }) => theme.space.default}px;
