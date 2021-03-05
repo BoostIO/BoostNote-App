@@ -14,7 +14,6 @@ import attachFileHandlerToCodeMirrorEditor, {
 import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
 import { useToast } from '../../../lib/stores/toast'
 import { YText } from 'yjs/dist/src/internals'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
@@ -27,10 +26,7 @@ import LayoutSelect from '../LayoutSelect'
 import SyncStatus from '../../organisms/Topbar/SyncStatus'
 import EditorToolbar from './EditorToolbar'
 import { usePreferences } from '../../../lib/stores/preferences'
-import {
-  baseIconStyle,
-  rightSidePageLayout,
-} from '../../../lib/styled/styleFunctions'
+import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { useRouter } from '../../../lib/router'
 import {
   pasteFormatPlugin,
@@ -44,15 +40,9 @@ import EditorTemplateButton from './EditorTemplateButton'
 import AppLayout from '../../layouts/AppLayout'
 import DocBookmark from '../../organisms/RightSideTopBar/DocTopbar/DocBookmark'
 import BreadCrumbs from '../../organisms/RightSideTopBar/BreadCrumbs'
-import {
-  mdiClose,
-  mdiRepeat,
-  mdiRepeatOff,
-  mdiFileDocumentOutline,
-} from '@mdi/js'
+import { mdiRepeat, mdiRepeatOff, mdiFileDocumentOutline } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
-import IconMdi from '../../atoms/IconMdi'
 import EditorToolbarUpload from './EditorToolbarUpload'
 import { useNav } from '../../../lib/stores/nav'
 import { Hint } from 'codemirror'
@@ -706,15 +696,12 @@ const Editor = ({
               )}
               {shortcodeConvertMenu !== null && (
                 <StyledShortcodeConvertMenu style={shortcodeConvertMenuStyle}>
-                  <p>Embed Pull Request?</p>
-                  <StyledMenuCloseButton
-                    onClick={() => shortcodeConvertMenu.cb(false)}
-                  >
-                    <IconMdi path={mdiClose} />
-                  </StyledMenuCloseButton>
-                  <CustomButton onClick={() => shortcodeConvertMenu.cb(true)}>
-                    Embed
-                  </CustomButton>
+                  <button onClick={() => shortcodeConvertMenu.cb(false)}>
+                    Dismiss
+                  </button>
+                  <button onClick={() => shortcodeConvertMenu.cb(true)}>
+                    Create embed
+                  </button>
                 </StyledShortcodeConvertMenu>
               )}
             </>
@@ -775,34 +762,36 @@ const StyledBottomBar = styled.div`
 `
 
 const StyledShortcodeConvertMenu = styled.div`
-  position: relative;
   margin-top: ${({ theme }) => theme.space.xsmall}px;
-  padding: ${({ theme }) => theme.space.default}px
-    ${({ theme }) => theme.space.large}px;
-  background-color: ${({ theme }) => theme.subtleBackgroundColor};
   border-radius: 5px;
   box-shadow: ${({ theme }) => theme.baseShadowColor};
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
-  text-align: center;
-  height: 125px;
-  & > a {
-    cursor: pointer;
+
+  button {
+    display: block;
+    width: 200px;
+    line-height: 25px;
+    padding: ${({ theme }) => theme.space.xsmall}px
+      ${({ theme }) => theme.space.small}px;
+    background-color: ${({ theme }) => theme.contextMenuColor};
+    color: ${({ theme }) => theme.baseTextColor};
+    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    text-align: left;
+
     &:first-child {
-      text-decoration: underline;
-      color: ${({ theme }) => theme.primaryTextColor};
+      border-radius: 5px 5px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: ${({ theme }) => theme.subtleBackgroundColor};
+      color: ${({ theme }) => theme.emphasizedTextColor};
+      cursor: pointer;
     }
   }
-`
-
-const StyledMenuCloseButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: none;
-  border: 0;
-  outline: none;
-  ${baseIconStyle}
 `
 
 const StyledLayoutDimensions = styled.div`
