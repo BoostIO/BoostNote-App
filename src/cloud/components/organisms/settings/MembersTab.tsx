@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from 'react'
 import {
   Section,
   Column,
+  Container,
   Scrollable,
   TabHeader,
   SectionHeader2,
@@ -388,10 +389,12 @@ const MembersTab = () => {
     return (
       <Column>
         <Scrollable>
-          <TabHeader>{t('settings.teamMembers')}</TabHeader>
-          <ColoredBlock variant='danger'>
-            You don&apos;t own any permissions.
-          </ColoredBlock>
+          <Container>
+            <TabHeader>{t('settings.teamMembers')}</TabHeader>
+            <ColoredBlock variant='danger'>
+              You don&apos;t own any permissions.
+            </ColoredBlock>
+          </Container>
         </Scrollable>
       </Column>
     )
@@ -403,11 +406,13 @@ const MembersTab = () => {
     return (
       <Column>
         <Scrollable>
-          <SettingsTeamForm
-            team={team}
-            onCancel={() => setShowTeamPersonalForm(false)}
-            teamConversion={true}
-          />
+          <Container>
+            <SettingsTeamForm
+              team={team}
+              onCancel={() => setShowTeamPersonalForm(false)}
+              teamConversion={true}
+            />
+          </Container>
         </Scrollable>
       </Column>
     )
@@ -416,69 +421,24 @@ const MembersTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabSelector>
-          <button
-            className={cc([tab === 'member' && 'active'])}
-            onClick={() => setTab('member')}
-          >
-            Members ({permissions.length})
-          </button>
-          <button
-            className={cc([tab === 'guest' && 'active'])}
-            onClick={() => setTab('guest')}
-          >
-            Guests ({guestsMap.size})
-          </button>
-        </TabSelector>
+        <Container>
+          <TabSelector>
+            <button
+              className={cc([tab === 'member' && 'active'])}
+              onClick={() => setTab('member')}
+            >
+              Members ({permissions.length})
+            </button>
+            <button
+              className={cc([tab === 'guest' && 'active'])}
+              onClick={() => setTab('guest')}
+            >
+              Guests ({guestsMap.size})
+            </button>
+          </TabSelector>
 
-        {tab === 'member' ? (
-          team.personal ? (
-            <Section>
-              <Flexbox>
-                <SectionHeader2>Current Members</SectionHeader2>
-                {fetching.has('userEmails') && (
-                  <Spinner className='relative' style={{ top: 2 }} />
-                )}
-              </Flexbox>
-              <Button
-                variant='primary'
-                onClick={() => setShowTeamPersonalForm(true)}
-              >
-                Add members
-              </Button>
-              <TopMargin />
-              <StyledMembersTable>
-                <thead className='table-header'>
-                  <th>User</th>
-                </thead>
-                <tbody className='table-body'>
-                  <tr key={currentUserPermissions.id}>
-                    <td>
-                      <div className='user-info'>
-                        <div className='user-info-icon'>
-                          <UserIcon user={currentUserPermissions.user} />
-                        </div>
-                        <StyledMembername>
-                          {currentUserPermissions.user.displayName}
-                          {currentUserIsAdmin &&
-                            userEmailsMap.has(currentUserPermissions.id) && (
-                              <span>
-                                {userEmailsMap.get(currentUserPermissions.id)}
-                              </span>
-                            )}
-                        </StyledMembername>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </StyledMembersTable>
-            </Section>
-          ) : (
-            <>
-              {currentUserIsAdmin && (
-                <OpenInvitesSection userPermissions={currentUserPermissions} />
-              )}
-              <TeamInvitesSection userPermissions={currentUserPermissions} />
+          {tab === 'member' ? (
+            team.personal ? (
               <Section>
                 <Flexbox>
                   <SectionHeader2>Current Members</SectionHeader2>
@@ -486,176 +446,229 @@ const MembersTab = () => {
                     <Spinner className='relative' style={{ top: 2 }} />
                   )}
                 </Flexbox>
+                <Button
+                  variant='primary'
+                  onClick={() => setShowTeamPersonalForm(true)}
+                >
+                  Add members
+                </Button>
+                <TopMargin />
                 <StyledMembersTable>
                   <thead className='table-header'>
                     <th>User</th>
-                    <th>Access Level</th>
                   </thead>
                   <tbody className='table-body'>
-                    {permissions.map((permission) => {
-                      const targetPermissionsAreUsersOwn =
-                        currentUserPermissions.id === permission.id
-                      return (
-                        <tr key={permission.id}>
+                    <tr key={currentUserPermissions.id}>
+                      <td>
+                        <div className='user-info'>
+                          <div className='user-info-icon'>
+                            <UserIcon user={currentUserPermissions.user} />
+                          </div>
+                          <StyledMembername>
+                            {currentUserPermissions.user.displayName}
+                            {currentUserIsAdmin &&
+                              userEmailsMap.has(currentUserPermissions.id) && (
+                                <span>
+                                  {userEmailsMap.get(currentUserPermissions.id)}
+                                </span>
+                              )}
+                          </StyledMembername>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </StyledMembersTable>
+              </Section>
+            ) : (
+              <>
+                {currentUserIsAdmin && (
+                  <OpenInvitesSection
+                    userPermissions={currentUserPermissions}
+                  />
+                )}
+                <TeamInvitesSection userPermissions={currentUserPermissions} />
+                <Section>
+                  <Flexbox>
+                    <SectionHeader2>Current Members</SectionHeader2>
+                    {fetching.has('userEmails') && (
+                      <Spinner className='relative' style={{ top: 2 }} />
+                    )}
+                  </Flexbox>
+                  <StyledMembersTable>
+                    <thead className='table-header'>
+                      <th>User</th>
+                      <th>Access Level</th>
+                    </thead>
+                    <tbody className='table-body'>
+                      {permissions.map((permission) => {
+                        const targetPermissionsAreUsersOwn =
+                          currentUserPermissions.id === permission.id
+                        return (
+                          <tr key={permission.id}>
+                            <td>
+                              <div className='user-info'>
+                                <div className='user-info-icon'>
+                                  <UserIcon user={permission.user} />
+                                </div>
+                                <StyledMembername>
+                                  {permission.user.displayName}
+                                  {currentUserIsAdmin &&
+                                    userEmailsMap.has(permission.id) && (
+                                      <span>
+                                        {userEmailsMap.get(permission.id)}
+                                      </span>
+                                    )}
+                                </StyledMembername>
+                              </div>
+                            </td>
+                            <td>
+                              <div className='user-action'>
+                                {sending === `${permission.id}-change` ? (
+                                  <Spinner
+                                    style={{
+                                      position: 'relative',
+                                      top: -2,
+                                      bottom: 0,
+                                      verticalAlign: 'middle',
+                                      left: 0,
+                                    }}
+                                  />
+                                ) : (
+                                  <SectionSelect
+                                    value={permission.role}
+                                    onChange={(e: any) =>
+                                      changePermissionsRole(
+                                        e,
+                                        currentUserPermissions,
+                                        permission
+                                      )
+                                    }
+                                    style={{
+                                      width: 'auto',
+                                      minWidth: 'initial',
+                                      height: 24,
+                                      marginRight: 16,
+                                    }}
+                                    disabled={
+                                      !currentUserIsAdmin ||
+                                      targetPermissionsAreUsersOwn
+                                    }
+                                  >
+                                    <option value='admin'>admin</option>
+                                    <option value='member'>member</option>
+                                  </SectionSelect>
+                                )}
+                                {(targetPermissionsAreUsersOwn ||
+                                  currentUserIsAdmin) && (
+                                  <CustomButton
+                                    variant='transparent'
+                                    onClick={() =>
+                                      removePermissions(permission)
+                                    }
+                                    disabled={sending != null}
+                                    style={{ width: 80 }}
+                                  >
+                                    {sending === `${permission.id}-delete` ? (
+                                      <Spinner />
+                                    ) : currentUserPermissions.id ===
+                                      permission.id ? (
+                                      'Leave'
+                                    ) : (
+                                      'Remove'
+                                    )}
+                                  </CustomButton>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </StyledMembersTable>
+                </Section>{' '}
+              </>
+            )
+          ) : (
+            <>
+              {subscription == null || subscription.status === 'inactive' ? (
+                <>
+                  <SectionDescription>
+                    Upgrade to invite guests. Guests are people external to your
+                    team who you want to work with on specific documents.
+                    <br /> They can be invited to individual documents but not
+                    an entire workspace.{` `}
+                    <PrimaryAnchor
+                      target='_blank'
+                      rel='noreferrer'
+                      href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
+                    >
+                      See how it works <Icon path={mdiArrowRight} />
+                    </PrimaryAnchor>
+                  </SectionDescription>
+                  <CustomButton
+                    variant='primary'
+                    onClick={() => {
+                      openSettingsTab('teamUpgrade')
+                    }}
+                  >
+                    Start Free Trial
+                  </CustomButton>
+                </>
+              ) : (
+                <Section>
+                  <Flexbox>
+                    <SectionHeader2>Current Guests</SectionHeader2>
+                    {fetching.has('guestEmails') && (
+                      <Spinner className='relative' style={{ top: 2 }} />
+                    )}
+                  </Flexbox>
+                  <StyledMembersTable>
+                    <thead className='table-header'>
+                      <th>User</th>
+                      <th>Access Level</th>
+                    </thead>
+                    <tbody className='table-body'>
+                      {[...guestsMap.values()].map((guest) => (
+                        <tr key={guest.id}>
                           <td>
                             <div className='user-info'>
                               <div className='user-info-icon'>
-                                <UserIcon user={permission.user} />
+                                <UserIcon user={guest.user} />
                               </div>
                               <StyledMembername>
-                                {permission.user.displayName}
-                                {currentUserIsAdmin &&
-                                  userEmailsMap.has(permission.id) && (
-                                    <span>
-                                      {userEmailsMap.get(permission.id)}
-                                    </span>
-                                  )}
+                                {guest.user.displayName}
+                                {guestEmailsMap.has(guest.id) && (
+                                  <span>{guestEmailsMap.get(guest.id)}</span>
+                                )}
                               </StyledMembername>
                             </div>
                           </td>
                           <td>
                             <div className='user-action'>
-                              {sending === `${permission.id}-change` ? (
-                                <Spinner
-                                  style={{
-                                    position: 'relative',
-                                    top: -2,
-                                    bottom: 0,
-                                    verticalAlign: 'middle',
-                                    left: 0,
-                                  }}
-                                />
-                              ) : (
-                                <SectionSelect
-                                  value={permission.role}
-                                  onChange={(e: any) =>
-                                    changePermissionsRole(
-                                      e,
-                                      currentUserPermissions,
-                                      permission
-                                    )
-                                  }
-                                  style={{
-                                    width: 'auto',
-                                    minWidth: 'initial',
-                                    height: 24,
-                                    marginRight: 16,
-                                  }}
-                                  disabled={
-                                    !currentUserIsAdmin ||
-                                    targetPermissionsAreUsersOwn
-                                  }
-                                >
-                                  <option value='admin'>admin</option>
-                                  <option value='member'>member</option>
-                                </SectionSelect>
-                              )}
-                              {(targetPermissionsAreUsersOwn ||
-                                currentUserIsAdmin) && (
-                                <CustomButton
-                                  variant='transparent'
-                                  onClick={() => removePermissions(permission)}
-                                  disabled={sending != null}
-                                  style={{ width: 80 }}
-                                >
-                                  {sending === `${permission.id}-delete` ? (
-                                    <Spinner />
-                                  ) : currentUserPermissions.id ===
-                                    permission.id ? (
-                                    'Leave'
-                                  ) : (
-                                    'Remove'
-                                  )}
-                                </CustomButton>
-                              )}
+                              <Button
+                                variant='transparent'
+                                className='no-padding'
+                                onClick={(ev) =>
+                                  openGuestsContextMenu(ev, guest)
+                                }
+                              >
+                                {`${guest.docsIds.length} ${plur(
+                                  'Document',
+                                  guest.docsIds.length
+                                )}`}
+                                <Icon path={mdiChevronDown} />
+                              </Button>
                             </div>
                           </td>
                         </tr>
-                      )
-                    })}
-                  </tbody>
-                </StyledMembersTable>
-              </Section>{' '}
+                      ))}
+                    </tbody>
+                  </StyledMembersTable>
+                </Section>
+              )}
             </>
-          )
-        ) : (
-          <>
-            {subscription == null || subscription.status === 'inactive' ? (
-              <>
-                <SectionDescription>
-                  Upgrade to invite guests. Guests are people external to your
-                  team who you want to work with on specific documents.
-                  <br /> They can be invited to individual documents but not an
-                  entire workspace.{` `}
-                  <PrimaryAnchor
-                    target='_blank'
-                    rel='noreferrer'
-                    href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
-                  >
-                    See how it works <Icon path={mdiArrowRight} />
-                  </PrimaryAnchor>
-                </SectionDescription>
-                <CustomButton
-                  variant='primary'
-                  onClick={() => {
-                    openSettingsTab('teamUpgrade')
-                  }}
-                >
-                  Start Free Trial
-                </CustomButton>
-              </>
-            ) : (
-              <Section>
-                <Flexbox>
-                  <SectionHeader2>Current Guests</SectionHeader2>
-                  {fetching.has('guestEmails') && (
-                    <Spinner className='relative' style={{ top: 2 }} />
-                  )}
-                </Flexbox>
-                <StyledMembersTable>
-                  <thead className='table-header'>
-                    <th>User</th>
-                    <th>Access Level</th>
-                  </thead>
-                  <tbody className='table-body'>
-                    {[...guestsMap.values()].map((guest) => (
-                      <tr key={guest.id}>
-                        <td>
-                          <div className='user-info'>
-                            <div className='user-info-icon'>
-                              <UserIcon user={guest.user} />
-                            </div>
-                            <StyledMembername>
-                              {guest.user.displayName}
-                              {guestEmailsMap.has(guest.id) && (
-                                <span>{guestEmailsMap.get(guest.id)}</span>
-                              )}
-                            </StyledMembername>
-                          </div>
-                        </td>
-                        <td>
-                          <div className='user-action'>
-                            <Button
-                              variant='transparent'
-                              className='no-padding'
-                              onClick={(ev) => openGuestsContextMenu(ev, guest)}
-                            >
-                              {`${guest.docsIds.length} ${plur(
-                                'Document',
-                                guest.docsIds.length
-                              )}`}
-                              <Icon path={mdiChevronDown} />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </StyledMembersTable>
-              </Section>
-            )}
-          </>
-        )}
+          )}
+        </Container>
       </Scrollable>
     </Column>
   )

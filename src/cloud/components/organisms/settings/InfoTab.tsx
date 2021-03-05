@@ -6,6 +6,7 @@ import {
   SectionInput,
   SectionProfilePic,
   Column,
+  Container,
   Scrollable,
   SectionFlexLeft,
   SectionSeparator,
@@ -88,59 +89,61 @@ const InfoTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabHeader className='marginTop'>{t('settings.info')}</TabHeader>
-        <Section>
-          {currentUser != null && (
-            <>
-              <SectionLabel>Display Name</SectionLabel>
-              <SectionInput value={displayName} onChange={onChangeHandler} />
-              <SectionProfilePic>
-                <SectionLabel>Icon</SectionLabel>
-                <IconInput
-                  shape='square'
-                  defaultUrl={iconUrl}
-                  onChange={setIconFile}
-                />
-              </SectionProfilePic>
-            </>
-          )}
-          <SectionFlexLeft>
-            <CustomButton
-              variant='primary'
-              onClick={updateHandler}
-              style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
-              disabled={updating}
-            >
-              {updating ? (
-                <Spinner style={{ fontSize: 16 }} />
-              ) : (
-                t('general.update')
-              )}
-            </CustomButton>
-            <CustomButton onClick={closeSettingsTab} variant='secondary'>
-              {t('general.cancel')}
-            </CustomButton>
-          </SectionFlexLeft>
-        </Section>
-        <SectionSeparator />
-        <Section>
-          <StyledInfoTabDelete>
-            <SectionDescription>
-              {t('settings.account.delete')}
-            </SectionDescription>
-            <SectionDescription>
-              You may delete your account at any time, note that this is
-              unrecoverable.{' '}
-            </SectionDescription>
-            <AccountLink
-              intent='delete'
-              beforeNavigate={closeSettingsTab}
-              className='delete-link'
-            >
-              {t('general.delete')}
-            </AccountLink>
-          </StyledInfoTabDelete>
-        </Section>
+        <Container>
+          <TabHeader className='marginTop'>{t('settings.info')}</TabHeader>
+          <Section>
+            {currentUser != null && (
+              <>
+                <SectionLabel>Display Name</SectionLabel>
+                <SectionInput value={displayName} onChange={onChangeHandler} />
+                <SectionProfilePic>
+                  <SectionLabel>Icon</SectionLabel>
+                  <IconInput
+                    shape='square'
+                    defaultUrl={iconUrl}
+                    onChange={setIconFile}
+                  />
+                </SectionProfilePic>
+              </>
+            )}
+            <SectionFlexLeft>
+              <CustomButton
+                variant='primary'
+                onClick={updateHandler}
+                style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
+                disabled={updating}
+              >
+                {updating ? (
+                  <Spinner style={{ fontSize: 16 }} />
+                ) : (
+                  t('general.update')
+                )}
+              </CustomButton>
+              <CustomButton onClick={closeSettingsTab} variant='secondary'>
+                {t('general.cancel')}
+              </CustomButton>
+            </SectionFlexLeft>
+          </Section>
+          <SectionSeparator />
+          <Section>
+            <StyledInfoTabDelete>
+              <SectionDescription>
+                {t('settings.account.delete')}
+              </SectionDescription>
+              <SectionDescription>
+                You may delete your account at any time, note that this is
+                unrecoverable.{' '}
+              </SectionDescription>
+              <AccountLink
+                intent='delete'
+                beforeNavigate={closeSettingsTab}
+                className='delete-link'
+              >
+                {t('general.delete')}
+              </AccountLink>
+            </StyledInfoTabDelete>
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TabHeader, Column, Scrollable } from './styled'
+import { TabHeader, Column, Container, Scrollable } from './styled'
 import { useTranslation } from 'react-i18next'
 import UserPreferencesForm from './UserPreferencesForm'
 
@@ -9,8 +9,12 @@ const PreferencesTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabHeader className='marginTop'>{t('settings.preferences')}</TabHeader>
-        <UserPreferencesForm />
+        <Container>
+          <TabHeader className='marginTop'>
+            {t('settings.preferences')}
+          </TabHeader>
+          <UserPreferencesForm />
+        </Container>
       </Scrollable>
     </Column>
   )

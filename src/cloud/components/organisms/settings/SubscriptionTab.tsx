@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Column,
+  Container,
   Scrollable,
   Section,
   TabHeader,
@@ -58,11 +59,13 @@ const SubscriptionTab = () => {
     return (
       <Column>
         <Scrollable>
-          <Section>
-            <ColoredBlock variant='danger'>
-              Only admins can access this content.
-            </ColoredBlock>
-          </Section>
+          <Container>
+            <Section>
+              <ColoredBlock variant='danger'>
+                Only admins can access this content.
+              </ColoredBlock>
+            </Section>
+          </Container>
         </Scrollable>
       </Column>
     )
@@ -72,11 +75,13 @@ const SubscriptionTab = () => {
     return (
       <Column>
         <Scrollable>
-          <Section>
-            <ColoredBlock variant='danger'>
-              No active subscription. Your trial is underway
-            </ColoredBlock>
-          </Section>
+          <Container>
+            <Section>
+              <ColoredBlock variant='danger'>
+                No active subscription. Your trial is underway
+              </ColoredBlock>
+            </Section>
+          </Container>
         </Scrollable>
       </Column>
     )
@@ -85,43 +90,45 @@ const SubscriptionTab = () => {
   return (
     <Column>
       <Scrollable>
-        <Section>
-          <StyledSmallFont>
-            <TabHeader>{t('settings.teamSubscription')}</TabHeader>
-            {formtab == null ? (
-              <SubscriptionManagement
-                subscription={subscription}
-                team={team}
-                onEmailClick={() => setFormTab('email')}
-                onMethodClick={() => setFormTab('method')}
-                onPromoClick={() => setFormTab('promo')}
-              />
-            ) : (
-              <StyledBillingContainer>
-                {formtab === 'email' ? (
-                  <UpdateBillingEmailForm
-                    sub={subscription}
-                    onSuccess={onSuccessHandler}
-                    onCancel={() => setFormTab(undefined)}
-                  />
-                ) : formtab === 'method' ? (
-                  <Elements stripe={stripePromise}>
-                    <UpdateBillingMethodForm
+        <Container>
+          <Section>
+            <StyledSmallFont>
+              <TabHeader>{t('settings.teamSubscription')}</TabHeader>
+              {formtab == null ? (
+                <SubscriptionManagement
+                  subscription={subscription}
+                  team={team}
+                  onEmailClick={() => setFormTab('email')}
+                  onMethodClick={() => setFormTab('method')}
+                  onPromoClick={() => setFormTab('promo')}
+                />
+              ) : (
+                <StyledBillingContainer>
+                  {formtab === 'email' ? (
+                    <UpdateBillingEmailForm
                       sub={subscription}
                       onSuccess={onSuccessHandler}
                       onCancel={() => setFormTab(undefined)}
                     />
-                  </Elements>
-                ) : formtab === 'promo' ? (
-                  <UpdateBillingPromoForm
-                    sub={subscription}
-                    onCancel={() => setFormTab(undefined)}
-                  />
-                ) : null}
-              </StyledBillingContainer>
-            )}
-          </StyledSmallFont>
-        </Section>
+                  ) : formtab === 'method' ? (
+                    <Elements stripe={stripePromise}>
+                      <UpdateBillingMethodForm
+                        sub={subscription}
+                        onSuccess={onSuccessHandler}
+                        onCancel={() => setFormTab(undefined)}
+                      />
+                    </Elements>
+                  ) : formtab === 'promo' ? (
+                    <UpdateBillingPromoForm
+                      sub={subscription}
+                      onCancel={() => setFormTab(undefined)}
+                    />
+                  ) : null}
+                </StyledBillingContainer>
+              )}
+            </StyledSmallFont>
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )

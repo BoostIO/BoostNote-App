@@ -1,5 +1,5 @@
 import React from 'react'
-import { Column, Scrollable, Section, TabHeader } from './styled'
+import { Column, Container, Scrollable, Section, TabHeader } from './styled'
 import { useTranslation } from 'react-i18next'
 import AppFeedbackForm from '../../molecules/AppFeedbackForm'
 
@@ -9,10 +9,12 @@ const AppFeedbackTab = () => {
   return (
     <Column>
       <Scrollable>
-        <TabHeader>{t('settings.appFeedback')}</TabHeader>
-        <Section>
-          <AppFeedbackForm />
-        </Section>
+        <Container>
+          <TabHeader>{t('settings.appFeedback')}</TabHeader>
+          <Section>
+            <AppFeedbackForm />
+          </Section>
+        </Container>
       </Scrollable>
     </Column>
   )
