@@ -76,11 +76,16 @@ const SidebarTeamPickerContext = ({
                 <TeamLabel>
                   <TeamName>{team.name}</TeamName>
                   <TeamSubtitle>
-                    - {team.permissions.length}{' '}
-                    {plur('Member', team.permissions.length)}
-                    {!team.permissions
+                    {team.permissions
                       .map((p) => p.userId)
-                      .includes(currentUser.id) && ` ( Guest )`}
+                      .includes(currentUser.id) ? (
+                      <>
+                        - {team.permissions.length}{' '}
+                        {plur('Member', team.permissions.length)}
+                      </>
+                    ) : (
+                      <>( Guest )</>
+                    )}
                   </TeamSubtitle>
                 </TeamLabel>
               </TeamContainer>
