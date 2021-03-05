@@ -265,12 +265,12 @@ const Container = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     color: ${({ theme }) => theme.subtleTextColor};
+    text-decoration: none;
 
     &:hover,
     &:focus {
       background: ${({ theme }) => theme.transparentPrimaryBackgroundColor};
       color: ${({ theme }) => theme.primaryTextColor};
-      text-decoration: none;
     }
   }
 `
