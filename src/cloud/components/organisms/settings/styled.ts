@@ -19,7 +19,7 @@ export const Column = styled.div`
 `
 
 export const Container = styled.div`
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
 `
 
