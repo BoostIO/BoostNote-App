@@ -132,7 +132,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@mdi/js": "^5.8.55",
+    "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.2.1",
     "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
