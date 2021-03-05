@@ -28,7 +28,7 @@ export type State =
     }
 
 export function useServiceConnectionsStore(): State {
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [connections, setConnections] = useState<SerializedServiceConnection[]>(
     []
   )
@@ -42,7 +42,7 @@ export function useServiceConnectionsStore(): State {
         setConnections(connections)
         initialise.current = true
       } catch (err) {
-        pushAxiosErrorMessage(err)
+        pushApiErrorMessage(err)
       } finally {
         setIsLoadingConnections(false)
       }
@@ -59,12 +59,12 @@ export function useServiceConnectionsStore(): State {
           return conns.filter((conn) => conn.id !== connection.id)
         })
       } catch (err) {
-        pushAxiosErrorMessage(err)
+        pushApiErrorMessage(err)
       } finally {
         setIsLoadingConnections(false)
       }
     },
-    [pushAxiosErrorMessage]
+    [pushApiErrorMessage]
   )
 
   const addConnection = useCallback(

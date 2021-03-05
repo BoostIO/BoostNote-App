@@ -46,7 +46,7 @@ const SubscriptionManagement = ({
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
   const [fetchingHistory, setFetchingHistory] = useState<boolean>(false)
-  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const [targetedPlan, setTargetedPlan] = useState<
     'Free' | 'Standard' | 'Pro'
   >()
@@ -60,11 +60,11 @@ const SubscriptionManagement = ({
       const data = await getTeamPortalUrl(subscription.teamId)
       window.open(data.url, '_blank')
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
     }
 
     setFetchingHistory(false)
-  }, [fetchingHistory, subscription.teamId, pushAxiosErrorMessage])
+  }, [fetchingHistory, subscription.teamId, pushApiErrorMessage])
 
   const cancellingCallback = useCallback(() => {
     if (subscription.status === 'canceled') {

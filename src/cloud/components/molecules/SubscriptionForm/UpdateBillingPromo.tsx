@@ -19,7 +19,7 @@ const UpdateBillingPromoForm = ({
   sub,
   onCancel,
 }: UpdateBillingPromoFormProps) => {
-  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [promoCode, setPromoCode] = useState<string>('')
 
@@ -45,7 +45,7 @@ const UpdateBillingPromoForm = ({
           description: `Promo code ${promoCode} is not available for this account`,
         })
       } else {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
     } finally {
       setSending(false)

@@ -26,7 +26,7 @@ const SideNavigatorFolderForm = ({
   const [name, setName] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
   const { createFolderHandler } = useNav()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +71,7 @@ const SideNavigatorFolderForm = ({
         await createFolderHandler(body)
         close()
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
         close()
       }
     },
@@ -80,7 +80,7 @@ const SideNavigatorFolderForm = ({
       workspaceId,
       parentFolderId,
       createFolderHandler,
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       close,
     ]
   )

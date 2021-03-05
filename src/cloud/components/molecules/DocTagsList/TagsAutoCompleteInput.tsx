@@ -25,7 +25,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { tagsMap, updateDocsMap, updateTagsMap } = useNav()
   const [sending, setSending] = useState<boolean>(false)
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [tagText, setTagText] = useState<string>('')
 
   useEffect(() => {
@@ -51,12 +51,12 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
         setShowInput(false)
         setTagText('')
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
 
       setSending(false)
     },
-    [pushAxiosErrorMessage, sending, doc.id, team, updateDocsMap, updateTagsMap]
+    [pushApiErrorMessage, sending, doc.id, team, updateDocsMap, updateTagsMap]
   )
 
   const activateAndFocus = useCallback(() => {

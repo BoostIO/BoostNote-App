@@ -51,7 +51,7 @@ const SubscriptionForm = ({
   const [sending, setSending] = useState(false)
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )
@@ -110,7 +110,7 @@ const SubscriptionForm = ({
       setSending(false)
       onSuccess(subscription)
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
       setSending(false)
     }
   }

@@ -30,7 +30,7 @@ const ImportModal = () => {
   const [uploadType, setUploadType] = useState<
     AllowedDocTypeImports | undefined
   >()
-  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const { team, pageFolder, pageWorkspace, setPartialPageData } = usePage()
   const [sending, setSending] = useState<boolean>(false)
   const { updateDocsMap, updateFoldersMap, updateWorkspacesMap } = useNav()
@@ -125,7 +125,7 @@ const ImportModal = () => {
             }
           }
         } catch (error) {
-          pushAxiosErrorMessage(error)
+          pushApiErrorMessage(error)
         }
       }
       setSending(false)
@@ -134,7 +134,7 @@ const ImportModal = () => {
     [
       selectedWorkspaceId,
       selectedFolderId,
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       team,
       uploadType,
       sending,

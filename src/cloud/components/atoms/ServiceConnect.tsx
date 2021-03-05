@@ -19,7 +19,7 @@ const ServiceConnect = ({
   children = 'Connect',
   ...buttonProps
 }: ServiceConnectProps) => {
-  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const childRef = useRef<Window | null>()
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const ServiceConnect = ({
           )
           onConnect(connection)
         } catch (err) {
-          pushAxiosErrorMessage(err)
+          pushApiErrorMessage(err)
         }
       } else {
         pushMessage({
@@ -53,7 +53,7 @@ const ServiceConnect = ({
     return () => {
       window.removeEventListener('message', callback)
     }
-  }, [service, pushMessage, pushAxiosErrorMessage, onConnect])
+  }, [service, pushMessage, pushApiErrorMessage, onConnect])
 
   const onClick = useCallback(() => {
     if (childRef.current != null && childRef.current.closed) {

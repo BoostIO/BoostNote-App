@@ -24,7 +24,7 @@ const maxTagsDisplayed = 4
 
 const DocTagsList = ({ doc, team }: DocTagsListProps) => {
   const [sending, setSending] = useState<boolean>(false)
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const { updateDocsMap } = useNav()
   const [removing, setRemoving] = useState<string>()
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -41,12 +41,12 @@ const DocTagsList = ({ doc, team }: DocTagsListProps) => {
         const { doc: newDoc } = await deleteTagFromDoc(team.id, doc.id, tagId)
         updateDocsMap([newDoc.id, newDoc])
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
       setRemoving(undefined)
       setSending(false)
     },
-    [doc.id, team.id, sending, setSending, pushAxiosErrorMessage, updateDocsMap]
+    [doc.id, team.id, sending, setSending, pushApiErrorMessage, updateDocsMap]
   )
 
   const listContent = useMemo(() => {

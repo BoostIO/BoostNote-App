@@ -22,7 +22,7 @@ type State =
   | { state: 'initialised'; tokens: SerializedApiToken[]; actions: Actions }
 
 export function useApiTokensStore(): State {
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [tokens, setTokens] = useState<SerializedApiToken[]>([])
   const [initialised, setInitialised] = useState(false)
 
@@ -33,7 +33,7 @@ export function useApiTokensStore(): State {
         setTokens(tokens)
         setInitialised(true)
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
     }
     getUserTokens()
@@ -45,10 +45,10 @@ export function useApiTokensStore(): State {
         const { token } = await createToken(name, team)
         setTokens((tokens) => [token, ...tokens])
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
     },
-    [pushAxiosErrorMessage]
+    [pushApiErrorMessage]
   )
 
   const updateApiToken = useCallback(
@@ -63,10 +63,10 @@ export function useApiTokensStore(): State {
           return [...left, token, ...right]
         })
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
     },
-    [pushAxiosErrorMessage]
+    [pushApiErrorMessage]
   )
 
   const deleteApiToken = useCallback(
@@ -77,10 +77,10 @@ export function useApiTokensStore(): State {
           return tokens.filter((tok) => tok.id !== token.id)
         })
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
     },
-    [pushAxiosErrorMessage]
+    [pushApiErrorMessage]
   )
 
   if (!initialised) {
