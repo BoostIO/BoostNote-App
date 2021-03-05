@@ -672,6 +672,7 @@ const Editor = ({
                 tooltip={`${scrollSync ? 'Disable' : 'Enable'} scroll sync`}
                 path={scrollSync ? mdiRepeatOff : mdiRepeat}
                 onClick={toggleScrollSync}
+                className='scroll-sync'
               />
               <EditorToolbar
                 editorRef={editorRef}
