@@ -7,7 +7,7 @@
 
 ![uiimage](./static/img_ui.svg)
 
-<h2 align='center'>A Boost Note is a powerful, lightspeed collaborative workspace for developer teams.</h2>
+<h2 align='center'>Boost Note is a powerful, lightspeed collaborative workspace for developer teams.</h2>
 
 BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Boostnote).
 
