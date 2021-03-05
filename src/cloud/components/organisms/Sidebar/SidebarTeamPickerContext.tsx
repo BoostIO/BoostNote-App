@@ -84,7 +84,7 @@ const SidebarTeamPickerContext = ({
                         {plur('Member', team.permissions.length)}
                       </>
                     ) : (
-                      <>( Guest )</>
+                      '( Guest )'
                     )}
                   </TeamSubtitle>
                 </TeamLabel>
