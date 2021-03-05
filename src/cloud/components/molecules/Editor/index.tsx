@@ -111,7 +111,7 @@ const Editor = ({
   revisionHistory,
 }: EditorProps) => {
   const { currentUserPermissions } = usePage()
-  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
@@ -237,14 +237,14 @@ const Editor = ({
             return { type: 'file', url, title: file.name }
           }
         } catch (err) {
-          pushAxiosErrorMessage(err)
+          pushApiErrorMessage(err)
           return null
         }
       }
     } else {
       fileUploadHandlerRef.current = undefined
     }
-  }, [team, pushMessage, pushAxiosErrorMessage, doc])
+  }, [team, pushMessage, pushApiErrorMessage, doc])
 
   useEffect(() => {
     return () => {

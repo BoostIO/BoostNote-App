@@ -28,7 +28,7 @@ const UpdateBillingMethodForm = ({
 }: UpdateBillingMethodFormProps) => {
   const stripe = useStripe()
   const elements = useElements()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const { settings } = useSettings()
 
@@ -59,7 +59,7 @@ const UpdateBillingMethodForm = ({
       })
       onSuccess(subscription)
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
       setSending(false)
     }
   }

@@ -54,7 +54,7 @@ const ContentmanagerFolderRow = ({
     deleteFolderHandler,
     updateFolderHandler,
   } = useNav()
-  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { openModal } = useModal()
 
   const toggleFolderBookmark = useCallback(
@@ -121,12 +121,12 @@ const ContentmanagerFolderRow = ({
           emoji: 'unchanged',
         })
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
       setSending(undefined)
       setUpdating((prev) => prev.filter((id) => id !== patternedId))
     },
-    [updateFolderHandler, updating, setUpdating, pushAxiosErrorMessage]
+    [updateFolderHandler, updating, setUpdating, pushApiErrorMessage]
   )
 
   const openMoveForm = useCallback(

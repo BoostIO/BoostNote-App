@@ -37,7 +37,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     SerializedOpenInvite | undefined
   >(undefined)
   const { messageBox } = useDialog()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
 
   useEffectOnce(() => {
     fetchOpenInvite()
@@ -53,9 +53,9 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       setOpenInvite(invite)
       setFetching(false)
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
     }
-  }, [team, pushAxiosErrorMessage])
+  }, [team, pushApiErrorMessage])
 
   const createInvite = useCallback(async () => {
     if (team == null) {
@@ -67,10 +67,10 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       const { invite } = await createOpenInvite(team)
       setOpenInvite(invite)
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
     }
     setSending(false)
-  }, [team, pushAxiosErrorMessage])
+  }, [team, pushApiErrorMessage])
 
   const cancelInvite = useCallback(
     async (invite: SerializedOpenInvite) => {
@@ -94,7 +94,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
                 await cancelOpenInvite(team, invite)
                 setOpenInvite(undefined)
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               setSending(false)
               return
@@ -104,7 +104,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
       })
     },
-    [messageBox, t, team, pushAxiosErrorMessage]
+    [messageBox, t, team, pushApiErrorMessage]
   )
 
   const resetInvite = useCallback(async () => {
@@ -131,7 +131,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
               )
               setOpenInvite(newInvite)
             } catch (error) {
-              pushAxiosErrorMessage(error)
+              pushApiErrorMessage(error)
             }
             setSending(false)
             return
@@ -140,7 +140,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         }
       },
     })
-  }, [messageBox, t, team, pushAxiosErrorMessage, openInvite])
+  }, [messageBox, t, team, pushApiErrorMessage, openInvite])
 
   const toggleOpenInvite = useCallback(() => {
     if (openInvite != null) {

@@ -62,7 +62,7 @@ const MembersTab = () => {
     globalData: { currentUser },
   } = useGlobalData()
   const { messageBox } = useDialog()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const { setClosed, openSettingsTab } = useSettings()
   const [sending, setSending] = useState<string>()
   const router = useRouter()
@@ -192,7 +192,7 @@ const MembersTab = () => {
                   })
                 }
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               setSending(undefined)
               return
@@ -203,7 +203,7 @@ const MembersTab = () => {
       })
     },
     [
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       messageBox,
       currentUser,
       t,
@@ -269,7 +269,7 @@ const MembersTab = () => {
                   ),
                 })
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               setSending(undefined)
               return
@@ -279,14 +279,7 @@ const MembersTab = () => {
         },
       })
     },
-    [
-      pushAxiosErrorMessage,
-      messageBox,
-      t,
-      permissions,
-      setPartialPageData,
-      team,
-    ]
+    [pushApiErrorMessage, messageBox, t, permissions, setPartialPageData, team]
   )
   const removeGuestAccess = useCallback(
     (guestId: string, docId: string) => {
@@ -321,7 +314,7 @@ const MembersTab = () => {
                   updateGuestsMap([updatedGuest.id, updatedGuest])
                 }
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               remove(guestId)
               remove(`${guestId}-${docId}`)
@@ -339,7 +332,7 @@ const MembersTab = () => {
       remove,
       setGuestsMap,
       updateGuestsMap,
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       has,
     ]
   )

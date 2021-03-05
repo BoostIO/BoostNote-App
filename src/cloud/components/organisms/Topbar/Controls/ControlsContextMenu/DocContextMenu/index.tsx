@@ -109,7 +109,7 @@ const DocContextMenu = ({
     permissions = [],
     currentUserPermissions,
   } = usePage()
-  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences, setPreferences } = usePreferences()
@@ -278,13 +278,13 @@ const DocContextMenu = ({
       try {
         await updateDocHandler(doc, { workspaceId, parentFolderId })
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
       setSendingMove(false)
     },
     [
       updateDocHandler,
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       sendingTemplate,
       sendingArchive,
       sendingMove,

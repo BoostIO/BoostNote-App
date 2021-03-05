@@ -54,7 +54,7 @@ const SideNavigatorWorkspaceControls = ({
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const {
-    pushApiErrorMessage: pushAxiosErrorMessage,
+    pushApiErrorMessage,
     pushMessage,
     pushDocHandlerErrorMessage,
   } = useToast()
@@ -121,7 +121,7 @@ const SideNavigatorWorkspaceControls = ({
                   removeFromFoldersMap(...workspaceFolders.map((doc) => doc.id))
                 }
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               return
             case 1:
@@ -134,7 +134,7 @@ const SideNavigatorWorkspaceControls = ({
     [
       messageBox,
       t,
-      pushAxiosErrorMessage,
+      pushApiErrorMessage,
       team,
       removeFromWorkspacesMap,
       pushMessage,

@@ -33,7 +33,7 @@ const UploadListPage = ({
   const [sending, setSending] = useState<boolean>(false)
   const { t } = useTranslation()
   const { messageBox } = useDialog()
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const { subscription, permissions } = usePage()
   const { openSettingsTab } = useSettings()
 
@@ -63,7 +63,7 @@ const UploadListPage = ({
                   })
                 })
                 .catch((error: any) => {
-                  pushAxiosErrorMessage(error)
+                  pushApiErrorMessage(error)
                 })
                 .finally(() => setSending(false))
               return
@@ -74,7 +74,7 @@ const UploadListPage = ({
         },
       })
     },
-    [messageBox, setCurrentFiles, pushAxiosErrorMessage, sending, t]
+    [messageBox, setCurrentFiles, pushApiErrorMessage, sending, t]
   )
 
   return (

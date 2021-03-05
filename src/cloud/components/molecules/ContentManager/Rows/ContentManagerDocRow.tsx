@@ -62,7 +62,7 @@ const ContentmanagerDocRow = ({
 }: ContentManagerDocRowProps) => {
   const [sending, setSending] = useState<ActionsIds>()
   const { updateDocsMap, deleteDocHandler, updateDocHandler } = useNav()
-  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { openModal } = useModal()
   const { permissions = [] } = usePage()
 
@@ -162,12 +162,12 @@ const ContentmanagerDocRow = ({
       try {
         await updateDocHandler(doc, { workspaceId, parentFolderId })
       } catch (error) {
-        pushAxiosErrorMessage(error)
+        pushApiErrorMessage(error)
       }
       setSending(undefined)
       setUpdating((prev) => prev.filter((id) => id !== patternedId))
     },
-    [updateDocHandler, updating, setUpdating, pushAxiosErrorMessage]
+    [updateDocHandler, updating, setUpdating, pushApiErrorMessage]
   )
 
   const openMoveForm = useCallback(

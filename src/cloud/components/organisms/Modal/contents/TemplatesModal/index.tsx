@@ -65,10 +65,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     createDocHandler,
     currentParentFolderId,
   } = useNav()
-  const {
-    pushDocHandlerErrorMessage,
-    pushApiErrorMessage: pushAxiosErrorMessage,
-  } = useToast()
+  const { pushDocHandlerErrorMessage, pushApiErrorMessage } = useToast()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
   const [filter, setFilter] = useState<string>('')
@@ -236,7 +233,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                 await destroyDocTemplate(template.id)
                 removeFromTemplatesMap(template.id)
               } catch (error) {
-                pushAxiosErrorMessage(error)
+                pushApiErrorMessage(error)
               }
               setSendingState(undefined)
               return
@@ -246,7 +243,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
         },
       })
     },
-    [messageBox, pushAxiosErrorMessage, removeFromTemplatesMap]
+    [messageBox, pushApiErrorMessage, removeFromTemplatesMap]
   )
 
   const saveTemplate = useCallback(async () => {
@@ -263,7 +260,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
       })
       updateTemplatesMap([template.id, template])
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
     }
     setSendingState(undefined)
   }, [
@@ -273,7 +270,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     emoji,
     selectedTemplateId,
     updateTemplatesMap,
-    pushAxiosErrorMessage,
+    pushApiErrorMessage,
   ])
 
   const bindCallback = useCallback((editor: CodeMirror.Editor) => {

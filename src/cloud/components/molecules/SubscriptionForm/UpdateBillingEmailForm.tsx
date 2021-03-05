@@ -22,7 +22,7 @@ const UpdateBillingEmailForm = ({
   onSuccess,
   onCancel,
 }: UpdateBillingEmailFormProps) => {
-  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [email, setEmail] = useState<string>(sub != null ? sub.email : '')
 
@@ -37,7 +37,7 @@ const UpdateBillingEmailForm = ({
       const { subscription } = await updateSubEmail(sub.teamId, email)
       onSuccess(subscription)
     } catch (error) {
-      pushAxiosErrorMessage(error)
+      pushApiErrorMessage(error)
       setSending(false)
     }
   }
