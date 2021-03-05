@@ -15,7 +15,7 @@ import Link from '../../atoms/Link/Link'
 import { getHexFromUUID } from '../../../lib/utils/string'
 import { stringify } from 'querystring'
 import IconMdi from '../../atoms/IconMdi'
-import { mdiPlusCircleOutline, mdiLogout } from '@mdi/js'
+import { mdiPlusCircleOutline, mdiLogout, mdiDownloadBoxOutline } from '@mdi/js'
 import TeamIcon from '../../atoms/TeamIcon'
 import {
   useGlobalKeyDownHandler,
@@ -131,6 +131,18 @@ const SidebarTeamPickerContext = ({
   return (
     <StyledSidebarTeamPickerContext ref={pickerRef}>
       {teamsList}
+
+      <CustomLink
+        href='https://github.com/BoostIO/BoostNote.next/releases/latest'
+        external
+        className='team-link team-link-cstm cooperate-link'
+        id='teampicker-newteam'
+      >
+        <SidebarButton tabIndex={-1}>
+          <IconMdi path={mdiDownloadBoxOutline} />
+          Download Desktop App
+        </SidebarButton>
+      </CustomLink>
       <CustomLink
         href='/api/oauth/signout'
         onClick={(event) => {
