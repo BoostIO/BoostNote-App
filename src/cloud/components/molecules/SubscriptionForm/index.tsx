@@ -51,7 +51,7 @@ const SubscriptionForm = ({
   const [sending, setSending] = useState(false)
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )

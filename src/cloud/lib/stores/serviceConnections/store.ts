@@ -28,7 +28,7 @@ export type State =
     }
 
 export function useServiceConnectionsStore(): State {
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [connections, setConnections] = useState<SerializedServiceConnection[]>(
     []
   )

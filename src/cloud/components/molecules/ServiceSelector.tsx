@@ -24,7 +24,7 @@ interface ServiceSelectorProps {
 type Services = 'github' | 'slack' | 'vercel'
 
 const ServiceSelector = ({ onSelect }: ServiceSelectorProps) => {
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const [connections, setConnections] = useState<SerializedServiceConnection[]>(
     []
   )

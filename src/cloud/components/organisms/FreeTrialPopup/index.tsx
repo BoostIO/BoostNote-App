@@ -17,7 +17,7 @@ interface FreeTrialPopupProps {
 const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
 
   const onCloseCallback = useCallback(() => {
     if (sending) {

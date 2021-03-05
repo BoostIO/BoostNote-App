@@ -46,7 +46,7 @@ const SubscriptionManagement = ({
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
   const [fetchingHistory, setFetchingHistory] = useState<boolean>(false)
-  const { pushAxiosErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage, pushMessage } = useToast()
   const [targetedPlan, setTargetedPlan] = useState<
     'Free' | 'Standard' | 'Pro'
   >()

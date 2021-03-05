@@ -62,7 +62,7 @@ const ContentmanagerDocRow = ({
 }: ContentManagerDocRowProps) => {
   const [sending, setSending] = useState<ActionsIds>()
   const { updateDocsMap, deleteDocHandler, updateDocHandler } = useNav()
-  const { pushMessage, pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { openModal } = useModal()
   const { permissions = [] } = usePage()
 

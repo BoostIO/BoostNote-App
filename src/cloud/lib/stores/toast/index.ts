@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../../utils/context'
 import { generateSecret } from '../../utils/secret'
+import ky from 'ky'
 
 export interface ToastMessage {
   id: string
@@ -13,7 +14,7 @@ export interface ToastMessage {
 interface ToastStore {
   readonly messages: ToastMessage[]
   pushMessage: (message: Omit<ToastMessage, 'id' | 'createdAt'>) => void
-  pushAxiosErrorMessage: (error: any) => void
+  pushApiErrorMessage: (error: any) => void
   pushDocHandlerErrorMessage: (error: any) => void
   removeMessage: (message: ToastMessage) => void
 }
@@ -40,10 +41,17 @@ const useToastStore = (): ToastStore => {
   )
 
   const pushApiErrorMessage = useCallback(
-    (error: any) => {
-      const title = 'Error'
-      const description = 'Something wrong happened'
-      console.error(error)
+    async (error: any) => {
+      let title = 'Error'
+      let description = 'Something wrong happened'
+
+      if (error instanceof ky.HTTPError) {
+        title = error.response.status.toString()
+        const errorMessage = await error.response.text()
+        const split = errorMessage.replace('Error: ', '').split('\n')
+        description = split[0]
+      }
+
       setMessages((prev) => [
         {
           id: generateSecret(),
@@ -72,7 +80,7 @@ const useToastStore = (): ToastStore => {
   return {
     messages,
     pushMessage,
-    pushAxiosErrorMessage: pushApiErrorMessage,
+    pushApiErrorMessage,
     pushDocHandlerErrorMessage,
     removeMessage: (message) =>
       setMessages(messages.filter(({ id }) => id !== message.id)),

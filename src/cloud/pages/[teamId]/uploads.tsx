@@ -33,7 +33,7 @@ const UploadListPage = ({
   const [sending, setSending] = useState<boolean>(false)
   const { t } = useTranslation()
   const { messageBox } = useDialog()
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { subscription, permissions } = usePage()
   const { openSettingsTab } = useSettings()
 

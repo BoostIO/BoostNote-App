@@ -109,7 +109,7 @@ const DocContextMenu = ({
     permissions = [],
     currentUserPermissions,
   } = usePage()
-  const { pushMessage, pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences, setPreferences } = usePreferences()

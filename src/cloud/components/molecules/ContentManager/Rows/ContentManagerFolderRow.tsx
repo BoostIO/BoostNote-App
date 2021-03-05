@@ -54,7 +54,7 @@ const ContentmanagerFolderRow = ({
     deleteFolderHandler,
     updateFolderHandler,
   } = useNav()
-  const { pushMessage, pushAxiosErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { openModal } = useModal()
 
   const toggleFolderBookmark = useCallback(

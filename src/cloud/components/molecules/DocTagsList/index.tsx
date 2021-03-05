@@ -24,7 +24,7 @@ const maxTagsDisplayed = 4
 
 const DocTagsList = ({ doc, team }: DocTagsListProps) => {
   const [sending, setSending] = useState<boolean>(false)
-  const { pushAxiosErrorMessage } = useToast()
+  const { pushApiErrorMessage: pushAxiosErrorMessage } = useToast()
   const { updateDocsMap } = useNav()
   const [removing, setRemoving] = useState<string>()
   const [expanded, setExpanded] = useState<boolean>(false)
