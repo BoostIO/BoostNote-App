@@ -25,6 +25,7 @@ const ArchivedPage = () => {
   return (
     <AppLayout
       rightLayout={{
+        className: 'reduced-width',
         topbar: {
           left: <BreadCrumbs team={team} />,
         },
