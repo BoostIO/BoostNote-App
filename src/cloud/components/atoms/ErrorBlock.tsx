@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AxiosError } from 'axios'
 import ColoredBlock from './ColoredBlock'
 import { nodeEnv } from '../../lib/consts'
+import ky from 'ky'
 
 interface ErrorAlertProps {
   error: unknown
@@ -9,19 +10,29 @@ interface ErrorAlertProps {
 }
 
 const ErrorBlock = ({ error, style }: ErrorAlertProps) => {
-  const errorMessage = useMemo(() => {
-    try {
-      const rawMessage = getErrorMessage(error)
-      if (nodeEnv === 'development') {
-        return rawMessage.split('\n').map((message, index) => {
-          return <li key={index}>{message}</li>
-        })
-      }
+  const [message, setMessage] = useState<React.ReactNode>()
 
-      const [message] = rawMessage.split('\n')
-      return <li>{message}</li>
+  useEffect(() => {
+    try {
+      async function fetchData() {
+        const rawMessage = await getErrorMessage(error)
+        if (nodeEnv === 'development') {
+          setMessage(
+            rawMessage.split('\n').map((message, index) => {
+              return <li key={index}>{message}</li>
+            })
+          )
+          return
+        }
+        const lines = rawMessage.split('\n')
+        setMessage(<li>{lines[0]}</li>)
+        return
+      }
+      fetchData()
+      return
     } catch (err) {
-      return <li>{String(error)}</li>
+      setMessage(<li>{String(error)}</li>)
+      return
     }
   }, [error])
 
@@ -31,7 +42,7 @@ const ErrorBlock = ({ error, style }: ErrorAlertProps) => {
         className='list-unstyled'
         style={{ paddingLeft: 0, listStyle: 'none' }}
       >
-        {errorMessage}
+        {message}
       </ul>
     </ColoredBlock>
   )
@@ -39,7 +50,12 @@ const ErrorBlock = ({ error, style }: ErrorAlertProps) => {
 
 export default ErrorBlock
 
-export function getErrorMessage(error: unknown): string {
+export async function getErrorMessage(error: unknown): Promise<string> {
+  if (error instanceof ky.HTTPError) {
+    const message = await error.response.text()
+    return message
+  }
+
   if (isAxiosError(error)) {
     return error.response!.data
   }
