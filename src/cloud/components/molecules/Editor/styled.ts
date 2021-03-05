@@ -26,6 +26,11 @@ export const StyledEditorToolButtonContainer = styled.div`
     box-shadow: 0px 4px 0px 12px ${({ theme }) => theme.baseBackgroundColor};
     background: ${({ theme }) => theme.baseBackgroundColor};
   }
+
+  &.scroll-sync .bottom {
+    left: 100%;
+    transform: translateX(-20%);
+  }
 `
 
 export const StyledEditorToolButton = styled.button`
