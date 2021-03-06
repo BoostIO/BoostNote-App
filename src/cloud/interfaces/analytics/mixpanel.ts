@@ -156,3 +156,10 @@ export type MixpanelOpenInviteEvent =
   | MixpanelActionTrackTypes.OpenInviteCreate
   | MixpanelActionTrackTypes.OpenInviteDelete
   | MixpanelActionTrackTypes.OpenInviteReset
+
+export type MixpanelUserProfile = {
+  $first_name?: string
+  $last__name?: string
+  $created?: string
+  $email?: string
+}
