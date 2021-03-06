@@ -112,6 +112,10 @@ export type MixpanelTeamEvent =
   | MixpanelActionTrackTypes.TeamCreate
   | MixpanelActionTrackTypes.TeamDelete
   | MixpanelActionTrackTypes.PersonalCreate
+  | MixpanelActionTrackTypes.SubscriptionStart
+  | MixpanelActionTrackTypes.SubscriptionCancel
+  | MixpanelActionTrackTypes.SubscriptionTrialStart
+  | MixpanelActionTrackTypes.SubscriptionTrialEnd
 
 export type MixpanelDocEvent =
   | MixpanelActionTrackTypes.DocOpen
