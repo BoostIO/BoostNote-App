@@ -217,7 +217,6 @@ export default CloudIntroModal
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
-  width: 100%;
   height: 100%;
   position: fixed;
   top: 0;
