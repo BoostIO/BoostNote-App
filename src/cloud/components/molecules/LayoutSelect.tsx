@@ -8,14 +8,12 @@ import Tooltip from '../atoms/Tooltip'
 import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/stores/preferences'
 import {
-  trackAction,
-  ActionTrackTypes,
-} from '../../lib/analytics/mixpanelFront'
-import {
   togglePreviewModeEventEmitter,
   toggleSplitEditModeEventEmitter,
 } from '../../lib/utils/events'
 import { StyledTopBarIcon } from '../organisms/RightSideTopBar/styled'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 interface LayoutSelectProps {
   currentMode: LayoutMode
@@ -41,7 +39,7 @@ const LayoutSelect = ({
 
   const toggleViewMode = useCallback(() => {
     if (currentMode === 'preview') {
-      trackAction(ActionTrackTypes.DocLayoutEdit, {
+      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
         teamId,
         docId,
       })
