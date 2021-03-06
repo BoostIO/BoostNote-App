@@ -65,7 +65,7 @@ const AppContainer = styled.div`
 
 const App = () => {
   const { initialize, queueSyncingAllStorage, storageMap } = useDb()
-  const { push } = useRouter()
+  const { push, pathname } = useRouter()
   const [initialized, setInitialized] = useState(false)
   const { setGeneralStatus, generalStatus } = useGeneralStatus()
   const {
@@ -178,15 +178,22 @@ const App = () => {
 
         const cloudSpaces = globalData != null ? globalData.teams : []
 
-        if (localSpaces.length > 0) {
-          push(`/app/storages/${localSpaces[0].id}`)
-        } else if (cloudSpaces.length > 0) {
-          push(`/app/boosthub/teams/${cloudSpaces[0].domain}`)
-        } else {
-          if (globalData == null || globalData.user == null) {
-            push(`/app/boosthub/login`)
+        if (
+          pathname === '' ||
+          pathname === '/' ||
+          pathname === '/app' ||
+          pathname === '/app/storages'
+        ) {
+          if (localSpaces.length > 0) {
+            push(`/app/storages/${localSpaces[0].id}`)
+          } else if (cloudSpaces.length > 0) {
+            push(`/app/boosthub/teams/${cloudSpaces[0].domain}`)
           } else {
-            push(`/app/boosthub/teams`)
+            if (globalData == null || globalData.user == null) {
+              push(`/app/boosthub/login`)
+            } else {
+              push(`/app/boosthub/teams`)
+            }
           }
         }
         setInitialized(true)

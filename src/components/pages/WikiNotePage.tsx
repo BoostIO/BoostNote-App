@@ -20,6 +20,8 @@ import styled from '../../lib/styled'
 import { useRouter } from '../../lib/router'
 import { parseNumberStringOrReturnZero } from '../../lib/string'
 import NoteContextView from '../organisms/NoteContextView'
+import CloudIntroModal from '../organisms/CloudIntroModal'
+import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -32,6 +34,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     | StorageTagsRouteParams
   const { hash } = useRouter()
   const { generalStatus } = useGeneralStatus()
+  const { showingCloudIntroModal } = useCloudIntroModal()
   const noteViewMode = generalStatus.noteViewMode
 
   const note = useMemo(() => {
@@ -139,6 +142,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
           <NoteContextView storage={storage} note={note} />
         )}
       </Container>
+      {showingCloudIntroModal && <CloudIntroModal />}
     </StorageLayout>
   )
 }

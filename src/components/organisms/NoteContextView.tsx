@@ -10,6 +10,10 @@ import {
   mdiFilePdfOutline,
   mdiLabelMultipleOutline,
   mdiRestore,
+  mdiPlusBoxMultipleOutline,
+  mdiLinkPlus,
+  mdiAccountMultiple,
+  mdiHistory,
 } from '@mdi/js'
 import { isTagNameValid } from '../../lib/db/utils'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
@@ -25,6 +29,7 @@ import {
 } from '../../lib/exports'
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
+import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 
 interface NoteContextViewProps {
   storage: NoteStorage
@@ -48,6 +53,7 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
   const { previewStyle } = usePreviewStyle()
 
   const includeFrontMatter = preferences['markdown.includeFrontMatter']
+  const { toggleShowingCloudIntroModal } = useCloudIntroModal()
 
   const appendTagByName = useCallback(
     async (tagName: string) => {
@@ -208,6 +214,56 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
 
       <Separator />
 
+      <ControlItem>
+        <CloudIntroItemLabel>
+          <LabelIcon path={mdiAccountMultiple} />
+          Guests
+        </CloudIntroItemLabel>
+        <CloudIntroItemContent>
+          <TryCloudButton onClick={toggleShowingCloudIntroModal}>
+            Try Cloud
+          </TryCloudButton>
+        </CloudIntroItemContent>
+      </ControlItem>
+      <ControlItem>
+        <CloudIntroItemLabel>
+          <LabelIcon path={mdiLinkPlus} />
+          Public Sharing
+        </CloudIntroItemLabel>
+        <CloudIntroItemContent>
+          <TryCloudButton onClick={toggleShowingCloudIntroModal}>
+            Try Cloud
+          </TryCloudButton>
+        </CloudIntroItemContent>
+      </ControlItem>
+
+      <Separator />
+
+      <ControlItem>
+        <CloudIntroItemLabel>
+          <LabelIcon path={mdiHistory} />
+          Revisions
+        </CloudIntroItemLabel>
+        <CloudIntroItemContent>
+          <TryCloudButton onClick={toggleShowingCloudIntroModal}>
+            Try Cloud
+          </TryCloudButton>
+        </CloudIntroItemContent>
+      </ControlItem>
+
+      <Separator />
+
+      <ControlItem>
+        <CloudIntroItemLabel>
+          <LabelIcon path={mdiPlusBoxMultipleOutline} />
+          Save As Template
+        </CloudIntroItemLabel>
+        <CloudIntroItemContent>
+          <TryCloudButton onClick={toggleShowingCloudIntroModal}>
+            Try Cloud
+          </TryCloudButton>
+        </CloudIntroItemContent>
+      </ControlItem>
       {note.trashed ? (
         <>
           <ButtonItem title={t('note.restore')} onClick={untrash}>
@@ -320,6 +376,44 @@ const ControlItemContent = styled.div`
   align-items: center;
   flex-wrap: wrap;
   margin-right: 10px;
+`
+
+const CloudIntroItemLabel = styled.div`
+  height: 40px;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  flex-shrink: 0;
+  flex-grow: 1;
+`
+const CloudIntroItemContent = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-right: 10px;
+`
+
+const TryCloudButton = styled.button`
+  background-color: ${({ theme }) => theme.primaryColor};
+  color: ${({ theme }) => theme.primaryButtonLabelColor};
+  font-size: 12px;
+  border: none;
+
+  &:hover,
+  &:active,
+  &.active {
+    cursor: pointer;
+  }
+  &:focus {
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryColor};
+  }
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  padding: 5px 10px;
+  border-radius: 4px;
 `
 
 const ButtonItem = styled.button`

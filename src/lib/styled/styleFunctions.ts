@@ -129,7 +129,8 @@ font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
-&:disabled {
+&:disabled,
+&.disabled {
   opacity: .5;
   cursor: default;
 }
@@ -151,7 +152,8 @@ font-size: 13px;
 &:focus {
   box-shadow: 0 0 0 2px ${theme.primaryColor};
 }
-&:disabled {
+&:disabled,
+&.disabled {
   opacity: .5;
   cursor: default;
 }
