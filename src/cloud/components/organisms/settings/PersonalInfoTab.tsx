@@ -146,9 +146,25 @@ const PersonalInfoTab = () => {
                     onChange={selectCurrentEmailNotifications}
                     disabled={updating}
                   >
-                    <option value={'daily'}>Daily</option>
-                    <option value={'weekly'}>Weekly</option>
-                    <option value={undefined}> Never</option>
+                    <option
+                      value='daily'
+                      selected={currentEmailNotifications === 'daily'}
+                    >
+                      Daily
+                    </option>
+                    <option
+                      value='weekly'
+                      selected={currentEmailNotifications === 'weekly'}
+                    >
+                      Weekly
+                    </option>
+                    <option
+                      value={undefined}
+                      selected={currentEmailNotifications == null}
+                    >
+                      {' '}
+                      Never
+                    </option>
                   </SectionSelect>
                 </Section>
               </>
