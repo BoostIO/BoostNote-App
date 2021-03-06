@@ -31,6 +31,8 @@ import {
 } from './styled'
 import RevisionModalNavigator from './RevisionModalNavigator'
 import { compareDateString } from '../../../../../../lib/date'
+import { trackEvent } from '../../../../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
 
 interface RevisionsModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -149,6 +151,7 @@ const RevisionsModal = ({
   )
 
   useEffectOnce(() => {
+    trackEvent(MixpanelActionTrackTypes.DocFeatureRevision)
     fetchRevisions(currentPage)
   })
 
