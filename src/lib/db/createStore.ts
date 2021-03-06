@@ -217,7 +217,10 @@ export function createDbStoreCreator(
               const syncedStorage = (await prepareStorage(
                 storage
               )) as PouchNoteStorage
-              syncedStorage.cloudStorage!.syncedAt = Date.now()
+              syncedStorage.cloudStorage = {
+                ...storage.cloudStorage!,
+                syncedAt: Date.now(),
+              }
               let newStorageMap: ObjectMap<NoteStorage>
               setStorageMap((prevStorageMap) => {
                 newStorageMap = produce(prevStorageMap, (draft) => {
