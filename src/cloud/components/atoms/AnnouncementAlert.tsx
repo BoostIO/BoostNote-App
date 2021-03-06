@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import styled from '../../lib/styled'
-import { useSettings } from '../../lib/stores/settings'
 import { useOnboarding } from '../../lib/stores/onboarding'
 import IconMdi from './IconMdi'
 import { mdiClose } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
+import UpgradeButton from '../UpgradeButton'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
-  const { openSettingsTab } = useSettings()
   const { currentOnboardingState, setOnboarding } = useOnboarding()
   const {
     globalData: { currentUser },
@@ -74,15 +73,7 @@ const AnnouncementAlert = () => {
         <StyledAnnouncementAlert>
           <p>
             You are not eligible for a free trial anymore. Please
-            <a
-              href='#'
-              onClick={(e: any) => {
-                e.preventDefault()
-                openSettingsTab('teamUpgrade')
-              }}
-            >
-              upgrade
-            </a>{' '}
+            <UpgradeButton origin='limit' variant='link' label='Upgrade' />
             now.
           </p>
         </StyledAnnouncementAlert>
@@ -99,15 +90,11 @@ const AnnouncementAlert = () => {
       <StyledAnnouncementAlert>
         <p>
           Your number of documents exceeds the capacity of the free plan.
-          <a
-            href='#'
-            onClick={(e: any) => {
-              e.preventDefault()
-              openSettingsTab('teamUpgrade')
-            }}
-          >
-            Start your free trial
-          </a>{' '}
+          <UpgradeButton
+            origin='limit'
+            variant='link'
+            label='Start your free trial'
+          />
           now.
         </p>
       </StyledAnnouncementAlert>

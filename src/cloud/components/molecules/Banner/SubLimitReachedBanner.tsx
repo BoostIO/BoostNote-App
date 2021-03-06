@@ -4,6 +4,9 @@ import { usePage } from '../../../lib/stores/pageStore'
 import Banner from '.'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import styled from '../../../lib/styled'
+import { freePlanDocLimit } from '../../../lib/subscription'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 const DocLimitReachedBanner = () => {
   const { subscription } = usePage()
@@ -15,7 +18,7 @@ const DocLimitReachedBanner = () => {
         <p>
           <StyledLabel>
             {subscription == null
-              ? 'Your workspace exceeds the limit of your current plan. (30 created documents)'
+              ? `Your workspace exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
               : `Your workspace exceeds the limit of your current plan. (${subscription.seats} team members)`}
           </StyledLabel>
           <CustomButton
@@ -25,7 +28,10 @@ const DocLimitReachedBanner = () => {
               padding: '0 10px',
             }}
             variant='danger'
-            onClick={() => openSettingsTab('teamUpgrade')}
+            onClick={() => {
+              trackEvent(MixpanelActionTrackTypes.UpgradeLimit)
+              openSettingsTab('teamUpgrade')
+            }}
           >
             Upgrade
           </CustomButton>
