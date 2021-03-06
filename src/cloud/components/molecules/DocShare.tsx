@@ -35,12 +35,12 @@ import { Spinner } from '../atoms/Spinner'
 import DatePicker from 'react-datepicker'
 import { isArray } from 'util'
 import 'react-datepicker/dist/react-datepicker.css'
-import { useSettings } from '../../lib/stores/settings'
 import IconMdi from '../atoms/IconMdi'
 import { boostHubBaseUrl } from '../../lib/consts'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
+import UpgradeButton from '../UpgradeButton'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -65,7 +65,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
   const [showExpireForm, setShowExpireForm] = useState(false)
   const [passwordText, setPasswordText] = useState('')
   const [expireDate, setExpireDate] = useState<Date | null>(null)
-  const { openSettingsTab } = useSettings()
 
   useEffect(() => {
     if (currentDoc.shareLink == null) {
@@ -455,14 +454,14 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row__label'
                   >
                     <span>Password Protect</span>
-                    {subscription == null && (
-                      <button
+                    {(subscription == null ||
+                      subscription.plan === 'standard') && (
+                      <UpgradeButton
                         tabIndex={-1}
+                        origin='share.password'
                         className='upgrade__badge'
-                        onClick={() => openSettingsTab('teamUpgrade')}
-                      >
-                        upgrade
-                      </button>
+                        query={{ teamId: team.id, docId: currentDoc.id }}
+                      />
                     )}
                   </Flexbox>
                   <div className='share__row__switch'>
@@ -508,14 +507,14 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row__label'
                   >
                     <span>Expiration Date</span>
-                    {subscription == null && (
-                      <button
+                    {(subscription == null ||
+                      subscription.plan === 'standard') && (
+                      <UpgradeButton
                         tabIndex={-1}
+                        origin='share.expire'
                         className='upgrade__badge'
-                        onClick={() => openSettingsTab('teamUpgrade')}
-                      >
-                        upgrade
-                      </button>
+                        query={{ teamId: team.id, docId: currentDoc.id }}
+                      />
                     )}
                   </Flexbox>
                   <div className='share__row__switch'>
@@ -650,14 +649,14 @@ const Container = styled.div`
     flex: 0 0 auto;
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     width: 26px;
     padding: 0;
     text-align: center;
-    cursor:pointer;
+    cursor: pointer;
     &:last-child {
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
     }
   }
   #share__link__copy {
@@ -689,14 +688,7 @@ const Container = styled.div`
   }
 
   .upgrade__badge {
-    ${primaryButtonStyle}
-    font-size: ${({ theme }) => theme.fontSizes.xxsmall}px;
-    border-radius: 3px;
-    height: 26px;
-    padding: 0 5px;
-    text-transform: uppercase;
     margin-left: ${({ theme }) => theme.space.xsmall}px;
-    cursor: pointer;
   }
 
   .share__row__label span {

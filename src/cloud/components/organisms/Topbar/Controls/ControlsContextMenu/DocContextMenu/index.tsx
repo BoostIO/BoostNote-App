@@ -67,6 +67,7 @@ import DynamicExports from './DynamicExports'
 import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
+import UpgradeButton from '../../../../../UpgradeButton'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -428,22 +429,11 @@ const DocContextMenu = ({
                     )}
                     {subscription == null ||
                     subscription.plan === 'standard' ? (
-                      <button
+                      <UpgradeButton
                         className='context__badge'
-                        onClick={() =>
-                          openModal(
-                            <GuestsModal
-                              teamId={team.id}
-                              docId={currentDoc.id}
-                            />,
-                            {
-                              classNames: 'largeW fixed-height-large',
-                            }
-                          )
-                        }
-                      >
-                        Upgrade
-                      </button>
+                        origin='guest'
+                        query={{ teamId: team.id, docId: currentDoc.id }}
+                      />
                     ) : (
                       <Button
                         size='sm'
@@ -631,28 +621,39 @@ const DocContextMenu = ({
                       )}
                     </div>
                   </div>
-                  <div className='context__row'>
-                    <button
-                      className='context__flexible__button'
-                      onClick={revisionNavigateCallback}
-                      id='dc-context-top-revisions'
-                    >
-                      <Icon
-                        path={mdiHistory}
-                        className='context__icon'
-                        size={18}
-                      />
-                      {subscription != null && subscription.plan === 'standard'
-                        ? `See revisions ( last ${revisionHistoryStandardDays} days)`
-                        : 'See full revisions'}
+                  {currentUserPermissions != null && (
+                    <div className='context__column'>
+                      <button
+                        className='context__flexible__button'
+                        onClick={revisionNavigateCallback}
+                        id='dc-context-top-revisions'
+                        disabled={subscription == null}
+                      >
+                        <Icon
+                          path={mdiHistory}
+                          className='context__icon'
+                          size={18}
+                        />
+                        {subscription != null &&
+                        subscription.plan === 'standard'
+                          ? `See revisions ( last ${revisionHistoryStandardDays} days)`
+                          : 'See full revisions'}
+                      </button>
                       {(subscription == null ||
-                        (subscription != null &&
-                          subscription.plan === 'standard')) &&
-                        currentUserPermissions != null && (
-                          <div className='context__badge'>Upgrade</div>
-                        )}
-                    </button>
-                  </div>
+                        subscription.plan === 'standard') && (
+                        <Flexbox
+                          justifyContent='center'
+                          style={{ width: '100%' }}
+                        >
+                          <UpgradeButton
+                            origin='revision'
+                            query={{ teamId: team.id, docId: currentDoc.id }}
+                          />
+                        </Flexbox>
+                      )}
+                    </div>
+                  )}
+
                   <div className='context__break' />
                 </>
               )}
@@ -676,10 +677,6 @@ const Container = styled.div`
   .placeholder {
     width: 45px;
     flex: 0 0 auto;
-  }
-
-  .context__badge {
-    cursor: pointer;
   }
 
   .context__tooltip {
@@ -859,17 +856,12 @@ const Container = styled.div`
     }
   }
 
+  .context__flexible__button + div {
+    margin: ${({ theme }) => theme.space.xsmall}px 0;
+  }
+
   .context__badge {
     background: ${({ theme }) => theme.primaryBackgroundColor};
-    text-transform: uppercase;
-    color: ${({ theme }) => theme.whiteTextColor};
-    padding: 0 5px;
-    border-radius: 3px;
-    font-size: ${({ theme }) => theme.fontSizes.xxsmall}px;
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
-    height: auto;
-    line-height: 26px;
-    height: 26px;
   }
 
   .context__label + .context__badge {

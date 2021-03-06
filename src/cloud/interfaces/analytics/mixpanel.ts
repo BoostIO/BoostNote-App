@@ -11,6 +11,7 @@ export enum MixpanelActionTrackTypes {
   DocEdit = 'doc.edit',
   DocEmoji = 'doc.emoji',
   DocImport = 'doc.import',
+  DocLayoutEdit = 'doc.layout.edit',
   DocOpen = 'doc.open',
   DocUnarchive = 'doc.unarchive',
   DocShareCreate = 'doc.share.create',
@@ -58,6 +59,11 @@ export enum MixpanelActionTrackTypes {
   TokenCreate = 'token.create',
   TokenUpdate = 'token.update',
   TokenDelete = 'token.delete',
+  UpgradePassword = 'upgrade.origin.password',
+  UpgradeExpirationDate = 'upgrade.origin.expiration.date',
+  UpgradeRevision = 'upgrade.origin.revision',
+  UpgradeGuest = 'upgrade.origin.guest',
+  UpgradeLimit = 'upgrade.origin.limit',
   WorkspaceOpen = 'workspace.open',
   WorkspaceCreate = 'workspace.create',
   WorkspaceDelete = 'workspace.delete',
@@ -79,6 +85,12 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.ExportMd
   | MixpanelActionTrackTypes.ExportPdf
   | MixpanelActionTrackTypes.ExportHtml
+  | MixpanelActionTrackTypes.DocLayoutEdit
+  | MixpanelActionTrackTypes.UpgradeExpirationDate
+  | MixpanelActionTrackTypes.UpgradeGuest
+  | MixpanelActionTrackTypes.UpgradeLimit
+  | MixpanelActionTrackTypes.UpgradePassword
+  | MixpanelActionTrackTypes.UpgradeRevision
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
