@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from 'date-fns'
 import React, { useMemo } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { UpgradePlans } from '../../../lib/stripe'
@@ -12,6 +13,7 @@ import {
   standardPlanStorageMb,
 } from '../../../lib/subscription'
 import CustomButton from '../../atoms/buttons/CustomButton'
+import cc from 'classcat'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -32,6 +34,8 @@ const PlanTables = ({
   onProCallback,
   subscription,
 }: PlanTablesProps) => {
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 1080 })
+
   const freeTrialContent = useMemo(() => {
     if (team == null) {
       return null
@@ -70,267 +74,269 @@ const PlanTables = ({
   }, [subscription, team, onTrialCallback])
 
   return (
-    <StyledPlanTables>
-      <thead>
-        <tr>
-          <td className='first' />
-          <td className='header'>
-            <label>Free</label>
-            <div className='pricing'>
-              <span>$0</span>
-            </div>
+    <Container className={cc([isTabletOrMobile && 'mobile__layout'])}>
+      <table>
+        <thead>
+          <tr>
+            <td className='first' />
+            <td className='header'>
+              <label>Free</label>
+              <div className='pricing'>
+                <span>$0</span>
+              </div>
 
-            {selectedPlan === 'free' ? (
-              <CustomButton
-                className='upgrade-btn'
-                disabled={true}
-                variant='inverse-secondary'
-              >
-                Current Plan
-              </CustomButton>
-            ) : (
-              <CustomButton onClick={onFreeCallback} className='upgrade-btn'>
-                Downgrade
-              </CustomButton>
-            )}
-          </td>
+              {selectedPlan === 'free' ? (
+                <CustomButton
+                  className='upgrade-btn'
+                  disabled={true}
+                  variant='inverse-secondary'
+                >
+                  Current Plan
+                </CustomButton>
+              ) : (
+                <CustomButton onClick={onFreeCallback} className='upgrade-btn'>
+                  Downgrade
+                </CustomButton>
+              )}
+            </td>
 
-          <td className='header'>
-            <label>Standard</label>
-            <div className='pricing'>
-              <span>$3</span>
-              <div>per member per month</div>
-            </div>
-            {selectedPlan === 'standard' ? (
-              <CustomButton
-                className='upgrade-btn'
-                disabled={true}
-                variant='inverse-secondary'
-              >
-                Current Plan
-              </CustomButton>
-            ) : (
-              <CustomButton
-                onClick={onStandardCallback}
-                className='upgrade-btn'
-              >
-                {selectedPlan === 'free' ? 'Upgrade' : 'Downgrade'}
-              </CustomButton>
-            )}
-          </td>
+            <td className='header'>
+              <label>Standard</label>
+              <div className='pricing'>
+                <span>$3</span>
+                <div>per member per month</div>
+              </div>
+              {selectedPlan === 'standard' ? (
+                <CustomButton
+                  className='upgrade-btn'
+                  disabled={true}
+                  variant='inverse-secondary'
+                >
+                  Current Plan
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  onClick={onStandardCallback}
+                  className='upgrade-btn'
+                >
+                  {selectedPlan === 'free' ? 'Upgrade' : 'Downgrade'}
+                </CustomButton>
+              )}
+            </td>
 
-          <td className='header'>
-            <label>Pro</label>
-            <div className='pricing'>
-              <span>$8</span>
-              <div>per member per month</div>
-            </div>
+            <td className='header'>
+              <label>Pro</label>
+              <div className='pricing'>
+                <span>$8</span>
+                <div>per member per month</div>
+              </div>
 
-            {selectedPlan === 'pro' ? (
-              <CustomButton
-                className='upgrade-btn'
-                disabled={true}
-                variant='inverse-secondary'
-              >
-                Current Plan
-              </CustomButton>
-            ) : (
-              <CustomButton onClick={onProCallback} className='upgrade-btn'>
-                Upgrade
-              </CustomButton>
-            )}
-            {freeTrialContent}
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className='first'>Members</td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-        </tr>
+              {selectedPlan === 'pro' ? (
+                <CustomButton
+                  className='upgrade-btn'
+                  disabled={true}
+                  variant='inverse-secondary'
+                >
+                  Current Plan
+                </CustomButton>
+              ) : (
+                <CustomButton onClick={onProCallback} className='upgrade-btn'>
+                  Upgrade
+                </CustomButton>
+              )}
+              {freeTrialContent}
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className='first'>Members</td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Documents</td>
-          <td>
-            <div className='perk'>{freePlanDocLimit} per team</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Documents</td>
+            <td>
+              <div className='perk'>{freePlanDocLimit} per team</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Storage limit</td>
-          <td>
-            <div className='perk'>{freePlanStorageMb}MB per member</div>
-          </td>
-          <td>
-            <div className='perk'>
-              {standardPlanStorageMb / 100}GB per member
-            </div>
-          </td>
-          <td>
-            <div className='perk'>{proPlanStorageMb / 100}GB per member</div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Storage limit</td>
+            <td>
+              <div className='perk'>{freePlanStorageMb}MB per member</div>
+            </td>
+            <td>
+              <div className='perk'>
+                {standardPlanStorageMb / 100}GB per member
+              </div>
+            </td>
+            <td>
+              <div className='perk'>{proPlanStorageMb / 100}GB per member</div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Integrations</td>
-          <td>
-            <div className='perk'>2000+ integrations</div>
-          </td>
-          <td>
-            <div className='perk'>2000+ integrations</div>
-          </td>
-          <td>
-            <div className='perk'>2000+ integrations</div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Integrations</td>
+            <td>
+              <div className='perk'>2000+ integrations</div>
+            </td>
+            <td>
+              <div className='perk'>2000+ integrations</div>
+            </td>
+            <td>
+              <div className='perk'>2000+ integrations</div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Templates</td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-          <td>
-            <div className='perk'>Unlimited</div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Templates</td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+            <td>
+              <div className='perk'>Unlimited</div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Collaborative workspace</td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Collaborative workspace</td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Revision History</td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>
-                Last {revisionHistoryStandardDays} days
-              </span>
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Revision History</td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>
+                  Last {revisionHistoryStandardDays} days
+                </span>
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Private folders</td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Private folders</td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Guest invite</td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Guest invite</td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Password/Expiration date for sharing</td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Password/Expiration date for sharing</td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Priority support</td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>&#x292C;</div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td className='first'>Priority support</td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>&#x292C;</div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span>
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td className='first'>Mobile App</td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span> (Soon)
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span> (Soon)
-            </div>
-          </td>
-          <td>
-            <div className='perk'>
-              <span className='check'>&#x2713;</span> (Soon)
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </StyledPlanTables>
+          <tr>
+            <td className='first'>Mobile App</td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span> (Soon)
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span> (Soon)
+              </div>
+            </td>
+            <td>
+              <div className='perk'>
+                <span className='check'>&#x2713;</span> (Soon)
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Container>
   )
 }
 
@@ -344,12 +350,21 @@ const StyledTrialLink = styled.a`
   }
 `
 
-const StyledPlanTables = styled.table`
+const Container = styled.div`
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.space.medium}px;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 30px 0;
+  overflow: auto;
+
+  &.mobile__layout {
+    border-spacing: 6px 0;
+  }
+
+  > table {
+    margin-bottom: ${({ theme }) => theme.space.medium}px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 20px 0;
+    min-width: 600px;
+  }
 
   .first {
     width: 30%;
@@ -387,6 +402,12 @@ const StyledPlanTables = styled.table`
   .upgrade-btn {
     width: 100%;
     margin: ${({ theme }) => theme.fontSizes.xsmall}px 0;
+    padding: 0px ${({ theme }) => theme.space.xxsmall}px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    line-height: inherit;
   }
 
   tr td {
