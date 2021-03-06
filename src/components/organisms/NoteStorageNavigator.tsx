@@ -305,6 +305,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
           depth={0}
           label='Settings'
           onClick={togglePreferencesModal}
+          alert={storage.type === 'pouch' && storage.cloudStorage != null}
         />
         <BookmarkNavigatorFragment storage={storage} />
         <NavigatorSeparator />

@@ -19,7 +19,8 @@ const boostHubDesktopLoginPageUrl = `${boostHubBaseUrl}/desktop/login`
 
 export const boostHubAccountDeletePageUrl = `${boostHubBaseUrl}/account/delete`
 
-export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/for-teams/features`
+export const boostHubLearnMorePageUrl = `${boostHubBaseUrl}/features`
+export const boostHubPricingPageUrl = `${boostHubBaseUrl}/pricing`
 
 const boostHubCreateDesktopAccessTokenUrl = `${boostHubBaseUrl}/api/desktop/access-tokens`
 

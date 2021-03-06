@@ -16,6 +16,8 @@ import { writeFile, prepareDirectory } from '../../lib/electronOnly'
 import { entries } from '../../lib/db/utils'
 import { useRouter } from '../../lib/router'
 import { usePreferences } from '../../lib/preferences'
+import Icon from '../atoms/Icon'
+import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
 
 interface ConvertPouchStorageProps {
   storageId: string
@@ -122,12 +124,26 @@ const ConvertPouchStorage = ({
 
   return (
     <>
-      <FormHeading depth={2}>Convert File System based Storage</FormHeading>
-      {!opened ? (
-        <FormGroup>
-          <FormSecondaryButton onClick={openForm}>Convert</FormSecondaryButton>
-        </FormGroup>
-      ) : (
+      <FormHeading depth={2}>
+        <a
+          onClick={() => {
+            if (opened) {
+              closeForm()
+            } else {
+              openForm()
+            }
+          }}
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Icon path={opened ? mdiChevronDown : mdiChevronRight} />
+          <span>Convert File System based Storage</span>
+        </a>
+      </FormHeading>
+      {opened && (
         <>
           <FormBlockquote variant={errorMessage == null ? 'primary' : 'danger'}>
             {errorMessage == null

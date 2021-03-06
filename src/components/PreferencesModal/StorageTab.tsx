@@ -17,8 +17,12 @@ import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
-import { appIsElectron } from '../../lib/platform'
+import { appIsElectron, openNew } from '../../lib/platform'
 import { usePreferences } from '../../lib/preferences'
+import {
+  boostHubLearnMorePageUrl,
+  boostHubPricingPageUrl,
+} from '../../lib/boosthub'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -31,13 +35,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   const [newName, setNewName] = useState(storage.name)
   const { messageBox } = useDialog()
   const { pushMessage } = useToast()
-  const [editingName, setEditingName] = useState(false)
   const { openTab } = usePreferences()
-
-  const startEditingName = useCallback(() => {
-    setNewName(storage.name)
-    setEditingName(true)
-  }, [storage.name])
 
   const removeCallback = useCallback(() => {
     messageBox({
@@ -68,54 +66,49 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
 
   const updateStorageName = useCallback(() => {
     db.renameStorage(storage.id, newName)
-    setEditingName(false)
   }, [storage.id, db, newName])
 
   return (
     <div>
-      <h2>Storage Name</h2>
-      {!editingName ? (
-        <>
-          <p>{storage.name}</p>
-          <FormGroup>
-            <FormSecondaryButton onClick={startEditingName}>
-              Edit
-            </FormSecondaryButton>
-          </FormGroup>
-        </>
-      ) : (
-        <>
-          <FormGroup>
-            <FormTextInput
-              type='text'
-              value={newName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setNewName(e.target.value)
-              }
-            />
-          </FormGroup>
-          <FormGroup>
-            <FormPrimaryButton onClick={updateStorageName}>
-              Update
-            </FormPrimaryButton>
-            <FormSecondaryButton
-              onClick={() => {
-                setEditingName(false)
-              }}
-            >
-              Cancel
-            </FormSecondaryButton>
-          </FormGroup>
-        </>
+      {storage.type === 'pouch' && storage.cloudStorage != null && (
+        <FormBlockquote variant='danger'>
+          <div>
+            <h1 style={{ marginTop: 0 }}>⚠️ Action Required!</h1>
+            <p>
+              We have renewed our cloud storage solution and decided{' '}
+              <strong>
+                to deprecate the legacy cloud storage at 31th March.{' '}
+              </strong>
+              Please migrate your data to the new cloud space and{' '}
+              <strong>get a 3 months free coupon</strong>.(Monthly fee: $3) You
+              can also convert this storage into a file system based local
+              space.
+            </p>
+          </div>
+        </FormBlockquote>
       )}
-      <h2>Local Space Type</h2>
-      <p>{storage.type === 'fs' ? 'File System' : 'PouchDB'}</p>
-      {storage.type === 'fs' && (
-        <>
-          <h2>Space Location</h2>
-          <p>{storage.location}</p>
-        </>
-      )}
+      <h2>
+        Storage Info{' '}
+        <small>
+          (type: {storage.type === 'fs' ? 'File System' : 'PouchDB'})
+        </small>
+      </h2>
+      {storage.type === 'fs' && <p>Location : {storage.location}</p>}
+
+      <FormGroup>
+        <FormTextInput
+          type='text'
+          value={newName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewName(e.target.value)
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <FormPrimaryButton onClick={updateStorageName}>
+          Update
+        </FormPrimaryButton>
+      </FormGroup>
 
       {storage.type === 'fs' && (
         <>
@@ -134,10 +127,71 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </>
       )}
       <hr />
-      <FormHeading>Migrate data to cloud space</FormHeading>
-      <FormSecondaryButton onClick={() => openTab('migration')}>
+      <FormHeading depth={2}>Migrate data to cloud space</FormHeading>
+      <FormBlockquote>
+        <h2 style={{ marginTop: 0 }}>Notice</h2>
+        <ol>
+          <li>
+            We highly recommend you to migrate your local data to a cloud space
+            so you can access useful features like document revision history,
+            public APIs, document public sharing, 2000 tools integration and
+            more. Please click{' '}
+            <a
+              onClick={(event) => {
+                event.preventDefault()
+                openNew(boostHubPricingPageUrl)
+              }}
+              href={boostHubLearnMorePageUrl}
+            >
+              here
+            </a>{' '}
+            to check it out.
+          </li>
+          <li>
+            Some features are limited based on your pricing plan. Please try Pro
+            trial to access all of them for 2 weeks for free. Check our{' '}
+            <a
+              onClick={(event) => {
+                event.preventDefault()
+                openNew(boostHubPricingPageUrl)
+              }}
+              href={boostHubPricingPageUrl}
+            >
+              pricing plan
+            </a>{' '}
+            to know more.
+          </li>
+          <li>
+            Migrated documents will not be counted to the document limitation of
+            free plan. Please try out a cloud space today!
+          </li>
+          <li>
+            You will get a 3 Months free coupon after migration. This deal will
+            be available until 31th March.
+          </li>
+        </ol>
+      </FormBlockquote>
+
+      <FormPrimaryButton onClick={() => openTab('migration')}>
         Start Migration
-      </FormSecondaryButton>
+      </FormPrimaryButton>
+
+      {storage.type !== 'fs' && (
+        <>
+          <hr />
+          <FormHeading depth={2}>
+            Cloud Info{' '}
+            {storage.cloudStorage != null && (
+              <small>(ID: {storage.cloudStorage.id})</small>
+            )}
+          </FormHeading>
+          {storage.cloudStorage == null ? (
+            <LinkCloudStorageForm storage={storage} />
+          ) : (
+            <ManageCloudStorageForm storage={storage as any} />
+          )}
+        </>
+      )}
       <hr />
       <FormHeading depth={2}>Remove Space</FormHeading>
       {storage.type !== 'fs' && storage.cloudStorage != null && (
@@ -151,18 +205,6 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           Remove Space
         </FormSecondaryButton>
       </FormGroup>
-
-      {storage.type !== 'fs' && (
-        <>
-          <hr />
-          <FormHeading depth={2}>Cloud Info</FormHeading>
-          {storage.cloudStorage == null ? (
-            <LinkCloudStorageForm storage={storage} />
-          ) : (
-            <ManageCloudStorageForm storage={storage as any} />
-          )}
-        </>
-      )}
     </div>
   )
 }

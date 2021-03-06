@@ -13,33 +13,29 @@ const DocLimitReachedBanner = () => {
   const { openSettingsTab } = useSettings()
 
   return (
-    <Banner
-      content={
-        <p>
-          <StyledLabel>
-            {subscription == null
-              ? `Your workspace exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
-              : `Your workspace exceeds the limit of your current plan. (${subscription.seats} team members)`}
-          </StyledLabel>
-          <CustomButton
-            style={{
-              height: '28px',
-              lineHeight: '10px',
-              padding: '0 10px',
-            }}
-            variant='danger'
-            onClick={() => {
-              trackEvent(MixpanelActionTrackTypes.UpgradeLimit)
-              openSettingsTab('teamUpgrade')
-            }}
-          >
-            Upgrade
-          </CustomButton>
-        </p>
-      }
-      className='center'
-      variant='danger'
-    />
+    <Banner className='center' variant='danger'>
+      <p>
+        <StyledLabel>
+          {subscription == null
+            ? `Your workspace exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
+            : `Your workspace exceeds the limit of your current plan. (${subscription.seats} team members)`}
+        </StyledLabel>
+        <CustomButton
+          style={{
+            height: '28px',
+            lineHeight: '10px',
+            padding: '0 10px',
+          }}
+          variant='danger'
+          onClick={() => {
+            trackEvent(MixpanelActionTrackTypes.UpgradeLimit)
+            openSettingsTab('teamUpgrade')
+          }}
+        >
+          Upgrade
+        </CustomButton>
+      </p>
+    </Banner>
   )
 }
 

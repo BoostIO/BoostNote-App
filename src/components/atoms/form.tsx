@@ -83,6 +83,10 @@ export const FormBlockquote = styled.blockquote<{
     }};
   margin-left: 0;
   padding: 0.5em 1em;
+
+  a {
+    color: ${({ theme }) => theme.primaryColor};
+  }
 `
 
 export const FormCheckInlineItemContainer = styled.div`

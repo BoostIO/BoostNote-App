@@ -24,6 +24,8 @@ import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
 import { filenamify } from '../../lib/string'
+import Icon from '../atoms/Icon'
+import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -263,7 +265,25 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
 
   return (
     <>
-      <FormHeading depth={2}>Import Notes from Legacy BoostNote</FormHeading>
+      <FormHeading depth={2}>
+        <a
+          onClick={() => {
+            if (opened) {
+              closeForm()
+            } else {
+              openForm()
+            }
+          }}
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Icon path={opened ? mdiChevronDown : mdiChevronRight} />
+          <span>Import Notes from Legacy BoostNote</span>
+        </a>
+      </FormHeading>
       {opened ? (
         <>
           {errorMessage != null && (
@@ -302,7 +322,6 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
           {doneMessage != null && (
             <FormBlockquote variant='primary'>{doneMessage}</FormBlockquote>
           )}
-          <FormSecondaryButton onClick={openForm}>Import</FormSecondaryButton>
         </FormGroup>
       )}
     </>

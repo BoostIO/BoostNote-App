@@ -2,7 +2,12 @@ import React from 'react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
 import Icon from './Icon'
-import { mdiChevronDown, mdiChevronRight, mdiCircleSmall } from '@mdi/js'
+import {
+  mdiChevronDown,
+  mdiChevronRight,
+  mdiCircleSmall,
+  mdiAlertCircleOutline,
+} from '@mdi/js'
 import { textOverflow } from '../../lib/styled/styleFunctions'
 
 const Container = styled.div`
@@ -122,6 +127,7 @@ interface NavigatorItemProps {
   folded?: boolean
   active?: boolean
   subtle?: boolean
+  alert?: boolean
   onFoldButtonClick?: (event: React.MouseEvent) => void
   onClick?: (event: React.MouseEvent) => void
   onContextMenu?: (event: React.MouseEvent) => void
@@ -143,6 +149,7 @@ const NavigatorItem = ({
   dotPlaceholder,
   active,
   subtle,
+  alert,
   onFoldButtonClick,
   onClick,
   onDoubleClick,
@@ -201,6 +208,13 @@ const NavigatorItem = ({
           </IconContainer>
         )}
         <Label className={cc([subtle && 'subtle'])}>{label}</Label>
+        {alert && (
+          <Icon
+            color='red'
+            path={mdiAlertCircleOutline}
+            style={{ marginRight: 5 }}
+          />
+        )}
         {control && <Control className='control'>{control}</Control>}
       </ClickableContainer>
     </Container>

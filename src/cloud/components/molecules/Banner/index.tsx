@@ -3,14 +3,14 @@ import cc from 'classcat'
 import styled from '../../../lib/styled'
 
 interface BannerProps {
-  content: React.ReactNode | string
+  children: React.ReactNode | string
   variant?: 'danger' | 'info' | 'warning'
   className?: string
   style?: CSSProperties
 }
 
 const Banner = ({
-  content,
+  children,
   className,
   style,
   variant = 'danger',
@@ -20,7 +20,7 @@ const Banner = ({
       className={cc(['banner-top', `banner-${variant}`, className])}
       style={style}
     >
-      {content}
+      {children}
     </StyledBanner>
   )
 }
