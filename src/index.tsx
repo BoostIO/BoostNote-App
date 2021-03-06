@@ -15,6 +15,7 @@ import { SearchModalProvider } from './lib/searchModal'
 import { CheckedFeaturesProvider } from './lib/checkedFeatures'
 import { BoostHubStoreProvider } from './lib/boosthub'
 import { CreateWorkspaceModalProvider } from './lib/createWorkspaceModal'
+import { CloudIntroModalProvider } from './lib/cloudIntroModal'
 
 const CombinedProvider = combineProviders(
   BoostHubStoreProvider,
@@ -29,7 +30,8 @@ const CombinedProvider = combineProviders(
   RouterProvider,
   ToastProvider,
   CheckedFeaturesProvider,
-  CreateWorkspaceModalProvider
+  CreateWorkspaceModalProvider,
+  CloudIntroModalProvider
 )
 
 function render(Component: typeof App) {
