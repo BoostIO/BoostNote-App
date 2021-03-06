@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { SelectChangeEventHandler } from '../../lib/events'
-import { initAccessToken } from '../../cloud/lib/stores/electron'
-import { getWorkspaces } from '../../cloud/api/teams/workspaces'
 import { SectionSelect } from '../PreferencesModal/styled'
+import { usePreferences } from '../../lib/preferences'
+import { getWorkspaces } from '../../cloud/api/teams/workspaces'
 
 interface WorkspaceSelectProps {
   onChange: (workspace: SerializedWorkspace | null) => void
@@ -40,13 +40,23 @@ const CloudWorkspaceSelect = ({
   useEffect(() => {
     onErrorRef.current = onError
   }, [onError])
+  const { preferences } = usePreferences()
 
   useEffect(() => {
     let cancelled = false
     setWorkspaces(cache.current.get(team.id))
     setState('loading')
-    initAccessToken()
-      .then(() => getWorkspaces(team.id))
+
+    new Promise<{
+      workspaces: SerializedWorkspace[]
+    }>(async (resolve, reject) => {
+      try {
+        const data = await getWorkspaces(team.id)
+        resolve(data)
+      } catch (error) {
+        reject(error)
+      }
+    })
       .then(({ workspaces }) => {
         cache.current.set(team.id, workspaces)
         if (!cancelled) {
@@ -56,12 +66,13 @@ const CloudWorkspaceSelect = ({
       })
       .catch((error) => {
         setState('error')
+        console.error(error)
         onErrorRef.current && onErrorRef.current(error)
       })
     return () => {
       cancelled = true
     }
-  }, [team])
+  }, [team, preferences])
 
   useEffect(() => {
     onChange(workspaces != null ? workspaces[0] || null : null)

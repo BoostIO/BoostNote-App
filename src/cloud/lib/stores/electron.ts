@@ -61,6 +61,9 @@ export function openInBrowser(url: string) {
 let accessTokenHasBeenInitialized = false
 let accessToken: string | null = null
 export function setAccessToken(newAccessToken: string | null) {
+  if (!accessTokenHasBeenInitialized) {
+    accessTokenHasBeenInitialized = true
+  }
   accessToken = newAccessToken
 }
 

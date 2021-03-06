@@ -4,6 +4,7 @@ import {
   BrowserWindowConstructorOptions,
   Menu,
   protocol,
+  session,
 } from 'electron'
 import path from 'path'
 import url from 'url'
@@ -39,7 +40,9 @@ function createMainWindow() {
   const window = new BrowserWindow(windowOptions)
 
   if (dev) {
-    window.loadURL(`http://localhost:3000/app`)
+    window.loadURL(`http://localhost:3000/app`, {
+      userAgent: session.defaultSession.getUserAgent() + ` BoostNote`,
+    })
   } else {
     window.loadURL(
       url.format({

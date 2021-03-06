@@ -9,6 +9,7 @@ import { NoteSortingOptions } from './sort'
 import { setTrafficLightPosition } from './electronOnly'
 import { osName } from './platform'
 import { nodeEnv } from '../cloud/lib/consts'
+import { setAccessToken } from '../cloud/lib/stores/electron'
 
 export type GeneralThemeOptions =
   | 'auto'
@@ -175,6 +176,16 @@ function usePreferencesStore() {
       setTrafficLightPosition({ x: 8, y: 24 })
     }
   }, [generalShowAppNavigator])
+
+  const cloudUserInfo = preferences['cloud.user']
+  useEffect(() => {
+    if (cloudUserInfo == null) {
+      setAccessToken(null)
+      return
+    }
+
+    setAccessToken(cloudUserInfo.accessToken)
+  }, [cloudUserInfo])
 
   return {
     tab,

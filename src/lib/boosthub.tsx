@@ -13,7 +13,7 @@ import { Cookie } from 'electron/main'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
-export const boostHubWebViewUserAgent = `${navigator.userAgent} BoostNote ${process.env.VERSION}`
+export const boostHubWebViewUserAgent = `${navigator.userAgent} ${process.env.VERSION} Cloud Space`
 
 const boostHubDesktopLoginPageUrl = `${boostHubBaseUrl}/desktop/login`
 

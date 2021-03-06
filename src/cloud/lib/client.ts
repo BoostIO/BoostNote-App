@@ -36,7 +36,11 @@ export async function callApi<T = any>(
     ...headers,
   }
   const accessToken = getAccessToken()
-  if (usingElectron && accessToken != null) {
+  if (
+    usingElectron &&
+    accessToken != null &&
+    mergedHeaders['Authorization'] == null
+  ) {
     mergedHeaders['Authorization'] = `Bearer ${accessToken}`
   }
   return ky(pathname.startsWith('/') ? pathname.substring(1) : pathname, {
