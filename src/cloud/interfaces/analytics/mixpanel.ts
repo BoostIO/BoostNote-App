@@ -10,6 +10,9 @@ export enum MixpanelActionTrackTypes {
   DocDelete = 'doc.delete',
   DocEdit = 'doc.edit',
   DocEmoji = 'doc.emoji',
+  DocFeatureRevision = 'doc.feature.revision',
+  DocFeatureSharePassword = 'doc.feature.share.password',
+  DocFeatureShareExpirationDate = 'doc.feature.share.expiration.date',
   DocImport = 'doc.import',
   DocLayoutEdit = 'doc.layout.edit',
   DocOpen = 'doc.open',
@@ -91,6 +94,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.UpgradeLimit
   | MixpanelActionTrackTypes.UpgradePassword
   | MixpanelActionTrackTypes.UpgradeRevision
+  | MixpanelActionTrackTypes.DocFeatureRevision
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
