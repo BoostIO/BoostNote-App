@@ -104,18 +104,6 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                   'Get started for free'
                 )}
               </Button>
-              {usingElectron && (
-                <div>
-                  <Button
-                    type='button'
-                    variant='link'
-                    onClick={openCreateLocalSpacePage}
-                    style={{ marginTop: 10 }}
-                  >
-                    Create a Local Space
-                  </Button>
-                </div>
-              )}
               {!usingElectron && (
                 <Button
                   type='button'
@@ -132,6 +120,19 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
             </Flexbox>
           </form>
         </div>
+
+        {usingElectron && (
+          <div className='local-space'>
+            <Button
+              type='button'
+              variant='link'
+              onClick={openCreateLocalSpacePage}
+              style={{ marginTop: 10 }}
+            >
+              Create a Local Space
+            </Button>
+          </div>
+        )}
       </Container>
     </Page>
   )
@@ -141,6 +142,13 @@ const Container = styled.div`
   display: flex;
   height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .local-space {
+    text-align: center;
+    margin-bottom: 30px;
+  }
   .settings__wrap {
     position: relative;
     width: 1020px;
@@ -198,9 +206,9 @@ const Container = styled.div`
   }
   form {
     text-align: left;
-    margin-top: ${({ theme }) => theme.space.xxlarge}px;
+    margin-top: ${({ theme }) => theme.space.large}px;
     .row {
-      margin: ${({ theme }) => theme.space.xxlarge}px 0;
+      margin: ${({ theme }) => theme.space.large}px 0;
       position: relative;
     }
   }
