@@ -110,6 +110,7 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                     type='button'
                     variant='link'
                     onClick={openCreateLocalSpacePage}
+                    style={{ marginTop: 10 }}
                   >
                     Create a Local Space
                   </Button>
