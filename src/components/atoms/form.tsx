@@ -48,6 +48,14 @@ export const FormGroup = styled.div`
     margin-bottom: 0;
   }
 `
+export const FormControlGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+`
 
 export const FormLabel = styled.label`
   display: inline-block;
@@ -209,4 +217,26 @@ export const FormField = styled.div`
   padding: 1rem;
   border-radius: 0.25rem;
   ${border}
+`
+
+export const FormLabelGroup = styled.div`
+  margin-bottom: 1rem;
+  min-height: 40px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  justify-content: flexend;
+  display: flex;
+  align-items: center;
+`
+
+export const FormLabelGroupLabel = styled.label`
+  display: flex;
+  align-items: center;
+  min-width: 140px;
+`
+export const FormLabelGroupContent = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
 `

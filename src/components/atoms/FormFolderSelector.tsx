@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from '../../lib/styled'
 import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
@@ -38,10 +38,11 @@ const FormFolderSelectorButton = styled.button`
 
 interface FormFolderSelector {
   value: string
+  style?: CSSProperties
   setValue: (value: string) => void
 }
 
-const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
+const FormFolderSelector = ({ value, style, setValue }: FormFolderSelector) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
   const { t } = useTranslation()
   const openDialog = useCallback(async () => {
@@ -71,7 +72,7 @@ const FormFolderSelector = ({ value, setValue }: FormFolderSelector) => {
   }, [dialogIsOpen, setValue, t])
 
   return (
-    <FormFolderSelectorContainer>
+    <FormFolderSelectorContainer style={style}>
       <FormFolderSelectorInput
         type='text'
         onClick={openDialog}

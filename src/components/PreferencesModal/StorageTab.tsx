@@ -9,12 +9,13 @@ import {
   FormHeading,
   FormGroup,
   FormTextInput,
-  FormBlockquote,
   FormPrimaryButton,
-  FormSecondaryButton,
+  FormLabelGroup,
+  FormLabelGroupLabel,
+  FormLabelGroupContent,
+  FormControlGroup,
 } from '../atoms/form'
 import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
-import ManageCloudStorageForm from '../organisms/ManageCloudStorageForm'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
 import { appIsElectron, openNew } from '../../lib/platform'
@@ -23,6 +24,8 @@ import {
   boostHubLearnMorePageUrl,
   boostHubPricingPageUrl,
 } from '../../lib/boosthub'
+import Alert from '../atoms/Alert'
+import InlineLinkButton from '../atoms/InlineLinkButton'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -71,65 +74,46 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
   return (
     <div>
       {storage.type === 'pouch' && storage.cloudStorage != null && (
-        <FormBlockquote variant='danger'>
-          <div>
-            <h1 style={{ marginTop: 0 }}>⚠️ Action Required!</h1>
-            <p>
-              We have renewed our cloud storage solution and decided{' '}
-              <strong>
-                to deprecate the legacy cloud storage at 31th March.{' '}
-              </strong>
-              Please migrate your data to the new cloud space and{' '}
-              <strong>get a 3 months free coupon</strong>.(Monthly fee: $3) You
-              can also convert this storage into a file system based local
-              space.
-            </p>
-          </div>
-        </FormBlockquote>
+        <Alert variant='danger'>
+          <h1 style={{ marginTop: 0 }}>⚠️ Action Required!</h1>
+          <p>
+            We have renewed our cloud storage solution and decided{' '}
+            <strong>
+              to deprecate the legacy cloud storage on March 31st.{' '}
+            </strong>
+            Please migrate your data to the new cloud space and{' '}
+            <strong>get a 3 months free coupon</strong>.(Monthly fee: $3) You
+            can also convert this storage into a file system based local space.
+          </p>
+        </Alert>
       )}
-      <h2>
-        Storage Info{' '}
-        <small>
-          (type: {storage.type === 'fs' ? 'File System' : 'PouchDB'})
-        </small>
-      </h2>
+      <h2>Space Settings</h2>
       {storage.type === 'fs' && <p>Location : {storage.location}</p>}
 
-      <FormGroup>
-        <FormTextInput
-          type='text'
-          value={newName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setNewName(e.target.value)
-          }
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormPrimaryButton onClick={updateStorageName}>
-          Update
-        </FormPrimaryButton>
-      </FormGroup>
-
-      {storage.type === 'fs' && (
-        <>
-          <hr />
-          <ImportLegacyNotesForm storageId={storage.id} />
-        </>
+      {storage.type === 'pouch' && storage.cloudStorage == null && (
+        <LinkCloudStorageForm storage={storage} />
       )}
 
-      {storage.type === 'pouch' && appIsElectron && (
-        <>
-          <hr />
-          <ConvertPouchStorageForm
-            storageId={storage.id}
-            storageName={storage.name}
+      <FormLabelGroup>
+        <FormLabelGroupLabel>Space Name</FormLabelGroupLabel>
+        <FormLabelGroupContent>
+          <FormTextInput
+            type='text'
+            value={newName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewName(e.target.value)
+            }
           />
-        </>
-      )}
+        </FormLabelGroupContent>
+      </FormLabelGroup>
+      <FormControlGroup>
+        <FormPrimaryButton onClick={updateStorageName}>Save</FormPrimaryButton>
+      </FormControlGroup>
+
       <hr />
       <FormHeading depth={2}>Migrate data to cloud space</FormHeading>
-      <FormBlockquote>
-        <h2 style={{ marginTop: 0 }}>Notice</h2>
+      <Alert>
+        <h2>⚠️ Notice</h2>
         <ol>
           <li>
             We highly recommend you to migrate your local data to a cloud space
@@ -167,44 +151,50 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           </li>
           <li>
             You will get a 3 Months free coupon after migration. This deal will
-            be available until 31th March.
+            be available until March 31st.
           </li>
         </ol>
-      </FormBlockquote>
+      </Alert>
 
-      <FormPrimaryButton onClick={() => openTab('migration')}>
-        Start Migration
-      </FormPrimaryButton>
+      <FormGroup>
+        <FormPrimaryButton onClick={() => openTab('migration')}>
+          Start Migration
+        </FormPrimaryButton>
+      </FormGroup>
 
-      {storage.type !== 'fs' && (
+      {storage.type === 'fs' && (
         <>
           <hr />
-          <FormHeading depth={2}>
-            Cloud Info{' '}
-            {storage.cloudStorage != null && (
-              <small>(ID: {storage.cloudStorage.id})</small>
-            )}
-          </FormHeading>
-          {storage.cloudStorage == null ? (
-            <LinkCloudStorageForm storage={storage} />
-          ) : (
-            <ManageCloudStorageForm storage={storage as any} />
-          )}
+          <ImportLegacyNotesForm storageId={storage.id} />
         </>
       )}
-      <hr />
-      <FormHeading depth={2}>Remove Space</FormHeading>
-      {storage.type !== 'fs' && storage.cloudStorage != null && (
-        <FormBlockquote>
-          Your space in the legacy cloud server will not be deleted. To delete
-          data in the server, check cloud info section.
-        </FormBlockquote>
+
+      {storage.type === 'pouch' && appIsElectron && (
+        <>
+          <hr />
+          <ConvertPouchStorageForm
+            storageId={storage.id}
+            storageName={storage.name}
+          />
+        </>
       )}
-      <FormGroup>
-        <FormSecondaryButton onClick={removeCallback}>
-          Remove Space
-        </FormSecondaryButton>
-      </FormGroup>
+
+      <hr />
+
+      <FormHeading depth={2}>Remove Space</FormHeading>
+      <p>
+        {storage.type !== 'fs' ? (
+          <>
+            This will permantly remove all notes locally stored in this space.
+          </>
+        ) : (
+          <>
+            This will not delete the actual data files in your disk. You can add
+            it to the app again.
+          </>
+        )}
+        <InlineLinkButton onClick={removeCallback}>Remove</InlineLinkButton>
+      </p>
     </div>
   )
 }

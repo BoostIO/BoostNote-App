@@ -7,6 +7,10 @@ import {
   FormBlockquote,
   FormSecondaryButton,
   FormHeading,
+  FormLabelGroup,
+  FormLabelGroupLabel,
+  FormLabelGroupContent,
+  FormControlGroup,
 } from '../atoms/form'
 import FormFolderSelector from '../atoms/FormFolderSelector'
 import { useDb } from '../../lib/db'
@@ -140,39 +144,35 @@ const ConvertPouchStorage = ({
           }}
         >
           <Icon path={opened ? mdiChevronDown : mdiChevronRight} />
-          <span>Convert File System based Storage</span>
+          <span>Convert Into File System based Local Space</span>
         </a>
       </FormHeading>
       {opened && (
         <>
-          <FormBlockquote variant={errorMessage == null ? 'primary' : 'danger'}>
+          <p>
             {errorMessage == null
               ? 'This operation will clone data to File System based Space.'
               : errorMessage}
-          </FormBlockquote>
+          </p>
 
-          <FormGroup>
-            <FormLabel>Converted Space Name</FormLabel>
-            <FormTextInput
-              value={newStorageName}
-              onChange={updateNewStorageName}
-            />
-          </FormGroup>
-          <FormGroup>
-            <FormLabel>Converted Space Location</FormLabel>
-            <FormFolderSelector
-              value={newStorageLocation}
-              setValue={setNewStorageLocation}
-            />
-          </FormGroup>
-          <FormGroup>
-            <FormPrimaryButton onClick={cloneAndConvertStorage}>
-              Convert to File System based Space
-            </FormPrimaryButton>
+          <FormLabelGroup>
+            <FormLabelGroupLabel>Choose Location</FormLabelGroupLabel>
+            <FormLabelGroupContent>
+              <FormFolderSelector
+                style={{ flex: 1 }}
+                value={newStorageLocation}
+                setValue={setNewStorageLocation}
+              />
+            </FormLabelGroupContent>
+          </FormLabelGroup>
+          <FormControlGroup>
             <FormSecondaryButton onClick={closeForm}>
               Cancel
             </FormSecondaryButton>
-          </FormGroup>
+            <FormPrimaryButton onClick={cloneAndConvertStorage}>
+              Convert to File System based Space
+            </FormPrimaryButton>
+          </FormControlGroup>
         </>
       )}
     </>
