@@ -16,7 +16,7 @@ interface SharedDocPageProps {
   token: string
 }
 
-const SharedDocPage = ({ token }: SharedDocPageProps) => {
+const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userInfo] = useState(() => ({
@@ -30,6 +30,7 @@ const SharedDocPage = ({ token }: SharedDocPageProps) => {
 
   const [realtime, connState, otherUsers] = useRealtime({
     token,
+    id: doc.id,
     userInfo: userInfo,
   })
 

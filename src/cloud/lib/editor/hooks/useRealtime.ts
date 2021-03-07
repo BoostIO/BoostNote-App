@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
-import { Doc } from 'yjs'
+import { Doc, applyUpdate, encodeStateAsUpdate } from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { uniqWith } from 'ramda'
 import { useRealtimeConn } from '../../stores/realtimeConn'
+import { createCache } from '../../cache'
+import { useEffectOnce } from 'react-use'
 
 export type PresenceChange<T> =
   | { type: 'connected'; sessionId: number; userInfo: T }
@@ -10,6 +12,7 @@ export type PresenceChange<T> =
 
 export interface RealtimeArgs<T extends { id: string }> {
   token: string
+  id: string
   userInfo?: T
 }
 
@@ -22,6 +25,7 @@ export type ConnectionState =
 
 const useRealtime = <T extends { id: string }>({
   token,
+  id,
   userInfo,
 }: RealtimeArgs<T>) => {
   const { constructor } = useRealtimeConn()
@@ -29,6 +33,15 @@ const useRealtime = <T extends { id: string }>({
   const [connState, setConnState] = useState<ConnectionState>('initialising')
   const [users, setUsers] = useState<T[]>([])
   const timeoutRef = useRef<number>()
+  const [cachePromise] = useState(() =>
+    createCache<Uint8Array>('cache:realtime')
+  )
+
+  useEffectOnce(() => {
+    return () => {
+      cachePromise.then((cache) => cache.close())
+    }
+  })
 
   useEffect(() => {
     if (constructor == null) {
@@ -36,6 +49,16 @@ const useRealtime = <T extends { id: string }>({
     }
 
     const doc = new Doc()
+
+    cachePromise
+      .then((cache) => cache.get(id))
+      .then((data) => {
+        if (data != null) {
+          applyUpdate(doc, data)
+        }
+      })
+      .catch((error) => console.error(error))
+
     const provider = new WebsocketProvider('', token, doc, {
       WebSocketPolyfill: constructor,
     })
@@ -89,8 +112,12 @@ const useRealtime = <T extends { id: string }>({
       provider.destroy()
       setUsers([])
       setConnState('disconnected')
+      encodeStateAsUpdate(doc)
+      cachePromise
+        .then((cache) => cache.put(id, encodeStateAsUpdate(doc)))
+        .catch((error) => console.log(error))
     }
-  }, [token, constructor])
+  }, [token, constructor, cachePromise, id])
 
   useEffect(() => {
     if (provider != null && userInfo != null) {
