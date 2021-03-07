@@ -85,7 +85,9 @@ async function* createMigrationIter(
   workspace: SerializedWorkspace
 ): AsyncGenerator<MigrationProgress, MigrationProgress> {
   const attachments = Object.entries(storage.attachmentMap).filter(tupleExists)
-  const notes = Object.entries(storage.noteMap).filter(tupleExists)
+  const notes = Object.entries(storage.noteMap)
+    .filter(tupleExists)
+    .filter(([, doc]) => !doc.trashed)
 
   const attachmentSources: [string, string][] = []
 
