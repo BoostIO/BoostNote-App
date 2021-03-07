@@ -12,11 +12,13 @@ import { redeemPromo } from '../../../api/teams/subscription'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
+  onSuccess: (subscription: SerializedSubscription) => void
   onCancel: () => void
 }
 
 const UpdateBillingPromoForm = ({
   sub,
+  onSuccess,
   onCancel,
 }: UpdateBillingPromoFormProps) => {
   const { pushApiErrorMessage, pushMessage } = useToast()
@@ -37,6 +39,7 @@ const UpdateBillingPromoForm = ({
         description: `Applied promo code '${promoCode}' to your subscription`,
         type: 'success',
       })
+      onSuccess(sub)
     } catch (error) {
       if (error.response.status === 403) {
         pushMessage({
