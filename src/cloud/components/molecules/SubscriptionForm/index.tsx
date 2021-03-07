@@ -24,6 +24,8 @@ import {
   UpgradePlans,
 } from '../../../lib/stripe'
 import plur from 'plur'
+import Icon from '../../../../components/atoms/Icon'
+import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -48,6 +50,7 @@ const SubscriptionForm = ({
   const elements = useElements()
   const [email, setEmail] = useState('')
   const [promoCode, setPromoCode] = useState('')
+  const [showPromoCode, setShowPromoCode] = useState(false)
   const [sending, setSending] = useState(false)
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
@@ -96,7 +99,7 @@ const SubscriptionForm = ({
       } = await createSubscription(team, {
         source: source.id,
         email,
-        code: promoCode.length > 0 ? promoCode : undefined,
+        code: showPromoCode && promoCode.length > 0 ? promoCode : undefined,
         plan: currentPlan,
       })
 
@@ -190,16 +193,28 @@ const SubscriptionForm = ({
         value={email}
         onChange={onEmailInputChangeHandler}
       />
-      <StyledBillingInput
-        style={{ marginTop: '0' }}
-        placeholder='Promo Code'
-        value={promoCode}
-        onChange={onPromoCodeInputChangeHandler}
-      />
       {ongoingTrial != null && (
         <SectionDescription>
           Your free trial will be stopped.
         </SectionDescription>
+      )}
+      <button
+        className='sub__coupon'
+        onClick={() => {
+          setShowPromoCode((prev) => !prev)
+        }}
+        disabled={sending}
+      >
+        <Icon path={showPromoCode ? mdiChevronDown : mdiChevronRight} />
+        Apply a coupon
+      </button>
+      {showPromoCode && (
+        <StyledBillingInput
+          style={{ marginTop: '0' }}
+          placeholder='Promo Code'
+          value={promoCode}
+          onChange={onPromoCodeInputChangeHandler}
+        />
       )}
       <SectionFlexDualButtons
         style={{ justifyContent: 'flex-start', marginTop: '40px' }}
@@ -303,6 +318,28 @@ export const StyledSubscriptionForm = styled.form`
 
   .StripeElement {
     margin-top: 2px;
+  }
+
+  .sub__coupon {
+    display: inline-flex;
+    align-items: center;
+    transition: 200ms color;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    color: ${({ theme }) => theme.primaryTextColor};
+    margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: underline;
+    }
+
+    svg {
+      margin-left: ${({ theme }) => theme.space.xxsmall}px;
+    }
   }
 `
 
