@@ -79,6 +79,7 @@ const ModalBody = styled.div`
 
 const TabNav = styled.nav`
   width: 200px;
+  padding: 10px;
 `
 
 const TabContent = styled.div`
