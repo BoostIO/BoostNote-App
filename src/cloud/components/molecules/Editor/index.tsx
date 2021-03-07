@@ -158,6 +158,7 @@ const Editor = ({
 
   const [realtime, connState, connectedUsers] = useRealtime({
     token: doc.collaborationToken || doc.id,
+    id: doc.id,
     userInfo,
   })
 
