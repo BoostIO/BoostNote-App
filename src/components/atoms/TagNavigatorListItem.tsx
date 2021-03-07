@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Icon from './Icon'
 import styled from '../../lib/styled'
 import { mdiClose } from '@mdi/js'
@@ -79,6 +79,9 @@ const TagNavigatorListItem = ({
   const { report } = useAnalytics()
 
   const [colorPickerModal, showColorPickerModal] = useState(false)
+  const [tagColor, setTagColor] = useState(
+    typeof tag.data.color == 'string' ? tag.data.color : ''
+  )
 
   const openTagContextMenu = useCallback(() => {
     showColorPickerModal(true)
@@ -87,18 +90,11 @@ const TagNavigatorListItem = ({
   const handleColorChangeComplete = useCallback(
     (newColor: string) => {
       showColorPickerModal(false)
-      tag.data.color = newColor
-      updateTagColorByName(tag.name, tag.data.color)
+      setTagColor(newColor)
+      updateTagColorByName(tag.name, newColor)
     },
     [tag, updateTagColorByName]
   )
-  const tagColor = useMemo(() => {
-    return tag.data.color
-      ? typeof tag.data.color == 'string'
-        ? tag.data.color
-        : ''
-      : ''
-  }, [tag.data.color])
   return (
     <>
       {colorPickerModal && (
