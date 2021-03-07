@@ -1,10 +1,6 @@
-import React, { useState, useCallback, ChangeEvent } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
-  FormTextInput,
-  FormGroup,
-  FormLabel,
   FormPrimaryButton,
-  FormBlockquote,
   FormSecondaryButton,
   FormHeading,
   FormLabelGroup,
@@ -50,13 +46,6 @@ const ConvertPouchStorage = ({
   const closeForm = useCallback(() => {
     setOpened(false)
   }, [])
-
-  const updateNewStorageName = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setNewStorageName(event.target.value)
-    },
-    []
-  )
 
   const cloneAndConvertStorage = useCallback(async () => {
     try {
