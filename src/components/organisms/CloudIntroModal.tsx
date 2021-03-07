@@ -1,4 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, {
+  useCallback,
+  useState,
+  KeyboardEvent,
+  useRef,
+  useEffect,
+} from 'react'
 import Image from '../atoms/Image'
 import Icon from '../atoms/Icon'
 import {
@@ -25,9 +31,12 @@ import { FormPrimaryButton, FormSecondaryButton } from '../atoms/form'
 import { usePreferences } from '../../lib/preferences'
 import { useRouter } from '../../lib/router'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 const CloudIntroModal = () => {
   const { preferences, openTab } = usePreferences()
+  const { generalStatus } = useGeneralStatus()
+  const cloudSpaces = generalStatus.boostHubTeams
   const userInfo = preferences['cloud.user']
   const { push } = useRouter()
   const openLearnMorePage = useCallback(() => {
@@ -57,8 +66,31 @@ const CloudIntroModal = () => {
     setShowingDisabledMigrationTooltip(false)
   }, [])
 
+  const handleEscKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'Escape':
+          toggleShowingCloudIntroModal()
+          return
+      }
+    },
+    [toggleShowingCloudIntroModal]
+  )
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (containerRef.current == null) {
+      return
+    }
+    containerRef.current.focus()
+  })
+
   return (
-    <FullScreenContainer>
+    <FullScreenContainer
+      ref={containerRef}
+      tabIndex={-1}
+      onKeyDown={handleEscKeyDown}
+    >
       <BackgroundShadow onClick={toggleShowingCloudIntroModal} />
       <Container>
         <CloseButton onClick={toggleShowingCloudIntroModal}>
@@ -186,9 +218,11 @@ const CloudIntroModal = () => {
             </div>
           </IntroContainer>
           <div className='form-group'>
-            <FormPrimaryButton onClick={navigateToCreateSpacePageOrLogIn}>
-              Get Started
-            </FormPrimaryButton>
+            {cloudSpaces.length === 0 && (
+              <FormPrimaryButton onClick={navigateToCreateSpacePageOrLogIn}>
+                Get Started
+              </FormPrimaryButton>
+            )}
             <FormSecondaryButton
               className={cc([userInfo == null && 'disabled'])}
               onClick={() => {
