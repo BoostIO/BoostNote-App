@@ -193,6 +193,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             it to the app again.
           </>
         )}
+        &nbsp;
         <InlineLinkButton onClick={removeCallback}>Remove</InlineLinkButton>
       </p>
     </div>

@@ -15,6 +15,7 @@ import { CloudStorage, getStorages } from '../../lib/accounts'
 import InlineLinkButton from '../atoms/InlineLinkButton'
 import Alert from '../atoms/Alert'
 import LoginButton from '../atoms/LoginButton'
+import styled from '../../lib/styled'
 
 interface LinkCloudStorageFormProps {
   storage: NoteStorage
@@ -131,7 +132,10 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
           >
             Link to a deprecated legacy cloud space
           </LoginButton>
-          (All deprecated legacy cloud spaces will be discarded on March 31st.)
+          <DescriptionParagraph>
+            (All deprecated legacy cloud spaces will be discarded on March
+            31st.)
+          </DescriptionParagraph>
         </FormGroup>
       </>
     )
@@ -223,3 +227,8 @@ const LinkCloudStorageForm = ({ storage }: LinkCloudStorageFormProps) => {
 }
 
 export default LinkCloudStorageForm
+
+const DescriptionParagraph = styled.p`
+  margin: 5px 0;
+  color: ${({ theme }) => theme.uiTextColor};
+`
