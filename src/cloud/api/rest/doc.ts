@@ -8,6 +8,7 @@ interface DocCreateRequestBody {
   path: string
   tags: string[]
   teamId: string
+  generated?: boolean
 }
 
 interface DocCreateResponseBody {
