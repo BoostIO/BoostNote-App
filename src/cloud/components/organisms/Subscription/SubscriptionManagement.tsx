@@ -485,7 +485,6 @@ const StyledBillingButton = styled.button`
   &:hover,
   &:focus,
   &:active {
-    cursor: pointer;
     text-decoration: underline;
   }
 
