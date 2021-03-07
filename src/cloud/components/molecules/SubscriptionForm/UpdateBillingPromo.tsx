@@ -12,7 +12,7 @@ import { redeemPromo } from '../../../api/teams/subscription'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
-  onSuccess: (subscription: SerializedSubscription) => void
+  onSuccess: () => void
   onCancel: () => void
 }
 
@@ -39,7 +39,7 @@ const UpdateBillingPromoForm = ({
         description: `Applied promo code '${promoCode}' to your subscription`,
         type: 'success',
       })
-      onSuccess(sub)
+      onSuccess()
     } catch (error) {
       if (error.response.status === 403) {
         pushMessage({
