@@ -121,6 +121,7 @@ const SubscriptionTab = () => {
                   ) : formtab === 'promo' ? (
                     <UpdateBillingPromoForm
                       sub={subscription}
+                      onSuccess={onSuccessHandler}
                       onCancel={() => setFormTab(undefined)}
                     />
                   ) : null}
