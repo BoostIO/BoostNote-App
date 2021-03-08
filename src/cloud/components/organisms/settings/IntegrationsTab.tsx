@@ -580,7 +580,7 @@ const IntegrationsTab = () => {
                 <p>
                   Boost Note for Teams will show you the external content such
                   as Github issues, Trello cards, Google Docs, and much more
-                  automatically. What do you want on Boost Note for Teams?{' '}
+                  automatically. What do you want on Boost Note for Teams?
                   <button
                     className='item-info-request'
                     onClick={() =>
@@ -653,7 +653,13 @@ const StyledServiceListItem = styled.li`
     small {
       color: ${({ theme }) => theme.subtleTextColor};
       a {
+        color: ${({ theme }) => theme.primaryTextColor};
         text-decoration: underline;
+
+        &:hover,
+        &:focus {
+          text-decoration: none;
+        }
       }
     }
   }

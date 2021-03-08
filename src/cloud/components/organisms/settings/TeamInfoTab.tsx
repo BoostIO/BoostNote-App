@@ -38,13 +38,12 @@ const TeamInfoTab = () => {
 
           <SectionDescription>
             Once you delete this space we will remove all associated data. There
-            is no turning back.
+            is no turning back.{' '}
             <TeamLink
               intent='delete'
               team={team}
               beforeNavigate={() => closeSettingsTab()}
             >
-              {' '}
               {t('general.delete')}
             </TeamLink>
           </SectionDescription>

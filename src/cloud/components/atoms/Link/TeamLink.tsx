@@ -3,6 +3,7 @@ import Link from './Link'
 import querystring from 'querystring'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
+import styled from '../../../lib/styled'
 
 export type TeamLinkIntent =
   | 'index'
@@ -47,21 +48,34 @@ const TeamLink = ({
   tabIndex = 0,
 }: TeamLinkProps) => {
   return (
-    <Link
-      href={getTeamLinkHref(team, intent, query)}
-      className={className}
-      style={style}
-      beforeNavigate={beforeNavigate}
-      onFocus={onFocus}
-      tabIndex={tabIndex}
-      id={id}
-    >
-      {children}
-    </Link>
+    <StyledLink>
+      <Link
+        href={getTeamLinkHref(team, intent, query)}
+        className={className}
+        style={style}
+        beforeNavigate={beforeNavigate}
+        onFocus={onFocus}
+        tabIndex={tabIndex}
+        id={id}
+      >
+        {children}
+      </Link>
+    </StyledLink>
   )
 }
 
 export default TeamLink
+
+const StyledLink = styled.span`
+  a {
+    color: ${({ theme }) => theme.primaryTextColor};
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+`
 
 export function getTeamLinkHref(
   team: TeamIdProps,
