@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react'
 import { createStoreContext } from '../../utils/context'
 import { generateSecret } from '../../utils/secret'
-import ky from 'ky'
 
 export interface ToastMessage {
   id: string
@@ -45,7 +44,7 @@ const useToastStore = (): ToastStore => {
       let title = 'Error'
       let description = 'Something wrong happened'
 
-      if (error instanceof ky.HTTPError) {
+      if (error.response != null && typeof error.response.text === 'function') {
         try {
           title = error.response.status.toString()
           const errorMessage = await error.response.text()
