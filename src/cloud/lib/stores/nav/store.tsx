@@ -606,37 +606,34 @@ function useNavStore(pageProps: any): NavContext {
         if (event.teamId == null) {
           return
         }
-        const resourcesIds: string[] = []
-        const workspacesIds: string[] = []
+        const resourcesIds = new Set<string>()
+        const workspacesIds = new Set<string>()
 
         if (event.data != null) {
-          if (
-            event.type === 'resourcesUpdate' &&
-            event.data['resources'] != null
-          ) {
+          if (event.data['resource'] != null) {
+            resourcesIds.add(event.data['resource'])
+          }
+          if (event.data['workspaceId'] != null) {
+            workspacesIds.add(event.data['workspaceId'])
+          }
+          if (event.data['resources'] != null) {
             const data = event.data[
               'resources'
             ] as ResourcesIdSortedByWorkspaceIds
             const idSet = new Set<string>()
             Object.keys(data).forEach((workspaceId) => {
-              workspacesIds.push(workspaceId)
+              workspacesIds.add(workspaceId)
               ;(data[workspaceId] || []).forEach((resourceId) => {
                 idSet.add(resourceId)
               })
             })
-            resourcesIds.push(...idSet.values())
-          }
-          if (event.data['resource'] != null) {
-            resourcesIds.push(event.data['resource'])
-          }
-          if (event.data['workspaceId'] != null) {
-            workspacesIds.push(event.data['workspaceId'])
+            Array.from(idSet).forEach((id) => resourcesIds.add(id))
           }
         }
 
         const { docs, folders, workspaces } = await getResources(event.teamId, {
-          resourcesIds,
-          workspacesIds,
+          resourcesIds: Array.from(resourcesIds),
+          workspacesIds: Array.from(workspacesIds),
           minimal: true,
         })
         /** -- update -- **/
@@ -655,7 +652,7 @@ function useNavStore(pageProps: any): NavContext {
         const {
           uniqueFoldersIds,
           uniqueDocsIds,
-        } = getUniqueFolderAndDocIdsFromResourcesIds(resourcesIds)
+        } = getUniqueFolderAndDocIdsFromResourcesIds(Array.from(resourcesIds))
         uniqueFoldersIds.forEach((folderId) => {
           if (!changedFolders.has(folderId)) {
             removeFromFoldersMap(folderId)
