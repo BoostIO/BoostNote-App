@@ -5,7 +5,7 @@ import { createDocREST } from '../cloud/api/rest/doc'
 import { registerPromo } from '../cloud/api/teams/subscription'
 
 export interface MigrationJob {
-  on(ev: 'error', cb: (err: Error) => void): void
+  on(ev: 'error', cb: (err: any) => void): void
   on(ev: 'progress', cb: (progress: MigrationProgress) => void): void
   on(ev: 'complete', cb: (code?: string) => void): void
   start(): void
@@ -29,7 +29,7 @@ export function createMigrationJob(
   workspace: SerializedWorkspace
 ): MigrationJob {
   const iter = createMigrationIter(storage, workspace)
-  const onErrorSet = new Set<(err: Error) => void>()
+  const onErrorSet = new Set<(err: unknown) => void>()
   const onProgressSet = new Set<(progress: MigrationProgress) => void>()
   const onCompleteSet = new Set<(code?: string) => void>()
 
