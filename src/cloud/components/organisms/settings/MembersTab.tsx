@@ -591,20 +591,23 @@ const MembersTab = () => {
           ) : (
             <>
               {subscription == null || subscription.status === 'inactive' ? (
-                <>
-                  <SectionDescription>
-                    Upgrade to invite guests. Guests are people external to your
-                    team who you want to work with on specific documents.
-                    <br /> They can be invited to individual documents but not
-                    an entire workspace.{` `}
-                    <PrimaryAnchor
-                      target='_blank'
-                      rel='noreferrer'
-                      href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
-                    >
-                      See how it works <Icon path={mdiArrowRight} />
-                    </PrimaryAnchor>
-                  </SectionDescription>
+                <StyledGuestInactiveContent>
+                  <p>
+                    <SectionDescription>
+                      Upgrade to invite guests. Guests are people external to
+                      your team who you want to work with on specific documents.
+                      They can be invited to individual documents but not an
+                      entire workspace.
+                      {` `}
+                      <PrimaryAnchor
+                        target='_blank'
+                        rel='noreferrer'
+                        href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
+                      >
+                        See how it works <Icon path={mdiArrowRight} />
+                      </PrimaryAnchor>
+                    </SectionDescription>
+                  </p>
                   <CustomButton
                     variant='primary'
                     onClick={() => {
@@ -613,7 +616,7 @@ const MembersTab = () => {
                   >
                     Start Free Trial
                   </CustomButton>
-                </>
+                </StyledGuestInactiveContent>
               ) : (
                 <Section>
                   <Flexbox>
@@ -756,6 +759,18 @@ const StyledMembersTable = styled.table`
     .no-padding {
       padding: 0 !important;
     }
+  }
+`
+
+const StyledGuestInactiveContent = styled.div`
+  margin-top: ${({ theme }) => theme.space.medium}px;
+
+  p {
+    line-height: 1.6;
+  }
+
+  button {
+    margin-top: ${({ theme }) => theme.space.default}px;
   }
 `
 
