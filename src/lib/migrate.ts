@@ -94,47 +94,99 @@ async function* createMigrationIter(
   const jobCount = attachments.length * 2 + notes.length
   let jobsCompleted = 0
 
-  for (const [id, attachment] of attachments) {
+  const attachmentsQueue = attachments.map(([id, attachment]) => ({
+    id,
+    attachment,
+    retries: 0,
+  }))
+  while (attachmentsQueue.length > 0) {
+    const job = attachmentsQueue.shift()
+    if (job == null) break
+    const { attachment, id, retries } = job
+
     yield {
       jobCount,
       jobsCompleted,
       stage: { name: 'attachments', handling: id, subStage: 'setup' },
     }
-    const data = await attachment.getData()
-    const file = await loadFile(data, id)
-    yield {
-      jobCount,
-      jobsCompleted: ++jobsCompleted,
-      stage: { name: 'attachments', handling: id, subStage: 'upload' },
+
+    try {
+      const data = await attachment.getData()
+      const file = await loadFile(data, id)
+      yield {
+        jobCount,
+        jobsCompleted: ++jobsCompleted,
+        stage: { name: 'attachments', handling: id, subStage: 'upload' },
+      }
+      const upload = await uploadFile(workspace.teamId, file)
+      attachmentSources.push([
+        id,
+        buildTeamFileUrl(workspace.teamId, upload.file.name),
+      ])
+    } catch (err) {
+      if (
+        retries > 9 ||
+        (err.response instanceof Response && !isRetryable(err.response))
+      ) {
+        throw err
+      } else {
+        attachmentsQueue.push({ attachment, id, retries: retries + 1 })
+      }
     }
-    const upload = await uploadFile(workspace.teamId, file)
-    attachmentSources.push([
-      id,
-      buildTeamFileUrl(workspace.teamId, upload.file.name),
-    ])
   }
 
-  for (const [, note] of notes) {
+  const notesQueue = notes.map(([, note]) => ({
+    note,
+    retries: 0,
+  }))
+
+  while (notesQueue.length > 0) {
+    const job = notesQueue.shift()
+    if (job == null) break
+    const { note, retries } = job
+
     yield {
       jobCount,
-      jobsCompleted: ++jobsCompleted,
+      jobsCompleted,
       stage: {
         name: 'document',
         handling: `${note.folderPathname}/${note.title}`,
       },
     }
-    const content = replaceAttachments(note.content, attachmentSources)
-    await createDocREST({
-      workspaceId: workspace.id,
-      teamId: workspace.teamId,
-      content,
-      title: note.title,
-      tags: note.tags,
-      path: note.folderPathname,
-      generated: true,
-      events: true,
-    })
+
+    try {
+      const content = replaceAttachments(note.content, attachmentSources)
+      await createDocREST({
+        workspaceId: workspace.id,
+        teamId: workspace.teamId,
+        content,
+        title: note.title,
+        tags: note.tags,
+        path: note.folderPathname,
+        generated: true,
+        events: true,
+      })
+
+      yield {
+        jobCount,
+        jobsCompleted: ++jobsCompleted,
+        stage: {
+          name: 'document',
+          handling: `${note.folderPathname}/${note.title}`,
+        },
+      }
+    } catch (err) {
+      if (
+        retries > 9 ||
+        (err.response instanceof Response && !isRetryable(err.response))
+      ) {
+        throw err
+      } else {
+        notesQueue.push({ note, retries: retries + 1 })
+      }
+    }
   }
+
   return { jobCount, jobsCompleted, stage: { name: 'complete' as const } }
 }
 
@@ -142,6 +194,12 @@ function getPromoCode(teamId: string) {
   return registerPromo(teamId, 'migration')
     .then((code) => (code.active ? code.code : undefined))
     .catch(() => undefined)
+}
+
+function isRetryable(response: Response) {
+  return (
+    response.status === 408 || response.status < 400 || 499 < response.status
+  )
 }
 
 async function loadFile(data: AttachmentData, name: string) {
