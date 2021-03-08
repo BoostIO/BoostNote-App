@@ -71,7 +71,7 @@ export async function destroyWorkspace(
   destroyContent = false
 ) {
   const data = await callApi<DestroyWorkspaceResponseBody>(
-    `api/teams/${team.id}/workspaces/${workspace.id}}`,
+    `api/teams/${team.id}/workspaces/${workspace.id}`,
     {
       search: {
         destroyContent,
