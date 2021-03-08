@@ -22,6 +22,7 @@ import Icon from '../atoms/Icon'
 import { mdiAlert, mdiCheckCircle, mdiTea } from '@mdi/js'
 import ProgressBar from '../atoms/ProgressBar'
 import { usePreferences } from '../../lib/preferences'
+import ky from 'ky'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -338,7 +339,16 @@ function transitionRunning(
           return { ...prev, progress }
         })
       })
-      job.on('error', (err) => setState({ step: 'error', err }))
+      job.on('error', async (err) => {
+        if (err instanceof ky.HTTPError) {
+          const errorMessage = await err.response.text()
+          return setState({
+            step: 'error',
+            err: new Error(errorMessage.split('\n')[0].split(': ')[1]),
+          })
+        }
+        return setState({ step: 'error', err })
+      })
       job.on('complete', (code) => setState(transitionComplete(code)))
       job.start()
 
