@@ -137,7 +137,7 @@ const ViewPage = ({
 
 const StyledViewDocLayout = styled.div`
   ${rightSidePageLayout}
-  margin: auto;
+  margin: 0 auto;
 `
 
 const StyledContent = styled.div`
