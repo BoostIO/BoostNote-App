@@ -199,6 +199,7 @@ const SubscriptionForm = ({
         </SectionDescription>
       )}
       <button
+        type='button'
         className='sub__coupon'
         onClick={() => {
           setShowPromoCode((prev) => !prev)
