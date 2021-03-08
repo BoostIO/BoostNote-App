@@ -1,4 +1,4 @@
-import { NoteStorage, AttachmentData } from './db/types'
+import { NoteStorage, AttachmentData, NoteDoc } from './db/types'
 import { SerializedWorkspace } from '../cloud/interfaces/db/workspace'
 import { uploadFile, buildTeamFileUrl } from '../cloud/api/teams/files'
 import { createDocREST } from '../cloud/api/rest/doc'
@@ -150,7 +150,7 @@ async function* createMigrationIter(
       jobsCompleted,
       stage: {
         name: 'document',
-        handling: `${note.folderPathname}/${note.title}`,
+        handling: getNotePath(note),
       },
     }
 
@@ -172,7 +172,7 @@ async function* createMigrationIter(
         jobsCompleted: ++jobsCompleted,
         stage: {
           name: 'document',
-          handling: `${note.folderPathname}/${note.title}`,
+          handling: getNotePath(note),
         },
       }
     } catch (err) {
@@ -188,6 +188,12 @@ async function* createMigrationIter(
   }
 
   return { jobCount, jobsCompleted, stage: { name: 'complete' as const } }
+}
+
+function getNotePath(note: NoteDoc): string {
+  const path = note.folderPathname === '/' ? '' : note.folderPathname
+  const name = note.title === '' ? 'Untitled' : note.title
+  return `${path}/${name}`
 }
 
 function getPromoCode(teamId: string) {
