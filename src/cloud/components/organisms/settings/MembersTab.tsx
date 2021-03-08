@@ -591,8 +591,8 @@ const MembersTab = () => {
           ) : (
             <>
               {subscription == null || subscription.status === 'inactive' ? (
-                <StyledGuestInactiveContent>
-                  <p>
+                <>
+                  <StyledGuestInactiveText>
                     <SectionDescription>
                       Upgrade to invite guests. Guests are people external to
                       your team who you want to work with on specific documents.
@@ -607,7 +607,7 @@ const MembersTab = () => {
                         See how it works <Icon path={mdiArrowRight} />
                       </PrimaryAnchor>
                     </SectionDescription>
-                  </p>
+                  </StyledGuestInactiveText>
                   <CustomButton
                     variant='primary'
                     onClick={() => {
@@ -616,7 +616,7 @@ const MembersTab = () => {
                   >
                     Start Free Trial
                   </CustomButton>
-                </StyledGuestInactiveContent>
+                </>
               ) : (
                 <Section>
                   <Flexbox>
@@ -762,16 +762,10 @@ const StyledMembersTable = styled.table`
   }
 `
 
-const StyledGuestInactiveContent = styled.div`
+const StyledGuestInactiveText = styled.p`
   margin-top: ${({ theme }) => theme.space.medium}px;
-
-  p {
-    line-height: 1.6;
-  }
-
-  button {
-    margin-top: ${({ theme }) => theme.space.default}px;
-  }
+  margin-bottom: ${({ theme }) => theme.space.default}px;
+  line-height: 1.6;
 `
 
 export default MembersTab
