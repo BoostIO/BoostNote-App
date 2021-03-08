@@ -41,6 +41,7 @@ const StyledPageHeader = styled.header`
   justify-content: space-between;
 
   & .icon {
+    display: flex;
     margin-right: 10px;
   }
 
