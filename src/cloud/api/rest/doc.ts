@@ -9,6 +9,7 @@ interface DocCreateRequestBody {
   tags: string[]
   teamId: string
   generated?: boolean
+  events?: boolean
 }
 
 interface DocCreateResponseBody {

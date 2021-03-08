@@ -130,6 +130,7 @@ async function* createMigrationIter(
       tags: note.tags,
       path: note.folderPathname,
       generated: true,
+      events: true,
     })
   }
   return { jobCount, jobsCompleted, stage: { name: 'complete' as const } }
