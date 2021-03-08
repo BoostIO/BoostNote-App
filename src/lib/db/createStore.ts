@@ -27,7 +27,7 @@ import {
 import { generateId } from '../string'
 import PouchDB from './PouchDB'
 import { LiteStorage } from 'ltstrg'
-import { produce } from 'immer'
+import { produce, enableMapSet } from 'immer'
 import { RouterStore } from '../router'
 import { values } from '../db/utils'
 import { storageDataListKey } from '../localStorageKeys'
@@ -37,6 +37,8 @@ import { useToast } from '../toast'
 import { useFirstUser, usePreferences } from '../preferences'
 import { useRefState } from '../hooks'
 import FSNoteDb from './FSNoteDb'
+
+enableMapSet()
 
 const autoSyncIntervalTime = 1000 * 60 * 60 // Every one hour
 const autoSyncDebounceWaitingTime = 1000 * 30 // 30 seconds after updating data
