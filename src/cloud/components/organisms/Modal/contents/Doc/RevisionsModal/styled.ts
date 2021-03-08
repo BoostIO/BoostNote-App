@@ -24,6 +24,7 @@ export const MarkdownWrapper = styled.div`
   flex: 1 1 auto;
   height: 100%;
   padding: 0 ${({ theme }) => theme.space.default}px;
+  overflow-y: hidden;
 
   .CodeMirrorWrapper,
   .CodeMirrorWrapper .CodeMirror-wrap {
