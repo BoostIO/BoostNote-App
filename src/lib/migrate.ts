@@ -2,7 +2,7 @@ import { NoteStorage, AttachmentData, NoteDoc } from './db/types'
 import { SerializedWorkspace } from '../cloud/interfaces/db/workspace'
 import { uploadFile, buildTeamFileUrl } from '../cloud/api/teams/files'
 import { createDocREST } from '../cloud/api/rest/doc'
-import { registerPromo } from '../cloud/api/teams/subscription'
+import { getPromo } from '../cloud/api/teams/subscription'
 
 export interface MigrationJob {
   on(ev: 'error', cb: (err: any) => void): void
@@ -197,8 +197,8 @@ function getNotePath(note: NoteDoc): string {
 }
 
 function getPromoCode(teamId: string) {
-  return registerPromo(teamId, 'migration')
-    .then((code) => (code.active ? code.code : undefined))
+  return getPromo(teamId, 'migration')
+    .then((code) => code.code)
     .catch(() => undefined)
 }
 

@@ -37,10 +37,8 @@ export interface ReactivateSubscriptionResponseBody {
   subscription: SerializedSubscription
 }
 
-export interface RegisterPromoResponseBody {
-  new: boolean
+export interface GetPromoResponseBody {
   code: string
-  active: boolean
 }
 
 export async function createSubscription(
@@ -95,13 +93,10 @@ export async function redeemPromo(teamId: string, body: WithPromoCode) {
   })
 }
 
-export async function registerPromo(teamId: string, key: string) {
-  const data = await callApi<RegisterPromoResponseBody>(
+export async function getPromo(teamId: string, key: string) {
+  const data = await callApi<GetPromoResponseBody>(
     `api/teams/${teamId}/subscription/promotion`,
-    {
-      method: 'post',
-      json: { key },
-    }
+    { search: { key } }
   )
   return data
 }
