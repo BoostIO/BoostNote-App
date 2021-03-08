@@ -23,6 +23,7 @@ import { stripePublishableKey } from '../../../lib/consts'
 import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
+import styled from '../../../lib/styled'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -100,7 +101,7 @@ const UpgradeTab = () => {
                   onProCallback={() => onUpgradeCallback('pro')}
                   onTrialCallback={() => setShowTrialPopup(true)}
                 />
-                <p>
+                <StyledFYI>
                   * For larger businesses or those in highly regulated
                   industries, please{' '}
                   <CustomLink
@@ -112,7 +113,7 @@ const UpgradeTab = () => {
                     contact our sales department
                   </CustomLink>
                   .
-                </p>
+                </StyledFYI>
               </StyledSmallFont>
             </Section>
           </Container>
@@ -164,5 +165,17 @@ const UpgradeTab = () => {
     </Column>
   )
 }
+
+const StyledFYI = styled.p`
+  .type-link {
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      color: ${({ theme }) => theme.primaryTextColor};
+      text-decoration: none;
+    }
+  }
+`
 
 export default UpgradeTab
