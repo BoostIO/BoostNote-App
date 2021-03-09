@@ -321,6 +321,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
                           }}
                         >
                           ⚠️ {job.note.folderPathname}
+                          {job.note.folderPathname.endsWith('/') ? '' : '/'}
                           {job.note.title}
                         </a>
                       </li>
