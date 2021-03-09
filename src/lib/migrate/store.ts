@@ -1,8 +1,13 @@
 import { createStoreContext } from '../context'
 import { NoteStorage } from '../db/types'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
-import { MigrationJob, createMigrationJob, MigrationProgress } from '.'
 import { useCallback, useState, useRef, useEffect } from 'react'
+import {
+  MigrationJob,
+  createMigrationJob,
+  MigrationProgress,
+  MigrationSummary,
+} from '.'
 import { GeneralStatus } from '../generalStatus'
 import { notify } from '../notification'
 import { usePreferences } from '../preferences'
@@ -15,7 +20,11 @@ export interface MigrationInfo {
   storage: NoteStorage
   workspace: SerializedWorkspace
   state:
-    | { ok: true; progress: MigrationProgress | null }
+    | {
+        ok: true
+        progress: MigrationProgress | null
+        summary?: MigrationSummary
+      }
     | { ok: false; err: any }
 }
 
@@ -60,7 +69,6 @@ function useMigrationStore(): MigrationManager {
               job.destroy()
               return prev
             }
-
             const next = new Map(prev)
             next.set(storage.id, { ...curr, state: { ok: true, progress } })
             return next
@@ -81,7 +89,7 @@ function useMigrationStore(): MigrationManager {
           })
         })
 
-        job.on('complete', () => {
+        job.on('complete', (summary) => {
           notify({
             title: 'Migration Complete',
             body: `Migration for ${storage.name} to ${team.name}:${workspace.name} has completed. Check the report in the migration tab in settings.`,
@@ -89,6 +97,20 @@ function useMigrationStore(): MigrationManager {
               navigateRef.current(storage.id)
               openTabRef.current('migration')
             },
+          })
+
+          setJobs((prev) => {
+            const curr = prev.get(storage.id)
+            if (curr == null || curr._job !== job) {
+              job.destroy()
+              return prev
+            }
+            const next = new Map(prev)
+            next.set(storage.id, {
+              ...curr,
+              state: { ok: true, progress: null, summary },
+            })
+            return next
           })
         })
 

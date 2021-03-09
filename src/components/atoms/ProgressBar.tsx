@@ -14,6 +14,7 @@ const ProgressBarStyled = styled.div`
   height: 30px;
   position: relative;
   width: 100%;
+  margin: 30px 0;
 
   &:after {
     content: '';
