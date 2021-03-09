@@ -23,6 +23,7 @@ import Alert from '../atoms/Alert'
 import { useMigrations, MigrationInfo } from '../../lib/migrate/store'
 import plur from 'plur'
 import { useStorageRouter } from '../../lib/storageRouter'
+import styled from '../../lib/styled'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -264,29 +265,30 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
       : []
 
   return (
-    <div>
-      <Flexbox justifyContent='center' direction='column'>
-        <Icon size={42} path={mdiCheckCircle} />
-        <h3>Migration has completed!</h3>
-        <p style={{ textAlign: 'center' }}>
+    <StyledMigrationScreen>
+      <Flexbox
+        justifyContent='flex-start'
+        alignItems='baseline'
+        direction='column'
+      >
+        <Flexbox justifyContent='center' alignItems='center' direction='column'>
+          <Icon size={42} path={mdiCheckCircle} />
+          <h3>Migration has completed!</h3>
+        </Flexbox>
+        <p>
           Close settings modal and switch account via the left tab to the cloud
           space.
           <br />
           We hope you enjoy using it!
         </p>
+        <p>
+          Please check your email to receive your coupon code and learn how to
+          redeem it.
+        </p>
         {migrationState.summary != null ? (
           <>
-            {migrationState.summary.code != null && (
-              <>
-                <p>Please use the below promotion code for 3 months free</p>
-                <h1>{migrationState.summary.code}</h1>
-                <small>
-                  The coupon code has also been sent to your email address.
-                </small>
-              </>
-            )}
-            <br />
-            <p>
+            <p className='summary'>
+              &middot;{' '}
               {migrationState.summary.noteCount - failedNoteJobs.length}{' '}
               {plur(
                 'document',
@@ -296,8 +298,8 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             </p>
             {failedNoteJobs.length > 0 && (
               <>
-                <p>
-                  {failedNoteJobs.length}{' '}
+                <p className='summary'>
+                  &middot; {failedNoteJobs.length}{' '}
                   {plur('document', failedNoteJobs.length)} could not be
                   imported. Please open the documents separately to transfer
                   your data manually ( export, copy and paste ..). Sorry for the
@@ -318,7 +320,8 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
                             )
                           }}
                         >
-                          ⚠️ {job.note.folderPathname}/{job.note.title}
+                          ⚠️ {job.note.folderPathname}
+                          {job.note.title}
                         </a>
                       </li>
                     ))}
@@ -328,11 +331,36 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             )}
           </>
         ) : null}
-        <FormPrimaryButton onClick={finish}>Finish</FormPrimaryButton>
+
+        <Flexbox justifyContent='center'>
+          <FormPrimaryButton onClick={finish}>Finish</FormPrimaryButton>
+        </Flexbox>
       </Flexbox>
-    </div>
+    </StyledMigrationScreen>
   )
 }
+
+const StyledMigrationScreen = styled.div`
+  width: 96%;
+  max-width: 600px;
+  margin: auto;
+
+  div {
+    width: 100%;
+  }
+
+  .summary {
+    margin: 2px 0;
+    &:last-of-type {
+      margin-bottom: 30px;
+    }
+  }
+
+  .alert--variant-secondary {
+    max-height: 300px;
+    overflow: auto;
+  }
+`
 
 function initState(teams: Team[], runningJob?: MigrationInfo) {
   return () => {
