@@ -592,19 +592,22 @@ const MembersTab = () => {
             <>
               {subscription == null || subscription.status === 'inactive' ? (
                 <>
-                  <SectionDescription>
-                    Upgrade to invite guests. Guests are people external to your
-                    team who you want to work with on specific documents.
-                    <br /> They can be invited to individual documents but not
-                    an entire workspace.{` `}
-                    <PrimaryAnchor
-                      target='_blank'
-                      rel='noreferrer'
-                      href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
-                    >
-                      See how it works <Icon path={mdiArrowRight} />
-                    </PrimaryAnchor>
-                  </SectionDescription>
+                  <StyledGuestInactiveText>
+                    <SectionDescription>
+                      Upgrade to invite guests. Guests are people external to
+                      your team who you want to work with on specific documents.
+                      They can be invited to individual documents but not an
+                      entire workspace.
+                      {` `}
+                      <PrimaryAnchor
+                        target='_blank'
+                        rel='noreferrer'
+                        href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
+                      >
+                        See how it works <Icon path={mdiArrowRight} />
+                      </PrimaryAnchor>
+                    </SectionDescription>
+                  </StyledGuestInactiveText>
                   <CustomButton
                     variant='primary'
                     onClick={() => {
@@ -757,6 +760,12 @@ const StyledMembersTable = styled.table`
       padding: 0 !important;
     }
   }
+`
+
+const StyledGuestInactiveText = styled.p`
+  margin-top: ${({ theme }) => theme.space.medium}px;
+  margin-bottom: ${({ theme }) => theme.space.default}px;
+  line-height: 1.6;
 `
 
 export default MembersTab
