@@ -281,7 +281,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
                 <p>Please use the below promotion code for 3 months free</p>
                 <h1>{migrationState.summary.code}</h1>
                 <small>
-                  The coupon code has also been sent to your email adress.
+                  The coupon code has also been sent to your email address.
                 </small>
               </>
             )}
