@@ -5,6 +5,7 @@ import {
   primaryButtonStyle,
   secondaryButtonStyle,
 } from '../../lib/styled/styleFunctions'
+import { selectStyle } from '../../lib/styled/styleFunctions'
 
 interface FormHeadingProps {
   depth?: number
@@ -181,8 +182,8 @@ export const FormCheckItem = ({
 export const FormCheckList = styled.div``
 
 export const FormPrimaryButton = styled.button`
-  ${primaryButtonStyle}
-  padding: .375rem .75rem;
+  ${primaryButtonStyle};
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
@@ -193,8 +194,8 @@ export const FormPrimaryButton = styled.button`
 `
 
 export const FormSecondaryButton = styled.button`
-  ${secondaryButtonStyle}
-  padding: .375rem .75rem;
+  ${secondaryButtonStyle};
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
@@ -204,13 +205,34 @@ export const FormSecondaryButton = styled.button`
   }
 `
 
-export const FormSelect = styled.select`
-  display: block;
-  width: 100%;
+export const FormTransparentButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.navItemColor};
+  background-color: ${({ theme }) => theme.navItemBackgroundColor};
   padding: 0.375rem 0.75rem;
+  font-size: 1rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  ${border}
+  margin-left: 0.375rem;
+  cursor: pointer;
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:hover {
+    color: ${({ theme }) => theme.navItemActiveColor};
+    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+  }
+`
+
+export const FormSelect = styled.select`
+  ${selectStyle};
+  padding: 0 16px;
+  width: 200px;
+  height: 40px;
+  border-radius: 2px;
+  font-size: 14px;
 `
 
 export const FormField = styled.div`
