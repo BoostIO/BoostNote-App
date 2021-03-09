@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { SelectChangeEventHandler } from '../../cloud/lib/utils/events'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
-import { NoteStorage } from '../../lib/db/types'
-import { MigrationProgress } from '../../lib/migrate'
+import { NoteDoc, NoteStorage } from '../../lib/db/types'
+import { MigrationProgress, MigrationSummary } from '../../lib/migrate'
 import { useRouter } from '../../lib/router'
 import { GeneralStatus, useGeneralStatus } from '../../lib/generalStatus'
 import CloudWorkspaceSelect from '../molecules/CloudWorkspaceSelect'
@@ -21,6 +21,8 @@ import {
 } from '../atoms/form'
 import Alert from '../atoms/Alert'
 import { useMigrations, MigrationInfo } from '../../lib/migrate/store'
+import plur from 'plur'
+import { useStorageRouter } from '../../lib/storageRouter'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -47,7 +49,7 @@ type MigrationState =
       step: 'complete'
       team: Team
       workspace: SerializedWorkspace
-      promoCode?: string
+      summary?: MigrationSummary
     }
   | { step: 'error'; err: Error }
 
@@ -57,6 +59,8 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     generalStatus: { boostHubTeams },
   } = useGeneralStatus()
   const { get, start, end } = useMigrations()
+  const { navigateToNote } = useStorageRouter()
+
   const runningJob = get(storage.id)
 
   const [migrationState, setMigrationState] = useState<MigrationState>(
@@ -211,11 +215,11 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <p>
             This may take a while. Feel free to have a cup of tea while waiting.
           </p>
-          <small>
+          <p>
             {migrationState.progress == null
               ? 'Setting up!'
-              : progressStageToString(migrationState.progress.stage)}
-          </small>
+              : `Migrating ${migrationState.progress.jobsCompleted} / ${migrationState.progress.jobCount}`}
+          </p>
           <ProgressBar
             progress={
               migrationState.progress == null
@@ -247,6 +251,14 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     )
   }
 
+  const failedNoteJobs: { note: NoteDoc; err: unknown }[] =
+    migrationState.summary != null
+      ? (migrationState.summary.jobsFailed.filter(
+          (job) => job.name === 'note' && job.note
+        ) as any[])
+      : []
+
+  console.log(migrationState)
   return (
     <div>
       <Flexbox justifyContent='center' direction='column'>
@@ -258,13 +270,66 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <br />
           We hope you enjoy using it!
         </p>
-        {migrationState.promoCode != null && (
+        {migrationState.summary != null ? (
           <>
-            <p>Please use the below promotion code for 3 months free</p>
-            <h1>{migrationState.promoCode}</h1>
+            {migrationState.summary.code != null && (
+              <>
+                <p>Please use the below promotion code for 3 months free</p>
+                <h1>{migrationState.summary.code}</h1>
+                <small>
+                  The coupon code has also been sent to your email adress.
+                </small>
+              </>
+            )}
+            <br />
+            <p>
+              {migrationState.summary.noteCount - failedNoteJobs.length}{' '}
+              {plur(
+                'document',
+                migrationState.summary.noteCount - failedNoteJobs.length
+              )}{' '}
+              have been successfully imported
+            </p>
+            {failedNoteJobs.length > 0 && (
+              <>
+                <p>
+                  {failedNoteJobs.length}{' '}
+                  {plur('document', failedNoteJobs.length)} could not be
+                  imported. Please open the documents separately to transfer
+                  your data manually ( export, copy and paste ..). Sorry for the
+                  troubles.
+                </p>
+                <Alert>
+                  <ul>
+                    {failedNoteJobs.map((job) => (
+                      <li key={job.note._id}>
+                        <a
+                          href='#'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            navigateToNote(
+                              storage.id,
+                              job.note._id,
+                              job.note.folderPathname
+                            )
+                          }}
+                        >
+                          ⚠️ {job.note.folderPathname}/{job.note.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </Alert>
+              </>
+            )}
           </>
-        )}
-        <FormPrimaryButton onClick={() => openTab('storage')}>
+        ) : null}
+        <FormPrimaryButton
+          onClick={() => {
+            end(storage.id)
+            openTab('storage')
+          }}
+        >
           Finish
         </FormPrimaryButton>
       </Flexbox>
@@ -334,14 +399,11 @@ function updateWorkspace(workspace: SerializedWorkspace | null) {
 function syncStateToMigration(info: MigrationInfo) {
   return (): MigrationState => {
     if (info.state.ok) {
-      if (
-        info.state.progress != null &&
-        info.state.progress.stage.name === 'complete'
-      ) {
+      if (info.state.summary != null) {
         return {
           step: 'complete',
-
           team: info.team,
+          summary: info.state.summary,
           workspace: info.workspace,
         }
       }
@@ -382,20 +444,6 @@ function transitionCancel(teams: Team[]) {
       team: teams[0],
       workspace: null,
     }
-  }
-}
-
-function progressStageToString(stage: MigrationProgress['stage']) {
-  switch (stage.name) {
-    case 'document':
-      return `Migrating documents: ${stage.handling}`
-    case 'complete':
-      return 'Complete'
-    case 'attachments':
-      const substage =
-        stage.subStage === 'setup' ? 'Fetching data for' : `Uploading`
-
-      return `Migrating attachments: ${substage} ${stage.handling}`
   }
 }
 

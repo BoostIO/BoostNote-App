@@ -1,4 +1,4 @@
-import { NoteStorage, AttachmentData, NoteDoc } from '../db/types'
+import { NoteStorage, AttachmentData, NoteDoc, Attachment } from '../db/types'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { uploadFile, buildTeamFileUrl } from '../../cloud/api/teams/files'
 import { createDocREST } from '../../cloud/api/rest/doc'
@@ -10,7 +10,7 @@ type Team = GeneralStatus['boostHubTeams'][number]
 export interface MigrationJob {
   on(ev: 'error', cb: (err: any) => void): void
   on(ev: 'progress', cb: (progress: MigrationProgress) => void): void
-  on(ev: 'complete', cb: (code?: string) => void): void
+  on(ev: 'complete', cb: (summary: MigrationSummary) => void): void
   start(): void
   stop(): void
   destroy(): void
@@ -21,21 +21,39 @@ type Stage =
   | { name: 'document'; handling: string }
   | { name: 'complete' }
 
+type JobFailure =
+  | { name: 'note'; note: NoteDoc; err: unknown }
+  | {
+      name: 'attachment'
+      attachment: Attachment
+      err: unknown
+    }
+
 export interface MigrationProgress {
   jobCount: number
   jobsCompleted: number
+  jobsFailed: JobFailure[]
+  noteCount: number
   stage: Stage
+}
+
+export interface MigrationSummary {
+  jobCount: number
+  jobsCompleted: number
+  jobsFailed: JobFailure[]
+  noteCount: number
+  code?: string
 }
 
 export function createMigrationJob(
   storage: NoteStorage,
   workspace: SerializedWorkspace,
-  team: Team
+  _team: Team
 ): MigrationJob {
   const iter = createMigrationIter(storage, workspace)
   const onErrorSet = new Set<(err: unknown) => void>()
   const onProgressSet = new Set<(progress: MigrationProgress) => void>()
-  const onCompleteSet = new Set<(code?: string) => void>()
+  const onCompleteSet = new Set<(summary: MigrationSummary) => void>()
 
   let stopped = false
   let complete = false
@@ -63,7 +81,15 @@ export function createMigrationJob(
           onProgressSet.forEach(apply(result.value))
           if (result.done) {
             const promotion = await getPromoCode(workspace.teamId)
-            onCompleteSet.forEach(apply(promotion))
+            onCompleteSet.forEach(
+              apply({
+                code: promotion,
+                jobsFailed: result.value.jobsFailed,
+                jobsCompleted: result.value.jobsCompleted,
+                jobCount: result.value.jobCount,
+                noteCount: result.value.noteCount,
+              })
+            )
             complete = true
           }
         }
@@ -98,7 +124,7 @@ async function* createMigrationIter(
 
   const jobCount = attachments.length * 2 + notes.length
   let jobsCompleted = 0
-
+  const jobsFailed: JobFailure[] = []
   const attachmentsQueue = attachments.map(([id, attachment]) => ({
     id,
     attachment,
@@ -112,6 +138,8 @@ async function* createMigrationIter(
     yield {
       jobCount,
       jobsCompleted,
+      jobsFailed,
+      noteCount: notes.length,
       stage: { name: 'attachments', handling: id, subStage: 'setup' },
     }
 
@@ -121,6 +149,8 @@ async function* createMigrationIter(
       yield {
         jobCount,
         jobsCompleted: ++jobsCompleted,
+        jobsFailed,
+        noteCount: notes.length,
         stage: { name: 'attachments', handling: id, subStage: 'upload' },
       }
       const upload = await uploadFile(workspace.teamId, file)
@@ -133,7 +163,14 @@ async function* createMigrationIter(
         retries > 9 ||
         (err.response instanceof Response && !isRetryable(err.response))
       ) {
-        throw err
+        jobsFailed.push({ name: 'attachment', attachment, err })
+        yield {
+          jobCount,
+          jobsCompleted: ++jobsCompleted,
+          jobsFailed,
+          noteCount: notes.length,
+          stage: { name: 'attachments', handling: id, subStage: 'upload' },
+        }
       } else {
         attachmentsQueue.push({ attachment, id, retries: retries + 1 })
       }
@@ -153,6 +190,8 @@ async function* createMigrationIter(
     yield {
       jobCount,
       jobsCompleted,
+      jobsFailed,
+      noteCount: notes.length,
       stage: {
         name: 'document',
         handling: getNotePath(note),
@@ -175,6 +214,8 @@ async function* createMigrationIter(
       yield {
         jobCount,
         jobsCompleted: ++jobsCompleted,
+        jobsFailed,
+        noteCount: notes.length,
         stage: {
           name: 'document',
           handling: getNotePath(note),
@@ -185,14 +226,30 @@ async function* createMigrationIter(
         retries > 9 ||
         (err.response instanceof Response && !isRetryable(err.response))
       ) {
-        throw err
+        jobsFailed.push({ name: 'note', note, err })
+        yield {
+          jobCount,
+          jobsCompleted: ++jobsCompleted,
+          jobsFailed,
+          noteCount: notes.length,
+          stage: {
+            name: 'document',
+            handling: getNotePath(note),
+          },
+        }
       } else {
         notesQueue.push({ note, retries: retries + 1 })
       }
     }
   }
 
-  return { jobCount, jobsCompleted, stage: { name: 'complete' as const } }
+  return {
+    jobCount,
+    jobsCompleted,
+    jobsFailed,
+    noteCount: notes.length,
+    stage: { name: 'complete' as const },
+  }
 }
 
 function getNotePath(note: NoteDoc): string {

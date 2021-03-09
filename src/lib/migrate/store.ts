@@ -1,7 +1,12 @@
 import { createStoreContext } from '../context'
 import { NoteStorage } from '../db/types'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
-import { MigrationJob, createMigrationJob, MigrationProgress } from '.'
+import {
+  MigrationJob,
+  createMigrationJob,
+  MigrationProgress,
+  MigrationSummary,
+} from '.'
 import { useCallback, useState } from 'react'
 import { GeneralStatus } from '../generalStatus'
 
@@ -12,7 +17,11 @@ export interface MigrationInfo {
   storage: NoteStorage
   workspace: SerializedWorkspace
   state:
-    | { ok: true; progress: MigrationProgress | null }
+    | {
+        ok: true
+        progress: MigrationProgress | null
+        summary?: MigrationSummary
+      }
     | { ok: false; err: any }
 }
 
@@ -46,7 +55,6 @@ function useMigrationStore(): MigrationManager {
               job.destroy()
               return prev
             }
-
             const next = new Map(prev)
             next.set(storage.id, { ...curr, state: { ok: true, progress } })
             return next
@@ -63,6 +71,22 @@ function useMigrationStore(): MigrationManager {
 
             const next = new Map(prev)
             next.set(storage.id, { ...curr, state: { ok: false, err } })
+            return next
+          })
+        })
+
+        job.on('complete', (summary) => {
+          setJobs((prev) => {
+            const curr = prev.get(storage.id)
+            if (curr == null || curr._job !== job) {
+              job.destroy()
+              return prev
+            }
+            const next = new Map(prev)
+            next.set(storage.id, {
+              ...curr,
+              state: { ok: true, progress: null, summary },
+            })
             return next
           })
         })
