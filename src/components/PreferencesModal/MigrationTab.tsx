@@ -102,6 +102,11 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     setMigrationState(transitionCancel(boostHubTeams))
   }, [boostHubTeams, end, storage.id])
 
+  const finish = useCallback(() => {
+    end(storage.id)
+    openTab('storage')
+  }, [end, openTab, storage])
+
   if (migrationState.step === 'login') {
     return (
       <div>
@@ -264,9 +269,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             <h1>{migrationState.promoCode}</h1>
           </>
         )}
-        <FormPrimaryButton onClick={() => openTab('storage')}>
-          Finish
-        </FormPrimaryButton>
+        <FormPrimaryButton onClick={finish}>Finish</FormPrimaryButton>
       </Flexbox>
     </div>
   )
