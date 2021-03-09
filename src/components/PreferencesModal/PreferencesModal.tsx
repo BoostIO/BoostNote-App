@@ -195,7 +195,7 @@ const PreferencesModal = () => {
             />
             {currentStorage != null && (
               <TabButton
-                label='Storage'
+                label='Space'
                 tab='storage'
                 active={tab === 'storage' || tab === 'migration'}
                 setTab={openTab}
