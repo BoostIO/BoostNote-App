@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import querystring from 'querystring'
-import Link from './Link'
-import styled from '../../../lib/styled'
+import EmphasizedLink from './EmphasizedLink'
 
 export type AccountLinkIntent = 'delete'
 
@@ -24,32 +23,19 @@ const AccountLink: FC<AccountLinkProps> = ({
   beforeNavigate,
 }) => {
   return (
-    <StyledLink>
-      <Link
-        href={getAccountHref(intent, query)}
-        beforeNavigate={beforeNavigate}
-        className={className}
-        style={style}
-        draggable={draggable}
-      >
-        {children}
-      </Link>
-    </StyledLink>
+    <EmphasizedLink
+      href={getAccountHref(intent, query)}
+      beforeNavigate={beforeNavigate}
+      className={className}
+      style={style}
+      draggable={draggable}
+    >
+      {children}
+    </EmphasizedLink>
   )
 }
 
 export default AccountLink
-
-const StyledLink = styled.span`
-  a {
-    color: ${({ theme }) => theme.primaryTextColor};
-
-    &:hover,
-    &:focus {
-      text-decoration: none;
-    }
-  }
-`
 
 export function getAccountHref(intent: AccountLinkIntent, query?: any) {
   const basePathname = `account`
