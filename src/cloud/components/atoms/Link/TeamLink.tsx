@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react'
-import Link from './Link'
 import querystring from 'querystring'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
-import styled from '../../../lib/styled'
+import EmphasizedLink from './EmphasizedLink'
 
 export type TeamLinkIntent =
   | 'index'
@@ -48,34 +47,21 @@ const TeamLink = ({
   tabIndex = 0,
 }: TeamLinkProps) => {
   return (
-    <StyledLink>
-      <Link
-        href={getTeamLinkHref(team, intent, query)}
-        className={className}
-        style={style}
-        beforeNavigate={beforeNavigate}
-        onFocus={onFocus}
-        tabIndex={tabIndex}
-        id={id}
-      >
-        {children}
-      </Link>
-    </StyledLink>
+    <EmphasizedLink
+      href={getTeamLinkHref(team, intent, query)}
+      className={className}
+      style={style}
+      beforeNavigate={beforeNavigate}
+      onFocus={onFocus}
+      tabIndex={tabIndex}
+      id={id}
+    >
+      {children}
+    </EmphasizedLink>
   )
 }
 
 export default TeamLink
-
-const StyledLink = styled.span`
-  a {
-    color: ${({ theme }) => theme.primaryTextColor};
-
-    &:hover,
-    &:focus {
-      text-decoration: none;
-    }
-  }
-`
 
 export function getTeamLinkHref(
   team: TeamIdProps,
