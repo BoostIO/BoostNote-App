@@ -1,8 +1,11 @@
-import { NoteStorage, AttachmentData, NoteDoc } from './db/types'
-import { SerializedWorkspace } from '../cloud/interfaces/db/workspace'
-import { uploadFile, buildTeamFileUrl } from '../cloud/api/teams/files'
-import { createDocREST } from '../cloud/api/rest/doc'
-import { getPromo } from '../cloud/api/teams/subscription'
+import { NoteStorage, AttachmentData, NoteDoc } from '../db/types'
+import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
+import { uploadFile, buildTeamFileUrl } from '../../cloud/api/teams/files'
+import { createDocREST } from '../../cloud/api/rest/doc'
+import { getPromo } from '../../cloud/api/teams/subscription'
+import { GeneralStatus } from '../generalStatus'
+
+type Team = GeneralStatus['boostHubTeams'][number]
 
 export interface MigrationJob {
   on(ev: 'error', cb: (err: any) => void): void
@@ -14,9 +17,9 @@ export interface MigrationJob {
 }
 
 type Stage =
-  | { name: 'complete' }
   | { name: 'attachments'; handling: string; subStage: 'setup' | 'upload' }
   | { name: 'document'; handling: string }
+  | { name: 'complete' }
 
 export interface MigrationProgress {
   jobCount: number
@@ -26,7 +29,8 @@ export interface MigrationProgress {
 
 export function createMigrationJob(
   storage: NoteStorage,
-  workspace: SerializedWorkspace
+  workspace: SerializedWorkspace,
+  team: Team
 ): MigrationJob {
   const iter = createMigrationIter(storage, workspace)
   const onErrorSet = new Set<(err: unknown) => void>()
@@ -54,6 +58,7 @@ export function createMigrationJob(
       stopped = false
       try {
         while (!stopped && !complete) {
+          await new Promise((res) => setTimeout(res, 2000))
           const result = await iter.next()
           onProgressSet.forEach(apply(result.value))
           if (result.done) {
