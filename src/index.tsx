@@ -16,11 +16,13 @@ import { CheckedFeaturesProvider } from './lib/checkedFeatures'
 import { BoostHubStoreProvider } from './lib/boosthub'
 import { CreateWorkspaceModalProvider } from './lib/createWorkspaceModal'
 import { CloudIntroModalProvider } from './lib/cloudIntroModal'
+import { MigrationProvider } from './lib/migrate/store'
 
 const CombinedProvider = combineProviders(
   BoostHubStoreProvider,
   SearchModalProvider,
   PreviewStyleProvider,
+  MigrationProvider,
   GeneralStatusProvider,
   DialogProvider,
   DbProvider,

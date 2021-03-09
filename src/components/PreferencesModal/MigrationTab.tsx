@@ -1,13 +1,8 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { SelectChangeEventHandler } from '../../cloud/lib/utils/events'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { NoteStorage } from '../../lib/db/types'
-import { useEffectOnce } from 'react-use'
-import {
-  createMigrationJob,
-  MigrationProgress,
-  MigrationJob,
-} from '../../lib/migrate'
+import { MigrationProgress } from '../../lib/migrate'
 import { useRouter } from '../../lib/router'
 import { GeneralStatus, useGeneralStatus } from '../../lib/generalStatus'
 import CloudWorkspaceSelect from '../molecules/CloudWorkspaceSelect'
@@ -25,6 +20,7 @@ import {
   FormGroup,
 } from '../atoms/form'
 import Alert from '../atoms/Alert'
+import { useMigrations, MigrationInfo } from '../../lib/migrate/store'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -46,7 +42,6 @@ type MigrationState =
       team: Team
       workspace: SerializedWorkspace
       progress: MigrationProgress | null
-      job: MigrationJob
     }
   | {
       step: 'complete'
@@ -61,11 +56,20 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   const {
     generalStatus: { boostHubTeams },
   } = useGeneralStatus()
+  const { get, start, end } = useMigrations()
+  const runningJob = get(storage.id)
+
   const [migrationState, setMigrationState] = useState<MigrationState>(
-    stateFromTeams(boostHubTeams)
+    initState(boostHubTeams, runningJob)
   )
   const [workspaceErr, setWorkspaceErr] = useState<Error | null>(null)
   const { openTab, setClosed } = usePreferences()
+
+  useEffect(() => {
+    if (runningJob != null) {
+      setMigrationState(syncStateToMigration(runningJob))
+    }
+  }, [runningJob])
 
   useEffect(() => setMigrationState(stateFromTeams(boostHubTeams)), [
     boostHubTeams,
@@ -87,26 +91,16 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     []
   )
 
-  const runMigration = useCallback(
-    () => setMigrationState(transitionRunning(storage, setMigrationState)),
-    [storage]
-  )
-
-  const cancel = useCallback(
-    () => setMigrationState(transitionCancel(boostHubTeams)),
-    [boostHubTeams]
-  )
-
-  const latest = useRef(migrationState)
-  useEffect(() => {
-    latest.current = migrationState
-  }, [migrationState])
-
-  useEffectOnce(() => {
-    return () => {
-      latest.current.step === 'running' && latest.current.job.destroy()
+  const runMigration = useCallback(() => {
+    if (migrationState.step === 'confirm') {
+      start(storage, migrationState.workspace, migrationState.team)
     }
-  })
+  }, [migrationState, start, storage])
+
+  const cancel = useCallback(() => {
+    end(storage.id)
+    setMigrationState(transitionCancel(boostHubTeams))
+  }, [boostHubTeams, end, storage.id])
 
   if (migrationState.step === 'login') {
     return (
@@ -278,6 +272,16 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   )
 }
 
+function initState(teams: Team[], runningJob?: MigrationInfo) {
+  return () => {
+    if (runningJob != null) {
+      return syncStateToMigration(runningJob)()
+    } else {
+      return stateFromTeams(teams)()
+    }
+  }
+}
+
 function stateFromTeams(teams: Team[]) {
   return (previousState?: MigrationState): MigrationState => {
     if (teams.length < 1) {
@@ -327,54 +331,33 @@ function updateWorkspace(workspace: SerializedWorkspace | null) {
   }
 }
 
-function transitionRunning(
-  storage: NoteStorage,
-  setState: React.Dispatch<React.SetStateAction<MigrationState>>
-) {
-  return (previousState: MigrationState): MigrationState => {
-    if (previousState.step === 'confirm') {
-      const job = createMigrationJob(storage, previousState.workspace)
+function syncStateToMigration(info: MigrationInfo) {
+  return (): MigrationState => {
+    if (info.state.ok) {
+      if (
+        info.state.progress != null &&
+        info.state.progress.stage.name === 'complete'
+      ) {
+        return {
+          step: 'complete',
 
-      job.on('progress', (progress) => {
-        setState((prev) => {
-          return { ...prev, progress }
-        })
-      })
-      job.on('error', async (err) => {
-        if (err.response != null && typeof err.response.text === 'function') {
-          const errorMessage = await err.response.text()
-          return setState({
-            step: 'error',
-            err: new Error(errorMessage.split('\n')[0].split(': ')[1]),
-          })
+          team: info.team,
+          workspace: info.workspace,
         }
-
-        return setState({ step: 'error', err })
-      })
-      job.on('complete', (code) => setState(transitionComplete(code)))
-      job.start()
-
+      }
       return {
-        ...previousState,
         step: 'running',
-        progress: null,
-        job,
+        team: info.team,
+        workspace: info.workspace,
+        progress: info.state.progress,
+      }
+    } else {
+      return {
+        step: 'error',
+        err: info.state.err,
       }
     }
-    return previousState
   }
-}
-
-function transitionComplete(promoCode?: string) {
-  return (previousState: MigrationState): MigrationState =>
-    previousState.step === 'running'
-      ? {
-          step: 'complete',
-          team: previousState.team,
-          workspace: previousState.workspace,
-          promoCode,
-        }
-      : previousState
 }
 
 function transitionConfirm() {
@@ -389,11 +372,7 @@ function transitionConfirm() {
 }
 
 function transitionCancel(teams: Team[]) {
-  return (previousState: MigrationState): MigrationState => {
-    if (previousState.step === 'running') {
-      previousState.job.destroy()
-    }
-
+  return (): MigrationState => {
     if (teams.length < 1) {
       return { step: 'login' }
     }
