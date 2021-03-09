@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { SelectChangeEventHandler } from '../../lib/events'
-import { SectionSelect } from '../PreferencesModal/styled'
 import { usePreferences } from '../../lib/preferences'
 import { getWorkspaces } from '../../cloud/api/teams/workspaces'
+import { FormSelect } from '../atoms/form'
 
 interface WorkspaceSelectProps {
   onChange: (workspace: SerializedWorkspace | null) => void
@@ -79,7 +79,7 @@ const CloudWorkspaceSelect = ({
   }, [onChange, workspaces])
 
   return (
-    <SectionSelect
+    <FormSelect
       disabled={state === 'loading'}
       value={value?.id}
       onChange={selectWorkspace}
@@ -92,7 +92,7 @@ const CloudWorkspaceSelect = ({
             </option>
           )
         })}
-    </SectionSelect>
+    </FormSelect>
   )
 }
 

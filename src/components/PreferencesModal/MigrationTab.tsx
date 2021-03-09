@@ -1,10 +1,4 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import {
-  SectionHeader,
-  SectionSelect,
-  SectionPrimaryButton,
-  SectionSecondaryButton,
-} from './styled'
 import { SelectChangeEventHandler } from '../../cloud/lib/utils/events'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { NoteStorage } from '../../lib/db/types'
@@ -22,6 +16,15 @@ import Icon from '../atoms/Icon'
 import { mdiAlert, mdiCheckCircle, mdiTea } from '@mdi/js'
 import ProgressBar from '../atoms/ProgressBar'
 import { usePreferences } from '../../lib/preferences'
+import {
+  FormSelect,
+  FormPrimaryButton,
+  FormSecondaryButton,
+  FormHeading,
+  FormTransparentButton,
+  FormGroup,
+} from '../atoms/form'
+import Alert from '../atoms/Alert'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -109,9 +112,14 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
     return (
       <div>
         <p>You must have a cloud account to migrate data</p>
-        <SectionPrimaryButton onClick={() => push('/app/boosthub/login')}>
+        <FormPrimaryButton
+          onClick={() => {
+            push('/app/boosthub/login')
+            setClosed(true)
+          }}
+        >
           Create Team Account
-        </SectionPrimaryButton>
+        </FormPrimaryButton>
       </div>
     )
   }
@@ -119,46 +127,48 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   if (migrationState.step === 'select') {
     return (
       <div>
-        <SectionHeader>1. Select the destination</SectionHeader>
+        <FormHeading depth={2}>1. Select the destination</FormHeading>
         {workspaceErr != null && (
           <p>
             An Error occured while tring to fetch workspaces:{' '}
             {workspaceErr.message || 'unknown'}
           </p>
         )}
-        <Flexbox justifyContent='space-between'>
-          <p>Space</p>
-          <SectionSelect value={migrationState.team.id} onChange={selectTeam}>
-            {boostHubTeams.map((team) => {
-              return (
-                <option value={team.id} key={team.id}>
-                  {team.name}
-                </option>
-              )
-            })}
-          </SectionSelect>
-        </Flexbox>
-        <Flexbox justifyContent='space-between'>
-          <p>Workspace</p>
-          <div>
-            <CloudWorkspaceSelect
-              onChange={selectWorkspace}
-              onError={setWorkspaceErr}
-              value={migrationState.workspace}
-              team={migrationState.team}
-            />
-          </div>
-        </Flexbox>
+        <FormGroup>
+          <Flexbox justifyContent='space-between'>
+            <p>Space</p>
+            <FormSelect value={migrationState.team.id} onChange={selectTeam}>
+              {boostHubTeams.map((team) => {
+                return (
+                  <option value={team.id} key={team.id}>
+                    {team.name}
+                  </option>
+                )
+              })}
+            </FormSelect>
+          </Flexbox>
+          <Flexbox justifyContent='space-between'>
+            <p>Workspace</p>
+            <div>
+              <CloudWorkspaceSelect
+                onChange={selectWorkspace}
+                onError={setWorkspaceErr}
+                value={migrationState.workspace}
+                team={migrationState.team}
+              />
+            </div>
+          </Flexbox>
+        </FormGroup>
         <Flexbox justifyContent='flex-end'>
-          <SectionSecondaryButton onClick={() => openTab('storage')}>
+          <FormTransparentButton onClick={() => openTab('storage')}>
             Cancel
-          </SectionSecondaryButton>
-          <SectionPrimaryButton
+          </FormTransparentButton>
+          <FormPrimaryButton
             onClick={pinDestination}
             disabled={migrationState.workspace == null}
           >
             Next
-          </SectionPrimaryButton>
+          </FormPrimaryButton>
         </Flexbox>
       </div>
     )
@@ -167,11 +177,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   if (migrationState.step === 'confirm') {
     return (
       <div>
-        <SectionHeader>2. Start migration</SectionHeader>
-        <div>
-          <p>
-            <Icon path={mdiAlert} /> Notice
-          </p>
+        <FormHeading depth={2}>2. Start migration</FormHeading>
+        <Alert>
+          <FormHeading depth={2}>⚠️ Notice</FormHeading>
           <ol>
             <li>
               There are many advanced features like guest invitation for Cloud
@@ -188,14 +196,12 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
               completed.
             </li>
           </ol>
-        </div>
+        </Alert>
         <Flexbox justifyContent='flex-end'>
-          <SectionSecondaryButton onClick={cancel}>
-            Cancel
-          </SectionSecondaryButton>
-          <SectionPrimaryButton onClick={runMigration}>
+          <FormTransparentButton onClick={cancel}>Cancel</FormTransparentButton>
+          <FormPrimaryButton onClick={runMigration}>
             Start migration
-          </SectionPrimaryButton>
+          </FormPrimaryButton>
         </Flexbox>
       </div>
     )
@@ -204,7 +210,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
   if (migrationState.step === 'running') {
     return (
       <div>
-        <SectionHeader>2. Migrating</SectionHeader>
+        <FormHeading>2. Migrating</FormHeading>
         <Flexbox justifyContent='center' direction='column'>
           <Icon path={mdiTea} size={42} />
           <h3>Migration is processing...</h3>
@@ -225,9 +231,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           />
         </Flexbox>
         <Flexbox justifyContent='flex-end'>
-          <SectionSecondaryButton onClick={cancel}>
-            Cancel
-          </SectionSecondaryButton>
+          <FormTransparentButton onClick={cancel}>Cancel</FormTransparentButton>
         </Flexbox>
       </div>
     )
@@ -243,9 +247,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <p>{migrationState.err.toString()}</p>
         </div>
         <Flexbox justifyContent='flex-end'>
-          <SectionSecondaryButton onClick={cancel}>
-            Retry
-          </SectionSecondaryButton>
+          <FormSecondaryButton onClick={cancel}>Retry</FormSecondaryButton>
         </Flexbox>
       </div>
     )
@@ -268,9 +270,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             <h1>{migrationState.promoCode}</h1>
           </>
         )}
-        <SectionPrimaryButton onClick={() => setClosed(true)}>
-          Close
-        </SectionPrimaryButton>
+        <FormPrimaryButton onClick={() => openTab('storage')}>
+          Finish
+        </FormPrimaryButton>
       </Flexbox>
     </div>
   )
