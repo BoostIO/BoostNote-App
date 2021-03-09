@@ -318,6 +318,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
                               job.note._id,
                               job.note.folderPathname
                             )
+                            setClosed(true)
                           }}
                         >
                           ⚠️ {job.note.folderPathname}
