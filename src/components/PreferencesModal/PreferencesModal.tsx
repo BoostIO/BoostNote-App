@@ -22,6 +22,7 @@ import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import StorageTab from './StorageTab'
 import MigrationPage from './MigrationTab'
+import { useMigrations } from '../../lib/migrate/store'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -110,6 +111,7 @@ const PreferencesModal = () => {
   } = usePreferences()
   const { storageMap } = useDb()
   const routeParams = useRouteParams()
+  const { get } = useMigrations()
 
   const currentStorage = useMemo(() => {
     let storageId: string
@@ -196,7 +198,7 @@ const PreferencesModal = () => {
             {currentStorage != null && (
               <TabButton
                 label='Space'
-                tab='storage'
+                tab={get(currentStorage.id) != null ? 'migration' : 'storage'}
                 active={tab === 'storage' || tab === 'migration'}
                 setTab={openTab}
                 alert={
