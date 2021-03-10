@@ -28,6 +28,10 @@ const Container = styled.div`
   }
   &.alert--variant-danger {
     background-color: #ef5b5b;
+
+    a {
+      color: white;
+    }
   }
 
   padding: 10px;
