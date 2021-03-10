@@ -53,5 +53,6 @@ export async function callApi<T = any>(
     body,
     timeout: 60 * 1000,
     credentials: usingElectron ? undefined : 'include',
+    retry: 0,
   }).json() as Promise<T>
 }
