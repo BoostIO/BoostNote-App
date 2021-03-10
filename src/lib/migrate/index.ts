@@ -42,6 +42,7 @@ export interface MigrationSummary {
   code?: string
 }
 
+const maxAllowedRetries = 2
 export function createMigrationJob(
   storage: NoteStorage,
   workspace: SerializedWorkspace
@@ -155,7 +156,7 @@ async function* createMigrationIter(
       ])
     } catch (err) {
       if (
-        retries > 9 ||
+        retries > maxAllowedRetries ||
         (err.response instanceof Response && !isRetryable(err.response))
       ) {
         jobsFailed.push({ name: 'attachment', attachment, err })
@@ -218,7 +219,7 @@ async function* createMigrationIter(
       }
     } catch (err) {
       if (
-        retries > 9 ||
+        retries > maxAllowedRetries ||
         (err.response instanceof Response && !isRetryable(err.response))
       ) {
         jobsFailed.push({ name: 'note', note, err })
