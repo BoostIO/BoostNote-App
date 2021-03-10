@@ -85,6 +85,23 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             <strong>get a 3 months free coupon</strong>.(Monthly fee: $3) You
             can also convert this storage into a file system based local space.
           </p>
+          <p>
+            Please see{' '}
+            <a
+              href={
+                'https://intercom.help/boostnote-for-teams/en/articles/5018959-deprecation-notice-of-the-legacy-cloud-storage'
+              }
+              onClick={(event) => {
+                event.preventDefault()
+                openNew(
+                  'https://intercom.help/boostnote-for-teams/en/articles/5018959-deprecation-notice-of-the-legacy-cloud-storage'
+                )
+              }}
+            >
+              the announcement
+            </a>
+            .
+          </p>
         </Alert>
       )}
       <h2>Space Settings</h2>
