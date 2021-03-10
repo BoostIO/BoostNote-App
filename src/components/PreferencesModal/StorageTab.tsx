@@ -123,7 +123,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             <a
               onClick={(event) => {
                 event.preventDefault()
-                openNew(boostHubPricingPageUrl)
+                openNew(boostHubLearnMorePageUrl)
               }}
               href={boostHubLearnMorePageUrl}
             >
