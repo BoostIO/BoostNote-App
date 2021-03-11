@@ -97,8 +97,8 @@
   }
 
   async function readFileTypeFromBuffer(buffer) {
-    const { mime } = await FileType.fromBuffer(buffer)
-    return mime
+    const result = await FileType.fromBuffer(buffer)
+    return result != null ? result.mime : ''
   }
 
   function parseCSON(value) {
