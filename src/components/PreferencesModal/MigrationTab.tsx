@@ -196,7 +196,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             </li>
             <li>
               This operation will clone whole folders and documents to the cloud
-              space. Please delete this space manually one migration has
+              space. Please delete this space manually once migration has
               completed.
             </li>
           </ol>
