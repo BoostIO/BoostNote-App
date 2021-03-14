@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Doc, applyUpdate, encodeStateAsUpdate } from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { uniqWith } from 'ramda'
@@ -36,6 +36,20 @@ const useRealtime = <T extends { id: string }>({
   const [cachePromise] = useState(() =>
     createCache<Uint8Array>('cache:realtime')
   )
+
+  useEffect(() => {
+    if (provider != null) {
+      const setCache = () =>
+        cachePromise
+          .then((cache) => cache.put(id, encodeStateAsUpdate(provider.doc)))
+          .catch((error) => console.log(error))
+      window.addEventListener('beforeunload', setCache)
+      return () => {
+        window.removeEventListener('beforeunload', setCache)
+      }
+    }
+    return undefined
+  }, [provider, cachePromise, id])
 
   useEffectOnce(() => {
     return () => {
