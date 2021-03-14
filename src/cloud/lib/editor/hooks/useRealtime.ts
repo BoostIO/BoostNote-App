@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Doc, applyUpdate, encodeStateAsUpdate } from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { uniqWith } from 'ramda'
