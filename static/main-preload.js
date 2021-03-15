@@ -97,8 +97,16 @@
   }
 
   async function readFileTypeFromBuffer(buffer) {
-    const result = await FileType.fromBuffer(buffer)
-    return result != null ? result.mime : ''
+    try {
+      const result = await FileType.fromBuffer(buffer)
+      if (result == null) {
+        throw new Error('Failed to detect file type from the buffer')
+      }
+      return result.mime
+    } catch (error) {
+      console.warn(error)
+      return ''
+    }
   }
 
   function parseCSON(value) {
