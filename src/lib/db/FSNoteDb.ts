@@ -208,7 +208,8 @@ class FSNoteDb implements NoteDb {
     for (const fileName of fileNames) {
       const filePathname = this.getAttachmentPathname(fileName)
       const mime = await readFileType(filePathname)
-      if (!mime.startsWith('image/')) {
+
+      if (!mime.startsWith('image/') && !mime.startsWith('application/xml')) {
         continue
       }
 
