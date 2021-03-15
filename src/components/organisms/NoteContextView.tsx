@@ -328,7 +328,6 @@ const ControlItem = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  height: 30px;
   color: ${({ theme }) => theme.navItemColor};
   font-size: 14px;
 `
@@ -355,7 +354,7 @@ const LabelIcon = ({ path }: LabelIconProps) => {
 }
 
 const ControlItemLabel = styled.div`
-  height: 40px;
+  height: 30px;
   width: 120px;
   margin-right: 30px;
   display: flex;
