@@ -83,13 +83,16 @@ const NoteDetailTagNavigator = ({
   }, [setNewTagPopupPosition])
 
   const noteTags = useMemo(() => {
-    return tags.reduce((list, tagName) => {
-      const tagDoc = storageTagMap.get(tagName)
-      if (tagDoc != null) {
-        list.push(tagDoc)
-      }
-      return list
-    }, [] as PopulatedTagDoc[])
+    return tags
+      .slice()
+      .sort()
+      .reduce((list, tagName) => {
+        const tagDoc = storageTagMap.get(tagName)
+        if (tagDoc != null) {
+          list.push(tagDoc)
+        }
+        return list
+      }, [] as PopulatedTagDoc[])
   }, [tags, storageTagMap])
 
   useEffect(() => {
