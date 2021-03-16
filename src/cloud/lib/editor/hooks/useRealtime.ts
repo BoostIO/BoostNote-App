@@ -23,6 +23,8 @@ export type ConnectionState =
   | 'reconnecting'
   | 'disconnected'
 
+const RETRY_TIMEOUT = 30000
+
 const useRealtime = <T extends { id: string }>({
   token,
   id,
@@ -39,17 +41,18 @@ const useRealtime = <T extends { id: string }>({
 
   useEffect(() => {
     if (provider != null) {
-      const setCache = () =>
+      const setCache = () => {
         cachePromise
           .then((cache) => cache.put(id, encodeStateAsUpdate(provider.doc)))
           .catch((error) => console.log(error))
+      }
       window.addEventListener('beforeunload', setCache)
       return () => {
         window.removeEventListener('beforeunload', setCache)
       }
     }
     return undefined
-  }, [provider, cachePromise, id])
+  }, [provider, cachePromise, id, token])
 
   useEffectOnce(() => {
     return () => {
@@ -75,6 +78,7 @@ const useRealtime = <T extends { id: string }>({
 
     const provider = new WebsocketProvider('', token, doc, {
       WebSocketPolyfill: constructor,
+      resyncInterval: 10000,
     })
 
     provider.on('status', ({ status }: any) => {
@@ -84,9 +88,9 @@ const useRealtime = <T extends { id: string }>({
         timeoutRef.current = window.setTimeout(() => {
           provider.disconnect()
           setConnState('disconnected')
-        }, 30000)
+        }, RETRY_TIMEOUT)
       }
-      if (connected && timeoutRef.current != null) {
+      if (connected) {
         clearInterval(timeoutRef.current)
         timeoutRef.current = undefined
       }
@@ -114,12 +118,13 @@ const useRealtime = <T extends { id: string }>({
       timeoutRef.current = window.setTimeout(() => {
         provider.disconnect()
         setConnState('disconnected')
-      }, 30000)
+      }, RETRY_TIMEOUT)
       origConnect.call(provider)
     }
 
     setProvider(provider)
     return () => {
+      clearInterval(timeoutRef.current)
       doc.destroy()
       provider.awareness.destroy()
       provider.disconnect()
