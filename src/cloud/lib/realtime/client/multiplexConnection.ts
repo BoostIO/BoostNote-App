@@ -62,9 +62,7 @@ export function MultiplexConnection({
 
   let rootStream = new Subject<Result<null, ServerMessage>>()
   let conn = setupWebSocket(url, rootStream, WebSocketConstructor)
-  conn.onopen = () => {
-    conn.send(AuthMessage(auth))
-  }
+  conn.onopen = () => conn.send(AuthMessage(auth))
   onAuth(rootStream, authCallback)
   let messageStream = makeMessageStream(rootStream, () => authed)
 
@@ -79,9 +77,7 @@ export function MultiplexConnection({
     messageStream = makeMessageStream(rootStream, () => authed)
     setTimeout(() => {
       conn = setupWebSocket(url, rootStream, WebSocketConstructor)
-      conn.onopen = () => {
-        conn.send(AuthMessage(auth))
-      }
+      conn.onopen = () => conn.send(AuthMessage(auth))
       conn.onclose = reset
     }, backoffStep())
   }
@@ -118,15 +114,19 @@ export function MultiplexConnection({
       })
       if (subscriptions.has(token)) {
         Promise.resolve().then(() => {
-          userConn.readyState = WebSocket.OPEN
-          userConn.dispatchEvent(new Event('open'))
+          if (userConn.readyState === WebSocket.CONNECTING) {
+            userConn.readyState = WebSocket.OPEN
+            userConn.dispatchEvent(new Event('open'))
+          }
         })
       } else {
         makeSubscribeAcceptStream(token, messageStream).subscribe(
           () => {
-            subscriptions.add(token)
-            userConn.readyState = WebSocket.OPEN
-            userConn.dispatchEvent(new Event('open'))
+            if (userConn.readyState === WebSocket.CONNECTING) {
+              subscriptions.add(token)
+              userConn.readyState = WebSocket.OPEN
+              userConn.dispatchEvent(new Event('open'))
+            }
           },
           () => null
         )
