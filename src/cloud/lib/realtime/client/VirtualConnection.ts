@@ -41,6 +41,15 @@ export class VirtualConnection extends EventTarget implements WebSocket {
     })
   }
 
+  public triggerOpen() {
+    if (this.readyState === WebSocket.CONNECTING) {
+      this.readyState = WebSocket.OPEN
+      this.dispatchEvent(new Event('open'))
+      return true
+    }
+    return false
+  }
+
   public send(data: Uint8Array) {
     if (this.readyState === WebSocket.OPEN) {
       this._send(data)

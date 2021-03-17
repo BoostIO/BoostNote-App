@@ -113,19 +113,12 @@ export function MultiplexConnection({
         }
       })
       if (subscriptions.has(token)) {
-        Promise.resolve().then(() => {
-          if (userConn.readyState === WebSocket.CONNECTING) {
-            userConn.readyState = WebSocket.OPEN
-            userConn.dispatchEvent(new Event('open'))
-          }
-        })
+        Promise.resolve().then(() => userConn.triggerOpen())
       } else {
         makeSubscribeAcceptStream(token, messageStream).subscribe(
           () => {
-            if (userConn.readyState === WebSocket.CONNECTING) {
+            if (userConn.triggerOpen()) {
               subscriptions.add(token)
-              userConn.readyState = WebSocket.OPEN
-              userConn.dispatchEvent(new Event('open'))
             }
           },
           () => null
