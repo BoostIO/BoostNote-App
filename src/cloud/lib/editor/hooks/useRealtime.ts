@@ -52,7 +52,7 @@ const useRealtime = <T extends { id: string }>({
       }
     }
     return undefined
-  }, [provider, cachePromise, id, token])
+  }, [provider, cachePromise, id])
 
   useEffectOnce(() => {
     return () => {
