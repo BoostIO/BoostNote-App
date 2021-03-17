@@ -41,11 +41,11 @@ const useRealtime = <T extends { id: string }>({
 
   useEffect(() => {
     if (provider != null) {
-      const setCache = () => {
+      const setCache = () =>
         cachePromise
           .then((cache) => cache.put(id, encodeStateAsUpdate(provider.doc)))
           .catch((error) => console.log(error))
-      }
+
       window.addEventListener('beforeunload', setCache)
       return () => {
         window.removeEventListener('beforeunload', setCache)
