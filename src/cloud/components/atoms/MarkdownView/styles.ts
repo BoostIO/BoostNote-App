@@ -24,7 +24,8 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    padding-top: ${theme.space.xsmall}px;
+    padding-top: ${theme.space.xxsmall}px;
+    padding-left: ${theme.space.xxsmall}px;
     cursor: pointer;
     overflow: hidden;
 
@@ -75,7 +76,7 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
     & > div {
       flex: 1;
       min-width: 0;
-      padding: ${theme.space.xsmall}px ${theme.space.small}px;
+      padding: ${theme.space.xsmall}px ${theme.space.small}px ${theme.space.xsmall}px ${theme.space.xxsmall}px;
     }
 
     h1, a {
