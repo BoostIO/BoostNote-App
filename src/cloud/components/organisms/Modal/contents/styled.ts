@@ -102,6 +102,12 @@ export const ModalLine = styled.div`
   }
 `
 
+export const ModaLineHeader = styled.h3`
+  margin-top: 0;
+  margin-bottom: ${({ theme }) => theme.space.small}px;
+  font-size: ${({ theme }) => theme.fontSizes.medium}px;
+`
+
 export const ModalLabel = styled.label`
   display: block;
   margin-bottom: ${({ theme }) => theme.space.xsmall}px;

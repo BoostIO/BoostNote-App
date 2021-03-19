@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react'
 import { useModal } from '../../../../../lib/stores/modal'
 import { useToast } from '../../../../../lib/stores/toast'
 import { usePage } from '../../../../../lib/stores/pageStore'
-import { ModalBody, ModalContainer, ModalLine } from '../styled'
+import { ModalBody, ModalContainer, ModalLine, ModaLineHeader } from '../styled'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
 import { Spinner } from '../../../../atoms/Spinner'
 import ErrorBlock from '../../../../atoms/ErrorBlock'
@@ -185,7 +185,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
     <ModalBody ref={formRef} tabIndex={0}>
       <StyledModalForm onSubmit={onSubmit}>
         <ModalLine>
-          <h6>Name</h6>
+          <ModaLineHeader>Name</ModaLineHeader>
         </ModalLine>
         <ModalLine className='svg-initial-style' style={{ marginBottom: 30 }}>
           <StyledModalFormInput
@@ -198,7 +198,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         {workspace != null && workspace.default ? (
           <>
             <ModalLine>
-              <h6>Access</h6>
+              <ModaLineHeader>Access</ModaLineHeader>
             </ModalLine>
             <ModalLine style={{ marginBottom: 30 }}>
               <span>
@@ -210,7 +210,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         ) : (
           <>
             <ModalLine>
-              <h6>Make private</h6>
+              <ModaLineHeader>Make private</ModaLineHeader>
             </ModalLine>
             <ModalLine style={{ marginBottom: 30 }}>
               <Flexbox justifyContent='space-between'>
