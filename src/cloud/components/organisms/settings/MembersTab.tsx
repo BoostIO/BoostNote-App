@@ -47,6 +47,7 @@ import { SerializedGuest } from '../../../interfaces/db/guest'
 import EmojiIcon from '../../atoms/EmojiIcon'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
+import { guestsPerMember } from '../../../lib/subscription'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -625,6 +626,18 @@ const MembersTab = () => {
                       <Spinner className='relative' style={{ top: 2 }} />
                     )}
                   </Flexbox>
+                  <SectionDescription>
+                    Guests are people external to your team who you want to work
+                    with on specific documents. They can be invited to
+                    individual documents but not an entire workspace.
+                  </SectionDescription>
+                  <p>
+                    {permissions.length > 0
+                      ? `${
+                          permissions.length * guestsPerMember - guestsMap.size
+                        } remaining ${plur('seat', permissions.length)}. `
+                      : 'No Remaining seats. '}
+                  </p>
                   <StyledMembersTable>
                     <thead className='table-header'>
                       <th>User</th>
@@ -708,6 +721,7 @@ const TopMargin = styled.div`
 
 const StyledMembersTable = styled.table`
   width: 100%;
+  margin-top: ${({ theme }) => theme.space.default}px;
 
   .table-header {
     text-align: left;
@@ -765,7 +779,6 @@ const StyledMembersTable = styled.table`
 const StyledGuestInactiveText = styled.p`
   margin-top: ${({ theme }) => theme.space.medium}px;
   margin-bottom: ${({ theme }) => theme.space.default}px;
-  line-height: 1.6;
 `
 
 export default MembersTab
