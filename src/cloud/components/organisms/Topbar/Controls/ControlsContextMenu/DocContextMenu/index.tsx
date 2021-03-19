@@ -9,11 +9,11 @@ import {
   mdiArrowRight,
   mdiChevronLeft,
   mdiChevronRight,
-  mdiFileDocumentOutline,
   mdiAccountGroupOutline,
   mdiClockOutline,
   mdiLabelMultipleOutline,
   mdiAccountMultiplePlusOutline,
+  mdiArrowBottomLeft,
 } from '@mdi/js'
 import { useToast } from '../../../../../../lib/stores/toast'
 import { zIndexModalsBackground } from '../styled'
@@ -472,7 +472,7 @@ const DocContextMenu = ({
                                 id={`context__backlink__${doc.id}`}
                               >
                                 <Icon
-                                  path={mdiFileDocumentOutline}
+                                  path={mdiArrowBottomLeft}
                                   size={18}
                                   className='context__icon'
                                 />
@@ -888,6 +888,7 @@ const Container = styled.div`
     display: flex;
     align-items: end;
     line-height: 18px;
+    text-decoration: none;
   }
 
   .context__list + .context__flexible__button {
