@@ -370,6 +370,7 @@ export const SectionDescription = styled.small`
   color: ${({ theme }) => theme.subtleTextColor};
   display: block;
   margin-bottom: ${({ theme }) => theme.space.xsmall}px;
+  line-height: 1.6;
 `
 
 export const SectionFlexLeft = styled.div`
