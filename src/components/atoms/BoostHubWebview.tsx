@@ -31,7 +31,7 @@ import {
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
-import { DidFailLoadEvent } from 'electron/main'
+import { DidFailLoadEvent, MouseInputEvent } from 'electron/main'
 
 export interface WebviewControl {
   reload(): void
@@ -62,6 +62,7 @@ const BoostHubWebview = ({
   const webviewRef = useRef<WebviewTag>(null)
   const { preferences, setPreferences } = usePreferences()
   const { signOut } = useBoostHub()
+  const domReadyRef = useRef<boolean>(false)
   const cloudUser = preferences['cloud.user']
 
   const accessToken = useMemo(() => {
@@ -243,15 +244,120 @@ const BoostHubWebview = ({
     }
     boostHubReloadAllWebViewsEventEmitter.listen(reloadHandler)
 
+    const domReadyHandler = () => {
+      domReadyRef.current = true
+    }
+    webview.addEventListener('dom-ready', domReadyHandler)
+
     return () => {
       webview.removeEventListener('ipc-message', ipcMessageEventHandler)
       webview.removeEventListener('new-window', newWindowEventHandler)
+      webview.removeEventListener('dom-ready', domReadyHandler)
       boostHubReloadAllWebViewsEventEmitter.unlisten(reloadHandler)
     }
   })
 
+  const sendInputEvent = useCallback(async (event: MouseInputEvent): Promise<
+    void
+  > => {
+    if (webviewRef.current == null) {
+      return
+    }
+    if (!domReadyRef.current) {
+      return
+    }
+
+    return webviewRef.current.sendInputEvent(event)
+  }, [])
+
+  const bypassMouseDown = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+      const button = getTargetButton(event)
+      if (button == null) {
+        return
+      }
+
+      sendInputEvent({
+        button,
+        clickCount: 1,
+        type: 'mouseDown',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+  const bypassMouseUp = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+      const button = getTargetButton(event)
+      if (button == null) {
+        return
+      }
+
+      sendInputEvent({
+        button,
+        clickCount: 1,
+        type: 'mouseUp',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+  const bypassMouseEnter = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+
+      sendInputEvent({
+        type: 'mouseEnter',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+  const bypassMouseLeave = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+
+      sendInputEvent({
+        type: 'mouseLeave',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+
+  const bypassMouseMove = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+
+      sendInputEvent({
+        type: 'mouseMove',
+        x,
+        y,
+        movementX: event.movementX,
+        movementY: event.movementY,
+      })
+    },
+    [sendInputEvent]
+  )
+
   return (
     <Container className={className} style={style}>
+      <div
+        className='draggable'
+        onMouseDown={bypassMouseDown}
+        onMouseUp={bypassMouseUp}
+        onMouseEnter={bypassMouseEnter}
+        onMouseLeave={bypassMouseLeave}
+        onMouseMove={bypassMouseMove}
+      >
+        Draggable Area
+      </div>
       <webview
         ref={webviewRef}
         src={src}
@@ -268,24 +374,19 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  & > .container {
-    z-index: 1;
+  & > .draggable {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    z-index: 1;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: ${({ theme }) => theme.backgroundColor};
+    height: 44px;
+    background-color: rgba(255, 0, 0, 0.2);
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    opacity: 0;
   }
-  .error {
-    max-width: 500px;
-    text-align: center;
-  }
+
   & > webview {
     z-index: 0;
     position: absolute;
@@ -297,3 +398,29 @@ const Container = styled.div`
     bottom: 0;
   }
 `
+
+function getTargetButton(
+  event: React.MouseEvent<HTMLDivElement>
+): 'left' | 'right' | 'middle' | null {
+  switch (event.button) {
+    case 0:
+      return 'left'
+    case 1:
+      return 'middle'
+    case 2:
+      return 'right'
+  }
+  return null
+}
+
+function getTargetPosition(
+  event: React.MouseEvent<HTMLDivElement>
+): { x: number; y: number } {
+  const rect = (event.target as HTMLDivElement).getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const y = event.clientY - rect.top
+  return {
+    x,
+    y,
+  }
+}
