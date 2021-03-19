@@ -384,7 +384,7 @@ const DocContextMenu = ({
               {currentUserPermissions != null && (
                 <>
                   <div className='context__row'>
-                    <label className='context__label'>
+                    <label className='context__label' style={{ height: 37 }}>
                       <IconMdi
                         path={mdiLabelMultipleOutline}
                         size={18}
