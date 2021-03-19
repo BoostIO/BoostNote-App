@@ -3,7 +3,6 @@ import { Section, SectionSelect, SectionHeader3 } from './styled'
 import {
   useSettings,
   GeneralThemeOptions,
-  GeneralLanguageOptions,
   codeMirrorEditorThemes,
   CodeMirrorEditorTheme,
   codeMirrorKeyMap,
@@ -66,15 +65,6 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
-  const selectLanguage: SelectChangeEventHandler = useCallback(
-    (event) => {
-      setSettings({
-        'general.language': event.target.value as GeneralLanguageOptions,
-      })
-    },
-    [setSettings]
-  )
-
   const selectIndentType: SelectChangeEventHandler = useCallback(
     (event) => {
       setSettings({
@@ -99,14 +89,6 @@ const UserPreferencesForm = () => {
 
   return (
     <Section>
-      <SectionHeader3>{t('settings.interfaceLanguage')}</SectionHeader3>
-      <SectionSelect
-        value={settings['general.language']}
-        onChange={selectLanguage}
-      >
-        <option value='en-US'>English (US)</option>
-        <option value='ja'>日本語</option>
-      </SectionSelect>
       <SectionHeader3>{t('settings.applicationTheme')}</SectionHeader3>
       <SectionSelect value={settings['general.theme']} onChange={selectTheme}>
         <option value='light'>{t('settings.light')}</option>

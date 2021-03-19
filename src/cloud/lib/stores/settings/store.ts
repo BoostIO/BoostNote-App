@@ -9,7 +9,6 @@ import { saveUserSettings } from '../../../api/users/settings'
 import { toggleSettingsEventEmitter } from '../../utils/events'
 
 export const baseUserSettings: UserSettings = {
-  'general.language': 'en-US',
   'general.theme': 'dark',
   'general.editorTheme': 'default',
   'general.codeBlockTheme': 'default',
