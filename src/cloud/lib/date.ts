@@ -28,7 +28,7 @@ export function getFormattedBoosthubDate(date: string, prefixed = false) {
 export function getFormattedDateTime(
   date: string,
   prefix?: string,
-  timeFormat = 'HH:mm, dd MMM'
+  timeFormat = 'HH:mm, dd MMMM u'
 ) {
   const converted = new Date(date)
   const yesterday = new Date()
