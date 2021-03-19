@@ -10,6 +10,7 @@
   const readChunk = require('read-chunk')
   const CSON = require('cson-parser')
   const got = require('got')
+  const isSvg = require('is-svg')
 
   function openExternal(url) {
     console.log('opening ...', url)
@@ -92,17 +93,20 @@
   }
 
   async function readFileType(pathname) {
-    const buffer = readChunk.sync(pathname, 0, 4100)
+    const buffer = readChunk.sync(pathname, 0, 1024 * 1024)
     return readFileTypeFromBuffer(buffer)
   }
 
   async function readFileTypeFromBuffer(buffer) {
     try {
       const result = await FileType.fromBuffer(buffer)
-      if (result == null) {
-        throw new Error('Failed to detect file type from the buffer')
+      if (result != null) {
+        return result.mime
       }
-      return result.mime
+      if (isSvg(buffer)) {
+        return 'image/svg+xml'
+      }
+      throw new Error('Failed to detect file type from the buffer')
     } catch (error) {
       console.warn(error)
       return ''
