@@ -20,7 +20,7 @@ const LinkableHeader = ({
 }: LinkableHeaderProps) => {
   return (
     <StyledLinkableHeader as={as} id={id} {...rest}>
-      <StyledHeaderLink href={`#${id}`}>
+      <StyledHeaderLink href={`#${id}`} className='link-icon'>
         <IconMdi path={mdiLinkVariant} />
       </StyledHeaderLink>
       {children}
@@ -33,11 +33,11 @@ export default LinkableHeader
 const StyledLinkableHeader = styled.h1`
   position: relative;
 
-  a {
+  .link-icon {
     display: none;
   }
 
-  &:hover a {
+  &:hover .link-icon {
     display: block;
   }
 `
@@ -54,6 +54,6 @@ const StyledHeaderLink = styled.a`
   text-align: center;
 
   > svg {
-    margin-top: -4px;
+    margin-top: 4px;
   }
 `
