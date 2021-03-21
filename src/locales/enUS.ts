@@ -163,6 +163,9 @@ export default {
     'preferences.subfolders': 'Subfolders',
     'preferences.subfoldersView': 'Show content of all subfolders',
 
+    // Preferences KeymapTab
+    'preferences.keymap': 'Keymap',
+
     // Preferences EditorTab
     'preferences.editorTheme': 'Editor Theme',
     'preferences.editorFontSize': 'Editor Font Size',

@@ -2,7 +2,9 @@ import {
   app,
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  ipcMain,
   Menu,
+  MenuItemConstructorOptions,
   protocol,
   session,
 } from 'electron'
@@ -17,6 +19,11 @@ const MAC = process.platform === 'darwin'
 
 // single instance lock
 const singleInstance = app.requestSingleInstanceLock()
+
+function recreateMenu(template: MenuItemConstructorOptions[]) {
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+}
 
 function createMainWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
@@ -52,8 +59,7 @@ function createMainWindow() {
     )
   }
 
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  recreateMenu(template)
 
   if (MAC) {
     window.on('close', (event) => {
@@ -127,6 +133,55 @@ app.on('ready', () => {
     callback(pathname)
   })
   mainWindow = createMainWindow()
+
+  ipcMain.on('menuAcceleratorChanged', (_, args) => {
+    if (args.length != 2) {
+      return
+    }
+    const menuItemId = args[0]
+    const newAcceleratorShortcut =
+      args[1] == null
+        ? undefined
+        : MAC
+        ? args[1].replace('Ctrl', 'Cmd')
+        : args[1]
+
+    function updateTemplate(
+      template: MenuItemConstructorOptions[],
+      mainIndex: number,
+      subMenuIndex: number,
+      accelerator: string | undefined
+    ) {
+      if (
+        template != null &&
+        template[mainIndex] &&
+        template[mainIndex].submenu != null &&
+        template[mainIndex].submenu
+      ) {
+        const submenuItem = template[mainIndex].submenu
+        if (submenuItem) {
+          submenuItem[subMenuIndex].accelerator = accelerator
+        }
+      }
+    }
+
+    switch (menuItemId) {
+      case 'toggleGlobalSearch':
+        updateTemplate(template, 1, 9, newAcceleratorShortcut)
+        break
+      case 'togglePreviewMode':
+        updateTemplate(template, 2, 6, newAcceleratorShortcut)
+        break
+      case 'toggleSplitEditMode':
+        updateTemplate(template, 2, 7, newAcceleratorShortcut)
+        break
+      case 'editorSaveAs':
+        updateTemplate(template, 0, MAC ? 2 : 3, newAcceleratorShortcut)
+        break
+    }
+
+    recreateMenu(template)
+  })
 
   app.on('open-url', (_event, url) => {
     mainWindow!.webContents.send('open-boostnote-url', url)
