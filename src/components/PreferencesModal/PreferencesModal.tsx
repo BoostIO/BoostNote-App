@@ -23,6 +23,7 @@ import { useRouteParams } from '../../lib/routeParams'
 import StorageTab from './StorageTab'
 import MigrationPage from './MigrationTab'
 import { useMigrations } from '../../lib/migrate/store'
+import KeymapTab from './KeymapTab'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -58,7 +59,7 @@ const ContentContainer = styled.div`
 
 const ModalHeader = styled.div`
   height: 40px;
-  ${borderBottom}
+  ${borderBottom};
   display: flex;
 `
 
@@ -136,6 +137,8 @@ const PreferencesModal = () => {
 
   const content = useMemo(() => {
     switch (tab) {
+      case 'keymap':
+        return <KeymapTab />
       case 'editor':
         return <EditorTab />
       case 'markdown':
@@ -146,14 +149,17 @@ const PreferencesModal = () => {
         if (currentStorage != null) {
           return <StorageTab storage={currentStorage} />
         }
+        break
       case 'migration':
         if (currentStorage != null) {
           return <MigrationPage storage={currentStorage} />
         }
+        break
       case 'general':
       default:
         return <GeneralTab />
     }
+    return <GeneralTab />
   }, [tab, currentStorage])
 
   if (closed) {
@@ -178,6 +184,12 @@ const PreferencesModal = () => {
               label={t('about.about')}
               tab='about'
               active={tab === 'about'}
+              setTab={openTab}
+            />
+            <TabButton
+              label={t('preferences.keymap')}
+              tab='keymap'
+              active={tab === 'keymap'}
               setTab={openTab}
             />
             <TabButton

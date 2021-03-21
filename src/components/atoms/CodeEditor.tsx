@@ -7,7 +7,6 @@ import {
   EditorIndentSizeOptions,
   EditorKeyMapOptions,
 } from '../../lib/preferences'
-import { osName } from '../../lib/platform'
 
 const StyledContainer = styled.div`
   .CodeMirror {
@@ -54,6 +53,7 @@ interface CodeEditorProps {
   indentType?: EditorIndentTypeOptions
   indentSize?: EditorIndentSizeOptions
   keyMap?: EditorKeyMapOptions
+  getCustomKeymap: (key: string) => string | null
   mode?: string
   readonly?: boolean
   onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
@@ -71,6 +71,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.props.keyMap == null || this.props.keyMap === 'default'
         ? 'sublime'
         : this.props.keyMap
+
+    const extraKeys = this.getExtraKeys()
     this.codeMirror = CodeMirror.fromTextArea(this.textAreaRef.current!, {
       ...defaultCodeMirrorOptions,
       theme: getCodeMirrorTheme(this.props.theme),
@@ -80,12 +82,7 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       keyMap,
       mode: this.props.mode || 'gfm',
       readOnly: this.props.readonly === true,
-      extraKeys: {
-        Enter: 'newlineAndIndentContinueMarkdownList',
-        Tab: 'indentMore',
-        [osName === 'macos' ? 'Cmd-Alt-F' : 'Ctrl-Alt-F']: 'findPersistent',
-        Esc: 'clearSearch',
-      },
+      extraKeys: extraKeys,
       scrollPastEnd: true,
     })
     this.codeMirror.on('change', this.handleCodeMirrorChange)
@@ -96,6 +93,19 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     this.codeMirror.on('paste', this.handlePaste as any)
     this.codeMirror.on('drop', this.handleDrop)
     this.codeMirror.on('cursorActivity', this.handleCursorActivity)
+  }
+
+  getExtraKeys = () => {
+    const localSearchKey = this.props.getCustomKeymap('toggleLocalSearch')
+    const extraKeys = {
+      Enter: 'newlineAndIndentContinueMarkdownList',
+      Tab: 'indentMore',
+      Esc: 'clearSearch',
+    }
+    if (localSearchKey != null) {
+      extraKeys[localSearchKey] = 'findPersistent'
+    }
+    return extraKeys
   }
 
   reloadMode = () => {
@@ -139,6 +149,9 @@ class CodeEditor extends React.Component<CodeEditorProps> {
           : this.props.keyMap
       this.codeMirror.setOption('keyMap', keyMap)
     }
+
+    // Update shortcut binding
+    this.codeMirror.setOption('extraKeys', this.getExtraKeys())
   }
 
   componentWillUnmount() {

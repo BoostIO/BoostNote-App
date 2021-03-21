@@ -151,7 +151,7 @@ const EditableInput = ({
 }
 
 const StyledInput = styled.input`
-  ${inputStyle}
+  ${inputStyle};
   flex: 1 2 30px;
   width: 30px;
 `

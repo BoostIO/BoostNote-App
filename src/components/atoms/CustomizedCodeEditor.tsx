@@ -28,7 +28,7 @@ const CustomizedCodeEditor = ({
   onDrop,
   onCursorActivity,
 }: CustomizedCodeEditorProps) => {
-  const { preferences } = usePreferences()
+  const { preferences, getCodemirrorTypeKeymap } = usePreferences()
   return (
     <CodeEditor
       onChange={onChange}
@@ -41,6 +41,7 @@ const CustomizedCodeEditor = ({
       indentType={preferences['editor.indentType']}
       indentSize={preferences['editor.indentSize']}
       keyMap={preferences['editor.keyMap']}
+      getCustomKeymap={getCodemirrorTypeKeymap}
       mode={mode}
       readonly={readonly}
       onPaste={onPaste}
