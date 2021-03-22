@@ -115,10 +115,7 @@ const LocalReplace = ({
 
   const replaceSingleMarker = useCallback(
     (marker: TextMarker) => {
-      const markerPosition:
-        | MarkerRange
-        | CodeMirror.Position
-        | undefined = marker.find()
+      const markerPosition = marker.find()
       if (markerPosition === undefined) {
         return false
       }
