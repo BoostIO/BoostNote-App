@@ -17,11 +17,11 @@ import {
 import styled from '../../lib/styled/styled'
 import {
   LocalSearchInputLeft,
-  LocalSearchStyledButton,
-  SearchResultItem,
   SearchResultNavigationDirection,
 } from './LocalSearch'
 import { SearchReplaceOptions } from '../../lib/search/search'
+import LocalSearchButton from '../atoms/search/LocalSearchButton'
+import { SearchResultItem } from '../atoms/search/SearchResultItem'
 
 interface LocalReplaceProps {
   codeMirror: CodeMirror.EditorFromTextArea
@@ -324,22 +324,20 @@ const LocalReplace = ({
             ref={replaceTextAreaRef}
           />
           <SearchOptionsInnerContainer>
-            <LocalSearchStyledButton
+            <LocalSearchButton
               title={'New Line (Ctrl+Shift+Enter)'}
               className={'button'}
               onClick={addNewlineToReplaceValue}
-            >
-              <Icon path={mdiSubdirectoryArrowLeft} />
-            </LocalSearchStyledButton>
-            <LocalSearchStyledButton
+              iconPath={mdiSubdirectoryArrowLeft}
+            />
+            <LocalSearchButton
               title={
                 'Preserve Case (Alt+E) - Use tab to focus on an option and space to toggle'
               }
               className={preservingCaseReplace ? 'active' : ''}
               onClick={toggleCaseSensitiveReplace}
-            >
-              <Icon path={mdiAlphabeticalVariant} />
-            </LocalSearchStyledButton>
+              iconPath={mdiAlphabeticalVariant}
+            />
           </SearchOptionsInnerContainer>
         </LocalSearchInputLeft>
         <ReplaceRightContainer>
