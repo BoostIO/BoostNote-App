@@ -98,23 +98,14 @@ const LocalReplace = ({
     }
     const startPosition = replaceTextAreaRef.current.selectionStart
     const endPosition = replaceTextAreaRef.current.selectionEnd
-    if (startPosition == endPosition) {
-      // no selection -> add newline at this location
-      replaceTextAreaRef.current.setRangeText(
-        '\n',
-        startPosition,
-        endPosition,
-        'end'
-      )
-    } else {
-      // selection -> replace it with newline
-      replaceTextAreaRef.current.setRangeText(
-        '\n',
-        startPosition,
-        endPosition,
-        'end'
-      )
-    }
+
+    replaceTextAreaRef.current.setRangeText(
+      '\n',
+      startPosition,
+      endPosition,
+      'end'
+    )
+
     setReplaceValue(replaceTextAreaRef.current.value)
     if (onReplaceQueryChange != null) {
       onReplaceQueryChange(replaceValue)
