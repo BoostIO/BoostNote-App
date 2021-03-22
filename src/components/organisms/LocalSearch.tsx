@@ -32,6 +32,8 @@ import {
 } from '@mdi/js'
 import LocalReplace from './LocalReplace'
 import styled from '../../lib/styled/styled'
+import LocalSearchButton from '../atoms/search/LocalSearchButton'
+import { SearchResultItem } from '../atoms/search/SearchResultItem'
 
 const LOCAL_SEARCH_MAX_RESULTS = 10000
 
@@ -189,7 +191,11 @@ const LocalSearch = ({
   )
 
   const markFoundItems = useCallback(
-    (codeEditor, selectedItemIdx = -1, regExp) => {
+    (
+      codeEditor: CodeMirror.EditorFromTextArea,
+      selectedItemIndex = -1,
+      regExp: RegExp
+    ) => {
       const cursor = codeEditor.getSearchCursor(regExp)
       let first = true
       let from: CodeMirror.Position
@@ -216,7 +222,9 @@ const LocalSearch = ({
 
         codeEditor.markText(from, to, {
           className:
-            currentItemIndex === selectedItemIdx ? 'marked selected' : 'marked',
+            currentItemIndex === selectedItemIndex
+              ? 'marked selected'
+              : 'marked',
           attributes: { dataId: '' + currentItemIndex },
         })
         if (!LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
@@ -237,36 +245,22 @@ const LocalSearch = ({
       if (loadingResults) {
         return
       }
-      let newSelectedItemId: number = selectedItemIndex
+
       const markers = codeMirror.getAllMarks()
       const numberOfMarkers = markers.length
+      const newSelectedItemIndex: number = getNewSelectedItemIndex(
+        selectedItemIndex,
+        numberOfMarkers,
+        direction
+      )
       if (numberOfMarkers === 1) {
-        // Just focus
-        focusSearchItem(codeMirror, markers, newSelectedItemId)
+        focusSearchItem(codeMirror, markers, newSelectedItemIndex)
         if (focusingSearchInput) {
           focusSearchTextAreaInput()
         }
         return
       }
-      if (direction == 'previous') {
-        // Go to previous item
-        if (selectedItemIndex - 1 >= 0) {
-          newSelectedItemId--
-        } else {
-          // go to last (circular motion)
-          newSelectedItemId = numberOfMarkers - 1
-        }
-      } else {
-        // Go to next item
-        if (selectedItemIndex + 1 < numberOfMarkers) {
-          newSelectedItemId++
-        } else {
-          // go back to first (circular motion)
-          newSelectedItemId = 0
-        }
-      }
 
-      // we have new selected item - let's update it's marker class
       let selectedMarker = null
       let newSelectedMarker = null
       for (const marker of codeMirror.getAllMarks()) {
@@ -275,7 +269,7 @@ const LocalSearch = ({
         }
         if (
           marker['attributes'] &&
-          parseInt(marker['attributes']['dataId']) === newSelectedItemId
+          parseInt(marker['attributes']['dataId']) === newSelectedItemIndex
         ) {
           newSelectedMarker = marker
         }
@@ -292,16 +286,15 @@ const LocalSearch = ({
           codeMirror,
           newSelectedMarker,
           'marked selected',
-          newSelectedItemId
+          newSelectedItemIndex
         )
       }
-      setSelectedItemIndex(newSelectedItemId)
+      setSelectedItemIndex(newSelectedItemIndex)
 
-      // Markers are cleared and re-added (but same IDs and positions) so we retrieve new ones
       const newMarkers = codeMirror.getAllMarks()
       setNumberOfFoundItems(newMarkers.length)
       if (markers.length > 0) {
-        focusSearchItem(codeMirror, newMarkers, newSelectedItemId)
+        focusSearchItem(codeMirror, newMarkers, newSelectedItemIndex)
         if (focusingSearchInput) {
           focusSearchTextAreaInput()
         }
@@ -365,7 +358,7 @@ const LocalSearch = ({
       caseSensitive: boolean,
       focusingEditor = false,
       updateCursor = false,
-      defaultFocusItemId: number | null = null
+      defaultFocusItemIndex: number | null = null
     ) => {
       clearMarkers()
       if (searchQuery.trim() === '') {
@@ -377,8 +370,8 @@ const LocalSearch = ({
         return
       }
       const focusedItemIndex =
-        defaultFocusItemId !== null
-          ? defaultFocusItemId
+        defaultFocusItemIndex !== null
+          ? defaultFocusItemIndex
           : findClosestItemToFocusOn(
               codeMirror,
               codeMirror.getCursor().line,
@@ -690,30 +683,27 @@ const LocalSearch = ({
             ref={searchTextAreaRef}
           />
           <SearchOptionsInnerContainer>
-            <LocalSearchStyledButton
+            <LocalSearchButton
               title={'New Line (Ctrl+Shift+Enter)'}
               onClick={addNewlineToSearchValue}
-            >
-              <Icon path={mdiSubdirectoryArrowLeft} />
-            </LocalSearchStyledButton>
-            <LocalSearchStyledButton
+              iconPath={mdiSubdirectoryArrowLeft}
+            />
+            <LocalSearchButton
               className={caseSensitiveSearch ? 'active' : ''}
               title={
                 'Match Case (Alt+C) - Use tab to focus on an option and space to toggle'
               }
               onClick={toggleCaseSensitiveSearch}
-            >
-              <Icon path={mdiFormatLetterCase} />
-            </LocalSearchStyledButton>
-            <LocalSearchStyledButton
+              iconPath={mdiFormatLetterCase}
+            />
+            <LocalSearchButton
               title={
                 'Regex (Alt+X) - Use tab to focus on an option and space to toggle'
               }
               className={regexSearch ? 'active' : ''}
               onClick={toggleRegexSearch}
-            >
-              <Icon path={mdiRegex} />
-            </LocalSearchStyledButton>
+              iconPath={mdiRegex}
+            />
           </SearchOptionsInnerContainer>
         </LocalSearchInputLeft>
         <LocalSearchInputRightContainer>
@@ -734,31 +724,28 @@ const LocalSearch = ({
           </NumResultsContainer>
           <SearchOptionsOuterContainer>
             <SearchNavOptions>
-              <LocalSearchStyledButton
+              <LocalSearchButton
                 disabled={numberOfFoundItems === 0}
                 title={'Previous Occurrence (Shift+F3)'}
                 className={'button'}
                 onClick={() => navigateToNextItem('previous')}
-              >
-                <Icon path={mdiArrowUp} />
-              </LocalSearchStyledButton>
-              <LocalSearchStyledButton
+                iconPath={mdiArrowUp}
+              />
+              <LocalSearchButton
                 disabled={numberOfFoundItems === 0}
                 title={'Next Occurrence (F3)'}
                 className={'button'}
                 onClick={() => navigateToNextItem('next')}
-              >
-                <Icon path={mdiArrowDown} />
-              </LocalSearchStyledButton>
+                iconPath={mdiArrowDown}
+              />
             </SearchNavOptions>
           </SearchOptionsOuterContainer>
           <LocalSearchInputRightClose>
-            <LocalSearchStyledButton
+            <LocalSearchButton
               className={'button'}
               onClick={onSearchClose}
-            >
-              <Icon path={mdiClose} />
-            </LocalSearchStyledButton>
+              iconPath={mdiClose}
+            />
           </LocalSearchInputRightClose>
         </LocalSearchInputRightContainer>
       </SearchResultItem>
@@ -787,15 +774,6 @@ const LocalSearch = ({
 
 export default LocalSearch
 
-export interface LocalSearchTextAreaProps {
-  numRows: number
-}
-
-export const SearchResultItem = styled.div`
-  display: flex;
-  align-items: center;
-`
-
 const SearchOptionsOuterContainer = styled.div`
   justify-content: center;
   align-content: center;
@@ -820,49 +798,6 @@ const ResultStatusContainer = styled.div`
   color: #b8b8b6;
   &.error {
     color: #fa5a4f;
-  }
-`
-
-export const LocalSearchStyledButton = styled.button`
-  background-color: transparent;
-  cursor: pointer;
-
-  width: 22px;
-  height: 22px;
-  padding: 3px;
-  font-weight: bolder;
-  font-size: 16px;
-
-  overflow: hidden;
-  border-radius: 0;
-  border: none;
-
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navItemColor};
-  &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  &.active {
-    background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
-    color: #61a8e1;
-    border-radius: 3px;
-  }
-
-  &:disabled {
-    cursor: default;
-    opacity: 0.5;
-    &:hover {
-      color: ${({ theme }) => theme.navItemColor};
-    }
-  }
-
-  &:focus {
-    opacity: 0.6;
-    background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
-    outline: 1px solid #61a8e1;
-    border-radius: 3px;
   }
 `
 
@@ -929,4 +864,27 @@ function updateMarkerStyle(
     className: className,
     attributes: { dataId: index + '' },
   })
+}
+
+function getNewSelectedItemIndex(
+  currentSelectedIndex: number,
+  numberOfMarkers: number,
+  direction: 'previous' | 'next'
+) {
+  if (direction == 'previous') {
+    if (currentSelectedIndex - 1 >= 0) {
+      return currentSelectedIndex - 1
+    } else {
+      // go to last (circular motion)
+      return numberOfMarkers - 1
+    }
+  } else {
+    const selectedItemIsLast = currentSelectedIndex + 1 < numberOfMarkers
+    if (selectedItemIsLast) {
+      return currentSelectedIndex + 1
+    } else {
+      // go back to first (circular motion)
+      return 0
+    }
+  }
 }
