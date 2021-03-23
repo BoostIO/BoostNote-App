@@ -3,6 +3,7 @@ import React, {
   useCallback,
   MouseEventHandler,
   useEffect,
+  useState,
 } from 'react'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
@@ -35,6 +36,11 @@ import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/routeParams'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
+import {
+  folderPathnameFormat,
+  getTransferableTextData,
+  noteIdFormat,
+} from '../../lib/dnd'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -43,6 +49,7 @@ interface StorageNavigatorFragmentProps {
 const StorageNavigatorFragment = ({
   storage,
 }: StorageNavigatorFragmentProps) => {
+  const [draggedOver, setDraggedOver] = useState<boolean>(false)
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
   const { prompt } = useDialog()
   const {
@@ -53,6 +60,7 @@ const StorageNavigatorFragment = ({
     bookmarkNote,
     unbookmarkNote,
     trashNote,
+    updateNote,
   } = useDb()
   const { push } = useRouter()
   const { t } = useTranslation()
@@ -227,12 +235,63 @@ const StorageNavigatorFragment = ({
     routeParams.name === 'storages.notes' &&
     routeParams.noteId == null
 
+  const rootFolderDropHandler = (event: React.DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDraggedOver(false)
+
+    const sourceFolderPathname = getTransferableTextData(
+      event,
+      folderPathnameFormat
+    )
+    if (sourceFolderPathname != null) {
+      const sourceFolderName = sourceFolderPathname.substring(
+        sourceFolderPathname.lastIndexOf('/')
+      )
+      renameFolder(storageId, sourceFolderPathname, sourceFolderName).catch(
+        (err) => {
+          pushMessage({
+            title: 'Folder Structure Update Failed',
+            description: `Updating folder location failed. Reason: ${
+              err != null && err.message != null ? err.message : 'Unknown'
+            }`,
+          })
+        }
+      )
+    } else {
+      const noteId = getTransferableTextData(event, noteIdFormat)
+      if (noteId == null) {
+        return
+      }
+      updateNote(storageId, noteId, {
+        folderPathname: '/',
+      })
+    }
+  }
+
+  const handleDragLeaveNavigatorItem = useCallback((event: React.DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDraggedOver(false)
+  }, [])
+
+  const handleDragOverNavigatorItem = useCallback((event: React.DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    event.dataTransfer.dropEffect = 'move'
+    setDraggedOver(true)
+  }, [])
+
   return (
     <>
       <NavigatorHeader
         label='Workspace'
         active={rootIsActive}
         onClick={() => push(rootFolderPathname)}
+        draggedOver={draggedOver}
+        onDrop={(e) => rootFolderDropHandler(e)}
+        onDragOver={(e) => handleDragOverNavigatorItem(e)}
+        onDragLeave={(e) => handleDragLeaveNavigatorItem(e)}
         onContextMenu={openWorkspaceContextMenu}
         control={
           <>
@@ -274,6 +333,8 @@ const StorageNavigatorFragment = ({
           bookmarkNote={bookmarkNote}
           unbookmarkNote={unbookmarkNote}
           trashNote={trashNote}
+          renameFolder={renameFolder}
+          updateNote={updateNote}
         />
       )}
 

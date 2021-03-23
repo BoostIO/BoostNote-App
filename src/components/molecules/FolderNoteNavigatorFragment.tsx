@@ -4,6 +4,7 @@ import {
   NoteDoc,
   PopulatedFolderDoc,
   ObjectMap,
+  NoteDocEditibleProps,
 } from '../../lib/db/types'
 import { useRouteParams, StorageNotesRouteParams } from '../../lib/routeParams'
 import { useGeneralStatus } from '../../lib/generalStatus'
@@ -25,6 +26,16 @@ interface FolderNoteNavigatorFragment {
     noteId: string
   ) => Promise<NoteDoc | undefined>
   trashNote: (storageId: string, noteId: string) => Promise<NoteDoc | undefined>
+  updateNote(
+    storageId: string,
+    noteId: string,
+    noteProps: Partial<NoteDocEditibleProps>
+  ): Promise<NoteDoc | undefined>
+  renameFolder: (
+    storageName: string,
+    pathname: string,
+    newName: string
+  ) => Promise<void>
 }
 
 const FolderNoteNavigatorFragment = ({
@@ -35,6 +46,8 @@ const FolderNoteNavigatorFragment = ({
   bookmarkNote,
   unbookmarkNote,
   trashNote,
+  updateNote,
+  renameFolder,
 }: FolderNoteNavigatorFragment) => {
   const { folderMap, id: storageId } = storage
 
@@ -145,6 +158,8 @@ const FolderNoteNavigatorFragment = ({
             bookmarkNote={bookmarkNote}
             unbookmarkNote={unbookmarkNote}
             trashNote={trashNote}
+            renameFolder={renameFolder}
+            updateNote={updateNote}
           />
         )
       })}

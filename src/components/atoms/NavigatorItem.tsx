@@ -32,6 +32,15 @@ const Container = styled.div`
       opacity: 1;
     }
   }
+
+  &.dragged-over {
+    border-radius: 3px;
+    .dragged-over {
+      border-color: ${({ theme }) => theme.secondaryBorderColor};
+    }
+    background-color: ${({ theme }) =>
+      theme.secondaryButtonBackgroundColor} !important;
+  }
 `
 
 const FoldButton = styled.button`
@@ -90,7 +99,7 @@ const ClickableContainer = styled.button`
 `
 
 const Label = styled.div`
-  ${textOverflow}
+  ${textOverflow};
   flex: 1;
   font-size: 14px;
 
@@ -128,12 +137,16 @@ interface NavigatorItemProps {
   active?: boolean
   subtle?: boolean
   alert?: boolean
+  draggable?: boolean
+  draggedOver?: boolean
   onFoldButtonClick?: (event: React.MouseEvent) => void
   onClick?: (event: React.MouseEvent) => void
   onContextMenu?: (event: React.MouseEvent) => void
+  onDragStart?: (event: React.DragEvent) => void
   onDrop?: (event: React.DragEvent) => void
   onDragOver?: (event: React.DragEvent) => void
   onDragEnd?: (event: React.DragEvent) => void
+  onDragLeave?: (event: React.DragEvent) => void
   onDoubleClick?: (event: React.MouseEvent) => void
 }
 
@@ -148,15 +161,19 @@ const NavigatorItem = ({
   // TODO: Delete dot placeholder style
   dotPlaceholder,
   active,
+  draggable,
   subtle,
   alert,
   onFoldButtonClick,
   onClick,
   onDoubleClick,
   onContextMenu,
+  onDragStart,
   onDrop,
   onDragOver,
   onDragEnd,
+  onDragLeave,
+  draggedOver,
 }: NavigatorItemProps) => {
   return (
     <Container
@@ -164,11 +181,15 @@ const NavigatorItem = ({
         className,
         active && 'active',
         visibleControl && 'visibleControl',
+        draggedOver && 'dragged-over',
       ])}
       onContextMenu={onContextMenu}
+      onDragStart={onDragStart}
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
+      onDragLeave={onDragLeave}
+      draggable={draggable}
     >
       {!dotPlaceholder && folded != null && (
         <FoldButton

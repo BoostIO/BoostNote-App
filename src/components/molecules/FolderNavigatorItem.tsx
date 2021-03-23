@@ -1,10 +1,16 @@
-import React, { useCallback, useMemo, MouseEvent } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getFolderItemId } from '../../lib/nav'
-import { getTransferrableNoteData } from '../../lib/dnd'
+import {
+  folderPathnameFormat,
+  getTransferableTextData,
+  getTransferrableNoteData,
+  noteIdFormat,
+  setTransferableTextData,
+} from '../../lib/dnd'
 import { useTranslation } from 'react-i18next'
 import {
   mdiFolderOpenOutline,
@@ -16,6 +22,7 @@ import {
 import NavigatorButton from '../atoms/NavigatorButton'
 import { useRouter } from '../../lib/router'
 import { openContextMenu } from '../../lib/electronOnly'
+import { useToast } from '../../lib/toast'
 
 interface FolderNavigatorItemProps {
   active: boolean
@@ -42,15 +49,22 @@ const FolderNavigatorItem = ({
   showPromptToCreateFolder,
   showPromptToRenameFolder,
 }: FolderNavigatorItemProps) => {
-  const { toggleSideNavOpenedItem, sideNavOpenedItemSet } = useGeneralStatus()
+  const [draggedOver, setDraggedOver] = useState<boolean>(false)
+  const {
+    toggleSideNavOpenedItem,
+    sideNavOpenedItemSet,
+    openSideNavFolderItemRecursively,
+  } = useGeneralStatus()
   const { push } = useRouter()
   const { messageBox } = useDialog()
   const { t } = useTranslation()
+  const { pushMessage } = useToast()
   const {
     createNote,
     updateNote,
     removeFolder,
     moveNoteToOtherStorage,
+    renameFolder,
   } = useDb()
 
   const itemId = useMemo(() => {
@@ -179,6 +193,7 @@ const FolderNavigatorItem = ({
   const handleDrop = async (event: React.DragEvent) => {
     const transferrableNoteData = getTransferrableNoteData(event)
     if (transferrableNoteData == null) {
+      handleDropNavigatorItem(event)
       return
     }
 
@@ -224,6 +239,81 @@ const FolderNavigatorItem = ({
     }
   }
 
+  const handleDragOverNavigatorItem = useCallback((e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.dataTransfer.dropEffect = 'move'
+    setDraggedOver(true)
+  }, [])
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('Drag is over!')
+    setDraggedOver(false)
+  }
+
+  const handleDragStartNavigatorItem = (event: React.DragEvent) => {
+    setTransferableTextData(event, folderPathnameFormat, folderPathname)
+  }
+
+  const handleDropFolderToNavigatorItem = (
+    sourceItemPathname: string,
+    destinationFolderPathname: string
+  ) => {
+    const sourceFolderName = sourceItemPathname.substring(
+      sourceItemPathname.lastIndexOf('/')
+    )
+    const newFolderPathname = `${destinationFolderPathname}${sourceFolderName}`
+    renameFolder(
+      storageId,
+      sourceItemPathname == '' ? '/' : sourceItemPathname,
+      newFolderPathname
+    )
+      .then(() => {
+        // refresh works for file system (FSNote) database
+        push(`/app/storages/${storageId}/notes${newFolderPathname}`)
+        openSideNavFolderItemRecursively(storageId, newFolderPathname)
+      })
+      .catch((err) => {
+        pushMessage({
+          title: 'Folder Structure Update Failed',
+          description: `Updating folder location failed. Reason: ${
+            err != null && err.message != null ? err.message : 'Unknown'
+          }`,
+        })
+      })
+  }
+  const handleDropNoteToNavigatorItem = (
+    noteId: string,
+    destinationFolderPathname: string
+  ) => {
+    // move folder pathname of the note to new location (target destination)
+    updateNote(storageId, noteId, {
+      folderPathname: destinationFolderPathname,
+    })
+  }
+
+  const handleDropNavigatorItem = (event: React.DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDraggedOver(false)
+
+    const sourceFolderPathname = getTransferableTextData(
+      event,
+      folderPathnameFormat
+    )
+    if (sourceFolderPathname != null) {
+      handleDropFolderToNavigatorItem(sourceFolderPathname, folderPathname)
+    } else {
+      const noteId = getTransferableTextData(event, noteIdFormat)
+      if (noteId == null) {
+        return
+      }
+      handleDropNoteToNavigatorItem(noteId, folderPathname)
+    }
+  }
+
   return (
     <NavigatorItem
       folded={folded}
@@ -253,14 +343,14 @@ const FolderNavigatorItem = ({
           />
         </>
       }
-      onDragOver={preventDefault}
-      onDrop={handleDrop}
+      draggable={true}
+      draggedOver={draggedOver}
+      onDragStart={handleDragStartNavigatorItem}
+      onDragOver={handleDragOverNavigatorItem}
+      onDrop={(e) => handleDrop(e)}
+      onDragLeave={(e) => handleDragLeave(e)}
     />
   )
-}
-
-function preventDefault(event: MouseEvent) {
-  event.preventDefault()
 }
 
 export default FolderNavigatorItem

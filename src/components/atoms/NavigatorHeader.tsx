@@ -3,6 +3,7 @@ import styled from '../../lib/styled'
 import { textOverflow } from '../../lib/styled/styleFunctions'
 import Icon from './Icon'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
+import cc from 'classcat'
 
 const HeaderContainer = styled.header`
   position: relative;
@@ -73,28 +74,50 @@ const ClickableContainer = styled.div`
   &.subtle {
     color: ${({ theme }) => theme.disabledUiTextColor};
   }
+
+  &.dragged-over {
+    .dragged-over {
+      border-color: ${({ theme }) => theme.secondaryBorderColor};
+    }
+    background-color: ${({ theme }) =>
+      theme.secondaryButtonBackgroundColor} !important;
+  }
 `
 
 interface NavigatorHeaderProps {
   label: string
   active?: boolean
+  draggedOver?: boolean
   control?: React.ReactNode
   onContextMenu?: React.MouseEventHandler<HTMLDivElement>
   folded?: boolean
   onClick?: React.MouseEventHandler<HTMLDivElement>
+  onDrop?: (event: React.DragEvent) => void
+  onDragOver?: (event: React.DragEvent) => void
+  onDragLeave?: (event: React.DragEvent) => void
 }
 
 const NavigatorHeader = ({
   folded,
   label,
   active = false,
+  draggedOver,
   onContextMenu,
   onClick,
+  onDrop,
+  onDragOver,
+  onDragLeave,
   control,
 }: NavigatorHeaderProps) => {
   return (
     <HeaderContainer onContextMenu={onContextMenu}>
-      <ClickableContainer onClick={onClick} className={active ? 'active' : ''}>
+      <ClickableContainer
+        onClick={onClick}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        className={cc([active && 'active', draggedOver && 'dragged-over'])}
+      >
         {folded != null && (
           <Icon path={folded ? mdiChevronRight : mdiChevronDown} size={18} />
         )}
