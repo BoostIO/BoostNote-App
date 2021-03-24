@@ -257,39 +257,27 @@ const BoostHubWebview = ({
     }
   })
 
-  const sendInputEvent = useCallback((event: MouseInputEvent) => {
-    setImmediate(() => {
-      if (webviewRef.current == null) {
-        return
-      }
-      if (!domReadyRef.current) {
-        return
-      }
-      webviewRef.current.focus()
+  const sendInputEvent = useCallback(
+    (event: MouseInputEvent, focusBeforeSending = false) => {
+      setImmediate(() => {
+        if (webviewRef.current == null) {
+          return
+        }
+        if (!domReadyRef.current) {
+          return
+        }
 
-      webviewRef.current.sendInputEvent(event)
-    })
-  }, [])
+        if (focusBeforeSending) {
+          webviewRef.current.focus()
+        }
 
-  const bypassMouseDown = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-      const button = getTargetButton(event)
-      if (button == null) {
-        return
-      }
-
-      sendInputEvent({
-        button,
-        clickCount: 1,
-        type: 'mouseDown',
-        x,
-        y,
+        webviewRef.current.sendInputEvent(event)
       })
     },
-    [sendInputEvent]
+    []
   )
-  const bypassMouseUp = useCallback(
+
+  const bypassClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       const { x, y } = getTargetPosition(event)
       const button = getTargetButton(event)
@@ -297,6 +285,16 @@ const BoostHubWebview = ({
         return
       }
 
+      sendInputEvent(
+        {
+          button,
+          clickCount: 1,
+          type: 'mouseDown',
+          x,
+          y,
+        },
+        true
+      )
       sendInputEvent({
         button,
         clickCount: 1,
@@ -307,6 +305,64 @@ const BoostHubWebview = ({
     },
     [sendInputEvent]
   )
+
+  const bypassDoubleClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+      const button = getTargetButton(event)
+      if (button == null) {
+        return
+      }
+
+      sendInputEvent(
+        {
+          button,
+          clickCount: 2,
+          type: 'mouseDown',
+          x,
+          y,
+        },
+        true
+      )
+      sendInputEvent({
+        button,
+        clickCount: 2,
+        type: 'mouseUp',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+  const bypassContextMenu = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const { x, y } = getTargetPosition(event)
+      const button = getTargetButton(event)
+      if (button == null) {
+        return
+      }
+
+      sendInputEvent(
+        {
+          button,
+          clickCount: 1,
+          type: 'mouseDown',
+          x,
+          y,
+        },
+        true
+      )
+      sendInputEvent({
+        button,
+        clickCount: 1,
+        type: 'mouseUp',
+        x,
+        y,
+      })
+    },
+    [sendInputEvent]
+  )
+
   const bypassMouseEnter = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       const { x, y } = getTargetPosition(event)
@@ -352,8 +408,9 @@ const BoostHubWebview = ({
       {osName === 'macos' && (
         <div
           className='draggable'
-          onMouseDown={bypassMouseDown}
-          onMouseUp={bypassMouseUp}
+          onClick={bypassClick}
+          onContextMenu={bypassContextMenu}
+          onDoubleClick={bypassDoubleClick}
           onMouseEnter={bypassMouseEnter}
           onMouseLeave={bypassMouseLeave}
           onMouseMove={bypassMouseMove}
