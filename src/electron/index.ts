@@ -25,6 +25,7 @@ function createMainWindow() {
       webSecurity: !dev,
       webviewTag: true,
       enableRemoteModule: true,
+      contextIsolation: false,
       preload: dev
         ? path.join(app.getAppPath(), '../static/main-preload.js')
         : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),

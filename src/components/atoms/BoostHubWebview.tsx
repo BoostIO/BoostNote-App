@@ -19,7 +19,7 @@ import {
 } from 'electron'
 import { useEffectOnce } from 'react-use'
 import styled from '../../lib/styled'
-import { openNew } from '../../lib/platform'
+import { openNew, osName } from '../../lib/platform'
 import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
@@ -257,17 +257,18 @@ const BoostHubWebview = ({
     }
   })
 
-  const sendInputEvent = useCallback(async (event: MouseInputEvent): Promise<
-    void
-  > => {
-    if (webviewRef.current == null) {
-      return
-    }
-    if (!domReadyRef.current) {
-      return
-    }
+  const sendInputEvent = useCallback((event: MouseInputEvent) => {
+    setImmediate(() => {
+      if (webviewRef.current == null) {
+        return
+      }
+      if (!domReadyRef.current) {
+        return
+      }
+      webviewRef.current.focus()
 
-    return webviewRef.current.sendInputEvent(event)
+      webviewRef.current.sendInputEvent(event)
+    })
   }, [])
 
   const bypassMouseDown = useCallback(
@@ -348,21 +349,25 @@ const BoostHubWebview = ({
 
   return (
     <Container className={className} style={style}>
-      <div
-        className='draggable'
-        onMouseDown={bypassMouseDown}
-        onMouseUp={bypassMouseUp}
-        onMouseEnter={bypassMouseEnter}
-        onMouseLeave={bypassMouseLeave}
-        onMouseMove={bypassMouseMove}
-      >
-        Draggable Area
-      </div>
+      {osName === 'macos' && (
+        <div
+          className='draggable'
+          onMouseDown={bypassMouseDown}
+          onMouseUp={bypassMouseUp}
+          onMouseEnter={bypassMouseEnter}
+          onMouseLeave={bypassMouseLeave}
+          onMouseMove={bypassMouseMove}
+        >
+          Draggable Area
+        </div>
+      )}
       <webview
         ref={webviewRef}
         src={src}
+        tabIndex={-1}
         useragent={boostHubWebViewUserAgent}
         preload={boostHubPreloadUrl}
+        webpreferences='contextIsolation=no'
       />
     </Container>
   )
