@@ -244,7 +244,16 @@ const FolderPage = () => {
               style={{ marginRight: 10 }}
               tooltip='Icon'
             />
-            <span style={{ marginRight: 10 }}>{currentFolder.name}</span>
+            <span
+              style={{
+                marginRight: 10,
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflowX: 'hidden',
+              }}
+            >
+              {currentFolder.name}
+            </span>
             <RightLayoutHeaderButtons
               buttons={[
                 {
