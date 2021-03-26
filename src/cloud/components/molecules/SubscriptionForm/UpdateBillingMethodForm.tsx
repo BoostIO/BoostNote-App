@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import {
   SectionIntroduction,
   SectionFlexRow,
@@ -10,10 +10,14 @@ import { Spinner } from '../../atoms/Spinner'
 import { useToast } from '../../../lib/stores/toast'
 import { updateSubMethod } from '../../../api/teams/subscription/update'
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js'
-import { StripeElementStyle } from '@stripe/stripe-js'
+import {
+  StripeElementStyle,
+  StripeCardElementChangeEvent,
+} from '@stripe/stripe-js'
 import { selectTheme } from '../../../lib/styled'
 import { useSettings } from '../../../lib/stores/settings'
 import { StyledCardElementContainer } from './index'
+import Alert from '../../../../components/atoms/Alert'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription
@@ -78,6 +82,33 @@ const UpdateBillingMethodForm = ({
     }
   }, [settings])
 
+  const currentCardBrand = sub?.cardBrand
+
+  const [newCardBrand, setNewCardBrand] = useState('unknown')
+
+  const handleCardElementChange = useCallback(
+    (event: StripeCardElementChangeEvent) => {
+      setNewCardBrand(event.brand)
+    },
+    []
+  )
+
+  const usingDifferentCurrencyPricing = useMemo(() => {
+    if (newCardBrand.toLowerCase() === 'unknown') {
+      return false
+    }
+    const differentCardBrand =
+      newCardBrand.toLowerCase() !== (currentCardBrand || '').toLowerCase()
+
+    const oneOfThemAreJcb =
+      newCardBrand === 'jcb' || (currentCardBrand || '').toLowerCase() === 'jcb'
+    if (differentCardBrand && oneOfThemAreJcb) {
+      return true
+    } else {
+      return false
+    }
+  }, [currentCardBrand, newCardBrand])
+
   if (sub == null) {
     return (
       <div>
@@ -103,14 +134,25 @@ const UpdateBillingMethodForm = ({
         <p>Update your Credit Card</p>
         <SectionFlexRow>
           <label>Current Credit Card</label>
-          <span className='value'>**** **** **** {sub.last4}</span>
+          <span className='value'>
+            **** **** **** {sub.last4}
+            {sub.cardBrand != null && ` (${sub.cardBrand})`}
+          </span>
         </SectionFlexRow>
+        {usingDifferentCurrencyPricing && (
+          <Alert variant='danger'>
+            Switching payment method from/to JCB card requires canceling
+            existing active subscription. Please cancel the existing one and
+            subscribe again with a new card.
+          </Alert>
+        )}
 
         <StyledCardElementContainer>
           <CardElement
             options={{
               style: stripeFormStyle,
             }}
+            onChange={handleCardElementChange}
           />
         </StyledCardElementContainer>
 
@@ -123,7 +165,11 @@ const UpdateBillingMethodForm = ({
             Cancel
           </CustomButton>
 
-          <CustomButton onClick={onSubmit} variant='primary' disabled={sending}>
+          <CustomButton
+            onClick={onSubmit}
+            variant='primary'
+            disabled={usingDifferentCurrencyPricing || sending}
+          >
             {sending ? <Spinner /> : 'Update'}
           </CustomButton>
         </SectionFlexDualButtons>
