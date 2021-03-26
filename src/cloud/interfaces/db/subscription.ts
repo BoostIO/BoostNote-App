@@ -13,6 +13,7 @@ export interface SerializeableSubscriptionProps {
     | 'canceled'
     | 'inactive'
     | 'trialing'
+  cardBrand?: string
   last4?: string
   trialEnd: number
   currentPeriodEnd: number
