@@ -50,7 +50,6 @@ const SubscriptionForm = ({
   onCancel,
 }: SubscriptionFormProps) => {
   const stripe = useStripe()
-  const [usingJpyPricing, setUsingJpyPricing] = useState(false)
   const elements = useElements()
   const [email, setEmail] = useState('')
   const [promoCode, setPromoCode] = useState('')
@@ -136,6 +135,19 @@ const SubscriptionForm = ({
     }
   }, [settings])
 
+  const [newCardBrand, setNewCardBrand] = useState('unknown')
+
+  const handleCardElementChange = useCallback(
+    (event: Stripe.StripeCardElementChangeEvent) => {
+      setNewCardBrand(event.brand)
+    },
+    []
+  )
+
+  const usingJpyPricing = useMemo(() => {
+    return newCardBrand.toLowerCase() === 'jcb'
+  }, [newCardBrand])
+
   const unitPrice = useMemo(() => {
     if (currentPlan === 'pro') {
       if (usingJpyPricing) {
@@ -163,13 +175,6 @@ const SubscriptionForm = ({
     }
     return `$${stripeStandardPlanUnit * numberOfMembers}`
   }, [currentPlan, usingJpyPricing, numberOfMembers])
-
-  const handleCardElementChange = useCallback(
-    (event: Stripe.StripeCardElementChangeEvent) => {
-      setUsingJpyPricing(event.brand.toLowerCase() === 'jcb')
-    },
-    []
-  )
 
   return (
     <StyledSubscriptionForm onSubmit={handleSubmit}>
