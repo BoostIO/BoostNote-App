@@ -136,16 +136,10 @@ const LocalReplace = ({
         codeMirror.replaceRange(
           foundMarkText.charAt(0) + replaceQuery.substr(1),
           markerRange.from,
-          markerRange.to,
-          '@ignore'
+          markerRange.to
         )
       } else {
-        codeMirror.replaceRange(
-          replaceQuery,
-          markerRange.from,
-          markerRange.to,
-          '@ignore'
-        )
+        codeMirror.replaceRange(replaceQuery, markerRange.from, markerRange.to)
       }
 
       return true
@@ -187,14 +181,16 @@ const LocalReplace = ({
       return
     }
 
-    let anyReplacementSuccessful = false
-    for (const marker of markers) {
-      const replaceSuccessful = replaceSingleMarker(marker)
-      if (replaceSuccessful) {
-        anyReplacementSuccessful = true
+    const anyReplacementSuccessful = codeMirror.operation<boolean>(function () {
+      let anyReplacementSuccessful = false
+      for (const marker of markers) {
+        const replaceSuccessful = replaceSingleMarker(marker)
+        if (replaceSuccessful) {
+          anyReplacementSuccessful = true
+        }
       }
-    }
-
+      return anyReplacementSuccessful
+    })
     if (onReplacementFinished != null && anyReplacementSuccessful) {
       onReplacementFinished()
     }
