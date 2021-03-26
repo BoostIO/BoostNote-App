@@ -15,11 +15,7 @@ import {
   getMatchData,
   SearchReplaceOptions,
 } from '../../lib/search/search'
-import CodeMirror, {
-  EditorChangeLinkedList,
-  MarkerRange,
-  TextMarker,
-} from 'codemirror'
+import CodeMirror, { MarkerRange, TextMarker } from 'codemirror'
 import Icon from '../atoms/Icon'
 import {
   mdiArrowDown,
@@ -358,7 +354,8 @@ const LocalSearch = ({
       caseSensitive: boolean,
       focusingEditor = false,
       updateCursor = false,
-      defaultFocusItemIndex: number | null = null
+      defaultFocusItemIndex: number | null = null,
+      forceItemIndexUpdate = false
     ) => {
       clearMarkers()
       if (searchQuery.trim() === '') {
@@ -380,7 +377,7 @@ const LocalSearch = ({
       markFoundItems(codeMirror, focusedItemIndex, regExp)
 
       const newMarkers: TextMarker[] = codeMirror.getAllMarks()
-      if (focusedItemIndex !== selectedItemIndex) {
+      if (forceItemIndexUpdate || focusedItemIndex !== selectedItemIndex) {
         setSelectedItemIndex(focusedItemIndex)
       }
       if (newMarkers.length > 0) {
@@ -394,13 +391,13 @@ const LocalSearch = ({
       }
     },
     [
-      focusSearchItem,
       clearMarkers,
-      codeMirror,
-      findClosestItemToFocusOn,
       getSearchRegex,
+      findClosestItemToFocusOn,
+      codeMirror,
       markFoundItems,
       selectedItemIndex,
+      focusSearchItem,
     ]
   )
 
@@ -488,7 +485,8 @@ const LocalSearch = ({
       caseSensitiveSearch,
       false,
       false,
-      itemToFocusOn < numFoundItemsForFocus ? itemToFocusOn : 0
+      itemToFocusOn < numFoundItemsForFocus ? itemToFocusOn : 0,
+      true
     )
     setFocusingReplace(true)
   }, [
@@ -584,14 +582,7 @@ const LocalSearch = ({
   )
 
   useEffect(() => {
-    function onContentChange(
-      _: CodeMirror.Editor,
-      changes: EditorChangeLinkedList
-    ) {
-      if (changes.origin == '@ignore') {
-        return
-      }
-
+    function onContentChanges() {
       // restore replace focus before updating results otherwise it might render
       // out of focus because value don't have time to propagate
       if (focusingReplace) {
@@ -605,9 +596,15 @@ const LocalSearch = ({
         false
       )
     }
-    codeMirror.on('change', onContentChange)
+    /*
+     * Be care of the difference between this two events 'change' and 'changes
+     * the 'changes' event batches operations and is called only once per operation
+     * (with list of all changes)
+     * the 'change' event is called for each single operation once
+     */
+    codeMirror.on('changes', onContentChanges)
     return () => {
-      codeMirror.off('change', onContentChange)
+      codeMirror.off('changes', onContentChanges)
     }
   }, [
     caseSensitiveSearch,
