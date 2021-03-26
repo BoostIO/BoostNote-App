@@ -15,6 +15,8 @@ import {
   stripeProPlanUnit,
   stripeStandardPlanUnit,
   UpgradePlans,
+  stripeProJpyPlanUnit,
+  stripeStandardJpyPlanUnit,
 } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
@@ -26,6 +28,7 @@ import {
 } from '../../molecules/SubscriptionForm'
 import { SectionIntroduction, SectionParagraph } from '../settings/styled'
 import PlanTables from './PlanTables'
+import Alert from '../../../../components/atoms/Alert'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -130,6 +133,8 @@ const SubscriptionManagement = ({
   const subscriptionPlanChange =
     targetedPlan === 'Pro' ? 'Upgrade' : 'Downgrade'
 
+  const usingJpyPricing = (subscription.cardBrand || '').toLowerCase() === 'jcb'
+
   return (
     <>
       <StyledBillingContainer>
@@ -138,33 +143,61 @@ const SubscriptionManagement = ({
             <SectionParagraph>
               <StyledUpgradePlan>
                 <StyledCalcuration>
-                  <span className='plan-name'>Pro</span>${stripeProPlanUnit}{' '}
+                  <span className='plan-name'>Pro</span>
+                  {!usingJpyPricing
+                    ? `$${stripeProPlanUnit} `
+                    : `¥${stripeProJpyPlanUnit} `}
                   &times; {subscription.seats}{' '}
                   {plur('member', subscription.seats)} &times; 1 month
                 </StyledCalcuration>
-                <span>${subscription.seats * stripeProPlanUnit}</span>
+                <strong>
+                  {!usingJpyPricing
+                    ? `$${stripeProPlanUnit * subscription.seats}`
+                    : `¥${stripeProJpyPlanUnit * subscription.seats}`}
+                </strong>
               </StyledUpgradePlan>
               <StyledTotal>
                 <label>Total Monthly Price</label>
-                <strong>${subscription.seats * stripeProPlanUnit}</strong>
+
+                <strong>
+                  {!usingJpyPricing
+                    ? `$${stripeProPlanUnit * subscription.seats}`
+                    : `¥${stripeProJpyPlanUnit * subscription.seats}`}
+                </strong>
               </StyledTotal>
             </SectionParagraph>
           ) : subscription.plan === 'standard' ? (
             <SectionParagraph>
               <StyledUpgradePlan>
                 <StyledCalcuration>
-                  <span className='plan-name'>Standard</span>$
-                  {stripeStandardPlanUnit} &times; {subscription.seats}{' '}
+                  <span className='plan-name'>Standard</span>
+                  {!usingJpyPricing
+                    ? `$${stripeStandardPlanUnit} `
+                    : `¥${stripeStandardJpyPlanUnit} `}
+                  &times; {subscription.seats}{' '}
                   {plur('member', subscription.seats)} &times; 1 month
                 </StyledCalcuration>
-                <span>${stripeStandardPlanUnit}</span>
+                <span>
+                  {!usingJpyPricing
+                    ? `$${stripeStandardPlanUnit * subscription.seats}`
+                    : `¥${stripeStandardJpyPlanUnit * subscription.seats}`}
+                </span>
               </StyledUpgradePlan>
               <StyledTotal>
-                <label>Due Today</label>
-                <strong>${stripeStandardPlanUnit}</strong>
+                <label>Total Monthly Price</label>
+                <strong>
+                  {!usingJpyPricing
+                    ? `$${stripeStandardPlanUnit * subscription.seats}`
+                    : `¥${stripeStandardJpyPlanUnit * subscription.seats}`}
+                </strong>
               </StyledTotal>
             </SectionParagraph>
           ) : null}
+          {usingJpyPricing && (
+            <Alert variant='secondary'>
+              We can only accept JPY(Japanese Yen) when paying by JCB cards.
+            </Alert>
+          )}
           <StyledBillingDescription>
             {subscription.currentPeriodEnd !== 0 ? (
               subscription.status === 'canceled' ? (
@@ -178,7 +211,12 @@ const SubscriptionManagement = ({
               ) : (
                 <p>
                   Will bill to the credit card ending in{' '}
-                  <strong>{subscription.last4}</strong> at{' '}
+                  <strong>
+                    {subscription.last4}
+                    {subscription.cardBrand != null &&
+                      ` (${subscription.cardBrand})`}
+                  </strong>{' '}
+                  at{' '}
                   <strong>
                     {getFormattedDateFromUnixTimestamp(
                       subscription.currentPeriodEnd
