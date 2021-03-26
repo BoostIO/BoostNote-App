@@ -597,10 +597,10 @@ const LocalSearch = ({
       )
     }
     /*
-     * Be care of the difference between this two events 'change' and 'changes
-     * the 'changes' event batches operations and is called only once per operation
-     * (with list of all changes)
-     * the 'change' event is called for each single operation once
+     * Be care of the difference between this two events 'change' and 'changes'
+     * The 'changes' event batches operations and is called only once per operation
+     * (with list of all changes).
+     * The 'change' event is called for each single operation once.
      */
     codeMirror.on('changes', onContentChanges)
     return () => {
