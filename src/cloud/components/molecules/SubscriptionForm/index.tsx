@@ -12,7 +12,7 @@ import {
 } from '../../organisms/settings/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 import styled from '../../../lib/styled'
-import { StripeElementStyle } from '@stripe/stripe-js'
+import Stripe, { StripeElementStyle } from '@stripe/stripe-js'
 import { useSettings } from '../../../lib/stores/settings'
 import { selectTheme } from '../../../lib/styled'
 import { Spinner } from '../../atoms/Spinner'
@@ -22,10 +22,13 @@ import {
   stripeProPlanUnit,
   stripeStandardPlanUnit,
   UpgradePlans,
+  stripeProJpyPlanUnit,
+  stripeStandardJpyPlanUnit,
 } from '../../../lib/stripe'
 import plur from 'plur'
 import Icon from '../../../../components/atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import Alert from '../../../../components/atoms/Alert'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -47,6 +50,7 @@ const SubscriptionForm = ({
   onCancel,
 }: SubscriptionFormProps) => {
   const stripe = useStripe()
+  const [usingJpyPricing, setUsingJpyPricing] = useState(false)
   const elements = useElements()
   const [email, setEmail] = useState('')
   const [promoCode, setPromoCode] = useState('')
@@ -132,60 +136,70 @@ const SubscriptionForm = ({
     }
   }, [settings])
 
-  const planDescription: {
-    heading: React.ReactNode
-  } = useMemo(() => {
-    switch (currentPlan) {
-      case 'pro':
-        return {
-          heading: (
-            <SectionParagraph>
-              <StyledUpgradePlan>
-                <StyledCalcuration>
-                  <span className='plan-name'>Pro</span> ${stripeProPlanUnit}{' '}
-                  &times; {permissions.length}{' '}
-                  {plur('member', permissions.length)} &times; 1 month
-                </StyledCalcuration>
-              </StyledUpgradePlan>
-              <StyledTotal>
-                <label>Total Monthly Price</label>
-                <strong>${permissions.length * stripeProPlanUnit}</strong>
-              </StyledTotal>
-            </SectionParagraph>
-          ),
-        }
-      case 'standard':
-        return {
-          heading: (
-            <SectionParagraph>
-              <StyledUpgradePlan>
-                <StyledCalcuration>
-                  <span className='plan-name'>Standard</span> $
-                  {stripeStandardPlanUnit} &times; {permissions.length}{' '}
-                  {plur('member', permissions.length)} &times; 1 month
-                </StyledCalcuration>
-              </StyledUpgradePlan>
-              <StyledTotal>
-                <label>Total Monthly Price</label>
-                <strong>${permissions.length * stripeStandardPlanUnit}</strong>
-              </StyledTotal>
-            </SectionParagraph>
-          ),
-        }
-      default:
-        return { heading: null, footing: null }
+  const unitPrice = useMemo(() => {
+    if (currentPlan === 'pro') {
+      if (usingJpyPricing) {
+        return `¥${stripeProJpyPlanUnit}`
+      }
+      return `$${stripeProPlanUnit}`
     }
-  }, [currentPlan, permissions.length])
+    if (usingJpyPricing) {
+      return `¥${stripeStandardJpyPlanUnit}`
+    }
+    return `$${stripeStandardPlanUnit}`
+  }, [currentPlan, usingJpyPricing])
+
+  const numberOfMembers = permissions.length
+
+  const totalMonthlyPrice = useMemo(() => {
+    if (currentPlan === 'pro') {
+      if (usingJpyPricing) {
+        return `¥${stripeProJpyPlanUnit * numberOfMembers}`
+      }
+      return `$${stripeProPlanUnit * numberOfMembers}`
+    }
+    if (usingJpyPricing) {
+      return `¥${stripeStandardJpyPlanUnit * numberOfMembers}`
+    }
+    return `$${stripeStandardPlanUnit * numberOfMembers}`
+  }, [currentPlan, usingJpyPricing, numberOfMembers])
+
+  const handleCardElementChange = useCallback(
+    (event: Stripe.StripeCardElementChangeEvent) => {
+      setUsingJpyPricing(event.brand.toLowerCase() === 'jcb')
+    },
+    []
+  )
 
   return (
     <StyledSubscriptionForm onSubmit={handleSubmit}>
-      {planDescription.heading}
+      <SectionParagraph>
+        <StyledUpgradePlan>
+          <StyledCalcuration>
+            <span className='plan-name'>
+              {currentPlan === 'pro' ? 'Pro' : 'Standard'}
+            </span>{' '}
+            {unitPrice} &times; {permissions.length}{' '}
+            {plur('member', permissions.length)} &times; 1 month
+          </StyledCalcuration>
+        </StyledUpgradePlan>
+        <StyledTotal>
+          <label>Total Monthly Price</label>
+          <strong>{totalMonthlyPrice}</strong>
+        </StyledTotal>
+      </SectionParagraph>
+      {usingJpyPricing && (
+        <Alert variant='secondary'>
+          We can only accept JPY(Japanese Yen) when paying by JCB cards.
+        </Alert>
+      )}
       <StyledPaymentHeader>Payment Method</StyledPaymentHeader>
       <StyledCardElementContainer>
         <CardElement
           options={{
             style: stripeFormStyle,
           }}
+          onChange={handleCardElementChange}
         />
       </StyledCardElementContainer>
       <StyledBillingInput
