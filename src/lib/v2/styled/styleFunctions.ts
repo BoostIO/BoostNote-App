@@ -1,17 +1,18 @@
 import { darkTheme } from './dark'
-import { BaseTheme } from './types'
+import { lightTheme } from './light'
+import { BaseTheme, ThemeTypes } from './types'
 
 export interface StyledProps {
   theme: BaseTheme
 }
 
-export function selectV2Theme(theme: string) {
+export function selectV2Theme(theme: ThemeTypes) {
   switch (theme) {
-    case 'dark':
-      return darkTheme
     case 'light':
+      return lightTheme
+    case 'dark':
     default:
-      return {}
+      return darkTheme
   }
 }
 
