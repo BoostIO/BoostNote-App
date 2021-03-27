@@ -48,7 +48,7 @@ const Sidebar = ({
             sidebarState === 'spaces' && 'flexible',
           ])}
         >
-          <div className='wrapper'>
+          <div className='sidebar__expanded__wrapper'>
             {sidebarState === 'spaces' ? (
               <SidebarSpacesPicker
                 spaces={spaces}
@@ -216,6 +216,7 @@ const SidebarContainer = styled.div`
   .sidebar__expanded {
     border-right: 1px solid ${({ theme }) => theme.colors.border.main};
     height: 100%;
+    max-height: 100%;
 
     &.flexible {
       height: fit-content;
@@ -223,12 +224,11 @@ const SidebarContainer = styled.div`
       border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
       border-bottom-right-radius: ${({ theme }) => theme.borders.radius}px;
     }
+  }
 
-    > .wrapper {
-      padding: ${({ theme }) => theme.sizes.spaces.md}px
-        ${({ theme }) => theme.sizes.spaces.sm}px;
-      height: 100%;
-    }
+  .sidebar__expanded__wrapper {
+    height: 100%;
+    overflow: auto;
   }
 
   .sidebar__space__picker {

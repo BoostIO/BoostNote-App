@@ -1,8 +1,9 @@
 import React, { FC, PropsWithChildren, ComponentType } from 'react'
 import { Story } from '@storybook/react/types-6-0'
 import { ThemeProvider } from 'styled-components'
-import { ThemeTypes, selectTheme } from '../../themes/v2'
+import { ThemeTypes } from '../../lib/v2/styled/types'
 import styled from '../../lib/styled'
+import { selectV2Theme } from '../../lib/v2/styled/styleFunctions'
 
 interface ThemedWrapperProps {
   theme?: ThemeTypes
@@ -13,7 +14,7 @@ export const ThemedWrapper: FC<ThemedWrapperProps> = ({
   children,
 }) => {
   return (
-    <ThemeProvider theme={selectTheme(theme)}>
+    <ThemeProvider theme={selectV2Theme(theme)}>
       <StyledBackground>{children}</StyledBackground>
     </ThemeProvider>
   )

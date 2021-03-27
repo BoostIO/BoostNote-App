@@ -70,3 +70,5 @@ export interface ChangingThemes {
 }
 
 export type BaseTheme = SharedTheme & ChangingThemes
+
+export type ThemeTypes = 'light' | 'dark'

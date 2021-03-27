@@ -1,22 +1,22 @@
 import commonTheme from './common'
 import { BaseTheme } from './types'
 
-export const darkTheme: BaseTheme = {
+export const lightTheme: BaseTheme = {
   ...commonTheme,
   colors: {
     background: {
-      main: '#1E2024',
-      second: '#27282B',
+      main: '#',
+      second: '#',
     },
     text: {
-      main: '#fff',
-      second: '#D0D0D1',
-      subtle: '#9E9E9E',
-      link: '#329BBE',
+      main: '#',
+      second: '#',
+      subtle: '#',
+      link: '#',
     },
     border: {
-      main: '#303336',
-      second: '#3D3F45',
+      main: '#',
+      second: '#',
     },
     variants: {
       danger: {
@@ -30,9 +30,9 @@ export const darkTheme: BaseTheme = {
         text: '#fff',
       },
       secondary: {
-        base: '#3D3F44',
-        darker: '#303135',
-        text: '#fff',
+        base: '#',
+        darker: '#',
+        text: '#',
       },
       warning: {
         base: '',
