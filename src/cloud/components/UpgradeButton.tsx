@@ -95,7 +95,7 @@ const Container = styled.button`
     line-height: inherit;
     font-size: inherit;
     text-decoration: underline;
-    margin: 0 ${({ theme }) => theme.space.xxxsmall}px;
+    margin: 0 ${({ theme }) => theme.space.xxsmall}px;
 
     &:hover {
       opacity: 0.8;

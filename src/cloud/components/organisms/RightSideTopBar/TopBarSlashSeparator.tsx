@@ -18,7 +18,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.navButtonColor};
+  color: ${({ theme }) => theme.subtleIconColor};
   font-size: 14px;
   user-select: none;
   flex-grow: 0;

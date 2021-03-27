@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import Page from '../../components/Page'
-import styled from '../../lib/styled'
+import styled from '../../../cloud/lib/styled'
 import ErrorBlock from '../../components/atoms/ErrorBlock'
 import { Spinner } from '../../components/atoms/Spinner'
 import Button from '../../components/atoms/Button'
@@ -145,7 +145,7 @@ const Container = styled.div`
   }
   h1 {
     color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xl}px;
+    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
     margin-top: ${({ theme }) => theme.space.xxxlarge}px;
   }
   form {

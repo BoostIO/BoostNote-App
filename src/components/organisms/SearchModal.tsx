@@ -391,7 +391,8 @@ const Container = styled.div<BaseTheme & TextAreaProps>`
     & > .search {
       padding: 10px;
       display: flex;
-      align-items: ${({ numRows }) => (numRows == 1 ? 'center' : 'self-start')};
+      align-items: ${({ numRows }) =>
+        numRows.toString() === '1' ? 'center' : 'self-start'};
       ${borderBottom};
       textarea {
         flex: 1;
