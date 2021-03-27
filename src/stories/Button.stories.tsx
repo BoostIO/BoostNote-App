@@ -1,13 +1,12 @@
 import { Meta } from '@storybook/react/types-6-0'
-
-import { FormPrimaryButton } from '../components/atoms/form'
+import Button from '../components/v2/atoms/Button'
 import { createThemedTemplate } from './utils/themes'
 
-const { Template, themeArgType } = createThemedTemplate(FormPrimaryButton)
+const { Template, themeArgType } = createThemedTemplate(Button)
 
 export default {
-  title: 'Legacy/Atoms/FormPrimaryButton',
-  component: FormPrimaryButton,
+  title: 'Legacy/Atoms/Button',
+  component: Button,
   argTypes: {
     theme: themeArgType,
   },
@@ -15,5 +14,6 @@ export default {
 
 export const Primary = Template.bind({})
 Primary.args = {
-  children: 'Button',
+  children: 'Label',
+  variant: 'primary',
 }
