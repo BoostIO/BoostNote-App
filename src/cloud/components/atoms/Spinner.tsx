@@ -54,7 +54,7 @@ const StyledCustomIcon = styled.div`
       font-size: ${({ theme }) => theme.fontSizes.default}px;
       z-index: 0;
       pointer-events: none;
-      color: ${({ theme }) => theme.subtleTextIcolor};
+      color: ${({ theme }) => theme.subtleIconColor};
       opacity: 0.4;
     }
 

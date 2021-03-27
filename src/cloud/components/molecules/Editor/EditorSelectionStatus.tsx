@@ -46,6 +46,6 @@ const Container = styled.div`
   padding: 0 5px;
   height: 24px;
   font-size: 14px;
-  color: ${({ theme }) => theme.uiTextColor};
+  color: ${({ theme }) => theme.baseTextColor};
   user-select: none;
 `

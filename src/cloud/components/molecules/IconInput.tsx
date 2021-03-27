@@ -69,7 +69,7 @@ const StyledIconImageContent = styled.img<{ shape: string }>`
   height: 100%;
   background: ${({ theme }) => theme.secondaryBackgroundColor};
   border: 1px solid ${({ theme }) => theme.secondaryBorderColor};
-  border-radius: ${(props) => (props.shape === 'circle' ? '100%' : '0')};
+  border-radius: ${(props: any) => (props.shape === 'circle' ? '100%' : '0')};
 `
 
 const StyledIconInputLabel = styled.label`

@@ -20,7 +20,7 @@ const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;
   white-space: nowrap;
   position: relative;
-  ${tagBackgroundColor};
+  ${({ theme, color }) => tagBackgroundColor({ theme, color })};
   height: 24px;
   max-width: 140px;
   font-size: 14px;

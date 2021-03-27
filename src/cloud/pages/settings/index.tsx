@@ -202,7 +202,7 @@ const Container = styled.div`
   }
   h1 {
     color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xl}px;
+    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
     margin-top: ${({ theme }) => theme.space.xxxlarge}px;
   }
   form {
