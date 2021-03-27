@@ -13,7 +13,7 @@ declare module 'styled-components' {
     | number
     | undefined
     | string
-    | ((props: { theme: T } & P) => string | number | undefined)
+    | ((props: { theme: T }) => string | number | undefined)
   >
   export interface ThemedBaseStyledInterface<T>
     extends ThemeBasedStyledComponentWrapper<T> {

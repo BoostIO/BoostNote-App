@@ -1,8 +1,7 @@
 import React, { FC, PropsWithChildren, ComponentType } from 'react'
 import { Story } from '@storybook/react/types-6-0'
 import { ThemeProvider } from 'styled-components'
-
-import { ThemeTypes, selectTheme } from '../../themes'
+import { ThemeTypes, selectTheme } from '../../themes/v2'
 import styled from '../../lib/styled'
 
 interface ThemedWrapperProps {
@@ -51,7 +50,7 @@ export function createThemedTemplate<P = {}>(
       defaultValue: 'dark',
       control: {
         type: 'inline-radio',
-        options: ['light', 'dark', 'sepia', 'solarizedDark', 'legacy'],
+        options: ['light', 'dark'],
       },
     },
   }
