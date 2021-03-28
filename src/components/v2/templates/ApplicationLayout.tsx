@@ -1,9 +1,4 @@
 import React from 'react'
-import ContextMenu from '../../../cloud/components/molecules/ContextMenu'
-import Dialog from '../../../cloud/components/molecules/Dialog/Dialog'
-import EmojiPicker from '../../../cloud/components/molecules/EmojiPicker'
-import ToastList from '../../../cloud/components/molecules/Toast'
-import Modal from '../../../cloud/components/organisms/Modal'
 import { SidebarState } from '../../../lib/v2/sidebar'
 import styled from '../../../lib/v2/styled'
 import GlobalStyle from '../organisms/GlobalStyle'
@@ -13,7 +8,10 @@ import {
   SidebarSpace,
   SidebarSpaceContentRow,
 } from '../organisms/Sidebar/molecules/SidebarSpacesPicker'
-import { SidebarNavCategory } from '../organisms/Sidebar/molecules/SidebarTree'
+import {
+  SidebarNavCategory,
+  SidebarTreeControl,
+} from '../organisms/Sidebar/molecules/SidebarTree'
 
 interface ApplicationLayoutProps {
   sidebarState?: SidebarState
@@ -21,6 +19,7 @@ interface ApplicationLayoutProps {
   spaceBottomRows: SidebarSpaceContentRow[]
   contextRows: SidebarContextRow[]
   tree?: SidebarNavCategory[]
+  treeControls?: SidebarTreeControl[]
   sidebarExpandedWidth?: number
   sidebarResize?: (width: number) => void
 }
@@ -33,6 +32,7 @@ const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({
   sidebarResize,
   sidebarState,
   tree,
+  treeControls,
   children,
 }) => {
   return (
@@ -47,14 +47,10 @@ const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({
           sidebarExpandedWidth={sidebarExpandedWidth}
           sidebarState={sidebarState}
           tree={tree}
+          treeControls={treeControls}
         />
         <div className='application__content'>{children}</div>
       </div>
-      <Modal />
-      <ToastList />
-      <ContextMenu />
-      <EmojiPicker />
-      <Dialog />
       <GlobalStyle />
     </Container>
   )

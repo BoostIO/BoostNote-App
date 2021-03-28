@@ -112,8 +112,11 @@ const Container = styled.div<{ depth: number }>`
     padding-left: ${({ depth }) => 26 + (depth as number) * 20}px;
   }
 
-  .sidebar__tree__item__label {
+  a[href].sidebar__tree__item__label {
     cursor: pointer;
+  }
+
+  .sidebar__tree__item__label {
     display: flex;
     align-items: center;
     flex: 1 1 auto;

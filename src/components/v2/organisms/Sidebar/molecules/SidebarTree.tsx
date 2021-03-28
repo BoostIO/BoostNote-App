@@ -4,20 +4,28 @@ import SidebarContextList from '../atoms/SidebarContextList'
 import SidebarHeader from '../atoms/SidebarHeader'
 import SidebarItem, { FoldingProps } from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
+import Button from '../../../atoms/Button'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
+  treeControls?: SidebarTreeControl[]
 }
 
+export type SidebarTreeControl = {
+  icon: string
+  disabled?: boolean
+  onClick: (event: React.MouseEvent) => void
+  onContextMenu?: (event: React.MouseEvent) => void
+}
 export type SidebarTreeChildRow = SidebarNavRow & Partial<SidebarFoldingNavRow>
 
 export interface SidebarNavCategory {
   label: string
   folded: boolean
   controls?: SidebarNavControls[]
+  hidden: boolean
+  toggleHidden: () => void
   folding?: FoldingProps
-  displayed?: boolean
-  toggleDisplayed?: () => void
   rows: SidebarTreeChildRow[]
   shrink?: 1 | 2 | 3
 }
@@ -42,38 +50,57 @@ type SidebarNavControls =
   | { icon: string; onClick: () => void }
   | { icon: string; create: () => Promise<void> }
 
-const SidebarTree = ({ tree }: SidebarTreeProps) => (
-  <Container className='sidebar__tree'>
-    <SidebarHeader label='Explorer'>{tree.length > 0 && <>in</>}</SidebarHeader>
-    <SidebarContextList className='sidebar__tree__wrapper'>
-      {tree.map((category) => {
-        return (
-          <>
-            <SidebarItem
-              className={cc(['sidebar__category', ,])}
-              id={`category-${category.label}`}
-              label={category.label}
-              labelClick={category.folding?.toggle}
-              folding={category.folding}
-              folded={category.folded}
-              depth={-1}
+const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
+  return (
+    <Container className='sidebar__tree'>
+      <SidebarHeader label='Explorer'>
+        {treeControls != null &&
+          treeControls.map((control, i) => (
+            <Button
+              variant='icon'
+              key={`tree__control__${i}`}
+              iconPath={control.icon}
+              iconSize={22}
+              disabled={control.disabled}
+              onClick={control.onClick}
+              onContextMenu={control.onContextMenu}
             />
-            {!category.folded && (
-              <div
-                className={cc([
-                  'sidebar__category__items',
-                  `sidebar__category__items__shrink${category.shrink || '1'}`,
-                ])}
-              >
-                <NestedRows rows={category.rows} prefix={category.label} />
-              </div>
-            )}
-          </>
-        )
-      })}
-    </SidebarContextList>
-  </Container>
-)
+          ))}
+      </SidebarHeader>
+      <SidebarContextList className='sidebar__tree__wrapper'>
+        {tree.map((category) => {
+          if (category.hidden) {
+            return null
+          }
+
+          return (
+            <>
+              <SidebarItem
+                className={cc(['sidebar__category', ,])}
+                id={`category-${category.label}`}
+                label={category.label}
+                labelClick={category.folding?.toggle}
+                folding={category.folding}
+                folded={category.folded}
+                depth={-1}
+              />
+              {!category.folded && (
+                <div
+                  className={cc([
+                    'sidebar__category__items',
+                    `sidebar__category__items__shrink${category.shrink || '1'}`,
+                  ])}
+                >
+                  <NestedRows rows={category.rows} prefix={category.label} />
+                </div>
+              )}
+            </>
+          )
+        })}
+      </SidebarContextList>
+    </Container>
+  )
+}
 
 const NestedRows = ({
   rows,
