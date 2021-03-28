@@ -25,6 +25,9 @@ button {
   }
 }
 
+.icon {
+  transition: 100ms color;
+}
     
 /* total width */
 scrollbar-width: 8px;
@@ -35,12 +38,12 @@ scrollbar-width: 8px;
 
 /* background of the scrollbar except button or resizer */
 ::-webkit-scrollbar-track {
-  background-color: ${theme.colors.variants.secondary.darker};
+  background-color: ${theme.colors.background.gradients.first};
 }
 
 /* scrollbar itself */
 ::-webkit-scrollbar-thumb {
-  background-color: ${theme.colors.text.subtle};
+  background-color: ${theme.colors.background.gradients.second};
 }
 
 /* set button(top and bottom of the scrollbar) */
@@ -75,8 +78,11 @@ export default createGlobalStyle<BaseTheme>`
       outline: none;
     }
   }
-  
-    
+
+  .icon {
+    transition: 100ms color;
+  }
+
   /* total width */
   scrollbar-width: 8px;
   ::-webkit-scrollbar {
@@ -86,12 +92,14 @@ export default createGlobalStyle<BaseTheme>`
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.colors.variants.secondary.darker};
+    background-color: ${({ theme }) =>
+      theme.colors.background.gradients.first}};
   }
 
   /* scrollbar itself */
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.text.subtle};
+    background-color: ${({ theme }) =>
+      theme.colors.background.gradients.second};
   }
 
   /* set button(top and bottom of the scrollbar) */

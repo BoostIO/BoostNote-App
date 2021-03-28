@@ -7,6 +7,10 @@ export const lightTheme: BaseTheme = {
     background: {
       main: '#',
       second: '#',
+      gradients: {
+        first: '',
+        second: '',
+      },
     },
     text: {
       main: '#',

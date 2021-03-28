@@ -20,7 +20,8 @@ const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;
   white-space: nowrap;
   position: relative;
-  ${({ theme, color }) => tagBackgroundColor({ theme, color })};
+  ${({ theme, color }) =>
+    tagBackgroundColor({ theme, color: color as string })};
   height: 24px;
   max-width: 140px;
   font-size: 14px;
@@ -37,7 +38,9 @@ const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
   ${textOverflow};
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright(color || theme.secondaryBackgroundColor) ? 100 : 0}%
+      isColorBright((color as string) || theme.secondaryBackgroundColor)
+        ? 100
+        : 0}%
   );
 `
 
@@ -50,7 +53,9 @@ const TagRemoveButton = styled.button<BaseTheme & TagStyleProps>`
   color: #fff;
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright(color || theme.secondaryBackgroundColor) ? 100 : 0}%
+      isColorBright((color as string) || theme.secondaryBackgroundColor)
+        ? 100
+        : 0}%
   );
   width: 24px;
   height: 24px;

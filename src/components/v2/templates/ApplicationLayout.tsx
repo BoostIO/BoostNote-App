@@ -7,17 +7,20 @@ import Modal from '../../../cloud/components/organisms/Modal'
 import { SidebarState } from '../../../lib/v2/sidebar'
 import styled from '../../../lib/v2/styled'
 import GlobalStyle from '../organisms/GlobalStyle'
-import Sidebar, {
-  SidebarContextRow,
+import Sidebar from '../organisms/Sidebar/index'
+import { SidebarContextRow } from '../organisms/Sidebar/molecules/SidebarContext'
+import {
   SidebarSpace,
   SidebarSpaceContentRow,
-} from '../organisms/Sidebar'
+} from '../organisms/Sidebar/molecules/SidebarSpacesPicker'
+import { SidebarNavCategory } from '../organisms/Sidebar/molecules/SidebarTree'
 
 interface ApplicationLayoutProps {
   sidebarState?: SidebarState
   spaces: SidebarSpace[]
   spaceBottomRows: SidebarSpaceContentRow[]
   contextRows: SidebarContextRow[]
+  tree?: SidebarNavCategory[]
   sidebarExpandedWidth?: number
   sidebarResize?: (width: number) => void
 }
@@ -29,6 +32,7 @@ const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({
   sidebarExpandedWidth,
   sidebarResize,
   sidebarState,
+  tree,
   children,
 }) => {
   return (
@@ -42,6 +46,7 @@ const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({
           sidebarResize={sidebarResize}
           sidebarExpandedWidth={sidebarExpandedWidth}
           sidebarState={sidebarState}
+          tree={tree}
         />
         <div className='application__content'>{children}</div>
       </div>

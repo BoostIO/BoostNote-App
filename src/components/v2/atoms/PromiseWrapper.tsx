@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useEffectOnce } from 'react-use'
+import styled from '../../../lib/v2/styled'
+import Spinner from './Spinner'
 
 interface PromiseWrapper<T extends Record<string, any>, P> {
   promise: () => Promise<T>
@@ -43,7 +45,11 @@ const PromiseWrapper = <
   }, [fetching, setFetching, setError, call])
 
   if (fetching) {
-    return <div>fetching</div>
+    return (
+      <Container>
+        <Spinner />
+      </Container>
+    )
   }
 
   if (error != null || props == null) {
@@ -55,3 +61,12 @@ const PromiseWrapper = <
 }
 
 export default PromiseWrapper
+
+const Container = styled.div`
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: ${({ theme }) => theme.sizes.spaces.sm}px
+    ${({ theme }) => theme.sizes.spaces.md}px;
+  text-align: center;
+`

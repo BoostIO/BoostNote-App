@@ -4,9 +4,12 @@ import {
   mdiCogOutline,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
+  mdiFileDocumentOutline,
+  mdiLock,
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
+  mdiTag,
 } from '@mdi/js'
 import { stringify } from 'querystring'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -21,18 +24,32 @@ import { usePreferences } from '../../../../cloud/lib/stores/preferences'
 import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
 import { SidebarState } from '../../../../lib/v2/sidebar'
 import RoundedImage from '../../atoms/RoundedImage'
-import { SidebarContextRow, SidebarSpace } from '../../organisms/Sidebar'
 import ApplicationLayout from '../../templates/ApplicationLayout'
 import {
   usingElectron,
   sendToHost,
 } from '../../../../cloud/lib/stores/electron'
-import { getTeamURL } from '../../../../cloud/lib/utils/patterns'
+import {
+  getDocId,
+  getDocTitle,
+  getFolderId,
+  getTeamURL,
+} from '../../../../cloud/lib/utils/patterns'
+import { useNav } from '../../../../cloud/lib/stores/nav'
+import {
+  CollapsableType,
+  useSidebarCollapse,
+} from '../../../../cloud/lib/stores/sidebarCollapse'
+import { SidebarSpace } from '../../organisms/Sidebar/molecules/SidebarSpacesPicker'
+import { SidebarContextRow } from '../../organisms/Sidebar/molecules/SidebarContext'
+import {
+  SidebarNavCategory,
+  SidebarTreeChildRow,
+} from '../../organisms/Sidebar/molecules/SidebarTree'
+import { getMapValues } from '../../../../lib/v2/utils/array'
+import { FoldingProps } from '../../organisms/Sidebar/atoms/SidebarTreeItem'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ApplicationPageProps {}
-
-const ApplicationPage: React.FC<ApplicationPageProps> = ({ children }) => {
+const ApplicationPage: React.FC<{}> = ({ children }) => {
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
   )
@@ -44,6 +61,21 @@ const ApplicationPage: React.FC<ApplicationPageProps> = ({ children }) => {
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
   const { push } = useRouter()
+  const {
+    initialLoadDone,
+    docsMap,
+    foldersMap,
+    workspacesMap,
+    tagsMap,
+  } = useNav()
+  const {
+    sideBarOpenedLinksIdsSet,
+    sideBarOpenedFolderIdsSet,
+    sideBarOpenedWorkspaceIdsSet,
+    toggleItem,
+    unfoldItem,
+    foldItem,
+  } = useSidebarCollapse()
 
   const sidebarResize = useCallback(
     (leftWidth: number) => {
@@ -202,6 +234,209 @@ const ApplicationPage: React.FC<ApplicationPageProps> = ({ children }) => {
     return rows
   }, [sidebarState, openModal, team, openContext])
 
+  const docsPerTagIdMap = useMemo(() => {
+    return [...docsMap.values()].reduce((acc, doc) => {
+      const docTags = doc.tags || []
+      docTags.forEach((tag) => {
+        let docIds = acc.get(tag.id)
+        if (docIds == null) {
+          docIds = []
+          acc.set(tag.id, docIds)
+        }
+        docIds.push(doc.id)
+      })
+      return acc
+    }, new Map<string, string[]>())
+  }, [docsMap])
+
+  const getFoldEvents = useCallback(
+    (type: CollapsableType, key: string) => {
+      return {
+        fold: () => foldItem(type, key),
+        unfold: () => unfoldItem(type, key),
+        toggle: () => toggleItem(type, key),
+      }
+    },
+    [toggleItem, unfoldItem, foldItem]
+  )
+
+  const tree = useMemo(() => {
+    if (!initialLoadDone) {
+      return undefined
+    }
+
+    const items = new Map<string, CloudTreeItem>()
+
+    const [docs, folders, workspaces] = [
+      getMapValues(docsMap),
+      getMapValues(foldersMap),
+      getMapValues(workspacesMap),
+    ]
+
+    workspaces.forEach((wp) => {
+      items.set(wp.id, {
+        id: wp.id,
+        label: wp.name,
+        defaultIcon: !wp.public ? mdiLock : undefined,
+        children: wp.positions?.orderedIds || [],
+        folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
+        folding: getFoldEvents('workspaces', wp.id),
+      })
+    })
+
+    folders.forEach((folder) => {
+      const folderId = getFolderId(folder)
+      items.set(folderId, {
+        id: folderId,
+        label: folder.name,
+        bookmarked: folder.bookmarked,
+        emoji: folder.emoji,
+        folded: !sideBarOpenedFolderIdsSet.has(folder.id),
+        folding: getFoldEvents('folders', folder.id),
+        parentId:
+          folder.parentFolderId == null
+            ? folder.workspaceId
+            : folder.parentFolderId,
+        children:
+          typeof folder.positions != null &&
+          typeof folder.positions !== 'string'
+            ? folder.positions.orderedIds
+            : [],
+      })
+    })
+
+    docs.forEach((doc) => {
+      const docId = getDocId(doc)
+      items.set(docId, {
+        id: docId,
+        label: getDocTitle(doc, 'Untitled'),
+        bookmarked: doc.bookmarked,
+        emoji: doc.emoji,
+        defaultIcon: mdiFileDocumentOutline,
+        archived: doc.archivedAt != null,
+        children: [],
+        parentId:
+          doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
+      })
+    })
+
+    const arrayItems = getMapValues(items)
+
+    const tree: Partial<SidebarNavCategory>[] = []
+
+    const bookmarked = arrayItems.reduce((acc, val) => {
+      if (!val.bookmarked) {
+        return acc
+      }
+
+      acc.push({
+        id: val.id,
+        depth: 0,
+        label: val.label,
+        emoji: val.emoji,
+        defaultIcon: val.defaultIcon,
+      })
+      return acc
+    }, [] as SidebarTreeChildRow[])
+    if (bookmarked.length > 0) {
+      tree.push({
+        label: 'Bookmarks',
+        rows: bookmarked,
+      })
+    }
+
+    const navTree = arrayItems
+      .filter((item) => item.parentId == null)
+      .reduce((acc, val) => {
+        acc.push({
+          ...val,
+          depth: 0,
+          rows: buildChildrenNavRows(val.children, 1, items),
+        })
+        return acc
+      }, [] as SidebarTreeChildRow[])
+
+    tree.push({
+      label: 'Folders',
+      rows: navTree,
+    })
+
+    const labels = getMapValues(tagsMap)
+      .filter((tag) => (docsPerTagIdMap.get(tag.id) || []).length > 0)
+      .sort((a, b) => {
+        if (a.text < b.text) {
+          return -1
+        } else {
+          return 1
+        }
+      })
+      .reduce((acc, val) => {
+        acc.push({
+          id: val.id,
+          depth: 0,
+          label: val.text,
+          defaultIcon: mdiTag,
+        })
+        return acc
+      }, [] as SidebarTreeChildRow[])
+
+    if (labels.length > 0) {
+      tree.push({
+        label: 'Labels',
+        rows: labels,
+      })
+    }
+
+    tree.push({
+      label: 'Shared',
+      rows: [],
+    })
+
+    const archived = arrayItems.reduce((acc, val) => {
+      if (!val.archived) {
+        return acc
+      }
+
+      acc.push({
+        id: val.id,
+        depth: 0,
+        label: val.label,
+        emoji: val.emoji,
+        defaultIcon: val.defaultIcon,
+      })
+      return acc
+    }, [] as SidebarTreeChildRow[])
+    if (archived.length > 0) {
+      tree.push({
+        label: 'Archived',
+        rows: archived,
+      })
+    }
+
+    tree.forEach((category) => {
+      const key = (category.label || '').toLocaleLowerCase()
+      const foldKey = `fold-${key}`
+      const hideKey = `hide-${key}`
+      category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
+      category.folding = getFoldEvents('links', foldKey)
+      category.displayed = !sideBarOpenedLinksIdsSet.has(hideKey)
+      category.toggleDisplayed = category.folding?.toggle
+    })
+
+    return tree as SidebarNavCategory[]
+  }, [
+    initialLoadDone,
+    docsMap,
+    foldersMap,
+    workspacesMap,
+    tagsMap,
+    docsPerTagIdMap,
+    sideBarOpenedLinksIdsSet,
+    sideBarOpenedFolderIdsSet,
+    sideBarOpenedWorkspaceIdsSet,
+    getFoldEvents,
+  ])
+
   return (
     <ApplicationLayout
       sidebarState={sidebarState}
@@ -210,6 +445,7 @@ const ApplicationPage: React.FC<ApplicationPageProps> = ({ children }) => {
       spaceBottomRows={spaceBottomRows}
       sidebarResize={sidebarResize}
       sidebarExpandedWidth={preferences.sideBarWidth}
+      tree={tree}
     >
       {children}
     </ApplicationLayout>
@@ -217,3 +453,43 @@ const ApplicationPage: React.FC<ApplicationPageProps> = ({ children }) => {
 }
 
 export default ApplicationPage
+
+function buildChildrenNavRows(
+  childrenIds: string[],
+  depth: number,
+  map: Map<string, CloudTreeItem>
+) {
+  const rows = childrenIds.reduce((acc, childId) => {
+    const childRow = map.get(childId)
+    if (childRow == null) {
+      acc.push({
+        id: childId,
+        label: '...',
+        depth,
+      })
+      return acc
+    }
+
+    acc.push({
+      ...childRow,
+      depth,
+      rows: buildChildrenNavRows(childRow.children, depth + 1, map),
+    })
+
+    return acc
+  }, [] as SidebarTreeChildRow[])
+  return rows
+}
+
+type CloudTreeItem = {
+  id: string
+  parentId?: string
+  label: string
+  defaultIcon?: string
+  emoji?: string
+  bookmarked?: boolean
+  archived?: boolean
+  children: string[]
+  folding?: FoldingProps
+  folded?: boolean
+}
