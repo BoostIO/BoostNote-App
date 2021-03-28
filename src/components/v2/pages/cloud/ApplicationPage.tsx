@@ -358,6 +358,7 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
 
     tree.push({
       label: 'Folders',
+      shrink: 2,
       rows: navTree,
     })
 

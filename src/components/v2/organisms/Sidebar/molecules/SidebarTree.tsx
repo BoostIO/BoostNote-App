@@ -19,6 +19,7 @@ export interface SidebarNavCategory {
   displayed?: boolean
   toggleDisplayed?: () => void
   rows: SidebarTreeChildRow[]
+  shrink?: 1 | 2 | 3
 }
 
 type SidebarFoldingNavRow = SidebarNavRow & {
@@ -49,7 +50,7 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => (
         return (
           <>
             <SidebarItem
-              className='sidebar__category'
+              className={cc(['sidebar__category', ,])}
               id={`category-${category.label}`}
               label={category.label}
               labelClick={category.folding?.toggle}
@@ -58,8 +59,13 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => (
               depth={-1}
             />
             {!category.folded && (
-              <div className='sidebar__category__items'>
-                <NestedRows rows={category.rows} />
+              <div
+                className={cc([
+                  'sidebar__category__items',
+                  `sidebar__category__items__shrink${category.shrink || '1'}`,
+                ])}
+              >
+                <NestedRows rows={category.rows} prefix={category.label} />
               </div>
             )}
           </>
@@ -69,15 +75,21 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => (
   </Container>
 )
 
-const NestedRows = ({ rows }: { rows: SidebarTreeChildRow[] }) => {
+const NestedRows = ({
+  rows,
+  prefix,
+}: {
+  rows: SidebarTreeChildRow[]
+  prefix?: string
+}) => {
   return (
     <>
       {rows.map((child) => {
         return (
-          <div className={cc([])} key={child.id}>
+          <div className={cc(['sidebar__drag__zone'])} key={child.id}>
             <SidebarItem
               key={child.id}
-              id={`tree-item-${child.id}`}
+              id={`${prefix}-tree-item-${child.id}`}
               label={child.label}
               labelClick={child.navigateTo}
               folding={child.folding}
@@ -122,5 +134,15 @@ const Container = styled.div`
   .sidebar__category__items {
     flex-shrink: 2;
     overflow: auto;
+  }
+
+  .sidebar__category__items__shrink1 {
+    flex-shrink: 1;
+  }
+  .sidebar__category__items__shrink2 {
+    flex-shrink: 2;
+  }
+  .sidebar__category__items__shrink3 {
+    flex-shrink: 3;
   }
 `
