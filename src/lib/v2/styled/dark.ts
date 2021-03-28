@@ -7,6 +7,10 @@ export const darkTheme: BaseTheme = {
     background: {
       main: '#1E2024',
       second: '#27282B',
+      gradients: {
+        first: '#2f3238',
+        second: '#3e424a',
+      },
     },
     text: {
       main: '#fff',

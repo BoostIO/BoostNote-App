@@ -105,7 +105,9 @@ const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
   color: #fff;
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright(color || theme.secondaryBackgroundColor) ? 100 : 0}%
+      isColorBright((color as string) || theme.secondaryBackgroundColor)
+        ? 100
+        : 0}%
   );
 `
 

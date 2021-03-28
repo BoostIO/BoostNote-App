@@ -43,6 +43,7 @@ export interface SharedTheme {
   }
 }
 
+/** background color gradient => starting from main color, fade more and more towards the opposite BW ***/
 export interface ChangingThemes {
   colors: {
     variants: {
@@ -54,6 +55,10 @@ export interface ChangingThemes {
     background: {
       main: string
       second: string
+      gradients: {
+        first: string
+        second: string
+      }
     }
     text: {
       main: string
