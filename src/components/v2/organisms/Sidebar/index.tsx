@@ -12,7 +12,10 @@ import SidebarSpacesPicker, {
   SidebarSpacePickerProps,
 } from './molecules/SidebarSpacesPicker'
 import SidebarContext, { SidebarContextRow } from './molecules/SidebarContext'
-import SidebarTree, { SidebarNavCategory } from './molecules/SidebarTree'
+import SidebarTree, {
+  SidebarNavCategory,
+  SidebarTreeControl,
+} from './molecules/SidebarTree'
 import Spinner from '../../atoms/Spinner'
 
 type SidebarProps = {
@@ -22,6 +25,7 @@ type SidebarProps = {
   sidebarResize?: (width: number) => void
   className?: string
   tree?: SidebarNavCategory[]
+  treeControls?: SidebarTreeControl[]
 } & SidebarSpacePickerProps
 
 const Sidebar = ({
@@ -32,6 +36,7 @@ const Sidebar = ({
   sidebarExpandedWidth = defaultSidebarExpandedWidth,
   sidebarResize,
   tree,
+  treeControls,
   className,
 }: SidebarProps) => {
   return (
@@ -59,7 +64,7 @@ const Sidebar = ({
               tree == null ? (
                 <Spinner className='sidebar__loader' />
               ) : (
-                <SidebarTree tree={tree} />
+                <SidebarTree tree={tree} treeControls={treeControls} />
               )
             ) : null}
           </div>

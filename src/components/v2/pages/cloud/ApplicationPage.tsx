@@ -2,6 +2,7 @@ import {
   mdiAccountMultiplePlusOutline,
   mdiClockOutline,
   mdiCogOutline,
+  mdiDotsHorizontal,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
@@ -48,6 +49,16 @@ import {
 } from '../../organisms/Sidebar/molecules/SidebarTree'
 import { getMapValues } from '../../../../lib/v2/utils/array'
 import { FoldingProps } from '../../organisms/Sidebar/atoms/SidebarTreeItem'
+import {
+  MenuTypes,
+  useContextMenu,
+} from '../../../../cloud/lib/stores/contextMenu'
+import Modal from '../../../../cloud/components/organisms/Modal'
+import ContextMenu from '../../../../cloud/components/molecules/ContextMenu'
+import EmojiPicker from '../../../../cloud/components/molecules/EmojiPicker'
+import Dialog from '../../../../cloud/components/molecules/Dialog/Dialog'
+import ToastList from '../../../../cloud/components/molecules/Toast'
+import Checkbox from '../../atoms/Checkbox'
 
 const ApplicationPage: React.FC<{}> = ({ children }) => {
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
@@ -338,12 +349,6 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
       })
       return acc
     }, [] as SidebarTreeChildRow[])
-    if (bookmarked.length > 0) {
-      tree.push({
-        label: 'Bookmarks',
-        rows: bookmarked,
-      })
-    }
 
     const navTree = arrayItems
       .filter((item) => item.parentId == null)
@@ -355,12 +360,6 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
         })
         return acc
       }, [] as SidebarTreeChildRow[])
-
-    tree.push({
-      label: 'Folders',
-      shrink: 2,
-      rows: navTree,
-    })
 
     const labels = getMapValues(tagsMap)
       .filter((tag) => (docsPerTagIdMap.get(tag.id) || []).length > 0)
@@ -381,13 +380,6 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
         return acc
       }, [] as SidebarTreeChildRow[])
 
-    if (labels.length > 0) {
-      tree.push({
-        label: 'Labels',
-        rows: labels,
-      })
-    }
-
     const archived = arrayItems.reduce((acc, val) => {
       if (!val.archived) {
         return acc
@@ -402,6 +394,24 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
       })
       return acc
     }, [] as SidebarTreeChildRow[])
+
+    if (bookmarked.length > 0) {
+      tree.push({
+        label: 'Bookmarks',
+        rows: bookmarked,
+      })
+    }
+    tree.push({
+      label: 'Folders',
+      shrink: 2,
+      rows: navTree,
+    })
+    if (labels.length > 0) {
+      tree.push({
+        label: 'Labels',
+        rows: labels,
+      })
+    }
     if (archived.length > 0) {
       tree.push({
         label: 'Archived',
@@ -415,8 +425,8 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
       const hideKey = `hide-${key}`
       category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
       category.folding = getFoldEvents('links', foldKey)
-      category.displayed = !sideBarOpenedLinksIdsSet.has(hideKey)
-      category.toggleDisplayed = category.folding?.toggle
+      category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
+      category.toggleHidden = () => toggleItem('links', hideKey)
     })
 
     return tree as SidebarNavCategory[]
@@ -430,8 +440,38 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
     sideBarOpenedLinksIdsSet,
     sideBarOpenedFolderIdsSet,
     sideBarOpenedWorkspaceIdsSet,
+    toggleItem,
     getFoldEvents,
   ])
+
+  const { popup } = useContextMenu()
+  const treeControls = useMemo(() => {
+    if (tree == null || tree.length === 0) {
+      return undefined
+    }
+
+    return [
+      {
+        icon: mdiDotsHorizontal,
+        onClick: (event: React.MouseEvent) =>
+          popup(
+            event,
+            tree.map((category) => {
+              return {
+                type: MenuTypes.Normal,
+                onClick: category.toggleHidden,
+                label: (
+                  <span>
+                    <Checkbox checked={!category.hidden} />
+                    <span style={{ paddingLeft: 6 }}>{category.label}</span>
+                  </span>
+                ),
+              }
+            })
+          ),
+      },
+    ]
+  }, [popup, tree])
 
   return (
     <ApplicationLayout
@@ -442,7 +482,13 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
       sidebarResize={sidebarResize}
       sidebarExpandedWidth={preferences.sideBarWidth}
       tree={tree}
+      treeControls={treeControls}
     >
+      <Modal />
+      <ToastList />
+      <ContextMenu />
+      <EmojiPicker />
+      <Dialog />
       {children}
     </ApplicationLayout>
   )
