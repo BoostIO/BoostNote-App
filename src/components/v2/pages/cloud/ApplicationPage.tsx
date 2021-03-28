@@ -388,11 +388,6 @@ const ApplicationPage: React.FC<{}> = ({ children }) => {
       })
     }
 
-    tree.push({
-      label: 'Shared',
-      rows: [],
-    })
-
     const archived = arrayItems.reduce((acc, val) => {
       if (!val.archived) {
         return acc
