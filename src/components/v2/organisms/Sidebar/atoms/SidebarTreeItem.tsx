@@ -113,6 +113,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__tree__item__label {
+    cursor: pointer;
     display: flex;
     align-items: center;
     flex: 1 1 auto;
@@ -136,6 +137,24 @@ const Container = styled.div<{ depth: number }>`
   .sidebar__tree__item__icon {
     flex: 0 0 auto;
     padding-left: 0 !important;
+  }
+
+  &:not(.sidebar__category) {
+    border-radius: ${({ theme }) => theme.borders.radius}px;
+    &:hover {
+      background-color: ${({ theme }) =>
+        theme.colors.background.gradients.first};
+    }
+    &:active,
+    &.active {
+      background-color: ${({ theme }) => theme.colors.variants.primary.base};
+    }
+
+    &:focus,
+    &.focused {
+      background-color: ${({ theme }) =>
+        theme.colors.background.gradients.second};
+    }
   }
 
   &.sidebar__category {
