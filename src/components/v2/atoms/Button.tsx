@@ -74,9 +74,9 @@ const Button = React.forwardRef<
         type={type}
         className={cc([
           className,
-          `button__variant__${variant}`,
-          size && `button__size__${size}`,
-          disabled && `disabled`,
+          `button__variant--${variant}`,
+          size && `button__size--${size}`,
+          disabled && `button__state--disabled`,
         ])}
         id={id}
         disabled={disabled}
@@ -134,16 +134,16 @@ const StyledButton = styled.div`
     margin-left: 4px;
   }
 
-  &.disabled {
+  &.button__state--disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
-  &.button__variant__primary {
+  &.button__variant--primary {
     background-color: ${({ theme }) => theme.colors.variants.primary.base};
     color: ${({ theme }) => theme.colors.variants.primary.text};
 
-    &:not(.disabled) {
+    &:not(.button__state--disabled) {
       &:hover,
       &:active,
       &:focus,
@@ -154,11 +154,11 @@ const StyledButton = styled.div`
     }
   }
 
-  &.button__variant__secondary {
+  &.button__variant--secondary {
     background-color: ${({ theme }) => theme.colors.variants.secondary.base};
     color: ${({ theme }) => theme.colors.variants.secondary.text};
 
-    &:not(.disabled) {
+    &:not(.button__state--disabled) {
       &:hover,
       &:active,
       &:focus,
@@ -169,10 +169,10 @@ const StyledButton = styled.div`
     }
   }
 
-  &.button__variant__danger {
+  &.button__variant--danger {
     background-color: ${({ theme }) => theme.colors.variants.danger.base};
     color: ${({ theme }) => theme.colors.variants.danger.text};
-    &:not(.disabled) {
+    &:not(.button__state--disabled) {
       &:hover,
       &:active,
       &:focus,
@@ -182,13 +182,13 @@ const StyledButton = styled.div`
     }
   }
 
-  &.button__variant__icon {
+  &.button__variant--icon {
     background: none;
     border: 1px solid transparent;
     color: ${({ theme }) => theme.colors.text.subtle};
     padding: 0 3px !important;
 
-    &:not(.disabled) {
+    &:not(.button__state--disabled) {
       &:hover,
       &:active,
       &:focus,
@@ -198,12 +198,12 @@ const StyledButton = styled.div`
     }
   }
 
-  &.button__size__lg {
+  &.button__size--lg {
     height: 40px;
     padding: 0 14px;
   }
 
-  &.button__size__sm {
+  &.button__size--sm {
     height: 24px;
     padding: 0 6px;
   }

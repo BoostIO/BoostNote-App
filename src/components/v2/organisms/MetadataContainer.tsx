@@ -23,7 +23,15 @@ const MetadataContainer: AppComponent<MetadataContainerProps> = ({}) => {
     }
   })
 
-  return <Container ref={menuRef}></Container>
+  return (
+    <Container ref={menuRef} className='metadata'>
+      <div className='metadata__container'>
+        <div className='metadata__scroll__container'>
+          <div className='context__scroll'></div>
+        </div>
+      </div>
+    </Container>
+  )
 }
 
 const containerWidth = 350
@@ -35,6 +43,57 @@ const Container = styled.div`
   border-left: 1px solid transparent;
   background-color: ${({ theme }) => theme.colors.background.second};
   color: ${({ theme }) => theme.colors.text.main};
+
+  .metadata__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .metadata__scroll__container {
+    height: 100%;
+    overflow: auto;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+  }
+
+  .metadata__scroll {
+    flex: 1 1 auto;
+    width: 100%;
+    overflow: hidden auto;
+  }
+
+  .metadata__row,
+  .metadata__column {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    line-height: 30px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    padding: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
+    height: fit-content;
+  }
+
+  .metadata__column {
+    flex-direction: column;
+  }
+
+  .metadata__column + .metadata__break,
+  .metadata__row + .metadata__break {
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  }
+
+  .metadata__row + .metadata__row,
+  .metadata__break + .metadata__row,
+  .metadata__column + .metadata__column,
+  .metadata__break + .metadata__column {
+    padding-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    padding-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  }
 `
 
 export default MetadataContainer
