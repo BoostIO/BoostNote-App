@@ -41,7 +41,7 @@ import {
   CollapsableType,
   useSidebarCollapse,
 } from '../../../../cloud/lib/stores/sidebarCollapse'
-import { SidebarSpace } from '../../organisms/Sidebar/molecules/SidebarSpacesPicker'
+import { SidebarSpace } from '../../organisms/Sidebar/molecules/SidebarSpaces'
 import { SidebarContextRow } from '../../organisms/Sidebar/molecules/SidebarContext'
 import {
   SidebarNavCategory,
