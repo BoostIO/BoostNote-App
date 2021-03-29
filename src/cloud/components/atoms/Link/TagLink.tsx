@@ -36,7 +36,7 @@ const TagLink = ({
   tabIndex,
   id,
 }: TagLinkProps) => {
-  const href = getHref(tag, team, intent, query)
+  const href = getTagHref(tag, team, intent, query)
   const { push } = useRouter()
   const navigate = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
@@ -64,7 +64,7 @@ const TagLink = ({
 
 export default TagLink
 
-export function getHref(
+export function getTagHref(
   tag: SerializedTag,
   team: SerializedTeam,
   intent: TagLinkIntent,
@@ -78,4 +78,21 @@ export function getHref(
     return `${basePathname}${queryPathName}`
   }
   return `${basePathname}/${intent}${queryPathName}`
+}
+
+export function useNavigateToTag() {
+  const { push } = useRouter()
+
+  return useCallback(
+    (
+      tag: SerializedTag,
+      team: SerializedTeam,
+      intent: TagLinkIntent,
+      query?: any
+    ) => {
+      const href = getTagHref(tag, team, intent, query)
+      push(href)
+    },
+    [push]
+  )
 }

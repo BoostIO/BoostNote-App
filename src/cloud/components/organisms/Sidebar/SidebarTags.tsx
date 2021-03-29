@@ -3,7 +3,7 @@ import { usePage } from '../../../lib/stores/pageStore'
 import styled from '../../../lib/styled'
 import { sidebarButtonStyle } from '../../../lib/styled/styleFunctions'
 import { useNav } from '../../../lib/stores/nav'
-import { getHref } from '../../atoms/Link/TagLink'
+import { getTagHref } from '../../atoms/Link/TagLink'
 import { useRouter } from '../../../lib/router'
 import IconMdi from '../../atoms/IconMdi'
 import {
@@ -65,7 +65,7 @@ const SidebarTags = () => {
     }
 
     return sortedTags.map((tag) => {
-      const href = getHref(tag, team, 'index')
+      const href = getTagHref(tag, team, 'index')
 
       return (
         <SideNavigatorItem

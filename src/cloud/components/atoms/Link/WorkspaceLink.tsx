@@ -64,12 +64,16 @@ const WorkspaceLink = ({
 
 export default WorkspaceLink
 
-function getWorkspaceHref(
+export function getWorkspaceHref(
   workspace: SerializedWorkspace,
   team: SerializedTeam,
   intent: WorkspaceLinkIntent,
   query?: any
 ) {
+  if (workspace.default) {
+    return getTeamURL(team)
+  }
+
   const basePathname = `${getTeamURL(team)}${getWorkspaceURL(workspace)}`
   const queryPathName = query != null ? `?${querystring.stringify(query)}` : ''
   if (intent === 'index') {
