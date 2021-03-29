@@ -39,14 +39,14 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
   }, [rows])
 
   return (
-    <Container className={cc([className, 'sidebar__context__icons'])}>
-      <div className='sidebar__context__icons__scroller'>
-        <div className='sidebar__context__icons__top'>
+    <Container className={cc([className, 'sidebar__context'])}>
+      <div className='sidebar__context__scroller'>
+        <div className='sidebar__context__top'>
           {sortedRows.top.map((row, i) => (
             <button
               className={cc([
-                'sidebar__context__icons__item',
-                row.active && 'active',
+                'sidebar__context__item',
+                row.active && 'sidebar__context__item--active',
               ])}
               onClick={row.onClick}
               disabled={row.onClick == null}
@@ -61,12 +61,12 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
             </button>
           ))}
         </div>
-        <div className='sidebar__context__icons__bottom'>
+        <div className='sidebar__context__bottom'>
           {sortedRows.bottom.map((row, i) => (
             <button
               className={cc([
-                'sidebar__context__icons__item',
-                row.active && 'active',
+                'sidebar__context__item',
+                row.active && 'sidebar__context__item--active',
               ])}
               onClick={row.onClick}
               disabled={row.onClick == null}
@@ -89,7 +89,7 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
 export default SidebarContext
 
 const Container = styled.div`
-  &.sidebar__context__icons {
+  &.sidebar__context {
     display: flex;
     flex-direction: column;
     width: 40px;
@@ -98,7 +98,7 @@ const Container = styled.div`
     background: ${({ theme }) => theme.colors.background.second};
     overflow: hidden;
 
-    .sidebar__context__icons__scroller {
+    .sidebar__context__scroller {
       display: flex;
       flex: 1 1 auto;
       width: 100%;
@@ -109,19 +109,19 @@ const Container = styled.div`
       ${hideScroll}
     }
 
-    .sidebar__context__icons__top {
+    .sidebar__context__top {
       flex: 1 0 auto;
     }
 
-    .sidebar__context__icons__bottom {
+    .sidebar__context__bottom {
       flex: 0 0 auto;
     }
 
-    .sidebar__context__icons__top .sidebar__context__icons__item:last-of-type {
+    .sidebar__context__top .sidebar__context__item:last-of-type {
       margin-bottom: 0;
     }
 
-    .sidebar__context__icons__item {
+    .sidebar__context__item {
       display: flex;
       align-items: center;
       text-align: center;
@@ -136,11 +136,11 @@ const Container = styled.div`
       justify-content: center;
 
       &:hover,
-      &.active {
+      &.sidebar__context__item--active {
         color: ${({ theme }) => theme.colors.text.main};
       }
 
-      &.active {
+      &.sidebar__context__item--active {
         border-left-color: ${({ theme }) => theme.colors.text.main};
       }
     }

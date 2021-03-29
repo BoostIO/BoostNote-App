@@ -7,7 +7,7 @@ import { SidebarContextRow } from '../organisms/Sidebar/molecules/SidebarContext
 import {
   SidebarSpace,
   SidebarSpaceContentRow,
-} from '../organisms/Sidebar/molecules/SidebarSpacesPicker'
+} from '../organisms/Sidebar/molecules/SidebarSpaces'
 import {
   SidebarNavCategory,
   SidebarTreeControl,

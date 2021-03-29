@@ -6,7 +6,7 @@ import Icon from '../../../atoms/Icon'
 import RoundedImage from '../../../atoms/RoundedImage'
 import SidebarContextList from '../atoms/SidebarContextList'
 
-export interface SidebarSpacePickerProps {
+export interface SidebarSpaceProps {
   spaces: SidebarSpace[]
   spaceBottomRows: SidebarSpaceContentRow[]
 }
@@ -25,27 +25,25 @@ export type SidebarSpace = {
   linkProps: React.AnchorHTMLAttributes<{}>
 }
 
-const SidebarSpacesPicker: AppComponent<SidebarSpacePickerProps> = ({
+const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
   spaces,
   spaceBottomRows,
 }) => (
   <Container>
-    <SidebarContextList className='sidebar__space__picker sidebar__content'>
+    <SidebarContextList className='sidebar__spaces'>
       {spaces.map((row, i) => (
         <a
           {...row.linkProps}
           key={`space-top-${i}`}
           id={`space-top-${i}`}
-          className='sidebar__space__picker__item'
+          className='sidebar__spaces__item'
         >
-          <div className='sidebar__space__picker__icon'>
+          <div className='sidebar__spaces__icon'>
             <RoundedImage url={row.icon} alt={row.label} size='default' />
           </div>
-          <span className='sidebar__space__picker__label'>{row.label}</span>
+          <span className='sidebar__spaces__label'>{row.label}</span>
           {row.tooltip != null && (
-            <span className='sidebar__space__picker__tooltip'>
-              {row.tooltip}
-            </span>
+            <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
           )}
         </a>
       ))}
@@ -54,12 +52,12 @@ const SidebarSpacesPicker: AppComponent<SidebarSpacePickerProps> = ({
           {...row.linkProps}
           key={`space-bottom-${i}`}
           id={`space-bottom-${i}`}
-          className='sidebar__space__picker__item bottom'
+          className='sidebar__spaces__item sidebar__spaces__item--bottom'
         >
-          <div className='sidebar__space__picker__icon'>
+          <div className='sidebar__spaces__icon'>
             <Icon size={22} path={row.icon} />
           </div>
-          <span className='sidebar__space__picker__label'>{row.label}</span>
+          <span className='sidebar__spaces__label'>{row.label}</span>
         </a>
       ))}
     </SidebarContextList>
@@ -67,12 +65,12 @@ const SidebarSpacesPicker: AppComponent<SidebarSpacePickerProps> = ({
 )
 
 const Container = styled.div`
-  .sidebar__space__picker {
+  .sidebar__spaces {
     display: flex;
     flex-direction: column;
     width: 100%;
 
-    .sidebar__space__picker__item {
+    .sidebar__spaces__item {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -88,7 +86,7 @@ const Container = styled.div`
       transition: 200ms all;
       text-decoration: none;
 
-      &:focus .sidebar__space__picker__label {
+      &:focus .sidebar__spaces__label {
         text-decoration: underline;
       }
 
@@ -97,22 +95,22 @@ const Container = styled.div`
           theme.colors.background.gradients.first};
       }
 
-      .sidebar__space__picker__label {
+      .sidebar__spaces__label {
         ${overflowEllipsis}
       }
 
-      &.bottom {
+      &.sidebar__spaces__item--bottom {
         color: ${({ theme }) => theme.colors.text.subtle};
       }
     }
 
-    .sidebar__space__picker__tooltip {
+    .sidebar__spaces__tooltip {
       flex: 0 0 auto;
       color: ${({ theme }) => theme.colors.text.subtle};
       margin-right: ${({ theme }) => theme.sizes.spaces.md}px;
     }
 
-    .sidebar__space__picker__icon {
+    .sidebar__spaces__icon {
       width: 40px;
       text-align: center;
       flex: 0 0 auto;
@@ -122,4 +120,4 @@ const Container = styled.div`
   }
 `
 
-export default SidebarSpacesPicker
+export default SidebarSpaces

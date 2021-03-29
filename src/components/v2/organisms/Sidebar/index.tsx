@@ -8,9 +8,7 @@ import {
 } from '../../../../lib/v2/sidebar'
 import styled from '../../../../lib/v2/styled'
 import WidthEnlarger from '../../atoms/WidthEnlarger'
-import SidebarSpacesPicker, {
-  SidebarSpacePickerProps,
-} from './molecules/SidebarSpacesPicker'
+import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarContext, { SidebarContextRow } from './molecules/SidebarContext'
 import SidebarTree, {
   SidebarNavCategory,
@@ -26,7 +24,7 @@ type SidebarProps = {
   className?: string
   tree?: SidebarNavCategory[]
   treeControls?: SidebarTreeControl[]
-} & SidebarSpacePickerProps
+} & SidebarSpaceProps
 
 const Sidebar = ({
   sidebarState,
@@ -56,7 +54,7 @@ const Sidebar = ({
         >
           <div className='sidebar__expanded__wrapper'>
             {sidebarState === 'spaces' ? (
-              <SidebarSpacesPicker
+              <SidebarSpaces
                 spaces={spaces}
                 spaceBottomRows={spaceBottomRows}
               />
