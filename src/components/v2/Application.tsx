@@ -32,11 +32,8 @@ import { usingElectron, sendToHost } from '../../cloud/lib/stores/electron'
 import {
   getDocId,
   getDocTitle,
-  getDocURL,
   getFolderId,
-  getFolderURL,
   getTeamURL,
-  getWorkspaceURL,
 } from '../../cloud/lib/utils/patterns'
 import { useNav } from '../../cloud/lib/stores/nav'
 import {
@@ -76,9 +73,22 @@ import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { SerializedTag } from '../../cloud/interfaces/db/tag'
 import { SerializedTeam } from '../../cloud/interfaces/db/team'
 import { SerializedTeamInvite } from '../../cloud/interfaces/db/teamInvite'
-import { useNavigateToFolder } from '../../cloud/components/atoms/Link/FolderLink'
-import { useNavigateToWorkspace } from '../../cloud/components/atoms/Link/WorkspaceLink'
-import { useNavigateToDoc } from '../../cloud/components/atoms/Link/DocLink'
+import {
+  getFolderHref,
+  useNavigateToFolder,
+} from '../../cloud/components/atoms/Link/FolderLink'
+import {
+  useNavigateToWorkspace,
+  getWorkspaceHref,
+} from '../../cloud/components/atoms/Link/WorkspaceLink'
+import {
+  getDocLinkHref,
+  useNavigateToDoc,
+} from '../../cloud/components/atoms/Link/DocLink'
+import {
+  getTagHref,
+  useNavigateToTag,
+} from '../../cloud/components/atoms/Link/TagLink'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -108,6 +118,7 @@ const Application: React.FC<{}> = ({ children }) => {
   const navigateToDoc = useNavigateToDoc()
   const navigateToFolder = useNavigateToFolder()
   const navigateToWorkspace = useNavigateToWorkspace()
+  const navigateToLabel = useNavigateToTag()
 
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
@@ -148,6 +159,7 @@ const Application: React.FC<{}> = ({ children }) => {
       navigateToDoc,
       navigateToFolder,
       navigateToWorkspace,
+      navigateToLabel,
       team
     )
   }, [
@@ -164,6 +176,7 @@ const Application: React.FC<{}> = ({ children }) => {
     navigateToDoc,
     navigateToFolder,
     navigateToWorkspace,
+    navigateToLabel,
     team,
   ])
 
@@ -237,6 +250,12 @@ function mapTree(
     intent: 'index',
     query?: any
   ) => void,
+  navigateToLabel: (
+    tag: SerializedTag,
+    team: SerializedTeam,
+    intent: 'index',
+    query?: any
+  ) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -259,9 +278,11 @@ function mapTree(
       children: wp.positions?.orderedIds || [],
       folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
       folding: getFoldEvents('workspaces', wp.id),
-      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(
-        team
-      )}${getWorkspaceURL(wp)}`,
+      href: `${process.env.BOOST_HUB_BASE_URL}${getWorkspaceHref(
+        wp,
+        team,
+        'index'
+      )}`,
       navigateTo: () => navigateToWorkspace(wp, team, 'index'),
     })
   })
@@ -275,8 +296,10 @@ function mapTree(
       emoji: folder.emoji,
       folded: !sideBarOpenedFolderIdsSet.has(folder.id),
       folding: getFoldEvents('folders', folder.id),
-      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(team)}${getFolderURL(
-        folder
+      href: `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
+        folder,
+        team,
+        'index'
       )}`,
       navigateTo: () => navigateToFolder(folder, team, 'index'),
       parentId:
@@ -300,8 +323,10 @@ function mapTree(
       defaultIcon: mdiFileDocumentOutline,
       archived: doc.archivedAt != null,
       children: [],
-      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(team)}${getDocURL(
-        doc
+      href: `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
+        doc,
+        team,
+        'index'
       )}`,
       navigateTo: () => navigateToDoc(doc, team, 'index'),
       parentId:
@@ -368,6 +393,12 @@ function mapTree(
         depth: 0,
         label: val.text,
         defaultIcon: mdiTag,
+        href: `${process.env.BOOST_HUB_BASE_URL}${getTagHref(
+          val,
+          team,
+          'index'
+        )}`,
+        navigateTo: () => navigateToLabel(val, team, 'index'),
       })
       return acc
     }, [] as SidebarTreeChildRow[])
