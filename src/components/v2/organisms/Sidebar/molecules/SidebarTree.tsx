@@ -42,6 +42,7 @@ interface SidebarNavRow {
   defaultIcon?: string
   label: string
   depth: number
+  href?: string
   navigateTo?: () => void
   controls?: SidebarNavControls[]
 }
@@ -118,6 +119,7 @@ const NestedRows = ({
               key={child.id}
               id={`${prefix}-tree-item-${child.id}`}
               label={child.label}
+              labelHref={child.href}
               labelClick={child.navigateTo}
               folding={child.folding}
               folded={child.folded}

@@ -81,6 +81,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
           className='sidebar__tree__item__label'
           onFocus={() => setFocused(true)}
           onClick={labelClick}
+          href={labelHref}
           id={`tree-${id}`}
         >
           {emoji != null ? (
@@ -103,6 +104,7 @@ const Container = styled.div<{ depth: number }>`
   align-items: center;
   height: 30px;
   white-space: nowrap;
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
 
   .sidebar__tree__item__wrapper {
     width: 100%;
@@ -126,6 +128,7 @@ const Container = styled.div<{ depth: number }>`
     text-align: left;
     color: ${({ theme }) => theme.colors.text.main};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+    text-decoration: none;
     margin: 0;
     overflow: hidden;
     svg {
