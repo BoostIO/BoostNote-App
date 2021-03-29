@@ -51,12 +51,10 @@ import {
   MenuItem,
   MenuTypes,
   useContextMenu,
-} from '../../cloud/lib/stores/contextMenu'
+} from '../../lib/v2/stores/contextMenu'
 import Modal from '../../cloud/components/organisms/Modal'
-import ContextMenu from '../../cloud/components/molecules/ContextMenu'
-import EmojiPicker from '../../cloud/components/molecules/EmojiPicker'
+import ContextMenu from '../../components/v2/molecules/ContextMenu'
 import Dialog from '../../cloud/components/molecules/Dialog/Dialog'
-import ToastList from '../../cloud/components/molecules/Toast'
 import Checkbox from './atoms/Checkbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
@@ -89,6 +87,8 @@ import {
   getTagHref,
   useNavigateToTag,
 } from '../../cloud/components/atoms/Link/TagLink'
+import Toast from './organisms/Toast'
+import EmojiPicker from './molecules/EmojiPicker'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -195,7 +195,7 @@ const Application: React.FC<{}> = ({ children }) => {
   return (
     <>
       <Modal />
-      <ToastList />
+      <Toast />
       <ContextMenu />
       <EmojiPicker />
       <Dialog />

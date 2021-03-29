@@ -58,6 +58,10 @@ import SharedPage from '../pages/shared/[link]'
 import WorkspaceShowPage from '../../components/v2/pages/cloud/WorkspaceShowPage'
 import { selectV2Theme } from '../../lib/v2/styled/styleFunctions'
 import Application from '../../components/v2/Application'
+import { V2ToastProvider } from '../../lib/v2/stores/toast'
+import { V2EmojiProvider } from '../../lib/v2/stores/emoji'
+import { V2WindowProvider } from '../../lib/v2/stores/window'
+import { V2ContextMenuProvider } from '../../lib/v2/stores/contextMenu'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -71,6 +75,21 @@ const CombinedProvider = combineProviders(
   SearchProvider,
   ExternalEntitiesProvider,
   WindowProvider
+)
+
+const V2CombinedProvider = combineProviders(
+  V2ToastProvider,
+  V2EmojiProvider,
+  V2WindowProvider,
+  V2ContextMenuProvider,
+  SidebarCollapseProvider,
+  OnboardingProvider,
+  ModalProvider,
+  PreferencesProvider,
+  SettingsProvider,
+  DialogProvider,
+  SearchProvider,
+  ExternalEntitiesProvider
 )
 
 interface PageInfo {
@@ -239,7 +258,7 @@ const Router = () => {
   if (pageInfo.refactored) {
     return (
       <PageDataProvider pageProps={pageInfo.pageProps as any}>
-        <CombinedProvider>
+        <V2CombinedProvider>
           <NavProvider pageProps={pageInfo.pageProps as any}>
             <CustomThemeProvider>
               <V2ThemeProvider>
@@ -249,7 +268,7 @@ const Router = () => {
               </V2ThemeProvider>
             </CustomThemeProvider>
           </NavProvider>
-        </CombinedProvider>
+        </V2CombinedProvider>
       </PageDataProvider>
     )
   }

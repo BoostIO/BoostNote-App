@@ -45,5 +45,6 @@ export const darkTheme: BaseTheme = {
       },
     },
     focus: 'rgba(71, 170, 255, 0.6)',
+    shadow: '0px 0px 13px rgba(0,0,0,0.1)',
   },
 }

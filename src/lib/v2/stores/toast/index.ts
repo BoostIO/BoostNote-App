@@ -14,7 +14,6 @@ interface ToastStore {
   readonly messages: ToastMessage[]
   pushMessage: (message: Omit<ToastMessage, 'id' | 'createdAt'>) => void
   pushApiErrorMessage: (error: any) => void
-  pushDocHandlerErrorMessage: (error: any) => void
   removeMessage: (message: ToastMessage) => void
 }
 
@@ -66,28 +65,16 @@ const useToastStore = (): ToastStore => {
     [setMessages]
   )
 
-  const pushDocHandlerErrorMessage = useCallback(
-    (error: any) => {
-      if (error.response.data.includes('exceeds the free tier')) {
-        return
-      }
-
-      pushApiErrorMessage(error)
-    },
-    [pushApiErrorMessage]
-  )
-
   return {
     messages,
     pushMessage,
     pushApiErrorMessage,
-    pushDocHandlerErrorMessage,
     removeMessage: (message) =>
       setMessages(messages.filter(({ id }) => id !== message.id)),
   }
 }
 
 export const {
-  StoreProvider: ToastProvider,
+  StoreProvider: V2ToastProvider,
   useStore: useToast,
 } = createStoreContext(useToastStore)
