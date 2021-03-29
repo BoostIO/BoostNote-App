@@ -32,8 +32,11 @@ import { usingElectron, sendToHost } from '../../cloud/lib/stores/electron'
 import {
   getDocId,
   getDocTitle,
+  getDocURL,
   getFolderId,
+  getFolderURL,
   getTeamURL,
+  getWorkspaceURL,
 } from '../../cloud/lib/utils/patterns'
 import { useNav } from '../../cloud/lib/stores/nav'
 import {
@@ -61,12 +64,21 @@ import Checkbox from './atoms/Checkbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
 import { FoldingProps } from './organisms/Sidebar/atoms/SidebarTreeItem'
-import { SerializedDocWithBookmark } from '../../cloud/interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../cloud/interfaces/db/folder'
+import {
+  SerializedDoc,
+  SerializedDocWithBookmark,
+} from '../../cloud/interfaces/db/doc'
+import {
+  SerializedFolder,
+  SerializedFolderWithBookmark,
+} from '../../cloud/interfaces/db/folder'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
 import { SerializedTag } from '../../cloud/interfaces/db/tag'
 import { SerializedTeam } from '../../cloud/interfaces/db/team'
 import { SerializedTeamInvite } from '../../cloud/interfaces/db/teamInvite'
+import { useNavigateToFolder } from '../../cloud/components/atoms/Link/FolderLink'
+import { useNavigateToWorkspace } from '../../cloud/components/atoms/Link/WorkspaceLink'
+import { useNavigateToDoc } from '../../cloud/components/atoms/Link/DocLink'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -93,6 +105,9 @@ const Application: React.FC<{}> = ({ children }) => {
   } = useGlobalData()
   const { push } = useRouter()
   const navigateToTeam = useNavigateToTeam()
+  const navigateToDoc = useNavigateToDoc()
+  const navigateToFolder = useNavigateToFolder()
+  const navigateToWorkspace = useNavigateToWorkspace()
 
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
@@ -129,7 +144,11 @@ const Application: React.FC<{}> = ({ children }) => {
       sideBarOpenedFolderIdsSet,
       sideBarOpenedWorkspaceIdsSet,
       toggleItem,
-      getFoldEvents
+      getFoldEvents,
+      navigateToDoc,
+      navigateToFolder,
+      navigateToWorkspace,
+      team
     )
   }, [
     initialLoadDone,
@@ -142,6 +161,10 @@ const Application: React.FC<{}> = ({ children }) => {
     sideBarOpenedWorkspaceIdsSet,
     toggleItem,
     getFoldEvents,
+    navigateToDoc,
+    navigateToFolder,
+    navigateToWorkspace,
+    team,
   ])
 
   const treeControls = useMemo(() => {
@@ -195,9 +218,28 @@ function mapTree(
   sideBarOpenedFolderIdsSet: Set<string>,
   sideBarOpenedWorkspaceIdsSet: Set<string>,
   toggleItem: (type: CollapsableType, id: string) => void,
-  getFoldEvents: (type: CollapsableType, key: string) => FoldingProps
+  getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
+  navigateToDoc: (
+    doc: SerializedDoc,
+    team: SerializedTeam,
+    intent: 'index',
+    query?: any
+  ) => void,
+  navigateToFolder: (
+    folder: SerializedFolder,
+    team: SerializedTeam,
+    intent: 'index',
+    query?: any
+  ) => void,
+  navigateToWorkspace: (
+    workspace: SerializedWorkspace,
+    team: SerializedTeam,
+    intent: 'index',
+    query?: any
+  ) => void,
+  team?: SerializedTeam
 ) {
-  if (!initialLoadDone) {
+  if (!initialLoadDone || team == null) {
     return undefined
   }
 
@@ -217,6 +259,10 @@ function mapTree(
       children: wp.positions?.orderedIds || [],
       folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
       folding: getFoldEvents('workspaces', wp.id),
+      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(
+        team
+      )}${getWorkspaceURL(wp)}`,
+      navigateTo: () => navigateToWorkspace(wp, team, 'index'),
     })
   })
 
@@ -229,6 +275,10 @@ function mapTree(
       emoji: folder.emoji,
       folded: !sideBarOpenedFolderIdsSet.has(folder.id),
       folding: getFoldEvents('folders', folder.id),
+      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(team)}${getFolderURL(
+        folder
+      )}`,
+      navigateTo: () => navigateToFolder(folder, team, 'index'),
       parentId:
         folder.parentFolderId == null
           ? folder.workspaceId
@@ -250,6 +300,10 @@ function mapTree(
       defaultIcon: mdiFileDocumentOutline,
       archived: doc.archivedAt != null,
       children: [],
+      href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(team)}${getDocURL(
+        doc
+      )}`,
+      navigateTo: () => navigateToDoc(doc, team, 'index'),
       parentId:
         doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
     })
@@ -269,6 +323,8 @@ function mapTree(
       label: val.label,
       emoji: val.emoji,
       defaultIcon: val.defaultIcon,
+      href: val.href,
+      navigateTo: val.navigateTo,
     })
     return acc
   }, [] as SidebarTreeChildRow[])
@@ -327,6 +383,8 @@ function mapTree(
       label: val.label,
       emoji: val.emoji,
       defaultIcon: val.defaultIcon,
+      href: val.href,
+      navigateTo: val.navigateTo,
     })
     return acc
   }, [] as SidebarTreeChildRow[])
@@ -594,4 +652,6 @@ type CloudTreeItem = {
   children: string[]
   folding?: FoldingProps
   folded?: boolean
+  href?: string
+  navigateTo?: () => void
 }
