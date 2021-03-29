@@ -5,7 +5,7 @@ import { hideScroll } from '../../../../../lib/v2/styled/styleFunctions'
 import { AppComponent } from '../../../../../lib/v2/types'
 import Icon from '../../../atoms/Icon'
 
-export type SidebarContextRow = {
+export type SidebarToolbarRow = {
   icon: string | React.ReactNode
   active?: boolean
   tooltip?: string
@@ -13,18 +13,18 @@ export type SidebarContextRow = {
   onClick?: () => void
 }
 
-interface SidebarContextProps {
-  rows: SidebarContextRow[]
+interface SidebarToolbarProps {
+  rows: SidebarToolbarRow[]
 }
 
-const SidebarContext: AppComponent<SidebarContextProps> = ({
+const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
   rows,
   className,
 }) => {
   const sortedRows = useMemo(() => {
     const sortedRows: {
-      top: SidebarContextRow[]
-      bottom: SidebarContextRow[]
+      top: SidebarToolbarRow[]
+      bottom: SidebarToolbarRow[]
     } = { top: [], bottom: [] }
 
     rows.forEach((row) => {
@@ -39,14 +39,14 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
   }, [rows])
 
   return (
-    <Container className={cc([className, 'sidebar__context'])}>
-      <div className='sidebar__context__scroller'>
-        <div className='sidebar__context__top'>
+    <Container className={cc([className, 'sidebar__toolbar'])}>
+      <div className='sidebar__toolbar__scroller'>
+        <div className='sidebar__toolbar__top'>
           {sortedRows.top.map((row, i) => (
             <button
               className={cc([
-                'sidebar__context__item',
-                row.active && 'sidebar__context__item--active',
+                'sidebar__toolbar__item',
+                row.active && 'sidebar__toolbar__item--active',
               ])}
               onClick={row.onClick}
               disabled={row.onClick == null}
@@ -61,12 +61,12 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
             </button>
           ))}
         </div>
-        <div className='sidebar__context__bottom'>
+        <div className='sidebar__toolbar__bottom'>
           {sortedRows.bottom.map((row, i) => (
             <button
               className={cc([
-                'sidebar__context__item',
-                row.active && 'sidebar__context__item--active',
+                'sidebar__toolbar__item',
+                row.active && 'sidebar__toolbar__item--active',
               ])}
               onClick={row.onClick}
               disabled={row.onClick == null}
@@ -86,10 +86,10 @@ const SidebarContext: AppComponent<SidebarContextProps> = ({
   )
 }
 
-export default SidebarContext
+export default SidebarToolbar
 
 const Container = styled.div`
-  &.sidebar__context {
+  &.sidebar__toolbar {
     display: flex;
     flex-direction: column;
     width: 40px;
@@ -98,7 +98,7 @@ const Container = styled.div`
     background: ${({ theme }) => theme.colors.background.second};
     overflow: hidden;
 
-    .sidebar__context__scroller {
+    .sidebar__toolbar__scroller {
       display: flex;
       flex: 1 1 auto;
       width: 100%;
@@ -109,19 +109,19 @@ const Container = styled.div`
       ${hideScroll}
     }
 
-    .sidebar__context__top {
+    .sidebar__toolbar__top {
       flex: 1 0 auto;
     }
 
-    .sidebar__context__bottom {
+    .sidebar__toolbar__bottom {
       flex: 0 0 auto;
     }
 
-    .sidebar__context__top .sidebar__context__item:last-of-type {
+    .sidebar__toolbar__top .sidebar__toolbar__item:last-of-type {
       margin-bottom: 0;
     }
 
-    .sidebar__context__item {
+    .sidebar__toolbar__item {
       display: flex;
       align-items: center;
       text-align: center;
@@ -136,11 +136,11 @@ const Container = styled.div`
       justify-content: center;
 
       &:hover,
-      &.sidebar__context__item--active {
+      &.sidebar__toolbar__item--active {
         color: ${({ theme }) => theme.colors.text.main};
       }
 
-      &.sidebar__context__item--active {
+      &.sidebar__toolbar__item--active {
         border-left-color: ${({ theme }) => theme.colors.text.main};
       }
     }

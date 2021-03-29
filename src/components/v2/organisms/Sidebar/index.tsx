@@ -9,7 +9,7 @@ import {
 import styled from '../../../../lib/v2/styled'
 import WidthEnlarger from '../../atoms/WidthEnlarger'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
-import SidebarContext, { SidebarContextRow } from './molecules/SidebarContext'
+import SidebarToolbar, { SidebarToolbarRow } from './molecules/SidebarToolbar'
 import SidebarTree, {
   SidebarNavCategory,
   SidebarTreeControl,
@@ -18,7 +18,7 @@ import Spinner from '../../atoms/Spinner'
 
 type SidebarProps = {
   sidebarState?: SidebarState
-  contextRows: SidebarContextRow[]
+  toolbarRows: SidebarToolbarRow[]
   sidebarExpandedWidth?: number
   sidebarResize?: (width: number) => void
   className?: string
@@ -28,7 +28,7 @@ type SidebarProps = {
 
 const Sidebar = ({
   sidebarState,
-  contextRows,
+  toolbarRows,
   spaces,
   spaceBottomRows,
   sidebarExpandedWidth = defaultSidebarExpandedWidth,
@@ -39,7 +39,7 @@ const Sidebar = ({
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
-      <SidebarContext rows={contextRows} className='sidebar__context__icons' />
+      <SidebarToolbar rows={toolbarRows} className='sidebar__context__icons' />
       {sidebarState != null && (
         <WidthEnlarger
           position='right'

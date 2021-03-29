@@ -9,10 +9,13 @@ interface MetadataContainerProps {
 }
 
 interface MetadataContainerRow {
+  icon?: string
+  label: string
+  direction?: 'row' | 'column'
   breakAfter?: boolean
 }
 
-const MetadataContainer: AppComponent<MetadataContainerProps> = ({}) => {
+const MetadataContainer: AppComponent<MetadataContainerProps> = ({ rows }) => {
   const menuRef = useRef<HTMLDivElement>(null) as React.MutableRefObject<
     HTMLDivElement
   >
@@ -26,8 +29,14 @@ const MetadataContainer: AppComponent<MetadataContainerProps> = ({}) => {
   return (
     <Container ref={menuRef} className='metadata'>
       <div className='metadata__container'>
-        <div className='metadata__scroll__container'>
-          <div className='context__scroll'></div>
+        <div className='metadata__scroll'>
+          <div className='metadata__scroll__wrapper'>
+            {rows.map((row, i) => (
+              <React.Fragment key={`metadata__row${i}`}>
+                {row.breakAfter && <div className='metadata__break' />}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </Container>
@@ -50,7 +59,7 @@ const Container = styled.div`
     height: 100%;
   }
 
-  .metadata__scroll__container {
+  .metadata__scroll {
     height: 100%;
     overflow: auto;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
@@ -60,7 +69,7 @@ const Container = styled.div`
     }
   }
 
-  .metadata__scroll {
+  .metadata__scroll__wrapper {
     flex: 1 1 auto;
     width: 100%;
     overflow: hidden auto;

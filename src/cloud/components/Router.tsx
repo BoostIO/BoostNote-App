@@ -57,7 +57,7 @@ import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
 import SharedPage from '../pages/shared/[link]'
 import WorkspaceShowPage from '../../components/v2/pages/cloud/WorkspaceShowPage'
 import { selectV2Theme } from '../../lib/v2/styled/styleFunctions'
-import ApplicationPage from '../../components/v2/pages/cloud/ApplicationPage'
+import Application from '../../components/v2/Application'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -243,9 +243,9 @@ const Router = () => {
           <NavProvider pageProps={pageInfo.pageProps as any}>
             <CustomThemeProvider>
               <V2ThemeProvider>
-                <ApplicationPage>
+                <Application>
                   {<pageInfo.Component {...pageInfo.pageProps} />}
-                </ApplicationPage>
+                </Application>
               </V2ThemeProvider>
             </CustomThemeProvider>
           </NavProvider>
@@ -254,8 +254,6 @@ const Router = () => {
     )
   }
 
-  console.log('nope')
-  console.log(pageInfo)
   return (
     <PageDataProvider pageProps={pageInfo.pageProps as any}>
       <CombinedProvider>
