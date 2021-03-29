@@ -15,11 +15,14 @@ import {
 import { stringify } from 'querystring'
 import React, { useCallback, useMemo, useState } from 'react'
 import { buildIconUrl } from '../../cloud/api/files'
-import { useNavigateToTeam } from '../../cloud/components/atoms/Link/TeamLink'
+import {
+  TeamLinkIntent,
+  useNavigateToTeam,
+} from '../../cloud/components/atoms/Link/TeamLink'
 import ImportModal from '../../cloud/components/organisms/Modal/contents/Import/ImportModal'
-import { useRouter } from '../../cloud/lib/router'
+import { Url, useRouter } from '../../cloud/lib/router'
 import { useGlobalData } from '../../cloud/lib/stores/globalData'
-import { useModal } from '../../cloud/lib/stores/modal'
+import { ModalsOptions, useModal } from '../../cloud/lib/stores/modal'
 import { usePage } from '../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../cloud/lib/stores/preferences'
 import { getHexFromUUID } from '../../cloud/lib/utils/string'
@@ -44,7 +47,11 @@ import {
   SidebarTreeChildRow,
 } from './organisms/Sidebar/molecules/SidebarTree'
 import { getMapValues } from '../../lib/v2/utils/array'
-import { MenuTypes, useContextMenu } from '../../cloud/lib/stores/contextMenu'
+import {
+  MenuItem,
+  MenuTypes,
+  useContextMenu,
+} from '../../cloud/lib/stores/contextMenu'
 import Modal from '../../cloud/components/organisms/Modal'
 import ContextMenu from '../../cloud/components/molecules/ContextMenu'
 import EmojiPicker from '../../cloud/components/molecules/EmojiPicker'
@@ -54,58 +61,15 @@ import Checkbox from './atoms/Checkbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
 import { FoldingProps } from './organisms/Sidebar/atoms/SidebarTreeItem'
+import { SerializedDocWithBookmark } from '../../cloud/interfaces/db/doc'
+import { SerializedFolderWithBookmark } from '../../cloud/interfaces/db/folder'
+import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
+import { SerializedTag } from '../../cloud/interfaces/db/tag'
+import { SerializedTeam } from '../../cloud/interfaces/db/team'
+import { SerializedTeamInvite } from '../../cloud/interfaces/db/teamInvite'
 
 const Application: React.FC<{}> = ({ children }) => {
-  const toolbar = BuildToolbar()
-  const tree = BuildTree()
-  const size = BuildSidebarResize()
-  return (
-    <>
-      <Modal />
-      <ToastList />
-      <ContextMenu />
-      <EmojiPicker />
-      <Dialog />
-      <ApplicationLayout
-        sidebar={
-          <Sidebar
-            className='application__sidebar'
-            toolbarRows={toolbar.rows}
-            spaces={BuildSpaces()}
-            spaceBottomRows={BuildSpacesBottomRows()}
-            sidebarResize={size.sidebarResize}
-            sidebarExpandedWidth={size.width}
-            sidebarState={toolbar.sidebarState}
-            tree={tree.tree}
-            treeControls={tree.treeControls}
-          />
-        }
-        pageBody={children}
-      />
-    </>
-  )
-}
-
-export default Application
-
-function BuildSidebarResize() {
   const { preferences, setPreferences } = usePreferences()
-
-  const sidebarResize = useCallback(
-    (leftWidth: number) => {
-      setPreferences({
-        sideBarWidth: leftWidth,
-      })
-    },
-    [setPreferences]
-  )
-
-  return {
-    width: preferences.sideBarWidth,
-    sidebarResize,
-  }
-}
-function BuildTree() {
   const {
     initialLoadDone,
     docsMap,
@@ -121,21 +85,22 @@ function BuildTree() {
     unfoldItem,
     foldItem,
   } = useSidebarCollapse()
+  const { popup } = useContextMenu()
+  const { team } = usePage()
+  const { openModal } = useModal()
+  const {
+    globalData: { teams, invites },
+  } = useGlobalData()
+  const { push } = useRouter()
+  const navigateToTeam = useNavigateToTeam()
 
-  const docsPerTagIdMap = useMemo(() => {
-    return [...docsMap.values()].reduce((acc, doc) => {
-      const docTags = doc.tags || []
-      docTags.forEach((tag) => {
-        let docIds = acc.get(tag.id)
-        if (docIds == null) {
-          docIds = []
-          acc.set(tag.id, docIds)
-        }
-        docIds.push(doc.id)
-      })
-      return acc
-    }, new Map<string, string[]>())
-  }, [docsMap])
+  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
+    'tree'
+  )
+
+  const openState = useCallback((state: SidebarState) => {
+    setSidebarState((prev) => (prev === state ? undefined : state))
+  }, [])
 
   const getFoldEvents = useCallback(
     (type: CollapsableType, key: string) => {
@@ -148,384 +113,447 @@ function BuildTree() {
     [toggleItem, unfoldItem, foldItem]
   )
 
+  const sidebarResize = useCallback(
+    (width: number) => setPreferences({ sideBarWidth: width }),
+    [setPreferences]
+  )
+
   const tree = useMemo(() => {
-    if (!initialLoadDone) {
-      return undefined
-    }
-
-    const items = new Map<string, CloudTreeItem>()
-
-    const [docs, folders, workspaces] = [
-      getMapValues(docsMap),
-      getMapValues(foldersMap),
-      getMapValues(workspacesMap),
-    ]
-
-    workspaces.forEach((wp) => {
-      items.set(wp.id, {
-        id: wp.id,
-        label: wp.name,
-        defaultIcon: !wp.public ? mdiLock : undefined,
-        children: wp.positions?.orderedIds || [],
-        folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
-        folding: getFoldEvents('workspaces', wp.id),
-      })
-    })
-
-    folders.forEach((folder) => {
-      const folderId = getFolderId(folder)
-      items.set(folderId, {
-        id: folderId,
-        label: folder.name,
-        bookmarked: folder.bookmarked,
-        emoji: folder.emoji,
-        folded: !sideBarOpenedFolderIdsSet.has(folder.id),
-        folding: getFoldEvents('folders', folder.id),
-        parentId:
-          folder.parentFolderId == null
-            ? folder.workspaceId
-            : folder.parentFolderId,
-        children:
-          typeof folder.positions != null &&
-          typeof folder.positions !== 'string'
-            ? folder.positions.orderedIds
-            : [],
-      })
-    })
-
-    docs.forEach((doc) => {
-      const docId = getDocId(doc)
-      items.set(docId, {
-        id: docId,
-        label: getDocTitle(doc, 'Untitled'),
-        bookmarked: doc.bookmarked,
-        emoji: doc.emoji,
-        defaultIcon: mdiFileDocumentOutline,
-        archived: doc.archivedAt != null,
-        children: [],
-        parentId:
-          doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
-      })
-    })
-
-    const arrayItems = getMapValues(items)
-
-    const tree: Partial<SidebarNavCategory>[] = []
-
-    const bookmarked = arrayItems.reduce((acc, val) => {
-      if (!val.bookmarked) {
-        return acc
-      }
-
-      acc.push({
-        id: val.id,
-        depth: 0,
-        label: val.label,
-        emoji: val.emoji,
-        defaultIcon: val.defaultIcon,
-      })
-      return acc
-    }, [] as SidebarTreeChildRow[])
-
-    const navTree = arrayItems
-      .filter((item) => item.parentId == null)
-      .reduce((acc, val) => {
-        acc.push({
-          ...val,
-          depth: 0,
-          rows: buildChildrenNavRows(val.children, 1, items),
-        })
-        return acc
-      }, [] as SidebarTreeChildRow[])
-
-    const labels = getMapValues(tagsMap)
-      .filter((tag) => (docsPerTagIdMap.get(tag.id) || []).length > 0)
-      .sort((a, b) => {
-        if (a.text < b.text) {
-          return -1
-        } else {
-          return 1
-        }
-      })
-      .reduce((acc, val) => {
-        acc.push({
-          id: val.id,
-          depth: 0,
-          label: val.text,
-          defaultIcon: mdiTag,
-        })
-        return acc
-      }, [] as SidebarTreeChildRow[])
-
-    const archived = arrayItems.reduce((acc, val) => {
-      if (!val.archived) {
-        return acc
-      }
-
-      acc.push({
-        id: val.id,
-        depth: 0,
-        label: val.label,
-        emoji: val.emoji,
-        defaultIcon: val.defaultIcon,
-      })
-      return acc
-    }, [] as SidebarTreeChildRow[])
-
-    if (bookmarked.length > 0) {
-      tree.push({
-        label: 'Bookmarks',
-        rows: bookmarked,
-      })
-    }
-    tree.push({
-      label: 'Folders',
-      shrink: 2,
-      rows: navTree,
-    })
-    if (labels.length > 0) {
-      tree.push({
-        label: 'Labels',
-        rows: labels,
-      })
-    }
-    if (archived.length > 0) {
-      tree.push({
-        label: 'Archived',
-        rows: archived,
-      })
-    }
-
-    tree.forEach((category) => {
-      const key = (category.label || '').toLocaleLowerCase()
-      const foldKey = `fold-${key}`
-      const hideKey = `hide-${key}`
-      category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
-      category.folding = getFoldEvents('links', foldKey)
-      category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
-      category.toggleHidden = () => toggleItem('links', hideKey)
-    })
-
-    return tree as SidebarNavCategory[]
+    return mapTree(
+      initialLoadDone,
+      docsMap,
+      foldersMap,
+      workspacesMap,
+      tagsMap,
+      sideBarOpenedLinksIdsSet,
+      sideBarOpenedFolderIdsSet,
+      sideBarOpenedWorkspaceIdsSet,
+      toggleItem,
+      getFoldEvents
+    )
   }, [
     initialLoadDone,
     docsMap,
     foldersMap,
     workspacesMap,
     tagsMap,
-    docsPerTagIdMap,
-    sideBarOpenedLinksIdsSet,
     sideBarOpenedFolderIdsSet,
+    sideBarOpenedLinksIdsSet,
     sideBarOpenedWorkspaceIdsSet,
     toggleItem,
     getFoldEvents,
   ])
 
-  const { popup } = useContextMenu()
   const treeControls = useMemo(() => {
-    if (tree == null || tree.length === 0) {
-      return undefined
-    }
-
-    return [
-      {
-        icon: mdiDotsHorizontal,
-        onClick: (event: React.MouseEvent) =>
-          popup(
-            event,
-            tree.map((category) => {
-              return {
-                type: MenuTypes.Normal,
-                onClick: category.toggleHidden,
-                label: (
-                  <span>
-                    <Checkbox checked={!category.hidden} />
-                    <span style={{ paddingLeft: 6 }}>{category.label}</span>
-                  </span>
-                ),
-              }
-            })
-          ),
-      },
-    ]
+    return mapTreeControls(tree || [], popup)
   }, [popup, tree])
 
-  return {
-    tree,
-    treeControls,
-  }
-}
+  const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
+    return mapToolbarRows(openState, openModal, sidebarState, team)
+  }, [sidebarState, openModal, team, openState])
 
-function BuildToolbar() {
-  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'tree'
-  )
-  const openContext = useCallback((state: SidebarState) => {
-    setSidebarState((prev) => (prev === state ? undefined : state))
-  }, [])
-  const { team } = usePage()
-  const { openModal } = useModal()
-
-  const rows: SidebarToolbarRow[] = useMemo(() => {
-    const rows: SidebarToolbarRow[] = []
-    if (team != null) {
-      rows.push({
-        tooltip: 'Spaces',
-        active: sidebarState === 'spaces',
-        icon: (
-          <RoundedImage
-            size='sm'
-            alt={team.name}
-            url={
-              team.icon != null ? buildIconUrl(team.icon.location) : undefined
-            }
-          />
-        ),
-        onClick: () => openContext('spaces'),
-      })
-    }
-    rows.push({
-      tooltip: 'Tree',
-      active: sidebarState === 'tree',
-      icon: mdiFileDocumentMultipleOutline,
-      onClick: () => openContext('tree'),
-    })
-    rows.push({
-      tooltip: 'Search',
-      active: sidebarState === 'search',
-      icon: mdiMagnify,
-      onClick: () => openContext('search'),
-    })
-    rows.push({
-      tooltip: 'Timeline',
-      active: sidebarState === 'timeline',
-      icon: mdiClockOutline,
-      onClick: () => openContext('timeline'),
-    })
-    rows.push({
-      tooltip: 'Import',
-      icon: mdiDownload,
-      position: 'bottom',
-      onClick: () =>
-        openModal(<ImportModal />, {
-          classNames: 'largeW',
-        }),
-    })
-    rows.push({
-      tooltip: 'Members',
-      active: sidebarState === 'members',
-      icon: mdiAccountMultiplePlusOutline,
-      position: 'bottom',
-      onClick: () => openContext('members'),
-    })
-    rows.push({
-      tooltip: 'Settings',
-      active: sidebarState === 'settings',
-      icon: mdiCogOutline,
-      position: 'bottom',
-      onClick: () => openContext('settings'),
-    })
-
-    return rows
-  }, [sidebarState, openModal, team, openContext])
-
-  return {
-    rows,
-    sidebarState,
-  }
-}
-
-function BuildSpaces() {
-  const {
-    globalData: { teams, invites },
-  } = useGlobalData()
-  const { team } = usePage()
-  const { push } = useRouter()
-  const navigateToTeam = useNavigateToTeam()
-
-  return useMemo(() => {
-    const rows: SidebarSpace[] = []
-    teams.forEach((globalTeam) => {
-      rows.push({
-        label: globalTeam.name,
-        active: team?.id === globalTeam.id,
-        icon:
-          globalTeam.icon != null
-            ? buildIconUrl(globalTeam.icon.location)
-            : undefined,
-        linkProps: {
-          href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`,
-          onClick: (event: React.MouseEvent) => {
-            event.preventDefault()
-            navigateToTeam(globalTeam, 'index')
-          },
-        },
-      })
-    })
-
-    invites.forEach((invite) => {
-      const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
-      rows.push({
-        label: `${invite.team.name} (invited)`,
-        icon:
-          invite.team.icon != null
-            ? buildIconUrl(invite.team.icon.location)
-            : undefined,
-        linkProps: {
-          href: `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`,
-          onClick: (event: React.MouseEvent) => {
-            event.preventDefault()
-            push(`/invite?${stringify(query)}`)
-          },
-        },
-      })
-    })
-
-    return rows
+  const spaces = useMemo(() => {
+    return mapSpaces(navigateToTeam, push, teams, invites, team)
   }, [navigateToTeam, teams, team, invites, push])
+
+  return (
+    <>
+      <Modal />
+      <ToastList />
+      <ContextMenu />
+      <EmojiPicker />
+      <Dialog />
+      <ApplicationLayout
+        sidebar={
+          <Sidebar
+            className='application__sidebar'
+            toolbarRows={toolbarRows}
+            spaces={spaces}
+            spaceBottomRows={buildSpacesBottomRows(push)}
+            sidebarExpandedWidth={preferences.sideBarWidth}
+            sidebarState={sidebarState}
+            tree={tree}
+            treeControls={treeControls}
+            sidebarResize={sidebarResize}
+          />
+        }
+        pageBody={children}
+      />
+    </>
+  )
 }
 
-function BuildSpacesBottomRows() {
-  const { push } = useRouter()
-  return useMemo(() => {
-    return [
-      {
-        label: 'Create an account',
-        icon: mdiPlusCircleOutline,
-        linkProps: {
-          href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-          onClick: (event: React.MouseEvent) => {
-            event.preventDefault()
-            push(`/cooperate`)
-          },
-        },
-      },
-      {
-        label: 'Download desktop app',
-        icon: mdiDownload,
-        linkProps: {
-          href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-        },
-      },
-      {
-        label: 'Log out',
-        icon: mdiLogoutVariant,
-        linkProps: {
-          href: '/api/oauth/signout',
-          onClick: (event: React.MouseEvent) => {
-            event.preventDefault()
-            if (usingElectron) {
-              sendToHost('sign-out')
-            } else {
-              window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+export default Application
+
+function mapTree(
+  initialLoadDone: boolean,
+  docsMap: Map<string, SerializedDocWithBookmark>,
+  foldersMap: Map<string, SerializedFolderWithBookmark>,
+  workspacesMap: Map<string, SerializedWorkspace>,
+  tagsMap: Map<string, SerializedTag>,
+  sideBarOpenedLinksIdsSet: Set<string>,
+  sideBarOpenedFolderIdsSet: Set<string>,
+  sideBarOpenedWorkspaceIdsSet: Set<string>,
+  toggleItem: (type: CollapsableType, id: string) => void,
+  getFoldEvents: (type: CollapsableType, key: string) => FoldingProps
+) {
+  if (!initialLoadDone) {
+    return undefined
+  }
+
+  const items = new Map<string, CloudTreeItem>()
+
+  const [docs, folders, workspaces] = [
+    getMapValues(docsMap),
+    getMapValues(foldersMap),
+    getMapValues(workspacesMap),
+  ]
+
+  workspaces.forEach((wp) => {
+    items.set(wp.id, {
+      id: wp.id,
+      label: wp.name,
+      defaultIcon: !wp.public ? mdiLock : undefined,
+      children: wp.positions?.orderedIds || [],
+      folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
+      folding: getFoldEvents('workspaces', wp.id),
+    })
+  })
+
+  folders.forEach((folder) => {
+    const folderId = getFolderId(folder)
+    items.set(folderId, {
+      id: folderId,
+      label: folder.name,
+      bookmarked: folder.bookmarked,
+      emoji: folder.emoji,
+      folded: !sideBarOpenedFolderIdsSet.has(folder.id),
+      folding: getFoldEvents('folders', folder.id),
+      parentId:
+        folder.parentFolderId == null
+          ? folder.workspaceId
+          : folder.parentFolderId,
+      children:
+        typeof folder.positions != null && typeof folder.positions !== 'string'
+          ? folder.positions.orderedIds
+          : [],
+    })
+  })
+
+  docs.forEach((doc) => {
+    const docId = getDocId(doc)
+    items.set(docId, {
+      id: docId,
+      label: getDocTitle(doc, 'Untitled'),
+      bookmarked: doc.bookmarked,
+      emoji: doc.emoji,
+      defaultIcon: mdiFileDocumentOutline,
+      archived: doc.archivedAt != null,
+      children: [],
+      parentId:
+        doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
+    })
+  })
+
+  const arrayItems = getMapValues(items)
+  const tree: Partial<SidebarNavCategory>[] = []
+
+  const bookmarked = arrayItems.reduce((acc, val) => {
+    if (!val.bookmarked) {
+      return acc
+    }
+
+    acc.push({
+      id: val.id,
+      depth: 0,
+      label: val.label,
+      emoji: val.emoji,
+      defaultIcon: val.defaultIcon,
+    })
+    return acc
+  }, [] as SidebarTreeChildRow[])
+
+  const navTree = arrayItems
+    .filter((item) => item.parentId == null)
+    .reduce((acc, val) => {
+      acc.push({
+        ...val,
+        depth: 0,
+        rows: buildChildrenNavRows(val.children, 1, items),
+      })
+      return acc
+    }, [] as SidebarTreeChildRow[])
+
+  const docsPerTagIdMap = [...docsMap.values()].reduce((acc, doc) => {
+    const docTags = doc.tags || []
+    docTags.forEach((tag) => {
+      let docIds = acc.get(tag.id)
+      if (docIds == null) {
+        docIds = []
+        acc.set(tag.id, docIds)
+      }
+      docIds.push(doc.id)
+    })
+    return acc
+  }, new Map<string, string[]>())
+
+  const labels = getMapValues(tagsMap)
+    .filter((tag) => (docsPerTagIdMap.get(tag.id) || []).length > 0)
+    .sort((a, b) => {
+      if (a.text < b.text) {
+        return -1
+      } else {
+        return 1
+      }
+    })
+    .reduce((acc, val) => {
+      acc.push({
+        id: val.id,
+        depth: 0,
+        label: val.text,
+        defaultIcon: mdiTag,
+      })
+      return acc
+    }, [] as SidebarTreeChildRow[])
+
+  const archived = arrayItems.reduce((acc, val) => {
+    if (!val.archived) {
+      return acc
+    }
+
+    acc.push({
+      id: val.id,
+      depth: 0,
+      label: val.label,
+      emoji: val.emoji,
+      defaultIcon: val.defaultIcon,
+    })
+    return acc
+  }, [] as SidebarTreeChildRow[])
+
+  if (bookmarked.length > 0) {
+    tree.push({
+      label: 'Bookmarks',
+      rows: bookmarked,
+    })
+  }
+  tree.push({
+    label: 'Folders',
+    shrink: 2,
+    rows: navTree,
+  })
+  if (labels.length > 0) {
+    tree.push({
+      label: 'Labels',
+      rows: labels,
+    })
+  }
+  if (archived.length > 0) {
+    tree.push({
+      label: 'Archived',
+      rows: archived,
+    })
+  }
+
+  tree.forEach((category) => {
+    const key = (category.label || '').toLocaleLowerCase()
+    const foldKey = `fold-${key}`
+    const hideKey = `hide-${key}`
+    category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
+    category.folding = getFoldEvents('links', foldKey)
+    category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
+    category.toggleHidden = () => toggleItem('links', hideKey)
+  })
+
+  return tree as SidebarNavCategory[]
+}
+
+function mapTreeControls(
+  tree: SidebarNavCategory[],
+  popup: (event: React.MouseEvent, menuItems: MenuItem[]) => void
+) {
+  if (tree.length === 0) {
+    return undefined
+  }
+
+  return [
+    {
+      icon: mdiDotsHorizontal,
+      onClick: (event: React.MouseEvent) =>
+        popup(
+          event,
+          (tree || []).map((category) => {
+            return {
+              type: MenuTypes.Normal,
+              onClick: category.toggleHidden,
+              label: (
+                <span>
+                  <Checkbox checked={!category.hidden} />
+                  <span style={{ paddingLeft: 6 }}>{category.label}</span>
+                </span>
+              ),
             }
-          },
+          })
+        ),
+    },
+  ]
+}
+
+function mapToolbarRows(
+  openState: (sidebarState: SidebarState) => void,
+  openModal: (cmp: JSX.Element, options?: Partial<ModalsOptions>) => void,
+  sidebarState?: SidebarState,
+  team?: SerializedTeam
+) {
+  const rows: SidebarToolbarRow[] = []
+  if (team != null) {
+    rows.push({
+      tooltip: 'Spaces',
+      active: sidebarState === 'spaces',
+      icon: (
+        <RoundedImage
+          size='sm'
+          alt={team.name}
+          url={team.icon != null ? buildIconUrl(team.icon.location) : undefined}
+        />
+      ),
+      onClick: () => openState('spaces'),
+    })
+  }
+  rows.push({
+    tooltip: 'Tree',
+    active: sidebarState === 'tree',
+    icon: mdiFileDocumentMultipleOutline,
+    onClick: () => openState('tree'),
+  })
+  rows.push({
+    tooltip: 'Search',
+    active: sidebarState === 'search',
+    icon: mdiMagnify,
+    onClick: () => openState('search'),
+  })
+  rows.push({
+    tooltip: 'Timeline',
+    active: sidebarState === 'timeline',
+    icon: mdiClockOutline,
+    onClick: () => openState('timeline'),
+  })
+  rows.push({
+    tooltip: 'Import',
+    icon: mdiDownload,
+    position: 'bottom',
+    onClick: () =>
+      openModal(<ImportModal />, {
+        classNames: 'largeW',
+      }),
+  })
+  rows.push({
+    tooltip: 'Members',
+    active: sidebarState === 'members',
+    icon: mdiAccountMultiplePlusOutline,
+    position: 'bottom',
+    onClick: () => openState('members'),
+  })
+  rows.push({
+    tooltip: 'Settings',
+    active: sidebarState === 'settings',
+    icon: mdiCogOutline,
+    position: 'bottom',
+    onClick: () => openState('settings'),
+  })
+
+  return rows
+}
+
+function mapSpaces(
+  navigateToTeam: (
+    team: SerializedTeam,
+    intent: TeamLinkIntent,
+    query?: any
+  ) => void,
+  push: (url: Url) => void,
+  teams: SerializedTeam[],
+  invites: SerializedTeamInvite[],
+  team?: SerializedTeam
+) {
+  const rows: SidebarSpace[] = []
+  teams.forEach((globalTeam) => {
+    rows.push({
+      label: globalTeam.name,
+      active: team?.id === globalTeam.id,
+      icon:
+        globalTeam.icon != null
+          ? buildIconUrl(globalTeam.icon.location)
+          : undefined,
+      linkProps: {
+        href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`,
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+          navigateToTeam(globalTeam, 'index')
         },
       },
-    ]
-  }, [push])
+    })
+  })
+
+  invites.forEach((invite) => {
+    const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
+    rows.push({
+      label: `${invite.team.name} (invited)`,
+      icon:
+        invite.team.icon != null
+          ? buildIconUrl(invite.team.icon.location)
+          : undefined,
+      linkProps: {
+        href: `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`,
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+          push(`/invite?${stringify(query)}`)
+        },
+      },
+    })
+  })
+
+  return rows
+}
+
+function buildSpacesBottomRows(push: (url: Url) => void) {
+  return [
+    {
+      label: 'Create an account',
+      icon: mdiPlusCircleOutline,
+      linkProps: {
+        href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+          push(`/cooperate`)
+        },
+      },
+    },
+    {
+      label: 'Download desktop app',
+      icon: mdiDownload,
+      linkProps: {
+        href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      },
+    },
+    {
+      label: 'Log out',
+      icon: mdiLogoutVariant,
+      linkProps: {
+        href: '/api/oauth/signout',
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+          if (usingElectron) {
+            sendToHost('sign-out')
+          } else {
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+          }
+        },
+      },
+    },
+  ]
 }
 
 function buildChildrenNavRows(
