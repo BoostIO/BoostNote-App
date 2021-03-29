@@ -14,12 +14,21 @@ const WorkspaceShowPage = ({
   pageWorkspace,
 }: WorkspacesShowPageResponseBody) => {
   const { workspacesMap } = useNav()
-  const { preferences, setPreferences } = usePreferences()
 
   const workspace = useMemo(() => {
     return workspacesMap.get(pageWorkspace.id)
   }, [workspacesMap, pageWorkspace.id])
 
+  return (
+    <WorkspaceShowPageLayout
+      topbar={BuildTopbar()}
+      metadata={BuildMetadata()}
+    />
+  )
+}
+
+function BuildTopbar() {
+  const { preferences, setPreferences } = usePreferences()
   const topbarControls = useMemo(() => {
     const controls: ControlButtonProps[] = []
     controls.push({
@@ -32,12 +41,17 @@ const WorkspaceShowPage = ({
     return controls
   }, [preferences.docContextIsHidden, setPreferences])
 
-  return (
-    <WorkspaceShowPageLayout
-      topbar={{ controls: topbarControls }}
-      showMetadata={!preferences.docContextIsHidden}
-    />
-  )
+  return {
+    controls: topbarControls,
+  }
+}
+
+function BuildMetadata() {
+  const { preferences } = usePreferences()
+  return {
+    show: !preferences.docContextIsHidden,
+    rows: [],
+  }
 }
 
 WorkspaceShowPage.getInitialProps = async (

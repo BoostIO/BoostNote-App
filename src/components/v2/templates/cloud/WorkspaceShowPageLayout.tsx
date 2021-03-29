@@ -6,16 +6,16 @@ import { TopbarProps } from '../../organisms/Topbar'
 interface WorkspaceShowPageLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
   topbar: TopbarProps
-  showMetadata?: boolean
+  metadata?: { show: boolean; rows: any[] }
 }
 
 const WorkspaceShowPageLayout = ({
   topbar,
-  showMetadata,
+  metadata,
 }: WorkspaceShowPageLayoutProps) => (
   <ContentLayout
     topbar={topbar}
-    right={showMetadata && <MetadataContainer rows={[]} />}
+    right={metadata?.show && <MetadataContainer rows={[]} />}
   >
     workspace page
   </ContentLayout>
