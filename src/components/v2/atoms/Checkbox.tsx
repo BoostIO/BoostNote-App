@@ -50,6 +50,7 @@ const Container = styled.label`
   overflow: hidden;
   width: 18px;
   height: 18px;
+  color: ${({ theme }) => theme.colors.text.subtle};
 
   input {
     position: absolute;

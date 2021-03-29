@@ -71,6 +71,7 @@ export interface ChangingThemes {
       second: string
     }
     focus: string
+    shadow: string
   }
 }
 

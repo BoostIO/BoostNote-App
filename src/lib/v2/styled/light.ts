@@ -45,5 +45,6 @@ export const lightTheme: BaseTheme = {
       },
     },
     focus: 'rgba(71, 170, 255, 0.6)',
+    shadow: '',
   },
 }
