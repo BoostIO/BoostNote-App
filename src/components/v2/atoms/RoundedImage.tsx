@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '../../../lib/v2/styled'
+import cc from 'classcat'
 
 interface RoundedImageProps {
   url?: string
@@ -10,13 +11,21 @@ interface RoundedImageProps {
 const RoundedImage = ({ url, alt, size = 'default' }: RoundedImageProps) => {
   if (url == null) {
     return (
-      <StyledFillerIcon className={`size__${size}`}>
+      <StyledFillerIcon
+        className={cc(['roundedImage', `roundedImage__size--${size}`])}
+      >
         <span className='wrapper'>{alt.substr(0, 2)}</span>
       </StyledFillerIcon>
     )
   }
 
-  return <StyledImg className={`size__${size}`} src={url} alt={alt} />
+  return (
+    <StyledImg
+      className={cc(['roundedImage', `roundedImage__size--${size}`])}
+      src={url}
+      alt={alt}
+    />
+  )
 }
 
 const StyledFillerIcon = styled.div`
@@ -28,12 +37,12 @@ const StyledFillerIcon = styled.div`
   vertical-align: middle;
   border-radius: ${({ theme }) => theme.borders.radius}px;
 
-  &.size__sm {
+  &.roundedImage__size--sm {
     width: 22px;
     height: 22px;
   }
 
-  &.size__default {
+  &.roundedImage__size--default {
     width: 30px;
     height: 30px;
   }

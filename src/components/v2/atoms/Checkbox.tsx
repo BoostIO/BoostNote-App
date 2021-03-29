@@ -20,8 +20,8 @@ const Checkbox: AppComponent<CheckboxProps> = ({
   <Container
     className={cc([
       'checkbox',
-      disabled && 'disabled',
-      checked && 'checked',
+      disabled && 'checkbox__state--disabled',
+      checked && 'checkbox__state--checked',
       className,
     ])}
   >
@@ -56,7 +56,7 @@ const Container = styled.label`
     top: -100px;
   }
 
-  &.disabled {
+  &.checkbox__state--disabled {
     cursor: not-allowed;
   }
 
