@@ -21,6 +21,10 @@ const PromiseWrapper = <
   const [error, setError] = useState<unknown>()
   const [props, setProps] = useState<T | undefined>(undefined)
 
+  useEffectOnce(() => {
+    call().then(() => setFetching(false))
+  })
+
   const call = useCallback(async () => {
     try {
       const data = await api()
@@ -29,10 +33,6 @@ const PromiseWrapper = <
       setError(error)
     }
   }, [api, setProps, setError])
-
-  useEffectOnce(() => {
-    call().then(() => setFetching(false))
-  })
 
   const retry = useCallback(async () => {
     if (fetching) {

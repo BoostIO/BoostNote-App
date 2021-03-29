@@ -15,22 +15,15 @@ interface IconProps {
 const Icon = ({
   path,
   color = 'currentColor',
-  size,
+  size = 22,
   className,
   spin,
 }: IconProps) => (
   <MdiIcon
     path={path}
     style={{
-      ...(size == null
-        ? {
-            width: '1em',
-            height: '1em',
-          }
-        : {
-            width: `${size}px`,
-            height: `${size}px`,
-          }),
+      width: `${size}px`,
+      height: `${size}px`,
     }}
     color={color}
     className={cc(['icon', className])}
