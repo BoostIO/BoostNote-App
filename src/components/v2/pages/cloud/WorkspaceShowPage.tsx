@@ -4,6 +4,7 @@ import {
   getWorkspaceShowPageData,
   WorkspacesShowPageResponseBody,
 } from '../../../../cloud/api/pages/teams/workspaces'
+import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../../cloud/interfaces/pages'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { usePreferences } from '../../../../cloud/lib/stores/preferences'
@@ -14,44 +15,49 @@ const WorkspaceShowPage = ({
   pageWorkspace,
 }: WorkspacesShowPageResponseBody) => {
   const { workspacesMap } = useNav()
+  const { preferences, setPreferences } = usePreferences()
 
   const workspace = useMemo(() => {
     return workspacesMap.get(pageWorkspace.id)
   }, [workspacesMap, pageWorkspace.id])
 
+  const toolbar = useMemo(() => {
+    return mapTopbar(!preferences.docContextIsHidden, () =>
+      setPreferences({
+        docContextIsHidden: !preferences.docContextIsHidden,
+      })
+    )
+  }, [preferences.docContextIsHidden, setPreferences])
+
+  const metadataRows = useMemo(() => {
+    return mapMetadataRows(workspace)
+  }, [workspace])
+
   return (
     <WorkspaceShowPageLayout
-      topbar={BuildTopbar()}
-      metadata={BuildMetadata()}
+      topbar={toolbar}
+      metadata={{ show: !preferences.docContextIsHidden, rows: metadataRows }}
     />
   )
 }
 
-function BuildTopbar() {
-  const { preferences, setPreferences } = usePreferences()
-  const topbarControls = useMemo(() => {
-    const controls: ControlButtonProps[] = []
-    controls.push({
-      icon: preferences.docContextIsHidden ? mdiChevronLeft : mdiChevronRight,
-      onClick: () =>
-        setPreferences({
-          docContextIsHidden: !preferences.docContextIsHidden,
-        }),
-    })
-    return controls
-  }, [preferences.docContextIsHidden, setPreferences])
-
+function mapTopbar(hideMetadata: boolean, toggleHideMetadata: () => void) {
+  const controls: ControlButtonProps[] = []
+  controls.push({
+    icon: hideMetadata ? mdiChevronLeft : mdiChevronRight,
+    onClick: toggleHideMetadata,
+  })
   return {
-    controls: topbarControls,
+    controls,
   }
 }
 
-function BuildMetadata() {
-  const { preferences } = usePreferences()
-  return {
-    show: !preferences.docContextIsHidden,
-    rows: [],
+function mapMetadataRows(workspace?: SerializedWorkspace) {
+  if (workspace == null) {
+    return []
   }
+
+  return []
 }
 
 WorkspaceShowPage.getInitialProps = async (
