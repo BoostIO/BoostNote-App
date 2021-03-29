@@ -261,6 +261,9 @@ const AppLayout = ({
       }
 
       if (isSingleKeyEvent(event, 'escape') && isActiveElementAnInput()) {
+        if (isCodeMirorTextAreaEvent(event)) {
+          return
+        }
         preventKeyboardEventPropagation(event)
         ;(document.activeElement as InputableDomElement).blur()
       }
@@ -681,3 +684,20 @@ const StyledPane = styled.div`
     }
   }
 `
+
+function isCodeMirorTextAreaEvent(event: KeyboardEvent) {
+  const target = event.target as HTMLTextAreaElement
+  if (target == null || target.tagName.toLowerCase() !== 'textarea') {
+    return false
+  }
+  const classNameOfParentParentElement =
+    target.parentElement?.parentElement?.className
+  if (classNameOfParentParentElement == null) {
+    return false
+  }
+  if (!/CodeMirror/.test(classNameOfParentParentElement)) {
+    return false
+  }
+
+  return true
+}
