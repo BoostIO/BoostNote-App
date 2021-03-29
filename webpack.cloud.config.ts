@@ -53,7 +53,7 @@ module.exports = (env, argv) => {
       new webpack.NoEmitOnErrorsPlugin(),
       // do not emit compiled assets that include errors
       new HtmlWebpackPlugin({
-        template: 'index.html',
+        template: 'cloud.html',
       }),
       new ErrorOverlayPlugin(),
       new webpack.DefinePlugin({
