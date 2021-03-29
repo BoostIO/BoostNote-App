@@ -27,49 +27,46 @@ const Topbar: AppComponent<TopbarProps> = ({
   children,
   controls = [],
   navigation,
-}) => {
-  console.log(navigation?.goBack == null)
-  return (
-    <Container className='topbar'>
-      <div className='topbar__content'>
-        <div className='topbar__navigation'>
+}) => (
+  <Container className='topbar'>
+    <div className='topbar__content'>
+      <div className='topbar__navigation'>
+        <Button
+          variant='icon'
+          iconSize={22}
+          iconPath={mdiArrowLeft}
+          disabled={navigation?.goBack == null}
+          onClick={navigation?.goBack}
+        />
+        <Button
+          variant='icon'
+          iconSize={22}
+          size={'sm'}
+          iconPath={mdiArrowRight}
+          disabled={navigation?.goForward == null}
+          onClick={navigation?.goForward}
+        />
+      </div>
+      <div className='topbar__breadcrumbs'></div>
+      {children}
+    </div>
+    {controls.length > 0 && (
+      <div className='topbar__controls'>
+        {controls.map((control, i) => (
           <Button
-            variant='icon'
-            iconSize={22}
-            iconPath={mdiArrowLeft}
-            disabled={navigation?.goBack == null}
-            onClick={navigation?.goBack}
-          />
-          <Button
+            key={`topbar__control__${i}`}
             variant='icon'
             iconSize={22}
             size={'sm'}
-            iconPath={mdiArrowRight}
-            disabled={navigation?.goForward == null}
-            onClick={navigation?.goForward}
+            iconPath={control.icon}
+            disabled={control.disabled}
+            onClick={control.onClick}
           />
-        </div>
-        <div className='topbar__breadcrumbs'></div>
-        {children}
+        ))}
       </div>
-      {controls.length > 0 && (
-        <div className='topbar__controls'>
-          {controls.map((control, i) => (
-            <Button
-              key={`topbar__control__${i}`}
-              variant='icon'
-              iconSize={22}
-              size={'sm'}
-              iconPath={control.icon}
-              disabled={control.disabled}
-              onClick={control.onClick}
-            />
-          ))}
-        </div>
-      )}
-    </Container>
-  )
-}
+    )}
+  </Container>
+)
 
 export default Topbar
 
