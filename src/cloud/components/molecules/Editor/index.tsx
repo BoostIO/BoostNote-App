@@ -111,7 +111,7 @@ const Editor = ({
   const [title, setTitle] = useState(getDocTitle(doc))
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
-  const { query } = useRouter()
+  const { state } = useRouter()
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
@@ -156,7 +156,7 @@ const Editor = ({
     setTitle(getDocTitle(doc))
   }, [doc])
 
-  const docIsNew = !!query.new
+  const docIsNew = !!state.new
   useEffect(() => {
     if (docRef.current !== doc.id) {
       if (docIsNew) {
