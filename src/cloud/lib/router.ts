@@ -19,19 +19,28 @@ const initialLocation = normalizeLocation({
 })
 
 function useRouterStore() {
-  const [location, setLocation] = useState(initialLocation)
+  const [location, setLocation] = useState<{
+    state?: any
+    hash: string
+    search: string
+    pathname: string
+  }>({
+    ...initialLocation,
+    state: {},
+  })
 
   const query = useMemo(() => {
     return parseQuery(location.search.slice(1))
   }, [location.search])
 
-  const push = useCallback((url: Url) => {
+  const push = useCallback((url: Url, state: any = {}) => {
     const parsedUrl = typeof url === 'string' ? parseUrl(url) : url
 
     browserHistory.push({
       pathname: parsedUrl.pathname,
       search: parsedUrl.search,
       hash: parsedUrl.hash,
+      state: state,
     } as LocationDescriptorObject)
   }, [])
 
@@ -52,6 +61,7 @@ function useRouterStore() {
         pathname: blocation.pathname,
         hash: blocation.hash,
         search: blocation.search,
+        state: blocation.state,
       })
     })
   }, [])

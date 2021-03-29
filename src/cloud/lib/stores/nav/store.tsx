@@ -464,10 +464,13 @@ function useNavStore(pageProps: any): NavContext {
       const { doc } = await createDoc(team, body)
       updateDocsMap([doc.id, doc])
 
-      router.push({
-        pathname: `${getTeamURL(team)}${getDocURL(doc)}`,
-        search: 'new=new',
-      })
+      router.push(
+        {
+          pathname: `${getTeamURL(team)}${getDocURL(doc)}`,
+        },
+        { new: true }
+      )
+
       return
     },
     [team, updateDocsMap, router]
