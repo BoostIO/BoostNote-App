@@ -76,6 +76,7 @@ const Button = React.forwardRef<
           className,
           `button__variant__${variant}`,
           size && `button__size__${size}`,
+          disabled && `disabled`,
         ])}
         id={id}
         disabled={disabled}
@@ -127,16 +128,13 @@ const StyledButton = styled.div`
 
   & + * {
     margin-left: 5px;
-    &.block {
-      margin-left: 0;
-    }
   }
 
   & > .button__icon + .button__label {
     margin-left: 4px;
   }
 
-  &:disabled {
+  &.disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
@@ -145,11 +143,14 @@ const StyledButton = styled.div`
     background-color: ${({ theme }) => theme.colors.variants.primary.base};
     color: ${({ theme }) => theme.colors.variants.primary.text};
 
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &:focus:not(:disabled),
-    &.active:not(:disabled) {
-      background-color: ${({ theme }) => theme.colors.variants.primary.darker};
+    &:not(.disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+        background-color: ${({ theme }) =>
+          theme.colors.variants.primary.darker};
+      }
     }
   }
 
@@ -157,23 +158,27 @@ const StyledButton = styled.div`
     background-color: ${({ theme }) => theme.colors.variants.secondary.base};
     color: ${({ theme }) => theme.colors.variants.secondary.text};
 
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &:focus:not(:disabled),
-    &.active:not(:disabled) {
-      background-color: ${({ theme }) =>
-        theme.colors.variants.secondary.darker};
+    &:not(.disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+        background-color: ${({ theme }) =>
+          theme.colors.variants.secondary.darker};
+      }
     }
   }
 
   &.button__variant__danger {
     background-color: ${({ theme }) => theme.colors.variants.danger.base};
     color: ${({ theme }) => theme.colors.variants.danger.text};
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &:focus:not(:disabled),
-    &.active:not(:disabled) {
-      background-color: ${({ theme }) => theme.colors.variants.danger.darker};
+    &:not(.disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+        background-color: ${({ theme }) => theme.colors.variants.danger.darker};
+      }
     }
   }
 
@@ -182,11 +187,14 @@ const StyledButton = styled.div`
     border: 1px solid transparent;
     color: ${({ theme }) => theme.colors.text.subtle};
     padding: 0 3px !important;
-    &:hover:not(:disabled),
-    &:active:not(:disabled),
-    &:focus:not(:disabled),
-    &.active:not(:disabled) {
-      color: ${({ theme }) => theme.colors.text.main};
+
+    &:not(.disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+        color: ${({ theme }) => theme.colors.text.main};
+      }
     }
   }
 
@@ -198,11 +206,6 @@ const StyledButton = styled.div`
   &.button__size__sm {
     height: 24px;
     padding: 0 6px;
-  }
-
-  &.block {
-    display: flex;
-    width: 100%;
   }
 
   &:focus {

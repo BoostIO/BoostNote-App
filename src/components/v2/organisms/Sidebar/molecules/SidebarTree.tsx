@@ -68,13 +68,13 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
           ))}
       </SidebarHeader>
       <SidebarContextList className='sidebar__tree__wrapper'>
-        {tree.map((category) => {
+        {tree.map((category, i) => {
           if (category.hidden) {
             return null
           }
 
           return (
-            <>
+            <React.Fragment key={`sidebar__category__${i}`}>
               <SidebarItem
                 className={cc(['sidebar__category', ,])}
                 id={`category-${category.label}`}
@@ -94,7 +94,7 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
                   <NestedRows rows={category.rows} prefix={category.label} />
                 </div>
               )}
-            </>
+            </React.Fragment>
           )
         })}
       </SidebarContextList>
