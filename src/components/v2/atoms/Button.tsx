@@ -7,9 +7,10 @@ import React, {
 import cc from 'classcat'
 import styled from '../../../lib/v2/styled'
 import Icon, { IconSize } from './Icon'
+import Spinner from '../../atoms/Spinner'
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'icon'
+  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | 'link'
   size?: 'sm' | 'md' | 'lg'
   iconPath?: string
   iconSize?: IconSize
@@ -107,9 +108,24 @@ const Button = React.forwardRef<
   }
 )
 
+export const LoadingButton = ({
+  spinning,
+  ...props
+}: ButtonProps & { spinning?: boolean }) => {
+  if (spinning) {
+    return (
+      <Button {...props} disabled={true}>
+        <Spinner className='button__spinner' />
+      </Button>
+    )
+  }
+
+  return <Button {...props} />
+}
+
 export default Button
 
-const StyledButton = styled.div`
+const StyledButton = styled.button`
   padding: 0 10px;
   border-radius: 2px;
   font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
@@ -119,6 +135,8 @@ const StyledButton = styled.div`
   border-color: transparent;
   border-width: 1px;
   border-style: solid;
+  background: none;
+  color: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -143,6 +161,11 @@ const StyledButton = styled.div`
     background-color: ${({ theme }) => theme.colors.variants.primary.base};
     color: ${({ theme }) => theme.colors.variants.primary.text};
 
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.primary.text};
+      border-right-color: transparent;
+    }
+
     &:not(.button__state--disabled) {
       &:hover,
       &:active,
@@ -154,9 +177,40 @@ const StyledButton = styled.div`
     }
   }
 
+  &.button__variant--link {
+    background: none;
+    color: ${({ theme }) => theme.colors.text.link};
+    padding: 0;
+    border: 0;
+    height: auto !important;
+    display: inline;
+
+    &:focus {
+
+    }
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.text.link};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+      opacity: 0.8;
+    }
+  }
+
   &.button__variant--secondary {
     background-color: ${({ theme }) => theme.colors.variants.secondary.base};
     color: ${({ theme }) => theme.colors.variants.secondary.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.secondary.text};
+      border-right-color: transparent;
+    }
 
     &:not(.button__state--disabled) {
       &:hover,
@@ -172,6 +226,12 @@ const StyledButton = styled.div`
   &.button__variant--danger {
     background-color: ${({ theme }) => theme.colors.variants.danger.base};
     color: ${({ theme }) => theme.colors.variants.danger.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.danger.text};
+      border-right-color: transparent;
+    }
+
     &:not(.button__state--disabled) {
       &:hover,
       &:active,
@@ -209,6 +269,6 @@ const StyledButton = styled.div`
   }
 
   &:focus {
-    box-shadow: 0 0 0 0.2rem ${({ theme }) => theme.colors.focus};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.focus};
   }
 `

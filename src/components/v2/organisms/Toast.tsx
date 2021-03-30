@@ -61,7 +61,25 @@ const Container = styled.div`
     flex-direction: row;
     align-items: flex-start;
 
-    &.toast__item-error .toast__item__status {
+    .toast__item__status {
+      flex: 0 0 auto;
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    .toast__item__content {
+      flex: 1 1 auto;
+    }
+
+    .toast__item__close {
+      flex: 0 0 auto;
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    .toast__item__description {
+      margin: 0;
+    }
+
+    &.toast__item--error .toast__item__status {
       color: ${({ theme }) => theme.colors.variants.danger.base};
     }
 
@@ -127,7 +145,9 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
           <strong className='toast__item__title'>
             {this.props.item.title}
           </strong>
-          <p className='description'>{this.props.item.description}</p>
+          <p className='toast__item__description'>
+            {this.props.item.description}
+          </p>
         </div>
         <Button
           className='toast__item__close'

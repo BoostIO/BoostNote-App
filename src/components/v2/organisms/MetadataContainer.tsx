@@ -3,15 +3,39 @@ import { useEffectOnce } from 'react-use'
 import { focusFirstChildFromElement } from '../../../lib/v2/dom'
 import styled from '../../../lib/v2/styled'
 import { AppComponent } from '../../../lib/v2/types'
+import cc from 'classcat'
+import Icon from '../atoms/Icon'
+import Spinner from '../atoms/Spinner'
+import UpDownList from '../atoms/UpDownList'
 
 interface MetadataContainerProps {
   rows: MetadataContainerRow[]
 }
 
-interface MetadataContainerRow {
+export type MetadataContainerRow = (
+  | {
+      type: 'button'
+      spinning?: boolean
+      disabled?: boolean
+      onClick: () => void
+      label: {
+        text: string
+        icon?: string
+        tooltip?: { label: string; text: React.ReactNode }
+      }
+    }
+  | {
+      type: 'content'
+      direction?: 'row' | 'column'
+      content?: React.ReactNode
+    }
+) & {
   icon?: string
-  label: string
-  direction?: 'row' | 'column'
+  label?: {
+    text: string
+    icon?: string
+    tooltip?: { label: string; text: React.ReactNode }
+  }
   breakAfter?: boolean
 }
 
@@ -27,19 +51,68 @@ const MetadataContainer: AppComponent<MetadataContainerProps> = ({ rows }) => {
   })
 
   return (
-    <Container ref={menuRef} className='metadata'>
-      <div className='metadata__container'>
-        <div className='metadata__scroll'>
-          <div className='metadata__scroll__wrapper'>
-            {rows.map((row, i) => (
-              <React.Fragment key={`metadata__row${i}`}>
-                {row.breakAfter && <div className='metadata__break' />}
-              </React.Fragment>
-            ))}
+    <UpDownList>
+      <Container ref={menuRef} className='metadata'>
+        <div className='metadata__container'>
+          <div className='metadata__scroll'>
+            <div className='metadata__scroll__wrapper'>
+              {rows.map((row, i) => (
+                <React.Fragment key={`metadata__item${i}`}>
+                  {row.type === 'button' ? (
+                    <button
+                      className={cc(['metadata__item', 'metadata__button'])}
+                      onClick={row.onClick}
+                      disabled={row.disabled}
+                      id={`metadata-${i}-${row.label.text}`}
+                    >
+                      {row.spinning ? (
+                        <Spinner />
+                      ) : (
+                        <>
+                          {row.label.icon != null && (
+                            <Icon
+                              path={row.label.icon}
+                              className='metadata__icon'
+                            />
+                          )}
+                          {row.label.text}
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <div
+                      className={cc([
+                        'metadata__item',
+                        `metadata__item--${row.direction || 'row'}`,
+                      ])}
+                    >
+                      {row.label != null && (
+                        <label className='metadata__label'>
+                          {row.icon != null && (
+                            <Icon path={row.icon} className='metadata__icon' />
+                          )}
+                          {row.label.text}
+                          {row.label.tooltip && (
+                            <div className='context__tooltip'>
+                              <div className='context__tooltip__text'>
+                                {row.label.tooltip.text}
+                              </div>
+                              {row.label.tooltip.label}
+                            </div>
+                          )}
+                        </label>
+                      )}
+                      <div className='metadata__content'>{row.content}</div>
+                    </div>
+                  )}
+                  {row.breakAfter && <div className='metadata__break' />}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </UpDownList>
   )
 }
 
@@ -52,6 +125,7 @@ const Container = styled.div`
   border-left: 1px solid transparent;
   background-color: ${({ theme }) => theme.colors.background.second};
   color: ${({ theme }) => theme.colors.text.main};
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
 
   .metadata__container {
     position: relative;
@@ -69,14 +143,32 @@ const Container = styled.div`
     }
   }
 
+  .metadata__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    flex: 0 0 auto;
+  }
+
   .metadata__scroll__wrapper {
     flex: 1 1 auto;
     width: 100%;
     overflow: hidden auto;
   }
 
-  .metadata__row,
-  .metadata__column {
+  .metadata__break {
+    display: block;
+    height: 1px;
+    margin: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
+    background-color: ${({ theme }) =>
+      theme.colors.background.gradients.second};
+  }
+
+  .metadata__content {
+    line-height: inherit;
+    min-height: 30px;
+  }
+
+  .metadata__item,
+  .metadata__item--column {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -86,22 +178,69 @@ const Container = styled.div`
     height: fit-content;
   }
 
-  .metadata__column {
+  .metadata__item--column {
     flex-direction: column;
   }
 
-  .metadata__column + .metadata__break,
-  .metadata__row + .metadata__break {
+  .metadata__item--column + .metadata__break,
+  .metadata__item + .metadata__break {
     margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
-  .metadata__row + .metadata__row,
-  .metadata__break + .metadata__row,
-  .metadata__column + .metadata__column,
-  .metadata__break + .metadata__column {
+  .metadata__item + .metadata__item,
+  .metadata__break + .metadata__item,
+  .metadata__item--column + .metadata__item--column,
+  .metadata__break + .metadata__item--column {
     padding-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
     padding-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  }
+
+  .metadata__label {
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.text.main};
+    width: 120px;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    cursor: inherit;
+  }
+
+  .metadata__button {
+    width: 100%;
+    text-align: left;
+  }
+
+  .metadata__button {
+    display: flex;
+    align-items: center;
+    background: none;
+    outline: none;
+    border: 0;
+    color: ${({ theme }) => theme.colors.text.main};
+    cursor: pointer;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+
+    &:hover {
+      background-color: ${({ theme }) =>
+        theme.colors.background.gradients.second};
+    }
+    &:focus {
+      background-color: ${({ theme }) =>
+        theme.colors.background.gradients.first};
+    }
+
+    &:disabled {
+      color: ${({ theme }) => theme.colors.text.subtle};
+
+      &:hover,
+      &:focus {
+        color: ${({ theme }) => theme.colors.text.subtle} !important;
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+    }
   }
 `
 

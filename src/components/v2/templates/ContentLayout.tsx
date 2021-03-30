@@ -1,19 +1,13 @@
 import React from 'react'
 import styled from '../../../lib/v2/styled'
-import { AppComponent, ControlButtonProps } from '../../../lib/v2/types'
+import { AppComponent } from '../../../lib/v2/types'
 import DoublePane from '../atoms/DoublePane'
 import PageHelmet from '../atoms/PageHelmet'
-import Topbar from '../organisms/Topbar'
+import Topbar, { TopbarProps } from '../organisms/Topbar'
 
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
-  topbar: {
-    controls?: ControlButtonProps[]
-    navigation?: {
-      goBack?: () => void
-      goForward?: () => void
-    }
-  }
+  topbar: TopbarProps
   right?: React.ReactNode
 }
 

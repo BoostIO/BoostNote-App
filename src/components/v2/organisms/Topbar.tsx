@@ -14,13 +14,16 @@ export interface TopbarProps {
 }
 
 interface BreadCrumbs {
-  children: BreadCrumbs[]
-  controls?: { label: string; onClick: () => void }
-  current: boolean
+  label: string
   defaultIcon?: string
   emoji?: string
-  label: string
-  navigateTo?: () => void
+  active?: boolean
+  link: {
+    href?: string
+    navigateTo?: () => void
+  }
+  children: BreadCrumbs[]
+  controls?: { label: string; onClick: () => void }[]
 }
 
 const Topbar: AppComponent<TopbarProps> = ({
@@ -93,7 +96,10 @@ const Container = styled.div`
 
   .topbar__controls,
   .topbar__navigation {
+    display: flex;
     flex: 0 0 auto;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .topbar__separator {
@@ -119,7 +125,7 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
     overflow-x: hidden;
 
-    .bread-crumb-link {
+    .topbar__breadcrumbs__link {
       display: flex;
       align-items: center;
       padding: 2px 4px;

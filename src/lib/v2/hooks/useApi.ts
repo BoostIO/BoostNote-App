@@ -8,7 +8,7 @@ interface UseApiProps<P, R> {
 
 interface UseApiRes<P> {
   sending: boolean
-  submit: (...args: P[]) => void
+  submit: (...args: P[]) => Promise<{ err: boolean; error?: unknown }>
 }
 
 const useApi = <P, R>({ api, cb }: UseApiProps<P, R>) => {
@@ -16,7 +16,8 @@ const useApi = <P, R>({ api, cb }: UseApiProps<P, R>) => {
   const { pushApiErrorMessage } = useToast()
 
   const submit = useCallback(
-    async (args) => {
+    async (...args: P[]) => {
+      const res = { err: false, error: undefined }
       if (sending) {
         return
       }
@@ -28,9 +29,13 @@ const useApi = <P, R>({ api, cb }: UseApiProps<P, R>) => {
           cb(data)
         }
       } catch (error) {
+        res.err = true
+        res.error = error
+        console.error(error)
         pushApiErrorMessage(error)
       }
-      setSending(true)
+      setSending(false)
+      return res
     },
     [sending, api, cb, pushApiErrorMessage]
   )
