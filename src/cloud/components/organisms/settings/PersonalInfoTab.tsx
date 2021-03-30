@@ -42,9 +42,9 @@ const PersonalInfoTab = () => {
   const [iconFile, setIconFile] = useState<File | null>(null)
   const { t } = useTranslation()
   const { emailNotifications, closeSettingsTab } = useSettings()
-  const [currentEmailNotifications, setCurrentEmailNotifications] = useState(
-    emailNotifications
-  )
+  const [currentEmailNotifications, setCurrentEmailNotifications] = useState<
+    UserEmailNotificationType | 'never'
+  >(emailNotifications == null ? 'never' : emailNotifications)
 
   const onChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,12 @@ const PersonalInfoTab = () => {
       }
       if (currentEmailNotifications != emailNotifications) {
         const { settings } = await saveUserSettings({
-          emailNotifications: currentEmailNotifications,
+          notifications: {
+            summary:
+              currentEmailNotifications === 'never'
+                ? undefined
+                : currentEmailNotifications,
+          },
         })
         setPartialGlobalData({ currentUserSettings: settings })
       }
@@ -100,10 +105,16 @@ const PersonalInfoTab = () => {
 
   const selectCurrentEmailNotifications: SelectChangeEventHandler = useCallback(
     (event) => {
-      const value =
-        event.target.value == null
-          ? undefined
-          : (event.target.value as UserEmailNotificationType)
+      let value: UserEmailNotificationType | 'never'
+      switch (event.target.value) {
+        case 'daily':
+        case 'weekly':
+          value = event.target.value
+          break
+        case 'never':
+        default:
+          value = 'never'
+      }
       setCurrentEmailNotifications(value)
     },
     []
@@ -159,10 +170,9 @@ const PersonalInfoTab = () => {
                       Weekly
                     </option>
                     <option
-                      value={undefined}
+                      value='never'
                       selected={currentEmailNotifications == null}
                     >
-                      {' '}
                       Never
                     </option>
                   </SectionSelect>

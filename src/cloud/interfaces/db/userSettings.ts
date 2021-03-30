@@ -7,7 +7,9 @@ export interface SerializableUserSettingsProps {
   id: string
   value: UserSettings
   version: number
-  emailNotifications?: UserEmailNotificationType
+  notifications?: {
+    summary?: UserEmailNotificationType
+  }
 }
 
 export interface SerializedUnserializableUserSettingsProps {
