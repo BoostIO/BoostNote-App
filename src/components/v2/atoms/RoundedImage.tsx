@@ -2,17 +2,27 @@ import React from 'react'
 import styled from '../../../lib/v2/styled'
 import cc from 'classcat'
 
-interface RoundedImageProps {
+export interface RoundedImageProps {
   url?: string
   alt: string
   size?: 'sm' | 'default'
+  className?: string
 }
 
-const RoundedImage = ({ url, alt, size = 'default' }: RoundedImageProps) => {
+const RoundedImage = ({
+  className,
+  url,
+  alt,
+  size = 'default',
+}: RoundedImageProps) => {
   if (url == null) {
     return (
       <StyledFillerIcon
-        className={cc(['roundedImage', `roundedImage__size--${size}`])}
+        className={cc([
+          'rounded__image',
+          `rounded__image__size--${size}`,
+          className,
+        ])}
       >
         <span className='wrapper'>{alt.substr(0, 2)}</span>
       </StyledFillerIcon>
@@ -21,7 +31,7 @@ const RoundedImage = ({ url, alt, size = 'default' }: RoundedImageProps) => {
 
   return (
     <StyledImg
-      className={cc(['roundedImage', `roundedImage__size--${size}`])}
+      className={cc(['rounded__image', `rounded__image__size--${size}`])}
       src={url}
       alt={alt}
     />
@@ -37,12 +47,12 @@ const StyledFillerIcon = styled.div`
   vertical-align: middle;
   border-radius: ${({ theme }) => theme.borders.radius}px;
 
-  &.roundedImage__size--sm {
+  &.rounded__image__size--sm {
     width: 22px;
     height: 22px;
   }
 
-  &.roundedImage__size--default {
+  &.rounded__image__size--default {
     width: 30px;
     height: 30px;
   }
