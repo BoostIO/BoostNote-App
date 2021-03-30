@@ -3,7 +3,9 @@ import { callApi } from '../../lib/client'
 
 export interface SaveUserSettingsRequestBody {
   value?: string
-  emailNotifications?: 'daily' | 'weekly'
+  notifications?: {
+    summary?: 'daily' | 'weekly'
+  }
 }
 
 export interface SaveUserSettingsResponseBody {

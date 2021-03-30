@@ -44,11 +44,12 @@ function useSettingsStore() {
 
   const [settings, setSettings] = useSetState<UserSettings>(initialUserSettings)
 
+  const currentUserId = currentUser?.id
   useEffect(() => {
     if (saveTimer.current != null) {
       clearTimeout(saveTimer.current)
     }
-    if (currentUser == null) {
+    if (currentUserId) {
       return
     }
     saveTimer.current = setTimeout(() => {
@@ -67,7 +68,7 @@ function useSettingsStore() {
           })
         })
     }, 2000)
-  }, [settings, setPartialGlobalData, t, pushMessage, currentUser])
+  }, [settings, setPartialGlobalData, t, pushMessage, currentUserId])
 
   const mergedUserSettings = useMemo(() => {
     return {
@@ -103,11 +104,7 @@ function useSettingsStore() {
   )
 
   const emailNotifications = useMemo(() => {
-    if (currentUserSettings != null) {
-      return currentUserSettings.emailNotifications
-    }
-
-    return 'weekly'
+    return currentUserSettings?.notifications?.summary
   }, [currentUserSettings])
 
   useEffect(() => {
