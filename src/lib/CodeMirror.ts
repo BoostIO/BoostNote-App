@@ -21,7 +21,7 @@ import 'codemirror/keymap/vim'
 import 'codemirror-abap'
 
 // Custom addons
-import {initHyperlink} from './addons/hyperlink'
+import { initHyperlink } from './addons/hyperlink'
 
 const dispatchModeLoad = debounce(() => {
   window.dispatchEvent(new CustomEvent('codemirror-mode-load'))
