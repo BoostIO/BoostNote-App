@@ -8,7 +8,7 @@ import { overflowEllipsis } from '../../../lib/v2/styled/styleFunctions'
 
 interface UserIconListProps {
   className?: string
-  users: (RoundedImageProps & { tooltip?: string; color: string })[]
+  users: (RoundedImageProps & { tooltip?: string; color?: string })[]
   subtleBorders?: boolean
   hideBorders?: boolean
   expand?: boolean

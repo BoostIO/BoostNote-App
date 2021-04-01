@@ -11,6 +11,9 @@ import Button from '../../atoms/Button'
 import UserIconList from '../../molecules/UserIconList'
 import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { AppUser } from '../../../../lib/v2/mappers/users'
+import ShallowTimeline, {
+  ShallowTimelineRow,
+} from '../../organisms/ShallowTimeline'
 
 interface WorkspaceShowPageTemplateProps {
   helmet?: { title?: string; indexing?: boolean }
@@ -19,6 +22,7 @@ interface WorkspaceShowPageTemplateProps {
   workspace: SerializedWorkspace
   workspaceRemoval: { sending: boolean; call: () => void }
   users: Map<string, AppUser & { hasAccess?: boolean; isOwner?: boolean }>
+  timelineRows: ShallowTimelineRow[]
 }
 
 const WorkspaceShowPageTemplate = ({
@@ -27,6 +31,7 @@ const WorkspaceShowPageTemplate = ({
   workspace,
   workspaceRemoval,
   users,
+  timelineRows,
 }: WorkspaceShowPageTemplateProps) => {
   const { openModal } = useModal()
   const metadataRows = useMemo(() => {
@@ -108,11 +113,13 @@ const WorkspaceShowPageTemplate = ({
       type: 'content',
       label: { text: 'Timeline' },
       direction: 'column',
-      content: <div></div>,
+      content: (
+        <ShallowTimeline rows={timelineRows} sourcePlaceholder='this doc' />
+      ),
     })
 
     return rows
-  }, [workspace, workspaceRemoval, openModal, users])
+  }, [workspace, workspaceRemoval, openModal, users, timelineRows])
 
   return (
     <ContentLayout
