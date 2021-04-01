@@ -1,9 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { NoteStorage } from '../../lib/db/types'
-import { flexCenter, border } from '../../lib/styled/styleFunctions'
+import { flexCenter } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
-import Icon from '../atoms/Icon'
-import { mdiSync, mdiExclamationThick } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useFirstUser } from '../../lib/preferences'
 import { useToast } from '../../lib/toast'
@@ -84,38 +82,6 @@ const MainButton = styled.button`
   }
 `
 
-const SyncButton = styled.button`
-  height: 20px;
-  width: 20px;
-  border-radius: 10px;
-  color: ${({ theme }) => theme.secondaryButtonLabelColor};
-  font-size: 13px;
-
-  border: 1px solid red;
-  &:hover,
-  &:active,
-  &.active {
-    cursor: pointer;
-    color: ${({ theme }) => theme.secondaryButtonHoverLabelColor};
-    background-color: ${({ theme }) => theme.primaryColor};
-    ${border}
-  }
-
-  &:disabled,
-  &.disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-  background-color: ${({ theme }) => theme.navBackgroundColor};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  z-index: 1;
-`
-
 interface AppNavigatorStorageItemProps {
   active: boolean
   storage: NoteStorage
@@ -159,8 +125,6 @@ const AppNavigatorStorageItem = ({
   const navigateToStorage = useCallback(() => {
     navigate(storage.id)
   }, [navigate, storage.id])
-
-  const syncing = storage.type !== 'fs' && storage.sync != null
 
   const sync = useCallback(() => {
     if (user == null) {
@@ -233,16 +197,6 @@ const AppNavigatorStorageItem = ({
     [messageBox, prompt, renameStorage, removeStorage, storage, sync, t]
   )
 
-  const [hoverSyncButton, setHoverSyncButton] = useState(false)
-  const handleSyncButtonMouseEnter = useCallback(() => {
-    setHoverSyncButton(true)
-  }, [])
-  const handleSyncButtonMouseLeave = useCallback(() => {
-    setHoverSyncButton(false)
-  }, [])
-
-  const showingAlertIcon = !syncing && !hoverSyncButton
-
   return (
     <Container
       className={active ? 'active' : ''}
@@ -258,20 +212,6 @@ const AppNavigatorStorageItem = ({
       >
         {storage.name.slice(0, 1)}
       </MainButton>
-      {storage.type === 'pouch' && storage.cloudStorage != null && (
-        <SyncButton
-          className={syncing ? 'active' : ''}
-          onClick={sync}
-          onMouseEnter={handleSyncButtonMouseEnter}
-          onMouseLeave={handleSyncButtonMouseLeave}
-        >
-          <Icon
-            spin={syncing}
-            color={showingAlertIcon ? 'red' : undefined}
-            path={showingAlertIcon ? mdiExclamationThick : mdiSync}
-          />
-        </SyncButton>
-      )}
       {tooltipPosition != null && (
         <div className='tooltip' style={tooltipPosition}>
           <span className='tooltip__name'>{storage.name}</span>

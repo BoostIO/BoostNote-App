@@ -201,10 +201,6 @@ const PreferencesModal = () => {
                 tab={get(currentStorage.id) != null ? 'migration' : 'storage'}
                 active={tab === 'storage' || tab === 'migration'}
                 setTab={openTab}
-                alert={
-                  currentStorage.type === 'pouch' &&
-                  currentStorage.cloudStorage != null
-                }
               />
             )}
             <TabButton
