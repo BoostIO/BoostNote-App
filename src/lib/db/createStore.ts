@@ -8,10 +8,8 @@ import {
   PopulatedFolderDoc,
   PopulatedTagDoc,
   Attachment,
-  CloudNoteStorageData,
   TagDoc,
   NoteStorageData,
-  PouchNoteStorage,
   TagDocEditibleProps,
 } from './types'
 import { useState, useCallback, useEffect, useRef } from 'react'
@@ -50,9 +48,6 @@ export interface DbStore {
   ) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => void
-  renameCloudStorage: (id: string, cloudStorageName: string) => void
-  linkStorage: (id: string, cloudStorage: CloudNoteStorageData) => void
-  unlinkStorage: (id: string) => void
   createFolder: (storageName: string, pathname: string) => Promise<void>
   renameFolder: (
     storageName: string,
@@ -117,36 +112,6 @@ export function createDbStoreCreator(
     useEffect(() => {
       enableAutoSyncRef.current = enableAutoSync
     }, [enableAutoSync])
-
-    const unlinkStorage = useCallback(
-      (storageId: string) => {
-        let newStorageMap: ObjectMap<NoteStorage>
-        setStorageMap((prevStorageMap) => {
-          const existingStorage = prevStorageMap[storageId]
-          if (existingStorage == null) {
-            return prevStorageMap
-          }
-          if (existingStorage.type === 'fs') {
-            return prevStorageMap
-          }
-          const newStorage = {
-            ...existingStorage,
-          }
-          if (newStorage.cloudStorage != null) {
-            delete newStorage.cloudStorage
-          }
-
-          newStorageMap = {
-            ...prevStorageMap,
-            [storageId]: newStorage,
-          }
-          return newStorageMap
-        })
-
-        saveStorageDataList(liteStorage, newStorageMap!)
-      },
-      [setStorageMap]
-    )
 
     const createNote = useCallback(
       async (
@@ -272,30 +237,6 @@ export function createDbStoreCreator(
       return storageMap
     }, [setStorageMap])
 
-    const linkStorage = useCallback(
-      (storageId: string, cloudStorage: CloudNoteStorageData) => {
-        let newStorageMap: ObjectMap<NoteStorage>
-        setStorageMap((prevStorageMap) => {
-          const existingStorage = prevStorageMap[storageId]
-          if (existingStorage == null) {
-            return prevStorageMap
-          }
-          const newStorage = {
-            ...existingStorage,
-            cloudStorage,
-          }
-
-          newStorageMap = {
-            ...prevStorageMap,
-            [storageId]: newStorage,
-          }
-          return newStorageMap
-        })
-        saveStorageDataList(liteStorage, newStorageMap!)
-      },
-      [setStorageMap]
-    )
-
     const removeStorage = useCallback(
       async (id: string) => {
         const storage = storageMap[id]
@@ -334,30 +275,6 @@ export function createDbStoreCreator(
         setStorageMap((prevStorageMap) => {
           newStorageMap = produce(prevStorageMap, (draft) => {
             draft[id]!.name = name
-          })
-          return newStorageMap
-        })
-        saveStorageDataList(liteStorage, newStorageMap)
-      },
-      [setStorageMap, storageMap]
-    )
-
-    const renameCloudStorage = useCallback(
-      (id: string, cloudStorageName: string) => {
-        const storageData = storageMap[id]
-        if (storageData == null || storageData.type === 'fs') {
-          return
-        }
-        if (storageData.cloudStorage == null) {
-          return
-        }
-
-        let newStorageMap: ObjectMap<NoteStorage> = {}
-        setStorageMap((prevStorageMap) => {
-          newStorageMap = produce(prevStorageMap, (draft) => {
-            ;(draft[
-              id
-            ]! as PouchNoteStorage).cloudStorage!.name = cloudStorageName
           })
           return newStorageMap
         })
@@ -1195,9 +1112,6 @@ export function createDbStoreCreator(
       createStorage,
       removeStorage,
       renameStorage,
-      renameCloudStorage,
-      linkStorage,
-      unlinkStorage,
       createFolder,
       renameFolder,
       removeFolder,

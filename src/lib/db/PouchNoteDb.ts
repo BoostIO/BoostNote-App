@@ -32,9 +32,6 @@ import {
   isSubPathname,
 } from './utils'
 import { FOLDER_ID_PREFIX, ATTACHMENTS_ID } from './consts'
-import PouchDB from './PouchDB'
-import { buildCloudSyncUrl, User } from '../accounts'
-import { setHeader } from '../http'
 import NoteDb from './NoteDb'
 import { escapeRegExp, getHexatrigesimalString } from '../string'
 
@@ -620,31 +617,6 @@ export default class PouchNoteDb implements NoteDb {
       include_docs: true,
     })
     return allDocsResponse.rows.map((row) => row.doc!)
-  }
-
-  sync(
-    user: User,
-    cloudStorage: { id: number }
-  ): PouchDB.Replication.Sync<any> {
-    const cloudPouch = new PouchDB(
-      buildCloudSyncUrl(cloudStorage.id, user.id),
-      {
-        fetch: (url, opts = {}) => {
-          if (opts.headers == null) {
-            opts.headers = new Headers()
-          }
-
-          opts.headers = setHeader(
-            'Authorization',
-            `Bearer ${user.token}`,
-            opts.headers
-          )
-
-          return PouchDB.fetch(url, opts)
-        },
-      }
-    )
-    return this.pouchDb.sync(cloudPouch, { live: false })
   }
 
   async upsertAttachments(files: File[]): Promise<Attachment[]> {
