@@ -1,6 +1,4 @@
-import React, { useRef } from 'react'
-import { useEffectOnce } from 'react-use'
-import { focusFirstChildFromElement } from '../../../lib/v2/dom'
+import React from 'react'
 import styled from '../../../lib/v2/styled'
 import { AppComponent } from '../../../lib/v2/types'
 import cc from 'classcat'
@@ -39,82 +37,70 @@ export type MetadataContainerRow = (
   breakAfter?: boolean
 }
 
-const MetadataContainer: AppComponent<MetadataContainerProps> = ({ rows }) => {
-  const menuRef = useRef<HTMLDivElement>(null) as React.MutableRefObject<
-    HTMLDivElement
-  >
-
-  useEffectOnce(() => {
-    if (menuRef.current != null) {
-      focusFirstChildFromElement(menuRef.current)
-    }
-  })
-
-  return (
-    <UpDownList>
-      <Container ref={menuRef} className='metadata'>
-        <div className='metadata__container'>
-          <div className='metadata__scroll'>
-            <div className='metadata__scroll__wrapper'>
-              {rows.map((row, i) => (
-                <React.Fragment key={`metadata__item${i}`}>
-                  {row.type === 'button' ? (
-                    <button
-                      className={cc(['metadata__item', 'metadata__button'])}
-                      onClick={row.onClick}
-                      disabled={row.disabled}
-                      id={`metadata-${i}-${row.label.text}`}
-                    >
-                      {row.spinning ? (
-                        <Spinner />
-                      ) : (
-                        <>
-                          {row.label.icon != null && (
-                            <Icon
-                              path={row.label.icon}
-                              className='metadata__icon'
-                            />
-                          )}
-                          {row.label.text}
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <div
-                      className={cc([
-                        'metadata__item',
-                        `metadata__item--${row.direction || 'row'}`,
-                      ])}
-                    >
-                      {row.label != null && (
-                        <label className='metadata__label'>
-                          {row.icon != null && (
-                            <Icon path={row.icon} className='metadata__icon' />
-                          )}
-                          {row.label.text}
-                          {row.label.tooltip && (
-                            <div className='context__tooltip'>
-                              <div className='context__tooltip__text'>
-                                {row.label.tooltip.text}
-                              </div>
-                              {row.label.tooltip.label}
+const MetadataContainer: AppComponent<MetadataContainerProps> = ({ rows }) => (
+  <UpDownList>
+    <Container className='metadata'>
+      <div className='metadata__container'>
+        <div className='metadata__scroll'>
+          <div className='metadata__scroll__wrapper'>
+            {rows.map((row, i) => (
+              <React.Fragment key={`metadata__item${i}`}>
+                {row.type === 'button' ? (
+                  <button
+                    className={cc(['metadata__item', 'metadata__button'])}
+                    onClick={row.onClick}
+                    disabled={row.disabled}
+                    id={`metadata-${i}-${row.label.text}`}
+                  >
+                    {row.spinning ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        {row.label.icon != null && (
+                          <Icon
+                            path={row.label.icon}
+                            className='metadata__icon'
+                          />
+                        )}
+                        {row.label.text}
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div
+                    className={cc([
+                      'metadata__item',
+                      `metadata__item--${row.direction || 'row'}`,
+                    ])}
+                  >
+                    {row.label != null && (
+                      <label className='metadata__label'>
+                        {row.icon != null && (
+                          <Icon path={row.icon} className='metadata__icon' />
+                        )}
+                        {row.label.text}
+                        {row.label.tooltip && (
+                          <div className='context__tooltip'>
+                            <div className='context__tooltip__text'>
+                              {row.label.tooltip.text}
                             </div>
-                          )}
-                        </label>
-                      )}
-                      <div className='metadata__content'>{row.content}</div>
-                    </div>
-                  )}
-                  {row.breakAfter && <div className='metadata__break' />}
-                </React.Fragment>
-              ))}
-            </div>
+                            {row.label.tooltip.label}
+                          </div>
+                        )}
+                      </label>
+                    )}
+                    <div className='metadata__content'>{row.content}</div>
+                  </div>
+                )}
+                {row.breakAfter && <div className='metadata__break' />}
+              </React.Fragment>
+            ))}
           </div>
         </div>
-      </Container>
-    </UpDownList>
-  )
-}
+      </div>
+    </Container>
+  </UpDownList>
+)
 
 const containerWidth = 350
 const Container = styled.div`
