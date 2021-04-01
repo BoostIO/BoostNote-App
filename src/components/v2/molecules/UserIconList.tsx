@@ -6,32 +6,34 @@ import WithTooltip from '../atoms/WithTooltip'
 import Button from '../atoms/Button'
 import { overflowEllipsis } from '../../../lib/v2/styled/styleFunctions'
 
-interface RoundedImageListProps {
+interface UserIconListProps {
   className?: string
-  images: (RoundedImageProps & { tooltip?: string })[]
+  users: (RoundedImageProps & { tooltip?: string; color: string })[]
+  hideBorders?: boolean
   expand?: boolean
   limit?: number
 }
 
 const RoundedImageList = ({
   className,
-  images,
+  users,
   limit,
   expand,
-}: RoundedImageListProps) => {
+  hideBorders,
+}: UserIconListProps) => {
   const [expanded, setExpanded] = useState(false)
   const content = useMemo(() => {
     if (limit == null || expanded) {
       return {
-        rows: images,
+        rows: users,
       }
     }
 
     return {
-      rows: images.slice(0, limit),
-      sliced: images.length - limit,
+      rows: users.slice(0, limit),
+      sliced: users.length - limit,
     }
-  }, [expanded, images, limit])
+  }, [expanded, users, limit])
 
   if (content.rows.length == 0) {
     return null
@@ -42,6 +44,7 @@ const RoundedImageList = ({
       className={cc([
         'rounded__image__list',
         expanded && 'rounded__image__list--expanded',
+        hideBorders && 'rounded__image__list__borders--none',
         className,
       ])}
     >
@@ -53,11 +56,13 @@ const RoundedImageList = ({
               url={row.url}
               alt={row.alt}
               size={row.size}
+              rounded={true}
+              color={row.color}
             />
           </WithTooltip>
         ))}
       </div>
-      {expand && content.rows.length !== images.length ? (
+      {expand && content.rows.length !== users.length ? (
         <Button
           variant='icon'
           size='sm'
@@ -72,6 +77,10 @@ const RoundedImageList = ({
 }
 
 const Container = styled.div`
+  &:not(.rounded__image__list__borders--none) .rounded__image {
+    border: 2px solid transparent;
+  }
+
   &.rounded__image__list,
   .rounded__image__wrapper {
     display: inline-flex;
@@ -89,7 +98,7 @@ const Container = styled.div`
     ${overflowEllipsis}
   }
 
-  .rounded__image {
+  .rounded__image + .rounded__image {
     margin-left: -3px;
   }
 

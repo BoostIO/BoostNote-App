@@ -5,14 +5,18 @@ import cc from 'classcat'
 export interface RoundedImageProps {
   url?: string
   alt: string
+  rounded?: boolean
   size?: 'sm' | 'default'
   className?: string
+  color?: string
 }
 
 const RoundedImage = ({
   className,
   url,
   alt,
+  rounded,
+  color,
   size = 'default',
 }: RoundedImageProps) => {
   if (url == null) {
@@ -21,8 +25,10 @@ const RoundedImage = ({
         className={cc([
           'rounded__image',
           `rounded__image__size--${size}`,
+          rounded && `rounded__image--rounded`,
           className,
         ])}
+        style={{ color: color, borderColor: color }}
       >
         <span className='wrapper'>{alt.substr(0, 2)}</span>
       </StyledFillerIcon>
@@ -31,7 +37,13 @@ const RoundedImage = ({
 
   return (
     <StyledImg
-      className={cc(['rounded__image', `rounded__image__size--${size}`])}
+      className={cc([
+        'rounded__image',
+        `rounded__image__size--${size}`,
+        rounded && `rounded__image--rounded`,
+        className,
+      ])}
+      style={{ color: color, borderColor: color }}
       src={url}
       alt={alt}
     />
@@ -47,16 +59,6 @@ const StyledFillerIcon = styled.div`
   vertical-align: middle;
   border-radius: ${({ theme }) => theme.borders.radius}px;
 
-  &.rounded__image__size--sm {
-    width: 22px;
-    height: 22px;
-  }
-
-  &.rounded__image__size--default {
-    width: 30px;
-    height: 30px;
-  }
-
   .wrapper {
     display: table-cell;
     vertical-align: middle;
@@ -66,12 +68,41 @@ const StyledFillerIcon = styled.div`
     width: 100%;
     height: 100%;
   }
+
+  &.rounded__image--rounded {
+    border-radius: 50%;
+  }
+
+  &.rounded__image__size--sm {
+    width: 22px;
+    height: 22px;
+  }
+
+  &.rounded__image__size--default {
+    width: 30px;
+    height: 30px;
+  }
 `
 
 const StyledImg = styled.img`
   object-fit: cover;
   width: 22px;
   height: 22px;
+  border-radius: ${({ theme }) => theme.borders.radius}px;
+
+  &.rounded__image--rounded {
+    border-radius: 50%;
+  }
+
+  &.rounded__image__size--sm {
+    width: 22px;
+    height: 22px;
+  }
+
+  &.rounded__image__size--default {
+    width: 30px;
+    height: 30px;
+  }
 `
 
 export default RoundedImage

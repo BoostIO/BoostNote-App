@@ -29,6 +29,12 @@ function useModalStore(): ModalsContext {
     setModals([])
   }, [])
 
+  const closeModal = useCallback((index: number, collapse?: boolean) => {
+    setModals((modals) =>
+      collapse ? modals.slice(0, index - 1) : modals.splice(index, 1)
+    )
+  }, [])
+
   const closeLastModal = useCallback(() => {
     setModals((prev) => {
       const arr = prev.slice()
@@ -39,6 +45,7 @@ function useModalStore(): ModalsContext {
 
   return {
     modals,
+    closeModal,
     closeAllModals,
     closeLastModal,
     openModal,
@@ -46,6 +53,6 @@ function useModalStore(): ModalsContext {
 }
 
 export const {
-  StoreProvider: ModalProvider,
+  StoreProvider: V2ModalProvider,
   useStore: useModal,
 } = createStoreContext(useModalStore, 'modal')

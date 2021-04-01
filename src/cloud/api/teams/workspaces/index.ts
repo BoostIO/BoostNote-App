@@ -47,7 +47,7 @@ export interface UpdateWorkspaceResponseBody {
 }
 
 export async function updateWorkspace(
-  team: SerializedTeam,
+  team: { id: string },
   workspaceId: string,
   body: UpdateWorkspaceRequestBody
 ) {
@@ -66,7 +66,7 @@ export interface DestroyWorkspaceResponseBody {
 }
 
 export async function destroyWorkspace(
-  team: SerializedTeam,
+  team: { id: string },
   workspace: SerializedWorkspace,
   destroyContent = false
 ) {

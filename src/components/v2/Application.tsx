@@ -22,7 +22,6 @@ import {
 import ImportModal from '../../cloud/components/organisms/Modal/contents/Import/ImportModal'
 import { Url, useRouter } from '../../cloud/lib/router'
 import { useGlobalData } from '../../cloud/lib/stores/globalData'
-import { ModalsOptions, useModal } from '../../cloud/lib/stores/modal'
 import { usePage } from '../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../cloud/lib/stores/preferences'
 import { getHexFromUUID } from '../../cloud/lib/utils/string'
@@ -52,7 +51,6 @@ import {
   MenuTypes,
   useContextMenu,
 } from '../../lib/v2/stores/contextMenu'
-import Modal from '../../cloud/components/organisms/Modal'
 import ContextMenu from '../../components/v2/molecules/ContextMenu'
 import Dialog from '../../cloud/components/molecules/Dialog/Dialog'
 import Checkbox from './atoms/Checkbox'
@@ -89,6 +87,9 @@ import {
 } from '../../cloud/components/atoms/Link/TagLink'
 import Toast from './organisms/Toast'
 import EmojiPicker from './molecules/EmojiPicker'
+import { ModalOpeningOptions, useModal } from '../../lib/v2/stores/modal'
+import ModalV1 from '../../cloud/components/organisms/Modal'
+import Modal from './organisms/Modal'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -194,6 +195,7 @@ const Application: React.FC<{}> = ({ children }) => {
 
   return (
     <>
+      <ModalV1 />
       <Modal />
       <Toast />
       <ContextMenu />
@@ -490,7 +492,7 @@ function mapTreeControls(
 
 function mapToolbarRows(
   openState: (sidebarState: SidebarState) => void,
-  openModal: (cmp: JSX.Element, options?: Partial<ModalsOptions>) => void,
+  openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   sidebarState?: SidebarState,
   team?: SerializedTeam
 ) {
@@ -531,10 +533,7 @@ function mapToolbarRows(
     tooltip: 'Import',
     icon: mdiDownload,
     position: 'bottom',
-    onClick: () =>
-      openModal(<ImportModal />, {
-        classNames: 'largeW',
-      }),
+    onClick: () => openModal(<ImportModal />),
   })
   rows.push({
     tooltip: 'Members',

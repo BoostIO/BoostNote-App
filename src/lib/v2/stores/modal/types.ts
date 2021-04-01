@@ -13,6 +13,7 @@ export interface ModalOpeningOptions {
 export interface ModalsContext {
   modals: ModalElement[]
   openModal: (modalContent: JSX.Element, options?: ModalOpeningOptions) => void
+  closeModal: (index: number, collapse?: boolean) => void
   closeAllModals: () => void
   closeLastModal: () => void
 }
