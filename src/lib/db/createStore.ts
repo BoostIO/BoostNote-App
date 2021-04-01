@@ -12,7 +12,7 @@ import {
   NoteStorageData,
   TagDocEditibleProps,
 } from './types'
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import ow from 'ow'
 import { schema, isValid } from '../predicates'
 import PouchNoteDb from './PouchNoteDb'
@@ -32,7 +32,6 @@ import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
 import { useToast } from '../toast'
-import { usePreferences } from '../preferences'
 import { useRefState } from '../hooks'
 import FSNoteDb from './FSNoteDb'
 
@@ -106,12 +105,6 @@ export function createDbStoreCreator(
       ObjectMap<NoteStorage>
     >({})
     const { pushMessage } = useToast()
-    const { preferences } = usePreferences()
-    const enableAutoSync = preferences['general.enableAutoSync']
-    const enableAutoSyncRef = useRef(enableAutoSync)
-    useEffect(() => {
-      enableAutoSyncRef.current = enableAutoSync
-    }, [enableAutoSync])
 
     const createNote = useCallback(
       async (

@@ -43,7 +43,6 @@ export interface Preferences {
   'general.noteSorting': NoteSortingOptions
   'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
-  'general.enableAutoSync': boolean
   'general.showSubfolderContents': boolean
 
   // Cloud Workspace
@@ -93,7 +92,6 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
-  'general.enableAutoSync': true,
   'general.noteListView': 'default',
   'general.showSubfolderContents': true,
 

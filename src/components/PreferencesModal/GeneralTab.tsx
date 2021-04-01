@@ -55,15 +55,6 @@ const GeneralTab = () => {
     [setPreferences]
   )
 
-  const toggleEnableAutoSync: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      setPreferences({
-        'general.enableAutoSync': event.target.checked,
-      })
-    },
-    [setPreferences]
-  )
-
   const toggleShowSubfolderContents: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
       setPreferences({
@@ -137,19 +128,6 @@ const GeneralTab = () => {
             <option value='default'>{t('preferences.notesViewDefault')}</option>
             <option value='compact'>{t('preferences.notesViewCompact')}</option>
           </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.autoSync')}</SectionHeader>
-        <SectionControl>
-          <FormCheckItem
-            id='checkbox-enable-auto-sync'
-            type='checkbox'
-            checked={preferences['general.enableAutoSync']}
-            onChange={toggleEnableAutoSync}
-          >
-            {t('preferences.autoSync')}
-          </FormCheckItem>
         </SectionControl>
       </Section>
       <Section>
