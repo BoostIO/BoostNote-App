@@ -15,7 +15,6 @@ import {
   FormLabelGroupContent,
   FormControlGroup,
 } from '../atoms/form'
-import LinkCloudStorageForm from '../organisms/LinkCloudStorageForm'
 import ImportLegacyNotesForm from '../organisms/ImportLegacyNotesForm'
 import ConvertPouchStorageForm from '../organisms/ConvertPouchStorageForm'
 import { appIsElectron, openNew } from '../../lib/platform'
@@ -73,43 +72,8 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
 
   return (
     <div>
-      {storage.type === 'pouch' && storage.cloudStorage != null && (
-        <Alert variant='danger'>
-          <h1 style={{ marginTop: 0 }}>⚠️ Action Required!</h1>
-          <p>
-            We have renewed our cloud storage solution and decided{' '}
-            <strong>
-              to deprecate the legacy cloud storage on March 31st.{' '}
-            </strong>
-            Please migrate your data to the new cloud space and{' '}
-            <strong>get a 3 months free coupon</strong>.(Monthly fee: $3) You
-            can also convert this storage into a file system based local space.
-          </p>
-          <p>
-            Please see{' '}
-            <a
-              href={
-                'https://intercom.help/boostnote-for-teams/en/articles/5018959-deprecation-notice-of-the-legacy-cloud-storage'
-              }
-              onClick={(event) => {
-                event.preventDefault()
-                openNew(
-                  'https://intercom.help/boostnote-for-teams/en/articles/5018959-deprecation-notice-of-the-legacy-cloud-storage'
-                )
-              }}
-            >
-              the announcement
-            </a>
-            .
-          </p>
-        </Alert>
-      )}
       <h2>Space Settings</h2>
       {storage.type === 'fs' && <p>Location : {storage.location}</p>}
-
-      {storage.type === 'pouch' && storage.cloudStorage == null && (
-        <LinkCloudStorageForm storage={storage} />
-      )}
 
       <FormLabelGroup>
         <FormLabelGroupLabel>Space Name</FormLabelGroupLabel>
