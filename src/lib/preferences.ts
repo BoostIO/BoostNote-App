@@ -4,7 +4,6 @@ import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
-import { User } from './accounts'
 import { NoteSortingOptions } from './sort'
 import { setTrafficLightPosition } from './electronOnly'
 import { osName } from './platform'
@@ -38,7 +37,6 @@ export type EditorControlModeOptions = '2-toggles' | '3-buttons'
 
 export interface Preferences {
   // General
-  'general.accounts': User[]
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.showAppNavigator': boolean
@@ -90,7 +88,6 @@ const initialPreferences = loadPreferences()
 
 const basePreferences: Preferences = {
   // General
-  'general.accounts': [],
   'general.showAppNavigator': true,
   'general.language': 'en-US',
   'general.theme': 'dark',
