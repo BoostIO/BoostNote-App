@@ -281,10 +281,6 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <br />
           We hope you enjoy using it!
         </p>
-        <p>
-          Please check your email to receive your coupon code and learn how to
-          redeem it.
-        </p>
         {migrationState.summary != null ? (
           <>
             <p className='summary'>
@@ -302,7 +298,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
                   &middot; {failedNoteJobs.length}{' '}
                   {plur('document', failedNoteJobs.length)} could not be
                   imported. Please open the documents separately to transfer
-                  your data manually ( export, copy and paste ..). Sorry for the
+                  your data manually (export, copy and paste ...). Sorry for the
                   troubles.
                 </p>
                 <Alert>
