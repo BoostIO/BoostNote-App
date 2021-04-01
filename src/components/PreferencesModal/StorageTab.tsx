@@ -114,7 +114,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           </li>
           <li>
             Some features are limited based on your pricing plan. Please try Pro
-            trial to access all of them for 2 weeks for free. Check our{' '}
+            trial to access all of them for one week for free. Check our{' '}
             <a
               onClick={(event) => {
                 event.preventDefault()
