@@ -64,7 +64,7 @@ const AppContainer = styled.div`
 `
 
 const App = () => {
-  const { initialize, queueSyncingAllStorage, storageMap } = useDb()
+  const { initialize, storageMap } = useDb()
   const { push, pathname } = useRouter()
   const [initialized, setInitialized] = useState(false)
   const { setGeneralStatus, generalStatus } = useGeneralStatus()
@@ -165,9 +165,6 @@ const App = () => {
     initialize()
       .then(async (storageMap) => {
         const localSpaces = values(storageMap)
-        if (localSpaces.length > 0) {
-          queueSyncingAllStorage(0)
-        }
 
         const globalData = await fetchDesktopGlobalDataOfCloud().catch(
           (error) => {

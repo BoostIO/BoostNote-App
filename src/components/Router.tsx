@@ -147,7 +147,7 @@ function useContent(
   return (
     <NotFoundPageContainer
       onContextMenu={
-        preferences['general.accounts.general.showAppNavigator']
+        preferences['general.showAppNavigator']
           ? () => {
               openContextMenu({
                 menuItems: [

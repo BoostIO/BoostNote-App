@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import Analytics from '@aws-amplify/analytics'
 import Auth from '@aws-amplify/auth'
-import { usePreferences, useFirstUser } from './preferences'
+import { usePreferences } from './preferences'
 import { useEffectOnce } from 'react-use'
 import { osName, appIsElectron } from './platform'
 import { createStoreContext } from './context'
@@ -36,15 +36,10 @@ interface AnalyticsStore {
 function useAnalyticsStore(): AnalyticsStore {
   const { preferences } = usePreferences()
   const analyticsEnabled = preferences['general.enableAnalytics']
-  const user = useFirstUser()
 
   useEffectOnce(() => {
     reportViaPinpoint('init')
   })
-
-  const userId = useMemo(() => {
-    return user != null ? user.id.toString() : null
-  }, [user])
 
   useEffect(() => {
     const endpointConfig: any = {
@@ -54,11 +49,8 @@ function useAnalyticsStore(): AnalyticsStore {
       },
     }
 
-    if (userId != null) {
-      endpointConfig.userId = userId
-    }
     Analytics.updateEndpoint(endpointConfig)
-  }, [userId])
+  }, [])
 
   const report = useCallback(
     (name: string, attributes?: any) => {

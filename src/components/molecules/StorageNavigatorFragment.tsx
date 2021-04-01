@@ -9,14 +9,12 @@ import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useDb } from '../../lib/db'
 import { useRouter } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
-import { useToast } from '../../lib/toast'
-import { useFirstUser, usePreferences } from '../../lib/preferences'
+import { usePreferences } from '../../lib/preferences'
 import NavigatorItem from '../atoms/NavigatorItem'
 import { NoteStorage } from '../../lib/db/types'
 import {
   mdiTrashCanOutline,
   mdiPaperclip,
-  mdiSync,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
 } from '@mdi/js'
@@ -49,16 +47,13 @@ const StorageNavigatorFragment = ({
     createNote,
     createFolder,
     renameFolder,
-    syncStorage,
     bookmarkNote,
     unbookmarkNote,
     trashNote,
   } = useDb()
   const { push } = useRouter()
   const { t } = useTranslation()
-  const { pushMessage } = useToast()
   const routeParams = useRouteParams()
-  const user = useFirstUser()
   const { report } = useAnalytics()
   const { preferences } = usePreferences()
   const storageId = storage.id
@@ -148,17 +143,6 @@ const StorageNavigatorFragment = ({
     })
   }
 
-  const sync = useCallback(() => {
-    if (user == null) {
-      pushMessage({
-        title: 'No User Error',
-        description: 'Please login first to sync the storage.',
-      })
-      return
-    }
-    syncStorage(storage.id)
-  }, [user, storage.id, pushMessage, syncStorage])
-
   const generalAppMode = preferences['general.appMode']
 
   const rootFolderPathname = `/app/storages/${storage.id}/notes`
@@ -194,22 +178,9 @@ const StorageNavigatorFragment = ({
         },
       ]
 
-      if (storage.type !== 'fs' && storage.cloudStorage != null) {
-        menuItems.unshift(
-          {
-            type: 'separator',
-          },
-          {
-            type: 'normal',
-            label: 'Sync Storage',
-            click: sync,
-          }
-        )
-      }
-
       openContextMenu({ menuItems })
     },
-    [storage, createNewNoteInRootFolder, createNewFolderInRootFolder, sync, t]
+    [createNewNoteInRootFolder, createNewFolderInRootFolder, t]
   )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
@@ -221,7 +192,6 @@ const StorageNavigatorFragment = ({
   )
   const pathname = usePathnameWithoutNoteId()
 
-  const syncing = storage.type !== 'fs' && storage.sync != null
   const rootIsActive =
     `/app/storages/${storage.id}/notes` === pathname &&
     routeParams.name === 'storages.notes' &&
@@ -246,15 +216,6 @@ const StorageNavigatorFragment = ({
               iconPath={mdiFolderMultiplePlusOutline}
               title='New Folder'
             />
-
-            {storage.type !== 'fs' && storage.cloudStorage != null && (
-              <NavigatorButton
-                active={syncing}
-                onClick={sync}
-                iconPath={mdiSync}
-                spin={syncing}
-              />
-            )}
           </>
         }
       />

@@ -3,8 +3,6 @@ import { NoteStorage } from '../../lib/db/types'
 import { flexCenter } from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { useDb } from '../../lib/db'
-import { useFirstUser } from '../../lib/preferences'
-import { useToast } from '../../lib/toast'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import { MenuItemConstructorOptions } from 'electron'
@@ -98,9 +96,7 @@ const AppNavigatorStorageItem = ({
   storage,
   index,
 }: AppNavigatorStorageItemProps) => {
-  const { syncStorage, renameStorage, removeStorage } = useDb()
-  const user = useFirstUser()
-  const { pushMessage } = useToast()
+  const { renameStorage, removeStorage } = useDb()
   const { prompt, messageBox } = useDialog()
   const { t } = useTranslation()
   const { navigate } = useStorageRouter()
@@ -125,17 +121,6 @@ const AppNavigatorStorageItem = ({
   const navigateToStorage = useCallback(() => {
     navigate(storage.id)
   }, [navigate, storage.id])
-
-  const sync = useCallback(() => {
-    if (user == null) {
-      pushMessage({
-        title: 'No User Error',
-        description: 'Please login first to sync the storage.',
-      })
-      return
-    }
-    syncStorage(storage.id)
-  }, [user, pushMessage, syncStorage, storage.id])
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -184,17 +169,9 @@ const AppNavigatorStorageItem = ({
         },
       ]
 
-      if (storage.type !== 'fs' && storage.cloudStorage != null) {
-        menuItems.unshift({
-          type: 'normal',
-          label: 'Sync Storage',
-          click: sync,
-        })
-      }
-
       openContextMenu({ menuItems })
     },
-    [messageBox, prompt, renameStorage, removeStorage, storage, sync, t]
+    [messageBox, prompt, renameStorage, removeStorage, storage, t]
   )
 
   return (
