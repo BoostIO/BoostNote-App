@@ -9,6 +9,7 @@ import { overflowEllipsis } from '../../../lib/v2/styled/styleFunctions'
 interface UserIconListProps {
   className?: string
   users: (RoundedImageProps & { tooltip?: string; color: string })[]
+  subtleBorders?: boolean
   hideBorders?: boolean
   expand?: boolean
   limit?: number
@@ -20,6 +21,7 @@ const RoundedImageList = ({
   limit,
   expand,
   hideBorders,
+  subtleBorders,
 }: UserIconListProps) => {
   const [expanded, setExpanded] = useState(false)
   const content = useMemo(() => {
@@ -45,6 +47,7 @@ const RoundedImageList = ({
         'rounded__image__list',
         expanded && 'rounded__image__list--expanded',
         hideBorders && 'rounded__image__list__borders--none',
+        subtleBorders && 'rounded__image__list__borders--subtle',
         className,
       ])}
     >
@@ -79,6 +82,10 @@ const RoundedImageList = ({
 const Container = styled.div`
   &:not(.rounded__image__list__borders--none) .rounded__image {
     border: 2px solid transparent;
+  }
+
+  &.rounded__image__list__borders--subtle .rounded__image {
+    border-color: ${({ theme }) => theme.colors.border.second} !important;
   }
 
   &.rounded__image__list,
