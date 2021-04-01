@@ -29,12 +29,9 @@ export const getAllFocusableChildrenOfElement = (element: Element) => {
   const focusableElements = element.querySelectorAll(
     'a[href], area[href], input, select, textarea, button, [tabindex="0"]'
   )
-  console.log(focusableElements)
-  const filtered = Array.from(focusableElements).filter(
+  return Array.from(focusableElements).filter(
     (elem) => elem.id !== '' && elem['tabIndex'] !== -1 && !elem['disabled']
   ) as FocusableDomElement[]
-
-  return filtered
 }
 
 export const getFirstFocusableChildOfElement = (element: Element) => {
