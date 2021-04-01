@@ -50,7 +50,7 @@ const Button = React.forwardRef<
       iconSize,
       disabled,
       className,
-      tabIndex,
+      tabIndex = 1,
       id,
       onClick,
       onMouseUp,
@@ -185,10 +185,6 @@ const StyledButton = styled.button`
     height: auto !important;
     display: inline;
 
-    &:focus {
-
-    }
-
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.text.link};
       border-right-color: transparent;
@@ -199,7 +195,8 @@ const StyledButton = styled.button`
       &:active,
       &:focus,
       &.active {
-      opacity: 0.8;
+        opacity: 0.8;
+      }
     }
   }
 
@@ -247,6 +244,10 @@ const StyledButton = styled.button`
     border: 1px solid transparent;
     color: ${({ theme }) => theme.colors.text.subtle};
     padding: 0 3px !important;
+
+    &:focus {
+      box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.focus};
+    }
 
     &:not(.button__state--disabled) {
       &:hover,

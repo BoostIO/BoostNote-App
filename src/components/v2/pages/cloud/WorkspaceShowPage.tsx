@@ -12,15 +12,27 @@ import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../../../cloud/lib/stores/preferences'
 import { useWorkspaceDelete } from '../../../../lib/v2/hooks/cloud/workspaces'
 import { mapTopbar } from '../../../../lib/v2/mappers/topbar'
-import { mapUsersWithAccess } from '../../../../lib/v2/mappers/users'
+import {
+  mapUsers,
+  mapUsersWithAccess,
+  AppUser,
+} from '../../../../lib/v2/mappers/users'
 import WorkspaceShowPageTemplate from '../../templates/cloud/WorkspaceShowPageTemplate'
 import ErrorLayout from '../../templates/ErrorLayout'
 import { prop } from 'ramda'
+import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
+import { compareDateString } from '../../../../lib/v2/date'
+import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
+import { Url, useRouter } from '../../../../cloud/lib/router'
+import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
+import { RoundedImageProps } from '../../atoms/RoundedImage'
+import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
 
 const WorkspaceShowPage = ({
   pageWorkspace,
 }: WorkspacesShowPageResponseBody) => {
   const { workspacesMap } = useNav()
+  const { team } = usePage()
   const {
     globalData: { currentUser },
   } = useGlobalData()
@@ -33,22 +45,30 @@ const WorkspaceShowPage = ({
     return <ErrorLayout message={'You need to be connected'} />
   }
 
+  if (team == null) {
+    return <ErrorLayout message={'Team has been deleted'} />
+  }
+
   if (workspace == null) {
     return <ErrorLayout message={'Workspace has been removed'} />
   }
 
-  return <Page workspace={workspace} currentUser={currentUser} />
+  return <Page workspace={workspace} currentUser={currentUser} team={team} />
 }
 
 const Page = ({
   workspace,
   currentUser,
+  team,
 }: {
   workspace: SerializedWorkspace
   currentUser: SerializedUser
+  team: SerializedTeam
 }) => {
   const { preferences, setPreferences } = usePreferences()
   const { permissions = [] } = usePage()
+  const { docsMap } = useNav()
+  const { push } = useRouter()
 
   const toolbar = useMemo(() => {
     return mapTopbar(!preferences.docContextIsHidden, () =>
@@ -69,6 +89,17 @@ const Page = ({
     )
   }, [permissions, currentUser, workspace.ownerId, workspace.permissions])
 
+  const timelineRows = useMemo(() => {
+    return mapShallowTimelineRows(
+      mapUsers(permissions),
+      [...docsMap.values()].filter(
+        (doc) => doc.workspaceId === workspace.id && doc.parentFolderId == null
+      ),
+      push,
+      team
+    )
+  }, [permissions, docsMap, workspace.id, push, team])
+
   const workspaceRemoval = useWorkspaceDelete(workspace)
 
   return (
@@ -78,8 +109,55 @@ const Page = ({
       workspaceRemoval={workspaceRemoval}
       workspace={workspace}
       users={users}
+      timelineRows={timelineRows}
     />
   )
+}
+
+function mapShallowTimelineRows(
+  users: Map<string, AppUser>,
+  docs: SerializedDoc[],
+  push: (url: Url) => void,
+  team: SerializedTeam,
+  limit = 5
+) {
+  if (docs.length === 0) {
+    return []
+  }
+
+  return docs
+    .sort((a, b) =>
+      compareDateString(
+        a.head?.created || a.updatedAt,
+        b.head?.created || b.updatedAt,
+        'DESC'
+      )
+    )
+    .slice(0, limit)
+    .map((doc) => {
+      const href = getDocLinkHref(doc, team, 'index')
+      const creators = (doc.head?.creators || []).reduce((acc, creator) => {
+        const user = users.get(creator.id)
+        if (user != null) {
+          acc.push({
+            url: user.iconUrl,
+            alt: user.name,
+            color: user.color,
+          })
+        }
+        return acc
+      }, [] as RoundedImageProps[])
+
+      return {
+        date: doc.head?.created || doc.updatedAt,
+        source: {
+          label: getDocTitle(doc, 'a doc'),
+          href,
+          onClick: () => push(href),
+        },
+        users: creators,
+      }
+    })
 }
 
 WorkspaceShowPage.getInitialProps = async (

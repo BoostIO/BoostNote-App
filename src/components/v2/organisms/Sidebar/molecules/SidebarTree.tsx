@@ -77,7 +77,7 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
           return (
             <React.Fragment key={`sidebar__category__${i}`}>
               <SidebarItem
-                className={cc(['sidebar__category', ,])}
+                className={cc(['sidebar__category'])}
                 id={`category-${category.label}`}
                 label={category.label}
                 labelClick={category.folding?.toggle}
@@ -128,7 +128,7 @@ const NestedRows = ({
               defaultIcon={child.defaultIcon}
             />
             {!child.folded && (child.rows || []).length > 0 && (
-              <NestedRows rows={child.rows || []} />
+              <NestedRows rows={child.rows || []} prefix={prefix} />
             )}
           </div>
         )

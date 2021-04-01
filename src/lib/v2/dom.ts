@@ -25,24 +25,27 @@ export const isActiveElementAnInput = () => {
   return false
 }
 
-export const getFirstFocusableChildOfElement = (element: Element) => {
+export const getAllFocusableChildrenOfElement = (element: Element) => {
   const focusableElements = element.querySelectorAll(
-    'a[href]:not([tabindex="-1"]), area[href], input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([tabindex="-1"]), [tabindex="0"]'
+    'a[href], area[href], input, select, textarea, button, [tabindex="0"]'
   )
+  console.log(focusableElements)
+  const filtered = Array.from(focusableElements).filter(
+    (elem) => elem.id !== '' && elem['tabIndex'] !== -1 && !elem['disabled']
+  ) as FocusableDomElement[]
+
+  return filtered
+}
+
+export const getFirstFocusableChildOfElement = (element: Element) => {
+  const focusableElements = getAllFocusableChildrenOfElement(element)
   return focusableElements.length > 0
     ? (focusableElements[0] as FocusableDomElement)
     : null
 }
 
-export const getAllFocusableChildrenOfElement = (element: Element) => {
-  const focusableElements = element.querySelectorAll(
-    'a[href]:not([tabindex="-1"]), area[href], input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([tabindex="-1"]), [tabindex="0"]'
-  )
-  return Array.from(focusableElements) as FocusableDomElement[]
-}
-
 export const getFirstUnindexedOfElement = (element: Element) => {
-  const focusableElements = element.querySelectorAll('[tabindex="-1"]')
+  const focusableElements = getAllFocusableChildrenOfElement(element)
   return focusableElements.length > 0
     ? (focusableElements[0] as FocusableDomElement)
     : null

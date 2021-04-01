@@ -83,6 +83,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
           onClick={labelClick}
           href={labelHref}
           id={`tree-${id}`}
+          tabIndex={1}
         >
           {emoji != null ? (
             <Emoji emoji={emoji} set='apple' size={16} />
@@ -144,6 +145,7 @@ const Container = styled.div<{ depth: number }>`
   .sidebar__tree__item__icon {
     flex: 0 0 auto;
     padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   &:not(.sidebar__category) {
