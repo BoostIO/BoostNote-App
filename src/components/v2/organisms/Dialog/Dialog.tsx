@@ -88,7 +88,7 @@ const Container = styled.div`
   }
 
   .dialog__title {
-    margin: 0 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin: 0 0 ${({ theme }) => theme.sizes.spaces.sm}px;
     padding: 0;
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     flex: 0 0 auto;
@@ -97,7 +97,7 @@ const Container = styled.div`
   .dialog__message {
     margin: 0;
     padding: 0;
-    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
     flex: 0 0 auto;
   }
