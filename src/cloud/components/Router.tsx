@@ -63,6 +63,7 @@ import { V2EmojiProvider } from '../../lib/v2/stores/emoji'
 import { V2WindowProvider } from '../../lib/v2/stores/window'
 import { V2ContextMenuProvider } from '../../lib/v2/stores/contextMenu'
 import { V2ModalProvider } from '../../lib/v2/stores/modal'
+import { V2DialogProvider } from '../../lib/v2/stores/dialog'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -84,13 +85,14 @@ const V2CombinedProvider = combineProviders(
   V2WindowProvider,
   V2ContextMenuProvider,
   V2ModalProvider,
+  V2DialogProvider,
   ModalProvider,
   SidebarCollapseProvider,
   OnboardingProvider,
   PreferencesProvider,
   SettingsProvider,
-  DialogProvider,
   SearchProvider,
+  DialogProvider,
   ExternalEntitiesProvider
 )
 
