@@ -4,9 +4,8 @@ import {
   DestroyWorkspaceResponseBody,
 } from '../../../../cloud/api/teams/workspaces'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
-import { DialogIconTypes } from '../../../../cloud/lib/stores/dialog'
 import { useNav } from '../../../../cloud/lib/stores/nav'
-import { useDialog } from '../../../../cloud/lib/stores/dialog'
+import { useDialog } from '../../stores/dialog'
 import { useToast } from '../../stores/toast'
 import { getMapFromEntityArray } from '../../utils/array'
 import useApi from '../useApi'
@@ -71,20 +70,15 @@ export function useWorkspaceDelete(workspace: SerializedWorkspace) {
       messageBox({
         title: `Delete the workspace?`,
         message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
-        iconType: DialogIconTypes.Warning,
-        buttons: ['Destroy All', 'Cancel'],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              await submit()
-              return
-            case 1:
-            default:
-              return
-          }
-        },
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          { variant: 'danger', label: 'Destroy All', onClick: submit },
+        ],
       })
     }, [messageBox, submit, workspace.default]),
   }

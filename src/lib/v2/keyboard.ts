@@ -46,6 +46,35 @@ export const useUpDownNavigationListener = (
   useGlobalKeyDownHandler(handler)
 }
 
+export const useLeftToRightNavigationListener = (
+  listRef: React.RefObject<Element | null>
+) => {
+  const handler = useMemo(() => {
+    return (event: KeyboardEvent) => {
+      if (
+        listRef.current == null ||
+        !listRef.current.contains(document.activeElement)
+      ) {
+        return
+      }
+
+      if (isSingleKeyEvent(event, 'arrowleft')) {
+        navigateToNextFocusableWithin(listRef.current, true)
+        preventKeyboardEventPropagation(event)
+        return
+      }
+
+      if (isSingleKeyEvent(event, 'arrowright')) {
+        navigateToPreviousFocusableWithin(listRef.current, true)
+        preventKeyboardEventPropagation(event)
+        return
+      }
+    }
+  }, [listRef])
+
+  useGlobalKeyDownHandler(handler)
+}
+
 export function isWithGeneralCtrlKey(event: KeyboardEvent) {
   switch (osName) {
     case 'macos':

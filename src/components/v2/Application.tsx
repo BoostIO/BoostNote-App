@@ -52,7 +52,6 @@ import {
   useContextMenu,
 } from '../../lib/v2/stores/contextMenu'
 import ContextMenu from '../../components/v2/molecules/ContextMenu'
-import Dialog from '../../cloud/components/molecules/Dialog/Dialog'
 import Checkbox from './atoms/Checkbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
@@ -90,6 +89,7 @@ import EmojiPicker from './molecules/EmojiPicker'
 import { ModalOpeningOptions, useModal } from '../../lib/v2/stores/modal'
 import ModalV1 from '../../cloud/components/organisms/Modal'
 import Modal from './organisms/Modal'
+import Dialog from './organisms/Dialog/Dialog'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
