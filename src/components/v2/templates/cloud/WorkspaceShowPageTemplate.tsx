@@ -180,16 +180,36 @@ const WorkspaceShowPageTemplate = ({
             },
             controls: workspace.default
               ? [
-                  { label: 'Create a document', onClick: () => {} },
-                  { label: 'Create a folder', onClick: () => {} },
+                  {
+                    label: 'Create a document',
+                    onClick: () => {
+                      //#TOFIX
+                    },
+                  },
+                  {
+                    label: 'Create a folder',
+                    onClick: () => {
+                      //#TOFIX
+                    },
+                  },
                   {
                     label: 'Edit the workspace',
                     onClick: () => editWorkspace(),
                   },
                 ]
               : [
-                  { label: 'Create a document', onClick: () => {} },
-                  { label: 'Create a folder', onClick: () => {} },
+                  {
+                    label: 'Create a document',
+                    onClick: () => {
+                      //#TOFIX
+                    },
+                  },
+                  {
+                    label: 'Create a folder',
+                    onClick: () => {
+                      //#TOFIX
+                    },
+                  },
                   {
                     label: 'Edit the workspace',
                     onClick: () => editWorkspace(),
