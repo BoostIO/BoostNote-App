@@ -52,7 +52,7 @@ import {
   useContextMenu,
 } from '../../lib/v2/stores/contextMenu'
 import ContextMenu from '../../components/v2/molecules/ContextMenu'
-import Checkbox from './atoms/Checkbox'
+import Checkbox from './molecules/Form/atoms/FormCheckbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
 import {

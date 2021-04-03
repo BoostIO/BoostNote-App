@@ -20,7 +20,7 @@ const DoublePane: AppComponent<DoublePaneProps> = ({
 
 const Container = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
 
   .two__pane__left {
     flex: 1 1 auto;

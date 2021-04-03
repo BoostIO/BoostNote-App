@@ -14,6 +14,7 @@ import ShallowTimeline, {
 import { ControlButtonProps } from '../../../../lib/v2/types'
 import { BreadCrumbTreeItem } from '../../../../lib/v2/mappers/types'
 import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
+import ContentManager from '../../organisms/ContentManager'
 
 interface WorkspaceShowPageTemplateProps {
   topbarControls: ControlButtonProps[]
@@ -225,7 +226,14 @@ const WorkspaceShowPageTemplate = ({
       helmet={helmet}
       right={metadata?.show && <MetadataContainer rows={metadataRows} />}
     >
-      workspace page
+      <ContentManager
+        categories={[
+          { label: 'Folders', items: [] },
+          { label: 'Documents', items: [] },
+          { label: 'Archived', items: [] },
+        ]}
+        push={push}
+      />
     </ContentLayout>
   )
 }
