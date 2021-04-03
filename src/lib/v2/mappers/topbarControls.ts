@@ -1,7 +1,8 @@
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import { ControlButtonProps } from '../types'
 
-export function mapTopbar(
+// Map<parentId, [breadcrumb children]
+export function mapTopbarControls(
   hideMetadata: boolean,
   toggleHideMetadata: () => void
 ) {
@@ -10,7 +11,5 @@ export function mapTopbar(
     icon: hideMetadata ? mdiChevronLeft : mdiChevronRight,
     onClick: toggleHideMetadata,
   })
-  return {
-    controls,
-  }
+  return controls
 }

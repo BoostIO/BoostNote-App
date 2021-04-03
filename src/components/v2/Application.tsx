@@ -55,7 +55,6 @@ import ContextMenu from '../../components/v2/molecules/ContextMenu'
 import Checkbox from './atoms/Checkbox'
 import ApplicationLayout from './molecules/ApplicationLayout'
 import Sidebar from './organisms/Sidebar/index'
-import { FoldingProps } from './organisms/Sidebar/atoms/SidebarTreeItem'
 import {
   SerializedDoc,
   SerializedDocWithBookmark,
@@ -90,6 +89,7 @@ import { ModalOpeningOptions, useModal } from '../../lib/v2/stores/modal'
 import ModalV1 from '../../cloud/components/organisms/Modal'
 import Modal from './organisms/Modal'
 import Dialog from './organisms/Dialog/Dialog'
+import { FoldingProps } from './atoms/FoldingWrapper'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()

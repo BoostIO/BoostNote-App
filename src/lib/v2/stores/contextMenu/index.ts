@@ -29,14 +29,14 @@ function useContextMenuStore(): ContextMenuContext {
         menuMargin -
         menuVerticalPadding * 2
       const clientYIsLowerThanYPositionLimit =
-        currentTargetRect.top > yPositionLimit
+        currentTargetRect.bottom > yPositionLimit
 
       const position = {
         // TODO: Limit xPosition
         x: currentTargetRect.left,
         y: clientYIsLowerThanYPositionLimit
           ? yPositionLimit
-          : currentTargetRect.top,
+          : currentTargetRect.bottom,
       }
       setPosition(position)
     },

@@ -4,9 +4,30 @@ import { useUpDownNavigationListener } from '../../../lib/v2/keyboard'
 
 interface UpDownListProps {
   className?: string
+  onBlur?: () => void
 }
-const UpDownList: React.FC<UpDownListProps> = ({ className, children }) => {
+const UpDownList: React.FC<UpDownListProps> = ({
+  className,
+  children,
+  onBlur,
+}) => {
   const listRef = React.createRef<HTMLDivElement>()
+
+  const onBlurHandler = (event: any) => {
+    if (onBlur == null) {
+      return
+    }
+
+    if (
+      event.relatedTarget == null ||
+      listRef.current == null ||
+      !listRef.current.contains(event.relatedTarget)
+    ) {
+      onBlur()
+      return
+    }
+  }
+
   useEffectOnce(() => {
     if (listRef.current != null) {
       listRef.current.focus()
@@ -16,7 +37,12 @@ const UpDownList: React.FC<UpDownListProps> = ({ className, children }) => {
   useUpDownNavigationListener(listRef)
 
   return (
-    <div ref={listRef} className={className} tabIndex={0}>
+    <div
+      ref={listRef}
+      className={className}
+      onBlur={onBlurHandler}
+      tabIndex={0}
+    >
       {children}
     </div>
   )

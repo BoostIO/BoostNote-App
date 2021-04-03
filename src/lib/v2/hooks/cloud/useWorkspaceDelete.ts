@@ -10,7 +10,7 @@ import { useToast } from '../../stores/toast'
 import { getMapFromEntityArray } from '../../utils/array'
 import useApi from '../useApi'
 
-export function useWorkspaceDelete(workspace: SerializedWorkspace) {
+export function useWorkspaceDelete() {
   const {
     removeFromWorkspacesMap,
     docsMap,
@@ -25,9 +25,9 @@ export function useWorkspaceDelete(workspace: SerializedWorkspace) {
   const { pushMessage } = useToast()
 
   const { sending, submit } = useApi({
-    api: () =>
+    api: (workspace: { id: string; teamId: string; default?: boolean }) =>
       destroyWorkspace({ id: workspace.teamId } as any, workspace, true),
-    cb: ({ publicWorkspace }: DestroyWorkspaceResponseBody) => {
+    cb: ({ publicWorkspace }: DestroyWorkspaceResponseBody, workspace) => {
       removeFromWorkspacesMap(workspace.id)
       pushMessage({
         title: 'Success',
@@ -63,23 +63,30 @@ export function useWorkspaceDelete(workspace: SerializedWorkspace) {
 
   return {
     sending,
-    call: useCallback(() => {
-      if (workspace.default) {
-        return
-      }
-      messageBox({
-        title: `Delete the workspace?`,
-        message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
-        buttons: [
-          {
-            variant: 'secondary',
-            label: 'Cancel',
-            cancelButton: true,
-            defaultButton: true,
-          },
-          { variant: 'danger', label: 'Destroy All', onClick: submit },
-        ],
-      })
-    }, [messageBox, submit, workspace.default]),
+    call: useCallback(
+      (workspace: SerializedWorkspace) => {
+        if (workspace.default) {
+          return
+        }
+        messageBox({
+          title: `Delete the workspace?`,
+          message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
+          buttons: [
+            {
+              variant: 'secondary',
+              label: 'Cancel',
+              cancelButton: true,
+              defaultButton: true,
+            },
+            {
+              variant: 'danger',
+              label: 'Destroy All',
+              onClick: () => submit(workspace),
+            },
+          ],
+        })
+      },
+      [messageBox, submit]
+    ),
   }
 }
