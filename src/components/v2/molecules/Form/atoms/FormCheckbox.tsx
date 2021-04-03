@@ -1,8 +1,8 @@
 import React from 'react'
 import cc from 'classcat'
-import styled from '../../../lib/v2/styled'
-import { AppComponent } from '../../../lib/v2/types'
-import Icon from './Icon'
+import styled from '../../../../../lib/v2/styled'
+import { AppComponent } from '../../../../../lib/v2/types'
+import Icon from '../../../atoms/Icon'
 import { mdiCheck } from '@mdi/js'
 
 interface CheckboxProps {
@@ -19,14 +19,14 @@ const Checkbox: AppComponent<CheckboxProps> = ({
 }) => (
   <Container
     className={cc([
-      'checkbox',
-      disabled && 'checkbox__state--disabled',
-      checked && 'checkbox__state--checked',
+      'form__checkbox',
+      disabled && 'form__checkbox--disabled',
+      checked && 'form__checkbox--checked',
       className,
     ])}
   >
     <input
-      type='checkbox'
+      type='form__checkbox'
       checked={checked}
       onChange={(event) => {
         if (onChange != null) {
@@ -35,7 +35,7 @@ const Checkbox: AppComponent<CheckboxProps> = ({
         }
       }}
     />
-    <div className={cc(['checkbox__custom'])}>
+    <div className={cc(['form__checkbox__custom'])}>
       {checked && <Icon path={mdiCheck} size={16} />}
     </div>
   </Container>
@@ -57,7 +57,7 @@ const Container = styled.label`
     top: -100px;
   }
 
-  &.checkbox__state--disabled {
+  &.form__checkbox--disabled {
     cursor: not-allowed;
   }
 

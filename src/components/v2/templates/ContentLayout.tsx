@@ -42,9 +42,12 @@ const Container = styled.div`
 
   .two__pane {
     width: 100%;
-    display: flex;
+    height: 100%;
+
     .two__pane__left {
+      display: flex;
       flex-direction: column;
+      align-items: stretch;
     }
 
     .topbar {
