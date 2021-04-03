@@ -3,7 +3,7 @@ import styled from '../../../lib/v2/styled'
 import { AppComponent } from '../../../lib/v2/types'
 import DoublePane from '../atoms/DoublePane'
 import PageHelmet from '../atoms/PageHelmet'
-import Topbar, { TopbarProps } from '../organisms/Topbar'
+import Topbar, { TopbarProps } from '../organisms/Topbar/index'
 
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
@@ -21,8 +21,10 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
     <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
     <DoublePane className='two__pane' right={right}>
       <Topbar
+        tree={topbar.tree}
         controls={topbar.controls}
         navigation={topbar.navigation}
+        breadcrumbs={topbar.breadcrumbs}
         className='topbar'
       />
       <div className='layout__content'>

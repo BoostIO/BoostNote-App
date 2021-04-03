@@ -3,39 +3,83 @@ import MetadataContainer, {
   MetadataContainerRow,
 } from '../../organisms/MetadataContainer'
 import ContentLayout from '../ContentLayout'
-import { TopbarProps } from '../../organisms/Topbar'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
-import { useModal } from '../../../../lib/v2/stores/modal'
 import { mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import Button from '../../atoms/Button'
 import UserIconList from '../../molecules/UserIconList'
-import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { AppUser } from '../../../../lib/v2/mappers/users'
 import ShallowTimeline, {
   ShallowTimelineRow,
 } from '../../organisms/ShallowTimeline'
+import { ControlButtonProps } from '../../../../lib/v2/types'
+import { BreadCrumbTreeItem } from '../../../../lib/v2/mappers/types'
+import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
 
 interface WorkspaceShowPageTemplateProps {
+  topbarControls: ControlButtonProps[]
+  topbarTree?: Map<string, BreadCrumbTreeItem[]>
+  topbarNavigation: { goBack: () => void; goForward: () => void }
   helmet?: { title?: string; indexing?: boolean }
-  topbar: TopbarProps
   metadata: { show: boolean }
   workspace: SerializedWorkspace
-  workspaceRemoval: { sending: boolean; call: () => void }
+  workspaceHref: string
+  workspaceRemoval: {
+    sending: boolean
+    call: () => void
+  }
   users: Map<string, AppUser & { hasAccess?: boolean; isOwner?: boolean }>
   timelineRows: ShallowTimelineRow[]
+  push: (url: string) => void
+  editWorkspace: () => void
 }
 
 const WorkspaceShowPageTemplate = ({
-  topbar,
+  topbarControls,
+  topbarTree,
+  topbarNavigation,
+  helmet,
   metadata,
   workspace,
+  workspaceHref,
   workspaceRemoval,
   users,
   timelineRows,
+  editWorkspace,
+  push,
 }: WorkspaceShowPageTemplateProps) => {
-  const { openModal } = useModal()
   const metadataRows = useMemo(() => {
     const rows: MetadataContainerRow[] = []
+    if (workspace.default) {
+      rows.push({
+        type: 'content',
+        label: { text: 'Access' },
+        direction: 'column',
+        breakAfter: true,
+        content: (
+          <div>
+            This workspace is public and can&apos;t have its access modified.
+          </div>
+        ),
+      })
+
+      rows.push({
+        type: 'button',
+        label: { text: 'Edit', icon: mdiPencil },
+        onClick: editWorkspace,
+      })
+
+      rows.push({
+        type: 'content',
+        label: { text: 'Timeline' },
+        direction: 'column',
+        content: (
+          <ShallowTimeline rows={timelineRows} sourcePlaceholder='this doc' />
+        ),
+      })
+
+      return rows
+    }
+
     if (workspace.public) {
       rows.push({
         type: 'content',
@@ -48,9 +92,7 @@ const WorkspaceShowPageTemplate = ({
             can modify its access in the workspace{' '}
             <Button
               variant='link'
-              onClick={() =>
-                openModal(<EditWorkspaceModal workspace={workspace} />)
-              }
+              onClick={editWorkspace}
               id='workspace-settings-edit'
             >
               Settings
@@ -84,9 +126,7 @@ const WorkspaceShowPageTemplate = ({
             workspace{' '}
             <Button
               variant='link'
-              onClick={() => {
-                openModal(<EditWorkspaceModal workspace={workspace} />)
-              }}
+              onClick={editWorkspace}
               id='workspace-settings-edit'
             >
               Settings
@@ -100,8 +140,9 @@ const WorkspaceShowPageTemplate = ({
     rows.push({
       type: 'button',
       label: { text: 'Edit', icon: mdiPencil },
-      onClick: () => openModal(<EditWorkspaceModal workspace={workspace} />),
+      onClick: editWorkspace,
     })
+
     rows.push({
       type: 'button',
       label: { text: 'Delete', icon: mdiTrashCanOutline },
@@ -109,6 +150,7 @@ const WorkspaceShowPageTemplate = ({
       disabled: workspaceRemoval.sending,
       breakAfter: true,
     })
+
     rows.push({
       type: 'content',
       label: { text: 'Timeline' },
@@ -119,11 +161,48 @@ const WorkspaceShowPageTemplate = ({
     })
 
     return rows
-  }, [workspace, workspaceRemoval, openModal, users, timelineRows])
+  }, [workspace, workspaceRemoval, editWorkspace, users, timelineRows])
 
   return (
     <ContentLayout
-      topbar={topbar}
+      topbar={{
+        navigation: topbarNavigation,
+        tree: topbarTree,
+        controls: topbarControls,
+        breadcrumbs: [
+          {
+            label: workspace.name,
+            active: true,
+            parentId: topParentId,
+            link: {
+              href: workspaceHref,
+              navigateTo: () => push(workspaceHref),
+            },
+            controls: workspace.default
+              ? [
+                  { label: 'Create a document', onClick: () => {} },
+                  { label: 'Create a folder', onClick: () => {} },
+                  {
+                    label: 'Edit the workspace',
+                    onClick: () => editWorkspace(),
+                  },
+                ]
+              : [
+                  { label: 'Create a document', onClick: () => {} },
+                  { label: 'Create a folder', onClick: () => {} },
+                  {
+                    label: 'Edit the workspace',
+                    onClick: () => editWorkspace(),
+                  },
+                  {
+                    label: 'Delete the workspace',
+                    onClick: () => workspaceRemoval.call(),
+                  },
+                ],
+          },
+        ],
+      }}
+      helmet={helmet}
       right={metadata?.show && <MetadataContainer rows={metadataRows} />}
     >
       workspace page

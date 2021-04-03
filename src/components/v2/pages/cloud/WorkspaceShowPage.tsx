@@ -10,8 +10,7 @@ import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../../../cloud/lib/stores/preferences'
-import { useWorkspaceDelete } from '../../../../lib/v2/hooks/cloud/workspaces'
-import { mapTopbar } from '../../../../lib/v2/mappers/topbar'
+import { useWorkspaceDelete } from '../../../../lib/v2/hooks/cloud/useWorkspaceDelete'
 import {
   mapUsers,
   mapUsersWithAccess,
@@ -27,6 +26,11 @@ import { Url, useRouter } from '../../../../cloud/lib/router'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { RoundedImageProps } from '../../atoms/RoundedImage'
 import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
+import { mapTopbarTree } from '../../../../lib/v2/mappers/cloud/topbarTree'
+import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
+import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
+import { useModal } from '../../../../lib/v2/stores/modal'
 
 const WorkspaceShowPage = ({
   pageWorkspace,
@@ -67,16 +71,21 @@ const Page = ({
 }) => {
   const { preferences, setPreferences } = usePreferences()
   const { permissions = [] } = usePage()
-  const { docsMap } = useNav()
-  const { push } = useRouter()
+  const { push, goBack, goForward } = useRouter()
+  const { initialLoadDone, docsMap, foldersMap, workspacesMap } = useNav()
+  const workspaceRemoval = useWorkspaceDelete()
+  const { openModal } = useModal()
 
-  const toolbar = useMemo(() => {
-    return mapTopbar(!preferences.docContextIsHidden, () =>
-      setPreferences({
-        docContextIsHidden: !preferences.docContextIsHidden,
-      })
+  const breadcrumbsTree = useMemo(() => {
+    return mapTopbarTree(
+      team,
+      initialLoadDone,
+      docsMap,
+      foldersMap,
+      workspacesMap,
+      push
     )
-  }, [preferences.docContextIsHidden, setPreferences])
+  }, [docsMap, foldersMap, workspacesMap, initialLoadDone, push, team])
 
   const users = useMemo(() => {
     return mapUsersWithAccess(
@@ -100,16 +109,38 @@ const Page = ({
     )
   }, [permissions, docsMap, workspace.id, push, team])
 
-  const workspaceRemoval = useWorkspaceDelete(workspace)
-
   return (
     <WorkspaceShowPageTemplate
-      topbar={toolbar}
+      topbarControls={[
+        {
+          icon: !preferences.docContextIsHidden
+            ? mdiChevronLeft
+            : mdiChevronRight,
+          onClick: () =>
+            setPreferences({
+              docContextIsHidden: !preferences.docContextIsHidden,
+            }),
+        },
+      ]}
+      topbarNavigation={{ goBack, goForward }}
+      topbarTree={breadcrumbsTree}
       metadata={{ show: !preferences.docContextIsHidden }}
-      workspaceRemoval={workspaceRemoval}
+      workspaceRemoval={{
+        sending: workspaceRemoval.sending,
+        call: () => workspaceRemoval.call(workspace),
+      }}
       workspace={workspace}
+      workspaceHref={`${process.env.BOOST_HUB_BASE_URL}${getWorkspaceHref(
+        workspace,
+        team,
+        'index'
+      )}`}
       users={users}
       timelineRows={timelineRows}
+      push={push}
+      editWorkspace={() =>
+        openModal(<EditWorkspaceModal workspace={workspace} />)
+      }
     />
   )
 }

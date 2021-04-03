@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react'
 import { useToast } from '../stores/toast'
 
 interface UseApiProps<P, R> {
-  api: (...args: P[]) => Promise<R>
-  cb?: (...res: R[]) => any
+  api: (args: P) => Promise<R>
+  cb?: (res: R, args: P) => any
 }
 
 interface UseApiRes<P> {
@@ -16,7 +16,7 @@ const useApi = <P, R>({ api, cb }: UseApiProps<P, R>) => {
   const { pushApiErrorMessage } = useToast()
 
   const submit = useCallback(
-    async (...args: P[]) => {
+    async (args: P) => {
       const res = { err: false, error: undefined }
       if (sending) {
         return
@@ -24,9 +24,9 @@ const useApi = <P, R>({ api, cb }: UseApiProps<P, R>) => {
 
       setSending(true)
       try {
-        const data = await api(...args)
+        const data = await api(args)
         if (cb != null) {
-          cb(data)
+          cb(data, args)
         }
       } catch (error) {
         res.err = true

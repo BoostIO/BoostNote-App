@@ -2,9 +2,10 @@ import React from 'react'
 import styled from '../../../../../lib/v2/styled'
 import SidebarContextList from '../atoms/SidebarContextList'
 import SidebarHeader from '../atoms/SidebarHeader'
-import SidebarItem, { FoldingProps } from '../atoms/SidebarTreeItem'
+import SidebarItem from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
+import { FoldingProps } from '../../../atoms/FoldingWrapper'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]

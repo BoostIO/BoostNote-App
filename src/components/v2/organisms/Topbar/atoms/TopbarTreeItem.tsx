@@ -1,24 +1,25 @@
 import React, { useState } from 'react'
+import { BreadCrumbTreeItem } from '../../../../../lib/v2/mappers/types'
 import styled from '../../../../../lib/v2/styled'
 import { AppComponent } from '../../../../../lib/v2/types'
+import FoldingWrapper from '../../../atoms/FoldingWrapper'
 import cc from 'classcat'
-import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import Button from '../../../atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
+import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import Icon from '../../../atoms/Icon'
-import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
 
-interface SidebarTreeItemProps {
-  defaultIcon?: string
+interface TopbarTreeItemProps {
+  className?: string
+  item: BreadCrumbTreeItem
   depth: number
-  emoji?: string
   folded?: boolean
-  folding?: FoldingProps
-  id?: string
-  label: string
-  labelHref?: string
-  labelClick?: () => void
+  folding?: {
+    fold: () => void
+    unfold: () => void
+    toggle: () => void
+  }
 }
 
 interface SharedProps {
@@ -26,21 +27,15 @@ interface SharedProps {
   setFocused: React.Dispatch<boolean>
 }
 
-const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
-  className,
-  depth,
-  defaultIcon,
-  emoji,
-  focused,
-  folding,
-  folded,
-  id,
-  label,
-  labelHref,
-  labelClick,
+const TopbarItem = ({
+  item,
   setFocused,
-}) => {
-  const LabelTag = labelHref != null ? 'a' : 'button'
+  depth,
+  className,
+  focused,
+  folded,
+  folding,
+}: TopbarTreeItemProps & SharedProps) => {
   const unfocusOnBlur = (event: any) => {
     if (
       document.activeElement == null ||
@@ -52,36 +47,38 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
 
   return (
     <Container
-      depth={depth > 6 ? 6 : depth}
-      className={cc([className, 'sidebar__tree__item', focused && 'focused'])}
+      depth={depth}
+      className={cc([className, 'topbar__tree__item', focused && 'focused'])}
       onBlur={unfocusOnBlur}
     >
-      <div className='sidebar__tree__item__wrapper'>
+      <div className='topbar__tree__item__wrapper'>
         {folded != null && (
           <Button
             variant='icon'
             iconSize={16}
             iconPath={folded ? mdiChevronRight : mdiChevronDown}
-            className='sidebar__tree__item__icon'
+            className='topbar__tree__item__icon'
             size='sm'
             onClick={folding?.toggle}
           />
         )}
-        <LabelTag
-          className='sidebar__tree__item__label'
+        <a
+          className='topbar__tree__item__label'
           onFocus={() => setFocused(true)}
-          onClick={labelClick}
-          href={labelHref}
-          id={`tree-${id}`}
+          onClick={() => item.link.navigateTo()}
+          href={item.link.href}
+          id={`tree-${item.id}`}
           tabIndex={1}
         >
-          {emoji != null ? (
-            <Emoji emoji={emoji} set='apple' size={16} />
-          ) : defaultIcon != null ? (
-            <Icon path={defaultIcon} size={16} />
+          {item.emoji != null ? (
+            <Emoji emoji={item.emoji} set='apple' size={16} />
+          ) : item.defaultIcon != null ? (
+            <Icon path={item.defaultIcon} size={16} />
           ) : null}
-          <span className='sidebar__tree__item__label__ellipsis'>{label}</span>
-        </LabelTag>
+          <span className='topbar__tree__item__label__ellipsis'>
+            {item.label}
+          </span>
+        </a>
       </div>
     </Container>
   )
@@ -97,7 +94,7 @@ const Container = styled.div<{ depth: number }>`
   white-space: nowrap;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
-  .sidebar__tree__item__wrapper {
+  .topbar__tree__item__wrapper {
     width: 100%;
     flex: 1 1 auto;
     display: flex;
@@ -105,12 +102,9 @@ const Container = styled.div<{ depth: number }>`
     padding-left: ${({ depth }) => 26 + (depth as number) * 20}px;
   }
 
-  a[href].sidebar__tree__item__label {
-    cursor: pointer;
-  }
-
-  .sidebar__tree__item__label {
+  .topbar__tree__item__label {
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     flex: 1 1 auto;
@@ -126,55 +120,35 @@ const Container = styled.div<{ depth: number }>`
     svg {
       color: ${({ theme }) => theme.colors.text.link};
     }
-    .sidebar__tree__item__label__ellipsis {
+    .topbar__tree__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
       ${overflowEllipsis};
     }
   }
 
-  .sidebar__tree__item__icon {
+  .topbar__tree__item__icon {
     flex: 0 0 auto;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 
-  &:not(.sidebar__category) {
-    border-radius: ${({ theme }) => theme.borders.radius}px;
-    &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
-    }
-    &:active,
-    &.active {
-      background-color: ${({ theme }) => theme.colors.variants.primary.base};
-    }
-
-    &:focus,
-    &.focused {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
-    }
+  border-radius: ${({ theme }) => theme.borders.radius}px;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.background.gradients.first};
+  }
+  &:active,
+  &.active {
+    background-color: ${({ theme }) => theme.colors.variants.primary.base};
   }
 
-  &.sidebar__category {
-    .sidebar__tree__item__icon {
-      color: currentColor !important;
-    }
-    &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
-    }
-    &.focused {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
-    }
-
-    border-top: 1px solid ${({ theme }) => theme.colors.border.second};
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+  &:focus,
+  &.focused {
+    background-color: ${({ theme }) =>
+      theme.colors.background.gradients.second};
   }
 `
 
-const SidebarTreeItem: AppComponent<SidebarTreeItemProps> = ({
+const TopbarTreeItem: AppComponent<TopbarTreeItemProps> = ({
   folding,
   ...props
 }) => {
@@ -182,7 +156,7 @@ const SidebarTreeItem: AppComponent<SidebarTreeItemProps> = ({
   if (folding != null) {
     return (
       <FoldingWrapper folding={folding} focused={focused}>
-        <SidebarItem
+        <TopbarItem
           focused={focused}
           setFocused={setFocused}
           folding={folding}
@@ -192,7 +166,7 @@ const SidebarTreeItem: AppComponent<SidebarTreeItemProps> = ({
     )
   }
   return (
-    <SidebarItem
+    <TopbarItem
       focused={focused}
       setFocused={setFocused}
       folding={folding}
@@ -201,4 +175,4 @@ const SidebarTreeItem: AppComponent<SidebarTreeItemProps> = ({
   )
 }
 
-export default SidebarTreeItem
+export default TopbarTreeItem

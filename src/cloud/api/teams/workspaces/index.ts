@@ -67,7 +67,7 @@ export interface DestroyWorkspaceResponseBody {
 
 export async function destroyWorkspace(
   team: { id: string },
-  workspace: SerializedWorkspace,
+  workspace: { id: string },
   destroyContent = false
 ) {
   const data = await callApi<DestroyWorkspaceResponseBody>(
