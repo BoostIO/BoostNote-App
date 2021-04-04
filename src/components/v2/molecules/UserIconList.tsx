@@ -15,7 +15,7 @@ interface UserIconListProps {
   limit?: number
 }
 
-const RoundedImageList = ({
+const UserIconList = ({
   className,
   users,
   limit,
@@ -114,4 +114,4 @@ const Container = styled.div`
   }
 `
 
-export default RoundedImageList
+export default UserIconList

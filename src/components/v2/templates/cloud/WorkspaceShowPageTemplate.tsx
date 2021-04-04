@@ -237,6 +237,7 @@ const WorkspaceShowPageTemplate = <
         categories={['folders', 'documents', 'archived']}
         items={managerRows}
         push={push}
+        users={users}
       />
     </ContentLayout>
   )

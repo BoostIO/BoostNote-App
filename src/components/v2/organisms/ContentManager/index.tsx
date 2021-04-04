@@ -13,11 +13,13 @@ import {
   sortByAttributeAsc,
   sortByAttributeDesc,
 } from '../../../../lib/v2/utils/array'
+import { AppUser } from '../../../../lib/v2/mappers/users'
 
 interface ContentManagerProps<T> {
   className?: string
   push: (href: string) => void
   items: ContentManagerItemProps<T>[]
+  users?: Map<string, AppUser>
   categories: T[]
 }
 
@@ -27,6 +29,7 @@ const ContentManager = <T extends string>({
   className,
   categories,
   items,
+  users = new Map(),
   push,
 }: ContentManagerProps<T>) => {
   const [order, setOrder] = useState<
@@ -165,6 +168,16 @@ const ContentManager = <T extends string>({
                       labelHref={child.href}
                       lastUpdated={child.lastUpdated}
                       className='content__manager__item__row'
+                      lastUpdatedBy={(child.lastUpdatedBy || []).reduce(
+                        (acc, val) => {
+                          const user = users.get(val)
+                          if (user != null) {
+                            acc.push(user)
+                          }
+                          return acc
+                        },
+                        [] as AppUser[]
+                      )}
                       labelOnclick={(ev: React.MouseEvent) => {
                         ev.preventDefault()
                         push(child.href)

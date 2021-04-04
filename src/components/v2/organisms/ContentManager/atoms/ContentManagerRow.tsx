@@ -6,6 +6,8 @@ import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import { getFormattedDateTime } from '../../../../../lib/v2/date'
 import Badge from '../../../atoms/Badge'
+import { AppUser } from '../../../../../lib/v2/mappers/users'
+import UserIconList from '../../../molecules/UserIconList'
 
 interface ContentManagerRowProps {
   id: string
@@ -17,6 +19,7 @@ interface ContentManagerRowProps {
   labelOnclick: MouseEventHandler
   controls?: ControlButtonProps[]
   lastUpdated: string
+  lastUpdatedBy: AppUser[]
   badges?: string[]
 }
 
@@ -31,6 +34,7 @@ const ContentManagerRow = ({
   controls,
   lastUpdated,
   badges,
+  lastUpdatedBy,
 }: ContentManagerRowProps) => {
   return (
     <Container className={cc(['content__manager__row', className])}>
@@ -59,8 +63,24 @@ const ContentManagerRow = ({
                 </Badge>
               ))}
           </span>
-          <div className='content__manager__row__date'>
-            {getFormattedDateTime(lastUpdated)}
+          <div className='content__manager__row__info'>
+            <span className='content__manager__row__date'>
+              {getFormattedDateTime(lastUpdated)}
+            </span>
+            {lastUpdatedBy.length > 0 && (
+              <UserIconList
+                className='content__manager__row__editors'
+                hideBorders={true}
+                users={lastUpdatedBy.map((user) => {
+                  return {
+                    url: user.iconUrl,
+                    alt: user.name,
+                    color: user.color,
+                    size: 'sm',
+                  }
+                })}
+              />
+            )}
           </div>
         </a>
         {controls != null && (
@@ -81,8 +101,12 @@ const Container = styled.div`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .content__manager__row__actions,
-  &:hover .content__manager__row__date {
+  &:hover .content__manager__row__info {
     display: none;
+  }
+
+  .content__manager__row__editors {
+    padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .content__manager__row__badge {
@@ -99,7 +123,7 @@ const Container = styled.div`
     }
   }
 
-  .content__manager__row__date {
+  .content__manager__row__info {
     display: flex;
     align-items: center;
     flex: 0 2 auto;
@@ -107,7 +131,7 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
-  .content__manager__row__date,
+  .content__manager__row__info,
   .content__manager__row__actions {
     padding-right: ${({ theme }) => theme.sizes.spaces.df * 2}px;
   }
