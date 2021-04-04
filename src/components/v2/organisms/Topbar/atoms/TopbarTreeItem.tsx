@@ -155,7 +155,11 @@ const TopbarTreeItem: AppComponent<TopbarTreeItemProps> = ({
   const [focused, setFocused] = useState(false)
   if (folding != null) {
     return (
-      <FoldingWrapper folding={folding} focused={focused}>
+      <FoldingWrapper
+        fold={folding.fold}
+        unfold={folding.unfold}
+        focused={focused}
+      >
         <TopbarItem
           focused={focused}
           setFocused={setFocused}

@@ -12,11 +12,9 @@ export type FoldingProps = {
   toggle: () => void
 }
 
-const FoldingWrapper: React.FC<{ folding: FoldingProps; focused: boolean }> = ({
-  focused,
-  folding,
-  children,
-}) => {
+const FoldingWrapper: React.FC<
+  { focused: boolean } & { fold: () => void; unfold: () => void }
+> = ({ focused, fold, unfold, children }) => {
   const keyDownHandler = useCallback(
     (event: KeyboardEvent) => {
       if (!focused) {
@@ -25,17 +23,17 @@ const FoldingWrapper: React.FC<{ folding: FoldingProps; focused: boolean }> = ({
 
       if (isSingleKeyEvent(event, 'arrowright')) {
         preventKeyboardEventPropagation(event)
-        folding.unfold()
+        unfold()
         return
       }
 
       if (isSingleKeyEvent(event, 'arrowleft')) {
         preventKeyboardEventPropagation(event)
-        folding.fold()
+        fold()
         return
       }
     },
-    [folding, focused]
+    [fold, unfold, focused]
   )
   useGlobalKeyDownHandler(keyDownHandler)
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffectOnce } from 'react-use'
+import { focusFirstChildFromElement } from '../../../lib/v2/dom'
 import { useUpDownNavigationListener } from '../../../lib/v2/keyboard'
 
 interface UpDownListProps {
@@ -40,6 +41,12 @@ const UpDownList: React.FC<UpDownListProps> = ({
     <div
       ref={listRef}
       className={className}
+      onFocus={(event) => {
+        if (event.target === listRef.current) {
+          event.preventDefault()
+          focusFirstChildFromElement(event.target)
+        }
+      }}
       onBlur={onBlurHandler}
       tabIndex={0}
     >
