@@ -31,6 +31,7 @@ export interface ButtonProps {
   onDoubleClick?: MouseEventHandler<HTMLButtonElement>
   onContextMenu?: MouseEventHandler<HTMLButtonElement>
   onFocus?: FocusEventHandler<HTMLButtonElement>
+  onBlur?: FocusEventHandler<HTMLButtonElement>
   onDrag?: DragEventHandler<HTMLButtonElement>
   onDragStart?: DragEventHandler<HTMLButtonElement>
   onDragEnd?: DragEventHandler<HTMLButtonElement>
@@ -65,6 +66,7 @@ const Button = React.forwardRef<
       onDoubleClick,
       onContextMenu,
       onFocus,
+      onBlur,
       onDrag,
       onDragStart,
       onDragEnd,
@@ -97,6 +99,7 @@ const Button = React.forwardRef<
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
         onFocus={onFocus}
+        onBlur={onBlur}
         onDrag={onDrag}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}

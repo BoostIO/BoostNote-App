@@ -35,8 +35,11 @@ const Container = styled.div`
 
     & > h4 {
       flex: 1 1 20px;
+      display: flex;
+      align-items: center;
       margin: 0;
       font-weight: 400;
+      height: 40px;
       ${overflowEllipsis};
     }
 

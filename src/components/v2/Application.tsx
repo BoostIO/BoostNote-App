@@ -90,6 +90,9 @@ import ModalV1 from '../../cloud/components/organisms/Modal'
 import Modal from './organisms/Modal'
 import Dialog from './organisms/Dialog/Dialog'
 import { FoldingProps } from './atoms/FoldingWrapper'
+import { useSearch } from '../../cloud/lib/stores/search'
+import { HistoryItem } from '../../cloud/api/search'
+import { SidebarSearchHistory } from './organisms/Sidebar/molecules/SidebarSearch'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -120,6 +123,7 @@ const Application: React.FC<{}> = ({ children }) => {
   const navigateToFolder = useNavigateToFolder()
   const navigateToWorkspace = useNavigateToWorkspace()
   const navigateToLabel = useNavigateToTag()
+  const { history, searchHistory } = useSearch()
 
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
@@ -193,6 +197,10 @@ const Application: React.FC<{}> = ({ children }) => {
     return mapSpaces(navigateToTeam, push, teams, invites, team)
   }, [navigateToTeam, teams, team, invites, push])
 
+  const historyItems = useMemo(() => {
+    return mapHistory(history, push, docsMap, foldersMap, team)
+  }, [team, history, push, docsMap, foldersMap])
+
   return (
     <>
       <ModalV1 />
@@ -213,6 +221,8 @@ const Application: React.FC<{}> = ({ children }) => {
             tree={tree}
             treeControls={treeControls}
             sidebarResize={sidebarResize}
+            searchHistory={searchHistory}
+            recentPages={historyItems}
           />
         }
         pageBody={children}
@@ -223,6 +233,56 @@ const Application: React.FC<{}> = ({ children }) => {
 
 export default Application
 
+function mapHistory(
+  history: HistoryItem[],
+  push: (href: string) => void,
+  docsMap: Map<string, SerializedDoc>,
+  foldersMap: Map<string, SerializedFolder>,
+  team?: SerializedTeam
+) {
+  if (team == null) {
+    return []
+  }
+
+  const items = [] as SidebarSearchHistory[]
+
+  history.forEach((historyItem) => {
+    if (historyItem.type === 'folder') {
+      const item = foldersMap.get(historyItem.item)
+      if (item != null) {
+        const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
+          item,
+          team,
+          'index'
+        )}`
+        items.push({
+          emoji: item.emoji,
+          label: item.name,
+          href,
+          onClick: () => push(href),
+        })
+      }
+    } else {
+      const item = docsMap.get(historyItem.item)
+      if (item != null) {
+        const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
+          item,
+          team,
+          'index'
+        )}`
+        items.push({
+          emoji: item.emoji,
+          defaultIcon: mdiFileDocumentOutline,
+          label: getDocTitle(item, 'Untitled'),
+          href,
+          onClick: () => push(href),
+        })
+      }
+    }
+  })
+
+  return items
+}
 function mapTree(
   initialLoadDone: boolean,
   docsMap: Map<string, SerializedDocWithBookmark>,

@@ -15,6 +15,7 @@ import SidebarTree, {
   SidebarTreeControl,
 } from './molecules/SidebarTree'
 import Spinner from '../../atoms/Spinner'
+import SidebarSearch, { SidebarSearchHistory } from './molecules/SidebarSearch'
 
 type SidebarProps = {
   sidebarState?: SidebarState
@@ -24,6 +25,8 @@ type SidebarProps = {
   className?: string
   tree?: SidebarNavCategory[]
   treeControls?: SidebarTreeControl[]
+  searchHistory: string[]
+  recentPages: SidebarSearchHistory[]
 } & SidebarSpaceProps
 
 const Sidebar = ({
@@ -36,6 +39,8 @@ const Sidebar = ({
   tree,
   treeControls,
   className,
+  searchHistory,
+  recentPages,
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
@@ -64,6 +69,11 @@ const Sidebar = ({
               ) : (
                 <SidebarTree tree={tree} treeControls={treeControls} />
               )
+            ) : sidebarState === 'search' ? (
+              <SidebarSearch
+                recentlySearched={searchHistory}
+                recentlyVisited={recentPages}
+              />
             ) : null}
           </div>
         </WidthEnlarger>
