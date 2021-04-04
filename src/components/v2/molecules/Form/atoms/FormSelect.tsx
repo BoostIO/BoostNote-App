@@ -3,22 +3,15 @@ import Select from 'react-select'
 import cc from 'classcat'
 import styled from '../../../../../lib/v2/styled'
 
-export interface CustomSelectOption {
+export interface FormSelectOption {
   label: string | React.ReactNode
   value: string
 }
-/*
-interface ReactSelectStates {
-  isDisabled: boolean
-  isFocused: boolean
-  isSelected: boolean
-}
-*/
 
-interface StyledSelectProps {
+interface FormSelectProps {
   id?: string
-  options: CustomSelectOption[]
-  value?: CustomSelectOption
+  options: FormSelectOption[]
+  value?: FormSelectOption
   onChange: (val: any) => void
   closeMenuOnSelect?: boolean
   className?: string
@@ -27,7 +20,7 @@ interface StyledSelectProps {
   isMulti?: boolean
   isSearchable?: boolean
   name?: string
-  filterOption?: (option: CustomSelectOption, rawInput: string) => boolean
+  filterOption?: (option: FormSelectOption, rawInput: string) => boolean
   onMenuOpen?: () => void
 }
 
@@ -45,7 +38,7 @@ const FormSelect = ({
   name,
   filterOption,
   onMenuOpen,
-}: StyledSelectProps) => {
+}: FormSelectProps) => {
   const [focused, setFocused] = useState(false)
   return (
     <Container>
@@ -139,22 +132,22 @@ const Container = styled.div`
   .form__select .form__select__option {
     color: ${({ theme }) => theme.colors.text.second};
     cursor: default;
+    &.form__select__option--is-disabled {
+      color: ${({ theme }) => theme.colors.text.subtle};
+      cursor: not-allowed;
+    }
+
+    &.form__select__option--is-selected,
+    &:active:not(.form__select__option--is-disabled) {
+      background-color: ${({ theme }) => theme.colors.variants.primary.base};
+      color: ${({ theme }) => theme.colors.variants.primary.text};
+    }
+
     &.form__select__option--is-focused {
       transition: 0.2s;
       color: ${({ theme }) => theme.colors.text.main};
       background-color: ${({ theme }) =>
         theme.colors.background.gradients.second};
-    }
-    &.form__select__option--is-disabled {
-      color: ${({ theme }) => theme.colors.text.subtle};
-      cursor: not-allowed;
-    }
-    &.form__select__option--is-selected {
-    }
-
-    &:active:not(.form__select__option--is-disabled) {
-      background-color: ${({ theme }) => theme.colors.variants.primary.base};
-      color: ${({ theme }) => theme.colors.variants.primary.text};
     }
 
     &:hover {
