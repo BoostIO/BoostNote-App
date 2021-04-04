@@ -5,4 +5,5 @@ export type ControlButtonProps = {
   icon: string
   onClick: (event: React.MouseEvent) => void
   onContextMenu?: (event: React.MouseEvent) => void
+  tooltip?: string
 }

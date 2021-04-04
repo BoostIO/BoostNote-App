@@ -8,14 +8,14 @@ import { mdiCheck } from '@mdi/js'
 interface CheckboxProps {
   checked?: boolean
   disabled?: boolean
-  onChange?: (val: boolean) => void
+  toggle?: () => void
 }
 
 const Checkbox: AppComponent<CheckboxProps> = ({
   className,
   checked,
   disabled,
-  onChange,
+  toggle,
 }) => (
   <Container
     className={cc([
@@ -25,17 +25,8 @@ const Checkbox: AppComponent<CheckboxProps> = ({
       className,
     ])}
   >
-    <input
-      type='form__checkbox'
-      checked={checked}
-      onChange={(event) => {
-        if (onChange != null) {
-          event.preventDefault()
-          onChange(!checked)
-        }
-      }}
-    />
-    <div className={cc(['form__checkbox__custom'])}>
+    <input type='form__checkbox' checked={checked} />
+    <div className={cc(['form__checkbox__custom'])} onClick={toggle}>
       {checked && <Icon path={mdiCheck} size={16} />}
     </div>
   </Container>
@@ -52,6 +43,11 @@ const Container = styled.label`
   height: 18px;
   color: ${({ theme }) => theme.colors.text.subtle};
 
+  .form__checkbox__custom {
+    width: 100%;
+    height: 100%;
+  }
+
   input {
     position: absolute;
     top: -100px;
@@ -63,6 +59,7 @@ const Container = styled.label`
 
   &:hover {
     color: ${({ theme }) => theme.colors.text.second};
+    border-color: ${({ theme }) => theme.colors.text.second};
   }
 `
 export default Checkbox

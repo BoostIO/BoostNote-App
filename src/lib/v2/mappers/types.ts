@@ -10,3 +10,14 @@ export interface BreadCrumbTreeItem {
     navigateTo: () => void
   }
 }
+
+export interface ContentManagerItemProps<T> {
+  id: string
+  label: string
+  href: string
+  category: T
+  lastUpdated: string
+  controls: []
+  lastUpdatedBy?: string[]
+  badges?: string[]
+}

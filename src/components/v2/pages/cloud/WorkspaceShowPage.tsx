@@ -31,6 +31,7 @@ import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/Worksp
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { useModal } from '../../../../lib/v2/stores/modal'
+import { mapManagerRows } from '../../../../lib/v2/mappers/cloud/contentManager'
 
 const WorkspaceShowPage = ({
   pageWorkspace,
@@ -109,6 +110,15 @@ const Page = ({
     )
   }, [permissions, docsMap, workspace.id, push, team])
 
+  const managerRows = useMemo(() => {
+    return mapManagerRows(
+      team,
+      { workspaceId: workspace.id },
+      docsMap,
+      foldersMap
+    )
+  }, [workspace.id, docsMap, foldersMap, team])
+
   return (
     <WorkspaceShowPageTemplate
       topbarControls={[
@@ -136,6 +146,7 @@ const Page = ({
         'index'
       )}`}
       users={users}
+      managerRows={managerRows}
       timelineRows={timelineRows}
       push={push}
       editWorkspace={() =>

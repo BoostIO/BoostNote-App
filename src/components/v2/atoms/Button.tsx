@@ -10,13 +10,14 @@ import Icon, { IconSize } from './Icon'
 import Spinner from '../../atoms/Spinner'
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | 'link'
+  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | 'link' | 'transparent'
   size?: 'sm' | 'md' | 'lg'
   iconPath?: string
   iconSize?: IconSize
   type?: 'button' | 'submit'
   className?: string
   disabled?: boolean
+  active?: boolean
   tabIndex?: number
   id?: string
   onClick?: MouseEventHandler<HTMLButtonElement>
@@ -49,6 +50,7 @@ const Button = React.forwardRef<
       iconPath,
       iconSize,
       disabled,
+      active,
       className,
       tabIndex = 1,
       id,
@@ -78,8 +80,10 @@ const Button = React.forwardRef<
           `button__variant--${variant}`,
           size && `button__size--${size}`,
           disabled && `button__state--disabled`,
+          active && `button__state--active`,
         ])}
         id={id}
+        active={active}
         disabled={disabled}
         tabIndex={tabIndex}
         onClick={onClick}
@@ -170,7 +174,7 @@ const StyledButton = styled.button`
       &:hover,
       &:active,
       &:focus,
-      &.active {
+      &.button__state--active {
         background-color: ${({ theme }) =>
           theme.colors.variants.primary.darker};
       }
@@ -194,7 +198,7 @@ const StyledButton = styled.button`
       &:hover,
       &:active,
       &:focus,
-      &.active {
+      &.button__state--active {
         opacity: 0.8;
       }
     }
@@ -213,7 +217,7 @@ const StyledButton = styled.button`
       &:hover,
       &:active,
       &:focus,
-      &.active {
+      &.button__state--active {
         background-color: ${({ theme }) =>
           theme.colors.variants.secondary.darker};
       }
@@ -233,13 +237,14 @@ const StyledButton = styled.button`
       &:hover,
       &:active,
       &:focus,
-      &.active {
+      &.button__state--active {
         background-color: ${({ theme }) => theme.colors.variants.danger.darker};
       }
     }
   }
 
-  &.button__variant--icon {
+  &.button__variant--icon,
+  &.button__variant--transparent {
     background: none;
     border: 1px solid transparent;
     color: ${({ theme }) => theme.colors.text.subtle};
@@ -253,7 +258,7 @@ const StyledButton = styled.button`
       &:hover,
       &:active,
       &:focus,
-      &.active {
+      &.button__state--active {
         color: ${({ theme }) => theme.colors.text.main};
       }
     }

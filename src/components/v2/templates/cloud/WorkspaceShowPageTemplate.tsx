@@ -12,11 +12,14 @@ import ShallowTimeline, {
   ShallowTimelineRow,
 } from '../../organisms/ShallowTimeline'
 import { ControlButtonProps } from '../../../../lib/v2/types'
-import { BreadCrumbTreeItem } from '../../../../lib/v2/mappers/types'
+import {
+  BreadCrumbTreeItem,
+  ContentManagerItemProps,
+} from '../../../../lib/v2/mappers/types'
 import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
 import ContentManager from '../../organisms/ContentManager'
 
-interface WorkspaceShowPageTemplateProps {
+interface WorkspaceShowPageTemplateProps<T> {
   topbarControls: ControlButtonProps[]
   topbarTree?: Map<string, BreadCrumbTreeItem[]>
   topbarNavigation: { goBack: () => void; goForward: () => void }
@@ -30,11 +33,14 @@ interface WorkspaceShowPageTemplateProps {
   }
   users: Map<string, AppUser & { hasAccess?: boolean; isOwner?: boolean }>
   timelineRows: ShallowTimelineRow[]
+  managerRows: ContentManagerItemProps<T>[]
   push: (url: string) => void
   editWorkspace: () => void
 }
 
-const WorkspaceShowPageTemplate = ({
+const WorkspaceShowPageTemplate = <
+  T extends 'documents' | 'archived' | 'folders'
+>({
   topbarControls,
   topbarTree,
   topbarNavigation,
@@ -46,8 +52,9 @@ const WorkspaceShowPageTemplate = ({
   users,
   timelineRows,
   editWorkspace,
+  managerRows,
   push,
-}: WorkspaceShowPageTemplateProps) => {
+}: WorkspaceShowPageTemplateProps<T>) => {
   const metadataRows = useMemo(() => {
     const rows: MetadataContainerRow[] = []
     if (workspace.default) {
@@ -227,11 +234,8 @@ const WorkspaceShowPageTemplate = ({
       right={metadata?.show && <MetadataContainer rows={metadataRows} />}
     >
       <ContentManager
-        categories={[
-          { label: 'Folders', items: [] },
-          { label: 'Documents', items: [] },
-          { label: 'Archived', items: [] },
-        ]}
+        categories={['folders', 'documents', 'archived']}
+        items={managerRows}
         push={push}
       />
     </ContentLayout>
