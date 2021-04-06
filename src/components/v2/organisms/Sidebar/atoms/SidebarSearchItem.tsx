@@ -8,6 +8,7 @@ import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../../atoms/Icon'
 import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
+import { escapeRegExp } from '../../../../../lib/string'
 
 interface SidebarSearchItemProps {
   defaultIcon?: string
@@ -39,6 +40,8 @@ const SearchItem: AppComponent<SidebarSearchItemProps & SharedProps> = ({
   id,
   label,
   labelHref,
+  highlighted,
+  contexts,
   labelClick,
   setFocused,
 }) => {
@@ -55,7 +58,12 @@ const SearchItem: AppComponent<SidebarSearchItemProps & SharedProps> = ({
   return (
     <Container
       depth={depth}
-      className={cc([className, 'sidebar__search__item', focused && 'focused'])}
+      className={cc([
+        className,
+        'sidebar__search__item',
+        focused && 'sidebar__search__item--focused',
+        folded === false && 'sidebar__search__item--expanded',
+      ])}
       onBlur={unfocusOnBlur}
     >
       <div className='sidebar__search__item__wrapper'>
@@ -77,17 +85,50 @@ const SearchItem: AppComponent<SidebarSearchItemProps & SharedProps> = ({
           id={`search-${id}`}
           tabIndex={1}
         >
-          {emoji != null ? (
-            <Emoji emoji={emoji} set='apple' size={16} />
-          ) : defaultIcon != null ? (
-            <Icon path={defaultIcon} size={16} />
-          ) : null}
-          <span className='sidebar__search__item__label__ellipsis'>
-            {label}
-          </span>
+          <div className='sidebar__search__item__main'>
+            {emoji != null ? (
+              <Emoji emoji={emoji} set='apple' size={16} />
+            ) : defaultIcon != null ? (
+              <Icon path={defaultIcon} size={16} />
+            ) : null}
+            <span className='sidebar__search__item__label__ellipsis'>
+              {highlighted == null ? label : highlightMatch(label, highlighted)}
+            </span>
+          </div>
+          {contexts != null && !folded && (
+            <div className='sidebar__search__item__contexts'>
+              {contexts.map((context, i) => (
+                <div
+                  className='sidebar__search__item__label__ellipsis'
+                  key={`sidebar__search__item__${id}__contexts__${i}`}
+                >
+                  {highlighted == null
+                    ? context
+                    : highlightMatch(context, highlighted)}
+                </div>
+              ))}
+            </div>
+          )}
         </LabelTag>
       </div>
     </Container>
+  )
+}
+
+function highlightMatch(label: string, highlight: string) {
+  const parts = label.split(new RegExp(`(${escapeRegExp(highlight)})`, 'gi'))
+  return (
+    <span>
+      {parts.map((part: string, i: number) =>
+        part.toLowerCase() === highlight.toLowerCase() ? (
+          <span className='sidebar__search__highlight' key={i}>
+            {highlight}
+          </span>
+        ) : (
+          part
+        )
+      )}
+    </span>
   )
 }
 
@@ -102,12 +143,18 @@ const Container = styled.div<{ depth: number }>`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
   &:focus,
-  &.focused {
+  &.sidebar__search__item--focused {
     background-color: ${({ theme }) =>
       theme.colors.background.gradients.second};
   }
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.gradients.first};
+  }
+
+  &.sidebar__search__item--expanded,
+  &.sidebar__search__item--expanded .sidebar__search__item__wrapper {
+    height: fit-content;
+    align-items: flex-start;
   }
 
   .sidebar__search__item__wrapper {
@@ -125,7 +172,7 @@ const Container = styled.div<{ depth: number }>`
   .sidebar__search__item__label {
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     flex: 1 1 auto;
     background: none;
     outline: 0;
@@ -142,7 +189,26 @@ const Container = styled.div<{ depth: number }>`
     .sidebar__search__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
       ${overflowEllipsis};
+
+      span {
+        line-height: ${({ theme }) => theme.sizes.fonts.l}px;
+      }
     }
+  }
+
+  .sidebar__search__item__main {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+  }
+
+  .sidebar__search__item__contexts {
+    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
+  .sidebar__search__highlight {
+    background: #6a320f;
   }
 
   .sidebar__search__item__icon {

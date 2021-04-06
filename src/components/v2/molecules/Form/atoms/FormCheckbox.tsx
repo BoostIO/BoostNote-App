@@ -25,7 +25,7 @@ const Checkbox: AppComponent<CheckboxProps> = ({
       className,
     ])}
   >
-    <input type='form__checkbox' checked={checked} />
+    <input type='form__checkbox' checked={checked} readOnly={true} />
     <div className={cc(['form__checkbox__custom'])} onClick={toggle}>
       {checked && <Icon path={mdiCheck} size={16} />}
     </div>
