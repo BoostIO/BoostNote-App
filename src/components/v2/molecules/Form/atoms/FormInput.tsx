@@ -17,6 +17,7 @@ export interface FormInputProps {
   value?: string
   defaultValue?: string
   readOnly?: boolean
+  autoComplete?: 'on' | 'off'
   onChange?: ChangeEventHandler<HTMLInputElement>
   onClick?: MouseEventHandler<HTMLInputElement>
   onMouseUp?: MouseEventHandler<HTMLInputElement>
@@ -35,6 +36,7 @@ const FormInput: FC<FormInputProps> = ({
   value,
   className,
   type = 'text',
+  autoComplete = 'off',
   id,
   placeholder,
   title,
@@ -63,6 +65,7 @@ const FormInput: FC<FormInputProps> = ({
       title={title}
       defaultValue={defaultValue}
       readOnly={readOnly}
+      autoComplete={autoComplete}
       onChange={onChange}
       onClick={onClick}
       onMouseUp={onMouseUp}

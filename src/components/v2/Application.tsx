@@ -91,8 +91,18 @@ import Modal from './organisms/Modal'
 import Dialog from './organisms/Dialog/Dialog'
 import { FoldingProps } from './atoms/FoldingWrapper'
 import { useSearch } from '../../cloud/lib/stores/search'
-import { HistoryItem } from '../../cloud/api/search'
-import { SidebarSearchHistory } from './organisms/Sidebar/molecules/SidebarSearch'
+import {
+  getSearchResultsV2,
+  GetSearchResultsRequestQuery,
+  HistoryItem,
+  SearchResult,
+} from '../../cloud/api/search'
+import {
+  SidebarSearchHistory,
+  SidebarSearchResult,
+} from './organisms/Sidebar/molecules/SidebarSearch'
+import { useDebounce } from 'react-use'
+import useApi from '../../lib/v2/hooks/useApi'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -123,12 +133,12 @@ const Application: React.FC<{}> = ({ children }) => {
   const navigateToFolder = useNavigateToFolder()
   const navigateToWorkspace = useNavigateToWorkspace()
   const navigateToLabel = useNavigateToTag()
-  const { history, searchHistory } = useSearch()
-
+  const { history, searchHistory, addToSearchHistory } = useSearch()
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'tree'
+    'search'
   )
-
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
   }, [])
@@ -201,6 +211,51 @@ const Application: React.FC<{}> = ({ children }) => {
     return mapHistory(history, push, docsMap, foldersMap, team)
   }, [team, history, push, docsMap, foldersMap])
 
+  const setSearchQuery = useCallback((val: string) => {
+    setSidebarSearchQuery(val)
+  }, [])
+
+  const { submit: submitSearch, sending: fetchingSearchResults } = useApi({
+    api: ({ teamId, query }: { teamId: string; query: any }) =>
+      getSearchResultsV2({ teamId, query }),
+    cb: ({ results }) =>
+      setSearchResults(mapSearchResults(results, push, team)),
+  })
+  const [isNotDebouncing, cancel] = useDebounce(
+    async () => {
+      if (team == null || sidebarSearchQuery.trim() === '') {
+        return
+      }
+
+      if (fetchingSearchResults) {
+        cancel()
+      }
+
+      const searchParams = sidebarSearchQuery
+        .split(' ')
+        .reduce<GetSearchResultsRequestQuery>(
+          (params, str) => {
+            if (str === '--body') {
+              params.body = true
+              return params
+            }
+            if (str === '--title') {
+              params.title = true
+              return params
+            }
+            params.query = params.query == '' ? str : `${params.query} ${str}`
+            return params
+          },
+          { query: '' }
+        )
+
+      addToSearchHistory(searchParams.query)
+      await submitSearch({ teamId: team.id, query: searchParams })
+    },
+    600,
+    [sidebarSearchQuery]
+  )
+
   return (
     <>
       <ModalV1 />
@@ -221,8 +276,15 @@ const Application: React.FC<{}> = ({ children }) => {
             tree={tree}
             treeControls={treeControls}
             sidebarResize={sidebarResize}
+            searchQuery={sidebarSearchQuery}
+            setSearchQuery={setSearchQuery}
             searchHistory={searchHistory}
             recentPages={historyItems}
+            searchResults={searchResults}
+            sidebarSearchState={{
+              fetching: fetchingSearchResults,
+              isNotDebouncing: isNotDebouncing() === true,
+            }}
           />
         }
         pageBody={children}
@@ -232,6 +294,48 @@ const Application: React.FC<{}> = ({ children }) => {
 }
 
 export default Application
+
+function mapSearchResults(
+  results: SearchResult[],
+  push: (url: string) => void,
+  team?: SerializedTeam
+) {
+  if (team == null) {
+    return []
+  }
+
+  return results.reduce((acc, item) => {
+    if (item.type === 'folder') {
+      const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
+        item.result,
+        team,
+        'index'
+      )}`
+      acc.push({
+        label: item.result.name,
+        href,
+        emoji: item.result.emoji,
+        onClick: () => push(href),
+      })
+      return acc
+    }
+
+    const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
+      item.result,
+      team,
+      'index'
+    )}`
+    acc.push({
+      label: getDocTitle(item.result, 'Untitled'),
+      href,
+      defaultIcon: mdiFileDocumentOutline,
+      emoji: item.result.emoji,
+      contexts: item.type === 'docContent' ? [item.context] : undefined,
+      onClick: () => push(href),
+    })
+    return acc
+  }, [] as SidebarSearchResult[])
+}
 
 function mapHistory(
   history: HistoryItem[],
@@ -283,6 +387,7 @@ function mapHistory(
 
   return items
 }
+
 function mapTree(
   initialLoadDone: boolean,
   docsMap: Map<string, SerializedDocWithBookmark>,

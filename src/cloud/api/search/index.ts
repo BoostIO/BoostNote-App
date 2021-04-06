@@ -47,3 +47,15 @@ export async function getSearchResults(
     search: query as any,
   })
 }
+
+export async function getSearchResultsV2({
+  teamId,
+  query,
+}: {
+  teamId: string
+  query: any
+}) {
+  return callApi<GetSearchResultsResponseBody>(`api/teams/${teamId}/search`, {
+    search: query as any,
+  })
+}
