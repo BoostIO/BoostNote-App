@@ -77,7 +77,7 @@ const Container = styled.div`
       overflow: hidden;
       width: 100%;
       font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-      color: ${({ theme }) => theme.colors.text.main};
+      color: ${({ theme }) => theme.colors.text.primary};
       margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
       padding: ${({ theme }) => theme.sizes.spaces.xsm}px
         ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -91,8 +91,7 @@ const Container = styled.div`
       }
 
       &:hover {
-        background-color: ${({ theme }) =>
-          theme.colors.background.gradients.first};
+        background-color: ${({ theme }) => theme.colors.background.tertiary};
       }
 
       .sidebar__spaces__label {

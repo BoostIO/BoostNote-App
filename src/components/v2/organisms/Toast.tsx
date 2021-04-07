@@ -49,14 +49,14 @@ const Container = styled.div`
   .toast__item {
     position: relative;
     width: 350px;
-    margin: ${({ theme }) => theme.sizes.spaces.l}px;
+    margin: ${({ theme }) => theme.sizes.spaces.sm}px;
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.df}px
       ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     display: flex;
     flex-direction: row;
     align-items: flex-start;

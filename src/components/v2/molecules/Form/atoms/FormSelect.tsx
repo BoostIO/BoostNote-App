@@ -86,7 +86,7 @@ const Container = styled.div`
 
   .form__select .form__select__input {
     opacity: inherit;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     &.form__select__input--is-disabled {
       opacity: 0.6;
     }
@@ -117,7 +117,7 @@ const Container = styled.div`
 
   .form__select .form__select__multi-value,
   .form__select .form__select__control {
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
   }
 
   .form__select .form__select__control {
@@ -125,12 +125,12 @@ const Container = styled.div`
   }
 
   .form__select .form__select__menu {
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     border: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 
   .form__select .form__select__option {
-    color: ${({ theme }) => theme.colors.text.second};
+    color: ${({ theme }) => theme.colors.text.secondary};
     cursor: default;
     &.form__select__option--is-disabled {
       color: ${({ theme }) => theme.colors.text.subtle};
@@ -145,14 +145,12 @@ const Container = styled.div`
 
     &.form__select__option--is-focused {
       transition: 0.2s;
-      color: ${({ theme }) => theme.colors.text.main};
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      color: ${({ theme }) => theme.colors.text.primary};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
 
     &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
       transition: 0.2s;
     }
   }

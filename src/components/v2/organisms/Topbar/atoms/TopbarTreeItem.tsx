@@ -112,7 +112,7 @@ const Container = styled.div<{ depth: number }>`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     text-decoration: none;
     margin: 0;
@@ -134,7 +134,7 @@ const Container = styled.div<{ depth: number }>`
 
   border-radius: ${({ theme }) => theme.borders.radius}px;
   &:hover {
-    background-color: ${({ theme }) => theme.colors.background.gradients.first};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
   &:active,
   &.active {
@@ -143,8 +143,7 @@ const Container = styled.div<{ depth: number }>`
 
   &:focus,
   &.focused {
-    background-color: ${({ theme }) =>
-      theme.colors.background.gradients.second};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 `
 

@@ -6,8 +6,8 @@ export const getGlobalCss = (theme: BaseTheme) => `
 body {
   margin: 0;
   padding: 10px 15px;
-  background-color: ${theme.colors.background.main};
-  color: ${theme.colors.text.main};
+  background-color: ${theme.colors.background.primary};
+  color: ${theme.colors.text.primary};
   font-family: ${theme.fonts.family};
   font-size: ${theme.sizes.fonts.df}px;
 }
@@ -38,12 +38,12 @@ scrollbar-width: 8px;
 
 /* background of the scrollbar except button or resizer */
 ::-webkit-scrollbar-track {
-  background-color: ${theme.colors.background.gradients.first};
+  background-color: ${theme.colors.background.tertiary};
 }
 
 /* scrollbar itself */
 ::-webkit-scrollbar-thumb {
-  background-color: ${theme.colors.background.gradients.second};
+  background-color: ${theme.colors.background.quaternary};
 }
 
 /* set button(top and bottom of the scrollbar) */
@@ -60,8 +60,8 @@ export default createGlobalStyle<BaseTheme>`
 
   body {
     margin: 0;
-    background-color: ${({ theme }) => theme.colors.background.main};
-    color: ${({ theme }) => theme.colors.text.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    color: ${({ theme }) => theme.colors.text.primary};
     font-family: ${({ theme }) => theme.fonts.family};
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }
@@ -92,14 +92,12 @@ export default createGlobalStyle<BaseTheme>`
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) =>
-      theme.colors.background.gradients.first}};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
 
   /* scrollbar itself */
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) =>
-      theme.colors.background.gradients.second};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 
   /* set button(top and bottom of the scrollbar) */

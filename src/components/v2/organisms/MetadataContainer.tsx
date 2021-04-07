@@ -109,8 +109,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   border-left: 1px solid transparent;
-  background-color: ${({ theme }) => theme.colors.background.second};
-  color: ${({ theme }) => theme.colors.text.main};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
 
   .metadata__container {
@@ -144,8 +144,7 @@ const Container = styled.div`
     display: block;
     height: 1px;
     margin: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
-    background-color: ${({ theme }) =>
-      theme.colors.background.gradients.second};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 
   .metadata__content {
@@ -185,7 +184,7 @@ const Container = styled.div`
   .metadata__label {
     display: flex;
     align-items: center;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     width: 120px;
     flex: 0 0 auto;
     margin-bottom: 0;
@@ -204,17 +203,15 @@ const Container = styled.div`
     background: none;
     outline: none;
     border: 0;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     cursor: pointer;
     font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
 
     &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
     }
     &:focus {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
 
     &:disabled {

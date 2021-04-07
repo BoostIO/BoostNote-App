@@ -64,7 +64,7 @@ const Container = styled.div`
 
     &::after {
       border-bottom: 0;
-      border-top: 9px solid ${({ theme }) => theme.colors.text.second};
+      border-top: 9px solid ${({ theme }) => theme.colors.text.secondary};
       bottom: -9px;
       top: initial;
     }
@@ -82,14 +82,14 @@ const Container = styled.div`
   }
 
   > div {
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
 
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     border-radius: 5px;
     font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
 
     .tooltip-text {
       background-color: none;

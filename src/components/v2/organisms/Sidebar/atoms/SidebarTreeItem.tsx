@@ -118,7 +118,7 @@ const Container = styled.div<{ depth: number }>`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     text-decoration: none;
     margin: 0;
@@ -140,10 +140,6 @@ const Container = styled.div<{ depth: number }>`
 
   &:not(.sidebar__category) {
     border-radius: ${({ theme }) => theme.borders.radius}px;
-    &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
-    }
     &:active,
     &.active {
       background-color: ${({ theme }) => theme.colors.variants.primary.base};
@@ -151,8 +147,11 @@ const Container = styled.div<{ depth: number }>`
 
     &:focus,
     &.focused {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    }
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
   }
 
@@ -160,13 +159,11 @@ const Container = styled.div<{ depth: number }>`
     .sidebar__tree__item__icon {
       color: currentColor !important;
     }
-    &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
-    }
     &.focused {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    }
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
     border-top: 1px solid ${({ theme }) => theme.colors.border.second};

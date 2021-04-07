@@ -103,15 +103,15 @@ const Container = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.background.main};
+  background-color: ${({ theme }) => theme.colors.background.primary};
 
   .emoji-mart {
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     border-color: ${({ theme }) => theme.colors.border.main};
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
 
     .emoji-mart-category-label span {
-      background-color: ${({ theme }) => theme.colors.background.main};
+      background-color: ${({ theme }) => theme.colors.background.primary};
     }
 
     .emoji-mart-bar {
@@ -119,14 +119,13 @@ const Container = styled.div`
     }
 
     input {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
-      color: ${({ theme }) => theme.colors.text.second};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      color: ${({ theme }) => theme.colors.text.secondary};
       border-color: ${({ theme }) => theme.colors.border.main};
       margin-bottom: 5px;
 
       &:focus {
-        box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.focus};
+        box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.variants.info.base};
       }
     }
   }

@@ -27,14 +27,14 @@ const Container = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.sizes.spaces.df}px
     ${({ theme }) => theme.sizes.spaces.l}px;
-  background-color: ${({ theme }) => theme.colors.background.main};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   overflow: hidden auto;
-  color: ${({ theme }) => theme.colors.text.main};
+  color: ${({ theme }) => theme.colors.text.primary};
   height: 100%;
   text-align: left;
 
   .modal__content__title {
-    color: ${({ theme }) => theme.colors.text.second};
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 
   img {

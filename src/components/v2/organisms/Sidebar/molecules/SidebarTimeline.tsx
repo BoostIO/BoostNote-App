@@ -121,12 +121,10 @@ const Container = styled.div`
     border-radius: ${({ theme }) => theme.borders.radius}px;
     align-items: center;
     &:focus {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
     &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
   }
 
@@ -136,7 +134,7 @@ const Container = styled.div`
     flex: 1 1 auto;
     text-align: left;
     align-items: center;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     margin: 0;
     overflow: hidden;
