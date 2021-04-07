@@ -5,46 +5,57 @@ export const darkTheme: BaseTheme = {
   ...commonTheme,
   colors: {
     background: {
-      main: '#1E2024',
-      second: '#27282B',
-      gradients: {
-        first: '#2f3238',
-        second: '#3e424a',
-      },
+      primary: '#1E2024',
+      secondary: '#2A2C32',
+      tertiary: '#353940',
+      quaternary: '#41454E',
+    },
+    icon: {
+      default: '#A6A6A6',
+      hover: '#E6E6E6',
+      active: '#FFFFFF',
     },
     text: {
-      main: '#fff',
-      second: '#D0D0D1',
-      subtle: '#9E9E9E',
-      link: '#329BBE',
+      primary: '#fff',
+      secondary: '#E6E6E6',
+      subtle: '#9C9C9C',
+      disabled: '#666666',
+      link: '#3F729B',
     },
     border: {
-      main: '#303336',
-      second: '#3D3F45',
+      main: '#2A2C32',
+      second: '#41454E',
     },
     variants: {
-      danger: {
-        base: '#EC5757',
-        darker: '',
-        text: '#fff',
-      },
       primary: {
         base: '#004774',
-        darker: '',
         text: '#fff',
       },
       secondary: {
-        base: '#3D3F44',
-        darker: '#303135',
+        base: '#353940',
+        text: '#fff',
+      },
+      tertiary: {
+        base: '#2BBBAD',
         text: '#fff',
       },
       warning: {
-        base: '',
-        darker: '',
+        base: '#FFBB33',
+        text: '#fff',
+      },
+      success: {
+        base: '#00C851',
+        text: '#fff',
+      },
+      danger: {
+        base: '#8B2635',
+        text: '#fff',
+      },
+      info: {
+        base: '#33B5E5',
         text: '#fff',
       },
     },
-    focus: 'rgba(71, 170, 255, 0.6)',
     shadow: '0px 0px 13px rgba(0,0,0,0.1)',
   },
 }

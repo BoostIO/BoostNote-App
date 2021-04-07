@@ -109,7 +109,7 @@ const getTreeItemAndItsChildren = (
 const Container = styled.div`
   width: 350px;
   height: fit-content;
-  background: ${({ theme }) => theme.colors.background.main};
+  background: ${({ theme }) => theme.colors.background.primary};
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   border-radius: ${({ theme }) => theme.borders.radius};
   position: fixed;

@@ -16,7 +16,6 @@ enum Sizes {
 
 interface VariantColorProps {
   base: string
-  darker: string
   text: string
 }
 
@@ -48,29 +47,35 @@ export interface ChangingThemes {
   colors: {
     variants: {
       primary: VariantColorProps
+      secondary: VariantColorProps
+      tertiary: VariantColorProps
       danger: VariantColorProps
       warning: VariantColorProps
-      secondary: VariantColorProps
+      success: VariantColorProps
+      info: VariantColorProps
+    }
+    icon: {
+      default: string
+      hover: string
+      active: string
     }
     background: {
-      main: string
-      second: string
-      gradients: {
-        first: string
-        second: string
-      }
+      primary: string
+      secondary: string
+      tertiary: string
+      quaternary: string
     }
     text: {
-      main: string
-      second: string
+      primary: string
+      secondary: string
       subtle: string
       link: string
+      disabled: string
     }
     border: {
       main: string
       second: string
     }
-    focus: string
     shadow: string
   }
 }

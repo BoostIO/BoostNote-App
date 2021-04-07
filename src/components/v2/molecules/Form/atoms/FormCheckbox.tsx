@@ -58,8 +58,8 @@ const Container = styled.label`
   }
 
   &:hover {
-    color: ${({ theme }) => theme.colors.text.second};
-    border-color: ${({ theme }) => theme.colors.text.second};
+    color: ${({ theme }) => theme.colors.text.secondary};
+    border-color: ${({ theme }) => theme.colors.text.secondary};
   }
 `
 export default Checkbox

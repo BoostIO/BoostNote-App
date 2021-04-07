@@ -89,7 +89,7 @@ const Container = styled.div`
     display: flex;
     position: relative;
     width: 96%;
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     box-shadow: ${({ theme }) => theme.colors.shadow};
     border-radius: 4px;
     overflow: auto;

@@ -144,11 +144,10 @@ const Container = styled.div<{ depth: number }>`
   border-radius: ${({ theme }) => theme.borders.radius}px;
   &:focus,
   &.sidebar__search__item--focused {
-    background-color: ${({ theme }) =>
-      theme.colors.background.gradients.second};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.colors.background.gradients.first};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 
   &.sidebar__search__item--expanded,
@@ -178,7 +177,7 @@ const Container = styled.div<{ depth: number }>`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     text-decoration: none;
     margin: 0;

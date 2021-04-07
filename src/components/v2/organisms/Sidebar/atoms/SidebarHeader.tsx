@@ -29,7 +29,7 @@ const Container = styled.div`
     justify-content: space-between;
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.df}px;
-    color: ${({ theme }) => theme.colors.text.second};
+    color: ${({ theme }) => theme.colors.text.secondary};
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
     align-items: center;
 

@@ -178,8 +178,7 @@ const StyledButton = styled.button`
       &:active,
       &:focus,
       &.button__state--active {
-        background-color: ${({ theme }) =>
-          theme.colors.variants.primary.darker};
+        // TOFIX
       }
     }
   }
@@ -221,8 +220,7 @@ const StyledButton = styled.button`
       &:active,
       &:focus,
       &.button__state--active {
-        background-color: ${({ theme }) =>
-          theme.colors.variants.secondary.darker};
+        //TOFIX
       }
     }
   }
@@ -241,7 +239,7 @@ const StyledButton = styled.button`
       &:active,
       &:focus,
       &.button__state--active {
-        background-color: ${({ theme }) => theme.colors.variants.danger.darker};
+        //TOFIX
       }
     }
   }
@@ -254,7 +252,7 @@ const StyledButton = styled.button`
     padding: 0 3px !important;
 
     &:focus {
-      box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.focus};
+      box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
     }
 
     &:not(.button__state--disabled) {
@@ -262,7 +260,7 @@ const StyledButton = styled.button`
       &:active,
       &:focus,
       &.button__state--active {
-        color: ${({ theme }) => theme.colors.text.main};
+        color: ${({ theme }) => theme.colors.text.primary};
       }
     }
   }
@@ -278,6 +276,6 @@ const StyledButton = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.focus};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
   }
 `

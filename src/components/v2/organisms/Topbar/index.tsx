@@ -140,7 +140,7 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   height: 44px;
-  background: ${({ theme }) => theme.colors.background.main};
+  background: ${({ theme }) => theme.colors.background.primary};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   align-items: center;
   justify-content: space-between;
@@ -200,7 +200,7 @@ const Container = styled.div`
       border-radius: 3px;
       white-space: nowrap;
       background-color: transparent;
-      color: ${({ theme }) => theme.colors.text.main};
+      color: ${({ theme }) => theme.colors.text.primary};
       cursor: pointer;
       text-decoration: none !important;
 
@@ -214,8 +214,7 @@ const Container = styled.div`
 
       &:hover,
       &:focus {
-        background-color: ${({ theme }) =>
-          theme.colors.background.gradients.first};
+        background-color: ${({ theme }) => theme.colors.background.tertiary};
         .hoverIcon {
           opacity: 1;
         }

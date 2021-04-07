@@ -111,7 +111,7 @@ const Container = styled.div`
   min-width: 130px;
   position: fixed;
   z-index: ${menuZIndex};
-  background-color: ${({ theme }) => theme.colors.background.main};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   padding: ${menuVerticalPadding}px 0;
   font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
@@ -133,7 +133,7 @@ const Container = styled.div`
     font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
     text-align: left;
     transition: 200ms color;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
 
     &:disabled {
       color: ${({ theme }) => theme.colors.text.subtle};
@@ -142,13 +142,11 @@ const Container = styled.div`
     &:active,
     &.active,
     &:hover {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.second};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
     &:focus {
-      background-color: ${({ theme }) =>
-        theme.colors.background.gradients.first};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
     &:disabled {
       background-color: transparent;

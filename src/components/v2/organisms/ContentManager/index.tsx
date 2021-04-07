@@ -38,13 +38,7 @@ const ContentManager = <T extends string>({
   const [activeCategory, setActiveCategory] = useState<T | 'all'>('all')
   const [
     selectedRows,
-    {
-      add: addRow,
-      has: hasRow,
-      toggle: toggleRow,
-      reset: resetRow,
-      remove: removeRow,
-    },
+    { add: addRow, has: hasRow, toggle: toggleRow, remove: removeRow },
   ] = useSet<string>(new Set())
 
   const filteredItems = useMemo(() => {
@@ -263,11 +257,11 @@ const Container = styled.div`
   }
 
   .content__manager__category__row {
-    background: ${({ theme }) => theme.colors.background.second};
+    background: ${({ theme }) => theme.colors.background.secondary};
   }
 
   .content__manager__category__row .content__manager__category__label {
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .content__manager__category__row {

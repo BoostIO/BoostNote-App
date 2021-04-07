@@ -34,7 +34,7 @@ const PromiseWrapper = <
     }
   }, [api, setProps, setError])
 
-  const retry = useCallback(async () => {
+  useCallback(async () => {
     if (fetching) {
       return
     }

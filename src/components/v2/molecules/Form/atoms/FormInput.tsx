@@ -92,7 +92,7 @@ const StyledInput = styled.input`
   outline: none;
   background: none;
   border: 1px solid ${({ theme }) => theme.colors.border.main};
-  color: ${({ theme }) => theme.colors.text.main};
+  color: ${({ theme }) => theme.colors.text.primary};
 
   &:disabled {
     cursor: not-allowed;
@@ -100,6 +100,6 @@ const StyledInput = styled.input`
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.colors.variants.primary.base};
+    border-color: ${({ theme }) => theme.colors.variants.info.base};
   }
 `

@@ -158,7 +158,7 @@ const Container = styled.div`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
     text-decoration: none;
     margin: 0;
     overflow: hidden;

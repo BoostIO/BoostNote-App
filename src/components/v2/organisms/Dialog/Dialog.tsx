@@ -62,7 +62,7 @@ const Container = styled.div`
   .dialog {
     width: 100%;
     max-width: 450px;
-    background-color: ${({ theme }) => theme.colors.background.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     border-color: ${({ theme }) => theme.colors.border.main};
     border-style: solid;
     border-width: 0 1px 1px 1px;

@@ -95,7 +95,7 @@ const Container = styled.div`
     width: 40px;
     height: 100%;
     flex: 0 0 40px;
-    background: ${({ theme }) => theme.colors.background.second};
+    background: ${({ theme }) => theme.colors.background.secondary};
     overflow: hidden;
 
     .sidebar__toolbar__scroller {
@@ -137,11 +137,11 @@ const Container = styled.div`
 
       &:hover,
       &.sidebar__toolbar__item--active {
-        color: ${({ theme }) => theme.colors.text.main};
+        color: ${({ theme }) => theme.colors.text.primary};
       }
 
       &.sidebar__toolbar__item--active {
-        border-left-color: ${({ theme }) => theme.colors.text.main};
+        border-left-color: ${({ theme }) => theme.colors.text.primary};
       }
     }
   }

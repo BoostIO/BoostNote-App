@@ -25,7 +25,7 @@ const Container = styled.div`
   left: 0;
   top: 0;
   overflow: hidden;
-  background: ${({ theme }) => theme.colors.background.main};
+  background: ${({ theme }) => theme.colors.background.primary};
 
   .application__wrapper {
     width: 100%;

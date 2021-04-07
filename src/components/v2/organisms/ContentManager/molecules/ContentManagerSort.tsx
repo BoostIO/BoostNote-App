@@ -83,7 +83,7 @@ const StyledSortingOption = styled.div`
   }
 
   &:hover .form__select .form__select__single-value {
-    color: ${({ theme }) => theme.colors.text.main};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .form__select__menu {
