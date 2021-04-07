@@ -83,7 +83,7 @@ const Container = styled.ul`
   list-style: none;
 
   .shallow__timeline__item + .shallow__timeline__item {
-    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
 
     &::before {
       height: 15px;
@@ -121,7 +121,6 @@ const Container = styled.ul`
   .shallow__timeline__item__date {
     display: block;
     width: 100%;
-    padding-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
     font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   }
