@@ -182,11 +182,11 @@ const PlanTables = ({
             </td>
             <td>
               <div className='perk'>
-                {standardPlanStorageMb / 100}GB per member
+                {standardPlanStorageMb / 1000}GB per member
               </div>
             </td>
             <td>
-              <div className='perk'>{proPlanStorageMb / 100}GB per member</div>
+              <div className='perk'>{proPlanStorageMb / 1000}GB per member</div>
             </td>
           </tr>
 
@@ -204,22 +204,9 @@ const PlanTables = ({
           </tr>
 
           <tr>
-            <td className='first'>Templates</td>
-            <td>
-              <div className='perk'>Unlimited</div>
-            </td>
-            <td>
-              <div className='perk'>Unlimited</div>
-            </td>
-            <td>
-              <div className='perk'>Unlimited</div>
-            </td>
-          </tr>
-
-          <tr>
             <td className='first'>Collaborative workspace</td>
             <td>
-              <div className='perk'>&#x292C;</div>
+              <div className='perk'>&#x2713;</div>
             </td>
             <td>
               <div className='perk'>
@@ -243,25 +230,6 @@ const PlanTables = ({
                 <span className='check'>
                   Last {revisionHistoryStandardDays} days
                 </span>
-              </div>
-            </td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td className='first'>Private folders</td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span>
-              </div>
-            </td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span>
               </div>
             </td>
             <td>
@@ -312,25 +280,6 @@ const PlanTables = ({
             <td>
               <div className='perk'>
                 <span className='check'>&#x2713;</span>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td className='first'>Mobile App</td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span> (Soon)
-              </div>
-            </td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span> (Soon)
-              </div>
-            </td>
-            <td>
-              <div className='perk'>
-                <span className='check'>&#x2713;</span> (Soon)
               </div>
             </td>
           </tr>
