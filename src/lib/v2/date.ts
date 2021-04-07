@@ -31,3 +31,24 @@ export function getFormattedDateTime(date: string, prefixed = false) {
       return `${prefixed ? 'on ' : ''}${format(converted, 'MMM dd')}`
   }
 }
+
+export function getDateTime(
+  date: string,
+  prefixed: boolean,
+  dateFormat = 'HH:mm, dd MMMM u'
+) {
+  const converted = new Date(date)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  if (!isValid(converted)) {
+    return 'Invalid Date'
+  }
+
+  switch (converted > yesterday) {
+    case true:
+      return `${formatDistanceToNowStrict(converted)} ago`
+    default:
+      return `${prefixed ? 'on ' : ''}${format(converted, dateFormat)}`
+  }
+}

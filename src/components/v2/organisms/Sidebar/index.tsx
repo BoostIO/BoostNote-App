@@ -20,6 +20,10 @@ import SidebarSearch, {
   SidebarSearchResult,
   SidebarSearchState,
 } from './molecules/SidebarSearch'
+import SidebarTimeline, {
+  SidebarTimelineRow,
+} from './molecules/SidebarTimeline'
+import { AppUser } from '../../../../lib/v2/mappers/users'
 
 type SidebarProps = {
   sidebarState?: SidebarState
@@ -35,6 +39,8 @@ type SidebarProps = {
   recentPages: SidebarSearchHistory[]
   searchResults: SidebarSearchResult[]
   sidebarSearchState: SidebarSearchState
+  users: Map<string, AppUser>
+  timelineRows: SidebarTimelineRow[]
 } & SidebarSpaceProps
 
 const Sidebar = ({
@@ -53,6 +59,8 @@ const Sidebar = ({
   recentPages,
   searchResults,
   sidebarSearchState,
+  timelineRows,
+  users,
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
@@ -90,6 +98,8 @@ const Sidebar = ({
                 searchResults={searchResults}
                 searchState={sidebarSearchState}
               />
+            ) : sidebarState === 'timeline' ? (
+              <SidebarTimeline users={users} rows={timelineRows} />
             ) : null}
           </div>
         </WidthEnlarger>

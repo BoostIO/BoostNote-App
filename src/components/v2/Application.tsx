@@ -103,6 +103,9 @@ import {
 } from './organisms/Sidebar/molecules/SidebarSearch'
 import { useDebounce } from 'react-use'
 import useApi from '../../lib/v2/hooks/useApi'
+import { mapUsers } from '../../lib/v2/mappers/users'
+import { compareDateString } from '../../lib/v2/date'
+import { getColorFromString } from '../../lib/v2/string'
 
 const Application: React.FC<{}> = ({ children }) => {
   const { preferences, setPreferences } = usePreferences()
@@ -122,10 +125,10 @@ const Application: React.FC<{}> = ({ children }) => {
     foldItem,
   } = useSidebarCollapse()
   const { popup } = useContextMenu()
-  const { team } = usePage()
+  const { team, permissions = [], guestsMap } = usePage()
   const { openModal } = useModal()
   const {
-    globalData: { teams, invites },
+    globalData: { teams, invites, currentUser },
   } = useGlobalData()
   const { push } = useRouter()
   const navigateToTeam = useNavigateToTeam()
@@ -137,7 +140,7 @@ const Application: React.FC<{}> = ({ children }) => {
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'search'
+    'timeline'
   )
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
@@ -195,6 +198,10 @@ const Application: React.FC<{}> = ({ children }) => {
     team,
   ])
 
+  const users = useMemo(() => {
+    return mapUsers(permissions, currentUser, [...guestsMap.values()])
+  }, [permissions, currentUser, guestsMap])
+
   const treeControls = useMemo(() => {
     return mapTreeControls(tree || [], popup)
   }, [popup, tree])
@@ -221,6 +228,7 @@ const Application: React.FC<{}> = ({ children }) => {
     cb: ({ results }) =>
       setSearchResults(mapSearchResults(results, push, team)),
   })
+
   const [isNotDebouncing, cancel] = useDebounce(
     async () => {
       if (team == null || sidebarSearchQuery.trim() === '') {
@@ -256,6 +264,10 @@ const Application: React.FC<{}> = ({ children }) => {
     [sidebarSearchQuery]
   )
 
+  const timelineRows = useMemo(() => {
+    return mapTimelineItems([...docsMap.values()], push, team)
+  }, [docsMap, push, team])
+
   return (
     <>
       <ModalV1 />
@@ -281,6 +293,8 @@ const Application: React.FC<{}> = ({ children }) => {
             searchHistory={searchHistory}
             recentPages={historyItems}
             searchResults={searchResults}
+            users={users}
+            timelineRows={timelineRows}
             sidebarSearchState={{
               fetching: fetchingSearchResults,
               isNotDebouncing: isNotDebouncing() === true,
@@ -294,6 +308,53 @@ const Application: React.FC<{}> = ({ children }) => {
 }
 
 export default Application
+
+function mapTimelineItems(
+  docs: SerializedDoc[],
+  push: (url: string) => void,
+  team?: SerializedTeam,
+  limit = 10
+) {
+  if (team == null) {
+    return []
+  }
+
+  return docs
+    .sort((a, b) =>
+      compareDateString(
+        a.head?.created || a.updatedAt,
+        b.head?.created || b.updatedAt,
+        'DESC'
+      )
+    )
+    .slice(0, limit)
+    .map((doc) => {
+      const labelHref = getDocLinkHref(doc, team, 'index')
+      return {
+        id: doc.id,
+        label: getDocTitle(doc, 'Untitled'),
+        labelHref,
+        labelOnClick: () => push(labelHref),
+        emoji: doc.emoji,
+        defaultIcon: mdiFileDocumentOutline,
+        lastUpdated: doc.head?.created || doc.updatedAt,
+        lastUpdatedBy:
+          doc.head == null
+            ? []
+            : doc.head.creators.map((user) => {
+                return {
+                  color: getColorFromString(user.id),
+                  userId: user.id,
+                  name: user.displayName,
+                  iconUrl:
+                    user.icon != null
+                      ? buildIconUrl(user.icon.location)
+                      : undefined,
+                }
+              }),
+      }
+    })
+}
 
 function mapSearchResults(
   results: SearchResult[],

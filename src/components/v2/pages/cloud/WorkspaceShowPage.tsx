@@ -71,7 +71,7 @@ const Page = ({
   team: SerializedTeam
 }) => {
   const { preferences, setPreferences } = usePreferences()
-  const { permissions = [] } = usePage()
+  const { permissions = [], guestsMap } = usePage()
   const { push, goBack, goForward } = useRouter()
   const { initialLoadDone, docsMap, foldersMap, workspacesMap } = useNav()
   const workspaceRemoval = useWorkspaceDelete()
@@ -95,9 +95,16 @@ const Page = ({
         permissions: new Set((workspace.permissions || []).map(prop('id'))),
         owner: workspace.ownerId,
       },
-      currentUser
+      currentUser,
+      [...guestsMap.values()]
     )
-  }, [permissions, currentUser, workspace.ownerId, workspace.permissions])
+  }, [
+    permissions,
+    currentUser,
+    workspace.ownerId,
+    workspace.permissions,
+    guestsMap,
+  ])
 
   const timelineRows = useMemo(() => {
     return mapShallowTimelineRows(
