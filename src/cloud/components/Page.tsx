@@ -9,7 +9,7 @@ interface PageProps {
 
 const Page: React.FC<PageProps> = ({
   children,
-  title = 'Boost Note - An open sourced markdown editor for developers',
+  title = 'Boost Note is a powerful, lightspeed collaborative workspace for developer teams',
   privatePage = false,
   calendly = true,
 }) => (

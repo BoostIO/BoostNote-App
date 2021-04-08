@@ -8,7 +8,7 @@ import Footer from './organisms/Footer'
 const DefaultLayout: React.FC = ({ children }) => (
   <>
     <Head>
-      <title>Boost Note - An open sourced markdown editor for developers</title>
+      <title>Boost Note is a powerful, lightspeed collaborative workspace for developer teams</title>
 
       <meta charSet='utf-8' />
 
