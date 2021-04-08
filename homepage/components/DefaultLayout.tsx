@@ -8,7 +8,7 @@ import Footer from './organisms/Footer'
 const DefaultLayout: React.FC = ({ children }) => (
   <>
     <Head>
-      <title>Boost Note - An open sourced markdown editor for developers</title>
+      <title>Boost Note is a powerful, lightspeed collaborative workspace for developer teams</title>
 
       <meta charSet='utf-8' />
 
@@ -21,11 +21,11 @@ const DefaultLayout: React.FC = ({ children }) => (
       <meta name='subject' content='Boost Note' />
       <meta
         name='description'
-        content="Boost Note is an intuitive and stylish markdown editor for developers. It's fully open-source."
+        content="Boost Note is a powerful, lightspeed collaborative workspace for developer teams."
       />
       <meta
         name='keyword'
-        content='markdown editor, note app,note-taking,typora,stackedit,development,programmer,evernote,open source,hackmd'
+        content='markdown editor, note app,note-taking,typora,stackedit,developer,programmer,evernote,open source,hackmd,notion,clickup'
       />
       <meta name='author' content='BoostIO, kazz@boostio.co' />
       <meta name='robots' content='INDEX,FOLLOW' />
@@ -34,7 +34,7 @@ const DefaultLayout: React.FC = ({ children }) => (
       <meta property='og:title' content='Boost Note' />
       <meta
         property='og:description'
-        content="Boost Note is an intuitive and stylish markdown editor for developers. It's fully open-source."
+        content="Boost Note is a powerful, lightspeed collaborative workspace for developer teams."
       />
       <meta property='og:image' content='https://boostnote.io/static/ogp.jpg' />
       <meta property='og:image:alt' content='Image of Boost Note App' />
@@ -47,7 +47,7 @@ const DefaultLayout: React.FC = ({ children }) => (
       <meta name='twitter:title' content='Boost Note' />
       <meta
         name='twitter:description'
-        content="Boost Note is an intuitive and stylish markdown editor for developers. It's fully open-source."
+        content="Boost Note is a powerful, lightspeed collaborative workspace for developer teams."
       />
       <meta
         name='twitter:image:src'
