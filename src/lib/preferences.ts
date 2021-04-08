@@ -77,7 +77,7 @@ export interface Preferences {
   'general.keymap': Map<string, KeymapItem> | null
 }
 
-function replacer(key, value: any) {
+function replacer(_key: string, value: any) {
   if (value instanceof Map && value.size > 0) {
     return {
       dataType: 'Map',
@@ -88,7 +88,7 @@ function replacer(key, value: any) {
   }
 }
 
-function reviver(key, value: any) {
+function reviver(_key: string, value: any) {
   if (typeof value === 'object' && value !== null) {
     if (value.dataType === 'Map') {
       return new Map(value.value)
