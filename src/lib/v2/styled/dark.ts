@@ -6,7 +6,7 @@ export const darkTheme: BaseTheme = {
   colors: {
     background: {
       primary: '#1E2024',
-      secondary: '#2A2C32',
+      secondary: '#27282B',
       tertiary: '#353940',
       quaternary: '#41454E',
     },
