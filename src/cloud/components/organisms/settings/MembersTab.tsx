@@ -18,7 +18,6 @@ import { DialogIconTypes } from '../../../lib/stores/dialog/types'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../../lib/stores/globalData'
-import { useToast } from '../../../lib/stores/toast'
 import {
   destroyPermission,
   updatePermissionRole,
@@ -48,6 +47,7 @@ import EmojiIcon from '../../atoms/EmojiIcon'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const MembersTab = () => {
   const { t } = useTranslation()

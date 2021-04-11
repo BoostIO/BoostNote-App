@@ -20,7 +20,6 @@ import {
 import { usePage } from '../pageStore'
 import { useDialog, DialogIconTypes } from '../dialog'
 import { useRouter } from '../../router'
-import { useToast } from '../toast'
 import {
   createFolder,
   updateFolder,
@@ -56,6 +55,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
+import { useToast } from '../../../../lib/v2/stores/toast'
 export * from './types'
 
 function useNavStore(pageProps: any): NavContext {

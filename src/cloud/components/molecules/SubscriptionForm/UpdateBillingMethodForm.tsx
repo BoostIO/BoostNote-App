@@ -7,7 +7,6 @@ import {
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { Spinner } from '../../atoms/Spinner'
-import { useToast } from '../../../lib/stores/toast'
 import { updateSubMethod } from '../../../api/teams/subscription/update'
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js'
 import {
@@ -18,6 +17,7 @@ import { selectTheme } from '../../../lib/styled'
 import { useSettings } from '../../../lib/stores/settings'
 import { StyledCardElementContainer } from './index'
 import Alert from '../../../../components/atoms/Alert'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription

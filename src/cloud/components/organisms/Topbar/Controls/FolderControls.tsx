@@ -10,7 +10,6 @@ import {
   destroyFolderBookmark,
   createFolderBookmark,
 } from '../../../../api/teams/folders/bookmarks'
-import { useToast } from '../../../../lib/stores/toast'
 import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import {
   useGlobalKeyDownHandler,
@@ -21,6 +20,7 @@ import {
   isFolderBookmarkShortcut,
   isFolderDeleteShortcut,
 } from '../../../../lib/shortcuts'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface FolderControlsProps {
   currentFolder: SerializedFolderWithBookmark

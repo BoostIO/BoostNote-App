@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../lib/stores/nav'
-import { useToast } from '../../../../../lib/stores/toast'
 import ContextMenuItem from './ControlsContextMenuItem'
 import {
   Scrollable,
@@ -26,6 +25,7 @@ import { useDialog, DialogIconTypes } from '../../../../../lib/stores/dialog'
 import { useTranslation } from 'react-i18next'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiTrashCan } from '@mdi/js'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 interface TagContextMenuProps {
   currentTag: SerializedTag

@@ -18,13 +18,13 @@ import {
 import { ModalsOptions } from '../../../../../../lib/stores/modal/types'
 import { defaultPreviewStyle } from '../../../../../atoms/MarkdownView/styles'
 import { useSettings } from '../../../../../../lib/stores/settings'
-import { useToast } from '../../../../../../lib/stores/toast'
 import { useElectron } from '../../../../../../lib/stores/electron'
 import { downloadBlob, printIframe } from '../../../../../../lib/download'
 import Icon from '../../../../../atoms/Icon'
 import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
 import { selectTheme } from '../../../../../../lib/styled'
+import { useToast } from '../../../../../../../lib/v2/stores/toast'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark

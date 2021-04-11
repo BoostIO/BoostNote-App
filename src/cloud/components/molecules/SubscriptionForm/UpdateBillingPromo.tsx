@@ -7,8 +7,8 @@ import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { StyledBillingInput } from '.'
 import { Spinner } from '../../atoms/Spinner'
-import { useToast } from '../../../lib/stores/toast'
 import { redeemPromo } from '../../../api/teams/subscription'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription

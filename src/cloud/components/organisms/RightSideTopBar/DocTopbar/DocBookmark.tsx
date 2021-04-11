@@ -7,7 +7,6 @@ import {
   DestroyDocBookmarkResponseBody,
 } from '../../../../api/teams/docs/bookmarks'
 import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../lib/stores/toast'
 import {
   preventKeyboardEventPropagation,
   useGlobalKeyDownHandler,
@@ -19,6 +18,7 @@ import { mdiStar, mdiStarOutline } from '@mdi/js'
 import { StyledTopBarIcon } from '../styled'
 import Spinner from '../../../atoms/CustomSpinner'
 import cc from 'classcat'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface DocBookmarkProps {
   currentDoc: SerializedDocWithBookmark

@@ -12,7 +12,6 @@ import {
 import FolderLink from '../../../atoms/Link/FolderLink'
 import ContentManagerRowLinkContent from './ContentManagerRowLinkContent'
 import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../lib/stores/toast'
 import {
   CreateFolderBookmarkResponseBody,
   DestroyFolderBookmarkResponseBody,
@@ -24,6 +23,7 @@ import Flexbox from '../../../atoms/Flexbox'
 import { getFolderId } from '../../../../lib/utils/patterns'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../lib/stores/modal'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface ContentManagerFolderRowProps {
   team: SerializedTeam

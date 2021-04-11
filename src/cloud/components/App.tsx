@@ -9,12 +9,12 @@ import {
   usingLegacyElectron,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
-import { ToastProvider } from '../lib/stores/toast'
 import { useEffectOnce } from 'react-use'
 import { gaTrackingId, nodeEnv, boostHubBaseUrl } from '../lib/consts'
 import '../lib/i18n'
 
 import { RealtimeConnProvider } from '../lib/stores/realtimeConn'
+import { V2ToastProvider } from '../../lib/v2/stores/toast'
 const App = () => {
   useElectron()
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
@@ -48,7 +48,7 @@ const App = () => {
   }
   return (
     <>
-      <ToastProvider>
+      <V2ToastProvider>
         <GlobalDataProvider>
           <RealtimeConnProvider>
             <RouterProvider>
@@ -56,7 +56,7 @@ const App = () => {
             </RouterProvider>
           </RealtimeConnProvider>
         </GlobalDataProvider>
-      </ToastProvider>
+      </V2ToastProvider>
 
       <script
         async={true}

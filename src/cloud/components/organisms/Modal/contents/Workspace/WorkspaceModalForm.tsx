@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { useModal } from '../../../../../lib/stores/modal'
-import { useToast } from '../../../../../lib/stores/toast'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { ModalBody, ModalContainer, ModalLine, ModaLineHeader } from '../styled'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
@@ -21,6 +20,7 @@ import { useNav } from '../../../../../lib/stores/nav'
 import Flexbox from '../../../../atoms/Flexbox'
 import CustomSwitch from '../../../../atoms/CustomSwitch'
 import WorkspaceAccess from './WorkspaceAccess'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace

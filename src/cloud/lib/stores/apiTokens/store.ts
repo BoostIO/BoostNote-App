@@ -1,6 +1,5 @@
 import { SerializedApiToken } from '../../../interfaces/db/apiTokens'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { useToast } from '../toast'
 import { useState, useCallback } from 'react'
 import { useEffectOnce } from 'react-use'
 import {
@@ -10,6 +9,7 @@ import {
   updateToken,
 } from '../../../api/tokens'
 import { splitWhen } from 'ramda'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface Actions {
   deleteToken: (token: SerializedApiToken) => void

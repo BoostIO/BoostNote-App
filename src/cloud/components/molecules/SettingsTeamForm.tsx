@@ -17,9 +17,9 @@ import Button from '../atoms/Button'
 import Flexbox from '../atoms/Flexbox'
 import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
-import { useToast } from '../../lib/stores/toast'
 import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam

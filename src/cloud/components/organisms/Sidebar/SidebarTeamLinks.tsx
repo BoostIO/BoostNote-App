@@ -3,7 +3,6 @@ import styled from '../../../lib/styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import Tooltip from '../../atoms/Tooltip'
 import { useNav } from '../../../lib/stores/nav'
-import { useToast } from '../../../lib/stores/toast'
 import cc from 'classcat'
 import { MetaKeyText } from '../../../lib/keyboard'
 import { useSearch } from '../../../lib/stores/search'
@@ -16,6 +15,7 @@ import SidebarNewDocControls from './SideNavigator/SidebarNewDocControls'
 import { useRouter } from '../../../lib/router'
 import { newNoteEventEmitter } from '../../../lib/utils/events'
 import { useElectron } from '../../../lib/stores/electron'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const SidebarTeamLinks = () => {
   const { team, currentSubInfo } = usePage()
@@ -28,7 +28,7 @@ const SidebarTeamLinks = () => {
     setSideNavCreateButtonState,
   } = useNav()
   const { setShowGlobalSearch } = useSearch()
-  const { pushDocHandlerErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const { pathname } = useRouter()
   const navigateToTeam = useNavigateToTeam()
   const { usingElectron } = useElectron()
@@ -44,13 +44,17 @@ const SidebarTeamLinks = () => {
         workspaceId: currentWorkspaceId,
       })
     } catch (error) {
-      pushDocHandlerErrorMessage(error)
+      if (error.response.data.includes('exceeds the free tier')) {
+        return
+      }
+
+      pushApiErrorMessage(error)
     }
     setSideNavCreateButtonState()
   }, [
     currentParentFolderId,
     createDocHandler,
-    pushDocHandlerErrorMessage,
+    pushApiErrorMessage,
     currentWorkspaceId,
     sideNavCreateButtonState,
     setSideNavCreateButtonState,

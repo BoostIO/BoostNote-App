@@ -17,7 +17,6 @@ import { useSettings } from '../../../lib/stores/settings'
 import { selectTheme } from '../../../lib/styled'
 import { Spinner } from '../../atoms/Spinner'
 import { usePage } from '../../../lib/stores/pageStore'
-import { useToast } from '../../../lib/stores/toast'
 import {
   stripeProPlanUnit,
   stripeStandardPlanUnit,
@@ -29,6 +28,7 @@ import plur from 'plur'
 import Icon from '../../../../components/atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Alert from '../../../../components/atoms/Alert'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface SubscriptionFormProps {
   team: SerializedTeam

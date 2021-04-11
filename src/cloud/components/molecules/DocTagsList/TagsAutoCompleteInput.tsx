@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { mdiPlus } from '@mdi/js'
 import IconMdi from '../../atoms/IconMdi'
 import { useNav } from '../../../lib/stores/nav'
-import { useToast } from '../../../lib/stores/toast'
 import { createTag } from '../../../api/teams/tags'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
@@ -11,6 +10,7 @@ import styled from '../../../lib/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { isChildNode } from '../../../lib/dom'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {

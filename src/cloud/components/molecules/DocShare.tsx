@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
-import { useToast } from '../../lib/stores/toast'
 import {
   createShareLink,
   deleteShareLink,
@@ -41,6 +40,7 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
