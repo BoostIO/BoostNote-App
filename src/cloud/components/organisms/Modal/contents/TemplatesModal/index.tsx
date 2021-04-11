@@ -27,7 +27,10 @@ import { SerializedTemplate } from '../../../../../interfaces/db/template'
 import Flexbox from '../../../../atoms/Flexbox'
 import ClickableListItem from '../../../../molecules/ClickableListItem'
 import EditableInput from '../../../../atoms/EditableInput'
-import { useDialog, DialogIconTypes } from '../../../../../lib/stores/dialog'
+import {
+  useDialog,
+  DialogIconTypes,
+} from '../../../../../../lib/v2/stores/dialog'
 import {
   destroyDocTemplate,
   updateTemplate,
@@ -225,12 +228,17 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
           template.title.trim() !== '' ? template.title : 'this template'
         }?`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', 'Cancel'],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               //remove
               setSendingState('delete')
               try {
@@ -241,10 +249,9 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
               }
               setSendingState(undefined)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [messageBox, pushApiErrorMessage, removeFromTemplatesMap]

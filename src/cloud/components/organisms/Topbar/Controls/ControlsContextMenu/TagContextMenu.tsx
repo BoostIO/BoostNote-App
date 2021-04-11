@@ -21,8 +21,10 @@ import {
 import { SerializedTag } from '../../../../../interfaces/db/tag'
 import { deleteTag } from '../../../../../api/teams/tags'
 import { SerializedTeam } from '../../../../../interfaces/db/team'
-import { useDialog, DialogIconTypes } from '../../../../../lib/stores/dialog'
-import { useTranslation } from 'react-i18next'
+import {
+  useDialog,
+  DialogIconTypes,
+} from '../../../../../../lib/v2/stores/dialog'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiTrashCan } from '@mdi/js'
 import { useToast } from '../../../../../../lib/v2/stores/toast'
@@ -43,7 +45,6 @@ const TagContextMenu = ({
   const { setPartialPageData, pageTag } = usePage()
   const { pushApiErrorMessage } = useToast()
   const { messageBox } = useDialog()
-  const { t } = useTranslation()
 
   const menuRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
@@ -83,13 +84,17 @@ const TagContextMenu = ({
         title: `Delete #${currentTag.text}?`,
         message: `Are you sure to remove this tag? It will be removed from all the affiliated docs`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              //remove
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               setSendingRemoval(true)
               try {
                 await deleteTag(team.id, currentTag.id)
@@ -103,10 +108,9 @@ const TagContextMenu = ({
 
               setSendingRemoval(false)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
@@ -117,7 +121,6 @@ const TagContextMenu = ({
       setPartialPageData,
       pageTag,
       team.id,
-      t,
       messageBox,
     ]
   )

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react'
 import Flexbox from '../../../atoms/Flexbox'
 import HeaderAction from './HeaderAction'
 import { mdiFileUndoOutline, mdiTrashCanOutline } from '@mdi/js'
-import { useDialog, DialogIconTypes } from '../../../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { useNav } from '../../../../lib/stores/nav'
 import { destroyDoc, unarchiveDoc } from '../../../../api/teams/docs'
 import { SerializedTeam } from '../../../../interfaces/db/team'
@@ -80,13 +80,17 @@ const ContentManagerArchivesBulkActions = ({
       title: `Delete?`,
       message: 'Do you want to permanently delete these documents?',
       iconType: DialogIconTypes.Question,
-      buttons: ['Delete', 'Cancel'],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        switch (value) {
-          case 0:
-            //remove
+      buttons: [
+        {
+          variant: 'secondary',
+          label: 'Cancel',
+          cancelButton: true,
+          defaultButton: true,
+        },
+        {
+          variant: 'danger',
+          label: 'Delete',
+          onClick: async () => {
             const patternedIds = [...selectedDocs.values()].map(
               getDocIdFromString
             )
@@ -98,10 +102,9 @@ const ContentManagerArchivesBulkActions = ({
             setSending(undefined)
             setUpdating((prev) => difference(prev, patternedIds))
             return
-          default:
-            return
-        }
-      },
+          },
+        },
+      ],
     })
   }, [
     deleteSingleDoc,

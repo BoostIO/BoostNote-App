@@ -4,7 +4,7 @@ import {
   SectionHeader2,
   SectionRow,
 } from '../organisms/settings/styled'
-import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
 import {
@@ -13,7 +13,6 @@ import {
   cancelOpenInvite,
   resetOpenInvite,
 } from '../../api/teams/open-invites'
-import { useTranslation } from 'react-i18next'
 import { Spinner } from '../atoms/Spinner'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
@@ -29,7 +28,6 @@ interface OpenInvitesSectionProps {
 }
 
 const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
-  const { t } = useTranslation()
   const { team } = usePage()
   const [fetching, setFetching] = useState<boolean>(true)
   const [sending, setSending] = useState<boolean>(false)
@@ -82,12 +80,17 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         title: `Cancel invite?`,
         message: `Are you sure to cancel this invite? The link won't allow users to join anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               //remove
               setSending(true)
               try {
@@ -98,13 +101,12 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
               }
               setSending(false)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, t, team, pushApiErrorMessage]
+    [messageBox, team, pushApiErrorMessage]
   )
 
   const resetInvite = useCallback(async () => {
@@ -116,12 +118,17 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       title: `Regenerate Link`,
       message: `Are you sure to reset the current link and generate a new one? The previous link will be depreciated.`,
       iconType: DialogIconTypes.Warning,
-      buttons: ['Reset', t('general.cancel')],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        switch (value) {
-          case 0:
+      buttons: [
+        {
+          variant: 'secondary',
+          label: 'Cancel',
+          cancelButton: true,
+          defaultButton: true,
+        },
+        {
+          variant: 'danger',
+          label: 'Reset',
+          onClick: async () => {
             //remove
             setSending(true)
             try {
@@ -135,12 +142,11 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
             }
             setSending(false)
             return
-          default:
-            return
-        }
-      },
+          },
+        },
+      ],
     })
-  }, [messageBox, t, team, pushApiErrorMessage, openInvite])
+  }, [messageBox, team, pushApiErrorMessage, openInvite])
 
   const toggleOpenInvite = useCallback(() => {
     if (openInvite != null) {

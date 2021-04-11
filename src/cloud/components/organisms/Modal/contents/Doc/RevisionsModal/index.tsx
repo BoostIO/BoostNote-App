@@ -21,8 +21,10 @@ import { mdiBackupRestore } from '@mdi/js'
 import CustomButton from '../../../../../atoms/buttons/CustomButton'
 import { useModal } from '../../../../../../lib/stores/modal'
 import { useSettings } from '../../../../../../lib/stores/settings'
-import { useDialog, DialogIconTypes } from '../../../../../../lib/stores/dialog'
-import { useTranslation } from 'react-i18next'
+import {
+  useDialog,
+  DialogIconTypes,
+} from '../../../../../../../lib/v2/stores/dialog'
 import RevisionModalDetail from './RevisionModalDetail'
 import {
   StyledNoSubContent,
@@ -57,7 +59,6 @@ const RevisionsModal = ({
   const { messageBox } = useDialog()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
-  const { t } = useTranslation()
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -89,22 +90,27 @@ const RevisionsModal = ({
         title: `Restore this revision?`,
         message: `Are you sure to restore this revision?`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Restore', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'primary',
+            label: 'Restore',
+            onClick: async () => {
               restoreRevision(rev)
               closeModal()
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, t, restoreRevision, closeModal]
+    [messageBox, restoreRevision, closeModal]
   )
 
   const updateRevisionsMap = useCallback(

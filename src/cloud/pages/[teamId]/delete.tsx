@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import styled from '../../lib/styled'
 import Container from '../../components/layouts/Container'
 import Page from '../../components/Page'
-import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { useToast } from '../../../lib/v2/stores/toast'
 import { useTranslation } from 'react-i18next'
 import CustomButton from '../../components/atoms/buttons/CustomButton'
@@ -50,13 +50,17 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
       title: `Delete [${team.name}]?`,
       message: `Are you sure to delete this team and all of its content? You will not be able to revert this action.`,
       iconType: DialogIconTypes.Warning,
-      buttons: ['Delete', t('general.cancel')],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        switch (value) {
-          case 0:
-            //remove
+      buttons: [
+        {
+          variant: 'secondary',
+          label: 'Cancel',
+          cancelButton: true,
+          defaultButton: true,
+        },
+        {
+          variant: 'danger',
+          label: 'Delete',
+          onClick: async () => {
             setSendingRemoval(true)
             try {
               const { redirectTo } = await destroyTeam(team.id)
@@ -77,16 +81,12 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
               })
               setSendingRemoval(false)
             }
-
-            return
-          default:
-            return
-        }
-      },
+          },
+        },
+      ],
     })
   }, [
     messageBox,
-    t,
     team,
     pushMessage,
     push,
