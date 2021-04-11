@@ -20,7 +20,7 @@ export const darkTheme: BaseTheme = {
       secondary: '#E6E6E6',
       subtle: '#9C9C9C',
       disabled: '#666666',
-      link: '#3F729B',
+      link: '#329BBE',
     },
     border: {
       main: '#2A2C32',
