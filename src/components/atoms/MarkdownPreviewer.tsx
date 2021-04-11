@@ -253,11 +253,9 @@ const MarkdownPreviewer = ({
         return <Flowchart code={children[0]} />
       },
       chart: ({ children }: any) => {
-        console.log('got to chart', children)
         return <Chart config={children[0]} />
       },
       'chart(yaml)': ({ children }: any) => {
-        console.log('got to yaml chart', children)
         return <Chart config={children[0]} isYml={true} />
       },
     },
