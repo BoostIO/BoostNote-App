@@ -5,11 +5,11 @@ import {
   EmojiPickerDoc,
   EmojiPickerFolder,
 } from '../../../components/organisms/Sidebar/SideNavigator/SideNavIcon'
-import { useWindow } from '../window'
 import {
   EmojiPickerWidth,
   EmojiPickerHeight,
 } from '../../../components/molecules/EmojiPicker'
+import { useWindow } from '../../../../lib/v2/stores/window'
 
 function useEmojiPickerStore(): EmojiPickerContext {
   const [closed, setClosed] = useState(true)

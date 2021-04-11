@@ -18,7 +18,6 @@ import { SettingsProvider, useSettings } from '../lib/stores/settings'
 import { ModalProvider } from '../lib/stores/modal'
 import { PreferencesProvider } from '../lib/stores/preferences'
 import { SearchProvider } from '../lib/stores/search'
-import { WindowProvider } from '../lib/stores/window'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
 import { PageDataProvider } from '../lib/stores/pageStore'
 
@@ -73,8 +72,7 @@ const CombinedProvider = combineProviders(
   PreferencesProvider,
   SettingsProvider,
   SearchProvider,
-  ExternalEntitiesProvider,
-  WindowProvider
+  ExternalEntitiesProvider
 )
 
 const V2CombinedProvider = combineProviders(
@@ -252,8 +250,8 @@ const Router = () => {
   if (pageInfo.refactored) {
     return (
       <PageDataProvider pageProps={pageInfo.pageProps as any}>
-        <CombinedProvider>
-          <V2CombinedProvider>
+        <V2CombinedProvider>
+          <CombinedProvider>
             <NavProvider pageProps={pageInfo.pageProps as any}>
               <CustomThemeProvider>
                 <V2ThemeProvider>
@@ -263,16 +261,16 @@ const Router = () => {
                 </V2ThemeProvider>
               </CustomThemeProvider>
             </NavProvider>
-          </V2CombinedProvider>
-        </CombinedProvider>
+          </CombinedProvider>
+        </V2CombinedProvider>
       </PageDataProvider>
     )
   }
 
   return (
     <PageDataProvider pageProps={pageInfo.pageProps as any}>
-      <CombinedProvider>
-        <V2CombinedProvider>
+      <V2CombinedProvider>
+        <CombinedProvider>
           <NavProvider pageProps={pageInfo.pageProps as any}>
             <CustomThemeProvider>
               <V2ThemeProvider>
@@ -291,8 +289,8 @@ const Router = () => {
               </V2ThemeProvider>
             </CustomThemeProvider>
           </NavProvider>
-        </V2CombinedProvider>
-      </CombinedProvider>
+        </CombinedProvider>
+      </V2CombinedProvider>
     </PageDataProvider>
   )
 }
