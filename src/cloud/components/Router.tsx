@@ -12,7 +12,6 @@ import { SidebarCollapseProvider } from '../lib/stores/sidebarCollapse'
 import { combineProviders } from '../lib/utils/context'
 import { EmojiPickerProvider } from '../lib/stores/emoji'
 import { OnboardingProvider } from '../lib/stores/onboarding'
-import { ContextMenuProvider } from '../lib/stores/contextMenu'
 import { SettingsProvider, useSettings } from '../lib/stores/settings'
 
 import { ModalProvider } from '../lib/stores/modal'
@@ -29,7 +28,6 @@ import GlobalStyle from './GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import Modal from './organisms/Modal'
 import SettingsComponent from './organisms/settings/SettingsComponent'
-import ContextMenu from './molecules/ContextMenu'
 import EmojiPicker from './molecules/EmojiPicker'
 import SearchModal from './organisms/SearchModal'
 import { GetInitialPropsParameters } from '../interfaces/pages'
@@ -62,12 +60,12 @@ import { V2ModalProvider } from '../../lib/v2/stores/modal'
 import { V2DialogProvider } from '../../lib/v2/stores/dialog'
 import Toast from '../../components/v2/organisms/Toast'
 import Dialog from '../../components/v2/organisms/Dialog/Dialog'
+import ContextMenu from '../../components/v2/molecules/ContextMenu'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
   EmojiPickerProvider,
   OnboardingProvider,
-  ContextMenuProvider,
   ModalProvider,
   PreferencesProvider,
   SettingsProvider,

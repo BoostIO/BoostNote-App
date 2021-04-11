@@ -40,7 +40,10 @@ import { deleteGuestDoc, getGuestsEmails } from '../../../api/guests'
 import { useSet } from 'react-use'
 import plur from 'plur'
 import Button from '../../atoms/Button'
-import { MenuTypes, useContextMenu } from '../../../lib/stores/contextMenu'
+import {
+  MenuTypes,
+  useContextMenu,
+} from '../../../../lib/v2/stores/contextMenu'
 import { SerializedGuest } from '../../../interfaces/db/guest'
 import EmojiIcon from '../../atoms/EmojiIcon'
 import { getDocTitle } from '../../../lib/utils/patterns'

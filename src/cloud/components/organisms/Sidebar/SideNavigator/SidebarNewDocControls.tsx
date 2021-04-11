@@ -5,7 +5,10 @@ import {
   mdiFileUploadOutline,
   mdiPencilBoxMultipleOutline,
 } from '@mdi/js'
-import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
+import {
+  useContextMenu,
+  MenuTypes,
+} from '../../../../../lib/v2/stores/contextMenu'
 import TemplatesModal from '../../Modal/contents/TemplatesModal'
 import { useModal } from '../../../../lib/stores/modal'
 import { usePage } from '../../../../lib/stores/pageStore'

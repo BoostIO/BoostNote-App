@@ -11,7 +11,10 @@ import { useNav } from '../../../../lib/stores/nav'
 import { baseIconStyle } from '../../../../lib/styled/styleFunctions'
 import styled from '../../../../lib/styled'
 import { SerializedDocWithBookmark } from '../../../../interfaces/db/doc'
-import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
+import {
+  useContextMenu,
+  MenuTypes,
+} from '../../../../../lib/v2/stores/contextMenu'
 import {
   CreateDocBookmarkResponseBody,
   DestroyDocBookmarkResponseBody,

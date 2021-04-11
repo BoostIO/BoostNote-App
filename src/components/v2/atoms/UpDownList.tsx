@@ -6,10 +6,12 @@ import { useUpDownNavigationListener } from '../../../lib/v2/keyboard'
 interface UpDownListProps {
   className?: string
   onBlur?: () => void
+  ignoreFocus?: boolean
 }
 const UpDownList: React.FC<UpDownListProps> = ({
   className,
   children,
+  ignoreFocus,
   onBlur,
 }) => {
   const listRef = React.createRef<HTMLDivElement>()
@@ -42,6 +44,10 @@ const UpDownList: React.FC<UpDownListProps> = ({
       ref={listRef}
       className={className}
       onFocus={(event) => {
+        if (ignoreFocus) {
+          return
+        }
+
         if (event.target === listRef.current) {
           event.preventDefault()
           focusFirstChildFromElement(event.target)

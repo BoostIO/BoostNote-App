@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import {
   menuHeight,
@@ -24,12 +24,6 @@ const ContextMenu = () => {
         document.body.clientWidth
     )
   })
-
-  useEffect(() => {
-    if (!contextMenu.closed) {
-      menuRef.current!.focus()
-    }
-  }, [contextMenu.closed, menuRef])
 
   const closeContextMenu = () => {
     contextMenu!.close()
@@ -67,9 +61,9 @@ const ContextMenu = () => {
         top: position.y,
       }}
     >
-      <UpDownList>
+      <UpDownList ignoreFocus={true}>
         {menuItems.map((menu, index) => {
-          const key = `${id}-${index}`
+          const key = `context__menu--${id}-${index}`
           switch (menu.type) {
             case MenuTypes.Normal:
               const nMenu = {
@@ -86,6 +80,7 @@ const ContextMenu = () => {
                     closeContextMenu()
                     nMenu.onClick()
                   }}
+                  id={key}
                   disabled={nMenu.enabled == null ? false : !nMenu.enabled}
                 >
                   {nMenu.icon}
