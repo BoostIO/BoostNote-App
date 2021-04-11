@@ -2,7 +2,10 @@ import React, { useCallback, useState } from 'react'
 import { useNav } from '../../../../lib/stores/nav'
 import styled from '../../../../lib/styled'
 import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
-import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
+import {
+  useContextMenu,
+  MenuTypes,
+} from '../../../../../lib/v2/stores/contextMenu'
 import {
   CreateFolderBookmarkResponseBody,
   DestroyFolderBookmarkResponseBody,

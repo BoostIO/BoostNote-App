@@ -24,7 +24,8 @@ export const useUpDownNavigationListener = (
     return (event: KeyboardEvent) => {
       if (
         listRef.current == null ||
-        !listRef.current.contains(document.activeElement)
+        (!listRef.current.isSameNode(document.activeElement) &&
+          !listRef.current.contains(document.activeElement))
       ) {
         return
       }

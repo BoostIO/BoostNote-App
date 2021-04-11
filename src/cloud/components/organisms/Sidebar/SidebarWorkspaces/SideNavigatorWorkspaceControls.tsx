@@ -3,7 +3,10 @@ import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import { useModal } from '../../../../lib/stores/modal'
 import { useNav } from '../../../../lib/stores/nav'
-import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
+import {
+  useContextMenu,
+  MenuTypes,
+} from '../../../../../lib/v2/stores/contextMenu'
 import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { destroyWorkspace } from '../../../../api/teams/workspaces'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
