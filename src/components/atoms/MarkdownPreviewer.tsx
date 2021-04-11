@@ -23,13 +23,34 @@ import { Attachment, ObjectMap } from '../../lib/db/types'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 import AttachmentImage from './markdown/AttachmentImage'
 import CodeFence from './markdown/CodeFence'
+import {
+  Chart,
+  Flowchart,
+  rehypeMermaid,
+  remarkCharts,
+  remarkPlantUML,
+} from '../../cloud/lib/charts'
+import { rehypePosition } from '../../cloud/lib/rehypePosition'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': [...gh.attributes['*'], 'className', 'align'],
+    '*': [...gh.attributes['*'], 'className', 'align', 'data-line'],
     input: [...gh.attributes.input, 'checked'],
     pre: ['dataRaw'],
+    iframe: ['src'],
+    path: ['d'],
+    svg: ['viewBox'],
   },
+  tagNames: [
+    ...gh.tagNames,
+    'svg',
+    'path',
+    'mermaid',
+    'flowchart',
+    'chart',
+    'chart(yaml)',
+    'iframe',
+  ],
 })
 
 interface Element extends Parent {
@@ -185,66 +206,84 @@ const MarkdownPreviewer = ({
     infima: false,
   }
 
+  const rehypeReactConfig = {
+    createElement: React.createElement,
+    Fragment: React.Fragment,
+    components: {
+      img: ({ src, ...props }: any) => {
+        if (src != null && !src.match('/')) {
+          const attachment = attachmentMap[src]
+          if (attachment != null) {
+            return <AttachmentImage attachment={attachment} {...props} />
+          }
+        }
+
+        return <img {...props} src={src} />
+      },
+      a: ({ href, children }: any) => {
+        return (
+          <a
+            href={href}
+            onClick={(event) => {
+              event.preventDefault()
+              openNew(href)
+            }}
+          >
+            {children}
+          </a>
+        )
+      },
+      input: (props: React.HTMLProps<HTMLInputElement>) => {
+        const { type, checked } = props
+
+        if (type !== 'checkbox') {
+          return <input {...props} />
+        }
+
+        return (
+          <MarkdownCheckbox
+            index={checkboxIndexRef.current++}
+            checked={checked}
+            updateContent={updateContent}
+          />
+        )
+      },
+      pre: CodeFence,
+      flowchart: ({ children }: any) => {
+        return <Flowchart code={children[0]} />
+      },
+      chart: ({ children }: any) => {
+        console.log('got to chart', children)
+        return <Chart config={children[0]} />
+      },
+      'chart(yaml)': ({ children }: any) => {
+        console.log('got to yaml chart', children)
+        return <Chart config={children[0]} isYml={true} />
+      },
+    },
+  }
+
   const markdownProcessor = useMemo(() => {
     return unified()
       .use(remarkParse)
-      .use(remarkSlug)
       .use(remarkEmoji, { emoticon: false })
       .use(remarkAbmonitions, remarkAdmonitionOptions)
       .use(remarkMath)
+      .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
+      .use(remarkCharts)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
+      .use(remarkSlug)
+      .use(rehypePosition)
       .use(rehypeSanitize, schema)
+      .use(rehypeKatex)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
         theme: codeBlockTheme,
       })
-      .use(rehypeKatex)
-      .use(rehypeReact, {
-        createElement: React.createElement,
-        components: {
-          img: ({ src, ...props }: any) => {
-            if (src != null && !src.match('/')) {
-              const attachment = attachmentMap[src]
-              if (attachment != null) {
-                return <AttachmentImage attachment={attachment} {...props} />
-              }
-            }
-
-            return <img {...props} src={src} />
-          },
-          a: ({ href, children }: any) => {
-            return (
-              <a
-                href={href}
-                onClick={(event) => {
-                  event.preventDefault()
-                  openNew(href)
-                }}
-              >
-                {children}
-              </a>
-            )
-          },
-          input: (props: React.HTMLProps<HTMLInputElement>) => {
-            const { type, checked } = props
-
-            if (type !== 'checkbox') {
-              return <input {...props} />
-            }
-
-            return (
-              <MarkdownCheckbox
-                index={checkboxIndexRef.current++}
-                checked={checked}
-                updateContent={updateContent}
-              />
-            )
-          },
-          pre: CodeFence,
-        },
-      })
-  }, [remarkAdmonitionOptions, codeBlockTheme, attachmentMap, updateContent])
+      .use(rehypeMermaid)
+      .use(rehypeReact, rehypeReactConfig)
+  }, [remarkAdmonitionOptions, codeBlockTheme, rehypeReactConfig])
 
   const renderContent = useCallback(async () => {
     const content = previousContentRef.current
