@@ -6,7 +6,6 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
 import rehypeKatex from 'rehype-katex'
-import remarkAdmonitions from 'remark-admonitions'
 import { mergeDeepRight } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { rehypeCodeMirror } from '../components/atoms/MarkdownPreviewer'
@@ -32,10 +31,15 @@ import { join } from 'path'
 import { dev } from '../electron/consts'
 import { excludeFileProtocol } from './db/utils'
 import {
+  rehypeChart,
+  rehypeFlowChart,
   rehypeMermaid,
   remarkCharts,
   remarkPlantUML,
 } from '../cloud/lib/charts'
+import remarkSlug from 'remark-slug'
+import { rehypePosition } from '../cloud/lib/rehypePosition'
+import remarkAdmonitions from 'remark-admonitions'
 
 interface ImageData {
   name: string
@@ -58,7 +62,16 @@ const schema = mergeDeepRight(gh, {
     path: ['d'],
     svg: ['viewBox'],
   },
-  tagNames: [...gh.tagNames, 'svg', 'path', 'mermaid', 'iframe'],
+  tagNames: [
+    ...gh.tagNames,
+    'svg',
+    'path',
+    'mermaid',
+    'flowchart',
+    'chart',
+    'chart(yaml)',
+    'iframe',
+  ],
 })
 
 export async function openDialog(): Promise<string> {
@@ -449,6 +462,8 @@ async function convertNoteDocToMarkdownHtmlString(
     .use(remarkCharts)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
+    .use(remarkSlug)
+    .use(rehypePosition)
     .use(rehypeSanitize, schema)
     .use(rehypeKatex, { output: 'htmlAndMathml' })
     .use(rehypeCodeMirror, {
@@ -456,15 +471,18 @@ async function convertNoteDocToMarkdownHtmlString(
       theme: codeBlockTheme,
     })
     .use(rehypeMermaid)
+    .use(rehypeFlowChart)
+    .use(rehypeChart, { tagName: 'chart' })
+    .use(rehypeChart, { tagName: 'chart(yaml)', isYml: true })
     .use(rehypeReact, {
       createElement: React.createElement,
+      Fragment: React.Fragment,
       components: {
         pre: CodeFence,
       },
     })
     .use(rehypeStringify)
     .process(note.content)
-
   return output.toString('utf-8').trim() + '\n'
 }
 
