@@ -140,7 +140,7 @@ const Application: React.FC<{}> = ({ children }) => {
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'timeline'
+    'tree'
   )
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
