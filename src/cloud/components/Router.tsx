@@ -17,7 +17,6 @@ import { SettingsProvider, useSettings } from '../lib/stores/settings'
 
 import { ModalProvider } from '../lib/stores/modal'
 import { PreferencesProvider } from '../lib/stores/preferences'
-import { DialogProvider } from '../lib/stores/dialog'
 import { SearchProvider } from '../lib/stores/search'
 import { WindowProvider } from '../lib/stores/window'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
@@ -33,7 +32,6 @@ import Modal from './organisms/Modal'
 import SettingsComponent from './organisms/settings/SettingsComponent'
 import ContextMenu from './molecules/ContextMenu'
 import EmojiPicker from './molecules/EmojiPicker'
-import Dialog from './molecules/Dialog/Dialog'
 import SearchModal from './organisms/SearchModal'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import ResourceIndex from '../pages/[teamId]/[resourceId]'
@@ -64,6 +62,7 @@ import { V2ContextMenuProvider } from '../../lib/v2/stores/contextMenu'
 import { V2ModalProvider } from '../../lib/v2/stores/modal'
 import { V2DialogProvider } from '../../lib/v2/stores/dialog'
 import Toast from '../../components/v2/organisms/Toast'
+import Dialog from '../../components/v2/organisms/Dialog/Dialog'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -73,7 +72,6 @@ const CombinedProvider = combineProviders(
   ModalProvider,
   PreferencesProvider,
   SettingsProvider,
-  DialogProvider,
   SearchProvider,
   ExternalEntitiesProvider,
   WindowProvider

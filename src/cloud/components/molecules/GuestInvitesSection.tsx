@@ -7,9 +7,8 @@ import {
   SectionList,
   SectionListItem,
 } from '../organisms/settings/styled'
-import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { useEffectOnce, useSet } from 'react-use'
-import { useTranslation } from 'react-i18next'
 import { Spinner } from '../atoms/Spinner'
 import ErrorBlock from '../atoms/ErrorBlock'
 import CustomButton from '../atoms/buttons/CustomButton'
@@ -31,7 +30,6 @@ interface GuestInvitesSectionProps {
 }
 
 const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
-  const { t } = useTranslation()
   const [, { add, has, remove }] = useSet(new Set<string>())
   const [pendingInvites, setPendingInvites] = useState<SerializedGuestInvite[]>(
     []
@@ -107,12 +105,18 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
         title: `Deactivate?`,
         message: `Are you sure to retract this invite? The invited guest won't be able to access this document anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Deactivate', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Deactivate',
+            onClick: async () => {
               try {
                 add(invite.id)
                 await cancelGuestInvite(invite.id)
@@ -126,13 +130,12 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
                 setError(error)
               }
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, t, add, remove]
+    [messageBox, add, remove]
   )
 
   const removeGuestAccess = useCallback(
@@ -141,12 +144,18 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
         title: `Deactivate?`,
         message: `Are you sure to retract this invite? The invited guest won't be able to access this document anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Deactivate', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Deactivate',
+            onClick: async () => {
               try {
                 add(guestId)
                 const { guest: updatedGuest } = await deleteGuestDoc(
@@ -168,13 +177,12 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
                 setError(error)
               }
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, t, add, remove, setGuestsMap, updateGuestsMap]
+    [messageBox, add, remove, setGuestsMap, updateGuestsMap]
   )
 
   return (

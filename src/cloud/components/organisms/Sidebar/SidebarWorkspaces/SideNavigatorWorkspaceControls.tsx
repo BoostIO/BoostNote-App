@@ -4,8 +4,7 @@ import { SerializedTeam } from '../../../../interfaces/db/team'
 import { useModal } from '../../../../lib/stores/modal'
 import { useNav } from '../../../../lib/stores/nav'
 import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
-import { useDialog, DialogIconTypes } from '../../../../lib/stores/dialog'
-import { useTranslation } from 'react-i18next'
+import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { destroyWorkspace } from '../../../../api/teams/workspaces'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
 import EditWorkspaceModal from '../../Modal/contents/Workspace/EditWorkspaceModal'
@@ -54,7 +53,6 @@ const SideNavigatorWorkspaceControls = ({
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { pushApiErrorMessage, pushMessage } = useToast()
-  const { t } = useTranslation()
 
   const createChildDoc = useCallback(async () => {
     try {
@@ -77,18 +75,23 @@ const SideNavigatorWorkspaceControls = ({
         title: `Delete the workspace?`,
         message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Destroy All', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              const destroyContent = value === 0
+
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Destroy all',
+            onClick: async () => {
               try {
                 const { publicWorkspace } = await destroyWorkspace(
                   team,
                   workspace,
-                  destroyContent
+                  true
                 )
                 removeFromWorkspacesMap(workspace.id)
                 pushMessage({
@@ -124,16 +127,13 @@ const SideNavigatorWorkspaceControls = ({
                 pushApiErrorMessage(error)
               }
               return
-            case 1:
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
       messageBox,
-      t,
       pushApiErrorMessage,
       team,
       removeFromWorkspacesMap,

@@ -13,8 +13,7 @@ import {
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
-import { useDialog } from '../../../lib/stores/dialog'
-import { DialogIconTypes } from '../../../lib/stores/dialog/types'
+import { useDialog, DialogIconTypes } from '../../../../lib/v2/stores/dialog'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../../lib/stores/globalData'
@@ -173,12 +172,17 @@ const MembersTab = () => {
         title: mboxContent.title,
         message: mboxContent.message,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               //remove
               setSending(`${permission.id}-delete`)
               try {
@@ -198,17 +202,15 @@ const MembersTab = () => {
               }
               setSending(undefined)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
       pushApiErrorMessage,
       messageBox,
       currentUser,
-      t,
       router,
       permissions,
       setPartialPageData,
@@ -249,14 +251,17 @@ const MembersTab = () => {
         title: mboxContent.title,
         message: mboxContent.message,
         iconType: DialogIconTypes.Warning,
-        buttons: [changeIsDemotion ? 'Demote' : 'Promote', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              //remove
-
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: changeIsDemotion ? 'danger' : 'primary',
+            label: changeIsDemotion ? 'Demote' : 'Promote',
+            onClick: async () => {
               setSending(`${targetedPermissions.id}-change`)
               try {
                 const data = await updatePermissionRole(
@@ -275,13 +280,12 @@ const MembersTab = () => {
               }
               setSending(undefined)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [pushApiErrorMessage, messageBox, t, permissions, setPartialPageData, team]
+    [pushApiErrorMessage, messageBox, permissions, setPartialPageData, team]
   )
   const removeGuestAccess = useCallback(
     (guestId: string, docId: string) => {
@@ -292,12 +296,18 @@ const MembersTab = () => {
         title: `Deactivate?`,
         message: `Are you sure to retract this invite? The invited guest won't be able to access this document anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Deactivate', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Deactivate',
+            onClick: async () => {
               try {
                 add(guestId)
                 add(`${guestId}-${docId}`)
@@ -321,15 +331,13 @@ const MembersTab = () => {
               remove(guestId)
               remove(`${guestId}-${docId}`)
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
       messageBox,
-      t,
       add,
       remove,
       setGuestsMap,

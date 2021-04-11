@@ -18,7 +18,7 @@ import {
   SerializedDocWithBookmark,
 } from '../../../interfaces/db/doc'
 import { usePage } from '../pageStore'
-import { useDialog, DialogIconTypes } from '../dialog'
+import { useDialog, DialogIconTypes } from '../../../../lib/v2/stores/dialog'
 import { useRouter } from '../../router'
 import {
   createFolder,
@@ -36,7 +36,6 @@ import {
   getDocTitle,
 } from '../../utils/patterns'
 import { moveResource, getResources } from '../../../api/teams/resources'
-import { useTranslation } from 'react-i18next'
 import {
   createDoc,
   destroyDoc,
@@ -71,7 +70,6 @@ function useNavStore(pageProps: any): NavContext {
   const { messageBox } = useDialog()
   const router = useRouter()
   const { pushMessage } = useToast()
-  const { t } = useTranslation()
 
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [sideNavCreateButtonState, setSideNavCreateButtonState] = useState<
@@ -387,13 +385,17 @@ function useNavStore(pageProps: any): NavContext {
         title: `Delete ${target.pathname}`,
         message: `Are you sure to remove this folder and delete completely its notes`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              //remove
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               try {
                 const {
                   parentFolder,
@@ -436,16 +438,13 @@ function useNavStore(pageProps: any): NavContext {
                   description: 'Could not delete this folder',
                 })
               }
-              return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
       messageBox,
-      t,
       team,
       updateFoldersMap,
       removeFromFoldersMap,
@@ -489,14 +488,16 @@ function useNavStore(pageProps: any): NavContext {
         message,
         iconType: DialogIconTypes.Warning,
         buttons: [
-          { label: 'Delete', className: 'danger' },
-          t('general.cancel'),
-        ],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               try {
                 const { doc, parentFolder, workspace } = await destroyDoc(
                   team,
@@ -518,11 +519,9 @@ function useNavStore(pageProps: any): NavContext {
                   description: 'Could not delete this doc',
                 })
               }
-              return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
     [
@@ -531,7 +530,6 @@ function useNavStore(pageProps: any): NavContext {
       removeFromDocsMap,
       pushMessage,
       messageBox,
-      t,
       updateFoldersMap,
       updateWorkspacesMap,
     ]

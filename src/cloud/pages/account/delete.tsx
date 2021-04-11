@@ -4,7 +4,7 @@ import Container from '../../components/layouts/Container'
 import { useGlobalData } from '../../lib/stores/globalData'
 import Page from '../../components/Page'
 import ErrorPage from '../../components/organisms/error/ErrorPage'
-import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { useTranslation } from 'react-i18next'
 import CustomButton from '../../components/atoms/buttons/CustomButton'
 import { Spinner } from '../../components/atoms/Spinner'
@@ -53,13 +53,17 @@ const AccountDeletePage = () => {
       title: `Delete your account?`,
       message: `Are you sure to delete this account and all of its content? Your 1-man teams and all of their documents will be removed alongside it.`,
       iconType: DialogIconTypes.Warning,
-      buttons: ['Delete', t('general.cancel')],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        switch (value) {
-          case 0:
-            //remove
+      buttons: [
+        {
+          variant: 'secondary',
+          label: 'Cancel',
+          cancelButton: true,
+          defaultButton: true,
+        },
+        {
+          variant: 'danger',
+          label: 'Delete',
+          onClick: async () => {
             setSendingRemoval(true)
             try {
               await deleteUser(currentUser.id, feedback)
@@ -75,15 +79,12 @@ const AccountDeletePage = () => {
               })
               setSendingRemoval(false)
             }
-            return
-          default:
-            return
-        }
-      },
+          },
+        },
+      ],
     })
   }, [
     messageBox,
-    t,
     currentUser,
     pushMessage,
     feedback,

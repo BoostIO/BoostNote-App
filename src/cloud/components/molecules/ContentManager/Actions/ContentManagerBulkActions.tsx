@@ -23,7 +23,7 @@ import {
 import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import { destroyFolder } from '../../../../api/teams/folders'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
-import { useDialog, DialogIconTypes } from '../../../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../lib/stores/modal'
@@ -303,12 +303,17 @@ const ContentManagerBulkActions = ({
       title: `Delete the selected items?`,
       message: `Selected folders, their content, and the selected archived documents will be permanently deleted.`,
       iconType: DialogIconTypes.Warning,
-      buttons: ['Delete', 'Cancel'],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        switch (value) {
-          case 0:
+      buttons: [
+        {
+          variant: 'secondary',
+          label: 'Cancel',
+          cancelButton: true,
+          defaultButton: true,
+        },
+        {
+          variant: 'danger',
+          label: 'Delete',
+          onClick: async () => {
             const patternedIds = [...selectedDocs.values()].map(
               getDocIdFromString
             )
@@ -328,10 +333,9 @@ const ContentManagerBulkActions = ({
             setUpdating((prev) => difference(prev, patternedIds))
 
             return
-          default:
-            return
-        }
-      },
+          },
+        },
+      ],
     })
   }, [
     selectedDocs,

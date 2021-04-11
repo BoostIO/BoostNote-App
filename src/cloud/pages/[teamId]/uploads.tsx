@@ -10,8 +10,7 @@ import FileListItem from '../../components/atoms/FileListItem'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import { SerializedTeam } from '../../interfaces/db/team'
-import { DialogIconTypes, useDialog } from '../../lib/stores/dialog'
-import { useTranslation } from 'react-i18next'
+import { DialogIconTypes, useDialog } from '../../../lib/v2/stores/dialog'
 import { useToast } from '../../../lib/v2/stores/toast'
 import { deleteFile } from '../../api/teams/files'
 import { usePage } from '../../lib/stores/pageStore'
@@ -31,7 +30,6 @@ const UploadListPage = ({
 }: UploadsListPageResponseBody) => {
   const [currentFiles, setCurrentFiles] = useState(files)
   const [sending, setSending] = useState<boolean>(false)
-  const { t } = useTranslation()
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
   const { subscription, permissions } = usePage()
@@ -49,13 +47,17 @@ const UploadListPage = ({
         title: `Cancel?`,
         message: `Are you sure to delete this file? It won't be visible in your document anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
-              //remove
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               deleteFile(team, file.name)
                 .then(() => {
                   setCurrentFiles((prev) => {
@@ -66,15 +68,12 @@ const UploadListPage = ({
                   pushApiErrorMessage(error)
                 })
                 .finally(() => setSending(false))
-              return
-            default:
-              setSending(false)
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, setCurrentFiles, pushApiErrorMessage, sending, t]
+    [messageBox, setCurrentFiles, pushApiErrorMessage, sending]
   )
 
   return (

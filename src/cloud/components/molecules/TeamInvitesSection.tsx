@@ -10,7 +10,7 @@ import {
   SectionSelect,
 } from '../organisms/settings/styled'
 import { SerializedTeamInvite } from '../../interfaces/db/teamInvite'
-import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
 import {
@@ -19,7 +19,6 @@ import {
   cancelTeamInvite,
 } from '../../api/teams/invites'
 import { TeamPermissionType } from '../../interfaces/db/userTeamPermissions'
-import { useTranslation } from 'react-i18next'
 import IconMdi from '../atoms/IconMdi'
 import { mdiClose } from '@mdi/js'
 import { Spinner } from '../atoms/Spinner'
@@ -34,7 +33,6 @@ interface TeamInvitesSectionProps {
 }
 
 const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
-  const { t } = useTranslation()
   const { team } = usePage()
   const [sending, setSending] = useState<boolean>(true)
   const [pendingInvites, setPendingInvites] = useState<SerializedTeamInvite[]>(
@@ -103,12 +101,17 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
         title: `Cancel?`,
         message: `Are you sure to retract this invite? The user won't be able to join the team anymore.`,
         iconType: DialogIconTypes.Warning,
-        buttons: ['Delete', t('general.cancel')],
-        defaultButtonIndex: 0,
-        cancelButtonIndex: 1,
-        onClose: async (value: number | null) => {
-          switch (value) {
-            case 0:
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
               //remove
               try {
                 await cancelTeamInvite(team, invite)
@@ -121,13 +124,12 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
                 setError(error)
               }
               return
-            default:
-              return
-          }
-        },
+            },
+          },
+        ],
       })
     },
-    [messageBox, t, team]
+    [messageBox, team]
   )
 
   const selectRole: SelectChangeEventHandler = useCallback(
