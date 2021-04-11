@@ -20,7 +20,7 @@ export const lightTheme: BaseTheme = {
       secondary: '#666666',
       subtle: '#A6A6A6',
       disabled: '#D4D4D4',
-      link: '#3F729B',
+      link: '#329BBE',
     },
     border: {
       main: '#2A2C32',
