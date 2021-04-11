@@ -4,8 +4,8 @@ import cc from 'classcat'
 import { inputStyle } from '../../../../lib/styled/styleFunctions'
 import { useEffectOnce } from 'react-use'
 import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../lib/stores/toast'
 import Spinner from '../../../atoms/CustomSpinner'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SideNavigatorFolderFormProps {
   workspaceId?: string

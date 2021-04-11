@@ -30,7 +30,6 @@ import { intercomAppId } from '../lib/consts'
 import GlobalStyle from './GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import Modal from './organisms/Modal'
-import ToastList from './molecules/Toast'
 import SettingsComponent from './organisms/settings/SettingsComponent'
 import ContextMenu from './molecules/ContextMenu'
 import EmojiPicker from './molecules/EmojiPicker'
@@ -64,6 +63,7 @@ import { V2WindowProvider } from '../../lib/v2/stores/window'
 import { V2ContextMenuProvider } from '../../lib/v2/stores/contextMenu'
 import { V2ModalProvider } from '../../lib/v2/stores/modal'
 import { V2DialogProvider } from '../../lib/v2/stores/dialog'
+import Toast from '../../components/v2/organisms/Toast'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -85,15 +85,7 @@ const V2CombinedProvider = combineProviders(
   V2WindowProvider,
   V2ContextMenuProvider,
   V2ModalProvider,
-  V2DialogProvider,
-  ModalProvider,
-  SidebarCollapseProvider,
-  OnboardingProvider,
-  PreferencesProvider,
-  SettingsProvider,
-  SearchProvider,
-  DialogProvider,
-  ExternalEntitiesProvider
+  V2DialogProvider
 )
 
 interface PageInfo {
@@ -262,17 +254,19 @@ const Router = () => {
   if (pageInfo.refactored) {
     return (
       <PageDataProvider pageProps={pageInfo.pageProps as any}>
-        <V2CombinedProvider>
-          <NavProvider pageProps={pageInfo.pageProps as any}>
-            <CustomThemeProvider>
-              <V2ThemeProvider>
-                <Application>
-                  {<pageInfo.Component {...pageInfo.pageProps} />}
-                </Application>
-              </V2ThemeProvider>
-            </CustomThemeProvider>
-          </NavProvider>
-        </V2CombinedProvider>
+        <CombinedProvider>
+          <V2CombinedProvider>
+            <NavProvider pageProps={pageInfo.pageProps as any}>
+              <CustomThemeProvider>
+                <V2ThemeProvider>
+                  <Application>
+                    {<pageInfo.Component {...pageInfo.pageProps} />}
+                  </Application>
+                </V2ThemeProvider>
+              </CustomThemeProvider>
+            </NavProvider>
+          </V2CombinedProvider>
+        </CombinedProvider>
       </PageDataProvider>
     )
   }
@@ -280,22 +274,26 @@ const Router = () => {
   return (
     <PageDataProvider pageProps={pageInfo.pageProps as any}>
       <CombinedProvider>
-        <NavProvider pageProps={pageInfo.pageProps as any}>
-          <CustomThemeProvider>
-            {<pageInfo.Component {...pageInfo.pageProps} />}
+        <V2CombinedProvider>
+          <NavProvider pageProps={pageInfo.pageProps as any}>
+            <CustomThemeProvider>
+              <V2ThemeProvider>
+                {<pageInfo.Component {...pageInfo.pageProps} />}
 
-            <GlobalStyle />
-            <CodeMirrorStyle />
-            <Modal />
-            <ToastList />
-            <SettingsComponent />
-            <ContextMenu />
-            <EmojiPicker />
-            <Dialog />
-            <SearchModal />
-            <Helper />
-          </CustomThemeProvider>
-        </NavProvider>
+                <GlobalStyle />
+                <CodeMirrorStyle />
+                <Modal />
+                <Toast />
+                <SettingsComponent />
+                <ContextMenu />
+                <EmojiPicker />
+                <Dialog />
+                <SearchModal />
+                <Helper />
+              </V2ThemeProvider>
+            </CustomThemeProvider>
+          </NavProvider>
+        </V2CombinedProvider>
       </CombinedProvider>
     </PageDataProvider>
   )

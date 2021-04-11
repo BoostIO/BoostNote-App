@@ -3,7 +3,6 @@ import { useNav } from '../../../../lib/stores/nav'
 import styled from '../../../../lib/styled'
 import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
-import { useToast } from '../../../../lib/stores/toast'
 import {
   CreateFolderBookmarkResponseBody,
   DestroyFolderBookmarkResponseBody,
@@ -35,6 +34,7 @@ import EditFolderModal from '../../Modal/contents/Folder/EditFolderModal'
 import SideNavigatorIconButton from './SideNavigatorIconButton'
 import Tooltip from '../../../atoms/Tooltip'
 import IconMdi from '../../../atoms/IconMdi'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SideNavigatorFolderControlsProps {
   folder: SerializedFolderWithBookmark
@@ -48,7 +48,7 @@ const SideNavigatorFolderControls = ({
   onNewFolderClick,
 }: SideNavigatorFolderControlsProps) => {
   const { deleteFolderHandler, updateFoldersMap, createDocHandler } = useNav()
-  const { pushMessage, pushDocHandlerErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { popup } = useContextMenu()
   const { openModal } = useModal()
   const [sendingBookmark, setSendingBookmark] = useState<boolean>(false)
@@ -133,14 +133,12 @@ const SideNavigatorFolderControls = ({
         workspaceId: folder.workspaceId,
       })
     } catch (error) {
-      pushDocHandlerErrorMessage(error)
+      if (error.response.data.includes('exceeds the free tier')) {
+        return
+      }
+      pushApiErrorMessage(error)
     }
-  }, [
-    createDocHandler,
-    pushDocHandlerErrorMessage,
-    folder.id,
-    folder.workspaceId,
-  ])
+  }, [createDocHandler, pushApiErrorMessage, folder.id, folder.workspaceId])
 
   const keyDownHandler = useCallback(
     async (event: KeyboardEvent) => {

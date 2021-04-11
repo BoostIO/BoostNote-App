@@ -14,7 +14,6 @@ import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import SubscriptionForm from '../../molecules/SubscriptionForm'
-import { useToast } from '../../../lib/stores/toast'
 import { useSettings } from '../../../lib/stores/settings'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
@@ -24,6 +23,7 @@ import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const stripePromise = loadStripe(stripePublishableKey)
 

@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { ModalContainer } from '../styled'
-import { useToast } from '../../../../../lib/stores/toast'
 import { useNav } from '../../../../../lib/stores/nav'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import styled from '../../../../../lib/styled'
@@ -50,6 +49,7 @@ import { useEmojiPicker } from '../../../../../lib/stores/emoji'
 import Tooltip from '../../../../atoms/Tooltip'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../../../atoms/MarkdownView'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -65,7 +65,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     createDocHandler,
     currentParentFolderId,
   } = useNav()
-  const { pushDocHandlerErrorMessage, pushApiErrorMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
   const [filter, setFilter] = useState<string>('')
@@ -201,7 +201,11 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
       })
       closeModal()
     } catch (error) {
-      pushDocHandlerErrorMessage(error)
+      if (error.response.data.includes('exceeds the free tier')) {
+        return
+      }
+
+      pushApiErrorMessage(error)
       setSendingState(undefined)
     }
   }, [
@@ -210,7 +214,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     createDocHandler,
     closeModal,
     selectedTemplate,
-    pushDocHandlerErrorMessage,
+    pushApiErrorMessage,
   ])
 
   const deleteTemplate = useCallback(

@@ -5,7 +5,6 @@ import { useModal } from '../../../../lib/stores/modal'
 import { useNav } from '../../../../lib/stores/nav'
 import { useContextMenu, MenuTypes } from '../../../../lib/stores/contextMenu'
 import { useDialog, DialogIconTypes } from '../../../../lib/stores/dialog'
-import { useToast } from '../../../../lib/stores/toast'
 import { useTranslation } from 'react-i18next'
 import { destroyWorkspace } from '../../../../api/teams/workspaces'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
@@ -23,6 +22,7 @@ import Tooltip from '../../../atoms/Tooltip'
 import { useGlobalData } from '../../../../lib/stores/globalData'
 import { usePage } from '../../../../lib/stores/pageStore'
 import IconMdi from '../../../atoms/IconMdi'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SideNavigatorWorkspaceControlsProps {
   workspace: SerializedWorkspace
@@ -53,20 +53,20 @@ const SideNavigatorWorkspaceControls = ({
   } = useNav()
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
-  const {
-    pushApiErrorMessage,
-    pushMessage,
-    pushDocHandlerErrorMessage,
-  } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const { t } = useTranslation()
 
   const createChildDoc = useCallback(async () => {
     try {
       await createDocHandler({ workspaceId: workspace.id })
     } catch (error) {
-      pushDocHandlerErrorMessage(error)
+      if (error.response.data.includes('exceeds the free tier')) {
+        return
+      }
+
+      pushApiErrorMessage(error)
     }
-  }, [workspace.id, createDocHandler, pushDocHandlerErrorMessage])
+  }, [workspace.id, createDocHandler, pushApiErrorMessage])
 
   const onDeleteCallback = useCallback(
     (workspace: SerializedWorkspace) => {

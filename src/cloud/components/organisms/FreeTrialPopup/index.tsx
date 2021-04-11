@@ -3,11 +3,11 @@ import styled from '../../../lib/styled'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import Flexbox from '../../atoms/Flexbox'
 import Spinner from '../../atoms/CustomSpinner'
-import { useToast } from '../../../lib/stores/toast'
 import { startTeamFreeTrial } from '../../../api/teams/subscription/trial'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { usePage } from '../../../lib/stores/pageStore'
 import { freeTrialPeriodDays } from '../../../lib/subscription'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface FreeTrialPopupProps {
   team: SerializedTeam

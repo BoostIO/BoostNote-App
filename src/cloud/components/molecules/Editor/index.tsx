@@ -12,7 +12,6 @@ import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../../lib/editor/plugins/fileHandler'
 import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
-import { useToast } from '../../../lib/stores/toast'
 import { YText } from 'yjs/dist/src/internals'
 import {
   useGlobalKeyDownHandler,
@@ -67,6 +66,7 @@ import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 

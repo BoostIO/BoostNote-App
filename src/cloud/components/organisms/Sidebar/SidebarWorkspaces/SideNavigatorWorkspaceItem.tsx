@@ -2,7 +2,6 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../lib/stores/toast'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import { onDragLeaveCb } from '../../../../lib/dnd'
 import { NavResource } from '../../../../interfaces/resources'
@@ -32,6 +31,7 @@ import {
 import { shortcuts } from '../../../../lib/shortcuts'
 import SideNavigatorFoldButton from '../SideNavigator/SideNavigatorFoldButton'
 import Tooltip from '../../../atoms/Tooltip'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SidebarWorkspaceItemProps {
   workspace: SerializedWorkspace

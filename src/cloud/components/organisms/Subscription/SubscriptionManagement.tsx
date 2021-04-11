@@ -3,6 +3,7 @@ import plur from 'plur'
 import React, { useCallback, useState } from 'react'
 import Icon from '../../../../components/atoms/Icon'
 import Spinner from '../../../../components/atoms/Spinner'
+import { useToast } from '../../../../lib/v2/stores/toast'
 import { cancelSubscription } from '../../../api/teams/subscription'
 import { getTeamPortalUrl } from '../../../api/teams/subscription/invoices'
 import { updateSubPlan } from '../../../api/teams/subscription/update'
@@ -10,7 +11,6 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getFormattedDateFromUnixTimestamp } from '../../../lib/date'
 import { usePage } from '../../../lib/stores/pageStore'
-import { useToast } from '../../../lib/stores/toast'
 import {
   stripeProPlanUnit,
   stripeStandardPlanUnit,

@@ -4,9 +4,9 @@ import { UserSettings } from './types'
 import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../globalData'
 import { useSetState } from 'react-use'
-import { useToast } from '../toast'
 import { saveUserSettings } from '../../../api/users/settings'
 import { toggleSettingsEventEmitter } from '../../utils/events'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 export const baseUserSettings: UserSettings = {
   'general.theme': 'dark',

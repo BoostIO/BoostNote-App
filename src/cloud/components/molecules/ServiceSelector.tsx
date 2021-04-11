@@ -2,7 +2,6 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { SerializedServiceConnection } from '../../interfaces/db/connections'
 import { useEffectOnce } from 'react-use'
 import { getUserServiceConnections } from '../../api/connections'
-import { useToast } from '../../lib/stores/toast'
 import Spinner from '../atoms/CustomSpinner'
 import ServiceConnect from '../atoms/ServiceConnect'
 import styled from '../../lib/styled'
@@ -16,6 +15,7 @@ import {
   mdiCloud,
 } from '@mdi/js'
 import cc from 'classcat'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface ServiceSelectorProps {
   onSelect: (connection: SerializedServiceConnection) => void

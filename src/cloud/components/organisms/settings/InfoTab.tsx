@@ -15,7 +15,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { saveUserInfo, updateUserIcon } from '../../../api/users'
-import { useToast } from '../../../lib/stores/toast'
 import { buildIconUrl } from '../../../api/files'
 import IconInput from '../../molecules/IconInput'
 import CustomButton from '../../atoms/buttons/CustomButton'
@@ -27,6 +26,7 @@ import {
   baseButtonStyle,
   dangerButtonStyle,
 } from '../../../lib/styled/styleFunctions'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const InfoTab = () => {
   const {

@@ -5,7 +5,6 @@ import Container from '../../layouts/Container'
 import FolderDocList from '../../molecules/FolderDocList'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { useToast } from '../../../lib/stores/toast'
 import FolderListItem from '../../molecules/FolderListItem'
 import {
   CreateDocBookmarkResponseBody,
@@ -23,6 +22,7 @@ import {
 import DocListItem from '../../molecules/DocListItem'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { getHexFromUUID } from '../../../lib/utils/string'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const BookmarkLists = () => {
   const {

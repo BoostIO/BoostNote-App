@@ -17,12 +17,12 @@ import { useTranslation } from 'react-i18next'
 import { Spinner } from '../atoms/Spinner'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
-import { useToast } from '../../lib/stores/toast'
 import Switch from 'react-switch'
 import styled from '../../lib/styled'
 import CopyReadInput from '../atoms/CopyReadInput'
 import { getTeamURL, getOpenInviteURL } from '../../lib/utils/patterns'
 import { boostHubBaseUrl } from '../../lib/consts'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions

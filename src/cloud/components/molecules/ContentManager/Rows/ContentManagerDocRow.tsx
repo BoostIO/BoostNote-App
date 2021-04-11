@@ -23,7 +23,6 @@ import {
   DestroyDocBookmarkResponseBody,
 } from '../../../../api/teams/docs/bookmarks'
 import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../lib/stores/toast'
 import Flexbox from '../../../atoms/Flexbox'
 import { archiveDoc, unarchiveDoc } from '../../../../api/teams/docs'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
@@ -31,6 +30,7 @@ import { useModal } from '../../../../lib/stores/modal'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { SerializedUser } from '../../../../interfaces/db/user'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam

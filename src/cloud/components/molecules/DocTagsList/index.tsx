@@ -7,13 +7,13 @@ import {
   StyledDocTagsListContainer,
 } from './styled'
 import TagsAutoCompleteInput from './TagsAutoCompleteInput'
-import { useToast } from '../../../lib/stores/toast'
 import { deleteTagFromDoc } from '../../../api/teams/docs/tags'
 import { useNav } from '../../../lib/stores/nav'
 import DocTagsListItem from './DocTagsListItem'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark

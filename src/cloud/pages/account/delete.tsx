@@ -5,7 +5,6 @@ import { useGlobalData } from '../../lib/stores/globalData'
 import Page from '../../components/Page'
 import ErrorPage from '../../components/organisms/error/ErrorPage'
 import { useDialog, DialogIconTypes } from '../../lib/stores/dialog'
-import { useToast } from '../../lib/stores/toast'
 import { useTranslation } from 'react-i18next'
 import CustomButton from '../../components/atoms/buttons/CustomButton'
 import { Spinner } from '../../components/atoms/Spinner'
@@ -14,6 +13,7 @@ import FeedbackForm from '../../components/organisms/FeedbackForm'
 import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
 import { useElectron } from '../../lib/stores/electron'
 import { boostHubBaseUrl } from '../../lib/consts'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 const AccountDeletePage = () => {
   const { globalData } = useGlobalData()

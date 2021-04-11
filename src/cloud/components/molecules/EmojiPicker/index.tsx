@@ -4,12 +4,12 @@ import { StyledEmojiPicker } from './styled'
 import { Picker, EmojiData } from 'emoji-mart'
 import { selectTheme } from '../../../lib/styled'
 import { useSettings } from '../../../lib/stores/settings'
-import { useToast } from '../../../lib/stores/toast'
 import { updateFolderEmoji } from '../../../api/teams/folders'
 import { useNav } from '../../../lib/stores/nav'
 import { updateDocEmoji } from '../../../api/teams/docs'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { useWindow } from '../../../lib/stores/window'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 export const EmojiPickerWidth = 350
 export const EmojiPickerHeight = 380

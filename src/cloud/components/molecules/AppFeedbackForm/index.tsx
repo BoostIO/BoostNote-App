@@ -2,7 +2,6 @@ import React, { FormEvent, useState, useCallback, useRef } from 'react'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { Spinner } from '../../atoms/Spinner'
 import { StyledAppFeedbackForm } from './styled'
-import { useToast } from '../../../lib/stores/toast'
 import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import {
   SectionSelect,
@@ -13,6 +12,7 @@ import { registerAppFeedback } from '../../../api/users/appfeedback'
 import { AppFeedbackTypeOption } from '../../../interfaces/db/userAppFeedback'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useEffectOnce } from 'react-use'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const typeOptions: AppFeedbackTypeOption[] = ['Feature Request', 'Bug Report']
 

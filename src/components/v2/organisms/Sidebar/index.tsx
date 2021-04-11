@@ -73,11 +73,11 @@ const Sidebar = ({
           defaultWidth={sidebarExpandedWidth}
           onResizeEnd={sidebarResize}
           className={cc([
-            'sidebar__expanded',
-            sidebarState === 'spaces' && 'flexible',
+            'sidebar--expanded',
+            sidebarState === 'spaces' && 'sidebar--flexible',
           ])}
         >
-          <div className='sidebar__expanded__wrapper'>
+          <div className='sidebar--expanded__wrapper'>
             {sidebarState === 'spaces' ? (
               <SidebarSpaces
                 spaces={spaces}
@@ -127,13 +127,13 @@ const SidebarContainer = styled.div`
     right: 0;
   }
 
-  .sidebar__expanded {
+  .sidebar--expanded {
     border-right: 1px solid ${({ theme }) => theme.colors.border.main};
     height: 100%;
     max-height: 100%;
     position: relative;
 
-    &.flexible {
+    &.sidebar--flexible {
       height: fit-content;
       min-height: 200px;
       border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
@@ -141,7 +141,7 @@ const SidebarContainer = styled.div`
     }
   }
 
-  .sidebar__expanded__wrapper {
+  .sidebar--expanded__wrapper {
     height: 100%;
     overflow: auto;
   }

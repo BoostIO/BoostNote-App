@@ -7,7 +7,6 @@ import {
   CreateFolderBookmarkResponseBody,
   DestroyFolderBookmarkResponseBody,
 } from '../../../../../api/teams/folders/bookmarks'
-import { useToast } from '../../../../../lib/stores/toast'
 import ContextMenuItem from './ControlsContextMenuItem'
 import {
   StyledContextMenuContainer,
@@ -31,6 +30,7 @@ import { useModal } from '../../../../../lib/stores/modal'
 import EditFolderModal from '../../../Modal/contents/Folder/EditFolderModal'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiStar, mdiFolderEdit, mdiTrashCan, mdiStarOutline } from '@mdi/js'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark

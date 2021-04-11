@@ -12,7 +12,6 @@ import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { unarchiveDoc } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
-import { useToast } from '../../../lib/stores/toast'
 import { usePreferences } from '../../../lib/stores/preferences'
 import AppLayout from '../../layouts/AppLayout'
 import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
@@ -28,6 +27,7 @@ import cc from 'classcat'
 import DocContextMenu, {
   docContextWidth,
 } from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface ViewPageProps {
   team: SerializedTeam
