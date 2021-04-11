@@ -31,6 +31,11 @@ import {
 import { join } from 'path'
 import { dev } from '../electron/consts'
 import { excludeFileProtocol } from './db/utils'
+import {
+  rehypeMermaid,
+  remarkCharts,
+  remarkPlantUML,
+} from '../cloud/lib/charts'
 
 interface ImageData {
   name: string
@@ -46,10 +51,14 @@ interface CssStyleInfo {
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': [...gh.attributes['*'], 'className', 'align'],
+    '*': [...gh.attributes['*'], 'className', 'align', 'data-line'],
     input: [...gh.attributes.input, 'checked'],
     pre: ['dataRaw'],
+    iframe: ['src'],
+    path: ['d'],
+    svg: ['viewBox'],
   },
+  tagNames: [...gh.tagNames, 'svg', 'path', 'mermaid', 'iframe'],
 })
 
 export async function openDialog(): Promise<string> {
@@ -435,15 +444,18 @@ async function convertNoteDocToMarkdownHtmlString(
     .use(remarkParse)
     .use(remarkEmoji, { emoticon: false })
     .use(remarkAdmonitions, remarkAdmonitionOptions)
+    .use(remarkMath)
+    .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
+    .use(remarkCharts)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, schema)
-    .use(remarkMath)
+    .use(rehypeKatex, { output: 'htmlAndMathml' })
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
       theme: codeBlockTheme,
     })
-    .use(rehypeKatex, { output: 'htmlAndMathml' })
+    .use(rehypeMermaid)
     .use(rehypeReact, {
       createElement: React.createElement,
       components: {
