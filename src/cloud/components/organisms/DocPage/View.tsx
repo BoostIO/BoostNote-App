@@ -65,9 +65,10 @@ const ViewPage = ({
 
   return (
     <AppLayout
-      rightLayout={{
-        fullWidth: false,
+      content={{
+        reduced: true,
         topbar: {
+          type: 'v1',
           left: (
             <>
               <BreadCrumbs team={team} minimize={true} />

@@ -10,14 +10,15 @@ const GuestPage = () => {
   const { docsMap } = useNav()
 
   if (team == null) {
-    return <AppLayout rightLayout={{}} />
+    return <AppLayout content={{}} />
   }
 
   return (
     <AppLayout
-      rightLayout={{
-        className: 'reduced-width',
+      content={{
+        reduced: true,
         topbar: {
+          type: 'v1',
           left: <BreadCrumbs team={team} />,
         },
         header: <span style={{ marginRight: 10 }}>Shared documents</span>,

@@ -6,7 +6,7 @@ interface ErrorLayoutProps {
 }
 
 const ErrorLayout = ({ message }: ErrorLayoutProps) => (
-  <ContentLayout topbar={{}}>{message}</ContentLayout>
+  <ContentLayout>{message}</ContentLayout>
 )
 
 export default ErrorLayout

@@ -10,7 +10,7 @@ const BookmarksListPage = () => {
   return (
     <Page>
       <LazyDefaultLayout>
-        <AppLayout rightLayout={{ header: 'Bookmarks' }}>
+        <AppLayout content={{ header: 'Bookmarks' }}>
           <BookmarkLists />
         </AppLayout>
       </LazyDefaultLayout>

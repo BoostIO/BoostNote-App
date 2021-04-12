@@ -206,8 +206,6 @@ function getSortedItems<T extends string>(
 const Container = styled.div`
   position: relative;
   width: 100%;
-  max-width: 1480px;
-  margin: auto;
   height: 40px;
 
   .content__manager__header,

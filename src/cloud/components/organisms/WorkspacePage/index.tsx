@@ -103,14 +103,15 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   }, [openModal, submitNewFolder])
 
   if (team == null) {
-    return <AppLayout rightLayout={{}} />
+    return <AppLayout content={{}} />
   }
 
   return (
     <AppLayout
-      rightLayout={{
-        className: 'reduced-width',
+      content={{
+        reduced: true,
         topbar: {
+          type: 'v1',
           left: <BreadCrumbs team={team} />,
         },
         header: (

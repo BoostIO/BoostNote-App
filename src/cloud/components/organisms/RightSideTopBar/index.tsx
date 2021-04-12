@@ -24,10 +24,8 @@ const RightSideTopBar = ({
   return (
     <StyledRightSideTopbar
       style={{
-        width: preferences.sidebarIsHidden
-          ? '100%'
-          : `calc(100vw - ${preferences.sideBarWidth}px)`,
-        left: preferences.sidebarIsHidden ? 0 : preferences.sideBarWidth,
+        width: `calc(100vw - ${preferences.sideBarWidth}px)`,
+        left: preferences.sideBarWidth,
       }}
     >
       <StyledTopbarLeft>

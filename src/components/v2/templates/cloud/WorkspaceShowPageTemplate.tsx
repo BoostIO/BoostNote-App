@@ -174,6 +174,7 @@ const WorkspaceShowPageTemplate = <
   return (
     <ContentLayout
       topbar={{
+        type: 'v2',
         navigation: topbarNavigation,
         tree: topbarTree,
         controls: topbarControls,

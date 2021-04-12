@@ -48,15 +48,15 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
   const content = useMemo(() => {
     if (team == null) {
-      return <AppLayout rightLayout={{}} />
+      return <AppLayout content={{}} />
     }
 
     if (pageTag == null) {
       return (
         <AppLayout
-          rightLayout={{
-            className: 'reduced-width',
-            topbar: { left: <BreadCrumbs team={team} /> },
+          content={{
+            reduced: true,
+            topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
           }}
         >
           <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
@@ -69,9 +69,10 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
     return (
       <AppLayout
-        rightLayout={{
-          className: 'reduced-width',
+        content={{
+          reduced: true,
           topbar: {
+            type: 'v1',
             left: <BreadCrumbs team={team} />,
           },
           header: <span>#{pageTag.text}</span>,

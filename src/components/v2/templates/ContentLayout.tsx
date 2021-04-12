@@ -4,11 +4,16 @@ import { AppComponent } from '../../../lib/v2/types'
 import DoublePane from '../atoms/DoublePane'
 import PageHelmet from '../atoms/PageHelmet'
 import Topbar, { TopbarProps } from '../organisms/Topbar/index'
+import cc from 'classcat'
 
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
-  topbar: TopbarProps
+  header?: React.ReactNode
+  topbar?:
+    | (TopbarProps & { type: 'v2' })
+    | { type: 'v1'; left: React.ReactNode; right?: React.ReactNode }
   right?: React.ReactNode
+  reduced?: boolean
 }
 
 const ContentLayout: AppComponent<ContentLayoutProps> = ({
@@ -16,19 +21,42 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
   helmet,
   topbar,
   right,
+  reduced,
+  header,
 }) => (
   <Container className='layout'>
     <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
     <DoublePane className='two__pane' right={right}>
-      <Topbar
-        tree={topbar.tree}
-        controls={topbar.controls}
-        navigation={topbar.navigation}
-        breadcrumbs={topbar.breadcrumbs}
-        className='topbar'
-      />
+      {topbar?.type === 'v2' ? (
+        <Topbar
+          tree={topbar.tree}
+          controls={topbar.controls}
+          navigation={topbar.navigation}
+          breadcrumbs={topbar.breadcrumbs}
+          className='topbar'
+        />
+      ) : (
+        <div className='topbar topbar--v1'>
+          {topbar?.type === 'v1' && (
+            <>
+              <div className='topbar--v1__left'>{topbar?.left}</div>
+              {topbar?.right != null && (
+                <div className='topbar--v1__right'>{topbar?.right}</div>
+              )}
+            </>
+          )}
+        </div>
+      )}
       <div className='layout__content'>
-        <div className='layout__content__wrapper'>{children}</div>
+        <div
+          className={cc([
+            'layout__content__wrapper',
+            reduced && 'layout__content__wrapper--reduced',
+          ])}
+        >
+          {header != null && <h1 className='layout__content__header'></h1>}
+          {children}
+        </div>
       </div>
     </DoublePane>
   </Container>
@@ -63,6 +91,59 @@ const Container = styled.div`
       height: 100%;
       overflow: auto;
     }
+
+    .layout__content__wrapper--reduced {
+      max-width: 920px;
+      margin: auto;
+    }
+
+    .topbar--v1 {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 44px;
+      background: ${({ theme }) => theme.colors.background.primary};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1;
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+      flex: 0 0 auto;
+      -webkit-app-region: drag;
+      padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+      padding-right: ${({ theme }) => theme.sizes.spaces.l}px;
+
+      .topbar--v1__left {
+        display: flex;
+        flex: 2 2 auto;
+        align-items: center;
+        min-width: 0;
+        height: 100%;
+        margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+      }
+
+      .topbar--v1__right {
+        display: flex;
+        justify-content: flex-end;
+        flex: 0 0 auto;
+        align-items: center;
+        min-width: 0;
+        height: 100%;
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  .layout__content__header {
+    display: flex;
+    justify-content: left;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
+    font-size: 48pxpx;
   }
 `
 

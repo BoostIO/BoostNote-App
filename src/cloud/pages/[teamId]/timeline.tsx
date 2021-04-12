@@ -73,9 +73,10 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
       <Page>
         <LazyDefaultLayout>
           <AppLayout
-            rightLayout={{
-              className: 'reduced-width',
+            content={{
+              reduced: true,
               topbar: {
+                type: 'v1',
                 left: (
                   <StyledTimelineTopbar>
                     <IconMdi path={mdiClockOutline} />
@@ -104,9 +105,10 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
     <Page>
       <LazyDefaultLayout>
         <AppLayout
-          rightLayout={{
-            className: 'reduced-width',
+          content={{
+            reduced: true,
             topbar: {
+              type: 'v1',
               left: (
                 <StyledTimelineTopbar>
                   <IconMdi path={mdiClockOutline} />
