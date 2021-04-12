@@ -26,9 +26,8 @@ const WorkspaceShowPage = ({
     if (workspace == null) {
       return (
         <AppLayout
-          rightLayout={{
-            className: 'reduced-width',
-            topbar: { left: <BreadCrumbs team={team} /> },
+          content={{
+            topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
           }}
         >
           <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>

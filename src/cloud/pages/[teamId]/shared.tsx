@@ -26,7 +26,7 @@ const SharedDocsListPage = () => {
     return (
       <Page>
         <LazyDefaultLayout>
-          <AppLayout rightLayout={{}} />
+          <AppLayout content={{}} />
         </LazyDefaultLayout>
       </Page>
     )
@@ -36,9 +36,10 @@ const SharedDocsListPage = () => {
     <Page>
       <LazyDefaultLayout>
         <AppLayout
-          rightLayout={{
-            className: 'reduced-width',
+          content={{
+            reduced: true,
             topbar: {
+              type: 'v1',
               left: <BreadCrumbs team={team} />,
             },
             header: (

@@ -585,7 +585,7 @@ const Editor = ({
 
   if (!initialSyncDone) {
     return (
-      <AppLayout rightLayout={{}}>
+      <AppLayout content={{}}>
         <StyledLoadingView>
           <h3>Loading..</h3>
           <span>
@@ -597,11 +597,10 @@ const Editor = ({
   }
   return (
     <AppLayout
-      rightLayout={{
-        className: 'flex-column',
-        fullWidth: true,
-        padded: false,
+      content={{
+        reduced: false,
         topbar: {
+          type: 'v1',
           left: (
             <>
               <BreadCrumbs

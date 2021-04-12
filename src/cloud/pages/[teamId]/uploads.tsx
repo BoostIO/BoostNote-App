@@ -80,9 +80,9 @@ const UploadListPage = ({
     <Page>
       <LazyDefaultLayout>
         <AppLayout
-          rightLayout={{
+          content={{
             header: 'Attachments',
-            className: 'reduced-width',
+            reduced: true,
           }}
         >
           {permissions != null && (

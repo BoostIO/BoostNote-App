@@ -214,9 +214,9 @@ const FolderPage = () => {
   if (currentFolder == null) {
     return (
       <AppLayout
-        rightLayout={{
-          className: 'reduced-width',
-          topbar: { left: <BreadCrumbs team={team} /> },
+        content={{
+          reduced: true,
+          topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
         }}
       >
         <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
@@ -229,9 +229,10 @@ const FolderPage = () => {
 
   return (
     <AppLayout
-      rightLayout={{
-        className: 'reduced-width',
+      content={{
+        reduced: true,
         topbar: {
+          type: 'v1',
           left: <BreadCrumbs team={team} />,
           right: <FolderControls currentFolder={currentFolder} />,
         },
