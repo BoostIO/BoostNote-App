@@ -48,14 +48,18 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
         </div>
       )}
       <div className='layout__content'>
-        <div
-          className={cc([
-            'layout__content__wrapper',
-            reduced && 'layout__content__wrapper--reduced',
-          ])}
-        >
-          {header != null && <h1 className='layout__content__header'></h1>}
-          {children}
+        <div className='layout__content__wrapper'>
+          <div
+            className={cc([
+              'content__wrapper',
+              reduced && 'content__wrapper--reduced',
+            ])}
+          >
+            {header != null && (
+              <h1 className='layout__content__header'>{header}</h1>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     </DoublePane>
@@ -89,11 +93,17 @@ const Container = styled.div`
 
     .layout__content__wrapper {
       height: 100%;
+      width: 100%;
       overflow: auto;
     }
 
-    .layout__content__wrapper--reduced {
+    .content_wrapper {
+      flex: 1 1 auto;
+    }
+
+    .content__wrapper--reduced {
       max-width: 920px;
+      padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
       margin: auto;
     }
 
