@@ -27,7 +27,7 @@ import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
 import SingleInputModal from '../Modal/contents/Forms/SingleInputModal'
 import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
-import AppLayout from '../../layouts/AppLayout'
+import Application from '../../Application'
 import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
 
 enum FolderHeaderActions {
@@ -213,7 +213,7 @@ const FolderPage = () => {
 
   if (currentFolder == null) {
     return (
-      <AppLayout
+      <Application
         content={{
           reduced: true,
           topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
@@ -223,12 +223,12 @@ const FolderPage = () => {
           <h3>Oops...</h3>
           <p>The folder has been deleted.</p>
         </ColoredBlock>
-      </AppLayout>
+      </Application>
     )
   }
 
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: true,
         topbar: {
@@ -284,7 +284,7 @@ const FolderPage = () => {
         parent={parent}
         workspacesMap={workspaceMap}
       />
-    </AppLayout>
+    </Application>
   )
 }
 

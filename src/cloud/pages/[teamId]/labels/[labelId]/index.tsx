@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import Page from '../../../../components/Page'
-import AppLayout from '../../../../components/layouts/AppLayout'
+import Application from '../../../../components/Application'
 import { LazyDefaultLayout } from '../../../../components/layouts/DefaultLayout'
 import {
   getTagsShowPageData,
@@ -48,12 +48,12 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
   const content = useMemo(() => {
     if (team == null) {
-      return <AppLayout content={{}} />
+      return <Application content={{}} />
     }
 
     if (pageTag == null) {
       return (
-        <AppLayout
+        <Application
           content={{
             reduced: true,
             topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
@@ -63,12 +63,12 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
             <h3>Oops...</h3>
             <p>The Tag has been deleted.</p>
           </ColoredBlock>
-        </AppLayout>
+        </Application>
       )
     }
 
     return (
-      <AppLayout
+      <Application
         content={{
           reduced: true,
           topbar: {
@@ -85,7 +85,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
           page='tag'
           workspacesMap={relatedWorkspaces}
         />
-      </AppLayout>
+      </Application>
     )
   }, [docs, pageTag, team, relatedWorkspaces])
 

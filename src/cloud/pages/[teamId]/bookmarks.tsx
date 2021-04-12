@@ -1,6 +1,6 @@
 import React from 'react'
 import Page from '../../components/Page'
-import AppLayout from '../../components/layouts/AppLayout'
+import Application from '../../components/Application'
 import { LazyDefaultLayout } from '../../components/layouts/DefaultLayout'
 import { getBookmarksListPageData } from '../../api/pages/teams/bookmarks'
 import BookmarkLists from '../../components/organisms/BookmarksList'
@@ -10,9 +10,9 @@ const BookmarksListPage = () => {
   return (
     <Page>
       <LazyDefaultLayout>
-        <AppLayout content={{ header: 'Bookmarks' }}>
+        <Application content={{ header: 'Bookmarks' }}>
           <BookmarkLists />
-        </AppLayout>
+        </Application>
       </LazyDefaultLayout>
     </Page>
   )

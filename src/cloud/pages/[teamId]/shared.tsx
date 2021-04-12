@@ -9,7 +9,7 @@ import BreadCrumbs from '../../components/organisms/RightSideTopBar/BreadCrumbs'
 import ContentManager from '../../components/molecules/ContentManager'
 import Page from '../../components/Page'
 import { LazyDefaultLayout } from '../../components/layouts/DefaultLayout'
-import AppLayout from '../../components/layouts/AppLayout'
+import Application from '../../components/Application'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
 const SharedDocsListPage = () => {
@@ -26,7 +26,7 @@ const SharedDocsListPage = () => {
     return (
       <Page>
         <LazyDefaultLayout>
-          <AppLayout content={{}} />
+          <Application content={{}} />
         </LazyDefaultLayout>
       </Page>
     )
@@ -35,7 +35,7 @@ const SharedDocsListPage = () => {
   return (
     <Page>
       <LazyDefaultLayout>
-        <AppLayout
+        <Application
           content={{
             reduced: true,
             topbar: {
@@ -57,7 +57,7 @@ const SharedDocsListPage = () => {
             page='shared'
             workspacesMap={workspacesMap}
           />
-        </AppLayout>
+        </Application>
       </LazyDefaultLayout>
     </Page>
   )

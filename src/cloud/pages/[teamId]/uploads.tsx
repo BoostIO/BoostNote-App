@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import Page from '../../components/Page'
-import AppLayout from '../../components/layouts/AppLayout'
+import Application from '../../components/Application'
 import { LazyDefaultLayout } from '../../components/layouts/DefaultLayout'
 import {
   getUploadsListPageData,
@@ -79,7 +79,7 @@ const UploadListPage = ({
   return (
     <Page>
       <LazyDefaultLayout>
-        <AppLayout
+        <Application
           content={{
             header: 'Attachments',
             reduced: true,
@@ -125,7 +125,7 @@ const UploadListPage = ({
                 />
               ))}
           </FileItemList>
-        </AppLayout>
+        </Application>
       </LazyDefaultLayout>
     </Page>
   )

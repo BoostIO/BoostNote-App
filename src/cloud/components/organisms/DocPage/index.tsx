@@ -18,7 +18,7 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
-import AppLayout from '../../layouts/AppLayout'
+import Application from '../../Application'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { useRouter } from '../../../lib/router'
@@ -111,12 +111,12 @@ const DocPage = ({
 
   if (currentDoc == null || team == null) {
     return (
-      <AppLayout content={{}}>
+      <Application content={{}}>
         <ColoredBlock variant='danger' style={{ marginTop: '100px' }}>
           <h3>Oops...</h3>
           <p>The document has been deleted.</p>
         </ColoredBlock>
-      </AppLayout>
+      </Application>
     )
   }
 

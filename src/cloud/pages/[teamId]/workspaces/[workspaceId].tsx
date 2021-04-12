@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import Page from '../../../components/Page'
-import AppLayout from '../../../components/layouts/AppLayout'
+import Application from '../../../components/Application'
 import DefaultLayout from '../../../components/layouts/DefaultLayout'
 import {
   getWorkspaceShowPageData,
@@ -25,7 +25,7 @@ const WorkspaceShowPage = ({
   const rightContent = useMemo(() => {
     if (workspace == null) {
       return (
-        <AppLayout
+        <Application
           content={{
             topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
           }}
@@ -34,7 +34,7 @@ const WorkspaceShowPage = ({
             <h3>Oops...</h3>
             <p>The workspace has been deleted.</p>
           </ColoredBlock>
-        </AppLayout>
+        </Application>
       )
     }
 
