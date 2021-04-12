@@ -183,7 +183,7 @@ const ContentmanagerFolderRow = ({
       checked={checked}
       onSelect={onSelect}
       itemLink={
-        <FolderLink folder={folder} team={team}>
+        <FolderLink folder={folder} team={team} id={`cm-folder-${folder.id}`}>
           <ContentManagerRowLinkContent
             label={folder.name}
             defaultIcon={mdiFolderOutline}

@@ -274,7 +274,7 @@ const ContentmanagerDocRow = ({
       checked={checked}
       onSelect={onSelect}
       itemLink={
-        <DocLink doc={doc} team={team}>
+        <DocLink doc={doc} team={team} id={`cm-doc-${doc.id}`}>
           <ContentManagerRowLinkContent
             label={
               doc.archivedAt != null

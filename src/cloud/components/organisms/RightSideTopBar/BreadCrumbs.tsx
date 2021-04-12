@@ -207,7 +207,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                       folder={folder}
                       team={team!}
                       className='parentFolderItem'
-                      id={`folder-${index}`}
+                      id={`folder-breadcrumb-${index}`}
                       style={{
                         paddingLeft: `${(index + 1) * 5 + 5}px`,
                       }}
@@ -252,6 +252,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   team={team}
                   intent='index'
                   className='bread-crumb-link'
+                  id={`bread-crumb-workspace-${currentWorkspace.id}`}
                 >
                   <Icon
                     className='icon'
@@ -266,6 +267,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   workspace={currentWorkspace}
                   team={team!}
                   className='bread-crumb-link'
+                  id={`bread-crumb-workspace-${currentWorkspace.id}`}
                 >
                   <Icon
                     className='icon'
@@ -296,6 +298,7 @@ const BreadCrumbs = ({ team, path, addedNodes }: BreadCrumbsProps) => {
                   folder={directParentFolder}
                   team={team!}
                   className='bread-crumb-link'
+                  id={`bread-crumb-folder-${directParentFolder.id}`}
                 >
                   <Icon className='icon' path={mdiFolderOutline} size={18} />
                   <span className='label'>{directParentFolder.name}</span>
