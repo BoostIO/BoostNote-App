@@ -49,9 +49,7 @@ import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
 import SharedPage from '../pages/shared/[link]'
-import WorkspaceShowPage from '../../components/v2/pages/cloud/WorkspaceShowPage'
 import { selectV2Theme } from '../../lib/v2/styled/styleFunctions'
-import Application from '../../components/v2/Application'
 import { V2ToastProvider } from '../../lib/v2/stores/toast'
 import { V2EmojiProvider } from '../../lib/v2/stores/emoji'
 import { V2WindowProvider } from '../../lib/v2/stores/window'
@@ -61,6 +59,7 @@ import { V2DialogProvider } from '../../lib/v2/stores/dialog'
 import Toast from '../../components/v2/organisms/Toast'
 import Dialog from '../../components/v2/organisms/Dialog/Dialog'
 import ContextMenu from '../../components/v2/molecules/ContextMenu'
+import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -85,12 +84,10 @@ const V2CombinedProvider = combineProviders(
 interface PageInfo {
   Component: React.ComponentType<any>
   pageProps: any
-  refactored?: boolean
 }
 
 interface PageSpec {
   Component: React.ComponentType<any>
-  refactored?: boolean
   getInitialProps?: ({
     pathname,
     search,
@@ -183,7 +180,6 @@ const Router = () => {
           setPageInfo({
             Component: pageSpec.Component,
             pageProps: pageData,
-            refactored: pageSpec.refactored,
           })
           nProgress.done()
         })
@@ -213,7 +209,6 @@ const Router = () => {
       setPageInfo({
         Component: pageSpec.Component,
         pageProps: {},
-        refactored: pageSpec.refactored,
       })
       nProgress.done()
     }
@@ -242,26 +237,6 @@ const Router = () => {
         <LoadingScreen message='Fetching page data...' />
         <GlobalStyle />
       </ThemeProvider>
-    )
-  }
-
-  if (pageInfo.refactored) {
-    return (
-      <PageDataProvider pageProps={pageInfo.pageProps as any}>
-        <V2CombinedProvider>
-          <CombinedProvider>
-            <NavProvider pageProps={pageInfo.pageProps as any}>
-              <CustomThemeProvider>
-                <V2ThemeProvider>
-                  <Application>
-                    {<pageInfo.Component {...pageInfo.pageProps} />}
-                  </Application>
-                </V2ThemeProvider>
-              </CustomThemeProvider>
-            </NavProvider>
-          </CombinedProvider>
-        </V2CombinedProvider>
-      </PageDataProvider>
     )
   }
 
@@ -454,7 +429,6 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: WorkspaceShowPage,
           getInitialProps: WorkspaceShowPage.getInitialProps,
-          refactored: true,
         }
       default:
         return {
