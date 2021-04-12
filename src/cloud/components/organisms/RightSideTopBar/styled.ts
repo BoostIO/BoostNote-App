@@ -3,6 +3,7 @@ import { topbarIconButtonStyle } from '../../../lib/styled/styleFunctions'
 
 export const rightSideTopBarHeight = 44
 export const defaultTopbarIndex = 1
+<<<<<<< HEAD
 export const StyledRightSideTopbar = styled.div`
   display: flex;
   width: 100%;
@@ -73,6 +74,8 @@ export const StyledNavHideButton = styled.button`
     opacity: 1;
   }
 `
+=======
+>>>>>>> erase old
 
 export const StyledTopBarIcon = styled.button`
   ${topbarIconButtonStyle}
