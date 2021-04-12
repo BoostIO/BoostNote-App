@@ -24,6 +24,7 @@ import SidebarTimeline, {
   SidebarTimelineRow,
 } from './molecules/SidebarTimeline'
 import { AppUser } from '../../../../lib/v2/mappers/users'
+import Button, { ButtonProps } from '../../atoms/Button'
 
 type SidebarProps = {
   sidebarState?: SidebarState
@@ -41,6 +42,7 @@ type SidebarProps = {
   sidebarSearchState: SidebarSearchState
   users: Map<string, AppUser>
   timelineRows: SidebarTimelineRow[]
+  timelineMore?: ButtonProps
 } & SidebarSpaceProps
 
 const Sidebar = ({
@@ -60,6 +62,7 @@ const Sidebar = ({
   searchResults,
   sidebarSearchState,
   timelineRows,
+  timelineMore,
   users,
 }: SidebarProps) => {
   return (
@@ -99,7 +102,13 @@ const Sidebar = ({
                 searchState={sidebarSearchState}
               />
             ) : sidebarState === 'timeline' ? (
-              <SidebarTimeline users={users} rows={timelineRows} />
+              <SidebarTimeline users={users} rows={timelineRows}>
+                {timelineMore != null && (
+                  <Button id='sidebar__timeline__more' {...timelineMore}>
+                    See More
+                  </Button>
+                )}
+              </SidebarTimeline>
             ) : null}
           </div>
         </WidthEnlarger>

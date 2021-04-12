@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from '../../../../../lib/v2/styled'
 import { AppComponent } from '../../../../../lib/v2/types'
 import cc from 'classcat'
@@ -55,6 +55,17 @@ const SearchItem: AppComponent<SidebarSearchItemProps & SharedProps> = ({
     }
   }
 
+  const onClick: React.MouseEventHandler = useCallback(
+    (event) => {
+      if (labelClick == null) {
+        return
+      }
+      event.preventDefault()
+      labelClick()
+    },
+    [labelClick]
+  )
+
   return (
     <Container
       depth={depth}
@@ -80,7 +91,7 @@ const SearchItem: AppComponent<SidebarSearchItemProps & SharedProps> = ({
         <LabelTag
           className='sidebar__search__item__label'
           onFocus={() => setFocused(true)}
-          onClick={labelClick}
+          onClick={onClick}
           href={labelHref}
           id={`search-${id}`}
           tabIndex={1}

@@ -150,6 +150,7 @@ const StyledButton = styled.button`
   font-family: Arial;
   box-sizing: border-box;
   transition: 200ms background-color;
+  width: fit-content;
 
   & + * {
     margin-left: 5px;
@@ -161,7 +162,7 @@ const StyledButton = styled.button`
 
   &.button__state--disabled {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.6;
   }
 
   &.button__variant--primary {
@@ -174,11 +175,15 @@ const StyledButton = styled.button`
     }
 
     &:not(.button__state--disabled) {
-      &:hover,
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
       &:active,
-      &:focus,
       &.button__state--active {
-        // TOFIX
+        filter: brightness(112%);
       }
     }
   }
@@ -216,11 +221,15 @@ const StyledButton = styled.button`
     }
 
     &:not(.button__state--disabled) {
-      &:hover,
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
       &:active,
-      &:focus,
       &.button__state--active {
-        //TOFIX
+        filter: brightness(112%);
       }
     }
   }
@@ -235,11 +244,15 @@ const StyledButton = styled.button`
     }
 
     &:not(.button__state--disabled) {
-      &:hover,
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
       &:active,
-      &:focus,
       &.button__state--active {
-        //TOFIX
+        filter: brightness(112%);
       }
     }
   }
