@@ -82,7 +82,9 @@ const SidebarTimeline: AppComponent<SidebarTimelineProps> = ({
                 ) : row.defaultIcon != null ? (
                   <Icon path={row.defaultIcon} size={16} />
                 ) : null}
-                <span>{row.label}</span>
+                <span className='sidebar__timeline__row__label__text'>
+                  {row.label}
+                </span>
               </div>
             </a>
           </WithTooltip>
@@ -141,13 +143,13 @@ const Container = styled.div`
     svg {
       color: ${({ theme }) => theme.colors.text.link};
     }
-    span {
+    .sidebar__timeline__row__label__text {
       ${overflowEllipsis};
     }
   }
 
   .sidebar__timeline__row__label,
-  .sidebar__timeline__row__label span {
+  .sidebar__timeline__row__label .sidebar__timeline__row__label__text {
     padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `

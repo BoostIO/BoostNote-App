@@ -16,7 +16,7 @@ import {
 import { isActiveElementAnInput, InputableDomElement } from '../../lib/dom'
 import { useDebounce, useEffectOnce } from 'react-use'
 import { useModal } from '../../lib/stores/modal'
-import { useSettings } from '../../lib/stores/settings'
+import { SettingsTab, useSettings } from '../../lib/stores/settings'
 import { shortcuts } from '../../lib/shortcuts'
 import CreateFolderModal from '../organisms/Modal/contents/Folder/CreateFolderModal'
 import { useSearch } from '../../lib/stores/search'
@@ -237,8 +237,14 @@ const AppLayout = ({
   }, [popup, tree])
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
-    return mapToolbarRows(openState, openModal, sidebarState, team)
-  }, [sidebarState, openModal, team, openState])
+    return mapToolbarRows(
+      openState,
+      openModal,
+      openSettingsTab,
+      sidebarState,
+      team
+    )
+  }, [sidebarState, openModal, openSettingsTab, team, openState])
 
   const spaces = useMemo(() => {
     return mapSpaces(push, teams, invites, team)
@@ -774,6 +780,7 @@ function mapTreeControls(
 function mapToolbarRows(
   openState: (sidebarState: SidebarState) => void,
   openModal: (cmp: JSX.Element, options?: any) => void,
+  openSettingsTab: (tab: SettingsTab) => void,
   sidebarState?: SidebarState,
   team?: SerializedTeam
 ) {
@@ -824,14 +831,14 @@ function mapToolbarRows(
     active: sidebarState === 'members',
     icon: mdiAccountMultiplePlusOutline,
     position: 'bottom',
-    onClick: () => openState('members'),
+    onClick: () => openSettingsTab('teamMembers'),
   })
   rows.push({
     tooltip: 'Settings',
     active: sidebarState === 'settings',
     icon: mdiCogOutline,
     position: 'bottom',
-    onClick: () => openState('settings'),
+    onClick: () => openSettingsTab('preferences'),
   })
 
   return rows
