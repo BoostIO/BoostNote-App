@@ -8,6 +8,7 @@ import SidebarSearchCategory from '../atoms/SidebarSearchCategory'
 import SidebarSearchItem from '../atoms/SidebarSearchItem'
 import SidebarContextList from '../atoms/SidebarContextList'
 import Spinner from '../../../atoms/Spinner'
+import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 
 interface SidebarSearchProps {
   searchQuery: string
@@ -225,6 +226,12 @@ const Container = styled.div`
     justify-content: flex-start;
     margin: 0px ${({ theme }) => theme.sizes.spaces.df}px;
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    white-space: nowrap;
+    text-align: left;
+
+    .button__label {
+      ${overflowEllipsis}
+    }
   }
 
   .sidebar__search__item {
