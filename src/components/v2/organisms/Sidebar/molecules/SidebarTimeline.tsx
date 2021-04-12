@@ -89,7 +89,9 @@ const SidebarTimeline: AppComponent<SidebarTimelineProps> = ({
             </a>
           </WithTooltip>
         ))}
-        {children}
+        {children != null && (
+          <div className='sidebar__timeline__content'>{children}</div>
+        )}
       </SidebarContextList>
     </Container>
   )
@@ -106,6 +108,11 @@ const Container = styled.div`
     overflow: hidden;
     display: flex;
     flex-direction: column;
+  }
+
+  .sidebar__timeline__content {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    text-align: center;
   }
 
   .sidebar__timeline__row {

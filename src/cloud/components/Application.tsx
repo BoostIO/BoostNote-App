@@ -103,6 +103,7 @@ import { SidebarSpace } from '../../components/v2/organisms/Sidebar/molecules/Si
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../components/v2/templates/ContentLayout'
+import { getTeamLinkHref } from './atoms/Link/TeamLink'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -364,6 +365,14 @@ const Application = ({
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}
+            timelineMore={
+              team != null
+                ? {
+                    variant: 'primary',
+                    onClick: () => push(getTeamLinkHref(team, 'timeline')),
+                  }
+                : {}
+            }
             sidebarSearchState={{
               fetching: fetchingSearchResults,
               isNotDebouncing: isNotDebouncing() === true,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from '../../../../../lib/v2/styled'
 import { AppComponent } from '../../../../../lib/v2/types'
 import cc from 'classcat'
@@ -50,6 +50,17 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
     }
   }
 
+  const onClick: React.MouseEventHandler = useCallback(
+    (event) => {
+      if (labelClick == null) {
+        return
+      }
+      event.preventDefault()
+      labelClick()
+    },
+    [labelClick]
+  )
+
   return (
     <Container
       depth={depth > 6 ? 6 : depth}
@@ -70,7 +81,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
         <LabelTag
           className='sidebar__tree__item__label'
           onFocus={() => setFocused(true)}
-          onClick={labelClick}
+          onClick={onClick}
           href={labelHref}
           id={`tree-${id}`}
           tabIndex={1}
