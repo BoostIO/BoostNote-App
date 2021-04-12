@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from '../../../lib/v2/styled'
 import { AppComponent } from '../../../lib/v2/types'
 import DoublePane from '../atoms/DoublePane'
 import PageHelmet from '../atoms/PageHelmet'
 import Topbar, { TopbarProps } from '../organisms/Topbar/index'
 import cc from 'classcat'
+import { isFocusRightSideShortcut } from '../../../lib/v2/shortcuts'
+import {
+  preventKeyboardEventPropagation,
+  useGlobalKeyDownHandler,
+} from '../../../lib/v2/keyboard'
+import { focusFirstChildFromElement } from '../../../lib/v2/dom'
 
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
@@ -23,48 +29,63 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
   right,
   reduced,
   header,
-}) => (
-  <Container className='layout'>
-    <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
-    <DoublePane className='two__pane' right={right}>
-      {topbar?.type === 'v2' ? (
-        <Topbar
-          tree={topbar.tree}
-          controls={topbar.controls}
-          navigation={topbar.navigation}
-          breadcrumbs={topbar.breadcrumbs}
-          className='topbar'
-        />
-      ) : (
-        <div className='topbar topbar--v1'>
-          {topbar?.type === 'v1' && (
-            <>
-              <div className='topbar--v1__left'>{topbar?.left}</div>
-              {topbar?.right != null && (
-                <div className='topbar--v1__right'>{topbar?.right}</div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-      <div className='layout__content'>
-        <div className='layout__content__wrapper'>
-          <div
-            className={cc([
-              'content__wrapper',
-              reduced && 'content__wrapper--reduced',
-            ])}
-          >
-            {header != null && (
-              <h1 className='layout__content__header'>{header}</h1>
+}) => {
+  const rightSideContentRef = React.createRef<HTMLDivElement>()
+  const keydownHandler = useCallback(
+    async (event: KeyboardEvent) => {
+      if (isFocusRightSideShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        console.log('focus ne')
+        focusFirstChildFromElement(rightSideContentRef.current)
+      }
+    },
+    [rightSideContentRef]
+  )
+  useGlobalKeyDownHandler(keydownHandler)
+
+  return (
+    <Container className='layout' ref={rightSideContentRef}>
+      <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
+      <DoublePane className='two__pane' right={right}>
+        {topbar?.type === 'v2' ? (
+          <Topbar
+            tree={topbar.tree}
+            controls={topbar.controls}
+            navigation={topbar.navigation}
+            breadcrumbs={topbar.breadcrumbs}
+            className='topbar'
+          />
+        ) : (
+          <div className='topbar topbar--v1'>
+            {topbar?.type === 'v1' && (
+              <>
+                <div className='topbar--v1__left'>{topbar?.left}</div>
+                {topbar?.right != null && (
+                  <div className='topbar--v1__right'>{topbar?.right}</div>
+                )}
+              </>
             )}
-            {children}
+          </div>
+        )}
+        <div className='layout__content'>
+          <div className='layout__content__wrapper'>
+            <div
+              className={cc([
+                'content__wrapper',
+                reduced && 'content__wrapper--reduced',
+              ])}
+            >
+              {header != null && (
+                <h1 className='layout__content__header'>{header}</h1>
+              )}
+              {children}
+            </div>
           </div>
         </div>
-      </div>
-    </DoublePane>
-  </Container>
-)
+      </DoublePane>
+    </Container>
+  )
+}
 
 const Container = styled.div`
   flex: 1 1 0;

@@ -331,13 +331,6 @@ const Application = ({
         preventKeyboardEventPropagation(event)
         ;(document.activeElement as InputableDomElement).blur()
       }
-
-      /*
-      if (isFocusRightSideShortcut(event)) {
-        preventKeyboardEventPropagation(event)
-        focusFirstChildFromElement(rightSideContentRef.current)
-      }
-      */
     },
     [openSettingsTab, team]
   )
@@ -371,7 +364,7 @@ const Application = ({
                     variant: 'primary',
                     onClick: () => push(getTeamLinkHref(team, 'timeline')),
                   }
-                : {}
+                : undefined
             }
             sidebarSearchState={{
               fetching: fetchingSearchResults,
