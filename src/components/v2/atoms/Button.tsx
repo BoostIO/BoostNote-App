@@ -150,10 +150,14 @@ const StyledButton = styled.button`
   font-family: Arial;
   box-sizing: border-box;
   transition: 200ms background-color;
-  width: fit-content;
+  width: auto;
 
   & + * {
     margin-left: 5px;
+  }
+
+  .button__icon {
+    flex: 0 0 auto;
   }
 
   & > .button__icon + .button__label {
