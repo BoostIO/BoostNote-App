@@ -13,7 +13,7 @@ import SingleInputModal from '../Modal/contents/Forms/SingleInputModal'
 import EmojiIcon from '../../atoms/EmojiIcon'
 import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
-import AppLayout from '../../layouts/AppLayout'
+import Application from '../../Application'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -103,11 +103,11 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   }, [openModal, submitNewFolder])
 
   if (team == null) {
-    return <AppLayout content={{}} />
+    return <Application content={{}} />
   }
 
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: true,
         topbar: {
@@ -148,7 +148,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
         folders={childFolders}
         workspacesMap={workspaceMap}
       />
-    </AppLayout>
+    </Application>
   )
 }
 

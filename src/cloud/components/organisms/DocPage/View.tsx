@@ -13,7 +13,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { unarchiveDoc } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
 import { usePreferences } from '../../../lib/stores/preferences'
-import AppLayout from '../../layouts/AppLayout'
+import Application from '../../Application'
 import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
 import {
   StyledTopbarVerticalSplit,
@@ -64,7 +64,7 @@ const ViewPage = ({
   }, [doc, pushMessage, updateDocsMap, setPartialPageData])
 
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: true,
         topbar: {
@@ -132,7 +132,7 @@ const ViewPage = ({
           </StyledContent>
         </StyledViewDocLayout>
       </Container>
-    </AppLayout>
+    </Application>
   )
 }
 

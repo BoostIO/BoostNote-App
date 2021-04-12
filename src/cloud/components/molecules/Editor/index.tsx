@@ -36,7 +36,7 @@ import { StyledTopbarVerticalSplit } from '../../organisms/RightSideTopBar/style
 import { buildIconUrl } from '../../../api/files'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import EditorTemplateButton from './EditorTemplateButton'
-import AppLayout from '../../layouts/AppLayout'
+import Application from '../../Application'
 import DocBookmark from '../../organisms/RightSideTopBar/DocTopbar/DocBookmark'
 import BreadCrumbs from '../../organisms/RightSideTopBar/BreadCrumbs'
 import { mdiRepeat, mdiRepeatOff, mdiFileDocumentOutline } from '@mdi/js'
@@ -585,18 +585,18 @@ const Editor = ({
 
   if (!initialSyncDone) {
     return (
-      <AppLayout content={{}}>
+      <Application content={{}}>
         <StyledLoadingView>
           <h3>Loading..</h3>
           <span>
             <Spinner />
           </span>
         </StyledLoadingView>
-      </AppLayout>
+      </Application>
     )
   }
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: false,
         topbar: {
@@ -731,7 +731,7 @@ const Editor = ({
           </StyledBottomBar>
         )}
       </Container>
-    </AppLayout>
+    </Application>
   )
 }
 

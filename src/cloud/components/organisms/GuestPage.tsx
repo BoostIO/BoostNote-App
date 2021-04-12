@@ -2,7 +2,7 @@ import React from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import { useNav } from '../../lib/stores/nav'
 import BreadCrumbs from './RightSideTopBar/BreadCrumbs'
-import AppLayout from '../layouts/AppLayout'
+import Application from '../Application'
 import DocList from './DocList'
 
 const GuestPage = () => {
@@ -10,11 +10,11 @@ const GuestPage = () => {
   const { docsMap } = useNav()
 
   if (team == null) {
-    return <AppLayout content={{}} />
+    return <Application content={{}} />
   }
 
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: true,
         topbar: {
@@ -25,7 +25,7 @@ const GuestPage = () => {
       }}
     >
       <DocList docs={[...docsMap.values()]} team={team} />
-    </AppLayout>
+    </Application>
   )
 }
 

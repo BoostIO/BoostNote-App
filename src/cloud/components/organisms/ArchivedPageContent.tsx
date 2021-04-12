@@ -6,7 +6,7 @@ import { mdiArchive } from '@mdi/js'
 import BreadCrumbs from './RightSideTopBar/BreadCrumbs'
 import EmojiIcon from '../atoms/EmojiIcon'
 import ContentManager from '../molecules/ContentManager'
-import AppLayout from '../layouts/AppLayout'
+import Application from '../Application'
 
 const ArchivedPage = () => {
   const { team } = usePage()
@@ -19,11 +19,11 @@ const ArchivedPage = () => {
   useTitle('Archived')
 
   if (team == null) {
-    return <AppLayout content={{}} />
+    return <Application content={{}} />
   }
 
   return (
-    <AppLayout
+    <Application
       content={{
         reduced: true,
         topbar: {
@@ -45,7 +45,7 @@ const ArchivedPage = () => {
         page='archive'
         workspacesMap={workspacesMap}
       />
-    </AppLayout>
+    </Application>
   )
 }
 

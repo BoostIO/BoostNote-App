@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import Page from '../../components/Page'
 import { LazyDefaultLayout } from '../../components/layouts/DefaultLayout'
-import AppLayout from '../../components/layouts/AppLayout'
+import Application from '../../components/Application'
 import {
   getTimelinePageData,
   TimelinePageData,
@@ -72,7 +72,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
     return (
       <Page>
         <LazyDefaultLayout>
-          <AppLayout
+          <Application
             content={{
               reduced: true,
               topbar: {
@@ -95,7 +95,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                 teammates!
               </p>
             </StyledTimelinePage>
-          </AppLayout>
+          </Application>
         </LazyDefaultLayout>
       </Page>
     )
@@ -104,7 +104,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
   return (
     <Page>
       <LazyDefaultLayout>
-        <AppLayout
+        <Application
           content={{
             reduced: true,
             topbar: {
@@ -161,7 +161,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
               </div>
             )}
           </StyledTimelinePage>
-        </AppLayout>
+        </Application>
       </LazyDefaultLayout>
     </Page>
   )

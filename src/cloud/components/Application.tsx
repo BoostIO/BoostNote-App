@@ -1,3 +1,69 @@
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  CSSProperties,
+  useMemo,
+} from 'react'
+import { usePreferences } from '../lib/stores/preferences'
+import { usePage } from '../lib/stores/pageStore'
+import {
+  useGlobalKeyDownHandler,
+  isSingleKeyEventOutsideOfInput,
+  preventKeyboardEventPropagation,
+  isSingleKeyEvent,
+} from '../lib/keyboard'
+import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
+import { useDebounce, useEffectOnce } from 'react-use'
+import { useModal } from '../lib/stores/modal'
+import { SettingsTab, useSettings } from '../lib/stores/settings'
+import { shortcuts } from '../lib/shortcuts'
+import CreateFolderModal from './organisms/Modal/contents/Folder/CreateFolderModal'
+import { useSearch } from '../lib/stores/search'
+import AnnouncementAlert from './atoms/AnnouncementAlert'
+import { newFolderEventEmitter, searchEventEmitter } from '../lib/utils/events'
+import { useRouter } from '../lib/router'
+import { useNav } from '../lib/stores/nav'
+import EventSource from '../../components/v2/organisms/cloud/EventSource'
+import ApplicationLayout from '../../components/v2/molecules/ApplicationLayout'
+import Sidebar from '../../components/v2/organisms/Sidebar'
+import {
+  CollapsableType,
+  useSidebarCollapse,
+} from '../lib/stores/sidebarCollapse'
+import {
+  MenuItem,
+  MenuTypes,
+  useContextMenu,
+} from '../../lib/v2/stores/contextMenu'
+import { useGlobalData } from '../lib/stores/globalData'
+import { getDocLinkHref } from './atoms/Link/DocLink'
+import { getFolderHref } from './atoms/Link/FolderLink'
+import { getWorkspaceHref } from './atoms/Link/WorkspaceLink'
+import { getTagHref } from './atoms/Link/TagLink'
+import {
+  SidebarSearchHistory,
+  SidebarSearchResult,
+} from '../../components/v2/organisms/Sidebar/molecules/SidebarSearch'
+import { SidebarState } from '../../lib/v2/sidebar'
+import useApi from '../../lib/v2/hooks/useApi'
+import {
+  GetSearchResultsRequestQuery,
+  getSearchResultsV2,
+  HistoryItem,
+  SearchResult,
+} from '../api/search'
+import { SidebarToolbarRow } from '../../components/v2/organisms/Sidebar/molecules/SidebarToolbar'
+import { mapUsers } from '../../lib/v2/mappers/users'
+import { SerializedDoc, SerializedDocWithBookmark } from '../interfaces/db/doc'
+import { SerializedTeam } from '../interfaces/db/team'
+import { compareDateString } from '../../lib/v2/date'
+import {
+  getDocId,
+  getDocTitle,
+  getFolderId,
+  getTeamURL,
+} from '../lib/utils/patterns'
 import {
   mdiAccountMultiplePlusOutline,
   mdiClockOutline,
@@ -12,102 +78,43 @@ import {
   mdiPlusCircleOutline,
   mdiTag,
 } from '@mdi/js'
-import { stringify } from 'querystring'
-import React, { useCallback, useMemo, useState } from 'react'
-import { buildIconUrl } from '../../cloud/api/files'
-import {
-  TeamLinkIntent,
-  useNavigateToTeam,
-} from '../../cloud/components/atoms/Link/TeamLink'
-import ImportModal from '../../cloud/components/organisms/Modal/contents/Import/ImportModal'
-import { Url, useRouter } from '../../cloud/lib/router'
-import { useGlobalData } from '../../cloud/lib/stores/globalData'
-import { usePage } from '../../cloud/lib/stores/pageStore'
-import { usePreferences } from '../../cloud/lib/stores/preferences'
-import { getHexFromUUID } from '../../cloud/lib/utils/string'
-import { SidebarState } from '../../lib/v2/sidebar'
-import RoundedImage from './atoms/RoundedImage'
-import { usingElectron, sendToHost } from '../../cloud/lib/stores/electron'
-import {
-  getDocId,
-  getDocTitle,
-  getFolderId,
-  getTeamURL,
-} from '../../cloud/lib/utils/patterns'
-import { useNav } from '../../cloud/lib/stores/nav'
-import {
-  CollapsableType,
-  useSidebarCollapse,
-} from '../../cloud/lib/stores/sidebarCollapse'
-import { SidebarSpace } from './organisms/Sidebar/molecules/SidebarSpaces'
-import { SidebarToolbarRow } from './organisms/Sidebar/molecules/SidebarToolbar'
-import {
-  SidebarNavCategory,
-  SidebarTreeChildRow,
-} from './organisms/Sidebar/molecules/SidebarTree'
-import { getMapValues } from '../../lib/v2/utils/array'
-import {
-  MenuItem,
-  MenuTypes,
-  useContextMenu,
-} from '../../lib/v2/stores/contextMenu'
-import ContextMenu from '../../components/v2/molecules/ContextMenu'
-import Checkbox from './molecules/Form/atoms/FormCheckbox'
-import ApplicationLayout from './molecules/ApplicationLayout'
-import Sidebar from './organisms/Sidebar/index'
-import {
-  SerializedDoc,
-  SerializedDocWithBookmark,
-} from '../../cloud/interfaces/db/doc'
+import { getColorFromString } from '../../lib/v2/string'
+import { buildIconUrl } from '../api/files'
 import {
   SerializedFolder,
   SerializedFolderWithBookmark,
-} from '../../cloud/interfaces/db/folder'
-import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
-import { SerializedTag } from '../../cloud/interfaces/db/tag'
-import { SerializedTeam } from '../../cloud/interfaces/db/team'
-import { SerializedTeamInvite } from '../../cloud/interfaces/db/teamInvite'
+} from '../interfaces/db/folder'
+import { SerializedWorkspace } from '../interfaces/db/workspace'
+import { SerializedTag } from '../interfaces/db/tag'
+import { FoldingProps } from '../../components/v2/atoms/FoldingWrapper'
+import { getMapValues } from '../../lib/v2/utils/array'
 import {
-  getFolderHref,
-  useNavigateToFolder,
-} from '../../cloud/components/atoms/Link/FolderLink'
-import {
-  useNavigateToWorkspace,
-  getWorkspaceHref,
-} from '../../cloud/components/atoms/Link/WorkspaceLink'
-import {
-  getDocLinkHref,
-  useNavigateToDoc,
-} from '../../cloud/components/atoms/Link/DocLink'
-import {
-  getTagHref,
-  useNavigateToTag,
-} from '../../cloud/components/atoms/Link/TagLink'
-import Toast from './organisms/Toast'
-import EmojiPicker from './molecules/EmojiPicker'
-import { ModalOpeningOptions, useModal } from '../../lib/v2/stores/modal'
-import ModalV1 from '../../cloud/components/organisms/Modal'
-import Modal from './organisms/Modal'
-import Dialog from './organisms/Dialog/Dialog'
-import { FoldingProps } from './atoms/FoldingWrapper'
-import { useSearch } from '../../cloud/lib/stores/search'
-import {
-  getSearchResultsV2,
-  GetSearchResultsRequestQuery,
-  HistoryItem,
-  SearchResult,
-} from '../../cloud/api/search'
-import {
-  SidebarSearchHistory,
-  SidebarSearchResult,
-} from './organisms/Sidebar/molecules/SidebarSearch'
-import { useDebounce } from 'react-use'
-import useApi from '../../lib/v2/hooks/useApi'
-import { mapUsers } from '../../lib/v2/mappers/users'
-import { compareDateString } from '../../lib/v2/date'
-import { getColorFromString } from '../../lib/v2/string'
+  SidebarNavCategory,
+  SidebarTreeChildRow,
+} from '../../components/v2/organisms/Sidebar/molecules/SidebarTree'
+import Checkbox from '../../components/v2/molecules/Form/atoms/FormCheckbox'
+import RoundedImage from '../../components/v2/atoms/RoundedImage'
+import ImportModal from './organisms/Modal/contents/Import/ImportModal'
+import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
+import { getHexFromUUID } from '../lib/utils/string'
+import { stringify } from 'querystring'
+import { sendToHost, usingElectron } from '../lib/stores/electron'
+import { SidebarSpace } from '../../components/v2/organisms/Sidebar/molecules/SidebarSpaces'
+import ContentLayout, {
+  ContentLayoutProps,
+} from '../../components/v2/templates/ContentLayout'
 
-const Application: React.FC<{}> = ({ children }) => {
+interface ApplicationProps {
+  content: ContentLayoutProps
+  className?: string
+  style?: CSSProperties
+  maxLeftWidth?: number
+}
+
+const Application = ({
+  content,
+  children,
+}: React.PropsWithChildren<ApplicationProps>) => {
   const { preferences, setPreferences } = usePreferences()
   const {
     initialLoadDone,
@@ -115,6 +122,7 @@ const Application: React.FC<{}> = ({ children }) => {
     foldersMap,
     workspacesMap,
     tagsMap,
+    currentParentFolderId,
   } = useNav()
   const {
     sideBarOpenedLinksIdsSet,
@@ -125,23 +133,45 @@ const Application: React.FC<{}> = ({ children }) => {
     foldItem,
   } = useSidebarCollapse()
   const { popup } = useContextMenu()
-  const { team, permissions = [], guestsMap } = usePage()
+  const {
+    team,
+    permissions = [],
+    guestsMap,
+    currentUserPermissions,
+  } = usePage()
   const { openModal } = useModal()
   const {
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
-  const { push } = useRouter()
-  const navigateToTeam = useNavigateToTeam()
-  const navigateToDoc = useNavigateToDoc()
-  const navigateToFolder = useNavigateToFolder()
-  const navigateToWorkspace = useNavigateToWorkspace()
-  const navigateToLabel = useNavigateToTag()
+  const { push, query } = useRouter()
   const { history, searchHistory, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
   )
+  const { openSettingsTab } = useSettings()
+
+  useEffectOnce(() => {
+    if (query.settings === 'upgrade') {
+      openSettingsTab('teamUpgrade')
+    }
+  })
+
+  useEffect(() => {
+    const handler = () => {
+      if (sidebarState === 'search') {
+        setSidebarState(undefined)
+      } else {
+        setSidebarState('search')
+      }
+    }
+    searchEventEmitter.listen(handler)
+    return () => {
+      searchEventEmitter.unlisten(handler)
+    }
+  }, [sidebarState])
+
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
   }, [])
@@ -174,10 +204,7 @@ const Application: React.FC<{}> = ({ children }) => {
       sideBarOpenedWorkspaceIdsSet,
       toggleItem,
       getFoldEvents,
-      navigateToDoc,
-      navigateToFolder,
-      navigateToWorkspace,
-      navigateToLabel,
+      push,
       team
     )
   }, [
@@ -191,10 +218,7 @@ const Application: React.FC<{}> = ({ children }) => {
     sideBarOpenedWorkspaceIdsSet,
     toggleItem,
     getFoldEvents,
-    navigateToDoc,
-    navigateToFolder,
-    navigateToWorkspace,
-    navigateToLabel,
+    push,
     team,
   ])
 
@@ -207,12 +231,18 @@ const Application: React.FC<{}> = ({ children }) => {
   }, [popup, tree])
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
-    return mapToolbarRows(openState, openModal, sidebarState, team)
-  }, [sidebarState, openModal, team, openState])
+    return mapToolbarRows(
+      openState,
+      openModal,
+      openSettingsTab,
+      sidebarState,
+      team
+    )
+  }, [sidebarState, openModal, openSettingsTab, team, openState])
 
   const spaces = useMemo(() => {
-    return mapSpaces(navigateToTeam, push, teams, invites, team)
-  }, [navigateToTeam, teams, team, invites, push])
+    return mapSpaces(push, teams, invites, team)
+  }, [teams, team, invites, push])
 
   const historyItems = useMemo(() => {
     return mapHistory(history, push, docsMap, foldersMap, team)
@@ -268,14 +298,53 @@ const Application: React.FC<{}> = ({ children }) => {
     return mapTimelineItems([...docsMap.values()], push, team)
   }, [docsMap, push, team])
 
+  const openCreateFolderModal = useCallback(() => {
+    openModal(<CreateFolderModal parentFolderId={currentParentFolderId} />)
+  }, [openModal, currentParentFolderId])
+
+  useEffect(() => {
+    if (team == null || currentUserPermissions == null) {
+      return
+    }
+    newFolderEventEmitter.listen(openCreateFolderModal)
+    return () => {
+      newFolderEventEmitter.unlisten(openCreateFolderModal)
+    }
+  }, [team, currentUserPermissions, openCreateFolderModal])
+
+  const overrideBrowserCtrlsHandler = useCallback(
+    async (event: KeyboardEvent) => {
+      if (team == null) {
+        return
+      }
+
+      if (isSingleKeyEventOutsideOfInput(event, shortcuts.teamMembers)) {
+        preventKeyboardEventPropagation(event)
+        openSettingsTab('teamMembers')
+      }
+
+      if (isSingleKeyEvent(event, 'escape') && isActiveElementAnInput()) {
+        if (isCodeMirorTextAreaEvent(event)) {
+          return
+        }
+        preventKeyboardEventPropagation(event)
+        ;(document.activeElement as InputableDomElement).blur()
+      }
+
+      /*
+      if (isFocusRightSideShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        focusFirstChildFromElement(rightSideContentRef.current)
+      }
+      */
+    },
+    [openSettingsTab, team]
+  )
+  useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
+
   return (
     <>
-      <ModalV1 />
-      <Modal />
-      <Toast />
-      <ContextMenu />
-      <EmojiPicker />
-      <Dialog />
+      {team != null && <EventSource teamId={team.id} />}
       <ApplicationLayout
         sidebar={
           <Sidebar
@@ -301,8 +370,13 @@ const Application: React.FC<{}> = ({ children }) => {
             }}
           />
         }
-        pageBody={children}
+        pageBody={
+          <>
+            <ContentLayout {...content}>{children}</ContentLayout>
+          </>
+        }
       />
+      <AnnouncementAlert />
     </>
   )
 }
@@ -460,30 +534,7 @@ function mapTree(
   sideBarOpenedWorkspaceIdsSet: Set<string>,
   toggleItem: (type: CollapsableType, id: string) => void,
   getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
-  navigateToDoc: (
-    doc: SerializedDoc,
-    team: SerializedTeam,
-    intent: 'index',
-    query?: any
-  ) => void,
-  navigateToFolder: (
-    folder: SerializedFolder,
-    team: SerializedTeam,
-    intent: 'index',
-    query?: any
-  ) => void,
-  navigateToWorkspace: (
-    workspace: SerializedWorkspace,
-    team: SerializedTeam,
-    intent: 'index',
-    query?: any
-  ) => void,
-  navigateToLabel: (
-    tag: SerializedTag,
-    team: SerializedTeam,
-    intent: 'index',
-    query?: any
-  ) => void,
+  push: (url: string) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -499,6 +550,11 @@ function mapTree(
   ]
 
   workspaces.forEach((wp) => {
+    const href = `${process.env.BOOST_HUB_BASE_URL}${getWorkspaceHref(
+      wp,
+      team,
+      'index'
+    )}`
     items.set(wp.id, {
       id: wp.id,
       label: wp.name,
@@ -506,17 +562,18 @@ function mapTree(
       children: wp.positions?.orderedIds || [],
       folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
       folding: getFoldEvents('workspaces', wp.id),
-      href: `${process.env.BOOST_HUB_BASE_URL}${getWorkspaceHref(
-        wp,
-        team,
-        'index'
-      )}`,
-      navigateTo: () => navigateToWorkspace(wp, team, 'index'),
+      href,
+      navigateTo: () => push(href),
     })
   })
 
   folders.forEach((folder) => {
     const folderId = getFolderId(folder)
+    const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
+      folder,
+      team,
+      'index'
+    )}`
     items.set(folderId, {
       id: folderId,
       label: folder.name,
@@ -524,12 +581,8 @@ function mapTree(
       emoji: folder.emoji,
       folded: !sideBarOpenedFolderIdsSet.has(folder.id),
       folding: getFoldEvents('folders', folder.id),
-      href: `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
-        folder,
-        team,
-        'index'
-      )}`,
-      navigateTo: () => navigateToFolder(folder, team, 'index'),
+      href,
+      navigateTo: () => push(href),
       parentId:
         folder.parentFolderId == null
           ? folder.workspaceId
@@ -543,6 +596,11 @@ function mapTree(
 
   docs.forEach((doc) => {
     const docId = getDocId(doc)
+    const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
+      doc,
+      team,
+      'index'
+    )}`
     items.set(docId, {
       id: docId,
       label: getDocTitle(doc, 'Untitled'),
@@ -551,12 +609,8 @@ function mapTree(
       defaultIcon: mdiFileDocumentOutline,
       archived: doc.archivedAt != null,
       children: [],
-      href: `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
-        doc,
-        team,
-        'index'
-      )}`,
-      navigateTo: () => navigateToDoc(doc, team, 'index'),
+      href,
+      navigateTo: () => push(href),
       parentId:
         doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
     })
@@ -616,17 +670,18 @@ function mapTree(
       }
     })
     .reduce((acc, val) => {
+      const href = `${process.env.BOOST_HUB_BASE_URL}${getTagHref(
+        val,
+        team,
+        'index'
+      )}`
       acc.push({
         id: val.id,
         depth: 0,
         label: val.text,
         defaultIcon: mdiTag,
-        href: `${process.env.BOOST_HUB_BASE_URL}${getTagHref(
-          val,
-          team,
-          'index'
-        )}`,
-        navigateTo: () => navigateToLabel(val, team, 'index'),
+        href,
+        navigateTo: () => push(href),
       })
       return acc
     }, [] as SidebarTreeChildRow[])
@@ -718,7 +773,8 @@ function mapTreeControls(
 
 function mapToolbarRows(
   openState: (sidebarState: SidebarState) => void,
-  openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
+  openModal: (cmp: JSX.Element, options?: any) => void,
+  openSettingsTab: (tab: SettingsTab) => void,
   sidebarState?: SidebarState,
   team?: SerializedTeam
 ) {
@@ -759,39 +815,38 @@ function mapToolbarRows(
     tooltip: 'Import',
     icon: mdiDownload,
     position: 'bottom',
-    onClick: () => openModal(<ImportModal />),
+    onClick: () =>
+      openModal(<ImportModal />, {
+        classNames: 'largeW',
+      }),
   })
   rows.push({
     tooltip: 'Members',
     active: sidebarState === 'members',
     icon: mdiAccountMultiplePlusOutline,
     position: 'bottom',
-    onClick: () => openState('members'),
+    onClick: () => openSettingsTab('teamMembers'),
   })
   rows.push({
     tooltip: 'Settings',
     active: sidebarState === 'settings',
     icon: mdiCogOutline,
     position: 'bottom',
-    onClick: () => openState('settings'),
+    onClick: () => openSettingsTab('preferences'),
   })
 
   return rows
 }
 
 function mapSpaces(
-  navigateToTeam: (
-    team: SerializedTeam,
-    intent: TeamLinkIntent,
-    query?: any
-  ) => void,
-  push: (url: Url) => void,
+  push: (url: string) => void,
   teams: SerializedTeam[],
   invites: SerializedTeamInvite[],
   team?: SerializedTeam
 ) {
   const rows: SidebarSpace[] = []
   teams.forEach((globalTeam) => {
+    const href = `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`
     rows.push({
       label: globalTeam.name,
       active: team?.id === globalTeam.id,
@@ -800,10 +855,10 @@ function mapSpaces(
           ? buildIconUrl(globalTeam.icon.location)
           : undefined,
       linkProps: {
-        href: `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`,
+        href,
         onClick: (event: React.MouseEvent) => {
           event.preventDefault()
-          navigateToTeam(globalTeam, 'index')
+          push(href)
         },
       },
     })
@@ -811,6 +866,7 @@ function mapSpaces(
 
   invites.forEach((invite) => {
     const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
+    const href = `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`
     rows.push({
       label: `${invite.team.name} (invited)`,
       icon:
@@ -818,7 +874,7 @@ function mapSpaces(
           ? buildIconUrl(invite.team.icon.location)
           : undefined,
       linkProps: {
-        href: `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`,
+        href,
         onClick: (event: React.MouseEvent) => {
           event.preventDefault()
           push(`/invite?${stringify(query)}`)
@@ -830,7 +886,7 @@ function mapSpaces(
   return rows
 }
 
-function buildSpacesBottomRows(push: (url: Url) => void) {
+function buildSpacesBottomRows(push: (url: string) => void) {
   return [
     {
       label: 'Create an account',
@@ -911,3 +967,20 @@ type CloudTreeItem = {
   href?: string
   navigateTo?: () => void
 }
+
+
+function isCodeMirorTextAreaEvent(event: KeyboardEvent) {
+  const target = event.target as HTMLTextAreaElement
+  if (target == null || target.tagName.toLowerCase() !== 'textarea') {
+    return false
+  }
+  const classNameOfParentParentElement =
+    target.parentElement?.parentElement?.className
+  if (classNameOfParentParentElement == null) {
+    return false
+  }
+  if (!/CodeMirror/.test(classNameOfParentParentElement)) {
+    return false
+  }
+
+  return true
