@@ -74,7 +74,9 @@ import {
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
+  mdiFilePlusOutline,
   mdiFolderCogOutline,
+  mdiFolderPlusOutline,
   mdiLock,
   mdiLogoutVariant,
   mdiMagnify,
@@ -118,6 +120,8 @@ import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWor
 import EditWorkspaceModal from './organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
 import EditFolderModal from './organisms/Modal/contents/Folder/EditFolderModal'
+import { CreateFolderRequestBody } from '../api/teams/folders'
+import { CreateDocRequestBody } from '../api/teams/docs'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -209,6 +213,8 @@ const Application = ({
 
   const {
     sendingMap: treeSendingMap,
+    createDoc,
+    createFolder,
     toggleDocArchive,
     toggleDocBookmark,
     toggleFolderBookmark,
@@ -237,6 +243,8 @@ const Application = ({
       deleteWorkspace,
       toggleDocArchive,
       deleteFolder,
+      createFolder,
+      createDoc,
       team
     )
   }, [
@@ -259,6 +267,8 @@ const Application = ({
     deleteWorkspace,
     toggleDocArchive,
     deleteFolder,
+    createFolder,
+    createDoc,
     team,
   ])
 
@@ -596,6 +606,14 @@ function mapTree(
     archivedAt?: string
   ) => void,
   deleteFolder: (folder: SerializedFolder) => void,
+  createFolder: (
+    team: SerializedTeam,
+    body: CreateFolderRequestBody
+  ) => Promise<void>,
+  createDoc: (
+    team: SerializedTeam,
+    body: CreateDocRequestBody
+  ) => Promise<void>,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -627,6 +645,27 @@ function mapTree(
       href,
       active: href === currentPathWithDomain,
       navigateTo: () => push(href),
+      controls: [
+        {
+          icon: mdiFolderPlusOutline,
+          onClick: undefined,
+          create: (folderName: string) =>
+            createFolder(team, {
+              workspaceId: wp.id,
+              description: '',
+              folderName,
+            }),
+        },
+        {
+          icon: mdiFilePlusOutline,
+          onClick: undefined,
+          create: (title: string) =>
+            createDoc(team, {
+              workspaceId: wp.id,
+              title,
+            }),
+        },
+      ],
       contextControls: wp.default
         ? [
             {
@@ -670,7 +709,29 @@ function mapTree(
       href,
       active: href === currentPathWithDomain,
       navigateTo: () => push(href),
-      controls: [],
+      controls: [
+        {
+          icon: mdiFolderPlusOutline,
+          onClick: undefined,
+          create: (folderName: string) =>
+            createFolder(team, {
+              parentFolderId: folder.id,
+              workspaceId: folder.workspaceId,
+              description: '',
+              folderName,
+            }),
+        },
+        {
+          icon: mdiFilePlusOutline,
+          onClick: undefined,
+          create: (title: string) =>
+            createDoc(team, {
+              parentFolderId: folder.id,
+              workspaceId: folder.workspaceId,
+              title,
+            }),
+        },
+      ],
       contextControls: [
         {
           type: MenuTypes.Normal,

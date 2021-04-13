@@ -1,7 +1,11 @@
 import { useCallback } from 'react'
+import shortid from 'shortid'
 import {
   archiveDoc,
   ArchiveDocResponseBody,
+  createDoc,
+  CreateDocRequestBody,
+  CreateDocResponseBody,
   destroyDoc,
   DestroyDocResponseBody,
   unarchiveDoc,
@@ -13,6 +17,9 @@ import {
   DestroyDocBookmarkResponseBody,
 } from '../../../../cloud/api/teams/docs/bookmarks'
 import {
+  createFolder,
+  CreateFolderRequestBody,
+  CreateFolderResponseBody,
   destroyFolder,
   DestroyFolderResponseBody,
 } from '../../../../cloud/api/teams/folders'
@@ -26,8 +33,15 @@ import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
 } from '../../../../cloud/api/teams/workspaces'
+import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
+import { useRouter } from '../../../../cloud/lib/router'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
+import {
+  getDocURL,
+  getFolderURL,
+  getTeamURL,
+} from '../../../../cloud/lib/utils/patterns'
 import { DialogIconTypes, useDialog } from '../../stores/dialog'
 import { useToast } from '../../stores/toast'
 import { getMapFromEntityArray } from '../../utils/array'
@@ -47,8 +61,47 @@ export function useCloudUpdater() {
   } = useNav()
   const { pushMessage } = useToast()
   const { messageBox } = useDialog()
+  const { push } = useRouter()
 
   const { sendingMap, send } = useBulkApi()
+
+  const createDocApi = useCallback(
+    async (team: SerializedTeam, body: CreateDocRequestBody) => {
+      await send(shortid.generate(), 'create', {
+        api: () => createDoc({ id: team.id }, body),
+        cb: (res: CreateDocResponseBody) => {
+          updateDocsMap([res.doc.id, res.doc])
+          push(
+            {
+              pathname: `${getTeamURL(team)}${getDocURL(res.doc)}`,
+            },
+            { new: true }
+          )
+        },
+      })
+    },
+    [push, send, updateDocsMap]
+  )
+
+  const createFolderApi = useCallback(
+    async (team: SerializedTeam, body: CreateFolderRequestBody) => {
+      await send(shortid.generate(), 'create', {
+        api: () => createFolder(team, body),
+        cb: (res: CreateFolderResponseBody) => {
+          updateFoldersMap([
+            res.folder.id,
+            {
+              ...res.folder,
+              childDocsIds: [],
+              childFoldersIds: [],
+            },
+          ])
+          push(`${getTeamURL(team)}${getFolderURL(res.folder)}`)
+        },
+      })
+    },
+    [push, send, updateFoldersMap]
+  )
 
   const toggleDocArchive = useCallback(
     async (teamId: string, docId: string, archivedAt?: string) => {
@@ -328,6 +381,8 @@ export function useCloudUpdater() {
 
   return {
     sendingMap,
+    createDoc: createDocApi,
+    createFolder: createFolderApi,
     toggleDocArchive,
     toggleDocBookmark,
     toggleFolderBookmark,

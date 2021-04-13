@@ -6,9 +6,7 @@ import Spinner from '../../../atoms/Spinner'
 import FormInput from '../../../molecules/Form/atoms/FormInput'
 
 interface SideNavigatorFolderFormProps {
-  workspaceId?: string
-  parentFolderId?: string
-  style?: React.CSSProperties
+  createCallback: ((val: string) => Promise<void>) | null
   depth?: number
   close: () => void
 }
@@ -16,10 +14,17 @@ interface SideNavigatorFolderFormProps {
 const SidebarTreeForm = ({
   depth = 0,
   close,
+  createCallback,
 }: SideNavigatorFolderFormProps) => {
   const [sending, setSending] = useState<boolean>(false)
   const [name, setName] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,26 +42,40 @@ const SidebarTreeForm = ({
     close()
   }
 
-  useEffectOnce(() => {
-    if (inputRef.current != null) {
-      inputRef.current.focus()
-    }
-  })
+  const submit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault()
+
+      if (name.trim() === '' || createCallback == null) {
+        close()
+        return
+      }
+
+      setSending(true)
+      await createCallback(name.trim())
+      close()
+    },
+    [name, close, createCallback]
+  )
 
   return (
-    <Container depth={depth}>
+    <Container depth={depth} onSubmit={submit}>
       <div
-        className={cc([sending && 'sending'])}
+        className={cc([
+          'sidebar__tree__form',
+          sending && 'sidebar__tree__form--sending',
+        ])}
         onClick={() => setSending(false)}
       >
         <FormInput
+          className='sidebar__tree__form__input'
           value={name}
           onChange={updateName}
           ref={inputRef}
           onBlur={onBlur}
           disabled={sending}
         />
-        {sending && <Spinner className='emphasized spinner' />}
+        {sending && <Spinner className='sidebar__tree__form__spinner' />}
       </div>
     </Container>
   )
@@ -64,35 +83,33 @@ const SidebarTreeForm = ({
 
 export default SidebarTreeForm
 
-const Container = styled.form`
-  display: block;
-  width: 100%;
+const Container = styled.form<{ depth: number }>`
+  display: flex;
+  flex: 1 1 auto;
   position: relative;
   user-select: none;
-  height: 32px;
   margin: 2px 0;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
+  margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
-  .sending {
+  .sidebar__tree__form {
+    padding-left: ${({ depth }) => 26 + (depth as number) * 20}px;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+  }
+
+  .sidebar__tree__form__input {
+    flex: 1 1 auto;
+  }
+
+  .sidebar__tree__form--sending {
     cursor: not-allowed;
   }
 
-  .spinner {
+  .sidebar__tree__form__spinner {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-  }
-
-  input {
-    width: 100%;
-    padding-left: 5px;
-    &:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
+    right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
