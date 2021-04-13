@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../../../../lib/v2/styled'
 import FormInput from '../../../molecules/Form/atoms/FormInput'
 import SidebarHeader from '../atoms/SidebarHeader'
@@ -9,6 +9,7 @@ import SidebarSearchItem from '../atoms/SidebarSearchItem'
 import SidebarContextList from '../atoms/SidebarContextList'
 import Spinner from '../../../atoms/Spinner'
 import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
+import plur from 'plur'
 
 interface SidebarSearchProps {
   searchQuery: string
@@ -50,6 +51,33 @@ const SidebarSearch = ({
   searchResults = [],
 }: SidebarSearchProps) => {
   const [, { has, add, remove, toggle }] = useSet<string>(new Set())
+
+  const results = useMemo(() => {
+    return searchResults.reduce(
+      (acc, val) => {
+        const labelMatch = val.label
+          .toLocaleLowerCase()
+          .includes(searchQuery.toLocaleLowerCase())
+        if (labelMatch && val.contexts == null) {
+          acc.items.push(val)
+        } else if (val.contexts != null) {
+          acc.contextItems.push(val)
+        } else {
+          acc.similar.push(val)
+        }
+        return acc
+      },
+      {
+        items: [],
+        contextItems: [],
+        similar: [],
+      } as {
+        items: SidebarSearchResult[]
+        contextItems: SidebarSearchResult[]
+        similar: SidebarSearchResult[]
+      }
+    )
+  }, [searchResults, searchQuery])
 
   return (
     <Container className={cc(['sidebar__search', className])}>
@@ -153,33 +181,123 @@ const SidebarSearch = ({
             !fetching &&
             isNotDebouncing && (
               <>
-                {searchResults.map((result, i) => (
-                  <SidebarSearchItem
-                    id={`sidebar__result__${i}`}
-                    key={`sidebar__result__${i}`}
-                    label={result.label}
-                    labelHref={result.href}
-                    labelClick={result.onClick}
-                    contexts={result.contexts}
-                    emoji={result.emoji}
-                    defaultIcon={result.defaultIcon}
-                    highlighted={searchQuery}
-                    folded={
-                      result.contexts != null
-                        ? has(`${result.label}-${i}`)
-                        : undefined
-                    }
-                    folding={
-                      result.contexts != null
-                        ? {
-                            unfold: () => remove(`${result.label}-${i}`),
-                            fold: () => add(`${result.label}-${i}`),
-                            toggle: () => toggle(`${result.label}-${i}`),
-                          }
-                        : undefined
-                    }
-                  />
-                ))}
+                {results.items.length + results.contextItems.length === 0 ? (
+                  <>
+                    <strong className='sidebar__search__empty'>
+                      No matches
+                    </strong>
+                    <div className='sidebar__search__empty'>
+                      Try a different query.
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {results.items.length === 0 ? null : (
+                      <>
+                        <SidebarSearchCategory
+                          id='sidebar__search__matches'
+                          folded={has('matches')}
+                          unfold={() => remove('matches')}
+                          fold={() => add('matches')}
+                          toggle={() => toggle('matches')}
+                          className='sidebar__search__category'
+                        >
+                          {results.items.length}{' '}
+                          {plur('item', results.items.length)}
+                        </SidebarSearchCategory>
+                        {!has('matches') &&
+                          results.items.map((result, i) => (
+                            <SidebarSearchItem
+                              id={`sidebar__result--matches__${i}`}
+                              key={`sidebar__result--matches__${i}`}
+                              label={result.label}
+                              labelHref={result.href}
+                              labelClick={result.onClick}
+                              emoji={result.emoji}
+                              defaultIcon={result.defaultIcon}
+                              highlighted={searchQuery}
+                            />
+                          ))}
+                      </>
+                    )}
+
+                    {results.contextItems.length === 0 ? null : (
+                      <>
+                        <SidebarSearchCategory
+                          id='sidebar__search__context__matches'
+                          folded={has('context__matches')}
+                          unfold={() => remove('context__matches')}
+                          fold={() => add('context__matches')}
+                          toggle={() => toggle('context__matches')}
+                          className='sidebar__search__category'
+                        >
+                          Found in {results.contextItems.length}{' '}
+                          {plur('item', results.contextItems.length)}
+                        </SidebarSearchCategory>
+                        {!has('context__matches') &&
+                          results.contextItems.map((result, i) => (
+                            <SidebarSearchItem
+                              id={`sidebar__result__${i}`}
+                              key={`sidebar__result__${i}`}
+                              label={result.label}
+                              labelHref={result.href}
+                              labelClick={result.onClick}
+                              contexts={result.contexts}
+                              emoji={result.emoji}
+                              defaultIcon={result.defaultIcon}
+                              highlighted={searchQuery}
+                              folded={
+                                result.contexts != null
+                                  ? has(`${result.label}-${i}`)
+                                  : undefined
+                              }
+                              folding={
+                                result.contexts != null
+                                  ? {
+                                      unfold: () =>
+                                        remove(`${result.label}-${i}`),
+                                      fold: () => add(`${result.label}-${i}`),
+                                      toggle: () =>
+                                        toggle(`${result.label}-${i}`),
+                                    }
+                                  : undefined
+                              }
+                            />
+                          ))}
+                      </>
+                    )}
+                  </>
+                )}
+
+                {results.similar.length === 0 ? null : (
+                  <>
+                    <div className='sidebar__search__delimiter' />
+                    <SidebarSearchCategory
+                      id='sidebar__search__similarities'
+                      folded={has('similarities')}
+                      unfold={() => remove('similarities')}
+                      fold={() => add('similarities')}
+                      toggle={() => toggle('similarities')}
+                      className='sidebar__search__category'
+                    >
+                      {results.similar.length} Similar{' '}
+                      {plur('result', results.similar.length)}
+                    </SidebarSearchCategory>
+                    {!has('similarities') &&
+                      results.similar.map((result, i) => (
+                        <SidebarSearchItem
+                          id={`sidebar__result--similar__${i}`}
+                          key={`sidebar__result--similar__${i}`}
+                          label={result.label}
+                          labelHref={result.href}
+                          labelClick={result.onClick}
+                          emoji={result.emoji}
+                          defaultIcon={result.defaultIcon}
+                          highlighted={searchQuery}
+                        />
+                      ))}
+                  </>
+                )}
               </>
             )}
         </div>
@@ -197,6 +315,13 @@ const Container = styled.div`
   .sidebar__search__input {
     margin: 0px ${({ theme }) => theme.sizes.spaces.df}px;
     flex: 0 0 auto;
+  }
+
+  .sidebar__search__delimiter {
+    margin: ${({ theme }) => theme.sizes.spaces.df}px auto;
+    height: 1px;
+    width: 90%;
+    background: ${({ theme }) => theme.colors.border.main};
   }
 
   .sidebar__search__results {
@@ -232,6 +357,11 @@ const Container = styled.div`
     .button__label {
       ${overflowEllipsis}
     }
+  }
+
+  .sidebar__search__empty + .sidebar__search__category,
+  .sidebar__search__item + .sidebar__search__category {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .sidebar__search__item {

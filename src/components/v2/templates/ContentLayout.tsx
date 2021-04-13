@@ -118,8 +118,9 @@ const Container = styled.div`
       overflow: auto;
     }
 
-    .content_wrapper {
+    .content__wrapper {
       flex: 1 1 auto;
+      height: 100%;
     }
 
     .content__wrapper--reduced {

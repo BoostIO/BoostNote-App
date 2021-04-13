@@ -1,5 +1,4 @@
 import React, {
-  FC,
   ChangeEventHandler,
   MouseEventHandler,
   FocusEventHandler,
@@ -18,6 +17,7 @@ export interface FormInputProps {
   defaultValue?: string
   readOnly?: boolean
   autoComplete?: 'on' | 'off'
+  onBlur?: FocusEventHandler<HTMLInputElement>
   onChange?: ChangeEventHandler<HTMLInputElement>
   onClick?: MouseEventHandler<HTMLInputElement>
   onMouseUp?: MouseEventHandler<HTMLInputElement>
@@ -32,55 +32,63 @@ export interface FormInputProps {
   onFocus?: FocusEventHandler<HTMLInputElement>
 }
 
-const FormInput: FC<FormInputProps> = ({
-  value,
-  className,
-  type = 'text',
-  autoComplete = 'off',
-  id,
-  placeholder,
-  title,
-  defaultValue,
-  readOnly,
-  onChange,
-  onClick,
-  onMouseUp,
-  onMouseDown,
-  onMouseMove,
-  onMouseOver,
-  onMouseOut,
-  onMouseEnter,
-  onMouseLeave,
-  onDoubleClick,
-  onContextMenu,
-  onFocus,
-}) => {
-  return (
-    <StyledInput
-      className={cc(['form__input', className])}
-      value={value}
-      id={id}
-      type={type}
-      placeholder={placeholder}
-      title={title}
-      defaultValue={defaultValue}
-      readOnly={readOnly}
-      autoComplete={autoComplete}
-      onChange={onChange}
-      onClick={onClick}
-      onMouseUp={onMouseUp}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onDoubleClick={onDoubleClick}
-      onContextMenu={onContextMenu}
-      onFocus={onFocus}
-    />
-  )
-}
+const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
+  (
+    {
+      value,
+      className,
+      type = 'text',
+      autoComplete = 'off',
+      id,
+      placeholder,
+      title,
+      defaultValue,
+      readOnly,
+      onBlur,
+      onChange,
+      onClick,
+      onMouseUp,
+      onMouseDown,
+      onMouseMove,
+      onMouseOver,
+      onMouseOut,
+      onMouseEnter,
+      onMouseLeave,
+      onDoubleClick,
+      onContextMenu,
+      onFocus,
+    },
+    ref
+  ) => {
+    return (
+      <StyledInput
+        className={cc(['form__input', className])}
+        value={value}
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        title={title}
+        defaultValue={defaultValue}
+        readOnly={readOnly}
+        ref={ref}
+        autoComplete={autoComplete}
+        onBlur={onBlur}
+        onChange={onChange}
+        onClick={onClick}
+        onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onDoubleClick={onDoubleClick}
+        onContextMenu={onContextMenu}
+        onFocus={onFocus}
+      />
+    )
+  }
+)
 
 export default FormInput
 
