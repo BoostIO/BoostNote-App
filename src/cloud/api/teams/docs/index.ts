@@ -1,5 +1,4 @@
 import { callApi } from '../../../lib/client'
-import { SerializedTeam } from '../../../interfaces/db/team'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
@@ -21,7 +20,7 @@ export interface CreateDocResponseBody {
 }
 
 export async function createDoc(
-  team: SerializedTeam,
+  team: { id: string },
   body: CreateDocRequestBody
 ) {
   const data = await callApi<CreateDocResponseBody>(

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import styled from '../../../../../lib/v2/styled'
 import SidebarContextList from '../atoms/SidebarContextList'
 import SidebarHeader from '../atoms/SidebarHeader'
@@ -8,6 +8,7 @@ import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../../lib/v2/types'
 import { MenuItem } from '../../../../../lib/v2/stores/contextMenu'
+import SidebarTreeForm from '../atoms/SidebarTreeForm'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
@@ -54,7 +55,12 @@ interface SidebarNavRow {
 
 export type SidebarNavControls =
   | ControlButtonProps
-  | (ControlButtonProps & { create: (title: string) => Promise<void> })
+  | {
+      disabled?: boolean
+      icon: string
+      onClick: undefined
+      create: (title: string) => Promise<void>
+    }
 
 const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
   return (
@@ -80,28 +86,10 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
           }
 
           return (
-            <React.Fragment key={`sidebar__category__${i}`}>
-              <SidebarItem
-                className={cc(['sidebar__category'])}
-                id={`category-${category.label}`}
-                label={category.label}
-                labelClick={category.folding?.toggle}
-                folding={category.folding}
-                folded={category.folded}
-                controls={category.controls}
-                depth={-1}
-              />
-              {!category.folded && (
-                <div
-                  className={cc([
-                    'sidebar__category__items',
-                    `sidebar__category__items__shrink${category.shrink || '1'}`,
-                  ])}
-                >
-                  <NestedRows rows={category.rows} prefix={category.label} />
-                </div>
-              )}
-            </React.Fragment>
+            <SidebarCategory
+              category={category}
+              key={`sidebar__category__${i}`}
+            />
           )
         })}
       </SidebarContextList>
@@ -109,39 +97,119 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
   )
 }
 
-const NestedRows = ({
-  rows,
-  prefix,
-}: {
-  rows: SidebarTreeChildRow[]
-  prefix?: string
-}) => {
+const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
+  const [creationFormIsOpened, setCreationFormIsOpened] = useState(false)
   return (
-    <>
-      {rows.map((child) => {
-        return (
-          <div className={cc(['sidebar__drag__zone'])} key={child.id}>
-            <SidebarItem
-              key={child.id}
-              id={`${prefix}-tree-item-${child.id}`}
-              label={child.label}
-              labelHref={child.href}
-              labelClick={child.navigateTo}
-              folding={child.folding}
-              folded={child.folded}
-              depth={child.depth}
-              emoji={child.emoji}
-              defaultIcon={child.defaultIcon}
-              contextControls={child.contextControls}
-              active={child.active}
+    <React.Fragment>
+      <SidebarItem
+        className={cc(['sidebar__category'])}
+        id={`category-${category.label}`}
+        label={category.label}
+        labelClick={category.folding?.toggle}
+        folding={category.folding}
+        folded={category.folded}
+        controls={
+          (category.controls || []).filter(
+            (c) => c.onClick != null
+          ) as ControlButtonProps[]
+        }
+        depth={-1}
+      />
+      {!category.folded && (
+        <div
+          className={cc([
+            'sidebar__category__items',
+            `sidebar__category__items__shrink${category.shrink || '1'}`,
+            creationFormIsOpened && `sidebar__category__items--silenced`,
+          ])}
+        >
+          {category.rows.map((row) => (
+            <SidebarNestedTreeRow
+              row={row}
+              key={row.id}
+              prefix={category.label}
+              setCreationFormIsOpened={setCreationFormIsOpened}
             />
-            {!child.folded && (child.rows || []).length > 0 && (
-              <NestedRows rows={child.rows || []} prefix={prefix} />
-            )}
-          </div>
-        )
-      })}
-    </>
+          ))}
+        </div>
+      )}
+    </React.Fragment>
+  )
+}
+
+const SidebarNestedTreeRow = ({
+  row,
+  prefix,
+  setCreationFormIsOpened,
+}: {
+  row: SidebarTreeChildRow
+  prefix?: string
+  setCreationFormIsOpened: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
+    null
+  )
+
+  const controls = useMemo(
+    () =>
+      (row.controls || []).map((control) => {
+        if (control.onClick != null) {
+          return control
+        }
+
+        return {
+          icon: control.icon,
+          disabled: control.disabled,
+          onClick: () => {
+            if (row.folding != null) {
+              row.folding.unfold()
+            }
+            setCreationFormIsOpened(true)
+            setShowCreateForm(true)
+            creationCallbackRef.current = control.create
+          },
+        }
+      }) as ControlButtonProps[],
+    [row.controls, row.folding, creationCallbackRef, setCreationFormIsOpened]
+  )
+
+  return (
+    <div className={cc(['sidebar__drag__zone'])} key={row.id}>
+      <SidebarItem
+        key={row.id}
+        id={`${prefix}-tree-item-${row.id}`}
+        label={row.label}
+        labelHref={row.href}
+        labelClick={row.navigateTo}
+        folding={row.folding}
+        folded={row.folded}
+        depth={row.depth}
+        emoji={row.emoji}
+        defaultIcon={row.defaultIcon}
+        controls={controls}
+        contextControls={row.contextControls}
+        active={row.active}
+      />
+      {showCreateForm && (
+        <SidebarTreeForm
+          close={() => {
+            setCreationFormIsOpened(false)
+            setShowCreateForm(false)
+          }}
+          createCallback={creationCallbackRef.current}
+        />
+      )}
+      {!row.folded &&
+        (row.rows || []).map((child) => (
+          <SidebarNestedTreeRow
+            row={child}
+            key={`${prefix}-${child.id}`}
+            prefix={prefix}
+            setCreationFormIsOpened={setCreationFormIsOpened}
+          />
+        ))}
+    </div>
   )
 }
 
@@ -181,5 +249,9 @@ const Container = styled.div`
   }
   .sidebar__category__items__shrink3 {
     flex-shrink: 3;
+  }
+
+  .sidebar__category__items--silenced .sidebar__tree__item {
+    opacity: 0.4;
   }
 `
