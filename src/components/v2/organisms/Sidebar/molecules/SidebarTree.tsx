@@ -6,6 +6,7 @@ import SidebarItem from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
+import { ControlButtonProps } from '../../../../../lib/v2/types'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
@@ -48,9 +49,9 @@ interface SidebarNavRow {
   controls?: SidebarNavControls[]
 }
 
-type SidebarNavControls =
-  | { icon: string; onClick: () => void }
-  | { icon: string; create: () => Promise<void> }
+export type SidebarNavControls =
+  | ControlButtonProps
+  | (ControlButtonProps & { create: (title: string) => Promise<void> })
 
 const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
   return (
@@ -84,6 +85,7 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
                 labelClick={category.folding?.toggle}
                 folding={category.folding}
                 folded={category.folded}
+                controls={category.controls}
                 depth={-1}
               />
               {!category.folded && (
