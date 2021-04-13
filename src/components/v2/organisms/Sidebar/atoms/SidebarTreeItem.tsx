@@ -165,6 +165,7 @@ const Container = styled.div<{ depth: number }>`
       display: flex;
       padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
       font-size: inherit;
+      margin: 0;
     }
   }
 
