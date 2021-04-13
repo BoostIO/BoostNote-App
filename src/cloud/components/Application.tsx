@@ -75,8 +75,11 @@ import {
   mdiLock,
   mdiLogoutVariant,
   mdiMagnify,
+  mdiPaperclip,
+  mdiPlus,
   mdiPlusCircleOutline,
   mdiTag,
+  mdiWeb,
 } from '@mdi/js'
 import { getColorFromString } from '../../lib/v2/string'
 import { buildIconUrl } from '../api/files'
@@ -90,6 +93,7 @@ import { FoldingProps } from '../../components/v2/atoms/FoldingWrapper'
 import { getMapValues } from '../../lib/v2/utils/array'
 import {
   SidebarNavCategory,
+  SidebarNavControls,
   SidebarTreeChildRow,
 } from '../../components/v2/organisms/Sidebar/molecules/SidebarTree'
 import Checkbox from '../../components/v2/molecules/Form/atoms/FormCheckbox'
@@ -104,6 +108,7 @@ import ContentLayout, {
   ContentLayoutProps,
 } from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
+import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -206,6 +211,7 @@ const Application = ({
       toggleItem,
       getFoldEvents,
       push,
+      openModal,
       team
     )
   }, [
@@ -220,6 +226,7 @@ const Application = ({
     toggleItem,
     getFoldEvents,
     push,
+    openModal,
     team,
   ])
 
@@ -537,6 +544,7 @@ function mapTree(
   toggleItem: (type: CollapsableType, id: string) => void,
   getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
   push: (url: string) => void,
+  openModal: (cmp: JSX.Element) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -585,6 +593,7 @@ function mapTree(
       folding: getFoldEvents('folders', folder.id),
       href,
       navigateTo: () => push(href),
+      controls: [],
       parentId:
         folder.parentFolderId == null
           ? folder.workspaceId
@@ -715,6 +724,12 @@ function mapTree(
     label: 'Folders',
     shrink: 2,
     rows: navTree,
+    controls: [
+      {
+        icon: mdiPlus,
+        onClick: () => openModal(<CreateWorkspaceModal />),
+      },
+    ],
   })
   if (labels.length > 0) {
     tree.push({
@@ -728,6 +743,28 @@ function mapTree(
       rows: archived,
     })
   }
+
+  tree.push({
+    label: 'More',
+    rows: [
+      {
+        id: 'sidenav-attachment',
+        label: 'Attachments',
+        defaultIcon: mdiPaperclip,
+        href: getTeamLinkHref(team, 'uploads'),
+        navigateTo: () => push(getTeamLinkHref(team, 'uploads')),
+        depth: 0,
+      },
+      {
+        id: 'sidenav-shared',
+        label: 'Shared',
+        defaultIcon: mdiWeb,
+        href: getTeamLinkHref(team, 'shared'),
+        navigateTo: () => push(getTeamLinkHref(team, 'shared')),
+        depth: 0,
+      },
+    ],
+  })
 
   tree.forEach((category) => {
     const key = (category.label || '').toLocaleLowerCase()
@@ -968,6 +1005,7 @@ type CloudTreeItem = {
   folded?: boolean
   href?: string
   navigateTo?: () => void
+  controls?: SidebarNavControls[]
 }
 
 
