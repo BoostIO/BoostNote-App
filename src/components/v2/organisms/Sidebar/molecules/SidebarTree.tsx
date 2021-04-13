@@ -7,6 +7,7 @@ import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../../lib/v2/types'
+import { MenuItem } from '../../../../../lib/v2/stores/contextMenu'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
@@ -45,8 +46,10 @@ interface SidebarNavRow {
   label: string
   depth: number
   href?: string
+  active?: boolean
   navigateTo?: () => void
   controls?: SidebarNavControls[]
+  contextControls?: MenuItem[]
 }
 
 export type SidebarNavControls =
@@ -129,6 +132,8 @@ const NestedRows = ({
               depth={child.depth}
               emoji={child.emoji}
               defaultIcon={child.defaultIcon}
+              contextControls={child.contextControls}
+              active={child.active}
             />
             {!child.folded && (child.rows || []).length > 0 && (
               <NestedRows rows={child.rows || []} prefix={prefix} />

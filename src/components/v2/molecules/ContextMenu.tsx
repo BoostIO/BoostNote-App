@@ -9,6 +9,7 @@ import {
   useContextMenu,
 } from '../../../lib/v2/stores/contextMenu'
 import styled from '../../../lib/v2/styled'
+import Icon from '../atoms/Icon'
 import UpDownList from '../atoms/UpDownList'
 
 const ContextMenu = () => {
@@ -83,7 +84,11 @@ const ContextMenu = () => {
                   id={key}
                   disabled={nMenu.enabled == null ? false : !nMenu.enabled}
                 >
-                  {nMenu.icon}
+                  {typeof nMenu.icon === 'string' ? (
+                    <Icon path={nMenu.icon} size={16} />
+                  ) : (
+                    nMenu.icon
+                  )}
                   {nMenu.label}
                 </button>
               )

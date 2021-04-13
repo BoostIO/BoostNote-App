@@ -66,19 +66,25 @@ import {
 } from '../lib/utils/patterns'
 import {
   mdiAccountMultiplePlusOutline,
+  mdiApplicationCog,
+  mdiArchiveOutline,
   mdiClockOutline,
   mdiCogOutline,
   mdiDotsHorizontal,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
+  mdiFolderCogOutline,
   mdiLock,
   mdiLogoutVariant,
   mdiMagnify,
   mdiPaperclip,
   mdiPlus,
   mdiPlusCircleOutline,
+  mdiStar,
+  mdiStarOutline,
   mdiTag,
+  mdiTrashCanOutline,
   mdiWeb,
 } from '@mdi/js'
 import { getColorFromString } from '../../lib/v2/string'
@@ -109,6 +115,9 @@ import ContentLayout, {
 } from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
+import EditWorkspaceModal from './organisms/Modal/contents/Workspace/EditWorkspaceModal'
+import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
+import EditFolderModal from './organisms/Modal/contents/Folder/EditFolderModal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -149,7 +158,7 @@ const Application = ({
   const {
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
-  const { push, query } = useRouter()
+  const { push, query, pathname } = useRouter()
   const { history, searchHistory, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
@@ -198,13 +207,24 @@ const Application = ({
     [setPreferences]
   )
 
+  const {
+    sendingMap: treeSendingMap,
+    toggleDocArchive,
+    toggleDocBookmark,
+    toggleFolderBookmark,
+    deleteWorkspace,
+    deleteFolder,
+  } = useCloudUpdater()
+
   const tree = useMemo(() => {
     return mapTree(
       initialLoadDone,
+      pathname,
       docsMap,
       foldersMap,
       workspacesMap,
       tagsMap,
+      treeSendingMap,
       sideBarOpenedLinksIdsSet,
       sideBarOpenedFolderIdsSet,
       sideBarOpenedWorkspaceIdsSet,
@@ -212,14 +232,21 @@ const Application = ({
       getFoldEvents,
       push,
       openModal,
+      toggleDocBookmark,
+      toggleFolderBookmark,
+      deleteWorkspace,
+      toggleDocArchive,
+      deleteFolder,
       team
     )
   }, [
     initialLoadDone,
+    pathname,
     docsMap,
     foldersMap,
     workspacesMap,
     tagsMap,
+    treeSendingMap,
     sideBarOpenedFolderIdsSet,
     sideBarOpenedLinksIdsSet,
     sideBarOpenedWorkspaceIdsSet,
@@ -227,6 +254,11 @@ const Application = ({
     getFoldEvents,
     push,
     openModal,
+    toggleDocBookmark,
+    toggleFolderBookmark,
+    deleteWorkspace,
+    toggleDocArchive,
+    deleteFolder,
     team,
   ])
 
@@ -424,7 +456,7 @@ function mapTimelineItems(
         lastUpdatedBy:
           doc.head == null
             ? []
-            : doc.head.creators.map((user) => {
+            : (doc.head.creators || []).map((user) => {
                 return {
                   color: getColorFromString(user.id),
                   userId: user.id,
@@ -534,10 +566,12 @@ function mapHistory(
 
 function mapTree(
   initialLoadDone: boolean,
+  currentPath: string,
   docsMap: Map<string, SerializedDocWithBookmark>,
   foldersMap: Map<string, SerializedFolderWithBookmark>,
   workspacesMap: Map<string, SerializedWorkspace>,
   tagsMap: Map<string, SerializedTag>,
+  treeSendingMap: Map<string, string>,
   sideBarOpenedLinksIdsSet: Set<string>,
   sideBarOpenedFolderIdsSet: Set<string>,
   sideBarOpenedWorkspaceIdsSet: Set<string>,
@@ -545,12 +579,30 @@ function mapTree(
   getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
   push: (url: string) => void,
   openModal: (cmp: JSX.Element) => void,
+  toggleDocBookmark: (
+    teamId: string,
+    docId: string,
+    bookmarked: boolean
+  ) => void,
+  toggleFolderBookmark: (
+    teamId: string,
+    id: string,
+    bookmarked: boolean
+  ) => void,
+  deleteWorkspace: (wp: SerializedWorkspace) => void,
+  toggleDocArchive: (
+    teamId: string,
+    docId: string,
+    archivedAt?: string
+  ) => void,
+  deleteFolder: (folder: SerializedFolder) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
     return undefined
   }
 
+  const currentPathWithDomain = `${process.env.BOOST_HUB_BASE_URL}${currentPath}`
   const items = new Map<string, CloudTreeItem>()
 
   const [docs, folders, workspaces] = [
@@ -573,7 +625,31 @@ function mapTree(
       folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
       folding: getFoldEvents('workspaces', wp.id),
       href,
+      active: href === currentPathWithDomain,
       navigateTo: () => push(href),
+      contextControls: wp.default
+        ? [
+            {
+              type: MenuTypes.Normal,
+              icon: mdiApplicationCog,
+              label: 'Edit',
+              onClick: () => openModal(<EditWorkspaceModal workspace={wp} />),
+            },
+          ]
+        : [
+            {
+              type: MenuTypes.Normal,
+              icon: mdiApplicationCog,
+              label: 'Edit',
+              onClick: () => openModal(<EditWorkspaceModal workspace={wp} />),
+            },
+            {
+              type: MenuTypes.Normal,
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => deleteWorkspace(wp),
+            },
+          ],
     })
   })
 
@@ -592,8 +668,35 @@ function mapTree(
       folded: !sideBarOpenedFolderIdsSet.has(folder.id),
       folding: getFoldEvents('folders', folder.id),
       href,
+      active: href === currentPathWithDomain,
       navigateTo: () => push(href),
       controls: [],
+      contextControls: [
+        {
+          type: MenuTypes.Normal,
+          icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+          label:
+            treeSendingMap.get(folder.id) === 'bookmark'
+              ? '...'
+              : folder.bookmarked
+              ? 'Bookmarked'
+              : 'Bookmark',
+          onClick: () =>
+            toggleFolderBookmark(folder.teamId, folder.id, folder.bookmarked),
+        },
+        {
+          type: MenuTypes.Normal,
+          icon: mdiFolderCogOutline,
+          label: 'Edit',
+          onClick: () => openModal(<EditFolderModal folder={folder} />),
+        },
+        {
+          type: MenuTypes.Normal,
+          icon: mdiTrashCanOutline,
+          label: 'Delete',
+          onClick: () => deleteFolder(folder),
+        },
+      ],
       parentId:
         folder.parentFolderId == null
           ? folder.workspaceId
@@ -621,7 +724,27 @@ function mapTree(
       archived: doc.archivedAt != null,
       children: [],
       href,
+      active: href === currentPathWithDomain,
       navigateTo: () => push(href),
+      contextControls: [
+        {
+          type: MenuTypes.Normal,
+          icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+          label:
+            treeSendingMap.get(doc.id) === 'bookmark'
+              ? '...'
+              : doc.bookmarked
+              ? 'Bookmarked'
+              : 'Bookmark',
+          onClick: () => toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+        },
+        {
+          type: MenuTypes.Normal,
+          icon: mdiArchiveOutline,
+          label: doc.archivedAt == null ? 'Archive' : 'Restore',
+          onClick: () => toggleDocArchive(doc.teamId, doc.id, doc.archivedAt),
+        },
+      ],
       parentId:
         doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
     })
@@ -643,6 +766,7 @@ function mapTree(
       defaultIcon: val.defaultIcon,
       href: val.href,
       navigateTo: val.navigateTo,
+      contextControls: val.contextControls,
     })
     return acc
   }, [] as SidebarTreeChildRow[])
@@ -697,23 +821,6 @@ function mapTree(
       return acc
     }, [] as SidebarTreeChildRow[])
 
-  const archived = arrayItems.reduce((acc, val) => {
-    if (!val.archived) {
-      return acc
-    }
-
-    acc.push({
-      id: val.id,
-      depth: 0,
-      label: val.label,
-      emoji: val.emoji,
-      defaultIcon: val.defaultIcon,
-      href: val.href,
-      navigateTo: val.navigateTo,
-    })
-    return acc
-  }, [] as SidebarTreeChildRow[])
-
   if (bookmarked.length > 0) {
     tree.push({
       label: 'Bookmarks',
@@ -721,7 +828,7 @@ function mapTree(
     })
   }
   tree.push({
-    label: 'Folders',
+    label: 'Workspaces',
     shrink: 2,
     rows: navTree,
     controls: [
@@ -737,12 +844,6 @@ function mapTree(
       rows: labels,
     })
   }
-  if (archived.length > 0) {
-    tree.push({
-      label: 'Archived',
-      rows: archived,
-    })
-  }
 
   tree.push({
     label: 'More',
@@ -752,6 +853,7 @@ function mapTree(
         label: 'Attachments',
         defaultIcon: mdiPaperclip,
         href: getTeamLinkHref(team, 'uploads'),
+        active: getTeamLinkHref(team, 'uploads') === currentPath,
         navigateTo: () => push(getTeamLinkHref(team, 'uploads')),
         depth: 0,
       },
@@ -760,7 +862,17 @@ function mapTree(
         label: 'Shared',
         defaultIcon: mdiWeb,
         href: getTeamLinkHref(team, 'shared'),
+        active: getTeamLinkHref(team, 'shared') === currentPath,
         navigateTo: () => push(getTeamLinkHref(team, 'shared')),
+        depth: 0,
+      },
+      {
+        id: 'sidenav-archived',
+        label: 'Archived',
+        defaultIcon: mdiArchiveOutline,
+        href: getTeamLinkHref(team, 'archived'),
+        active: getTeamLinkHref(team, 'archived') === currentPath,
+        navigateTo: () => push(getTeamLinkHref(team, 'archived')),
         depth: 0,
       },
     ],
@@ -981,6 +1093,10 @@ function buildChildrenNavRows(
       return acc
     }
 
+    if (childRow.archived) {
+      return acc
+    }
+
     acc.push({
       ...childRow,
       depth,
@@ -1004,8 +1120,10 @@ type CloudTreeItem = {
   folding?: FoldingProps
   folded?: boolean
   href?: string
+  active?: boolean
   navigateTo?: () => void
   controls?: SidebarNavControls[]
+  contextControls?: MenuItem[]
 }
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
