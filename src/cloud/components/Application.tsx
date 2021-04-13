@@ -332,7 +332,7 @@ const Application = ({
       }
 
       if (isSingleKeyEvent(event, 'escape') && isActiveElementAnInput()) {
-        if (isCodeMirorTextAreaEvent(event)) {
+        if (isCodeMirrorTextAreaEvent(event)) {
           return
         }
         preventKeyboardEventPropagation(event)
@@ -1008,8 +1008,7 @@ type CloudTreeItem = {
   controls?: SidebarNavControls[]
 }
 
-
-function isCodeMirorTextAreaEvent(event: KeyboardEvent) {
+function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
   const target = event.target as HTMLTextAreaElement
   if (target == null || target.tagName.toLowerCase() !== 'textarea') {
     return false
@@ -1024,3 +1023,4 @@ function isCodeMirorTextAreaEvent(event: KeyboardEvent) {
   }
 
   return true
+}
