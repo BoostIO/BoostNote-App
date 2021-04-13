@@ -144,7 +144,8 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &:hover .sidebar__tree__item__controls,
-  &.focused .sidebar__tree__item__controls {
+  &.focused .sidebar__tree__item__controls,
+  &.sidebar__category .sidebar__tree__item__controls {
     display: flex;
     align-items: baseline;
   }
