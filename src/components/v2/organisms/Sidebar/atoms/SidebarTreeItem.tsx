@@ -4,10 +4,14 @@ import { AppComponent, ControlButtonProps } from '../../../../../lib/v2/types'
 import cc from 'classcat'
 import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import Button from '../../../atoms/Button'
-import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import { mdiChevronDown, mdiChevronRight, mdiDotsHorizontal } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../../atoms/Icon'
 import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
+import {
+  MenuItem,
+  useContextMenu,
+} from '../../../../../lib/v2/stores/contextMenu'
 
 interface SidebarTreeItemProps {
   defaultIcon?: string
@@ -20,6 +24,8 @@ interface SidebarTreeItemProps {
   labelHref?: string
   labelClick?: () => void
   controls?: ControlButtonProps[]
+  contextControls?: MenuItem[]
+  active?: boolean
 }
 
 interface SharedProps {
@@ -41,7 +47,10 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
   labelClick,
   setFocused,
   controls,
+  contextControls,
+  active,
 }) => {
+  const { popup } = useContextMenu()
   const LabelTag = labelHref != null ? 'a' : 'button'
   const unfocusOnBlur = (event: any) => {
     if (
@@ -66,7 +75,12 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
   return (
     <Container
       depth={depth > 6 ? 6 : depth}
-      className={cc([className, 'sidebar__tree__item', focused && 'focused'])}
+      className={cc([
+        className,
+        'sidebar__tree__item',
+        focused && 'focused',
+        active && 'sidebar__tree__item--active',
+      ])}
       onBlur={unfocusOnBlur}
     >
       <div className='sidebar__tree__item__wrapper'>
@@ -95,9 +109,9 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
           ) : null}
           <span className='sidebar__tree__item__label__ellipsis'>{label}</span>
         </LabelTag>
-        {controls != null && (
+        {(controls != null || contextControls != null) && (
           <div className='sidebar__tree__item__controls'>
-            {controls.map((control, i) => (
+            {(controls || []).map((control, i) => (
               <Button
                 key={i}
                 variant='icon'
@@ -109,6 +123,17 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
                 onClick={control.onClick}
               />
             ))}
+            {contextControls != null && (
+              <Button
+                variant='icon'
+                iconSize={16}
+                iconPath={mdiDotsHorizontal}
+                tabIndex={-1}
+                className='sidebar__tree__item__control'
+                size='sm'
+                onClick={(event) => popup(event, contextControls)}
+              />
+            )}
           </div>
         )}
       </div>
@@ -194,7 +219,7 @@ const Container = styled.div<{ depth: number }>`
   &:not(.sidebar__category) {
     border-radius: ${({ theme }) => theme.borders.radius}px;
     &:active,
-    &.active {
+    &.sidebar__tree__item--active {
       background-color: ${({ theme }) => theme.colors.variants.primary.base};
     }
 

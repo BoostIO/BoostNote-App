@@ -68,7 +68,7 @@ export interface DestroyDocResponseBody {
   doc?: SerializedDocWithBookmark
 }
 
-export async function destroyDoc(team: SerializedTeam, doc: SerializedDoc) {
+export async function destroyDoc(team: { id: string }, doc: { id: string }) {
   const data = await callApi<DestroyDocResponseBody>(
     `api/teams/${team.id}/docs/${doc.id}`,
     {

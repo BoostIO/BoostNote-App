@@ -80,8 +80,8 @@ export interface DestroyFolderResponseBody {
 }
 
 export async function destroyFolder(
-  team: SerializedTeam,
-  folder: SerializedFolder
+  team: { id: string },
+  folder: { id: string }
 ) {
   const data = await callApi<DestroyFolderResponseBody>(
     `api/teams/${team.id}/folders/${folder.id}`,
