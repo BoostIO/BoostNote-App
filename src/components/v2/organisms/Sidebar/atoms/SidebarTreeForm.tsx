@@ -6,6 +6,7 @@ import Spinner from '../../../atoms/Spinner'
 import FormInput from '../../../molecules/Form/atoms/FormInput'
 
 interface SideNavigatorFolderFormProps {
+  placeholder?: string
   createCallback: ((val: string) => Promise<void>) | null
   depth?: number
   close: () => void
@@ -13,6 +14,7 @@ interface SideNavigatorFolderFormProps {
 
 const SidebarTreeForm = ({
   depth = 0,
+  placeholder,
   close,
   createCallback,
 }: SideNavigatorFolderFormProps) => {
@@ -74,6 +76,7 @@ const SidebarTreeForm = ({
           ref={inputRef}
           onBlur={onBlur}
           disabled={sending}
+          placeholder={placeholder}
         />
         {sending && <Spinner className='sidebar__tree__form__spinner' />}
       </div>

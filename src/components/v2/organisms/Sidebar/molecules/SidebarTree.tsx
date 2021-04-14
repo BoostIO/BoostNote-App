@@ -59,6 +59,7 @@ export type SidebarNavControls =
       disabled?: boolean
       icon: string
       onClick: undefined
+      placeholder: string
       create: (title: string) => Promise<void>
     }
 
@@ -147,6 +148,7 @@ const SidebarNestedTreeRow = ({
   setCreationFormIsOpened: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [placeholder, setPlaceholder] = useState('')
   const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
     null
   )
@@ -165,6 +167,7 @@ const SidebarNestedTreeRow = ({
             if (row.folding != null) {
               row.folding.unfold()
             }
+            setPlaceholder(control.placeholder)
             setCreationFormIsOpened(true)
             setShowCreateForm(true)
             creationCallbackRef.current = control.create
@@ -193,6 +196,7 @@ const SidebarNestedTreeRow = ({
       />
       {showCreateForm && (
         <SidebarTreeForm
+          placeholder={placeholder}
           close={() => {
             setCreationFormIsOpened(false)
             setShowCreateForm(false)
