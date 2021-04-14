@@ -56,7 +56,7 @@ export interface UpdateFolderResponseBody {
 }
 
 export async function updateFolder(
-  team: SerializedTeam,
+  team: { id: string },
   folderId: string,
   body: UpdateFolderRequestBody
 ) {

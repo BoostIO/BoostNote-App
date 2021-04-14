@@ -38,7 +38,6 @@ const TopbarBreadcrumb = ({
     if (timeoutRef.current != null) {
       clearTimeout(timeoutRef.current)
       timeoutRef.current = null
-      console.log('double click')
       onDoubleClick()
       return
     }
