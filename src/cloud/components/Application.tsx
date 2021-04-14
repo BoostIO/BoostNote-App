@@ -649,6 +649,7 @@ function mapTree(
         {
           icon: mdiFolderPlusOutline,
           onClick: undefined,
+          placeholder: 'Folder name..',
           create: (folderName: string) =>
             createFolder(team, {
               workspaceId: wp.id,
@@ -659,6 +660,7 @@ function mapTree(
         {
           icon: mdiFilePlusOutline,
           onClick: undefined,
+          placeholder: 'Doc title..',
           create: (title: string) =>
             createDoc(team, {
               workspaceId: wp.id,
@@ -713,6 +715,7 @@ function mapTree(
         {
           icon: mdiFolderPlusOutline,
           onClick: undefined,
+          placeholder: 'Folder name..',
           create: (folderName: string) =>
             createFolder(team, {
               parentFolderId: folder.id,
@@ -724,6 +727,7 @@ function mapTree(
         {
           icon: mdiFilePlusOutline,
           onClick: undefined,
+          placeholder: 'Doc title..',
           create: (title: string) =>
             createDoc(team, {
               parentFolderId: folder.id,
