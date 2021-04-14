@@ -122,6 +122,9 @@ import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
 import EditFolderModal from './organisms/Modal/contents/Folder/EditFolderModal'
 import { CreateFolderRequestBody } from '../api/teams/folders'
 import { CreateDocRequestBody } from '../api/teams/docs'
+import { useCloudDnd } from '../../lib/v2/hooks/cloud/useCloudDnd'
+import { NavResource } from '../interfaces/resources'
+import { SidebarDragState } from '../../lib/v2/dnd'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -211,6 +214,7 @@ const Application = ({
     [setPreferences]
   )
 
+  const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useCloudDnd()
   const {
     sendingMap: treeSendingMap,
     createDoc,
@@ -220,6 +224,8 @@ const Application = ({
     toggleFolderBookmark,
     deleteWorkspace,
     deleteFolder,
+    updateDoc,
+    updateFolder,
   } = useCloudUpdater()
 
   const tree = useMemo(() => {
@@ -245,6 +251,9 @@ const Application = ({
       deleteFolder,
       createFolder,
       createDoc,
+      draggedResource,
+      dropInDocOrFolder,
+      (id: string) => dropInWorkspace(id, updateFolder, updateDoc),
       team
     )
   }, [
@@ -269,6 +278,11 @@ const Application = ({
     deleteFolder,
     createFolder,
     createDoc,
+    dropInDocOrFolder,
+    dropInWorkspace,
+    updateFolder,
+    updateDoc,
+    draggedResource,
     team,
   ])
 
@@ -614,6 +628,12 @@ function mapTree(
     team: SerializedTeam,
     body: CreateDocRequestBody
   ) => Promise<void>,
+  draggedResource: React.MutableRefObject<NavResource | undefined>,
+  dropInFolderOrDoc: (
+    targetedResource: NavResource,
+    targetedPosition: SidebarDragState
+  ) => void,
+  dropInWorkspace: (id: string) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -645,6 +665,8 @@ function mapTree(
       href,
       active: href === currentPathWithDomain,
       navigateTo: () => push(href),
+      dropIn: true,
+      onDrop: () => dropInWorkspace(wp.id),
       controls: [
         {
           icon: mdiFolderPlusOutline,
@@ -711,6 +733,13 @@ function mapTree(
       href,
       active: href === currentPathWithDomain,
       navigateTo: () => push(href),
+      onDrop: (position: SidebarDragState) =>
+        dropInFolderOrDoc({ type: 'folder', result: folder }, position),
+      onDragStart: () => {
+        draggedResource.current = { type: 'folder', result: folder }
+      },
+      dropIn: true,
+      dropAround: true,
       controls: [
         {
           icon: mdiFolderPlusOutline,
@@ -790,7 +819,13 @@ function mapTree(
       children: [],
       href,
       active: href === currentPathWithDomain,
+      dropAround: true,
       navigateTo: () => push(href),
+      onDrop: (position: SidebarDragState) =>
+        dropInFolderOrDoc({ type: 'doc', result: doc }, position),
+      onDragStart: () => {
+        draggedResource.current = { type: 'doc', result: doc }
+      },
       contextControls: [
         {
           type: MenuTypes.Normal,
@@ -1189,6 +1224,10 @@ type CloudTreeItem = {
   navigateTo?: () => void
   controls?: SidebarNavControls[]
   contextControls?: MenuItem[]
+  dropIn?: boolean
+  dropAround?: boolean
+  onDragStart?: () => void
+  onDrop?: (position?: SidebarDragState) => void
 }
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {

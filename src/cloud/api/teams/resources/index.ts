@@ -42,7 +42,7 @@ export interface MoveResourceResponseBody {
 }
 
 export async function moveResource(
-  team: SerializedTeam,
+  team: { id: string },
   resourceId: string,
   body: MoveResourceRequestBody
 ): Promise<MoveResourceResponseBody> {

@@ -9,6 +9,9 @@ import {
   destroyDoc,
   DestroyDocResponseBody,
   unarchiveDoc,
+  updateDoc,
+  UpdateDocRequestBody,
+  UpdateDocResponseBody,
 } from '../../../../cloud/api/teams/docs'
 import {
   createDocBookmark,
@@ -22,6 +25,9 @@ import {
   CreateFolderResponseBody,
   destroyFolder,
   DestroyFolderResponseBody,
+  updateFolder,
+  UpdateFolderRequestBody,
+  UpdateFolderResponseBody,
 } from '../../../../cloud/api/teams/folders'
 import {
   createFolderBookmark,
@@ -33,6 +39,8 @@ import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
 } from '../../../../cloud/api/teams/workspaces'
+import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
+import { SerializedFolder } from '../../../../cloud/interfaces/db/folder'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { useRouter } from '../../../../cloud/lib/router'
 import { useNav } from '../../../../cloud/lib/stores/nav'
@@ -58,6 +66,7 @@ export function useCloudUpdater() {
     docsMap,
     removeFromDocsMap,
     removeFromFoldersMap,
+    setCurrentPath,
   } = useNav()
   const { pushMessage } = useToast()
   const { messageBox } = useDialog()
@@ -379,6 +388,78 @@ export function useCloudUpdater() {
     ]
   )
 
+  const updateFolderApi = useCallback(
+    async (target: SerializedFolder, body: UpdateFolderRequestBody) => {
+      await send(target.id, 'update', {
+        api: () => updateFolder({ id: target.teamId }, target.id, body),
+        cb: ({ folders, docs, workspaces }: UpdateFolderResponseBody) => {
+          const changedFolders = getMapFromEntityArray(folders)
+          updateFoldersMap(...changedFolders)
+
+          const changedDocs = getMapFromEntityArray(docs)
+          updateDocsMap(...changedDocs)
+
+          if (workspaces != null) {
+            updateWorkspacesMap(...getMapFromEntityArray(workspaces))
+          }
+
+          if (pageFolder != null && changedFolders.get(pageFolder.id) != null) {
+            setPartialPageData({
+              pageFolder: changedFolders.get(pageFolder.id)!,
+            })
+            setCurrentPath(changedFolders.get(pageFolder.id)!.pathname)
+          }
+
+          if (pageDoc != null && changedDocs.get(pageDoc.id) != null) {
+            setPartialPageData({ pageDoc: changedDocs.get(pageDoc.id)! })
+            setCurrentPath(changedDocs.get(pageDoc.id)!.folderPathname)
+          }
+        },
+      })
+    },
+    [
+      updateFoldersMap,
+      pageDoc,
+      pageFolder,
+      updateDocsMap,
+      updateWorkspacesMap,
+      setPartialPageData,
+      setCurrentPath,
+      send,
+    ]
+  )
+
+  const updateDocApi = useCallback(
+    async (target: SerializedDoc, body: UpdateDocRequestBody) => {
+      await send(target.id, 'update', {
+        api: () => updateDoc(target.teamId, target.id, body),
+        cb: ({ folders, doc, workspaces }: UpdateDocResponseBody) => {
+          const changedFolders = getMapFromEntityArray(folders)
+          updateFoldersMap(...changedFolders)
+          updateDocsMap([doc.id, doc])
+
+          if (workspaces != null) {
+            updateWorkspacesMap(...getMapFromEntityArray(workspaces))
+          }
+
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+            setCurrentPath(doc.folderPathname)
+          }
+        },
+      })
+    },
+    [
+      updateFoldersMap,
+      pageDoc,
+      updateDocsMap,
+      updateWorkspacesMap,
+      setPartialPageData,
+      setCurrentPath,
+      send,
+    ]
+  )
+
   return {
     sendingMap,
     createDoc: createDocApi,
@@ -389,5 +470,7 @@ export function useCloudUpdater() {
     deleteWorkspace,
     deleteFolder,
     deleteDoc,
+    updateFolder: updateFolderApi,
+    updateDoc: updateDocApi,
   }
 }

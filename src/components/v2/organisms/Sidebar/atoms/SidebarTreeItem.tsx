@@ -83,7 +83,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
       ])}
       onBlur={unfocusOnBlur}
     >
-      <div className='sidebar__tree__item__wrapper'>
+      <div className='sidebar__tree__item__wrapper' draggable={false}>
         {folded != null && (
           <Button
             variant='icon'
@@ -101,6 +101,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
           href={labelHref}
           id={`tree-${id}`}
           tabIndex={1}
+          draggable={false}
         >
           {emoji != null ? (
             <Emoji emoji={emoji} set='apple' size={16} />

@@ -35,7 +35,6 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
     async (event: KeyboardEvent) => {
       if (isFocusRightSideShortcut(event)) {
         preventKeyboardEventPropagation(event)
-        console.log('focus ne')
         focusFirstChildFromElement(rightSideContentRef.current)
       }
     },

@@ -13,20 +13,20 @@ export const onDragLeaveCb = (
   dropzone: React.RefObject<HTMLDivElement>,
   cb: () => void
 ) => {
+  event.preventDefault()
   event.stopPropagation()
   const relatedTarget = event.relatedTarget
-  let targetIsChildElement = false
+  let ignoreCb = false
   if (
     relatedTarget != null &&
     dropzone.current != null &&
-    relatedTarget instanceof Node
+    relatedTarget instanceof Node &&
+    dropzone.current.isSameNode(relatedTarget)
   ) {
-    if (dropzone.current.contains(relatedTarget)) {
-      targetIsChildElement = true
-    }
+    ignoreCb = true
   }
 
-  if (!targetIsChildElement) {
+  if (!ignoreCb) {
     cb()
   }
 }
