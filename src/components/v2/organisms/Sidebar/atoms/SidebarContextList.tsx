@@ -9,7 +9,15 @@ import {
 import { isFocusLeftSideShortcut } from '../../../../../lib/v2/shortcuts'
 import { AppComponent } from '../../../../../lib/v2/types'
 
-const SidebarContextList: AppComponent<{}> = ({ className, children }) => {
+interface SidebarContextListProps {
+  onBlur?: () => void
+}
+
+const SidebarContextList: AppComponent<SidebarContextListProps> = ({
+  className,
+  children,
+  onBlur,
+}) => {
   const listRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
     if (listRef.current != null) {
@@ -29,8 +37,28 @@ const SidebarContextList: AppComponent<{}> = ({ className, children }) => {
   useGlobalKeyDownHandler(keydownHandler)
   useUpDownNavigationListener(listRef)
 
+  const onBlurHandler = (event: any) => {
+    if (onBlur == null) {
+      return
+    }
+
+    if (
+      event.relatedTarget == null ||
+      listRef.current == null ||
+      !listRef.current.contains(event.relatedTarget)
+    ) {
+      onBlur()
+      return
+    }
+  }
+
   return (
-    <div ref={listRef} className={className} tabIndex={0}>
+    <div
+      ref={listRef}
+      className={className}
+      tabIndex={0}
+      onBlur={onBlurHandler}
+    >
       {children}
     </div>
   )

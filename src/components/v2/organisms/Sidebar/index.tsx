@@ -27,6 +27,7 @@ import { AppUser } from '../../../../lib/v2/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
 
 type SidebarProps = {
+  showSpaces: boolean
   sidebarState?: SidebarState
   toolbarRows: SidebarToolbarRow[]
   sidebarExpandedWidth?: number
@@ -46,6 +47,8 @@ type SidebarProps = {
 } & SidebarSpaceProps
 
 const Sidebar = ({
+  showSpaces,
+  onSpacesBlur,
   sidebarState,
   toolbarRows,
   spaces,
@@ -68,6 +71,13 @@ const Sidebar = ({
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
       <SidebarToolbar rows={toolbarRows} className='sidebar__context__icons' />
+      {showSpaces && (
+        <SidebarSpaces
+          spaces={spaces}
+          spaceBottomRows={spaceBottomRows}
+          onSpacesBlur={onSpacesBlur}
+        />
+      )}
       {sidebarState != null && (
         <WidthEnlarger
           position='right'
@@ -75,18 +85,10 @@ const Sidebar = ({
           maxWidth={maxSidebarExpandedWidth}
           defaultWidth={sidebarExpandedWidth}
           onResizeEnd={sidebarResize}
-          className={cc([
-            'sidebar--expanded',
-            sidebarState === 'spaces' && 'sidebar--flexible',
-          ])}
+          className={cc(['sidebar--expanded'])}
         >
           <div className='sidebar--expanded__wrapper'>
-            {sidebarState === 'spaces' ? (
-              <SidebarSpaces
-                spaces={spaces}
-                spaceBottomRows={spaceBottomRows}
-              />
-            ) : sidebarState === 'tree' ? (
+            {sidebarState === 'tree' ? (
               tree == null ? (
                 <Spinner className='sidebar__loader' />
               ) : (
@@ -141,13 +143,6 @@ const SidebarContainer = styled.div`
     height: 100%;
     max-height: 100%;
     position: relative;
-
-    &.sidebar--flexible {
-      height: fit-content;
-      min-height: 200px;
-      border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
-      border-bottom-right-radius: ${({ theme }) => theme.borders.radius}px;
-    }
   }
 
   .sidebar--expanded__wrapper {

@@ -168,6 +168,7 @@ const Application = ({
   const { push, query, pathname } = useRouter()
   const { history, searchHistory, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
+  const [showSpaces, setShowSpaces] = useState(false)
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     'tree'
@@ -296,13 +297,15 @@ const Application = ({
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(
+      showSpaces,
+      setShowSpaces,
       openState,
       openModal,
       openSettingsTab,
       sidebarState,
       team
     )
-  }, [sidebarState, openModal, openSettingsTab, team, openState])
+  }, [sidebarState, openModal, openSettingsTab, team, openState, showSpaces])
 
   const spaces = useMemo(() => {
     return mapSpaces(push, teams, invites, team)
@@ -406,6 +409,8 @@ const Application = ({
         sidebar={
           <Sidebar
             className='application__sidebar'
+            showSpaces={showSpaces}
+            onSpacesBlur={() => setShowSpaces(false)}
             toolbarRows={toolbarRows}
             spaces={spaces}
             spaceBottomRows={buildSpacesBottomRows(push)}
@@ -1024,6 +1029,8 @@ function mapTreeControls(
 }
 
 function mapToolbarRows(
+  showSpaces: boolean,
+  setShowSpaces: React.Dispatch<React.SetStateAction<boolean>>,
   openState: (sidebarState: SidebarState) => void,
   openModal: (cmp: JSX.Element, options?: any) => void,
   openSettingsTab: (tab: SettingsTab) => void,
@@ -1034,7 +1041,7 @@ function mapToolbarRows(
   if (team != null) {
     rows.push({
       tooltip: 'Spaces',
-      active: sidebarState === 'spaces',
+      active: showSpaces,
       icon: (
         <RoundedImage
           size={26}
@@ -1042,7 +1049,7 @@ function mapToolbarRows(
           url={team.icon != null ? buildIconUrl(team.icon.location) : undefined}
         />
       ),
-      onClick: () => openState('spaces'),
+      onClick: () => setShowSpaces((prev) => !prev),
     })
   }
   rows.push({
