@@ -37,6 +37,7 @@ export interface SidebarNavCategory {
   folding?: FoldingProps
   rows: SidebarTreeChildRow[]
   shrink?: 1 | 2 | 3
+  lastCategory?: boolean
 }
 
 type SidebarFoldingNavRow = SidebarNavRow & {
@@ -97,7 +98,7 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
 
           return (
             <SidebarCategory
-              category={category}
+              category={{ ...category, lastCategory: i === tree.length - 1 }}
               key={`sidebar__category__${i}`}
             />
           )
@@ -113,7 +114,10 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
   return (
     <React.Fragment>
       <SidebarItem
-        className={cc(['sidebar__category'])}
+        className={cc([
+          'sidebar__category',
+          category.lastCategory && 'sidebar__category--last',
+        ])}
         id={`category-${category.label}`}
         label={category.label}
         labelClick={category.folding?.toggle}
