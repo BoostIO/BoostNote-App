@@ -251,7 +251,7 @@ const Container = styled.div<{ depth: number }>`
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
-    &:not(:last-of-type) {
+    &:not(.sidebar__category--last) {
       border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
     }
   }

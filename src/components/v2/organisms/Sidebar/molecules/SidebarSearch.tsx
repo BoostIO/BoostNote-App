@@ -10,6 +10,7 @@ import SidebarContextList from '../atoms/SidebarContextList'
 import Spinner from '../../../atoms/Spinner'
 import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import plur from 'plur'
+import CloseButtonWrapper from '../../../molecules/CloseButtonWrapper'
 
 interface SidebarSearchProps {
   searchQuery: string
@@ -88,14 +89,20 @@ const SidebarSearch = ({
     <Container className={cc(['sidebar__search', className])}>
       <SidebarHeader label='Search' />
       <SidebarContextList className='sidebar__search__wrapper'>
-        <FormInput
-          className='sidebar__search__input'
-          placeholder='Search'
-          id='sidebar__search__input'
-          value={searchQuery}
-          onChange={(ev) => setSearchQuery(ev.target.value)}
-          ref={inputRef}
-        />
+        <CloseButtonWrapper
+          onClick={() => setSearchQuery('')}
+          show={searchQuery !== ''}
+          className='sidebar__search__input__wrapper'
+        >
+          <FormInput
+            className='sidebar__search__input'
+            placeholder='Search'
+            id='sidebar__search__input'
+            value={searchQuery}
+            onChange={(ev) => setSearchQuery(ev.target.value)}
+            ref={inputRef}
+          />
+        </CloseButtonWrapper>
         <div className='sidebar__search__results'>
           {searchQuery.trim() === '' && (
             <>
@@ -318,7 +325,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  .sidebar__search__input {
+  .sidebar__search__input__wrapper {
     margin: 0px ${({ theme }) => theme.sizes.spaces.df}px;
     flex: 0 0 auto;
   }
