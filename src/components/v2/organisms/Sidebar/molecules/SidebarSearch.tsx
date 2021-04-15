@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import styled from '../../../../../lib/v2/styled'
 import FormInput from '../../../molecules/Form/atoms/FormInput'
 import SidebarHeader from '../atoms/SidebarHeader'
 import cc from 'classcat'
-import { useSet } from 'react-use'
+import { useEffectOnce, useSet } from 'react-use'
 import SidebarSearchCategory from '../atoms/SidebarSearchCategory'
 import SidebarSearchItem from '../atoms/SidebarSearchItem'
 import SidebarContextList from '../atoms/SidebarContextList'
@@ -51,6 +51,11 @@ const SidebarSearch = ({
   searchResults = [],
 }: SidebarSearchProps) => {
   const [, { has, add, remove, toggle }] = useSet<string>(new Set())
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffectOnce(() => {
+    inputRef.current?.focus()
+  })
 
   const results = useMemo(() => {
     return searchResults.reduce(
@@ -89,6 +94,7 @@ const SidebarSearch = ({
           id='sidebar__search__input'
           value={searchQuery}
           onChange={(ev) => setSearchQuery(ev.target.value)}
+          ref={inputRef}
         />
         <div className='sidebar__search__results'>
           {searchQuery.trim() === '' && (

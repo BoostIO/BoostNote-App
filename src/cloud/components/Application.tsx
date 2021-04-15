@@ -983,9 +983,9 @@ function mapTree(
     const key = (category.label || '').toLocaleLowerCase()
     const foldKey = `fold-${key}`
     const hideKey = `hide-${key}`
-    category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
+    category.folded = sideBarOpenedLinksIdsSet.has(foldKey)
     category.folding = getFoldEvents('links', foldKey)
-    category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
+    category.hidden = !sideBarOpenedLinksIdsSet.has(hideKey)
     category.toggleHidden = () => toggleItem('links', hideKey)
   })
 

@@ -609,7 +609,6 @@ const Editor = ({
                 addedNodes={
                   <EditableInput
                     focusTitleInputRef={focusTitleInputRef}
-                    editOnStart={docIsNew}
                     text={title || ''}
                     onTextChange={titleChangeCallback}
                     placeholder='Title'
