@@ -64,14 +64,14 @@ const SidebarTimeline: AppComponent<SidebarTimelineProps> = ({
                   if (mappedUser == null) {
                     return {
                       url: user.iconUrl,
-                      size: 'sm',
+                      size: 22,
                       alt: user.name,
                     }
                   }
 
                   return {
                     url: mappedUser.iconUrl,
-                    size: 'sm',
+                    size: 22,
                     alt: mappedUser.name,
                   }
                 })}

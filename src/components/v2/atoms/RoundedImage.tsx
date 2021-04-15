@@ -6,7 +6,7 @@ export interface RoundedImageProps {
   url?: string
   alt: string
   rounded?: boolean
-  size?: 'sm' | 'default'
+  size?: 22 | 26 | 30
   className?: string
   color?: string
 }
@@ -17,7 +17,7 @@ const RoundedImage = ({
   alt,
   rounded,
   color,
-  size = 'default',
+  size = 30,
 }: RoundedImageProps) => {
   if (url == null) {
     return (
@@ -28,6 +28,7 @@ const RoundedImage = ({
           rounded && `rounded__image--rounded`,
           className,
         ])}
+        size={size}
         style={{ color: color, borderColor: color }}
       >
         <span className='wrapper'>{alt.substr(0, 2)}</span>
@@ -43,6 +44,7 @@ const RoundedImage = ({
         rounded && `rounded__image--rounded`,
         className,
       ])}
+      size={size}
       style={{ color: color, borderColor: color }}
       src={url}
       alt={alt}
@@ -50,7 +52,7 @@ const RoundedImage = ({
   )
 }
 
-const StyledFillerIcon = styled.div`
+const StyledFillerIcon = styled.div<{ size: number }>`
   text-transform: capitalize;
   background: #000;
   color: #fff;
@@ -58,6 +60,8 @@ const StyledFillerIcon = styled.div`
   display: table;
   vertical-align: middle;
   border-radius: ${({ theme }) => theme.borders.radius}px;
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
 
   .wrapper {
     display: table-cell;
@@ -72,36 +76,18 @@ const StyledFillerIcon = styled.div`
   &.rounded__image--rounded {
     border-radius: 50%;
   }
-
-  &.rounded__image__size--sm {
-    width: 22px;
-    height: 22px;
-  }
-
-  &.rounded__image__size--default {
-    width: 30px;
-    height: 30px;
-  }
 `
 
-const StyledImg = styled.img`
+const StyledImg = styled.img<{ size: number }>`
   object-fit: cover;
   width: 22px;
   height: 22px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
 
   &.rounded__image--rounded {
     border-radius: 50%;
-  }
-
-  &.rounded__image__size--sm {
-    width: 22px;
-    height: 22px;
-  }
-
-  &.rounded__image__size--default {
-    width: 30px;
-    height: 30px;
   }
 `
 

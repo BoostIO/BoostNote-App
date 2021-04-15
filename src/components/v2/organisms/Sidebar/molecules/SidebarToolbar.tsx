@@ -54,7 +54,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
               key={`top-${i}`}
             >
               {typeof row.icon === 'string' ? (
-                <Icon size={22} path={row.icon} />
+                <Icon size={26} path={row.icon} />
               ) : (
                 row.icon
               )}
@@ -74,7 +74,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
               key={`bottom-${i}`}
             >
               {typeof row.icon === 'string' ? (
-                <Icon size={22} path={row.icon} />
+                <Icon size={26} path={row.icon} />
               ) : (
                 row.icon
               )}
@@ -126,12 +126,12 @@ const Container = styled.div`
       align-items: center;
       text-align: center;
       width: 100%;
-      height: 24px;
+      height: 28px;
       background: none;
-      border: 1px solid transparent;
+      border: 2px solid transparent;
       color: ${({ theme }) => theme.colors.text.subtle};
       outline: none !important;
-      margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
+      margin: 0 0 ${({ theme }) => theme.sizes.spaces.df}px 0;
       position: relative;
       justify-content: center;
 

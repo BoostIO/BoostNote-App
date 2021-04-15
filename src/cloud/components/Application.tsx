@@ -1037,7 +1037,7 @@ function mapToolbarRows(
       active: sidebarState === 'spaces',
       icon: (
         <RoundedImage
-          size='sm'
+          size={26}
           alt={team.name}
           url={team.icon != null ? buildIconUrl(team.icon.location) : undefined}
         />
