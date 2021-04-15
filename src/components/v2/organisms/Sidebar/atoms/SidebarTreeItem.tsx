@@ -237,6 +237,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &.sidebar__category {
+    border-bottom: 1px solid transparent;
     .sidebar__tree__item__label {
       text-transform: uppercase !important;
     }
@@ -251,8 +252,8 @@ const Container = styled.div<{ depth: number }>`
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
-    &:not(.sidebar__category--last) {
-      border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+    &:not(.sidebar__category--last):not(.sidebar__category--open) {
+      border-color: ${({ theme }) => theme.colors.border.second};
     }
   }
 `
