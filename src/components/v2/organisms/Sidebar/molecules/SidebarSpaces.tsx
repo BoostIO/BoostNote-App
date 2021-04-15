@@ -9,6 +9,7 @@ import SidebarContextList from '../atoms/SidebarContextList'
 export interface SidebarSpaceProps {
   spaces: SidebarSpace[]
   spaceBottomRows: SidebarSpaceContentRow[]
+  onSpacesBlur: () => void
 }
 
 export type SidebarSpaceContentRow = {
@@ -28,9 +29,10 @@ export type SidebarSpace = {
 const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
   spaces,
   spaceBottomRows,
+  onSpacesBlur,
 }) => (
   <Container>
-    <SidebarContextList className='sidebar__spaces'>
+    <SidebarContextList className='sidebar__spaces' onBlur={onSpacesBlur}>
       {spaces.map((row, i) => (
         <a
           {...row.linkProps}
@@ -65,6 +67,19 @@ const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
 )
 
 const Container = styled.div`
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: ${({ theme }) => theme.colors.background.primary};
+  z-index: 101;
+  box-shadow: ${({ theme }) => theme.colors.shadow};
+  border: 1px solid ${({ theme }) => theme.colors.border.main};
+  overflow: auto;
+  height: calc(100vh - 30px);
+  width: calc(100vw - 30px);
+  max-width: 350px;
+  max-height: 400px;
+
   .sidebar__spaces {
     display: flex;
     flex-direction: column;

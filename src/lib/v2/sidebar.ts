@@ -1,5 +1,4 @@
 export type SidebarState =
-  | 'spaces'
   | 'tree'
   | 'search'
   | 'timeline'
