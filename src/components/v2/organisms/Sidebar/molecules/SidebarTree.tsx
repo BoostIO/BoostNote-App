@@ -117,6 +117,7 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
         className={cc([
           'sidebar__category',
           category.lastCategory && 'sidebar__category--last',
+          !category.folded && 'sidebar__category--open',
         ])}
         id={`category-${category.label}`}
         label={category.label}
