@@ -111,6 +111,16 @@ const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
 const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
   const [creationFormIsOpened, setCreationFormIsOpened] = useState(false)
   const [draggingItem, setDraggingItem] = useState(false)
+  const [inScroll, setInScroll] = useState(false)
+  const scrollTimer = useRef<any>()
+
+  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
+    setInScroll(true)
+    scrollTimer.current = setTimeout(() => {
+      setInScroll(false)
+    }, 600)
+  }, [])
+
   return (
     <React.Fragment>
       <SidebarItem
@@ -137,7 +147,9 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
             'sidebar__category__items',
             `sidebar__category__items__shrink${category.shrink || '1'}`,
             creationFormIsOpened && `sidebar__category__items--silenced`,
+            inScroll && 'sidebar__category__items--scrolling',
           ])}
+          onScroll={onScrollHandler}
         >
           {category.rows.map((row, i) => (
             <SidebarNestedTreeRow
@@ -375,7 +387,39 @@ const Container = styled.div`
   .sidebar__category__items {
     padding: 4px 0;
     flex-shrink: 2;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-y: overlay;
+
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: none !important;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb,
+    &::-webkit-scrollbar-track {
+      transition: background 0.3s ease;
+    }
+
+    &.sidebar__category__items--scrolling {
+      scrollbar-width: thin; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+    }
+
+    &.sidebar__category__items--scrolling::-webkit-scrollbar-track {
+      -webkit-box-shadow: none !important;
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    }
+
+    &.sidebar__category__items--scrolling::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
+    }
   }
 
   .sidebar__category__items__shrink1 {
