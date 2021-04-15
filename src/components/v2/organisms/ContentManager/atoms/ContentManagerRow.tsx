@@ -76,7 +76,7 @@ const ContentManagerRow = ({
                     url: user.iconUrl,
                     alt: user.name,
                     color: user.color,
-                    size: 'sm',
+                    size: 22,
                   }
                 })}
               />

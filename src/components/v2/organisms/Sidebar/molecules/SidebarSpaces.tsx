@@ -39,7 +39,7 @@ const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
           className='sidebar__spaces__item'
         >
           <div className='sidebar__spaces__icon'>
-            <RoundedImage url={row.icon} alt={row.label} size='default' />
+            <RoundedImage url={row.icon} alt={row.label} size={30} />
           </div>
           <span className='sidebar__spaces__label'>{row.label}</span>
           {row.tooltip != null && (
