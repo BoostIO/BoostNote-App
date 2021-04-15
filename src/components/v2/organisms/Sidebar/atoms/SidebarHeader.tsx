@@ -28,9 +28,10 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px 0
       ${({ theme }) => theme.sizes.spaces.df}px;
     color: ${({ theme }) => theme.colors.text.secondary};
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
     align-items: center;
 
     & > h4 {
