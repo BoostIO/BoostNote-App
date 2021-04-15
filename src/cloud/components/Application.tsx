@@ -916,6 +916,7 @@ function mapTree(
         label: val.text,
         defaultIcon: mdiTag,
         href,
+        active: href === currentPathWithDomain,
         navigateTo: () => push(href),
       })
       return acc
