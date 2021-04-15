@@ -148,9 +148,9 @@ const Container = styled.div<{ depth: number }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 30px;
+  height: 26px;
   white-space: nowrap;
-  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
 
   .sidebar__tree__item__controls {
     min-width: 0;
@@ -182,7 +182,7 @@ const Container = styled.div<{ depth: number }>`
     flex: 1 1 auto;
     display: flex;
     align-items: center;
-    padding-left: ${({ depth }) => 26 + (depth as number) * 20}px;
+    padding-left: ${({ depth }) => 13 + (depth as number) * 10}px;
   }
 
   a[href].sidebar__tree__item__label {
@@ -190,7 +190,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__tree__item__label {
-    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     display: flex;
     align-items: center;
     flex: 1 1 auto;
@@ -199,7 +199,7 @@ const Container = styled.div<{ depth: number }>`
     border: 0;
     text-align: left;
     color: ${({ theme }) => theme.colors.text.primary};
-    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+    padding: 2px 0;
     text-decoration: none;
     margin: 0;
     overflow: hidden;
@@ -208,6 +208,7 @@ const Container = styled.div<{ depth: number }>`
     }
     .sidebar__tree__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+      padding-right: ${({ theme }) => theme.sizes.spaces.df}px;
       ${overflowEllipsis};
     }
   }
@@ -219,7 +220,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &:not(.sidebar__category) {
-    border-radius: ${({ theme }) => theme.borders.radius}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     &:active,
     &.sidebar__tree__item--active {
       background-color: ${({ theme }) => theme.colors.variants.primary.base};
@@ -236,6 +237,10 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &.sidebar__category {
+    .sidebar__tree__item__label {
+      text-transform: uppercase !important;
+    }
+
     .sidebar__tree__item__icon {
       color: currentColor !important;
     }
@@ -246,8 +251,9 @@ const Container = styled.div<{ depth: number }>`
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
-    border-top: 1px solid ${({ theme }) => theme.colors.border.second};
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+    &:not(:last-of-type) {
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+    }
   }
 `
 

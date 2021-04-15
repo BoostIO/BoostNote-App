@@ -50,6 +50,7 @@ const Container = styled.div`
     position: relative;
     width: 350px;
     margin: ${({ theme }) => theme.sizes.spaces.sm}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.df}px
       ${({ theme }) => theme.sizes.spaces.sm}px
@@ -60,6 +61,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
 
     .toast__item__status {
       flex: 0 0 auto;
