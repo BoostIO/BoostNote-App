@@ -246,6 +246,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &.sidebar__category {
+    border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     .sidebar__tree__item__label {
       text-transform: uppercase !important;
@@ -259,10 +260,6 @@ const Container = styled.div<{ depth: number }>`
     }
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.quaternary};
-    }
-
-    &:not(.sidebar__category--last):not(.sidebar__category--open) {
-      border-color: ${({ theme }) => theme.colors.border.second};
     }
   }
 `

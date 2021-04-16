@@ -488,6 +488,15 @@ const Container = styled.div`
     }
   }
 
+  .sidebar__category:not(.sidebar__category--last):not(.sidebar__category--open) {
+    border-bottom-color: ${({ theme }) =>
+      theme.colors.border.second} !important;
+  }
+
+  .sidebar__category__items + .sidebar__category {
+    border-top-color: ${({ theme }) => theme.colors.border.second} !important;
+  }
+
   .sidebar__drag__zone__border {
     height: 16px;
     width: 100%;
