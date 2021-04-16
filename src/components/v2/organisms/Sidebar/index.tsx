@@ -10,10 +10,7 @@ import styled from '../../../../lib/v2/styled'
 import WidthEnlarger from '../../atoms/WidthEnlarger'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarToolbar, { SidebarToolbarRow } from './molecules/SidebarToolbar'
-import SidebarTree, {
-  SidebarNavCategory,
-  SidebarTreeControl,
-} from './molecules/SidebarTree'
+import SidebarTree, { SidebarNavCategory } from './molecules/SidebarTree'
 import Spinner from '../../atoms/Spinner'
 import SidebarSearch, {
   SidebarSearchHistory,
@@ -34,7 +31,6 @@ type SidebarProps = {
   sidebarResize?: (width: number) => void
   className?: string
   tree?: SidebarNavCategory[]
-  treeControls?: SidebarTreeControl[]
   searchQuery: string
   setSearchQuery: (val: string) => void
   searchHistory: string[]
@@ -56,7 +52,6 @@ const Sidebar = ({
   sidebarExpandedWidth = defaultSidebarExpandedWidth,
   sidebarResize,
   tree,
-  treeControls,
   className,
   searchHistory,
   searchQuery,
@@ -92,7 +87,7 @@ const Sidebar = ({
               tree == null ? (
                 <Spinner className='sidebar__loader' />
               ) : (
-                <SidebarTree tree={tree} treeControls={treeControls} />
+                <SidebarTree tree={tree} />
               )
             ) : sidebarState === 'search' ? (
               <SidebarSearch
