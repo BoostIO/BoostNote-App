@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styled from '../../../lib/v2/styled'
 import cc from 'classcat'
 
@@ -6,84 +6,92 @@ interface WithTooltipProps {
   className?: string
   side?: 'top' | 'left' | 'right' | 'bottom' | 'bottom-right'
   tooltip?: React.ReactNode
-  tagName?: 'span' | 'div' | 'p' | 'li'
 }
 
+const posOffset = 5
 const WithTooltip: React.FC<WithTooltipProps> = ({
   children,
   tooltip,
   className,
-  tagName = 'div',
   side = 'bottom',
 }) => {
   const [open, setOpen] = useState(false)
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>()
+  const ref = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
 
-  const Tag = tagName
+  const onMouseOver = useCallback(() => {
+    if (ref.current == null || tooltipRef.current == null) {
+      setTooltipStyle(undefined)
+      return
+    }
+
+    const rectOffset = ref.current.getBoundingClientRect()
+    const tooltipOffset = tooltipRef.current.getBoundingClientRect()
+
+    let style: React.CSSProperties = {}
+    switch (side) {
+      case 'right':
+        style = {
+          left: rectOffset.left + rectOffset.width + posOffset,
+          top: rectOffset.top - (tooltipOffset.height - rectOffset.height) / 2,
+        }
+        break
+      case 'bottom':
+        style = {
+          left: rectOffset.left - (tooltipOffset.width - rectOffset.width) / 2,
+          top: rectOffset.top + rectOffset.height + posOffset,
+        }
+        break
+      default:
+        return
+    }
+    setTooltipStyle(style)
+  }, [side, ref])
 
   if (tooltip == null) {
     return <>{children}</>
   }
 
   return (
-    <Tag
+    <div
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
+      onMouseOver={onMouseOver}
       onClick={() => setOpen(false)}
-      style={{ position: 'relative', display: 'flex' }}
       className={className}
+      ref={ref}
     >
       {children}
       {open && (
-        <Container className={cc(['tooltip__container', side])}>
+        <Container
+          className={cc(['tooltip__container', side])}
+          style={tooltipStyle}
+          ref={tooltipRef}
+        >
           <div className='tooltip__base'>
             <span>{tooltip}</span>
           </div>
         </Container>
       )}
-    </Tag>
+    </div>
   )
 }
 
 export default WithTooltip
 
 const Container = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   z-index: 100;
-  margin-top: 9px;
   width: max-content;
   min-width: 40px;
   text-align: center;
   pointer-events: none;
-
-  &.top {
-    top: initial;
-    bottom: 120%;
-
-    &::after {
-      border-bottom: 0;
-      border-top: 9px solid ${({ theme }) => theme.colors.text.secondary};
-      bottom: -9px;
-      top: initial;
-    }
-  }
-
-  &.right {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-100%);
-  }
-
-  &.bottom-right {
-    left: 100%;
-    transform: translateX(-20%);
-  }
+  top: 100px;
+  bottom: 100px;
 
   > div {
     background-color: ${({ theme }) => theme.colors.background.primary};
-
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
