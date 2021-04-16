@@ -203,6 +203,10 @@ const Container = styled.div`
     transition: 200ms color;
     color: ${({ theme }) => theme.colors.text.primary};
 
+    > * {
+      pointer-events: none;
+    }
+
     &:disabled {
       color: ${({ theme }) => theme.colors.text.subtle};
     }
