@@ -23,7 +23,7 @@ export const lightTheme: BaseTheme = {
       link: '#329BBE',
     },
     border: {
-      main: '#9DA0A5',
+      main: '#EDEDEE',
       second: '#BBBBBB',
     },
     variants: {

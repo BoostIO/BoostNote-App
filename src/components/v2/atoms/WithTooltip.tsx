@@ -87,8 +87,6 @@ const Container = styled.div`
   min-width: 40px;
   text-align: center;
   pointer-events: none;
-  top: 100px;
-  bottom: 100px;
 
   > div {
     background-color: ${({ theme }) => theme.colors.background.primary};
