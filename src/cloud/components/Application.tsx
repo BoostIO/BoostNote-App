@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  CSSProperties,
-  useMemo,
-} from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { usePreferences } from '../lib/stores/preferences'
 import { usePage } from '../lib/stores/pageStore'
 import {
@@ -123,13 +117,13 @@ import { SidebarDragState } from '../../lib/v2/dnd'
 interface ApplicationProps {
   content: ContentLayoutProps
   className?: string
-  style?: CSSProperties
-  maxLeftWidth?: number
+  initialSidebarState?: SidebarState
 }
 
 const Application = ({
   content,
   children,
+  initialSidebarState,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { preferences, setPreferences } = usePreferences()
   const {
@@ -164,7 +158,9 @@ const Application = ({
   const [showSpaces, setShowSpaces] = useState(false)
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'tree'
+    initialSidebarState != null
+      ? initialSidebarState
+      : preferences.lastSidebarState
   )
   const { openSettingsTab } = useSettings()
 
@@ -173,6 +169,10 @@ const Application = ({
       openSettingsTab('teamUpgrade')
     }
   })
+
+  useEffect(() => {
+    setPreferences({ lastSidebarState: sidebarState })
+  }, [sidebarState, setPreferences])
 
   useEffect(() => {
     const handler = () => {
