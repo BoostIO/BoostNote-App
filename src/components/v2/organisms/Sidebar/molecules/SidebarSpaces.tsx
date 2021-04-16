@@ -5,6 +5,8 @@ import { AppComponent } from '../../../../../lib/v2/types'
 import Icon from '../../../atoms/Icon'
 import RoundedImage from '../../../atoms/RoundedImage'
 import SidebarContextList from '../atoms/SidebarContextList'
+import cc from 'classcat'
+import { mdiCheck } from '@mdi/js'
 
 export interface SidebarSpaceProps {
   spaces: SidebarSpace[]
@@ -38,12 +40,19 @@ const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
           {...row.linkProps}
           key={`space-top-${i}`}
           id={`space-top-${i}`}
-          className='sidebar__spaces__item'
+          className={cc([
+            'sidebar__spaces__item',
+            row.active && 'sidebar__spaces__item--active',
+          ])}
         >
           <div className='sidebar__spaces__icon'>
             <RoundedImage url={row.icon} alt={row.label} size={30} />
           </div>
           <span className='sidebar__spaces__label'>{row.label}</span>
+
+          {row.active && (
+            <Icon size={22} path={mdiCheck} className='sidebar__spaces__icon' />
+          )}
           {row.tooltip != null && (
             <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
           )}
@@ -100,6 +109,7 @@ const Container = styled.div`
       cursor: pointer;
       transition: 200ms all;
       text-decoration: none;
+      position: relative;
 
       &:focus .sidebar__spaces__label {
         text-decoration: underline;
