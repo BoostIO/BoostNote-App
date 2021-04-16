@@ -185,7 +185,7 @@ const Editor = ({
     if (!initialSyncDone) {
       return
     }
-    if (!docIsNew && editorRef.current != null) {
+    if (editorRef.current != null) {
       editorRef.current.focus()
     } else if (titleRef.current != null) {
       titleRef.current.focus()
