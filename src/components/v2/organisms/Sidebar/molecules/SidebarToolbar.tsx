@@ -4,6 +4,7 @@ import styled from '../../../../../lib/v2/styled'
 import { hideScroll } from '../../../../../lib/v2/styled/styleFunctions'
 import { AppComponent } from '../../../../../lib/v2/types'
 import Icon from '../../../atoms/Icon'
+import WithTooltip from '../../../atoms/WithTooltip'
 
 export type SidebarToolbarRow = {
   icon: string | React.ReactNode
@@ -43,42 +44,44 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
       <div className='sidebar__toolbar__scroller'>
         <div className='sidebar__toolbar__top'>
           {sortedRows.top.map((row, i) => (
-            <button
-              className={cc([
-                'sidebar__toolbar__item',
-                row.active && 'sidebar__toolbar__item--active',
-              ])}
-              onClick={row.onClick}
-              disabled={row.onClick == null}
-              tabIndex={-1}
-              key={`top-${i}`}
-            >
-              {typeof row.icon === 'string' ? (
-                <Icon size={26} path={row.icon} />
-              ) : (
-                row.icon
-              )}
-            </button>
+            <WithTooltip tooltip={row.tooltip} key={`top-${i}`} side='right'>
+              <button
+                className={cc([
+                  'sidebar__toolbar__item',
+                  row.active && 'sidebar__toolbar__item--active',
+                ])}
+                onClick={row.onClick}
+                disabled={row.onClick == null}
+                tabIndex={-1}
+              >
+                {typeof row.icon === 'string' ? (
+                  <Icon size={26} path={row.icon} />
+                ) : (
+                  row.icon
+                )}
+              </button>
+            </WithTooltip>
           ))}
         </div>
         <div className='sidebar__toolbar__bottom'>
           {sortedRows.bottom.map((row, i) => (
-            <button
-              className={cc([
-                'sidebar__toolbar__item',
-                row.active && 'sidebar__toolbar__item--active',
-              ])}
-              onClick={row.onClick}
-              disabled={row.onClick == null}
-              tabIndex={-1}
-              key={`bottom-${i}`}
-            >
-              {typeof row.icon === 'string' ? (
-                <Icon size={26} path={row.icon} />
-              ) : (
-                row.icon
-              )}
-            </button>
+            <WithTooltip tooltip={row.tooltip} key={`bottom-${i}`} side='right'>
+              <button
+                className={cc([
+                  'sidebar__toolbar__item',
+                  row.active && 'sidebar__toolbar__item--active',
+                ])}
+                onClick={row.onClick}
+                disabled={row.onClick == null}
+                tabIndex={-1}
+              >
+                {typeof row.icon === 'string' ? (
+                  <Icon size={26} path={row.icon} />
+                ) : (
+                  row.icon
+                )}
+              </button>
+            </WithTooltip>
           ))}
         </div>
       </div>
@@ -115,6 +118,10 @@ const Container = styled.div`
 
     .sidebar__toolbar__bottom {
       flex: 0 0 auto;
+    }
+
+    .sidebar__toolbar__top .sidebar__toolbar__item:first-of-type {
+      margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
 
     .sidebar__toolbar__top .sidebar__toolbar__item:last-of-type {
