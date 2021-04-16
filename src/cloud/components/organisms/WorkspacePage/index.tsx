@@ -14,6 +14,7 @@ import EmojiIcon from '../../atoms/EmojiIcon'
 import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
+import { useRouter } from '../../../lib/router'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -33,6 +34,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     createDocHandler,
   } = useNav()
   const { openModal } = useModal()
+  const { query } = useRouter()
   const [sending, setSending] = useState<number>()
 
   const childFolders = useMemo(() => {
@@ -108,6 +110,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
 
   return (
     <Application
+      initialSidebarState={query.onboarding != null ? 'tree' : undefined}
       content={{
         reduced: true,
         topbar: {

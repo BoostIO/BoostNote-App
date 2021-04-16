@@ -17,6 +17,7 @@ const basePreferences: Preferences = {
   lastUsedLayout: 'split',
   sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
+  lastSidebarState: 'tree',
 }
 
 function usePreferencesStore() {

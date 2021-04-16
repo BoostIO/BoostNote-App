@@ -1,3 +1,4 @@
+import { SidebarState } from '../../../../lib/v2/sidebar'
 import { LayoutMode } from '../../../components/layouts/DocEditLayout'
 
 export interface Preferences {
@@ -8,4 +9,5 @@ export interface Preferences {
   lastUsedLayout: LayoutMode
   workspaceManagerIsOpen: boolean
   sidebarBookmarksAreUnfolded: boolean
+  lastSidebarState: SidebarState | undefined
 }
