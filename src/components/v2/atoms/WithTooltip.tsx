@@ -4,7 +4,7 @@ import cc from 'classcat'
 
 interface WithTooltipProps {
   className?: string
-  side?: 'top' | 'left' | 'right' | 'bottom' | 'bottom-right'
+  side?: 'right' | 'bottom'
   tooltip?: React.ReactNode
 }
 
