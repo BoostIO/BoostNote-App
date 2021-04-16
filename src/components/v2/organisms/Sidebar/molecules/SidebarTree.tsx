@@ -100,15 +100,12 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => {
             key={`tree__control__categories`}
             iconPath={mdiDotsHorizontal}
             iconSize={22}
-            onClick={(event) => {
-              if (categoriesContextIsClosed) {
-                setCategoriesContextPosition(
-                  getContextPositionFromDomElement(event, tree.length)
-                )
-                setCategoriesContextIsClosed(false)
-              } else {
-                setCategoriesContextIsClosed(true)
-              }
+            disabled={!categoriesContextIsClosed}
+            onClick={async (event) => {
+              setCategoriesContextPosition(
+                getContextPositionFromDomElement(event, tree.length)
+              )
+              setCategoriesContextIsClosed(false)
             }}
           />
         )}

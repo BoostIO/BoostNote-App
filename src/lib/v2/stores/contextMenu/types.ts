@@ -67,7 +67,6 @@ export function getContextPositionFromDomElement(
     currentTargetRect.bottom > yPositionLimit
 
   const position = {
-    // TODO: Limit xPosition
     x: currentTargetRect.left,
     y: clientYIsLowerThanYPositionLimit
       ? yPositionLimit
