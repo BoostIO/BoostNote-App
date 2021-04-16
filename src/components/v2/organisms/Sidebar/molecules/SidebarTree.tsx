@@ -7,17 +7,23 @@ import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../../lib/v2/types'
-import { MenuItem } from '../../../../../lib/v2/stores/contextMenu'
+import {
+  MenuItem,
+  MenuTypes,
+  getContextPositionFromDomElement,
+} from '../../../../../lib/v2/stores/contextMenu/types'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import {
   DraggedTo,
   onDragLeaveCb,
   SidebarDragState,
 } from '../../../../../lib/v2/dnd'
+import { mdiDotsHorizontal } from '@mdi/js'
+import { FocusedContextMenu } from '../../../molecules/ContextMenu'
+import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
-  treeControls?: SidebarTreeControl[]
 }
 
 export type SidebarTreeControl = {
@@ -73,22 +79,57 @@ export type SidebarNavControls =
       create: (title: string) => Promise<void>
     }
 
-const SidebarTree = ({ tree, treeControls }: SidebarTreeProps) => {
+const SidebarTree = ({ tree }: SidebarTreeProps) => {
+  const [categoriesContextIsClosed, setCategoriesContextIsClosed] = useState(
+    true
+  )
+  const [categoriesContextPosition, setCategoriesContextPosition] = useState<
+    | {
+        x: number
+        y: number
+      }
+    | undefined
+  >()
+
   return (
     <Container className='sidebar__tree'>
       <SidebarHeader label='Explorer'>
-        {treeControls != null &&
-          treeControls.map((control, i) => (
-            <Button
-              variant='icon'
-              key={`tree__control__${i}`}
-              iconPath={control.icon}
-              iconSize={22}
-              disabled={control.disabled}
-              onClick={control.onClick}
-              onContextMenu={control.onContextMenu}
-            />
-          ))}
+        {tree.length > 0 && (
+          <Button
+            variant='icon'
+            key={`tree__control__categories`}
+            iconPath={mdiDotsHorizontal}
+            iconSize={22}
+            onClick={(event) => {
+              if (categoriesContextIsClosed) {
+                setCategoriesContextPosition(
+                  getContextPositionFromDomElement(event, tree.length)
+                )
+                setCategoriesContextIsClosed(false)
+              } else {
+                setCategoriesContextIsClosed(true)
+              }
+            }}
+          />
+        )}
+        {tree.length > 0 && !categoriesContextIsClosed && (
+          <FocusedContextMenu
+            menuItems={tree.map((category) => {
+              return {
+                type: MenuTypes.Normal,
+                onClick: category.toggleHidden,
+                label: (
+                  <span>
+                    <Checkbox checked={!category.hidden} />
+                    <span style={{ paddingLeft: 6 }}>{category.label}</span>
+                  </span>
+                ),
+              }
+            })}
+            position={categoriesContextPosition}
+            close={() => setCategoriesContextIsClosed(true)}
+          />
+        )}
       </SidebarHeader>
       <SidebarContextList className='sidebar__tree__wrapper'>
         {tree.map((category, i) => {

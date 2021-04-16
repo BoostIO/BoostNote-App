@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import {
   menuHeight,
+  MenuItem,
   MenuTypes,
   menuVerticalPadding,
   menuZIndex,
@@ -15,7 +16,6 @@ import UpDownList from '../atoms/UpDownList'
 const ContextMenu = () => {
   const contextMenu = useContextMenu()
   const [windowWith, setWindowWidth] = useState(200)
-  const menuRef: React.RefObject<HTMLDivElement> = React.createRef()
 
   useEffectOnce(() => {
     setWindowWidth(
@@ -30,24 +30,6 @@ const ContextMenu = () => {
     contextMenu!.close()
   }
 
-  const closeContextMenuIfMenuBlurred = (
-    event: React.FocusEvent<HTMLDivElement>
-  ) => {
-    if (isMenuBlurred(event.relatedTarget)) {
-      closeContextMenu()
-    }
-  }
-
-  const isMenuBlurred = (relatedTarget: any): boolean => {
-    if (menuRef.current == null) return true
-    let currentTarget: HTMLElement | null | undefined = relatedTarget
-    while (currentTarget != null) {
-      if (currentTarget === menuRef.current) return false
-      currentTarget = currentTarget.parentElement
-    }
-    return true
-  }
-
   const { closed, menuItems, position, id } = contextMenu
   if (closed) return null
 
@@ -55,14 +37,12 @@ const ContextMenu = () => {
     <Container
       className='context__menu'
       tabIndex={-1}
-      ref={menuRef}
-      onBlur={closeContextMenuIfMenuBlurred}
       style={{
         left: position.x + 130 < windowWith ? position.x : windowWith - 150,
         top: position.y,
       }}
     >
-      <UpDownList ignoreFocus={true}>
+      <UpDownList ignoreFocus={true} onBlur={closeContextMenu}>
         {menuItems.map((menu, index) => {
           const key = `context__menu--${id}-${index}`
           switch (menu.type) {
@@ -106,6 +86,94 @@ const ContextMenu = () => {
 }
 
 export default ContextMenu
+
+interface FocusedContextMenuProps {
+  menuItems: MenuItem[]
+  id?: string
+  position?: { x: number; y: number }
+  close: () => void
+}
+
+export const FocusedContextMenu = ({
+  menuItems,
+  position,
+  close,
+  id = '',
+}: FocusedContextMenuProps) => {
+  const [windowWith, setWindowWidth] = useState(200)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffectOnce(() => {
+    setWindowWidth(
+      window.innerWidth ||
+        innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth
+    )
+  })
+
+  const onBlurHandler = useCallback(
+    (event: any) => {
+      if (
+        event.relatedTarget == null ||
+        menuRef.current == null ||
+        !menuRef.current.contains(event.relatedTarget)
+      ) {
+        close()
+        return
+      }
+    },
+    [close]
+  )
+
+  if (position == null) return null
+
+  return (
+    <Container
+      className='context__menu'
+      tabIndex={-1}
+      style={{
+        left: position.x + 130 < windowWith ? position.x : windowWith - 150,
+        top: position.y,
+      }}
+      ref={menuRef}
+      onBlurHandler={onBlurHandler}
+    >
+      <UpDownList ignoreFocus={true} onBlur={close}>
+        {menuItems.map((menu, index) => {
+          const key = `context__menu--${id}-${index}`
+          switch (menu.type) {
+            case MenuTypes.Normal:
+              const nMenu = {
+                ...(menu as NormalMenuItem),
+              }
+              return (
+                <button
+                  className='context__menu__item'
+                  key={key}
+                  onClick={nMenu.onClick}
+                  id={key}
+                  disabled={(nMenu.enabled = false)}
+                  onBlur={onBlurHandler}
+                >
+                  {typeof nMenu.icon === 'string' ? (
+                    <Icon path={nMenu.icon} size={16} />
+                  ) : (
+                    nMenu.icon
+                  )}
+                  {nMenu.label}
+                </button>
+              )
+            case MenuTypes.Separator:
+              return <div className='context__menu__separator' key={key} />
+            default:
+              return null
+          }
+        })}
+      </UpDownList>
+    </Container>
+  )
+}
 
 const Container = styled.div`
   min-width: 130px;

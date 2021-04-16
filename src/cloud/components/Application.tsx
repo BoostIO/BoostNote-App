@@ -31,11 +31,7 @@ import {
   CollapsableType,
   useSidebarCollapse,
 } from '../lib/stores/sidebarCollapse'
-import {
-  MenuItem,
-  MenuTypes,
-  useContextMenu,
-} from '../../lib/v2/stores/contextMenu'
+import { MenuItem, MenuTypes } from '../../lib/v2/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
 import { getFolderHref } from './atoms/Link/FolderLink'
@@ -70,7 +66,6 @@ import {
   mdiArchiveOutline,
   mdiClockOutline,
   mdiCogOutline,
-  mdiDotsHorizontal,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
@@ -104,7 +99,6 @@ import {
   SidebarNavControls,
   SidebarTreeChildRow,
 } from '../../components/v2/organisms/Sidebar/molecules/SidebarTree'
-import Checkbox from '../../components/v2/molecules/Form/atoms/FormCheckbox'
 import RoundedImage from '../../components/v2/atoms/RoundedImage'
 import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
@@ -154,7 +148,6 @@ const Application = ({
     unfoldItem,
     foldItem,
   } = useSidebarCollapse()
-  const { popup } = useContextMenu()
   const {
     team,
     permissions = [],
@@ -291,10 +284,6 @@ const Application = ({
     return mapUsers(permissions, currentUser, [...guestsMap.values()])
   }, [permissions, currentUser, guestsMap])
 
-  const treeControls = useMemo(() => {
-    return mapTreeControls(tree || [], popup)
-  }, [popup, tree])
-
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(
       showSpaces,
@@ -417,7 +406,6 @@ const Application = ({
             sidebarExpandedWidth={preferences.sideBarWidth}
             sidebarState={sidebarState}
             tree={tree}
-            treeControls={treeControls}
             sidebarResize={sidebarResize}
             searchQuery={sidebarSearchQuery}
             setSearchQuery={setSearchQuery}
@@ -995,37 +983,6 @@ function mapTree(
   })
 
   return tree as SidebarNavCategory[]
-}
-
-function mapTreeControls(
-  tree: SidebarNavCategory[],
-  popup: (event: React.MouseEvent, menuItems: MenuItem[]) => void
-) {
-  if (tree.length === 0) {
-    return undefined
-  }
-
-  return [
-    {
-      icon: mdiDotsHorizontal,
-      onClick: (event: React.MouseEvent) =>
-        popup(
-          event,
-          (tree || []).map((category) => {
-            return {
-              type: MenuTypes.Normal,
-              onClick: category.toggleHidden,
-              label: (
-                <span>
-                  <Checkbox checked={!category.hidden} />
-                  <span style={{ paddingLeft: 6 }}>{category.label}</span>
-                </span>
-              ),
-            }
-          })
-        ),
-    },
-  ]
 }
 
 function mapToolbarRows(
