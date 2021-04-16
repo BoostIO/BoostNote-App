@@ -755,7 +755,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     line-height: 30px;
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
     padding: 0px ${({ theme }) => theme.space.small}px;
     height: fit-content;
   }
@@ -782,7 +782,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     color: ${({ theme }) => theme.baseTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
     width: 120px;
     flex: 0 0 auto;
     margin-bottom: 0;
@@ -837,7 +837,7 @@ const Container = styled.div`
     outline: none;
     color: ${({ theme }) => theme.baseTextColor};
     cursor: pointer;
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
     &:hover,
     &:focus {
       background-color: ${({ theme }) => theme.subtleBackgroundColor};
@@ -930,7 +930,7 @@ const Container = styled.div`
     width: 100%;
     padding-top: ${({ theme }) => theme.space.xxsmall}px;
     color: ${({ theme }) => theme.subtleTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
   }
 
   &.active {
