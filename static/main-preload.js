@@ -144,6 +144,11 @@
     ipcRenderer.on(channel, listener)
   }
 
+  function sendIpcMessage(channel, data) {
+    const { ipcRenderer } = electron
+    ipcRenderer.send(channel, data)
+  }
+
   function removeIpcListener(channel, listener) {
     const { ipcRenderer } = electron
     ipcRenderer.removeListener(channel, listener)
@@ -234,12 +239,13 @@
   window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
   window.__ELECTRON_ONLY__.getPathByName = getPathByName
   window.__ELECTRON_ONLY__.addIpcListener = addIpcListener
+  window.__ELECTRON_ONLY__.sendIpcMessage = sendIpcMessage
   window.__ELECTRON_ONLY__.removeIpcListener = removeIpcListener
   window.__ELECTRON_ONLY__.removeAllIpcListeners = removeAllIpcListeners
   window.__ELECTRON_ONLY__.setAsDefaultProtocolClient = setAsDefaultProtocolClient
   window.__ELECTRON_ONLY__.removeAsDefaultProtocolClient = removeAsDefaultProtocolClient
   window.__ELECTRON_ONLY__.isDefaultProtocolClient = isDefaultProtocolClient
-  window.__ELECTRON_ONLY__.getWebContentsById
+  window.__ELECTRON_ONLY__.getWebContentsById = getWebContentsById
   window.__ELECTRON_ONLY__.setTrafficLightPosition = setTrafficLightPosition
   window.__ELECTRON_ONLY__.convertHtmlStringToPdfBuffer = convertHtmlStringToPdfBuffer
   window.__ELECTRON_ONLY__.setCookie = setCookie
