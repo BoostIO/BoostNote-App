@@ -1,7 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
 import { Section, SectionHeader } from './styled'
 import { usePreferences } from '../../lib/preferences'
-import { KeymapItem, KeymapItemEditableProps } from '../../lib/keymap'
+import {
+  getGenericShortcutString,
+  KeymapItem,
+  KeymapItemEditableProps,
+} from '../../lib/keymap'
 import { useTranslation } from 'react-i18next'
 import KeymapItemSection from '../atoms/KeymapItemSection'
 import styled from '../../lib/styled/styled'
@@ -46,6 +50,14 @@ const KeymapTab = () => {
     resetKeymap()
   }, [resetKeymap])
 
+  const getKeymapItemSectionKey = useCallback((keymapItem: KeymapItem) => {
+    if (keymapItem.shortcutMainStroke == null) {
+      return keymapItem.description
+    } else {
+      return getGenericShortcutString(keymapItem.shortcutMainStroke)
+    }
+  }, [])
+
   return (
     <Section>
       <KeymapHeaderSection>
@@ -59,7 +71,7 @@ const KeymapTab = () => {
           keymap.map((keymapEntry: [string, KeymapItem]) => {
             return (
               <KeymapItemSection
-                key={keymapEntry[0]}
+                key={getKeymapItemSectionKey(keymapEntry[1])}
                 keymapKey={keymapEntry[0]}
                 currentKeymapItem={keymapEntry[1].shortcutMainStroke}
                 description={keymapEntry[1].description}
