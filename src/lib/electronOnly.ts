@@ -42,6 +42,7 @@ const __ELECTRON_ONLY__: {
     channel: string,
     listener: (event: IpcRendererEvent, ...args: any[]) => void
   ): void
+  sendIpcMessage(channel: string, data: any[]): void
   removeIpcListener(
     channel: string,
     listener: (event: IpcRendererEvent, ...args: any[]) => void
@@ -80,6 +81,7 @@ const {
   openContextMenu,
   getPathByName,
   addIpcListener,
+  sendIpcMessage,
   removeIpcListener,
   removeAllIpcListeners,
   setAsDefaultProtocolClient,
@@ -137,6 +139,7 @@ export {
   openContextMenu,
   getPathByName,
   addIpcListener,
+  sendIpcMessage,
   removeIpcListener,
   removeAllIpcListeners,
   setAsDefaultProtocolClient,

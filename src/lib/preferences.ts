@@ -5,6 +5,7 @@ import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { NoteSortingOptions } from './sort'
+import { sendIpcMessage } from './electronOnly'
 import { nodeEnv } from '../cloud/lib/consts'
 import { setAccessToken } from '../cloud/lib/stores/electron'
 import {
@@ -295,8 +296,7 @@ function usePreferencesStore() {
       })
 
       if (isMenuKeymap(keymapItem)) {
-        const { ipcRenderer } = window.require('electron')
-        ipcRenderer.send('menuAcceleratorChanged', [
+        sendIpcMessage('menuAcceleratorChanged', [
           key,
           getMenuAcceleratorForKeymapItem(keymapItem),
         ])
@@ -328,8 +328,7 @@ function usePreferencesStore() {
       })
 
       if (isMenuKeymap(keymapItem)) {
-        const { ipcRenderer } = window.require('electron')
-        ipcRenderer.send('menuAcceleratorChanged', [key, null])
+        sendIpcMessage('menuAcceleratorChanged', [key, null])
       }
       return true
     },
@@ -339,10 +338,9 @@ function usePreferencesStore() {
   const loadKeymaps = useCallback(() => {
     const keymap = mergedPreferences['general.keymap']
     if (keymap != null) {
-      const { ipcRenderer } = window.require('electron')
       for (const [key, keymapItem] of keymap) {
         if (isMenuKeymap(keymapItem)) {
-          ipcRenderer.send('menuAcceleratorChanged', [
+          sendIpcMessage('menuAcceleratorChanged', [
             key,
             getMenuAcceleratorForKeymapItem(keymapItem),
           ])
