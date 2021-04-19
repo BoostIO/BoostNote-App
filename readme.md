@@ -5,7 +5,7 @@
 
 </div>
 
-![uiimage](./static/img_ui.svg)
+![uiimage](./static/img_ui.png)
 
 <h2 align='center'>Boost Note is a powerful, lightspeed collaborative workspace for developer teams.</h2>
 
