@@ -16,19 +16,10 @@ import { values, getFolderNameFromPathname } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
-import {
-  mdiPlus,
-  mdiFolderOutline,
-  mdiTag,
-  mdiMagnify,
-  mdiCogOutline,
-} from '@mdi/js'
+import { mdiPlus, mdiFolderOutline, mdiTag } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
-import { osName } from '../../lib/platform'
-import { useSearchModal } from '../../lib/searchModal'
-import NavigatorItem from '../atoms/NavigatorItem'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
 import { useTranslation } from 'react-i18next'
 
@@ -47,11 +38,7 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const { prompt, messageBox } = useDialog()
   const { push, hash } = useRouter()
   const { navigate } = useStorageRouter()
-  const {
-    togglePreferencesModal,
-    setPreferences,
-    preferences,
-  } = usePreferences()
+  const { togglePreferencesModal, preferences } = usePreferences()
   const routeParams = useRouteParams()
   const storageId = storage.id
   const { t } = useTranslation()
@@ -155,22 +142,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
               openCreateStorageDialog()
             },
           },
-          {
-            type: 'separator',
-          },
-          {
-            type: 'normal',
-            label: 'Toggle App Navigator',
-            click: () => {
-              setPreferences((prevPreferences) => {
-                return {
-                  'general.showAppNavigator': !prevPreferences[
-                    'general.showAppNavigator'
-                  ],
-                }
-              })
-            },
-          },
         ],
       })
     },
@@ -187,7 +158,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       storageId,
       navigate,
       openCreateStorageDialog,
-      setPreferences,
       removeStorage,
     ]
   )
@@ -252,18 +222,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
     }
   }, [push, hash])
 
-  const { toggleShowSearchModal } = useSearchModal()
-
-  useEffect(() => {
-    const handler = () => {
-      toggleShowSearchModal()
-    }
-    addIpcListener('search', handler)
-    return () => {
-      removeIpcListener('search', handler)
-    }
-  }, [toggleShowSearchModal])
-
   useEffect(() => {
     const handler = () => {
       createNoteByRoute()
@@ -281,13 +239,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
         <div className='topButtonLabel'>{storage.name}</div>
       </TopButton>
 
-      <SearchButton onClick={toggleShowSearchModal}>
-        <div className='icon'>
-          <Icon path={mdiMagnify} />
-        </div>
-        <div className='label'>Search</div>
-        <div className='kbd'>{osName === 'macos' ? '⌘P' : 'Ctrl P'}</div>
-      </SearchButton>
       <NewNoteButton onClick={createNoteByRoute}>
         <div className='icon'>
           <Icon path={mdiPlus} />
@@ -299,13 +250,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       </NewNoteButton>
 
       <ScrollableContainer>
-        <NavigatorItem
-          dotPlaceholder={true}
-          iconPath={mdiCogOutline}
-          depth={0}
-          label='Settings'
-          onClick={togglePreferencesModal}
-        />
         <BookmarkNavigatorFragment storage={storage} />
         <NavigatorSeparator />
         <StorageNavigatorFragment storage={storage} />
@@ -351,48 +295,6 @@ const TopButton = styled.button`
     font-size: 14px;
     padding-right: 4px;
     ${textOverflow}
-  }
-`
-
-const SearchButton = styled.button`
-  margin: 0 8px;
-  height: 28px;
-  color: ${({ theme }) => theme.uiTextColor};
-  background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  text-align: left;
-  align-items: center;
-  display: flex;
-  padding: 0 8px 0 4px;
-  font-size: 14px;
-  &:hover {
-    background-color: ${({ theme }) =>
-      theme.secondaryButtonHoverBackgroundColor};
-    & > .kbd {
-      display: flex;
-    }
-  }
-  & > .icon {
-    width: 28px;
-    height: 28px;
-    ${flexCenter};
-    flex-shrink: 0;
-    font-size: 20px;
-  }
-  & > .label {
-    white-space: nowrap;
-    flex: 1;
-  }
-
-  & > .kbd {
-    display: none;
-    font-size: 12px;
-    margin-left: 5px;
-    ${textOverflow};
-    align-items: center;
-    flex-shrink: 0;
   }
 `
 

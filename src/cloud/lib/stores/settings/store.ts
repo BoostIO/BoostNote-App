@@ -5,7 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../globalData'
 import { useSetState } from 'react-use'
 import { saveUserSettings } from '../../../api/users/settings'
-import { toggleSettingsEventEmitter } from '../../utils/events'
+import {
+  toggleSettingsEventEmitter,
+  toggleSettingsMembersEventEmitter,
+} from '../../utils/events'
 import { useToast } from '../../../../lib/v2/stores/toast'
 
 export const baseUserSettings: UserSettings = {
@@ -107,12 +110,38 @@ function useSettingsStore() {
     return currentUserSettings?.notifications?.summary
   }, [currentUserSettings])
 
-  useEffect(() => {
-    toggleSettingsEventEmitter.listen(toggleClosed)
-    return () => {
-      toggleSettingsEventEmitter.unlisten(toggleClosed)
+  const togglePreferencesTab = useCallback(() => {
+    if (closed || settingsTab !== 'preferences') {
+      setSettingsTab('preferences')
+      setClosed(false)
+      return
     }
-  }, [toggleClosed])
+
+    setClosed(true)
+  }, [closed, settingsTab])
+  useEffect(() => {
+    toggleSettingsEventEmitter.listen(togglePreferencesTab)
+    return () => {
+      toggleSettingsEventEmitter.unlisten(togglePreferencesTab)
+    }
+  }, [togglePreferencesTab])
+
+  const toggleMembersTab = useCallback(() => {
+    if (closed || settingsTab !== 'teamMembers') {
+      setSettingsTab('teamMembers')
+      setClosed(false)
+      return
+    }
+
+    setClosed(true)
+  }, [closed, settingsTab])
+
+  useEffect(() => {
+    toggleSettingsMembersEventEmitter.listen(toggleMembersTab)
+    return () => {
+      toggleSettingsMembersEventEmitter.unlisten(toggleMembersTab)
+    }
+  }, [toggleMembersTab])
 
   return {
     closed,

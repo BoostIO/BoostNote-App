@@ -3,7 +3,7 @@ import cc from 'classcat'
 import styled from '../../../../../lib/v2/styled'
 import { hideScroll } from '../../../../../lib/v2/styled/styleFunctions'
 import { AppComponent } from '../../../../../lib/v2/types'
-import Icon from '../../../atoms/Icon'
+import Icon, { IconSize } from '../../../atoms/Icon'
 import WithTooltip from '../../../atoms/WithTooltip'
 
 export type SidebarToolbarRow = {
@@ -16,11 +16,13 @@ export type SidebarToolbarRow = {
 
 interface SidebarToolbarProps {
   rows: SidebarToolbarRow[]
+  iconSize?: IconSize
 }
 
 const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
   rows,
   className,
+  iconSize = 26,
 }) => {
   const sortedRows = useMemo(() => {
     const sortedRows: {
@@ -40,7 +42,10 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
   }, [rows])
 
   return (
-    <Container className={cc([className, 'sidebar__toolbar'])}>
+    <Container
+      className={cc([className, 'sidebar__toolbar'])}
+      iconSize={iconSize}
+    >
       <div className='sidebar__toolbar__scroller'>
         <div className='sidebar__toolbar__top'>
           {sortedRows.top.map((row, i) => (
@@ -55,7 +60,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
                 tabIndex={-1}
               >
                 {typeof row.icon === 'string' ? (
-                  <Icon size={26} path={row.icon} />
+                  <Icon size={iconSize} path={row.icon} />
                 ) : (
                   row.icon
                 )}
@@ -76,7 +81,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
                 tabIndex={-1}
               >
                 {typeof row.icon === 'string' ? (
-                  <Icon size={26} path={row.icon} />
+                  <Icon size={iconSize} path={row.icon} />
                 ) : (
                   row.icon
                 )}
@@ -91,7 +96,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
 
 export default SidebarToolbar
 
-const Container = styled.div`
+const Container = styled.div<{ iconSize: number }>`
   &.sidebar__toolbar {
     display: flex;
     flex-direction: column;
@@ -133,7 +138,7 @@ const Container = styled.div`
       align-items: center;
       text-align: center;
       width: 100%;
-      height: 28px;
+      height: ${({ iconSize }) => (iconSize as number) + 2}px;
       background: none;
       border: 2px solid transparent;
       color: ${({ theme }) => theme.colors.text.subtle};

@@ -11,6 +11,11 @@ import {
   toggleSplitEditModeEventEmitter,
   applyBoldStyleEventEmitter,
   applyItalicStyleEventEmitter,
+  toggleSidebarTreeEventEmitter,
+  toggleSidebarTimelineEventEmitter,
+  toggleSidebarSearchEventEmitter,
+  toggleSettingsMembersEventEmitter,
+  modalImportEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
@@ -136,6 +141,21 @@ const useElectronStore = (): ElectronStore => {
       return
     }
 
+    addHostListener('modal-import', () => {
+      modalImportEventEmitter.dispatch()
+    })
+    addHostListener('toggle-sidebar-tree', () => {
+      toggleSidebarTreeEventEmitter.dispatch()
+    })
+    addHostListener('toggle-sidebar-timeline', () => {
+      toggleSidebarTimelineEventEmitter.dispatch()
+    })
+    addHostListener('toggle-sidebar-search', () => {
+      toggleSidebarSearchEventEmitter.dispatch()
+    })
+    addHostListener('toggle-settings-members', () => {
+      toggleSettingsMembersEventEmitter.dispatch()
+    })
     addHostListener('toggle-settings', () => {
       toggleSettingsEventEmitter.dispatch()
     })

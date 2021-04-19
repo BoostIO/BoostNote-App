@@ -1,4 +1,5 @@
 import { ChangeEventHandler } from 'react'
+import { SidebarState } from './v2/sidebar'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
@@ -116,3 +117,25 @@ export const boostHubReloadAllWebViewsEventEmitter = createCustomEventEmitter(
 export const boostHubCreateLocalSpaceEventEmitter = createCustomEventEmitter(
   'BoostHub:createLocalSpace'
 )
+
+export const boostHubToggleSidebarTreeEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSidebarTree'
+)
+export const boostHubToggleSidebarSearchEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSidebarSearch'
+)
+export const boostHubToggleSidebarTimelineEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSidebarTimeline'
+)
+export const boostHubToggleSettingsMembersEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSettingsMembers'
+)
+
+export const boostHubOpenImportModalEventEmitter = createCustomEventEmitter(
+  'BoostHub:openImportModal'
+)
+
+export type boostHubSidebarStateEvent = CustomEvent<{ state: SidebarState }>
+export const boostHubSidebarStateEventEmitter = createCustomEventEmitter<{
+  state: SidebarState
+}>('BoostHub:sidebarStateUpdate')
