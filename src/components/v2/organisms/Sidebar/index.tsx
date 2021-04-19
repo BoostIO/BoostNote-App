@@ -24,6 +24,7 @@ import { AppUser } from '../../../../lib/v2/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
 
 type SidebarProps = {
+  showToolbar: boolean
   showSpaces: boolean
   sidebarState?: SidebarState
   toolbarRows: SidebarToolbarRow[]
@@ -43,6 +44,7 @@ type SidebarProps = {
 } & SidebarSpaceProps
 
 const Sidebar = ({
+  showToolbar,
   showSpaces,
   onSpacesBlur,
   sidebarState,
@@ -65,7 +67,12 @@ const Sidebar = ({
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
-      <SidebarToolbar rows={toolbarRows} className='sidebar__context__icons' />
+      {showToolbar && (
+        <SidebarToolbar
+          rows={toolbarRows}
+          className='sidebar__context__icons'
+        />
+      )}
       {showSpaces && (
         <SidebarSpaces
           spaces={spaces}
@@ -131,6 +138,10 @@ const SidebarContainer = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
+  }
+
+  .application__sidebar--electron .sidebar__context__icons {
+    display: none;
   }
 
   .sidebar--expanded {

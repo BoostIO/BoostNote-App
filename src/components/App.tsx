@@ -49,6 +49,7 @@ import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
+import { selectV2Theme } from '../lib/v2/styled/styleFunctions'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -350,31 +351,33 @@ const App = () => {
 
   return (
     <ThemeProvider theme={selectTheme(preferences['general.theme'])}>
-      <AppContainer
-        onDrop={(event: React.DragEvent) => {
-          event.preventDefault()
-        }}
-      >
-        {initialized ? (
-          <>
-            {preferences['general.showAppNavigator'] && <AppNavigator />}
-            <Router />
-            {showCreateWorkspaceModal && (
-              <CreateWorkspaceModal
-                closeModal={toggleShowCreateWorkspaceModal}
-              />
-            )}
-          </>
-        ) : (
-          <LoadingText>Loading Data...</LoadingText>
-        )}
-        <GlobalStyle />
-        <Dialog />
-        <PreferencesModal />
-        <ToastList />
-        <CodeMirrorStyle />
-        <ExternalStyle />
-      </AppContainer>
+      <ThemeProvider theme={selectV2Theme(preferences['general.theme'] as any)}>
+        <AppContainer
+          onDrop={(event: React.DragEvent) => {
+            event.preventDefault()
+          }}
+        >
+          {initialized ? (
+            <>
+              <AppNavigator />
+              <Router />
+              {showCreateWorkspaceModal && (
+                <CreateWorkspaceModal
+                  closeModal={toggleShowCreateWorkspaceModal}
+                />
+              )}
+            </>
+          ) : (
+            <LoadingText>Loading Data...</LoadingText>
+          )}
+          <GlobalStyle />
+          <Dialog />
+          <PreferencesModal />
+          <ToastList />
+          <CodeMirrorStyle />
+          <ExternalStyle />
+        </AppContainer>
+      </ThemeProvider>
     </ThemeProvider>
   )
 }

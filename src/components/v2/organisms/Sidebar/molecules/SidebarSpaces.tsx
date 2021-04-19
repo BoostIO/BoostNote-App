@@ -31,48 +31,98 @@ export type SidebarSpace = {
 const SidebarSpaces: AppComponent<SidebarSpaceProps> = ({
   spaces,
   spaceBottomRows,
+  className,
   onSpacesBlur,
 }) => (
-  <Container>
+  <Container className={cc(['sidebar__spaces__container', className])}>
     <SidebarContextList className='sidebar__spaces' onBlur={onSpacesBlur}>
       {spaces.map((row, i) => (
-        <a
-          {...row.linkProps}
-          key={`space-top-${i}`}
+        <SidebarSpace
+          row={row}
           id={`space-top-${i}`}
-          className={cc([
-            'sidebar__spaces__item',
-            row.active && 'sidebar__spaces__item--active',
-          ])}
-        >
-          <div className='sidebar__spaces__icon'>
-            <RoundedImage url={row.icon} alt={row.label} size={30} />
-          </div>
-          <span className='sidebar__spaces__label'>{row.label}</span>
-
-          {row.active && (
-            <Icon size={22} path={mdiCheck} className='sidebar__spaces__icon' />
-          )}
-          {row.tooltip != null && (
-            <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
-          )}
-        </a>
+          key={`space-top-${i}`}
+          onSpacesBlur={onSpacesBlur}
+        />
       ))}
       {spaceBottomRows.map((row, i) => (
-        <a
-          {...row.linkProps}
+        <SidebarContentRow
+          row={row}
           key={`space-bottom-${i}`}
           id={`space-bottom-${i}`}
-          className='sidebar__spaces__item sidebar__spaces__item--bottom'
-        >
-          <div className='sidebar__spaces__icon'>
-            <Icon size={22} path={row.icon} />
-          </div>
-          <span className='sidebar__spaces__label'>{row.label}</span>
-        </a>
+          onSpacesBlur={onSpacesBlur}
+        />
       ))}
     </SidebarContextList>
   </Container>
+)
+
+const SidebarSpace = ({
+  row,
+  id,
+  onSpacesBlur,
+}: {
+  row: SidebarSpace
+  id: string
+  onSpacesBlur: () => void
+}) => (
+  <a
+    {...row.linkProps}
+    onClick={(event) => {
+      if (row.linkProps.onClick == null) {
+        return
+      }
+
+      event.preventDefault()
+      row.linkProps.onClick(event)
+      onSpacesBlur()
+    }}
+    id={id}
+    className={cc([
+      'sidebar__spaces__item',
+      row.active && 'sidebar__spaces__item--active',
+    ])}
+  >
+    <div className='sidebar__spaces__icon'>
+      <RoundedImage url={row.icon} alt={row.label} size={30} />
+    </div>
+    <span className='sidebar__spaces__label'>{row.label}</span>
+    {row.active && (
+      <Icon size={22} path={mdiCheck} className='sidebar__spaces__icon' />
+    )}
+    {row.tooltip != null && (
+      <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
+    )}
+  </a>
+)
+
+const SidebarContentRow = ({
+  row,
+  id,
+  onSpacesBlur,
+}: {
+  row: SidebarSpaceContentRow
+  id: string
+  onSpacesBlur: () => void
+}) => (
+  <a
+    {...row.linkProps}
+    onClick={(event) => {
+      if (row.linkProps.onClick == null) {
+        return
+      }
+
+      event.preventDefault()
+      row.linkProps.onClick(event)
+      onSpacesBlur()
+    }}
+    id={id}
+    className='sidebar__spaces__item sidebar__spaces__item--bottom'
+  >
+    <div className='sidebar__spaces__icon'>
+      <Icon size={22} path={row.icon} />
+    </div>
+    <span className='sidebar__spaces__label'>{row.label}</span>
+  </a>
 )
 
 const Container = styled.div`
@@ -132,6 +182,10 @@ const Container = styled.div`
       flex: 0 0 auto;
       color: ${({ theme }) => theme.colors.text.subtle};
       margin-right: ${({ theme }) => theme.sizes.spaces.md}px;
+    }
+
+    .sidebar__spaces__icon + .sidebar__spaces__tooltip {
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
 
     .sidebar__spaces__icon {

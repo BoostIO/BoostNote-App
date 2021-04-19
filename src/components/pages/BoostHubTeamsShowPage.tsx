@@ -10,7 +10,14 @@ import {
   textOverflow,
 } from '../../lib/styled/styleFunctions'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
-import { boostHubToggleSettingsEventEmitter } from '../../lib/events'
+import {
+  boostHubOpenImportModalEventEmitter,
+  boostHubToggleSettingsEventEmitter,
+  boostHubToggleSettingsMembersEventEmitter,
+  boostHubToggleSidebarSearchEventEmitter,
+  boostHubToggleSidebarTimelineEventEmitter,
+  boostHubToggleSidebarTreeEventEmitter,
+} from '../../lib/events'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -37,10 +44,37 @@ const BoostHubTeamsShowPage = ({
       return
     }
 
+    const toggleOpenImportModalHandler = () => {
+      webviewControlRef.current!.sendMessage('modal-import')
+    }
+    boostHubOpenImportModalEventEmitter.listen(toggleOpenImportModalHandler)
+
     const toggleSettingsHandler = () => {
       webviewControlRef.current!.sendMessage('toggle-settings')
     }
     boostHubToggleSettingsEventEmitter.listen(toggleSettingsHandler)
+
+    const toggleSidebarTreeHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-sidebar-tree')
+    }
+    boostHubToggleSidebarTreeEventEmitter.listen(toggleSidebarTreeHandler)
+    const toggleSidebarTimelineHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-sidebar-timeline')
+    }
+    boostHubToggleSidebarTimelineEventEmitter.listen(
+      toggleSidebarTimelineHandler
+    )
+    const toggleSidebarSearchHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-sidebar-search')
+    }
+    boostHubToggleSidebarSearchEventEmitter.listen(toggleSidebarSearchHandler)
+
+    const toggleSettingsMembersHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-settings-members')
+    }
+    boostHubToggleSettingsMembersEventEmitter.listen(
+      toggleSettingsMembersHandler
+    )
 
     const newNoteHandler = () => {
       webviewControlRef.current!.sendMessage('new-note')
@@ -92,7 +126,18 @@ const BoostHubTeamsShowPage = ({
     addIpcListener('apply-italic-style', applyItalicStyle)
 
     return () => {
+      boostHubOpenImportModalEventEmitter.unlisten(toggleOpenImportModalHandler)
       boostHubToggleSettingsEventEmitter.unlisten(toggleSettingsHandler)
+      boostHubToggleSettingsMembersEventEmitter.unlisten(
+        toggleSettingsMembersHandler
+      )
+      boostHubToggleSidebarSearchEventEmitter.unlisten(
+        toggleSidebarSearchHandler
+      )
+      boostHubToggleSidebarTimelineEventEmitter.unlisten(
+        toggleSidebarTimelineHandler
+      )
+      boostHubToggleSidebarTreeEventEmitter.unlisten(toggleSidebarTreeHandler)
       removeIpcListener('new-note', newNoteHandler)
       removeIpcListener('new-folder', newFolderHandler)
       removeIpcListener('save-as', saveAsHandler)

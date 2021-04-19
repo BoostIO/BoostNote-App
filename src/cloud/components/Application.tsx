@@ -15,7 +15,14 @@ import { shortcuts } from '../lib/shortcuts'
 import CreateFolderModal from './organisms/Modal/contents/Folder/CreateFolderModal'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './atoms/AnnouncementAlert'
-import { newFolderEventEmitter, searchEventEmitter } from '../lib/utils/events'
+import {
+  modalImportEventEmitter,
+  newFolderEventEmitter,
+  searchEventEmitter,
+  toggleSidebarSearchEventEmitter,
+  toggleSidebarTimelineEventEmitter,
+  toggleSidebarTreeEventEmitter,
+} from '../lib/utils/events'
 import { useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from '../../components/v2/organisms/cloud/EventSource'
@@ -98,7 +105,7 @@ import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
 import { stringify } from 'querystring'
-import { sendToHost, usingElectron } from '../lib/stores/electron'
+import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
 import { SidebarSpace } from '../../components/v2/organisms/Sidebar/molecules/SidebarSpaces'
 import ContentLayout, {
   ContentLayoutProps,
@@ -113,6 +120,7 @@ import { CreateDocRequestBody } from '../api/teams/docs'
 import { useCloudDnd } from '../../lib/v2/hooks/cloud/useCloudDnd'
 import { NavResource } from '../interfaces/resources'
 import { SidebarDragState } from '../../lib/v2/dnd'
+import cc from 'classcat'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -162,7 +170,8 @@ const Application = ({
       ? initialSidebarState
       : preferences.lastSidebarState
   )
-  const { openSettingsTab } = useSettings()
+  const { openSettingsTab, closeSettingsTab } = useSettings()
+  const { usingElectron, sendToElectron } = useElectron()
 
   useEffectOnce(() => {
     if (query.settings === 'upgrade') {
@@ -391,13 +400,73 @@ const Application = ({
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
+  const toggleSidebarTree = useCallback(() => {
+    closeSettingsTab()
+    setSidebarState((prev) => {
+      return prev === 'tree' ? undefined : 'tree'
+    })
+  }, [closeSettingsTab])
+  useEffect(() => {
+    toggleSidebarTreeEventEmitter.listen(toggleSidebarTree)
+    return () => {
+      toggleSidebarTreeEventEmitter.unlisten(toggleSidebarTree)
+    }
+  }, [toggleSidebarTree])
+
+  const toggleSidebarSearch = useCallback(() => {
+    closeSettingsTab()
+    setSidebarState((prev) => {
+      return prev === 'search' ? undefined : 'search'
+    })
+  }, [closeSettingsTab])
+  useEffect(() => {
+    toggleSidebarSearchEventEmitter.listen(toggleSidebarSearch)
+    return () => {
+      toggleSidebarSearchEventEmitter.unlisten(toggleSidebarSearch)
+    }
+  }, [toggleSidebarSearch])
+
+  const toggleSidebarTimeline = useCallback(() => {
+    closeSettingsTab()
+    setSidebarState((prev) => {
+      return prev === 'timeline' ? undefined : 'timeline'
+    })
+  }, [closeSettingsTab])
+  useEffect(() => {
+    toggleSidebarTimelineEventEmitter.listen(toggleSidebarTimeline)
+    return () => {
+      toggleSidebarTimelineEventEmitter.unlisten(toggleSidebarTimeline)
+    }
+  }, [toggleSidebarTimeline])
+
+  const openImportModal = useCallback(() => {
+    closeSettingsTab()
+    openModal(<ImportModal />, {
+      classNames: 'largeW',
+    })
+  }, [closeSettingsTab, openModal])
+  useEffect(() => {
+    modalImportEventEmitter.listen(openImportModal)
+    return () => {
+      modalImportEventEmitter.unlisten(openImportModal)
+    }
+  }, [openImportModal])
+
+  useEffect(() => {
+    if (!usingElectron) {
+      return
+    }
+    sendToElectron('sidebar--state', { state: sidebarState })
+  }, [usingElectron, , sendToElectron, sidebarState])
+
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
       <ApplicationLayout
         sidebar={
           <Sidebar
-            className='application__sidebar'
+            className={cc(['application__sidebar'])}
+            showToolbar={!usingElectron}
             showSpaces={showSpaces}
             onSpacesBlur={() => setShowSpaces(false)}
             toolbarRows={toolbarRows}
