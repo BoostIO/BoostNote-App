@@ -119,6 +119,7 @@ const Editor = ({
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const [editorLayout, setEditorLayout] = useState<LayoutMode>('preview')
   const [title, setTitle] = useState(getDocTitle(doc))
+  const previousTitle = useRef<string>()
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
   const { state, push } = useRouter()
@@ -165,6 +166,13 @@ const Editor = ({
     id: doc.id,
     userInfo,
   })
+
+  useEffect(() => {
+    if (previousTitle.current !== doc.head?.title) {
+      setTitle(getDocTitle(doc))
+      previousTitle.current = doc.head?.title
+    }
+  }, [doc])
 
   const docIsNew = !!state.new
   useEffect(() => {
@@ -264,6 +272,8 @@ const Editor = ({
       if (realtime == null) {
         return
       }
+
+      console.log(`changing to ${newTitle}`)
 
       const realtimeTitle = realtime.doc.getText('title') as YText
       // TODO: switch to delta diff implementation
