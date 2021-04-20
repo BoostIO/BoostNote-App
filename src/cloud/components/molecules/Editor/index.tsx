@@ -775,6 +775,10 @@ const Editor = ({
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
             presence={{ user: userInfo, users: otherUsers, editorLayout }}
+            openRenameDocForm={() =>
+              openRenameDocForm(doc, titleChangeCallback)
+            }
+            sendingRename={sendingMap.has(doc.id)}
           />
         ) : null,
       }}
