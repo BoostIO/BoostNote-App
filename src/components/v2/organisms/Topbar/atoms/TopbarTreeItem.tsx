@@ -65,7 +65,13 @@ const TopbarItem = ({
         <a
           className='topbar__tree__item__label'
           onFocus={() => setFocused(true)}
-          onClick={() => item.link.navigateTo()}
+          onClick={(event) => {
+            if (item.link.navigateTo == null) {
+              return
+            }
+            event.preventDefault()
+            item.link.navigateTo()
+          }}
           href={item.link.href}
           id={`tree-${item.id}`}
           tabIndex={1}
