@@ -5,6 +5,7 @@ import {
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
   mdiFolderOutline,
+  mdiFileDocumentOutline,
 } from '@mdi/js'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useNav } from '../../../lib/stores/nav'
@@ -84,7 +85,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const openNewDocForm = useCallback(() => {
     openModal(
       <EmojiInputForm
-        defaultIcon={mdiFolderOutline}
+        defaultIcon={mdiFileDocumentOutline}
         placeholder='Doc title'
         submitButtonProps={{
           label: 'Create',

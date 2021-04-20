@@ -1,4 +1,4 @@
-import { mdiFolderOutline } from '@mdi/js'
+import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
 import { SerializedFolder } from '../../../../cloud/interfaces/db/folder'
@@ -45,7 +45,7 @@ export function useCloudUI() {
     (doc: SerializedDoc, updateTitle?: (title: string) => void) => {
       openModal(
         <EmojiInputForm
-          defaultIcon={mdiFolderOutline}
+          defaultIcon={mdiFileDocumentOutline}
           defaultInputValue={doc.head?.title}
           defaultEmoji={doc.emoji}
           placeholder='Doc title'
@@ -68,7 +68,7 @@ export function useCloudUI() {
         {
           showCloseIcon: true,
           size: 'default',
-          title: 'Rename folder',
+          title: 'Rename doc',
         }
       )
     },
