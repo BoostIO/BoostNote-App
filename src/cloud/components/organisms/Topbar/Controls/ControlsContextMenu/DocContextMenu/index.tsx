@@ -12,6 +12,7 @@ import {
   mdiLabelMultipleOutline,
   mdiAccountMultiplePlusOutline,
   mdiArrowBottomLeft,
+  mdiPencil,
 } from '@mdi/js'
 import { zIndexModalsBackground } from '../styled'
 import {
@@ -80,6 +81,8 @@ interface DocContextMenuProps {
     editorLayout: LayoutMode
   }
   restoreRevision?: (revision: SerializedRevision) => void
+  openRenameDocForm: () => void
+  sendingRename: boolean
 }
 
 const DocContextMenu = ({
@@ -91,6 +94,8 @@ const DocContextMenu = ({
   presence,
   revisionHistory,
   restoreRevision,
+  openRenameDocForm,
+  sendingRename,
 }: DocContextMenuProps) => {
   const [sendingTemplate, setSendingTemplate] = useState(false)
   const [sendingArchive, setSendingArchive] = useState(false)
@@ -461,6 +466,19 @@ const DocContextMenu = ({
                       <div className='context__break' />
                     </>
                   )}
+                  <button
+                    className='context__row context__button'
+                    id='dc-context-top-move'
+                    onClick={openRenameDocForm}
+                    disabled={updating}
+                  >
+                    <Icon
+                      path={mdiPencil}
+                      size={18}
+                      className='context__icon'
+                    />
+                    <span>{sendingRename ? '...' : 'Rename'}</span>
+                  </button>
                   <button
                     className='context__row context__button'
                     id='dc-context-top-move'
