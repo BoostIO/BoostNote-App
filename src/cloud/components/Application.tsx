@@ -121,6 +121,7 @@ import { useCloudDnd } from '../../lib/v2/hooks/cloud/useCloudDnd'
 import { NavResource } from '../interfaces/resources'
 import { SidebarDragState } from '../../lib/v2/dnd'
 import cc from 'classcat'
+import { mapTopbarTree } from '../../lib/v2/mappers/cloud/topbarTree'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -129,7 +130,7 @@ interface ApplicationProps {
 }
 
 const Application = ({
-  content,
+  content: { topbar, ...content },
   children,
   initialSidebarState,
 }: React.PropsWithChildren<ApplicationProps>) => {
@@ -160,7 +161,7 @@ const Application = ({
   const {
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
-  const { push, query, pathname } = useRouter()
+  const { push, query, pathname, goBack, goForward } = useRouter()
   const { history, searchHistory, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [showSpaces, setShowSpaces] = useState(false)
@@ -305,6 +306,21 @@ const Application = ({
     )
   }, [sidebarState, openModal, openSettingsTab, team, openState, showSpaces])
 
+  const topbarTree = useMemo(() => {
+    if (team == null) {
+      return undefined
+    }
+
+    return mapTopbarTree(
+      team,
+      initialLoadDone,
+      docsMap,
+      foldersMap,
+      workspacesMap,
+      push
+    )
+  }, [team, initialLoadDone, docsMap, foldersMap, workspacesMap, push])
+
   const spaces = useMemo(() => {
     return mapSpaces(push, teams, invites, team)
   }, [teams, team, invites, push])
@@ -445,6 +461,7 @@ const Application = ({
       classNames: 'largeW',
     })
   }, [closeSettingsTab, openModal])
+
   useEffect(() => {
     modalImportEventEmitter.listen(openImportModal)
     return () => {
@@ -499,7 +516,19 @@ const Application = ({
         }
         pageBody={
           <>
-            <ContentLayout {...content}>{children}</ContentLayout>
+            <ContentLayout
+              {...content}
+              topbar={{
+                ...topbar,
+                tree: topbarTree,
+                navigation: {
+                  goBack,
+                  goForward,
+                },
+              }}
+            >
+              {children}
+            </ContentLayout>
           </>
         }
       />

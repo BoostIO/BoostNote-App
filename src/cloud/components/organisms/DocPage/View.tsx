@@ -14,12 +14,7 @@ import { unarchiveDoc } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
 import { usePreferences } from '../../../lib/stores/preferences'
 import Application from '../../Application'
-import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
-import {
-  StyledTopbarVerticalSplit,
-  rightSideTopBarHeight,
-} from '../RightSideTopBar/styled'
-import DocBookmark from '../RightSideTopBar/DocTopbar/DocBookmark'
+import { rightSideTopBarHeight } from '../RightSideTopBar/styled'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { SerializedUser } from '../../../interfaces/db/user'
 import MarkdownView from '../../atoms/MarkdownView'
@@ -28,6 +23,11 @@ import DocContextMenu, {
   docContextWidth,
 } from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { useToast } from '../../../../lib/v2/stores/toast'
+import { mapTopbarBreadcrumbs } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
+import { useRouter } from '../../../lib/router'
+import { LoadingButton } from '../../../../components/v2/atoms/Button'
+import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
+import { mdiStar, mdiStarOutline } from '@mdi/js'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -45,10 +45,17 @@ const ViewPage = ({
   backLinks,
 }: ViewPageProps) => {
   const { hoverSidebarOn } = usePreferences()
-  const { updateDocsMap, deleteDocHandler } = useNav()
+  const {
+    updateDocsMap,
+    deleteDocHandler,
+    foldersMap,
+    workspacesMap,
+  } = useNav()
+  const { push } = useRouter()
   const { setPartialPageData, currentUserPermissions } = usePage()
   const { pushMessage } = useToast()
   const { preferences } = usePreferences()
+  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
 
   const unarchiveHandler = useCallback(async () => {
     try {
@@ -68,29 +75,37 @@ const ViewPage = ({
       content={{
         reduced: true,
         topbar: {
-          type: 'v1',
-          left: (
-            <>
-              <BreadCrumbs team={team} minimize={true} />
-              <StyledTopbarVerticalSplit />
-            </>
+          breadcrumbs: mapTopbarBreadcrumbs(
+            team,
+            foldersMap,
+            workspacesMap,
+            push,
+            { pageDoc: doc }
           ),
-          right: (
-            <>
-              <StyledTopbarVerticalSplit className='transparent' />
-              {currentUserPermissions != null && (
-                <DocBookmark currentDoc={doc} />
-              )}
-              <StyledTopbarVerticalSplit className='transparent' />
-              <DocContextMenu
-                currentDoc={doc}
-                team={team}
-                contributors={contributors}
-                backLinks={backLinks}
+          children:
+            currentUserPermissions != null ? (
+              <LoadingButton
+                variant='icon'
+                disabled={sendingMap.has(doc.id)}
+                spinning={sendingMap.has(doc.id)}
+                size='sm'
+                iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+                onClick={() =>
+                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+                }
               />
-            </>
-          ),
+            ) : null,
         },
+        right: (
+          <>
+            <DocContextMenu
+              currentDoc={doc}
+              team={team}
+              contributors={contributors}
+              backLinks={backLinks}
+            />
+          </>
+        ),
       }}
     >
       <Container

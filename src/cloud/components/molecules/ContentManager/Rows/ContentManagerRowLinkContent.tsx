@@ -8,7 +8,7 @@ import EditorsIcons from '../../../atoms/EditorsIcons'
 interface ContentManagerRowLinkContentProps {
   label: string
   emoji?: string
-  defaultIcon: string
+  defaultIcon?: string
   date: string
   editors?: SerializedUser[]
   path?: string
@@ -22,7 +22,11 @@ const ContentManagerRowLinkContent = ({
   date,
   editors,
 }: ContentManagerRowLinkContentProps) => (
-  <Flexbox flex={'1 1 auto'} justifyContent='space-between'>
+  <Flexbox
+    flex={'1 1 auto'}
+    justifyContent='space-between'
+    className='cm-row-link-content'
+  >
     <Flexbox flex={'1 1 auto'}>
       <EmojiIcon defaultIcon={defaultIcon} emoji={emoji} size={20} />
       {path != null ? (

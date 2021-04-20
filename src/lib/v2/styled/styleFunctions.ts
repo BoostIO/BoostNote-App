@@ -39,6 +39,50 @@ export const overflowEllipsis = () => `
     Background
 ———————————–———————————–———————————–——–—— */
 
+export const scrollbarOverlay = (
+  { theme }: StyledProps,
+  direction: 'x' | 'y',
+  scrollingClassName: string
+) => `
+  overflow-${direction}: scroll;
+  overflow-${direction}: overlay;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: none !important;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-track {
+    transition: background 0.3s ease;
+  }
+
+  &.${scrollingClassName} {
+    ${
+      direction === 'x'
+        ? 'scrollbar-height: thin; /* Firefox */'
+        : 'scrollbar-width: thin; /* Firefox */'
+    }
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  &.${scrollingClassName}::-webkit-scrollbar-track {
+    -webkit-box-shadow: none !important;
+    background-color: ${theme.colors.background.tertiary};
+  }
+
+  &.${scrollingClassName}::-webkit-scrollbar-thumb {
+    background-color: ${theme.colors.background.quaternary};
+  }
+`
+
 /* ———————————–———————————–———————————–——–——
     Border
 ———————————–———————————–———————————–——–—— */

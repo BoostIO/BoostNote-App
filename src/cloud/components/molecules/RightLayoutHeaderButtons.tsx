@@ -28,10 +28,10 @@ const RightLayoutHeaderButtons = ({
                 <Spinner
                   className='relative'
                   style={{ position: 'inherit' }}
-                  size={24}
+                  size={20}
                 />
               ) : (
-                <IconMdi path={iconPath} size={24} />
+                <IconMdi path={iconPath} size={20} />
               )}
             </StyledHeaderButton>
           </Tooltip>
@@ -44,10 +44,10 @@ const RightLayoutHeaderButtons = ({
             <Spinner
               className='relative'
               style={{ position: 'inherit' }}
-              size={24}
+              size={20}
             />
           ) : (
-            <IconMdi path={iconPath} size={24} />
+            <IconMdi path={iconPath} size={20} />
           )}
         </StyledHeaderButton>
       )
@@ -60,6 +60,7 @@ const StyledHeaderButton = styled.button`
   border: 0;
   background: none;
   color: ${({ theme }) => theme.emphasizedTextColor};
+  line-height: 13px;
 
   svg {
     color: ${({ theme }) => theme.emphasizedTextColor} !important;

@@ -7,7 +7,7 @@ import Tooltip from './Tooltip'
 
 interface EmojiIconProps {
   emoji?: string
-  defaultIcon: string
+  defaultIcon?: string
   style?: React.CSSProperties
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
   size?: number
@@ -22,6 +22,10 @@ const EmojiIcon = ({
   tooltip,
   onClick,
 }: EmojiIconProps) => {
+  if (emoji == null && defaultIcon == null) {
+    return null
+  }
+
   if (tooltip != null) {
     return (
       <Flexbox
@@ -35,7 +39,7 @@ const EmojiIcon = ({
           {emoji != null ? (
             <Emoji emoji={emoji} set='apple' size={size} />
           ) : (
-            <IconMdi path={defaultIcon} size={size} />
+            <IconMdi path={defaultIcon!} size={size} />
           )}
         </Tooltip>
       </Flexbox>
@@ -53,7 +57,7 @@ const EmojiIcon = ({
       {emoji != null ? (
         <Emoji emoji={emoji} set='apple' size={size} />
       ) : (
-        <IconMdi path={defaultIcon} size={size} />
+        <IconMdi path={defaultIcon!} size={size} />
       )}
     </Flexbox>
   )

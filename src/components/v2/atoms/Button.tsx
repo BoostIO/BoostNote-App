@@ -9,8 +9,17 @@ import styled from '../../../lib/v2/styled'
 import Icon, { IconSize } from './Icon'
 import Spinner from '../../atoms/Spinner'
 
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'icon'
+  | 'link'
+  | 'transparent'
+  | 'warning'
+
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | 'link' | 'transparent'
+  variant?: ButtonVariant
   size?: 'sm' | 'md' | 'lg'
   iconPath?: string
   iconSize?: IconSize
@@ -121,7 +130,7 @@ export const LoadingButton = ({
 }: ButtonProps & { spinning?: boolean }) => {
   if (spinning) {
     return (
-      <Button {...props} disabled={true}>
+      <Button {...props} iconPath={undefined} disabled={true}>
         <Spinner className='button__spinner' />
       </Button>
     )
@@ -261,6 +270,29 @@ const StyledButton = styled.button`
     }
   }
 
+  &.button__variant--warning {
+    background-color: ${({ theme }) => theme.colors.variants.warning.base};
+    color: ${({ theme }) => theme.colors.variants.warning.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.warning.text};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        filter: brightness(112%);
+      }
+    }
+  }
+
   &.button__variant--icon,
   &.button__variant--transparent {
     background: none;
@@ -284,15 +316,21 @@ const StyledButton = styled.button`
 
   &.button__size--lg {
     height: 40px;
+    min-width: 46px;
     padding: 0 14px;
   }
 
   &.button__size--sm {
     height: 24px;
+    min-width: 30px;
     padding: 0 6px;
   }
 
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
+  }
+
+  .button__spinner {
+    margin-top: 6px;
   }
 `

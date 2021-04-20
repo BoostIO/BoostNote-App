@@ -69,7 +69,7 @@ const StyledSortingOption = styled.div`
   margin-left: ${({ theme }) => theme.space.small}px;
 
   .rc-select {
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
 
     svg {
       margin-right: ${({ theme }) => theme.space.xsmall}px;

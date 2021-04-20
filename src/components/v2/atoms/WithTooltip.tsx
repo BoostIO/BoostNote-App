@@ -55,9 +55,9 @@ const WithTooltip: React.FC<WithTooltipProps> = ({
 
   return (
     <div
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onMouseOver={onMouseOver}
+      onPointerEnter={() => setOpen(true)}
+      onPointerLeave={() => setOpen(false)}
+      onPointerOver={onMouseOver}
       onClick={() => setOpen(false)}
       className={className}
       ref={ref}

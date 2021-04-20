@@ -11,14 +11,11 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import {
   StyledContentManager,
   StyledContentManagerHeaderRow,
-  StyledContentManagerRow,
   StyledContentManagerList,
 } from './styled'
 import Flexbox from '../../atoms/Flexbox'
 import Checkbox from '../../atoms/Checkbox'
-import WorkspaceLink from '../../atoms/Link/WorkspaceLink'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import FolderLink from '../../atoms/Link/FolderLink'
 import { CustomSelectOption } from '../../atoms/Select/CustomSelect'
 import SortingOption, { sortingOrders } from './SortingOption'
 import { Spinner } from '../../atoms/Spinner'
@@ -29,7 +26,6 @@ import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerArchivesBulkActions from './Actions/ContentManagerArchivesBulkActions'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
-import TeamLink from '../../atoms/Link/TeamLink'
 import Tooltip from '../../atoms/Tooltip'
 
 export type ContentManagerParent =
@@ -41,7 +37,6 @@ interface ContentManagerProps {
   documents: SerializedDocWithBookmark[]
   folders: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
-  parent?: ContentManagerParent
   page?: 'archive' | 'tag' | 'shared'
 }
 
@@ -50,7 +45,6 @@ const ContentManager = ({
   documents,
   folders,
   page,
-  parent,
   workspacesMap,
 }: ContentManagerProps) => {
   const [sending] = useState<boolean>(false)
@@ -144,30 +138,6 @@ const ContentManager = ({
         return sortByAttributeDesc('updatedAt', folders)
     }
   }, [order, folders])
-
-  const parentRow = useMemo(() => {
-    if (parent == null) {
-      return null
-    }
-
-    return (
-      <StyledContentManagerRow className='parent'>
-        {parent.type === 'workspace' ? (
-          parent.item.public ? (
-            <TeamLink team={team}>..</TeamLink>
-          ) : (
-            <WorkspaceLink team={team} workspace={parent.item}>
-              ..
-            </WorkspaceLink>
-          )
-        ) : (
-          <FolderLink team={team} folder={parent.item}>
-            ..
-          </FolderLink>
-        )}
-      </StyledContentManagerRow>
-    )
-  }, [parent, team])
 
   const onGlobalcheckboxClick = useCallback(() => {
     if (selectedFolderSet.size + selectedDocSet.size !== 0) {
@@ -316,6 +286,7 @@ const ContentManager = ({
                 checked={showArchived}
                 onChange={onToggleDisplayArchived}
                 label='Archived'
+                style={{ fontSize: 13 }}
               />
             )}
             <SortingOption value={order} onChange={onChangeOrder} />
@@ -323,7 +294,6 @@ const ContentManager = ({
         </Flexbox>
       </StyledContentManagerHeaderRow>
       <StyledContentManagerList>
-        {parentRow}
         {orderedFolders.map((folder) => (
           <ContentmanagerFolderRow
             folder={folder}

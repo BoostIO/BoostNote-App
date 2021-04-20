@@ -10,16 +10,17 @@ import { isSameDay, isBefore, subDays, formatDistanceToNow } from 'date-fns'
 import { partition } from 'ramda'
 import TimelineList from '../../components/molecules/Timeline/TimelineList'
 import styled from '../../lib/styled'
-import TeamLink from '../../components/atoms/Link/TeamLink'
+import TeamLink, { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import { linkText } from '../../lib/styled/styleFunctions'
-import PageHeader from '../../components/molecules/PageHeader'
 import { mdiClockOutline } from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
 import { buildIconUrl } from '../../api/files'
 import { SerializedUser } from '../../interfaces/db/user'
 import { getColorFromString } from '../../lib/utils/string'
-import IconMdi from '../../components/atoms/IconMdi'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { topParentId } from '../../../lib/v2/mappers/cloud/topbarTree'
+import { useRouter } from '../../lib/router'
+import EmojiIcon from '../../components/atoms/EmojiIcon'
 
 export interface TimelineUser {
   user: SerializedUser
@@ -28,6 +29,7 @@ export interface TimelineUser {
 }
 
 const TimelinePage = ({ team, events }: TimelinePageData) => {
+  const { push } = useRouter()
   const { permissions = [] } = usePage()
 
   const { today, thisWeek, others } = useMemo(() => {
@@ -68,36 +70,45 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
     return map
   }, [permissions])
 
+  const href = getTeamLinkHref(team, 'timeline')
   if (today.length + thisWeek.length + others.length === 0) {
     return (
-      <Page>
-        <LazyDefaultLayout>
-          <Application
-            content={{
-              reduced: true,
-              topbar: {
-                type: 'v1',
-                left: (
-                  <StyledTimelineTopbar>
-                    <IconMdi path={mdiClockOutline} />
-                    <span style={{ marginLeft: '5px' }}>Timeline</span>
-                  </StyledTimelineTopbar>
-                ),
+      <Application
+        content={{
+          reduced: true,
+          topbar: {
+            breadcrumbs: [
+              {
+                label: 'Timeline',
+                active: true,
+                parentId: topParentId,
+                icon: mdiClockOutline,
+                link: {
+                  href,
+                  navigateTo: () => push(href),
+                },
               },
-              header: (
-                <PageHeader title='Timeline' iconVariant={mdiClockOutline} />
-              ),
-            }}
-          >
-            <StyledTimelinePage>
-              <p className='no-document'>
-                No documents have been created. Share your knowledge with your
-                teammates!
-              </p>
-            </StyledTimelinePage>
-          </Application>
-        </LazyDefaultLayout>
-      </Page>
+            ],
+          },
+          header: (
+            <>
+              <EmojiIcon
+                defaultIcon={mdiClockOutline}
+                style={{ marginRight: 10 }}
+                size={16}
+              />
+              <span style={{ marginRight: 10 }}>Timeline</span>
+            </>
+          ),
+        }}
+      >
+        <StyledTimelinePage>
+          <p className='no-document'>
+            No documents have been created. Share your knowledge with your
+            teammates!
+          </p>
+        </StyledTimelinePage>
+      </Application>
     )
   }
 
@@ -108,16 +119,28 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
           content={{
             reduced: true,
             topbar: {
-              type: 'v1',
-              left: (
-                <StyledTimelineTopbar>
-                  <IconMdi path={mdiClockOutline} />
-                  <span style={{ marginLeft: '5px' }}>Timeline</span>
-                </StyledTimelineTopbar>
-              ),
+              breadcrumbs: [
+                {
+                  label: 'Timeline',
+                  active: true,
+                  parentId: topParentId,
+                  icon: mdiClockOutline,
+                  link: {
+                    href,
+                    navigateTo: () => push(href),
+                  },
+                },
+              ],
             },
             header: (
-              <PageHeader title='Timeline' iconVariant={mdiClockOutline} />
+              <>
+                <EmojiIcon
+                  defaultIcon={mdiClockOutline}
+                  style={{ marginRight: 10 }}
+                  size={16}
+                />
+                <span style={{ marginRight: 10 }}>Timeline</span>
+              </>
             ),
           }}
         >
@@ -177,12 +200,6 @@ export default TimelinePage
 function dateFormatDistanceToNow(date: Date) {
   return `${formatDistanceToNow(date)} ago`
 }
-
-const StyledTimelineTopbar = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 ${({ theme }) => theme.space.small}px;
-`
 
 const StyledTimelinePage = styled.div`
   padding-bottom: ${({ theme }) => theme.space.default}px;
