@@ -7,7 +7,8 @@ export const StyledContentManager = styled.div`
 `
 
 export const StyledContentManagerHeaderRow = styled.div`
-  padding: ${({ theme }) => theme.space.xsmall}px
+  padding: 3px ${({ theme }) => theme.space.xxsmall}px
+    ${({ theme }) => theme.space.xsmall}px
     ${({ theme }) => theme.space.xxsmall}px;
   border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
   border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
@@ -106,7 +107,7 @@ export const StyledContentManagerRow = styled.div`
 
   .label {
     flex: 1 1 auto;
-    margin: 0 ${({ theme }) => theme.space.xsmall}px;
+    margin: 0 ${({ theme }) => theme.space.xsmall}px 0 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
