@@ -126,7 +126,7 @@ const Container = styled.div`
     align-items: center;
     height: 30px;
     white-space: nowrap;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
     align-items: center;
     &:focus {
@@ -138,7 +138,7 @@ const Container = styled.div`
   }
 
   .sidebar__timeline__row__label {
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: flex;
     flex: 1 1 auto;
     text-align: left;

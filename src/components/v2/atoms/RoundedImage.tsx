@@ -68,7 +68,7 @@ const StyledFillerIcon = styled.div<{ size: number }>`
     vertical-align: middle;
     text-align: center;
     margin: auto;
-    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     width: 100%;
     height: 100%;
   }

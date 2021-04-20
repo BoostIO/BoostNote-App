@@ -87,7 +87,7 @@ const SidebarSpace = ({
     </div>
     <span className='sidebar__spaces__label'>{row.label}</span>
     {row.active && (
-      <Icon size={22} path={mdiCheck} className='sidebar__spaces__icon' />
+      <Icon size={20} path={mdiCheck} className='sidebar__spaces__icon' />
     )}
     {row.tooltip != null && (
       <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
@@ -119,7 +119,7 @@ const SidebarContentRow = ({
     className='sidebar__spaces__item sidebar__spaces__item--bottom'
   >
     <div className='sidebar__spaces__icon'>
-      <Icon size={22} path={row.icon} />
+      <Icon size={20} path={row.icon} />
     </div>
     <span className='sidebar__spaces__label'>{row.label}</span>
   </a>

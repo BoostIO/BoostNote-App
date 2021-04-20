@@ -151,7 +151,7 @@ const Container = styled.div<{ depth: number }>`
   align-items: center;
   height: 30px;
   white-space: nowrap;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
   &:focus,
   &.sidebar__search__item--focused {
@@ -180,7 +180,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__search__item__label {
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -213,7 +213,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__search__item__contexts {
-    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 

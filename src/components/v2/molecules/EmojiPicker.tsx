@@ -95,7 +95,7 @@ const Container = styled.div`
   position: fixed;
   z-index: 8002;
   padding: 0;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   box-sizing: border-box;
   border-radius: 4px;
   box-shadow: ${({ theme }) => theme.colors.shadow};

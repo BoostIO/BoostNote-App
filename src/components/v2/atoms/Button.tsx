@@ -14,6 +14,7 @@ export type ButtonVariant =
   | 'secondary'
   | 'danger'
   | 'icon'
+  | 'icon-secondary'
   | 'link'
   | 'transparent'
   | 'warning'
@@ -144,7 +145,7 @@ export default Button
 const StyledButton = styled.button`
   padding: 0 10px;
   border-radius: 2px;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
   border-radius: 4px;
@@ -314,15 +315,36 @@ const StyledButton = styled.button`
     }
   }
 
+  &.button__variant--icon-secondary {
+    background: none;
+    border: 1px solid transparent;
+    color: ${({ theme }) => theme.colors.text.primary};
+    padding: 0 3px !important;
+
+    &:focus {
+      box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
+    }
+
+    &:not(.button__state--disabled) {
+      &:hover,
+      &:focus {
+        background-color: ${({ theme }) => theme.colors.background.quaternary};
+      }
+
+      &:active,
+      &.button__state--active {
+        background-color: ${({ theme }) => theme.colors.background.tertiary};
+      }
+    }
+  }
+
   &.button__size--lg {
     height: 40px;
-    min-width: 46px;
     padding: 0 14px;
   }
 
   &.button__size--sm {
     height: 24px;
-    min-width: 30px;
     padding: 0 6px;
   }
 

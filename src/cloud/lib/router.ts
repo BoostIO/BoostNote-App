@@ -52,8 +52,8 @@ function useRouterStore() {
     browserHistory.go(count)
   }, [])
 
-  const goBack = useCallback(() => go(-1), [go])
-  const goForward = useCallback(() => go(1), [go])
+  const goBack = useCallback(() => browserHistory.goBack(), [])
+  const goForward = useCallback(() => browserHistory.goForward(), [])
 
   useEffect(() => {
     return browserHistory.listen((blocation) => {

@@ -100,7 +100,7 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => {
             variant='icon'
             key={`tree__control__categories`}
             iconPath={mdiDotsHorizontal}
-            iconSize={22}
+            iconSize={20}
             disabled={!categoriesContextIsClosed}
             onClick={async (event) => {
               setCategoriesContextPosition(

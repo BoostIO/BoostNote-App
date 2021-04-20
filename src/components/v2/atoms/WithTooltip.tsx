@@ -94,7 +94,7 @@ const Container = styled.div`
       ${({ theme }) => theme.sizes.spaces.sm}px;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     border-radius: 5px;
-    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     color: ${({ theme }) => theme.colors.text.primary};
 
     .tooltip-text {

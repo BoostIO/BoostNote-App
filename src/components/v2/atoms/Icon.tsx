@@ -2,7 +2,7 @@ import React from 'react'
 import { Icon as MdiIcon } from '@mdi/react'
 import cc from 'classcat'
 
-export type IconSize = 16 | 22 | 26 | 34
+export type IconSize = 16 | 20 | 26 | 34
 
 interface IconProps {
   path: string
@@ -15,7 +15,7 @@ interface IconProps {
 const Icon = ({
   path,
   color = 'currentColor',
-  size = 22,
+  size = 20,
   className,
   spin,
 }: IconProps) => (

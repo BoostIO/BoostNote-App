@@ -182,7 +182,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.background.primary};
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   padding: ${menuVerticalPadding}px 0;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   box-sizing: border-box;
   border-radius: 4px;
   box-shadow: ${({ theme }) => theme.colors.shadow};
@@ -198,7 +198,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     text-align: left;
     transition: 200ms color;
     color: ${({ theme }) => theme.colors.text.primary};
