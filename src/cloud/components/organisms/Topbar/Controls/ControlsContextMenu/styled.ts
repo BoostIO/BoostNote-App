@@ -33,6 +33,7 @@ export const StyledContextMenuContainer = styled.div`
   border: none;
   background-color: ${({ theme }) => theme.baseBackgroundColor};
   box-shadow: ${({ theme }) => theme.baseShadowColor};
+  font-size: 13px;
 
   &.large {
     width: 500px;
@@ -88,7 +89,7 @@ export const StyledIcon = styled.div`
 
 export const StyledContextMenuRow = styled.div`
   position: relative;
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
+  font-size: 13px;
   padding: ${({ theme }) => theme.space.small}px
     ${({ theme }) => theme.space.small}px;
 

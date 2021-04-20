@@ -33,6 +33,7 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.secondary};
     margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
     align-items: center;
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
 
     & > h4 {
       flex: 1 1 20px;

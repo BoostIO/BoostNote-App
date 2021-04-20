@@ -60,7 +60,7 @@ const StyledContextMenuItem = styled.button`
   background: none;
   color: ${({ theme }) => theme.baseTextColor};
   cursor: pointer;
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
+  font-size: 13px;
   line-height: ${({ theme }) => theme.fontSizes.small}px;
   text-align: left;
   white-space: nowrap;
