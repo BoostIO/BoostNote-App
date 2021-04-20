@@ -44,6 +44,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       title,
       defaultValue,
       readOnly,
+      disabled,
       onBlur,
       onChange,
       onClick,
@@ -72,6 +73,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         readOnly={readOnly}
         ref={ref}
         autoComplete={autoComplete}
+        disabled={disabled}
         onBlur={onBlur}
         onChange={onChange}
         onClick={onClick}

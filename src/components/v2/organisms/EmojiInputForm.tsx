@@ -9,6 +9,7 @@ interface EmojiInputFormProps {
   placeholder: string
   defaultEmoji?: string
   defaultIcon: string
+  inputIsDisabled?: boolean
   submitButtonProps: ButtonProps & {
     label: React.ReactNode
     spinning?: boolean
@@ -23,6 +24,7 @@ const EmojiInputForm = ({
   prevRows = [],
   placeholder,
   submitButtonProps,
+  inputIsDisabled,
   onSubmit,
 }: EmojiInputFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -30,7 +32,7 @@ const EmojiInputForm = ({
   const [emoji, setEmoji] = useState(defaultEmoji)
 
   useEffectOnce(() => {
-    if (inputRef.current != null) {
+    if (inputRef.current != null && !inputIsDisabled) {
       inputRef.current.focus()
     }
   })
@@ -53,6 +55,7 @@ const EmojiInputForm = ({
               type: 'input',
               props: {
                 ref: inputRef,
+                disabled: inputIsDisabled,
                 placeholder,
                 value: value,
                 onChange: (event) => setValue(event.target.value),

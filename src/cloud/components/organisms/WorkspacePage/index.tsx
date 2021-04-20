@@ -4,8 +4,6 @@ import {
   mdiLock,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
-  mdiFolderOutline,
-  mdiFileDocumentOutline,
 } from '@mdi/js'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useNav } from '../../../lib/stores/nav'
@@ -16,10 +14,8 @@ import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
 import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
 import { getWorkspaceHref } from '../../atoms/Link/WorkspaceLink'
-import { useModal } from '../../../../lib/v2/stores/modal'
-import EmojiInputForm from '../../../../components/v2/organisms/EmojiInputForm'
 import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
-import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
+import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -33,10 +29,9 @@ enum WorkspaceHeaderActions {
 const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { team } = usePage()
   const { docsMap, foldersMap } = useNav()
-  const { openModal, closeLastModal } = useModal()
   const { query, push } = useRouter()
   const [sending, setSending] = useState<number>()
-  const { createFolder, createDoc } = useCloudUpdater()
+  const { openNewFolderForm, openNewDocForm } = useCloudUI()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
@@ -82,104 +77,41 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     return map
   }, [workspace])
 
-  const openNewDocForm = useCallback(() => {
-    openModal(
-      <EmojiInputForm
-        defaultIcon={mdiFileDocumentOutline}
-        placeholder='Doc title'
-        submitButtonProps={{
-          label: 'Create',
-          spinning: sending === WorkspaceHeaderActions.newDoc,
-        }}
-        prevRows={[
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
-            ),
-          },
-        ]}
-        onSubmit={async (inputValue: string, emoji?: string) => {
-          if (team == null || workspace == null) {
-            return
-          }
-          setSending(WorkspaceHeaderActions.newDoc)
-          await createDoc(
-            team,
-            {
-              workspaceId: workspace.id,
-              title: inputValue,
-              emoji,
-            },
-            closeLastModal
-          )
-          setSending(undefined)
-        }}
-      />,
+  const openCreateDocForm = useCallback(() => {
+    openNewDocForm(
       {
-        showCloseIcon: true,
-        size: 'default',
-        title: 'Create new doc',
-      }
+        team,
+        workspaceId: workspace.id,
+      },
+      {
+        before: () => setSending(WorkspaceHeaderActions.newDoc),
+        after: () => setSending(undefined),
+      },
+      [
+        {
+          description: <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />,
+        },
+      ]
     )
-  }, [
-    openModal,
-    closeLastModal,
-    createDoc,
-    workspace,
-    sending,
-    team,
-    topbarBreadcrumbs,
-  ])
+  }, [openNewDocForm, workspace, team, topbarBreadcrumbs])
 
-  const openNewFolderForm = useCallback(() => {
-    openModal(
-      <EmojiInputForm
-        defaultIcon={mdiFolderOutline}
-        placeholder='Folder name'
-        submitButtonProps={{
-          label: 'Create',
-          spinning: sending === WorkspaceHeaderActions.newFolder,
-        }}
-        prevRows={[
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
-            ),
-          },
-        ]}
-        onSubmit={async (inputValue: string, emoji?: string) => {
-          if (team == null || workspace == null) {
-            return
-          }
-          setSending(WorkspaceHeaderActions.newFolder)
-          await createFolder(
-            team,
-            {
-              workspaceId: workspace.id,
-              folderName: inputValue,
-              description: '',
-              emoji,
-            },
-            closeLastModal
-          )
-          setSending(undefined)
-        }}
-      />,
+  const openCreateFolderForm = useCallback(() => {
+    openNewFolderForm(
       {
-        showCloseIcon: true,
-        size: 'default',
-        title: 'Create new folder',
-      }
+        team,
+        workspaceId: workspace.id,
+      },
+      {
+        before: () => setSending(WorkspaceHeaderActions.newFolder),
+        after: () => setSending(undefined),
+      },
+      [
+        {
+          description: <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />,
+        },
+      ]
     )
-  }, [
-    openModal,
-    closeLastModal,
-    createFolder,
-    workspace,
-    sending,
-    team,
-    topbarBreadcrumbs,
-  ])
+  }, [openNewFolderForm, workspace, team, topbarBreadcrumbs])
 
   if (team == null) {
     return <Application content={{}} />
@@ -210,14 +142,14 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
                   sending: sending === WorkspaceHeaderActions.newDoc,
                   tooltip: 'Create new doc',
                   iconPath: mdiTextBoxPlusOutline,
-                  onClick: openNewDocForm,
+                  onClick: openCreateDocForm,
                 },
                 {
                   disabled: sending != null,
                   sending: sending === WorkspaceHeaderActions.newFolder,
                   tooltip: 'Create new folder',
                   iconPath: mdiFolderMultiplePlusOutline,
-                  onClick: openNewFolderForm,
+                  onClick: openCreateFolderForm,
                 },
               ]}
             />

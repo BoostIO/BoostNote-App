@@ -12,7 +12,6 @@ import { useDebounce, useEffectOnce } from 'react-use'
 import { useModal } from '../lib/stores/modal'
 import { SettingsTab, useSettings } from '../lib/stores/settings'
 import { shortcuts } from '../lib/shortcuts'
-import CreateFolderModal from './organisms/Modal/contents/Folder/CreateFolderModal'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './atoms/AnnouncementAlert'
 import {
@@ -71,12 +70,12 @@ import {
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
-  mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
   mdiLogoutVariant,
   mdiMagnify,
   mdiPaperclip,
+  mdiPencil,
   mdiPlus,
   mdiPlusCircleOutline,
   mdiStar,
@@ -114,7 +113,6 @@ import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
 import EditWorkspaceModal from './organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
-import EditFolderModal from './organisms/Modal/contents/Folder/EditFolderModal'
 import { CreateFolderRequestBody } from '../api/teams/folders'
 import { CreateDocRequestBody } from '../api/teams/docs'
 import { useCloudDnd } from '../../lib/v2/hooks/cloud/useCloudDnd'
@@ -122,6 +120,7 @@ import { NavResource } from '../interfaces/resources'
 import { SidebarDragState } from '../../lib/v2/dnd'
 import cc from 'classcat'
 import { mapTopbarTree } from '../../lib/v2/mappers/cloud/topbarTree'
+import { useCloudUI } from '../../lib/v2/hooks/cloud/useCloudUI'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -142,6 +141,7 @@ const Application = ({
     workspacesMap,
     tagsMap,
     currentParentFolderId,
+    currentWorkspaceId,
   } = useNav()
   const {
     sideBarOpenedLinksIdsSet,
@@ -173,6 +173,11 @@ const Application = ({
   )
   const { openSettingsTab, closeSettingsTab } = useSettings()
   const { usingElectron, sendToElectron } = useElectron()
+  const {
+    openRenameFolderForm,
+    openNewFolderForm,
+    openRenameDocForm,
+  } = useCloudUI()
 
   useEffectOnce(() => {
     if (query.settings === 'upgrade') {
@@ -258,6 +263,8 @@ const Application = ({
       draggedResource,
       dropInDocOrFolder,
       (id: string) => dropInWorkspace(id, updateFolder, updateDoc),
+      openRenameFolderForm,
+      openRenameDocForm,
       team
     )
   }, [
@@ -286,6 +293,8 @@ const Application = ({
     dropInWorkspace,
     updateFolder,
     updateDoc,
+    openRenameFolderForm,
+    openRenameDocForm,
     draggedResource,
     team,
   ])
@@ -380,8 +389,12 @@ const Application = ({
   }, [docsMap, push, team])
 
   const openCreateFolderModal = useCallback(() => {
-    openModal(<CreateFolderModal parentFolderId={currentParentFolderId} />)
-  }, [openModal, currentParentFolderId])
+    openNewFolderForm({
+      team,
+      workspaceId: currentWorkspaceId,
+      parentFolderId: currentParentFolderId,
+    })
+  }, [openNewFolderForm, currentParentFolderId, team, currentWorkspaceId])
 
   useEffect(() => {
     if (team == null || currentUserPermissions == null) {
@@ -725,6 +738,8 @@ function mapTree(
     targetedPosition: SidebarDragState
   ) => void,
   dropInWorkspace: (id: string) => void,
+  openRenameFolderForm: (folder: SerializedFolder) => void,
+  openRenameDocForm: (doc: SerializedDoc) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -871,9 +886,9 @@ function mapTree(
         },
         {
           type: MenuTypes.Normal,
-          icon: mdiFolderCogOutline,
-          label: 'Edit',
-          onClick: () => openModal(<EditFolderModal folder={folder} />),
+          icon: mdiPencil,
+          label: 'Rename',
+          onClick: () => openRenameFolderForm(folder),
         },
         {
           type: MenuTypes.Normal,
@@ -928,6 +943,12 @@ function mapTree(
               ? 'Bookmarked'
               : 'Bookmark',
           onClick: () => toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+        },
+        {
+          type: MenuTypes.Normal,
+          icon: mdiPencil,
+          label: 'Rename',
+          onClick: () => openRenameDocForm(doc),
         },
         {
           type: MenuTypes.Normal,
