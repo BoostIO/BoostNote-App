@@ -214,7 +214,7 @@ export const SideNavLabelStyle = styled.div`
 `
 
 export const StyledNavTagsList = styled.div`
-  flex: 1 1 auto;
+  flex: 20 1 auto;
   height: 20px;
   overflow: hidden;
 
