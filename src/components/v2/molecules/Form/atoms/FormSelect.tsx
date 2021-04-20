@@ -8,7 +8,7 @@ export interface FormSelectOption {
   value: string
 }
 
-interface FormSelectProps {
+export interface FormSelectProps {
   id?: string
   options: FormSelectOption[]
   value?: FormSelectOption

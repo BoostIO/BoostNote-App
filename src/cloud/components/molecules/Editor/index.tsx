@@ -76,6 +76,7 @@ import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -148,6 +149,7 @@ const Editor = ({
   const { docsMap, workspacesMap, foldersMap } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { openRenameDocForm, openRenameFolderForm } = useCloudUI()
 
   const userInfo = useMemo(() => {
     return {
@@ -163,10 +165,6 @@ const Editor = ({
     id: doc.id,
     userInfo,
   })
-
-  useEffect(() => {
-    setTitle(getDocTitle(doc))
-  }, [doc])
 
   const docIsNew = !!state.new
   useEffect(() => {
@@ -599,10 +597,27 @@ const Editor = ({
       foldersMap,
       workspacesMap,
       push,
-      { pageDoc: doc }
+      {
+        pageDoc: {
+          ...doc,
+          head: { ...(doc.head || {}), title },
+        } as SerializedDoc,
+      },
+      openRenameFolderForm,
+      (doc) => openRenameDocForm(doc, titleChangeCallback)
     )
     return breadcrumbs
-  }, [team, foldersMap, workspacesMap, doc, push])
+  }, [
+    team,
+    foldersMap,
+    workspacesMap,
+    doc,
+    push,
+    openRenameDocForm,
+    openRenameFolderForm,
+    titleChangeCallback,
+    title,
+  ])
 
   const updateLayout = useCallback(
     (mode: LayoutMode) => {

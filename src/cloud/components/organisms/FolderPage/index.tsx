@@ -2,7 +2,6 @@ import React, { useMemo, useEffect, useCallback, useState } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
-import { useModal } from '../../../lib/stores/modal'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
@@ -21,13 +20,13 @@ import {
   mdiStarOutline,
   mdiStar,
   mdiDotsHorizontal,
+  mdiFileDocumentOutline,
 } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import EmojiIcon from '../../atoms/EmojiIcon'
 import ContentManager from '../../molecules/ContentManager'
 import { useEmojiPicker } from '../../../lib/stores/emoji'
 import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
-import SingleInputModal from '../Modal/contents/Forms/SingleInputModal'
 import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Application from '../../Application'
@@ -37,6 +36,10 @@ import { mapTopbarBreadcrumbs } from '../../../../lib/v2/mappers/cloud/topbarBre
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
+import { useModal } from '../../../../lib/v2/stores/modal'
+import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
+import EmojiInputForm from '../../../../components/v2/organisms/EmojiInputForm'
+import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
 
 enum FolderHeaderActions {
   newDoc = 0,
@@ -51,15 +54,20 @@ const FolderPage = () => {
     setCurrentPath,
     workspacesMap,
     currentWorkspaceId,
-    createDocHandler,
-    createFolderHandler,
   } = useNav()
-  const { openModal } = useModal()
+  const { openModal, closeLastModal } = useModal()
   const { openEmojiPicker } = useEmojiPicker()
   const [sending, setSending] = useState<number>()
-  const { toggleFolderBookmark, sendingMap, deleteFolder } = useCloudUpdater()
+  const {
+    toggleFolderBookmark,
+    sendingMap,
+    deleteFolder,
+    createFolder,
+    createDoc,
+  } = useCloudUpdater()
   const { push } = useRouter()
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
+  const { openRenameDocForm, openRenameFolderForm } = useCloudUI()
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {
@@ -73,11 +81,26 @@ const FolderPage = () => {
     if (team == null) {
       return []
     }
-
-    return mapTopbarBreadcrumbs(team, foldersMap, workspacesMap, push, {
-      pageFolder: currentFolder,
-    })
-  }, [currentFolder, foldersMap, workspacesMap, push, team])
+    return mapTopbarBreadcrumbs(
+      team,
+      foldersMap,
+      workspacesMap,
+      push,
+      {
+        pageFolder: currentFolder,
+      },
+      openRenameFolderForm,
+      openRenameDocForm
+    )
+  }, [
+    currentFolder,
+    foldersMap,
+    workspacesMap,
+    push,
+    team,
+    openRenameFolderForm,
+    openRenameDocForm,
+  ])
 
   const childDocs = useMemo(() => {
     if (currentFolder == null) {
@@ -169,53 +192,106 @@ const FolderPage = () => {
     return map
   }, [currentWorkspace])
 
-  const submitNewDoc = useCallback(async () => {
-    if (currentFolder == null) {
-      return
-    }
-
-    try {
-      setSending(FolderHeaderActions.newDoc)
-      await createDocHandler({
-        workspaceId: currentFolder.workspaceId,
-        parentFolderId: currentFolder.id,
-      })
-    } catch (error) {}
-    setSending(undefined)
-  }, [createDocHandler, currentFolder])
-
-  const submitNewFolder = useCallback(
-    async (name: string) => {
-      if (name.trim() === '' || currentFolder == null) {
-        return
+  const openNewDocForm = useCallback(() => {
+    openModal(
+      <EmojiInputForm
+        defaultIcon={mdiFileDocumentOutline}
+        placeholder='Doc title'
+        submitButtonProps={{
+          label: 'Create',
+          spinning: sending === FolderHeaderActions.newDoc,
+        }}
+        prevRows={[
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+            ),
+          },
+        ]}
+        onSubmit={async (inputValue: string, emoji?: string) => {
+          if (team == null || currentFolder == null) {
+            return
+          }
+          setSending(FolderHeaderActions.newDoc)
+          await createDoc(
+            team,
+            {
+              workspaceId: currentFolder.workspaceId,
+              parentFolderId: currentFolder.id,
+              title: inputValue,
+              emoji,
+            },
+            closeLastModal
+          )
+          setSending(undefined)
+        }}
+      />,
+      {
+        showCloseIcon: true,
+        size: 'default',
+        title: 'Create new doc',
       }
-
-      try {
-        setSending(FolderHeaderActions.newFolder)
-        await createFolderHandler({
-          workspaceId: currentFolder.workspaceId,
-          parentFolderId: currentFolder.id,
-          folderName: name,
-          description: '',
-        })
-      } catch (error) {}
-
-      setSending(undefined)
-    },
-    [createFolderHandler, currentFolder]
-  )
+    )
+  }, [
+    openModal,
+    closeLastModal,
+    createDoc,
+    currentFolder,
+    sending,
+    team,
+    topBarBreadcrumbs,
+  ])
 
   const openNewFolderForm = useCallback(() => {
     openModal(
-      <SingleInputModal
-        content={<p>Name of your new folder</p>}
-        onSubmit={submitNewFolder}
+      <EmojiInputForm
+        defaultIcon={mdiFolderOutline}
+        placeholder='Folder name'
+        submitButtonProps={{
+          label: 'Create',
+          spinning: sending === FolderHeaderActions.newFolder,
+        }}
+        prevRows={[
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+            ),
+          },
+        ]}
+        onSubmit={async (inputValue: string, emoji?: string) => {
+          if (team == null || currentFolder == null) {
+            return
+          }
+          setSending(FolderHeaderActions.newFolder)
+          await createFolder(
+            team,
+            {
+              workspaceId: currentFolder.workspaceId,
+              parentFolderId: currentFolder.id,
+              folderName: inputValue,
+              description: '',
+              emoji,
+            },
+            closeLastModal
+          )
+          setSending(undefined)
+        }}
       />,
       {
-        classNames: 'fit-content',
+        showCloseIcon: true,
+        size: 'default',
+        title: 'Create new folder',
       }
     )
-  }, [openModal, submitNewFolder])
+  }, [
+    openModal,
+    closeLastModal,
+    createFolder,
+    currentFolder,
+    sending,
+    team,
+    topBarBreadcrumbs,
+  ])
 
   if (team == null) {
     return (
@@ -298,7 +374,7 @@ const FolderPage = () => {
                   sending: sending === FolderHeaderActions.newDoc,
                   tooltip: 'Create new doc',
                   iconPath: mdiTextBoxPlusOutline,
-                  onClick: submitNewDoc,
+                  onClick: openNewDocForm,
                 },
                 {
                   disabled: sending != null,

@@ -127,7 +127,7 @@ const Button = React.forwardRef<
 export const LoadingButton = ({
   spinning,
   ...props
-}: ButtonProps & { spinning?: boolean }) => {
+}: PropsWithChildren<ButtonProps> & { spinning?: boolean }) => {
   if (spinning) {
     return (
       <Button {...props} iconPath={undefined} disabled={true}>
