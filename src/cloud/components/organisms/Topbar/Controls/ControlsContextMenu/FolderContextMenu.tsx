@@ -26,11 +26,10 @@ import {
   useContextMenuKeydownHandler,
 } from '../../../../../lib/keyboard'
 import { MetaKeyText } from '../../../../../lib/keyboard'
-import { useModal } from '../../../../../lib/stores/modal'
-import EditFolderModal from '../../../Modal/contents/Folder/EditFolderModal'
 import IconMdi from '../../../../atoms/IconMdi'
-import { mdiStar, mdiFolderEdit, mdiTrashCan, mdiStarOutline } from '@mdi/js'
+import { mdiStar, mdiTrashCan, mdiStarOutline, mdiPencil } from '@mdi/js'
 import { useToast } from '../../../../../../lib/v2/stores/toast'
+import { useCloudUI } from '../../../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -45,7 +44,7 @@ const FolderContextMenu = ({
   const { updateFoldersMap, deleteFolderHandler } = useNav()
   const { setPartialPageData } = usePage()
   const { pushMessage } = useToast()
-  const { openModal } = useModal()
+  const { openRenameFolderForm } = useCloudUI()
 
   const menuRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
@@ -124,15 +123,15 @@ const FolderContextMenu = ({
               <div>
                 <StyledMenuItem>
                   <StyledIcon>
-                    <IconMdi path={mdiFolderEdit} />
+                    <IconMdi path={mdiPencil} />
                   </StyledIcon>
-                  Edit
+                  Rename
                 </StyledMenuItem>
               </div>
             }
             disabled={sendingBookmark}
             onClick={() => {
-              openModal(<EditFolderModal folder={currentFolder} />)
+              openRenameFolderForm(currentFolder)
               closeContextMenu()
             }}
             id='fD-context-top-edit'

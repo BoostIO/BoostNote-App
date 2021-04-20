@@ -32,12 +32,11 @@ import {
   isFolderBookmarkShortcut,
   isFolderEditShortcut,
 } from '../../../../lib/shortcuts'
-import { useModal } from '../../../../lib/stores/modal'
-import EditFolderModal from '../../Modal/contents/Folder/EditFolderModal'
 import SideNavigatorIconButton from './SideNavigatorIconButton'
 import Tooltip from '../../../atoms/Tooltip'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useCloudUI } from '../../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface SideNavigatorFolderControlsProps {
   folder: SerializedFolderWithBookmark
@@ -53,8 +52,8 @@ const SideNavigatorFolderControls = ({
   const { deleteFolderHandler, updateFoldersMap, createDocHandler } = useNav()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const { popup } = useContextMenu()
-  const { openModal } = useModal()
   const [sendingBookmark, setSendingBookmark] = useState<boolean>(false)
+  const { openRenameFolderForm } = useCloudUI()
 
   const toggleBookmark = useCallback(async () => {
     if (sendingBookmark) {
@@ -94,7 +93,7 @@ const SideNavigatorFolderControls = ({
           type: MenuTypes.Normal,
           icon: <IconMdi path={mdiFolderCogOutline} size={16} />,
           label: 'Edit Folder',
-          onClick: async () => openModal(<EditFolderModal folder={folder} />),
+          onClick: () => openRenameFolderForm(folder),
         },
         {
           type: MenuTypes.Normal,
@@ -123,7 +122,7 @@ const SideNavigatorFolderControls = ({
       popup,
       folder,
       toggleBookmark,
-      openModal,
+      openRenameFolderForm,
       sendingBookmark,
       deleteFolderHandler,
     ]
@@ -161,7 +160,7 @@ const SideNavigatorFolderControls = ({
 
       if (isFolderEditShortcut(event)) {
         preventKeyboardEventPropagation(event)
-        openModal(<EditFolderModal folder={folder} />)
+        openRenameFolderForm(folder)
         return
       }
 
@@ -183,7 +182,7 @@ const SideNavigatorFolderControls = ({
       onNewFolderClick,
       folder,
       deleteFolderHandler,
-      openModal,
+      openRenameFolderForm,
     ]
   )
   useCapturingGlobalKeyDownHandler(keyDownHandler)
