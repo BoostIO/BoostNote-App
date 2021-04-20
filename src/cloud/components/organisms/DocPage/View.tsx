@@ -28,6 +28,7 @@ import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
+import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -56,6 +57,7 @@ const ViewPage = ({
   const { pushMessage } = useToast()
   const { preferences } = usePreferences()
   const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { openRenameDocForm, openRenameFolderForm } = useCloudUI()
 
   const unarchiveHandler = useCallback(async () => {
     try {
@@ -80,7 +82,9 @@ const ViewPage = ({
             foldersMap,
             workspacesMap,
             push,
-            { pageDoc: doc }
+            { pageDoc: doc },
+            currentUserPermissions != null ? openRenameFolderForm : undefined,
+            currentUserPermissions != null ? openRenameDocForm : undefined
           ),
           children:
             currentUserPermissions != null ? (

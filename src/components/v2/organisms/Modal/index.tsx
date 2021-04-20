@@ -5,7 +5,6 @@ import { useModal } from '../../../../lib/v2/stores/modal'
 import { isActiveElementAnInput } from '../../../../lib/v2/dom'
 import { useGlobalKeyDownHandler } from '../../../../lib/v2/keyboard'
 import { usePathnameChangeEffect } from '../../../../cloud/lib/router'
-import Icon from '../../atoms/Icon'
 import styled from '../../../../lib/v2/styled'
 import Button from '../../atoms/Button'
 
@@ -47,10 +46,15 @@ const Modal = () => {
                 iconPath={mdiClose}
                 onClick={closeLastModal}
                 className='modal__window__close'
-              >
-                <Icon path={mdiClose} />
-              </Button>
+                iconSize={26}
+              />
             )}
+            <div className='modal__wrapper'>
+              {modal.title != null && (
+                <h3 className='modal__title'>{modal.title}</h3>
+              )}
+              <div className='modal__content'>{modal.content}</div>
+            </div>
           </div>
         </React.Fragment>
       ))}
@@ -102,7 +106,8 @@ const Container = styled.div`
 
     &.modal__window__size--default {
       width: 900px;
-      height: 60vh;
+      min-height: 200px;
+      max-height: 60vh;
     }
 
     &.modal__window__size--large {
@@ -118,10 +123,31 @@ const Container = styled.div`
 
   .modal__window__close {
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    right: ${({ theme }) => theme.sizes.spaces.df}px;
     white-space: nowrap;
     z-index: 1;
+  }
+
+  .modal__wrapper {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+
+  .modal__title {
+    flex: 0 0 auto;
+    margin: ${({ theme }) => theme.sizes.spaces.sm}px 0
+      ${({ theme }) => theme.sizes.spaces.md}px 0;
+    font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
+  }
+
+  .modal__content {
+    flex: 1 1 10px;
   }
 `
 export default Modal

@@ -18,6 +18,12 @@ import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
 import { TopbarBreadcrumbProps } from '../../../../components/v2/organisms/Topbar'
 import { topParentId } from './topbarTree'
 
+type AddedProperties =
+  | { type: 'folder'; item: SerializedFolder }
+  | { type: 'doc'; item: SerializedDoc }
+  | { type: 'wp'; item: SerializedWorkspace }
+  | { type: undefined; item: undefined }
+
 export function mapTopbarBreadcrumbs(
   team: SerializedTeam,
   foldersMap: Map<string, SerializedFolderWithBookmark>,
@@ -26,9 +32,11 @@ export function mapTopbarBreadcrumbs(
   {
     pageDoc,
     pageFolder,
-  }: { pageDoc?: SerializedDoc; pageFolder?: SerializedFolder }
+  }: { pageDoc?: SerializedDoc; pageFolder?: SerializedFolder },
+  renameFolder?: (folder: SerializedFolder) => void,
+  renameDoc?: (doc: SerializedDoc) => void
 ) {
-  const items: TopbarBreadcrumbProps[] = []
+  const items: (TopbarBreadcrumbProps & AddedProperties)[] = []
 
   let parent:
     | { type: 'folder'; item?: SerializedFolder }
@@ -47,10 +55,16 @@ export function mapTopbarBreadcrumbs(
       parentId: getUnsignedId(pageDoc.workspaceId, pageDoc.parentFolderId),
       icon: mdiFileDocumentOutline,
       emoji: pageDoc.emoji,
+      type: 'doc',
+      item: pageDoc,
       link: {
         href: getDocLinkHref(pageDoc, team, 'index'),
         navigateTo: () => push(getDocLinkHref(pageDoc, team, 'index')),
       },
+      controls:
+        renameDoc != null
+          ? [{ label: 'Rename doc', onClick: () => renameDoc(pageDoc) }]
+          : undefined,
     })
   }
 
@@ -68,10 +82,21 @@ export function mapTopbarBreadcrumbs(
         pageFolder.parentFolderId
       ),
       emoji: pageFolder.emoji,
+      type: 'folder',
+      item: pageFolder,
       link: {
         href: getFolderHref(pageFolder, team, 'index'),
         navigateTo: () => push(getFolderHref(pageFolder, team, 'index')),
       },
+      controls:
+        renameFolder != null
+          ? [
+              {
+                label: 'Rename folder',
+                onClick: () => renameFolder(pageFolder),
+              },
+            ]
+          : [],
     })
   }
 
@@ -82,12 +107,24 @@ export function mapTopbarBreadcrumbs(
       break
     }
 
-    const href =
+    const addedProperties: AddedProperties & { href: string } =
       parent.item == null
-        ? getTeamLinkHref(team, 'index')
+        ? {
+            href: getTeamLinkHref(team, 'index'),
+            item: undefined,
+            type: undefined,
+          }
         : parent.type === 'folder'
-        ? getFolderHref(parent.item, team, 'index')
-        : getWorkspaceHref(parent.item, team, 'index')
+        ? {
+            href: getFolderHref(parent.item, team, 'index'),
+            type: 'folder',
+            item: parent.item,
+          }
+        : {
+            href: getWorkspaceHref(parent.item, team, 'index'),
+            type: 'wp',
+            item: parent.item,
+          }
 
     items.unshift({
       label: parent.item?.name || '..',
@@ -95,16 +132,25 @@ export function mapTopbarBreadcrumbs(
         parent.item == null || parent.type === 'workspace'
           ? topParentId
           : getUnsignedId(parent.item.workspaceId, parent.item.parentFolderId),
-
       icon:
         parent.type === 'workspace' && !parent.item?.public
           ? mdiLock
           : undefined,
       emoji: parent.type === 'folder' ? parent.item?.emoji : undefined,
+      ...addedProperties,
       link: {
-        href,
-        navigateTo: () => push(href),
+        href: addedProperties.href,
+        navigateTo: () => push(addedProperties.href),
       },
+      controls:
+        addedProperties.type === 'folder' && renameFolder != null
+          ? [
+              {
+                label: 'Rename folder',
+                onClick: () => renameFolder(addedProperties.item),
+              },
+            ]
+          : undefined,
     })
 
     if (parent.type === 'workspace') {

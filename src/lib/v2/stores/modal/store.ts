@@ -10,6 +10,7 @@ function useModalStore(): ModalsContext {
     (content: React.ReactNode, options: ModalOpeningOptions = {}) => {
       const modal: ModalElement = {
         content,
+        ...options,
         size: options.size || 'default',
       }
       if (!options.keepAll) {
@@ -38,7 +39,12 @@ function useModalStore(): ModalsContext {
   const closeLastModal = useCallback(() => {
     setModals((prev) => {
       const arr = prev.slice()
-      arr.pop()
+      const closedModal = arr.pop()
+
+      if (closedModal != null && closedModal.onClose != null) {
+        closedModal.onClose()
+      }
+
       return arr
     })
   }, [])

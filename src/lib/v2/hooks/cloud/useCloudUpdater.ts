@@ -10,6 +10,7 @@ import {
   DestroyDocResponseBody,
   unarchiveDoc,
   updateDoc,
+  updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
 } from '../../../../cloud/api/teams/docs'
@@ -26,8 +27,10 @@ import {
   destroyFolder,
   DestroyFolderResponseBody,
   updateFolder,
+  UpdateFolderEmojiResponseBody,
   UpdateFolderRequestBody,
   UpdateFolderResponseBody,
+  updateFolderEmoji,
 } from '../../../../cloud/api/teams/folders'
 import {
   createFolderBookmark,
@@ -75,7 +78,11 @@ export function useCloudUpdater() {
   const { sendingMap, send } = useBulkApi()
 
   const createDocApi = useCallback(
-    async (team: SerializedTeam, body: CreateDocRequestBody) => {
+    async (
+      team: SerializedTeam,
+      body: CreateDocRequestBody,
+      afterSuccess?: () => void
+    ) => {
       await send(shortid.generate(), 'create', {
         api: () => createDoc({ id: team.id }, body),
         cb: (res: CreateDocResponseBody) => {
@@ -86,6 +93,9 @@ export function useCloudUpdater() {
             },
             { new: true }
           )
+          if (afterSuccess != null) {
+            afterSuccess()
+          }
         },
       })
     },
@@ -93,7 +103,11 @@ export function useCloudUpdater() {
   )
 
   const createFolderApi = useCallback(
-    async (team: SerializedTeam, body: CreateFolderRequestBody) => {
+    async (
+      team: SerializedTeam,
+      body: CreateFolderRequestBody,
+      afterSuccess?: () => void
+    ) => {
       await send(shortid.generate(), 'create', {
         api: () => createFolder(team, body),
         cb: (res: CreateFolderResponseBody) => {
@@ -106,6 +120,9 @@ export function useCloudUpdater() {
             },
           ])
           push(`${getTeamURL(team)}${getFolderURL(res.folder)}`)
+          if (afterSuccess != null) {
+            afterSuccess()
+          }
         },
       })
     },
@@ -460,6 +477,38 @@ export function useCloudUpdater() {
     ]
   )
 
+  const updateDocEmojiApi = useCallback(
+    async (target: SerializedDoc, emoji?: string) => {
+      await send(target.id, 'emoji', {
+        api: () => updateDocEmoji(target, emoji),
+        cb: ({ doc }: UpdateDocResponseBody) => {
+          updateDocsMap([doc.id, doc])
+
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateFolderEmojiApi = useCallback(
+    async (target: SerializedFolder, emoji?: string) => {
+      await send(target.id, 'emoji', {
+        api: () => updateFolderEmoji(target, emoji),
+        cb: ({ folder }: UpdateFolderEmojiResponseBody) => {
+          updateFoldersMap([folder.id, folder])
+
+          if (pageFolder != null && folder.id === pageFolder.id) {
+            setPartialPageData({ pageFolder: folder })
+          }
+        },
+      })
+    },
+    [pageFolder, updateFoldersMap, setPartialPageData, send]
+  )
+
   return {
     sendingMap,
     createDoc: createDocApi,
@@ -472,5 +521,7 @@ export function useCloudUpdater() {
     deleteDoc,
     updateFolder: updateFolderApi,
     updateDoc: updateDocApi,
+    updateDocEmoji: updateDocEmojiApi,
+    updateFolderEmoji: updateFolderEmojiApi,
   }
 }
