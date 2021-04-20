@@ -273,8 +273,6 @@ const Editor = ({
         return
       }
 
-      console.log(`changing to ${newTitle}`)
-
       const realtimeTitle = realtime.doc.getText('title') as YText
       // TODO: switch to delta diff implementation
       realtimeTitle.delete(0, realtimeTitle.toString().length)
