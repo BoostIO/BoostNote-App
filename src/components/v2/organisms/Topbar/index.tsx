@@ -84,8 +84,8 @@ const Topbar: AppComponent<TopbarProps> = ({
         )}
         <div className='topbar__navigation'>
           <Button
-            variant='icon'
-            iconSize={22}
+            variant='icon-secondary'
+            iconSize={20}
             iconPath={mdiArrowLeft}
             disabled={navigation?.goBack == null}
             onClick={() =>
@@ -93,8 +93,8 @@ const Topbar: AppComponent<TopbarProps> = ({
             }
           />
           <Button
-            variant='icon'
-            iconSize={22}
+            variant='icon-secondary'
+            iconSize={20}
             size={'sm'}
             iconPath={mdiArrowRight}
             disabled={navigation?.goForward == null}
@@ -164,7 +164,7 @@ const Topbar: AppComponent<TopbarProps> = ({
             >
               <Button
                 variant={control.variant}
-                iconSize={22}
+                iconSize={20}
                 size={'sm'}
                 iconPath={control.iconPath}
                 disabled={control.disabled}
@@ -192,7 +192,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   flex: 0 0 auto;
   -webkit-app-region: drag;
   padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;

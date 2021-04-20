@@ -67,7 +67,7 @@ const Container = styled.div`
     border-style: solid;
     border-width: 0 1px 1px 1px;
     padding: ${({ theme }) => theme.sizes.spaces.df}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     box-sizing: border-box;
     border-radius: 0 0 5px 5px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.35);
@@ -97,7 +97,7 @@ const Container = styled.div`
   .dialog__message {
     margin: 0;
     padding: 0;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
     flex: 0 0 auto;
   }

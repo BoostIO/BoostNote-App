@@ -722,11 +722,11 @@ const Editor = ({
               ? [
                   {
                     variant: 'warning' as const,
-                    disabled: true,
-                    label: 'Connecting...',
+                    onClick: () => realtime.connect(),
+                    label: 'Reconnect',
                     tooltip: (
                       <>
-                        Attempting auto-reconnection
+                        Please try reconnecting.
                         <br />
                         Changes will not be synced with the server until
                         reconnection

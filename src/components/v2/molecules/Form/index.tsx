@@ -97,7 +97,7 @@ const Form: AppComponent<FormProps> = ({
 export default Form
 
 const Container = styled.form`
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .form__row__description {
     color: ${({ theme }) => theme.colors.text.subtle};

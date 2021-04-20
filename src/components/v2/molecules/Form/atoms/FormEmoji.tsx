@@ -80,9 +80,9 @@ const FormEmoji = React.forwardRef<HTMLDivElement, FormEmojiProps>(
         onFocus={onFocus}
       >
         {emoji != null ? (
-          <Emoji emoji={emoji} set='apple' size={26} />
+          <Emoji emoji={emoji} set='apple' size={20} />
         ) : (
-          <Icon path={defaultIcon} size={26} />
+          <Icon path={defaultIcon} size={20} />
         )}
       </Container>
     )
@@ -94,7 +94,7 @@ export default FormEmoji
 const Container = styled.button`
   padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
   background: none;

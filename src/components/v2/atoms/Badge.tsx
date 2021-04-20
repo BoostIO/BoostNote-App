@@ -24,7 +24,7 @@ const Container = styled.div`
   padding: ${({ theme }) => theme.sizes.spaces.xsm}px
     ${({ theme }) => theme.sizes.spaces.sm}px;
   border-radius: 10px;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   &.badge--bordered {
     background-color: transparent;

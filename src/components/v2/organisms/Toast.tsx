@@ -133,7 +133,7 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
       >
         <div className='toast__item__status'>
           <Icon
-            size={22}
+            size={20}
             path={
               this.props.item.type === 'success'
                 ? mdiCheckCircleOutline
@@ -155,7 +155,7 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
           className='toast__item__close'
           variant='icon'
           iconPath={mdiClose}
-          iconSize={22}
+          iconSize={20}
           onClick={() => this.props.onClose(this.props.item)}
         />
       </div>

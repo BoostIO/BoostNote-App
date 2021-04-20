@@ -16,7 +16,7 @@ export const contentManagerSortOptions: FormSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <Icon path={mdiSortClockAscending} size={22} />{' '}
+        <Icon path={mdiSortClockAscending} size={20} />{' '}
         <span className='label'>Latest Updated</span>
       </Flexbox>
     ),
@@ -25,7 +25,7 @@ export const contentManagerSortOptions: FormSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <Icon path={mdiSortAlphabeticalAscending} size={22} />{' '}
+        <Icon path={mdiSortAlphabeticalAscending} size={20} />{' '}
         <span className='label'>Title A-Z</span>
       </Flexbox>
     ),
@@ -34,7 +34,7 @@ export const contentManagerSortOptions: FormSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <Icon path={mdiSortAlphabeticalDescending} size={22} />{' '}
+        <Icon path={mdiSortAlphabeticalDescending} size={20} />{' '}
         <span className='label'>Title Z-A</span>
       </Flexbox>
     ),
@@ -69,7 +69,7 @@ const ContentManagerSort = ({
 
 const StyledSortingOption = styled.div`
   .form__select {
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     width: 50px;
 
     .form__select__control {

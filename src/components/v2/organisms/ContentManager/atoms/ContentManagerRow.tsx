@@ -127,7 +127,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     flex: 0 2 auto;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 

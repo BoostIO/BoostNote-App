@@ -122,7 +122,7 @@ const Container = styled.ul`
     display: block;
     width: 100%;
     color: ${({ theme }) => theme.colors.text.subtle};
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }
 `
 

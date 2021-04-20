@@ -111,7 +111,7 @@ const Container = styled.div`
   border-left: 1px solid transparent;
   background-color: ${({ theme }) => theme.colors.background.secondary};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .metadata__container {
     position: relative;
@@ -158,7 +158,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     line-height: 30px;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     padding: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
     height: fit-content;
   }
@@ -205,7 +205,7 @@ const Container = styled.div`
     border: 0;
     color: ${({ theme }) => theme.colors.text.primary};
     cursor: pointer;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.secondary};

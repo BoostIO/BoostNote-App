@@ -95,7 +95,7 @@ export default FormInput
 const StyledInput = styled.input`
   padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
   background: none;

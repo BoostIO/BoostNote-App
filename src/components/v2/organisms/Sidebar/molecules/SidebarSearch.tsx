@@ -349,7 +349,7 @@ const Container = styled.div`
 
   .sidebar__search__empty {
     margin: 0px ${({ theme }) => theme.sizes.spaces.df}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
@@ -363,7 +363,7 @@ const Container = styled.div`
   .sidebar__search__category {
     justify-content: flex-start;
     margin: 0px ${({ theme }) => theme.sizes.spaces.df}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     white-space: nowrap;
     text-align: left;
 

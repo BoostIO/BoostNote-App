@@ -150,7 +150,7 @@ const Container = styled.div<{ depth: number }>`
   align-items: center;
   height: 26px;
   white-space: nowrap;
-  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .sidebar__tree__item__controls {
     min-width: 0;
@@ -190,7 +190,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__tree__item__label {
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: flex;
     align-items: center;
     flex: 1 1 auto;
@@ -220,7 +220,7 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &:not(.sidebar__category) {
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     &:active,
     &.sidebar__tree__item--active {
       background-color: ${({ theme }) => theme.colors.variants.primary.base};
