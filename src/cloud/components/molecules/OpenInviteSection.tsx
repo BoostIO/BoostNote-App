@@ -230,7 +230,7 @@ const StyledResetLinkButton = styled.button`
   background-color: transparent;
   padding: 0;
   color: ${({ theme }) => theme.primaryTextColor};
-  font-size: 16px;
+  font-size: inherit;
   display: inline;
   cursor: pointer;
 
