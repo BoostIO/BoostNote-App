@@ -133,6 +133,7 @@ const FolderContextMenu = ({
             disabled={sendingBookmark}
             onClick={() => {
               openModal(<EditFolderModal folder={currentFolder} />)
+              closeContextMenu()
             }}
             id='fD-context-top-edit'
             tooltip='E'
