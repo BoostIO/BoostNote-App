@@ -1,8 +1,7 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { mdiArrowLeft, mdiArrowRight, mdiChevronRight } from '@mdi/js'
-import styled from '../../../../lib/v2/styled'
-import { AppComponent, ControlButtonProps } from '../../../../lib/v2/types'
-import Button from '../../atoms/Button'
+import { AppComponent } from '../../../../lib/v2/types'
+import Button, { ButtonProps, ButtonVariant } from '../../atoms/Button'
 import Icon from '../../atoms/Icon'
 import TopbarBreadcrumb from './molecules/TopbarBreadcrumb'
 import { BreadCrumbTreeItem } from '../../../../lib/v2/mappers/types'
@@ -11,21 +10,37 @@ import {
   useContextMenu,
 } from '../../../../lib/v2/stores/contextMenu'
 import TopbarTree from './molecules/TopbarTree'
+import cc from 'classcat'
+import { scrollbarOverlay } from '../../../../lib/v2/styled/styleFunctions'
+import WithTooltip from '../../atoms/WithTooltip'
+import styled from '../../../../lib/v2/styled'
 
-export interface TopbarProps {
-  controls?: ControlButtonProps[]
-  breadcrumbs?: {
-    link: { href: string; navigateTo: () => void }
-    label: string
-    parentId: string
-    active?: boolean
-    controls: { label: string; onClick: () => void }[]
-  }[]
+export interface TopbarBreadcrumbProps {
+  link: { href: string; navigateTo: () => void }
+  label: string
+  emoji?: string
+  icon?: string
+  parentId: string
+  active?: boolean
+  controls?: { label: string; onClick: () => void }[]
+}
+
+export interface TopbarPageProps {
+  controls?: (ButtonProps & {
+    variant: ButtonVariant
+    label?: React.ReactNode
+    tooltip?: React.ReactNode
+  })[]
+  breadcrumbs?: TopbarBreadcrumbProps[]
+}
+
+export type TopbarProps = TopbarPageProps & {
   tree?: Map<string, BreadCrumbTreeItem[]>
   navigation?: {
     goBack?: () => void
     goForward?: () => void
   }
+  children?: React.ReactNode
 }
 
 const Topbar: AppComponent<TopbarProps> = ({
@@ -41,6 +56,14 @@ const Topbar: AppComponent<TopbarProps> = ({
     left: number
     id: string
   }>()
+  const [scrollingBreadcrumbs, setScrollingBreadcrumbs] = useState(false)
+  const scrollTimer = useRef<any>()
+  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
+    setScrollingBreadcrumbs(true)
+    scrollTimer.current = setTimeout(() => {
+      setScrollingBreadcrumbs(false)
+    }, 600)
+  }, [])
 
   const openNavTree = useCallback(
     (parentId: string, props: { bottom: number; left: number }) => {
@@ -80,7 +103,13 @@ const Topbar: AppComponent<TopbarProps> = ({
             }
           />
         </div>
-        <div className='topbar__breadcrumbs'>
+        <div
+          className={cc([
+            'topbar__breadcrumbs',
+            scrollingBreadcrumbs && 'topbar__breadcrumbs--scrolling',
+          ])}
+          onScroll={onScrollHandler}
+        >
           {breadcrumbs.map((breadcrumb, i) => (
             <React.Fragment key={`topbar__breadcrumb__${i}`}>
               <TopbarBreadcrumb
@@ -88,11 +117,15 @@ const Topbar: AppComponent<TopbarProps> = ({
                 className='topbar__breadcrumbs__item'
                 label={breadcrumb.label}
                 href={breadcrumb.link.href}
-                controls={breadcrumb.controls}
                 active={breadcrumb.active}
+                emoji={breadcrumb.emoji}
+                defaultIcon={breadcrumb.icon}
                 onContextMenu={(event: React.MouseEvent) => {
                   event.preventDefault()
                   event.stopPropagation()
+                  if (breadcrumb.controls == null) {
+                    return
+                  }
                   popup(
                     event,
                     breadcrumb.controls.map((control) => {
@@ -108,25 +141,39 @@ const Topbar: AppComponent<TopbarProps> = ({
                 onDoubleClick={breadcrumb.link.navigateTo}
               />
               {i !== breadcrumbs.length - 1 && (
-                <Icon path={mdiChevronRight} size={16} />
+                <Icon
+                  path={mdiChevronRight}
+                  size={16}
+                  className='topbar__separator'
+                />
               )}
             </React.Fragment>
           ))}
+          {children != null && (
+            <div className='topbar__children'>{children}</div>
+          )}
         </div>
-        {children}
       </div>
       {controls.length > 0 && (
         <div className='topbar__controls'>
           {controls.map((control, i) => (
-            <Button
+            <WithTooltip
               key={`topbar__control__${i}`}
-              variant='icon'
-              iconSize={22}
-              size={'sm'}
-              iconPath={control.icon}
-              disabled={control.disabled}
-              onClick={control.onClick}
-            />
+              tooltip={control.tooltip}
+              side='bottom'
+            >
+              <Button
+                variant={control.variant}
+                iconSize={22}
+                size={'sm'}
+                iconPath={control.iconPath}
+                disabled={control.disabled}
+                active={control.active}
+                onClick={control.onClick}
+              >
+                {control.label}
+              </Button>
+            </WithTooltip>
           ))}
         </div>
       )}
@@ -148,19 +195,24 @@ const Container = styled.div`
   font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   flex: 0 0 auto;
   -webkit-app-region: drag;
-  padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
-  padding-right: ${({ theme }) => theme.sizes.spaces.l}px;
+  padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  min-width: 100%;
 
   .topbar__content {
-    flex: 1 1 0;
+    flex: 1 1 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    height: 100%;
+    min-width: 0;
   }
 
   .topbar__controls,
-  .topbar__navigation {
+  .topbar__navigation,
+  .topbar__separator {
     display: flex;
+    min-width: 0;
     flex: 0 0 auto;
     flex-wrap: nowrap;
     align-items: center;
@@ -173,7 +225,7 @@ const Container = styled.div`
   .topbar__separator {
     height: 24px;
     width: 24px;
-    margin: 0 -5px;
+    margin: 0 -1px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -185,41 +237,21 @@ const Container = styled.div`
     flex-shrink: 0;
   }
 
+  .topbar__children {
+    display: flex;
+    flex: 1 1 10px;
+    height: 100%;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
   .topbar__breadcrumbs {
     display: flex;
     flex: 1 1 10px;
     height: 100%;
     align-items: center;
     color: ${({ theme }) => theme.colors.text.subtle};
-    overflow-x: hidden;
-
-    .topbar__breadcrumbs__item {
-      display: flex;
-      align-items: center;
-      padding: 2px 4px;
-      border-radius: 3px;
-      white-space: nowrap;
-      background-color: transparent;
-      color: ${({ theme }) => theme.colors.text.primary};
-      cursor: pointer;
-      text-decoration: none !important;
-
-      .label {
-        margin-left: 4px;
-      }
-      .hoverIcon {
-        margin-left: 4px;
-        opacity: 0;
-      }
-
-      &:hover,
-      &:focus {
-        background-color: ${({ theme }) => theme.colors.background.tertiary};
-        .hoverIcon {
-          opacity: 1;
-        }
-      }
-    }
+    ${(theme) => scrollbarOverlay(theme, 'x', 'topbar__breadcrumbs--scrolling')}
   }
 `
 

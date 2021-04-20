@@ -3,7 +3,6 @@ import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
 import {
-  mdiFolderOutline,
   mdiStar,
   mdiStarOutline,
   mdiFolderMoveOutline,
@@ -186,7 +185,6 @@ const ContentmanagerFolderRow = ({
         <FolderLink folder={folder} team={team} id={`cm-folder-${folder.id}`}>
           <ContentManagerRowLinkContent
             label={folder.name}
-            defaultIcon={mdiFolderOutline}
             emoji={folder.emoji}
             date={folder.updatedAt}
           />

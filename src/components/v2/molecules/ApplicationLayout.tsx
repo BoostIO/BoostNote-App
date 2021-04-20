@@ -34,15 +34,17 @@ const Container = styled.div`
     flex-direction: row;
     overflow: initial;
     align-items: flex-start;
+    flex-wrap: nowrap;
   }
 
   .application__sidebar {
     flex: 0 0 auto;
+    min-width: 0;
   }
 
   .application__content {
-    width: 100%;
-    flex: 1 1 auto;
+    flex: 1 1 100%;
+    min-width: 0;
   }
 `
 

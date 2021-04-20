@@ -1,34 +1,42 @@
 import React, { useMemo, useEffect, useCallback, useState } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
-import ColoredBlock from '../../atoms/ColoredBlock'
 import { useTitle } from 'react-use'
 import { useModal } from '../../../lib/stores/modal'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
 } from '../../../lib/keyboard'
-import { isFolderEditShortcut } from '../../../lib/shortcuts'
+import {
+  isFolderBookmarkShortcut,
+  isFolderDeleteShortcut,
+  isFolderEditShortcut,
+} from '../../../lib/shortcuts'
 import EditFolderModal from '../Modal/contents/Folder/EditFolderModal'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import {
   mdiFolderOutline,
   mdiTextBoxPlusOutline,
   mdiFolderMultiplePlusOutline,
+  mdiStarOutline,
+  mdiStar,
+  mdiDotsHorizontal,
 } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import FolderControls from '../Topbar/Controls/FolderControls'
 import EmojiIcon from '../../atoms/EmojiIcon'
-import ContentManager, {
-  ContentManagerParent,
-} from '../../molecules/ContentManager'
+import ContentManager from '../../molecules/ContentManager'
 import { useEmojiPicker } from '../../../lib/stores/emoji'
 import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
 import SingleInputModal from '../Modal/contents/Forms/SingleInputModal'
 import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Application from '../../Application'
-import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
+import ErrorLayout from '../../../../components/v2/templates/ErrorLayout'
+import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
+import { mapTopbarBreadcrumbs } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
+import { useRouter } from '../../../lib/router'
+import { LoadingButton } from '../../../../components/v2/atoms/Button'
+import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
 
 enum FolderHeaderActions {
   newDoc = 0,
@@ -49,6 +57,9 @@ const FolderPage = () => {
   const { openModal } = useModal()
   const { openEmojiPicker } = useEmojiPicker()
   const [sending, setSending] = useState<number>()
+  const { toggleFolderBookmark, sendingMap, deleteFolder } = useCloudUpdater()
+  const { push } = useRouter()
+  const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {
@@ -57,6 +68,16 @@ const FolderPage = () => {
 
     return foldersMap.get(pageFolder.id)
   }, [foldersMap, pageFolder])
+
+  const topBarBreadcrumbs = useMemo(() => {
+    if (team == null) {
+      return []
+    }
+
+    return mapTopbarBreadcrumbs(team, foldersMap, workspacesMap, push, {
+      pageFolder: currentFolder,
+    })
+  }, [currentFolder, foldersMap, workspacesMap, push, team])
 
   const childDocs = useMemo(() => {
     if (currentFolder == null) {
@@ -108,28 +129,29 @@ const FolderPage = () => {
 
   const folderPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      if (team == null) {
+      if (team == null || pageFolder == null) {
         return
       }
+
       if (isFolderEditShortcut(event)) {
-        if (pageFolder == null) {
-          return
-        }
         preventKeyboardEventPropagation(event)
         openModal(<EditFolderModal folder={pageFolder} />)
         return
       }
+
+      if (isFolderBookmarkShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        toggleFolderBookmark(team.id, pageFolder.id, pageFolder.bookmarked)
+        return
+      }
+      if (isFolderDeleteShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        deleteFolder(pageFolder)
+        return
+      }
     }
-  }, [openModal, team, pageFolder])
+  }, [openModal, team, pageFolder, deleteFolder, toggleFolderBookmark])
   useGlobalKeyDownHandler(folderPageControlsKeyDownHandler)
-
-  const parentFolder = useMemo(() => {
-    if (currentFolder == null || currentFolder.parentFolderId == null) {
-      return
-    }
-
-    return foldersMap.get(currentFolder.parentFolderId)
-  }, [foldersMap, currentFolder])
 
   const currentWorkspace = useMemo(() => {
     if (currentWorkspaceId == null) {
@@ -146,18 +168,6 @@ const FolderPage = () => {
 
     return map
   }, [currentWorkspace])
-
-  const parent: ContentManagerParent | undefined = useMemo(() => {
-    if (parentFolder != null) {
-      return { type: 'folder', item: parentFolder }
-    }
-
-    if (currentWorkspace != null) {
-      return { type: 'workspace', item: currentWorkspace }
-    }
-
-    return undefined
-  }, [parentFolder, currentWorkspace])
 
   const submitNewDoc = useCallback(async () => {
     if (currentFolder == null) {
@@ -208,7 +218,15 @@ const FolderPage = () => {
   }, [openModal, submitNewFolder])
 
   if (team == null) {
-    return null
+    return (
+      <Application
+        content={{
+          reduced: true,
+        }}
+      >
+        <ErrorLayout message={'Team is missing'} />
+      </Application>
+    )
   }
 
   if (currentFolder == null) {
@@ -216,13 +234,9 @@ const FolderPage = () => {
       <Application
         content={{
           reduced: true,
-          topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
         }}
       >
-        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
-          <h3>Oops...</h3>
-          <p>The folder has been deleted.</p>
-        </ColoredBlock>
+        <ErrorLayout message={'The folder has been deleted'} />
       </Application>
     )
   }
@@ -232,9 +246,30 @@ const FolderPage = () => {
       content={{
         reduced: true,
         topbar: {
-          type: 'v1',
-          left: <BreadCrumbs team={team} />,
-          right: <FolderControls currentFolder={currentFolder} />,
+          breadcrumbs: topBarBreadcrumbs,
+          children: (
+            <LoadingButton
+              variant='icon'
+              disabled={sendingMap.has(currentFolder.id)}
+              spinning={sendingMap.has(currentFolder.id)}
+              size='sm'
+              iconPath={currentFolder.bookmarked ? mdiStar : mdiStarOutline}
+              onClick={() =>
+                toggleFolderBookmark(
+                  currentFolder.teamId,
+                  currentFolder.id,
+                  currentFolder.bookmarked
+                )
+              }
+            />
+          ),
+          controls: [
+            {
+              variant: 'icon',
+              iconPath: mdiDotsHorizontal,
+              onClick: () => setShowContextMenu(true),
+            },
+          ],
         },
         header: (
           <>
@@ -244,6 +279,7 @@ const FolderPage = () => {
               onClick={onEmojiClick}
               style={{ marginRight: 10 }}
               tooltip='Icon'
+              size={20}
             />
             <span
               style={{
@@ -277,11 +313,16 @@ const FolderPage = () => {
         ),
       }}
     >
+      {showContextMenu && (
+        <FolderContextMenu
+          currentFolder={currentFolder}
+          closeContextMenu={() => setShowContextMenu(false)}
+        />
+      )}
       <ContentManager
         team={team}
         documents={childDocs}
         folders={childFolders}
-        parent={parent}
         workspacesMap={workspaceMap}
       />
     </Application>

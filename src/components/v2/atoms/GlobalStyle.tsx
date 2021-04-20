@@ -31,9 +31,11 @@ button {
     
 /* total width */
 scrollbar-width: 8px;
+scrollbar-height: 8px;
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 8px;
+  height: 8px;
 }
 
 /* background of the scrollbar except button or resizer */
@@ -85,10 +87,13 @@ export default createGlobalStyle<BaseTheme>`
 
   /* total width */
   scrollbar-width: 8px;
+  scrollbar-height: 8px;
   ::-webkit-scrollbar {
     background-color: transparent;
     width: 8px;
+    height: 8px;
   }
+  
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {

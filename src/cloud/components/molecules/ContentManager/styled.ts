@@ -3,7 +3,6 @@ import styled from '../../../lib/styled'
 export const StyledContentManager = styled.div`
   display: block;
   width: 100%;
-  margin-top: ${({ theme }) => theme.space.large}px;
   padding-bottom: ${({ theme }) => theme.space.medium}px;
 `
 
@@ -21,6 +20,7 @@ export const StyledContentManagerSelector = styled.button`
   cursor: pointer;
   border-radius: 3px;
   color: ${({ theme }) => theme.subtleTextColor};
+  font-size: 13px;
   &:disabled {
     cursor: not-allowed;
   }
@@ -36,7 +36,7 @@ export const StyledContentManagerSelectorControl = styled.div`
   flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
-  font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
+  font-size: 13px;
   position: relative;
 `
 
@@ -48,7 +48,7 @@ export const StyledContentManagerRow = styled.div`
   flex: 1 1 auto;
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
-  font-size: ${({ theme }) => theme.fontSizes.default}px;
+  font-size: 13px;
   padding: 0 ${({ theme }) => theme.space.xxsmall}px;
 
   &.expanded {
@@ -97,7 +97,7 @@ export const StyledContentManagerRow = styled.div`
 
   .date {
     flex: 0 2 auto;
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    font-size: 13px;
     color: ${({ theme }) => theme.subtleTextColor};
     white-space: nowrap;
     overflow: hidden;
@@ -124,6 +124,12 @@ export const StyledContentManagerRow = styled.div`
 
   &.archived a {
     color: ${({ theme }) => theme.subtleTextColor};
+  }
+
+  .cm-row-link-content {
+    svg {
+      color: #329bbe !important;
+    }
   }
 `
 

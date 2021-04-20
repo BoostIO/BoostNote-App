@@ -11,7 +11,6 @@ import { AppUser } from '../../../../lib/v2/mappers/users'
 import ShallowTimeline, {
   ShallowTimelineRow,
 } from '../../organisms/ShallowTimeline'
-import { ControlButtonProps } from '../../../../lib/v2/types'
 import {
   BreadCrumbTreeItem,
   ContentManagerItemProps,
@@ -20,7 +19,7 @@ import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
 import ContentManager from '../../organisms/ContentManager'
 
 interface WorkspaceShowPageTemplateProps<T> {
-  topbarControls: ControlButtonProps[]
+  topbarControls: any[]
   topbarTree?: Map<string, BreadCrumbTreeItem[]>
   topbarNavigation: { goBack: () => void; goForward: () => void }
   helmet?: { title?: string; indexing?: boolean }
@@ -174,7 +173,6 @@ const WorkspaceShowPageTemplate = <
   return (
     <ContentLayout
       topbar={{
-        type: 'v2',
         navigation: topbarNavigation,
         tree: topbarTree,
         controls: topbarControls,

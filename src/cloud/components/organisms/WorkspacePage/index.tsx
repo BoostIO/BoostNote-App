@@ -7,7 +7,6 @@ import {
 } from '@mdi/js'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useNav } from '../../../lib/stores/nav'
-import BreadCrumbs from '../RightSideTopBar/BreadCrumbs'
 import { useModal } from '../../../lib/stores/modal'
 import SingleInputModal from '../Modal/contents/Forms/SingleInputModal'
 import EmojiIcon from '../../atoms/EmojiIcon'
@@ -15,6 +14,8 @@ import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
+import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
+import { getWorkspaceHref } from '../../atoms/Link/WorkspaceLink'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -34,7 +35,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     createDocHandler,
   } = useNav()
   const { openModal } = useModal()
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const [sending, setSending] = useState<number>()
 
   const childFolders = useMemo(() => {
@@ -108,19 +109,33 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     return <Application content={{}} />
   }
 
+  const workspaceHref = getWorkspaceHref(workspace, team, 'index')
   return (
     <Application
       initialSidebarState={query.onboarding != null ? 'tree' : undefined}
       content={{
         reduced: true,
         topbar: {
-          type: 'v1',
-          left: <BreadCrumbs team={team} />,
+          breadcrumbs: [
+            {
+              label: workspace.name,
+              active: true,
+              parentId: topParentId,
+              link: {
+                href: workspaceHref,
+                navigateTo: () => push(workspaceHref),
+              },
+            },
+          ],
         },
         header: (
           <>
             {!workspace.public && (
-              <EmojiIcon defaultIcon={mdiLock} style={{ marginRight: 10 }} />
+              <EmojiIcon
+                defaultIcon={mdiLock}
+                style={{ marginRight: 10 }}
+                size={20}
+              />
             )}
             <span style={{ marginRight: 10 }}>{workspace.name}</span>
             <RightLayoutHeaderButtons

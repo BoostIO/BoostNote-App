@@ -96,6 +96,7 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
 
 export default SidebarToolbar
 
+const toolbarSpacing = 15
 const Container = styled.div<{ iconSize: number }>`
   &.sidebar__toolbar {
     display: flex;
@@ -126,7 +127,7 @@ const Container = styled.div<{ iconSize: number }>`
     }
 
     .sidebar__toolbar__top .sidebar__toolbar__item:first-of-type {
-      margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+      margin-top: ${toolbarSpacing}px;
     }
 
     .sidebar__toolbar__top .sidebar__toolbar__item:last-of-type {
@@ -143,7 +144,7 @@ const Container = styled.div<{ iconSize: number }>`
       border: 2px solid transparent;
       color: ${({ theme }) => theme.colors.text.subtle};
       outline: none !important;
-      margin: 0 0 ${({ theme }) => theme.sizes.spaces.df}px 0;
+      margin: 0 0 ${toolbarSpacing}px 0;
       position: relative;
       justify-content: center;
 

@@ -21,9 +21,9 @@ const PageHeader = ({
         {iconVariant != null && (
           <span className='icon'>
             {iconType === 'emoji' ? (
-              <Emoji emoji={iconVariant} set='apple' size={32} />
+              <Emoji emoji={iconVariant} set='apple' size={16} />
             ) : (
-              <IconMdi path={iconVariant} size={32} />
+              <IconMdi path={iconVariant} size={16} />
             )}{' '}
           </span>
         )}

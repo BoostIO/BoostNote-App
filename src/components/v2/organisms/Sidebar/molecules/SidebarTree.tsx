@@ -21,6 +21,7 @@ import {
 import { mdiDotsHorizontal } from '@mdi/js'
 import { FocusedContextMenu } from '../../../molecules/ContextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
+import { scrollbarOverlay } from '../../../../../lib/v2/styled/styleFunctions'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
@@ -425,39 +426,8 @@ const Container = styled.div`
   .sidebar__category__items {
     padding: 4px 0;
     flex-shrink: 2;
-    overflow-y: scroll;
-    overflow-y: overlay;
-
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
-    &::-webkit-scrollbar-track {
-      -webkit-box-shadow: none !important;
-      background-color: transparent;
-    }
-    &::-webkit-scrollbar,
-    &::-webkit-scrollbar-thumb {
-      background-color: transparent;
-    }
-
-    &::-webkit-scrollbar,
-    &::-webkit-scrollbar-thumb,
-    &::-webkit-scrollbar-track {
-      transition: background 0.3s ease;
-    }
-
-    &.sidebar__category__items--scrolling {
-      scrollbar-width: thin; /* Firefox */
-      -ms-overflow-style: none; /* IE 10+ */
-    }
-
-    &.sidebar__category__items--scrolling::-webkit-scrollbar-track {
-      -webkit-box-shadow: none !important;
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
-    }
-
-    &.sidebar__category__items--scrolling::-webkit-scrollbar-thumb {
-      background-color: ${({ theme }) => theme.colors.background.quaternary};
-    }
+    ${(theme) =>
+      scrollbarOverlay(theme, 'y', 'sidebar__category__items--scrolling')}
   }
 
   .sidebar__category__items__shrink1 {

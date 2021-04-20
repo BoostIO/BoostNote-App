@@ -15,9 +15,7 @@ import { focusFirstChildFromElement } from '../../../lib/v2/dom'
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }
   header?: React.ReactNode
-  topbar?:
-    | (TopbarProps & { type: 'v2' })
-    | { type: 'v1'; left: React.ReactNode; right?: React.ReactNode }
+  topbar?: TopbarProps
   right?: React.ReactNode
   reduced?: boolean
 }
@@ -46,25 +44,18 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
     <Container className='layout' ref={rightSideContentRef}>
       <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
       <DoublePane className='two__pane' right={right}>
-        {topbar?.type === 'v2' ? (
+        {topbar != null ? (
           <Topbar
             tree={topbar.tree}
             controls={topbar.controls}
             navigation={topbar.navigation}
             breadcrumbs={topbar.breadcrumbs}
             className='topbar'
-          />
+          >
+            {topbar.children}
+          </Topbar>
         ) : (
-          <div className='topbar topbar--v1'>
-            {topbar?.type === 'v1' && (
-              <>
-                <div className='topbar--v1__left'>{topbar?.left}</div>
-                {topbar?.right != null && (
-                  <div className='topbar--v1__right'>{topbar?.right}</div>
-                )}
-              </>
-            )}
-          </div>
+          <div className='topbar topbar--placeholder'>{topbar}</div>
         )}
         <div className='layout__content'>
           <div className='layout__content__wrapper'>
@@ -90,7 +81,7 @@ const Container = styled.div`
   flex: 1 1 0;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  min-width: 100%;
 
   .two__pane {
     width: 100%;
@@ -99,22 +90,20 @@ const Container = styled.div`
     .two__pane__left {
       display: flex;
       flex-direction: column;
-      align-items: stretch;
     }
 
     .topbar {
+      width: 100%;
       flex: 0 0 auto;
     }
 
     .layout__content {
       flex: 1 1 auto;
-      overflow: hidden;
     }
 
     .layout__content__wrapper {
       height: 100%;
       width: 100%;
-      overflow: auto;
     }
 
     .content__wrapper {
@@ -123,12 +112,12 @@ const Container = styled.div`
     }
 
     .content__wrapper--reduced {
-      max-width: 920px;
+      max-width: 1280px;
       padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
       margin: auto;
     }
 
-    .topbar--v1 {
+    .topbar--placeholder {
       width: 100%;
       display: flex;
       flex-direction: row;
@@ -173,8 +162,8 @@ const Container = styled.div`
     flex-wrap: nowrap;
     align-items: center;
     width: 100%;
-    margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
-    font-size: 48pxpx;
+    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
+    font-size: 16px;
   }
 `
 

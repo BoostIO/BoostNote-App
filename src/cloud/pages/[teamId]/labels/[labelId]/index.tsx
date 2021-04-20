@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react'
-import Page from '../../../../components/Page'
 import Application from '../../../../components/Application'
-import { LazyDefaultLayout } from '../../../../components/layouts/DefaultLayout'
 import {
   getTagsShowPageData,
   TagsShowPageResponseBody,
@@ -9,14 +7,18 @@ import {
 import { useNav } from '../../../../lib/stores/nav'
 import { usePage } from '../../../../lib/stores/pageStore'
 import ColoredBlock from '../../../../components/atoms/ColoredBlock'
-import BreadCrumbs from '../../../../components/organisms/RightSideTopBar/BreadCrumbs'
 import ContentManager from '../../../../components/molecules/ContentManager'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
+import { topParentId } from '../../../../../lib/v2/mappers/cloud/topbarTree'
+import { mdiTag } from '@mdi/js'
+import { getTagHref } from '../../../../components/atoms/Link/TagLink'
+import { useRouter } from '../../../../lib/router'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
   const { team } = usePage()
+  const { push } = useRouter()
 
   const pageTag = useMemo(() => {
     return tagsMap.get(pagePropsTag.id)
@@ -46,53 +48,50 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
     }, new Map<string, SerializedWorkspace>())
   }, [docs, workspacesMap])
 
-  const content = useMemo(() => {
-    if (team == null) {
-      return <Application content={{}} />
-    }
+  if (team == null) {
+    return <Application content={{}} />
+  }
 
-    if (pageTag == null) {
-      return (
-        <Application
-          content={{
-            reduced: true,
-            topbar: { type: 'v1', left: <BreadCrumbs team={team} /> },
-          }}
-        >
-          <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
-            <h3>Oops...</h3>
-            <p>The Tag has been deleted.</p>
-          </ColoredBlock>
-        </Application>
-      )
-    }
-
+  if (pageTag == null) {
     return (
-      <Application
-        content={{
-          reduced: true,
-          topbar: {
-            type: 'v1',
-            left: <BreadCrumbs team={team} />,
-          },
-          header: <span>#{pageTag.text}</span>,
-        }}
-      >
-        <ContentManager
-          team={team}
-          documents={docs}
-          folders={[]}
-          page='tag'
-          workspacesMap={relatedWorkspaces}
-        />
+      <Application content={{}}>
+        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
+          <h3>Oops...</h3>
+          <p>The Tag has been deleted.</p>
+        </ColoredBlock>
       </Application>
     )
-  }, [docs, pageTag, team, relatedWorkspaces])
+  }
 
   return (
-    <Page>
-      <LazyDefaultLayout>{content}</LazyDefaultLayout>
-    </Page>
+    <Application
+      content={{
+        reduced: true,
+        topbar: {
+          breadcrumbs: [
+            {
+              label: pageTag.text,
+              active: true,
+              parentId: topParentId,
+              icon: mdiTag,
+              link: {
+                href: getTagHref(pageTag, team, 'index'),
+                navigateTo: () => push(getTagHref(pageTag, team, 'index')),
+              },
+            },
+          ],
+        },
+        header: <span>#{pageTag.text}</span>,
+      }}
+    >
+      <ContentManager
+        team={team}
+        documents={docs}
+        folders={[]}
+        page='tag'
+        workspacesMap={relatedWorkspaces}
+      />
+    </Application>
   )
 }
 

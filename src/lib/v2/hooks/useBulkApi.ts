@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useToast } from '../stores/toast'
 
 export type BulkApiAction = (
@@ -13,7 +13,7 @@ interface UseBulkApiRes {
 }
 
 const useBulkApi = () => {
-  const sendingMap = new Map<string, string>()
+  const [sendingMap, setSendingMap] = useState<Map<string, string>>(new Map())
   const { pushApiErrorMessage } = useToast()
 
   const send = useCallback(
@@ -23,7 +23,12 @@ const useBulkApi = () => {
         return
       }
 
-      sendingMap.set(id, act)
+      setSendingMap((prev) => {
+        const newMap = new Map(prev)
+        newMap.delete(id)
+        newMap.set(id, act)
+        return newMap
+      })
       try {
         const data = await api()
         if (cb != null) {
@@ -35,7 +40,13 @@ const useBulkApi = () => {
         console.error(error)
         pushApiErrorMessage(error)
       }
-      sendingMap.delete(id)
+
+      setSendingMap((prev) => {
+        const newMap = new Map(prev)
+        newMap.delete(id)
+        return newMap
+      })
+
       return res
     },
     [sendingMap, pushApiErrorMessage]

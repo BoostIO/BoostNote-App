@@ -7,8 +7,6 @@ import {
   mdiHistory,
   mdiArchiveOutline,
   mdiArrowRight,
-  mdiChevronLeft,
-  mdiChevronRight,
   mdiAccountGroupOutline,
   mdiClockOutline,
   mdiLabelMultipleOutline,
@@ -113,7 +111,7 @@ const DocContextMenu = ({
   const { pushMessage, pushApiErrorMessage } = useToast()
   const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
-  const { preferences, setPreferences } = usePreferences()
+  const { preferences } = usePreferences()
   const menuRef = useRef<HTMLDivElement>(null)
 
   const usersMap = useMemo(() => {
@@ -145,17 +143,6 @@ const DocContextMenu = ({
       sliced,
     }
   }, [contributors, sliceContributors])
-
-  const toggleContextMenu = useCallback(() => {
-    const docContextWasHidden = preferences.docContextIsHidden
-    setPreferences({
-      docContextIsHidden: !docContextWasHidden,
-    })
-
-    if (docContextWasHidden && menuRef.current != null) {
-      focusFirstChildFromElement(menuRef.current)
-    }
-  }, [setPreferences, preferences.docContextIsHidden])
 
   const toggleArchived = useCallback(async () => {
     if (
@@ -309,19 +296,8 @@ const DocContextMenu = ({
 
   return (
     <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
-      <div className='placeholder' />
       <div ref={menuRef} className='context__menu'>
         <div className='context__container'>
-          <button className='context__toggle' onClick={toggleContextMenu}>
-            <Icon
-              path={
-                preferences.docContextIsHidden
-                  ? mdiChevronLeft
-                  : mdiChevronRight
-              }
-              size={24}
-            />
-          </button>
           <div className='context__scroll__container'>
             <div className='context__scroll'>
               {presence != null && (
@@ -674,11 +650,6 @@ const DocContextMenu = ({
 export const docContextWidth = 350
 
 const Container = styled.div`
-  .placeholder {
-    width: 45px;
-    flex: 0 0 auto;
-  }
-
   .context__tooltip {
     border-radius: 50%;
     display: flex;
@@ -712,12 +683,8 @@ const Container = styled.div`
 
   .context__menu {
     z-index: ${zIndexModalsBackground + 1};
-    position: absolute;
-    top: 0;
     margin: auto;
     width: ${docContextWidth}px;
-    right: -${docContextWidth}px;
-    max-width: 94%;
     height: 100vh;
     display: flex;
     flex-direction: column;

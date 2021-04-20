@@ -4,13 +4,13 @@ import { SerializedTeam } from '../../../../interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
 import { getDocTitle, getDocId } from '../../../../lib/utils/patterns'
 import {
-  mdiCardTextOutline,
   mdiStarOutline,
   mdiStar,
   mdiArchiveOutline,
   mdiFileUndoOutline,
   mdiTrashCanOutline,
   mdiFolderMoveOutline,
+  mdiFileDocumentOutline,
 } from '@mdi/js'
 import DocLink from '../../../atoms/Link/DocLink'
 import cc from 'classcat'
@@ -281,7 +281,7 @@ const ContentmanagerDocRow = ({
                 ? `( Archived ) ${getDocTitle(doc, 'Untitled')}`
                 : getDocTitle(doc, 'Untitled')
             }
-            defaultIcon={mdiCardTextOutline}
+            defaultIcon={mdiFileDocumentOutline}
             emoji={doc.emoji}
             date={doc.updatedAt}
             path={fullPath}

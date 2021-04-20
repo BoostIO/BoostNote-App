@@ -21,8 +21,6 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { isEditSessionSaveShortcut } from '../../../lib/shortcuts'
 import { getDocTitle, getTeamURL, getDocURL } from '../../../lib/utils/patterns'
 import { SerializedUser } from '../../../interfaces/db/user'
-import LayoutSelect from '../LayoutSelect'
-import SyncStatus from '../../organisms/Topbar/SyncStatus'
 import EditorToolbar from './EditorToolbar'
 import { usePreferences } from '../../../lib/stores/preferences'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
@@ -32,14 +30,22 @@ import {
   PositionRange,
   Callback,
 } from '../../../lib/editor/plugins/pasteFormatPlugin'
-import { StyledTopbarVerticalSplit } from '../../organisms/RightSideTopBar/styled'
 import { buildIconUrl } from '../../../api/files'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import EditorTemplateButton from './EditorTemplateButton'
 import Application from '../../Application'
-import DocBookmark from '../../organisms/RightSideTopBar/DocTopbar/DocBookmark'
-import BreadCrumbs from '../../organisms/RightSideTopBar/BreadCrumbs'
-import { mdiRepeat, mdiRepeatOff, mdiFileDocumentOutline } from '@mdi/js'
+import {
+  mdiRepeat,
+  mdiRepeatOff,
+  mdiFileDocumentOutline,
+  mdiStar,
+  mdiStarOutline,
+  mdiChevronLeft,
+  mdiChevronRight,
+  mdiPencil,
+  mdiEyeOutline,
+  mdiViewSplitVertical,
+} from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
 import EditorToolbarUpload from './EditorToolbarUpload'
@@ -49,24 +55,27 @@ import { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import TemplatesModal from '../../organisms/Modal/contents/TemplatesModal'
 import { useModal } from '../../../lib/stores/modal'
-import EditableInput from '../../atoms/EditableInput'
 import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
-import DocContextMenu, {
-  docContextWidth,
-} from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
-import cc from 'classcat'
+import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import {
   focusTitleEventEmitter,
   focusEditorEventEmitter,
+  toggleSplitEditModeEventEmitter,
+  togglePreviewModeEventEmitter,
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../../lib/v2/stores/toast'
+import { mapTopbarBreadcrumbs } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
+import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
+import { LoadingButton } from '../../../../components/v2/atoms/Button'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -111,7 +120,7 @@ const Editor = ({
   const [title, setTitle] = useState(getDocTitle(doc))
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
-  const { state } = useRouter()
+  const { state, push } = useRouter()
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
@@ -136,6 +145,9 @@ const Editor = ({
       },
     ],
   })
+  const { docsMap, workspacesMap, foldersMap } = useNav()
+  const suggestionsRef = useRef<Hint[]>([])
+  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
 
   const userInfo = useMemo(() => {
     return {
@@ -285,8 +297,6 @@ const Editor = ({
     return
   }, [realtime, setTitle])
 
-  const { docsMap, workspacesMap } = useNav()
-  const suggestionsRef = useRef<Hint[]>([])
   useEffect(() => {
     suggestionsRef.current = Array.from(docsMap.values()).map((doc) => {
       const workspace = workspacesMap.get(doc.workspaceId)
@@ -583,6 +593,60 @@ const Editor = ({
     }
   }, [focusEditor])
 
+  const breadcrumbs = useMemo(() => {
+    const breadcrumbs = mapTopbarBreadcrumbs(
+      team,
+      foldersMap,
+      workspacesMap,
+      push,
+      { pageDoc: doc }
+    )
+    return breadcrumbs
+  }, [team, foldersMap, workspacesMap, doc, push])
+
+  const updateLayout = useCallback(
+    (mode: LayoutMode) => {
+      changeEditorLayout(mode)
+    },
+    [changeEditorLayout]
+  )
+
+  const toggleViewMode = useCallback(() => {
+    if (editorLayout === 'preview') {
+      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+        team: doc.teamId,
+        doc: doc.id,
+      })
+      updateLayout(preferences.lastUsedLayout)
+      return
+    }
+    updateLayout('preview')
+  }, [
+    updateLayout,
+    preferences.lastUsedLayout,
+    editorLayout,
+    doc.id,
+    doc.teamId,
+  ])
+
+  useEffect(() => {
+    togglePreviewModeEventEmitter.listen(toggleViewMode)
+    return () => {
+      togglePreviewModeEventEmitter.unlisten(toggleViewMode)
+    }
+  }, [toggleViewMode])
+
+  const toggleSplitEditMode = useCallback(() => {
+    updateLayout(editorLayout === 'split' ? 'editor' : 'split')
+  }, [updateLayout, editorLayout])
+
+  useEffect(() => {
+    toggleSplitEditModeEventEmitter.listen(toggleSplitEditMode)
+    return () => {
+      toggleSplitEditModeEventEmitter.unlisten(toggleSplitEditMode)
+    }
+  }, [toggleSplitEditMode])
+
   if (!initialSyncDone) {
     return (
       <Application content={{}}>
@@ -600,60 +664,99 @@ const Editor = ({
       content={{
         reduced: false,
         topbar: {
-          type: 'v1',
-          left: (
-            <>
-              <BreadCrumbs
-                team={team}
-                minimize={true}
-                addedNodes={
-                  <EditableInput
-                    focusTitleInputRef={focusTitleInputRef}
-                    text={title || ''}
-                    onTextChange={titleChangeCallback}
-                    placeholder='Title'
-                    onKeydownConfirm={focusEditor}
-                  />
+          breadcrumbs,
+          children:
+            currentUserPermissions != null ? (
+              <LoadingButton
+                variant='icon'
+                disabled={sendingMap.has(doc.id)}
+                spinning={sendingMap.has(doc.id)}
+                size='sm'
+                iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+                onClick={() =>
+                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
                 }
               />
-            </>
-          ),
-          right: (
-            <>
-              <StyledTopbarVerticalSplit className='transparent' />
-              {editorLayout !== 'preview' && (
-                <>
-                  <SyncStatus provider={realtime} connState={connState} />
-                  <StyledTopbarVerticalSplit className='transparent' />
-                </>
-              )}
-              <LayoutSelect
-                currentMode={editorLayout}
-                setLayout={changeEditorLayout}
-                teamId={team.id}
-                docId={doc.id}
-              />
-              {currentUserPermissions != null && (
-                <DocBookmark currentDoc={doc} />
-              )}
-              <DocContextMenu
-                currentDoc={doc}
-                contributors={contributors}
-                backLinks={backLinks}
-                team={team}
-                editorRef={editorRef}
-                restoreRevision={onRestoreRevisionCallback}
-                revisionHistory={revisionHistory}
-                presence={{ user: userInfo, users: otherUsers, editorLayout }}
-              />
-            </>
-          ),
+            ) : null,
+          controls: [
+            ...(connState === 'reconnecting'
+              ? [
+                  {
+                    variant: 'secondary' as const,
+                    disabled: true,
+                    label: 'Connecting...',
+                    tooltip: (
+                      <>
+                        Attempting auto-reconnection
+                        <br />
+                        Changes will not be synced with the server until
+                        reconnection
+                      </>
+                    ),
+                  },
+                ]
+              : connState === 'disconnected'
+              ? [
+                  {
+                    variant: 'warning' as const,
+                    disabled: true,
+                    label: 'Connecting...',
+                    tooltip: (
+                      <>
+                        Attempting auto-reconnection
+                        <br />
+                        Changes will not be synced with the server until
+                        reconnection
+                      </>
+                    ),
+                  },
+                ]
+              : []),
+            {
+              variant: 'icon',
+              iconPath: mdiPencil,
+              active: editorLayout === 'editor',
+              onClick: () => updateLayout('editor'),
+            },
+            {
+              variant: 'icon',
+              iconPath: mdiViewSplitVertical,
+              active: editorLayout === 'split',
+              onClick: () => updateLayout('split'),
+            },
+            {
+              variant: 'icon',
+              iconPath: mdiEyeOutline,
+              active: editorLayout === 'preview',
+              onClick: () => updateLayout('preview'),
+            },
+            {
+              variant: 'icon',
+              iconPath: !preferences.docContextIsHidden
+                ? mdiChevronLeft
+                : mdiChevronRight,
+              onClick: () =>
+                setPreferences({
+                  docContextIsHidden: !preferences.docContextIsHidden,
+                }),
+            },
+          ],
         },
+        right: !preferences.docContextIsHidden ? (
+          <DocContextMenu
+            currentDoc={doc}
+            contributors={contributors}
+            backLinks={backLinks}
+            team={team}
+            editorRef={editorRef}
+            restoreRevision={onRestoreRevisionCallback}
+            revisionHistory={revisionHistory}
+            presence={{ user: userInfo, users: otherUsers, editorLayout }}
+          />
+        ) : null,
       }}
     >
-      <Container
-        className={cc([!preferences.docContextIsHidden && 'with__context'])}
-      >
+      <Container>
         {editorLayout !== 'preview' && (
           <StyledLayoutDimensions className={editorLayout}>
             <ToolbarRow>
@@ -740,11 +843,6 @@ const Container = styled.div`
   flex-grow: 1;
   width: 100%;
   height: 100%;
-  @media screen and (min-width: 1020px) {
-    &.with__context {
-      max-width: calc(100% - ${docContextWidth}px) !important;
-    }
-  }
 `
 
 const StyledBottomBar = styled.div`
