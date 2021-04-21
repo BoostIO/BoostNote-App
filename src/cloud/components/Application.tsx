@@ -335,7 +335,7 @@ const Application = ({
   }, [teams, team, invites, push])
 
   const historyItems = useMemo(() => {
-    return mapHistory(history, push, docsMap, foldersMap, team)
+    return mapHistory(history || [], push, docsMap, foldersMap, team)
   }, [team, history, push, docsMap, foldersMap])
 
   const setSearchQuery = useCallback((val: string) => {

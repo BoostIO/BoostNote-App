@@ -21,15 +21,20 @@ const DoublePane: AppComponent<DoublePaneProps> = ({
 const Container = styled.div`
   display: flex;
   flex-wrap: nowrap;
+  flex: 1 1 auto;
+  overflow: hidden;
 
   .two__pane__left {
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    overflow: auto;
   }
 
   .two__pane__right {
     flex: 0 0 auto;
     width: auto;
+    overflow: auto;
   }
 `
 

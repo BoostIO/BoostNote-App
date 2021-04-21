@@ -79,13 +79,14 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
 
 const Container = styled.div`
   flex: 1 1 0;
-  width: 100%;
+  min-width: 0;
+  overflow: hidden;
   height: 100vh;
-  min-width: 100%;
 
   .two__pane {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 
     .two__pane__left {
       display: flex;
@@ -108,6 +109,8 @@ const Container = styled.div`
     }
 
     .content__wrapper {
+      display: flex;
+      flex-direction: column;
       flex: 1 1 auto;
       height: 100%;
     }
