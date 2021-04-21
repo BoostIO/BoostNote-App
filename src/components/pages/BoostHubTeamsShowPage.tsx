@@ -18,6 +18,8 @@ import {
   boostHubToggleSidebarTimelineEventEmitter,
   boostHubToggleSidebarTreeEventEmitter,
 } from '../../lib/events'
+import { FormSecondaryButton } from '../atoms/form'
+import { DidFailLoadEvent } from 'electron/main'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -153,6 +155,28 @@ const BoostHubTeamsShowPage = ({
     }
   }, [active])
 
+  const [refusedConnection, setRefusedConnection] = useState(false)
+
+  const reloadWebview = useCallback(() => {
+    if (webviewControlRef.current == null) {
+      return
+    }
+    webviewControlRef.current.reload()
+    setRefusedConnection(false)
+  }, [])
+
+  const handleWebviewDidFailLoadEventHandler = useCallback(
+    (event: DidFailLoadEvent) => {
+      console.warn('did fail load', event)
+      if (event.errorDescription !== 'ERR_CONNECTION_REFUSED') {
+        return
+      }
+
+      setRefusedConnection(true)
+    },
+    []
+  )
+
   return (
     <Container key={domain} className={active ? 'active' : ''}>
       <div className='webview'>
@@ -160,9 +184,23 @@ const BoostHubTeamsShowPage = ({
           src={url}
           onDidNavigate={updateUrl}
           onDidNavigateInPage={updateUrl}
+          onDidFailLoad={handleWebviewDidFailLoadEventHandler}
           controlRef={webviewControlRef}
         />
       </div>
+      {refusedConnection && (
+        <ReloadView>
+          <div>
+            <h1 className='heading'>Cannot Reach Server</h1>
+            <p className='description'>
+              Please check your internet connection.
+            </p>
+            <FormSecondaryButton onClick={reloadWebview}>
+              Reload Page
+            </FormSecondaryButton>
+          </div>
+        </ReloadView>
+      )}
     </Container>
   )
 }
@@ -231,5 +269,25 @@ const Container = styled.div`
       right: 0;
       bottom: 0;
     }
+  }
+`
+
+const ReloadView = styled.div`
+  position: absolute;
+  top: 0;
+  left: 72px;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: ${({ theme }) => theme.backgroundColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  .heading {
+    text-align: center;
+  }
+  .description {
+    text-align: center;
   }
 `
