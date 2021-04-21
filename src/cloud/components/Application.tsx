@@ -1263,11 +1263,6 @@ function buildChildrenNavRows(
   const rows = childrenIds.reduce((acc, childId) => {
     const childRow = map.get(childId)
     if (childRow == null) {
-      acc.push({
-        id: childId,
-        label: '...',
-        depth,
-      })
       return acc
     }
 
