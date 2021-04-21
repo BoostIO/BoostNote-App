@@ -6,6 +6,7 @@ import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { FormRowProps } from '../../../../components/v2/molecules/Form'
 import EmojiInputForm from '../../../../components/v2/organisms/EmojiInputForm'
 import { useModal } from '../../stores/modal'
+import { PromiseWrapperCallbacks } from '../../types'
 import { useCloudUpdater } from './useCloudUpdater'
 
 export function useCloudUI() {
@@ -85,15 +86,8 @@ export function useCloudUI() {
 
   const openNewFolderForm = useCallback(
     (
-      body: {
-        team?: SerializedTeam
-        workspaceId?: string
-        parentFolderId?: string
-      },
-      sending?: {
-        before: () => void
-        after: () => void
-      },
+      body: CloudNewResourceRequestBody,
+      sending?: PromiseWrapperCallbacks,
       prevRows?: FormRowProps[]
     ) => {
       openModal(
@@ -140,15 +134,8 @@ export function useCloudUI() {
 
   const openNewDocForm = useCallback(
     (
-      body: {
-        team?: SerializedTeam
-        workspaceId?: string
-        parentFolderId?: string
-      },
-      sending?: {
-        before: () => void
-        after: () => void
-      },
+      body: CloudNewResourceRequestBody,
+      sending?: PromiseWrapperCallbacks,
       prevRows?: FormRowProps[]
     ) => {
       openModal(
@@ -198,4 +185,10 @@ export function useCloudUI() {
     openRenameFolderForm,
     openRenameDocForm,
   }
+}
+
+export interface CloudNewResourceRequestBody {
+  team?: SerializedTeam
+  workspaceId?: string
+  parentFolderId?: string
 }
