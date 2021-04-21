@@ -377,8 +377,8 @@ const Container = styled.div`
     }
 
     .sidebar__spaces__container {
-      top: 17px !important;
-      left: 17px !important;
+      top: 24px !important;
+      left: 60px !important;
     }
   }
 
