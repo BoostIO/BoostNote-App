@@ -20,7 +20,6 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useBoostHub } from '../../lib/boosthub'
-import cc from 'classcat'
 import SidebarToolbar, {
   SidebarToolbarRow,
 } from '../v2/organisms/Sidebar/molecules/SidebarToolbar'
@@ -350,7 +349,7 @@ const TopLevelNavigator = () => {
   ])
 
   return (
-    <Container className={cc([osName === 'macos' && 'app__navigator--mac'])}>
+    <Container>
       <SidebarToolbar
         rows={toolbarRows}
         className='sidebar__toolbar'
@@ -371,20 +370,7 @@ const TopLevelNavigator = () => {
 export default TopLevelNavigator
 
 const Container = styled.div`
-  &.app__navigator--mac {
-    .sidebar__toolbar {
-      width: 68px;
-    }
-
-    .sidebar__spaces__container {
-      top: 24px !important;
-      left: 60px !important;
-    }
-  }
-
   .sidebar__toolbar .sidebar__toolbar__top {
-    padding-top: 17px;
-
     .sidebar__toolbar__item:first-of-type {
       height: 32px;
     }
