@@ -11,6 +11,7 @@ import FormEmoji, { FormEmojiProps } from './atoms/FormEmoji'
 interface FormProps {
   rows: FormRowProps[]
   onSubmit: React.FormEventHandler
+
   submitButton?: ButtonProps & { label: React.ReactNode; spinning?: boolean }
   onCancel?: () => void
 }
@@ -42,8 +43,7 @@ const Form: AppComponent<FormProps> = ({
       onSubmit={async (event: React.FormEvent) => {
         event.preventDefault()
         setSubmitState(true)
-        await onSubmit(event)
-        setSubmitState(false)
+        new Promise(() => onSubmit(event)).finally(() => setSubmitState(false))
       }}
       className={cc(['form', className])}
     >

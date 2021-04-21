@@ -155,8 +155,7 @@ const Topbar: AppComponent<TopbarProps> = ({
                 onClick={(props) =>
                   openNavTree(breadcrumb.parentId, {
                     ...props,
-                    actions:
-                      i === breadcrumbs.length - 1 ? breadcrumb.controls : [],
+                    actions: breadcrumb.controls,
                   })
                 }
                 onDoubleClick={breadcrumb.link.navigateTo}
