@@ -27,8 +27,6 @@ function useRouterStore() {
   ])
   const [currentLocationIndex, setCurrentLocationIndex] = useState<number>(0)
 
-  console.log(locations)
-
   const [location, setLocation] = useState<{
     state?: any
     hash: string
