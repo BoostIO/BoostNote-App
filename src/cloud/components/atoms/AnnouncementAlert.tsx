@@ -46,8 +46,8 @@ const AnnouncementAlert = () => {
       <StyledAnnouncementAlertWrapper>
         <StyledAnnouncementAlert className='pad-0'>
           <p>
-            Please update the desktop app. This version is outdated.(Current
-            version: {currentDesktopAppVersion}, Required version: &gt;=0.16.0)
+            Please update the desktop app. This version is outdated (current
+            version: {currentDesktopAppVersion}, required version: &gt;=0.16.0).
           </p>
           <StyledAnnouncementAlertButton
             onClick={() => setHidingOutdatedDesktopClientAlert(true)}
