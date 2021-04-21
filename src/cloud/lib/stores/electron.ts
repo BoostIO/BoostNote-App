@@ -41,7 +41,7 @@ function removeAllHostListeners(channel?: string) {
 
 export const usingElectron = /BoostNote/.test(navigator.userAgent)
 
-function getCurrentDesktopAppVersion() {
+export function getCurrentDesktopAppVersion() {
   const matchResult = /BoostNote (\d+\.\d+\.\d+)/.exec(navigator.userAgent)
   if (matchResult == null) {
     return null

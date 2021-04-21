@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import styled from '../../lib/styled'
 import { useOnboarding } from '../../lib/stores/onboarding'
@@ -7,6 +7,11 @@ import { mdiClose } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
 import UpgradeButton from '../UpgradeButton'
+import ltSemver from 'semver/functions/lt'
+import {
+  usingElectron,
+  getCurrentDesktopAppVersion,
+} from '../../lib/stores/electron'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
@@ -15,6 +20,10 @@ const AnnouncementAlert = () => {
     globalData: { currentUser },
   } = useGlobalData()
   const { permissions = [] } = usePage<PageStoreWithTeam>()
+  const [
+    hidingOutdatedDesktopClientAlert,
+    setHidingOutdatedDesktopClientAlert,
+  ] = useState(false)
 
   const currentUserPermissions = useMemo(() => {
     try {
@@ -25,6 +34,30 @@ const AnnouncementAlert = () => {
       return undefined
     }
   }, [currentUser, permissions])
+  const currentDesktopAppVersion = getCurrentDesktopAppVersion()
+
+  if (
+    usingElectron &&
+    currentDesktopAppVersion != null &&
+    ltSemver(currentDesktopAppVersion, '0.16.1') &&
+    !hidingOutdatedDesktopClientAlert
+  ) {
+    return (
+      <StyledAnnouncementAlertWrapper>
+        <StyledAnnouncementAlert className='pad-0'>
+          <p>
+            Please update the desktop app. This version is outdated.(Current
+            version: {currentDesktopAppVersion}, Required version: &gt;=0.16.0)
+          </p>
+          <StyledAnnouncementAlertButton
+            onClick={() => setHidingOutdatedDesktopClientAlert(true)}
+          >
+            <IconMdi path={mdiClose} />
+          </StyledAnnouncementAlertButton>
+        </StyledAnnouncementAlert>
+      </StyledAnnouncementAlertWrapper>
+    )
+  }
 
   if (
     currentOnboardingState != null &&
