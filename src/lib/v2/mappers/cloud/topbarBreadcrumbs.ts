@@ -1,4 +1,4 @@
-import { mdiFileDocumentOutline, mdiLock } from '@mdi/js'
+import { mdiFileDocumentOutline, mdiLock, mdiPencil } from '@mdi/js'
 import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
 import { getFolderHref } from '../../../../cloud/components/atoms/Link/FolderLink'
 import { getTeamLinkHref } from '../../../../cloud/components/atoms/Link/TeamLink'
@@ -63,7 +63,13 @@ export function mapTopbarBreadcrumbs(
       },
       controls:
         renameDoc != null
-          ? [{ label: 'Rename doc', onClick: () => renameDoc(pageDoc) }]
+          ? [
+              {
+                icon: mdiPencil,
+                label: 'Rename',
+                onClick: () => renameDoc(pageDoc),
+              },
+            ]
           : undefined,
     })
   }
@@ -92,7 +98,8 @@ export function mapTopbarBreadcrumbs(
         renameFolder != null
           ? [
               {
-                label: 'Rename folder',
+                icon: mdiPencil,
+                label: 'Rename',
                 onClick: () => renameFolder(pageFolder),
               },
             ]
@@ -146,7 +153,8 @@ export function mapTopbarBreadcrumbs(
         addedProperties.type === 'folder' && renameFolder != null
           ? [
               {
-                label: 'Rename folder',
+                icon: mdiPencil,
+                label: 'Rename',
                 onClick: () => renameFolder(addedProperties.item),
               },
             ]

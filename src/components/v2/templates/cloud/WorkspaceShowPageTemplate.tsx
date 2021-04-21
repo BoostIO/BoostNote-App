@@ -188,40 +188,47 @@ const WorkspaceShowPageTemplate = <
             controls: workspace.default
               ? [
                   {
+                    icon: mdiPencil,
                     label: 'Create a document',
                     onClick: () => {
                       //#TOFIX
                     },
                   },
                   {
+                    icon: mdiPencil,
                     label: 'Create a folder',
                     onClick: () => {
                       //#TOFIX
                     },
                   },
                   {
+                    icon: mdiPencil,
                     label: 'Edit the workspace',
                     onClick: () => editWorkspace(),
                   },
                 ]
               : [
                   {
+                    icon: mdiPencil,
                     label: 'Create a document',
                     onClick: () => {
                       //#TOFIX
                     },
                   },
                   {
+                    icon: mdiPencil,
                     label: 'Create a folder',
                     onClick: () => {
                       //#TOFIX
                     },
                   },
                   {
+                    icon: mdiPencil,
                     label: 'Edit the workspace',
                     onClick: () => editWorkspace(),
                   },
                   {
+                    icon: mdiPencil,
                     label: 'Delete the workspace',
                     onClick: () => workspaceRemoval.call(),
                   },
