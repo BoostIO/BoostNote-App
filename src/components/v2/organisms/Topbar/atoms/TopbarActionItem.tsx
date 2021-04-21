@@ -98,12 +98,6 @@ const Container = styled.button<{ depth: number }>`
     }
   }
 
-  .topbar__action__item__icon {
-    flex: 0 0 auto;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   border-radius: ${({ theme }) => theme.borders.radius}px;
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.tertiary};
