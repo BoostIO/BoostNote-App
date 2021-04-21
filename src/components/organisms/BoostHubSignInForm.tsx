@@ -162,10 +162,6 @@ const BoostHubSignInForm = () => {
     setStatus('idle')
   }, [])
 
-  const navigateToCreateLocalSpacePage = useCallback(() => {
-    push('/app/storages')
-  }, [push])
-
   return (
     <Container>
       <h1 className='heading'>Create Account</h1>
@@ -182,14 +178,6 @@ const BoostHubSignInForm = () => {
             <FormSecondaryButton onClick={startLoginRequest}>
               Sign In
             </FormSecondaryButton>
-          </div>
-          <div className='control'>
-            <a
-              className='control-link'
-              onClick={navigateToCreateLocalSpacePage}
-            >
-              Create a local space without creating an account
-            </a>
           </div>
         </>
       ) : status === 'logging-in' ? (
