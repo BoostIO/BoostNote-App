@@ -41,7 +41,6 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
   }, [provider])
 
   const content = useMemo(() => {
-    console.log(connState)
     switch (connState) {
       case 'loaded':
         return (
