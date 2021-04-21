@@ -739,7 +739,7 @@ function mapTree(
   ) => void,
   dropInWorkspace: (id: string) => void,
   openRenameFolderForm: (folder: SerializedFolder) => void,
-  openRenameDocForm: (doc: SerializedDoc) => void,
+  _openRenameDocForm: (doc: SerializedDoc) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -943,12 +943,6 @@ function mapTree(
               ? 'Bookmarked'
               : 'Bookmark',
           onClick: () => toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
-        },
-        {
-          type: MenuTypes.Normal,
-          icon: mdiPencil,
-          label: 'Rename',
-          onClick: () => openRenameDocForm(doc),
         },
         {
           type: MenuTypes.Normal,

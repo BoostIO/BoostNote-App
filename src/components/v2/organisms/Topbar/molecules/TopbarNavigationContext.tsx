@@ -7,6 +7,9 @@ import cc from 'classcat'
 import { useSet } from 'react-use'
 import { menuZIndex } from '../../../../../lib/v2/stores/contextMenu'
 import TopbarTreeItem from '../atoms/TopbarTreeItem'
+import TopbarActionItem, {
+  TopbarActionItemAttrbs,
+} from '../atoms/TopbarActionItem'
 
 interface TopbarTreeProps {
   className?: string
@@ -14,19 +17,24 @@ interface TopbarTreeProps {
     bottom: number
     left: number
     id: string
+    actions: TopbarActionItemAttrbs[]
   }
-  tree: Map<string, BreadCrumbTreeItem[]>
+  tree?: Map<string, BreadCrumbTreeItem[]>
   close: () => void
 }
 
-const TopbarTree = ({
+const TopbarNavigationContext = ({
   tree,
   close,
   className,
-  state: { bottom, left, id },
+  state: { bottom, left, id, actions = [] },
 }: TopbarTreeProps) => {
   const { windowSize } = useWindow()
   const [, { has, add, remove, toggle }] = useSet(new Set<string>())
+
+  if (tree == null && actions.length === 0) {
+    return null
+  }
 
   return (
     <Container
@@ -40,21 +48,33 @@ const TopbarTree = ({
       }}
     >
       <UpDownList className='topbar__tree__list' onBlur={close}>
-        {tree.has(id)
-          ? tree
-              .get(id)!
-              .map((item) =>
-                getTreeItemAndItsChildren(
-                  item,
-                  0,
-                  tree,
-                  has,
-                  remove,
-                  add,
-                  toggle
-                )
-              )
-          : null}
+        {actions.map((action, i) => (
+          <TopbarActionItem
+            className='topbar__action__item'
+            depth={0}
+            key={`action-${i}`}
+            item={action}
+          />
+        ))}
+        {tree != null && (
+          <div className='topbar__tree__navigation'>
+            {tree.has(id)
+              ? tree
+                  .get(id)!
+                  .map((item) =>
+                    getTreeItemAndItsChildren(
+                      item,
+                      0,
+                      tree,
+                      has,
+                      remove,
+                      add,
+                      toggle
+                    )
+                  )
+              : null}
+          </div>
+        )}
       </UpDownList>
     </Container>
   )
@@ -119,6 +139,12 @@ const Container = styled.div`
   .topbar__tree__list {
     overflow: auto;
   }
+
+  .topbar__action__item + .topbar__tree__navigation {
+    border-top: 1px solid ${({ theme }) => theme.colors.border.main};
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
 `
 
-export default TopbarTree
+export default TopbarNavigationContext

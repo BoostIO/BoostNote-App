@@ -81,8 +81,8 @@ interface DocContextMenuProps {
     editorLayout: LayoutMode
   }
   restoreRevision?: (revision: SerializedRevision) => void
-  openRenameDocForm: () => void
-  sendingRename: boolean
+  openRenameDocForm?: () => void
+  sendingRename?: boolean
 }
 
 const DocContextMenu = ({
@@ -466,19 +466,21 @@ const DocContextMenu = ({
                       <div className='context__break' />
                     </>
                   )}
-                  <button
-                    className='context__row context__button'
-                    id='dc-context-top-move'
-                    onClick={openRenameDocForm}
-                    disabled={updating}
-                  >
-                    <Icon
-                      path={mdiPencil}
-                      size={18}
-                      className='context__icon'
-                    />
-                    <span>{sendingRename ? '...' : 'Rename'}</span>
-                  </button>
+                  {openRenameDocForm != null && (
+                    <button
+                      className='context__row context__button'
+                      id='dc-context-top-move'
+                      onClick={openRenameDocForm}
+                      disabled={updating}
+                    >
+                      <Icon
+                        path={mdiPencil}
+                        size={18}
+                        className='context__icon'
+                      />
+                      <span>{sendingRename ? '...' : 'Rename'}</span>
+                    </button>
+                  )}
                   <button
                     className='context__row context__button'
                     id='dc-context-top-move'

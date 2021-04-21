@@ -9,11 +9,12 @@ import {
   MenuTypes,
   useContextMenu,
 } from '../../../../lib/v2/stores/contextMenu'
-import TopbarTree from './molecules/TopbarTree'
+import TopbarNavigationContext from './molecules/TopbarNavigationContext'
 import cc from 'classcat'
 import { scrollbarOverlay } from '../../../../lib/v2/styled/styleFunctions'
 import WithTooltip from '../../atoms/WithTooltip'
 import styled from '../../../../lib/v2/styled'
+import { TopbarActionItemAttrbs } from './atoms/TopbarActionItem'
 
 export interface TopbarBreadcrumbProps {
   link: { href: string; navigateTo: () => void }
@@ -22,7 +23,7 @@ export interface TopbarBreadcrumbProps {
   icon?: string
   parentId: string
   active?: boolean
-  controls?: { label: string; onClick: () => void }[]
+  controls?: { label: string; onClick: () => void; icon: string }[]
 }
 
 export interface TopbarPageProps {
@@ -55,6 +56,7 @@ const Topbar: AppComponent<TopbarProps> = ({
     bottom: number
     left: number
     id: string
+    actions: TopbarActionItemAttrbs[]
   }>()
   const [scrollingBreadcrumbs, setScrollingBreadcrumbs] = useState(false)
   const scrollTimer = useRef<any>()
@@ -66,8 +68,20 @@ const Topbar: AppComponent<TopbarProps> = ({
   }, [])
 
   const openNavTree = useCallback(
-    (parentId: string, props: { bottom: number; left: number }) => {
-      setTreeState({ bottom: props.bottom, left: props.left, id: parentId })
+    (
+      parentId: string,
+      props: {
+        bottom: number
+        left: number
+        actions?: TopbarActionItemAttrbs[]
+      }
+    ) => {
+      setTreeState({
+        bottom: props.bottom,
+        left: props.left,
+        id: parentId,
+        actions: props.actions || [],
+      })
     },
     []
   )
@@ -75,8 +89,8 @@ const Topbar: AppComponent<TopbarProps> = ({
   return (
     <Container className='topbar'>
       <div className='topbar__content'>
-        {treeState != null && tree != null && (
-          <TopbarTree
+        {treeState != null && (
+          <TopbarNavigationContext
             state={treeState}
             close={() => setTreeState(undefined)}
             tree={tree}
@@ -130,6 +144,7 @@ const Topbar: AppComponent<TopbarProps> = ({
                     event,
                     breadcrumb.controls.map((control) => {
                       return {
+                        icon: control.icon,
                         type: MenuTypes.Normal,
                         label: control.label,
                         onClick: control.onClick,
@@ -137,7 +152,13 @@ const Topbar: AppComponent<TopbarProps> = ({
                     })
                   )
                 }}
-                onClick={(props) => openNavTree(breadcrumb.parentId, props)}
+                onClick={(props) =>
+                  openNavTree(breadcrumb.parentId, {
+                    ...props,
+                    actions:
+                      i === breadcrumbs.length - 1 ? breadcrumb.controls : [],
+                  })
+                }
                 onDoubleClick={breadcrumb.link.navigateTo}
               />
               {i !== breadcrumbs.length - 1 && (
