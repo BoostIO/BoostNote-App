@@ -43,7 +43,6 @@ const Container = styled.div`
   overflow: hidden;
   height: 44px;
   flex-shrink: 0;
-  -webkit-app-region: drag;
   padding: 0 8px;
   ${borderBottom};
   align-items: center;

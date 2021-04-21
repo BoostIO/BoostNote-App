@@ -228,7 +228,6 @@ const Container = styled.div`
   .toolbar {
     height: 40px;
     flex-shrink: 0;
-    -webkit-app-region: drag;
     display: flex;
     align-items: center;
     ${borderBottom}

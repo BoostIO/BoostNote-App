@@ -27,7 +27,6 @@ const Container = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  -webkit-app-region: drag;
   ${flexCenter}
   & > .shadow {
     position: absolute;

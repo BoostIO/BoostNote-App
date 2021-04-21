@@ -19,7 +19,7 @@ import {
 } from 'electron'
 import { useEffectOnce } from 'react-use'
 import styled from '../../lib/styled'
-import { openNew, osName } from '../../lib/platform'
+import { openNew } from '../../lib/platform'
 import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
@@ -32,7 +32,7 @@ import {
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
-import { DidFailLoadEvent, MouseInputEvent } from 'electron/main'
+import { DidFailLoadEvent } from 'electron/main'
 
 export interface WebviewControl {
   focus(): void
@@ -254,167 +254,8 @@ const BoostHubWebview = ({
     }
   })
 
-  const sendInputEvent = useCallback(
-    (event: MouseInputEvent, focusBeforeSending = false) => {
-      setImmediate(() => {
-        if (webviewRef.current == null) {
-          return
-        }
-        if (!domReadyRef.current) {
-          return
-        }
-
-        if (focusBeforeSending) {
-          webviewRef.current.focus()
-        }
-
-        webviewRef.current.sendInputEvent(event)
-      })
-    },
-    []
-  )
-
-  const bypassClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-      const button = getTargetButton(event)
-      if (button == null) {
-        return
-      }
-
-      sendInputEvent(
-        {
-          button,
-          clickCount: 1,
-          type: 'mouseDown',
-          x,
-          y,
-        },
-        true
-      )
-      sendInputEvent({
-        button,
-        clickCount: 1,
-        type: 'mouseUp',
-        x,
-        y,
-      })
-    },
-    [sendInputEvent]
-  )
-
-  const bypassDoubleClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-      const button = getTargetButton(event)
-      if (button == null) {
-        return
-      }
-
-      sendInputEvent(
-        {
-          button,
-          clickCount: 2,
-          type: 'mouseDown',
-          x,
-          y,
-        },
-        true
-      )
-      sendInputEvent({
-        button,
-        clickCount: 2,
-        type: 'mouseUp',
-        x,
-        y,
-      })
-    },
-    [sendInputEvent]
-  )
-  const bypassContextMenu = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-      const button = getTargetButton(event)
-      if (button == null) {
-        return
-      }
-
-      sendInputEvent(
-        {
-          button,
-          clickCount: 1,
-          type: 'mouseDown',
-          x,
-          y,
-        },
-        true
-      )
-      sendInputEvent({
-        button,
-        clickCount: 1,
-        type: 'mouseUp',
-        x,
-        y,
-      })
-    },
-    [sendInputEvent]
-  )
-
-  const bypassMouseEnter = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-
-      sendInputEvent({
-        type: 'mouseEnter',
-        x,
-        y,
-      })
-    },
-    [sendInputEvent]
-  )
-  const bypassMouseLeave = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-
-      sendInputEvent({
-        type: 'mouseLeave',
-        x,
-        y,
-      })
-    },
-    [sendInputEvent]
-  )
-
-  const bypassMouseMove = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const { x, y } = getTargetPosition(event)
-
-      sendInputEvent({
-        type: 'mouseMove',
-        x,
-        y,
-        movementX: event.movementX,
-        movementY: event.movementY,
-      })
-    },
-    [sendInputEvent]
-  )
-
   return (
     <Container className={className} style={style}>
-      {osName === 'macos' && (
-        <div
-          className='draggable'
-          onClick={bypassClick}
-          onContextMenu={bypassContextMenu}
-          onDoubleClick={bypassDoubleClick}
-          onMouseEnter={bypassMouseEnter}
-          onMouseLeave={bypassMouseLeave}
-          onMouseMove={bypassMouseMove}
-        >
-          Draggable Area
-        </div>
-      )}
       <webview
         ref={webviewRef}
         src={src}
@@ -442,7 +283,6 @@ const Container = styled.div`
     height: 44px;
     background-color: rgba(255, 0, 0, 0.2);
     -webkit-user-select: none;
-    -webkit-app-region: drag;
     opacity: 0;
   }
 
@@ -457,29 +297,3 @@ const Container = styled.div`
     bottom: 0;
   }
 `
-
-function getTargetButton(
-  event: React.MouseEvent<HTMLDivElement>
-): 'left' | 'right' | 'middle' | null {
-  switch (event.button) {
-    case 0:
-      return 'left'
-    case 1:
-      return 'middle'
-    case 2:
-      return 'right'
-  }
-  return null
-}
-
-function getTargetPosition(
-  event: React.MouseEvent<HTMLDivElement>
-): { x: number; y: number } {
-  const rect = (event.target as HTMLDivElement).getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const y = event.clientY - rect.top
-  return {
-    x,
-    y,
-  }
-}

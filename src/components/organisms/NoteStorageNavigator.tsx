@@ -276,7 +276,6 @@ const TopButton = styled.button`
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  -webkit-app-region: drag;
   text-align: left;
   padding: 0 16px;
   border: none;

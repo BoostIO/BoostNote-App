@@ -135,7 +135,6 @@ const Container = styled.div`
       z-index: 1;
       font-size: ${({ theme }) => theme.sizes.fonts.df}px;
       flex: 0 0 auto;
-      -webkit-app-region: drag;
       padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
       padding-right: ${({ theme }) => theme.sizes.spaces.l}px;
 

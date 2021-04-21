@@ -7,7 +7,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  -webkit-app-region: drag;
   ${borderBottom}
   height: 40px;
 
