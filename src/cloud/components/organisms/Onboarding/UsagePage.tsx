@@ -104,12 +104,12 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                   'Get started for free'
                 )}
               </Button>
-              {!usingElectron && (
+              {!usingElectron && router.goBack != null && (
                 <Button
                   type='button'
                   disabled={sending}
                   variant='transparent'
-                  onClick={() => router.goBack()}
+                  onClick={() => router.goBack!()}
                 >
                   <Flexbox alignItems='center'>
                     <Icon path={mdiChevronRight} />

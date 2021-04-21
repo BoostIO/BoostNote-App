@@ -19,6 +19,16 @@ const initialLocation = normalizeLocation({
 })
 
 function useRouterStore() {
+  const [locations, setLocations] = useState<LocationDescriptorObject[]>([
+    {
+      ...initialLocation,
+      state: {},
+    },
+  ])
+  const [currentLocationIndex, setCurrentLocationIndex] = useState<number>(0)
+
+  console.log(locations)
+
   const [location, setLocation] = useState<{
     state?: any
     hash: string
@@ -33,16 +43,26 @@ function useRouterStore() {
     return parseQuery(location.search.slice(1))
   }, [location.search])
 
-  const push = useCallback((url: Url, state: any = {}) => {
-    const parsedUrl = typeof url === 'string' ? parseUrl(url) : url
+  const push = useCallback(
+    (url: Url, state: any = {}) => {
+      const parsedUrl = typeof url === 'string' ? parseUrl(url) : url
 
-    browserHistory.push({
-      pathname: parsedUrl.pathname,
-      search: parsedUrl.search,
-      hash: parsedUrl.hash,
-      state: state,
-    } as LocationDescriptorObject)
-  }, [])
+      const location = {
+        pathname: parsedUrl.pathname,
+        search: parsedUrl.search,
+        hash: parsedUrl.hash,
+        state: state,
+      } as LocationDescriptorObject
+
+      setLocations((prev) => [
+        ...prev.slice(0, currentLocationIndex + 1),
+        location,
+      ])
+      setCurrentLocationIndex((prev) => prev + 1)
+      browserHistory.push(location)
+    },
+    [currentLocationIndex]
+  )
 
   const replace = useCallback((urlStr: string) => {
     browserHistory.replace(urlStr)
@@ -52,8 +72,14 @@ function useRouterStore() {
     browserHistory.go(count)
   }, [])
 
-  const goBack = useCallback(() => go(-1), [go])
-  const goForward = useCallback(() => go(1), [go])
+  const goBack = useCallback(() => {
+    go(-1)
+    setCurrentLocationIndex((prev) => prev - 1)
+  }, [go])
+  const goForward = useCallback(() => {
+    go(1)
+    setCurrentLocationIndex((prev) => prev + 1)
+  }, [go])
 
   useEffect(() => {
     return browserHistory.listen((blocation) => {
@@ -72,11 +98,20 @@ function useRouterStore() {
       query,
       push,
       replace,
-      go,
-      goBack,
-      goForward,
+      goBack: currentLocationIndex - 1 >= 0 ? goBack : undefined,
+      goForward:
+        currentLocationIndex + 1 < locations.length ? goForward : undefined,
     }
-  }, [location, query, push, replace, go, goBack, goForward])
+  }, [
+    location,
+    query,
+    push,
+    replace,
+    goBack,
+    goForward,
+    currentLocationIndex,
+    locations,
+  ])
 
   return router
 }
