@@ -35,9 +35,7 @@ function createMainWindow() {
     minWidth: 960,
     minHeight: 630,
   }
-  if (process.platform === 'darwin') {
-    windowOptions.titleBarStyle = 'hidden'
-  }
+
   const window = new BrowserWindow(windowOptions)
 
   if (dev) {
