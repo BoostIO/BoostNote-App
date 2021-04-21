@@ -128,7 +128,7 @@ const SidebarContentRow = ({
 const Container = styled.div`
   position: fixed;
   top: 15px;
-  left: 15px;
+  left: 35px;
   background: ${({ theme }) => theme.colors.background.primary};
   z-index: 101;
   box-shadow: ${({ theme }) => theme.colors.shadow};
