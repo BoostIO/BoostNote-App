@@ -67,6 +67,7 @@ const BoostHubTeamsShowPage = ({
       toggleSidebarTimelineHandler
     )
     const toggleSidebarSearchHandler = () => {
+      webviewControlRef.current!.focus()
       webviewControlRef.current!.sendMessage('toggle-sidebar-search')
     }
     boostHubToggleSidebarSearchEventEmitter.listen(toggleSidebarSearchHandler)
@@ -276,8 +277,8 @@ const ReloadView = styled.div`
   position: absolute;
   top: 0;
   left: 72px;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
   background-color: ${({ theme }) => theme.backgroundColor};
   display: flex;

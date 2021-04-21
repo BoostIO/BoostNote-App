@@ -35,6 +35,7 @@ import { openContextMenu } from '../../lib/electronOnly'
 import { DidFailLoadEvent, MouseInputEvent } from 'electron/main'
 
 export interface WebviewControl {
+  focus(): void
   reload(): void
   goBack(): void
   goForward(): void
@@ -93,18 +94,23 @@ const BoostHubWebview = ({
     webviewRef.current!.send(channel, ...args)
   }, [])
 
+  const focus = useCallback(() => {
+    webviewRef.current!.focus()
+  }, [])
+
   useEffect(() => {
     if (controlRef == null) {
       return
     }
     controlRef.current = {
+      focus,
       reload,
       goBack,
       goForward,
       openDevTools,
       sendMessage,
     }
-  }, [controlRef, reload, goBack, goForward, openDevTools, sendMessage])
+  }, [controlRef, reload, goBack, goForward, openDevTools, sendMessage, focus])
 
   useEffect(() => {
     const webview = webviewRef.current!
