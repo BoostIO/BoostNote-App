@@ -156,6 +156,16 @@ const BoostHubTeamsShowPage = ({
     }
   }, [active])
 
+  // Release focus before hiding webview
+  useEffect(() => {
+    if (active) {
+      webviewControlRef.current!.focus()
+    }
+    return () => {
+      window.focus()
+    }
+  }, [active])
+
   const [refusedConnection, setRefusedConnection] = useState(false)
 
   const reloadWebview = useCallback(() => {
