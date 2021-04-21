@@ -115,7 +115,7 @@ const Editor = ({
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
-  const [initialSyncDone, setInitialSyncDone] = useState(false)
+  const [initialLoadDone, setInitialLoadDone] = useState(false)
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const [editorLayout, setEditorLayout] = useState<LayoutMode>('preview')
   const [title, setTitle] = useState(getDocTitle(doc))
@@ -200,7 +200,7 @@ const Editor = ({
   }, [editorLayout])
 
   useEffect(() => {
-    if (!initialSyncDone) {
+    if (!initialLoadDone) {
       return
     }
     if (editorRef.current != null) {
@@ -208,7 +208,7 @@ const Editor = ({
     } else if (titleRef.current != null) {
       titleRef.current.focus()
     }
-  }, [initialSyncDone, docIsNew])
+  }, [initialLoadDone, docIsNew])
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -257,13 +257,13 @@ const Editor = ({
 
   useEffect(() => {
     return () => {
-      setInitialSyncDone(false)
+      setInitialLoadDone(false)
     }
   }, [doc.id])
 
   useEffect(() => {
     if (connState === 'synced' || connState === 'loaded') {
-      setInitialSyncDone(true)
+      setInitialLoadDone(true)
     }
   }, [connState])
 
@@ -670,7 +670,7 @@ const Editor = ({
     }
   }, [toggleSplitEditMode])
 
-  if (!initialSyncDone) {
+  if (!initialLoadDone) {
     return (
       <Application content={{}}>
         <StyledLoadingView>
