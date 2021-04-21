@@ -99,6 +99,7 @@ const Container = styled.div`
 
     .layout__content {
       flex: 1 1 auto;
+      overflow: auto;
     }
 
     .layout__content__wrapper {
