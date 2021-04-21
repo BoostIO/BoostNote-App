@@ -8,3 +8,8 @@ export type ControlButtonProps = {
   onContextMenu?: (event: React.MouseEvent) => void
   tooltip?: string
 }
+
+export type PromiseWrapperCallbacks = {
+  before: () => void
+  after: () => void
+}

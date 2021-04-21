@@ -150,7 +150,12 @@ const Editor = ({
   const { docsMap, workspacesMap, foldersMap } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudUpdater()
-  const { openRenameDocForm, openRenameFolderForm } = useCloudUI()
+  const {
+    openRenameDocForm,
+    openRenameFolderForm,
+    openNewFolderForm,
+    openNewDocForm,
+  } = useCloudUI()
 
   const userInfo = useMemo(() => {
     return {
@@ -612,7 +617,9 @@ const Editor = ({
         } as SerializedDoc,
       },
       openRenameFolderForm,
-      (doc) => openRenameDocForm(doc, titleChangeCallback)
+      (doc) => openRenameDocForm(doc, titleChangeCallback),
+      openNewFolderForm,
+      openNewDocForm
     )
     return breadcrumbs
   }, [
@@ -620,11 +627,13 @@ const Editor = ({
     foldersMap,
     workspacesMap,
     doc,
+    title,
     push,
     openRenameDocForm,
     openRenameFolderForm,
     titleChangeCallback,
-    title,
+    openNewFolderForm,
+    openNewDocForm,
   ])
 
   const updateLayout = useCallback(

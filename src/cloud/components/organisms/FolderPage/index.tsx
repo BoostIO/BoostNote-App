@@ -84,7 +84,9 @@ const FolderPage = () => {
         pageFolder: currentFolder,
       },
       openRenameFolderForm,
-      openRenameDocForm
+      openRenameDocForm,
+      openNewFolderForm,
+      openNewDocForm
     )
   }, [
     currentFolder,
@@ -94,6 +96,8 @@ const FolderPage = () => {
     team,
     openRenameFolderForm,
     openRenameDocForm,
+    openNewFolderForm,
+    openNewDocForm,
   ])
 
   const childDocs = useMemo(() => {
