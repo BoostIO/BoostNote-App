@@ -19,11 +19,19 @@ const RECONNECTING_TOOLTIP = (
   </>
 )
 
-const DISCONNECTED_TOOTIP = (
+const DISCONNECTED_TOOLTIP = (
   <>
     Please try reconnecting.
     <br />
     Changes will not be synced with the server until reconnection
+  </>
+)
+
+const SYNCING_TOOLTIP = (
+  <>
+    Syncing with the cloud.
+    <br />
+    Checking for changes and live updating the document
   </>
 )
 
@@ -33,7 +41,16 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
   }, [provider])
 
   const content = useMemo(() => {
+    console.log(connState)
     switch (connState) {
+      case 'loaded':
+        return (
+          <Tooltip tooltip={SYNCING_TOOLTIP}>
+            <span>
+              Syncing.. <Spinner />
+            </span>
+          </Tooltip>
+        )
       case 'reconnecting':
         return (
           <Tooltip tooltip={RECONNECTING_TOOLTIP}>
@@ -44,7 +61,7 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
         )
       case 'disconnected':
         return (
-          <Tooltip tooltip={DISCONNECTED_TOOTIP}>
+          <Tooltip tooltip={DISCONNECTED_TOOLTIP}>
             <StyledButton variant='warning' onClick={reconnect}>
               Reconnect
             </StyledButton>
