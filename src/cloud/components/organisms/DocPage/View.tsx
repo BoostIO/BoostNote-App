@@ -112,24 +112,22 @@ const ViewPage = ({
         ),
       }}
     >
+      {doc.archivedAt != null && (
+        <ColoredBlock variant='warning' className='float-on-top'>
+          <p>The document has been archived.</p>
+          {currentUserPermissions != null && (
+            <>
+              <CustomButton onClick={unarchiveHandler}>Unarchive</CustomButton>
+              <CustomButton onClick={() => deleteDocHandler(doc)}>
+                Delete
+              </CustomButton>
+            </>
+          )}
+        </ColoredBlock>
+      )}
       <Container
         className={cc([!preferences.docContextIsHidden && 'with__context'])}
       >
-        {doc.archivedAt != null && (
-          <ColoredBlock variant='warning' className='float-on-top'>
-            <p>The document has been archived.</p>
-            {currentUserPermissions != null && (
-              <>
-                <CustomButton onClick={unarchiveHandler}>
-                  Unarchive
-                </CustomButton>
-                <CustomButton onClick={() => deleteDocHandler(doc)}>
-                  Delete
-                </CustomButton>
-              </>
-            )}
-          </ColoredBlock>
-        )}
         <StyledViewDocLayout>
           <StyledTitle>{getDocTitle(doc, 'Untitled..')}</StyledTitle>
           <StyledBannerWrap>
