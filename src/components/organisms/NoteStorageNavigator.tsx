@@ -38,12 +38,10 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
   const { prompt, messageBox } = useDialog()
   const { push, hash } = useRouter()
   const { navigate } = useStorageRouter()
-  const { togglePreferencesModal, preferences } = usePreferences()
+  const { togglePreferencesModal } = usePreferences()
   const routeParams = useRouteParams()
   const storageId = storage.id
   const { t } = useTranslation()
-
-  const generalShowAppNavigator = preferences['general.showAppNavigator']
 
   const openCreateStorageDialog = useCallback(() => {
     prompt({
@@ -234,7 +232,6 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
 
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
-      {!generalShowAppNavigator && <WindowControlSpacer />}
       <TopButton onClick={openStorageContextMenu}>
         <div className='topButtonLabel'>{storage.name}</div>
       </TopButton>
@@ -271,10 +268,6 @@ const ScrollableContainer = styled.div`
   flex: 1;
   padding: 8px;
   overflow: auto;
-`
-const WindowControlSpacer = styled.div`
-  height: 40px;
-  -webkit-app-region: drag;
 `
 
 const TopButton = styled.button`
