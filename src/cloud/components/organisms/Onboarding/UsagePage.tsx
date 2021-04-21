@@ -120,19 +120,6 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
             </Flexbox>
           </form>
         </div>
-
-        {usingElectron && (
-          <div className='local-space'>
-            <Button
-              type='button'
-              variant='link'
-              onClick={openCreateLocalSpacePage}
-              style={{ marginTop: 10 }}
-            >
-              Create a Local Space
-            </Button>
-          </div>
-        )}
       </Container>
     </Page>
   )
