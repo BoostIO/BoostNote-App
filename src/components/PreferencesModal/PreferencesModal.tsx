@@ -47,6 +47,7 @@ const ContentContainer = styled.div`
   z-index: 7001;
   position: absolute;
   top: 0;
+  left: 40px;
   right: 0;
   bottom: 0;
   display: flex;
@@ -102,13 +103,7 @@ const CloseButton = styled.button`
 
 const PreferencesModal = () => {
   const { t } = useTranslation()
-  const {
-    closed,
-    togglePreferencesModal,
-    tab,
-    openTab,
-    preferences,
-  } = usePreferences()
+  const { closed, togglePreferencesModal, tab, openTab } = usePreferences()
   const { storageMap } = useDb()
   const routeParams = useRouteParams()
   const { get } = useMigrations()
@@ -167,11 +162,7 @@ const PreferencesModal = () => {
 
   return (
     <FullScreenContainer>
-      <ContentContainer
-        style={{
-          left: preferences['general.showAppNavigator'] ? 68 : 0,
-        }}
-      >
+      <ContentContainer>
         <ModalHeader>
           <ModalTitle>
             <Icon size={24} path={mdiHammerWrench} />
