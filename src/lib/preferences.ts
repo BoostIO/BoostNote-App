@@ -5,8 +5,6 @@ import { useSetState } from 'react-use'
 import { useTranslation } from 'react-i18next'
 import { preferencesKey } from './localStorageKeys'
 import { NoteSortingOptions } from './sort'
-import { setTrafficLightPosition } from './electronOnly'
-import { osName } from './platform'
 import { nodeEnv } from '../cloud/lib/consts'
 import { setAccessToken } from '../cloud/lib/stores/electron'
 
@@ -159,18 +157,6 @@ function usePreferencesStore() {
       i18n.changeLanguage(currentLanguage)
     }, [i18n, currentLanguage])
   }
-
-  const generalShowAppNavigator = preferences['general.showAppNavigator']
-  useEffect(() => {
-    if (osName !== 'macos') {
-      return
-    }
-    if (generalShowAppNavigator) {
-      setTrafficLightPosition({ x: 8, y: 8 })
-    } else {
-      setTrafficLightPosition({ x: 8, y: 24 })
-    }
-  }, [generalShowAppNavigator])
 
   const cloudUserInfo = preferences['cloud.user']
   useEffect(() => {
