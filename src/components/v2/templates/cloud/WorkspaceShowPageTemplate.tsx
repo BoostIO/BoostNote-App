@@ -21,7 +21,7 @@ import ContentManager from '../../organisms/ContentManager'
 interface WorkspaceShowPageTemplateProps<T> {
   topbarControls: any[]
   topbarTree?: Map<string, BreadCrumbTreeItem[]>
-  topbarNavigation: { goBack: () => void; goForward: () => void }
+  topbarNavigation: { goBack?: () => void; goForward?: () => void }
   helmet?: { title?: string; indexing?: boolean }
   metadata: { show: boolean }
   workspace: SerializedWorkspace
