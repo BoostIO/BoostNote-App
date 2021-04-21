@@ -1,4 +1,4 @@
-import React, { useState, useCallback, MouseEvent } from 'react'
+import React, { useState } from 'react'
 import Page from '../../Page'
 import cc from 'classcat'
 import styled from '../../../lib/styled'
@@ -13,7 +13,7 @@ import Button from '../../atoms/Button'
 import Spinner from '../../../../components/atoms/Spinner'
 import Icon from '../../../../components/atoms/Icon'
 import { useRouter } from '../../../lib/router'
-import { usingElectron, sendToHost } from '../../../lib/stores/electron'
+import { usingElectron } from '../../../lib/stores/electron'
 
 interface UsagePageProps {
   onUsage: (val: 'personal' | 'team') => void
@@ -24,15 +24,6 @@ interface UsagePageProps {
 const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
   const router = useRouter()
-
-  const openCreateLocalSpacePage = useCallback((event: MouseEvent) => {
-    event.preventDefault()
-    if (!usingElectron) {
-      return
-    }
-
-    sendToHost('create-local-space')
-  }, [])
 
   return (
     <Page>
