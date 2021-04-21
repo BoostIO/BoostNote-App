@@ -113,6 +113,7 @@ const Container = styled.div`
       flex-direction: column;
       flex: 1 1 auto;
       height: 100%;
+      position: relative;
     }
 
     .content__wrapper--reduced {
