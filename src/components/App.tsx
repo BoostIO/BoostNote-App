@@ -205,18 +205,31 @@ const App = () => {
     routeParams.name === 'boosthub.teams.show'
 
   useEffect(() => {
-    const handler = () => {
+    const preferencesIpcEventHandler = () => {
       if (boostHubTeamsShowPageIsActive) {
         boostHubToggleSettingsEventEmitter.dispatch()
       } else {
         togglePreferencesModal()
       }
     }
-    addIpcListener('preferences', handler)
-    return () => {
-      removeIpcListener('preferences', handler)
+    addIpcListener('preferences', preferencesIpcEventHandler)
+
+    const createLocalSpaceHandler = () => {
+      push('/app/storages')
     }
-  }, [togglePreferencesModal, boostHubTeamsShowPageIsActive])
+    addIpcListener('create-local-space', createLocalSpaceHandler)
+
+    const createCloudSpaceHandler = () => {
+      push('/app/boosthub/teams')
+    }
+    addIpcListener('create-cloud-space', createCloudSpaceHandler)
+
+    return () => {
+      removeIpcListener('preferences', preferencesIpcEventHandler)
+      removeIpcListener('create-local-space', createLocalSpaceHandler)
+      removeIpcListener('create-cloud-space', createCloudSpaceHandler)
+    }
+  }, [togglePreferencesModal, push, boostHubTeamsShowPageIsActive])
 
   useEffect(() => {
     const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {

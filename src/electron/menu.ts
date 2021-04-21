@@ -31,6 +31,15 @@ export const template: MenuItemConstructorOptions[] = [
             },
             { type: 'separator' },
             {
+              label: 'Add Cloud Space',
+              click: createEmitIpcMenuItemHandler('create-cloud-space'),
+            },
+            {
+              label: 'Add Local Space',
+              click: createEmitIpcMenuItemHandler('create-local-space'),
+            },
+            { type: 'separator' },
+            {
               label: 'Check For Updates',
               click: checkForUpdates,
             },
@@ -91,6 +100,15 @@ export const template: MenuItemConstructorOptions[] = [
             label: 'Save As',
             click: createEmitIpcMenuItemHandler('save-as'),
             accelerator: 'Ctrl + S',
+          },
+          { type: 'separator' },
+          {
+            label: 'Add Cloud Space',
+            click: createEmitIpcMenuItemHandler('create-cloud-space'),
+          },
+          {
+            label: 'Add Local Space',
+            click: createEmitIpcMenuItemHandler('create-local-space'),
           },
           { type: 'separator' },
           {
