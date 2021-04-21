@@ -18,6 +18,7 @@ export interface RealtimeArgs<T extends { id: string }> {
 
 export type ConnectionState =
   | 'initialising'
+  | 'loaded'
   | 'connected'
   | 'synced'
   | 'reconnecting'
@@ -36,7 +37,7 @@ const useRealtime = <T extends { id: string }>({
   const [users, setUsers] = useState<T[]>([])
   const timeoutRef = useRef<number>()
   const [cachePromise] = useState(() =>
-    createCache<Uint8Array>('cache:realtime')
+    createCache<Uint8Array>('cache:realtime', { max_object_count: 1000 })
   )
 
   useEffect(() => {
@@ -67,11 +68,13 @@ const useRealtime = <T extends { id: string }>({
 
     const doc = new Doc()
 
+    let cancel = false
     cachePromise
       .then((cache) => cache.get(id))
       .then((data) => {
-        if (data != null) {
+        if (data != null && !cancel) {
           applyUpdate(doc, data)
+          setConnState((current) => (current !== 'synced' ? 'loaded' : current))
         }
       })
       .catch((error) => console.error(error))
@@ -124,6 +127,7 @@ const useRealtime = <T extends { id: string }>({
 
     setProvider(provider)
     return () => {
+      cancel = true
       clearInterval(timeoutRef.current)
       doc.destroy()
       provider.awareness.destroy()
