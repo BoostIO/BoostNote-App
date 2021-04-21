@@ -262,7 +262,7 @@ const Editor = ({
   }, [doc.id])
 
   useEffect(() => {
-    if (connState === 'synced') {
+    if (connState === 'synced' || connState === 'loaded') {
       setInitialSyncDone(true)
     }
   }, [connState])
