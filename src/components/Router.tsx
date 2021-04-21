@@ -5,7 +5,6 @@ import StorageCreatePage from './pages/StorageCreatePage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
 import styled from '../lib/styled'
-import { usePreferences } from '../lib/preferences'
 import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
@@ -20,7 +19,6 @@ import { openNew } from '../lib/platform'
 import BoostHubLoginPage from './pages/BoostHubLoginPage'
 import { ObjectMap, NoteStorage } from '../lib/db/types'
 import { useGeneralStatus } from '../lib/generalStatus'
-import { openContextMenu } from '../lib/electronOnly'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -112,7 +110,6 @@ function useContent(
   routeParams: AllRouteParams,
   storageMap: ObjectMap<NoteStorage>
 ) {
-  const { preferences, setPreferences } = usePreferences()
   switch (routeParams.name) {
     case 'boosthub.login':
       return <BoostHubLoginPage />
@@ -145,27 +142,7 @@ function useContent(
       return <StorageCreatePage />
   }
   return (
-    <NotFoundPageContainer
-      onContextMenu={
-        preferences['general.showAppNavigator']
-          ? () => {
-              openContextMenu({
-                menuItems: [
-                  {
-                    type: 'normal',
-                    label: 'Show App Navigator',
-                    click: () => {
-                      setPreferences({
-                        'general.showAppNavigator': true,
-                      })
-                    },
-                  },
-                ],
-              })
-            }
-          : undefined
-      }
-    >
+    <NotFoundPageContainer>
       <h1>Page not found</h1>
       <p>Check the URL or click other link in the left side navigation.</p>
     </NotFoundPageContainer>

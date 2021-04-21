@@ -61,7 +61,7 @@ const BoostHubWebview = ({
   onDidFailLoad,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
-  const { preferences, setPreferences } = usePreferences()
+  const { preferences } = usePreferences()
   const { signOut } = useBoostHub()
   const domReadyRef = useRef<boolean>(false)
   const cloudUser = preferences['cloud.user']
@@ -187,19 +187,6 @@ const BoostHubWebview = ({
                     label: 'Go To Home Page',
                     click: () => {
                       webview.loadURL(src)
-                    },
-                  },
-                  {
-                    type: 'normal',
-                    label: 'Toggle App Navigator',
-                    click: () => {
-                      setPreferences((prevPreferences) => {
-                        return {
-                          'general.showAppNavigator': !prevPreferences[
-                            'general.showAppNavigator'
-                          ],
-                        }
-                      })
                     },
                   },
                   {

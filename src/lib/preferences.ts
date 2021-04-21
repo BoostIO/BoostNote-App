@@ -37,7 +37,6 @@ export interface Preferences {
   // General
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
-  'general.showAppNavigator': boolean
   'general.noteSorting': NoteSortingOptions
   'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
@@ -85,7 +84,6 @@ const initialPreferences = loadPreferences()
 
 const basePreferences: Preferences = {
   // General
-  'general.showAppNavigator': true,
   'general.language': 'en-US',
   'general.theme': 'dark',
   'general.noteSorting': 'updated-date-dsc',
