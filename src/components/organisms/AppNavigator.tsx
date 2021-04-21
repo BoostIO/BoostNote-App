@@ -12,6 +12,7 @@ import {
   mdiLogout,
   mdiMagnify,
   mdiPlus,
+  mdiMenu,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
@@ -228,9 +229,7 @@ const TopLevelNavigator = () => {
     t,
   ])
 
-  const toolbarRows = useMemo(() => {
-    const rows: SidebarToolbarRow[] = []
-
+  const toolbarRows = useMemo<SidebarToolbarRow[]>(() => {
     const boosthubTeam =
       activeBoostHubTeamDomain != null
         ? generalStatus.boostHubTeams.find(
@@ -238,103 +237,104 @@ const TopLevelNavigator = () => {
           )
         : null
 
+    if (boosthubTeam != null) {
+      return [
+        {
+          tooltip: 'Spaces',
+          active: showSpaces,
+          icon: (
+            <RoundedImage
+              size={30}
+              alt={boosthubTeam.name}
+              url={boosthubTeam.iconUrl}
+            />
+          ),
+          onClick: () => setShowSpaces((prev) => !prev),
+        },
+
+        {
+          tooltip: 'Tree',
+          icon: mdiFileDocumentMultipleOutline,
+          active: sidebarState === 'tree' && !showSpaces,
+          onClick: boostHubToggleSidebarTreeEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Search',
+          active: sidebarState === 'search' && !showSpaces,
+          icon: mdiMagnify,
+          onClick: boostHubToggleSidebarSearchEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Timeline',
+          active: sidebarState === 'timeline' && !showSpaces,
+          icon: mdiClockOutline,
+          onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Import',
+          icon: mdiDownload,
+          position: 'bottom',
+          onClick: boostHubOpenImportModalEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Members',
+          active: false,
+          icon: mdiAccountMultiplePlusOutline,
+          position: 'bottom',
+          onClick: boostHubToggleSettingsMembersEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Settings',
+          active: false,
+          icon: mdiCog,
+          position: 'bottom',
+          onClick: boostHubToggleSettingsEventEmitter.dispatch,
+        },
+      ] as SidebarToolbarRow[]
+    }
+
     const activeStorage = values(storageMap).find(
       (storage) => activeStorageId === storage?.id
     )
+    if (activeStorage) {
+      return [
+        {
+          tooltip: 'Spaces',
+          active: showSpaces,
+          icon: <RoundedImage size={30} alt={activeStorage.name} />,
+          onClick: () => setShowSpaces((prev) => !prev),
+        },
 
-    if (boosthubTeam != null) {
-      rows.push({
+        {
+          tooltip: 'Tree',
+          icon: mdiFileDocumentMultipleOutline,
+          active: !showSearchModal && closed && !showSpaces,
+          onClick: undefined,
+        },
+        {
+          tooltip: 'Search',
+          active: showSearchModal && closed && !showSpaces,
+          icon: mdiMagnify,
+          onClick: toggleShowSearchModal,
+        },
+        {
+          tooltip: 'Settings',
+          active: !closed && !showSpaces,
+          position: 'bottom',
+          icon: mdiCog,
+          onClick: togglePreferencesModal,
+        },
+      ] as SidebarToolbarRow[]
+    }
+
+    return [
+      {
         tooltip: 'Spaces',
         active: showSpaces,
-        icon: (
-          <RoundedImage
-            size={30}
-            alt={boosthubTeam.name}
-            url={boosthubTeam.iconUrl}
-          />
-        ),
+        icon: mdiMenu,
         onClick: () => setShowSpaces((prev) => !prev),
-      })
-    } else {
-      rows.push({
-        tooltip: 'Spaces',
-        active: showSpaces,
-        icon: <RoundedImage size={30} alt={activeStorage?.name || 'Spaces'} />,
-        onClick: () => setShowSpaces((prev) => !prev),
-      })
-    }
-
-    rows.push({
-      tooltip: 'Tree',
-      icon: mdiFileDocumentMultipleOutline,
-      active:
-        boosthubTeam == null
-          ? !showSearchModal && closed && !showSpaces
-          : sidebarState === 'tree' && !showSpaces,
-      onClick:
-        boosthubTeam != null
-          ? boostHubToggleSidebarTreeEventEmitter.dispatch
-          : undefined,
-    })
-
-    if (boosthubTeam != null) {
-      rows.push({
-        tooltip: 'Search',
-        active: sidebarState === 'search' && !showSpaces,
-        icon: mdiMagnify,
-        onClick: boostHubToggleSidebarSearchEventEmitter.dispatch,
-      })
-    } else {
-      rows.push({
-        tooltip: 'Search',
-        active: showSearchModal && closed && !showSpaces,
-        icon: mdiMagnify,
-        onClick: toggleShowSearchModal,
-      })
-    }
-
-    if (boosthubTeam != null) {
-      rows.push({
-        tooltip: 'Timeline',
-        active: sidebarState === 'timeline' && !showSpaces,
-        icon: mdiClockOutline,
-        onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
-      })
-
-      rows.push({
-        tooltip: 'Import',
-        icon: mdiDownload,
-        position: 'bottom',
-        onClick: boostHubOpenImportModalEventEmitter.dispatch,
-      })
-      rows.push({
-        tooltip: 'Members',
-        active: false,
-        icon: mdiAccountMultiplePlusOutline,
-        position: 'bottom',
-        onClick: boostHubToggleSettingsMembersEventEmitter.dispatch,
-      })
-    }
-
-    if (boosthubTeam != null) {
-      rows.push({
-        tooltip: 'Settings',
-        active: false,
-        icon: mdiCog,
-        position: 'bottom',
-        onClick: boostHubToggleSettingsEventEmitter.dispatch,
-      })
-    } else {
-      rows.push({
-        tooltip: 'Settings',
-        active: !closed && !showSpaces,
-        position: 'bottom',
-        icon: mdiCog,
-        onClick: togglePreferencesModal,
-      })
-    }
-
-    return rows
+      },
+    ] as SidebarToolbarRow[]
   }, [
     activeBoostHubTeamDomain,
     generalStatus.boostHubTeams,
