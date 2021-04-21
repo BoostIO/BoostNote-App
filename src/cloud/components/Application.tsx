@@ -514,7 +514,7 @@ const Application = ({
             users={users}
             timelineRows={timelineRows}
             timelineMore={
-              team != null
+              team != null && pathname !== getTeamLinkHref(team, 'timeline')
                 ? {
                     variant: 'primary',
                     onClick: () => push(getTeamLinkHref(team, 'timeline')),
