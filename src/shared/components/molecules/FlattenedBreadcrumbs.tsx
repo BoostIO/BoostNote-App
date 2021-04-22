@@ -3,7 +3,7 @@ import { Emoji } from 'emoji-mart'
 import React from 'react'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
-import { TopbarBreadcrumbProps } from '../../../components/v2/organisms/Topbar'
+import { TopbarBreadcrumbProps } from '../organisms/Topbar'
 
 interface FlattenedBreadcrumbsProps {
   breadcrumbs: TopbarBreadcrumbProps[]
