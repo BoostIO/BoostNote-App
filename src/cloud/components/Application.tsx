@@ -31,7 +31,7 @@ import {
   CollapsableType,
   useSidebarCollapse,
 } from '../lib/stores/sidebarCollapse'
-import { MenuItem, MenuTypes } from '../../lib/v2/stores/contextMenu'
+import { MenuItem, MenuTypes } from '../../shared/lib/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
 import { getFolderHref } from './atoms/Link/FolderLink'
@@ -41,8 +41,8 @@ import {
   SidebarSearchHistory,
   SidebarSearchResult,
 } from '../../components/v2/organisms/Sidebar/molecules/SidebarSearch'
-import { SidebarState } from '../../lib/v2/sidebar'
-import useApi from '../../lib/v2/hooks/useApi'
+import { SidebarState } from '../../shared/lib/sidebar'
+import useApi from '../../shared/lib/hooks/useApi'
 import {
   GetSearchResultsRequestQuery,
   getSearchResultsV2,
@@ -50,10 +50,10 @@ import {
   SearchResult,
 } from '../api/search'
 import { SidebarToolbarRow } from '../../components/v2/organisms/Sidebar/molecules/SidebarToolbar'
-import { mapUsers } from '../../lib/v2/mappers/users'
+import { mapUsers } from '../../shared/lib/mappers/users'
 import { SerializedDoc, SerializedDocWithBookmark } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
-import { compareDateString } from '../../lib/v2/date'
+import { compareDateString } from '../../shared/lib/date'
 import {
   getDocId,
   getDocTitle,
@@ -84,7 +84,7 @@ import {
   mdiTrashCanOutline,
   mdiWeb,
 } from '@mdi/js'
-import { getColorFromString } from '../../lib/v2/string'
+import { getColorFromString } from '../../shared/lib/string'
 import { buildIconUrl } from '../api/files'
 import {
   SerializedFolder,
@@ -93,7 +93,7 @@ import {
 import { SerializedWorkspace } from '../interfaces/db/workspace'
 import { SerializedTag } from '../interfaces/db/tag'
 import { FoldingProps } from '../../components/v2/atoms/FoldingWrapper'
-import { getMapValues } from '../../lib/v2/utils/array'
+import { getMapValues } from '../../shared/lib/utils/array'
 import {
   SidebarNavCategory,
   SidebarNavControls,
@@ -111,15 +111,15 @@ import ContentLayout, {
 } from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
-import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
+import { useCloudUpdater } from '../../shared/lib/hooks/cloud/useCloudUpdater'
 import { CreateFolderRequestBody } from '../api/teams/folders'
 import { CreateDocRequestBody } from '../api/teams/docs'
-import { useCloudDnd } from '../../lib/v2/hooks/cloud/useCloudDnd'
+import { useCloudDnd } from '../../shared/lib/hooks/cloud/useCloudDnd'
 import { NavResource } from '../interfaces/resources'
-import { SidebarDragState } from '../../lib/v2/dnd'
+import { SidebarDragState } from '../../shared/lib/dnd'
 import cc from 'classcat'
-import { mapTopbarTree } from '../../lib/v2/mappers/cloud/topbarTree'
-import { useCloudUI } from '../../lib/v2/hooks/cloud/useCloudUI'
+import { mapTopbarTree } from '../../shared/lib/mappers/cloud/topbarTree'
+import { useCloudUI } from '../../shared/lib/hooks/cloud/useCloudUI'
 
 interface ApplicationProps {
   content: ContentLayoutProps

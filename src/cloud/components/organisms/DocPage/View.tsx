@@ -22,13 +22,13 @@ import cc from 'classcat'
 import DocContextMenu, {
   docContextWidth,
 } from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
-import { useToast } from '../../../../lib/v2/stores/toast'
-import { mapTopbarBreadcrumbs } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
+import { useToast } from '../../../../shared/lib/stores/toast'
+import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
-import { useCloudUpdater } from '../../../../lib/v2/hooks/cloud/useCloudUpdater'
+import { useCloudUpdater } from '../../../../shared/lib/hooks/cloud/useCloudUpdater'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
-import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
 
 interface ViewPageProps {
   team: SerializedTeam

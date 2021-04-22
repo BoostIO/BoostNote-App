@@ -4,7 +4,7 @@ import {
   isSingleKeyEvent,
   preventKeyboardEventPropagation,
   useGlobalKeyDownHandler,
-} from '../../../lib/v2/keyboard'
+} from '../../../shared/lib/keyboard'
 
 export type FoldingProps = {
   fold: () => void

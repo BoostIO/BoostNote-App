@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../../lib/v2/styled'
+import styled from '../../../shared/lib/styled'
 import cc from 'classcat'
 
 export interface RoundedImageProps {

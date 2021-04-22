@@ -19,7 +19,7 @@ import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
 import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
-import { useToast } from '../../../lib/v2/stores/toast'
+import { useToast } from '../../../shared/lib/stores/toast'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam

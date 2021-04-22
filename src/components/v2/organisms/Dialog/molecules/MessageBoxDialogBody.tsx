@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { useEffectOnce } from 'react-use'
-import { MessageBoxButtonProps } from '../../../../../lib/v2/stores/dialog'
-import styled from '../../../../../lib/v2/styled'
+import { MessageBoxButtonProps } from '../../../../../shared/lib/stores/dialog'
+import styled from '../../../../../shared/lib/styled'
 import Button from '../../../atoms/Button'
 import LeftToRightList from '../../../atoms/LeftRightList'
 

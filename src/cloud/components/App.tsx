@@ -14,7 +14,7 @@ import { gaTrackingId, nodeEnv, boostHubBaseUrl } from '../lib/consts'
 import '../lib/i18n'
 
 import { RealtimeConnProvider } from '../lib/stores/realtimeConn'
-import { V2ToastProvider } from '../../lib/v2/stores/toast'
+import { V2ToastProvider } from '../../shared/lib/stores/toast'
 const App = () => {
   useElectron()
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
