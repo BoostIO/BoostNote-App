@@ -57,7 +57,16 @@ const ViewPage = ({
   const { pushMessage } = useToast()
   const { preferences } = usePreferences()
   const { sendingMap, toggleDocBookmark } = useCloudUpdater()
-  const { openRenameDocForm, openRenameFolderForm } = useCloudUI()
+  const {
+    openRenameDocForm,
+    openRenameFolderForm,
+    openWorkspaceEditForm,
+    openNewDocForm,
+    openNewFolderForm,
+    deleteOrArchiveDoc: deleteDoc,
+    deleteFolder,
+    deleteWorkspace,
+  } = useCloudUI()
 
   const unarchiveHandler = useCallback(async () => {
     try {
@@ -84,7 +93,13 @@ const ViewPage = ({
             push,
             { pageDoc: doc },
             currentUserPermissions != null ? openRenameFolderForm : undefined,
-            currentUserPermissions != null ? openRenameDocForm : undefined
+            currentUserPermissions != null ? openRenameDocForm : undefined,
+            currentUserPermissions != null ? openNewDocForm : undefined,
+            currentUserPermissions != null ? openNewFolderForm : undefined,
+            currentUserPermissions != null ? openWorkspaceEditForm : undefined,
+            currentUserPermissions != null ? deleteDoc : undefined,
+            currentUserPermissions != null ? deleteFolder : undefined,
+            currentUserPermissions != null ? deleteWorkspace : undefined
           ),
           children:
             currentUserPermissions != null ? (

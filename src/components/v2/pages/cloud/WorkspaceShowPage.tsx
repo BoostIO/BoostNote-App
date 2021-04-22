@@ -29,9 +29,8 @@ import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
 import { mapTopbarTree } from '../../../../lib/v2/mappers/cloud/topbarTree'
 import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
-import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
-import { useModal } from '../../../../lib/v2/stores/modal'
 import { mapManagerRows } from '../../../../lib/v2/mappers/cloud/contentManager'
+import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
 
 // TOFIX
 const WorkspaceShowPage = ({
@@ -76,7 +75,7 @@ const Page = ({
   const { push, goBack, goForward } = useRouter()
   const { initialLoadDone, docsMap, foldersMap, workspacesMap } = useNav()
   const workspaceRemoval = useWorkspaceDelete()
-  const { openModal } = useModal()
+  const { openWorkspaceEditForm } = useCloudUI()
 
   const breadcrumbsTree = useMemo(() => {
     return mapTopbarTree(
@@ -157,9 +156,7 @@ const Page = ({
       managerRows={managerRows}
       timelineRows={timelineRows}
       push={push}
-      editWorkspace={() =>
-        openModal(<EditWorkspaceModal workspace={workspace} />)
-      }
+      editWorkspace={() => openWorkspaceEditForm(workspace)}
     />
   )
 }

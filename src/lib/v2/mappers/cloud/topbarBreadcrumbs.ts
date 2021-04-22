@@ -1,9 +1,12 @@
 import {
+  mdiApplicationCog,
+  mdiArchive,
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
   mdiLock,
   mdiPencil,
   mdiTextBoxPlusOutline,
+  mdiTrashCanOutline,
 } from '@mdi/js'
 import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
 import { getFolderHref } from '../../../../cloud/components/atoms/Link/FolderLink'
@@ -41,19 +44,26 @@ export function mapTopbarBreadcrumbs(
   {
     pageDoc,
     pageFolder,
-  }: { pageDoc?: SerializedDoc; pageFolder?: SerializedFolder },
+  }: {
+    pageDoc?: SerializedDoc
+    pageFolder?: SerializedFolder
+  },
   renameFolder?: (folder: SerializedFolder) => void,
   renameDoc?: (doc: SerializedDoc) => void,
+  openNewDocForm?: (
+    body: CloudNewResourceRequestBody,
+    wrappers?: PromiseWrapperCallbacks,
+    prevRows?: FormRowProps[]
+  ) => void,
   openNewFolderForm?: (
     body: CloudNewResourceRequestBody,
     wrappers?: PromiseWrapperCallbacks,
     prevRows?: FormRowProps[]
   ) => void,
-  openNewDocForm?: (
-    body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
-  ) => void
+  editWorkspace?: (wp: SerializedWorkspace) => void,
+  deleteOrArchiveDoc?: (doc: SerializedDoc) => void,
+  deleteFolder?: (folder: SerializedFolder) => void,
+  deleteWorkspace?: (wp: SerializedWorkspace) => void
 ) {
   const items: (TopbarBreadcrumbProps & AddedProperties)[] = []
 
@@ -68,33 +78,12 @@ export function mapTopbarBreadcrumbs(
         ? { type: 'folder', item: foldersMap.get(pageDoc.parentFolderId) }
         : { type: 'workspace', item: workspacesMap.get(pageDoc.workspaceId) }
 
-    items.unshift({
-      label: getDocTitle(pageDoc, 'Untitled'),
-      active: true,
-      parentId: getUnsignedId(pageDoc.workspaceId, pageDoc.parentFolderId),
-      icon: mdiFileDocumentOutline,
-      emoji: pageDoc.emoji,
-      type: 'doc',
-      item: pageDoc,
-      link: {
-        href: getDocLinkHref(pageDoc, team, 'index'),
-        navigateTo: () => push(getDocLinkHref(pageDoc, team, 'index')),
-      },
-      controls:
-        renameDoc != null
-          ? [
-              {
-                icon: mdiPencil,
-                label: 'Rename',
-                onClick: () => renameDoc(pageDoc),
-              },
-            ]
-          : undefined,
-    })
+    items.unshift(
+      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteOrArchiveDoc)
+    )
   }
 
   let parentWorkspace: SerializedWorkspace | undefined
-  let newResourceBody: CloudNewResourceRequestBody
   if (pageFolder != null) {
     parentWorkspace = workspacesMap.get(pageFolder.workspaceId)
     parent =
@@ -102,70 +91,18 @@ export function mapTopbarBreadcrumbs(
         ? { type: 'folder', item: foldersMap.get(pageFolder.parentFolderId) }
         : { type: 'workspace', item: parentWorkspace }
 
-    newResourceBody = {
-      team,
-      workspaceId: pageFolder.workspaceId,
-      parentFolderId: pageFolder.id,
-    }
-
-    items.unshift({
-      label: pageFolder.name,
-      active: true,
-      parentId: getUnsignedId(
-        pageFolder.workspaceId,
-        pageFolder.parentFolderId
-      ),
-      emoji: pageFolder.emoji,
-      type: 'folder',
-      item: pageFolder,
-      link: {
-        href: getFolderHref(pageFolder, team, 'index'),
-        navigateTo: () => push(getFolderHref(pageFolder, team, 'index')),
-      },
-      controls: [
-        ...(openNewDocForm != null
-          ? [
-              {
-                icon: mdiTextBoxPlusOutline,
-                label: 'Create a document',
-                onClick: () =>
-                  openNewDocForm(newResourceBody, undefined, [
-                    {
-                      description: `${
-                        parentWorkspace != null ? parentWorkspace.name : ''
-                      }${pageFolder.pathname}`,
-                    },
-                  ]),
-              },
-            ]
-          : []),
-        ...(openNewFolderForm != null
-          ? [
-              {
-                icon: mdiFolderPlusOutline,
-                label: 'Create a folder',
-                onClick: () =>
-                  openNewFolderForm(newResourceBody, undefined, [
-                    {
-                      description: `${
-                        parentWorkspace != null ? parentWorkspace.name : ''
-                      }${pageFolder.pathname}`,
-                    },
-                  ]),
-              },
-            ]
-          : []),
-        ...(renameFolder != null
-          ? [
-              {
-                icon: mdiPencil,
-                label: 'Rename',
-                onClick: () => renameFolder(pageFolder),
-              },
-            ]
-          : []),
-      ],
-    })
+    items.unshift(
+      getFolderBreadcrumb(
+        team,
+        pageFolder,
+        workspacesMap,
+        push,
+        openNewFolderForm,
+        openNewDocForm,
+        renameFolder,
+        deleteFolder
+      )
+    )
   }
 
   let reversedToTop = false
@@ -194,82 +131,45 @@ export function mapTopbarBreadcrumbs(
             item: parent.item,
           }
 
-    newResourceBody = {
-      team,
-      workspaceId:
-        parent.type === 'workspace'
-          ? parent.item?.id
-          : parent.type === 'folder'
-          ? parent.item?.workspaceId
-          : undefined,
-      parentFolderId: parent.type === 'folder' ? parent.item?.id : undefined,
+    if (parent.item == null) {
+      items.unshift({
+        label: '..',
+        parentId: topParentId,
+        ...addedProperties,
+        link: {
+          href: addedProperties.href,
+          navigateTo: () => push(addedProperties.href),
+        },
+        controls: [],
+      })
+    } else {
+      if (parent.type === 'folder') {
+        items.unshift(
+          getFolderBreadcrumb(
+            team,
+            parent.item,
+            workspacesMap,
+            push,
+            openNewDocForm,
+            openNewFolderForm,
+            renameFolder,
+            deleteFolder
+          )
+        )
+      } else {
+        items.unshift(
+          mapWorkspaceBreadcrumb(
+            team,
+            parent.item,
+            push,
+            openNewDocForm,
+            openNewFolderForm,
+            editWorkspace,
+            deleteWorkspace
+          )
+        )
+      }
     }
-
-    const parentFolderPath =
-      parent.type === 'workspace'
-        ? parent.item?.name || ''
-        : `${
-            parent.item != null
-              ? workspacesMap.get(parent.item.workspaceId)?.name
-              : ''
-          }${parent.item?.pathname}`
-
-    items.unshift({
-      label: parent.item?.name || '..',
-      parentId:
-        parent.item == null || parent.type === 'workspace'
-          ? topParentId
-          : getUnsignedId(parent.item.workspaceId, parent.item.parentFolderId),
-      icon:
-        parent.type === 'workspace' && !parent.item?.public
-          ? mdiLock
-          : undefined,
-      emoji: parent.type === 'folder' ? parent.item?.emoji : undefined,
-      ...addedProperties,
-      link: {
-        href: addedProperties.href,
-        navigateTo: () => push(addedProperties.href),
-      },
-      controls: [
-        ...(openNewDocForm != null
-          ? [
-              {
-                icon: mdiTextBoxPlusOutline,
-                label: 'Create a document',
-                onClick: () =>
-                  openNewDocForm(newResourceBody, undefined, [
-                    {
-                      description: parentFolderPath,
-                    },
-                  ]),
-              },
-            ]
-          : []),
-        ...(openNewFolderForm != null
-          ? [
-              {
-                icon: mdiFolderPlusOutline,
-                label: 'Create a folder',
-                onClick: () =>
-                  openNewFolderForm(newResourceBody, undefined, [
-                    {
-                      description: parentFolderPath,
-                    },
-                  ]),
-              },
-            ]
-          : []),
-        ...(addedProperties.type === 'folder' && renameFolder != null
-          ? [
-              {
-                icon: mdiPencil,
-                label: 'Rename',
-                onClick: () => renameFolder(addedProperties.item),
-              },
-            ]
-          : []),
-      ],
-    })
 
     if (parent.type === 'workspace') {
       reversedToTop = true
@@ -287,6 +187,229 @@ export function mapTopbarBreadcrumbs(
   }
 
   return items
+}
+
+function getDocBreadcrumb(
+  team: SerializedTeam,
+  doc: SerializedDoc,
+  active: boolean,
+  push: (url: string) => void,
+  renameDoc?: (doc: SerializedDoc) => void,
+  deleteOrArchiveDoc?: (doc: SerializedDoc) => void
+): TopbarBreadcrumbProps & AddedProperties {
+  return {
+    label: getDocTitle(doc, 'Untitled'),
+    active,
+    parentId: getUnsignedId(doc.workspaceId, doc.parentFolderId),
+    icon: mdiFileDocumentOutline,
+    emoji: doc.emoji,
+    type: 'doc',
+    item: doc,
+    link: {
+      href: getDocLinkHref(doc, team, 'index'),
+      navigateTo: () => push(getDocLinkHref(doc, team, 'index')),
+    },
+    controls: [
+      ...(renameDoc != null
+        ? [
+            {
+              icon: mdiPencil,
+              label: 'Rename',
+              onClick: () => renameDoc(doc),
+            },
+          ]
+        : []),
+      ...(deleteOrArchiveDoc != null
+        ? [
+            doc.archivedAt != null
+              ? {
+                  icon: mdiTrashCanOutline,
+                  label: 'Delete',
+                  onClick: () => deleteOrArchiveDoc(doc),
+                }
+              : {
+                  icon: mdiArchive,
+                  label: 'Archive',
+                  onClick: () => deleteOrArchiveDoc(doc),
+                },
+          ]
+        : []),
+    ],
+  }
+}
+
+function getFolderBreadcrumb(
+  team: SerializedTeam,
+  folder: SerializedFolder,
+  workspacesMap: Map<string, SerializedWorkspace>,
+  push: (url: string) => void,
+  openNewDocForm?: (
+    body: CloudNewResourceRequestBody,
+    wrappers?: PromiseWrapperCallbacks,
+    prevRows?: FormRowProps[]
+  ) => void,
+  openNewFolderForm?: (
+    body: CloudNewResourceRequestBody,
+    wrappers?: PromiseWrapperCallbacks,
+    prevRows?: FormRowProps[]
+  ) => void,
+  renameFolder?: (folder: SerializedFolder) => void,
+  deleteFolder?: (folder: SerializedFolder) => void
+): TopbarBreadcrumbProps & AddedProperties {
+  const newResourceBody = {
+    team,
+    workspaceId: folder.workspaceId,
+    parentFolderId: folder.id,
+  }
+
+  const currentPath = `${workspacesMap.get(folder.workspaceId)?.name}${
+    folder.pathname
+  }`
+
+  return {
+    type: 'folder',
+    item: folder,
+    label: folder.name,
+    active: true,
+    parentId: getUnsignedId(folder.workspaceId, folder.parentFolderId),
+    emoji: folder.emoji,
+    link: {
+      href: getFolderHref(folder, team, 'index'),
+      navigateTo: () => push(getFolderHref(folder, team, 'index')),
+    },
+    controls: [
+      ...(openNewDocForm != null
+        ? [
+            {
+              icon: mdiTextBoxPlusOutline,
+              label: 'Create a document',
+              onClick: () =>
+                openNewDocForm(newResourceBody, undefined, [
+                  {
+                    description: currentPath,
+                  },
+                ]),
+            },
+          ]
+        : []),
+      ...(openNewFolderForm != null
+        ? [
+            {
+              icon: mdiFolderPlusOutline,
+              label: 'Create a folder',
+              onClick: () =>
+                openNewFolderForm(newResourceBody, undefined, [
+                  {
+                    description: currentPath,
+                  },
+                ]),
+            },
+          ]
+        : []),
+      ...(renameFolder != null
+        ? [
+            {
+              icon: mdiPencil,
+              label: 'Rename',
+              onClick: () => renameFolder(folder),
+            },
+          ]
+        : []),
+      ...(deleteFolder != null
+        ? [
+            {
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => deleteFolder(folder),
+            },
+          ]
+        : []),
+    ],
+  }
+}
+
+export function mapWorkspaceBreadcrumb(
+  team: SerializedTeam,
+  workspace: SerializedWorkspace,
+  push: (url: string) => void,
+  openNewDocForm?: (
+    body: CloudNewResourceRequestBody,
+    wrappers?: PromiseWrapperCallbacks,
+    prevRows?: FormRowProps[]
+  ) => void,
+  openNewFolderForm?: (
+    body: CloudNewResourceRequestBody,
+    wrappers?: PromiseWrapperCallbacks,
+    prevRows?: FormRowProps[]
+  ) => void,
+  editWorkspace?: (wp: SerializedWorkspace) => void,
+  deleteWorkspace?: (wp: SerializedWorkspace) => void
+): TopbarBreadcrumbProps & AddedProperties {
+  const newResourceBody = {
+    team,
+    workspaceId: workspace.id,
+  }
+
+  return {
+    type: 'wp',
+    item: workspace,
+    label: workspace.name,
+    active: true,
+    icon: workspace.default ? undefined : mdiLock,
+    parentId: topParentId,
+    link: {
+      href: getWorkspaceHref(workspace, team, 'index'),
+      navigateTo: () => push(getWorkspaceHref(workspace, team, 'index')),
+    },
+    controls: [
+      ...(openNewDocForm != null
+        ? [
+            {
+              icon: mdiTextBoxPlusOutline,
+              label: 'Create a document',
+              onClick: () =>
+                openNewDocForm(newResourceBody, undefined, [
+                  {
+                    description: workspace.name,
+                  },
+                ]),
+            },
+          ]
+        : []),
+      ...(openNewFolderForm != null
+        ? [
+            {
+              icon: mdiFolderPlusOutline,
+              label: 'Create a folder',
+              onClick: () =>
+                openNewFolderForm(newResourceBody, undefined, [
+                  {
+                    description: workspace.name,
+                  },
+                ]),
+            },
+          ]
+        : []),
+      ...(editWorkspace != null
+        ? [
+            {
+              icon: mdiApplicationCog,
+              label: 'Edit',
+              onClick: () => editWorkspace(workspace),
+            },
+          ]
+        : []),
+      ...(deleteWorkspace != null && !workspace.default
+        ? [
+            {
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => deleteWorkspace(workspace),
+            },
+          ]
+        : []),
+    ],
+  }
 }
 
 function getUnsignedId(fallbackId: string, folderId?: string) {
