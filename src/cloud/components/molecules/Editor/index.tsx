@@ -734,6 +734,21 @@ const Editor = ({
                     ),
                   },
                 ]
+              : connState === 'loaded'
+              ? [
+                  {
+                    variant: 'secondary' as const,
+                    disabled: true,
+                    label: 'Syncing...',
+                    tooltip: (
+                      <>
+                        Syncing with the cloud.
+                        <br />
+                        Checking for changes and live updating the document
+                      </>
+                    ),
+                  },
+                ]
               : []),
             {
               variant: 'icon',
