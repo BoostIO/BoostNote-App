@@ -2,8 +2,8 @@ import React, { useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 import { MessageBoxButtonProps } from '../../../../../shared/lib/stores/dialog'
 import styled from '../../../../../shared/lib/styled'
-import Button from '../../../atoms/Button'
-import LeftToRightList from '../../../atoms/LeftRightList'
+import Button from '../../../../../shared/components/atoms/Button'
+import LeftToRightList from '../../../../../shared/components/atoms/LeftRightList'
 
 type MessageBoxDialogProps = {
   buttons?: MessageBoxButtonProps[]

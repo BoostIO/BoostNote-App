@@ -6,7 +6,7 @@ import { isActiveElementAnInput } from '../../../../shared/lib/dom'
 import { useGlobalKeyDownHandler } from '../../../../shared/lib/keyboard'
 import { usePathnameChangeEffect } from '../../../../cloud/lib/router'
 import styled from '../../../../shared/lib/styled'
-import Button from '../../atoms/Button'
+import Button from '../../../../shared/components/atoms/Button'
 
 const Modal = () => {
   const { modals, closeAllModals, closeLastModal } = useModal()

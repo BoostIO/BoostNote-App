@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import styled from '../../../../shared/lib/styled'
-import { LoadingButton, ButtonProps } from '../../atoms/Button'
+import {
+  LoadingButton,
+  ButtonProps,
+} from '../../../../shared/components/atoms/Button'
 import FormInput, { FormInputProps } from './atoms/FormInput'
 import { FormSelectProps } from './atoms/FormSelect'
 import cc from 'classcat'

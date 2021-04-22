@@ -1,6 +1,6 @@
 import React from 'react'
 import cc from 'classcat'
-import styled from '../../../shared/lib/styled'
+import styled from '../../lib/styled'
 
 interface BadgeProps {
   variant?: 'bordered'

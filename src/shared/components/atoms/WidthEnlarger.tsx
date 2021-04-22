@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import throttle from 'lodash/throttle'
 import { clamp } from 'ramda'
-import styled from '../../../shared/lib/styled'
+import styled from '../../lib/styled'
 import cc from 'classcat'
 
 interface WidthEnlargerProps {
