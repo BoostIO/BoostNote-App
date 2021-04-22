@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { SerializedTeam } from '../../../../interfaces/db/team'
-import { useModal } from '../../../../lib/stores/modal'
 import { useNav } from '../../../../lib/stores/nav'
 import {
   useContextMenu,
@@ -10,7 +9,6 @@ import {
 import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { destroyWorkspace } from '../../../../api/teams/workspaces'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
-import EditWorkspaceModal from '../../Modal/contents/Workspace/EditWorkspaceModal'
 import SideNavigatorIconButton from '../SideNavigator/SideNavigatorIconButton'
 import {
   mdiApplicationCog,
@@ -25,6 +23,7 @@ import { useGlobalData } from '../../../../lib/stores/globalData'
 import { usePage } from '../../../../lib/stores/pageStore'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useCloudUI } from '../../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface SideNavigatorWorkspaceControlsProps {
   workspace: SerializedWorkspace
@@ -41,7 +40,6 @@ const SideNavigatorWorkspaceControls = ({
     globalData: { currentUser },
   } = useGlobalData()
   const { permissions } = usePage()
-  const { openModal } = useModal()
   const {
     removeFromWorkspacesMap,
     docsMap,
@@ -56,6 +54,7 @@ const SideNavigatorWorkspaceControls = ({
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { pushApiErrorMessage, pushMessage } = useToast()
+  const { openWorkspaceEditForm } = useCloudUI()
 
   const createChildDoc = useCallback(async () => {
     try {
@@ -176,8 +175,7 @@ const SideNavigatorWorkspaceControls = ({
                 type: MenuTypes.Normal,
                 icon: <IconMdi path={mdiApplicationCog} size={16} />,
                 label: 'Edit Workspace',
-                onClick: () =>
-                  openModal(<EditWorkspaceModal workspace={workspace} />),
+                onClick: () => openWorkspaceEditForm(workspace),
               },
 
               {
@@ -194,13 +192,18 @@ const SideNavigatorWorkspaceControls = ({
                 type: MenuTypes.Normal,
                 icon: <IconMdi path={mdiApplicationCog} size={16} />,
                 label: 'Edit Workspace',
-                onClick: () =>
-                  openModal(<EditWorkspaceModal workspace={workspace} />),
+                onClick: () => openWorkspaceEditForm(workspace),
               },
             ]
       )
     },
-    [popup, currentUserPermissionsId, onDeleteCallback, openModal, workspace]
+    [
+      popup,
+      currentUserPermissionsId,
+      onDeleteCallback,
+      openWorkspaceEditForm,
+      workspace,
+    ]
   )
 
   return (

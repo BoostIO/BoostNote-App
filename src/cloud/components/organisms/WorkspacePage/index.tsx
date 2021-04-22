@@ -12,10 +12,9 @@ import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
-import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
-import { getWorkspaceHref } from '../../atoms/Link/WorkspaceLink'
 import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
+import { mapWorkspaceBreadcrumb } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -31,26 +30,38 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { docsMap, foldersMap } = useNav()
   const { query, push } = useRouter()
   const [sending, setSending] = useState<number>()
-  const { openNewFolderForm, openNewDocForm } = useCloudUI()
+  const {
+    openNewFolderForm,
+    openNewDocForm,
+    openWorkspaceEditForm,
+    deleteWorkspace,
+  } = useCloudUI()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
       return []
     }
 
-    const workspaceHref = getWorkspaceHref(workspace, team, 'index')
     return [
-      {
-        label: workspace.name,
-        active: true,
-        parentId: topParentId,
-        link: {
-          href: workspaceHref,
-          navigateTo: () => push(workspaceHref),
-        },
-      },
+      mapWorkspaceBreadcrumb(
+        team,
+        workspace,
+        push,
+        openNewDocForm,
+        openNewFolderForm,
+        openWorkspaceEditForm,
+        deleteWorkspace
+      ),
     ]
-  }, [team, workspace, push])
+  }, [
+    team,
+    workspace,
+    push,
+    openNewFolderForm,
+    openNewDocForm,
+    openWorkspaceEditForm,
+    deleteWorkspace,
+  ])
 
   const childFolders = useMemo(() => {
     if (workspace == null) {

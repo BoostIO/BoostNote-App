@@ -155,6 +155,10 @@ const Editor = ({
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
+    openWorkspaceEditForm,
+    deleteOrArchiveDoc,
+    deleteFolder,
+    deleteWorkspace,
   } = useCloudUI()
 
   const userInfo = useMemo(() => {
@@ -618,8 +622,12 @@ const Editor = ({
       },
       openRenameFolderForm,
       (doc) => openRenameDocForm(doc, titleChangeCallback),
+      openNewDocForm,
       openNewFolderForm,
-      openNewDocForm
+      openWorkspaceEditForm,
+      deleteOrArchiveDoc,
+      deleteFolder,
+      deleteWorkspace
     )
     return breadcrumbs
   }, [
@@ -634,6 +642,10 @@ const Editor = ({
     titleChangeCallback,
     openNewFolderForm,
     openNewDocForm,
+    deleteOrArchiveDoc,
+    deleteFolder,
+    openWorkspaceEditForm,
+    deleteWorkspace,
   ])
 
   const updateLayout = useCallback(

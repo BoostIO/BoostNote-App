@@ -53,7 +53,7 @@ const FolderPage = () => {
   } = useNav()
   const { openEmojiPicker } = useEmojiPicker()
   const [sending, setSending] = useState<number>()
-  const { toggleFolderBookmark, sendingMap, deleteFolder } = useCloudUpdater()
+  const { toggleFolderBookmark, sendingMap } = useCloudUpdater()
   const { push } = useRouter()
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const {
@@ -61,6 +61,10 @@ const FolderPage = () => {
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
+    deleteFolder,
+    openWorkspaceEditForm,
+    deleteOrArchiveDoc,
+    deleteWorkspace,
   } = useCloudUI()
 
   const currentFolder = useMemo(() => {
@@ -85,8 +89,12 @@ const FolderPage = () => {
       },
       openRenameFolderForm,
       openRenameDocForm,
+      openNewDocForm,
       openNewFolderForm,
-      openNewDocForm
+      openWorkspaceEditForm,
+      deleteOrArchiveDoc,
+      deleteFolder,
+      deleteWorkspace
     )
   }, [
     currentFolder,
@@ -98,6 +106,10 @@ const FolderPage = () => {
     openRenameDocForm,
     openNewFolderForm,
     openNewDocForm,
+    deleteOrArchiveDoc,
+    deleteWorkspace,
+    deleteFolder,
+    openWorkspaceEditForm,
   ])
 
   const childDocs = useMemo(() => {
