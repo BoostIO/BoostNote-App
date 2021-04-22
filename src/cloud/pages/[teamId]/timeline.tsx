@@ -18,9 +18,9 @@ import { buildIconUrl } from '../../api/files'
 import { SerializedUser } from '../../interfaces/db/user'
 import { getColorFromString } from '../../lib/utils/string'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
-import { topParentId } from '../../../shared/lib/mappers/cloud/topbarTree'
 import { useRouter } from '../../lib/router'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
+import { topParentId } from '../../lib/mappers/topbarTree'
 
 export interface TimelineUser {
   user: SerializedUser
