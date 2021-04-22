@@ -3,8 +3,8 @@ import cc from 'classcat'
 import styled from '../../../../../shared/lib/styled'
 import { hideScroll } from '../../../../../shared/lib/styled/styleFunctions'
 import { AppComponent } from '../../../../../shared/lib/types'
-import Icon, { IconSize } from '../../../atoms/Icon'
-import WithTooltip from '../../../atoms/WithTooltip'
+import Icon, { IconSize } from '../../../../../shared/components/atoms/Icon'
+import WithTooltip from '../../../../../shared/components/atoms/WithTooltip'
 
 export type SidebarToolbarRow = {
   icon: string | React.ReactNode

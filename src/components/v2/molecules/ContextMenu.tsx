@@ -10,8 +10,8 @@ import {
   useContextMenu,
 } from '../../../shared/lib/stores/contextMenu'
 import styled from '../../../shared/lib/styled'
-import Icon from '../atoms/Icon'
-import UpDownList from '../atoms/UpDownList'
+import Icon from '../../../shared/components/atoms/Icon'
+import UpDownList from '../../../shared/components/atoms/UpDownList'
 
 const ContextMenu = () => {
   const contextMenu = useContextMenu()
