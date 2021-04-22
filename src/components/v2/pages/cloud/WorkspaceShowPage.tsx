@@ -10,7 +10,7 @@ import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../../../cloud/lib/stores/preferences'
-import { useWorkspaceDelete } from '../../../../shared/lib/hooks/cloud/useWorkspaceDelete'
+import { useWorkspaceDelete } from '../../../../cloud/lib/hooks/useWorkspaceDelete'
 import {
   mapUsers,
   mapUsersWithAccess,
@@ -30,7 +30,7 @@ import { mapTopbarTree } from '../../../../shared/lib/mappers/cloud/topbarTree'
 import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import { mapManagerRows } from '../../../../shared/lib/mappers/cloud/contentManager'
-import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../../../../cloud/lib/hooks/useCloudUI'
 
 // TOFIX
 const WorkspaceShowPage = ({
