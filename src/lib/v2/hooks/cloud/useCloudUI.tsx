@@ -1,22 +1,37 @@
 import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
+import EditWorkspaceModal from '../../../../cloud/components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
 import { SerializedFolder } from '../../../../cloud/interfaces/db/folder'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
+import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { FormRowProps } from '../../../../components/v2/molecules/Form'
 import EmojiInputForm from '../../../../components/v2/organisms/EmojiInputForm'
+import { DialogIconTypes, useDialog } from '../../stores/dialog'
 import { useModal } from '../../stores/modal'
 import { PromiseWrapperCallbacks } from '../../types'
 import { useCloudUpdater } from './useCloudUpdater'
 
 export function useCloudUI() {
   const { openModal, closeLastModal } = useModal()
+  const { messageBox } = useDialog()
   const {
     updateFolder,
     updateDocEmoji,
     createFolder,
     createDoc,
+    deleteWorkspaceApi,
+    deleteFolderApi,
+    deleteDocApi,
+    toggleDocArchive,
   } = useCloudUpdater()
+
+  const openWorkspaceEditForm = useCallback(
+    (wp: SerializedWorkspace) => {
+      openModal(<EditWorkspaceModal workspace={wp} />)
+    },
+    [openModal]
+  )
 
   const openRenameFolderForm = useCallback(
     (folder: SerializedFolder) => {
@@ -179,11 +194,122 @@ export function useCloudUI() {
     [openModal, closeLastModal, createDoc]
   )
 
+  const deleteWorkspace = useCallback(
+    async (workspace: { id: string; teamId: string; default: boolean }) => {
+      if (workspace.default) {
+        return
+      }
+      messageBox({
+        title: `Delete the workspace?`,
+        message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Destroy All',
+            onClick: async () => await deleteWorkspaceApi(workspace),
+          },
+        ],
+      })
+    },
+    [messageBox, deleteWorkspaceApi]
+  )
+
+  const deleteFolder = useCallback(
+    async (target: { id: string; pathname: string; teamId: string }) => {
+      messageBox({
+        title: `Delete ${target.pathname}`,
+        message: `Are you sure to remove this folder and delete completely its notes`,
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
+              await deleteFolderApi(target)
+            },
+          },
+        ],
+      })
+    },
+    [messageBox, deleteFolderApi]
+  )
+
+  const deleteOrArchiveDoc = useCallback(
+    async (
+      target: { id: string; archivedAt?: string; teamId: string },
+      title = 'this document'
+    ) => {
+      if (target.archivedAt == null) {
+        return messageBox({
+          title: `Archive ${title}`,
+          message: `Are you sure to archive this content?`,
+          iconType: DialogIconTypes.Warning,
+          buttons: [
+            {
+              variant: 'secondary',
+              label: 'Cancel',
+              cancelButton: true,
+              defaultButton: true,
+            },
+            {
+              variant: 'warning',
+              label: 'archive',
+              onClick: async () => {
+                await toggleDocArchive(
+                  target.teamId,
+                  target.id,
+                  target.archivedAt
+                )
+              },
+            },
+          ],
+        })
+      }
+      messageBox({
+        title: `Delete ${title}`,
+        message: `Are you sure to remove for good this content?`,
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: 'Delete',
+            onClick: async () => {
+              await deleteDocApi(target)
+            },
+          },
+        ],
+      })
+    },
+    [messageBox, deleteDocApi, toggleDocArchive]
+  )
+
   return {
+    openWorkspaceEditForm,
     openNewDocForm,
     openNewFolderForm,
     openRenameFolderForm,
     openRenameDocForm,
+    deleteFolder,
+    deleteWorkspace,
+    deleteOrArchiveDoc,
   }
 }
 

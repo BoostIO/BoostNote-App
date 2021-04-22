@@ -111,7 +111,6 @@ import ContentLayout, {
 } from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
-import EditWorkspaceModal from './organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { useCloudUpdater } from '../../lib/v2/hooks/cloud/useCloudUpdater'
 import { CreateFolderRequestBody } from '../api/teams/folders'
 import { CreateDocRequestBody } from '../api/teams/docs'
@@ -177,6 +176,7 @@ const Application = ({
     openRenameFolderForm,
     openNewFolderForm,
     openRenameDocForm,
+    openWorkspaceEditForm,
   } = useCloudUI()
 
   useEffectOnce(() => {
@@ -231,11 +231,10 @@ const Application = ({
     toggleDocArchive,
     toggleDocBookmark,
     toggleFolderBookmark,
-    deleteWorkspace,
-    deleteFolder,
     updateDoc,
     updateFolder,
   } = useCloudUpdater()
+  const { deleteWorkspace, deleteFolder } = useCloudUI()
 
   const tree = useMemo(() => {
     return mapTree(
@@ -265,6 +264,7 @@ const Application = ({
       (id: string) => dropInWorkspace(id, updateFolder, updateDoc),
       openRenameFolderForm,
       openRenameDocForm,
+      openWorkspaceEditForm,
       team
     )
   }, [
@@ -295,6 +295,7 @@ const Application = ({
     updateDoc,
     openRenameFolderForm,
     openRenameDocForm,
+    openWorkspaceEditForm,
     draggedResource,
     team,
   ])
@@ -740,6 +741,7 @@ function mapTree(
   dropInWorkspace: (id: string) => void,
   openRenameFolderForm: (folder: SerializedFolder) => void,
   _openRenameDocForm: (doc: SerializedDoc) => void,
+  openWorkspaceEditForm: (wp: SerializedWorkspace) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -802,7 +804,7 @@ function mapTree(
               type: MenuTypes.Normal,
               icon: mdiApplicationCog,
               label: 'Edit',
-              onClick: () => openModal(<EditWorkspaceModal workspace={wp} />),
+              onClick: () => openWorkspaceEditForm(wp),
             },
           ]
         : [
@@ -810,7 +812,7 @@ function mapTree(
               type: MenuTypes.Normal,
               icon: mdiApplicationCog,
               label: 'Edit',
-              onClick: () => openModal(<EditWorkspaceModal workspace={wp} />),
+              onClick: () => openWorkspaceEditForm(wp),
             },
             {
               type: MenuTypes.Normal,

@@ -53,8 +53,6 @@ import {
   getFolderURL,
   getTeamURL,
 } from '../../../../cloud/lib/utils/patterns'
-import { DialogIconTypes, useDialog } from '../../stores/dialog'
-import { useToast } from '../../stores/toast'
 import { getMapFromEntityArray } from '../../utils/array'
 import useBulkApi from '../useBulkApi'
 
@@ -71,8 +69,6 @@ export function useCloudUpdater() {
     removeFromFoldersMap,
     setCurrentPath,
   } = useNav()
-  const { pushMessage } = useToast()
-  const { messageBox } = useDialog()
   const { push } = useRouter()
 
   const { sendingMap, send } = useBulkApi()
@@ -198,213 +194,6 @@ export function useCloudUpdater() {
     [pageFolder, send, setPartialPageData, updateFoldersMap]
   )
 
-  const deleteWorkspace = useCallback(
-    async (workspace: { id: string; teamId: string; default: boolean }) => {
-      if (workspace.default) {
-        return
-      }
-      messageBox({
-        title: `Delete the workspace?`,
-        message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
-        buttons: [
-          {
-            variant: 'secondary',
-            label: 'Cancel',
-            cancelButton: true,
-            defaultButton: true,
-          },
-          {
-            variant: 'danger',
-            label: 'Destroy All',
-            onClick: async () => {
-              await send(workspace.id, 'delete', {
-                api: () =>
-                  destroyWorkspace(
-                    { id: workspace.teamId } as any,
-                    workspace,
-                    true
-                  ),
-                cb: ({ publicWorkspace }: DestroyWorkspaceResponseBody) => {
-                  removeFromWorkspacesMap(workspace.id)
-                  pushMessage({
-                    title: 'Success',
-                    type: 'success',
-                    description: 'Your workspace has been deleted',
-                  })
-
-                  const workspaceDocs = [...docsMap.values()].filter(
-                    (doc) => doc.workspaceId === workspace.id
-                  )
-                  const workspaceFolders = [...foldersMap.values()].filter(
-                    (folder) => folder.workspaceId === workspace.id
-                  )
-
-                  if (publicWorkspace != null) {
-                    const changedDocs = workspaceDocs.map((doc) => {
-                      doc.workspaceId = publicWorkspace.id
-                      return doc
-                    })
-                    updateDocsMap(...getMapFromEntityArray(changedDocs))
-                    const changedFolders = workspaceFolders.map((folder) => {
-                      folder.workspaceId = publicWorkspace.id
-                      return folder
-                    })
-                    updateFoldersMap(...getMapFromEntityArray(changedFolders))
-                    updateWorkspacesMap([publicWorkspace.id, publicWorkspace])
-                  } else {
-                    removeFromDocsMap(...workspaceDocs.map((doc) => doc.id))
-                    removeFromFoldersMap(
-                      ...workspaceFolders.map((doc) => doc.id)
-                    )
-                  }
-                },
-              })
-            },
-          },
-        ],
-      })
-    },
-    [
-      messageBox,
-      docsMap,
-      foldersMap,
-      pushMessage,
-      removeFromDocsMap,
-      removeFromFoldersMap,
-      send,
-      updateDocsMap,
-      updateFoldersMap,
-      updateWorkspacesMap,
-      removeFromWorkspacesMap,
-    ]
-  )
-
-  const deleteFolder = useCallback(
-    async (target: { id: string; pathname: string; teamId: string }) => {
-      messageBox({
-        title: `Delete ${target.pathname}`,
-        message: `Are you sure to remove this folder and delete completely its notes`,
-        iconType: DialogIconTypes.Warning,
-        buttons: [
-          {
-            variant: 'secondary',
-            label: 'Cancel',
-            cancelButton: true,
-            defaultButton: true,
-          },
-          {
-            variant: 'danger',
-            label: 'Delete',
-            onClick: async () => {
-              await send(target.id, 'delete', {
-                api: () =>
-                  destroyFolder({ id: target.teamId }, { id: target.id }),
-                cb: ({
-                  parentFolder,
-                  workspace,
-                  docs,
-                  docsIds,
-                  foldersIds,
-                }: DestroyFolderResponseBody) => {
-                  foldersIds.forEach((folderId) => {
-                    removeFromFoldersMap(folderId)
-                  })
-
-                  if (docs == null) {
-                    docsIds.forEach((docId) => {
-                      removeFromDocsMap(docId)
-                    })
-                  } else {
-                    updateDocsMap(...getMapFromEntityArray(docs))
-                  }
-
-                  if (parentFolder != null) {
-                    updateFoldersMap([
-                      parentFolder.id,
-                      {
-                        ...parentFolder,
-                        childFoldersIds: parentFolder.childFoldersIds.filter(
-                          (id) => id !== target.id
-                        ),
-                      },
-                    ])
-                  }
-
-                  if (workspace != null) {
-                    updateWorkspacesMap([workspace.id, workspace])
-                  }
-                },
-              })
-            },
-          },
-        ],
-      })
-    },
-    [
-      messageBox,
-      updateFoldersMap,
-      removeFromFoldersMap,
-      updateDocsMap,
-      updateWorkspacesMap,
-      removeFromDocsMap,
-      send,
-    ]
-  )
-
-  const deleteDoc = useCallback(
-    async (
-      target: { id: string; archivedAt?: string; teamId: string },
-      title = 'this document'
-    ) => {
-      messageBox({
-        title: `Delete ${title}`,
-        message: `Are you sure to remove for good this content?`,
-        iconType: DialogIconTypes.Warning,
-        buttons: [
-          {
-            variant: 'secondary',
-            label: 'Cancel',
-            cancelButton: true,
-            defaultButton: true,
-          },
-          {
-            variant: 'danger',
-            label: 'Delete',
-            onClick: async () => {
-              await send(target.id, 'delete', {
-                api: () => destroyDoc({ id: target.teamId }, { id: target.id }),
-                cb: ({
-                  doc,
-                  parentFolder,
-                  workspace,
-                }: DestroyDocResponseBody) => {
-                  removeFromDocsMap(target.id)
-                  if (parentFolder != null) {
-                    updateFoldersMap([parentFolder.id, parentFolder])
-                  }
-                  if (workspace != null) {
-                    updateWorkspacesMap([workspace.id, workspace])
-                  }
-                  if (doc != null) {
-                    updateDocsMap([doc.id, doc])
-                  }
-                },
-              })
-            },
-          },
-        ],
-      })
-    },
-    [
-      messageBox,
-      updateFoldersMap,
-      updateDocsMap,
-      updateWorkspacesMap,
-      removeFromDocsMap,
-      send,
-    ]
-  )
-
   const updateFolderApi = useCallback(
     async (target: SerializedFolder, body: UpdateFolderRequestBody) => {
       await send(target.id, 'update', {
@@ -509,6 +298,130 @@ export function useCloudUpdater() {
     [pageFolder, updateFoldersMap, setPartialPageData, send]
   )
 
+  const deleteWorkspaceApi = useCallback(
+    async (workspace: { id: string; teamId: string; default: boolean }) => {
+      await send(workspace.id, 'delete', {
+        api: () =>
+          destroyWorkspace({ id: workspace.teamId } as any, workspace, true),
+        cb: ({ publicWorkspace }: DestroyWorkspaceResponseBody) => {
+          removeFromWorkspacesMap(workspace.id)
+          const workspaceDocs = [...docsMap.values()].filter(
+            (doc) => doc.workspaceId === workspace.id
+          )
+          const workspaceFolders = [...foldersMap.values()].filter(
+            (folder) => folder.workspaceId === workspace.id
+          )
+
+          if (publicWorkspace != null) {
+            const changedDocs = workspaceDocs.map((doc) => {
+              doc.workspaceId = publicWorkspace.id
+              return doc
+            })
+            updateDocsMap(...getMapFromEntityArray(changedDocs))
+            const changedFolders = workspaceFolders.map((folder) => {
+              folder.workspaceId = publicWorkspace.id
+              return folder
+            })
+            updateFoldersMap(...getMapFromEntityArray(changedFolders))
+            updateWorkspacesMap([publicWorkspace.id, publicWorkspace])
+          } else {
+            removeFromDocsMap(...workspaceDocs.map((doc) => doc.id))
+            removeFromFoldersMap(...workspaceFolders.map((doc) => doc.id))
+          }
+        },
+      })
+    },
+    [
+      send,
+      docsMap,
+      foldersMap,
+      updateDocsMap,
+      updateFoldersMap,
+      updateWorkspacesMap,
+      removeFromDocsMap,
+      removeFromFoldersMap,
+      removeFromWorkspacesMap,
+    ]
+  )
+
+  const deleteFolderApi = useCallback(
+    async (target: { id: string; pathname: string; teamId: string }) => {
+      return send(target.id, 'delete', {
+        api: () => destroyFolder({ id: target.teamId }, { id: target.id }),
+        cb: ({
+          parentFolder,
+          workspace,
+          docs,
+          docsIds,
+          foldersIds,
+        }: DestroyFolderResponseBody) => {
+          foldersIds.forEach((folderId) => {
+            removeFromFoldersMap(folderId)
+          })
+
+          if (docs == null) {
+            docsIds.forEach((docId) => {
+              removeFromDocsMap(docId)
+            })
+          } else {
+            updateDocsMap(...getMapFromEntityArray(docs))
+          }
+
+          if (parentFolder != null) {
+            updateFoldersMap([
+              parentFolder.id,
+              {
+                ...parentFolder,
+                childFoldersIds: parentFolder.childFoldersIds.filter(
+                  (id) => id !== target.id
+                ),
+              },
+            ])
+          }
+
+          if (workspace != null) {
+            updateWorkspacesMap([workspace.id, workspace])
+          }
+        },
+      })
+    },
+    [
+      send,
+      updateDocsMap,
+      updateFoldersMap,
+      updateWorkspacesMap,
+      removeFromDocsMap,
+      removeFromFoldersMap,
+    ]
+  )
+
+  const deleteDocApi = useCallback(
+    async (target: { id: string; teamId: string }) => {
+      return send(target.id, 'delete', {
+        api: () => destroyDoc({ id: target.teamId }, { id: target.id }),
+        cb: ({ doc, parentFolder, workspace }: DestroyDocResponseBody) => {
+          removeFromDocsMap(target.id)
+          if (parentFolder != null) {
+            updateFoldersMap([parentFolder.id, parentFolder])
+          }
+          if (workspace != null) {
+            updateWorkspacesMap([workspace.id, workspace])
+          }
+          if (doc != null) {
+            updateDocsMap([doc.id, doc])
+          }
+        },
+      })
+    },
+    [
+      send,
+      updateDocsMap,
+      updateFoldersMap,
+      updateWorkspacesMap,
+      removeFromDocsMap,
+    ]
+  )
+
   return {
     sendingMap,
     createDoc: createDocApi,
@@ -516,12 +429,12 @@ export function useCloudUpdater() {
     toggleDocArchive,
     toggleDocBookmark,
     toggleFolderBookmark,
-    deleteWorkspace,
-    deleteFolder,
-    deleteDoc,
     updateFolder: updateFolderApi,
     updateDoc: updateDocApi,
     updateDocEmoji: updateDocEmojiApi,
     updateFolderEmoji: updateFolderEmojiApi,
+    deleteWorkspaceApi,
+    deleteFolderApi,
+    deleteDocApi,
   }
 }
