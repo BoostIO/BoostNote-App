@@ -776,7 +776,7 @@ const Editor = ({
             },
             {
               variant: 'icon',
-              iconPath: !preferences.docContextIsHidden
+              iconPath: preferences.docContextIsHidden
                 ? mdiChevronLeft
                 : mdiChevronRight,
               onClick: () =>
