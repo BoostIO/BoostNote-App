@@ -1,8 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { mdiArrowLeft, mdiArrowRight, mdiChevronRight } from '@mdi/js'
 import { AppComponent } from '../../../../shared/lib/types'
-import Button, { ButtonProps, ButtonVariant } from '../../atoms/Button'
-import Icon from '../../atoms/Icon'
+import Button, {
+  ButtonProps,
+  ButtonVariant,
+} from '../../../../shared/components/atoms/Button'
+import Icon from '../../../../shared/components/atoms/Icon'
 import TopbarBreadcrumb from './molecules/TopbarBreadcrumb'
 import { BreadCrumbTreeItem } from '../../../../shared/lib/mappers/types'
 import {
@@ -12,7 +15,7 @@ import {
 import TopbarNavigationContext from './molecules/TopbarNavigationContext'
 import cc from 'classcat'
 import { scrollbarOverlay } from '../../../../shared/lib/styled/styleFunctions'
-import WithTooltip from '../../atoms/WithTooltip'
+import WithTooltip from '../../../../shared/components/atoms/WithTooltip'
 import styled from '../../../../shared/lib/styled'
 import { TopbarActionItemAttrbs } from './atoms/TopbarActionItem'
 

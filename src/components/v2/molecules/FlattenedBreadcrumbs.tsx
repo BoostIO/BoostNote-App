@@ -2,7 +2,7 @@ import { mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
 import React from 'react'
 import styled from '../../../shared/lib/styled'
-import Icon from '../atoms/Icon'
+import Icon from '../../../shared/components/atoms/Icon'
 import { TopbarBreadcrumbProps } from '../organisms/Topbar'
 
 interface FlattenedBreadcrumbsProps {

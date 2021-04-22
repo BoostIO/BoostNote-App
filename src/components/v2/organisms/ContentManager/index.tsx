@@ -4,7 +4,7 @@ import cc from 'classcat'
 import ContentManagerSort, {
   contentManagerSortOptions,
 } from './molecules/ContentManagerSort'
-import Button from '../../atoms/Button'
+import Button from '../../../../shared/components/atoms/Button'
 import { useSet } from 'react-use'
 import ContentManagerRow from './atoms/ContentManagerRow'
 import { ContentManagerItemProps } from '../../../../shared/lib/mappers/types'
