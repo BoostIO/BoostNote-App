@@ -7,11 +7,11 @@ import {
   SidebarState,
 } from '../../../../shared/lib/sidebar'
 import styled from '../../../../shared/lib/styled'
-import WidthEnlarger from '../../atoms/WidthEnlarger'
+import WidthEnlarger from '../../../../shared/components/atoms/WidthEnlarger'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarToolbar, { SidebarToolbarRow } from './molecules/SidebarToolbar'
 import SidebarTree, { SidebarNavCategory } from './molecules/SidebarTree'
-import Spinner from '../../atoms/Spinner'
+import Spinner from '../../../../shared/components/atoms/Spinner'
 import SidebarSearch, {
   SidebarSearchHistory,
   SidebarSearchResult,
@@ -21,7 +21,7 @@ import SidebarTimeline, {
   SidebarTimelineRow,
 } from './molecules/SidebarTimeline'
 import { AppUser } from '../../../../shared/lib/mappers/users'
-import Button, { ButtonProps } from '../../atoms/Button'
+import Button, { ButtonProps } from '../../../../shared/components/atoms/Button'
 
 type SidebarProps = {
   showToolbar: boolean

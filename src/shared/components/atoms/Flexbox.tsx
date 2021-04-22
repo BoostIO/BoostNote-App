@@ -1,7 +1,7 @@
 import React from 'react'
 import cc from 'classcat'
-import { AppComponent } from '../../../shared/lib/types'
-import styled from '../../../shared/lib/styled'
+import { AppComponent } from '../../lib/types'
+import styled from '../../lib/styled'
 
 interface FlexboxProps {
   flex?: string
