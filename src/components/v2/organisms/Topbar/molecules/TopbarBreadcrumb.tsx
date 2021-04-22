@@ -106,6 +106,9 @@ const Container = styled.a`
     align-items: center;
     flex: 0 0 auto;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    svg {
+      color: ${({ theme }) => theme.colors.text.link};
+    }
   }
 
   &:hover,
