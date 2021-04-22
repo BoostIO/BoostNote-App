@@ -26,7 +26,7 @@ import { useGlobalData } from '../../../../lib/stores/globalData'
 import { usePage } from '../../../../lib/stores/pageStore'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../../shared/lib/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../../../../lib/hooks/useCloudUI'
 
 interface SideNavigatorWorkspaceControlsProps {
   workspace: SerializedWorkspace

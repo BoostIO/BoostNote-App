@@ -29,7 +29,7 @@ import { MetaKeyText } from '../../../../../lib/keyboard'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiStar, mdiTrashCan, mdiStarOutline, mdiPencil } from '@mdi/js'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../../../shared/lib/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../../../../../lib/hooks/useCloudUI'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
