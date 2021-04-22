@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../lib/styled'
 
 export interface FormSelectOption {
   label: string | React.ReactNode

@@ -33,7 +33,7 @@ import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topba
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
-import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
+import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 

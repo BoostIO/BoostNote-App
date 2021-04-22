@@ -25,7 +25,7 @@ import {
   prefixFolders,
 } from '../../../../cloud/lib/utils/patterns'
 import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
-import { FormRowProps } from '../../../../components/v2/molecules/Form'
+import { FormRowProps } from '../../../components/molecules/Form'
 import { TopbarBreadcrumbProps } from '../../../../components/v2/organisms/Topbar'
 import { PromiseWrapperCallbacks } from '../../types'
 import { topParentId } from './topbarTree'

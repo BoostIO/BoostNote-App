@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react'
 import styled from '../../../../../shared/lib/styled'
-import FormInput from '../../../molecules/Form/atoms/FormInput'
+import FormInput from '../../../../../shared/components/molecules/Form/atoms/FormInput'
 import SidebarHeader from '../atoms/SidebarHeader'
 import cc from 'classcat'
 import { useEffectOnce, useSet } from 'react-use'
@@ -10,7 +10,7 @@ import SidebarContextList from '../atoms/SidebarContextList'
 import Spinner from '../../../../../shared/components/atoms/Spinner'
 import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
 import plur from 'plur'
-import CloseButtonWrapper from '../../../molecules/CloseButtonWrapper'
+import CloseButtonWrapper from '../../../../../shared/components/molecules/CloseButtonWrapper'
 
 interface SidebarSearchProps {
   searchQuery: string

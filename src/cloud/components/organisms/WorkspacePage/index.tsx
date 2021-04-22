@@ -12,7 +12,7 @@ import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
-import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
+import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapWorkspaceBreadcrumb } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 

@@ -5,9 +5,9 @@ import React, {
   useCallback,
 } from 'react'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../lib/styled'
 import { useEmojiPicker } from '../../../../../cloud/lib/stores/emoji'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Icon from '../../../atoms/Icon'
 import { Emoji } from 'emoji-mart'
 
 export interface FormEmojiProps {
