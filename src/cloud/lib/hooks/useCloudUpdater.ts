@@ -13,13 +13,13 @@ import {
   updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
-} from '../../../../cloud/api/teams/docs'
+} from '../../api/teams/docs'
 import {
   createDocBookmark,
   CreateDocBookmarkResponseBody,
   destroyDocBookmark,
   DestroyDocBookmarkResponseBody,
-} from '../../../../cloud/api/teams/docs/bookmarks'
+} from '../../api/teams/docs/bookmarks'
 import {
   createFolder,
   CreateFolderRequestBody,
@@ -31,30 +31,26 @@ import {
   UpdateFolderRequestBody,
   UpdateFolderResponseBody,
   updateFolderEmoji,
-} from '../../../../cloud/api/teams/folders'
+} from '../../api/teams/folders'
 import {
   createFolderBookmark,
   CreateFolderBookmarkResponseBody,
   destroyFolderBookmark,
   DestroyFolderBookmarkResponseBody,
-} from '../../../../cloud/api/teams/folders/bookmarks'
+} from '../../api/teams/folders/bookmarks'
 import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
-} from '../../../../cloud/api/teams/workspaces'
-import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
-import { SerializedFolder } from '../../../../cloud/interfaces/db/folder'
-import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
-import { useRouter } from '../../../../cloud/lib/router'
-import { useNav } from '../../../../cloud/lib/stores/nav'
-import { usePage } from '../../../../cloud/lib/stores/pageStore'
-import {
-  getDocURL,
-  getFolderURL,
-  getTeamURL,
-} from '../../../../cloud/lib/utils/patterns'
-import { getMapFromEntityArray } from '../../utils/array'
-import useBulkApi from '../useBulkApi'
+} from '../../api/teams/workspaces'
+import { SerializedDoc } from '../../interfaces/db/doc'
+import { SerializedFolder } from '../../interfaces/db/folder'
+import { SerializedTeam } from '../../interfaces/db/team'
+import { useRouter } from '../router'
+import { useNav } from '../stores/nav'
+import { usePage } from '../stores/pageStore'
+import { getDocURL, getFolderURL, getTeamURL } from '../utils/patterns'
+import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
+import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
 
 export function useCloudUpdater() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
