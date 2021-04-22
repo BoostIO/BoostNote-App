@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import { ButtonProps } from '../../../shared/components/atoms/Button'
-import Form, { FormRowProps } from '../molecules/Form'
+import Form, { FormRowProps } from '../../../shared/components/molecules/Form'
 
 interface EmojiInputFormProps {
   prevRows?: FormRowProps[]

@@ -8,7 +8,7 @@ import SidebarContextList from '../atoms/SidebarContextList'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../../../../shared/components/atoms/Icon'
 import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
-import UserIconList from '../../../molecules/UserIconList'
+import UserIconList from '../../../../../shared/components/molecules/UserIconList'
 import WithTooltip from '../../../../../shared/components/atoms/WithTooltip'
 import { getDateTime } from '../../../../../shared/lib/date'
 

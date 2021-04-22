@@ -25,7 +25,7 @@ import {
 import { useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from '../../components/v2/organisms/cloud/EventSource'
-import ApplicationLayout from '../../components/v2/molecules/ApplicationLayout'
+import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import Sidebar from '../../components/v2/organisms/Sidebar'
 import {
   CollapsableType,

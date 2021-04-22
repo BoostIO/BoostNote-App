@@ -5,7 +5,7 @@ import { useWindow } from '../window'
 import {
   EmojiPickerHeight,
   EmojiPickerWidth,
-} from '../../../../components/v2/molecules/EmojiPicker'
+} from '../../../components/molecules/EmojiPicker'
 
 function useEmojiPickerStore(): EmojiPickerContext {
   const [closed, setClosed] = useState(true)
