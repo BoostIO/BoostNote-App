@@ -9,7 +9,7 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { StyledBillingInput } from '.'
 import { Spinner } from '../../atoms/Spinner'
 import { updateSubEmail } from '../../../api/teams/subscription/update'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 interface UpdateBillingEmailFormProps {
   sub?: SerializedSubscription

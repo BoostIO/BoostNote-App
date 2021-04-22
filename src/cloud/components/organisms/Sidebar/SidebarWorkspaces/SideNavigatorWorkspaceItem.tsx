@@ -31,7 +31,7 @@ import {
 import { shortcuts } from '../../../../lib/shortcuts'
 import SideNavigatorFoldButton from '../SideNavigator/SideNavigatorFoldButton'
 import Tooltip from '../../../atoms/Tooltip'
-import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../../shared/lib/stores/toast'
 
 interface SidebarWorkspaceItemProps {
   workspace: SerializedWorkspace

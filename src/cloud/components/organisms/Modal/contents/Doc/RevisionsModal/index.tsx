@@ -24,7 +24,7 @@ import { useSettings } from '../../../../../../lib/stores/settings'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../../../../lib/v2/stores/dialog'
+} from '../../../../../../../shared/lib/stores/dialog'
 import RevisionModalDetail from './RevisionModalDetail'
 import {
   StyledNoSubContent,

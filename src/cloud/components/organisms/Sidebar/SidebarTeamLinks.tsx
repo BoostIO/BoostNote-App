@@ -15,7 +15,7 @@ import SidebarNewDocControls from './SideNavigator/SidebarNewDocControls'
 import { useRouter } from '../../../lib/router'
 import { newNoteEventEmitter } from '../../../lib/utils/events'
 import { useElectron } from '../../../lib/stores/electron'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 const SidebarTeamLinks = () => {
   const { team, currentSubInfo } = usePage()

@@ -7,15 +7,15 @@ import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import Button from '../../atoms/Button'
 import UserIconList from '../../molecules/UserIconList'
-import { AppUser } from '../../../../lib/v2/mappers/users'
+import { AppUser } from '../../../../shared/lib/mappers/users'
 import ShallowTimeline, {
   ShallowTimelineRow,
 } from '../../organisms/ShallowTimeline'
 import {
   BreadCrumbTreeItem,
   ContentManagerItemProps,
-} from '../../../../lib/v2/mappers/types'
-import { topParentId } from '../../../../lib/v2/mappers/cloud/topbarTree'
+} from '../../../../shared/lib/mappers/types'
+import { topParentId } from '../../../../shared/lib/mappers/cloud/topbarTree'
 import ContentManager from '../../organisms/ContentManager'
 
 interface WorkspaceShowPageTemplateProps<T> {

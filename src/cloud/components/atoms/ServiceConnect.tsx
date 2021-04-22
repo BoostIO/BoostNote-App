@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useEffect } from 'react'
 import CustomButton, { PrimaryButtonProps } from './buttons/CustomButton'
 import { SerializedServiceConnection } from '../../interfaces/db/connections'
 import { createServiceConnectionFromOAuth } from '../../api/connections'
-import { useToast } from '../../../lib/v2/stores/toast'
+import { useToast } from '../../../shared/lib/stores/toast'
 
 interface ServiceConnectProps extends PrimaryButtonProps {
   service: string

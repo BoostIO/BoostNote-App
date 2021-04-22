@@ -6,7 +6,7 @@ import {
   ResourcesIdSortedByWorkspaceIds,
   SerializedAppEvent,
 } from '../../../../cloud/interfaces/db/appEvents'
-import { getMapFromEntityArray } from '../../../../lib/v2/utils/array'
+import { getMapFromEntityArray } from '../../../../shared/lib/utils/array'
 import { getResources } from '../../../../cloud/api/teams/resources'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { SerializedTag } from '../../../../cloud/interfaces/db/tag'

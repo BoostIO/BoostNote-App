@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { BreadCrumbTreeItem } from '../../../../../lib/v2/mappers/types'
-import styled from '../../../../../lib/v2/styled'
-import { AppComponent } from '../../../../../lib/v2/types'
+import { BreadCrumbTreeItem } from '../../../../../shared/lib/mappers/types'
+import styled from '../../../../../shared/lib/styled'
+import { AppComponent } from '../../../../../shared/lib/types'
 import FoldingWrapper from '../../../atoms/FoldingWrapper'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
-import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
 import Icon from '../../../atoms/Icon'
 
 interface TopbarTreeItemProps {

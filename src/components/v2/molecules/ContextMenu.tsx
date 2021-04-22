@@ -8,8 +8,8 @@ import {
   menuZIndex,
   NormalMenuItem,
   useContextMenu,
-} from '../../../lib/v2/stores/contextMenu'
-import styled from '../../../lib/v2/styled'
+} from '../../../shared/lib/stores/contextMenu'
+import styled from '../../../shared/lib/styled'
 import Icon from '../atoms/Icon'
 import UpDownList from '../atoms/UpDownList'
 
