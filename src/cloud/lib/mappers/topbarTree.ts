@@ -1,18 +1,14 @@
 import { mdiFileDocumentOutline, mdiLock } from '@mdi/js'
-import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
-import { getFolderHref } from '../../../../cloud/components/atoms/Link/FolderLink'
-import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
-import { SerializedDocWithBookmark } from '../../../../cloud/interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../../../cloud/interfaces/db/folder'
-import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
-import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
-import {
-  getDocId,
-  getDocTitle,
-  getFolderId,
-} from '../../../../cloud/lib/utils/patterns'
-import { getMapValues } from '../../utils/array'
-import { BreadCrumbTreeItem } from '../types'
+import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
+import { getFolderHref } from '../../components/atoms/Link/FolderLink'
+import { getWorkspaceHref } from '../../components/atoms/Link/WorkspaceLink'
+import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
+import { SerializedTeam } from '../../interfaces/db/team'
+import { SerializedWorkspace } from '../../interfaces/db/workspace'
+import { getDocId, getDocTitle, getFolderId } from '../utils/patterns'
+import { getMapValues } from '../../../shared/lib/utils/array'
+import { BreadCrumbTreeItem } from '../../../shared/lib/mappers/types'
 
 export const topParentId = 'root'
 
