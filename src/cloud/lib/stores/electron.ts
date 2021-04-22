@@ -39,6 +39,9 @@ function removeAllHostListeners(channel?: string) {
   ;(window as any).__ELECTRON_ONLY__.removeAllHostListeners(channel)
 }
 
+export const globalContextMenuIsConfigured = !!(window as any).__ELECTRON_ONLY__
+  .globalContextMenuIsConfigured
+
 export const usingElectron = /Cloud Space/.test(navigator.userAgent)
 
 export function getCurrentDesktopAppVersion() {

@@ -7,6 +7,7 @@ import {
   sendToHost,
   useElectron,
   usingLegacyElectron,
+  globalContextMenuIsConfigured,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { useEffectOnce } from 'react-use'
@@ -30,6 +31,9 @@ const App = () => {
 
   useEffectOnce(() => {
     if (!usingElectron) {
+      return
+    }
+    if (globalContextMenuIsConfigured) {
       return
     }
     const handler = (event: MouseEvent) => {
