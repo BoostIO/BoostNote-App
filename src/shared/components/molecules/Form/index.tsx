@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import styled from '../../../../shared/lib/styled'
-import {
-  LoadingButton,
-  ButtonProps,
-} from '../../../../shared/components/atoms/Button'
+import styled from '../../../lib/styled'
+import { LoadingButton, ButtonProps } from '../../atoms/Button'
 import FormInput, { FormInputProps } from './atoms/FormInput'
 import { FormSelectProps } from './atoms/FormSelect'
 import cc from 'classcat'
-import { AppComponent } from '../../../../shared/lib/types'
-import { FormSelect } from '../../../atoms/form'
+import { AppComponent } from '../../../lib/types'
+import { FormSelect } from '../../../../components/atoms/form'
 import FormEmoji, { FormEmojiProps } from './atoms/FormEmoji'
 
 interface FormProps {

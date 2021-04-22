@@ -58,7 +58,7 @@ import { V2ModalProvider } from '../../shared/lib/stores/modal'
 import { V2DialogProvider } from '../../shared/lib/stores/dialog'
 import Toast from '../../components/v2/organisms/Toast'
 import Dialog from '../../components/v2/organisms/Dialog/Dialog'
-import ContextMenu from '../../components/v2/molecules/ContextMenu'
+import ContextMenu from '../../shared/components/molecules/ContextMenu'
 import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 import V2Modal from '../../components/v2/organisms/Modal'
 
