@@ -1,6 +1,6 @@
 import React from 'react'
-import { ToastMessage, useToast } from '../../../lib/v2/stores/toast'
-import styled from '../../../lib/v2/styled'
+import { ToastMessage, useToast } from '../../../shared/lib/stores/toast'
+import styled from '../../../shared/lib/styled'
 import cc from 'classcat'
 import Button from '../atoms/Button'
 import {

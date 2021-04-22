@@ -1,6 +1,6 @@
 import { Emoji } from 'emoji-mart'
 import React, { useRef } from 'react'
-import styled from '../../../../../lib/v2/styled'
+import styled from '../../../../../shared/lib/styled'
 import Icon from '../../../atoms/Icon'
 import cc from 'classcat'
 import { textOverflow } from '../../../../../lib/styled/styleFunctions'

@@ -9,7 +9,7 @@ import {
   updateToken,
 } from '../../../api/tokens'
 import { splitWhen } from 'ramda'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 interface Actions {
   deleteToken: (token: SerializedApiToken) => void

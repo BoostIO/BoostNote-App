@@ -5,7 +5,7 @@ import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import {
   useContextMenu,
   MenuTypes,
-} from '../../../../../lib/v2/stores/contextMenu'
+} from '../../../../../shared/lib/stores/contextMenu'
 import {
   CreateFolderBookmarkResponseBody,
   DestroyFolderBookmarkResponseBody,
@@ -35,8 +35,8 @@ import {
 import SideNavigatorIconButton from './SideNavigatorIconButton'
 import Tooltip from '../../../atoms/Tooltip'
 import IconMdi from '../../../atoms/IconMdi'
-import { useToast } from '../../../../../lib/v2/stores/toast'
-import { useCloudUI } from '../../../../../lib/v2/hooks/cloud/useCloudUI'
+import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useCloudUI } from '../../../../../shared/lib/hooks/cloud/useCloudUI'
 
 interface SideNavigatorFolderControlsProps {
   folder: SerializedFolderWithBookmark

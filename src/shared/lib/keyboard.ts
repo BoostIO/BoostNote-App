@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { osName } from '../platform'
+import { osName } from './platform'
 import {
   isActiveElementAnInput,
   navigateToPreviousFocusableWithin,

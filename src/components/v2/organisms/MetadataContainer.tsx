@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../../lib/v2/styled'
-import { AppComponent } from '../../../lib/v2/types'
+import styled from '../../../shared/lib/styled'
+import { AppComponent } from '../../../shared/lib/types'
 import cc from 'classcat'
 import Icon from '../atoms/Icon'
 import Spinner from '../atoms/Spinner'

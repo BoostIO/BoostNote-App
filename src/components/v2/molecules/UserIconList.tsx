@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import RoundedImage, { RoundedImageProps } from '../atoms/RoundedImage'
 import cc from 'classcat'
-import styled from '../../../lib/v2/styled'
+import styled from '../../../shared/lib/styled'
 import WithTooltip from '../atoms/WithTooltip'
 import Button from '../atoms/Button'
-import { overflowEllipsis } from '../../../lib/v2/styled/styleFunctions'
+import { overflowEllipsis } from '../../../shared/lib/styled/styleFunctions'
 
 interface UserIconListProps {
   className?: string

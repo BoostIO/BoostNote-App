@@ -10,27 +10,27 @@ import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { usePreferences } from '../../../../cloud/lib/stores/preferences'
-import { useWorkspaceDelete } from '../../../../lib/v2/hooks/cloud/useWorkspaceDelete'
+import { useWorkspaceDelete } from '../../../../shared/lib/hooks/cloud/useWorkspaceDelete'
 import {
   mapUsers,
   mapUsersWithAccess,
   AppUser,
-} from '../../../../lib/v2/mappers/users'
+} from '../../../../shared/lib/mappers/users'
 import WorkspaceShowPageTemplate from '../../templates/cloud/WorkspaceShowPageTemplate'
 import ErrorLayout from '../../templates/ErrorLayout'
 import { prop } from 'ramda'
 import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
-import { compareDateString } from '../../../../lib/v2/date'
+import { compareDateString } from '../../../../shared/lib/date'
 import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
 import { Url, useRouter } from '../../../../cloud/lib/router'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { RoundedImageProps } from '../../atoms/RoundedImage'
 import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
-import { mapTopbarTree } from '../../../../lib/v2/mappers/cloud/topbarTree'
+import { mapTopbarTree } from '../../../../shared/lib/mappers/cloud/topbarTree'
 import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
-import { mapManagerRows } from '../../../../lib/v2/mappers/cloud/contentManager'
-import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
+import { mapManagerRows } from '../../../../shared/lib/mappers/cloud/contentManager'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
 
 // TOFIX
 const WorkspaceShowPage = ({

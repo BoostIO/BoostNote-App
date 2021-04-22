@@ -30,7 +30,7 @@ import EditableInput from '../../../../atoms/EditableInput'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../../../lib/v2/stores/dialog'
+} from '../../../../../../shared/lib/stores/dialog'
 import {
   destroyDocTemplate,
   updateTemplate,
@@ -52,7 +52,7 @@ import { useEmojiPicker } from '../../../../../lib/stores/emoji'
 import Tooltip from '../../../../atoms/Tooltip'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../../../atoms/MarkdownView'
-import { useToast } from '../../../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../../../shared/lib/stores/toast'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
