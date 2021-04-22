@@ -111,15 +111,15 @@ import ContentLayout, {
 } from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
-import { useCloudUpdater } from '../../shared/lib/hooks/cloud/useCloudUpdater'
+import { useCloudUpdater } from '../lib/hooks/useCloudUpdater'
 import { CreateFolderRequestBody } from '../api/teams/folders'
 import { CreateDocRequestBody } from '../api/teams/docs'
-import { useCloudDnd } from '../../shared/lib/hooks/cloud/useCloudDnd'
+import { useCloudDnd } from '../lib/hooks/useCloudDnd'
 import { NavResource } from '../interfaces/resources'
 import { SidebarDragState } from '../../shared/lib/dnd'
 import cc from 'classcat'
 import { mapTopbarTree } from '../../shared/lib/mappers/cloud/topbarTree'
-import { useCloudUI } from '../../shared/lib/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../lib/hooks/useCloudUI'
 
 interface ApplicationProps {
   content: ContentLayoutProps

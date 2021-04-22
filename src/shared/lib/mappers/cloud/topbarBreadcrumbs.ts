@@ -19,6 +19,7 @@ import {
 } from '../../../../cloud/interfaces/db/folder'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
+import { CloudNewResourceRequestBody } from '../../../../cloud/lib/hooks/useCloudUI'
 import {
   getDocTitle,
   prefixFolders,
@@ -26,7 +27,6 @@ import {
 import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
 import { FormRowProps } from '../../../../components/v2/molecules/Form'
 import { TopbarBreadcrumbProps } from '../../../../components/v2/organisms/Topbar'
-import { CloudNewResourceRequestBody } from '../../hooks/cloud/useCloudUI'
 import { PromiseWrapperCallbacks } from '../../types'
 import { topParentId } from './topbarTree'
 

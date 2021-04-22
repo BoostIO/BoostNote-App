@@ -36,7 +36,7 @@ import SideNavigatorIconButton from './SideNavigatorIconButton'
 import Tooltip from '../../../atoms/Tooltip'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../../shared/lib/hooks/cloud/useCloudUI'
+import { useCloudUI } from '../../../../lib/hooks/useCloudUI'
 
 interface SideNavigatorFolderControlsProps {
   folder: SerializedFolderWithBookmark
