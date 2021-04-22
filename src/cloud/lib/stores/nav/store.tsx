@@ -18,7 +18,10 @@ import {
   SerializedDocWithBookmark,
 } from '../../../interfaces/db/doc'
 import { usePage } from '../pageStore'
-import { useDialog, DialogIconTypes } from '../../../../lib/v2/stores/dialog'
+import {
+  useDialog,
+  DialogIconTypes,
+} from '../../../../shared/lib/stores/dialog'
 import { useRouter } from '../../router'
 import {
   createFolder,
@@ -54,7 +57,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 export * from './types'
 
 function useNavStore(pageProps: any): NavContext {

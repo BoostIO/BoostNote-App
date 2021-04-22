@@ -22,7 +22,7 @@ import Flexbox from '../../../atoms/Flexbox'
 import { getFolderId } from '../../../../lib/utils/patterns'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../lib/stores/modal'
-import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../../shared/lib/stores/toast'
 
 interface ContentManagerFolderRowProps {
   team: SerializedTeam

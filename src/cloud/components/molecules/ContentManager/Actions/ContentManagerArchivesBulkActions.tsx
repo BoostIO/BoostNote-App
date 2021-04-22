@@ -2,7 +2,10 @@ import React, { useState, useCallback, useMemo } from 'react'
 import Flexbox from '../../../atoms/Flexbox'
 import HeaderAction from './HeaderAction'
 import { mdiFileUndoOutline, mdiTrashCanOutline } from '@mdi/js'
-import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
+import {
+  useDialog,
+  DialogIconTypes,
+} from '../../../../../shared/lib/stores/dialog'
 import { useNav } from '../../../../lib/stores/nav'
 import { destroyDoc, unarchiveDoc } from '../../../../api/teams/docs'
 import { SerializedTeam } from '../../../../interfaces/db/team'

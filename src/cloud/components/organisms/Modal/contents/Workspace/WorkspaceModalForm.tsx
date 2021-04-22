@@ -20,7 +20,7 @@ import { useNav } from '../../../../../lib/stores/nav'
 import Flexbox from '../../../../atoms/Flexbox'
 import CustomSwitch from '../../../../atoms/CustomSwitch'
 import WorkspaceAccess from './WorkspaceAccess'
-import { useToast } from '../../../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../../../shared/lib/stores/toast'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace

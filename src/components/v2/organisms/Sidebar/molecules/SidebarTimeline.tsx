@@ -1,16 +1,16 @@
 import React from 'react'
-import { AppUser } from '../../../../../lib/v2/mappers/users'
-import styled from '../../../../../lib/v2/styled'
-import { AppComponent } from '../../../../../lib/v2/types'
+import { AppUser } from '../../../../../shared/lib/mappers/users'
+import styled from '../../../../../shared/lib/styled'
+import { AppComponent } from '../../../../../shared/lib/types'
 import SidebarHeader from '../atoms/SidebarHeader'
 import cc from 'classcat'
 import SidebarContextList from '../atoms/SidebarContextList'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../../atoms/Icon'
-import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
 import UserIconList from '../../../molecules/UserIconList'
 import WithTooltip from '../../../atoms/WithTooltip'
-import { getDateTime } from '../../../../../lib/v2/date'
+import { getDateTime } from '../../../../../shared/lib/date'
 
 export type SidebarTimelineRow = {
   label: string

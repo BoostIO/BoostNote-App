@@ -13,8 +13,8 @@ import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
 import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
-import { useCloudUI } from '../../../../lib/v2/hooks/cloud/useCloudUI'
-import { mapWorkspaceBreadcrumb } from '../../../../lib/v2/mappers/cloud/topbarBreadcrumbs'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
+import { mapWorkspaceBreadcrumb } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace

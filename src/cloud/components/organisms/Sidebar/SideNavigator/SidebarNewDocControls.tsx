@@ -8,7 +8,7 @@ import {
 import {
   useContextMenu,
   MenuTypes,
-} from '../../../../../lib/v2/stores/contextMenu'
+} from '../../../../../shared/lib/stores/contextMenu'
 import TemplatesModal from '../../Modal/contents/TemplatesModal'
 import { useModal } from '../../../../lib/stores/modal'
 import { usePage } from '../../../../lib/stores/pageStore'
@@ -28,7 +28,7 @@ import { ModalContainer } from '../../Modal/contents/styled'
 import { StyledImportModalContainer } from '../../Modal/contents/Import/styled'
 import { updateTeam } from '../../../../api/teams'
 import IconMdi from '../../../atoms/IconMdi'
-import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../../shared/lib/stores/toast'
 
 interface SidebarNewDocControlsProps {
   disabled: boolean

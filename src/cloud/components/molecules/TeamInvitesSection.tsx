@@ -10,7 +10,7 @@ import {
   SectionSelect,
 } from '../organisms/settings/styled'
 import { SerializedTeamInvite } from '../../interfaces/db/teamInvite'
-import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
 import {

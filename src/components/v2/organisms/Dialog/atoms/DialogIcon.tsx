@@ -1,5 +1,5 @@
 import React from 'react'
-import { DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
+import { DialogIconTypes } from '../../../../../shared/lib/stores/dialog'
 import cc from 'classcat'
 
 type DialogIconProps = {

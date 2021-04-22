@@ -13,7 +13,7 @@ import DocTagsListItem from './DocTagsListItem'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark

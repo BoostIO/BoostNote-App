@@ -7,7 +7,7 @@ import { startTeamFreeTrial } from '../../../api/teams/subscription/trial'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { usePage } from '../../../lib/stores/pageStore'
 import { freeTrialPeriodDays } from '../../../lib/subscription'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 interface FreeTrialPopupProps {
   team: SerializedTeam

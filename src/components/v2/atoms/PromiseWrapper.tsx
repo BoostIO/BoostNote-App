@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import styled from '../../../lib/v2/styled'
+import styled from '../../../shared/lib/styled'
 import Spinner from './Spinner'
 
 interface PromiseWrapper<T extends Record<string, any>, P> {

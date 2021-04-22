@@ -9,7 +9,7 @@ import {
   toggleSettingsEventEmitter,
   toggleSettingsMembersEventEmitter,
 } from '../../utils/events'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 export const baseUserSettings: UserSettings = {
   'general.theme': 'dark',

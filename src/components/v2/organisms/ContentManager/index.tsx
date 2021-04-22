@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import styled from '../../../../lib/v2/styled'
+import styled from '../../../../shared/lib/styled'
 import cc from 'classcat'
 import ContentManagerSort, {
   contentManagerSortOptions,
@@ -7,13 +7,13 @@ import ContentManagerSort, {
 import Button from '../../atoms/Button'
 import { useSet } from 'react-use'
 import ContentManagerRow from './atoms/ContentManagerRow'
-import { ContentManagerItemProps } from '../../../../lib/v2/mappers/types'
+import { ContentManagerItemProps } from '../../../../shared/lib/mappers/types'
 import Checkbox from '../../molecules/Form/atoms/FormCheckbox'
 import {
   sortByAttributeAsc,
   sortByAttributeDesc,
-} from '../../../../lib/v2/utils/array'
-import { AppUser } from '../../../../lib/v2/mappers/users'
+} from '../../../../shared/lib/utils/array'
+import { AppUser } from '../../../../shared/lib/mappers/users'
 
 interface ContentManagerProps<T> {
   className?: string

@@ -26,7 +26,7 @@ import AccountLink from '../../atoms/Link/AccountLink'
 import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { UserEmailNotificationType } from '../../../interfaces/db/userSettings'
 import { saveUserSettings } from '../../../api/users/settings'
-import { useToast } from '../../../../lib/v2/stores/toast'
+import { useToast } from '../../../../shared/lib/stores/toast'
 
 const PersonalInfoTab = () => {
   const {

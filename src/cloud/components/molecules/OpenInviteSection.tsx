@@ -4,7 +4,7 @@ import {
   SectionHeader2,
   SectionRow,
 } from '../organisms/settings/styled'
-import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
 import {
@@ -21,7 +21,7 @@ import styled from '../../lib/styled'
 import CopyReadInput from '../atoms/CopyReadInput'
 import { getTeamURL, getOpenInviteURL } from '../../lib/utils/patterns'
 import { boostHubBaseUrl } from '../../lib/consts'
-import { useToast } from '../../../lib/v2/stores/toast'
+import { useToast } from '../../../shared/lib/stores/toast'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions

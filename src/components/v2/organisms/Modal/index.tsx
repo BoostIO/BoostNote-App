@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
-import { useModal } from '../../../../lib/v2/stores/modal'
-import { isActiveElementAnInput } from '../../../../lib/v2/dom'
-import { useGlobalKeyDownHandler } from '../../../../lib/v2/keyboard'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import { isActiveElementAnInput } from '../../../../shared/lib/dom'
+import { useGlobalKeyDownHandler } from '../../../../shared/lib/keyboard'
 import { usePathnameChangeEffect } from '../../../../cloud/lib/router'
-import styled from '../../../../lib/v2/styled'
+import styled from '../../../../shared/lib/styled'
 import Button from '../../atoms/Button'
 
 const Modal = () => {
