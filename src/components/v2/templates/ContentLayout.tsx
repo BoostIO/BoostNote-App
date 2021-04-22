@@ -3,7 +3,9 @@ import styled from '../../../shared/lib/styled'
 import { AppComponent } from '../../../shared/lib/types'
 import DoublePane from '../../../shared/components/atoms/DoublePane'
 import PageHelmet from '../../../shared/components/atoms/PageHelmet'
-import Topbar, { TopbarProps } from '../organisms/Topbar/index'
+import Topbar, {
+  TopbarProps,
+} from '../../../shared/components/organisms/Topbar/index'
 import cc from 'classcat'
 import { isFocusRightSideShortcut } from '../../../shared/lib/shortcuts'
 import {

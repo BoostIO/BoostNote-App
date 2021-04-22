@@ -24,9 +24,9 @@ import {
 } from '../lib/utils/events'
 import { useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
-import EventSource from '../../components/v2/organisms/cloud/EventSource'
+import EventSource from '../../shared/components/organisms/cloud/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
-import Sidebar from '../../components/v2/organisms/Sidebar'
+import Sidebar from '../../shared/components/organisms/Sidebar'
 import {
   CollapsableType,
   useSidebarCollapse,
@@ -40,7 +40,7 @@ import { getTagHref } from './atoms/Link/TagLink'
 import {
   SidebarSearchHistory,
   SidebarSearchResult,
-} from '../../components/v2/organisms/Sidebar/molecules/SidebarSearch'
+} from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import { SidebarState } from '../../shared/lib/sidebar'
 import useApi from '../../shared/lib/hooks/useApi'
 import {
@@ -49,7 +49,7 @@ import {
   HistoryItem,
   SearchResult,
 } from '../api/search'
-import { SidebarToolbarRow } from '../../components/v2/organisms/Sidebar/molecules/SidebarToolbar'
+import { SidebarToolbarRow } from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import { mapUsers } from '../../shared/lib/mappers/users'
 import { SerializedDoc, SerializedDocWithBookmark } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
@@ -98,14 +98,14 @@ import {
   SidebarNavCategory,
   SidebarNavControls,
   SidebarTreeChildRow,
-} from '../../components/v2/organisms/Sidebar/molecules/SidebarTree'
+} from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import RoundedImage from '../../shared/components/atoms/RoundedImage'
 import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
 import { stringify } from 'querystring'
 import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
-import { SidebarSpace } from '../../components/v2/organisms/Sidebar/molecules/SidebarSpaces'
+import { SidebarSpace } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../components/v2/templates/ContentLayout'
