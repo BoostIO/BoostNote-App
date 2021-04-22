@@ -23,11 +23,11 @@ import { useGeneralStatus } from '../../lib/generalStatus'
 import { useBoostHub } from '../../lib/boosthub'
 import SidebarToolbar, {
   SidebarToolbarRow,
-} from '../v2/organisms/Sidebar/molecules/SidebarToolbar'
+} from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import SidebarSpaces, {
   SidebarSpace,
   SidebarSpaceContentRow,
-} from '../v2/organisms/Sidebar/molecules/SidebarSpaces'
+} from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { DialogIconTypes, useDialog } from '../../lib/dialog'
