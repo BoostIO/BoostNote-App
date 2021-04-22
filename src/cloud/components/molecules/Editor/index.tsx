@@ -174,7 +174,7 @@ const Editor = ({
     }
   }, [doc])
 
-  const docIsNew = !!state.new
+  const docIsNew = !!state?.new
   useEffect(() => {
     if (docRef.current !== doc.id) {
       if (docIsNew) {
