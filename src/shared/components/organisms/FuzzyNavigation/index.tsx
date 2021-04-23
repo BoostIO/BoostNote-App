@@ -9,6 +9,8 @@ import FuzzyNavigationitem, {
 } from './molecules/FuzzyNavigationItem'
 import Fuse from 'fuse.js'
 import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
+import { scrollbarOverlay } from '../../../lib/styled/styleFunctions'
+import cc from 'classcat'
 
 interface FuzzyNavigationProps {
   recentItems: FuzzyNavigationItemAttrbs[]
@@ -23,6 +25,8 @@ const FuzzyNavigation = ({
 }: FuzzyNavigationProps) => {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const [inScroll, setInScroll] = useState(false)
+  const scrollTimer = useRef<any>()
 
   useEffectOnce(() => {
     if (inputRef.current != null) {
@@ -40,6 +44,13 @@ const FuzzyNavigation = ({
   )
   useGlobalKeyDownHandler(keydownHandler)
 
+  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
+    setInScroll(true)
+    scrollTimer.current = setTimeout(() => {
+      setInScroll(false)
+    }, 600)
+  }, [])
+
   const filteredItems = useMemo(() => {
     if (query === '') return []
 
@@ -54,6 +65,7 @@ const FuzzyNavigation = ({
       }
     })
 
+    console.log(items)
     return items
   }, [allItems, query])
 
@@ -76,35 +88,43 @@ const FuzzyNavigation = ({
             }}
           />
         </CloseButtonWrapper>
-        {query === '' ? (
-          <>
-            <span className='fuzzy__label'>
-              {recentItems.length === 0
-                ? `No recently visited items`
-                : `Recent items`}
-            </span>
-            {recentItems.map((item, i) => (
-              <FuzzyNavigationitem
-                item={item}
-                id={`fuzzy-recent-${i}`}
-                key={`fuzzy-recent-${i}`}
-              />
-            ))}
-          </>
-        ) : (
-          <>
-            {filteredItems.length === 0 && (
-              <span className='fuzzy__label'>No matching results</span>
-            )}
-            {filteredItems.map((item, i) => (
-              <FuzzyNavigationitem
-                item={item}
-                id={`fuzzy-filtered-${i}`}
-                key={`fuzzy-filtered-${i}`}
-              />
-            ))}
-          </>
-        )}
+        <div
+          className={cc([
+            'fuzzy__scroller',
+            inScroll && 'fuzzy__scroller--scrolling',
+          ])}
+          onScroll={onScrollHandler}
+        >
+          {query === '' ? (
+            <>
+              <span className='fuzzy__label'>
+                {recentItems.length === 0
+                  ? `No recently visited items`
+                  : `Recent items`}
+              </span>
+              {recentItems.map((item, i) => (
+                <FuzzyNavigationitem
+                  item={item}
+                  id={`fuzzy-recent-${i}`}
+                  key={`fuzzy-recent-${i}`}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {filteredItems.length === 0 && (
+                <span className='fuzzy__label'>No matching results</span>
+              )}
+              {filteredItems.map((item, i) => (
+                <FuzzyNavigationitem
+                  item={item}
+                  id={`fuzzy-filtered-${i}`}
+                  key={`fuzzy-filtered-${i}`}
+                />
+              ))}
+            </>
+          )}
+        </div>
       </UpDownList>
     </Container>
   )
@@ -137,6 +157,14 @@ const Container = styled.div`
 
     display: flex;
     flex-direction: column;
+  }
+
+  .fuzzy__scroller {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(80vh - 80px);
+    ${(theme) => scrollbarOverlay(theme, 'y', 'fuzzy__scroller--scrolling')}
   }
 
   .fuzzy__background {
