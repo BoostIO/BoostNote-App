@@ -22,7 +22,7 @@ import {
   toggleSidebarTimelineEventEmitter,
   toggleSidebarTreeEventEmitter,
 } from '../lib/utils/events'
-import { useRouter } from '../lib/router'
+import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
@@ -120,6 +120,11 @@ import { SidebarDragState } from '../../shared/lib/dnd'
 import cc from 'classcat'
 import { useCloudUI } from '../lib/hooks/useCloudUI'
 import { mapTopbarTree } from '../lib/mappers/topbarTree'
+import FuzzyNavigation from '../../shared/components/organisms/FuzzyNavigation'
+import {
+  mapFuzzyNavigationItems,
+  mapFuzzyNavigationRecentItems,
+} from '../lib/mappers/fuzzyNavigation'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -178,6 +183,11 @@ const Application = ({
     openRenameDocForm,
     openWorkspaceEditForm,
   } = useCloudUI()
+  const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(true)
+
+  usePathnameChangeEffect(() => {
+    setShowFuzzyNavigation(false)
+  })
 
   useEffectOnce(() => {
     if (query.settings === 'upgrade') {
@@ -191,17 +201,13 @@ const Application = ({
 
   useEffect(() => {
     const handler = () => {
-      if (sidebarState === 'search') {
-        setSidebarState(undefined)
-      } else {
-        setSidebarState('search')
-      }
+      setShowFuzzyNavigation((prev) => !prev)
     }
     searchEventEmitter.listen(handler)
     return () => {
       searchEventEmitter.unlisten(handler)
     }
-  }, [sidebarState])
+  }, [])
 
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
@@ -493,6 +499,26 @@ const Application = ({
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
+      {showFuzzyNavigation && team != null && (
+        <FuzzyNavigation
+          close={() => setShowFuzzyNavigation(false)}
+          allItems={mapFuzzyNavigationItems(
+            team,
+            push,
+            docsMap,
+            foldersMap,
+            workspacesMap
+          )}
+          recentItems={mapFuzzyNavigationRecentItems(
+            team,
+            history,
+            push,
+            docsMap,
+            foldersMap,
+            workspacesMap
+          )}
+        />
+      )}
       <ApplicationLayout
         sidebar={
           <Sidebar
