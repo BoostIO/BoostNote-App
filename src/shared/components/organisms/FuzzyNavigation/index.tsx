@@ -7,8 +7,8 @@ import FormInput from '../../molecules/Form/atoms/FormInput'
 import FuzzyNavigationitem, {
   FuzzyNavigationItemAttrbs,
 } from './molecules/FuzzyNavigationItem'
-import { distance } from 'fastest-levenshtein'
-import { sortArrayByIntProperty } from '../../../lib/utils/array'
+import Fuse from 'fuse.js'
+import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
 
 interface FuzzyNavigationProps {
   recentItems: FuzzyNavigationItemAttrbs[]
@@ -43,15 +43,16 @@ const FuzzyNavigation = ({
   const filteredItems = useMemo(() => {
     if (query === '') return []
 
-    const items = sortArrayByIntProperty(
-      allItems.map((item) => {
-        return {
-          ...item,
-          distance: distance(query, item.label),
-        }
-      }),
-      'distance'
-    )
+    const fuse = new Fuse(allItems, { keys: ['label', 'path'] })
+
+    const results = fuse.search(query)
+    const items = results.map((res) => {
+      return {
+        ...res.item,
+        ...res,
+        refIndex: res.refIndex,
+      }
+    })
 
     return items
   }, [allItems, query])
@@ -60,15 +61,21 @@ const FuzzyNavigation = ({
     <Container className='fuzzy'>
       <div className='fuzzy__background' onClick={() => close()} />
       <UpDownList className='fuzzy__wrapper'>
-        <FormInput
-          id='fuzzy__search__input'
-          className='fuzzy__search'
-          placeholder='Search'
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value)
-          }}
-        />
+        <CloseButtonWrapper
+          onClick={() => setQuery('')}
+          show={query !== ''}
+          className='fuzzy__search__reset'
+        >
+          <FormInput
+            id='fuzzy__search__input'
+            className='fuzzy__search'
+            placeholder='Search'
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value)
+            }}
+          />
+        </CloseButtonWrapper>
         {query === '' ? (
           <>
             <span className='fuzzy__label'>
@@ -105,11 +112,15 @@ const FuzzyNavigation = ({
 
 const Container = styled.div`
   .fuzzy__search {
+    width: 100%;
+  }
+
+  .fuzzy__search__reset {
+    width: initial;
     margin: ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.sm}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
-    width: initial;
   }
 
   .fuzzy__wrapper {
