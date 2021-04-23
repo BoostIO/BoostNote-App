@@ -37,68 +37,10 @@ const FuzzyNavigationitem = ({
       }
     }
 
-    let parsingQuery = query
-    let leftOvers = ''
-
-    const minimizedLabel = item.label.toLocaleLowerCase()
-    const minimizedPath = item.path.toLocaleLowerCase()
-    const labelHighlightIndexes: { from: number; to: number }[] = []
-    const pathHighlightIndexes: { from: number; to: number }[] = []
-
-    while (parsingQuery !== '') {
-      let match = minimizedLabel.indexOf(parsingQuery)
-
-      if (match !== -1) {
-        labelHighlightIndexes.push({
-          from: match,
-          to: parsingQuery.length + match,
-        })
-        parsingQuery = ''
-        continue
-      }
-
-      match = minimizedPath.indexOf(parsingQuery)
-      if (match !== -1) {
-        pathHighlightIndexes.push({
-          from: match,
-          to: parsingQuery.length + match,
-        })
-        parsingQuery = ''
-        continue
-      }
-
-      leftOvers = parsingQuery[parsingQuery.length - 1] + leftOvers
-      parsingQuery = parsingQuery.slice(0, -1)
-    }
-
-    while (leftOvers !== '') {
-      let match = minimizedLabel.indexOf(leftOvers)
-
-      if (match !== -1) {
-        labelHighlightIndexes.push({
-          from: match,
-          to: leftOvers.length + match,
-        })
-        leftOvers = ''
-        continue
-      }
-
-      match = minimizedPath.indexOf(leftOvers)
-      if (match !== -1) {
-        pathHighlightIndexes.push({
-          from: match,
-          to: leftOvers.length + match,
-        })
-        leftOvers = ''
-        continue
-      }
-
-      leftOvers = leftOvers.slice(0, -1)
-    }
-
+    const indexes = getHighlightedIndexes(query, item.label, item.path)
     return {
-      label: getHighlightedNodes(item.label, labelHighlightIndexes),
-      path: getHighlightedNodes(item.path, pathHighlightIndexes),
+      label: getHighlightedNodes(item.label, indexes.labelHighlightIndexes),
+      path: getHighlightedNodes(item.path, indexes.pathHighlightIndexes),
     }
   }, [item.label, item.path, query])
   return (
@@ -132,6 +74,73 @@ const FuzzyNavigationitem = ({
   )
 }
 
+function getHighlightedIndexes(query: string, label: string, path: string) {
+  let parsingQuery = query
+  let leftOvers = ''
+
+  const minimizedLabel = label.toLocaleLowerCase()
+  const minimizedPath = path.toLocaleLowerCase()
+
+  const labelHighlightIndexes: { from: number; to: number }[] = []
+  const pathHighlightIndexes: { from: number; to: number }[] = []
+
+  while (parsingQuery !== '') {
+    let match = minimizedLabel.indexOf(parsingQuery)
+
+    if (match !== -1) {
+      labelHighlightIndexes.push({
+        from: match,
+        to: parsingQuery.length + match,
+      })
+      parsingQuery = ''
+      continue
+    }
+
+    match = minimizedPath.indexOf(parsingQuery)
+    if (match !== -1) {
+      pathHighlightIndexes.push({
+        from: match,
+        to: parsingQuery.length + match,
+      })
+      parsingQuery = ''
+      continue
+    }
+
+    leftOvers = parsingQuery[parsingQuery.length - 1] + leftOvers
+    parsingQuery = parsingQuery.slice(0, -1)
+  }
+
+  while (leftOvers !== '') {
+    let match = minimizedLabel.indexOf(leftOvers)
+
+    if (match !== -1) {
+      labelHighlightIndexes.push({
+        from: match,
+        to: leftOvers.length + match,
+      })
+      leftOvers = ''
+      continue
+    }
+
+    match = minimizedPath.indexOf(leftOvers)
+    if (match !== -1) {
+      pathHighlightIndexes.push({
+        from: match,
+        to: leftOvers.length + match,
+      })
+      leftOvers = ''
+      continue
+    }
+
+    leftOvers = leftOvers.slice(0, -1)
+  }
+
+  return {
+    labelHighlightIndexes,
+    pathHighlightIndexes,
+  }
+}
+
 function getHighlightedNodes(
   label: string,
   highlightIndexes: { from: number; to: number }[]
@@ -156,10 +165,23 @@ function getHighlightedNodes(
           if (i % 2 !== 0) {
             return null
           }
+
           return (
-            <mark key={i}>
-              {label.substr(index, sortedIndexes[i + 1] - index)}
-            </mark>
+            <>
+              {i > 0 ? (
+                <>
+                  {label.substr(
+                    sortedIndexes[i - 1],
+                    index - sortedIndexes[i - 1]
+                  )}
+                </>
+              ) : null}
+              {
+                <mark key={i}>
+                  {label.substr(index, sortedIndexes[i + 1] - index)}
+                </mark>
+              }
+            </>
           )
         })}
         {sortedIndexes[sortedIndexes.length - 1] !== label.length ? (
