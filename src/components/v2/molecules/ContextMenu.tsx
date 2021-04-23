@@ -137,7 +137,7 @@ export const FocusedContextMenu = ({
         top: position.y,
       }}
       ref={menuRef}
-      onBlurHandler={onBlurHandler}
+      onBlur={onBlurHandler}
     >
       <UpDownList ignoreFocus={true} onBlur={close}>
         {menuItems.map((menu, index) => {
