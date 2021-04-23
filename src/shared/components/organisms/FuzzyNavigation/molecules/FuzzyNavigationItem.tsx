@@ -31,7 +31,10 @@ const FuzzyNavigationitem = ({
       <Tag
         id={id}
         className='fuzzy__navigation__item'
-        onClick={item.onClick}
+        onClick={(e: React.MouseEvent) => {
+          e.preventDefault()
+          item.onClick()
+        }}
         href={item.href}
       >
         {item.emoji != null || item.icon != null ? (
