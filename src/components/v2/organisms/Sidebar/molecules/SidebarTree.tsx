@@ -98,6 +98,7 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => {
         {tree.length > 0 && (
           <Button
             variant='icon'
+            className='sidebar__tree__viewbtn'
             key={`tree__control__categories`}
             iconPath={mdiDotsHorizontal}
             iconSize={20}
@@ -407,6 +408,16 @@ const Container = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  .sidebar__header {
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.xsm}px 0
+      ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+
+  .sidebar__tree__viewbtn {
+    width: 32px;
+  }
 
   .sidebar__tree__wrapper {
     height: 100%;
