@@ -65,7 +65,6 @@ const FuzzyNavigation = ({
       }
     })
 
-    console.log(items)
     return items
   }, [allItems, query])
 
@@ -120,6 +119,7 @@ const FuzzyNavigation = ({
                   item={item}
                   id={`fuzzy-filtered-${i}`}
                   key={`fuzzy-filtered-${i}`}
+                  query={query.trim().toLocaleLowerCase()}
                 />
               ))}
             </>
