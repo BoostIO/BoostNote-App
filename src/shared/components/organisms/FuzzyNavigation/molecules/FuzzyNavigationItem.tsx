@@ -46,8 +46,10 @@ const FuzzyNavigationitem = ({
             )}
           </div>
         ) : null}
-        <span className='fuzzy__navigation__item__label'>{item.label}</span>
-        <small className='fuzzy__navigation__path'>{item.path}</small>
+        <div className='fuzzy__navigation__item__label_wrapper'>
+          <span className='fuzzy__navigation__item__label'>{item.label}</span>
+          <small className='fuzzy__navigation__path'>{item.path}</small>
+        </div>
       </Tag>
     </Container>
   )
@@ -84,31 +86,33 @@ const Container = styled.div`
   .fuzzy__navigation__icon {
     flex: 0 0 auto;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    svg {
+      color: ${({ theme }) => theme.colors.text.link};
+    }
   }
 
   a[href].fuzzy__navigation__item {
     cursor: pointer;
   }
 
-  .fuzzy__navigation__item__label {
-    flex: 0 1 auto;
+  .fuzzy__navigation__item__label_wrapper {
+    flex: 1 1 auto;
     text-align: left;
     margin: 0;
     overflow: hidden;
-    svg {
-      color: ${({ theme }) => theme.colors.text.link};
-    }
-    .fuzzy__navigation__item__label {
-      ${overflowEllipsis};
+  }
 
-      span {
-        line-height: ${({ theme }) => theme.sizes.fonts.l}px;
-      }
-    }
+  .fuzzy__navigation__item__label,
+  fuzzy__navigation__path {
+    ${overflowEllipsis};
+  }
+
+  .fuzzy__navigation__item__label {
+    flex: 1 1 auto;
   }
 
   .fuzzy__navigation__path {
-    flex: 1 2 auto;
+    flex: 2 2 auto;
     color: ${({ theme }) => theme.colors.text.subtle};
     padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
