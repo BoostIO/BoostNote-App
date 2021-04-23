@@ -46,15 +46,19 @@ function useSettingsStore() {
   }
 
   const [settings, setSettings] = useSetState<UserSettings>(initialUserSettings)
-
+  const previousSettingsRef = useRef(settings)
   const currentUserId = currentUser?.id
   useEffect(() => {
     if (saveTimer.current != null) {
       clearTimeout(saveTimer.current)
     }
-    if (currentUserId) {
+    if (currentUserId == null) {
       return
     }
+    if (previousSettingsRef.current === settings) {
+      return
+    }
+    previousSettingsRef.current = settings
     saveTimer.current = setTimeout(() => {
       saveUserSettings({
         value: JSON.stringify(settings),
