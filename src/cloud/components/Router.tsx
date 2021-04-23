@@ -29,7 +29,6 @@ import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import Modal from './organisms/Modal'
 import SettingsComponent from './organisms/settings/SettingsComponent'
 import EmojiPicker from './molecules/EmojiPicker'
-import SearchModal from './organisms/SearchModal'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import ResourceIndex from '../pages/[teamId]/[resourceId]'
 import TeamIndex from '../pages/[teamId]'
@@ -259,7 +258,6 @@ const Router = () => {
                 <ContextMenu />
                 <EmojiPicker />
                 <Dialog />
-                <SearchModal />
                 <Helper />
               </V2ThemeProvider>
             </CustomThemeProvider>
