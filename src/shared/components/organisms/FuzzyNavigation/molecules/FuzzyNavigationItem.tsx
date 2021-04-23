@@ -4,6 +4,7 @@ import cc from 'classcat'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../../atoms/Icon'
 import { overflowEllipsis } from '../../../../lib/styled/styleFunctions'
+import shortid from 'shortid'
 
 interface FuzzyNavigationItemProps {
   item: FuzzyNavigationItemAttrbs
@@ -167,7 +168,7 @@ function getHighlightedNodes(
           }
 
           return (
-            <>
+            <React.Fragment key={`i-${shortid.generate()}`}>
               {i > 0 ? (
                 <>
                   {label.substr(
@@ -181,7 +182,7 @@ function getHighlightedNodes(
                   {label.substr(index, sortedIndexes[i + 1] - index)}
                 </mark>
               }
-            </>
+            </React.Fragment>
           )
         })}
         {sortedIndexes[sortedIndexes.length - 1] !== label.length ? (
