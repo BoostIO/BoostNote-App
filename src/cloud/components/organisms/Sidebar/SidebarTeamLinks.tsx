@@ -5,9 +5,8 @@ import Tooltip from '../../atoms/Tooltip'
 import { useNav } from '../../../lib/stores/nav'
 import cc from 'classcat'
 import { MetaKeyText } from '../../../lib/keyboard'
-import { useSearch } from '../../../lib/stores/search'
 import SidebarTopButton from './SidebarTopButton'
-import { mdiMagnify, mdiPlus, mdiClockOutline, mdiCircleSmall } from '@mdi/js'
+import { mdiPlus, mdiClockOutline, mdiCircleSmall } from '@mdi/js'
 import IconMdi from '../../atoms/IconMdi'
 import { useNavigateToTeam } from '../../atoms/Link/TeamLink'
 import Flexbox from '../../atoms/Flexbox'
@@ -27,7 +26,6 @@ const SidebarTeamLinks = () => {
     sideNavCreateButtonState,
     setSideNavCreateButtonState,
   } = useNav()
-  const { setShowGlobalSearch } = useSearch()
   const { pushApiErrorMessage } = useToast()
   const { pathname } = useRouter()
   const navigateToTeam = useNavigateToTeam()
@@ -79,20 +77,6 @@ const SidebarTeamLinks = () => {
 
   return (
     <StyledSidebarTeamLinks>
-      <SidebarTopButton
-        onClick={() => setShowGlobalSearch(true)}
-        id='sidebar-search'
-        variant='emphasized'
-        justify='space-between'
-        label='Search'
-        prependIcon={mdiMagnify}
-        addedNodes={
-          <StyledSideNavHeadingButtonTooltip className='hovered'>
-            {`${MetaKeyText()} P`}
-          </StyledSideNavHeadingButtonTooltip>
-        }
-      />
-
       <Flexbox flex='1 1 auto'>
         <Tooltip
           tooltip={
@@ -157,13 +141,6 @@ const StyledSidebarTeamLinks = styled.div`
     min-width: 0 !important;
     width: 100% !important;
   }
-`
-
-const StyledSideNavHeadingButtonTooltip = styled.small`
-  color: ${({ theme }) => theme.emphasizedTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
-  padding: 2px 3px;
-  margin-right: ${({ theme }) => theme.space.xsmall}px;
 `
 
 const StyledNewDocButtonSmall = styled.small`

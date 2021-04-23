@@ -7,8 +7,6 @@ import { searchKey, searchHistoryKey } from '../../localStorageKeys'
 import { SerializedDoc } from '../../../interfaces/db/doc'
 import { SerializedFolder } from '../../../interfaces/db/folder'
 import { usePage } from '../pageStore'
-import { trackEvent } from '../../../api/track'
-import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 const recentPagesLimit = 5
 const historySearchLimit = 3
@@ -25,14 +23,6 @@ function useSearchStore(): SearchContext {
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [searchHistory, setSearchHistory] = useState<string[]>([])
   const { team, pageFolder, pageDoc } = usePage()
-  const [showGlobalSearch, setGlobalSearch] = useState<boolean>(false)
-
-  const setShowGlobalSearch = useCallback((val: boolean) => {
-    if (val) {
-      trackEvent(MixpanelActionTrackTypes.SearchOpen)
-    }
-    setGlobalSearch(val)
-  }, [])
 
   const addToSearchHistory = useCallback((newSearch: string) => {
     if (newSearch.trim() === '') {
@@ -148,8 +138,6 @@ function useSearchStore(): SearchContext {
     history,
     searchHistory,
     addToSearchHistory,
-    showGlobalSearch,
-    setShowGlobalSearch,
   }
 }
 

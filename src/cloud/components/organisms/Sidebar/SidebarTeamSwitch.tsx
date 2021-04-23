@@ -16,7 +16,6 @@ import {
 import { shortcuts } from '../../../lib/shortcuts'
 import { useModal } from '../../../lib/stores/modal'
 import { useSettings } from '../../../lib/stores/settings'
-import { useSearch } from '../../../lib/stores/search'
 import { useElectron } from '../../../lib/stores/electron'
 
 const SidebarTeamSwitch = () => {
@@ -24,13 +23,12 @@ const SidebarTeamSwitch = () => {
   const [hideContext, setHideContext] = useState<boolean>(true)
   const { closed } = useSettings()
   const { modalContent } = useModal()
-  const { showGlobalSearch } = useSearch()
   const { usingElectron } = useElectron()
 
   const teamSwitchKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (isSingleKeyEventOutsideOfInput(event, shortcuts.teamPicker)) {
-        if (modalContent != null || !closed || showGlobalSearch) {
+        if (modalContent != null || !closed) {
           return
         }
         setHideContext((prev) => {
@@ -39,7 +37,7 @@ const SidebarTeamSwitch = () => {
         event.preventDefault()
       }
     }
-  }, [setHideContext, closed, modalContent, showGlobalSearch])
+  }, [setHideContext, closed, modalContent])
   useGlobalKeyDownHandler(teamSwitchKeyDownHandler)
 
   const currentTeamPicker = useMemo(() => {
