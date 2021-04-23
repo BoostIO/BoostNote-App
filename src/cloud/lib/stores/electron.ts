@@ -40,7 +40,7 @@ function removeAllHostListeners(channel?: string) {
 }
 
 export const globalContextMenuIsConfigured = !!(window as any).__ELECTRON_ONLY__
-  .globalContextMenuIsConfigured
+  ?.globalContextMenuIsConfigured
 
 export const usingElectron = /Cloud Space/.test(navigator.userAgent)
 
