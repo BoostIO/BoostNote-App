@@ -214,7 +214,7 @@ const CloudIntroModal = () => {
               </ul>
             )}
             <div className='screenShot'>
-              <Image src='/app/static/boosthub.png' />
+              <Image src='/app/static/img_ui_no-annotation.jpg' />
             </div>
           </IntroContainer>
           <div className='form-group'>
