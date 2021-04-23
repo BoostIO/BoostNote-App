@@ -183,7 +183,7 @@ const Application = ({
     openRenameDocForm,
     openWorkspaceEditForm,
   } = useCloudUI()
-  const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(true)
+  const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
