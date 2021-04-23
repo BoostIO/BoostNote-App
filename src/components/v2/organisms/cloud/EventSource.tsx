@@ -18,16 +18,16 @@ import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { getTemplate } from '../../../../cloud/api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../../../cloud/lib/utils/patterns'
+import { getAccessToken } from '../../../../cloud/lib/stores/electron'
 
 interface EventSourceProps {
   teamId: string
-  accessToken?: string
 }
 
 const defaultReconnectionDelay = 500 // 5ms
 const maxReconnectionDelay = 600000 // 10min
 
-const EventSource = ({ teamId, accessToken }: EventSourceProps) => {
+const EventSource = ({ teamId }: EventSourceProps) => {
   const eventSourceRef = useRef<EventSource | undefined>()
   const [eventSourceSetupCounter, { inc }] = useNumber(0)
   const reconnectionDelayRef = useRef<number>(defaultReconnectionDelay)
@@ -66,7 +66,7 @@ const EventSource = ({ teamId, accessToken }: EventSourceProps) => {
       if (eventSourceRef.current != null) {
         eventSourceRef.current.close()
       }
-      console.log('setup event source', url)
+      const accessToken = getAccessToken()
       const newEventSource = new EventSourcePolyfill(url, {
         withCredentials: true,
         headers:
@@ -90,7 +90,7 @@ const EventSource = ({ teamId, accessToken }: EventSourceProps) => {
       eventSourceRef.current = newEventSource
       inc(1)
     },
-    [inc, accessToken]
+    [inc]
   )
 
   useEffect(() => {
