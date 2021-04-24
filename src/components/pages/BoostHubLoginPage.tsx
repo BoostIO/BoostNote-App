@@ -1,7 +1,7 @@
 import React from 'react'
 import BoostHubSignInForm from '../organisms/BoostHubSignInForm'
-import styled from '../../lib/styled'
 import { flexCenter } from '../../lib/styled/styleFunctions'
+import styled from '../../shared/lib/styled'
 
 const BoostHubLoginPage = () => {
   return (

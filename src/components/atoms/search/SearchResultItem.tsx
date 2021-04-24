@@ -1,4 +1,4 @@
-import styled from '../../../lib/styled/styled'
+import styled from '../../../shared/lib/styled'
 
 export const SearchResultItem = styled.div`
   display: flex;

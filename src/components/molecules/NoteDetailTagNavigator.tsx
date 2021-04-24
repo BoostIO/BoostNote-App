@@ -1,19 +1,57 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import styled from '../../lib/styled'
-import { mdiPlus } from '@mdi/js'
 import { useRouteParams } from '../../lib/routeParams'
-import ToolbarIconButton from '../atoms/ToolbarIconButton'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
-import { useTranslation } from 'react-i18next'
 import { PopulatedTagDoc, NoteStorage } from '../../lib/db/types'
 import { entries } from '../../lib/db/utils'
+import styled from '../../shared/lib/styled'
+import { contextMenuFormItem } from '../../shared/lib/styled/styleFunctions'
+import IconMdi from '../../cloud/components/atoms/IconMdi'
+import { mdiPlus } from '@mdi/js'
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   position: relative;
+
+  .tag__add--empty {
+    ${({ theme }) => contextMenuFormItem({ theme }, ':focus')};
+
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    outline: 0;
+    width: 100%;
+    display: block;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    height: 32px;
+    border-radius: 4px;
+    &:hover {
+      color: ${({ theme }) => theme.colors.text.primary};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
+    }
+    text-align: left;
+  }
+
+  .tag__add {
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    color: ${({ theme }) => theme.colors.text.subtle};
+    margin: 5px 4px;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+      color: ${({ theme }) => theme.colors.text.primary} !important;
+    }
+  }
 `
 
 const TagNavigatorList = styled.ul`
@@ -22,7 +60,6 @@ const TagNavigatorList = styled.ul`
   padding: 0;
   margin: 0;
   flex-wrap: wrap;
-  overflow: hidden;
   gap: 5px;
   align-items: center;
 `
@@ -44,7 +81,6 @@ const NoteDetailTagNavigator = ({
   removeTagByName,
   updateTagColorByName,
 }: NoteDetailTagNavigatorProps) => {
-  const { t } = useTranslation()
   const storageId = storage.id
 
   const storageTagMap = useMemo(() => {
@@ -54,33 +90,26 @@ const NoteDetailTagNavigator = ({
   const routeParams = useRouteParams()
 
   const currentTagName = useMemo(() => {
-    if (routeParams.name !== 'storages.tags.show') {
+    if (routeParams.name !== 'workspaces.labels.show') {
       return null
     }
     return routeParams.tagName
   }, [routeParams])
 
-  const [newTagPopupPosition, setNewTagPopupPosition] = useState<{
-    top: number
-    right: number
-  } | null>(null)
+  const [showingNewTagPopup, setShowingNewTagPopup] = useState<boolean>(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const closeNewTagPopup = useCallback(() => {
-    setNewTagPopupPosition(null)
+    setShowingNewTagPopup(false)
     if (buttonRef.current == null) {
       return
     }
     buttonRef.current.focus()
-  }, [setNewTagPopupPosition])
+  }, [setShowingNewTagPopup])
 
   const showNewTagPopup = useCallback(() => {
-    const rect = buttonRef.current!.getBoundingClientRect()
-    setNewTagPopupPosition({
-      right: 10,
-      top: rect.bottom,
-    })
-  }, [setNewTagPopupPosition])
+    setShowingNewTagPopup(true)
+  }, [])
 
   const noteTags = useMemo(() => {
     return tags
@@ -97,7 +126,7 @@ const NoteDetailTagNavigator = ({
 
   useEffect(() => {
     const resizeHandler = () => {
-      if (newTagPopupPosition == null) {
+      if (!showingNewTagPopup) {
         return
       }
       showNewTagPopup()
@@ -106,7 +135,7 @@ const NoteDetailTagNavigator = ({
     return () => {
       window.removeEventListener('resize', resizeHandler)
     }
-  }, [newTagPopupPosition, showNewTagPopup])
+  }, [setShowingNewTagPopup, showNewTagPopup, showingNewTagPopup])
 
   const appendTagByNameAndRefreshPopupPosition = useCallback(
     (tagName: string) => {
@@ -134,21 +163,26 @@ const NoteDetailTagNavigator = ({
             )
           )
         })}
-        <ToolbarIconButton
-          title={t('tag.add')}
-          iconPath={mdiPlus}
-          ref={buttonRef}
-          onClick={showNewTagPopup}
-        />
       </TagNavigatorList>
-      {newTagPopupPosition != null && (
+      {showingNewTagPopup ? (
         <TagNavigatorNewTagPopup
           tags={tags}
           storageTagMap={storageTagMap}
           close={closeNewTagPopup}
           appendTagByName={appendTagByNameAndRefreshPopupPosition}
-          position={newTagPopupPosition}
         />
+      ) : tags.length === 0 ? (
+        <button
+          className='tag__add--empty'
+          ref={buttonRef}
+          onClick={showNewTagPopup}
+        >
+          Add a label
+        </button>
+      ) : (
+        <button className='tag__add' ref={buttonRef} onClick={showNewTagPopup}>
+          <IconMdi path={mdiPlus} size={16} />
+        </button>
       )}
     </Container>
   )

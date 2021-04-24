@@ -3,7 +3,6 @@ import { useDb } from '../../lib/db'
 import { NoteStorage } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
 import { useDialog, DialogIconTypes } from '../../lib/dialog'
-import { useToast } from '../../lib/toast'
 import { useTranslation } from 'react-i18next'
 import {
   FormHeading,
@@ -24,7 +23,10 @@ import {
   boostHubPricingPageUrl,
 } from '../../lib/boosthub'
 import Alert from '../atoms/Alert'
-import InlineLinkButton from '../atoms/InlineLinkButton'
+import { useToast } from '../../shared/lib/stores/toast'
+import Button from '../../shared/components/atoms/Button'
+import styled from '../../shared/lib/styled'
+import InlineLink from '../atoms/InlineLink'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -101,7 +103,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             so you can access useful features like document revision history,
             public APIs, document public sharing, 2000 tools integration and
             more. Please click{' '}
-            <a
+            <InlineLink
               onClick={(event) => {
                 event.preventDefault()
                 openNew(boostHubLearnMorePageUrl)
@@ -109,13 +111,13 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
               href={boostHubLearnMorePageUrl}
             >
               here
-            </a>{' '}
+            </InlineLink>{' '}
             to check it out.
           </li>
           <li>
             Some features are limited based on your pricing plan. Please try Pro
             trial to access all of them for one week for free. Check our{' '}
-            <a
+            <InlineLink
               onClick={(event) => {
                 event.preventDefault()
                 openNew(boostHubPricingPageUrl)
@@ -123,7 +125,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
               href={boostHubPricingPageUrl}
             >
               pricing plan
-            </a>{' '}
+            </InlineLink>{' '}
             to know more.
           </li>
           <li>
@@ -164,9 +166,10 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
 
       <FormHeading depth={2}>Remove Space</FormHeading>
       <p>
+        {/*todo: Should be removed once pouch DB no longer active */}
         {storage.type !== 'fs' ? (
           <>
-            This will permantly remove all notes locally stored in this space.
+            This will permanently remove all notes locally stored in this space.
           </>
         ) : (
           <>
@@ -175,10 +178,27 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           </>
         )}
         &nbsp;
-        <InlineLinkButton onClick={removeCallback}>Remove</InlineLinkButton>
+        <InlineLinkButton>
+          <Button
+            className={'storage__tab__link'}
+            variant={'link'}
+            onClick={removeCallback}
+          >
+            Remove
+          </Button>
+        </InlineLinkButton>
       </p>
     </div>
   )
 }
+
+const InlineLinkButton = styled.a`
+  .storage__tab__link {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`
 
 export default StorageEditPage

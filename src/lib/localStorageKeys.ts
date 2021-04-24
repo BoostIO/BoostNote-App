@@ -6,6 +6,7 @@ export const defaultStorageCreatedKey =
   'note.boostio.co:defaultStorageCreatedKey'
 export const appModeChosenKey = 'note.boostio.co:appModeChosen'
 export const checkedFeaturesKey = 'note.boostio.co:checkedFeaturesKey'
+export const sidebarCollapseKey = 'note.boostio.co::sidebar'
 
 // Deprecated
 export const introDataKey = 'note.boostio.co:introDataKey'

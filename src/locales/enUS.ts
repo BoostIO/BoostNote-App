@@ -5,7 +5,7 @@ export default {
     'general.error': 'Error',
     'general.cancel': 'Cancel',
     'general.attachments': 'Attachments',
-    'general.trash': 'Trash',
+    'general.archive': 'Archive',
     'general.allNotes': 'All Notes',
     'general.signin': 'Sign In',
     'general.signOut': 'Sign Out',

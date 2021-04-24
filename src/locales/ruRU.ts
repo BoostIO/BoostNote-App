@@ -4,7 +4,7 @@ export default {
     'general.error': 'Ошибка',
     'general.cancel': 'Отменить',
     'general.attachments': 'Вложения',
-    'general.trash': 'Корзина',
+    'general.archive': 'Архив',
     'general.allNotes': 'Все Заметки',
     'general.signin': 'Войти',
     'general.signOut': 'Выйти',

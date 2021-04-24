@@ -3,7 +3,7 @@ export type TranslationSource = {
   'general.cancel': string
   'general.update': string
   'general.attachments': string
-  'general.trash': string
+  'general.archive': string
   'general.allnote': string
   'general.signin': string
   'general.signinCheck': string

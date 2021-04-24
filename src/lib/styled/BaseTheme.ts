@@ -1,3 +1,5 @@
+// import { BaseTheme } from '../../cloud/lib/styled/themes/types'
+
 export interface BaseTheme {
   colors: any
 
@@ -75,3 +77,5 @@ export interface BaseTheme {
   tooltipBackgroundColor: string
   tooltipTextColor: string
 }
+
+// export type V2BaseTheme = BaseThemeLocal & BaseTheme

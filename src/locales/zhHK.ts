@@ -4,7 +4,7 @@ export default {
     'general.error': '錯誤',
     'general.cancel': '取消',
     'general.attachments': '附件',
-    'general.trash': '垃圾筒',
+    'general.archive': '档案',
     'general.allNotes': '所有筆記',
     'general.signin': '登入',
     'general.signOut': '登出',

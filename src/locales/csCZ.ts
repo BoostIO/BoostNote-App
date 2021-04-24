@@ -4,7 +4,7 @@ export default {
     'general.error': 'Chyba',
     'general.cancel': 'Storno',
     'general.attachments': 'Přílohy',
-    'general.trash': 'Koš',
+    'general.archive': 'Archiv',
     'general.allNotes': 'Všechny poznámky',
     'general.signin': 'Přihlásit se',
     'general.signOut': 'Odhlásit se',

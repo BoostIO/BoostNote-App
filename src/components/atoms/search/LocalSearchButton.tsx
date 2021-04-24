@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../../lib/styled/styled'
-import Icon from '../Icon'
+import styled from '../../../shared/lib/styled'
+import Icon from '../../../shared/components/atoms/Icon'
 
 interface LocalSearchButtonProps {
   title?: string
@@ -24,7 +24,7 @@ const LocalSearchButton = ({
       className={className}
       onClick={onClick}
     >
-      <Icon path={iconPath} />
+      <Icon size={16} path={iconPath} />
     </LocalSearchStyledButton>
   )
 }
@@ -46,14 +46,14 @@ const LocalSearchStyledButton = styled.button`
   border: none;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.colors.text.primary};
   &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 
   &:active,
   &.active {
-    background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
     color: #61a8e1;
     border-radius: 3px;
   }
@@ -62,13 +62,13 @@ const LocalSearchStyledButton = styled.button`
     cursor: default;
     opacity: 0.5;
     &:hover {
-      color: ${({ theme }) => theme.navItemColor};
+      color: ${({ theme }) => theme.colors.text.disabled};
     }
   }
 
   &:focus {
     opacity: 0.6;
-    background-color: ${({ theme }) => theme.secondaryButtonBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
     outline: 1px solid #61a8e1;
     border-radius: 3px;
   }

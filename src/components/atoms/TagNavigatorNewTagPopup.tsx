@@ -6,50 +6,70 @@ import React, {
   useRef,
   useCallback,
 } from 'react'
-import {
-  border,
-  backgroundColor,
-  borderColor,
-  contextMenuShadow,
-  uiTextColor,
-  activeBackgroundColor,
-  textOverflow,
-  inputStyle,
-} from '../../lib/styled/styleFunctions'
-import styled from '../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import { mdiTag } from '@mdi/js'
-import Icon from './Icon'
 import { isTagNameValid } from '../../lib/db/utils'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { PopulatedTagDoc } from '../../lib/db/types'
+import styled from '../../shared/lib/styled'
+import {
+  textColor,
+  textOverflow,
+  activeBackgroundColor,
+} from '../../shared/lib/styled/styleFunctions'
+import Icon from '../../shared/components/atoms/Icon'
+import FormInput from '../../shared/components/molecules/Form/atoms/FormInput'
+import cc from 'classcat'
 
 const Container = styled.div`
-  position: fixed;
-  background-color: white;
-  width: 200px;
-  max-height: 200px;
-  overflow-y: auto;
-
-  ${backgroundColor}
-  ${border}
-  z-index: 9000;
-  ${backgroundColor}
-  ${borderColor}
-  ${contextMenuShadow}
-`
-
-const TagNameInput = styled.input`
-  ${inputStyle};
+  position: relative;
   width: 100%;
-  height: 30px;
-  padding: 0 0.25em;
+
+  .autocomplete__input {
+    line-height: inherit !important;
+    height: 28px !important;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .autocomplete__container {
+    z-index: 9000;
+    position: absolute;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    left: 0;
+    top: 100%;
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    box-shadow: ${({ theme }) => theme.colors.shadow};
+  }
+
+  .autocomplete__option {
+    width: 100%;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      background: ${({ theme }) => theme.colors.background.quaternary};
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+  }
 `
 
 const MenuButton = styled.button`
   width: 100%;
   height: 30px;
-  ${uiTextColor};
+  ${textColor};
   background-color: transparent;
   border: none;
   display: flex;
@@ -72,7 +92,6 @@ interface TagNavigatorNewTagPopupProps {
   storageTagMap: Map<string, PopulatedTagDoc>
   close: () => void
   appendTagByName: (tagName: string) => void
-  position: { top: number; right: number }
 }
 
 const TagNavigatorNewTagPopup = ({
@@ -80,7 +99,6 @@ const TagNavigatorNewTagPopup = ({
   storageTagMap,
   close,
   appendTagByName,
-  position,
 }: TagNavigatorNewTagPopupProps) => {
   const [newTagName, setNewTagName] = useState('')
   const [menuIndex, setMenuIndex] = useState(0)
@@ -202,56 +220,67 @@ const TagNavigatorNewTagPopup = ({
   )
 
   return (
-    <Container
-      onBlur={handlePopupBlur}
-      ref={containerRef}
-      style={{ top: position.top, right: position.right }}
-    >
-      <TagNameInput
+    <Container onBlur={handlePopupBlur} ref={containerRef}>
+      <FormInput
+        id='autocomplete-tags-local'
         ref={inputRef}
+        className='autocomplete__input'
+        placeholder='Add New Label...'
         value={newTagName}
-        placeholder='Label Name...'
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setMenuIndex(0)
           setNewTagName(event.target.value)
         }}
         onKeyDown={handleKeyInput}
+        autoComplete='off'
       />
-      <>
-        {filteredStorageTags.map((storageTag, index) => (
-          <MenuButton
-            key={storageTag.name}
-            className={menuIndex === index ? 'active' : ''}
-            onClick={() => {
-              appendTagByName(storageTag.name)
-              setNewTagName('')
-              inputRef.current?.focus()
-              report(analyticsEvents.appendNoteTag)
-            }}
-          >
-            <Icon path={mdiTag} />
-            <span>{storageTag.name}</span>
-          </MenuButton>
-        ))}
-      </>
+      {filteredStorageTags.length > 0 && (
+        <div className='autocomplete__container'>
+          {filteredStorageTags.map((storageTag, index) => (
+            <MenuButton
+              key={storageTag.name}
+              className={cc([
+                menuIndex === index ? 'active' : '',
+                'autocomplete__option',
+              ])}
+              onClick={() => {
+                appendTagByName(storageTag.name)
+                setNewTagName('')
+                inputRef.current?.focus()
+                report(analyticsEvents.appendNoteTag)
+              }}
+            >
+              <Icon path={mdiTag} />
+              <span>{storageTag.name}</span>
+            </MenuButton>
+          ))}
+        </div>
+      )}
+
       {!newTagNameIsEmpty &&
         !tagSet.has(trimmedNewTagName) &&
         !storageTagMap.has(trimmedNewTagName) && (
-          <MenuButton
-            className={menuIndex === filteredStorageTags.length ? 'active' : ''}
-            onClick={() => {
-              appendTagByName(trimmedNewTagName)
-              setNewTagName('')
-              inputRef.current?.focus()
-              report(analyticsEvents.appendNoteTag)
-              report(analyticsEvents.addTag)
-            }}
-          >
-            <span>Create</span>&nbsp;
-            <Icon path={mdiTag} />
-            <span>{newTagName}</span>
-          </MenuButton>
+          <div className='autocomplete__container'>
+            <MenuButton
+              className={cc([
+                menuIndex === filteredStorageTags.length ? 'active' : '',
+                'autocomplete__option',
+              ])}
+              onClick={() => {
+                appendTagByName(trimmedNewTagName)
+                setNewTagName('')
+                inputRef.current?.focus()
+                report(analyticsEvents.appendNoteTag)
+                report(analyticsEvents.addTag)
+              }}
+            >
+              <span>Create</span>&nbsp;
+              <Icon path={mdiTag} />
+              <span>{newTagName}</span>
+            </MenuButton>
+          </div>
         )}
+
       {tags.includes(trimmedNewTagName) && (
         <MenuButton disabled={true}>
           <Icon path={mdiTag} />

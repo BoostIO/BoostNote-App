@@ -4,7 +4,7 @@ export default {
     'general.error': 'Virhe',
     'general.cancel': 'Peruuta',
     'general.attachments': 'Liitteet',
-    'general.trash': 'Roska',
+    'general.archive': 'Arkistoi',
     'general.allNotes': 'Kaikki muistiinpanot',
     'general.signin': 'Kirjaudu sisään',
     'general.signOut': 'Kirjaudu ulos',

@@ -1,7 +1,7 @@
 import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
 import Icon from '../../../../components/atoms/Icon'
-import Spinner from '../../../../components/atoms/Spinner'
+import Spinner from '../../../../shared/components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { cancelSubscription } from '../../../api/teams/subscription'
 import { getTeamPortalUrl } from '../../../api/teams/subscription/invoices'

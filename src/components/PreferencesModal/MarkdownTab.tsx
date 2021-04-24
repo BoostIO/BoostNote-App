@@ -10,14 +10,14 @@ import {
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
 import { usePreferences } from '../../lib/preferences'
-import styled from '../../lib/styled'
 import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
 import { capitalize } from '../../lib/string'
 import { useTranslation } from 'react-i18next'
 import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
-import { borderRight, border } from '../../lib/styled/styleFunctions'
 import { FormCheckItem } from '../atoms/form'
+import styled from '../../shared/lib/styled'
+import { border, borderRight } from '../../shared/lib/styled/styleFunctions'
 
 const EditorContainer = styled.div`
   ${border}

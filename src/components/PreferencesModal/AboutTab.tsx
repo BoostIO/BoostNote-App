@@ -1,15 +1,12 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
-import {
-  Section,
-  SectionHeader,
-  SectionSubtleText,
-  PrimaryAnchor,
-} from './styled'
+import { Section, SectionHeader, SectionSubtleText } from './styled'
 import { openNew } from '../../lib/platform'
 import Image from '../atoms/Image'
 import { useTranslation } from 'react-i18next'
 import SubscribeNewsLettersForm from '../organisms/SubscribeNewsLettersForm'
+import styled from '../../shared/lib/styled'
+import Link from '../../shared/components/atoms/Link'
+import cc from 'classcat'
 
 const AboutContents = styled.div`
   max-width: 360px;
@@ -82,6 +79,14 @@ interface PrimaryLinkProps {
   children: string
 }
 
+const PrimaryLinkContainer = styled.div`
+  .about__tab__primary__link {
+    :hover {
+      text-decoration: underline;
+    }
+  }
+`
+
 const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -92,9 +97,15 @@ const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   )
 
   return (
-    <PrimaryAnchor href={href} onClick={handleClick}>
-      {children}
-    </PrimaryAnchor>
+    <PrimaryLinkContainer>
+      <Link
+        className={cc(['about__tab__primary__link'])}
+        href={href}
+        onClick={handleClick}
+      >
+        {children}
+      </Link>
+    </PrimaryLinkContainer>
   )
 }
 

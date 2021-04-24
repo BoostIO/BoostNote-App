@@ -4,7 +4,7 @@
     'general.error': 'Erro',
     'general.cancel': 'Cancelar',
     'general.attachments': 'Anexos',
-    'general.trash': 'Lixo',
+    'general.archive': 'Arquivo',
     'general.allNotes': 'All Notes',
     'general.signin': 'Logar',
     'general.signOut': 'Sair',

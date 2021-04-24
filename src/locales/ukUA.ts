@@ -4,7 +4,7 @@ export default {
     'general.error': 'Помилка',
     'general.cancel': 'Скасувати',
     'general.attachments': 'Вкладення',
-    'general.trash': 'Сміття',
+    'general.archive': 'Архів',
     'general.allNotes': 'Усі примітки',
     'general.signin': 'Увійти',
     'general.signOut': 'Вийти',

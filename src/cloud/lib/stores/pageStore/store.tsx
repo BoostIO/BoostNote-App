@@ -201,7 +201,6 @@ function usePageDataStore(pageProps: any) {
         },
       }
     }
-
     const docCount = team.creationsCounter
     const trialIsOver = !team.trial
     overLimit = docCount >= freePlanDocLimit

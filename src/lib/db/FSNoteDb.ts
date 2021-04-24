@@ -324,10 +324,11 @@ class FSNoteDb implements NoteDb {
     if (noteDoc.trashed) {
       return noteDoc
     }
-
+    const now = getNow()
     const newNoteDoc = {
       ...noteDoc,
       trashed: true,
+      archivedAt: now,
     }
 
     await writeFile(notePathname, JSON.stringify(newNoteDoc))
@@ -355,6 +356,7 @@ class FSNoteDb implements NoteDb {
     const newNoteDoc = {
       ...noteDoc,
       trashed: false,
+      archivedAt: undefined,
     }
 
     await writeFile(notePathname, JSON.stringify(newNoteDoc))

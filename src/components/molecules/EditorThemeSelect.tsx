@@ -3,9 +3,9 @@ import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
 import { MenuItemConstructorOptions } from 'electron'
 import BottomBarButton from '../atoms/BottomBarButton'
-import Icon from '../atoms/Icon'
 import { mdiPaletteOutline } from '@mdi/js'
 import { themes } from '../../lib/CodeMirror'
+import Icon from '../../shared/components/atoms/Icon'
 
 const EditorThemeSelect = () => {
   const { preferences, setPreferences } = usePreferences()

@@ -16,7 +16,6 @@ import {
   SearchReplaceOptions,
 } from '../../lib/search/search'
 import CodeMirror, { MarkerRange, TextMarker } from 'codemirror'
-import Icon from '../atoms/Icon'
 import {
   mdiArrowDown,
   mdiArrowUp,
@@ -27,11 +26,12 @@ import {
   mdiSubdirectoryArrowLeft,
 } from '@mdi/js'
 import LocalReplace from './LocalReplace'
-import styled from '../../lib/styled/styled'
 import LocalSearchButton from '../atoms/search/LocalSearchButton'
 import { SearchResultItem } from '../atoms/search/SearchResultItem'
 import { compareEventKeyWithKeymap } from '../../lib/keymap'
 import { usePreferences } from '../../lib/preferences'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 
 const LOCAL_SEARCH_MAX_RESULTS = 10000
 
@@ -803,6 +803,7 @@ const SearchOptionsInnerContainer = styled.div`
 `
 
 const NumResultsContainer = styled.div`
+  padding-top: 4px;
   padding-left: 4px;
   padding-right: 4px;
 `
@@ -832,7 +833,7 @@ export const LocalSearchInputLeft = styled.div`
     flex: 1;
     background-color: transparent;
     border: none;
-    color: ${({ theme }) => theme.uiTextColor};
+    color: ${({ theme }) => theme.colors.text.primary};
 
     resize: none;
     max-height: 6em;
@@ -850,7 +851,7 @@ export const LocalSearchInputRightContainer = styled.div`
   align-content: stretch;
   align-self: stretch;
   align-items: flex-start;
-  background-color: ${({ theme }) => theme.searchSecondaryBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
 `
 
 export const LocalSearchInputRightClose = styled.div`
@@ -859,7 +860,7 @@ export const LocalSearchInputRightClose = styled.div`
 
 const LocalSearchContainer = styled.div`
   z-index: 5001;
-  background-color: ${({ theme }) => theme.navBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
 `
 
 function updateMarkerStyle(

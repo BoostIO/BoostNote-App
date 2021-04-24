@@ -148,7 +148,6 @@ const ConvertPouchStorage = ({
             <FormLabelGroupLabel>Choose Location</FormLabelGroupLabel>
             <FormLabelGroupContent>
               <FormFolderSelector
-                style={{ flex: 1 }}
                 value={newStorageLocation}
                 setValue={setNewStorageLocation}
               />

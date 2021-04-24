@@ -52,6 +52,7 @@ export type NoteDoc = {
   _id: string
   createdAt: string
   updatedAt: string
+  archivedAt?: string
   trashed: boolean
   _rev: string
 } & NoteDocEditibleProps

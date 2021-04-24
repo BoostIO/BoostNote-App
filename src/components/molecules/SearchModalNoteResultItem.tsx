@@ -1,18 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
-import styled from '../../lib/styled'
 import { NoteDoc } from '../../lib/db/types'
-import Icon from '../atoms/Icon'
 import {
   mdiCardTextOutline,
   mdiTagMultiple,
   mdiFolderOutline,
   mdiChevronRight,
 } from '@mdi/js'
-import {
-  flexCenter,
-  borderBottom,
-  textOverflow,
-} from '../../lib/styled/styleFunctions'
 import {
   getSearchResultKey,
   MAX_SEARCH_PREVIEW_LINE_LENGTH,
@@ -22,6 +15,13 @@ import {
 import { SearchMatchHighlight } from '../PreferencesModal/styled'
 import { escapeRegExp } from '../../lib/string'
 import cc from 'classcat'
+import styled from '../../shared/lib/styled'
+import {
+  borderBottom,
+  flexCenter,
+  textOverflow,
+} from '../../shared/lib/styled/styleFunctions'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface SearchModalNoteResultItemProps {
   note: NoteDoc
@@ -238,10 +238,10 @@ const MetaContainer = styled.div`
   user-select: none;
 
   &:hover {
-    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
   &:hover:active {
-    background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 
   & > .header {
@@ -261,13 +261,14 @@ const MetaContainer = styled.div`
       font-size: 18px;
       ${textOverflow}
       &.empty {
-        color: ${({ theme }) => theme.disabledUiTextColor};
+        color: ${({ theme }) => theme.colors.text.disabled};
       }
     }
   }
   & > .meta {
     font-size: 12px;
-    color: ${({ theme }) => theme.navItemColor};
+    //maybe white
+    color: ${({ theme }) => theme.colors.text.secondary};
     display: flex;
     margin-left: 18px;
 
@@ -313,18 +314,15 @@ const SearchResultItem = styled.div`
   margin-bottom: 2px;
 
   &.selected {
-    color: ${({ theme }) => theme.searchItemSelectionTextColor};
-    background-color: ${({ theme }) =>
-      theme.searchItemSelectionBackgroundColor};
+    color: ${({ theme }) => theme.colors.text.primary};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
   &.selected:hover {
-    background-color: ${({ theme }) =>
-      theme.searchItemSelectionHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
 
   &:hover {
-    background-color: ${({ theme }) =>
-      theme.secondaryButtonHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.secondary};
   }
 `
 
@@ -337,7 +335,7 @@ const SearchResultLeft = styled.div`
 
 const SearchResultRight = styled.div`
   flex-shrink: 0;
-  ${flexCenter}
+  ${flexCenter};
 
   & > .button {
     height: 24px;
@@ -349,14 +347,14 @@ const SearchResultRight = styled.div`
     border: none;
 
     transition: color 200ms ease-in-out;
-    color: ${({ theme }) => theme.navItemColor};
+    color: ${({ theme }) => theme.colors.text.primary};
     &:hover {
-      color: ${({ theme }) => theme.navButtonHoverColor};
+      color: ${({ theme }) => theme.colors.text.secondary};
     }
 
     &:active,
     &.active {
-      color: ${({ theme }) => theme.navButtonActiveColor};
+      color: ${({ theme }) => theme.colors.text.link};
     }
   }
 `

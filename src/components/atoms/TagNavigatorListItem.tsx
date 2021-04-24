@@ -1,10 +1,7 @@
 import React, { useCallback, useState } from 'react'
-import Icon from './Icon'
-import styled from '../../lib/styled'
 import { mdiClose } from '@mdi/js'
 import {
   flexCenter,
-  tagBackgroundColor,
   TagStyleProps,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
@@ -15,6 +12,9 @@ import DialogColorPicker from './dialog/DialogColorPicker'
 import { PopulatedTagDoc } from '../../lib/db/types'
 import { BaseTheme } from '../../lib/styled/BaseTheme'
 import { isColorBright } from '../../lib/colors'
+import { tagBackgroundColor } from '../../shared/lib/styled/styleFunctions'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;
@@ -38,7 +38,7 @@ const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
   ${textOverflow};
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright((color as string) || theme.secondaryBackgroundColor)
+      isColorBright((color as string) || theme.colors.background.secondary)
         ? 100
         : 0}%
   );
@@ -53,7 +53,7 @@ const TagRemoveButton = styled.button<BaseTheme & TagStyleProps>`
   color: #fff;
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright((color as string) || theme.secondaryBackgroundColor)
+      isColorBright((color as string) || theme.colors.background.secondary)
         ? 100
         : 0}%
   );

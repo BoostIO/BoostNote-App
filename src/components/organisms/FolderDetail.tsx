@@ -13,8 +13,11 @@ import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
 import FolderDetailListItem from '../molecules/FolderDetailListItem'
 import { useRouter } from '../../lib/router'
-import styled from '../../lib/styled'
-import { borderBottom, selectStyle } from '../../lib/styled/styleFunctions'
+import {
+  borderBottom,
+  selectStyle,
+} from '../../shared/lib/styled/styleFunctions'
+import styled from '../../shared/lib/styled'
 
 interface FolderDetailProps {
   storage: NoteStorage
@@ -108,7 +111,7 @@ const FolderDetail = ({ storage, folderPathname }: FolderDetailProps) => {
   return (
     <PageContainer>
       <Control>
-        <div className='left'></div>
+        <div className='left' />
         <div className='right'>
           <select onChange={selectNoteSorting} value={noteSorting}>
             {<NoteSortingOptionsFragment />}
@@ -148,7 +151,7 @@ const Control = styled.div`
   display: flex;
   height: 40px;
   margin-top: 10px;
-  ${borderBottom}
+  ${borderBottom};
   .left {
     flex: 1;
   }
@@ -157,7 +160,7 @@ const Control = styled.div`
     align-items: center;
 
     select {
-      ${selectStyle}
+      ${selectStyle};
       width: 120px;
       height: 25px;
       margin-bottom: 10px;

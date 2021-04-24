@@ -10,10 +10,10 @@ import {
 } from '@mdi/js'
 import Flexbox from '../../atoms/Flexbox'
 import Button from '../../atoms/Button'
-import Spinner from '../../../../components/atoms/Spinner'
 import Icon from '../../../../components/atoms/Icon'
 import { useRouter } from '../../../lib/router'
 import { usingElectron, sendToHost } from '../../../lib/stores/electron'
+import Spinner from '../../../../shared/components/atoms/Spinner'
 
 interface UsagePageProps {
   onUsage: (val: 'personal' | 'team') => void

@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import styled from '../../lib/styled'
 import { NoteDoc, NoteStorage } from '../../lib/db/types'
-import Icon from '../atoms/Icon'
 import {
   mdiClockOutline,
   mdiTrashCanOutline,
@@ -18,7 +16,6 @@ import {
 import { isTagNameValid } from '../../lib/db/utils'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
 import { useDb } from '../../lib/db'
-import { useToast } from '../../lib/toast'
 import { getFormattedDateTime } from '../../lib/time'
 import { useTranslation } from 'react-i18next'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
@@ -31,6 +28,9 @@ import {
 import { usePreferences } from '../../lib/preferences'
 import { usePreviewStyle } from '../../lib/preview'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
+import { useToast } from '../../shared/lib/stores/toast'
 
 interface NoteContextViewProps {
   storage: NoteStorage
@@ -148,6 +148,7 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
       includeFrontMatter
     )
     pushMessage({
+      type: 'success',
       title: 'Markdown export',
       description: 'Markdown file exported successfully.',
     })
@@ -169,6 +170,7 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
       previewStyle
     )
     pushMessage({
+      type: 'success',
       title: 'HTML export',
       description: 'HTML file exported successfully.',
     })
@@ -183,6 +185,12 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
       storage.attachmentMap,
       previewStyle
     )
+    // todo: [komediruzecki-23/05/2021] Pushes message after export is generated but not after user saved the file in dialog!
+    pushMessage({
+      type: 'success',
+      title: 'PDF export',
+      description: 'PDF file exported successfully.',
+    })
   }, [note, preferences, pushMessage, storage.attachmentMap, previewStyle])
 
   return (
@@ -316,24 +324,18 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
 export default NoteContextView
 
 const Container = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  padding: 8px 0;
-  display: flex;
-  flex-direction: column;
-  width: 350px;
-  overflow-y: auto;
-  border-left: solid 1px ${({ theme }) => theme.borderColor};
-  flex-shrink: 0;
-  color: ${({ theme }) => theme.uiTextColor};
+  padding: 4px 0;
+  width: 400px;
+  // overflow-y: auto;
+  border-left: 1px solid ${({ theme }) => theme.colors.border.second};
+  border-radius: 0;
+  height: 100vh;
 `
 
 const Separator = styled.div`
   height: 1px;
   margin: 8px 16px;
-  background-color: ${({ theme }) => theme.borderColor};
+  background-color: ${({ theme }) => theme.colors.border.main};
   flex-shrink: 0;
 `
 
@@ -341,7 +343,7 @@ const ControlItem = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 14px;
 `
 
@@ -361,7 +363,7 @@ interface LabelIconProps {
 const LabelIcon = ({ path }: LabelIconProps) => {
   return (
     <ControlItemLabelIconContainer>
-      <Icon size={18} path={path} />
+      <Icon size={16} path={path} />
     </ControlItemLabelIconContainer>
   )
 }
@@ -406,8 +408,8 @@ const CloudIntroItemContent = styled.div`
 `
 
 const TryCloudButton = styled.button`
-  background-color: ${({ theme }) => theme.primaryColor};
-  color: ${({ theme }) => theme.primaryButtonLabelColor};
+  background-color: ${({ theme }) => theme.colors.variants.primary.base};
+  color: ${({ theme }) => theme.colors.variants.primary.text};
   font-size: 12px;
   border: none;
 
@@ -417,7 +419,7 @@ const TryCloudButton = styled.button`
     cursor: pointer;
   }
   &:focus {
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryColor};
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.background.tertiary};
   }
   &:disabled,
   &.disabled {
@@ -438,19 +440,19 @@ const ButtonItem = styled.button`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 14px;
-  background-color: ${({ theme }) => theme.navItemBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   &:hover {
-    background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.secondary};
   }
   &:active,
   &.active {
-    background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
   &:hover:active,
   &:hover.active {
-    background-color: ${({ theme }) => theme.navItemHoverActiveBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
   }
 `
 

@@ -42,6 +42,14 @@ export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 export type EditorControlModeOptions = '2-toggles' | '3-buttons'
+export type PreferencesTab =
+  | 'about'
+  | 'keymap'
+  | 'editor'
+  | 'markdown'
+  | 'storage'
+  | 'migration'
+  | 'general'
 
 export interface Preferences {
   // General
@@ -154,7 +162,7 @@ function usePreferencesStore() {
     ...initialPreferences,
   })
 
-  const [tab, setTab] = useState('about')
+  const [tab, setSettingsTab] = useState<PreferencesTab>('about')
 
   const mergedPreferences = useMemo(() => {
     const preferencesKeymap = preferences['general.keymap']
@@ -178,16 +186,16 @@ function usePreferencesStore() {
   const [closed, setClosed] = useState(true)
   const togglePreferencesModal = useCallback(() => {
     if (closed) {
-      setTab('about')
+      setSettingsTab('about')
       setClosed(false)
     } else {
       setClosed(true)
     }
   }, [closed, setClosed])
 
-  const openTab = useCallback(
-    (tab: string) => {
-      setTab(tab)
+  const openSettingsTab = useCallback(
+    (tab: PreferencesTab) => {
+      setSettingsTab(tab)
       if (closed) {
         setClosed(false)
       }
@@ -379,7 +387,7 @@ function usePreferencesStore() {
 
   return {
     tab,
-    openTab,
+    openTab: openSettingsTab,
     closed,
     setClosed,
     togglePreferencesModal,

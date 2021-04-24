@@ -1,13 +1,11 @@
-import styled from '../../lib/styled'
+import styled from '../../shared/lib/styled'
 import {
   selectStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
   inputStyle,
   tableStyle,
-  disabledUiTextColor,
-  PrimaryTextColor,
-} from '../../lib/styled/styleFunctions'
+} from '../../shared/lib/styled/styleFunctions'
 
 export const Section = styled.section`
   margin-bottom: 2em;
@@ -19,11 +17,7 @@ export const SectionHeader = styled.h3`
 `
 
 export const SectionSubtleText = styled.p`
-  ${disabledUiTextColor}
-`
-
-export const PrimaryAnchor = styled.a`
-  ${PrimaryTextColor}
+  color: ${({ theme }) => theme.colors.text.disabled};
 `
 
 export const SectionMargin = styled.section`
@@ -83,24 +77,6 @@ export const SectionTable = styled.table`
   ${tableStyle}
 `
 
-export const RightMargin = styled.span`
-  margin-right: 20px;
-`
-
-export const TopMargin = styled.div`
-  margin-top: 40px;
-`
-
-export const DeleteStorageButton = styled.button`
-  ${secondaryButtonStyle};
-  padding: 0 16px;
-  height: 40px;
-  border-radius: 2px;
-  cursor: pointer;
-  vertical-align: middle;
-  align-items: center;
-`
-
 export const SectionListSelect = styled.div`
   ${selectStyle};
   padding: 0 16px;
@@ -111,8 +87,8 @@ export const SectionListSelect = styled.div`
 `
 
 export const SearchMatchHighlight = styled.span`
-  background-color: ${({ theme }) => theme.searchHighlightBackgroundColor};
-  color: ${({ theme }) => theme.searchHighlightTextColor};
-
+  background-color: ${({ theme }) =>
+    theme.codeEditorSelectedTextBackgroundColor};
+  color: #212121 !important;
   padding: 2px;
 `

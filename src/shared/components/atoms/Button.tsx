@@ -7,7 +7,7 @@ import React, {
 import cc from 'classcat'
 import styled from '../../lib/styled'
 import Icon, { IconSize } from './Icon'
-import Spinner from '../../../components/atoms/Spinner'
+import Spinner from './Spinner'
 
 export type ButtonVariant =
   | 'primary'
