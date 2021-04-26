@@ -3,7 +3,7 @@ import cc from 'classcat'
 import { useEffectOnce } from 'react-use'
 import styled from '../../../../../shared/lib/styled'
 import Spinner from '../../../../../shared/components/atoms/Spinner'
-import FormInput from '../../../../../shared/components/molecules/Form/atoms/FormInput'
+import FormInput from '../../../molecules/Form/atoms/FormInput'
 
 interface SideNavigatorFolderFormProps {
   placeholder?: string

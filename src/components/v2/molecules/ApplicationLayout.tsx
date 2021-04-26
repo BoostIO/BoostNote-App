@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../lib/styled'
-import GlobalStyle from '../atoms/GlobalStyle'
+import styled from '../../../shared/lib/styled'
+import GlobalStyle from '../../../shared/components/atoms/GlobalStyle'
 
 interface ApplicationLayoutProps {
   sidebar: React.ReactNode

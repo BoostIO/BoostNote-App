@@ -1,7 +1,7 @@
 import React from 'react'
 import FormSelect, {
   FormSelectOption,
-} from '../../../../../shared/components/molecules/Form/atoms/FormSelect'
+} from '../../../molecules/Form/atoms/FormSelect'
 import styled from '../../../../../shared/lib/styled'
 import Flexbox from '../../../../../shared/components/atoms/Flexbox'
 import Icon from '../../../../../shared/components/atoms/Icon'

@@ -6,7 +6,7 @@ import ContentLayout from '../ContentLayout'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import Button from '../../../../shared/components/atoms/Button'
-import UserIconList from '../../../../shared/components/molecules/UserIconList'
+import UserIconList from '../../molecules/UserIconList'
 import { AppUser } from '../../../../shared/lib/mappers/users'
 import ShallowTimeline, {
   ShallowTimelineRow,

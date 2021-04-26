@@ -8,7 +8,7 @@ import Button from '../../../../shared/components/atoms/Button'
 import { useSet } from 'react-use'
 import ContentManagerRow from './atoms/ContentManagerRow'
 import { ContentManagerItemProps } from '../../../../shared/lib/mappers/types'
-import Checkbox from '../../../../shared/components/molecules/Form/atoms/FormCheckbox'
+import Checkbox from '../../molecules/Form/atoms/FormCheckbox'
 import {
   sortByAttributeAsc,
   sortByAttributeDesc,

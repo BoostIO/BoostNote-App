@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
 import { Picker, EmojiData } from 'emoji-mart'
-import styled from '../../lib/styled'
-import Button from '../atoms/Button'
-import { useWindow } from '../../lib/stores/window'
-import { useEmoji } from '../../lib/stores/emoji'
-import { useToast } from '../../lib/stores/toast'
+import styled from '../../../shared/lib/styled'
+import Button from '../../../shared/components/atoms/Button'
+import { useWindow } from '../../../shared/lib/stores/window'
+import { useEmoji } from '../../../shared/lib/stores/emoji'
+import { useToast } from '../../../shared/lib/stores/toast'
 
 export const EmojiPickerWidth = 350
 export const EmojiPickerHeight = 380

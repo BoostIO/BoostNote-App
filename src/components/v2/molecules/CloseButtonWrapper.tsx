@@ -1,7 +1,7 @@
 import React from 'react'
 import cc from 'classcat'
-import styled from '../../lib/styled'
-import Button from '../atoms/Button'
+import styled from '../../../shared/lib/styled'
+import Button from '../../../shared/components/atoms/Button'
 import { mdiClose } from '@mdi/js'
 
 export interface CloseButtonWrapperProps {

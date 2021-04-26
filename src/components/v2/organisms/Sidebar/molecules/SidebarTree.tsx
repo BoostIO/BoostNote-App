@@ -19,8 +19,8 @@ import {
   SidebarDragState,
 } from '../../../../../shared/lib/dnd'
 import { mdiDotsHorizontal } from '@mdi/js'
-import { FocusedContextMenu } from '../../../../../shared/components/molecules/ContextMenu'
-import Checkbox from '../../../../../shared/components/molecules/Form/atoms/FormCheckbox'
+import { FocusedContextMenu } from '../../../molecules/ContextMenu'
+import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { scrollbarOverlay } from '../../../../../shared/lib/styled/styleFunctions'
 
 interface SidebarTreeProps {
