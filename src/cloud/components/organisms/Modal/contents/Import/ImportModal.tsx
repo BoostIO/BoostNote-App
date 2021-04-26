@@ -3,7 +3,6 @@ import { ModalContainer } from '../styled'
 import ImportModalHeader, { ImportStep } from './ImportModalHeader'
 import { StyledImportModalContainer } from './styled'
 import ImportModalSelectFolder from './ImportModalSelectFolder'
-import { useModal } from '../../../../../lib/stores/modal'
 import ImportModalSelectSource from './ImportModalSelectSource'
 import ImportModalGuide, { ImportService } from './ImportModalGuide'
 import {
@@ -19,13 +18,14 @@ import { useNavigateToFolder } from '../../../../atoms/Link/FolderLink'
 import { useNavigateToWorkspace } from '../../../../atoms/Link/WorkspaceLink'
 import { useNavigateToTeam } from '../../../../atoms/Link/TeamLink'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../../shared/lib/stores/modal'
 
 const ImportModal = () => {
   const [step, setStep] = useState<ImportStep>('source')
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
   const [service, setService] = useState<ImportService>()
-  const { closeModal } = useModal()
+  const { closeLastModal: closeModal } = useModal()
   const fileUploaderRef = useRef<HTMLInputElement>(null)
   const [uploadType, setUploadType] = useState<
     AllowedDocTypeImports | undefined

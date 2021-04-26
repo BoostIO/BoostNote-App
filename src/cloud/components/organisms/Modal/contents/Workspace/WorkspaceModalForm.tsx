@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { useModal } from '../../../../../lib/stores/modal'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { ModalBody, ModalContainer, ModalLine, ModaLineHeader } from '../styled'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
@@ -21,6 +20,7 @@ import Flexbox from '../../../../atoms/Flexbox'
 import CustomSwitch from '../../../../atoms/CustomSwitch'
 import WorkspaceAccess from './WorkspaceAccess'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../../shared/lib/stores/modal'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -32,7 +32,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
     globalData: { currentUser },
   } = useGlobalData()
   const { pushMessage } = useToast()
-  const { closeModal } = useModal()
+  const { closeLastModal } = useModal()
   const { updateWorkspacesMap } = useNav()
 
   const [error, setError] = useState<unknown>()
@@ -153,7 +153,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         } else {
           await submitCreateWorkSpaceHandler(team, body)
         }
-        closeModal()
+        closeLastModal()
       } catch (error) {
         setError(error)
       } finally {
@@ -162,7 +162,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
     },
     [
       name,
-      closeModal,
+      closeLastModal,
       pushMessage,
       selectedPermissions,
       submitCreateWorkSpaceHandler,
@@ -272,7 +272,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
           <CustomButton
             variant='transparent'
             className='rounded mr-2 size-l'
-            onClick={closeModal}
+            onClick={closeLastModal}
             type='button'
           >
             Cancel

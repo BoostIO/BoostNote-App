@@ -1,8 +1,7 @@
-import React, { useMemo, useCallback } from 'react'
+import React from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import {
   mdiFileDocumentOutline,
-  mdiDownload,
   mdiPaperclip,
   mdiArchive,
   mdiWeb,
@@ -10,43 +9,14 @@ import {
 import { getTeamLinkHref } from '../../atoms/Link/TeamLink'
 import { useModal } from '../../../lib/stores/modal'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
-import ImportModal from '../Modal/contents/Import/ImportModal'
-import { OnboardingPastille } from '../Onboarding/styled'
-import { updateTeam } from '../../../api/teams'
 import SideNavigatorItem from './SideNavigator/SideNavigatorItem'
 import { useRouter } from '../../../lib/router'
 
 const SidebarSecondaryTeamLinks = () => {
-  const { team, setPartialPageData } = usePage()
+  const { team } = usePage()
   const { openModal } = useModal()
 
   const { pathname } = useRouter()
-
-  const hideImportNotice = useMemo(() => {
-    return team != null && team.state.import === true
-  }, [team])
-
-  const onImportModal = useCallback(async () => {
-    if (team == null) {
-      return
-    }
-
-    openModal(<ImportModal />, {
-      classNames: 'largeW',
-    })
-    if (team.state.import) {
-      return
-    }
-    setPartialPageData({
-      team: { ...team, state: { ...team.state, import: true } },
-    })
-    try {
-      await updateTeam(team.id, {
-        name: team.name,
-        state: JSON.stringify({ ...team.state, import: true }),
-      })
-    } catch (error) {}
-  }, [team, setPartialPageData, openModal])
 
   if (team == null) {
     return null
@@ -54,30 +24,6 @@ const SidebarSecondaryTeamLinks = () => {
 
   return (
     <>
-      <SideNavigatorItem
-        id='sidebar-uploadModal'
-        iconNode={mdiDownload}
-        label={
-          hideImportNotice ? (
-            'Import'
-          ) : (
-            <>
-              Import{' '}
-              <OnboardingPastille
-                style={{
-                  marginLeft: 14,
-                  verticalAlign: 'middle',
-                  width: 12,
-                  height: 12,
-                }}
-              />
-            </>
-          )
-        }
-        onClick={onImportModal}
-        depth={1}
-      />
-
       <SideNavigatorItem
         id='sidebar-templatesmodal'
         iconNode={mdiFileDocumentOutline}
