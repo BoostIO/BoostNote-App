@@ -16,8 +16,8 @@ import {
   mapUsersWithAccess,
   AppUser,
 } from '../../../../shared/lib/mappers/users'
-import WorkspaceShowPageTemplate from '../../../../shared/components/templates/cloud/WorkspaceShowPageTemplate'
-import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
+import WorkspaceShowPageTemplate from '../../templates/cloud/WorkspaceShowPageTemplate'
+import ErrorLayout from '../../templates/ErrorLayout'
 import { prop } from 'ramda'
 import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
 import { compareDateString } from '../../../../shared/lib/date'

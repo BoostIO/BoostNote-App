@@ -1,22 +1,22 @@
 import React, { useMemo } from 'react'
 import MetadataContainer, {
   MetadataContainerRow,
-} from '../../organisms/MetadataContainer'
+} from '../../../../shared/components/organisms/MetadataContainer'
 import ContentLayout from '../ContentLayout'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { mdiPencil, mdiTrashCanOutline } from '@mdi/js'
-import Button from '../../atoms/Button'
-import UserIconList from '../../molecules/UserIconList'
-import { AppUser } from '../../../lib/mappers/users'
+import Button from '../../../../shared/components/atoms/Button'
+import UserIconList from '../../../../shared/components/molecules/UserIconList'
+import { AppUser } from '../../../../shared/lib/mappers/users'
 import ShallowTimeline, {
   ShallowTimelineRow,
-} from '../../organisms/ShallowTimeline'
+} from '../../../../shared/components/organisms/ShallowTimeline'
 import {
   BreadCrumbTreeItem,
   ContentManagerItemProps,
-} from '../../../lib/mappers/types'
-import { topParentId } from '../../../lib/mappers/cloud/topbarTree'
-import ContentManager from '../../organisms/ContentManager'
+} from '../../../../shared/lib/mappers/types'
+import { topParentId } from '../../../../shared/lib/mappers/cloud/topbarTree'
+import ContentManager from '../../../../shared/components/organisms/ContentManager'
 
 interface WorkspaceShowPageTemplateProps<T> {
   topbarControls: any[]

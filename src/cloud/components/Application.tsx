@@ -108,7 +108,7 @@ import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
 import { SidebarSpace } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import ContentLayout, {
   ContentLayoutProps,
-} from '../../shared/components/templates/ContentLayout'
+} from '../../components/v2/templates/ContentLayout'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import CreateWorkspaceModal from './organisms/Modal/contents/Workspace/CreateWorkspaceModal'
 import { useCloudUpdater } from '../lib/hooks/useCloudUpdater'
