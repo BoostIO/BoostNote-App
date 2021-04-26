@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
-} from '../../api/teams/workspaces'
-import { useNav } from '../stores/nav'
-import useApi from '../../../shared/lib/hooks/useApi'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
-import { useDialog } from '../../../shared/lib/stores/dialog'
-import { useToast } from '../../../shared/lib/stores/toast'
-import { SerializedWorkspace } from '../../interfaces/db/workspace'
+} from '../../../../cloud/api/teams/workspaces'
+import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
+import { useNav } from '../../../../cloud/lib/stores/nav'
+import { useDialog } from '../../stores/dialog'
+import { useToast } from '../../stores/toast'
+import { getMapFromEntityArray } from '../../utils/array'
+import useApi from '../useApi'
 
 export function useWorkspaceDelete() {
   const {

@@ -72,11 +72,11 @@ import MarkdownView from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
+import { useCloudUpdater } from '../../../../shared/lib/hooks/cloud/useCloudUpdater'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 

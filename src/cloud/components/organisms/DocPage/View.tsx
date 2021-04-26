@@ -26,9 +26,9 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
+import { useCloudUpdater } from '../../../../shared/lib/hooks/cloud/useCloudUpdater'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
 
 interface ViewPageProps {
   team: SerializedTeam

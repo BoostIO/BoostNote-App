@@ -29,13 +29,13 @@ import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Application from '../../Application'
 import ErrorLayout from '../../../../components/v2/templates/ErrorLayout'
+import { useCloudUpdater } from '../../../../shared/lib/hooks/cloud/useCloudUpdater'
 import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
 import FlattenedBreadcrumbs from '../../../../components/v2/molecules/FlattenedBreadcrumbs'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
+import { useCloudUI } from '../../../../shared/lib/hooks/cloud/useCloudUI'
 
 enum FolderHeaderActions {
   newDoc = 0,
