@@ -7,10 +7,16 @@ import { overflowEllipsis } from '../../../../lib/styled/styleFunctions'
 import shortid from 'shortid'
 
 interface FuzzyNavigationItemProps {
-  item: FuzzyNavigationItemAttrbs
+  item: {
+    label: React.ReactNode
+    icon?: string
+    emoji?: string
+    path: React.ReactNode
+    href?: string
+    onClick: () => void
+  }
   id: string
   className?: string
-  query?: string
 }
 
 export interface FuzzyNavigationItemAttrbs {
@@ -22,28 +28,13 @@ export interface FuzzyNavigationItemAttrbs {
   onClick: () => void
 }
 
-const FuzzyNavigationitem = ({
+const FuzzyNavigationItem = ({
   id,
   className,
   item,
-  query,
 }: FuzzyNavigationItemProps) => {
   const Tag = item.href == null ? 'button' : 'a'
 
-  const highlighted = useMemo(() => {
-    if (query == null) {
-      return {
-        label: item.label,
-        path: item.path,
-      }
-    }
-
-    const indexes = getHighlightedIndexes(query, item.label, item.path)
-    return {
-      label: getHighlightedNodes(item.label, indexes.labelHighlightIndexes),
-      path: getHighlightedNodes(item.path, indexes.pathHighlightIndexes),
-    }
-  }, [item.label, item.path, query])
   return (
     <Container className={cc(['fuzzy__navigation__item__wrapper', className])}>
       <Tag
@@ -65,133 +56,43 @@ const FuzzyNavigationitem = ({
           </div>
         ) : null}
         <div className='fuzzy__navigation__item__label_wrapper'>
-          <span className='fuzzy__navigation__item__label'>
-            {highlighted.label}
-          </span>
-          <small className='fuzzy__navigation__path'>{highlighted.path}</small>
+          <span className='fuzzy__navigation__item__label'>{item.label}</span>
+          <small className='fuzzy__navigation__path'>{item.path}</small>
         </div>
       </Tag>
     </Container>
   )
 }
 
-function getHighlightedIndexes(query: string, label: string, path: string) {
-  let parsingQuery = query
-  let leftOvers = ''
-
-  const minimizedLabel = label.toLocaleLowerCase()
-  const minimizedPath = path.toLocaleLowerCase()
-
-  const labelHighlightIndexes: { from: number; to: number }[] = []
-  const pathHighlightIndexes: { from: number; to: number }[] = []
-
-  while (parsingQuery !== '') {
-    let match = minimizedLabel.indexOf(parsingQuery)
-
-    if (match !== -1) {
-      labelHighlightIndexes.push({
-        from: match,
-        to: parsingQuery.length + match,
-      })
-      parsingQuery = ''
-      continue
-    }
-
-    match = minimizedPath.indexOf(parsingQuery)
-    if (match !== -1) {
-      pathHighlightIndexes.push({
-        from: match,
-        to: parsingQuery.length + match,
-      })
-      parsingQuery = ''
-      continue
-    }
-
-    leftOvers = parsingQuery[parsingQuery.length - 1] + leftOvers
-    parsingQuery = parsingQuery.slice(0, -1)
-  }
-
-  while (leftOvers !== '') {
-    let match = minimizedLabel.indexOf(leftOvers)
-
-    if (match !== -1) {
-      labelHighlightIndexes.push({
-        from: match,
-        to: leftOvers.length + match,
-      })
-      leftOvers = ''
-      continue
-    }
-
-    match = minimizedPath.indexOf(leftOvers)
-    if (match !== -1) {
-      pathHighlightIndexes.push({
-        from: match,
-        to: leftOvers.length + match,
-      })
-      leftOvers = ''
-      continue
-    }
-
-    leftOvers = leftOvers.slice(0, -1)
-  }
-
-  return {
-    labelHighlightIndexes,
-    pathHighlightIndexes,
-  }
+type HighlightedFuzzyNavigationItemProps = {
+  item: FuzzyNavigationItemAttrbs
+  id: string
+  className?: string
+  query: string
+  labelMatches?: readonly [number, number][]
+  pathMatches?: readonly [number, number][]
 }
 
-function getHighlightedNodes(
-  label: string,
-  highlightIndexes: { from: number; to: number }[]
-) {
-  let res = <>{label}</>
-  if (highlightIndexes.length > 0) {
-    const sortedIndexes = Array.from(
-      highlightIndexes.reduce((acc, val) => {
-        acc.add(val.from)
-        acc.add(val.to)
-        return acc
-      }, new Set<number>())
-    ).sort((a, b) => {
-      return a - b
-    })
-    res = (
-      <>
-        {sortedIndexes[0] !== 0 ? (
-          <>{label.substr(0, sortedIndexes[0])}</>
-        ) : null}
-        {sortedIndexes.map((index, i) => {
-          if (i % 2 !== 0) {
-            return null
-          }
+export const HighlightedFuzzyNavigationitem = ({
+  item,
+  query,
+  labelMatches = [],
+  pathMatches = [],
+  ...rest
+}: HighlightedFuzzyNavigationItemProps) => {
+  const highlighted = useMemo(() => {
+    return {
+      label: getHighlightedNodes(item.label, labelMatches),
+      path: getHighlightedNodes(item.path, pathMatches),
+    }
+  }, [item.label, item.path, pathMatches, labelMatches])
 
-          return (
-            <React.Fragment key={`i-${shortid.generate()}`}>
-              {i > 0 ? (
-                <>
-                  {label.substr(
-                    sortedIndexes[i - 1],
-                    index - sortedIndexes[i - 1]
-                  )}
-                </>
-              ) : null}
-              {
-                <mark key={i}>
-                  {label.substr(index, sortedIndexes[i + 1] - index)}
-                </mark>
-              }
-            </React.Fragment>
-          )
-        })}
-        {sortedIndexes[sortedIndexes.length - 1] !== label.length ? (
-          <>{label.substr(sortedIndexes[sortedIndexes.length - 1])}</>
-        ) : null}
-      </>
-    )
-  }
-  return res
+  return (
+    <FuzzyNavigationItem
+      item={{ ...item, label: highlighted.label, path: highlighted.path }}
+      {...rest}
+    />
+  )
 }
 
 const Container = styled.div`
@@ -265,4 +166,50 @@ const Container = styled.div`
   }
 `
 
-export default FuzzyNavigationitem
+function getHighlightedNodes(
+  label: string,
+  highlightIndexes: readonly [number, number][]
+) {
+  if (highlightIndexes.length === 0) {
+    return label
+  }
+
+  const sortedIndexes = Array.from(highlightIndexes).sort((a, b) => {
+    if (a[0] === b[0]) {
+      return a[1] - b[1]
+    }
+    return a[0] - b[0]
+  })
+
+  return (
+    <>
+      {sortedIndexes[0][0] !== 0 ? (
+        <>{label.substr(0, sortedIndexes[0][0])}</>
+      ) : null}
+      {sortedIndexes.map((matchIndex, i) => {
+        return (
+          <React.Fragment key={`i-${shortid.generate()}`}>
+            {i > 0 ? (
+              <>
+                {label.substr(
+                  sortedIndexes[i - 1][1] + 1,
+                  matchIndex[0] - sortedIndexes[i - 1][1] - 1
+                )}
+              </>
+            ) : null}
+            {
+              <mark key={i}>
+                {label.substr(matchIndex[0], matchIndex[1] - matchIndex[0] + 1)}
+              </mark>
+            }
+          </React.Fragment>
+        )
+      })}
+      {sortedIndexes[sortedIndexes.length - 1][1] + 1 < label.length ? (
+        <>{label.substr(sortedIndexes[sortedIndexes.length - 1][1] + 1)}</>
+      ) : null}
+    </>
+  )
+}
+
+export default FuzzyNavigationItem
