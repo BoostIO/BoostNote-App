@@ -1,7 +1,7 @@
 import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { FormRowProps } from '../../../shared/components/molecules/Form'
-import EmojiInputForm from '../../../shared/components/organisms/EmojiInputForm'
+import EmojiInputForm from '../../../components/v2/organisms/EmojiInputForm'
 import { DialogIconTypes, useDialog } from '../../../shared/lib/stores/dialog'
 import { useModal } from '../../../shared/lib/stores/modal'
 import { PromiseWrapperCallbacks } from '../../../shared/lib/types'
