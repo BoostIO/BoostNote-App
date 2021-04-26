@@ -8,7 +8,7 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { StyledBillingInput } from '.'
 import { Spinner } from '../../atoms/Spinner'
 import { redeemPromo } from '../../../api/teams/subscription'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription

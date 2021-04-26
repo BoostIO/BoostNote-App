@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react'
-import styled from '../../../shared/lib/styled'
-import { AppComponent } from '../../../shared/lib/types'
+import styled from '../../../lib/v2/styled'
+import { AppComponent } from '../../../lib/v2/types'
 import DoublePane from '../atoms/DoublePane'
 import PageHelmet from '../atoms/PageHelmet'
 import Topbar, { TopbarProps } from '../organisms/Topbar/index'
 import cc from 'classcat'
-import { isFocusRightSideShortcut } from '../../../shared/lib/shortcuts'
+import { isFocusRightSideShortcut } from '../../../lib/v2/shortcuts'
 import {
   preventKeyboardEventPropagation,
   useGlobalKeyDownHandler,
-} from '../../../shared/lib/keyboard'
-import { focusFirstChildFromElement } from '../../../shared/lib/dom'
+} from '../../../lib/v2/keyboard'
+import { focusFirstChildFromElement } from '../../../lib/v2/dom'
 
 export interface ContentLayoutProps {
   helmet?: { title?: string; indexing?: boolean }

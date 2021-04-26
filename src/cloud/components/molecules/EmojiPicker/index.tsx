@@ -8,8 +8,8 @@ import { updateFolderEmoji } from '../../../api/teams/folders'
 import { useNav } from '../../../lib/stores/nav'
 import { updateDocEmoji } from '../../../api/teams/docs'
 import CustomButton from '../../atoms/buttons/CustomButton'
-import { useToast } from '../../../../shared/lib/stores/toast'
-import { useWindow } from '../../../../shared/lib/stores/window'
+import { useToast } from '../../../../lib/v2/stores/toast'
+import { useWindow } from '../../../../lib/v2/stores/window'
 
 export const EmojiPickerWidth = 350
 export const EmojiPickerHeight = 380

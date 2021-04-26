@@ -7,7 +7,7 @@ import {
   SectionList,
   SectionListItem,
 } from '../organisms/settings/styled'
-import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../lib/v2/stores/dialog'
 import { useEffectOnce, useSet } from 'react-use'
 import { Spinner } from '../atoms/Spinner'
 import ErrorBlock from '../atoms/ErrorBlock'

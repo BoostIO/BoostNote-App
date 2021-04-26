@@ -12,7 +12,7 @@ import { registerAppFeedback } from '../../../api/users/appfeedback'
 import { AppFeedbackTypeOption } from '../../../interfaces/db/userAppFeedback'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useEffectOnce } from 'react-use'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const typeOptions: AppFeedbackTypeOption[] = ['Feature Request', 'Bug Report']
 

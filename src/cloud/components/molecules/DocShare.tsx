@@ -40,7 +40,7 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
-import { useToast } from '../../../shared/lib/stores/toast'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark

@@ -24,10 +24,10 @@ import { SerializedTeam } from '../../../../../interfaces/db/team'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../../../shared/lib/stores/dialog'
+} from '../../../../../../lib/v2/stores/dialog'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiTrashCan } from '@mdi/js'
-import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 interface TagContextMenuProps {
   currentTag: SerializedTag

@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from 'react'
-import { SidebarState } from '../shared/lib/sidebar'
+import { SidebarState } from './v2/sidebar'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 

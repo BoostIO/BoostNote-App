@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../lib/v2/styled'
 import GlobalStyle from '../atoms/GlobalStyle'
 
 interface ApplicationLayoutProps {

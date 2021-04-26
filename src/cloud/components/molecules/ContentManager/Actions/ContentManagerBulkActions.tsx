@@ -23,10 +23,7 @@ import {
 import { SerializedFolderWithBookmark } from '../../../../interfaces/db/folder'
 import { destroyFolder } from '../../../../api/teams/folders'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
-import {
-  useDialog,
-  DialogIconTypes,
-} from '../../../../../shared/lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../lib/stores/modal'

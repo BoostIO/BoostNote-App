@@ -49,7 +49,7 @@ import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
 import { useDialog, DialogIconTypes } from '../lib/dialog'
-import { selectV2Theme } from '../shared/lib/styled/styleFunctions'
+import { selectV2Theme } from '../lib/v2/styled/styleFunctions'
 
 const LoadingText = styled.div`
   margin: 30px;

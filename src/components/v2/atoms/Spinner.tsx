@@ -1,5 +1,5 @@
 import { keyframes } from 'styled-components'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../lib/v2/styled'
 
 const rotate = keyframes`
   from {

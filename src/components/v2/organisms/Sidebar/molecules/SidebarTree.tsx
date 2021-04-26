@@ -1,27 +1,27 @@
 import React, { DragEvent, useCallback, useMemo, useRef, useState } from 'react'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 import SidebarContextList from '../atoms/SidebarContextList'
 import SidebarHeader from '../atoms/SidebarHeader'
 import SidebarItem from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
-import { ControlButtonProps } from '../../../../../shared/lib/types'
+import { ControlButtonProps } from '../../../../../lib/v2/types'
 import {
   MenuItem,
   MenuTypes,
   getContextPositionFromDomElement,
-} from '../../../../../shared/lib/stores/contextMenu/types'
+} from '../../../../../lib/v2/stores/contextMenu/types'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import {
   DraggedTo,
   onDragLeaveCb,
   SidebarDragState,
-} from '../../../../../shared/lib/dnd'
+} from '../../../../../lib/v2/dnd'
 import { mdiDotsHorizontal } from '@mdi/js'
 import { FocusedContextMenu } from '../../../molecules/ContextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
-import { scrollbarOverlay } from '../../../../../shared/lib/styled/styleFunctions'
+import { scrollbarOverlay } from '../../../../../lib/v2/styled/styleFunctions'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]

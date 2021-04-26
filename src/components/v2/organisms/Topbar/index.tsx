@@ -1,19 +1,19 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { mdiArrowLeft, mdiArrowRight, mdiChevronRight } from '@mdi/js'
-import { AppComponent } from '../../../../shared/lib/types'
+import { AppComponent } from '../../../../lib/v2/types'
 import Button, { ButtonProps, ButtonVariant } from '../../atoms/Button'
 import Icon from '../../atoms/Icon'
 import TopbarBreadcrumb from './molecules/TopbarBreadcrumb'
-import { BreadCrumbTreeItem } from '../../../../shared/lib/mappers/types'
+import { BreadCrumbTreeItem } from '../../../../lib/v2/mappers/types'
 import {
   MenuTypes,
   useContextMenu,
-} from '../../../../shared/lib/stores/contextMenu'
+} from '../../../../lib/v2/stores/contextMenu'
 import TopbarNavigationContext from './molecules/TopbarNavigationContext'
 import cc from 'classcat'
-import { scrollbarOverlay } from '../../../../shared/lib/styled/styleFunctions'
+import { scrollbarOverlay } from '../../../../lib/v2/styled/styleFunctions'
 import WithTooltip from '../../atoms/WithTooltip'
-import styled from '../../../../shared/lib/styled'
+import styled from '../../../../lib/v2/styled'
 import { TopbarActionItemAttrbs } from './atoms/TopbarActionItem'
 
 export interface TopbarBreadcrumbProps {

@@ -28,7 +28,7 @@ import plur from 'plur'
 import Icon from '../../../../components/atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Alert from '../../../../components/atoms/Alert'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface SubscriptionFormProps {
   team: SerializedTeam

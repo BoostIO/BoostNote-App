@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { BaseTheme } from '../../../shared/lib/styled/types'
+import { BaseTheme } from '../../../lib/v2/styled/types'
 import 'emoji-mart/css/emoji-mart.css'
 
 export const getGlobalCss = (theme: BaseTheme) => `

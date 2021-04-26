@@ -1,12 +1,12 @@
 import React from 'react'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../lib/v2/styled'
 import cc from 'classcat'
 import { RoundedImageProps } from '../atoms/RoundedImage'
 import UserIconList from '../molecules/UserIconList'
 import { getFormattedDateTime } from '../../../lib/time'
 import Button from '../atoms/Button'
 import Link from '../atoms/Link'
-import { AppComponent } from '../../../shared/lib/types'
+import { AppComponent } from '../../../lib/v2/types'
 
 interface ShallowTimelineProps {
   rows: ShallowTimelineRow[]

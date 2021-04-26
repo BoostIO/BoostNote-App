@@ -5,7 +5,7 @@ import React, {
   PropsWithChildren,
 } from 'react'
 import cc from 'classcat'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../lib/v2/styled'
 import Icon, { IconSize } from './Icon'
 import Spinner from '../../atoms/Spinner'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import FormSelect, {
   FormSelectOption,
 } from '../../../molecules/Form/atoms/FormSelect'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 import Flexbox from '../../../atoms/Flexbox'
 import Icon from '../../../atoms/Icon'
 import {

@@ -3,7 +3,7 @@ import React, {
   FocusEventHandler,
   MouseEventHandler,
 } from 'react'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../lib/v2/styled'
 import cc from 'classcat'
 
 interface HyperLinkProps {

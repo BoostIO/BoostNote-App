@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react'
 import cc from 'classcat'
 import { useEffectOnce } from 'react-use'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 import Spinner from '../../../atoms/Spinner'
 import FormInput from '../../../molecules/Form/atoms/FormInput'
 

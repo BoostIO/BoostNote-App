@@ -15,7 +15,7 @@ import {
   mdiCloud,
 } from '@mdi/js'
 import cc from 'classcat'
-import { useToast } from '../../../shared/lib/stores/toast'
+import { useToast } from '../../../lib/v2/stores/toast'
 
 interface ServiceSelectorProps {
   onSelect: (connection: SerializedServiceConnection) => void

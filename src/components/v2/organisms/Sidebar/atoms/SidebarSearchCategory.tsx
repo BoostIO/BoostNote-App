@@ -1,5 +1,5 @@
 import React, { FocusEventHandler, useState } from 'react'
-import { AppComponent } from '../../../../../shared/lib/types'
+import { AppComponent } from '../../../../../lib/v2/types'
 import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'

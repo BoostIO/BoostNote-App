@@ -26,7 +26,7 @@ import {
   baseButtonStyle,
   dangerButtonStyle,
 } from '../../../lib/styled/styleFunctions'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const InfoTab = () => {
   const {

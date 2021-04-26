@@ -24,7 +24,7 @@ import Icon from '../../../../../atoms/Icon'
 import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
 import { selectTheme } from '../../../../../../lib/styled'
-import { useToast } from '../../../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../../lib/v2/stores/toast'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark

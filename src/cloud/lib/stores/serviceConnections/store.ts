@@ -5,7 +5,7 @@ import {
   deleteUserServiceConnection,
 } from '../../../api/connections'
 import { useState, useRef, useCallback } from 'react'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface Actions {
   removeConnection: (

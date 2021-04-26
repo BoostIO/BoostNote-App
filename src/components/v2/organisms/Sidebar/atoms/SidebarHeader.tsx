@@ -1,8 +1,8 @@
 import React from 'react'
-import styled from '../../../../../shared/lib/styled'
-import { AppComponent } from '../../../../../shared/lib/types'
+import styled from '../../../../../lib/v2/styled'
+import { AppComponent } from '../../../../../lib/v2/types'
 import cc from 'classcat'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 
 interface SidebarHeaderProps {
   label: string

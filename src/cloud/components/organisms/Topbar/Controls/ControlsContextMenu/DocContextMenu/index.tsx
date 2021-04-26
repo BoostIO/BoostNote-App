@@ -66,7 +66,7 @@ import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
-import { useToast } from '../../../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../../lib/v2/stores/toast'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark

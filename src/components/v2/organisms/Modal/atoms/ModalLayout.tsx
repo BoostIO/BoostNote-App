@@ -1,7 +1,7 @@
 import React from 'react'
-import { AppComponent } from '../../../../../shared/lib/types'
+import { AppComponent } from '../../../../../lib/v2/types'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 
 interface ModalLayoutProps {
   title?: string

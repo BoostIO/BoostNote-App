@@ -17,7 +17,7 @@ import { selectTheme } from '../../../lib/styled'
 import { useSettings } from '../../../lib/stores/settings'
 import { StyledCardElementContainer } from './index'
 import Alert from '../../../../components/atoms/Alert'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription

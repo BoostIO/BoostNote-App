@@ -1,11 +1,11 @@
 import React from 'react'
-import { BreadCrumbTreeItem } from '../../../../../shared/lib/mappers/types'
-import { useWindow } from '../../../../../shared/lib/stores/window'
-import styled from '../../../../../shared/lib/styled'
+import { BreadCrumbTreeItem } from '../../../../../lib/v2/mappers/types'
+import { useWindow } from '../../../../../lib/v2/stores/window'
+import styled from '../../../../../lib/v2/styled'
 import UpDownList from '../../../atoms/UpDownList'
 import cc from 'classcat'
 import { useSet } from 'react-use'
-import { menuZIndex } from '../../../../../shared/lib/stores/contextMenu'
+import { menuZIndex } from '../../../../../lib/v2/stores/contextMenu'
 import TopbarTreeItem from '../atoms/TopbarTreeItem'
 import TopbarActionItem, {
   TopbarActionItemAttrbs,

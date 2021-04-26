@@ -1,4 +1,4 @@
-import { SidebarState } from '../../../../shared/lib/sidebar'
+import { SidebarState } from '../../../../lib/v2/sidebar'
 import { LayoutMode } from '../../../components/layouts/DocEditLayout'
 
 export interface Preferences {

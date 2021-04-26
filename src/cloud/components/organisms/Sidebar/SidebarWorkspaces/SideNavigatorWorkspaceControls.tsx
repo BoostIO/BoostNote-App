@@ -5,11 +5,8 @@ import { useNav } from '../../../../lib/stores/nav'
 import {
   useContextMenu,
   MenuTypes,
-} from '../../../../../shared/lib/stores/contextMenu'
-import {
-  useDialog,
-  DialogIconTypes,
-} from '../../../../../shared/lib/stores/dialog'
+} from '../../../../../lib/v2/stores/contextMenu'
+import { useDialog, DialogIconTypes } from '../../../../../lib/v2/stores/dialog'
 import { destroyWorkspace } from '../../../../api/teams/workspaces'
 import { getMapFromEntityArray } from '../../../../lib/utils/array'
 import SideNavigatorIconButton from '../SideNavigator/SideNavigatorIconButton'
@@ -25,8 +22,8 @@ import Tooltip from '../../../atoms/Tooltip'
 import { useGlobalData } from '../../../../lib/stores/globalData'
 import { usePage } from '../../../../lib/stores/pageStore'
 import IconMdi from '../../../atoms/IconMdi'
-import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../../shared/lib/hooks/cloud/useCloudUI'
+import { useToast } from '../../../../../lib/v2/stores/toast'
+import { useCloudUI } from '../../../../../lib/v2/hooks/cloud/useCloudUI'
 
 interface SideNavigatorWorkspaceControlsProps {
   workspace: SerializedWorkspace

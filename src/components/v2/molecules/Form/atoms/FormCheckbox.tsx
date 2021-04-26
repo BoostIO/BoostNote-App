@@ -1,7 +1,7 @@
 import React from 'react'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
-import { AppComponent } from '../../../../../shared/lib/types'
+import styled from '../../../../../lib/v2/styled'
+import { AppComponent } from '../../../../../lib/v2/types'
 import Icon from '../../../atoms/Icon'
 import { mdiCheck } from '@mdi/js'
 

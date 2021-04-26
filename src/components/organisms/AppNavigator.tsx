@@ -45,7 +45,7 @@ import {
   boostHubToggleSidebarTreeEventEmitter,
 } from '../../lib/events'
 import { useSearchModal } from '../../lib/searchModal'
-import { SidebarState } from '../../shared/lib/sidebar'
+import { SidebarState } from '../../lib/v2/sidebar'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()

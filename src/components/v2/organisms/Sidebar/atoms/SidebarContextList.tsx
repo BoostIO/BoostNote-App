@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import { useEffectOnce } from 'react-use'
-import { focusFirstChildFromElement } from '../../../../../shared/lib/dom'
+import { focusFirstChildFromElement } from '../../../../../lib/v2/dom'
 import {
   preventKeyboardEventPropagation,
   useGlobalKeyDownHandler,
   useUpDownNavigationListener,
-} from '../../../../../shared/lib/keyboard'
-import { isFocusLeftSideShortcut } from '../../../../../shared/lib/shortcuts'
-import { AppComponent } from '../../../../../shared/lib/types'
+} from '../../../../../lib/v2/keyboard'
+import { isFocusLeftSideShortcut } from '../../../../../lib/v2/shortcuts'
+import { AppComponent } from '../../../../../lib/v2/types'
 
 interface SidebarContextListProps {
   onBlur?: () => void

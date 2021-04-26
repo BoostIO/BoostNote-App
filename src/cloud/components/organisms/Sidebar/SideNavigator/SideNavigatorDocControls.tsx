@@ -14,7 +14,7 @@ import { SerializedDocWithBookmark } from '../../../../interfaces/db/doc'
 import {
   useContextMenu,
   MenuTypes,
-} from '../../../../../shared/lib/stores/contextMenu'
+} from '../../../../../lib/v2/stores/contextMenu'
 import {
   CreateDocBookmarkResponseBody,
   DestroyDocBookmarkResponseBody,
@@ -29,7 +29,7 @@ import {
 import { isDocBookmarkShortcut } from '../../../../lib/shortcuts'
 import { saveDocAsTemplate } from '../../../../api/teams/docs/templates'
 import { archiveDoc, unarchiveDoc } from '../../../../api/teams/docs'
-import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SideNavigatorDocControlsProps {
   doc: SerializedDocWithBookmark

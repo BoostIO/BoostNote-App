@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from 'react'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
-import { ControlButtonProps } from '../../../../../shared/lib/types'
+import styled from '../../../../../lib/v2/styled'
+import { ControlButtonProps } from '../../../../../lib/v2/types'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
-import { getFormattedDateTime } from '../../../../../shared/lib/date'
+import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
+import { getFormattedDateTime } from '../../../../../lib/v2/date'
 import Badge from '../../../atoms/Badge'
-import { AppUser } from '../../../../../shared/lib/mappers/users'
+import { AppUser } from '../../../../../lib/v2/mappers/users'
 import UserIconList from '../../../molecules/UserIconList'
 
 interface ContentManagerRowProps {

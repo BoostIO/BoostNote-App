@@ -10,7 +10,7 @@ import styled from '../../../lib/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { isChildNode } from '../../../lib/dom'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {

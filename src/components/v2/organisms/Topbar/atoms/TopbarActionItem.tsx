@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 import cc from 'classcat'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../../lib/v2/styled/styleFunctions'
 import Icon from '../../../atoms/Icon'
 import shortid from 'shortid'
 

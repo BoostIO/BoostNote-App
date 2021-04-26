@@ -5,7 +5,7 @@ import { inputStyle } from '../../../../lib/styled/styleFunctions'
 import { useEffectOnce } from 'react-use'
 import { useNav } from '../../../../lib/stores/nav'
 import Spinner from '../../../atoms/CustomSpinner'
-import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface SideNavigatorFolderFormProps {
   workspaceId?: string

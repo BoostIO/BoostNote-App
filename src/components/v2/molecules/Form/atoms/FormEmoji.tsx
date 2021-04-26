@@ -5,7 +5,7 @@ import React, {
   useCallback,
 } from 'react'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 import { useEmojiPicker } from '../../../../../cloud/lib/stores/emoji'
 import Icon from '../../../atoms/Icon'
 import { Emoji } from 'emoji-mart'

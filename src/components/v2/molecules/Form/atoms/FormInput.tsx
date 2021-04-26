@@ -4,7 +4,7 @@ import React, {
   FocusEventHandler,
 } from 'react'
 import cc from 'classcat'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../lib/v2/styled'
 
 export interface FormInputProps {
   type?: 'text' | 'number' | 'email' | 'password'

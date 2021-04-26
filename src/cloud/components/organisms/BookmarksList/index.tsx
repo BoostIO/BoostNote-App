@@ -22,7 +22,7 @@ import {
 import DocListItem from '../../molecules/DocListItem'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { getHexFromUUID } from '../../../lib/utils/string'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const BookmarkLists = () => {
   const {

@@ -5,8 +5,8 @@ import {
   maxSidebarExpandedWidth,
   minSidebarExpandedWidth,
   SidebarState,
-} from '../../../../shared/lib/sidebar'
-import styled from '../../../../shared/lib/styled'
+} from '../../../../lib/v2/sidebar'
+import styled from '../../../../lib/v2/styled'
 import WidthEnlarger from '../../atoms/WidthEnlarger'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarToolbar, { SidebarToolbarRow } from './molecules/SidebarToolbar'
@@ -20,7 +20,7 @@ import SidebarSearch, {
 import SidebarTimeline, {
   SidebarTimelineRow,
 } from './molecules/SidebarTimeline'
-import { AppUser } from '../../../../shared/lib/mappers/users'
+import { AppUser } from '../../../../lib/v2/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
 
 type SidebarProps = {

@@ -13,10 +13,7 @@ import {
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
-import {
-  useDialog,
-  DialogIconTypes,
-} from '../../../../shared/lib/stores/dialog'
+import { useDialog, DialogIconTypes } from '../../../../lib/v2/stores/dialog'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../../lib/stores/globalData'
@@ -46,13 +43,13 @@ import Button from '../../atoms/Button'
 import {
   MenuTypes,
   useContextMenu,
-} from '../../../../shared/lib/stores/contextMenu'
+} from '../../../../lib/v2/stores/contextMenu'
 import { SerializedGuest } from '../../../interfaces/db/guest'
 import EmojiIcon from '../../atoms/EmojiIcon'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../lib/v2/stores/toast'
 
 const MembersTab = () => {
   const { t } = useTranslation()

@@ -5,8 +5,8 @@ import {
   DialogData,
   DialogTypes,
   useDialog,
-} from '../../../../shared/lib/stores/dialog'
-import styled from '../../../../shared/lib/styled'
+} from '../../../../lib/v2/stores/dialog'
+import styled from '../../../../lib/v2/styled'
 
 const Dialog = () => {
   const { data, closeDialog } = useDialog()

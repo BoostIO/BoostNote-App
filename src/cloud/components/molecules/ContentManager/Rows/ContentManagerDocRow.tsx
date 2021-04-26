@@ -30,7 +30,7 @@ import { useModal } from '../../../../lib/stores/modal'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { SerializedUser } from '../../../../interfaces/db/user'
-import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../lib/v2/stores/toast'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam

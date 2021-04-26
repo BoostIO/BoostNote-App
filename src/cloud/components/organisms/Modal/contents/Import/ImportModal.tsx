@@ -18,7 +18,7 @@ import { useNavigateToDoc } from '../../../../atoms/Link/DocLink'
 import { useNavigateToFolder } from '../../../../atoms/Link/FolderLink'
 import { useNavigateToWorkspace } from '../../../../atoms/Link/WorkspaceLink'
 import { useNavigateToTeam } from '../../../../atoms/Link/TeamLink'
-import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../lib/v2/stores/toast'
 
 const ImportModal = () => {
   const [step, setStep] = useState<ImportStep>('source')
