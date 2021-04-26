@@ -9,7 +9,6 @@ import {
 } from '../lib/keyboard'
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
 import { useDebounce, useEffectOnce } from 'react-use'
-import { useModal } from '../lib/stores/modal'
 import { SettingsTab, useSettings } from '../lib/stores/settings'
 import { shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
@@ -125,6 +124,7 @@ import {
   mapFuzzyNavigationItems,
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
+import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -477,9 +477,7 @@ const Application = ({
 
   const openImportModal = useCallback(() => {
     closeSettingsTab()
-    openModal(<ImportModal />, {
-      classNames: 'largeW',
-    })
+    openModal(<ImportModal />, { showCloseIcon: true })
   }, [closeSettingsTab, openModal])
 
   useEffect(() => {
@@ -1130,7 +1128,7 @@ function mapToolbarRows(
   showSpaces: boolean,
   setShowSpaces: React.Dispatch<React.SetStateAction<boolean>>,
   openState: (sidebarState: SidebarState) => void,
-  openModal: (cmp: JSX.Element, options?: any) => void,
+  openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   openSettingsTab: (tab: SettingsTab) => void,
   sidebarState?: SidebarState,
   team?: SerializedTeam
@@ -1172,10 +1170,7 @@ function mapToolbarRows(
     tooltip: 'Import',
     icon: mdiDownload,
     position: 'bottom',
-    onClick: () =>
-      openModal(<ImportModal />, {
-        classNames: 'largeW',
-      }),
+    onClick: () => openModal(<ImportModal />, { showCloseIcon: true }),
   })
   rows.push({
     tooltip: 'Members',
