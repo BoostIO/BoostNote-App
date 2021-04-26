@@ -17,9 +17,9 @@ function useContextMenuStore(): ContextMenuContext {
   const popup = useCallback(
     (event: React.MouseEvent<Element>, menuItems: MenuItem[]) => {
       incrementId()
-      setClosed(false)
       setMenuItems(menuItems)
       setPosition(getContextPositionFromDomElement(event, menuItems.length))
+      setClosed(false)
     },
     [incrementId]
   )

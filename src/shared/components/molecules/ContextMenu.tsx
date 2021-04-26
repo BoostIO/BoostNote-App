@@ -9,28 +9,21 @@ import {
   NormalMenuItem,
   useContextMenu,
 } from '../../lib/stores/contextMenu'
+import { useWindow } from '../../lib/stores/window'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import UpDownList from '../atoms/UpDownList'
 
 const ContextMenu = () => {
-  const contextMenu = useContextMenu()
-  const [windowWith, setWindowWidth] = useState(200)
-
-  useEffectOnce(() => {
-    setWindowWidth(
-      window.innerWidth ||
-        innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth
-    )
-  })
+  const { close, closed, menuItems, position, id } = useContextMenu()
+  const {
+    windowSize: { width: windowWidth },
+  } = useWindow()
 
   const closeContextMenu = () => {
-    contextMenu!.close()
+    close()
   }
 
-  const { closed, menuItems, position, id } = contextMenu
   if (closed) return null
 
   return (
@@ -38,7 +31,7 @@ const ContextMenu = () => {
       className='context__menu'
       tabIndex={-1}
       style={{
-        left: position.x + 130 < windowWith ? position.x : windowWith - 150,
+        left: position.x + 130 < windowWidth ? position.x : windowWidth - 150,
         top: position.y,
       }}
     >
