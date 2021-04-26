@@ -118,8 +118,8 @@ import { useCloudDnd } from '../lib/hooks/useCloudDnd'
 import { NavResource } from '../interfaces/resources'
 import { SidebarDragState } from '../../shared/lib/dnd'
 import cc from 'classcat'
+import { mapTopbarTree } from '../../shared/lib/mappers/cloud/topbarTree'
 import { useCloudUI } from '../lib/hooks/useCloudUI'
-import { mapTopbarTree } from '../lib/mappers/topbarTree'
 
 interface ApplicationProps {
   content: ContentLayoutProps

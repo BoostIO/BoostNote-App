@@ -8,23 +8,26 @@ import {
   mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import { FormRowProps } from '../../../shared/components/molecules/Form'
-import { TopbarBreadcrumbProps } from '../../../shared/components/organisms/Topbar'
-import { PromiseWrapperCallbacks } from '../../../shared/lib/types'
-import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
-import { getFolderHref } from '../../components/atoms/Link/FolderLink'
-import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
-import { getWorkspaceHref } from '../../components/atoms/Link/WorkspaceLink'
-import { SerializedDoc } from '../../interfaces/db/doc'
+import { getDocLinkHref } from '../../../../cloud/components/atoms/Link/DocLink'
+import { getFolderHref } from '../../../../cloud/components/atoms/Link/FolderLink'
+import { getTeamLinkHref } from '../../../../cloud/components/atoms/Link/TeamLink'
+import { getWorkspaceHref } from '../../../../cloud/components/atoms/Link/WorkspaceLink'
+import { SerializedDoc } from '../../../../cloud/interfaces/db/doc'
 import {
   SerializedFolder,
   SerializedFolderWithBookmark,
-} from '../../interfaces/db/folder'
-import { SerializedTeam } from '../../interfaces/db/team'
-import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { CloudNewResourceRequestBody } from '../hooks/useCloudUI'
-import { getDocTitle, prefixFolders } from '../utils/patterns'
-import { getHexFromUUID } from '../utils/string'
+} from '../../../../cloud/interfaces/db/folder'
+import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
+import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
+import { CloudNewResourceRequestBody } from '../../../../cloud/lib/hooks/useCloudUI'
+import {
+  getDocTitle,
+  prefixFolders,
+} from '../../../../cloud/lib/utils/patterns'
+import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
+import { FormRowProps } from '../../../components/molecules/Form'
+import { TopbarBreadcrumbProps } from '../../../components/organisms/Topbar'
+import { PromiseWrapperCallbacks } from '../../types'
 import { topParentId } from './topbarTree'
 
 type AddedProperties =

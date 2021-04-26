@@ -9,7 +9,7 @@ import { useRouter } from '../../lib/router'
 import Application from '../../components/Application'
 import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import ContentManager from '../../components/molecules/ContentManager'
-import { topParentId } from '../../lib/mappers/topbarTree'
+import { topParentId } from '../../../shared/lib/mappers/cloud/topbarTree'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
 
 const ArchivedPage = () => {

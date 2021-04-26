@@ -71,12 +71,12 @@ import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
-import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 

@@ -14,7 +14,7 @@ import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
 import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
-import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
+import { mapWorkspaceBreadcrumb } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace

@@ -10,7 +10,7 @@ import Application from '../../components/Application'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import { useRouter } from '../../lib/router'
-import { topParentId } from '../../lib/mappers/topbarTree'
+import { topParentId } from '../../../shared/lib/mappers/cloud/topbarTree'
 
 const SharedDocsListPage = () => {
   const { team } = usePage()
