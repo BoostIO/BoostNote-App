@@ -24,7 +24,7 @@ import {
 } from '../lib/utils/events'
 import { useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
-import EventSource from './organisms/EventSource'
+import EventSource from '../../shared/components/organisms/cloud/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import Sidebar from '../../shared/components/organisms/Sidebar'
 import {

@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { EventSourcePolyfill } from 'event-source-polyfill'
-import { sseUrl } from '../../lib/consts'
+import { sseUrl } from '../../../../cloud/lib/consts'
 import { useNumber } from 'react-use'
 import {
   ResourcesIdSortedByWorkspaceIds,
   SerializedAppEvent,
-} from '../../interfaces/db/appEvents'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
-import { getResources } from '../../api/teams/resources'
-import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { SerializedTag } from '../../interfaces/db/tag'
-import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
-import { SerializedGuest } from '../../interfaces/db/guest'
-import { useGlobalData } from '../../lib/stores/globalData'
-import { useNav } from '../../lib/stores/nav'
-import { usePage } from '../../lib/stores/pageStore'
-import { SerializedTeam } from '../../interfaces/db/team'
-import { getTemplate } from '../../api/teams/docs/templates'
-import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
+} from '../../../../cloud/interfaces/db/appEvents'
+import { getMapFromEntityArray } from '../../../lib/utils/array'
+import { getResources } from '../../../../cloud/api/teams/resources'
+import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
+import { SerializedTag } from '../../../../cloud/interfaces/db/tag'
+import { SerializedUserTeamPermissions } from '../../../../cloud/interfaces/db/userTeamPermissions'
+import { SerializedGuest } from '../../../../cloud/interfaces/db/guest'
+import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
+import { useNav } from '../../../../cloud/lib/stores/nav'
+import { usePage } from '../../../../cloud/lib/stores/pageStore'
+import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
+import { getTemplate } from '../../../../cloud/api/teams/docs/templates'
+import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../../../cloud/lib/utils/patterns'
 
 interface EventSourceProps {
   teamId: string
