@@ -6,10 +6,10 @@ import SidebarHeader from '../atoms/SidebarHeader'
 import cc from 'classcat'
 import SidebarContextList from '../atoms/SidebarContextList'
 import { Emoji } from 'emoji-mart'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Icon from '../../../atoms/Icon'
 import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
 import UserIconList from '../../../molecules/UserIconList'
-import WithTooltip from '../../../../../shared/components/atoms/WithTooltip'
+import WithTooltip from '../../../atoms/WithTooltip'
 import { getDateTime } from '../../../../../shared/lib/date'
 
 export type SidebarTimelineRow = {

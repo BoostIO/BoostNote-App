@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffectOnce } from 'react-use'
-import { focusFirstChildFromElement } from '../../lib/dom'
-import { useUpDownNavigationListener } from '../../lib/keyboard'
+import { focusFirstChildFromElement } from '../../../shared/lib/dom'
+import { useUpDownNavigationListener } from '../../../shared/lib/keyboard'
 
 interface UpDownListProps {
   className?: string

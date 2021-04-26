@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { Picker, EmojiData } from 'emoji-mart'
 import styled from '../../../shared/lib/styled'
-import Button from '../../../shared/components/atoms/Button'
+import Button from '../atoms/Button'
 import { useWindow } from '../../../shared/lib/stores/window'
 import { useEmoji } from '../../../shared/lib/stores/emoji'
 import { useToast } from '../../../shared/lib/stores/toast'

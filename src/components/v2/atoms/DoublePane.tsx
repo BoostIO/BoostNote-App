@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../lib/styled'
-import { AppComponent } from '../../lib/types'
+import styled from '../../../shared/lib/styled'
+import { AppComponent } from '../../../shared/lib/types'
 import cc from 'classcat'
 
 interface DoublePaneProps {

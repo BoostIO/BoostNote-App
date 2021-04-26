@@ -4,8 +4,8 @@ import SidebarContextList from '../atoms/SidebarContextList'
 import SidebarHeader from '../atoms/SidebarHeader'
 import SidebarItem from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
-import Button from '../../../../../shared/components/atoms/Button'
-import { FoldingProps } from '../../../../../shared/components/atoms/FoldingWrapper'
+import Button from '../../../atoms/Button'
+import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../../shared/lib/types'
 import {
   MenuItem,

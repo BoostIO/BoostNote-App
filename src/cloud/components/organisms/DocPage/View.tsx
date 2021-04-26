@@ -25,7 +25,7 @@ import DocContextMenu, {
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { mapTopbarBreadcrumbs } from '../../../../shared/lib/mappers/cloud/topbarBreadcrumbs'
 import { useRouter } from '../../../lib/router'
-import { LoadingButton } from '../../../../shared/components/atoms/Button'
+import { LoadingButton } from '../../../../components/v2/atoms/Button'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
 import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'

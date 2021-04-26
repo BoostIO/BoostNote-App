@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffectOnce } from 'react-use'
-import { useLeftToRightNavigationListener } from '../../lib/keyboard'
+import { useLeftToRightNavigationListener } from '../../../shared/lib/keyboard'
 
 interface LeftToRightListProps {
   className?: string

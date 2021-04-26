@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import { ButtonProps } from '../../../shared/components/atoms/Button'
+import { ButtonProps } from '../atoms/Button'
 import Form, { FormRowProps } from '../molecules/Form'
 
 interface EmojiInputFormProps {

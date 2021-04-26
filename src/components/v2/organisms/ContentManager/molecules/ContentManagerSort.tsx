@@ -3,8 +3,8 @@ import FormSelect, {
   FormSelectOption,
 } from '../../../molecules/Form/atoms/FormSelect'
 import styled from '../../../../../shared/lib/styled'
-import Flexbox from '../../../../../shared/components/atoms/Flexbox'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Flexbox from '../../../atoms/Flexbox'
+import Icon from '../../../atoms/Icon'
 import {
   mdiSortAlphabeticalAscending,
   mdiSortAlphabeticalDescending,

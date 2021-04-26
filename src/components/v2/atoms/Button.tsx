@@ -5,9 +5,9 @@ import React, {
   PropsWithChildren,
 } from 'react'
 import cc from 'classcat'
-import styled from '../../lib/styled'
+import styled from '../../../shared/lib/styled'
 import Icon, { IconSize } from './Icon'
-import Spinner from '../../../components/atoms/Spinner'
+import Spinner from '../../atoms/Spinner'
 
 export type ButtonVariant =
   | 'primary'

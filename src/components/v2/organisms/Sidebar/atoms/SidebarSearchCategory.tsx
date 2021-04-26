@@ -1,10 +1,8 @@
 import React, { FocusEventHandler, useState } from 'react'
 import { AppComponent } from '../../../../../shared/lib/types'
-import FoldingWrapper, {
-  FoldingProps,
-} from '../../../../../shared/components/atoms/FoldingWrapper'
+import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
 import cc from 'classcat'
-import Button from '../../../../../shared/components/atoms/Button'
+import Button from '../../../atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 interface SidebarSearchCategoryProps {

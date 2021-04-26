@@ -2,14 +2,14 @@ import React from 'react'
 import { ToastMessage, useToast } from '../../../shared/lib/stores/toast'
 import styled from '../../../shared/lib/styled'
 import cc from 'classcat'
-import Button from '../../../shared/components/atoms/Button'
+import Button from '../atoms/Button'
 import {
   mdiCheckCircleOutline,
   mdiClose,
   mdiCloseCircleOutline,
   mdiInformationOutline,
 } from '@mdi/js'
-import Icon from '../../../shared/components/atoms/Icon'
+import Icon from '../atoms/Icon'
 
 interface ToastItemProps {
   item: ToastMessage

@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from '../../../shared/lib/styled'
 import cc from 'classcat'
-import { RoundedImageProps } from '../../../shared/components/atoms/RoundedImage'
+import { RoundedImageProps } from '../atoms/RoundedImage'
 import UserIconList from '../molecules/UserIconList'
 import { getFormattedDateTime } from '../../../lib/time'
-import Button from '../../../shared/components/atoms/Button'
-import Link from '../../../shared/components/atoms/Link'
+import Button from '../atoms/Button'
+import Link from '../atoms/Link'
 import { AppComponent } from '../../../shared/lib/types'
 
 interface ShallowTimelineProps {

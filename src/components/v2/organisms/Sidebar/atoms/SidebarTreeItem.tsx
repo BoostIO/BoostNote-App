@@ -6,13 +6,11 @@ import {
 } from '../../../../../shared/lib/types'
 import cc from 'classcat'
 import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
-import Button from '../../../../../shared/components/atoms/Button'
+import Button from '../../../atoms/Button'
 import { mdiChevronDown, mdiChevronRight, mdiDotsHorizontal } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
-import Icon from '../../../../../shared/components/atoms/Icon'
-import FoldingWrapper, {
-  FoldingProps,
-} from '../../../../../shared/components/atoms/FoldingWrapper'
+import Icon from '../../../atoms/Icon'
+import FoldingWrapper, { FoldingProps } from '../../../atoms/FoldingWrapper'
 import {
   MenuItem,
   useContextMenu,

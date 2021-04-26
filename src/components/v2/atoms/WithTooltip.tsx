@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import styled from '../../lib/styled'
+import styled from '../../../shared/lib/styled'
 import cc from 'classcat'
 
 interface WithTooltipProps {

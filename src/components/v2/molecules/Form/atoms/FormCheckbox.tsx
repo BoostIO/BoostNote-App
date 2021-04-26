@@ -2,7 +2,7 @@ import React from 'react'
 import cc from 'classcat'
 import styled from '../../../../../shared/lib/styled'
 import { AppComponent } from '../../../../../shared/lib/types'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Icon from '../../../atoms/Icon'
 import { mdiCheck } from '@mdi/js'
 
 interface CheckboxProps {

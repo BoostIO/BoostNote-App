@@ -5,7 +5,7 @@ import { ControlButtonProps } from '../../../../../shared/lib/types'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
 import { getFormattedDateTime } from '../../../../../shared/lib/date'
-import Badge from '../../../../../shared/components/atoms/Badge'
+import Badge from '../../../atoms/Badge'
 import { AppUser } from '../../../../../shared/lib/mappers/users'
 import UserIconList from '../../../molecules/UserIconList'
 

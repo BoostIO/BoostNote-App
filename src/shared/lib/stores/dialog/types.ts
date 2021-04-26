@@ -1,4 +1,4 @@
-import { ButtonProps } from '../../../components/atoms/Button'
+import { ButtonProps } from '../../../../components/v2/atoms/Button'
 
 export enum DialogTypes {
   MessageBox = 'MessageBox',

@@ -2,9 +2,9 @@ import React from 'react'
 import styled from '../../../shared/lib/styled'
 import { AppComponent } from '../../../shared/lib/types'
 import cc from 'classcat'
-import Icon from '../../../shared/components/atoms/Icon'
-import Spinner from '../../../shared/components/atoms/Spinner'
-import UpDownList from '../../../shared/components/atoms/UpDownList'
+import Icon from '../atoms/Icon'
+import Spinner from '../atoms/Spinner'
+import UpDownList from '../atoms/UpDownList'
 
 interface MetadataContainerProps {
   rows: MetadataContainerRow[]

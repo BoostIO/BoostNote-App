@@ -32,7 +32,7 @@ import { useStorageRouter } from '../../lib/storageRouter'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { DialogIconTypes, useDialog } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
-import RoundedImage from '../../shared/components/atoms/RoundedImage'
+import RoundedImage from '../v2/atoms/RoundedImage'
 import { values } from 'ramda'
 import {
   boostHubOpenImportModalEventEmitter,

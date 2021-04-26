@@ -92,14 +92,14 @@ import {
 } from '../interfaces/db/folder'
 import { SerializedWorkspace } from '../interfaces/db/workspace'
 import { SerializedTag } from '../interfaces/db/tag'
-import { FoldingProps } from '../../shared/components/atoms/FoldingWrapper'
+import { FoldingProps } from '../../components/v2/atoms/FoldingWrapper'
 import { getMapValues } from '../../shared/lib/utils/array'
 import {
   SidebarNavCategory,
   SidebarNavControls,
   SidebarTreeChildRow,
 } from '../../components/v2/organisms/Sidebar/molecules/SidebarTree'
-import RoundedImage from '../../shared/components/atoms/RoundedImage'
+import RoundedImage from '../../components/v2/atoms/RoundedImage'
 import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
