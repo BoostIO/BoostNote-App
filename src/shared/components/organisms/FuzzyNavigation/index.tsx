@@ -4,8 +4,9 @@ import { useGlobalKeyDownHandler } from '../../../lib/keyboard'
 import styled from '../../../lib/styled'
 import UpDownList from '../../atoms/UpDownList'
 import FormInput from '../../molecules/Form/atoms/FormInput'
-import FuzzyNavigationitem, {
+import FuzzyNavigationItem, {
   FuzzyNavigationItemAttrbs,
+  HighlightedFuzzyNavigationitem,
 } from './molecules/FuzzyNavigationItem'
 import Fuse from 'fuse.js'
 import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
@@ -54,14 +55,21 @@ const FuzzyNavigation = ({
   const filteredItems = useMemo(() => {
     if (query === '') return []
 
-    const fuse = new Fuse(allItems, { keys: ['label', 'path'] })
+    const fuse = new Fuse(allItems, {
+      keys: [
+        { name: 'label', weight: 0.6 },
+        { name: 'path', weight: 0.4 },
+      ],
+      includeMatches: true,
+    })
 
     const results = fuse.search(query)
     const items = results.map((res) => {
       return {
         ...res.item,
-        ...res,
         refIndex: res.refIndex,
+        labelMatches: res.matches?.find((val) => val.key === 'label')?.indices,
+        pathMatches: res.matches?.find((val) => val.key === 'path')?.indices,
       }
     })
 
@@ -102,7 +110,7 @@ const FuzzyNavigation = ({
                   : `Recent items`}
               </span>
               {recentItems.map((item, i) => (
-                <FuzzyNavigationitem
+                <FuzzyNavigationItem
                   item={item}
                   id={`fuzzy-recent-${i}`}
                   key={`fuzzy-recent-${i}`}
@@ -115,11 +123,13 @@ const FuzzyNavigation = ({
                 <span className='fuzzy__label'>No matching results</span>
               )}
               {filteredItems.map((item, i) => (
-                <FuzzyNavigationitem
+                <HighlightedFuzzyNavigationitem
                   item={item}
                   id={`fuzzy-filtered-${i}`}
                   key={`fuzzy-filtered-${i}`}
                   query={query.trim().toLocaleLowerCase()}
+                  labelMatches={item.labelMatches}
+                  pathMatches={item.pathMatches}
                 />
               ))}
             </>
