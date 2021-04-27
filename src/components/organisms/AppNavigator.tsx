@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import styled from '../../lib/styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
@@ -13,6 +13,7 @@ import {
   mdiMagnify,
   mdiPlus,
   mdiMenu,
+  mdiCloudQuestion,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
@@ -46,6 +47,8 @@ import {
 } from '../../lib/events'
 import { useSearchModal } from '../../lib/searchModal'
 import { SidebarState } from '../../shared/lib/sidebar'
+import CloudIntroModal from './CloudIntroModal'
+import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()
@@ -64,6 +67,10 @@ const TopLevelNavigator = () => {
   const [showSpaces, setShowSpaces] = useState(false)
   const boostHubUserInfo = preferences['cloud.user']
   const activeStorageId = useActiveStorageId()
+  const {
+    showingCloudIntroModal,
+    toggleShowingCloudIntroModal,
+  } = useCloudIntroModal()
 
   useEffect(() => {
     const boostHubSidebarStateEventHandler = (
@@ -318,6 +325,13 @@ const TopLevelNavigator = () => {
           onClick: toggleShowSearchModal,
         },
         {
+          tooltip: 'Cloud Space',
+          active: false,
+          position: 'bottom',
+          icon: mdiCloudQuestion,
+          onClick: toggleShowingCloudIntroModal,
+        },
+        {
           tooltip: 'Settings',
           active: !closed && !showSpaces,
           position: 'bottom',
@@ -346,6 +360,7 @@ const TopLevelNavigator = () => {
     togglePreferencesModal,
     toggleShowSearchModal,
     sidebarState,
+    toggleShowingCloudIntroModal,
   ])
 
   return (
@@ -363,6 +378,7 @@ const TopLevelNavigator = () => {
           onSpacesBlur={() => setShowSpaces(false)}
         />
       )}
+      {showingCloudIntroModal && <CloudIntroModal />}
     </Container>
   )
 }
