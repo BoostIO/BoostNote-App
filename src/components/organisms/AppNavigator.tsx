@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from '../../lib/styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
