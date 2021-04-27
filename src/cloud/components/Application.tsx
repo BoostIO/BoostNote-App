@@ -559,6 +559,7 @@ const Application = ({
                     onClick={() =>
                       openNewDocForm(
                         {
+                          team,
                           parentFolderId: currentParentFolderId,
                           workspaceId: currentWorkspaceId,
                         },
