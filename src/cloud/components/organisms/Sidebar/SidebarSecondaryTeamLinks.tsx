@@ -7,15 +7,14 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { getTeamLinkHref } from '../../atoms/Link/TeamLink'
-import { useModal } from '../../../lib/stores/modal'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
 import SideNavigatorItem from './SideNavigator/SideNavigatorItem'
 import { useRouter } from '../../../lib/router'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 const SidebarSecondaryTeamLinks = () => {
   const { team } = usePage()
   const { openModal } = useModal()
-
   const { pathname } = useRouter()
 
   if (team == null) {
@@ -28,12 +27,7 @@ const SidebarSecondaryTeamLinks = () => {
         id='sidebar-templatesmodal'
         iconNode={mdiFileDocumentOutline}
         label={'Templates'}
-        onClick={() =>
-          openModal(<TemplatesModal />, {
-            classNames: 'size-XL',
-            closable: false,
-          })
-        }
+        onClick={() => openModal(<TemplatesModal />, { size: 'large' })}
         depth={1}
       />
 

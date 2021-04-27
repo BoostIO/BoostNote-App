@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { ModalContainer } from '../styled'
-import { useModal } from '../../../../../lib/stores/modal'
 import styled from '../../../../../lib/styled'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
 import Flexbox from '../../../../atoms/Flexbox'
@@ -8,13 +7,14 @@ import WorkspaceExplorer from '../../../../molecules/WorkspaceExplorer'
 import { useNav } from '../../../../../lib/stores/nav'
 import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
 import { sortByAttributeAsc } from '../../../../../lib/utils/array'
+import { useModal } from '../../../../../../shared/lib/stores/modal'
 
 interface MoveItemModalProps {
   onSubmit: (workspaceId: string, parentFolderId?: string) => void
 }
 
 const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
-  const { closeModal } = useModal()
+  const { closeLastModal: closeModal } = useModal()
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
   const { workspacesMap, foldersMap } = useNav()

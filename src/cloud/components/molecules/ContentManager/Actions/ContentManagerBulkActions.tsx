@@ -29,7 +29,7 @@ import {
 } from '../../../../../shared/lib/stores/dialog'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
-import { useModal } from '../../../../lib/stores/modal'
+import { useModal } from '../../../../../shared/lib/stores/modal'
 
 interface ContentManagerBulkActionsProps {
   team: SerializedTeam

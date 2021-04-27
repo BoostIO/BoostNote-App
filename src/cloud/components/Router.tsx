@@ -14,7 +14,6 @@ import { EmojiPickerProvider } from '../lib/stores/emoji'
 import { OnboardingProvider } from '../lib/stores/onboarding'
 import { SettingsProvider, useSettings } from '../lib/stores/settings'
 
-import { ModalProvider } from '../lib/stores/modal'
 import { PreferencesProvider } from '../lib/stores/preferences'
 import { SearchProvider } from '../lib/stores/search'
 import { ExternalEntitiesProvider } from '../lib/stores/externalEntities'
@@ -26,7 +25,6 @@ import { intercomAppId } from '../lib/consts'
 
 import GlobalStyle from './GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
-import Modal from './organisms/Modal'
 import SettingsComponent from './organisms/settings/SettingsComponent'
 import EmojiPicker from './molecules/EmojiPicker'
 import { GetInitialPropsParameters } from '../interfaces/pages'
@@ -65,7 +63,6 @@ const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
   EmojiPickerProvider,
   OnboardingProvider,
-  ModalProvider,
   PreferencesProvider,
   SettingsProvider,
   SearchProvider,
@@ -251,7 +248,6 @@ const Router = () => {
 
                 <GlobalStyle />
                 <CodeMirrorStyle />
-                <Modal />
                 <V2Modal />
                 <Toast />
                 <SettingsComponent />

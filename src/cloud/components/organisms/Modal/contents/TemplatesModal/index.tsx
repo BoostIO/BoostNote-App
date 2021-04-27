@@ -20,7 +20,6 @@ import { focusFirstChildFromElement } from '../../../../../lib/dom'
 import Spinner from '../../../../atoms/CustomSpinner'
 import { getHexFromUUID } from '../../../../../lib/utils/string'
 import CustomButton from '../../../../atoms/buttons/CustomButton'
-import { useModal } from '../../../../../lib/stores/modal'
 import { trackEvent } from '../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../interfaces/analytics/mixpanel'
 import { SerializedTemplate } from '../../../../../interfaces/db/template'
@@ -53,6 +52,7 @@ import Tooltip from '../../../../atoms/Tooltip'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../../../atoms/MarkdownView'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../../shared/lib/stores/modal'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -82,7 +82,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     'delete' | 'update' | 'newDoc'
   >()
   const { messageBox } = useDialog()
-  const { closeModal } = useModal()
+  const { closeLastModal: closeModal } = useModal()
   const { settings } = useSettings()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
   const { openEmojiPickerWithCallback } = useEmojiPicker()

@@ -5,10 +5,10 @@ import { sortByAttributeAsc } from '../../../../lib/utils/array'
 import { usePage } from '../../../../lib/stores/pageStore'
 import SidebarWorkspaceItem from './SideNavigatorWorkspaceItem'
 import { mdiPlus } from '@mdi/js'
-import { useModal } from '../../../../lib/stores/modal'
 import CreateWorkspaceModal from '../../Modal/contents/Workspace/CreateWorkspaceModal'
 import SideNavigatorIconButton from '../SideNavigator/SideNavigatorIconButton'
 import SidebarTopHeader from '../SidebarTopHeader'
+import { useModal } from '../../../../../shared/lib/stores/modal'
 
 const SidebarWorkspaces = () => {
   const { team } = usePage()

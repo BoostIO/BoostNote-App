@@ -11,7 +11,6 @@ import {
 } from '@mdi/js'
 import { useContextMenuKeydownHandler } from '../../lib/keyboard'
 import { baseShadowColor } from '../../lib/styled/styleFunctions'
-import { useModal } from '../../lib/stores/modal'
 import FeedbackModal from '../organisms/Modal/contents/FeedbackModal'
 import cc from 'classcat'
 import { useGlobalData } from '../../lib/stores/globalData'
@@ -20,6 +19,7 @@ import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import { trackEvent } from '../../api/track'
 import { intercomAppId } from '../../lib/consts'
 import { useRouter } from '../../lib/router'
+import { useModal } from '../../../shared/lib/stores/modal'
 
 const forbiddenRoutes = [
   '\\/cooperate',
@@ -94,9 +94,7 @@ const Helper = () => {
             href='#'
             onClick={(event) => {
               event.preventDefault()
-              openModal(<FeedbackModal />, {
-                classNames: 'largeW fixed-height-large',
-              })
+              openModal(<FeedbackModal />, { size: 'large' })
             }}
           >
             <Icon path={mdiHeartOutline} className='icon' />

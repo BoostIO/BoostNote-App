@@ -10,7 +10,6 @@ import {
   MenuTypes,
 } from '../../../../../shared/lib/stores/contextMenu'
 import TemplatesModal from '../../Modal/contents/TemplatesModal'
-import { useModal } from '../../../../lib/stores/modal'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { importDocs } from '../../../../api/teams/docs/import'
 import { useNav } from '../../../../lib/stores/nav'
@@ -29,6 +28,7 @@ import { StyledImportModalContainer } from '../../Modal/contents/Import/styled'
 import { updateTeam } from '../../../../api/teams'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../shared/lib/stores/modal'
 
 interface SidebarNewDocControlsProps {
   disabled: boolean
@@ -179,8 +179,7 @@ const SidebarNewDocControls = ({ disabled }: SidebarNewDocControlsProps) => {
           label: 'Create from a template',
           onClick: async () =>
             openModal(<TemplatesModal />, {
-              classNames: 'size-XL',
-              closable: false,
+              size: 'large',
             }),
         },
         {

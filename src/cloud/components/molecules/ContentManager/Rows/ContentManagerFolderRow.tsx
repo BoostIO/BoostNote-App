@@ -21,8 +21,8 @@ import RowAction, { ContentManagerRowAction } from '../Actions/RowAction'
 import Flexbox from '../../../atoms/Flexbox'
 import { getFolderId } from '../../../../lib/utils/patterns'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
-import { useModal } from '../../../../lib/stores/modal'
 import { useToast } from '../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../shared/lib/stores/modal'
 
 interface ContentManagerFolderRowProps {
   team: SerializedTeam
