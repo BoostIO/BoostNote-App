@@ -19,7 +19,6 @@ import ErrorBlock from '../../../../../atoms/ErrorBlock'
 import IconMdi from '../../../../../atoms/IconMdi'
 import { mdiBackupRestore } from '@mdi/js'
 import CustomButton from '../../../../../atoms/buttons/CustomButton'
-import { useModal } from '../../../../../../lib/stores/modal'
 import { useSettings } from '../../../../../../lib/stores/settings'
 import {
   useDialog,
@@ -35,6 +34,7 @@ import RevisionModalNavigator from './RevisionModalNavigator'
 import { compareDateString } from '../../../../../../lib/date'
 import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
+import { useModal } from '../../../../../../../shared/lib/stores/modal'
 
 interface RevisionsModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -53,7 +53,7 @@ const RevisionsModal = ({
   >(new Map())
   const [error, setError] = useState<unknown>()
   const { subscription, currentUserPermissions } = usePage()
-  const { closeModal } = useModal()
+  const { closeLastModal: closeModal } = useModal()
   const { openSettingsTab } = useSettings()
   const [revisionIndex, setRevisionIndex] = useState<number>()
   const { messageBox } = useDialog()

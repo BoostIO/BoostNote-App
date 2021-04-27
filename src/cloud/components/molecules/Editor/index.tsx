@@ -54,7 +54,6 @@ import { Hint } from 'codemirror'
 import { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import TemplatesModal from '../../organisms/Modal/contents/TemplatesModal'
-import { useModal } from '../../../lib/stores/modal'
 import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
@@ -77,6 +76,7 @@ import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel
 import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -520,8 +520,7 @@ const Editor = ({
   const { openModal } = useModal()
   const onEditorTemplateToolClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
-      classNames: 'size-XL',
-      closable: false,
+      size: 'large',
     })
   }, [openModal, onTemplatePickCallback])
 

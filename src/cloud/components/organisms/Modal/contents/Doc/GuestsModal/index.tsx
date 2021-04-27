@@ -3,7 +3,6 @@ import { ModalContainer } from '../../styled'
 import { usePage } from '../../../../../../lib/stores/pageStore'
 import { mdiArrowRight, mdiBackupRestore } from '@mdi/js'
 import CustomButton from '../../../../../atoms/buttons/CustomButton'
-import { useModal } from '../../../../../../lib/stores/modal'
 import { useSettings } from '../../../../../../lib/stores/settings'
 import styled from '../../../../../../lib/styled'
 import Icon from '../../../../../atoms/Icon'
@@ -11,6 +10,7 @@ import { guestsPerMember } from '../../../../../../lib/subscription'
 import plur from 'plur'
 import GuestInvitesSection from '../../../../../molecules/GuestInvitesSection'
 import { PrimaryAnchor } from '../../../../settings/styled'
+import { useModal } from '../../../../../../../shared/lib/stores/modal'
 
 interface GuestsModalProps {
   docId: string
@@ -19,7 +19,7 @@ interface GuestsModalProps {
 
 const GuestsModal = ({ docId, teamId }: GuestsModalProps) => {
   const { subscription, permissions = [], guestsMap } = usePage()
-  const { closeModal } = useModal()
+  const { closeLastModal: closeModal } = useModal()
   const { openSettingsTab } = useSettings()
 
   if (subscription == null || subscription.plan === 'standard') {

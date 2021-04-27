@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
 import CustomButton from '../../atoms/buttons/CustomButton'
-import { useModal } from '../../../lib/stores/modal'
 import TemplatesModal from '../../organisms/Modal/contents/TemplatesModal'
 import { mdiPalette } from '@mdi/js'
 import IconMdi from '../../atoms/IconMdi'
 import styled from '../../../lib/styled'
 import { SerializedTemplate } from '../../../interfaces/db/template'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 interface EditorTemplateButtonProps {
   onTemplatePickCallback: (template: SerializedTemplate) => void
@@ -18,8 +18,7 @@ const EditorTemplateButton = ({
 
   const onClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
-      classNames: 'size-XL',
-      closable: false,
+      size: 'large',
     })
   }, [openModal, onTemplatePickCallback])
 

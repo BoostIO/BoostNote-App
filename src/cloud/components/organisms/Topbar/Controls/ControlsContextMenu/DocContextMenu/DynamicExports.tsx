@@ -15,7 +15,6 @@ import {
   convertMarkdownToPdfExportableHtml,
   filenamifyTitle,
 } from '../../../../../../lib/export'
-import { ModalsOptions } from '../../../../../../lib/stores/modal/types'
 import { defaultPreviewStyle } from '../../../../../atoms/MarkdownView/styles'
 import { useSettings } from '../../../../../../lib/stores/settings'
 import { useElectron } from '../../../../../../lib/stores/electron'
@@ -25,15 +24,13 @@ import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
 import { selectTheme } from '../../../../../../lib/styled'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
+import { ModalOpeningOptions } from '../../../../../../../shared/lib/stores/modal'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
   team: SerializedTeam
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
-  openModal: (
-    modalContent: JSX.Element,
-    options?: Partial<ModalsOptions>
-  ) => void
+  openModal: (modalContent: JSX.Element, options?: ModalOpeningOptions) => void
 }
 
 const DynamicExports = ({ currentDoc, editorRef }: DocContextMenuProps) => {

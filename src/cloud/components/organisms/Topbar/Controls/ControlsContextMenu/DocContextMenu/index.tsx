@@ -28,7 +28,6 @@ import {
 import { saveDocAsTemplate } from '../../../../../../api/teams/docs/templates'
 import { SerializedTeam } from '../../../../../../interfaces/db/team'
 import { archiveDoc, unarchiveDoc } from '../../../../../../api/teams/docs'
-import { useModal } from '../../../../../../lib/stores/modal'
 import RevisionsModal from '../../../../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
@@ -67,6 +66,7 @@ import Button from '../../../../../atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../../../../shared/lib/stores/modal'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -250,7 +250,7 @@ const DocContextMenu = ({
         restoreRevision={restoreRevision}
       />,
       {
-        classNames: 'largeW fixed-height-large',
+        size: 'large',
       }
     )
     trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
@@ -425,7 +425,7 @@ const DocContextMenu = ({
                               docId={currentDoc.id}
                             />,
                             {
-                              classNames: 'largeW fixed-height-large',
+                              size: 'large',
                             }
                           )
                         }

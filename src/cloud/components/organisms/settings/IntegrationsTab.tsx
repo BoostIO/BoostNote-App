@@ -19,12 +19,12 @@ import {
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import FeedbackModal from '../Modal/contents/FeedbackModal'
-import { useModal } from '../../../lib/stores/modal'
 import { githubOauthId, boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import Button from '../../atoms/Button'
 import { openNew } from '../../../lib/utils/platform'
 import { usePage } from '../../../lib/stores/pageStore'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
@@ -584,9 +584,7 @@ const IntegrationsTab = () => {
                   <button
                     className='item-info-request'
                     onClick={() =>
-                      openModal(<FeedbackModal />, {
-                        classNames: 'largeW fixed-height-large',
-                      })
+                      openModal(<FeedbackModal />, { size: 'large' })
                     }
                   >
                     Please let us know your requests!
