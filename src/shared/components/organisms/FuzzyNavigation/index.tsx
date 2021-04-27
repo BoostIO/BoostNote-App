@@ -60,11 +60,13 @@ const FuzzyNavigation = ({
         { name: 'label', weight: 0.6 },
         { name: 'path', weight: 0.4 },
       ],
+      threshold: 0.4,
+      distance: 80,
       includeMatches: true,
     })
 
     const results = fuse.search(query)
-    const items = results.map((res) => {
+    const items = results.slice(0, 30).map((res) => {
       return {
         ...res.item,
         refIndex: res.refIndex,
