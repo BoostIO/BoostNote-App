@@ -98,6 +98,9 @@ const CloudIntroModal = () => {
         </CloseButton>
         <div className='content'>
           <h1 className='title'>Introducing Cloud Space</h1>
+          <h4 className='title'>
+            Migrate data to Cloud space and earn a 1 month coupon!
+          </h4>
           <div className='switch'>
             <div className='switch__group'>
               <button
