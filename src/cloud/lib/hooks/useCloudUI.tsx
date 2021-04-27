@@ -4,7 +4,7 @@ import { FormRowProps } from '../../../shared/components/molecules/Form'
 import EmojiInputForm from '../../../shared/components/organisms/EmojiInputForm'
 import { DialogIconTypes, useDialog } from '../../../shared/lib/stores/dialog'
 import { useModal } from '../../../shared/lib/stores/modal'
-import { PromiseWrapperCallbacks } from '../../../shared/lib/types'
+import { SubmissionWrappers } from '../../../shared/lib/types'
 import EditWorkspaceModal from '../../components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
 import { SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
@@ -100,11 +100,7 @@ export function useCloudUI() {
   )
 
   const openNewFolderForm = useCallback(
-    (
-      body: CloudNewResourceRequestBody,
-      sending?: PromiseWrapperCallbacks,
-      prevRows?: FormRowProps[]
-    ) => {
+    (body: CloudNewResourceRequestBody, options?: UIFormOptions) => {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFolderOutline}
@@ -112,14 +108,14 @@ export function useCloudUI() {
           submitButtonProps={{
             label: 'Create',
           }}
-          prevRows={prevRows}
+          prevRows={options?.precedingRows}
           onSubmit={async (inputValue: string, emoji?: string) => {
             if (body.team == null || body.workspaceId == null) {
               return
             }
 
-            if (sending != null) {
-              sending.before()
+            if (options?.beforeSubmitting != null) {
+              options.beforeSubmitting()
             }
             await createFolder(
               body.team,
@@ -132,8 +128,8 @@ export function useCloudUI() {
               },
               closeLastModal
             )
-            if (sending != null) {
-              sending.after()
+            if (options?.afterSubmitting != null) {
+              options.afterSubmitting()
             }
           }}
         />,
@@ -148,11 +144,7 @@ export function useCloudUI() {
   )
 
   const openNewDocForm = useCallback(
-    (
-      body: CloudNewResourceRequestBody,
-      sending?: PromiseWrapperCallbacks,
-      prevRows?: FormRowProps[]
-    ) => {
+    (body: CloudNewResourceRequestBody, options?: UIFormOptions) => {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
@@ -160,14 +152,14 @@ export function useCloudUI() {
           submitButtonProps={{
             label: 'Create',
           }}
-          prevRows={prevRows}
+          prevRows={options?.precedingRows}
           onSubmit={async (inputValue: string, emoji?: string) => {
             if (body.team == null || body.workspaceId == null) {
               return
             }
 
-            if (sending != null) {
-              sending.before()
+            if (options?.beforeSubmitting != null) {
+              options.beforeSubmitting()
             }
             await createDoc(
               body.team,
@@ -179,8 +171,8 @@ export function useCloudUI() {
               },
               closeLastModal
             )
-            if (sending != null) {
-              sending.after()
+            if (options?.afterSubmitting != null) {
+              options.afterSubmitting()
             }
           }}
         />,
@@ -317,4 +309,8 @@ export interface CloudNewResourceRequestBody {
   team?: SerializedTeam
   workspaceId?: string
   parentFolderId?: string
+}
+
+export type UIFormOptions = SubmissionWrappers & {
+  precedingRows: FormRowProps[]
 }

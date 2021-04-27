@@ -8,9 +8,7 @@ import {
   mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import { FormRowProps } from '../../../shared/components/molecules/Form'
 import { TopbarBreadcrumbProps } from '../../../shared/components/organisms/Topbar'
-import { PromiseWrapperCallbacks } from '../../../shared/lib/types'
 import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
 import { getFolderHref } from '../../components/atoms/Link/FolderLink'
 import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
@@ -22,7 +20,7 @@ import {
 } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { CloudNewResourceRequestBody } from '../hooks/useCloudUI'
+import { CloudNewResourceRequestBody, UIFormOptions } from '../hooks/useCloudUI'
 import { getDocTitle, prefixFolders } from '../utils/patterns'
 import { getHexFromUUID } from '../utils/string'
 import { topParentId } from './topbarTree'
@@ -49,13 +47,11 @@ export function mapTopbarBreadcrumbs(
   renameDoc?: (doc: SerializedDoc) => void,
   openNewDocForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   openNewFolderForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   editWorkspace?: (wp: SerializedWorkspace) => void,
   deleteOrArchiveDoc?: (doc: SerializedDoc) => void,
@@ -242,13 +238,11 @@ function getFolderBreadcrumb(
   push: (url: string) => void,
   openNewDocForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   openNewFolderForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   renameFolder?: (folder: SerializedFolder) => void,
   deleteFolder?: (folder: SerializedFolder) => void
@@ -281,11 +275,13 @@ function getFolderBreadcrumb(
               icon: mdiTextBoxPlusOutline,
               label: 'Create a document',
               onClick: () =>
-                openNewDocForm(newResourceBody, undefined, [
-                  {
-                    description: currentPath,
-                  },
-                ]),
+                openNewDocForm(newResourceBody, {
+                  precedingRows: [
+                    {
+                      description: currentPath,
+                    },
+                  ],
+                }),
             },
           ]
         : []),
@@ -295,11 +291,13 @@ function getFolderBreadcrumb(
               icon: mdiFolderPlusOutline,
               label: 'Create a folder',
               onClick: () =>
-                openNewFolderForm(newResourceBody, undefined, [
-                  {
-                    description: currentPath,
-                  },
-                ]),
+                openNewFolderForm(newResourceBody, {
+                  precedingRows: [
+                    {
+                      description: currentPath,
+                    },
+                  ],
+                }),
             },
           ]
         : []),
@@ -331,13 +329,11 @@ export function mapWorkspaceBreadcrumb(
   push: (url: string) => void,
   openNewDocForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   openNewFolderForm?: (
     body: CloudNewResourceRequestBody,
-    wrappers?: PromiseWrapperCallbacks,
-    prevRows?: FormRowProps[]
+    options: UIFormOptions
   ) => void,
   editWorkspace?: (wp: SerializedWorkspace) => void,
   deleteWorkspace?: (wp: SerializedWorkspace) => void
@@ -365,11 +361,13 @@ export function mapWorkspaceBreadcrumb(
               icon: mdiTextBoxPlusOutline,
               label: 'Create a document',
               onClick: () =>
-                openNewDocForm(newResourceBody, undefined, [
-                  {
-                    description: workspace.name,
-                  },
-                ]),
+                openNewDocForm(newResourceBody, {
+                  precedingRows: [
+                    {
+                      description: workspace.name,
+                    },
+                  ],
+                }),
             },
           ]
         : []),
@@ -379,11 +377,13 @@ export function mapWorkspaceBreadcrumb(
               icon: mdiFolderPlusOutline,
               label: 'Create a folder',
               onClick: () =>
-                openNewFolderForm(newResourceBody, undefined, [
-                  {
-                    description: workspace.name,
-                  },
-                ]),
+                openNewFolderForm(newResourceBody, {
+                  precedingRows: [
+                    {
+                      description: workspace.name,
+                    },
+                  ],
+                }),
             },
           ]
         : []),

@@ -30,7 +30,11 @@ import {
   CollapsableType,
   useSidebarCollapse,
 } from '../lib/stores/sidebarCollapse'
-import { MenuItem, MenuTypes } from '../../shared/lib/stores/contextMenu'
+import {
+  MenuItem,
+  MenuTypes,
+  useContextMenu,
+} from '../../shared/lib/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
 import { getFolderHref } from './atoms/Link/FolderLink'
@@ -65,6 +69,7 @@ import {
   mdiArchiveOutline,
   mdiClockOutline,
   mdiCogOutline,
+  mdiDotsHorizontal,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
@@ -75,11 +80,13 @@ import {
   mdiMagnify,
   mdiPaperclip,
   mdiPencil,
+  mdiPencilBoxMultipleOutline,
   mdiPlus,
   mdiPlusCircleOutline,
   mdiStar,
   mdiStarOutline,
   mdiTag,
+  mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
   mdiWeb,
 } from '@mdi/js'
@@ -125,6 +132,9 @@ import {
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
 import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
+import ButtonGroup from '../../shared/components/atoms/ButtonGroup'
+import Button from '../../shared/components/atoms/Button'
+import TemplatesModal from './organisms/Modal/contents/TemplatesModal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -146,6 +156,7 @@ const Application = ({
     tagsMap,
     currentParentFolderId,
     currentWorkspaceId,
+    currentPath,
   } = useNav()
   const {
     sideBarOpenedLinksIdsSet,
@@ -182,8 +193,10 @@ const Application = ({
     openNewFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
+    openNewDocForm,
   } = useCloudUI()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
+  const { popup } = useContextMenu()
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -535,6 +548,54 @@ const Application = ({
             setSearchQuery={setSearchQuery}
             searchHistory={searchHistory}
             recentPages={historyItems}
+            treeTopRows={
+              <>
+                <ButtonGroup>
+                  <Button
+                    variant='primary'
+                    iconPath={mdiTextBoxPlusOutline}
+                    id='sidebar-newdoc-btn'
+                    iconSize={16}
+                    onClick={() =>
+                      openNewDocForm(
+                        {
+                          parentFolderId: currentParentFolderId,
+                          workspaceId: currentWorkspaceId,
+                        },
+                        {
+                          precedingRows: [
+                            {
+                              description: `${
+                                workspacesMap.get(currentWorkspaceId || '')
+                                  ?.name
+                              }${currentPath}`,
+                            },
+                          ],
+                        }
+                      )
+                    }
+                  >
+                    Create new doc
+                  </Button>
+                  <Button
+                    variant='primary'
+                    iconPath={mdiDotsHorizontal}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      popup(event, [
+                        {
+                          icon: mdiPencilBoxMultipleOutline,
+                          type: MenuTypes.Normal,
+                          label: 'Use a template',
+                          onClick: () =>
+                            openModal(<TemplatesModal />, { size: 'large' }),
+                        },
+                      ])
+                    }}
+                  />
+                </ButtonGroup>
+              </>
+            }
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}
