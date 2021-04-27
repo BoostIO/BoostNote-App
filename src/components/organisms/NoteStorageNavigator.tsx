@@ -22,6 +22,7 @@ import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
 import { useTranslation } from 'react-i18next'
+import { useSearchModal } from '../../lib/searchModal'
 
 interface NoteStorageNavigatorProps {
   storage: NoteStorage
@@ -229,6 +230,18 @@ const NoteStorageNavigator = ({ storage }: NoteStorageNavigatorProps) => {
       removeIpcListener('new-note', handler)
     }
   }, [createNoteByRoute])
+
+  const { toggleShowSearchModal } = useSearchModal()
+
+  useEffect(() => {
+    const handler = () => {
+      toggleShowSearchModal()
+    }
+    addIpcListener('search', handler)
+    return () => {
+      removeIpcListener('search', handler)
+    }
+  }, [toggleShowSearchModal])
 
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
