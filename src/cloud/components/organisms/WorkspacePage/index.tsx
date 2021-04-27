@@ -95,14 +95,16 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
         workspaceId: workspace.id,
       },
       {
-        before: () => setSending(WorkspaceHeaderActions.newDoc),
-        after: () => setSending(undefined),
-      },
-      [
-        {
-          description: <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />,
-        },
-      ]
+        precedingRows: [
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
+            ),
+          },
+        ],
+        beforeSubmitting: () => setSending(WorkspaceHeaderActions.newDoc),
+        afterSubmitting: () => setSending(undefined),
+      }
     )
   }, [openNewDocForm, workspace, team, topbarBreadcrumbs])
 
@@ -113,14 +115,16 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
         workspaceId: workspace.id,
       },
       {
-        before: () => setSending(WorkspaceHeaderActions.newFolder),
-        after: () => setSending(undefined),
-      },
-      [
-        {
-          description: <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />,
-        },
-      ]
+        precedingRows: [
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
+            ),
+          },
+        ],
+        beforeSubmitting: () => setSending(WorkspaceHeaderActions.newFolder),
+        afterSubmitting: () => setSending(undefined),
+      }
     )
   }, [openNewFolderForm, workspace, team, topbarBreadcrumbs])
 

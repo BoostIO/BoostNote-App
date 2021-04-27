@@ -32,6 +32,7 @@ type SidebarProps = {
   sidebarResize?: (width: number) => void
   className?: string
   tree?: SidebarNavCategory[]
+  treeTopRows?: React.ReactNode
   searchQuery: string
   setSearchQuery: (val: string) => void
   searchHistory: string[]
@@ -54,6 +55,7 @@ const Sidebar = ({
   sidebarExpandedWidth = defaultSidebarExpandedWidth,
   sidebarResize,
   tree,
+  treeTopRows,
   className,
   searchHistory,
   searchQuery,
@@ -94,7 +96,7 @@ const Sidebar = ({
               tree == null ? (
                 <Spinner className='sidebar__loader' />
               ) : (
-                <SidebarTree tree={tree} />
+                <SidebarTree tree={tree} topRows={treeTopRows} />
               )
             ) : sidebarState === 'search' ? (
               <SidebarSearch

@@ -9,7 +9,7 @@ export type ControlButtonProps = {
   tooltip?: string
 }
 
-export type PromiseWrapperCallbacks = {
-  before: () => void
-  after: () => void
+export type SubmissionWrappers = {
+  beforeSubmitting?: () => void
+  afterSubmitting?: () => void
 }

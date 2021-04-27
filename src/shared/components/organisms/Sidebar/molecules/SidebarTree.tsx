@@ -21,6 +21,7 @@ import { scrollbarOverlay } from '../../../../lib/styled/styleFunctions'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
+  topRows?: React.ReactNode
 }
 
 export type SidebarTreeControl = {
@@ -76,7 +77,7 @@ export type SidebarNavControls =
       create: (title: string) => Promise<void>
     }
 
-const SidebarTree = ({ tree }: SidebarTreeProps) => {
+const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
   const [categoriesContextIsClosed, setCategoriesContextIsClosed] = useState(
     true
   )
@@ -127,6 +128,9 @@ const SidebarTree = ({ tree }: SidebarTreeProps) => {
         )}
       </SidebarHeader>
       <SidebarContextList className='sidebar__tree__wrapper'>
+        {topRows != null && (
+          <div className='sidebar__tree__rows--top'>{topRows}</div>
+        )}
         {tree.map((category, i) => {
           if (category.hidden) {
             return null
@@ -404,6 +408,13 @@ const Container = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  .sidebar__tree__rows--top {
+    margin: ${({ theme }) => theme.sizes.spaces.sm}px 13px !important;
+    > div {
+      width: 100%;
+    }
+  }
 
   .sidebar__header {
     padding: ${({ theme }) => theme.sizes.spaces.sm}px

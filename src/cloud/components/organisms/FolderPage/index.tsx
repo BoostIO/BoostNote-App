@@ -216,14 +216,16 @@ const FolderPage = () => {
         parentFolderId: currentFolder?.id,
       },
       {
-        before: () => setSending(FolderHeaderActions.newDoc),
-        after: () => setSending(undefined),
-      },
-      [
-        {
-          description: <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />,
-        },
-      ]
+        precedingRows: [
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+            ),
+          },
+        ],
+        beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
+        afterSubmitting: () => setSending(undefined),
+      }
     )
   }, [openNewDocForm, currentFolder, team, topBarBreadcrumbs])
 
@@ -235,14 +237,16 @@ const FolderPage = () => {
         parentFolderId: currentFolder?.id,
       },
       {
-        before: () => setSending(FolderHeaderActions.newFolder),
-        after: () => setSending(undefined),
-      },
-      [
-        {
-          description: <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />,
-        },
-      ]
+        precedingRows: [
+          {
+            description: (
+              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+            ),
+          },
+        ],
+        beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
+        afterSubmitting: () => setSending(undefined),
+      }
     )
   }, [openNewFolderForm, currentFolder, team, topBarBreadcrumbs])
 
