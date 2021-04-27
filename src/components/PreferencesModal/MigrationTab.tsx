@@ -199,6 +199,10 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
               space. Please delete this space manually once migration has
               completed.
             </li>
+            <li>
+              You can revieve 1 month free trial coupon for the cloud space if
+              you migrate data from a local space.
+            </li>
           </ol>
         </Alert>
         <Flexbox justifyContent='flex-end'>
