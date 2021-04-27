@@ -17,11 +17,7 @@ const KeymapTab = () => {
 
   const keymap = useMemo(() => {
     const keymap = preferences['general.keymap']
-    if (keymap != null) {
-      return [...keymap.entries()]
-    } else {
-      return []
-    }
+    return [...keymap.entries()]
   }, [preferences])
 
   const getKeymapItemSectionKey = useCallback((keymapItem: KeymapItem) => {

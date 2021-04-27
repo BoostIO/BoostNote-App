@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createStoreContext } from './context'
 import { localLiteStorage } from 'ltstrg'
 import { useSetState } from 'react-use'
@@ -75,7 +75,7 @@ export interface Preferences {
   'markdown.includeFrontMatter': boolean
 
   // Keymap
-  'general.keymap': Map<string, KeymapItem> | null
+  'general.keymap': Map<string, KeymapItem>
 }
 
 function replacer(_key: string, value: any) {
@@ -146,7 +146,7 @@ const basePreferences: Preferences = {
   'markdown.includeFrontMatter': true,
 
   // Keymap
-  'general.keymap': null,
+  'general.keymap': new Map<string, KeymapItem>(),
 }
 
 function usePreferencesStore() {
@@ -158,12 +158,7 @@ function usePreferencesStore() {
 
   const mergedPreferences = useMemo(() => {
     const preferencesKeymap = preferences['general.keymap']
-    const basePreferencesKeymap = basePreferences['general.keymap']
-
-    const keymap =
-      basePreferencesKeymap != null
-        ? basePreferencesKeymap
-        : new Map<string, KeymapItem>([])
+    const keymap = basePreferences['general.keymap']
     try {
       if (preferencesKeymap != null) {
         preferencesKeymap.forEach((value, key) => {
@@ -337,31 +332,27 @@ function usePreferencesStore() {
 
   const loadKeymaps = useCallback(() => {
     const keymap = mergedPreferences['general.keymap']
-    if (keymap != null) {
-      for (const [key, keymapItem] of keymap) {
-        if (isMenuKeymap(keymapItem)) {
-          sendIpcMessage('menuAcceleratorChanged', [
-            key,
-            getMenuAcceleratorForKeymapItem(keymapItem),
-          ])
-        }
+    for (const [key, keymapItem] of keymap) {
+      if (isMenuKeymap(keymapItem)) {
+        sendIpcMessage('menuAcceleratorChanged', [
+          key,
+          getMenuAcceleratorForKeymapItem(keymapItem),
+        ])
       }
     }
   }, [mergedPreferences])
 
   const resetKeymap = useCallback(() => {
-    if (keymap != null) {
-      keymap.clear()
-      for (const [key, keymapItem] of defaultKeymap) {
-        keymap.set(key, keymapItem)
-      }
-      setPreferences((preferences) => {
-        return {
-          ...preferences,
-          'general.keymap': defaultKeymap,
-        }
-      })
+    keymap.clear()
+    for (const [key, keymapItem] of defaultKeymap) {
+      keymap.set(key, keymapItem)
     }
+    setPreferences((preferences) => {
+      return {
+        ...preferences,
+        'general.keymap': defaultKeymap,
+      }
+    })
   }, [keymap, setPreferences])
 
   useEffect(() => {
