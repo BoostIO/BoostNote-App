@@ -21,7 +21,7 @@ const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift']
 interface KeymapItemSectionProps {
   keymapKey: string
   currentKeymapItem?: KeymapItemEditableProps
-  onAssignNewKeymap: (
+  updateKeymap: (
     key: string,
     shortcutFirst: KeymapItemEditableProps,
     shortcutSecond?: KeymapItemEditableProps
@@ -33,7 +33,7 @@ interface KeymapItemSectionProps {
 const KeymapItemSection = ({
   keymapKey,
   currentKeymapItem,
-  onAssignNewKeymap,
+  updateKeymap,
   removeKeymap,
   description,
 }: KeymapItemSectionProps) => {
@@ -79,29 +79,30 @@ const KeymapItemSection = ({
   }
 
   const applyKeymap = useCallback(() => {
-    if (currentShortcut != null) {
-      if (rejectedShortcutInputs.includes(currentShortcut.key.toLowerCase())) {
-        setInputError(true)
-        if (shortcutInputRef.current != null) {
-          shortcutInputRef.current.focus()
-        }
-        return
-      }
-
-      onAssignNewKeymap(keymapKey, currentShortcut, undefined)
-        .then(() => {
-          setChangingShortcut(false)
-          setInputError(false)
-        })
-        .catch(() => {
-          pushMessage({
-            title: 'Keymap assignment failed',
-            description: 'Cannot assign to already assigned shortcut',
-          })
-          setInputError(true)
-        })
+    if (currentShortcut == null) {
+      return
     }
-  }, [currentShortcut, keymapKey, onAssignNewKeymap, pushMessage])
+    if (rejectedShortcutInputs.includes(currentShortcut.key.toLowerCase())) {
+      setInputError(true)
+      if (shortcutInputRef.current != null) {
+        shortcutInputRef.current.focus()
+      }
+      return
+    }
+
+    updateKeymap(keymapKey, currentShortcut, undefined)
+      .then(() => {
+        setChangingShortcut(false)
+        setInputError(false)
+      })
+      .catch(() => {
+        pushMessage({
+          title: 'Keymap assignment failed',
+          description: 'Cannot assign to already assigned shortcut',
+        })
+        setInputError(true)
+      })
+  }, [currentShortcut, keymapKey, updateKeymap, pushMessage])
 
   const toggleChangingShortcut = useCallback(() => {
     if (changingShortcut) {
@@ -202,7 +203,6 @@ const InputKeymapChooser = styled.button`
   color: ${({ theme }) => theme.navButtonColor};
 
   text-align: center;
-  //padding: 8px 0;
   padding: 5px;
 
   &:hover {
@@ -213,9 +213,6 @@ const InputKeymapChooser = styled.button`
 const KeymapItemSectionContainer = styled.div`
   display: grid;
   grid-template-columns: 45% minmax(55%, 400px);
-
-  //margin-left: 15%;
-  //margin-right: 15%;
 `
 
 const KeymapItemInputSection = styled.div`

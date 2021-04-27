@@ -1,11 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { Section, SectionHeader } from './styled'
 import { usePreferences } from '../../lib/preferences'
-import {
-  getGenericShortcutString,
-  KeymapItem,
-  KeymapItemEditableProps,
-} from '../../lib/keymap'
+import { getGenericShortcutString, KeymapItem } from '../../lib/keymap'
 import { useTranslation } from 'react-i18next'
 import KeymapItemSection from '../atoms/KeymapItemSection'
 import styled from '../../lib/styled/styled'
@@ -28,28 +24,6 @@ const KeymapTab = () => {
     }
   }, [preferences])
 
-  const handleAssignNewKeymap = useCallback(
-    (
-      key: string,
-      firstShortcut: KeymapItemEditableProps,
-      secondShortcut?: KeymapItemEditableProps
-    ) => {
-      return updateKeymap(key, firstShortcut, secondShortcut)
-    },
-    [updateKeymap]
-  )
-
-  const handleRemoveKeymap = useCallback(
-    (key: string) => {
-      removeKeymap(key)
-    },
-    [removeKeymap]
-  )
-
-  const handleResetKeymap = useCallback(() => {
-    resetKeymap()
-  }, [resetKeymap])
-
   const getKeymapItemSectionKey = useCallback((keymapItem: KeymapItem) => {
     if (keymapItem.shortcutMainStroke == null) {
       return keymapItem.description
@@ -63,7 +37,7 @@ const KeymapTab = () => {
       <KeymapHeaderSection>
         <SectionHeader>{t('preferences.keymap')}</SectionHeader>
         <SectionResetKeymap>
-          <ButtonContainer onClick={handleResetKeymap}>Reset</ButtonContainer>
+          <ButtonContainer onClick={() => resetKeymap()}>Reset</ButtonContainer>
         </SectionResetKeymap>
       </KeymapHeaderSection>
       <KeymapItemList>
@@ -75,8 +49,8 @@ const KeymapTab = () => {
                 keymapKey={keymapEntry[0]}
                 currentKeymapItem={keymapEntry[1].shortcutMainStroke}
                 description={keymapEntry[1].description}
-                onAssignNewKeymap={handleAssignNewKeymap}
-                removeKeymap={handleRemoveKeymap}
+                updateKeymap={updateKeymap}
+                removeKeymap={removeKeymap}
               />
             )
           })}
