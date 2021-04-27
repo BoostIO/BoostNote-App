@@ -47,29 +47,27 @@ interface RehypeChartProps {
   isYml?: boolean
 }
 
-export function createAndAddElementWithId(id: string, tagName: string) {
+export function appendElementToBody(id: string, tagName: string) {
   let chartExportElement = window.document.getElementById(id)
   if (chartExportElement == null) {
     chartExportElement = window.document.createElement(tagName)
     chartExportElement.id = id
     chartExportElement.style.display = 'none'
-    const bodyElement = window.document.getElementsByTagName('body').item(0)
-    if (bodyElement) {
-      bodyElement.appendChild(chartExportElement)
-    }
+    const bodyElement = window.document.body
+    bodyElement.appendChild(chartExportElement)
   }
 }
 
 // create element for export prior to exporting to be able to render them correctly
 const chartExportElementId = 'chart-export-container'
-createAndAddElementWithId(chartExportElementId, 'canvas')
+appendElementToBody(chartExportElementId, 'canvas')
 
 export function rehypeChart({ tagName, isYml = false }: RehypeChartProps) {
   return async (tree: Node) => {
-    const eleRef = window.document.getElementById(
+    const chartCanvasElement = window.document.getElementById(
       chartExportElementId
     ) as HTMLCanvasElement
-    if (eleRef == null) {
+    if (chartCanvasElement == null) {
       return
     }
     const chartNodes: Node[] = []
@@ -83,7 +81,10 @@ export function rehypeChart({ tagName, isYml = false }: RehypeChartProps) {
         const value = node.children[0].value
         try {
           const parsed = isYml ? YAML.load(value) : JSON.parse(value)
-          const chartData = new _Chart(eleRef.getContext('2d'), parsed)
+          const chartData = new _Chart(
+            chartCanvasElement.getContext('2d'),
+            parsed
+          )
           if (
             parsed.maintainAspectRatio == null ||
             parsed.maintainAspectRatio == false

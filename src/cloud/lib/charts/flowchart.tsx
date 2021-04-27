@@ -4,7 +4,7 @@ import { Node } from 'unist'
 import visit from 'unist-util-visit'
 import unified from 'unified'
 import rehypeParse from 'rehype-parse'
-import { createAndAddElementWithId } from './charts'
+import { appendElementToBody } from './charts'
 
 export interface FlowchartProps {
   code: string
@@ -48,7 +48,7 @@ export const Flowchart = ({ code, options }: FlowchartProps) => {
 
 // create element for export prior to exporting to be able to render them correctly
 const flowChartExportElementId = 'flowchart-export-container'
-createAndAddElementWithId(flowChartExportElementId, 'div')
+appendElementToBody(flowChartExportElementId, 'div')
 
 export function rehypeFlowChart() {
   return async (tree: Node) => {
@@ -56,8 +56,10 @@ export function rehypeFlowChart() {
     visit(tree, { tagName: 'flowchart' }, (node: any) => {
       flowchartNodes.push(node)
     })
-    const eleRef = window.document.getElementById(flowChartExportElementId)
-    if (eleRef == null) {
+    const flowChartElement = window.document.getElementById(
+      flowChartExportElementId
+    )
+    if (flowChartElement == null) {
       return
     }
     const parser = unified().use(rehypeParse, { fragment: true })
@@ -66,14 +68,14 @@ export function rehypeFlowChart() {
         const value = node.children[0].value
         try {
           const diagram = FlowChart.parse(value)
-          while (eleRef.firstChild != null) {
-            eleRef.removeChild(eleRef.lastChild!)
+          while (flowChartElement.firstChild != null) {
+            flowChartElement.removeChild(flowChartElement.lastChild!)
           }
 
-          diagram.drawSVG(eleRef, { maxWidth: 3 })
-          const svg = eleRef.childNodes[0] as SVGElement
+          diagram.drawSVG(flowChartElement, { maxWidth: 3 })
+          const svg = flowChartElement.childNodes[0] as SVGElement
           if (svg != null && typeof svg.getAttribute('height') === 'string') {
-            eleRef.style.setProperty(
+            flowChartElement.style.setProperty(
               'height',
               `${svg.getAttribute('height')!}px`
             )
