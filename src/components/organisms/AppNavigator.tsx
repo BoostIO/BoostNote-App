@@ -13,7 +13,6 @@ import {
   mdiMagnify,
   mdiPlus,
   mdiMenu,
-  mdiCloudQuestion,
   mdiCloudOffOutline,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
