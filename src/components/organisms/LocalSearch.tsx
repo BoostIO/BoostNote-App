@@ -63,6 +63,7 @@ const LocalSearch = ({
   onUpdateSearchOptions,
 }: LocalSearchProps) => {
   const searchTextAreaRef = useRef<HTMLTextAreaElement>(null)
+  const replaceTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
   const [loadingResults, setLoadingResults] = useState<boolean>(false)
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>(0)
@@ -76,7 +77,15 @@ const LocalSearch = ({
   const [numberOfFoundItems, setNumberOfFoundItems] = useState<number>(0)
   const [searchResultError, setSearchResultError] = useState<boolean>(false)
 
-  const [focusingReplace, setFocusingReplace] = useState<boolean>(false)
+  const focusReplaceInput = useCallback((focusPoint = 0) => {
+    if (replaceTextAreaRef.current != null) {
+      replaceTextAreaRef.current.focus()
+      if (focusPoint > 0) {
+        replaceTextAreaRef.current.selectionStart = focusPoint
+        replaceTextAreaRef.current.selectionEnd = focusPoint
+      }
+    }
+  }, [])
 
   const getNumberOfTextAreaRows = useMemo(() => {
     const searchNumLines = searchValue ? searchValue.split('\n').length : 0
@@ -106,7 +115,6 @@ const LocalSearch = ({
             searchTextAreaRef.current.selectionEnd
         }
       }
-      setFocusingReplace(false)
     },
     []
   )
@@ -121,7 +129,6 @@ const LocalSearch = ({
         setSearchResultError(() => false)
         return regExp
       } catch (err) {
-        // set error for better user acknowledge
         setSearchResultError(() => true)
         return null
       }
@@ -488,9 +495,10 @@ const LocalSearch = ({
       itemToFocusOn < numFoundItemsForFocus ? itemToFocusOn : 0,
       true
     )
-    setFocusingReplace(true)
+    focusReplaceInput()
   }, [
     caseSensitiveSearch,
+    focusReplaceInput,
     getSearchRegex,
     numberOfFoundItems,
     regexSearch,
@@ -499,6 +507,10 @@ const LocalSearch = ({
     selectedItemIndex,
     updateSearchResults,
   ])
+
+  const setReplaceTextAreaRef = useCallback((ref) => {
+    replaceTextAreaRef.current = ref
+  }, [])
 
   const handleSearchInputKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -540,7 +552,7 @@ const LocalSearch = ({
           if (showingReplace) {
             event.preventDefault()
             event.stopPropagation()
-            setFocusingReplace(true)
+            focusReplaceInput(replaceQuery.length)
           }
           break
         case 'F3':
@@ -578,16 +590,12 @@ const LocalSearch = ({
       addNewlineToSearchValue,
       toggleRegexSearch,
       toggleCaseSensitiveSearch,
+      focusReplaceInput,
     ]
   )
 
   useEffect(() => {
     function onContentChanges() {
-      // restore replace focus before updating results otherwise it might render
-      // out of focus because value don't have time to propagate
-      if (focusingReplace) {
-        setFocusingReplace(false)
-      }
       updateSearchResults(
         searchValue,
         regexSearch,
@@ -609,7 +617,6 @@ const LocalSearch = ({
   }, [
     caseSensitiveSearch,
     codeMirror,
-    focusingReplace,
     getSearchRegex,
     regexSearch,
     searchValue,
@@ -619,7 +626,7 @@ const LocalSearch = ({
   useEffectOnce(() => {
     updateSearchResults(searchValue, regexSearch, caseSensitiveSearch)
     if (showingReplace && searchValue.length !== 0) {
-      setFocusingReplace(true)
+      focusReplaceInput(replaceQuery.length)
     } else {
       focusSearchTextAreaInput(searchValue.length, true)
     }
@@ -644,7 +651,6 @@ const LocalSearch = ({
     }
   }, [
     caseSensitiveSearch,
-    focusingReplace,
     loadingResults,
     onUpdateSearchOptions,
     regexSearch,
@@ -752,17 +758,19 @@ const LocalSearch = ({
           codeMirror={codeMirror}
           replaceQuery={replaceQuery}
           numberOfFoundItems={numberOfFoundItems}
-          focusingReplace={focusingReplace}
           navigateToNext={(direction) => {
             navigateToNextItem(direction, false)
-            setFocusingReplace(true)
+            focusReplaceInput()
           }}
           onReplaceToggle={handleOnReplaceToggle}
           onReplaceQueryChange={onReplaceQueryChange}
           onReplacementFinished={handleOnReplacementFinished}
-          onFocusSearchInput={focusSearchTextAreaInput}
+          onFocusSearchInput={() =>
+            focusSearchTextAreaInput(searchQuery.length, true)
+          }
           onReplaceClose={handleOnReplaceClose}
           onUpdateSearchOptions={onUpdateSearchOptions}
+          setReplaceTextAreaRef={setReplaceTextAreaRef}
         />
       )}
     </LocalSearchContainer>

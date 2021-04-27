@@ -646,18 +646,6 @@ const Container = styled.div`
   }
 `
 
-/* todo: [komediruzecki-14/02/2021] It's either this width manipulation and
- *  on top of content section or we need to join editor with search bar
- *  and in that case everything is scoped to content section of editor but
- *  the problem is with codemirror height attribute (set at 100%).
- *  It works normally when you scroll with mouse (stays sticky and on top) but
- *  when you focus editor and go to the last line and type down arrow - the
- *  search bar hops up and the codemirror takes over the 100% height (not good).
- *  This can be solved by using 99% or 98% of codemirror height and rest for
- *  search bar (when visible) but is not a perfect solution and does not work well
- *  for all resolutions. So for now this hack with search bar outside of content section
- *  works well for this absolute positioning.
- */
 const SearchBarContainer = styled.div`
   width: 100%;
   &.halfWidth {

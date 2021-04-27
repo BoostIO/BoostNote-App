@@ -28,7 +28,7 @@ interface LocalReplaceProps {
   replaceQuery: string
   searchOptions: SearchReplaceOptions
   numberOfFoundItems: number
-  focusingReplace: boolean
+
   navigateToNext: (direction: SearchResultNavigationDirection) => void
   onUpdateSearchOptions: (searchOptions: Partial<SearchReplaceOptions>) => void
   onReplaceToggle?: (nextState?: boolean) => void
@@ -36,6 +36,7 @@ interface LocalReplaceProps {
   onReplacementFinished?: () => void
   onFocusSearchInput?: () => void
   onReplaceClose?: () => void
+  setReplaceTextAreaRef?: (replaceTextAreaRef: HTMLTextAreaElement) => void
 }
 
 const LocalReplace = ({
@@ -43,7 +44,6 @@ const LocalReplace = ({
   replaceQuery,
   searchOptions,
   numberOfFoundItems,
-  focusingReplace,
   navigateToNext,
   onReplaceToggle,
   onReplaceQueryChange,
@@ -51,6 +51,7 @@ const LocalReplace = ({
   onFocusSearchInput,
   onReplaceClose,
   onUpdateSearchOptions,
+  setReplaceTextAreaRef,
 }: LocalReplaceProps) => {
   const replaceTextAreaRef = useRef<HTMLTextAreaElement>(null)
   const [replaceValue, setReplaceValue] = useState(replaceQuery)
@@ -81,14 +82,14 @@ const LocalReplace = ({
     }
   }, [onReplaceClose])
 
-  const focusReplaceTextAreaInput = useCallback((replaceValueLength = 0) => {
+  const focusReplaceTextAreaInput = useCallback((focusPoint = 0) => {
     if (replaceTextAreaRef.current == null) {
       return
     }
     replaceTextAreaRef.current.focus()
-    if (replaceValueLength > 0) {
-      replaceTextAreaRef.current.selectionEnd += replaceValueLength
-      replaceTextAreaRef.current.selectionStart = replaceValueLength
+    if (focusPoint > 0) {
+      replaceTextAreaRef.current.selectionEnd = focusPoint
+      replaceTextAreaRef.current.selectionStart = focusPoint
     }
   }, [])
 
@@ -215,21 +216,12 @@ const LocalReplace = ({
           event.stopPropagation()
           if (event.ctrlKey && event.shiftKey) {
             addNewlineToReplaceValue()
-          } else if (!event.repeat) {
-            // todo: [komediruzecki-13/02/2021] If we use repeat debounce should be used
-            //  could not get debounce to work with onKeyDown properly (need to debounce keyDown
-            //  but also prevent propagation on custom functionality)
-            //  original issues is that with allowing repeat and holding enter key
-            //  it would replace items fast and few seconds after holding the key it would start
-            //  entering newlines in replace text area instead of replacing following items
-            //  (probably event is fired on some re-render and is able to enter newline in text area
-            //  without this handler which stops propagation and uses different 'Enter' key logic)
+          } else {
             onReplaceCurrentItem()
           }
           break
         case 'Tab':
           if (event.shiftKey && onFocusSearchInput) {
-            // Focus on search
             event.preventDefault()
             event.stopPropagation()
             onFocusSearchInput()
@@ -294,11 +286,10 @@ const LocalReplace = ({
   )
 
   useEffect(() => {
-    if (focusingReplace) {
-      // focusReplaceTextAreaInput(replaceQuery.length)
-      focusReplaceTextAreaInput()
+    if (setReplaceTextAreaRef != null && replaceTextAreaRef.current != null) {
+      setReplaceTextAreaRef(replaceTextAreaRef.current)
     }
-  }, [focusReplaceTextAreaInput, focusingReplace, replaceQuery.length])
+  }, [replaceTextAreaRef, setReplaceTextAreaRef])
 
   return (
     <LocalReplaceContainer>
