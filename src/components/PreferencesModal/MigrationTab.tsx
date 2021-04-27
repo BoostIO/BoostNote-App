@@ -283,6 +283,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           Close settings modal and switch account via the left tab to the cloud
           space.
           <br />
+          You&apos;ll receive an email containing the coupon code and
+          instructions on how to redeem it.
+          <br />
           We hope you enjoy using it!
         </p>
         {migrationState.summary != null ? (
