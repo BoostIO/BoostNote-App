@@ -549,53 +549,55 @@ const Application = ({
             searchHistory={searchHistory}
             recentPages={historyItems}
             treeTopRows={
-              <>
-                <ButtonGroup>
-                  <Button
-                    variant='primary'
-                    iconPath={mdiTextBoxPlusOutline}
-                    id='sidebar-newdoc-btn'
-                    iconSize={16}
-                    onClick={() =>
-                      openNewDocForm(
-                        {
-                          team,
-                          parentFolderId: currentParentFolderId,
-                          workspaceId: currentWorkspaceId,
-                        },
-                        {
-                          precedingRows: [
-                            {
-                              description: `${
-                                workspacesMap.get(currentWorkspaceId || '')
-                                  ?.name
-                              }${currentPath}`,
-                            },
-                          ],
-                        }
-                      )
-                    }
-                  >
-                    Create new doc
-                  </Button>
-                  <Button
-                    variant='primary'
-                    iconPath={mdiDotsHorizontal}
-                    onClick={(event) => {
-                      event.preventDefault()
-                      popup(event, [
-                        {
-                          icon: mdiPencilBoxMultipleOutline,
-                          type: MenuTypes.Normal,
-                          label: 'Use a template',
-                          onClick: () =>
-                            openModal(<TemplatesModal />, { size: 'large' }),
-                        },
-                      ])
-                    }}
-                  />
-                </ButtonGroup>
-              </>
+              team == null ? null : (
+                <>
+                  <ButtonGroup>
+                    <Button
+                      variant='primary'
+                      iconPath={mdiTextBoxPlusOutline}
+                      id='sidebar-newdoc-btn'
+                      iconSize={16}
+                      onClick={() =>
+                        openNewDocForm(
+                          {
+                            team,
+                            parentFolderId: currentParentFolderId,
+                            workspaceId: currentWorkspaceId,
+                          },
+                          {
+                            precedingRows: [
+                              {
+                                description: `${
+                                  workspacesMap.get(currentWorkspaceId || '')
+                                    ?.name
+                                }${currentPath}`,
+                              },
+                            ],
+                          }
+                        )
+                      }
+                    >
+                      Create new doc
+                    </Button>
+                    <Button
+                      variant='primary'
+                      iconPath={mdiDotsHorizontal}
+                      onClick={(event) => {
+                        event.preventDefault()
+                        popup(event, [
+                          {
+                            icon: mdiPencilBoxMultipleOutline,
+                            type: MenuTypes.Normal,
+                            label: 'Use a template',
+                            onClick: () =>
+                              openModal(<TemplatesModal />, { size: 'large' }),
+                          },
+                        ])
+                      }}
+                    />
+                  </ButtonGroup>
+                </>
+              )
             }
             searchResults={searchResults}
             users={users}
