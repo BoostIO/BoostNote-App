@@ -10,7 +10,7 @@ import {
 } from 'electron'
 import path from 'path'
 import url from 'url'
-import { template } from './menu'
+import { getTemplateFromKeymap } from './menu'
 import { dev } from './consts'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
@@ -20,7 +20,14 @@ const MAC = process.platform === 'darwin'
 // single instance lock
 const singleInstance = app.requestSingleInstanceLock()
 
-function recreateMenu(template: MenuItemConstructorOptions[]) {
+const keymap = new Map<string, string>([
+  ['toggleGlobalSearch', 'Ctrl + P'],
+  ['toggleSplitEditMode', 'Ctrl + \\'],
+  ['togglePreviewMode', 'Ctrl + E'],
+  ['editorSaveAs', 'Ctrl + S'],
+])
+
+function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 }
@@ -59,7 +66,7 @@ function createMainWindow() {
     )
   }
 
-  recreateMenu(template)
+  applyMenuTemplate(getTemplateFromKeymap(keymap))
 
   if (MAC) {
     window.on('close', (event) => {
@@ -146,41 +153,8 @@ app.on('ready', () => {
         ? args[1].replace('Ctrl', 'Cmd')
         : args[1]
 
-    function updateTemplate(
-      template: MenuItemConstructorOptions[],
-      mainIndex: number,
-      subMenuIndex: number,
-      accelerator: string | undefined
-    ) {
-      if (
-        template != null &&
-        template[mainIndex] &&
-        template[mainIndex].submenu != null &&
-        template[mainIndex].submenu
-      ) {
-        const submenuItem = template[mainIndex].submenu
-        if (submenuItem) {
-          submenuItem[subMenuIndex].accelerator = accelerator
-        }
-      }
-    }
-
-    switch (menuItemId) {
-      case 'toggleGlobalSearch':
-        updateTemplate(template, 1, 9, newAcceleratorShortcut)
-        break
-      case 'togglePreviewMode':
-        updateTemplate(template, 2, 6, newAcceleratorShortcut)
-        break
-      case 'toggleSplitEditMode':
-        updateTemplate(template, 2, 7, newAcceleratorShortcut)
-        break
-      case 'editorSaveAs':
-        updateTemplate(template, 0, MAC ? 2 : 3, newAcceleratorShortcut)
-        break
-    }
-
-    recreateMenu(template)
+    keymap.set(menuItemId, newAcceleratorShortcut)
+    applyMenuTemplate(getTemplateFromKeymap(keymap))
   })
 
   app.on('open-url', (_event, url) => {

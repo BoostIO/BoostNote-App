@@ -150,7 +150,6 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.codeMirror.setOption('keyMap', keyMap)
     }
 
-    // Update shortcut binding
     this.codeMirror.setOption('extraKeys', this.getExtraKeys())
   }
 

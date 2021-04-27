@@ -155,9 +155,6 @@ const PreferencesModal = () => {
           return <MigrationPage storage={currentStorage} />
         }
         break
-      case 'general':
-      default:
-        return <GeneralTab />
     }
     return <GeneralTab />
   }, [tab, currentStorage])
