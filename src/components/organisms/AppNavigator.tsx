@@ -14,6 +14,7 @@ import {
   mdiPlus,
   mdiMenu,
   mdiCloudQuestion,
+  mdiCloudOffOutline,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
@@ -328,7 +329,7 @@ const TopLevelNavigator = () => {
           tooltip: 'Cloud Space',
           active: false,
           position: 'bottom',
-          icon: mdiCloudQuestion,
+          icon: mdiCloudOffOutline,
           onClick: toggleShowingCloudIntroModal,
         },
         {
