@@ -200,8 +200,8 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
               completed.
             </li>
             <li>
-              You can revieve 1 month free trial coupon for the cloud space if
-              you migrate data from a local space.
+              After migration, you will receive an 1 month free trial coupon for
+              the cloud space.
             </li>
           </ol>
         </Alert>
