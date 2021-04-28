@@ -13,7 +13,7 @@ import Button from '../../atoms/Button'
 import Spinner from '../../../../components/atoms/Spinner'
 import Icon from '../../../../components/atoms/Icon'
 import { useRouter } from '../../../lib/router'
-import { usingElectron } from '../../../lib/stores/electron'
+import { usingElectron, sendToHost } from '../../../lib/stores/electron'
 
 interface UsagePageProps {
   onUsage: (val: 'personal' | 'team') => void
@@ -106,6 +106,17 @@ const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
                     <Icon path={mdiChevronRight} />
                     <span>Go Back</span>
                   </Flexbox>
+                </Button>
+              )}
+              {usingElectron && (
+                <Button
+                  type='button'
+                  variant='transparent'
+                  onClick={() => {
+                    sendToHost('create-local-space')
+                  }}
+                >
+                  <Flexbox alignItems='center'>Create a local space</Flexbox>
                 </Button>
               )}
             </Flexbox>
