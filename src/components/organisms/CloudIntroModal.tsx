@@ -52,7 +52,8 @@ const CloudIntroModal = () => {
     } else {
       push('/app/boosthub/teams')
     }
-  }, [userInfo, push])
+    toggleShowingCloudIntroModal()
+  }, [userInfo, push, toggleShowingCloudIntroModal])
 
   const [
     showingDisabledMigrationTooltip,
@@ -257,7 +258,7 @@ const Container = styled.div`
   height: 100%;
   position: fixed;
   top: 0;
-  left: 68px;
+  left: 40px;
   bottom: 0;
   right: 0;
   z-index: 10000;
