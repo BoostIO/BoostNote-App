@@ -130,6 +130,10 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
             Migrated documents will not be counted to the document limitation of
             free plan. Please try out a cloud space today!
           </li>
+          <li>
+            After migration, you will receive an 1 month free trial coupon for
+            the cloud space.
+          </li>
         </ol>
       </Alert>
 
