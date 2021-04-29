@@ -22,6 +22,8 @@ import {
 import { SearchReplaceOptions } from '../../lib/search/search'
 import LocalSearchButton from '../atoms/search/LocalSearchButton'
 import { SearchResultItem } from '../atoms/search/SearchResultItem'
+import { usePreferences } from '../../lib/preferences'
+import { compareEventKeyWithKeymap } from '../../lib/keymap'
 
 interface LocalReplaceProps {
   codeMirror: CodeMirror.EditorFromTextArea
@@ -58,6 +60,8 @@ const LocalReplace = ({
   const [preservingCaseReplace, setPreservingCaseReplace] = useState<boolean>(
     searchOptions.preservingCaseReplace
   )
+
+  const { preferences } = usePreferences()
 
   const getNumberOfTextAreaRows = useMemo(() => {
     const replaceNumLines = replaceValue ? replaceValue.split('\n').length : 0
@@ -263,25 +267,29 @@ const LocalReplace = ({
         case 'Escape':
           handleOnReplaceClose()
           break
-        case 'f':
-        case 'F':
-          if (event.ctrlKey && onReplaceToggle) {
-            onReplaceToggle(false)
-          }
-          break
+      }
+
+      const keymap = preferences['general.keymap']
+      if (keymap == null || onReplaceToggle == null) {
+        return
+      }
+      const localSearchKeymapItem = keymap.get('toggleLocalSearch')
+      if (compareEventKeyWithKeymap(localSearchKeymapItem, event)) {
+        onReplaceToggle(false)
       }
     },
     [
-      addNewlineToReplaceValue,
-      focusReplaceTextAreaInput,
-      handleOnReplaceClose,
-      navigateToNext,
+      preferences,
       onFocusSearchInput,
-      onReplaceCurrentItem,
-      onReplaceToggle,
-      replaceQuery.length,
       getNumberOfTextAreaRows,
+      handleOnReplaceClose,
+      addNewlineToReplaceValue,
+      onReplaceCurrentItem,
       toggleCaseSensitiveReplace,
+      navigateToNext,
+      focusReplaceTextAreaInput,
+      replaceQuery.length,
+      onReplaceToggle,
     ]
   )
 

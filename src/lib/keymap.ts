@@ -1,4 +1,5 @@
 import { osName } from './platform'
+import { KeyboardEvent } from 'react'
 
 interface ModifierItem {
   ctrl?: boolean
@@ -103,6 +104,25 @@ export const defaultKeymap = new Map<string, KeymapItem>([
     },
   ],
 ])
+
+export function compareEventKeyWithKeymap(
+  keymapProps: KeymapItem | undefined,
+  event: KeyboardEvent<HTMLTextAreaElement>
+) {
+  if (keymapProps == null || keymapProps.shortcutMainStroke == null) {
+    return
+  }
+  const eventProps: KeymapItemEditableProps = {
+    key: event.key.toUpperCase(),
+    modifiers: {
+      ctrl: event.ctrlKey,
+      shift: event.shiftKey,
+      alt: event.altKey,
+    },
+    keycode: event.keyCode,
+  }
+  return areShortcutsEqual(keymapProps.shortcutMainStroke, eventProps)
+}
 
 export function createCodemirrorTypeKeymap(
   keymapProps: KeymapItemEditableProps
