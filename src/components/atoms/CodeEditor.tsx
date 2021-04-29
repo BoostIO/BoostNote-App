@@ -90,6 +90,8 @@ interface CodeEditorProps {
 class CodeEditor extends React.Component<CodeEditorProps> {
   textAreaRef = React.createRef<HTMLTextAreaElement>()
   codeMirror?: CodeMirror.EditorFromTextArea
+  prevLocalSearchShortcut?: string
+  prevLocalReplaceShortcut?: string
 
   componentDidMount() {
     const indentSize = this.props.indentSize == null ? 2 : this.props.indentSize
@@ -164,7 +166,17 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       this.codeMirror.setOption('keyMap', keyMap)
     }
 
-    this.codeMirror.setOption('extraKeys', this.getExtraKeys(keyMap))
+    const [
+      localSearchShortcut,
+      localReplaceShortcut,
+    ] = this.getCurrentSearchKeymaps()
+    if (
+      this.props.keyMap !== prevProps.keyMap ||
+      this.prevLocalSearchShortcut != localSearchShortcut ||
+      this.prevLocalReplaceShortcut != localReplaceShortcut
+    ) {
+      this.codeMirror.setOption('extraKeys', this.getExtraKeys(keyMap))
+    }
   }
 
   componentWillUnmount() {
@@ -177,15 +189,23 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     window.removeEventListener('codemirror-mode-load', this.reloadMode)
   }
 
+  getCurrentSearchKeymaps(): string[] {
+    let localSearchShortcut = this.props.getCustomKeymap('toggleLocalSearch')
+    let localReplaceShortcut = this.props.getCustomKeymap('toggleLocalReplace')
+    if (localSearchShortcut == null) {
+      localSearchShortcut = osName === 'macos' ? 'Cmd+F' : 'Ctrl+F'
+    }
+    if (localReplaceShortcut == null) {
+      localReplaceShortcut = osName === 'macos' ? 'Cmd-H' : 'Ctrl-H'
+    }
+    return [localSearchShortcut, localReplaceShortcut]
+  }
+
   getExtraKeys = (keyMapStyle: string) => {
-    let localSearchKey = this.props.getCustomKeymap('toggleLocalSearch')
-    let localReplaceKey = this.props.getCustomKeymap('toggleLocalReplace')
-    if (localSearchKey == null) {
-      localSearchKey = osName === 'macos' ? 'Cmd+F' : 'Ctrl+F'
-    }
-    if (localReplaceKey == null) {
-      localReplaceKey = osName === 'macos' ? 'Cmd-H' : 'Ctrl-H'
-    }
+    const [
+      localSearchShortcut,
+      localReplaceShortcut,
+    ] = this.getCurrentSearchKeymaps()
     const extraKeys = {
       Enter: 'newlineAndIndentContinueMarkdownList',
       Tab: 'indentMore',
@@ -198,12 +218,14 @@ class CodeEditor extends React.Component<CodeEditorProps> {
         }
       },
     }
-    extraKeys[localSearchKey] = (cm: CodeMirror.Editor) =>
+    extraKeys[localSearchShortcut] = (cm: CodeMirror.Editor) =>
       this.handleOnLocalSearchToggle(cm, true)
 
-    extraKeys[localReplaceKey] = (cm: CodeMirror.Editor) =>
+    extraKeys[localReplaceShortcut] = (cm: CodeMirror.Editor) =>
       this.handleOnLocalSearchReplaceToggle(cm, true)
 
+    this.prevLocalSearchShortcut = localSearchShortcut
+    this.prevLocalReplaceShortcut = localReplaceShortcut
     return extraKeys
   }
 
