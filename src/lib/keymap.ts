@@ -48,6 +48,19 @@ export const defaultKeymap = new Map<string, KeymapItem>([
     },
   ],
   [
+    'toggleLocalReplace',
+    {
+      shortcutMainStroke: {
+        key: 'H',
+        keycode: 72,
+        modifiers: {
+          ctrl: true,
+        },
+      },
+      description: 'Toggles local editor replace modal dialog',
+    },
+  ],
+  [
     'editorSaveAs',
     {
       shortcutMainStroke: {
