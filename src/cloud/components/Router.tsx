@@ -57,7 +57,7 @@ import Toast from '../../shared/components/organisms/Toast'
 import Dialog from '../../shared/components/organisms/Dialog/Dialog'
 import ContextMenu from '../../shared/components/molecules/ContextMenu'
 import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
-import V2Modal from '../../shared/components/organisms/Modal'
+import CloudModal from './organisms/CloudModal'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -248,7 +248,7 @@ const Router = () => {
 
                 <GlobalStyle />
                 <CodeMirrorStyle />
-                <V2Modal />
+                <CloudModal />
                 <Toast />
                 <SettingsComponent />
                 <ContextMenu />

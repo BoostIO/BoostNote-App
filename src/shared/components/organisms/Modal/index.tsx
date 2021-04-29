@@ -4,12 +4,11 @@ import cc from 'classcat'
 import { useModal } from '../../../lib/stores/modal'
 import { isActiveElementAnInput } from '../../../lib/dom'
 import { useGlobalKeyDownHandler } from '../../../lib/keyboard'
-import { usePathnameChangeEffect } from '../../../../cloud/lib/router'
 import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
 
 const Modal = () => {
-  const { modals, closeAllModals, closeLastModal } = useModal()
+  const { modals, closeLastModal } = useModal()
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -19,7 +18,6 @@ const Modal = () => {
     }
   }, [closeLastModal])
   useGlobalKeyDownHandler(keydownHandler)
-  usePathnameChangeEffect(closeAllModals)
 
   if (modals.length === 0) return null
 
