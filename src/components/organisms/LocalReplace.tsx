@@ -136,10 +136,16 @@ const LocalReplace = ({
         markerRange.from,
         markerRange.to
       )
+
       if (foundMarkText.length >= 1 && preservingCaseReplace) {
-        // if first character was upper case - set the replacement to upper case too
+        const foundItemFirstLetterIsUpperCase =
+          foundMarkText.charAt(0) != foundMarkText.charAt(0).toLowerCase()
+        const preservedFirstCharacterCase = foundItemFirstLetterIsUpperCase
+          ? replaceQuery.charAt(0).toUpperCase()
+          : replaceQuery.charAt(0).toLowerCase()
+        // if first character was upper case - set the replacement to upper case too and vice versa
         codeMirror.replaceRange(
-          foundMarkText.charAt(0) + replaceQuery.substr(1),
+          preservedFirstCharacterCase + replaceQuery.substr(1),
           markerRange.from,
           markerRange.to
         )
