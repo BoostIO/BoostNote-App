@@ -30,6 +30,8 @@ import LocalReplace from './LocalReplace'
 import styled from '../../lib/styled/styled'
 import LocalSearchButton from '../atoms/search/LocalSearchButton'
 import { SearchResultItem } from '../atoms/search/SearchResultItem'
+import { compareEventKeyWithKeymap } from '../../lib/keymap'
+import { usePreferences } from '../../lib/preferences'
 
 const LOCAL_SEARCH_MAX_RESULTS = 10000
 
@@ -76,6 +78,8 @@ const LocalSearch = ({
   )
   const [numberOfFoundItems, setNumberOfFoundItems] = useState<number>(0)
   const [searchResultError, setSearchResultError] = useState<boolean>(false)
+
+  const { preferences } = usePreferences()
 
   const focusReplaceInput = useCallback((focusPoint = 0) => {
     if (replaceTextAreaRef.current != null) {
@@ -524,14 +528,6 @@ const LocalSearch = ({
             navigateToNextItem('next')
           }
           break
-        case 'h':
-        case 'H':
-          if (event.ctrlKey && onReplaceToggle) {
-            event.preventDefault()
-            event.stopPropagation()
-            onReplaceToggle(true)
-          }
-          break
         case 'x':
         case 'X':
           if (event.altKey) {
@@ -573,15 +569,26 @@ const LocalSearch = ({
         case 'Escape':
           onSearchClose()
           break
-        case 'F':
-        case 'f':
-          if (event.ctrlKey && onReplaceToggle) {
-            onReplaceToggle(false)
-          }
-          break
+      }
+
+      const keymap = preferences['general.keymap']
+      if (keymap == null || onReplaceToggle == null) {
+        return
+      }
+      const localSearchKeymapItem = keymap.get('toggleLocalSearch')
+      if (compareEventKeyWithKeymap(localSearchKeymapItem, event)) {
+        onReplaceToggle(false)
+      }
+
+      const localReplaceKeymapItem = keymap.get('toggleLocalReplace')
+      if (compareEventKeyWithKeymap(localReplaceKeymapItem, event)) {
+        event.preventDefault()
+        event.stopPropagation()
+        onReplaceToggle(true)
       }
     },
     [
+      preferences,
       onReplaceToggle,
       showingReplace,
       navigateToNextItem,
@@ -591,6 +598,7 @@ const LocalSearch = ({
       toggleRegexSearch,
       toggleCaseSensitiveSearch,
       focusReplaceInput,
+      replaceQuery.length,
     ]
   )
 
