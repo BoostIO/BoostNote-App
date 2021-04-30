@@ -131,6 +131,7 @@ const Topbar: AppComponent<TopbarProps> = ({
                 active={breadcrumb.active}
                 emoji={breadcrumb.emoji}
                 defaultIcon={breadcrumb.icon}
+                minimized={i !== breadcrumbs.length - 1}
                 onContextMenu={(event: React.MouseEvent) => {
                   event.preventDefault()
                   event.stopPropagation()
