@@ -7,6 +7,7 @@ import { SerializedShareLink } from './shareLink'
 
 export interface SerializableDocProps {
   id: string
+  title: string
   emoji?: string
   parentFolderId?: string
   folderPathname: string

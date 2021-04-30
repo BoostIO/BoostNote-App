@@ -83,7 +83,7 @@ const DynamicExports = ({ currentDoc, editorRef }: DocContextMenuProps) => {
       const previewStyle = defaultPreviewStyle({
         theme: selectTheme(settings['general.theme']),
       })
-      const pdfName = `${filenamifyTitle(updatedDoc.head.title)}.pdf`
+      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
       const htmlString = await convertMarkdownToPdfExportableHtml(
         updatedDoc.head.content,
         settings,

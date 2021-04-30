@@ -8,7 +8,6 @@ import {
   StyledHeaderTitle,
   StyledHeaderDescription,
   MarkdownWrapper,
-  StyledRevisionTitle,
 } from './styled'
 import CodeMirrorEditor from '../../../../../../lib/editor/components/CodeMirrorEditor'
 
@@ -68,7 +67,6 @@ const RevisionModalDetail = ({
           </CustomButton>
         )}
       </StyledHeader>
-      <StyledRevisionTitle>{rev.title}</StyledRevisionTitle>
       <MarkdownWrapper>
         <CodeMirrorEditor
           config={{

@@ -17,7 +17,7 @@ export function useCloudUI() {
   const { messageBox } = useDialog()
   const {
     updateFolder,
-    updateDocEmoji,
+    updateDoc,
     createFolder,
     createDoc,
     deleteWorkspaceApi,
@@ -65,27 +65,23 @@ export function useCloudUI() {
   )
 
   const openRenameDocForm = useCallback(
-    (doc: SerializedDoc, updateTitle?: (title: string) => void) => {
+    (doc: SerializedDoc) => {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
-          defaultInputValue={doc.head?.title}
+          defaultInputValue={doc.title}
           defaultEmoji={doc.emoji}
           placeholder='Doc title'
           submitButtonProps={{
             label: 'Update',
           }}
-          inputIsDisabled={updateTitle == null}
           onSubmit={async (inputValue: string, emoji?: string) => {
-            if (updateTitle != null) {
-              await Promise.all([
-                updateDocEmoji(doc, emoji),
-                updateTitle(inputValue),
-              ])
-            } else {
-              //fix backend
-              await updateDocEmoji(doc, emoji)
-            }
+            await updateDoc(doc, {
+              workspaceId: doc.workspaceId,
+              parentFolderId: doc.parentFolderId,
+              title: inputValue,
+              emoji: emoji == null ? null : emoji,
+            })
             closeLastModal()
           }}
         />,
@@ -96,7 +92,7 @@ export function useCloudUI() {
         }
       )
     },
-    [openModal, closeLastModal, updateDocEmoji]
+    [openModal, closeLastModal, updateDoc]
   )
 
   const openNewFolderForm = useCallback(
