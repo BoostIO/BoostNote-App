@@ -4,9 +4,11 @@ import styled from '../../../../lib/styled'
 import Icon from '../../../atoms/Icon'
 import cc from 'classcat'
 import { textOverflow } from '../../../../../lib/styled/styleFunctions'
+import WithTooltip from '../../../atoms/WithTooltip'
 
 export interface TopbarBreadcrumbItemProps {
   id: string
+  minimized?: boolean
   className?: string
   label: string
   defaultIcon?: string
@@ -22,6 +24,7 @@ const TopbarBreadcrumb = ({
   id,
   className,
   label,
+  minimized,
   defaultIcon,
   emoji,
   active,
@@ -54,7 +57,8 @@ const TopbarBreadcrumb = ({
       id={id}
       className={cc([
         'topbar__breadcrumb',
-        active && 'topbar__breadcrumb__active',
+        active && 'topbar__breadcrumb--active',
+        minimized && 'topbar__breadcrumb--minimized',
         className,
       ])}
       onContextMenu={onContextMenu}
@@ -75,6 +79,21 @@ const TopbarBreadcrumb = ({
   )
 }
 
+const WrappedTopbarBreadcrumb = ({
+  minimized,
+  ...props
+}: TopbarBreadcrumbItemProps) => {
+  if (minimized) {
+    return (
+      <WithTooltip tooltip={props.label} side='bottom'>
+        <TopbarBreadcrumb {...props} minimized={minimized} />
+      </WithTooltip>
+    )
+  }
+
+  return <TopbarBreadcrumb {...props} minimized={minimized} />
+}
+
 const Container = styled.a`
   display: flex;
   align-items: center;
@@ -90,15 +109,18 @@ const Container = styled.a`
   cursor: pointer;
   text-decoration: none !important;
   min-width: 20px;
-  max-width: 160px;
   overflow: hidden;
 
   .topbar__breadcrumb__label {
     ${textOverflow}
   }
 
-  &.topbar__breadcrumb__active {
+  &.topbar__breadcrumb--active {
     color: ${({ theme }) => theme.colors.text.primary};
+  }
+
+  &.topbar__breadcrumb--minimized {
+    max-width: 160px;
   }
 
   .topbar__breadcrumb__icon {
@@ -118,4 +140,4 @@ const Container = styled.a`
   }
 `
 
-export default TopbarBreadcrumb
+export default WrappedTopbarBreadcrumb
