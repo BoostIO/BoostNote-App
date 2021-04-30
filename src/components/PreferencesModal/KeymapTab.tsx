@@ -33,7 +33,9 @@ const KeymapTab = () => {
       <KeymapHeaderSection>
         <SectionHeader>{t('preferences.keymap')}</SectionHeader>
         <SectionResetKeymap>
-          <ButtonContainer onClick={() => resetKeymap()}>Reset</ButtonContainer>
+          <KeymapItemButton onClick={() => resetKeymap()}>
+            Restore
+          </KeymapItemButton>
         </SectionResetKeymap>
       </KeymapHeaderSection>
       <KeymapItemList>
@@ -71,8 +73,9 @@ const SectionResetKeymap = styled.div`
   align-self: center;
 `
 
-export const ButtonContainer = styled.button`
-  width: 92px;
+export const KeymapItemButton = styled.button`
+  min-width: 88px;
+  max-width: 120px;
   height: 32px;
   font-size: 15px;
   display: flex;
@@ -81,29 +84,19 @@ export const ButtonContainer = styled.button`
 
   cursor: pointer;
 
-  background: #214953;
-  border: 1px solid #214953;
+  background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
+  border: 1px solid ${({ theme }) => theme.borderColor};
   border-radius: 4px;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
+  color: ${({ theme }) => theme.primaryButtonLabelColor};
+
+  text-align: center;
+  padding: 5px;
+
   &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
-  }
-
-  &:active,
-  &.active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
-  }
-
-  &.disabled,
-  &:disabled {
-    color: ${({ theme }) => theme.disabledUiTextColor};
-    background: #12292e;
-    border: 1px solid #214953;
-    border-radius: 4px;
-    width: 88px;
-    height: 32px;
+    border-color: ${({ theme }) => theme.borderColor};
+    background: ${({ theme }) => theme.primaryButtonHoverBackgroundColor};
   }
 `
 

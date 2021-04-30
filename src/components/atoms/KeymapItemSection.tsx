@@ -13,7 +13,7 @@ import {
 import { inputStyle } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import { useToast } from '../../lib/toast'
-import { ButtonContainer } from '../PreferencesModal/KeymapTab'
+import { KeymapItemButton } from '../PreferencesModal/KeymapTab'
 
 const invalidShortcutInputs = [' ']
 const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift']
@@ -131,14 +131,17 @@ const KeymapItemSection = ({
   }, [keymapKey, removeKeymap])
 
   const shortcutString = useMemo(() => {
-    return currentShortcut != null
-      ? getGenericShortcutString(currentShortcut)
+    return currentShortcut != null && currentKeymapItem != null
+      ? getGenericShortcutString(currentKeymapItem)
       : ''
-  }, [currentShortcut])
+  }, [currentKeymapItem, currentShortcut])
   return (
     <KeymapItemSectionContainer>
       <div>{description}</div>
       <KeymapItemInputSection>
+        {currentShortcut != null && currentKeymapItem != null && (
+          <ShortcutItemStyle>{shortcutString}</ShortcutItemStyle>
+        )}
         {changingShortcut && (
           <StyledInput
             className={cc([inputError && 'error'])}
@@ -149,29 +152,43 @@ const KeymapItemSection = ({
             onKeyDown={fetchInputShortcuts}
           />
         )}
-
-        <InputKeymapChooser onClick={toggleChangingShortcut}>
+        <KeymapItemButton onClick={toggleChangingShortcut}>
           {currentShortcut == null
             ? 'Assign'
             : changingShortcut
             ? 'Apply'
-            : shortcutString}
-        </InputKeymapChooser>
+            : 'Change'}
+        </KeymapItemButton>
         {changingShortcut && (
-          <ButtonContainer onClick={handleCancelKeymapChange}>
+          <KeymapItemButton onClick={handleCancelKeymapChange}>
             Cancel
-          </ButtonContainer>
+          </KeymapItemButton>
         )}
 
         {currentShortcut != null && !changingShortcut && (
-          <ButtonContainer onClick={handleRemoveKeymap}>
+          <KeymapItemButton onClick={handleRemoveKeymap}>
             Un-assign
-          </ButtonContainer>
+          </KeymapItemButton>
         )}
       </KeymapItemInputSection>
     </KeymapItemSectionContainer>
   )
 }
+
+const ShortcutItemStyle = styled.div`
+  min-width: 88px;
+  max-width: 120px;
+  height: 32px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
+  color: ${({ theme }) => theme.primaryButtonLabelColor};
+  border: 1px solid ${({ theme }) => theme.borderColor};
+  border-radius: 4px;
+`
 
 const StyledInput = styled.input`
   ${inputStyle};
@@ -181,32 +198,6 @@ const StyledInput = styled.input`
 
   &.error {
     border: 1px solid red;
-  }
-`
-
-const InputKeymapChooser = styled.button`
-  min-width: 88px;
-  max-width: 120px;
-  height: 32px;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  background: #214953;
-  border: 1px solid #214953;
-  border-radius: 4px;
-
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
-
-  text-align: center;
-  padding: 5px;
-
-  &:hover {
-    background: #2a5c69;
   }
 `
 
