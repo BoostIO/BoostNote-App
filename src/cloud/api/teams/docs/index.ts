@@ -37,6 +37,8 @@ export async function createDoc(
 export interface UpdateDocRequestBody {
   workspaceId: string
   parentFolderId?: string
+  title?: string
+  emoji?: string | null
 }
 
 export interface UpdateDocResponseBody {

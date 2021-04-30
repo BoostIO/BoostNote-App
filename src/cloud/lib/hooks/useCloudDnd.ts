@@ -56,6 +56,8 @@ export function useCloudDnd() {
         const doc = draggedResource.current.result
         updateDoc(doc, {
           workspaceId: workspaceId,
+          title: doc.title,
+          emoji: doc.emoji,
         })
       }
     },

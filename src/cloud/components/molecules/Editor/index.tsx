@@ -120,8 +120,6 @@ const Editor = ({
   const [editorLayout, setEditorLayout] = useState<LayoutMode>(
     preferences.lastUsedLayout
   )
-  const [title, setTitle] = useState(getDocTitle(doc))
-  const previousTitle = useRef<string>()
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
   const { state, push } = useRouter()
@@ -177,13 +175,6 @@ const Editor = ({
     id: doc.id,
     userInfo,
   })
-
-  useEffect(() => {
-    if (previousTitle.current !== doc.head?.title) {
-      setTitle(getDocTitle(doc))
-      previousTitle.current = doc.head?.title
-    }
-  }, [doc])
 
   const docIsNew = !!state?.new
   useEffect(() => {
@@ -277,42 +268,6 @@ const Editor = ({
       setInitialLoadDone(true)
     }
   }, [connState])
-
-  const titleChangeCallback = useCallback(
-    (newTitle: string) => {
-      if (realtime == null) {
-        return
-      }
-
-      const realtimeTitle = realtime.doc.getText('title') as YText
-      // TODO: switch to delta diff implementation
-      realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, newTitle)
-      //--------
-    },
-    [realtime]
-  )
-
-  useEffect(() => {
-    if (realtime == null) {
-      return
-    }
-
-    const titleYText = realtime.doc.getText('title') as YText
-    const realtimeTitle = titleYText.toString()
-    setTitle(realtimeTitle)
-
-    titleYText.observe((textEvent, _transac) => {
-      // TODO: switch to delta diff implementation
-      const delta = textEvent.delta[0]
-      if (delta == null || delta['insert'] == null) {
-        return setTitle('')
-      }
-      setTitle(delta['insert'])
-      //--------
-    })
-    return
-  }, [realtime, setTitle])
 
   useEffect(() => {
     suggestionsRef.current = Array.from(docsMap.values()).map((doc) => {
@@ -447,14 +402,9 @@ const Editor = ({
       if (editorRef.current == null || realtime == null) {
         return
       }
-      setTitle(template.title)
-      const realtimeTitle = realtime.doc.getText('title') as YText
-      // TODO: switch to delta diff implementation
-      realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, template.title)
       editorRef.current.setValue(template.content)
     },
-    [setTitle, realtime]
+    [realtime]
   )
 
   const { settings } = useSettings()
@@ -513,7 +463,6 @@ const Editor = ({
       }
       const realtimeTitle = realtime.doc.getText('title') as YText
       realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, rev.title)
       setEditorRefContent(rev.content)
     },
     [realtime, setEditorRefContent]
@@ -541,7 +490,7 @@ const Editor = ({
         const current = `${location.protocol}//${location.host}`
         const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
         embedMap.set(doc.id, {
-          title: doc.head.title,
+          title: doc.title,
           content: doc.head.content,
           link,
         })
@@ -618,11 +567,11 @@ const Editor = ({
       {
         pageDoc: {
           ...doc,
-          head: { ...(doc.head || {}), title },
+          head: { ...(doc.head || {}) },
         } as SerializedDoc,
       },
       openRenameFolderForm,
-      (doc) => openRenameDocForm(doc, titleChangeCallback),
+      openRenameDocForm,
       openNewDocForm,
       openNewFolderForm,
       openWorkspaceEditForm,
@@ -636,11 +585,9 @@ const Editor = ({
     foldersMap,
     workspacesMap,
     doc,
-    title,
     push,
     openRenameDocForm,
     openRenameFolderForm,
-    titleChangeCallback,
     openNewFolderForm,
     openNewDocForm,
     deleteOrArchiveDoc,
@@ -812,9 +759,7 @@ const Editor = ({
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
             presence={{ user: userInfo, users: otherUsers, editorLayout }}
-            openRenameDocForm={() =>
-              openRenameDocForm(doc, titleChangeCallback)
-            }
+            openRenameDocForm={() => openRenameDocForm(doc)}
             sendingRename={sendingMap.has(doc.id)}
           />
         ) : null,

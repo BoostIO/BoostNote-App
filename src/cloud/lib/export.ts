@@ -46,7 +46,7 @@ export const exportAsHtmlFile = async (
     .use(rehypeRaw)
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeDocument, {
-      title: doc.head.title,
+      title: doc.title,
       style: previewStyle,
       css: 'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css',
       meta: { keywords: (doc.tags || []).map(prop('text')).join() },
@@ -57,7 +57,7 @@ export const exportAsHtmlFile = async (
 
   downloadString(
     file.toString(),
-    `${filenamifyTitle(doc.head.title)}.html`,
+    `${filenamifyTitle(doc.title)}.html`,
     'text/html'
   )
 }
@@ -75,7 +75,7 @@ export const exportAsMarkdownFile = async (
     content =
       [
         '---',
-        `title: "${doc.head!.title}"`,
+        `title: "${doc.title}"`,
         `tags: "${(doc.tags || []).map(prop('text')).join()}"`,
         '---',
         '',
@@ -83,11 +83,7 @@ export const exportAsMarkdownFile = async (
       ].join('\n') + content
   }
 
-  downloadString(
-    content,
-    `${filenamifyTitle(doc.head.title)}.md`,
-    'text/markdown'
-  )
+  downloadString(content, `${filenamifyTitle(doc.title)}.md`, 'text/markdown')
 }
 
 const fetchCorrectMdThemeName = (theme: string) => {
