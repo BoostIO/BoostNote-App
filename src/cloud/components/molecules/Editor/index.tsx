@@ -117,7 +117,9 @@ const Editor = ({
   const editorRef = useRef<CodeMirror.Editor | null>(null)
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const fileUploadHandlerRef = useRef<OnFileCallback>()
-  const [editorLayout, setEditorLayout] = useState<LayoutMode>('preview')
+  const [editorLayout, setEditorLayout] = useState<LayoutMode>(
+    preferences.lastUsedLayout
+  )
   const [title, setTitle] = useState(getDocTitle(doc))
   const previousTitle = useRef<string>()
   const [editorContent, setEditorContent] = useState('')
