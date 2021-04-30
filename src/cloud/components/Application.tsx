@@ -865,6 +865,16 @@ function mapTree(
       onDrop: () => dropInWorkspace(wp.id),
       controls: [
         {
+          icon: mdiFilePlusOutline,
+          onClick: undefined,
+          placeholder: 'Doc title..',
+          create: (title: string) =>
+            createDoc(team, {
+              workspaceId: wp.id,
+              title,
+            }),
+        },
+        {
           icon: mdiFolderPlusOutline,
           onClick: undefined,
           placeholder: 'Folder name..',
@@ -873,16 +883,6 @@ function mapTree(
               workspaceId: wp.id,
               description: '',
               folderName,
-            }),
-        },
-        {
-          icon: mdiFilePlusOutline,
-          onClick: undefined,
-          placeholder: 'Doc title..',
-          create: (title: string) =>
-            createDoc(team, {
-              workspaceId: wp.id,
-              title,
             }),
         },
       ],
@@ -938,6 +938,17 @@ function mapTree(
       dropAround: true,
       controls: [
         {
+          icon: mdiFilePlusOutline,
+          onClick: undefined,
+          placeholder: 'Doc title..',
+          create: (title: string) =>
+            createDoc(team, {
+              parentFolderId: folder.id,
+              workspaceId: folder.workspaceId,
+              title,
+            }),
+        },
+        {
           icon: mdiFolderPlusOutline,
           onClick: undefined,
           placeholder: 'Folder name..',
@@ -947,17 +958,6 @@ function mapTree(
               workspaceId: folder.workspaceId,
               description: '',
               folderName,
-            }),
-        },
-        {
-          icon: mdiFilePlusOutline,
-          onClick: undefined,
-          placeholder: 'Doc title..',
-          create: (title: string) =>
-            createDoc(team, {
-              parentFolderId: folder.id,
-              workspaceId: folder.workspaceId,
-              title,
             }),
         },
       ],
