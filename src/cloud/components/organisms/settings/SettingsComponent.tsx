@@ -11,16 +11,7 @@ import {
 import { baseIconStyle } from '../../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
 import Icon from '../../atoms/IconMdi'
-import {
-  mdiClose,
-  mdiDomain,
-  mdiAccountGroup,
-  mdiProfessionalHexagon,
-  mdiThemeLightDark,
-  mdiFlash,
-  mdiKey,
-  mdiAccountCircleOutline,
-} from '@mdi/js'
+import { mdiClose, mdiDomain, mdiAccountCircleOutline } from '@mdi/js'
 import {
   StyledModals,
   StyledModalsBackground,
@@ -43,6 +34,7 @@ import IntegrationsTab from './IntegrationsTab'
 import PreferencesTab from './PreferencesTab'
 import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
+import IconMdi from '../../atoms/IconMdi'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -140,22 +132,26 @@ const SettingsComponent = () => {
       <StyledModalsContainer className='fullscreen'>
         <StyledSideNavModal>
           <TabNav ref={menuRef}>
-            <Subtitle>Account</Subtitle>
+            <Subtitle>
+              <IconMdi path={mdiAccountCircleOutline} size={13} />
+              Account
+            </Subtitle>
             <TabButton
               label={t('settings.personalInfo')}
               active={settingsTab === 'personalInfo'}
               tab='personalInfo'
               id='settings-personalInfoTab-btn'
-              prependIcon={mdiAccountCircleOutline}
             />
             <TabButton
               label={t('settings.preferences')}
               active={settingsTab === 'preferences'}
               tab='preferences'
               id='settings-personalInfoTab-btn'
-              prependIcon={mdiThemeLightDark}
             />
-            <Subtitle>Space</Subtitle>
+            <Subtitle>
+              <IconMdi path={mdiDomain} size={13} />
+              Space
+            </Subtitle>
             {currentUserPermissions != null && (
               <>
                 <TabButton
@@ -163,28 +159,24 @@ const SettingsComponent = () => {
                   active={settingsTab === 'teamInfo'}
                   tab='teamInfo'
                   id='settings-teamInfoTab-btn'
-                  prependIcon={mdiDomain}
                 />
                 <TabButton
                   label={t('settings.teamMembers')}
                   active={settingsTab === 'teamMembers'}
                   tab='teamMembers'
                   id='settings-teamMembersTab-btn'
-                  prependIcon={mdiAccountGroup}
                 />
                 <TabButton
                   label={t('settings.integrations')}
                   active={settingsTab === 'integrations'}
                   tab='integrations'
                   id='settings-integrationsTab-btn'
-                  prependIcon={mdiFlash}
                 />
                 <TabButton
                   label='API'
                   active={settingsTab === 'api'}
                   tab='api'
                   id='settings-apiTab-btn'
-                  prependIcon={mdiKey}
                 />
               </>
             )}
@@ -199,7 +191,6 @@ const SettingsComponent = () => {
                       active={settingsTab === 'teamUpgrade'}
                       tab='teamUpgrade'
                       id='settings-teamUpgradeTab-btn'
-                      prependIcon={mdiProfessionalHexagon}
                     />
                   ) : (
                     <TabButton
@@ -207,7 +198,6 @@ const SettingsComponent = () => {
                       active={settingsTab === 'teamSubscription'}
                       tab='teamSubscription'
                       id='settings-teamBillingTab-btn'
-                      prependIcon={mdiProfessionalHexagon}
                     />
                   )}
                   <TeamSubLimit />
@@ -227,11 +217,10 @@ const SettingsComponent = () => {
 
 const TabNav = styled.nav`
   width: 250px;
-  padding: 0;
+  padding: ${({ theme }) => theme.space.xsmall}px;
   overflow: hidden auto;
   margin-right: 0;
   margin-bottom: 0;
-  padding: ${({ theme }) => theme.space.xsmall}px 0;
 
   hr {
     height: 1px;
@@ -242,13 +231,16 @@ const TabNav = styled.nav`
 `
 
 const Subtitle = styled.div`
+  display: flex;
+  align-items: center;
   margin: ${({ theme }) => theme.space.default}px
-    ${({ theme }) => theme.space.default}px
-    ${({ theme }) => theme.space.xsmall}px;
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.large}px;
-  text-transform: uppercase;
-  font-weight: 500;
+    ${({ theme }) => theme.space.small}px ${({ theme }) => theme.space.xsmall}px;
+  color: ${({ theme }) => theme.subtleTextColor};
+  font-size: ${({ theme }) => theme.fontSizes.default}px;
+
+  svg {
+    margin-right: ${({ theme }) => theme.space.xxsmall}px;
+  }
 `
 
 const TabContent = styled.div`
