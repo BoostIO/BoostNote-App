@@ -286,6 +286,11 @@ const Container = styled.div`
     }
   }
   .control-link {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 30px;
+    margin-left: 40px;
     color: ${({ theme }) => theme.uiTextColor};
     &:hover {
       color: ${({ theme }) => theme.textColor};
