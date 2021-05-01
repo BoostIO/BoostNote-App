@@ -418,7 +418,7 @@ const Container = styled.div`
 
   .sidebar__header {
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
-      ${({ theme }) => theme.sizes.spaces.xsm}px 0
+      ${({ theme }) => theme.sizes.spaces.df}px 0
       ${({ theme }) => theme.sizes.spaces.df}px;
   }
 

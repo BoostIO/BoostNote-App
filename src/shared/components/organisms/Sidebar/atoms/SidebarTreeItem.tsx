@@ -155,7 +155,7 @@ const Container = styled.div<{ depth: number }>`
     flex: 0 0 auto;
     justify-content: flex-end;
     position: relative;
-    padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     align-items: center;
     flex-shrink: 0;
 
@@ -179,7 +179,7 @@ const Container = styled.div<{ depth: number }>`
     flex: 1 1 auto;
     display: flex;
     align-items: center;
-    padding-left: ${({ depth }) => 13 + (depth as number) * 10}px;
+    padding-left: ${({ depth }) => 18 + (depth as number) * 10}px;
   }
 
   a[href].sidebar__tree__item__label {
