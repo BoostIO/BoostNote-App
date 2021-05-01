@@ -95,6 +95,7 @@ const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
         {tree.length > 0 && (
           <Button
             variant='icon'
+            size='sm'
             className='sidebar__tree__viewbtn'
             key={`tree__control__categories`}
             iconPath={mdiDotsHorizontal}
@@ -423,7 +424,7 @@ const Container = styled.div`
   }
 
   .sidebar__tree__viewbtn {
-    width: 32px;
+    width: 24px;
   }
 
   .sidebar__tree__wrapper {
