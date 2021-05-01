@@ -2,17 +2,15 @@ import React, { useCallback } from 'react'
 import styled from '../../../lib/styled'
 import { SettingsTab, useSettings } from '../../../lib/stores/settings'
 import cc from 'classcat'
-import IconMdi from '../../atoms/IconMdi'
 
 interface TabButtonProps {
   label: string
   active: boolean
   tab: SettingsTab
   id?: string
-  prependIcon: string
 }
 
-const TabButton = ({ label, tab, active, id, prependIcon }: TabButtonProps) => {
+const TabButton = ({ label, tab, active, id }: TabButtonProps) => {
   const { openSettingsTab } = useSettings()
   const onClickHandler = useCallback(() => {
     openSettingsTab(tab)
@@ -24,9 +22,6 @@ const TabButton = ({ label, tab, active, id, prependIcon }: TabButtonProps) => {
       className={cc([active && 'active'])}
       id={id}
     >
-      <span className='icon'>
-        <IconMdi path={prependIcon} size={20} />
-      </span>
       <span className='label'>{label}</span>
     </StyledButton>
   )
@@ -39,10 +34,11 @@ const StyledButton = styled.button`
   align-items: center;
   width: 100%;
   padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
+    ${({ theme }) => theme.space.medium}px;
   background-color: transparent;
   border: none;
-  color: ${({ theme }) => theme.subtleTextColor};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.baseTextColor};
   cursor: pointer;
 
   .icon {
