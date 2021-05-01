@@ -554,6 +554,7 @@ const Application = ({
                   <ButtonGroup>
                     <Button
                       variant='primary'
+                      size='sm'
                       iconPath={mdiTextBoxPlusOutline}
                       id='sidebar-newdoc-btn'
                       iconSize={16}
@@ -581,6 +582,7 @@ const Application = ({
                     </Button>
                     <Button
                       variant='primary'
+                      size='sm'
                       iconPath={mdiDotsHorizontal}
                       onClick={(event) => {
                         event.preventDefault()
