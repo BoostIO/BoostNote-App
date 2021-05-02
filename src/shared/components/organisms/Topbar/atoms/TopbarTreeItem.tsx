@@ -100,10 +100,6 @@ const Container = styled.div<{ depth: number }>`
   white-space: nowrap;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
-  &.topbar__tree__item {
-    border-radius: 0;
-  }
-
   .topbar__tree__item__wrapper {
     width: 100%;
     flex: 1 1 auto;
@@ -142,7 +138,6 @@ const Container = styled.div<{ depth: number }>`
     padding-right: 0 !important;
   }
 
-  border-radius: ${({ theme }) => theme.borders.radius}px;
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.tertiary};
   }
