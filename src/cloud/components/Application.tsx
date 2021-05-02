@@ -135,6 +135,7 @@ import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
 import ButtonGroup from '../../shared/components/atoms/ButtonGroup'
 import Button from '../../shared/components/atoms/Button'
 import TemplatesModal from './organisms/Modal/contents/TemplatesModal'
+import { CreateWorkspaceRequestBody } from '../api/teams/workspaces'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -245,6 +246,7 @@ const Application = ({
   const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useCloudDnd()
   const {
     sendingMap: treeSendingMap,
+    createWorkspace,
     createDoc,
     createFolder,
     toggleDocArchive,
@@ -273,6 +275,7 @@ const Application = ({
       openModal,
       toggleDocBookmark,
       toggleFolderBookmark,
+      createWorkspace,
       deleteWorkspace,
       toggleDocArchive,
       deleteFolder,
@@ -303,6 +306,7 @@ const Application = ({
     openModal,
     toggleDocBookmark,
     toggleFolderBookmark,
+    createWorkspace,
     deleteWorkspace,
     toggleDocArchive,
     deleteFolder,
@@ -808,6 +812,14 @@ function mapTree(
     id: string,
     bookmarked: boolean
   ) => void,
+  createWorkspace: (
+    team: SerializedTeam,
+    body: CreateWorkspaceRequestBody,
+    options: {
+      skipRedirect?: boolean
+      afterSuccess?: (workspace: SerializedWorkspace) => void
+    }
+  ) => void,
   deleteWorkspace: (wp: SerializedWorkspace) => void,
   toggleDocArchive: (
     teamId: string,
@@ -847,7 +859,13 @@ function mapTree(
     getMapValues(workspacesMap),
   ]
 
+  let personalWorkspace: SerializedWorkspace | undefined
   workspaces.forEach((wp) => {
+    if (wp.personal) {
+      personalWorkspace = wp
+      return
+    }
+
     const href = `${process.env.BOOST_HUB_BASE_URL}${getWorkspaceHref(
       wp,
       team,
@@ -1143,6 +1161,90 @@ function mapTree(
       },
     ],
   })
+  tree.push({
+    label: 'Private',
+    shrink: 2,
+    rows:
+      personalWorkspace != null
+        ? arrayItems
+            .filter((item) => item.parentId === personalWorkspace!.id)
+            .reduce((acc, val) => {
+              acc.push({
+                ...val,
+                depth: 0,
+                rows: buildChildrenNavRows(val.children, 1, items),
+              })
+              return acc
+            }, [] as SidebarTreeChildRow[])
+        : [],
+    controls: [
+      {
+        icon: mdiFilePlusOutline,
+        onClick: undefined,
+        placeholder: 'Doc title..',
+        create: async (title: string) => {
+          if (personalWorkspace == null) {
+            return createWorkspace(
+              team,
+              {
+                personal: true,
+                name: 'Private',
+                permissions: [],
+                public: false,
+              },
+              {
+                skipRedirect: true,
+                afterSuccess: (wp) =>
+                  createDoc(team, {
+                    workspaceId: wp.id,
+                    title,
+                  }),
+              }
+            )
+          }
+
+          return createDoc(team, {
+            workspaceId: personalWorkspace!.id,
+            title,
+          })
+        },
+      },
+      {
+        icon: mdiFolderPlusOutline,
+        onClick: undefined,
+        placeholder: 'Folder name..',
+        create: async (folderName: string) => {
+          if (personalWorkspace == null) {
+            return createWorkspace(
+              team,
+              {
+                personal: true,
+                name: 'Private',
+                permissions: [],
+                public: false,
+              },
+              {
+                skipRedirect: true,
+                afterSuccess: (wp) =>
+                  createFolder(team, {
+                    workspaceId: wp.id,
+                    description: '',
+                    folderName,
+                  }),
+              }
+            )
+          }
+
+          return createFolder(team, {
+            workspaceId: personalWorkspace!.id,
+            description: '',
+            folderName,
+          })
+        },
+      },
+    ],
+  })
+
   if (labels.length > 0) {
     tree.push({
       label: 'Labels',
