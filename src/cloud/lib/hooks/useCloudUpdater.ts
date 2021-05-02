@@ -39,6 +39,9 @@ import {
   DestroyFolderBookmarkResponseBody,
 } from '../../api/teams/folders/bookmarks'
 import {
+  createWorkspace,
+  CreateWorkspaceRequestBody,
+  CreateWorkspaceResponseBody,
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
 } from '../../api/teams/workspaces'
@@ -48,9 +51,15 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../router'
 import { useNav } from '../stores/nav'
 import { usePage } from '../stores/pageStore'
-import { getDocURL, getFolderURL, getTeamURL } from '../utils/patterns'
+import {
+  getDocURL,
+  getFolderURL,
+  getTeamURL,
+  getWorkspaceURL,
+} from '../utils/patterns'
 import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
+import { SerializedWorkspace } from '../../interfaces/db/workspace'
 
 export function useCloudUpdater() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -68,6 +77,38 @@ export function useCloudUpdater() {
   const { push } = useRouter()
 
   const { sendingMap, send } = useBulkApi()
+
+  const createWorkspaceApi = useCallback(
+    async (
+      team: SerializedTeam,
+      body: CreateWorkspaceRequestBody,
+      options: {
+        skipRedirect?: boolean
+        afterSuccess?: (workspace: SerializedWorkspace) => void
+      }
+    ) => {
+      await send(shortid.generate(), 'create', {
+        api: () => createWorkspace({ id: team.id }, body),
+        cb: (res: CreateWorkspaceResponseBody) => {
+          updateWorkspacesMap([res.workspace.id, res.workspace])
+          if (!options.skipRedirect) {
+            push(
+              {
+                pathname: `${getTeamURL(team)}${getWorkspaceURL(
+                  res.workspace
+                )}`,
+              },
+              { new: true }
+            )
+          }
+          if (options.afterSuccess != null) {
+            options.afterSuccess(res.workspace)
+          }
+        },
+      })
+    },
+    [push, send, updateWorkspacesMap]
+  )
 
   const createDocApi = useCallback(
     async (
@@ -420,6 +461,7 @@ export function useCloudUpdater() {
 
   return {
     sendingMap,
+    createWorkspace: createWorkspaceApi,
     createDoc: createDocApi,
     createFolder: createFolderApi,
     toggleDocArchive,

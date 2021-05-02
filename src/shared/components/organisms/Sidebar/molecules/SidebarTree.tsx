@@ -154,6 +154,11 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
   const [draggingItem, setDraggingItem] = useState(false)
   const [inScroll, setInScroll] = useState(false)
   const scrollTimer = useRef<any>()
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [placeholder, setPlaceholder] = useState('')
+  const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
+    null
+  )
 
   const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
     setInScroll(true)
@@ -161,6 +166,36 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
       setInScroll(false)
     }, 600)
   }, [])
+
+  const controls = useMemo(
+    () =>
+      (category.controls || []).map((control) => {
+        if (control.onClick != null) {
+          return control
+        }
+
+        return {
+          icon: control.icon,
+          disabled: control.disabled,
+          onClick: () => {
+            if (category.folded) {
+              category.folding?.toggle()
+            }
+            setPlaceholder(control.placeholder)
+            setCreationFormIsOpened(true)
+            setShowCreateForm(true)
+            creationCallbackRef.current = control.create
+          },
+        }
+      }) as ControlButtonProps[],
+    [
+      category.controls,
+      category.folded,
+      category.folding,
+      creationCallbackRef,
+      setCreationFormIsOpened,
+    ]
+  )
 
   return (
     <React.Fragment>
@@ -175,11 +210,7 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
         labelClick={category.folding?.toggle}
         folding={category.folding}
         folded={category.folded}
-        controls={
-          (category.controls || []).filter(
-            (c) => c.onClick != null
-          ) as ControlButtonProps[]
-        }
+        controls={controls}
         depth={-1}
       />
       {!category.folded && (
@@ -192,6 +223,16 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
           ])}
           onScroll={onScrollHandler}
         >
+          {showCreateForm && (
+            <SidebarTreeForm
+              placeholder={placeholder}
+              close={() => {
+                setCreationFormIsOpened(false)
+                setShowCreateForm(false)
+              }}
+              createCallback={creationCallbackRef.current}
+            />
+          )}
           {category.rows.map((row, i) => (
             <SidebarNestedTreeRow
               isLastRow={i === category.rows.length - 1}

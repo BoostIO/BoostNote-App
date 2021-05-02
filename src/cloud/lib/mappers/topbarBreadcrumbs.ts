@@ -387,7 +387,7 @@ export function mapWorkspaceBreadcrumb(
             },
           ]
         : []),
-      ...(editWorkspace != null
+      ...(editWorkspace != null && !workspace.personal
         ? [
             {
               icon: mdiApplicationCog,
@@ -396,7 +396,7 @@ export function mapWorkspaceBreadcrumb(
             },
           ]
         : []),
-      ...(deleteWorkspace != null && !workspace.default
+      ...(deleteWorkspace != null && !workspace.default && !workspace.personal
         ? [
             {
               icon: mdiTrashCanOutline,
