@@ -140,10 +140,6 @@ const Container = styled.div`
     overflow: auto;
   }
 
-  .topbar__action__item {
-    border-radius: 0;
-  }
-
   .topbar__action__item + .topbar__tree__navigation {
     border-top: 1px solid ${({ theme }) => theme.colors.border.main};
     margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
