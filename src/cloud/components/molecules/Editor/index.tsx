@@ -118,7 +118,9 @@ const Editor = ({
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const [editorLayout, setEditorLayout] = useState<LayoutMode>(
-    preferences.lastUsedLayout
+    preferences.lastEditorMode != 'preview'
+      ? preferences.lastEditorEditLayout
+      : 'preview'
   )
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
@@ -176,20 +178,52 @@ const Editor = ({
     userInfo,
   })
 
+  const changeEditorLayout = useCallback(
+    (target: LayoutMode) => {
+      setEditorLayout(target)
+      if (target === 'preview') {
+        setPreferences({
+          lastEditorMode: 'preview',
+        })
+        return
+      }
+
+      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+        team: doc.teamId,
+        doc: doc.id,
+      })
+      setPreferences({
+        lastEditorMode: 'edit',
+        lastEditorEditLayout: target,
+      })
+    },
+    [setPreferences, doc.id, doc.teamId]
+  )
+
   const docIsNew = !!state?.new
   useEffect(() => {
     if (docRef.current !== doc.id) {
       if (docIsNew) {
-        setEditorLayout(preferences.lastUsedLayout)
+        changeEditorLayout(preferences.lastEditorEditLayout)
         if (titleRef.current != null) {
           titleRef.current.focus()
         }
       } else {
-        setEditorLayout('preview')
+        changeEditorLayout(
+          preferences.lastEditorMode === 'preview'
+            ? 'preview'
+            : preferences.lastEditorEditLayout
+        )
       }
       docRef.current = doc.id
     }
-  }, [doc.id, docIsNew, preferences.lastUsedLayout])
+  }, [
+    doc.id,
+    docIsNew,
+    preferences.lastEditorEditLayout,
+    preferences.lastEditorMode,
+    changeEditorLayout,
+  ])
 
   useEffect(() => {
     if (editorLayout === 'preview') {
@@ -211,20 +245,6 @@ const Editor = ({
       titleRef.current.focus()
     }
   }, [initialLoadDone, docIsNew])
-
-  const changeEditorLayout = useCallback(
-    (target: LayoutMode) => {
-      setEditorLayout(target)
-      if (target === 'preview') {
-        return
-      }
-
-      setPreferences({
-        lastUsedLayout: target,
-      })
-    },
-    [setPreferences]
-  )
 
   const editPageKeydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -605,21 +625,11 @@ const Editor = ({
 
   const toggleViewMode = useCallback(() => {
     if (editorLayout === 'preview') {
-      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
-        team: doc.teamId,
-        doc: doc.id,
-      })
-      updateLayout(preferences.lastUsedLayout)
+      changeEditorLayout(preferences.lastEditorEditLayout)
       return
     }
-    updateLayout('preview')
-  }, [
-    updateLayout,
-    preferences.lastUsedLayout,
-    editorLayout,
-    doc.id,
-    doc.teamId,
-  ])
+    changeEditorLayout('preview')
+  }, [changeEditorLayout, preferences.lastEditorEditLayout, editorLayout])
 
   useEffect(() => {
     togglePreviewModeEventEmitter.listen(toggleViewMode)
