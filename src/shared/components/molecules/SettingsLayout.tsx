@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import GlobalStyle from '../atoms/GlobalStyle'
 
 interface SettingsLayoutProps {
   sidebar: React.ReactNode
@@ -14,7 +13,6 @@ const SettingsLayout = ({ sidebar, pageBody }: SettingsLayoutProps) => (
       <div className='settings__divider'></div>
       <div className='settings__content'>{pageBody}</div>
     </div>
-    <GlobalStyle />
   </Container>
 )
 
