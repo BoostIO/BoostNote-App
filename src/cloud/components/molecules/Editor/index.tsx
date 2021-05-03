@@ -989,6 +989,7 @@ const StyledEditor = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
+    z-index: 0 !important;
     .CodeMirror-hints {
       position: absolute;
       z-index: 10;
