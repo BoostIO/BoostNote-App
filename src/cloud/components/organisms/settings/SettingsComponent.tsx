@@ -8,16 +8,8 @@ import {
   useCapturingGlobalKeyDownHandler,
   isSingleKeyEventOutsideOfInput,
 } from '../../../lib/keyboard'
-import { baseIconStyle } from '../../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
-import Icon from '../../atoms/IconMdi'
-import { mdiClose, mdiDomain, mdiAccountCircleOutline } from '@mdi/js'
-import {
-  StyledModals,
-  StyledModalsBackground,
-  StyledModalsContainer,
-  StyledSideNavModal,
-} from '../Modal/styled'
+import { mdiDomain, mdiAccountCircleOutline } from '@mdi/js'
 import PersonalInfoTab from './PersonalInfoTab'
 import { usePage } from '../../../lib/stores/pageStore'
 import TeamInfoTab from './TeamInfoTab'
@@ -35,6 +27,7 @@ import PreferencesTab from './PreferencesTab'
 import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import IconMdi from '../../atoms/IconMdi'
+import SettingsLayout from '../../../../shared/components/molecules/SettingsLayout'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -108,13 +101,6 @@ const SettingsComponent = () => {
     }
   }, [settingsTab, currentUserPermissions])
 
-  const backgroundClickHandler = useMemo(() => {
-    return (event: MouseEvent) => {
-      event.preventDefault()
-      toggleClosed()
-    }
-  }, [toggleClosed])
-
   useEffect(() => {
     if (closed) {
       return
@@ -127,91 +113,83 @@ const SettingsComponent = () => {
   }
 
   return (
-    <StyledModals>
-      <StyledModalsBackground onClick={backgroundClickHandler} />
-      <StyledModalsContainer className='fullscreen'>
-        <StyledSideNavModal>
-          <TabNav ref={menuRef}>
-            <Subtitle>
-              <IconMdi path={mdiAccountCircleOutline} size={13} />
-              Account
-            </Subtitle>
-            <TabButton
-              label={t('settings.personalInfo')}
-              active={settingsTab === 'personalInfo'}
-              tab='personalInfo'
-              id='settings-personalInfoTab-btn'
-            />
-            <TabButton
-              label={t('settings.preferences')}
-              active={settingsTab === 'preferences'}
-              tab='preferences'
-              id='settings-personalInfoTab-btn'
-            />
-            <Subtitle>
-              <IconMdi path={mdiDomain} size={13} />
-              Space
-            </Subtitle>
-            {currentUserPermissions != null && (
+    <SettingsLayout
+      sidebar={
+        <TabNav ref={menuRef}>
+          <Subtitle>
+            <IconMdi path={mdiAccountCircleOutline} size={13} />
+            Account
+          </Subtitle>
+          <TabButton
+            label={t('settings.personalInfo')}
+            active={settingsTab === 'personalInfo'}
+            tab='personalInfo'
+            id='settings-personalInfoTab-btn'
+          />
+          <TabButton
+            label={t('settings.preferences')}
+            active={settingsTab === 'preferences'}
+            tab='preferences'
+            id='settings-personalInfoTab-btn'
+          />
+          <Subtitle>
+            <IconMdi path={mdiDomain} size={13} />
+            Space
+          </Subtitle>
+          {currentUserPermissions != null && (
+            <>
+              <TabButton
+                label={t('settings.teamInfo')}
+                active={settingsTab === 'teamInfo'}
+                tab='teamInfo'
+                id='settings-teamInfoTab-btn'
+              />
+              <TabButton
+                label={t('settings.teamMembers')}
+                active={settingsTab === 'teamMembers'}
+                tab='teamMembers'
+                id='settings-teamMembersTab-btn'
+              />
+              <TabButton
+                label={t('settings.integrations')}
+                active={settingsTab === 'integrations'}
+                tab='integrations'
+                id='settings-integrationsTab-btn'
+              />
+              <TabButton
+                label='API'
+                active={settingsTab === 'api'}
+                tab='api'
+                id='settings-apiTab-btn'
+              />
+            </>
+          )}
+          {team != null &&
+            currentUserPermissions != null &&
+            currentUserPermissions.role === 'admin' && (
               <>
-                <TabButton
-                  label={t('settings.teamInfo')}
-                  active={settingsTab === 'teamInfo'}
-                  tab='teamInfo'
-                  id='settings-teamInfoTab-btn'
-                />
-                <TabButton
-                  label={t('settings.teamMembers')}
-                  active={settingsTab === 'teamMembers'}
-                  tab='teamMembers'
-                  id='settings-teamMembersTab-btn'
-                />
-                <TabButton
-                  label={t('settings.integrations')}
-                  active={settingsTab === 'integrations'}
-                  tab='integrations'
-                  id='settings-integrationsTab-btn'
-                />
-                <TabButton
-                  label='API'
-                  active={settingsTab === 'api'}
-                  tab='api'
-                  id='settings-apiTab-btn'
-                />
+                {subscription == null || subscription.status === 'trialing' ? (
+                  <TabButton
+                    label={t('settings.teamUpgrade')}
+                    active={settingsTab === 'teamUpgrade'}
+                    tab='teamUpgrade'
+                    id='settings-teamUpgradeTab-btn'
+                  />
+                ) : (
+                  <TabButton
+                    label={t('settings.teamSubscription')}
+                    active={settingsTab === 'teamSubscription'}
+                    tab='teamSubscription'
+                    id='settings-teamBillingTab-btn'
+                  />
+                )}
+                <TeamSubLimit />
               </>
             )}
-            {team != null &&
-              currentUserPermissions != null &&
-              currentUserPermissions.role === 'admin' && (
-                <>
-                  {subscription == null ||
-                  subscription.status === 'trialing' ? (
-                    <TabButton
-                      label={t('settings.teamUpgrade')}
-                      active={settingsTab === 'teamUpgrade'}
-                      tab='teamUpgrade'
-                      id='settings-teamUpgradeTab-btn'
-                    />
-                  ) : (
-                    <TabButton
-                      label={t('settings.teamSubscription')}
-                      active={settingsTab === 'teamSubscription'}
-                      tab='teamSubscription'
-                      id='settings-teamBillingTab-btn'
-                    />
-                  )}
-                  <TeamSubLimit />
-                </>
-              )}
-          </TabNav>
-        </StyledSideNavModal>
-        <DividerBorder />
-        <TabContent ref={contentSideRef}>{content}</TabContent>
-        <CloseButton onClick={toggleClosed}>
-          <Icon path={mdiClose} />
-        </CloseButton>
-      </StyledModalsContainer>
-    </StyledModals>
+        </TabNav>
+      }
+      pageBody={<TabContent ref={contentSideRef}>{content}</TabContent>}
+    ></SettingsLayout>
   )
 }
 
@@ -247,25 +225,6 @@ const TabContent = styled.div`
   flex: 1;
   overflow: hidden auto;
   position: relative;
-`
-
-const CloseButton = styled.button`
-  ${baseIconStyle}
-  position: absolute;
-  top: ${({ theme }) => theme.space.small}px;
-  right: ${({ theme }) => theme.space.small}px;
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.fontSizes.xxlarge}px;
-`
-
-const DividerBorder = styled.div`
-  width: 1px;
-  height: 100%;
-  background-color: ${({ theme }) => theme.baseBorderColor};
 `
 
 export default SettingsComponent
