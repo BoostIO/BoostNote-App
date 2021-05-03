@@ -7,8 +7,7 @@ export default createGlobalStyle<BaseTheme>`
     margin: 0;
     ${backgroundColor}
     ${textColor}
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: Lato, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
     font-size: 15px;
     font-weight: 400;
   }

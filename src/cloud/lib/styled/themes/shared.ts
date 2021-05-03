@@ -1,8 +1,7 @@
 import { InitialTheme } from './types'
 
 export const sharedTheme: InitialTheme = {
-  fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Fira sans', Roboto, Helvetica,
-  Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+  fontFamily: `Lato, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif`,
   fontSizes: {
     xxxsmall: 8,
     xxsmall: 10,
