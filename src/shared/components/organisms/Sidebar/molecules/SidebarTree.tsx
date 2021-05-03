@@ -492,12 +492,15 @@ const Container = styled.div`
 
   .sidebar__category__items__shrink1 {
     flex-shrink: 1;
+    min-height: 50px;
   }
   .sidebar__category__items__shrink2 {
     flex-shrink: 2;
+    min-height: 50px;
   }
   .sidebar__category__items__shrink3 {
     flex-shrink: 3;
+    min-height: 50px;
   }
 
   .sidebar__category__items--silenced .sidebar__tree__item {
