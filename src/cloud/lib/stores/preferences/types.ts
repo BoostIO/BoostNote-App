@@ -6,7 +6,8 @@ export interface Preferences {
   sidebarIsHidden: boolean
   sidebarIsHovered: boolean
   sideBarWidth: number
-  lastUsedLayout: LayoutMode
+  lastEditorMode: 'edit' | 'preview'
+  lastEditorEditLayout: LayoutMode
   workspaceManagerIsOpen: boolean
   sidebarBookmarksAreUnfolded: boolean
   lastSidebarState: SidebarState | undefined
