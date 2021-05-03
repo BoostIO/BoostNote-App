@@ -1,7 +1,6 @@
 import React, { useMemo, useEffect } from 'react'
-import styled from '../../../lib/styled'
 import { useSettings } from '../../../lib/stores/settings'
-import TabButton from './TabButton'
+import SettingSidenavItem from './SettingSidenavItem'
 import {
   preventKeyboardEventPropagation,
   useUpDownNavigationListener,
@@ -26,8 +25,10 @@ import IntegrationsTab from './IntegrationsTab'
 import PreferencesTab from './PreferencesTab'
 import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
-import IconMdi from '../../atoms/IconMdi'
-import SettingsLayout from '../../../../shared/components/molecules/SettingsLayout'
+import SettingsLayout from '../../../../shared/components/organisms/Settings/molecles/SettingsLayout'
+import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/atoms/SettingSidenavHeader'
+import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
+import SettingContent from '../../../../shared/components/organisms/Settings/atoms/SettingContent'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -115,48 +116,46 @@ const SettingsComponent = () => {
   return (
     <SettingsLayout
       sidebar={
-        <TabNav ref={menuRef}>
-          <Subtitle>
-            <IconMdi path={mdiAccountCircleOutline} size={13} />
-            Account
-          </Subtitle>
-          <TabButton
+        <SettingSidenav ref={menuRef}>
+          <SettingSidenavHeader
+            path={mdiAccountCircleOutline}
+            text={'Account'}
+            size={16}
+          />
+          <SettingSidenavItem
             label={t('settings.personalInfo')}
             active={settingsTab === 'personalInfo'}
             tab='personalInfo'
             id='settings-personalInfoTab-btn'
           />
-          <TabButton
+          <SettingSidenavItem
             label={t('settings.preferences')}
             active={settingsTab === 'preferences'}
             tab='preferences'
             id='settings-personalInfoTab-btn'
           />
-          <Subtitle>
-            <IconMdi path={mdiDomain} size={13} />
-            Space
-          </Subtitle>
+          <SettingSidenavHeader path={mdiDomain} text={'Space'} size={16} />
           {currentUserPermissions != null && (
             <>
-              <TabButton
+              <SettingSidenavItem
                 label={t('settings.teamInfo')}
                 active={settingsTab === 'teamInfo'}
                 tab='teamInfo'
                 id='settings-teamInfoTab-btn'
               />
-              <TabButton
+              <SettingSidenavItem
                 label={t('settings.teamMembers')}
                 active={settingsTab === 'teamMembers'}
                 tab='teamMembers'
                 id='settings-teamMembersTab-btn'
               />
-              <TabButton
+              <SettingSidenavItem
                 label={t('settings.integrations')}
                 active={settingsTab === 'integrations'}
                 tab='integrations'
                 id='settings-integrationsTab-btn'
               />
-              <TabButton
+              <SettingSidenavItem
                 label='API'
                 active={settingsTab === 'api'}
                 tab='api'
@@ -169,14 +168,14 @@ const SettingsComponent = () => {
             currentUserPermissions.role === 'admin' && (
               <>
                 {subscription == null || subscription.status === 'trialing' ? (
-                  <TabButton
+                  <SettingSidenavItem
                     label={t('settings.teamUpgrade')}
                     active={settingsTab === 'teamUpgrade'}
                     tab='teamUpgrade'
                     id='settings-teamUpgradeTab-btn'
                   />
                 ) : (
-                  <TabButton
+                  <SettingSidenavItem
                     label={t('settings.teamSubscription')}
                     active={settingsTab === 'teamSubscription'}
                     tab='teamSubscription'
@@ -186,45 +185,11 @@ const SettingsComponent = () => {
                 <TeamSubLimit />
               </>
             )}
-        </TabNav>
+        </SettingSidenav>
       }
-      pageBody={<TabContent ref={contentSideRef}>{content}</TabContent>}
+      content={<SettingContent ref={contentSideRef}>{content}</SettingContent>}
     ></SettingsLayout>
   )
 }
-
-const TabNav = styled.nav`
-  width: 250px;
-  padding: ${({ theme }) => theme.space.xsmall}px;
-  overflow: hidden auto;
-  margin-right: 0;
-  margin-bottom: 0;
-
-  hr {
-    height: 1px;
-    background-color: ${({ theme }) => theme.baseBorderColor};
-    border: none;
-    margin: ${({ theme }) => theme.space.small}px 0;
-  }
-`
-
-const Subtitle = styled.div`
-  display: flex;
-  align-items: center;
-  margin: ${({ theme }) => theme.space.default}px
-    ${({ theme }) => theme.space.small}px ${({ theme }) => theme.space.xsmall}px;
-  color: ${({ theme }) => theme.subtleTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.default}px;
-
-  svg {
-    margin-right: ${({ theme }) => theme.space.xxsmall}px;
-  }
-`
-
-const TabContent = styled.div`
-  flex: 1;
-  overflow: hidden auto;
-  position: relative;
-`
 
 export default SettingsComponent
