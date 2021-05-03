@@ -9,7 +9,7 @@ const SettingTabButton = styled.button`
     ${({ theme }) => theme.sizes.spaces.md}px;
   background-color: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: 2px;
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
