@@ -188,16 +188,12 @@ const Editor = ({
         return
       }
 
-      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
-        team: doc.teamId,
-        doc: doc.id,
-      })
       setPreferences({
         lastEditorMode: 'edit',
         lastEditorEditLayout: target,
       })
     },
-    [setPreferences, doc.id, doc.teamId]
+    [setPreferences]
   )
 
   const docIsNew = !!state?.new
@@ -209,7 +205,7 @@ const Editor = ({
           titleRef.current.focus()
         }
       } else {
-        changeEditorLayout(
+        setEditorLayout(
           preferences.lastEditorMode === 'preview'
             ? 'preview'
             : preferences.lastEditorEditLayout
@@ -618,9 +614,16 @@ const Editor = ({
 
   const updateLayout = useCallback(
     (mode: LayoutMode) => {
+      if (editorLayout === 'preview' && mode !== 'preview') {
+        trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+          team: doc.teamId,
+          doc: doc.id,
+        })
+      }
+
       changeEditorLayout(mode)
     },
-    [changeEditorLayout]
+    [changeEditorLayout, doc.id, doc.teamId, editorLayout]
   )
 
   const toggleViewMode = useCallback(() => {
@@ -628,8 +631,19 @@ const Editor = ({
       changeEditorLayout(preferences.lastEditorEditLayout)
       return
     }
+
+    trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+      team: doc.teamId,
+      doc: doc.id,
+    })
     changeEditorLayout('preview')
-  }, [changeEditorLayout, preferences.lastEditorEditLayout, editorLayout])
+  }, [
+    changeEditorLayout,
+    preferences.lastEditorEditLayout,
+    editorLayout,
+    doc.teamId,
+    doc.id,
+  ])
 
   useEffect(() => {
     togglePreviewModeEventEmitter.listen(toggleViewMode)
