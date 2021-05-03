@@ -67,6 +67,7 @@ export function useCloudUpdater() {
     updateWorkspacesMap,
     updateFoldersMap,
     updateDocsMap,
+    updateParentFolderOfDoc,
     removeFromWorkspacesMap,
     foldersMap,
     docsMap,
@@ -120,6 +121,9 @@ export function useCloudUpdater() {
         api: () => createDoc({ id: team.id }, body),
         cb: (res: CreateDocResponseBody) => {
           updateDocsMap([res.doc.id, res.doc])
+          if (res.doc.parentFolder != null) {
+            updateParentFolderOfDoc(res.doc)
+          }
           push(
             {
               pathname: `${getTeamURL(team)}${getDocURL(res.doc)}`,
@@ -132,7 +136,7 @@ export function useCloudUpdater() {
         },
       })
     },
-    [push, send, updateDocsMap]
+    [push, send, updateDocsMap, updateParentFolderOfDoc]
   )
 
   const createFolderApi = useCallback(
