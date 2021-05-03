@@ -114,8 +114,7 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
 -ms-text-size-adjust: 100%;
 -webkit-text-size-adjust: 100%;
 line-height: 1.6;
-font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
-  sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+font-family: Lato, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 font-size: 15px;
 line-height: 1.6;
 word-wrap: break-word;
