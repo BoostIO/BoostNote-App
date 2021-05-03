@@ -21,22 +21,27 @@ const basePreferences: Preferences = {
   lastSidebarState: 'tree',
 }
 
+function getExistingPreferences() {
+  try {
+    const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
+    if (stringifiedPreferences == null) return
+    return JSON.parse(stringifiedPreferences)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(error.message)
+  }
+}
+
+const initialPreference = {
+  ...basePreferences,
+  ...getExistingPreferences(),
+}
+
 function usePreferencesStore() {
   const [preferences, setPreferences] = useSetState<Partial<Preferences>>(
-    basePreferences
+    initialPreference
   )
   const hoverOffTimeoutRef = useRef<number>()
-
-  useEffect(() => {
-    try {
-      const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
-      if (stringifiedPreferences == null) return
-      setPreferences(JSON.parse(stringifiedPreferences))
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error.message)
-    }
-  }, [setPreferences])
 
   useEffect(() => {
     savePreferencesToLocalStorage(preferences)
