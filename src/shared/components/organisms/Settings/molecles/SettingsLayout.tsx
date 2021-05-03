@@ -1,17 +1,17 @@
 import React from 'react'
-import styled from '../../lib/styled'
+import styled from '../../../../lib/styled'
 
 interface SettingsLayoutProps {
   sidebar: React.ReactNode
-  pageBody: React.ReactNode
+  content: React.ReactNode
 }
 
-const SettingsLayout = ({ sidebar, pageBody }: SettingsLayoutProps) => (
+const SettingsLayout = ({ sidebar, content }: SettingsLayoutProps) => (
   <Container className='settings__layout'>
     <div className='settings__wrapper'>
       <div className='settings__sidebar'>{sidebar}</div>
       <div className='settings__divider'></div>
-      <div className='settings__content'>{pageBody}</div>
+      <div className='settings__content'>{content}</div>
     </div>
   </Container>
 )
