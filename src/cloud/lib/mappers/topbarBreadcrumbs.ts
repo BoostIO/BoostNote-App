@@ -90,8 +90,8 @@ export function mapTopbarBreadcrumbs(
         pageFolder,
         workspacesMap,
         push,
-        openNewFolderForm,
         openNewDocForm,
+        openNewFolderForm,
         renameFolder,
         deleteFolder
       )
