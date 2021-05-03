@@ -1161,89 +1161,92 @@ function mapTree(
       },
     ],
   })
-  tree.push({
-    label: 'Private',
-    shrink: 2,
-    rows:
-      personalWorkspace != null
-        ? arrayItems
-            .filter((item) => item.parentId === personalWorkspace!.id)
-            .reduce((acc, val) => {
-              acc.push({
-                ...val,
-                depth: 0,
-                rows: buildChildrenNavRows(val.children, 1, items),
-              })
-              return acc
-            }, [] as SidebarTreeChildRow[])
-        : [],
-    controls: [
-      {
-        icon: mdiFilePlusOutline,
-        onClick: undefined,
-        placeholder: 'Doc title..',
-        create: async (title: string) => {
-          if (personalWorkspace == null) {
-            return createWorkspace(
-              team,
-              {
-                personal: true,
-                name: 'Private',
-                permissions: [],
-                public: false,
-              },
-              {
-                skipRedirect: true,
-                afterSuccess: (wp) =>
-                  createDoc(team, {
-                    workspaceId: wp.id,
-                    title,
-                  }),
-              }
-            )
-          }
 
-          return createDoc(team, {
-            workspaceId: personalWorkspace!.id,
-            title,
-          })
-        },
-      },
-      {
-        icon: mdiFolderPlusOutline,
-        onClick: undefined,
-        placeholder: 'Folder name..',
-        create: async (folderName: string) => {
-          if (personalWorkspace == null) {
-            return createWorkspace(
-              team,
-              {
-                personal: true,
-                name: 'Private',
-                permissions: [],
-                public: false,
-              },
-              {
-                skipRedirect: true,
-                afterSuccess: (wp) =>
-                  createFolder(team, {
-                    workspaceId: wp.id,
-                    description: '',
-                    folderName,
-                  }),
-              }
-            )
-          }
+  if (!team.personal) {
+    tree.push({
+      label: 'Private',
+      shrink: 2,
+      rows:
+        personalWorkspace != null
+          ? arrayItems
+              .filter((item) => item.parentId === personalWorkspace!.id)
+              .reduce((acc, val) => {
+                acc.push({
+                  ...val,
+                  depth: 0,
+                  rows: buildChildrenNavRows(val.children, 1, items),
+                })
+                return acc
+              }, [] as SidebarTreeChildRow[])
+          : [],
+      controls: [
+        {
+          icon: mdiFilePlusOutline,
+          onClick: undefined,
+          placeholder: 'Doc title..',
+          create: async (title: string) => {
+            if (personalWorkspace == null) {
+              return createWorkspace(
+                team,
+                {
+                  personal: true,
+                  name: 'Private',
+                  permissions: [],
+                  public: false,
+                },
+                {
+                  skipRedirect: true,
+                  afterSuccess: (wp) =>
+                    createDoc(team, {
+                      workspaceId: wp.id,
+                      title,
+                    }),
+                }
+              )
+            }
 
-          return createFolder(team, {
-            workspaceId: personalWorkspace!.id,
-            description: '',
-            folderName,
-          })
+            return createDoc(team, {
+              workspaceId: personalWorkspace!.id,
+              title,
+            })
+          },
         },
-      },
-    ],
-  })
+        {
+          icon: mdiFolderPlusOutline,
+          onClick: undefined,
+          placeholder: 'Folder name..',
+          create: async (folderName: string) => {
+            if (personalWorkspace == null) {
+              return createWorkspace(
+                team,
+                {
+                  personal: true,
+                  name: 'Private',
+                  permissions: [],
+                  public: false,
+                },
+                {
+                  skipRedirect: true,
+                  afterSuccess: (wp) =>
+                    createFolder(team, {
+                      workspaceId: wp.id,
+                      description: '',
+                      folderName,
+                    }),
+                }
+              )
+            }
+
+            return createFolder(team, {
+              workspaceId: personalWorkspace!.id,
+              description: '',
+              folderName,
+            })
+          },
+        },
+      ],
+    })
+  }
 
   if (labels.length > 0) {
     tree.push({
