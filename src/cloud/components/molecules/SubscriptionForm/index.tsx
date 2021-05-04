@@ -34,7 +34,6 @@ interface SubscriptionFormProps {
   team: SerializedTeam
   initialPlan?: UpgradePlans
   ongoingTrial?: boolean
-  onError: (err: any) => void
   onSuccess: (subscription: SerializedSubscription) => void
   onCancel?: () => void
 }
@@ -45,7 +44,6 @@ const SubscriptionForm = ({
   team,
   ongoingTrial,
   initialPlan,
-  onError,
   onSuccess,
   onCancel,
 }: SubscriptionFormProps) => {
@@ -57,7 +55,7 @@ const SubscriptionForm = ({
   const [sending, setSending] = useState(false)
   const { settings } = useSettings()
   const { permissions = [] } = usePage()
-  const { pushApiErrorMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )
@@ -91,6 +89,11 @@ const SubscriptionForm = ({
 
     const { error, source } = await stripe.createSource(card, { type: 'card' })
     if (error != null || source == null) {
+      pushMessage({
+        type: 'error',
+        title: '400',
+        description: error?.message || 'Source could not be fetched',
+      })
       return setSending(false)
     }
 
@@ -109,7 +112,13 @@ const SubscriptionForm = ({
       if (requiresAction) {
         const { error } = await stripe.confirmCardPayment(clientSecret)
         if (error) {
-          onError(error)
+          pushMessage({
+            type: 'info',
+            title: 'Pending',
+            description:
+              error.message ||
+              'Your subscription is pending and needs further action.',
+          })
           return setSending(false)
         }
       }
