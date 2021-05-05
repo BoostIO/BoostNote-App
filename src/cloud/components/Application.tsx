@@ -44,7 +44,10 @@ import {
   SidebarSearchHistory,
   SidebarSearchResult,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
-import { SidebarState } from '../../shared/lib/sidebar'
+import {
+  SidebarState,
+  SidebarTreeSortingOrders,
+} from '../../shared/lib/sidebar'
 import useApi from '../../shared/lib/hooks/useApi'
 import {
   GetSearchResultsRequestQuery,
@@ -552,6 +555,36 @@ const Application = ({
             setSearchQuery={setSearchQuery}
             searchHistory={searchHistory}
             recentPages={historyItems}
+            treeControls={[
+              {
+                icon:
+                  preferences.sidebarTreeSortingOrder === 'a-z'
+                    ? SidebarTreeSortingOrders.aZ.icon
+                    : preferences.sidebarTreeSortingOrder === 'z-a'
+                    ? SidebarTreeSortingOrders.zA.icon
+                    : preferences.sidebarTreeSortingOrder === 'last-updated'
+                    ? SidebarTreeSortingOrders.lastUpdated.icon
+                    : SidebarTreeSortingOrders.dragDrop.icon,
+                onClick: (event) => {
+                  popup(
+                    event,
+                    Object.values(SidebarTreeSortingOrders).map((sort) => {
+                      return {
+                        type: MenuTypes.Normal,
+                        onClick: () =>
+                          setPreferences({
+                            sidebarTreeSortingOrder: sort.value,
+                          }),
+                        label: sort.label,
+                        icon: sort.icon,
+                        active:
+                          sort.value === preferences.sidebarTreeSortingOrder,
+                      }
+                    })
+                  )
+                },
+              },
+            ]}
             treeTopRows={
               team == null ? null : (
                 <>

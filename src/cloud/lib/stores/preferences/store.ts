@@ -13,6 +13,7 @@ const basePreferences: Preferences = {
   docContextIsHidden: false,
   sidebarIsHidden: false,
   sidebarIsHovered: false,
+  sidebarTreeSortingOrder: 'last-updated',
   sideBarWidth: 250,
   lastEditorMode: 'edit',
   lastEditorEditLayout: 'split',
