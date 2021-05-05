@@ -46,6 +46,7 @@ import {
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import {
   SidebarState,
+  SidebarTreeSortingOrder,
   SidebarTreeSortingOrders,
 } from '../../shared/lib/sidebar'
 import useApi from '../../shared/lib/hooks/useApi'
@@ -94,6 +95,10 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { getColorFromString } from '../../shared/lib/string'
+import {
+  sortByAttributeAsc,
+  sortByAttributeDesc,
+} from '../../shared/lib/utils/array'
 import { buildIconUrl } from '../api/files'
 import {
   SerializedFolder,
@@ -263,6 +268,7 @@ const Application = ({
   const tree = useMemo(() => {
     return mapTree(
       initialLoadDone,
+      preferences.sidebarTreeSortingOrder,
       pathname,
       docsMap,
       foldersMap,
@@ -294,6 +300,7 @@ const Application = ({
     )
   }, [
     initialLoadDone,
+    preferences.sidebarTreeSortingOrder,
     pathname,
     docsMap,
     foldersMap,
@@ -822,6 +829,7 @@ function mapHistory(
 
 function mapTree(
   initialLoadDone: boolean,
+  sortingOrder: SidebarTreeSortingOrder,
   currentPath: string,
   docsMap: Map<string, SerializedDocWithBookmark>,
   foldersMap: Map<string, SerializedFolderWithBookmark>,
@@ -906,6 +914,7 @@ function mapTree(
     )}`
     items.set(wp.id, {
       id: wp.id,
+      lastUpdated: wp.updatedAt,
       label: wp.name,
       defaultIcon: !wp.public ? mdiLock : undefined,
       children: wp.positions?.orderedIds || [],
@@ -974,6 +983,7 @@ function mapTree(
     )}`
     items.set(folderId, {
       id: folderId,
+      lastUpdated: folder.updatedAt,
       label: folder.name,
       bookmarked: folder.bookmarked,
       emoji: folder.emoji,
@@ -988,7 +998,7 @@ function mapTree(
         draggedResource.current = { type: 'folder', result: folder }
       },
       dropIn: true,
-      dropAround: true,
+      dropAround: sortingOrder === 'drag' ? true : false,
       controls: [
         {
           icon: mdiFilePlusOutline,
@@ -1060,6 +1070,7 @@ function mapTree(
     )}`
     items.set(docId, {
       id: docId,
+      lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
       label: getDocTitle(doc, 'Untitled'),
       bookmarked: doc.bookmarked,
       emoji: doc.emoji,
@@ -1068,7 +1079,7 @@ function mapTree(
       children: [],
       href,
       active: href === currentPathWithDomain,
-      dropAround: true,
+      dropAround: sortingOrder === 'drag' ? true : false,
       navigateTo: () => push(href),
       onDrop: (position: SidebarDragState) =>
         dropInFolderOrDoc({ type: 'doc', result: doc }, position),
@@ -1132,7 +1143,7 @@ function mapTree(
       acc.push({
         ...val,
         depth: 0,
-        rows: buildChildrenNavRows(val.children, 1, items),
+        rows: buildChildrenNavRows(sortingOrder, val.children, 1, items),
       })
       return acc
     }, [] as SidebarTreeChildRow[])
@@ -1207,7 +1218,12 @@ function mapTree(
                 acc.push({
                   ...val,
                   depth: 0,
-                  rows: buildChildrenNavRows(val.children, 1, items),
+                  rows: buildChildrenNavRows(
+                    sortingOrder,
+                    val.children,
+                    1,
+                    items
+                  ),
                 })
                 return acc
               }, [] as SidebarTreeChildRow[])
@@ -1489,6 +1505,7 @@ function buildSpacesBottomRows(push: (url: string) => void) {
 }
 
 function buildChildrenNavRows(
+  sortingOrder: SidebarTreeSortingOrder,
   childrenIds: string[],
   depth: number,
   map: Map<string, CloudTreeItem>
@@ -1506,12 +1523,28 @@ function buildChildrenNavRows(
     acc.push({
       ...childRow,
       depth,
-      rows: buildChildrenNavRows(childRow.children, depth + 1, map),
+      rows: buildChildrenNavRows(
+        sortingOrder,
+        childRow.children,
+        depth + 1,
+        map
+      ),
     })
 
     return acc
-  }, [] as SidebarTreeChildRow[])
-  return rows
+  }, [] as (SidebarTreeChildRow & { lastUpdated: string })[])
+
+  switch (sortingOrder) {
+    case 'a-z':
+      return sortByAttributeAsc('label', rows)
+    case 'z-a':
+      return sortByAttributeDesc('label', rows)
+    case 'last-updated':
+      return sortByAttributeDesc('lastUpdated', rows)
+    case 'drag':
+    default:
+      return rows
+  }
 }
 
 type CloudTreeItem = {
@@ -1527,6 +1560,7 @@ type CloudTreeItem = {
   folded?: boolean
   href?: string
   active?: boolean
+  lastUpdated: string
   navigateTo?: () => void
   controls?: SidebarNavControls[]
   contextControls?: MenuItem[]
