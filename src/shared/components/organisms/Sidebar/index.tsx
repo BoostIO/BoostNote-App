@@ -22,6 +22,7 @@ import SidebarTimeline, {
 } from './molecules/SidebarTimeline'
 import { AppUser } from '../../../lib/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
+import { ControlButtonProps } from '../../../lib/types'
 
 type SidebarProps = {
   showToolbar: boolean
@@ -32,6 +33,7 @@ type SidebarProps = {
   sidebarResize?: (width: number) => void
   className?: string
   tree?: SidebarNavCategory[]
+  treeControls?: ControlButtonProps[]
   treeTopRows?: React.ReactNode
   searchQuery: string
   setSearchQuery: (val: string) => void
@@ -55,6 +57,7 @@ const Sidebar = ({
   sidebarExpandedWidth = defaultSidebarExpandedWidth,
   sidebarResize,
   tree,
+  treeControls,
   treeTopRows,
   className,
   searchHistory,
@@ -96,7 +99,11 @@ const Sidebar = ({
               tree == null ? (
                 <Spinner className='sidebar__loader' />
               ) : (
-                <SidebarTree tree={tree} topRows={treeTopRows} />
+                <SidebarTree
+                  tree={tree}
+                  topRows={treeTopRows}
+                  treeControls={treeControls}
+                />
               )
             ) : sidebarState === 'search' ? (
               <SidebarSearch

@@ -22,6 +22,7 @@ export interface NormalMenuItem extends MenuItemBase {
   type: MenuTypes.Normal
   icon?: React.ReactNode | string
   label: string | React.ReactNode
+  active?: boolean
   onClick?: () => void
 }
 
