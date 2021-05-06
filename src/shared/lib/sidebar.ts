@@ -1,5 +1,5 @@
 import {
-  mdiMouse,
+  mdiMouseMoveDown,
   mdiSortAlphabeticalAscending,
   mdiSortAlphabeticalDescending,
   mdiSortClockAscending,
@@ -39,7 +39,7 @@ export const SidebarTreeSortingOrders = {
   dragDrop: {
     value: 'drag',
     label: 'Drag and drop',
-    icon: mdiMouse,
+    icon: mdiMouseMoveDown,
   },
 } as {
   [title: string]: {
