@@ -56,6 +56,6 @@ export const darkTheme: BaseTheme = {
         text: '#fff',
       },
     },
-    shadow: '0px 0px 13px rgba(0,0,0,0.1)',
+    shadow: '0px 0px 13px rgba(0,0,0,0.2)',
   },
 }
