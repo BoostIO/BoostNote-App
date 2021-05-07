@@ -33,6 +33,10 @@ import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import { useRouter } from '../../../lib/router'
+import useSelection from '../../../lib/useSelection'
+import SelectionTooltip from '../SelectionTooltip'
+import Icon from '../Icon'
+import { mdiCommentTextOutline } from '@mdi/js'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -74,6 +78,7 @@ interface MarkdownViewProps {
   className?: string
   embeddableDocs?: Map<string, EmbedDoc>
   scrollerRef?: React.RefObject<HTMLDivElement>
+  onSelection?: () => void
 }
 
 const MarkdownView = ({
@@ -262,9 +267,22 @@ const MarkdownView = ({
     }
   }, [state])
 
+  const defaultRef = useRef<HTMLElement>(null)
+  const selection = useSelection(scrollerRef || defaultRef)
+
   return (
-    <StyledMarkdownPreview className={className} ref={scrollerRef}>
+    <StyledMarkdownPreview
+      className={className}
+      ref={scrollerRef || defaultRef}
+    >
       {displayContent}
+      {selection.type === 'some' && selection.selection.type === 'Range' && (
+        <SelectionTooltip selection={selection}>
+          <StyledTooltipContent>
+            <Icon size={34} path={mdiCommentTextOutline} />
+          </StyledTooltipContent>
+        </SelectionTooltip>
+      )}
     </StyledMarkdownPreview>
   )
 }
@@ -284,4 +302,22 @@ const StyledMarkdownPreview = styled.div`
   theme.space.xxxlarge}px;
 `
 
+const StyledTooltipContent = styled.div`
+  display: flex;
+  padding: 8px;
+  background-color: ${({ theme }) => theme.contextMenuColor};
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, 0);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 12px 0 12px;
+    border-color: ${({ theme }) => theme.contextMenuColor} transparent
+      transparent transparent;
+  }
+`
 export default MarkdownView
