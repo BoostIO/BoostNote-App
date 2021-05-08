@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Section, SectionSelect, SectionHeader3 } from './styled'
+import { SectionSelect, SectionHeader3 } from './styled'
 import {
   useSettings,
   GeneralThemeOptions,
@@ -88,7 +88,7 @@ const UserPreferencesForm = () => {
   )
 
   return (
-    <Section>
+    <section>
       <SectionHeader3>{t('settings.applicationTheme')}</SectionHeader3>
       <SectionSelect value={settings['general.theme']} onChange={selectTheme}>
         <option value='light'>{t('settings.light')}</option>
@@ -145,7 +145,7 @@ const UserPreferencesForm = () => {
         <option value='4'>4</option>
         <option value='2'>2</option>
       </SectionSelect>
-    </Section>
+    </section>
   )
 }
 
