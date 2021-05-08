@@ -1,12 +1,11 @@
 import React, { MouseEventHandler } from 'react'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
-import { SettingsTab } from '../../../../../cloud/lib/stores/settings'
 
 interface SettingTabButtonProps {
   label: string
   active: boolean
-  tab: SettingsTab
+  tab: string
   id?: string
   onClick?: MouseEventHandler<HTMLButtonElement>
 }
