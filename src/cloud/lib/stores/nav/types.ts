@@ -51,6 +51,7 @@ export interface NavContext {
   removeFromFoldersMap: (...ids: string[]) => void
   docsMap: Map<string, SerializedDocWithBookmark>
   updateDocsMap: (...mappedDoc: [string, SerializedDocWithBookmark][]) => void
+  updateParentFolderOfDoc: (doc: SerializedDocWithBookmark) => void
   removeFromDocsMap: (...ids: string[]) => void
   createFolderHandler: (body: CreateFolderRequestBody) => void
   updateFolderHandler: (

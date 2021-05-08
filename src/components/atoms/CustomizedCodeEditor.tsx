@@ -1,6 +1,7 @@
 import React from 'react'
 import CodeEditor from './CodeEditor'
 import { usePreferences } from '../../lib/preferences'
+import CodeMirror from '../../lib/CodeMirror'
 
 interface CustomizedCodeEditorProps {
   value: string
@@ -15,6 +16,14 @@ interface CustomizedCodeEditorProps {
   onPaste?: (codeMirror: CodeMirror.Editor, event: ClipboardEvent) => void
   onDrop?: (codeMirror: CodeMirror.Editor, event: DragEvent) => void
   onCursorActivity?: (codeMirror: CodeMirror.Editor) => void
+  onLocalSearchToggle?: (
+    codeMirror: CodeMirror.Editor,
+    showLocalSearch: boolean
+  ) => void
+  onLocalSearchReplaceToggle?: (
+    codeMirror: CodeMirror.Editor,
+    showLocalReplace: boolean
+  ) => void
 }
 
 const CustomizedCodeEditor = ({
@@ -27,6 +36,8 @@ const CustomizedCodeEditor = ({
   onPaste,
   onDrop,
   onCursorActivity,
+  onLocalSearchToggle,
+  onLocalSearchReplaceToggle,
 }: CustomizedCodeEditorProps) => {
   const { preferences, getCodemirrorTypeKeymap } = usePreferences()
   return (
@@ -47,6 +58,8 @@ const CustomizedCodeEditor = ({
       onPaste={onPaste}
       onDrop={onDrop}
       onCursorActivity={onCursorActivity}
+      onLocalSearchToggle={onLocalSearchToggle}
+      onLocalSearchReplaceToggle={onLocalSearchReplaceToggle}
     />
   )
 }

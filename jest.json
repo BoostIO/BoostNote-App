@@ -1,5 +1,6 @@
 {
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
-  }
+  },
+  "setupFiles": ["<rootDir>/test/setup.js"]
 }

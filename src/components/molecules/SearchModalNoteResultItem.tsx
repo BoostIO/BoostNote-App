@@ -342,7 +342,7 @@ const SearchResultRight = styled.div`
   & > .button {
     height: 24px;
     width: 24px;
-    ${flexCenter}
+    ${flexCenter};
 
     background-color: transparent;
     overflow: hidden;

@@ -98,7 +98,6 @@ const Container = styled.button<{ depth: number }>`
     }
   }
 
-  border-radius: ${({ theme }) => theme.borders.radius}px;
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.tertiary};
   }

@@ -1,8 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { useEffectOnce } from 'react-use'
+import React from 'react'
 import {
   menuHeight,
-  MenuItem,
   MenuTypes,
   menuVerticalPadding,
   menuZIndex,
@@ -13,6 +11,7 @@ import { useWindow } from '../../lib/stores/window'
 import styled from '../../lib/styled'
 import Icon from '../atoms/Icon'
 import UpDownList from '../atoms/UpDownList'
+import cc from 'classcat'
 
 const ContextMenu = () => {
   const { close, closed, menuItems, position, id } = useContextMenu()
@@ -48,7 +47,10 @@ const ContextMenu = () => {
               }
               return (
                 <button
-                  className='context__menu__item'
+                  className={cc([
+                    'context__menu__item',
+                    nMenu.active && 'context__menu__item--active',
+                  ])}
                   key={key}
                   onClick={() => {
                     closeContextMenu()
@@ -79,94 +81,6 @@ const ContextMenu = () => {
 }
 
 export default ContextMenu
-
-interface FocusedContextMenuProps {
-  menuItems: MenuItem[]
-  id?: string
-  position?: { x: number; y: number }
-  close: () => void
-}
-
-export const FocusedContextMenu = ({
-  menuItems,
-  position,
-  close,
-  id = '',
-}: FocusedContextMenuProps) => {
-  const [windowWith, setWindowWidth] = useState(200)
-  const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffectOnce(() => {
-    setWindowWidth(
-      window.innerWidth ||
-        innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth
-    )
-  })
-
-  const onBlurHandler = useCallback(
-    (event: any) => {
-      if (
-        event.relatedTarget == null ||
-        menuRef.current == null ||
-        !menuRef.current.contains(event.relatedTarget)
-      ) {
-        close()
-        return
-      }
-    },
-    [close]
-  )
-
-  if (position == null) return null
-
-  return (
-    <Container
-      className='context__menu'
-      tabIndex={-1}
-      style={{
-        left: position.x + 130 < windowWith ? position.x : windowWith - 150,
-        top: position.y,
-      }}
-      ref={menuRef}
-      onBlur={onBlurHandler}
-    >
-      <UpDownList ignoreFocus={true} onBlur={close}>
-        {menuItems.map((menu, index) => {
-          const key = `context__menu--${id}-${index}`
-          switch (menu.type) {
-            case MenuTypes.Normal:
-              const nMenu = {
-                ...(menu as NormalMenuItem),
-              }
-              return (
-                <button
-                  className='context__menu__item'
-                  key={key}
-                  onClick={nMenu.onClick}
-                  id={key}
-                  disabled={(nMenu.enabled = false)}
-                  onBlur={onBlurHandler}
-                >
-                  {typeof nMenu.icon === 'string' ? (
-                    <Icon path={nMenu.icon} size={16} />
-                  ) : (
-                    nMenu.icon
-                  )}
-                  {nMenu.label}
-                </button>
-              )
-            case MenuTypes.Separator:
-              return <div className='context__menu__separator' key={key} />
-            default:
-              return null
-          }
-        })}
-      </UpDownList>
-    </Container>
-  )
-}
 
 const Container = styled.div`
   min-width: 130px;
@@ -206,13 +120,21 @@ const Container = styled.div`
 
     &:active,
     &.active,
+    &.context__menu__item--active {
+      background-color: ${({ theme }) => theme.colors.variants.primary.base};
+      color: ${({ theme }) => theme.colors.variants.primary.text};
+    }
+
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.quaternary};
+      color: ${({ theme }) => theme.colors.text.primary};
     }
 
     &:focus {
       background-color: ${({ theme }) => theme.colors.background.tertiary};
+      color: ${({ theme }) => theme.colors.text.primary};
     }
+
     &:disabled {
       background-color: transparent;
     }

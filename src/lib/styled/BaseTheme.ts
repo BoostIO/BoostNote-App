@@ -68,6 +68,9 @@ export interface BaseTheme {
   searchItemSelectionHoverBackgroundColor: string
   searchHighlightTextColor: string
 
+  // Local Search
+  searchSecondaryBackgroundColor: string
+
   // Tooltip
   tooltipBackgroundColor: string
   tooltipTextColor: string

@@ -118,10 +118,10 @@ const Editor = ({
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const [editorLayout, setEditorLayout] = useState<LayoutMode>(
-    preferences.lastUsedLayout
+    preferences.lastEditorMode != 'preview'
+      ? preferences.lastEditorEditLayout
+      : 'preview'
   )
-  const [title, setTitle] = useState(getDocTitle(doc))
-  const previousTitle = useRef<string>()
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
   const { state, push } = useRouter()
@@ -178,27 +178,48 @@ const Editor = ({
     userInfo,
   })
 
-  useEffect(() => {
-    if (previousTitle.current !== doc.head?.title) {
-      setTitle(getDocTitle(doc))
-      previousTitle.current = doc.head?.title
-    }
-  }, [doc])
+  const changeEditorLayout = useCallback(
+    (target: LayoutMode) => {
+      setEditorLayout(target)
+      if (target === 'preview') {
+        setPreferences({
+          lastEditorMode: 'preview',
+        })
+        return
+      }
+
+      setPreferences({
+        lastEditorMode: 'edit',
+        lastEditorEditLayout: target,
+      })
+    },
+    [setPreferences]
+  )
 
   const docIsNew = !!state?.new
   useEffect(() => {
     if (docRef.current !== doc.id) {
       if (docIsNew) {
-        setEditorLayout(preferences.lastUsedLayout)
+        changeEditorLayout(preferences.lastEditorEditLayout)
         if (titleRef.current != null) {
           titleRef.current.focus()
         }
       } else {
-        setEditorLayout('preview')
+        setEditorLayout(
+          preferences.lastEditorMode === 'preview'
+            ? 'preview'
+            : preferences.lastEditorEditLayout
+        )
       }
       docRef.current = doc.id
     }
-  }, [doc.id, docIsNew, preferences.lastUsedLayout])
+  }, [
+    doc.id,
+    docIsNew,
+    preferences.lastEditorEditLayout,
+    preferences.lastEditorMode,
+    changeEditorLayout,
+  ])
 
   useEffect(() => {
     if (editorLayout === 'preview') {
@@ -220,20 +241,6 @@ const Editor = ({
       titleRef.current.focus()
     }
   }, [initialLoadDone, docIsNew])
-
-  const changeEditorLayout = useCallback(
-    (target: LayoutMode) => {
-      setEditorLayout(target)
-      if (target === 'preview') {
-        return
-      }
-
-      setPreferences({
-        lastUsedLayout: target,
-      })
-    },
-    [setPreferences]
-  )
 
   const editPageKeydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -277,42 +284,6 @@ const Editor = ({
       setInitialLoadDone(true)
     }
   }, [connState])
-
-  const titleChangeCallback = useCallback(
-    (newTitle: string) => {
-      if (realtime == null) {
-        return
-      }
-
-      const realtimeTitle = realtime.doc.getText('title') as YText
-      // TODO: switch to delta diff implementation
-      realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, newTitle)
-      //--------
-    },
-    [realtime]
-  )
-
-  useEffect(() => {
-    if (realtime == null) {
-      return
-    }
-
-    const titleYText = realtime.doc.getText('title') as YText
-    const realtimeTitle = titleYText.toString()
-    setTitle(realtimeTitle)
-
-    titleYText.observe((textEvent, _transac) => {
-      // TODO: switch to delta diff implementation
-      const delta = textEvent.delta[0]
-      if (delta == null || delta['insert'] == null) {
-        return setTitle('')
-      }
-      setTitle(delta['insert'])
-      //--------
-    })
-    return
-  }, [realtime, setTitle])
 
   useEffect(() => {
     suggestionsRef.current = Array.from(docsMap.values()).map((doc) => {
@@ -447,14 +418,9 @@ const Editor = ({
       if (editorRef.current == null || realtime == null) {
         return
       }
-      setTitle(template.title)
-      const realtimeTitle = realtime.doc.getText('title') as YText
-      // TODO: switch to delta diff implementation
-      realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, template.title)
       editorRef.current.setValue(template.content)
     },
-    [setTitle, realtime]
+    [realtime]
   )
 
   const { settings } = useSettings()
@@ -513,7 +479,6 @@ const Editor = ({
       }
       const realtimeTitle = realtime.doc.getText('title') as YText
       realtimeTitle.delete(0, realtimeTitle.toString().length)
-      realtimeTitle.insert(0, rev.title)
       setEditorRefContent(rev.content)
     },
     [realtime, setEditorRefContent]
@@ -541,7 +506,7 @@ const Editor = ({
         const current = `${location.protocol}//${location.host}`
         const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
         embedMap.set(doc.id, {
-          title: doc.head.title,
+          title: doc.title,
           content: doc.head.content,
           link,
         })
@@ -618,11 +583,11 @@ const Editor = ({
       {
         pageDoc: {
           ...doc,
-          head: { ...(doc.head || {}), title },
+          head: { ...(doc.head || {}) },
         } as SerializedDoc,
       },
       openRenameFolderForm,
-      (doc) => openRenameDocForm(doc, titleChangeCallback),
+      openRenameDocForm,
       openNewDocForm,
       openNewFolderForm,
       openWorkspaceEditForm,
@@ -636,11 +601,9 @@ const Editor = ({
     foldersMap,
     workspacesMap,
     doc,
-    title,
     push,
     openRenameDocForm,
     openRenameFolderForm,
-    titleChangeCallback,
     openNewFolderForm,
     openNewDocForm,
     deleteOrArchiveDoc,
@@ -651,27 +614,35 @@ const Editor = ({
 
   const updateLayout = useCallback(
     (mode: LayoutMode) => {
+      if (editorLayout === 'preview' && mode !== 'preview') {
+        trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+          team: doc.teamId,
+          doc: doc.id,
+        })
+      }
+
       changeEditorLayout(mode)
     },
-    [changeEditorLayout]
+    [changeEditorLayout, doc.id, doc.teamId, editorLayout]
   )
 
   const toggleViewMode = useCallback(() => {
     if (editorLayout === 'preview') {
-      trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
-        team: doc.teamId,
-        doc: doc.id,
-      })
-      updateLayout(preferences.lastUsedLayout)
+      changeEditorLayout(preferences.lastEditorEditLayout)
       return
     }
-    updateLayout('preview')
+
+    trackEvent(MixpanelActionTrackTypes.DocLayoutEdit, {
+      team: doc.teamId,
+      doc: doc.id,
+    })
+    changeEditorLayout('preview')
   }, [
-    updateLayout,
-    preferences.lastUsedLayout,
+    changeEditorLayout,
+    preferences.lastEditorEditLayout,
     editorLayout,
-    doc.id,
     doc.teamId,
+    doc.id,
   ])
 
   useEffect(() => {
@@ -812,9 +783,7 @@ const Editor = ({
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
             presence={{ user: userInfo, users: otherUsers, editorLayout }}
-            openRenameDocForm={() =>
-              openRenameDocForm(doc, titleChangeCallback)
-            }
+            openRenameDocForm={() => openRenameDocForm(doc)}
             sendingRename={sendingMap.has(doc.id)}
           />
         ) : null,
@@ -1044,6 +1013,7 @@ const StyledEditor = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
+    z-index: 0 !important;
     .CodeMirror-hints {
       position: absolute;
       z-index: 10;

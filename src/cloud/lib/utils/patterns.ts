@@ -15,7 +15,7 @@ export const prefixWorspaces = 'wP'
 export const prefixOpenInvite = 'oI'
 
 export function getDocTitle(doc: SerializedDoc, fallback = '') {
-  return doc.head != null && doc.head.title != '' ? doc.head.title : fallback
+  return doc.title != '' ? doc.title : fallback
 }
 
 export function getTeamURL(team: SerializedTeam) {
@@ -39,10 +39,9 @@ export function getFolderURL(folder: SerializedFolder) {
 }
 
 export function getDocURL(doc: SerializedDoc) {
-  const title = doc.head != null ? doc.head.title : ''
   return [
     '/',
-    title !== '' ? slugify(title) + '-' : '',
+    doc.title !== '' ? slugify(doc.title) + '-' : '',
     prefixDocs,
     getHexFromUUID(doc.id),
   ].join('')

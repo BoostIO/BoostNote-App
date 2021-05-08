@@ -13,29 +13,36 @@ const basePreferences: Preferences = {
   docContextIsHidden: false,
   sidebarIsHidden: false,
   sidebarIsHovered: false,
+  sidebarTreeSortingOrder: 'last-updated',
   sideBarWidth: 250,
-  lastUsedLayout: 'split',
+  lastEditorMode: 'edit',
+  lastEditorEditLayout: 'split',
   sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
 }
 
+function getExistingPreferences() {
+  try {
+    const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
+    if (stringifiedPreferences == null) return
+    return JSON.parse(stringifiedPreferences)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(error.message)
+  }
+}
+
+const initialPreference = {
+  ...basePreferences,
+  ...getExistingPreferences(),
+}
+
 function usePreferencesStore() {
   const [preferences, setPreferences] = useSetState<Partial<Preferences>>(
-    basePreferences
+    initialPreference
   )
   const hoverOffTimeoutRef = useRef<number>()
-
-  useEffect(() => {
-    try {
-      const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
-      if (stringifiedPreferences == null) return
-      setPreferences(JSON.parse(stringifiedPreferences))
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(error.message)
-    }
-  }, [setPreferences])
 
   useEffect(() => {
     savePreferencesToLocalStorage(preferences)

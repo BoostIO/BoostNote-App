@@ -87,7 +87,7 @@ export const SectionLabel = styled.label`
   font-size: ${({ theme }) => theme.fontSizes.small}px;
 `
 
-export const SectionParagraph = styled.p`
+export const SectionParagraph = styled.div`
   display: block;
   color: ${({ theme }) => theme.emphasizedTextColor};
   font-size: ${({ theme }) => theme.fontSizes.default}px;

@@ -19,13 +19,15 @@ import {
   inspectDataTransfer,
   convertFileListToArray,
 } from '../../lib/dom'
-import { EditorPosition } from '../../lib/CodeMirror'
+import CodeMirror, { EditorPosition } from '../../lib/CodeMirror'
 import EditorSelectionStatus from '../molecules/EditorSelectionStatus'
 import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
 import EditorThemeSelect from '../molecules/EditorThemeSelect'
 import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import { Position } from 'codemirror'
+import LocalSearch from './LocalSearch'
+import { SearchReplaceOptions } from '../../lib/search/search'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -45,6 +47,11 @@ type NoteDetailState = {
   prevNoteId: string
   content: string
   currentCursor: EditorPosition
+  searchOptions: SearchReplaceOptions
+  showSearch: boolean
+  showReplace: boolean
+  searchQuery: string
+  replaceQuery: string
   currentSelections: {
     head: EditorPosition
     anchor: EditorPosition
@@ -60,6 +67,15 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
       line: 0,
       ch: 0,
     },
+    searchOptions: {
+      regexSearch: false,
+      caseSensitiveSearch: false,
+      preservingCaseReplace: false,
+    },
+    showSearch: false,
+    showReplace: false,
+    searchQuery: '',
+    replaceQuery: '',
     currentSelections: [
       {
         head: {
@@ -74,6 +90,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     ],
   }
   codeMirror?: CodeMirror.EditorFromTextArea
+
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
     this.codeMirror = codeMirror
 
@@ -100,6 +117,15 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
             : 0,
           ch: props.initialCursorPosition ? props.initialCursorPosition.ch : 0,
         },
+        searchOptions: {
+          regexSearch: false,
+          caseSensitiveSearch: false,
+          preservingCaseReplace: false,
+        },
+        showSearch: false,
+        showReplace: false,
+        searchQuery: '',
+        replaceQuery: '',
         currentSelections: [
           {
             head: {
@@ -311,6 +337,88 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     })
   }
 
+  updateSearchReplaceOptions = (options: Partial<SearchReplaceOptions>) => {
+    this.setState((prevState) => {
+      return {
+        searchOptions: {
+          ...prevState.searchOptions,
+          ...options,
+        },
+      }
+    })
+  }
+
+  toggleSearchReplace = (showReplace?: boolean, editor?: CodeMirror.Editor) => {
+    if (showReplace) {
+      this.toggleSearch(true, editor)
+    }
+    this.setState((prevState) => {
+      return {
+        showReplace: showReplace != null ? showReplace : !prevState.showReplace,
+      }
+    })
+  }
+
+  toggleSearch = (
+    showSearch: boolean,
+    editor?: CodeMirror.Editor,
+    searchOnly = false
+  ) => {
+    if (showSearch && this.state.showSearch) {
+      // Focus search again
+      this.setState(() => {
+        return {
+          showSearch: false,
+        }
+      })
+    }
+
+    if (showSearch && editor != null && editor.getSelection() !== '') {
+      // fetch selected range to input into search box
+      this.setState(() => {
+        return {
+          searchQuery: editor.getSelection(),
+        }
+      })
+    }
+    if (editor != null && !showSearch) {
+      // Clear marks if any
+      editor.getAllMarks().forEach((mark) => mark.clear())
+    }
+    this.setState(
+      (prevState) => {
+        return {
+          showSearch: showSearch != null ? showSearch : !prevState.showSearch,
+        }
+      },
+      () => {
+        if (!this.state.showSearch || searchOnly) {
+          this.toggleSearchReplace(false)
+        }
+      }
+    )
+  }
+
+  handleOnReplaceQueryChange = (newReplaceQuery: string) => {
+    if (this.state.replaceQuery !== newReplaceQuery) {
+      this.setState(() => {
+        return {
+          replaceQuery: newReplaceQuery,
+        }
+      })
+    }
+  }
+
+  handleOnSearchQueryChange = (newSearchQuery: string) => {
+    if (this.state.searchQuery !== newSearchQuery) {
+      this.setState(() => {
+        return {
+          searchQuery: newSearchQuery,
+        }
+      })
+    }
+  }
+
   applyBoldStyle = () => {
     const codeMirror = this.codeMirror
     if (codeMirror == null) {
@@ -452,6 +560,12 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         onPaste={this.handlePaste}
         onDrop={this.handleDrop}
         onCursorActivity={this.handleCursorActivity}
+        onLocalSearchToggle={(editor, showLocalSearch) =>
+          this.toggleSearch(showLocalSearch, editor, true)
+        }
+        onLocalSearchReplaceToggle={(editor, showLocalReplace) =>
+          this.toggleSearchReplace(showLocalReplace, editor)
+        }
       />
     )
 
@@ -465,6 +579,28 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
 
     return (
       <Container>
+        {viewMode !== 'preview' &&
+          this.state.showSearch &&
+          this.codeMirror != null && (
+            <SearchBarContainer
+              className={viewMode === 'split' ? 'halfWidth' : ''}
+            >
+              <LocalSearch
+                key={this.state.showReplace + ''}
+                searchQuery={this.state.searchQuery}
+                replaceQuery={this.state.replaceQuery}
+                searchOptions={this.state.searchOptions}
+                codeMirror={this.codeMirror}
+                showingReplace={this.state.showReplace}
+                onSearchToggle={this.toggleSearch}
+                onCursorActivity={this.handleCursorActivity}
+                onSearchQueryChange={this.handleOnSearchQueryChange}
+                onReplaceToggle={this.toggleSearchReplace}
+                onReplaceQueryChange={this.handleOnReplaceQueryChange}
+                onUpdateSearchOptions={this.updateSearchReplaceOptions}
+              />
+            </SearchBarContainer>
+          )}
         <ContentSection>
           {viewMode === 'preview' ? (
             markdownPreviewer
@@ -499,12 +635,21 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   & > .bottomBar {
+    ${backgroundColor};
     display: flex;
-    ${borderTop}
+    ${borderTop};
     height: 24px;
     & > :first-child {
       flex: 1;
     }
+    z-index: 5001;
+  }
+`
+
+const SearchBarContainer = styled.div`
+  width: 100%;
+  &.halfWidth {
+    width: 50%;
   }
 `
 
@@ -512,6 +657,7 @@ const ContentSection = styled.div`
   flex: 1;
   overflow: hidden;
   position: relative;
+
   .editor .CodeMirror {
     position: absolute;
     top: 0;
@@ -519,6 +665,7 @@ const ContentSection = styled.div`
     width: 100%;
     height: 100%;
   }
+
   .MarkdownPreviewer {
     position: absolute;
     top: 0;

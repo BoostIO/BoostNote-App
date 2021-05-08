@@ -6,6 +6,7 @@ export interface SerializableWorkspaceProps {
   id: string
   name: string
   teamId: string
+  personal: boolean
   default: boolean
   public: boolean
   ownerId?: string

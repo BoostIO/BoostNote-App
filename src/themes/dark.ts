@@ -92,6 +92,9 @@ export const darkTheme: BaseTheme = {
   searchItemSelectionHoverBackgroundColor: primaryDarkerColor,
   searchHighlightTextColor: dark87Color,
 
+  // Local Search
+  searchSecondaryBackgroundColor: light12Color,
+
   // Tooltip
   tooltipBackgroundColor: 'rgba(0,0,0,0.8)',
   tooltipTextColor: '#f0f0f0',

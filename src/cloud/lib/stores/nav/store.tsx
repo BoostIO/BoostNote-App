@@ -258,6 +258,27 @@ function useNavStore(pageProps: any): NavContext {
     []
   )
 
+  const updateParentFolderOfDoc = useCallback(
+    (doc: SerializedDocWithBookmark) =>
+      setFoldersMap((prevMap) => {
+        const parentFolder = doc.parentFolder!
+        const existingParentFolder = prevMap.get(parentFolder.id)
+        const existingChildDocsIds =
+          existingParentFolder != null ? existingParentFolder.childDocsIds : []
+        const bookmarked =
+          existingParentFolder != null ? existingParentFolder.bookmarked : false
+        const newFolder: SerializedFolderWithBookmark = {
+          ...existingParentFolder,
+          ...parentFolder,
+          bookmarked,
+          childDocsIds: [...existingChildDocsIds, doc.id],
+        }
+
+        return new Map([...prevMap, [parentFolder.id, newFolder]])
+      }),
+    []
+  )
+
   const removeFromDocsMap = useCallback(
     (...ids: string[]) =>
       setDocsMap((prevMap) => {
@@ -736,6 +757,7 @@ function useNavStore(pageProps: any): NavContext {
     initialLoadDone,
     sideNavCreateButtonState,
     setSideNavCreateButtonState,
+    updateParentFolderOfDoc,
     currentPath,
     setCurrentPath,
     currentWorkspaceId,

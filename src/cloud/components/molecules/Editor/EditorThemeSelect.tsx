@@ -153,7 +153,7 @@ const StyledContainer = styled.div`
   .menu__item__label {
     overflow: nowrap;
     display: block;
-    font-size: ${({ theme }) => theme.space.xxsmall}px;
+    font-size: ${({ theme }) => theme.fontSizes.small}px;
     margin-bottom: 0;
   }
   .menu__item__select {

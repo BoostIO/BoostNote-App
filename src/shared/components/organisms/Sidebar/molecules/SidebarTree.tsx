@@ -7,20 +7,17 @@ import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../lib/types'
-import {
-  MenuItem,
-  MenuTypes,
-  getContextPositionFromDomElement,
-} from '../../../../lib/stores/contextMenu/types'
+import { MenuItem, MenuTypes } from '../../../../lib/stores/contextMenu/types'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import { DraggedTo, onDragLeaveCb, SidebarDragState } from '../../../../lib/dnd'
 import { mdiDotsHorizontal } from '@mdi/js'
-import { FocusedContextMenu } from '../../../molecules/ContextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { scrollbarOverlay } from '../../../../lib/styled/styleFunctions'
+import { useContextMenu } from '../../../../lib/stores/contextMenu'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
+  treeControls?: ControlButtonProps[]
   topRows?: React.ReactNode
 }
 
@@ -77,53 +74,54 @@ export type SidebarNavControls =
       create: (title: string) => Promise<void>
     }
 
-const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
-  const [categoriesContextIsClosed, setCategoriesContextIsClosed] = useState(
-    true
-  )
-  const [categoriesContextPosition, setCategoriesContextPosition] = useState<
-    | {
-        x: number
-        y: number
-      }
-    | undefined
-  >()
+const SidebarTree = ({
+  tree,
+  treeControls = [],
+  topRows,
+}: SidebarTreeProps) => {
+  const { popup } = useContextMenu()
 
   return (
     <Container className='sidebar__tree'>
       <SidebarHeader label='Explorer'>
+        {treeControls.map((control, i) => (
+          <Button
+            variant='icon'
+            size='sm'
+            className='sidebar__tree__viewbtn'
+            key={`tree__control__${i}`}
+            iconPath={control.icon}
+            iconSize={20}
+            onClick={control.onClick}
+            active={control.active}
+            disabled={control.disabled}
+          />
+        ))}
         {tree.length > 0 && (
           <Button
             variant='icon'
+            size='sm'
             className='sidebar__tree__viewbtn'
             key={`tree__control__categories`}
             iconPath={mdiDotsHorizontal}
             iconSize={20}
-            disabled={!categoriesContextIsClosed}
             onClick={async (event) => {
-              setCategoriesContextPosition(
-                getContextPositionFromDomElement(event, tree.length)
+              popup(
+                event,
+                tree.map((category) => {
+                  return {
+                    type: MenuTypes.Normal,
+                    onClick: category.toggleHidden,
+                    label: (
+                      <span>
+                        <Checkbox checked={!category.hidden} />
+                        <span style={{ paddingLeft: 6 }}>{category.label}</span>
+                      </span>
+                    ),
+                  }
+                })
               )
-              setCategoriesContextIsClosed(false)
             }}
-          />
-        )}
-        {tree.length > 0 && !categoriesContextIsClosed && (
-          <FocusedContextMenu
-            menuItems={tree.map((category) => {
-              return {
-                type: MenuTypes.Normal,
-                onClick: category.toggleHidden,
-                label: (
-                  <span>
-                    <Checkbox checked={!category.hidden} />
-                    <span style={{ paddingLeft: 6 }}>{category.label}</span>
-                  </span>
-                ),
-              }
-            })}
-            position={categoriesContextPosition}
-            close={() => setCategoriesContextIsClosed(true)}
           />
         )}
       </SidebarHeader>
@@ -153,6 +151,11 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
   const [draggingItem, setDraggingItem] = useState(false)
   const [inScroll, setInScroll] = useState(false)
   const scrollTimer = useRef<any>()
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [placeholder, setPlaceholder] = useState('')
+  const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
+    null
+  )
 
   const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
     setInScroll(true)
@@ -160,6 +163,36 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
       setInScroll(false)
     }, 600)
   }, [])
+
+  const controls = useMemo(
+    () =>
+      (category.controls || []).map((control) => {
+        if (control.onClick != null) {
+          return control
+        }
+
+        return {
+          icon: control.icon,
+          disabled: control.disabled,
+          onClick: () => {
+            if (category.folded) {
+              category.folding?.toggle()
+            }
+            setPlaceholder(control.placeholder)
+            setCreationFormIsOpened(true)
+            setShowCreateForm(true)
+            creationCallbackRef.current = control.create
+          },
+        }
+      }) as ControlButtonProps[],
+    [
+      category.controls,
+      category.folded,
+      category.folding,
+      creationCallbackRef,
+      setCreationFormIsOpened,
+    ]
+  )
 
   return (
     <React.Fragment>
@@ -174,11 +207,7 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
         labelClick={category.folding?.toggle}
         folding={category.folding}
         folded={category.folded}
-        controls={
-          (category.controls || []).filter(
-            (c) => c.onClick != null
-          ) as ControlButtonProps[]
-        }
+        controls={controls}
         depth={-1}
       />
       {!category.folded && (
@@ -191,6 +220,16 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
           ])}
           onScroll={onScrollHandler}
         >
+          {showCreateForm && (
+            <SidebarTreeForm
+              placeholder={placeholder}
+              close={() => {
+                setCreationFormIsOpened(false)
+                setShowCreateForm(false)
+              }}
+              createCallback={creationCallbackRef.current}
+            />
+          )}
           {category.rows.map((row, i) => (
             <SidebarNestedTreeRow
               isLastRow={i === category.rows.length - 1}
@@ -418,12 +457,12 @@ const Container = styled.div`
 
   .sidebar__header {
     padding: ${({ theme }) => theme.sizes.spaces.sm}px
-      ${({ theme }) => theme.sizes.spaces.xsm}px 0
+      ${({ theme }) => theme.sizes.spaces.df}px 0
       ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .sidebar__tree__viewbtn {
-    width: 32px;
+    width: 24px;
   }
 
   .sidebar__tree__wrapper {
@@ -450,12 +489,15 @@ const Container = styled.div`
 
   .sidebar__category__items__shrink1 {
     flex-shrink: 1;
+    min-height: 50px;
   }
   .sidebar__category__items__shrink2 {
     flex-shrink: 2;
+    min-height: 50px;
   }
   .sidebar__category__items__shrink3 {
     flex-shrink: 3;
+    min-height: 50px;
   }
 
   .sidebar__category__items--silenced .sidebar__tree__item {

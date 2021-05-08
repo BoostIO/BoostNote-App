@@ -28,7 +28,7 @@ import {
   NoteSearchData,
   SearchResult,
   SEARCH_DEBOUNCE_TIMEOUT,
-  MERGE_SAME_LINE_RESULTS_INTO_ONE,
+  GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE,
   TagSearchResult,
 } from '../../lib/search/search'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
@@ -173,8 +173,9 @@ const SearchModal = ({ storage }: SearchModalProps) => {
       if (codeEditor) {
         const cursor = codeEditor.getSearchCursor(getSearchRegex(searchValue))
         let first = true
-        let from, to
-        let currentItemId = 0
+        let from: CodeMirror.Position
+        let to: CodeMirror.Position
+        let currentItemIndex = 0
         let previousLine = -1
         let lineChanged = false
         while (cursor.findNext()) {
@@ -188,19 +189,19 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
           lineChanged = from.line != previousLine
           previousLine = from.line
-          if (MERGE_SAME_LINE_RESULTS_INTO_ONE) {
+          if (GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
             if (lineChanged) {
-              currentItemId++
+              currentItemIndex++
             }
           }
 
           codeEditor.markText(from, to, {
             className:
-              currentItemId == selectedItemId ? 'marked selected' : 'marked',
+              currentItemIndex == selectedItemId ? 'marked selected' : 'marked',
           })
 
-          if (!MERGE_SAME_LINE_RESULTS_INTO_ONE) {
-            currentItemId++
+          if (!GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE) {
+            currentItemIndex++
           }
         }
       }

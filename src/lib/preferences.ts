@@ -340,7 +340,24 @@ function usePreferencesStore() {
         ])
       }
     }
-  }, [mergedPreferences])
+
+    // add new keymaps to preferences if weren't available before
+    let addedKeymap = false
+    for (const [key, keymapItem] of defaultKeymap) {
+      if (!keymap.has(key)) {
+        keymap.set(key, keymapItem)
+        addedKeymap = true
+      }
+    }
+    if (addedKeymap) {
+      setPreferences((preferences) => {
+        return {
+          ...preferences,
+          'general.keymap': keymap,
+        }
+      })
+    }
+  }, [mergedPreferences, setPreferences])
 
   const resetKeymap = useCallback(() => {
     keymap.clear()
@@ -356,9 +373,9 @@ function usePreferencesStore() {
   }, [keymap, setPreferences])
 
   useEffect(() => {
-    savePreferences(preferences)
     loadKeymaps()
-  }, [loadKeymaps, preferences])
+    savePreferences(preferences)
+  }, [loadKeymaps, mergedPreferences, preferences, resetKeymap])
 
   return {
     tab,

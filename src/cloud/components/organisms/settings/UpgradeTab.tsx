@@ -23,7 +23,6 @@ import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
-import { useToast } from '../../../../shared/lib/stores/toast'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -37,7 +36,6 @@ const UpgradeTab = () => {
     updateTeamSubscription,
     permissions = [],
   } = usePage<PageStoreWithTeam>()
-  const { pushMessage } = useToast()
   const [tabState, setTabState] = useState<UpgradeTabs>('plans')
   const { openSettingsTab } = useSettings()
   const {
@@ -141,12 +139,6 @@ const UpgradeTab = () => {
                       <SubscriptionForm
                         team={team}
                         initialPlan={initialPlan}
-                        onError={(err) =>
-                          pushMessage({
-                            title: 'Subscription Error',
-                            description: err.message,
-                          })
-                        }
                         ongoingTrial={
                           subscription != null &&
                           subscription.status === 'trialing'
