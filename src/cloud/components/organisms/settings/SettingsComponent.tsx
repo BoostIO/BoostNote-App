@@ -27,7 +27,7 @@ import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/atoms/SettingSidenavHeader'
 import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
-import SettingContent from '../../../../shared/components/organisms/Settings/atoms/SettingContent'
+import SettingMain from '../../../../shared/components/organisms/Settings/atoms/SettingMain'
 import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
 
 const SettingsComponent = () => {
@@ -196,7 +196,7 @@ const SettingsComponent = () => {
             )}
         </SettingSidenav>
       }
-      content={<SettingContent ref={contentSideRef}>{content}</SettingContent>}
+      content={<SettingMain ref={contentSideRef}>{content}</SettingMain>}
     ></Settings>
   )
 }
