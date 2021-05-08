@@ -1,14 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import styled from '../../../lib/styled'
-import {
-  Section,
-  TabHeader,
-  Column,
-  Container,
-  Scrollable,
-  SectionSubtleText,
-  SectionHeader2,
-} from './styled'
+import { SectionSubtleText, SectionHeader2 } from './styled'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import ServiceConnect from '../../atoms/ServiceConnect'
 import Spinner from '../../atoms/CustomSpinner'
@@ -25,6 +17,7 @@ import Button from '../../atoms/Button'
 import { openNew } from '../../../lib/utils/platform'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
@@ -48,11 +41,11 @@ const IntegrationsTab = () => {
   }, [])
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <TabHeader>Integrations</TabHeader>
+    <SettingTabContent
+      header={'Integrations'}
+      body={
+        <>
+          <section>
             <SectionSubtleText>
               Connect 3rd party content to your Boost Note for Teams documents.
             </SectionSubtleText>
@@ -77,8 +70,8 @@ const IntegrationsTab = () => {
                 </a>
               </StyledServiceListItem>
             </StyledServiceList>
-          </Section>
-          <Section>
+          </section>
+          <section>
             <SectionHeader2>Popular Integrations</SectionHeader2>
             <StyledServiceList>
               <StyledServiceListItem>
@@ -509,8 +502,8 @@ const IntegrationsTab = () => {
                 </a>
               </StyledServiceListItem>
             </StyledServiceList>
-          </Section>
-          <Section>
+          </section>
+          <section>
             <SectionHeader2>External Entity</SectionHeader2>
             <StyledServiceList>
               <StyledServiceListItem>
@@ -592,10 +585,10 @@ const IntegrationsTab = () => {
                 </p>
               </StyledServiceListItem>
             </StyledServiceList>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+          </section>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 

@@ -1,14 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Column,
-  Scrollable,
-  Container,
-  Section,
-  SectionRow,
-  TabHeader,
-  StyledSmallFont,
-} from './styled'
+import { SectionRow, StyledSmallFont } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -23,6 +15,7 @@ import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -82,15 +75,18 @@ const UpgradeTab = () => {
 
   if (tabState === 'plans') {
     return (
-      <Column>
-        {showTrialPopup && (
-          <FreeTrialPopup team={team} close={() => setShowTrialPopup(false)} />
-        )}
-        <Scrollable>
-          <Container>
-            <Section>
+      <SettingTabContent
+        header={t('settings.teamUpgrade')}
+        body={
+          <>
+            {showTrialPopup && (
+              <FreeTrialPopup
+                team={team}
+                close={() => setShowTrialPopup(false)}
+              />
+            )}
+            <section>
               <StyledSmallFont>
-                <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
                 <PlanTables
                   team={team}
                   subscription={subscription}
@@ -113,48 +109,45 @@ const UpgradeTab = () => {
                   .
                 </StyledFYI>
               </StyledSmallFont>
-            </Section>
-          </Container>
-        </Scrollable>
-      </Column>
+            </section>
+          </>
+        }
+      ></SettingTabContent>
     )
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <StyledSmallFont>
-              <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
-
-              {currentUserPermissions.role !== 'admin' ? (
-                <ColoredBlock variant='danger'>
-                  Only admins can access this content.
-                </ColoredBlock>
-              ) : (
-                !(subscription != null && subscription.status === 'active') && (
-                  <SectionRow>
-                    <Elements stripe={stripePromise}>
-                      <SubscriptionForm
-                        team={team}
-                        initialPlan={initialPlan}
-                        ongoingTrial={
-                          subscription != null &&
-                          subscription.status === 'trialing'
-                        }
-                        onSuccess={onSuccessCallback}
-                        onCancel={onCancelCallback}
-                      />
-                    </Elements>
-                  </SectionRow>
-                )
-              )}
-            </StyledSmallFont>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      header={t('settings.teamUpgrade')}
+      body={
+        <section>
+          <StyledSmallFont>
+            {currentUserPermissions.role !== 'admin' ? (
+              <ColoredBlock variant='danger'>
+                Only admins can access this content.
+              </ColoredBlock>
+            ) : (
+              !(subscription != null && subscription.status === 'active') && (
+                <SectionRow>
+                  <Elements stripe={stripePromise}>
+                    <SubscriptionForm
+                      team={team}
+                      initialPlan={initialPlan}
+                      ongoingTrial={
+                        subscription != null &&
+                        subscription.status === 'trialing'
+                      }
+                      onSuccess={onSuccessCallback}
+                      onCancel={onCancelCallback}
+                    />
+                  </Elements>
+                </SectionRow>
+              )
+            )}
+          </StyledSmallFont>
+        </section>
+      }
+    ></SettingTabContent>
   )
 }
 

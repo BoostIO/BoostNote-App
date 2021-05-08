@@ -1,22 +1,20 @@
 import React from 'react'
-import { Column, Container, Scrollable, Section, TabHeader } from './styled'
 import { useTranslation } from 'react-i18next'
 import AppFeedbackForm from '../../molecules/AppFeedbackForm'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const AppFeedbackTab = () => {
   const { t } = useTranslation()
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader>{t('settings.appFeedback')}</TabHeader>
-          <Section>
-            <AppFeedbackForm />
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      header={t('settings.appFeedback')}
+      body={
+        <section>
+          <AppFeedbackForm />
+        </section>
+      }
+    ></SettingTabContent>
   )
 }
 
