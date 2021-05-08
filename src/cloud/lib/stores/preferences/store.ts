@@ -20,6 +20,7 @@ const basePreferences: Preferences = {
   sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
+  sidebarOrderedCategories: 'Bookmarks|Workspaces|Private|Labels|More',
 }
 
 function getExistingPreferences() {

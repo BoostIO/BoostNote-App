@@ -39,6 +39,11 @@ export interface SidebarNavCategory {
   rows: SidebarTreeChildRow[]
   shrink?: 1 | 2 | 3
   lastCategory?: boolean
+  drag?: {
+    onDragStart: () => void
+    onDragEnd: () => void
+    onDrop: () => void
+  }
 }
 
 type SidebarFoldingNavRow = SidebarNavRow & {
@@ -62,6 +67,7 @@ interface SidebarNavRow {
   dropAround?: boolean
   onDragStart?: () => void
   onDrop?: (position?: SidebarDragState) => void
+  onDragEnd?: () => void
 }
 
 export type SidebarNavControls =
@@ -80,6 +86,7 @@ const SidebarTree = ({
   topRows,
 }: SidebarTreeProps) => {
   const { popup } = useContextMenu()
+  const [draggingCategory, setDraggingCategory] = useState(false)
 
   return (
     <Container className='sidebar__tree'>
@@ -136,7 +143,12 @@ const SidebarTree = ({
 
           return (
             <SidebarCategory
-              category={{ ...category, lastCategory: i === tree.length - 1 }}
+              category={{
+                ...category,
+                lastCategory: i === tree.length - 1,
+              }}
+              draggingCategory={draggingCategory}
+              setDraggingCategory={setDraggingCategory}
               key={`sidebar__category__${i}`}
             />
           )
@@ -146,7 +158,15 @@ const SidebarTree = ({
   )
 }
 
-const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
+const SidebarCategory = ({
+  category,
+  draggingCategory,
+  setDraggingCategory,
+}: {
+  category: SidebarNavCategory
+  draggingCategory: boolean
+  setDraggingCategory: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [creationFormIsOpened, setCreationFormIsOpened] = useState(false)
   const [draggingItem, setDraggingItem] = useState(false)
   const [inScroll, setInScroll] = useState(false)
@@ -156,6 +176,8 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
   const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
     null
   )
+  const [draggedOver, setDraggedOver] = useState(false)
+  const dragRef = useRef<HTMLDivElement>(null)
 
   const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
     setInScroll(true)
@@ -194,7 +216,7 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
     ]
   )
 
-  return (
+  const content = (
     <React.Fragment>
       <SidebarItem
         className={cc([
@@ -239,11 +261,61 @@ const SidebarCategory = ({ category }: { category: SidebarNavCategory }) => {
               setCreationFormIsOpened={setCreationFormIsOpened}
               draggingItem={draggingItem}
               setDraggingItem={setDraggingItem}
+              draggingCategory={draggingCategory}
             />
           ))}
         </div>
       )}
     </React.Fragment>
+  )
+
+  if (category.drag == null) {
+    return (
+      <div
+        className={cc([
+          'sidebar__category__wrapper',
+          !category.folded && 'sidebar__category__wrapper--open',
+        ])}
+      >
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <div
+      draggable={true}
+      className={cc([
+        'sidebar__category__wrapper',
+        draggedOver && 'sidebar__category__wrapper--draggedOver',
+        !category.folded && 'sidebar__category__wrapper--open',
+      ])}
+      onDragStart={(event) => {
+        event.stopPropagation()
+        setDraggingCategory(true)
+        category.drag!.onDragStart()
+      }}
+      onDragLeave={(event) => {
+        onDragLeaveCb(event, dragRef, () => {
+          setDraggedOver(false)
+        })
+      }}
+      onDragEnd={() => {
+        category.drag!.onDragEnd()
+      }}
+      onDragOver={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setDraggedOver(true)
+      }}
+      onDrop={(event) => {
+        event.stopPropagation()
+        category.drag!.onDrop()
+        setDraggedOver(false)
+      }}
+    >
+      {content}
+    </div>
   )
 }
 
@@ -254,6 +326,7 @@ const SidebarNestedTreeRow = ({
   setCreationFormIsOpened,
   draggingItem,
   setDraggingItem,
+  draggingCategory,
 }: {
   isLastRow: boolean
   draggingItem: boolean
@@ -261,6 +334,7 @@ const SidebarNestedTreeRow = ({
   row: SidebarTreeChildRow
   prefix?: string
   setCreationFormIsOpened: React.Dispatch<React.SetStateAction<boolean>>
+  draggingCategory: boolean
 }) => {
   const [draggedOver, setDraggedOver] = useState<SidebarDragState>()
   const dragRef = useRef<HTMLDivElement>(null)
@@ -347,7 +421,8 @@ const SidebarNestedTreeRow = ({
         ref={dragRef}
         className={cc([
           'sidebar__drag__zone',
-          draggedOver === DraggedTo.insideFolder &&
+          !draggingCategory &&
+            draggedOver === DraggedTo.insideFolder &&
             `sidebar__drag__zone--dragged-over`,
         ])}
         draggable={row.onDragStart != null}
@@ -363,6 +438,11 @@ const SidebarNestedTreeRow = ({
           onDragLeaveCb(event, dragRef, () => {
             setDraggedOver(undefined)
           })
+        }}
+        onDragEnd={() => {
+          if (row.onDragEnd != null) {
+            row.onDragEnd()
+          }
         }}
         onDragOver={(event) => {
           event.preventDefault()
@@ -409,6 +489,7 @@ const SidebarNestedTreeRow = ({
               prefix={prefix}
               setCreationFormIsOpened={setCreationFormIsOpened}
               setDraggingItem={setDraggingItem}
+              draggingCategory={draggingCategory}
             />
           ))}
       </div>
@@ -447,6 +528,10 @@ const Container = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  .sidebar__category__wrapper--draggedOver {
+    background: ${({ theme }) => theme.colors.background.quaternary};
+  }
 
   .sidebar__tree__rows--top {
     margin: ${({ theme }) => theme.sizes.spaces.sm}px 13px !important;
@@ -522,8 +607,10 @@ const Container = styled.div`
     border-bottom-color: ${({ theme }) => theme.colors.border.main} !important;
   }
 
-  .sidebar__category__items + .sidebar__category {
-    border-top-color: ${({ theme }) => theme.colors.border.main} !important;
+  .sidebar__category__wrapper--open + .sidebar__category__wrapper {
+    .sidebar__category {
+      border-top-color: ${({ theme }) => theme.colors.border.main} !important;
+    }
   }
 
   .sidebar__drag__zone__border {

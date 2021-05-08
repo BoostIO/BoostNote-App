@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { usePreferences } from '../lib/stores/preferences'
+import {
+  SidebarOrderedCategoriesDelimiter,
+  usePreferences,
+} from '../lib/stores/preferences'
 import { usePage } from '../lib/stores/pageStore'
 import {
   useGlobalKeyDownHandler,
@@ -251,7 +254,12 @@ const Application = ({
     [setPreferences]
   )
 
-  const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useCloudDnd()
+  const {
+    draggedCategory,
+    draggedResource,
+    dropInDocOrFolder,
+    dropInWorkspace,
+  } = useCloudDnd()
   const {
     sendingMap: treeSendingMap,
     createWorkspace,
@@ -331,6 +339,73 @@ const Application = ({
     openWorkspaceEditForm,
     draggedResource,
     team,
+  ])
+
+  const treeWithOrderedNav = useMemo(() => {
+    if (tree == null) {
+      return undefined
+    }
+
+    const orderedCategories = preferences.sidebarOrderedCategories.split(
+      SidebarOrderedCategoriesDelimiter
+    )
+
+    const orderedTree = tree.sort((categoryA, categoryB) => {
+      if (
+        orderedCategories.indexOf(categoryA.label) >
+        orderedCategories.indexOf(categoryB.label)
+      ) {
+        return 1
+      } else {
+        return -1
+      }
+    })
+
+    orderedTree.forEach((category) => {
+      category.drag = {
+        onDragStart: () => {
+          draggedCategory.current = category.label
+        },
+        onDragEnd: () => {
+          draggedCategory.current = undefined
+        },
+        onDrop: () => {
+          if (draggedCategory.current == null) {
+            return
+          }
+          const orderedItems = orderedCategories.splice(0)
+          const categoryIndex = orderedItems.includes(category.label)
+            ? orderedItems.indexOf(category.label)
+            : orderedItems.length - 1
+
+          const reArrangedArray = orderedItems.reduce((acc, val, i) => {
+            if (i === categoryIndex) {
+              acc.push(draggedCategory.current!)
+            }
+
+            if (i !== categoryIndex && val === draggedCategory.current) {
+              return acc
+            }
+
+            acc.push(val)
+            return acc
+          }, [] as string[])
+
+          setPreferences({
+            sidebarOrderedCategories: reArrangedArray.join(
+              SidebarOrderedCategoriesDelimiter
+            ),
+          })
+        },
+      }
+    })
+
+    return orderedTree
+  }, [
+    tree,
+    preferences.sidebarOrderedCategories,
+    setPreferences,
+    draggedCategory,
   ])
 
   const users = useMemo(() => {
@@ -556,7 +631,7 @@ const Application = ({
             spaceBottomRows={buildSpacesBottomRows(push)}
             sidebarExpandedWidth={preferences.sideBarWidth}
             sidebarState={sidebarState}
-            tree={tree}
+            tree={treeWithOrderedNav}
             sidebarResize={sidebarResize}
             searchQuery={sidebarSearchQuery}
             setSearchQuery={setSearchQuery}
@@ -997,6 +1072,9 @@ function mapTree(
       onDragStart: () => {
         draggedResource.current = { type: 'folder', result: folder }
       },
+      onDragEnd: () => {
+        draggedResource.current = undefined
+      },
       dropIn: true,
       dropAround: sortingOrder === 'drag' ? true : false,
       controls: [
@@ -1085,6 +1163,9 @@ function mapTree(
         dropInFolderOrDoc({ type: 'doc', result: doc }, position),
       onDragStart: () => {
         draggedResource.current = { type: 'doc', result: doc }
+      },
+      onDragEnd: () => {
+        draggedResource.current = undefined
       },
       contextControls: [
         {
@@ -1568,6 +1649,7 @@ type CloudTreeItem = {
   dropAround?: boolean
   onDragStart?: () => void
   onDrop?: (position?: SidebarDragState) => void
+  onDragEnd?: () => void
 }
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
