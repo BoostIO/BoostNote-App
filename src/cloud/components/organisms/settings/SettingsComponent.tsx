@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect } from 'react'
 import { useSettings } from '../../../lib/stores/settings'
-import SettingSidenavItem from './SettingSidenavItem'
 import {
   preventKeyboardEventPropagation,
   useUpDownNavigationListener,
@@ -29,12 +28,14 @@ import SettingsLayout from '../../../../shared/components/organisms/Settings/mol
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/atoms/SettingSidenavHeader'
 import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
 import SettingContent from '../../../../shared/components/organisms/Settings/atoms/SettingContent'
+import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
   const { closed, toggleClosed, settingsTab } = useSettings()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
+  const { openSettingsTab } = useSettings()
   const { team, subscription, currentUserPermissions } = usePage<
     PageStoreWithTeam
   >()
@@ -122,44 +123,50 @@ const SettingsComponent = () => {
             text={'Account'}
             size={16}
           />
-          <SettingSidenavItem
+          <SettingTabButton
             label={t('settings.personalInfo')}
             active={settingsTab === 'personalInfo'}
             tab='personalInfo'
             id='settings-personalInfoTab-btn'
+            onClick={() => openSettingsTab('personalInfo')}
           />
-          <SettingSidenavItem
+          <SettingTabButton
             label={t('settings.preferences')}
             active={settingsTab === 'preferences'}
             tab='preferences'
             id='settings-personalInfoTab-btn'
+            onClick={() => openSettingsTab('preferences')}
           />
           <SettingSidenavHeader path={mdiDomain} text={'Space'} size={16} />
           {currentUserPermissions != null && (
             <>
-              <SettingSidenavItem
+              <SettingTabButton
                 label={t('settings.teamInfo')}
                 active={settingsTab === 'teamInfo'}
                 tab='teamInfo'
                 id='settings-teamInfoTab-btn'
+                onClick={() => openSettingsTab('teamInfo')}
               />
-              <SettingSidenavItem
+              <SettingTabButton
                 label={t('settings.teamMembers')}
                 active={settingsTab === 'teamMembers'}
                 tab='teamMembers'
                 id='settings-teamMembersTab-btn'
+                onClick={() => openSettingsTab('teamMembers')}
               />
-              <SettingSidenavItem
+              <SettingTabButton
                 label={t('settings.integrations')}
                 active={settingsTab === 'integrations'}
                 tab='integrations'
                 id='settings-integrationsTab-btn'
+                onClick={() => openSettingsTab('integrations')}
               />
-              <SettingSidenavItem
+              <SettingTabButton
                 label='API'
                 active={settingsTab === 'api'}
                 tab='api'
                 id='settings-apiTab-btn'
+                onClick={() => openSettingsTab('api')}
               />
             </>
           )}
@@ -168,18 +175,20 @@ const SettingsComponent = () => {
             currentUserPermissions.role === 'admin' && (
               <>
                 {subscription == null || subscription.status === 'trialing' ? (
-                  <SettingSidenavItem
+                  <SettingTabButton
                     label={t('settings.teamUpgrade')}
                     active={settingsTab === 'teamUpgrade'}
                     tab='teamUpgrade'
                     id='settings-teamUpgradeTab-btn'
+                    onClick={() => openSettingsTab('teamUpgrade')}
                   />
                 ) : (
-                  <SettingSidenavItem
+                  <SettingTabButton
                     label={t('settings.teamSubscription')}
                     active={settingsTab === 'teamSubscription'}
                     tab='teamSubscription'
                     id='settings-teamBillingTab-btn'
+                    onClick={() => openSettingsTab('teamSubscription')}
                   />
                 )}
                 <TeamSubLimit />
