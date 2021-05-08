@@ -13,6 +13,7 @@ import { useToast } from '../../../shared/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
 
 export function useCloudDnd() {
+  const draggedCategory = useRef<string>()
   const draggedResource = useRef<NavResource>()
   const {
     updateFoldersMap,
@@ -125,6 +126,7 @@ export function useCloudDnd() {
   )
 
   return {
+    draggedCategory,
     draggedResource,
     dropInWorkspace,
     dropInDocOrFolder,

@@ -13,4 +13,7 @@ export interface Preferences {
   sidebarBookmarksAreUnfolded: boolean
   lastSidebarState: SidebarState | undefined
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
+  sidebarOrderedCategories: string
 }
+
+export const SidebarOrderedCategoriesDelimiter = '|'
