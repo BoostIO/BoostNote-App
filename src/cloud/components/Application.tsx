@@ -396,6 +396,8 @@ const Application = ({
               SidebarOrderedCategoriesDelimiter
             ),
           })
+
+          draggedCategory.current = undefined
         },
       }
     })

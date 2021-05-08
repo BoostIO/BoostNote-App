@@ -30,8 +30,11 @@ export function useCloudDnd() {
       updateFolder: (
         folder: SerializedFolder,
         body: UpdateFolderRequestBody
-      ) => void,
-      updateDoc: (doc: SerializedDoc, body: UpdateDocRequestBody) => void
+      ) => Promise<void>,
+      updateDoc: (
+        doc: SerializedDoc,
+        body: UpdateDocRequestBody
+      ) => Promise<void>
     ) => {
       if (draggedResource.current == null) {
         return
@@ -52,6 +55,8 @@ export function useCloudDnd() {
           description: folder.description,
           folderName: folder.name,
           emoji: folder.emoji,
+        }).then(() => {
+          draggedResource.current = undefined
         })
       } else if (draggedResource.current.type === 'doc') {
         const doc = draggedResource.current.result
@@ -59,6 +64,8 @@ export function useCloudDnd() {
           workspaceId: workspaceId,
           title: doc.title,
           emoji: doc.emoji,
+        }).then(() => {
+          draggedResource.current = undefined
         })
       }
     },
@@ -110,6 +117,8 @@ export function useCloudDnd() {
         if (pageDoc != null && changedDocs.get(pageDoc.id) != null) {
           setCurrentPath(changedDocs.get(pageDoc.id)!.folderPathname)
         }
+
+        draggedResource.current = undefined
       } catch (error) {
         pushApiErrorMessage(error)
       }
