@@ -1,12 +1,12 @@
 import React from 'react'
-import styled from '../../../../lib/styled'
+import styled from '../../../lib/styled'
 
-interface SettingsLayoutProps {
+interface SettingsProps {
   sidebar: React.ReactNode
   content: React.ReactNode
 }
 
-const SettingsLayout = ({ sidebar, content }: SettingsLayoutProps) => (
+const Settings = ({ sidebar, content }: SettingsProps) => (
   <Container className='settings__layout'>
     <div className='settings__wrapper'>
       <div className='settings__sidebar'>{sidebar}</div>
@@ -55,4 +55,4 @@ const Container = styled.div`
   }
 `
 
-export default SettingsLayout
+export default Settings

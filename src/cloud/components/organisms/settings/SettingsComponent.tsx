@@ -24,7 +24,7 @@ import IntegrationsTab from './IntegrationsTab'
 import PreferencesTab from './PreferencesTab'
 import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
-import SettingsLayout from '../../../../shared/components/organisms/Settings/molecles/SettingsLayout'
+import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/atoms/SettingSidenavHeader'
 import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
 import SettingContent from '../../../../shared/components/organisms/Settings/atoms/SettingContent'
@@ -115,7 +115,7 @@ const SettingsComponent = () => {
   }
 
   return (
-    <SettingsLayout
+    <Settings
       sidebar={
         <SettingSidenav ref={menuRef}>
           <SettingSidenavHeader
@@ -197,7 +197,7 @@ const SettingsComponent = () => {
         </SettingSidenav>
       }
       content={<SettingContent ref={contentSideRef}>{content}</SettingContent>}
-    ></SettingsLayout>
+    ></Settings>
   )
 }
 
