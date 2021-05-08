@@ -1,13 +1,8 @@
 import React, { useCallback, useState, useMemo } from 'react'
 import {
-  Section,
-  TabHeader,
   SectionLabel,
   SectionInput,
   SectionProfilePic,
-  Column,
-  Container,
-  Scrollable,
   SectionFlexLeft,
   SectionSeparator,
   SectionDescription,
@@ -27,6 +22,7 @@ import {
   dangerButtonStyle,
 } from '../../../lib/styled/styleFunctions'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const InfoTab = () => {
   const {
@@ -87,11 +83,11 @@ const InfoTab = () => {
   }, [currentUser])
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader className='marginTop'>{t('settings.info')}</TabHeader>
-          <Section>
+    <SettingTabContent
+      header={t('settings.info')}
+      body={
+        <>
+          <section>
             {currentUser != null && (
               <>
                 <SectionLabel>Display Name</SectionLabel>
@@ -123,9 +119,9 @@ const InfoTab = () => {
                 {t('general.cancel')}
               </CustomButton>
             </SectionFlexLeft>
-          </Section>
+          </section>
           <SectionSeparator />
-          <Section>
+          <section>
             <StyledInfoTabDelete>
               <SectionDescription>
                 {t('settings.account.delete')}
@@ -142,10 +138,10 @@ const InfoTab = () => {
                 {t('general.delete')}
               </AccountLink>
             </StyledInfoTabDelete>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+          </section>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 

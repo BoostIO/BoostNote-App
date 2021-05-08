@@ -1,13 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Column,
-  Container,
-  Scrollable,
-  Section,
-  TabHeader,
-  StyledSmallFont,
-} from './styled'
+import { StyledSmallFont } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -21,6 +14,7 @@ import styled from '../../../lib/styled'
 import { stripePublishableKey } from '../../../lib/consts'
 import SubscriptionManagement from '../Subscription/SubscriptionManagement'
 import UpdateBillingPromoForm from '../../molecules/SubscriptionForm/UpdateBillingPromo'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -57,81 +51,75 @@ const SubscriptionTab = () => {
 
   if (currentUserPermissions.role !== 'admin') {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <Section>
-              <ColoredBlock variant='danger'>
-                Only admins can access this content.
-              </ColoredBlock>
-            </Section>
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        body={
+          <section>
+            <ColoredBlock variant='danger'>
+              Only admins can access this content.
+            </ColoredBlock>
+          </section>
+        }
+      ></SettingTabContent>
     )
   }
 
   if (subscription != null && subscription.status === 'trialing') {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <Section>
-              <ColoredBlock variant='danger'>
-                No active subscription. Your trial is underway
-              </ColoredBlock>
-            </Section>
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        body={
+          <section>
+            <ColoredBlock variant='danger'>
+              No active subscription. Your trial is underway
+            </ColoredBlock>
+          </section>
+        }
+      ></SettingTabContent>
     )
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <StyledSmallFont>
-              <TabHeader>{t('settings.teamSubscription')}</TabHeader>
-              {formtab == null ? (
-                <SubscriptionManagement
-                  subscription={subscription}
-                  team={team}
-                  onEmailClick={() => setFormTab('email')}
-                  onMethodClick={() => setFormTab('method')}
-                  onPromoClick={() => setFormTab('promo')}
-                />
-              ) : (
-                <StyledBillingContainer>
-                  {formtab === 'email' ? (
-                    <UpdateBillingEmailForm
+    <SettingTabContent
+      header={t('settings.teamSubscription')}
+      body={
+        <section>
+          <StyledSmallFont>
+            {formtab == null ? (
+              <SubscriptionManagement
+                subscription={subscription}
+                team={team}
+                onEmailClick={() => setFormTab('email')}
+                onMethodClick={() => setFormTab('method')}
+                onPromoClick={() => setFormTab('promo')}
+              />
+            ) : (
+              <StyledBillingContainer>
+                {formtab === 'email' ? (
+                  <UpdateBillingEmailForm
+                    sub={subscription}
+                    onSuccess={onSuccessHandler}
+                    onCancel={() => setFormTab(undefined)}
+                  />
+                ) : formtab === 'method' ? (
+                  <Elements stripe={stripePromise}>
+                    <UpdateBillingMethodForm
                       sub={subscription}
                       onSuccess={onSuccessHandler}
                       onCancel={() => setFormTab(undefined)}
                     />
-                  ) : formtab === 'method' ? (
-                    <Elements stripe={stripePromise}>
-                      <UpdateBillingMethodForm
-                        sub={subscription}
-                        onSuccess={onSuccessHandler}
-                        onCancel={() => setFormTab(undefined)}
-                      />
-                    </Elements>
-                  ) : formtab === 'promo' ? (
-                    <UpdateBillingPromoForm
-                      sub={subscription}
-                      onSuccess={() => setFormTab(undefined)}
-                      onCancel={() => setFormTab(undefined)}
-                    />
-                  ) : null}
-                </StyledBillingContainer>
-              )}
-            </StyledSmallFont>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+                  </Elements>
+                ) : formtab === 'promo' ? (
+                  <UpdateBillingPromoForm
+                    sub={subscription}
+                    onSuccess={() => setFormTab(undefined)}
+                    onCancel={() => setFormTab(undefined)}
+                  />
+                ) : null}
+              </StyledBillingContainer>
+            )}
+          </StyledSmallFont>
+        </section>
+      }
+    ></SettingTabContent>
   )
 }
 

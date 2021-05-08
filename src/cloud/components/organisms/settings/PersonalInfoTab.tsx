@@ -1,18 +1,14 @@
 import React, { useCallback, useState, useMemo } from 'react'
 import {
-  Section,
-  TabHeader,
   SectionLabel,
   SectionInput,
   SectionProfilePic,
-  Column,
-  Container,
-  Scrollable,
   SectionFlexLeft,
   SectionSeparator,
   SectionDescription,
   SectionSelect,
   SectionHeader3,
+  SectionHeader2,
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
@@ -27,6 +23,7 @@ import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { UserEmailNotificationType } from '../../../interfaces/db/userSettings'
 import { saveUserSettings } from '../../../api/users/settings'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const PersonalInfoTab = () => {
   const {
@@ -121,13 +118,11 @@ const PersonalInfoTab = () => {
   )
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader className='marginTop'>
-            {t('settings.personalInfo')}
-          </TabHeader>
-          <Section>
+    <SettingTabContent
+      header={t('settings.personalInfo')}
+      body={
+        <>
+          <section>
             {currentUser != null && (
               <>
                 <SectionLabel>Display Name</SectionLabel>
@@ -145,10 +140,8 @@ const PersonalInfoTab = () => {
 
             {currentUser != null && (
               <>
-                <TabHeader style={{ marginTop: 20 }}>
-                  {t('settings.notifications')}
-                </TabHeader>
-                <Section>
+                <SectionHeader2>{t('settings.notifications')}</SectionHeader2>
+                <section>
                   <SectionHeader3>
                     {t('settings.notificationsFrequency')}
                   </SectionHeader3>
@@ -176,7 +169,7 @@ const PersonalInfoTab = () => {
                       Never
                     </option>
                   </SectionSelect>
-                </Section>
+                </section>
               </>
             )}
 
@@ -197,9 +190,9 @@ const PersonalInfoTab = () => {
                 {t('general.cancel')}
               </CustomButton>
             </SectionFlexLeft>
-          </Section>
+          </section>
           <SectionSeparator style={{ marginTop: 20 }} />
-          <Section>
+          <section>
             <SectionDescription>
               {t('settings.account.delete')}
             </SectionDescription>
@@ -210,10 +203,10 @@ const PersonalInfoTab = () => {
                 {t('general.delete')}
               </AccountLink>
             </SectionDescription>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+          </section>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 
