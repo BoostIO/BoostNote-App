@@ -341,7 +341,7 @@ const Application = ({
     team,
   ])
 
-  const treeWithOrderedNav = useMemo(() => {
+  const treeWithOrderedCategories = useMemo(() => {
     if (tree == null) {
       return undefined
     }
@@ -631,7 +631,7 @@ const Application = ({
             spaceBottomRows={buildSpacesBottomRows(push)}
             sidebarExpandedWidth={preferences.sideBarWidth}
             sidebarState={sidebarState}
-            tree={treeWithOrderedNav}
+            tree={treeWithOrderedCategories}
             sidebarResize={sidebarResize}
             searchQuery={sidebarSearchQuery}
             setSearchQuery={setSearchQuery}
