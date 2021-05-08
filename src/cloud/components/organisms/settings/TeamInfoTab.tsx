@@ -1,19 +1,12 @@
 import React, { useMemo } from 'react'
-import {
-  Column,
-  Scrollable,
-  Container,
-  Section,
-  TabHeader,
-  SectionDescription,
-  SectionSeparator,
-} from './styled'
+import { SectionDescription, SectionSeparator } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { useTranslation } from 'react-i18next'
 import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -33,7 +26,7 @@ const TeamInfoTab = () => {
     return (
       <>
         <SectionSeparator />
-        <Section>
+        <section>
           <SectionDescription>Space Deletion</SectionDescription>
 
           <SectionDescription>
@@ -47,7 +40,7 @@ const TeamInfoTab = () => {
               {t('general.delete')}
             </TeamLink>
           </SectionDescription>
-        </Section>
+        </section>
       </>
     )
   }, [team, , currentUserPermissions, t, closeSettingsTab])
@@ -57,21 +50,15 @@ const TeamInfoTab = () => {
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader>{t('settings.teamInfo')}</TabHeader>
-          <Section>
-            <SettingsTeamForm
-              team={team}
-              teamConversion={false}
-              header={false}
-            />
-            {adminContent}
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      header={t('settings.teamInfo')}
+      body={
+        <section>
+          <SettingsTeamForm team={team} teamConversion={false} header={false} />
+          {adminContent}
+        </section>
+      }
+    ></SettingTabContent>
   )
 }
 

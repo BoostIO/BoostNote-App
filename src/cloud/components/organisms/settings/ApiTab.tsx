@@ -1,15 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from '../../../lib/styled'
-import {
-  Section,
-  TabHeader,
-  Column,
-  Container,
-  Scrollable,
-  SectionSubtleText,
-  SectionHeader2,
-  PrimaryAnchor,
-} from './styled'
+import { SectionSubtleText, SectionHeader2, PrimaryAnchor } from './styled'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import Spinner from '../../atoms/CustomSpinner'
 import { useApiTokens, withApiTokens } from '../../../lib/stores/apiTokens'
@@ -19,6 +10,7 @@ import { usePage } from '../../../lib/stores/pageStore'
 import Flexbox from '../../atoms/Flexbox'
 import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -42,17 +34,17 @@ const ApiTab = () => {
   }, [apiTokenState, team])
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <TabHeader>API</TabHeader>
+    <SettingTabContent
+      header={'API'}
+      body={
+        <>
+          <section>
             <SectionSubtleText>
               These tokens are available only to{' '}
               {team != null ? team.name : 'your team'}.
             </SectionSubtleText>
-          </Section>
-          <Section>
+          </section>
+          <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
                 <SectionHeader2 style={{ margin: '0' }}>
@@ -103,10 +95,10 @@ const ApiTab = () => {
                 })}
               </StyledServiceList>
             )}
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+          </section>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 

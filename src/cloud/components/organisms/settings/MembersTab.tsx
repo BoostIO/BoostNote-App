@@ -1,10 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
 import {
-  Section,
-  Column,
-  Container,
-  Scrollable,
-  TabHeader,
   SectionHeader2,
   StyledMembername,
   SectionSelect,
@@ -53,6 +48,7 @@ import { getDocTitle } from '../../../lib/utils/patterns'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -402,16 +398,14 @@ const MembersTab = () => {
 
   if (currentUserPermissions == null || team == null) {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <TabHeader>{t('settings.teamMembers')}</TabHeader>
-            <ColoredBlock variant='danger'>
-              You don&apos;t own any permissions.
-            </ColoredBlock>
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        header={t('settings.teamMembers')}
+        body={
+          <ColoredBlock variant='danger'>
+            You don&apos;t own any permissions.
+          </ColoredBlock>
+        }
+      ></SettingTabContent>
     )
   }
 
@@ -419,24 +413,22 @@ const MembersTab = () => {
 
   if (team.personal && showTeamPersonalForm) {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <SettingsTeamForm
-              team={team}
-              onCancel={() => setShowTeamPersonalForm(false)}
-              teamConversion={true}
-            />
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        body={
+          <SettingsTeamForm
+            team={team}
+            onCancel={() => setShowTeamPersonalForm(false)}
+            teamConversion={true}
+          />
+        }
+      ></SettingTabContent>
     )
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
+    <SettingTabContent
+      body={
+        <>
           <TabSelector>
             <button
               className={cc([tab === 'member' && 'active'])}
@@ -454,7 +446,7 @@ const MembersTab = () => {
 
           {tab === 'member' ? (
             team.personal ? (
-              <Section>
+              <section>
                 <Flexbox>
                   <SectionHeader2>Current Members</SectionHeader2>
                   {fetching.has('userEmails') && (
@@ -493,7 +485,7 @@ const MembersTab = () => {
                     </tr>
                   </tbody>
                 </StyledMembersTable>
-              </Section>
+              </section>
             ) : (
               <>
                 {currentUserIsAdmin && (
@@ -502,7 +494,7 @@ const MembersTab = () => {
                   />
                 )}
                 <TeamInvitesSection userPermissions={currentUserPermissions} />
-                <Section>
+                <section>
                   <Flexbox>
                     <SectionHeader2>Current Members</SectionHeader2>
                     {fetching.has('userEmails') && (
@@ -600,7 +592,7 @@ const MembersTab = () => {
                       })}
                     </tbody>
                   </StyledMembersTable>
-                </Section>{' '}
+                </section>{' '}
               </>
             )
           ) : (
@@ -633,7 +625,7 @@ const MembersTab = () => {
                   </CustomButton>
                 </>
               ) : (
-                <Section>
+                <section>
                   <Flexbox>
                     <SectionHeader2>Current Guests</SectionHeader2>
                     {fetching.has('guestEmails') && (
@@ -694,13 +686,13 @@ const MembersTab = () => {
                       ))}
                     </tbody>
                   </StyledMembersTable>
-                </Section>
+                </section>
               )}
             </>
           )}
-        </Container>
-      </Scrollable>
-    </Column>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 
