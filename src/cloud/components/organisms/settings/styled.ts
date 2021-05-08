@@ -3,56 +3,13 @@ import {
   selectStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
-  dangerButtonStyle,
   inputStyle,
-  tableStyle,
   baseIconStyle,
   baseButtonStyle,
-  paddingLeftMedium,
 } from '../../../lib/styled/styleFunctions'
-
-export const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-`
-
-export const Container = styled.div`
-  max-width: 700px;
-  margin: 0 auto;
-`
-
-export const Scrollable = styled.div`
-  flex: 1 1 auto;
-  width: 100%;
-  padding: ${({ theme }) => theme.space.large}px
-    ${({ theme }) => theme.space.default}px;
-  overflow: hidden auto;
-`
 
 export const Section = styled.section`
   padding: ${({ theme }) => theme.space.xsmall}px 0;
-`
-
-export const AlignedRightContent = styled.div`
-  text-align: right;
-`
-
-export const TabHeader = styled.h2`
-  margin-top: 0;
-  margin-bottom: ${({ theme }) => theme.space.xsmall}px;
-  font-size: ${({ theme }) => theme.fontSizes.medium}px;
-  font-weight: 500;
-
-  &.marginTop {
-    margin-top: ${({ theme }) => theme.space.xsmall}px;
-  }
-`
-
-export const SectionHeader1 = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes.xxxsmall * 4}px;
-  font-weight: 500;
 `
 
 export const SectionHeader2 = styled.h2`
@@ -68,16 +25,6 @@ export const SectionHeader3 = styled.h3`
   margin: ${({ theme }) => theme.space.default}px 0;
   font-size: ${({ theme }) => theme.fontSizes.small}px;
   font-weight: 500;
-`
-
-export const SectionSpan = styled.span`
-  display: inline-block;
-  width: 60%;
-  font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
-`
-
-export const SectionHighlight = styled.span`
-  color: ${({ theme }) => theme.primaryBackgroundColor};
 `
 
 export const SectionLabel = styled.label`
@@ -103,23 +50,6 @@ export const PrimaryAnchor = styled.a`
   &:hover {
     color: ${({ theme }) => theme.darkerPrimaryBackgroundColor};
     text-decoration: underline;
-  }
-`
-
-export const SectionMargin = styled.section`
-  margin: ${({ theme }) => theme.space.xlarge * 2}px;
-`
-
-export const SectionControl = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: ${({ theme }) => theme.space.small}px;
-  text-align: right;
-  button {
-    margin-left: ${({ theme }) => theme.space.xxsmall}px;
-    &:first-child {
-      margin-left: 0;
-    }
   }
 `
 
@@ -154,12 +84,6 @@ export const SectionPrimaryButton = styled.button`
 export const SectionSecondaryButton = styled.button`
   ${baseButtonStyle}
   ${secondaryButtonStyle}
-  align-items: center;
-`
-
-export const SectionDangerButton = styled.button`
-  ${baseButtonStyle}
-  ${dangerButtonStyle}
   align-items: center;
 `
 
@@ -205,28 +129,6 @@ export const SectionInLineIcon = styled.span`
   ${baseIconStyle}
 `
 
-export const SectionIcon = styled.div`
-  position: relative;
-  width: 50px;
-  height: 40px;
-  margin-left: 16px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  ${baseIconStyle}
-
-  .icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    width: 1.6em !important;
-  }
-`
-
 export const SectionInput = styled.input`
   ${inputStyle}
   flex-grow: 1;
@@ -263,31 +165,6 @@ export const SectionFooter = styled.div`
     ${({ theme }) => theme.space.default}px;
   border-top: 1px solid ${({ theme }) => theme.baseBorderColor};
   text-align: center;
-`
-
-export const SectionTable = styled.table`
-  ${tableStyle}
-  margin-top: ${({ theme }) => theme.space.default}px;
-  margin-bottom: ${({ theme }) => theme.space.default}px;
-`
-
-export const RightMargin = styled.span`
-  margin-right: ${({ theme }) => theme.space.default}px;
-`
-
-export const TopMargin = styled.div`
-  margin-top: ${({ theme }) => theme.space.large}px;
-`
-
-export const DeleteStorageButton = styled.button`
-  ${baseButtonStyle}
-  ${secondaryButtonStyle}
-  padding: 0 ${({ theme }) => theme.space.small}px;
-  height: 40px;
-  border-radius: 2px;
-  cursor: pointer;
-  vertical-align: middle;
-  align-items: center;
 `
 
 export const SectionIntroduction = styled.div`
@@ -386,11 +263,6 @@ export const SectionSeparator = styled.div`
   height: 1px;
 `
 
-export const StyledWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
 export const StyledMembername = styled.div`
   display: flex;
   align-items: center;
@@ -408,8 +280,4 @@ export const StyledMembername = styled.div`
     font-size: ${({ theme }) => theme.fontSizes.small}px;
     padding: 2px 5px;
   }
-`
-
-export const StyledButtonWrap = styled.div`
-  ${paddingLeftMedium}
 `
