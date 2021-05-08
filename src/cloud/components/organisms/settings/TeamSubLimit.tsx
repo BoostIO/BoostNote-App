@@ -1,8 +1,8 @@
 import React from 'react'
-import styled from '../../../lib/styled'
-import { usePage } from '../../../lib/stores/pageStore'
 import cc from 'classcat'
+import { usePage } from '../../../lib/stores/pageStore'
 import { useSettings } from '../../../lib/stores/settings'
+import SettingTeamSubLimit from '../../../../shared/components/organisms/Settings/atoms/SettingTeamSubLimit'
 
 const TeamSubLimit = () => {
   const { subscription, team, currentSubInfo } = usePage()
@@ -18,7 +18,7 @@ const TeamSubLimit = () => {
 
   if (currentSubInfo.trialing) {
     return (
-      <StyledSidebarTeamSubLimit>
+      <SettingTeamSubLimit>
         <a
           className='upgrade-link'
           href='#'
@@ -36,12 +36,12 @@ const TeamSubLimit = () => {
             You can upgrade at anytime during your trial.
           </p>
         </a>
-      </StyledSidebarTeamSubLimit>
+      </SettingTeamSubLimit>
     )
   }
 
   return (
-    <StyledSidebarTeamSubLimit>
+    <SettingTeamSubLimit>
       <a
         className='upgrade-link'
         href='#'
@@ -69,81 +69,8 @@ const TeamSubLimit = () => {
           </p>
         )}
       </a>
-    </StyledSidebarTeamSubLimit>
+    </SettingTeamSubLimit>
   )
 }
-
-const StyledSidebarTeamSubLimit = styled.div`
-  width: 100%;
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
-
-  p {
-    color: ${({ theme }) => theme.subtleTextColor};
-    margin: 10px 0px;
-  }
-
-  .note-limit {
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
-  }
-
-  .progress-sm {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    height: 3px;
-    font-size: 0.75rem;
-    background-color: ${({ theme }) => theme.subtleBackgroundColor};
-    border-radius: 0.25rem;
-    text-align: center;
-    position: relative;
-  }
-
-  .progress-bar {
-    background-color: ${({ theme }) => theme.primaryBackgroundColor};
-    max-width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    white-space: nowrap;
-    transition: width 0.6s ease;
-    height: 3px;
-
-    &.over-limit {
-      background-color: ${({ theme }) => theme.dangerBackgroundColor};
-    }
-  }
-
-  .upgrade-link {
-    &:hover,
-    &:focus {
-      background-color: ${({ theme }) => theme.subtleBackgroundColor};
-    }
-    cursor: pointer;
-    display: block;
-    margin: 10px 0 5px 0;
-    padding: 15px;
-    text-decoration: none;
-  }
-
-  h6 {
-    font-size: ${({ theme }) => theme.fontSizes.default}px;
-    margin: 0;
-    color: ${({ theme }) => theme.primaryTextColor};
-  }
-
-  .progress-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-  }
-
-  .text-danger {
-    color: ${({ theme }) => theme.dangerTextColor};
-  }
-`
 
 export default TeamSubLimit
