@@ -7,7 +7,6 @@ import {
   mdiHistory,
   mdiArchiveOutline,
   mdiArrowRight,
-  mdiAccountGroupOutline,
   mdiClockOutline,
   mdiLabelMultipleOutline,
   mdiAccountMultiplePlusOutline,
@@ -53,9 +52,6 @@ import {
   topbarIconButtonStyle,
 } from '../../../../../../lib/styled/styleFunctions'
 import Icon from '../../../../../atoms/Icon'
-import { UserPresenceInfo } from '../../../../../../interfaces/presence'
-import { LayoutMode } from '../../../../../layouts/DocEditLayout'
-import PresenceIcons from '../../../PresenceIcons'
 import DocShare from '../../../../../molecules/DocShare'
 import plur from 'plur'
 import styled from '../../../../../../lib/styled'
@@ -75,11 +71,6 @@ interface DocContextMenuProps {
   revisionHistory?: SerializedRevision[]
   team: SerializedTeam
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
-  presence?: {
-    users: UserPresenceInfo[]
-    user: UserPresenceInfo
-    editorLayout: LayoutMode
-  }
   restoreRevision?: (revision: SerializedRevision) => void
   openRenameDocForm?: () => void
   sendingRename?: boolean
@@ -91,7 +82,6 @@ const DocContextMenu = ({
   contributors,
   backLinks,
   editorRef,
-  presence,
   revisionHistory,
   restoreRevision,
   openRenameDocForm,
@@ -305,25 +295,6 @@ const DocContextMenu = ({
         <div className='context__container'>
           <div className='context__scroll__container'>
             <div className='context__scroll'>
-              {presence != null && (
-                <div className='context__row'>
-                  <label className='context__label'>
-                    <IconMdi
-                      path={mdiAccountGroupOutline}
-                      size={18}
-                      className='context__icon'
-                    />{' '}
-                    Participating
-                  </label>
-                  <div className='context__content'>
-                    <PresenceIcons
-                      user={presence.user}
-                      users={presence.users}
-                      withTooltip={presence.editorLayout !== 'preview'}
-                    />
-                  </div>
-                </div>
-              )}
               <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi

@@ -77,6 +77,7 @@ import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -683,16 +684,20 @@ const Editor = ({
           breadcrumbs,
           children:
             currentUserPermissions != null ? (
-              <LoadingButton
-                variant='icon'
-                disabled={sendingMap.has(doc.id)}
-                spinning={sendingMap.has(doc.id)}
-                size='sm'
-                iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                onClick={() =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-                }
-              />
+              <StyledTopbarChildrenContainer>
+                <LoadingButton
+                  variant='icon'
+                  disabled={sendingMap.has(doc.id)}
+                  spinning={sendingMap.has(doc.id)}
+                  size='sm'
+                  iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+                  onClick={() =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+                  }
+                />
+
+                <PresenceIcons user={userInfo} users={otherUsers} />
+              </StyledTopbarChildrenContainer>
             ) : null,
           controls: [
             ...(connState === 'reconnecting'
@@ -782,7 +787,6 @@ const Editor = ({
             editorRef={editorRef}
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
-            presence={{ user: userInfo, users: otherUsers, editorLayout }}
             openRenameDocForm={() => openRenameDocForm(doc)}
             sendingRename={sendingMap.has(doc.id)}
           />
@@ -876,6 +880,13 @@ const Container = styled.div`
   flex-grow: 1;
   width: 100%;
   height: 100%;
+`
+
+const StyledTopbarChildrenContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `
 
 const StyledBottomBar = styled.div`
