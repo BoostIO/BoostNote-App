@@ -298,6 +298,7 @@ const FolderPage = () => {
           ),
           controls: [
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiDotsHorizontal,
               onClick: () => setShowContextMenu(true),

@@ -78,6 +78,7 @@ import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
+import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -700,9 +701,13 @@ const Editor = ({
               </StyledTopbarChildrenContainer>
             ) : null,
           controls: [
+            {
+              type: 'separator',
+            },
             ...(connState === 'reconnecting'
               ? [
                   {
+                    type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
                     label: 'Connecting...',
@@ -719,6 +724,7 @@ const Editor = ({
               : connState === 'disconnected'
               ? [
                   {
+                    type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
                     label: 'Reconnect',
@@ -735,6 +741,7 @@ const Editor = ({
               : connState === 'loaded'
               ? [
                   {
+                    type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
                     label: 'Syncing...',
@@ -749,24 +756,31 @@ const Editor = ({
                 ]
               : []),
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiPencil,
               active: editorLayout === 'editor',
               onClick: () => updateLayout('editor'),
             },
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiViewSplitVertical,
               active: editorLayout === 'split',
               onClick: () => updateLayout('split'),
             },
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiEyeOutline,
               active: editorLayout === 'preview',
               onClick: () => updateLayout('preview'),
             },
             {
+              type: 'separator',
+            },
+            {
+              type: 'button',
               variant: 'icon',
               iconPath: preferences.docContextIsHidden
                 ? mdiChevronLeft
@@ -776,7 +790,7 @@ const Editor = ({
                   docContextIsHidden: !preferences.docContextIsHidden,
                 }),
             },
-          ],
+          ] as TopbarControlProps[],
         },
         right: !preferences.docContextIsHidden ? (
           <DocContextMenu

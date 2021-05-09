@@ -23,12 +23,23 @@ export interface TopbarBreadcrumbProps {
   controls?: { label: string; onClick: () => void; icon: string }[]
 }
 
+export type TopbarControlButtonProps = ButtonProps & {
+  type: 'button'
+  variant: ButtonVariant
+  label?: React.ReactNode
+  tooltip?: React.ReactNode
+}
+
+export type TopbarControlSeparatorProps = {
+  type: 'separator'
+}
+
+export type TopbarControlProps =
+  | TopbarControlButtonProps
+  | TopbarControlSeparatorProps
+
 export interface TopbarPageProps {
-  controls?: (ButtonProps & {
-    variant: ButtonVariant
-    label?: React.ReactNode
-    tooltip?: React.ReactNode
-  })[]
+  controls?: TopbarControlProps[]
   breadcrumbs?: TopbarBreadcrumbProps[]
 }
 
@@ -174,25 +185,31 @@ const Topbar: AppComponent<TopbarProps> = ({
       </div>
       {controls.length > 0 && (
         <div className='topbar__controls'>
-          {controls.map((control, i) => (
-            <WithTooltip
-              key={`topbar__control__${i}`}
-              tooltip={control.tooltip}
-              side='bottom'
-            >
-              <Button
-                variant={control.variant}
-                iconSize={20}
-                size={'sm'}
-                iconPath={control.iconPath}
-                disabled={control.disabled}
-                active={control.active}
-                onClick={control.onClick}
+          {controls.map((control, i) => {
+            if (control.type === 'separator') {
+              return <div className='topbar__controls__separator' />
+            }
+
+            return (
+              <WithTooltip
+                key={`topbar__control__${i}`}
+                tooltip={control.tooltip}
+                side='bottom'
               >
-                {control.label}
-              </Button>
-            </WithTooltip>
-          ))}
+                <Button
+                  variant={control.variant}
+                  iconSize={20}
+                  size={'sm'}
+                  iconPath={control.iconPath}
+                  disabled={control.disabled}
+                  active={control.active}
+                  onClick={control.onClick}
+                >
+                  {control.label}
+                </Button>
+              </WithTooltip>
+            )
+          })}
         </div>
       )}
     </Container>
@@ -233,6 +250,12 @@ const Container = styled.div`
     flex: 0 0 auto;
     flex-wrap: nowrap;
     align-items: center;
+  }
+
+  .topbar__controls__separator {
+    margin: 0 12px 0 11px;
+    border-right: 1px solid ${({ theme }) => theme.colors.border.main};
+    height: 24px;
   }
 
   .topbar__navigation button {
