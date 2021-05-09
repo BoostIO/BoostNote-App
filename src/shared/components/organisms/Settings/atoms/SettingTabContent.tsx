@@ -49,8 +49,8 @@ const Container = styled.div`
   }
 
   .tab-content__header {
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
-    padding-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.l}px;
+    padding-bottom: ${({ theme }) => theme.sizes.spaces.l}px;
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 
@@ -67,24 +67,25 @@ const Container = styled.div`
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }
 
-  .tab-content__body {
-    section {
-      margin: ${({ theme }) => theme.sizes.spaces.md}px 0;
-    }
-  }
-
+  .tab-content__body,
   .tab-content__footer {
-    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
-    padding-top: ${({ theme }) => theme.sizes.spaces.md}px;
-    border-top: 1px solid ${({ theme }) => theme.colors.border.main};
-
     h2 {
       font-size: ${({ theme }) => theme.sizes.fonts.md}px;
       font-weight: normal;
     }
 
-    p {
+    .text--subtle {
       color: ${({ theme }) => theme.colors.text.subtle};
+    }
+
+    .text--small {
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    }
+  }
+
+  .tab-content__body {
+    section {
+      margin: ${({ theme }) => theme.sizes.spaces.md}px 0;
     }
   }
 `
