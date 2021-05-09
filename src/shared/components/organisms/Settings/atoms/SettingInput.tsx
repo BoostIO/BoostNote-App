@@ -4,6 +4,7 @@ import styled from '../../../../lib/styled'
 interface SettingInputProps {
   label?: string
   value?: string
+  placeholder?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
