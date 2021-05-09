@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from '../../../lib/styled'
-import { SectionSubtleText, SectionHeader2, PrimaryAnchor } from './styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import Spinner from '../../atoms/CustomSpinner'
 import { useApiTokens, withApiTokens } from '../../../lib/stores/apiTokens'
 import TokenControl from '../../molecules/TokenControl'
@@ -11,6 +9,8 @@ import Flexbox from '../../atoms/Flexbox'
 import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
+import Button from '../../../../shared/components/atoms/Button'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -36,37 +36,36 @@ const ApiTab = () => {
   return (
     <SettingTabContent
       title={'API'}
+      description={'These tokens are available only to BoostIO.'}
       body={
         <>
           <section>
-            <SectionSubtleText>
+            <p className='text--subtle'>
               These tokens are available only to{' '}
               {team != null ? team.name : 'your team'}.
-            </SectionSubtleText>
+            </p>
           </section>
           <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
-                <SectionHeader2 style={{ margin: '0' }}>
-                  Access Tokens
-                </SectionHeader2>
+                <h2 style={{ margin: '0' }}>Access Tokens</h2>
                 <p>
                   See the{' '}
-                  <PrimaryAnchor
+                  <SettingLink
                     href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'
                     target='_blank'
                   >
                     documentation for Boost Note for Teams API{' '}
                     <Icon path={mdiOpenInNew} />
-                  </PrimaryAnchor>
+                  </SettingLink>
                 </p>
               </div>
-              <CustomButton
+              <Button
                 onClick={() => setTokenCreateMode(!tokenCreateMode)}
                 disabled={apiTokenState.state === 'initialising'}
               >
                 {tokenCreateMode ? 'Close' : 'Generate Token'}
-              </CustomButton>
+              </Button>
             </Flexbox>
             {tokenCreateMode && (
               <StyledServiceList>

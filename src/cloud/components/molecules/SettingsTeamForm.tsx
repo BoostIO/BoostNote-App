@@ -13,13 +13,13 @@ import {
   inputStyle,
   inverseSecondaryButtonStyle,
 } from '../../lib/styled/styleFunctions'
-import Button from '../atoms/Button'
 import Flexbox from '../atoms/Flexbox'
 import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
 import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
 import { useToast } from '../../../shared/lib/stores/toast'
+import Button from '../../../shared/components/atoms/Button'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -144,7 +144,7 @@ const SettingsTeamForm = ({
           <Flexbox className='form__header'>
             {onCancel != null && (
               <Button
-                variant='outline-secondary'
+                variant='secondary'
                 onClick={onCancel}
                 disabled={sending}
                 type='button'

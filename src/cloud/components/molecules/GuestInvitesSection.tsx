@@ -1,9 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import {
-  Section,
-  SectionHeader2,
   SectionRow,
-  SectionInput,
   SectionList,
   SectionListItem,
 } from '../organisms/settings/styled'
@@ -23,6 +20,7 @@ import Button from '../atoms/Button'
 import UserIcon from '../atoms/UserIcon'
 import { deleteGuestDoc } from '../../api/guests'
 import { usePage } from '../../lib/stores/pageStore'
+import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
 
 interface GuestInvitesSectionProps {
   docId: string
@@ -186,14 +184,14 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
   )
 
   return (
-    <Section>
+    <section>
       <Flexbox>
-        <SectionHeader2>Invite with Email</SectionHeader2>
+        <h2>Invite with Email</h2>
         {has('fetch') && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
       <form onSubmit={submitInvite}>
         <SectionRow>
-          <SectionInput
+          <SettingInput
             value={email}
             onChange={onChangeHandler}
             placeholder='Email...'
@@ -245,7 +243,7 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
         ))}
       </SectionList>
       {error != null && <ErrorBlock error={error} />}
-    </Section>
+    </section>
   )
 }
 

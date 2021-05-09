@@ -1,9 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import {
-  Section,
-  SectionHeader2,
-  SectionRow,
-} from '../organisms/settings/styled'
+import { SectionRow } from '../organisms/settings/styled'
 import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
@@ -172,11 +168,9 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   }
 
   return (
-    <Section>
+    <section>
       <StyledFlex>
-        <SectionHeader2 style={{ margin: 0 }}>
-          Invite with an open Link
-        </SectionHeader2>
+        <h2 style={{ margin: 0 }}>Invite with an open Link</h2>
         <Switch
           disabled={fetching || sending}
           type='switch'
@@ -208,7 +202,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
           <Spinner style={{ position: 'relative' }} />
         </SectionRow>
       )}
-    </Section>
+    </section>
   )
 }
 
