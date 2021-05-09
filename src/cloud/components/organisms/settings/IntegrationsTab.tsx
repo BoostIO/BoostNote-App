@@ -42,7 +42,7 @@ const IntegrationsTab = () => {
 
   return (
     <SettingTabContent
-      header={'Integrations'}
+      title={'Integrations'}
       body={
         <>
           <section>

@@ -51,7 +51,7 @@ const TeamInfoTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.teamInfo')}
+      title={t('settings.teamInfo')}
       body={
         <section>
           <SettingsTeamForm team={team} teamConversion={false} header={false} />
