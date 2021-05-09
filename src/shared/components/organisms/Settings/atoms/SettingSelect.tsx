@@ -3,9 +3,10 @@ import styled from '../../../../lib/styled'
 
 interface SettingSelectProps {
   label?: string
-  value?: string
+  value?: string | number
   disabled?: boolean
   onChange?: (val: any) => void
+  style?: React.CSSProperties
   options: React.ReactNode
 }
 
