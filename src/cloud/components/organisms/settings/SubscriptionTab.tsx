@@ -79,7 +79,7 @@ const SubscriptionTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.teamSubscription')}
+      title={t('settings.teamSubscription')}
       body={
         <section>
           <StyledSmallFont>

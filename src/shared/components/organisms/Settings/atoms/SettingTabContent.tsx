@@ -2,15 +2,23 @@ import React from 'react'
 import styled from '../../../../lib/styled'
 
 interface SettingTabContentProps {
-  header?: React.ReactNode
+  title?: React.ReactNode
+  description?: React.ReactNode
   body: React.ReactNode
 }
 
-const SettingTabContent = ({ header, body }: SettingTabContentProps) => (
+const SettingTabContent = ({
+  title,
+  description,
+  body,
+}: SettingTabContentProps) => (
   <Container className='tab-content'>
     <div className='tab-content__scrollable'>
       <div className='tab-content__container'>
-        <div className='tab-content__header'>{header}</div>
+        <div className='tab-content__header'>
+          <h1 className='tab-content__header__title'>{title}</h1>
+          <p className='tab-content__header__description'>{description}</p>
+        </div>
         <div className='tab-content__body'>{body}</div>
       </div>
     </div>
@@ -22,6 +30,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  padding-top: ${({ theme }) => theme.sizes.spaces.xl}px;
 
   .tab-content__scrollable {
     flex: 1 1 auto;
@@ -37,10 +46,22 @@ const Container = styled.div`
   }
 
   .tab-content__header {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    padding-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
+  }
+
+  .tab-content__header__title {
     margin-top: 0;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
-    font-weight: 500;
+    font-size: ${({ theme }) => theme.sizes.fonts.l}px;
+    font-weight: normal;
+  }
+
+  .tab-content__header__description {
+    margin-bottom: 0;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }
 
   .tab-content__body {
