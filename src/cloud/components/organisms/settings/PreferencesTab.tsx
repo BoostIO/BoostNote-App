@@ -8,7 +8,7 @@ const PreferencesTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.preferences')}
+      title={t('settings.preferences')}
       body={<UserPreferencesForm />}
     ></SettingTabContent>
   )
