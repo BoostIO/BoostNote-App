@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
 import styled from '../../../lib/styled'
-import { SectionSubtleText, SectionHeader2 } from './styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import ServiceConnect from '../../atoms/ServiceConnect'
 import Spinner from '../../atoms/CustomSpinner'
 import {
@@ -13,11 +11,11 @@ import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel
 import FeedbackModal from '../Modal/contents/FeedbackModal'
 import { githubOauthId, boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
-import Button from '../../atoms/Button'
 import { openNew } from '../../../lib/utils/platform'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import Button from '../../../../shared/components/atoms/Button'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
@@ -46,9 +44,9 @@ const IntegrationsTab = () => {
       body={
         <>
           <section>
-            <SectionSubtleText>
+            <p className='text--subtle'>
               Connect 3rd party content to your Boost Note for Teams documents.
-            </SectionSubtleText>
+            </p>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info zapier'>
@@ -60,19 +58,19 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('global')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
             </StyledServiceList>
           </section>
           <section>
-            <SectionHeader2>Popular Integrations</SectionHeader2>
+            <h2>Popular Integrations</h2>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info'>
@@ -90,13 +88,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('github')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -115,13 +113,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('trello')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -140,13 +138,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('slack')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -165,13 +163,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('gmail')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -193,13 +191,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-calendar')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -221,13 +219,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-drive')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -246,13 +244,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('jira')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -271,13 +269,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('miro')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -296,13 +294,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('dropbox')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -321,13 +319,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('airtable')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -346,13 +344,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('clickup')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -375,13 +373,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('lambda')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -400,13 +398,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('mailchimp')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -425,13 +423,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('intercom')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -451,13 +449,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('stripe')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -473,13 +471,13 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('asana')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
               <StyledServiceListItem>
@@ -492,19 +490,19 @@ const IntegrationsTab = () => {
                   target='_blank'
                   rel='noreferrer noopener'
                 >
-                  <CustomButton
-                    variant='inverse-secondary'
+                  <Button
+                    variant='secondary'
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('zapier')}
                   >
                     See
-                  </CustomButton>
+                  </Button>
                 </a>
               </StyledServiceListItem>
             </StyledServiceList>
           </section>
           <section>
-            <SectionHeader2>External Entity</SectionHeader2>
+            <h2>External Entity</h2>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info'>
@@ -528,12 +526,9 @@ const IntegrationsTab = () => {
                 </div>
                 {(connectionState.type === 'initialising' ||
                   connectionState.type === 'working') && (
-                  <CustomButton
-                    variant='inverse-secondary'
-                    className='item-btn'
-                  >
+                  <Button variant='secondary' className='item-btn'>
                     <Spinner />
-                  </CustomButton>
+                  </Button>
                 )}
                 {connectionState.type === 'initialised' && (
                   <>
@@ -549,7 +544,7 @@ const IntegrationsTab = () => {
                         </Button>
                       ) : (
                         <ServiceConnect
-                          variant='inverse-secondary'
+                          variant='secondary'
                           className='item-btn'
                           service='github'
                           onConnect={connectionState.actions.addConnection}
@@ -558,13 +553,13 @@ const IntegrationsTab = () => {
                         </ServiceConnect>
                       )
                     ) : (
-                      <CustomButton
+                      <Button
                         variant='danger'
                         className='item-btn'
                         onClick={removeGithubConnection}
                       >
                         Disable
-                      </CustomButton>
+                      </Button>
                     )}
                   </>
                 )}

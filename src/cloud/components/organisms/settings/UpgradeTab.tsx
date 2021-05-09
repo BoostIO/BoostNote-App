@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionRow, StyledSmallFont } from './styled'
+import { SectionRow } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -77,6 +77,7 @@ const UpgradeTab = () => {
     return (
       <SettingTabContent
         title={t('settings.teamUpgrade')}
+        description={'Choose your plan.'}
         body={
           <>
             {showTrialPopup && (
@@ -86,7 +87,7 @@ const UpgradeTab = () => {
               />
             )}
             <section>
-              <StyledSmallFont>
+              <p className='text--small'>
                 <PlanTables
                   team={team}
                   subscription={subscription}
@@ -108,7 +109,7 @@ const UpgradeTab = () => {
                   </CustomLink>
                   .
                 </StyledFYI>
-              </StyledSmallFont>
+              </p>
             </section>
           </>
         }
@@ -121,7 +122,7 @@ const UpgradeTab = () => {
       title={t('settings.teamUpgrade')}
       body={
         <section>
-          <StyledSmallFont>
+          <p className='text--small'>
             {currentUserPermissions.role !== 'admin' ? (
               <ColoredBlock variant='danger'>
                 Only admins can access this content.
@@ -144,7 +145,7 @@ const UpgradeTab = () => {
                 </SectionRow>
               )
             )}
-          </StyledSmallFont>
+          </p>
         </section>
       }
     ></SettingTabContent>
