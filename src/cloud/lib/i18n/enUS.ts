@@ -40,7 +40,7 @@ const enTranslation: TranslationSource = {
   'settings.editorKeyMap': 'Editor Keymap',
   'settings.light': 'Light',
   'settings.dark': 'Dark',
-  'settings.notificationsFrequency': 'Notification frequency',
+  'settings.notificationsFrequency': 'Email updates',
 
   // Settings Community
   'community.feature.requests': 'Feature Requests',
