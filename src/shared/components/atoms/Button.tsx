@@ -143,7 +143,7 @@ export const LoadingButton = ({
 export default Button
 
 const StyledButton = styled.button`
-  padding: 0 10px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.md}px;
   border-radius: 2px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
