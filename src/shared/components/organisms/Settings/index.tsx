@@ -16,7 +16,7 @@ const Settings = ({ sidebar, content }: SettingsProps) => (
   </Container>
 )
 
-const zIndexModals = 8001
+const zIndexModals = 8000
 
 const Container = styled.div`
   z-index: ${zIndexModals};
