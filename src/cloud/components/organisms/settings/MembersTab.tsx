@@ -399,7 +399,7 @@ const MembersTab = () => {
   if (currentUserPermissions == null || team == null) {
     return (
       <SettingTabContent
-        header={t('settings.teamMembers')}
+        title={t('settings.teamMembers')}
         body={
           <ColoredBlock variant='danger'>
             You don&apos;t own any permissions.

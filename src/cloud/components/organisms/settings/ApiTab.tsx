@@ -35,7 +35,7 @@ const ApiTab = () => {
 
   return (
     <SettingTabContent
-      header={'API'}
+      title={'API'}
       body={
         <>
           <section>

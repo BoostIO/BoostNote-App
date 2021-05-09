@@ -84,7 +84,7 @@ const InfoTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.info')}
+      title={t('settings.info')}
       body={
         <>
           <section>

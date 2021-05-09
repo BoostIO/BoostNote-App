@@ -76,7 +76,7 @@ const UpgradeTab = () => {
   if (tabState === 'plans') {
     return (
       <SettingTabContent
-        header={t('settings.teamUpgrade')}
+        title={t('settings.teamUpgrade')}
         body={
           <>
             {showTrialPopup && (
@@ -118,7 +118,7 @@ const UpgradeTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.teamUpgrade')}
+      title={t('settings.teamUpgrade')}
       body={
         <section>
           <StyledSmallFont>

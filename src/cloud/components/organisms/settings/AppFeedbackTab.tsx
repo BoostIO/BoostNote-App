@@ -8,7 +8,7 @@ const AppFeedbackTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.appFeedback')}
+      title={t('settings.appFeedback')}
       body={
         <section>
           <AppFeedbackForm />
