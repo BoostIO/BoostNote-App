@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { SectionSelect, SectionHeader3 } from './styled'
 import {
   useSettings,
   GeneralThemeOptions,
@@ -14,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
@@ -88,64 +88,101 @@ const UserPreferencesForm = () => {
   )
 
   return (
-    <section>
-      <SectionHeader3>{t('settings.applicationTheme')}</SectionHeader3>
-      <SectionSelect value={settings['general.theme']} onChange={selectTheme}>
-        <option value='light'>{t('settings.light')}</option>
-        <option value='dark'>{t('settings.dark')}</option>
-      </SectionSelect>
+    <>
+      <section>
+        <SettingSelect
+          label={t('settings.applicationTheme')}
+          value={settings['general.theme']}
+          onChange={selectTheme}
+          options={
+            <>
+              <option value='light'>{t('settings.light')}</option>
+              <option value='dark'>{t('settings.dark')}</option>
+            </>
+          }
+        ></SettingSelect>
+      </section>
 
-      <SectionHeader3>{t('settings.editorTheme')}</SectionHeader3>
-      <SectionSelect
-        value={settings['general.editorTheme']}
-        onChange={selectEditorTheme}
-      >
-        {codeMirrorEditorThemes.map((val) => (
-          <option key={`theme-${val}`} value={val}>
-            {val}
-          </option>
-        ))}
-      </SectionSelect>
-      <SectionHeader3>{t('settings.codeblockTheme')}</SectionHeader3>
-      <SectionSelect
-        value={settings['general.codeBlockTheme']}
-        onChange={selectCodeBlockTheme}
-      >
-        {codeMirrorEditorThemes.map((val) => (
-          <option key={`theme-${val}`} value={val}>
-            {val}
-          </option>
-        ))}
-      </SectionSelect>
-      <SectionHeader3>{t('settings.editorKeyMap')}</SectionHeader3>
-      <SectionSelect
-        value={settings['general.editorKeyMap']}
-        onChange={selectEditorKeyMap}
-      >
-        {codeMirrorKeyMap.map((val) => (
-          <option key={val} value={val}>
-            {val}
-          </option>
-        ))}
-      </SectionSelect>
-      <SectionHeader3>Editor Indent Type</SectionHeader3>
-      <SectionSelect
-        value={settings['general.editorIndentType']}
-        onChange={selectIndentType}
-      >
-        <option value='spaces'>Spaces</option>
-        <option value='tab'>Tab</option>
-      </SectionSelect>
-      <SectionHeader3>Editor Indent Size</SectionHeader3>
-      <SectionSelect
-        value={settings['general.editorIndentSize']}
-        onChange={selectIndentSize}
-      >
-        <option value='8'>8</option>
-        <option value='4'>4</option>
-        <option value='2'>2</option>
-      </SectionSelect>
-    </section>
+      <section>
+        <SettingSelect
+          label={t('settings.editorTheme')}
+          value={settings['general.editorTheme']}
+          onChange={selectEditorTheme}
+          options={
+            <>
+              {codeMirrorEditorThemes.map((val) => (
+                <option key={`theme-${val}`} value={val}>
+                  {val}
+                </option>
+              ))}
+            </>
+          }
+        ></SettingSelect>
+      </section>
+
+      <section>
+        <SettingSelect
+          label={t('settings.codeblockTheme')}
+          value={settings['general.codeBlockTheme']}
+          onChange={selectCodeBlockTheme}
+          options={
+            <>
+              {codeMirrorEditorThemes.map((val) => (
+                <option key={`theme-${val}`} value={val}>
+                  {val}
+                </option>
+              ))}
+            </>
+          }
+        ></SettingSelect>
+      </section>
+
+      <section>
+        <SettingSelect
+          label={t('settings.editorKeyMap')}
+          value={settings['general.editorKeyMap']}
+          onChange={selectEditorKeyMap}
+          options={
+            <>
+              {codeMirrorKeyMap.map((val) => (
+                <option key={val} value={val}>
+                  {val}
+                </option>
+              ))}
+            </>
+          }
+        ></SettingSelect>
+      </section>
+
+      <section>
+        <SettingSelect
+          label={'Editor Indent Type'}
+          value={settings['general.editorIndentType']}
+          onChange={selectIndentType}
+          options={
+            <>
+              <option value='spaces'>Spaces</option>
+              <option value='tab'>Tab</option>
+            </>
+          }
+        ></SettingSelect>
+      </section>
+
+      <section>
+        <SettingSelect
+          label={'Editor Indent Size'}
+          value={settings['general.editorIndentSize']}
+          onChange={selectIndentSize}
+          options={
+            <>
+              <option value='8'>8</option>
+              <option value='4'>4</option>
+              <option value='2'>2</option>
+            </>
+          }
+        ></SettingSelect>
+      </section>
+    </>
   )
 }
 

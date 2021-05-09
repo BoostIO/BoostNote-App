@@ -3,16 +3,13 @@ import CustomButton from '../../atoms/buttons/CustomButton'
 import { Spinner } from '../../atoms/Spinner'
 import { StyledAppFeedbackForm } from './styled'
 import { SelectChangeEventHandler } from '../../../lib/utils/events'
-import {
-  SectionSelect,
-  SectionHeader2,
-  SectionTextarea,
-} from '../../organisms/settings/styled'
 import { registerAppFeedback } from '../../../api/users/appfeedback'
 import { AppFeedbackTypeOption } from '../../../interfaces/db/userAppFeedback'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useEffectOnce } from 'react-use'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
+import SettingTextarea from '../../../../shared/components/organisms/Settings/atoms/SettingTextarea'
 
 const typeOptions: AppFeedbackTypeOption[] = ['Feature Request', 'Bug Report']
 
@@ -98,17 +95,23 @@ const AppFeedbackForm = () => {
 
   return (
     <StyledAppFeedbackForm onSubmit={sendFeedback}>
-      <SectionHeader2>Type of feedback</SectionHeader2>
-      <SectionSelect value={feedbackType} onChange={feedbackTypeChangeHandler}>
-        {typeOptions.map((val) => (
-          <option key={`select-type-${val}`} value={val}>
-            {val}
-          </option>
-        ))}
-      </SectionSelect>
+      <h2>Type of feedback</h2>
+      <SettingSelect
+        value={feedbackType}
+        onChange={feedbackTypeChangeHandler}
+        options={
+          <>
+            {typeOptions.map((val) => (
+              <option key={`select-type-${val}`} value={val}>
+                {val}
+              </option>
+            ))}
+          </>
+        }
+      ></SettingSelect>
 
-      <SectionHeader2>Free form</SectionHeader2>
-      <SectionTextarea
+      <h2>Free form</h2>
+      <SettingTextarea
         value={feedback}
         ref={freeFormRef}
         onChange={feedbackOnChangeEvent}
