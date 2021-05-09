@@ -1,11 +1,4 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
-import {
-  SectionHeader2,
-  StyledMembername,
-  SectionSelect,
-  SectionDescription,
-  PrimaryAnchor,
-} from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
 import {
@@ -37,7 +30,6 @@ import { mdiArrowRight, mdiCardTextOutline, mdiChevronDown } from '@mdi/js'
 import { deleteGuestDoc, getGuestsEmails } from '../../../api/guests'
 import { useSet } from 'react-use'
 import plur from 'plur'
-import Button from '../../atoms/Button'
 import {
   MenuTypes,
   useContextMenu,
@@ -49,6 +41,9 @@ import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
+import Button from '../../../../shared/components/atoms/Button'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -376,7 +371,7 @@ const MembersTab = () => {
                   {doc != null ? getDocTitle(doc, 'Untitled') : 'Untitled'}
                 </Flexbox>
                 <Button
-                  variant='outline-secondary'
+                  variant='secondary'
                   onClick={() => removeGuestAccess(guest.id, docId)}
                   size='sm'
                   disabled={has(guest.id)}
@@ -427,28 +422,30 @@ const MembersTab = () => {
 
   return (
     <SettingTabContent
+      title={
+        <TabSelector>
+          <button
+            className={cc([tab === 'member' && 'active'])}
+            onClick={() => setTab('member')}
+          >
+            Members ({permissions.length})
+          </button>
+          <button
+            className={cc([tab === 'guest' && 'active'])}
+            onClick={() => setTab('guest')}
+          >
+            Guests ({guestsMap.size})
+          </button>
+        </TabSelector>
+      }
+      description={'Manage who access to this space.'}
       body={
         <>
-          <TabSelector>
-            <button
-              className={cc([tab === 'member' && 'active'])}
-              onClick={() => setTab('member')}
-            >
-              Members ({permissions.length})
-            </button>
-            <button
-              className={cc([tab === 'guest' && 'active'])}
-              onClick={() => setTab('guest')}
-            >
-              Guests ({guestsMap.size})
-            </button>
-          </TabSelector>
-
           {tab === 'member' ? (
             team.personal ? (
               <section>
                 <Flexbox>
-                  <SectionHeader2>Current Members</SectionHeader2>
+                  <h2>Current Members</h2>
                   {fetching.has('userEmails') && (
                     <Spinner className='relative' style={{ top: 2 }} />
                   )}
@@ -496,7 +493,7 @@ const MembersTab = () => {
                 <TeamInvitesSection userPermissions={currentUserPermissions} />
                 <section>
                   <Flexbox>
-                    <SectionHeader2>Current Members</SectionHeader2>
+                    <h2>Current Members</h2>
                     {fetching.has('userEmails') && (
                       <Spinner className='relative' style={{ top: 2 }} />
                     )}
@@ -541,7 +538,7 @@ const MembersTab = () => {
                                     }}
                                   />
                                 ) : (
-                                  <SectionSelect
+                                  <SettingSelect
                                     value={permission.role}
                                     onChange={(e: any) =>
                                       changePermissionsRole(
@@ -560,10 +557,13 @@ const MembersTab = () => {
                                       !currentUserIsAdmin ||
                                       targetPermissionsAreUsersOwn
                                     }
-                                  >
-                                    <option value='admin'>admin</option>
-                                    <option value='member'>member</option>
-                                  </SectionSelect>
+                                    options={
+                                      <>
+                                        <option value='admin'>admin</option>
+                                        <option value='member'>member</option>
+                                      </>
+                                    }
+                                  ></SettingSelect>
                                 )}
                                 {(targetPermissionsAreUsersOwn ||
                                   currentUserIsAdmin) && (
@@ -600,43 +600,43 @@ const MembersTab = () => {
               {subscription == null || subscription.status === 'inactive' ? (
                 <>
                   <StyledGuestInactiveText>
-                    <SectionDescription>
+                    <p>
                       Upgrade to invite guests. Guests are people external to
                       your team who you want to work with on specific documents.
                       They can be invited to individual documents but not an
                       entire workspace.
                       {` `}
-                      <PrimaryAnchor
+                      <SettingLink
                         target='_blank'
                         rel='noreferrer'
                         href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
                       >
                         See how it works <Icon path={mdiArrowRight} />
-                      </PrimaryAnchor>
-                    </SectionDescription>
+                      </SettingLink>
+                    </p>
                   </StyledGuestInactiveText>
-                  <CustomButton
+                  <Button
                     variant='primary'
                     onClick={() => {
                       openSettingsTab('teamUpgrade')
                     }}
                   >
                     Start Free Trial
-                  </CustomButton>
+                  </Button>
                 </>
               ) : (
                 <section>
                   <Flexbox>
-                    <SectionHeader2>Current Guests</SectionHeader2>
+                    <h2>Current Guests</h2>
                     {fetching.has('guestEmails') && (
                       <Spinner className='relative' style={{ top: 2 }} />
                     )}
                   </Flexbox>
-                  <SectionDescription>
+                  <p>
                     Guests are people external to your team who you want to work
                     with on specific documents. They can be invited to
                     individual documents but not an entire workspace.
-                  </SectionDescription>
+                  </p>
                   <p>
                     {permissions.length > 0
                       ? `${
@@ -785,6 +785,25 @@ const StyledMembersTable = styled.table`
 const StyledGuestInactiveText = styled.p`
   margin-top: ${({ theme }) => theme.space.medium}px;
   margin-bottom: ${({ theme }) => theme.space.default}px;
+`
+
+const StyledMembername = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+
+  p {
+    margin: 0;
+    color: ${({ theme }) => theme.baseTextColor};
+    padding-right: ${({ theme }) => theme.space.xsmall}px;
+  }
+
+  span {
+    color: ${({ theme }) => theme.subtleTextColor};
+    margin-left: ${({ theme }) => theme.space.xsmall}px;
+    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    padding: 2px 5px;
+  }
 `
 
 export default MembersTab

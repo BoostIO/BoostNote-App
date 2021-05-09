@@ -1,13 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import {
-  Section,
-  SectionHeader2,
   SectionRow,
-  SectionInput,
   SectionList,
   SectionListItem,
   SectionInLineIcon,
-  SectionSelect,
 } from '../organisms/settings/styled'
 import { SerializedTeamInvite } from '../../interfaces/db/teamInvite'
 import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
@@ -27,6 +23,8 @@ import CustomButton from '../atoms/buttons/CustomButton'
 import { SelectChangeEventHandler } from '../../lib/utils/events'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import Flexbox from '../atoms/Flexbox'
+import SettingSelect from '../../../shared/components/organisms/Settings/atoms/SettingSelect'
+import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -144,27 +142,30 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   )
 
   return (
-    <Section>
+    <section>
       <Flexbox>
-        <SectionHeader2>Invite with Email</SectionHeader2>
+        <h2>Invite with Email</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
       <form onSubmit={submitInvite}>
         <SectionRow>
-          <SectionInput
+          <SettingInput
             value={email}
             onChange={onChangeHandler}
-            placeholder='Email...'
+            placeholder={'Email...'}
           />
-          <SectionSelect
+          <SettingSelect
             value={role}
             onChange={selectRole}
             style={{ width: 'auto', minWidth: 'initial', marginRight: 16 }}
             disabled={userPermissions.role !== 'admin'}
-          >
-            <option value='admin'>admin</option>
-            <option value='member'>member</option>
-          </SectionSelect>
+            options={
+              <>
+                <option value='admin'>admin</option>
+                <option value='member'>member</option>
+              </>
+            }
+          ></SettingSelect>
           <CustomButton type='submit' variant='primary'>
             Send
           </CustomButton>
@@ -193,7 +194,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
         ))}
       </SectionList>
       {error != null && <ErrorBlock error={error} />}
-    </Section>
+    </section>
   )
 }
 

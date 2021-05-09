@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyledSmallFont } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -82,7 +81,7 @@ const SubscriptionTab = () => {
       title={t('settings.teamSubscription')}
       body={
         <section>
-          <StyledSmallFont>
+          <p className='text--small'>
             {formtab == null ? (
               <SubscriptionManagement
                 subscription={subscription}
@@ -116,7 +115,7 @@ const SubscriptionTab = () => {
                 ) : null}
               </StyledBillingContainer>
             )}
-          </StyledSmallFont>
+          </p>
         </section>
       }
     ></SettingTabContent>

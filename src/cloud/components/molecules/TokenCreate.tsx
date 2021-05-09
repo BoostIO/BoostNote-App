@@ -1,13 +1,8 @@
 import React, { useState, useCallback, ChangeEvent } from 'react'
 import CustomButton from '../atoms/buttons/CustomButton'
-import {
-  Section,
-  SectionInput,
-  SectionLabel,
-} from '../organisms/settings/styled'
 import Flexbox from '../atoms/Flexbox'
 import styled from '../../lib/styled'
-import { SectionHeader2 } from '../organisms/Modal/contents/styled'
+import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
 
 interface TokenCreateProps {
   onCreate: (name: string) => void
@@ -22,16 +17,16 @@ const TokenCreate = ({ onCreate }: TokenCreateProps) => {
 
   return (
     <StyledTokenCreate>
-      <SectionHeader2 style={{ margin: '0' }}>Create a token</SectionHeader2>
-      <Section>
-        <SectionLabel>Name</SectionLabel>
-        <SectionInput
+      <h2>Create a token</h2>
+      <section>
+        <SettingInput
+          label={'Name'}
           value={name}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setName(e.target.value)
           }
-        />
-      </Section>
+        ></SettingInput>
+      </section>
       <Flexbox justifyContent='flex-end'>
         {name.length === 0 && (
           <StyledWarningText>Enter a name</StyledWarningText>

@@ -3,13 +3,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
 import { createSubscription } from '../../../api/teams/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import {
-  SectionPrimaryButton,
-  SectionFlexDualButtons,
-  SectionDescription,
-  SectionSecondaryButton,
-  SectionParagraph,
-} from '../../organisms/settings/styled'
+import { SectionFlexDualButtons } from '../../organisms/settings/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 import styled from '../../../lib/styled'
 import Stripe, { StripeElementStyle } from '@stripe/stripe-js'
@@ -29,6 +23,7 @@ import Icon from '../../../../components/atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Button from '../../../../shared/components/atoms/Button'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -187,7 +182,7 @@ const SubscriptionForm = ({
 
   return (
     <StyledSubscriptionForm onSubmit={handleSubmit}>
-      <SectionParagraph>
+      <section>
         <StyledUpgradePlan>
           <StyledCalcuration>
             <span className='plan-name'>
@@ -201,7 +196,7 @@ const SubscriptionForm = ({
           <label>Total Monthly Price</label>
           <strong>{totalMonthlyPrice}</strong>
         </StyledTotal>
-      </SectionParagraph>
+      </section>
       {usingJpyPricing && (
         <Alert variant='secondary'>
           We can only accept JPY(Japanese Yen) when paying by JCB cards.
@@ -221,11 +216,7 @@ const SubscriptionForm = ({
         value={email}
         onChange={onEmailInputChangeHandler}
       />
-      {ongoingTrial != null && (
-        <SectionDescription>
-          Your free trial will be stopped.
-        </SectionDescription>
-      )}
+      {ongoingTrial != null && <p>Your free trial will be stopped.</p>}
       <button
         type='button'
         className='sub__coupon'
@@ -249,21 +240,21 @@ const SubscriptionForm = ({
         style={{ justifyContent: 'flex-start', marginTop: '40px' }}
       >
         {onCancel != null && (
-          <SectionSecondaryButton
+          <Button
             type='button'
             disabled={sending}
             onClick={onCancel}
-            style={{ marginLeft: 0 }}
+            variant='secondary'
           >
             Cancel
-          </SectionSecondaryButton>
+          </Button>
         )}
-        <SectionPrimaryButton
+        <Button
           type='submit'
           disabled={!stripe || sending || currentPlan == null}
         >
           {sending ? <Spinner /> : 'Subscribe'}
-        </SectionPrimaryButton>
+        </Button>
       </SectionFlexDualButtons>
     </StyledSubscriptionForm>
   )

@@ -15,6 +15,7 @@ import SettingTabContent from '../../../../shared/components/organisms/Settings/
 import SettingInput from '../../../../shared/components/organisms/Settings/atoms/SettingInput'
 import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 import Button from '../../../../shared/components/atoms/Button'
+import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
 
 const PersonalInfoTab = () => {
   const {
@@ -183,8 +184,9 @@ const PersonalInfoTab = () => {
       }
       footer={
         <>
+          <SettingDivider />
           <h2>{t('settings.account.delete')}</h2>
-          <p>
+          <p className='text--subtle'>
             You may delete your account at any time, note that this is
             unrecoverable.{' '}
             <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>

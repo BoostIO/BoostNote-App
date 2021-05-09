@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { SectionDescription, SectionSeparator } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +6,7 @@ import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -25,11 +25,10 @@ const TeamInfoTab = () => {
 
     return (
       <>
-        <SectionSeparator />
+        <SettingDivider />
         <section>
-          <SectionDescription>Space Deletion</SectionDescription>
-
-          <SectionDescription>
+          <h2>Delete Space</h2>
+          <p className='text--subtle'>
             Once you delete this space we will remove all associated data. There
             is no turning back.{' '}
             <TeamLink
@@ -39,7 +38,7 @@ const TeamInfoTab = () => {
             >
               {t('general.delete')}
             </TeamLink>
-          </SectionDescription>
+          </p>
         </section>
       </>
     )
@@ -52,12 +51,13 @@ const TeamInfoTab = () => {
   return (
     <SettingTabContent
       title={t('settings.teamInfo')}
+      description={'Manage your space settings.'}
       body={
         <section>
           <SettingsTeamForm team={team} teamConversion={false} header={false} />
-          {adminContent}
         </section>
       }
+      footer={adminContent}
     ></SettingTabContent>
   )
 }

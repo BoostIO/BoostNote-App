@@ -9,6 +9,7 @@ const PreferencesTab = () => {
   return (
     <SettingTabContent
       title={t('settings.preferences')}
+      description={'Manage your preferences.'}
       body={<UserPreferencesForm />}
     ></SettingTabContent>
   )

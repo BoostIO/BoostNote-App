@@ -26,7 +26,7 @@ import {
   StyledTotal,
   StyledUpgradePlan,
 } from '../../molecules/SubscriptionForm'
-import { SectionIntroduction, SectionParagraph } from '../settings/styled'
+import { SectionIntroduction } from '../settings/styled'
 import PlanTables from './PlanTables'
 import Alert from '../../../../components/atoms/Alert'
 
@@ -140,7 +140,7 @@ const SubscriptionManagement = ({
       <StyledBillingContainer>
         <SectionIntroduction>
           {subscription.plan === 'pro' ? (
-            <SectionParagraph>
+            <section>
               <StyledUpgradePlan>
                 <StyledCalcuration>
                   <span className='plan-name'>Pro</span>
@@ -165,9 +165,9 @@ const SubscriptionManagement = ({
                     : `¥${stripeProJpyPlanUnit * subscription.seats}`}
                 </strong>
               </StyledTotal>
-            </SectionParagraph>
+            </section>
           ) : subscription.plan === 'standard' ? (
-            <SectionParagraph>
+            <section>
               <StyledUpgradePlan>
                 <StyledCalcuration>
                   <span className='plan-name'>Standard</span>
@@ -191,7 +191,7 @@ const SubscriptionManagement = ({
                     : `¥${stripeStandardJpyPlanUnit * subscription.seats}`}
                 </strong>
               </StyledTotal>
-            </SectionParagraph>
+            </section>
           ) : null}
           {usingJpyPricing && (
             <Alert variant='secondary'>
@@ -337,7 +337,7 @@ const SubscriptionManagement = ({
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
-                  <SectionParagraph className='popup__billing'>
+                  <section className='popup__billing'>
                     <StyledUpgradePlan>
                       <StyledCalcuration>
                         ${stripeProPlanUnit} &times; {subscription.seats}{' '}
@@ -348,7 +348,7 @@ const SubscriptionManagement = ({
                       <label>Total Monthly Price</label>
                       <strong>${subscription.seats * stripeProPlanUnit}</strong>
                     </StyledTotal>
-                  </SectionParagraph>
+                  </section>
                 </>
               ) : (
                 <>
@@ -368,7 +368,7 @@ const SubscriptionManagement = ({
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
-                  <SectionParagraph className='popup__billing'>
+                  <section className='popup__billing'>
                     <StyledUpgradePlan>
                       <StyledCalcuration>
                         ${stripeStandardPlanUnit} &times; {subscription.seats}{' '}
@@ -381,7 +381,7 @@ const SubscriptionManagement = ({
                         ${subscription.seats * stripeStandardPlanUnit}
                       </strong>
                     </StyledTotal>
-                  </SectionParagraph>
+                  </section>
                 </>
               )}
             </Flexbox>
