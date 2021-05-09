@@ -1,21 +1,9 @@
 import React, { useCallback, useState, useMemo } from 'react'
-import {
-  SectionLabel,
-  SectionInput,
-  SectionProfilePic,
-  SectionFlexLeft,
-  SectionSeparator,
-  SectionDescription,
-  SectionSelect,
-  SectionHeader3,
-  SectionHeader2,
-} from './styled'
 import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { saveUserInfo, updateUserIcon } from '../../../api/users'
 import { buildIconUrl } from '../../../api/files'
 import IconInput from '../../molecules/IconInput'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import { Spinner } from '../../atoms/Spinner'
 import { useSettings } from '../../../lib/stores/settings'
 import AccountLink from '../../atoms/Link/AccountLink'
@@ -24,6 +12,9 @@ import { UserEmailNotificationType } from '../../../interfaces/db/userSettings'
 import { saveUserSettings } from '../../../api/users/settings'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import SettingInput from '../../../../shared/components/organisms/Settings/atoms/SettingInput'
+import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
+import Button from '../../../../shared/components/atoms/Button'
 
 const PersonalInfoTab = () => {
   const {
@@ -119,37 +110,38 @@ const PersonalInfoTab = () => {
 
   return (
     <SettingTabContent
-      header={t('settings.personalInfo')}
+      title={t('settings.personalInfo')}
+      description={'Manage your Boost Note profile.'}
       body={
         <>
-          <section>
-            {currentUser != null && (
-              <>
-                <SectionLabel>Display Name</SectionLabel>
-                <SectionInput value={displayName} onChange={onChangeHandler} />
-                <SectionProfilePic>
-                  <SectionLabel>Icon</SectionLabel>
-                  <IconInput
-                    shape='square'
-                    defaultUrl={iconUrl}
-                    onChange={setIconFile}
-                  />
-                </SectionProfilePic>
-              </>
-            )}
+          {currentUser != null && (
+            <>
+              <section>
+                <IconInput
+                  shape='circle'
+                  defaultUrl={iconUrl}
+                  onChange={setIconFile}
+                />
+              </section>
+              <section>
+                <SettingInput
+                  label={'Name'}
+                  value={displayName}
+                  onChange={onChangeHandler}
+                ></SettingInput>
+              </section>
+            </>
+          )}
 
-            {currentUser != null && (
-              <>
-                <SectionHeader2>{t('settings.notifications')}</SectionHeader2>
-                <section>
-                  <SectionHeader3>
-                    {t('settings.notificationsFrequency')}
-                  </SectionHeader3>
-                  <SectionSelect
-                    value={currentEmailNotifications}
-                    onChange={selectCurrentEmailNotifications}
-                    disabled={updating}
-                  >
+          {currentUser != null && (
+            <section>
+              <SettingSelect
+                label={t('settings.notificationsFrequency')}
+                value={currentEmailNotifications}
+                onChange={selectCurrentEmailNotifications}
+                disabled={updating}
+                options={
+                  <>
                     <option
                       value='daily'
                       selected={currentEmailNotifications === 'daily'}
@@ -168,42 +160,37 @@ const PersonalInfoTab = () => {
                     >
                       Never
                     </option>
-                  </SectionSelect>
-                </section>
-              </>
-            )}
+                  </>
+                }
+              ></SettingSelect>
+            </section>
+          )}
 
-            <SectionFlexLeft>
-              <CustomButton
-                variant='primary'
-                onClick={updateHandler}
-                style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
-                disabled={updating}
-              >
-                {updating ? (
-                  <Spinner style={{ fontSize: 16 }} />
-                ) : (
-                  t('general.update')
-                )}
-              </CustomButton>
-              <CustomButton onClick={closeSettingsTab} variant='secondary'>
-                {t('general.cancel')}
-              </CustomButton>
-            </SectionFlexLeft>
-          </section>
-          <SectionSeparator style={{ marginTop: 20 }} />
           <section>
-            <SectionDescription>
-              {t('settings.account.delete')}
-            </SectionDescription>
-            <SectionDescription>
-              You may delete your account at any time, note that this is
-              unrecoverable.{' '}
-              <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
-                {t('general.delete')}
-              </AccountLink>
-            </SectionDescription>
+            <Button
+              variant='primary'
+              onClick={updateHandler}
+              disabled={updating}
+            >
+              {updating ? (
+                <Spinner style={{ fontSize: 16 }} />
+              ) : (
+                t('general.update')
+              )}
+            </Button>
           </section>
+        </>
+      }
+      footer={
+        <>
+          <h2>{t('settings.account.delete')}</h2>
+          <p>
+            You may delete your account at any time, note that this is
+            unrecoverable.{' '}
+            <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
+              {t('general.delete')}
+            </AccountLink>
+          </p>
         </>
       }
     ></SettingTabContent>
