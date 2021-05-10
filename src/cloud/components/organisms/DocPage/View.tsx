@@ -10,7 +10,7 @@ import CustomButton from '../../atoms/buttons/CustomButton'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { unarchiveDoc } from '../../../api/teams/docs'
+import { updateDocStatus } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
 import { usePreferences } from '../../../lib/stores/preferences'
 import Application from '../../Application'
@@ -70,7 +70,7 @@ const ViewPage = ({
 
   const unarchiveHandler = useCallback(async () => {
     try {
-      const data = await unarchiveDoc(doc.teamId, doc.id)
+      const data = await updateDocStatus(doc.teamId, doc.id, null)
       updateDocsMap([data.doc.id, data.doc])
       setPartialPageData({ pageDoc: data.doc })
     } catch (error) {

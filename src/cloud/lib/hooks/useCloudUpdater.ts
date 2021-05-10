@@ -1,18 +1,17 @@
 import { useCallback } from 'react'
 import shortid from 'shortid'
 import {
-  archiveDoc,
-  ArchiveDocResponseBody,
   createDoc,
   CreateDocRequestBody,
   CreateDocResponseBody,
   destroyDoc,
   DestroyDocResponseBody,
-  unarchiveDoc,
   updateDoc,
   updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
+  updateDocStatus,
+  UpdateDocStatusResponseBody,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -171,12 +170,12 @@ export function useCloudUpdater() {
       await send(docId, 'archive', {
         api: () => {
           if (archivedAt == null) {
-            return archiveDoc(teamId, docId)
+            return updateDocStatus(teamId, docId, 'archived')
           } else {
-            return unarchiveDoc(teamId, docId)
+            return updateDocStatus(teamId, docId, null)
           }
         },
-        cb: (res: ArchiveDocResponseBody) => {
+        cb: (res: UpdateDocStatusResponseBody) => {
           updateDocsMap([res.doc.id, res.doc])
           if (pageDoc != null && res.doc.id === pageDoc.id) {
             setPartialPageData({ pageDoc: res.doc })

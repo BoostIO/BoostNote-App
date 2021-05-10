@@ -11,11 +11,7 @@ import { SerializedDocWithBookmark } from '../../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import { useNav } from '../../../../lib/stores/nav'
 import { difference } from 'ramda'
-import {
-  archiveDoc,
-  unarchiveDoc,
-  destroyDoc,
-} from '../../../../api/teams/docs'
+import { updateDocStatus, destroyDoc } from '../../../../api/teams/docs'
 import {
   getDocIdFromString,
   getFolderIdFromString,
@@ -161,7 +157,7 @@ const ContentManagerBulkActions = ({
   const archiveSingleDoc = useCallback(
     async (teamId: string, docId: string) => {
       try {
-        const data = await archiveDoc(teamId, docId)
+        const data = await updateDocStatus(teamId, docId, 'archived')
         updateDocsMap([data.doc.id, data.doc])
       } catch (err) {}
     },
@@ -171,7 +167,7 @@ const ContentManagerBulkActions = ({
   const unArchiveSingleDoc = useCallback(
     async (teamId: string, docId: string) => {
       try {
-        const data = await unarchiveDoc(teamId, docId)
+        const data = await updateDocStatus(teamId, docId, null)
         updateDocsMap([data.doc.id, data.doc])
       } catch (err) {}
     },

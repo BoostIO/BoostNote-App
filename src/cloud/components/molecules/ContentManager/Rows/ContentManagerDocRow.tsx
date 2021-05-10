@@ -24,7 +24,7 @@ import {
 } from '../../../../api/teams/docs/bookmarks'
 import { useNav } from '../../../../lib/stores/nav'
 import Flexbox from '../../../atoms/Flexbox'
-import { archiveDoc, unarchiveDoc } from '../../../../api/teams/docs'
+import { updateDocStatus } from '../../../../api/teams/docs'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
@@ -115,10 +115,11 @@ const ContentmanagerDocRow = ({
       setUpdating((prev) => [...prev, patternedId])
       setSending(ActionsIds.Archive)
       try {
-        const data =
-          doc.archivedAt == null
-            ? await archiveDoc(doc.teamId, doc.id)
-            : await unarchiveDoc(doc.teamId, doc.id)
+        const data = await updateDocStatus(
+          doc.teamId,
+          doc.id,
+          doc.archivedAt == null ? 'archived' : null
+        )
         updateDocsMap([data.doc.id, data.doc])
       } catch (error) {
         pushMessage({

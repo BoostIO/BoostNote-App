@@ -28,7 +28,7 @@ import {
 } from '../../../../lib/keyboard'
 import { isDocBookmarkShortcut } from '../../../../lib/shortcuts'
 import { saveDocAsTemplate } from '../../../../api/teams/docs/templates'
-import { archiveDoc, unarchiveDoc } from '../../../../api/teams/docs'
+import { updateDocStatus } from '../../../../api/teams/docs'
 import { useToast } from '../../../../../shared/lib/stores/toast'
 
 interface SideNavigatorDocControlsProps {
@@ -112,10 +112,11 @@ const SideNavigatorDocControls = ({
     }
     setSendingArchive(true)
     try {
-      const data =
-        doc.archivedAt == null
-          ? await archiveDoc(doc.teamId, doc.id)
-          : await unarchiveDoc(doc.teamId, doc.id)
+      const data = await updateDocStatus(
+        doc.teamId,
+        doc.id,
+        doc.archivedAt == null ? 'archived' : null
+      )
       updateDocsMap([data.doc.id, data.doc])
       setPartialPageData({ pageDoc: data.doc })
     } catch (error) {

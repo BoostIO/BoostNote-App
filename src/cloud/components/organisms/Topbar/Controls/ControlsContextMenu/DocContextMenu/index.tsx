@@ -19,6 +19,7 @@ import { zIndexModalsBackground } from '../styled'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
+  DocStatus,
 } from '../../../../../../interfaces/db/doc'
 import { getFormattedDateTime } from '../../../../../../lib/date'
 import {
@@ -28,7 +29,7 @@ import {
 } from '../../../../../../lib/keyboard'
 import { saveDocAsTemplate } from '../../../../../../api/teams/docs/templates'
 import { SerializedTeam } from '../../../../../../interfaces/db/team'
-import { DocStatus, updateDocStatus } from '../../../../../../api/teams/docs'
+import { updateDocStatus } from '../../../../../../api/teams/docs'
 import RevisionsModal from '../../../../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
