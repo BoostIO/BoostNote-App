@@ -310,6 +310,9 @@ const DocContextMenu = ({
           <div className='context__scroll__container'>
             <div className='context__scroll'>
               <div className='context__row'>
+                <div className='context__header'>DOC INFO</div>
+              </div>
+              <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
                     path={mdiAccountCircleOutline}
@@ -783,9 +786,12 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     line-height: 30px;
-    font-size: 13px;
+    font-size: ${({ theme }) => theme.fontSizes.default}px;
     padding: 0px ${({ theme }) => theme.space.small}px;
     height: fit-content;
+  }
+  .context__header {
+    font-size: ${({ theme }) => theme.fontSizes.medium}px;
   }
 
   .context__column {
