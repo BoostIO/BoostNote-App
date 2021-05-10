@@ -2,6 +2,7 @@ import { callApi } from '../../../lib/client'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
+  DocStatus,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import report from '../../../lib/analytics'
@@ -92,10 +93,7 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   report('update_doc')
   return data
 }
-
-export type DocStatus = 'in_progress' | 'completed' | 'archived' | 'pause'
-
-export interface UpdateDocStatusBody {
+export interface UpdateDocStatusResponseBody {
   doc: SerializedDocWithBookmark
 }
 
@@ -104,7 +102,7 @@ export async function updateDocStatus(
   docId: string,
   status: DocStatus | null
 ) {
-  const data = await callApi<UpdateDocStatusBody>(
+  const data = await callApi<UpdateDocStatusResponseBody>(
     `api/teams/${teamId}/docs/${docId}/status`,
     {
       method: 'put',

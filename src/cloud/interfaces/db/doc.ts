@@ -6,6 +6,8 @@ import { SerializedWorkspace } from './workspace'
 import { SerializedShareLink } from './shareLink'
 import { SerializedUser } from './user'
 
+export type DocStatus = 'in_progress' | 'completed' | 'archived' | 'paused'
+
 export interface SerializedDocAssignee {
   id: string
   docId: string
@@ -24,7 +26,7 @@ export interface SerializableDocProps {
   version: number
   teamId: string
   workspaceId: string
-  status?: 'in_progress' | 'completed' | 'archived' | 'pause'
+  status?: DocStatus
   dueDate: string
   assignees?: SerializedDocAssignee[]
 }
