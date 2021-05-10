@@ -93,26 +93,26 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   return data
 }
 
-export interface ArchiveDocResponseBody {
+export type DocStatus = 'in_progress' | 'completed' | 'archived' | 'pause'
+
+export interface UpdateDocStatusBody {
   doc: SerializedDocWithBookmark
 }
 
-export async function archiveDoc(teamId: string, docId: string) {
-  const data = await callApi<ArchiveDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/archive`,
+export async function updateDocStatus(
+  teamId: string,
+  docId: string,
+  status: DocStatus | null
+) {
+  const data = await callApi<UpdateDocStatusBody>(
+    `api/teams/${teamId}/docs/${docId}/status`,
     {
       method: 'put',
+      json: {
+        status,
+      },
     }
   )
-  return data
-}
 
-export async function unarchiveDoc(teamId: string, docId: string) {
-  const data = await callApi<ArchiveDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/archive`,
-    {
-      method: 'delete',
-    }
-  )
   return data
 }
