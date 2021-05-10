@@ -40,13 +40,11 @@ const IntegrationsTab = () => {
 
   return (
     <SettingTabContent
-      title={'Integrations'}
+      title='Integrations'
+      description='Connect 3rd party content to your Boost Note for Teams documents.'
       body={
         <>
           <section>
-            <p className='text--subtle'>
-              Connect 3rd party content to your Boost Note for Teams documents.
-            </p>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info zapier'>
