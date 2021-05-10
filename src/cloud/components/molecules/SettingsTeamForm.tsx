@@ -8,11 +8,6 @@ import { useElectron } from '../../lib/stores/electron'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { usePage } from '../../lib/stores/pageStore'
 import styled from '../../lib/styled'
-import {
-  baseButtonStyle,
-  inputStyle,
-  inverseSecondaryButtonStyle,
-} from '../../lib/styled/styleFunctions'
 import Flexbox from '../atoms/Flexbox'
 import Icon from '../atoms/Icon'
 import { Spinner } from '../atoms/Spinner'
@@ -20,6 +15,8 @@ import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
 import { useToast } from '../../../shared/lib/stores/toast'
 import Button from '../../../shared/components/atoms/Button'
+import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
+import SettingIconInputLabel from '../../../shared/components/organisms/Settings/atoms/SettingIconInputLabel'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -165,22 +162,24 @@ const SettingsTeamForm = ({
               ) : (
                 <Icon path={mdiDomain} className='profile__icon' size={50} />
               )}
+              <SettingIconInputLabel htmlFor='profile'>
+                <span>
+                  {fileUrl == null ? 'Add a photo' : 'Change your photo'}
+                </span>
+                <input
+                  id='profile'
+                  name='profile'
+                  accept='image/*'
+                  type='file'
+                  onChange={changeHandler}
+                />
+              </SettingIconInputLabel>
             </div>
-            <label htmlFor='profile' className='profile__label'>
-              {fileUrl == null ? 'Add a photo' : 'Change your photo'}
-            </label>
-            <input
-              id='profile'
-              name='profile'
-              accept='image/*'
-              type='file'
-              onChange={changeHandler}
-            />
           </Flexbox>
         </Flexbox>
         <Flexbox className='form__row'>
           <label>{label} name</label>
-          <input
+          <SettingInput
             type='text'
             value={name}
             onChange={(ev) => setName(ev.target.value)}
@@ -190,7 +189,7 @@ const SettingsTeamForm = ({
           <Flexbox className='form__row' alignItems='baseline'>
             <label>{label} domain</label>
             <Flexbox direction='column' alignItems='baseline'>
-              <input
+              <SettingInput
                 type='text'
                 value={domain}
                 onChange={(ev) => setDomain(ev.target.value)}
@@ -234,12 +233,9 @@ const Container = styled.div`
     color: ${({ theme }) => theme.secondaryBorderColor};
   }
   .profile__row {
+    display: flex;
+    align-items: center;
     margin-bottom: ${({ theme }) => theme.space.small}px;
-    text-align: center;
-  }
-  .profile__label {
-    ${baseButtonStyle}
-    ${inverseSecondaryButtonStyle}
   }
   #profile {
     display: none;
@@ -270,13 +266,6 @@ const Container = styled.div`
       flex: 0 0 auto;
       margin: 0;
       color: ${({ theme }) => theme.subtleTextColor};
-    }
-    input[type='text'] {
-      ${inputStyle};
-      width: 100%;
-      height: 30px;
-      padding: ${({ theme }) => theme.space.xsmall}px
-        ${({ theme }) => theme.space.small}px;
     }
     .description {
       font-size: ${({ theme }) => theme.fontSizes.xsmall}px;

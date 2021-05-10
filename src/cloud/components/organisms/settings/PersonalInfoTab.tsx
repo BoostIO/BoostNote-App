@@ -15,7 +15,7 @@ import SettingInput from '../../../../shared/components/organisms/Settings/atoms
 import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 import Button from '../../../../shared/components/atoms/Button'
 import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
-import SettingIconInput from '../../../../shared/components/organisms/Settings/atoms/SettingIconInput'
+import SettingIconInput from '../../../../shared/components/organisms/Settings/molecules/SettingIconInput'
 
 const PersonalInfoTab = () => {
   const {
