@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import querystring from 'querystring'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
-import EmphasizedLink from './EmphasizedLink'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 
 export type TeamLinkIntent =
   | 'index'
@@ -47,7 +47,7 @@ const TeamLink = ({
   tabIndex = 0,
 }: TeamLinkProps) => {
   return (
-    <EmphasizedLink
+    <SettingLink
       href={getTeamLinkHref(team, intent, query)}
       className={className}
       style={style}
@@ -57,7 +57,7 @@ const TeamLink = ({
       id={id}
     >
       {children}
-    </EmphasizedLink>
+    </SettingLink>
   )
 }
 
