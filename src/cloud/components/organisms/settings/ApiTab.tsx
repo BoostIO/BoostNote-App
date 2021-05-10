@@ -35,8 +35,8 @@ const ApiTab = () => {
 
   return (
     <SettingTabContent
-      title={'API'}
-      description={'These tokens are available only to BoostIO.'}
+      title='API'
+      description='These tokens are available only to BoostIO.'
       body={
         <>
           <section>
