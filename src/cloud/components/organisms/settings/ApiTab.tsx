@@ -9,7 +9,7 @@ import { mdiOpenInNew } from '@mdi/js'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
-import SettingTokenCreate from '../../../../shared/components/organisms/Settings/atoms/SettingTokenCreate'
+import SettingTokenCreate from '../../../../shared/components/organisms/Settings/molecules/SettingTokenCreate'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 
 const ApiTab = () => {
