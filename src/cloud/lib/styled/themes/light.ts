@@ -91,6 +91,7 @@ export const lightTheme: BaseTheme = {
 
   warningTextColor: warningColor,
   infoTextColor: infoColor,
+  successTextColor: successColor,
 
   /* --- Icon Colors --- */
 

@@ -75,6 +75,7 @@ export type BaseTheme = InitialTheme & {
 
   warningTextColor: string
   infoTextColor: string
+  successTextColor: string
 
   /* --- Icon Colors --- */
 
