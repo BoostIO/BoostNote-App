@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { saveUserInfo, updateUserIcon } from '../../../api/users'
 import { buildIconUrl } from '../../../api/files'
-import IconInput from '../../molecules/IconInput'
 import { Spinner } from '../../atoms/Spinner'
 import { useSettings } from '../../../lib/stores/settings'
 import AccountLink from '../../atoms/Link/AccountLink'
@@ -16,6 +15,7 @@ import SettingInput from '../../../../shared/components/organisms/Settings/atoms
 import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 import Button from '../../../../shared/components/atoms/Button'
 import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
+import SettingIconInput from '../../../../shared/components/organisms/Settings/atoms/SettingIconInput'
 
 const PersonalInfoTab = () => {
   const {
@@ -118,11 +118,7 @@ const PersonalInfoTab = () => {
           {currentUser != null && (
             <>
               <section>
-                <IconInput
-                  shape='circle'
-                  defaultUrl={iconUrl}
-                  onChange={setIconFile}
-                />
+                <SettingIconInput defaultUrl={iconUrl} onChange={setIconFile} />
               </section>
               <section>
                 <SettingInput
