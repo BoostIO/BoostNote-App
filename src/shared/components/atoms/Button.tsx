@@ -166,6 +166,11 @@ const StyledButton = styled.button`
     margin-left: 5px;
   }
 
+  .button__label {
+    display: flex;
+    align-items: center;
+  }
+
   .button__icon {
     flex: 0 0 auto;
   }
