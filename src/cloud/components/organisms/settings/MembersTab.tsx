@@ -21,7 +21,6 @@ import UserIcon from '../../atoms/UserIcon'
 import styled from '../../../lib/styled'
 import { arraysAreIdentical } from '../../../lib/utils/array'
 import { getUserEmailsFromPermissions } from '../../../api/teams/permissions/emails'
-import Flexbox from '../../atoms/Flexbox'
 import { useRouter } from '../../../lib/router'
 import cc from 'classcat'
 import { useNav } from '../../../lib/stores/nav'
@@ -44,6 +43,7 @@ import SettingTabContent from '../../../../shared/components/organisms/Settings/
 import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -354,11 +354,8 @@ const MembersTab = () => {
           return {
             type: MenuTypes.Component,
             component: (
-              <Flexbox
-                justifyContent='space-between'
-                style={{ padding: '3px 5px' }}
-              >
-                <Flexbox flex='1 1 auto' style={{ marginRight: 10 }}>
+              <Flexbox justifyContent='space-between'>
+                <Flexbox flex='1 1 auto'>
                   {doc != null ? (
                     <EmojiIcon
                       defaultIcon={mdiCardTextOutline}
