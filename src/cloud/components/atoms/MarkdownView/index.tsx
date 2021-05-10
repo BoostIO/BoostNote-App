@@ -33,10 +33,11 @@ import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import { useRouter } from '../../../lib/router'
-import useSelection from '../../../lib/useSelection'
+import useSelection from '../../../lib/selection/useSelection'
 import SelectionTooltip from '../SelectionTooltip'
 import Icon from '../Icon'
 import { mdiCommentTextOutline } from '@mdi/js'
+import useSelectionLocation from '../../../lib/selection/useSelectionLocation'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -268,7 +269,7 @@ const MarkdownView = ({
   }, [state])
 
   const defaultRef = useRef<HTMLElement>(null)
-  const selection = useSelection(scrollerRef || defaultRef)
+  const selection = useSelectionLocation(scrollerRef || defaultRef)
 
   return (
     <StyledMarkdownPreview
@@ -276,8 +277,8 @@ const MarkdownView = ({
       ref={scrollerRef || defaultRef}
     >
       {displayContent}
-      {selection.type === 'some' && selection.selection.type === 'Range' && (
-        <SelectionTooltip selection={selection}>
+      {selection != null && selection.local != null && (
+        <SelectionTooltip rect={selection.local}>
           <StyledTooltipContent>
             <Icon size={34} path={mdiCommentTextOutline} />
           </StyledTooltipContent>
@@ -297,6 +298,7 @@ function triggerCollapse(event: Event) {
 }
 
 const StyledMarkdownPreview = styled.div`
+  position: relative;
   ${defaultPreviewStyle}
   padding: 0 ${({ theme }) => theme.space.xsmall}px ${({ theme }) =>
   theme.space.xxxlarge}px;

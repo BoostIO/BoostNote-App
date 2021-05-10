@@ -27,7 +27,7 @@ function useSelection(node?: MutableRefObject<Element | null>) {
           return prev.type === 'none' ? prev : { type: 'none' }
         })
       }
-    }, 500)
+    }, 200)
 
     document.addEventListener('selectionchange', listener)
     return () => document.removeEventListener('selectionchange', listener)
