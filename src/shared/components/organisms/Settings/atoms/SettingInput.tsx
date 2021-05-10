@@ -5,6 +5,7 @@ interface SettingInputProps {
   label?: string
   value?: string
   placeholder?: string
+  type?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
@@ -28,7 +29,8 @@ const Container = styled.div`
     flex-shrink: 1;
     width: 100%;
     height: 40px;
-    max-width: 400px;
+    min-width: 300px;
+    max-width: 450px;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
     background-color: ${({ theme }) => theme.colors.background.primary};

@@ -36,7 +36,8 @@ const Container = styled.div`
   select {
     width: 100%;
     height: 40px;
-    max-width: 400px;
+    min-width: 300px;
+    max-width: 450px;
     padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
     border-radius: 4px;
     background-color: ${({ theme }) => theme.colors.background.primary};
