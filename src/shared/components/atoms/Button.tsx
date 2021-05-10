@@ -146,7 +146,6 @@ export default Button
 
 const StyledButton = styled.button`
   padding: 0 ${({ theme }) => theme.sizes.spaces.md}px;
-  border-radius: 2px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
@@ -159,7 +158,6 @@ const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: Arial;
   box-sizing: border-box;
   transition: 200ms background-color;
   width: auto;
