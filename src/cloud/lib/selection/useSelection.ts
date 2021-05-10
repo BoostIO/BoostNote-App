@@ -52,7 +52,7 @@ function convertSelectionToState(
   selection: ReturnType<typeof getSelection>
 ): SelectionState {
   if (selection == null) return { type: 'none' }
-  if (selection.type === 'none') return { type: 'none' }
+  if (selection.type !== 'Range') return { type: 'none' }
   return { type: 'some', selection }
 }
 
