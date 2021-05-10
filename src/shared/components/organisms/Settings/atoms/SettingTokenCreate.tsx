@@ -43,7 +43,8 @@ const Container = styled.div`
   width: 100%;
 
   .text--warning {
-    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    margin-top: 0;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
     color: ${({ theme }) => theme.colors.variants.warning.base};
   }
 `

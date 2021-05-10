@@ -81,7 +81,7 @@ const TokenControl = ({ token, onUpdate, onDelete }: TokenControlProps) => {
           </>
         ) : (
           <>
-            <p>{name}</p>
+            <p style={{ marginTop: 0 }}>{name}</p>
             <div>
               <SmallButton variant='transparent' onClick={() => setEdit(true)}>
                 <IconMdi path={mdiPencil} size={18} />
