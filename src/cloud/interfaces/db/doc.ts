@@ -4,6 +4,15 @@ import { SerializedRevision } from './revision'
 import type { SerializedTag } from './tag'
 import { SerializedWorkspace } from './workspace'
 import { SerializedShareLink } from './shareLink'
+import { SerializedUser } from './user'
+
+export interface SerializedDocAssignee {
+  id: string
+  docId: string
+  doc?: SerializedDoc
+  userId: string
+  user?: SerializedUser
+}
 
 export interface SerializableDocProps {
   id: string
@@ -15,6 +24,9 @@ export interface SerializableDocProps {
   version: number
   teamId: string
   workspaceId: string
+  status?: 'in_progress' | 'completed' | 'archived' | 'pause'
+  dueDate: string
+  assignees?: SerializedDocAssignee[]
 }
 
 export interface SerializedUnserializableDocProps {
