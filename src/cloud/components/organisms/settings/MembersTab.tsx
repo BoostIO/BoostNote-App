@@ -44,6 +44,7 @@ import SettingSelect from '../../../../shared/components/organisms/Settings/atom
 import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -420,7 +421,7 @@ const MembersTab = () => {
   return (
     <SettingTabContent
       title={
-        <TabSelector>
+        <SettingTabSelector>
           <button
             className={cc([tab === 'member' && 'active'])}
             onClick={() => setTab('member')}
@@ -433,7 +434,7 @@ const MembersTab = () => {
           >
             Guests ({guestsMap.size})
           </button>
-        </TabSelector>
+        </SettingTabSelector>
       }
       description={'Manage who access to this space.'}
       body={
@@ -693,31 +694,6 @@ const MembersTab = () => {
   )
 }
 
-const TabSelector = styled.div`
-  display: flex;
-  button {
-    background: transparent;
-    margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
-    font-size: ${({ theme }) => theme.fontSizes.medium}px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    border-bottom: 1px solid transparent;
-    cursor: pointer;
-    outline: none;
-
-    &:hover {
-      color: ${({ theme }) => theme.emphasizedTextColor};
-    }
-
-    &.active {
-      color: ${({ theme }) => theme.emphasizedTextColor};
-      border-color: ${({ theme }) => theme.emphasizedTextColor};
-    }
-  }
-  button:first-of-type {
-    margin-right: ${({ theme }) => theme.space.medium}px;
-  }
-`
-
 const TopMargin = styled.div`
   margin-top: ${({ theme }) => theme.space.medium}px;
 `
@@ -782,6 +758,7 @@ const StyledMembersTable = styled.table`
 const StyledGuestInactiveText = styled.p`
   margin-top: ${({ theme }) => theme.space.medium}px;
   margin-bottom: ${({ theme }) => theme.space.default}px;
+  line-height: 1.6;
 `
 
 const StyledMembername = styled.div`
