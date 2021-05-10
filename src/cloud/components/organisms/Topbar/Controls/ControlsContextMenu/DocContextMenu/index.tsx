@@ -12,6 +12,8 @@ import {
   mdiAccountMultiplePlusOutline,
   mdiArrowBottomLeft,
   mdiPencil,
+  mdiListStatus,
+  mdiAccountCircleOutline,
 } from '@mdi/js'
 import { zIndexModalsBackground } from '../styled'
 import {
@@ -26,7 +28,7 @@ import {
 } from '../../../../../../lib/keyboard'
 import { saveDocAsTemplate } from '../../../../../../api/teams/docs/templates'
 import { SerializedTeam } from '../../../../../../interfaces/db/team'
-import { archiveDoc, unarchiveDoc } from '../../../../../../api/teams/docs'
+import { DocStatus, updateDocStatus } from '../../../../../../api/teams/docs'
 import RevisionsModal from '../../../../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
@@ -63,6 +65,7 @@ import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../../shared/lib/stores/modal'
+import DocStatusSelect from './DocStatusSelect'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -88,7 +91,7 @@ const DocContextMenu = ({
   sendingRename,
 }: DocContextMenuProps) => {
   const [sendingTemplate, setSendingTemplate] = useState(false)
-  const [sendingArchive, setSendingArchive] = useState(false)
+  const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
   const [sendingMove, setSendingMove] = useState(false)
   const {
     updateDocsMap,
@@ -139,44 +142,10 @@ const DocContextMenu = ({
     }
   }, [contributors, sliceContributors])
 
-  const toggleArchived = useCallback(async () => {
-    if (
-      sendingTemplate ||
-      sendingArchive ||
-      sendingMove ||
-      currentDoc == null
-    ) {
-      return
-    }
-    setSendingArchive(true)
-    try {
-      const data =
-        currentDoc.archivedAt == null
-          ? await archiveDoc(currentDoc.teamId, currentDoc.id)
-          : await unarchiveDoc(currentDoc.teamId, currentDoc.id)
-      updateDocsMap([data.doc.id, data.doc])
-      setPartialPageData({ pageDoc: data.doc })
-    } catch (error) {
-      pushMessage({
-        title: 'Error',
-        description: 'Could not archive this doc',
-      })
-    }
-    setSendingArchive(false)
-  }, [
-    currentDoc,
-    setPartialPageData,
-    pushMessage,
-    updateDocsMap,
-    sendingTemplate,
-    sendingArchive,
-    sendingMove,
-  ])
-
   const toggleTemplate = useCallback(async () => {
     if (
       sendingTemplate ||
-      sendingArchive ||
+      sendingUpdateStatus ||
       sendingMove ||
       currentDoc == null
     ) {
@@ -198,7 +167,7 @@ const DocContextMenu = ({
     setSendingTemplate,
     pushMessage,
     sendingTemplate,
-    sendingArchive,
+    sendingUpdateStatus,
     sendingMove,
     updateTemplatesMap,
   ])
@@ -254,7 +223,7 @@ const DocContextMenu = ({
       workspaceId: string,
       parentFolderId?: string
     ) => {
-      if (sendingTemplate || sendingArchive || sendingMove) {
+      if (sendingTemplate || sendingUpdateStatus || sendingMove) {
         return
       }
       setSendingMove(true)
@@ -269,7 +238,7 @@ const DocContextMenu = ({
       updateDocHandler,
       pushApiErrorMessage,
       sendingTemplate,
-      sendingArchive,
+      sendingUpdateStatus,
       sendingMove,
     ]
   )
@@ -287,7 +256,51 @@ const DocContextMenu = ({
     [openModal, moveDoc]
   )
 
-  const updating = sendingTemplate || sendingArchive || sendingMove
+  const currentDocStatus = currentDoc.status
+  const sendUpdateStatus = useCallback(
+    async (newStatus: DocStatus | null) => {
+      if (currentDocStatus == newStatus) {
+        return
+      }
+      if (
+        sendingTemplate ||
+        sendingUpdateStatus ||
+        sendingMove ||
+        currentDoc == null
+      ) {
+        return
+      }
+
+      setSendingUpdateStatus(true)
+      try {
+        const data = await updateDocStatus(
+          currentDoc.teamId,
+          currentDoc.id,
+          newStatus
+        )
+        updateDocsMap([data.doc.id, data.doc])
+        setPartialPageData({ pageDoc: data.doc })
+      } catch (error) {
+        pushMessage({
+          title: 'Error',
+          description: 'Could not archive this doc',
+        })
+      }
+      setSendingUpdateStatus(false)
+    },
+    [
+      currentDoc,
+      currentDocStatus,
+      pushMessage,
+      sendingUpdateStatus,
+      sendingMove,
+      sendingTemplate,
+      setPartialPageData,
+      updateDocsMap,
+    ]
+  )
+
+  const updating = sendingTemplate || sendingUpdateStatus || sendingMove
 
   return (
     <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
@@ -298,11 +311,63 @@ const DocContextMenu = ({
               <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
+                    path={mdiAccountCircleOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Assignees
+                </label>
+                <div className='context__content'>
+                  <span>
+                    {currentDoc.assignees?.map((assignee) => {
+                      return <li>{assignee.user?.uniqueName}</li>
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiListStatus}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Status
+                </label>
+                <div className='context__content'>
+                  <DocStatusSelect
+                    status={currentDoc.status}
+                    sending={sendingUpdateStatus}
+                    onStatusChange={sendUpdateStatus}
+                  />
+                </div>
+              </div>
+
+              <div className='context__break' />
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
                     path={mdiClockOutline}
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Last updated
+                  Creation Date
+                </label>
+                <div className='context__content'>
+                  <span>
+                    {getFormattedDateTime(currentDoc.createdAt, 'at')}
+                  </span>
+                </div>
+              </div>
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiClockOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Update Date
                 </label>
                 <div className='context__content'>
                   {currentDoc.head == null ? (
@@ -467,7 +532,7 @@ const DocContextMenu = ({
                     className='context__row context__button'
                     id='dc-context-top-template'
                     onClick={toggleTemplate}
-                    disabled={sendingTemplate || sendingArchive}
+                    disabled={sendingTemplate || sendingUpdateStatus}
                   >
                     <Icon
                       path={mdiPlusBoxMultipleOutline}
@@ -479,9 +544,15 @@ const DocContextMenu = ({
                   <button
                     className='context__row context__button'
                     id='dc-context-top-archive'
-                    onClick={toggleArchived}
+                    onClick={() => {
+                      if (currentDoc.archivedAt == null) {
+                        sendUpdateStatus('archived')
+                      } else {
+                        sendUpdateStatus(null)
+                      }
+                    }}
                     disabled={
-                      sendingTemplate || sendingTemplate || sendingArchive
+                      sendingTemplate || sendingTemplate || sendingUpdateStatus
                     }
                   >
                     <Icon
