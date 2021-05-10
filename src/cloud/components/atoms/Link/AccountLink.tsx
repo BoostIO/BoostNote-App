@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import querystring from 'querystring'
-import EmphasizedLink from './EmphasizedLink'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 
 export type AccountLinkIntent = 'delete'
 
@@ -23,7 +23,7 @@ const AccountLink: FC<AccountLinkProps> = ({
   beforeNavigate,
 }) => {
   return (
-    <EmphasizedLink
+    <SettingLink
       href={getAccountHref(intent, query)}
       beforeNavigate={beforeNavigate}
       className={className}
@@ -31,7 +31,7 @@ const AccountLink: FC<AccountLinkProps> = ({
       draggable={draggable}
     >
       {children}
-    </EmphasizedLink>
+    </SettingLink>
   )
 }
 
