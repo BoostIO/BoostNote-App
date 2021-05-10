@@ -3,14 +3,14 @@ import styled from '../../../lib/styled'
 import Spinner from '../../atoms/CustomSpinner'
 import { useApiTokens, withApiTokens } from '../../../lib/stores/apiTokens'
 import TokenControl from '../../molecules/TokenControl'
-import TokenCreate from '../../molecules/TokenCreate'
 import { usePage } from '../../../lib/stores/pageStore'
-import Flexbox from '../../atoms/Flexbox'
 import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
+import SettingTokenCreate from '../../../../shared/components/organisms/Settings/atoms/SettingTokenCreate'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -70,7 +70,7 @@ const ApiTab = () => {
             {tokenCreateMode && (
               <StyledServiceList>
                 <StyledServiceListItem>
-                  <TokenCreate onCreate={createToken} />
+                  <SettingTokenCreate onCreate={createToken} />
                 </StyledServiceListItem>
               </StyledServiceList>
             )}
