@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import styled from '../../../../lib/styled'
+import SettingIconInputLabel from '../atoms/SettingIconInputLabel'
 
 interface SettingIconInputProps {
   onChange?: (file: File) => void
@@ -34,10 +35,10 @@ const SettingIconInput = ({ onChange, defaultUrl }: SettingIconInputProps) => {
           src={fileUrl != null ? fileUrl : defaultUrl}
         />
       </div>
-      <label className='setting__icon-input__label'>
+      <SettingIconInputLabel>
         <span>Select Image...</span>
         <input accept='image/*' type='file' onChange={changeHandler} />
-      </label>
+      </SettingIconInputLabel>
     </Container>
   )
 }
@@ -60,41 +61,5 @@ const Container = styled.div`
     background: ${({ theme }) => theme.colors.background.secondary};
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     border-radius: 50%;
-  }
-
-  .setting__icon-input__label {
-    position: relative;
-    cursor: pointer;
-    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
-
-    & > span {
-      display: flex;
-      align-items: center;
-      height: 32px;
-      padding: 0 ${({ theme }) => theme.sizes.spaces.md}px;
-      background-color: ${({ theme }) => theme.colors.variants.secondary.base};
-      border-radius: 4px;
-      color: ${({ theme }) => theme.colors.variants.secondary.text};
-      font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-      transition: 200ms background-color;
-
-      &.focus {
-        filter: brightness(103%);
-      }
-      &:hover {
-        filter: brightness(106%);
-      }
-      &:active,
-      &.button__state--active {
-        filter: brightness(112%);
-      }
-    }
-
-    & > input[type='file'] {
-      position: absolute;
-      opacity: 0;
-      height: 0px;
-      width: 0px;
-    }
   }
 `
