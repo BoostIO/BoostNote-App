@@ -51,7 +51,7 @@ function useSelectionLocation(element: MutableRefObject<Element | null>) {
     return undefined
   }, [element])
 
-  return state.location
+  return state
 }
 
 function buildLocation(

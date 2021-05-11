@@ -33,15 +33,22 @@ import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import { useRouter } from '../../../lib/router'
-import useSelection from '../../../lib/selection/useSelection'
 import SelectionTooltip from '../SelectionTooltip'
 import Icon from '../Icon'
 import { mdiCommentTextOutline } from '@mdi/js'
-import useSelectionLocation from '../../../lib/selection/useSelectionLocation'
+import useSelectionLocation, {
+  Rect,
+} from '../../../lib/selection/useSelectionLocation'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': [...gh.attributes['*'], 'className', 'align', 'data-line'],
+    '*': [
+      ...gh.attributes['*'],
+      'className',
+      'align',
+      'data-line',
+      'data-offset',
+    ],
     input: [...gh.attributes['input'], 'checked'],
     pre: ['dataRaw'],
     shortcode: ['entityId', 'identifier'],
@@ -67,6 +74,16 @@ type MarkdownViewState =
   | { type: 'loaded'; content: React.ReactNode }
   | { type: 'error'; err: Error }
 
+interface SelectionState {
+  context: {
+    start: number
+    end: number
+    text: string
+  }
+  position: Rect
+  selection: Selection
+}
+
 interface MarkdownViewProps {
   content: string
   customBlockRenderer?: (name: string) => JSX.Element
@@ -79,7 +96,7 @@ interface MarkdownViewProps {
   className?: string
   embeddableDocs?: Map<string, EmbedDoc>
   scrollerRef?: React.RefObject<HTMLDivElement>
-  onSelection?: () => void
+  SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
 }
 
 const MarkdownView = ({
@@ -91,6 +108,7 @@ const MarkdownView = ({
   className,
   embeddableDocs,
   scrollerRef,
+  SelectionMenu,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
@@ -269,7 +287,29 @@ const MarkdownView = ({
   }, [state])
 
   const defaultRef = useRef<HTMLElement>(null)
-  const selection = useSelectionLocation(scrollerRef || defaultRef)
+  const selectionInfo = useSelectionLocation(scrollerRef || defaultRef)
+  const [selectionState, setSelectionState] = useState<SelectionState | null>(
+    null
+  )
+
+  useEffect(() => {
+    if (
+      selectionInfo.selection.type === 'none' ||
+      selectionInfo.location == null ||
+      selectionInfo.location.local == null
+    ) {
+      setSelectionState(null)
+    } else {
+      const context = getSelectionContext(selectionInfo.selection.selection)
+      if (context != null) {
+        setSelectionState({
+          position: selectionInfo.location.local,
+          context,
+          selection: selectionInfo.selection.selection,
+        })
+      }
+    }
+  }, [selectionInfo])
 
   return (
     <StyledMarkdownPreview
@@ -277,10 +317,10 @@ const MarkdownView = ({
       ref={scrollerRef || defaultRef}
     >
       {displayContent}
-      {selection != null && selection.local != null && (
-        <SelectionTooltip rect={selection.local}>
+      {selectionState != null && SelectionMenu && (
+        <SelectionTooltip rect={selectionState.position}>
           <StyledTooltipContent>
-            <Icon size={34} path={mdiCommentTextOutline} />
+            <SelectionMenu selection={selectionState.context} />
           </StyledTooltipContent>
         </SelectionTooltip>
       )}
@@ -297,6 +337,37 @@ function triggerCollapse(event: Event) {
   }
 }
 
+function getSelectionContext(
+  selection: Selection
+): SelectionState['context'] | null {
+  const anchor = selection.anchorNode
+  const focus = selection.focusNode
+  if (anchor == null || focus == null) return null
+  if (!anchor.TEXT_NODE || !focus.TEXT_NODE) return null
+  const offset1 = getOffset(anchor)
+  const offset2 = getOffset(focus)
+  if (offset1 == null || offset2 == null) return null
+
+  const rangeStart = offset1 + selection.anchorOffset
+  const rangeEnd = offset2 + selection.focusOffset
+  return {
+    start: Math.min(rangeStart, rangeEnd),
+    end: Math.max(rangeStart, rangeEnd),
+    text: selection.toString(),
+  }
+}
+
+function getOffset(node: Node) {
+  const nonTextNode = node.TEXT_NODE ? node.parentElement : node
+  if (nonTextNode == null || !isElement(nonTextNode)) return null
+  const offset = parseInt(nonTextNode.getAttribute('data-offset') || '', 10)
+  return isNaN(offset) ? null : offset
+}
+
+function isElement(node: Node): node is Element {
+  return node.nodeType === 1
+}
+
 const StyledMarkdownPreview = styled.div`
   position: relative;
   ${defaultPreviewStyle}
@@ -305,8 +376,6 @@ const StyledMarkdownPreview = styled.div`
 `
 
 const StyledTooltipContent = styled.div`
-  display: flex;
-  padding: 8px;
   background-color: ${({ theme }) => theme.contextMenuColor};
   &:after {
     content: '';

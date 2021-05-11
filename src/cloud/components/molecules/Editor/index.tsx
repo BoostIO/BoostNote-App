@@ -45,6 +45,7 @@ import {
   mdiPencil,
   mdiEyeOutline,
   mdiViewSplitVertical,
+  mdiCommentTextOutline,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -77,6 +78,7 @@ import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import Icon from '../../atoms/Icon'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -850,6 +852,13 @@ const Editor = ({
               className='scroller'
               embeddableDocs={embeddableDocs}
               scrollerRef={previewRef}
+              SelectionMenu={({ selection }) => (
+                <StyledSelectionMenu>
+                  <div onClick={() => console.log(selection)}>
+                    <Icon size={32} path={mdiCommentTextOutline} />
+                  </div>
+                </StyledSelectionMenu>
+              )}
             />
           </StyledPreview>
         </StyledEditor>
@@ -986,6 +995,13 @@ const StyledPreview = styled.div`
   &.layout-editor {
     display: none;
   }
+`
+
+const StyledSelectionMenu = styled.div`
+  display: flex;
+  padding: 8px;
+  max-height: 50px;
+  cursor: pointer;
 `
 
 const StyledEditor = styled.div`
