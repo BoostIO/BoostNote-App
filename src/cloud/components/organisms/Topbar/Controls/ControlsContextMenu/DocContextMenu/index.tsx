@@ -257,10 +257,9 @@ const DocContextMenu = ({
     [openModal, moveDoc]
   )
 
-  const currentDocStatus = currentDoc.status
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
-      if (currentDocStatus == newStatus) {
+      if (currentDoc.status === newStatus) {
         return
       }
       if (
@@ -291,7 +290,6 @@ const DocContextMenu = ({
     },
     [
       currentDoc,
-      currentDocStatus,
       pushMessage,
       sendingUpdateStatus,
       sendingMove,
@@ -827,6 +825,7 @@ const Container = styled.div`
   .context__content {
     line-height: inherit;
     min-height: 30px;
+    flex: 1;
 
     &.single__line {
       display: flex;

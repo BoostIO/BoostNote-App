@@ -31,6 +31,7 @@ const DocStatusSelect = ({
   return (
     <Container>
       <LoadingButton
+        className='status_button'
         spinning={sending}
         variant='transparent'
         onClick={(event) => {
@@ -103,7 +104,7 @@ const DocStatusSelect = ({
                   Clear
                 </ContextMenuItemContainer>
               ),
-              onCLick: () => {
+              onClick: () => {
                 onStatusChange(null)
               },
             },
@@ -119,9 +120,18 @@ const DocStatusSelect = ({
 export default DocStatusSelect
 
 const Container = styled.div`
+  height: 30px;
+  .status_button {
+    width: 100%;
+    text-align: left;
+    justify-content: left;
+  }
   .status {
     display: flex;
     align-items: center;
+  }
+  .status--empty {
+    color: ${({ theme }) => theme.subtleTextColor};
   }
   .status_icon {
     margin-right: 5px;
@@ -200,5 +210,5 @@ const StatusView = ({ status }: { status?: DocStatus | null }) => {
         </div>
       )
   }
-  return <div className='status'>Undefined</div>
+  return <div className='status status--empty'>Empty</div>
 }
