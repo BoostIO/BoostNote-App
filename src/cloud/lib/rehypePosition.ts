@@ -9,6 +9,9 @@ export const rehypePosition: unified.Plugin = function () {
           node.properties = {}
         }
         ;(node.properties as any)['data-line'] = node.position.start.line
+        if (node.position.start.offset != null) {
+          ;(node.properties as any)['data-offset'] = node.position.start.offset
+        }
       }
     })
   }
