@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
-import { LoadingButton } from '../../../../../../../shared/components/atoms/Button'
+import DocPropertyValueButton from './DocPropertyValueButton'
+import { format as formatDate } from 'date-fns'
 
 interface DocDueDateSelectProps {
+  className?: string
   sending?: boolean
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
 }
 
 const DocDueDateSelect = ({
+  className,
   sending,
   dueDate: dueDateString,
   onDueDateChange,
@@ -23,14 +26,15 @@ const DocDueDateSelect = ({
 
   return (
     <DatePicker
+      wrapperClassName={className}
       disabled={sending}
       selected={dueDate}
       onChange={onDueDateChange}
-      popperPlacement='top'
+      popperPlacement='top-end'
       customInput={
-        <LoadingButton spinning={sending} variant='transparent'>
-          {dueDate != null ? dueDate.toString() : 'Empty'}
-        </LoadingButton>
+        <DocPropertyValueButton sending={sending}>
+          {dueDate != null ? formatDate(dueDate, 'MMM dd, yyyy') : 'Empty'}
+        </DocPropertyValueButton>
       }
     />
   )

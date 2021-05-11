@@ -402,6 +402,7 @@ const DocContextMenu = ({
                 </label>
                 <div className='context__content'>
                   <DocDueDateSelect
+                    className='context__content__date_select'
                     sending={sendingDueDate}
                     dueDate={currentDoc.dueDate}
                     onDueDateChange={sendUpdateDocDueDate}
@@ -892,6 +893,9 @@ const Container = styled.div`
       display: flex;
       align-items: center;
     }
+  }
+  .context__content__date_select {
+    width: 100%;
   }
 
   .context__break {

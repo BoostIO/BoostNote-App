@@ -1,5 +1,4 @@
 import React from 'react'
-import { LoadingButton } from '../../../../../../../shared/components/atoms/Button'
 import {
   useContextMenu,
   MenuTypes,
@@ -15,6 +14,7 @@ import {
 } from '@mdi/js'
 import styled from '../../../../../../lib/styled'
 import { DocStatus } from '../../../../../../interfaces/db/doc'
+import DocPropertyValueButton from './DocPropertyValueButton'
 
 interface DocStatusSelectProps {
   sending?: boolean
@@ -30,10 +30,8 @@ const DocStatusSelect = ({
   const { popup } = useContextMenu()
   return (
     <Container>
-      <LoadingButton
-        className='status_button'
-        spinning={sending}
-        variant='transparent'
+      <DocPropertyValueButton
+        sending={sending}
         onClick={(event) => {
           popup(event, [
             {
@@ -112,7 +110,7 @@ const DocStatusSelect = ({
         }}
       >
         <StatusView status={status} />
-      </LoadingButton>
+      </DocPropertyValueButton>
     </Container>
   )
 }
@@ -121,11 +119,6 @@ export default DocStatusSelect
 
 const Container = styled.div`
   height: 30px;
-  .status_button {
-    width: 100%;
-    text-align: left;
-    justify-content: left;
-  }
   .status {
     display: flex;
     align-items: center;
