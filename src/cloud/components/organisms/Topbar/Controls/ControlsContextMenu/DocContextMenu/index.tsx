@@ -29,7 +29,10 @@ import {
 } from '../../../../../../lib/keyboard'
 import { saveDocAsTemplate } from '../../../../../../api/teams/docs/templates'
 import { SerializedTeam } from '../../../../../../interfaces/db/team'
-import { updateDocStatus } from '../../../../../../api/teams/docs'
+import {
+  updateDocStatus,
+  updateDocDueDate,
+} from '../../../../../../api/teams/docs'
 import RevisionsModal from '../../../../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
@@ -67,6 +70,7 @@ import UpgradeButton from '../../../../../UpgradeButton'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../../shared/lib/stores/modal'
 import DocStatusSelect from './DocStatusSelect'
+import DocDueDateSelect from './DocDueDateSelect'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -94,6 +98,7 @@ const DocContextMenu = ({
   const [sendingTemplate, setSendingTemplate] = useState(false)
   const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
   const [sendingMove, setSendingMove] = useState(false)
+  const [sendingDueDate, setSendingDueDate] = useState(false)
   const {
     updateDocsMap,
     deleteDocHandler,
@@ -299,7 +304,47 @@ const DocContextMenu = ({
     ]
   )
 
-  const updating = sendingTemplate || sendingUpdateStatus || sendingMove
+  const sendUpdateDocDueDate = useCallback(
+    async (newDate: Date | null) => {
+      if (
+        sendingTemplate ||
+        sendingUpdateStatus ||
+        sendingMove ||
+        currentDoc == null
+      ) {
+        return
+      }
+
+      setSendingDueDate(true)
+      try {
+        const data = await updateDocDueDate(
+          currentDoc.teamId,
+          currentDoc.id,
+          newDate
+        )
+        updateDocsMap([data.doc.id, data.doc])
+        setPartialPageData({ pageDoc: data.doc })
+      } catch (error) {
+        pushMessage({
+          title: 'Error',
+          description: 'Could not archive this doc',
+        })
+      }
+      setSendingDueDate(false)
+    },
+    [
+      currentDoc,
+      pushMessage,
+      sendingMove,
+      sendingTemplate,
+      sendingUpdateStatus,
+      setPartialPageData,
+      updateDocsMap,
+    ]
+  )
+
+  const updating =
+    sendingTemplate || sendingUpdateStatus || sendingMove || sendingDueDate
 
   return (
     <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
@@ -346,6 +391,24 @@ const DocContextMenu = ({
                 </div>
               </div>
 
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiClockOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Due Date
+                </label>
+                <div className='context__content'>
+                  <DocDueDateSelect
+                    sending={sendingDueDate}
+                    dueDate={currentDoc.dueDate}
+                    onDueDateChange={sendUpdateDocDueDate}
+                  />
+                </div>
+              </div>
+
               <div className='context__break' />
               <div className='context__row'>
                 <label className='context__label'>
@@ -373,9 +436,7 @@ const DocContextMenu = ({
                 </label>
                 <div className='context__content'>
                   {currentDoc.head == null ? (
-                    <span>
-                      {getFormattedDateTime(currentDoc.updatedAt, 'at')}
-                    </span>
+                    <span>{getFormattedDateTime(currentDoc.updatedAt)}</span>
                   ) : (
                     <Flexbox wrap='wrap'>
                       {(currentDoc.head.creators || []).length > 0 ? (

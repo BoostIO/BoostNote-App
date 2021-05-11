@@ -114,3 +114,25 @@ export async function updateDocStatus(
 
   return data
 }
+
+export interface UpdateDocDueDateResponseBody {
+  doc: SerializedDocWithBookmark
+}
+
+export async function updateDocDueDate(
+  teamId: string,
+  docId: string,
+  dueDate: Date | null
+) {
+  const data = await callApi<UpdateDocStatusResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/due-date`,
+    {
+      method: 'put',
+      json: {
+        dueDate,
+      },
+    }
+  )
+
+  return data
+}
