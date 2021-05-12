@@ -14,6 +14,7 @@ import {
   mdiPencil,
   mdiListStatus,
   mdiAccountCircleOutline,
+  mdiAccountMultiple,
 } from '@mdi/js'
 import { zIndexModalsBackground } from '../styled'
 import {
@@ -422,8 +423,43 @@ const DocContextMenu = ({
                 </label>
                 <div className='context__content'>
                   <span>
-                    {getFormattedDateTime(currentDoc.createdAt, 'at')}
+                    {getFormattedDateTime(
+                      currentDoc.createdAt,
+                      undefined,
+                      'MMM dd, yyyy, HH:mm'
+                    )}
                   </span>
+                </div>
+              </div>
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiAccountCircleOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Updated by
+                </label>
+                <div className='context__content'>
+                  <Flexbox wrap='wrap'>
+                    {currentDoc.head != null ? (
+                      (currentDoc.head.creators || []).length > 0 ? (
+                        <>
+                          {(currentDoc.head.creators || []).map((user) => (
+                            <UserIcon
+                              key={user.id}
+                              user={usersMap.get(user.id) || user}
+                              className='subtle'
+                            />
+                          ))}
+                        </>
+                      ) : (
+                        ''
+                      )
+                    ) : (
+                      <div>Unknown</div>
+                    )}
+                  </Flexbox>
                 </div>
               </div>
               <div className='context__row'>
@@ -436,11 +472,34 @@ const DocContextMenu = ({
                   Update Date
                 </label>
                 <div className='context__content'>
-                  {currentDoc.head == null ? (
-                    <span>{getFormattedDateTime(currentDoc.updatedAt)}</span>
-                  ) : (
-                    <Flexbox wrap='wrap'>
-                      {(currentDoc.head.creators || []).length > 0 ? (
+                  <Flexbox wrap='wrap'>
+                    {currentDoc.head != null
+                      ? getFormattedDateTime(
+                          currentDoc.head.created,
+                          undefined,
+                          'MMM dd, yyyy, HH:mm'
+                        )
+                      : getFormattedDateTime(
+                          currentDoc.updatedAt,
+                          undefined,
+                          'MMM dd, yyyy, HH:mm'
+                        )}
+                  </Flexbox>
+                </div>
+              </div>
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiAccountCircleOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Updated by
+                </label>
+                <div className='context__content'>
+                  <Flexbox wrap='wrap'>
+                    {currentDoc.head != null ? (
+                      (currentDoc.head.creators || []).length > 0 ? (
                         <>
                           {(currentDoc.head.creators || []).map((user) => (
                             <UserIcon
@@ -449,16 +508,49 @@ const DocContextMenu = ({
                               className='subtle'
                             />
                           ))}
-                          <span style={{ paddingLeft: 10, paddingRight: 5 }}>
-                            at
-                          </span>
                         </>
                       ) : (
                         ''
-                      )}
-                      {getFormattedDateTime(currentDoc.head.created)}
-                    </Flexbox>
-                  )}
+                      )
+                    ) : (
+                      <div>Unknown</div>
+                    )}
+                  </Flexbox>
+                </div>
+              </div>
+              <div
+                className='context__row'
+                style={{ paddingTop: 0, paddingBottom: 8 }}
+              >
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiAccountMultiple}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  {plur('Contributor', contributorsState.contributors.length)}
+                </label>
+                <div className='context__content'>
+                  <Flexbox wrap='wrap'>
+                    {contributorsState.contributors.map((contributor) => (
+                      <UserIcon
+                        key={contributor.id}
+                        user={usersMap.get(contributor.id) || contributor}
+                        className='subtle'
+                      />
+                    ))}
+
+                    {contributors.length > 5 && (
+                      <SmallButton
+                        variant='transparent'
+                        onClick={() => setSliceContributors((prev) => !prev)}
+                      >
+                        {contributorsState.sliced > 0
+                          ? `+${contributorsState.sliced}`
+                          : '-'}
+                      </SmallButton>
+                    )}
+                  </Flexbox>
                 </div>
               </div>
               <div className='context__break' />
@@ -645,38 +737,6 @@ const DocContextMenu = ({
                   <div className='context__break' />
                 </>
               )}
-              <div className='context__row'>
-                <label className='context__label'>
-                  {contributorsState.contributors.length}{' '}
-                  {plur('Contributor', contributorsState.contributors.length)}
-                </label>
-              </div>
-              <div
-                className='context__row'
-                style={{ paddingTop: 0, paddingBottom: 8 }}
-              >
-                <div className='context__content'>
-                  <Flexbox wrap='wrap'>
-                    {contributorsState.contributors.map((contributor) => (
-                      <UserIcon
-                        key={contributor.id}
-                        user={usersMap.get(contributor.id) || contributor}
-                        className='subtle'
-                      />
-                    ))}
-                    {contributors.length > 5 && (
-                      <SmallButton
-                        variant='transparent'
-                        onClick={() => setSliceContributors((prev) => !prev)}
-                      >
-                        {contributorsState.sliced > 0
-                          ? `+${contributorsState.sliced}`
-                          : '-'}
-                      </SmallButton>
-                    )}
-                  </Flexbox>
-                </div>
-              </div>
               <div className='context__break' />
               {revisionHistory != null && (
                 <>
