@@ -518,10 +518,7 @@ const DocContextMenu = ({
                   </Flexbox>
                 </div>
               </div>
-              <div
-                className='context__row'
-                style={{ paddingTop: 0, paddingBottom: 8 }}
-              >
+              <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
                     path={mdiAccountMultiple}
@@ -551,6 +548,84 @@ const DocContextMenu = ({
                       </SmallButton>
                     )}
                   </Flexbox>
+                </div>
+              </div>
+              <div className='context__row'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiHistory}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  History
+                </label>
+                <div className='context__content'>
+                  {(subscription == null ||
+                    subscription.plan === 'standard') && (
+                    <Flexbox
+                      justifyContent='flex-end'
+                      style={{ width: '100%' }}
+                    >
+                      <UpgradeButton
+                        origin='revision'
+                        query={{ teamId: team.id, docId: currentDoc.id }}
+                      />
+                    </Flexbox>
+                  )}
+                </div>
+              </div>
+              <div className='context__row'>
+                <div className='context__content'>
+                  {revisionHistory != null && revisionHistory.length > 0 && (
+                    <ul className='context__list'>
+                      {revisionHistory.map((rev) => {
+                        const creators = rev.creators || []
+                        return (
+                          <li className='context__revision' key={rev.id}>
+                            {creators.length > 0 ? (
+                              <Flexbox alignItems='center' wrap='wrap'>
+                                {creators.map((user) => (
+                                  <UserIcon
+                                    key={user.id}
+                                    user={usersMap.get(user.id) || user}
+                                    className='context__revision__user subtle'
+                                  />
+                                ))}
+                                <span className='context__revision__names'>
+                                  {' '}
+                                  {creators
+                                    .map((user) => user.displayName)
+                                    .join(',')}{' '}
+                                  updated doc
+                                </span>
+                              </Flexbox>
+                            ) : (
+                              'Doc has been updated'
+                            )}
+                            <span className='context__revision__date'>
+                              {getFormattedDateTime(rev.created)}
+                            </span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
+
+                  <button
+                    className='context__flexible__button'
+                    onClick={revisionNavigateCallback}
+                    id='dc-context-top-revisions'
+                    disabled={subscription == null}
+                  >
+                    <Icon
+                      path={mdiHistory}
+                      className='context__icon'
+                      size={18}
+                    />
+                    {subscription != null && subscription.plan === 'standard'
+                      ? `See revisions ( last ${revisionHistoryStandardDays} days)`
+                      : 'See full revisions'}
+                  </button>
                 </div>
               </div>
               <div className='context__break' />
@@ -738,85 +813,6 @@ const DocContextMenu = ({
                 </>
               )}
               <div className='context__break' />
-              {revisionHistory != null && (
-                <>
-                  <div className='context__row'>
-                    <label className='context__label'>Revisions</label>
-                  </div>
-                  <div className='context__row'>
-                    <div className='context__content'>
-                      {revisionHistory.length > 0 && (
-                        <ul className='context__list'>
-                          {revisionHistory.map((rev) => {
-                            const creators = rev.creators || []
-                            return (
-                              <li className='context__revision' key={rev.id}>
-                                {creators.length > 0 ? (
-                                  <Flexbox alignItems='center' wrap='wrap'>
-                                    {creators.map((user) => (
-                                      <UserIcon
-                                        key={user.id}
-                                        user={usersMap.get(user.id) || user}
-                                        className='context__revision__user subtle'
-                                      />
-                                    ))}
-                                    <span className='context__revision__names'>
-                                      {' '}
-                                      {creators
-                                        .map((user) => user.displayName)
-                                        .join(',')}{' '}
-                                      updated doc
-                                    </span>
-                                  </Flexbox>
-                                ) : (
-                                  'Doc has been updated'
-                                )}
-                                <span className='context__revision__date'>
-                                  {getFormattedDateTime(rev.created)}
-                                </span>
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-                  {currentUserPermissions != null && (
-                    <div className='context__column'>
-                      <button
-                        className='context__flexible__button'
-                        onClick={revisionNavigateCallback}
-                        id='dc-context-top-revisions'
-                        disabled={subscription == null}
-                      >
-                        <Icon
-                          path={mdiHistory}
-                          className='context__icon'
-                          size={18}
-                        />
-                        {subscription != null &&
-                        subscription.plan === 'standard'
-                          ? `See revisions ( last ${revisionHistoryStandardDays} days)`
-                          : 'See full revisions'}
-                      </button>
-                      {(subscription == null ||
-                        subscription.plan === 'standard') && (
-                        <Flexbox
-                          justifyContent='center'
-                          style={{ width: '100%' }}
-                        >
-                          <UpgradeButton
-                            origin='revision'
-                            query={{ teamId: team.id, docId: currentDoc.id }}
-                          />
-                        </Flexbox>
-                      )}
-                    </div>
-                  )}
-
-                  <div className='context__break' />
-                </>
-              )}
               <DynamicExports
                 openModal={openModal}
                 currentDoc={currentDoc}
