@@ -569,6 +569,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                 )}
               </>
             )}
+            <div className='share__break' />
           </>
         )}
       </Container>
@@ -702,6 +703,13 @@ const Container = styled.div`
 
   .share__row__label span {
     min-width: 120px;
+  }
+  .share__break {
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: ${({ theme }) => theme.space.xsmall}px 0;
+    background-color: ${({ theme }) => theme.subtleBorderColor};
   }
 `
 
