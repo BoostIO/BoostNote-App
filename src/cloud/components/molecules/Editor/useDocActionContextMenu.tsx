@@ -25,6 +25,7 @@ import copy from 'copy-to-clipboard'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { boostHubBaseUrl } from '../../../lib/consts'
+import { usingElectron, sendToHost } from '../../../lib/stores/electron'
 
 export interface DocActionContextMenuParams {
   team: SerializedTeam
@@ -84,10 +85,17 @@ export function useDocActionContextMenu({
             copy(docUrl)
           },
         }),
-        createMenuItem({
-          label: 'Open in Browser',
-          iconPath: mdiOpenInNew,
-        }),
+        ...(usingElectron
+          ? [
+              createMenuItem({
+                label: 'Open in Browser',
+                iconPath: mdiOpenInNew,
+                onClick: () => {
+                  sendToHost('open-external-url', docUrl)
+                },
+              }),
+            ]
+          : []),
         createMenuItem({
           label: 'Export',
           iconPath: mdiExportVariant,

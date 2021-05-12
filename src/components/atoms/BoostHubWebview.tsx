@@ -31,7 +31,7 @@ import {
   boostHubSidebarStateEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu } from '../../lib/electronOnly'
+import { openContextMenu, openExternal } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 
 export interface WebviewControl {
@@ -162,6 +162,10 @@ const BoostHubWebview = ({
           break
         case 'request-access-token':
           webview.send('update-access-token', accessToken)
+          break
+        case 'open-external-url':
+          const [url] = event.args
+          openExternal(url)
           break
         case 'open-context-menu':
           openContextMenu({
