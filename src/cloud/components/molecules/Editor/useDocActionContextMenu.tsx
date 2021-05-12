@@ -11,12 +11,14 @@ import {
   mdiAccountMultiplePlus,
   mdiContentCopy,
   mdiOpenInNew,
-  mdiExportVariant,
   mdiPaletteOutline,
   mdiArrowRight,
   mdiArchiveOutline,
   mdiStarRemoveOutline,
   mdiEarthRemove,
+  mdiFileCodeOutline,
+  mdiFilePdfOutline,
+  mdiLanguageMarkdownOutline,
 } from '@mdi/js'
 import styled from '../../../../shared/lib/styled'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
@@ -25,11 +27,29 @@ import copy from 'copy-to-clipboard'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { boostHubBaseUrl } from '../../../lib/consts'
-import { usingElectron, sendToHost } from '../../../lib/stores/electron'
+import {
+  usingElectron,
+  sendToHost,
+  useElectron,
+} from '../../../lib/stores/electron'
+import { useToast } from '../../../../shared/lib/stores/toast'
+import { useSettings } from '../../../lib/stores/settings'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { defaultPreviewStyle } from '../../atoms/MarkdownView/styles'
+import { selectTheme } from '../../../lib/styled'
 
+import {
+  exportAsMarkdownFile,
+  exportAsHtmlFile,
+  convertMarkdownToPdfExportableHtml,
+  filenamifyTitle,
+} from '../../../lib/export'
+import { downloadBlob, printIframe } from '../../../lib/download'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
+  editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   toggleBookmarkForDoc: () => void
   togglePublicSharing: () => void
   openGuestsModal: () => void
@@ -38,6 +58,7 @@ export interface DocActionContextMenuParams {
 export function useDocActionContextMenu({
   team,
   doc,
+  editorRef,
   toggleBookmarkForDoc,
   togglePublicSharing,
   openGuestsModal,
@@ -47,6 +68,82 @@ export function useDocActionContextMenu({
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
   }, [team, doc])
+
+  const { settings } = useSettings()
+  const { pushMessage } = useToast()
+  const { convertHtmlStringToPdfBlob } = useElectron()
+
+  const updatedDoc = useMemo(() => {
+    const updatedDoc = {
+      ...doc,
+      head: {
+        ...(doc.head || { title: '', content: '' }),
+      },
+    } as SerializedDocWithBookmark
+
+    if (editorRef != null && editorRef.current != null) {
+      updatedDoc.head!.content = editorRef.current.getValue()
+    }
+
+    return updatedDoc
+  }, [doc, editorRef])
+
+  const exportAsMarkdown = useCallback(() => {
+    trackEvent(MixpanelActionTrackTypes.ExportMd)
+    return exportAsMarkdownFile(updatedDoc, { includeFrontMatter: true })
+  }, [updatedDoc])
+
+  const exportAsHtml = useCallback(() => {
+    const previewStyle = defaultPreviewStyle({
+      theme: selectTheme(settings['general.theme']),
+    })
+    try {
+      trackEvent(MixpanelActionTrackTypes.ExportHtml)
+      exportAsHtmlFile(updatedDoc, settings, previewStyle)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+      pushMessage({
+        title: 'Failed to export as HTML',
+        description: error.message,
+      })
+    }
+  }, [updatedDoc, settings, pushMessage])
+
+  const exportAsPdf = useCallback(async () => {
+    if (updatedDoc.head == null) {
+      return
+    }
+    try {
+      const previewStyle = defaultPreviewStyle({
+        theme: selectTheme(settings['general.theme']),
+      })
+      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
+      const htmlString = await convertMarkdownToPdfExportableHtml(
+        updatedDoc.head.content,
+        settings,
+        previewStyle
+      )
+      if (usingElectron) {
+        const printOpts = {
+          printBackground: true,
+          pageSize: 'A4',
+        }
+        const blob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
+        downloadBlob(blob, pdfName)
+      } else {
+        printIframe(htmlString, pdfName)
+      }
+      trackEvent(MixpanelActionTrackTypes.ExportPdf)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+      pushMessage({
+        title: 'Failed to export as PDF',
+        description: error.message,
+      })
+    }
+  }, [updatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
 
   const open = useCallback(
     (event: MouseEvent) => {
@@ -97,8 +194,19 @@ export function useDocActionContextMenu({
             ]
           : []),
         createMenuItem({
-          label: 'Export',
-          iconPath: mdiExportVariant,
+          label: 'Export as Markdown',
+          iconPath: mdiLanguageMarkdownOutline,
+          onClick: exportAsMarkdown,
+        }),
+        createMenuItem({
+          label: 'Export as HTML',
+          iconPath: mdiFileCodeOutline,
+          onClick: exportAsHtml,
+        }),
+        createMenuItem({
+          label: 'Export as PDF',
+          iconPath: mdiFilePdfOutline,
+          onClick: exportAsPdf,
         }),
         createMenuItem({
           label: 'Save as Template',
@@ -117,10 +225,13 @@ export function useDocActionContextMenu({
     [
       popup,
       doc.bookmarked,
-      toggleBookmarkForDoc,
       doc.shareLink,
+      toggleBookmarkForDoc,
       togglePublicSharing,
       openGuestsModal,
+      exportAsMarkdown,
+      exportAsHtml,
+      exportAsPdf,
       docUrl,
     ]
   )
