@@ -278,17 +278,6 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  & > .draggable {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 44px;
-    background-color: rgba(255, 0, 0, 0.2);
-    -webkit-user-select: none;
-    opacity: 0;
-  }
 
   & > webview {
     z-index: 0;
