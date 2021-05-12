@@ -15,6 +15,7 @@ import {
   mdiListStatus,
   mdiAccountCircleOutline,
   mdiAccountMultiple,
+  mdiContentSaveOutline,
 } from '@mdi/js'
 import { zIndexModalsBackground } from '../styled'
 import {
@@ -480,7 +481,7 @@ const DocContextMenu = ({
               <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
-                    path={mdiClockOutline}
+                    path={mdiContentSaveOutline}
                     size={18}
                     className='context__icon'
                   />{' '}
