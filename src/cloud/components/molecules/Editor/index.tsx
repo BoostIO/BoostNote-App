@@ -82,6 +82,7 @@ import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 import { useDocActionContextMenu } from './useDocActionContextMenu'
+import GuestsModal from '../../organisms/Modal/contents/Doc/GuestsModal'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -684,10 +685,17 @@ const Editor = ({
     })
   }, [setPreferences, preferences.docContextIsHidden])
 
+  const openGuestsModal = useCallback(() => {
+    openModal(<GuestsModal teamId={doc.teamId} docId={doc.id} />, {
+      size: 'large',
+    })
+  }, [doc.teamId, doc.id, openModal])
+
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
     toggleBookmarkForDoc,
     togglePublicSharing,
+    openGuestsModal,
   })
 
   if (!initialLoadDone) {

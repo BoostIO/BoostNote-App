@@ -25,12 +25,14 @@ export interface DocActionContextMenuParams {
   doc: SerializedDocWithBookmark
   toggleBookmarkForDoc: () => void
   togglePublicSharing: () => void
+  openGuestsModal: () => void
 }
 
 export function useDocActionContextMenu({
   doc,
   toggleBookmarkForDoc,
   togglePublicSharing,
+  openGuestsModal,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
 
@@ -62,6 +64,7 @@ export function useDocActionContextMenu({
         createMenuItem({
           label: 'Invite Guest',
           iconPath: mdiAccountMultiplePlus,
+          onClick: openGuestsModal,
         }),
         createMenuItem({
           label: 'Copy Link',
@@ -95,6 +98,7 @@ export function useDocActionContextMenu({
       toggleBookmarkForDoc,
       doc.shareLink,
       togglePublicSharing,
+      openGuestsModal,
     ]
   )
 
