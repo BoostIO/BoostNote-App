@@ -45,6 +45,7 @@ import {
   mdiPencil,
   mdiEyeOutline,
   mdiViewSplitVertical,
+  mdiDotsHorizontal,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -79,6 +80,7 @@ import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
+import { useDocActionContextMenu } from './useDocActionContextMenu'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -665,6 +667,15 @@ const Editor = ({
     }
   }, [toggleSplitEditMode])
 
+  const toggleBookmarkForDoc = useCallback(() => {
+    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+  }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
+
+  const { open: openDocActionContextMenu } = useDocActionContextMenu({
+    doc,
+    toggleBookmarkForDoc,
+  })
+
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -692,9 +703,7 @@ const Editor = ({
                   spinning={sendingMap.has(doc.id)}
                   size='sm'
                   iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                  onClick={() =>
-                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-                  }
+                  onClick={toggleBookmarkForDoc}
                 />
 
                 <PresenceIcons user={userInfo} users={otherUsers} />
@@ -778,6 +787,12 @@ const Editor = ({
             },
             {
               type: 'separator',
+            },
+            {
+              type: 'button',
+              variant: 'icon',
+              iconPath: mdiDotsHorizontal,
+              onClick: openDocActionContextMenu,
             },
             {
               type: 'button',
