@@ -411,7 +411,22 @@ const DocContextMenu = ({
                 </div>
               </div>
 
+              <div className='context__row'>
+                <label className='context__label' style={{ height: 32 }}>
+                  <IconMdi
+                    path={mdiLabelMultipleOutline}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  Labels
+                </label>
+                <div className='context__content'>
+                  <DocTagsList team={team} doc={currentDoc} />
+                </div>
+              </div>
+
               <div className='context__break' />
+
               <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
@@ -632,19 +647,8 @@ const DocContextMenu = ({
               {currentUserPermissions != null && (
                 <>
                   <div className='context__row'>
-                    <label className='context__label' style={{ height: 37 }}>
-                      <IconMdi
-                        path={mdiLabelMultipleOutline}
-                        size={18}
-                        className='context__icon'
-                      />{' '}
-                      Labels
-                    </label>
-                    <div className='context__content'>
-                      <DocTagsList team={team} doc={currentDoc} />
-                    </div>
+                    <div className='context__header'>SHARE</div>
                   </div>
-                  <div className='context__break' />
                   <DocShare currentDoc={currentDoc} team={team} />
                   <div className='context__row'>
                     {guestsOnThisDoc.length === 0 ? (
@@ -901,7 +905,7 @@ const Container = styled.div`
     position: relative;
     display: flex;
     align-items: flex-start;
-    line-height: 30px;
+    line-height: 32px;
     font-size: ${({ theme }) => theme.fontSizes.default}px;
     padding: 0px ${({ theme }) => theme.space.small}px;
     height: fit-content;
@@ -912,20 +916,6 @@ const Container = styled.div`
 
   .context__column {
     flex-direction: column;
-  }
-
-  .context__column + .context__break,
-  .context__row + .context__break {
-    margin-top: ${({ theme }) => theme.space.xxsmall}px;
-    margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
-  }
-
-  .context__row + .context__row,
-  .context__break + .context__row,
-  .context__column + .context__column,
-  .context__break + .context__column {
-    padding-top: ${({ theme }) => theme.space.xxsmall}px;
-    padding-bottom: ${({ theme }) => theme.space.xxsmall}px;
   }
 
   .context__label {
@@ -957,7 +947,8 @@ const Container = styled.div`
   .context__break {
     display: block;
     height: 1px;
-    margin: 0px ${({ theme }) => theme.space.small}px;
+    margin: ${({ theme }) => theme.space.xsmall}px
+      ${({ theme }) => theme.space.small}px;
     background-color: ${({ theme }) => theme.subtleBorderColor};
   }
 
