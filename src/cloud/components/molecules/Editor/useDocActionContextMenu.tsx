@@ -16,6 +16,7 @@ import {
   mdiArrowRight,
   mdiArchiveOutline,
   mdiStarRemoveOutline,
+  mdiEarthRemove,
 } from '@mdi/js'
 import styled from '../../../../shared/lib/styled'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
@@ -23,11 +24,13 @@ import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 export interface DocActionContextMenuParams {
   doc: SerializedDocWithBookmark
   toggleBookmarkForDoc: () => void
+  togglePublicSharing: () => void
 }
 
 export function useDocActionContextMenu({
   doc,
   toggleBookmarkForDoc,
+  togglePublicSharing,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
 
@@ -45,10 +48,17 @@ export function useDocActionContextMenu({
               iconPath: mdiStarOutline,
               onClick: toggleBookmarkForDoc,
             }),
-        createMenuItem({
-          label: 'Share to Web',
-          iconPath: mdiEarth,
-        }),
+        doc.shareLink == null
+          ? createMenuItem({
+              label: 'Share to Web',
+              iconPath: mdiEarth,
+              onClick: togglePublicSharing,
+            })
+          : createMenuItem({
+              label: 'Stop Sharing to Web',
+              iconPath: mdiEarthRemove,
+              onClick: togglePublicSharing,
+            }),
         createMenuItem({
           label: 'Invite Guest',
           iconPath: mdiAccountMultiplePlus,
@@ -79,7 +89,13 @@ export function useDocActionContextMenu({
         }),
       ])
     },
-    [popup, doc.bookmarked, toggleBookmarkForDoc]
+    [
+      popup,
+      doc.bookmarked,
+      toggleBookmarkForDoc,
+      doc.shareLink,
+      togglePublicSharing,
+    ]
   )
 
   return {

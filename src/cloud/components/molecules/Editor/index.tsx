@@ -65,6 +65,7 @@ import {
   focusEditorEventEmitter,
   toggleSplitEditModeEventEmitter,
   togglePreviewModeEventEmitter,
+  toggleDocPublicSharingEventEmitter,
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
@@ -671,9 +672,22 @@ const Editor = ({
     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
   }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
 
+  const togglePublicSharing = useCallback(async () => {
+    if (preferences.docContextIsHidden) {
+      setPreferences({
+        docContextIsHidden: !preferences.docContextIsHidden,
+      })
+    }
+
+    setImmediate(() => {
+      toggleDocPublicSharingEventEmitter.dispatch()
+    })
+  }, [setPreferences, preferences.docContextIsHidden])
+
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
     toggleBookmarkForDoc,
+    togglePublicSharing,
   })
 
   if (!initialLoadDone) {
