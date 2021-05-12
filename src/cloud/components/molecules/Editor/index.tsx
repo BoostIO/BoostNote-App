@@ -693,6 +693,7 @@ const Editor = ({
 
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
+    team,
     toggleBookmarkForDoc,
     togglePublicSharing,
     openGuestsModal,

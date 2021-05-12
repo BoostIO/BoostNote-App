@@ -1,4 +1,4 @@
-import React, { useCallback, MouseEvent } from 'react'
+import React, { useCallback, MouseEvent, useMemo } from 'react'
 import {
   useContextMenu,
   MenuTypes,
@@ -21,7 +21,13 @@ import {
 import styled from '../../../../shared/lib/styled'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 
+import copy from 'copy-to-clipboard'
+import { SerializedTeam } from '../../../interfaces/db/team'
+import { getDocLinkHref } from '../../atoms/Link/DocLink'
+import { boostHubBaseUrl } from '../../../lib/consts'
+
 export interface DocActionContextMenuParams {
+  team: SerializedTeam
   doc: SerializedDocWithBookmark
   toggleBookmarkForDoc: () => void
   togglePublicSharing: () => void
@@ -29,12 +35,17 @@ export interface DocActionContextMenuParams {
 }
 
 export function useDocActionContextMenu({
+  team,
   doc,
   toggleBookmarkForDoc,
   togglePublicSharing,
   openGuestsModal,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
+
+  const docUrl = useMemo(() => {
+    return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
+  }, [team, doc])
 
   const open = useCallback(
     (event: MouseEvent) => {
@@ -69,6 +80,9 @@ export function useDocActionContextMenu({
         createMenuItem({
           label: 'Copy Link',
           iconPath: mdiContentCopy,
+          onClick: () => {
+            copy(docUrl)
+          },
         }),
         createMenuItem({
           label: 'Open in Browser',
@@ -99,6 +113,7 @@ export function useDocActionContextMenu({
       doc.shareLink,
       togglePublicSharing,
       openGuestsModal,
+      docUrl,
     ]
   )
 
