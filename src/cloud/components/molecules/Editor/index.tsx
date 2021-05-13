@@ -65,7 +65,6 @@ import {
   focusEditorEventEmitter,
   toggleSplitEditModeEventEmitter,
   togglePreviewModeEventEmitter,
-  toggleDocPublicSharingEventEmitter,
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
@@ -82,7 +81,6 @@ import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 import { useDocActionContextMenu } from './useDocActionContextMenu'
-import GuestsModal from '../../organisms/Modal/contents/Doc/GuestsModal'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -673,31 +671,11 @@ const Editor = ({
     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
   }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
 
-  const togglePublicSharing = useCallback(async () => {
-    if (preferences.docContextIsHidden) {
-      setPreferences({
-        docContextIsHidden: !preferences.docContextIsHidden,
-      })
-    }
-
-    setImmediate(() => {
-      toggleDocPublicSharingEventEmitter.dispatch()
-    })
-  }, [setPreferences, preferences.docContextIsHidden])
-
-  const openGuestsModal = useCallback(() => {
-    openModal(<GuestsModal teamId={doc.teamId} docId={doc.id} />, {
-      size: 'large',
-    })
-  }, [doc.teamId, doc.id, openModal])
-
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
     team,
     editorRef,
     toggleBookmarkForDoc,
-    togglePublicSharing,
-    openGuestsModal,
   })
 
   if (!initialLoadDone) {

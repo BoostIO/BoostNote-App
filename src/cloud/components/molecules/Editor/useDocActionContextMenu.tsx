@@ -7,15 +7,12 @@ import {
 import Icon from '../../../../shared/components/atoms/Icon'
 import {
   mdiStarOutline,
-  mdiEarth,
-  mdiAccountMultiplePlus,
   mdiContentCopy,
   mdiOpenInNew,
   mdiPaletteOutline,
   mdiArrowRight,
   mdiArchiveOutline,
   mdiStarRemoveOutline,
-  mdiEarthRemove,
   mdiFileCodeOutline,
   mdiFilePdfOutline,
   mdiLanguageMarkdownOutline,
@@ -51,8 +48,6 @@ export interface DocActionContextMenuParams {
   doc: SerializedDocWithBookmark
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   toggleBookmarkForDoc: () => void
-  togglePublicSharing: () => void
-  openGuestsModal: () => void
 }
 
 export function useDocActionContextMenu({
@@ -60,8 +55,6 @@ export function useDocActionContextMenu({
   doc,
   editorRef,
   toggleBookmarkForDoc,
-  togglePublicSharing,
-  openGuestsModal,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
 
@@ -160,22 +153,6 @@ export function useDocActionContextMenu({
               iconPath: mdiStarOutline,
               onClick: toggleBookmarkForDoc,
             }),
-        doc.shareLink == null
-          ? createMenuItem({
-              label: 'Share to Web',
-              iconPath: mdiEarth,
-              onClick: togglePublicSharing,
-            })
-          : createMenuItem({
-              label: 'Stop Sharing to Web',
-              iconPath: mdiEarthRemove,
-              onClick: togglePublicSharing,
-            }),
-        createMenuItem({
-          label: 'Invite Guest',
-          iconPath: mdiAccountMultiplePlus,
-          onClick: openGuestsModal,
-        }),
         createMenuItem({
           label: 'Copy Link',
           iconPath: mdiContentCopy,
@@ -194,6 +171,7 @@ export function useDocActionContextMenu({
               }),
             ]
           : []),
+        { type: MenuTypes.Separator },
         createMenuItem({
           label: 'Export as Markdown',
           iconPath: mdiLanguageMarkdownOutline,
@@ -209,6 +187,7 @@ export function useDocActionContextMenu({
           iconPath: mdiFilePdfOutline,
           onClick: exportAsPdf,
         }),
+        { type: MenuTypes.Separator },
         createMenuItem({
           label: 'Save as Template',
           iconPath: mdiPaletteOutline,
@@ -226,10 +205,7 @@ export function useDocActionContextMenu({
     [
       popup,
       doc.bookmarked,
-      doc.shareLink,
       toggleBookmarkForDoc,
-      togglePublicSharing,
-      openGuestsModal,
       exportAsMarkdown,
       exportAsHtml,
       exportAsPdf,

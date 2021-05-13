@@ -41,7 +41,6 @@ import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
 import { useToast } from '../../../shared/lib/stores/toast'
-import { toggleDocPublicSharingEventEmitter } from '../../lib/utils/events'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -329,14 +328,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
   const openNew = useCallback(() => {
     openInBrowser(docUrl)
   }, [docUrl])
-
-  useEffect(() => {
-    toggleDocPublicSharingEventEmitter.listen(togglePublicSharing)
-
-    return () => {
-      toggleDocPublicSharingEventEmitter.unlisten(togglePublicSharing)
-    }
-  }, [togglePublicSharing])
 
   return (
     <>
