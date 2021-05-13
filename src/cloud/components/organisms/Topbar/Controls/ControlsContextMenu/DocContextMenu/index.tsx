@@ -3,7 +3,6 @@ import { usePage } from '../../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../../lib/stores/nav'
 import {
   mdiTrashCan,
-  mdiPlusBoxMultipleOutline,
   mdiHistory,
   mdiArchiveOutline,
   mdiArrowRight,
@@ -29,7 +28,6 @@ import {
   preventKeyboardEventPropagation,
   useGlobalKeyDownHandler,
 } from '../../../../../../lib/keyboard'
-import { saveDocAsTemplate } from '../../../../../../api/teams/docs/templates'
 import { SerializedTeam } from '../../../../../../interfaces/db/team'
 import {
   updateDocStatus,
@@ -94,16 +92,10 @@ const DocContextMenu = ({
   openRenameDocForm,
   sendingRename,
 }: DocContextMenuProps) => {
-  const [sendingTemplate, setSendingTemplate] = useState(false)
   const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
   const [sendingMove, setSendingMove] = useState(false)
   const [sendingDueDate, setSendingDueDate] = useState(false)
-  const {
-    updateDocsMap,
-    deleteDocHandler,
-    updateDocHandler,
-    updateTemplatesMap,
-  } = useNav()
+  const { updateDocsMap, deleteDocHandler, updateDocHandler } = useNav()
   const {
     guestsMap,
     setPartialPageData,
@@ -146,36 +138,6 @@ const DocContextMenu = ({
       sliced,
     }
   }, [contributors, sliceContributors])
-
-  const toggleTemplate = useCallback(async () => {
-    if (
-      sendingTemplate ||
-      sendingUpdateStatus ||
-      sendingMove ||
-      currentDoc == null
-    ) {
-      return
-    }
-    setSendingTemplate(true)
-    try {
-      const data = await saveDocAsTemplate(currentDoc.teamId, currentDoc.id)
-      updateTemplatesMap([data.template.id, data.template])
-    } catch (error) {
-      pushMessage({
-        title: 'Error',
-        description: 'Could not handle the template change',
-      })
-    }
-    setSendingTemplate(false)
-  }, [
-    currentDoc,
-    setSendingTemplate,
-    pushMessage,
-    sendingTemplate,
-    sendingUpdateStatus,
-    sendingMove,
-    updateTemplatesMap,
-  ])
 
   const useContextMenuKeydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -228,7 +190,7 @@ const DocContextMenu = ({
       workspaceId: string,
       parentFolderId?: string
     ) => {
-      if (sendingTemplate || sendingUpdateStatus || sendingMove) {
+      if (sendingUpdateStatus || sendingMove) {
         return
       }
       setSendingMove(true)
@@ -239,13 +201,7 @@ const DocContextMenu = ({
       }
       setSendingMove(false)
     },
-    [
-      updateDocHandler,
-      pushApiErrorMessage,
-      sendingTemplate,
-      sendingUpdateStatus,
-      sendingMove,
-    ]
+    [updateDocHandler, pushApiErrorMessage, sendingUpdateStatus, sendingMove]
   )
 
   const openMoveForm = useCallback(
@@ -266,12 +222,7 @@ const DocContextMenu = ({
       if (currentDoc.status === newStatus) {
         return
       }
-      if (
-        sendingTemplate ||
-        sendingUpdateStatus ||
-        sendingMove ||
-        currentDoc == null
-      ) {
+      if (sendingUpdateStatus || sendingMove || currentDoc == null) {
         return
       }
 
@@ -297,7 +248,6 @@ const DocContextMenu = ({
       pushMessage,
       sendingUpdateStatus,
       sendingMove,
-      sendingTemplate,
       setPartialPageData,
       updateDocsMap,
     ]
@@ -305,12 +255,7 @@ const DocContextMenu = ({
 
   const sendUpdateDocDueDate = useCallback(
     async (newDate: Date | null) => {
-      if (
-        sendingTemplate ||
-        sendingUpdateStatus ||
-        sendingMove ||
-        currentDoc == null
-      ) {
+      if (sendingUpdateStatus || sendingMove || currentDoc == null) {
         return
       }
 
@@ -335,15 +280,13 @@ const DocContextMenu = ({
       currentDoc,
       pushMessage,
       sendingMove,
-      sendingTemplate,
       sendingUpdateStatus,
       setPartialPageData,
       updateDocsMap,
     ]
   )
 
-  const updating =
-    sendingTemplate || sendingUpdateStatus || sendingMove || sendingDueDate
+  const updating = sendingUpdateStatus || sendingMove || sendingDueDate
 
   return (
     <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
@@ -763,19 +706,6 @@ const DocContextMenu = ({
                   </button>
                   <button
                     className='context__row context__button'
-                    id='dc-context-top-template'
-                    onClick={toggleTemplate}
-                    disabled={sendingTemplate || sendingUpdateStatus}
-                  >
-                    <Icon
-                      path={mdiPlusBoxMultipleOutline}
-                      size={18}
-                      className='context__icon'
-                    />
-                    <span>{sendingMove ? '...' : 'Save as a template'}</span>
-                  </button>
-                  <button
-                    className='context__row context__button'
                     id='dc-context-top-archive'
                     onClick={() => {
                       if (currentDoc.archivedAt == null) {
@@ -784,9 +714,7 @@ const DocContextMenu = ({
                         sendUpdateStatus(null)
                       }
                     }}
-                    disabled={
-                      sendingTemplate || sendingTemplate || sendingUpdateStatus
-                    }
+                    disabled={sendingUpdateStatus}
                   >
                     <Icon
                       path={mdiArchiveOutline}
