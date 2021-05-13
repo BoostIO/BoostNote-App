@@ -2,15 +2,11 @@ import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { usePage } from '../../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../../lib/stores/nav'
 import {
-  mdiTrashCan,
   mdiHistory,
-  mdiArchiveOutline,
-  mdiArrowRight,
   mdiClockOutline,
   mdiLabelMultipleOutline,
   mdiAccountMultiplePlusOutline,
   mdiArrowBottomLeft,
-  mdiPencil,
   mdiListStatus,
   mdiAccountCircleOutline,
   mdiAccountMultiple,
@@ -41,7 +37,6 @@ import { SerializedUser } from '../../../../../../interfaces/db/user'
 import Flexbox from '../../../../../atoms/Flexbox'
 import UserIcon from '../../../../../atoms/UserIcon'
 import SmallButton from '../../../../../atoms/SmallButton'
-import MoveItemModal from '../../../../Modal/contents/Forms/MoveItemModal'
 import DocTagsList from '../../../../../molecules/DocTagsList'
 import DocLink from '../../../../../atoms/Link/DocLink'
 import { getDocTitle } from '../../../../../../lib/utils/patterns'
@@ -78,8 +73,6 @@ interface DocContextMenuProps {
   revisionHistory?: SerializedRevision[]
   team: SerializedTeam
   restoreRevision?: (revision: SerializedRevision) => void
-  openRenameDocForm?: () => void
-  sendingRename?: boolean
 }
 
 const DocContextMenu = ({
@@ -89,13 +82,10 @@ const DocContextMenu = ({
   backLinks,
   revisionHistory,
   restoreRevision,
-  openRenameDocForm,
-  sendingRename,
 }: DocContextMenuProps) => {
   const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
-  const [sendingMove, setSendingMove] = useState(false)
   const [sendingDueDate, setSendingDueDate] = useState(false)
-  const { updateDocsMap, deleteDocHandler, updateDocHandler } = useNav()
+  const { updateDocsMap } = useNav()
   const {
     guestsMap,
     setPartialPageData,
@@ -103,7 +93,7 @@ const DocContextMenu = ({
     permissions = [],
     currentUserPermissions,
   } = usePage()
-  const { pushMessage, pushApiErrorMessage } = useToast()
+  const { pushMessage } = useToast()
   const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences } = usePreferences()
@@ -184,45 +174,12 @@ const DocContextMenu = ({
     })
   }, [currentDoc, openModal, restoreRevision])
 
-  const moveDoc = useCallback(
-    async (
-      doc: SerializedDocWithBookmark,
-      workspaceId: string,
-      parentFolderId?: string
-    ) => {
-      if (sendingUpdateStatus || sendingMove) {
-        return
-      }
-      setSendingMove(true)
-      try {
-        await updateDocHandler(doc, { workspaceId, parentFolderId })
-      } catch (error) {
-        pushApiErrorMessage(error)
-      }
-      setSendingMove(false)
-    },
-    [updateDocHandler, pushApiErrorMessage, sendingUpdateStatus, sendingMove]
-  )
-
-  const openMoveForm = useCallback(
-    (doc: SerializedDocWithBookmark) => {
-      openModal(
-        <MoveItemModal
-          onSubmit={(workspaceId, parentFolderId) =>
-            moveDoc(doc, workspaceId, parentFolderId)
-          }
-        />
-      )
-    },
-    [openModal, moveDoc]
-  )
-
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
       if (currentDoc.status === newStatus) {
         return
       }
-      if (sendingUpdateStatus || sendingMove || currentDoc == null) {
+      if (sendingUpdateStatus || currentDoc == null) {
         return
       }
 
@@ -247,7 +204,6 @@ const DocContextMenu = ({
       currentDoc,
       pushMessage,
       sendingUpdateStatus,
-      sendingMove,
       setPartialPageData,
       updateDocsMap,
     ]
@@ -255,7 +211,7 @@ const DocContextMenu = ({
 
   const sendUpdateDocDueDate = useCallback(
     async (newDate: Date | null) => {
-      if (sendingUpdateStatus || sendingMove || currentDoc == null) {
+      if (sendingUpdateStatus || currentDoc == null) {
         return
       }
 
@@ -279,14 +235,11 @@ const DocContextMenu = ({
     [
       currentDoc,
       pushMessage,
-      sendingMove,
       sendingUpdateStatus,
       setPartialPageData,
       updateDocsMap,
     ]
   )
-
-  const updating = sendingUpdateStatus || sendingMove || sendingDueDate
 
   return (
     <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
@@ -676,70 +629,6 @@ const DocContextMenu = ({
                       <div className='context__break' />
                     </>
                   )}
-                  {openRenameDocForm != null && (
-                    <button
-                      className='context__row context__button'
-                      id='dc-context-top-move'
-                      onClick={openRenameDocForm}
-                      disabled={updating}
-                    >
-                      <Icon
-                        path={mdiPencil}
-                        size={18}
-                        className='context__icon'
-                      />
-                      <span>{sendingRename ? '...' : 'Rename'}</span>
-                    </button>
-                  )}
-                  <button
-                    className='context__row context__button'
-                    id='dc-context-top-move'
-                    onClick={() => openMoveForm(currentDoc)}
-                    disabled={updating}
-                  >
-                    <Icon
-                      path={mdiArrowRight}
-                      size={18}
-                      className='context__icon'
-                    />
-                    <span>{sendingMove ? '...' : 'Move'}</span>
-                  </button>
-                  <button
-                    className='context__row context__button'
-                    id='dc-context-top-archive'
-                    onClick={() => {
-                      if (currentDoc.archivedAt == null) {
-                        sendUpdateStatus('archived')
-                      } else {
-                        sendUpdateStatus(null)
-                      }
-                    }}
-                    disabled={sendingUpdateStatus}
-                  >
-                    <Icon
-                      path={mdiArchiveOutline}
-                      size={18}
-                      className='context__icon'
-                    />
-                    <span>
-                      {currentDoc.archivedAt != null ? 'Unarchive' : 'Archive'}
-                    </span>
-                  </button>
-                  {currentDoc.archivedAt != null && (
-                    <button
-                      className='context__row context__button'
-                      onClick={() => deleteDocHandler(currentDoc)}
-                      id='dc-context-top-delete'
-                    >
-                      <Icon
-                        path={mdiTrashCan}
-                        size={18}
-                        className='context__icon'
-                      />
-                      <span>{'Delete permanently'}</span>
-                    </button>
-                  )}
-                  <div className='context__break' />
                 </>
               )}
             </div>
