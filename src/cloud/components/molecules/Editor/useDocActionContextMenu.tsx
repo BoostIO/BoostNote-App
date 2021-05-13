@@ -146,13 +146,6 @@ export function useDocActionContextMenu({
     try {
       const data = await saveDocAsTemplate(team.id, doc.id)
       updateTemplatesMap([data.template.id, data.template])
-
-      pushMessage({
-        type: 'success',
-        title: 'Saved Template',
-        description:
-          'The template has been created. Please use it when creating a new document',
-      })
     } catch (error) {
       console.error(error)
       pushMessage({
