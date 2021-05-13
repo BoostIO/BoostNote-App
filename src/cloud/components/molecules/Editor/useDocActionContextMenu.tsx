@@ -11,11 +11,11 @@ import {
   mdiOpenInNew,
   mdiPaletteOutline,
   mdiArrowRight,
-  mdiArchiveOutline,
   mdiStarRemoveOutline,
   mdiFileCodeOutline,
   mdiFilePdfOutline,
   mdiLanguageMarkdownOutline,
+  mdiTrashCanOutline,
 } from '@mdi/js'
 import styled from '../../../../shared/lib/styled'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
@@ -61,7 +61,7 @@ export function useDocActionContextMenu({
   toggleBookmarkForDoc,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
-  const { updateDocHandler } = useNav()
+  const { updateDocHandler, deleteDocHandler } = useNav()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
@@ -191,6 +191,10 @@ export function useDocActionContextMenu({
     )
   }, [doc, openModal, moveDoc])
 
+  const openDeleteDocDialog = useCallback(() => {
+    deleteDocHandler(doc)
+  }, [deleteDocHandler, doc])
+
   const open = useCallback(
     (event: MouseEvent) => {
       popup(event, [
@@ -251,8 +255,9 @@ export function useDocActionContextMenu({
           onClick: openMoveForm,
         }),
         createMenuItem({
-          label: 'Archive',
-          iconPath: mdiArchiveOutline,
+          label: 'Delete',
+          iconPath: mdiTrashCanOutline,
+          onClick: openDeleteDocDialog,
         }),
       ])
     },
@@ -266,6 +271,7 @@ export function useDocActionContextMenu({
       docUrl,
       createTemplate,
       openMoveForm,
+      openDeleteDocDialog,
     ]
   )
 

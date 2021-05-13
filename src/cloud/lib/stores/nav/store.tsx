@@ -501,7 +501,7 @@ function useNavStore(pageProps: any): NavContext {
 
   const deleteDocHandler = useCallback(
     async (target: SerializedDoc) => {
-      if (team == null || target.archivedAt == null) {
+      if (team == null) {
         return
       }
 
