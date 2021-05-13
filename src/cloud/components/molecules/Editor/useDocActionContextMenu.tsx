@@ -1,4 +1,4 @@
-import React, { useCallback, MouseEvent, useMemo } from 'react'
+import React, { useCallback, MouseEvent, useMemo, useState } from 'react'
 import {
   useContextMenu,
   MenuTypes,
@@ -45,6 +45,8 @@ import {
 } from '../../../lib/export'
 import { downloadBlob, printIframe } from '../../../lib/download'
 import { useNav } from '../../../lib/stores/nav'
+import MoveItemModal from '../../organisms/Modal/contents/Forms/MoveItemModal'
+import { useModal } from '../../../../shared/lib/stores/modal'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
@@ -59,15 +61,17 @@ export function useDocActionContextMenu({
   toggleBookmarkForDoc,
 }: DocActionContextMenuParams) {
   const { popup } = useContextMenu()
+  const { updateDocHandler } = useNav()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
   }, [team, doc])
 
   const { settings } = useSettings()
-  const { pushMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
   const { updateTemplatesMap } = useNav()
+  const { openModal } = useModal()
 
   const getUpdatedDoc = useCallback(() => {
     const updatedDoc = {
@@ -155,6 +159,38 @@ export function useDocActionContextMenu({
     }
   }, [team.id, doc.id, updateTemplatesMap, pushMessage])
 
+  const [sendingMove, setSendingMove] = useState(false)
+
+  const moveDoc = useCallback(
+    async (
+      doc: SerializedDocWithBookmark,
+      workspaceId: string,
+      parentFolderId?: string
+    ) => {
+      if (sendingMove) {
+        return
+      }
+      setSendingMove(true)
+      try {
+        await updateDocHandler(doc, { workspaceId, parentFolderId })
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
+      setSendingMove(false)
+    },
+    [updateDocHandler, pushApiErrorMessage, sendingMove]
+  )
+
+  const openMoveForm = useCallback(() => {
+    openModal(
+      <MoveItemModal
+        onSubmit={(workspaceId, parentFolderId) =>
+          moveDoc(doc, workspaceId, parentFolderId)
+        }
+      />
+    )
+  }, [doc, openModal, moveDoc])
+
   const open = useCallback(
     (event: MouseEvent) => {
       popup(event, [
@@ -212,6 +248,7 @@ export function useDocActionContextMenu({
         createMenuItem({
           label: 'Move to',
           iconPath: mdiArrowRight,
+          onClick: openMoveForm,
         }),
         createMenuItem({
           label: 'Archive',
@@ -228,6 +265,7 @@ export function useDocActionContextMenu({
       exportAsPdf,
       docUrl,
       createTemplate,
+      openMoveForm,
     ]
   )
 
