@@ -35,6 +35,7 @@ import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { defaultPreviewStyle } from '../../atoms/MarkdownView/styles'
 import { selectTheme } from '../../../lib/styled'
+import { saveDocAsTemplate } from '../../../api/teams/docs/templates'
 
 import {
   exportAsMarkdownFile,
@@ -43,6 +44,7 @@ import {
   filenamifyTitle,
 } from '../../../lib/export'
 import { downloadBlob, printIframe } from '../../../lib/download'
+import { useNav } from '../../../lib/stores/nav'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
@@ -65,6 +67,7 @@ export function useDocActionContextMenu({
   const { settings } = useSettings()
   const { pushMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
+  const { updateTemplatesMap } = useNav()
 
   const getUpdatedDoc = useCallback(() => {
     const updatedDoc = {
@@ -139,6 +142,26 @@ export function useDocActionContextMenu({
     }
   }, [getUpdatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
 
+  const createTemplate = useCallback(async () => {
+    try {
+      const data = await saveDocAsTemplate(team.id, doc.id)
+      updateTemplatesMap([data.template.id, data.template])
+
+      pushMessage({
+        type: 'success',
+        title: 'Saved Template',
+        description:
+          'The template has been created. Please use it when creating a new document',
+      })
+    } catch (error) {
+      console.error(error)
+      pushMessage({
+        title: 'Error',
+        description: 'Could not save the template',
+      })
+    }
+  }, [team.id, doc.id, updateTemplatesMap, pushMessage])
+
   const open = useCallback(
     (event: MouseEvent) => {
       popup(event, [
@@ -191,6 +214,7 @@ export function useDocActionContextMenu({
         createMenuItem({
           label: 'Save as Template',
           iconPath: mdiPaletteOutline,
+          onClick: createTemplate,
         }),
         createMenuItem({
           label: 'Move to',
@@ -210,6 +234,7 @@ export function useDocActionContextMenu({
       exportAsHtml,
       exportAsPdf,
       docUrl,
+      createTemplate,
     ]
   )
 
