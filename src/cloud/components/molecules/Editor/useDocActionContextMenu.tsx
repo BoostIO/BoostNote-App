@@ -73,7 +73,7 @@ export function useDocActionContextMenu({
   const { pushMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
 
-  const updatedDoc = useMemo(() => {
+  const getUpdatedDoc = useCallback(() => {
     const updatedDoc = {
       ...doc,
       head: {
@@ -90,8 +90,8 @@ export function useDocActionContextMenu({
 
   const exportAsMarkdown = useCallback(() => {
     trackEvent(MixpanelActionTrackTypes.ExportMd)
-    return exportAsMarkdownFile(updatedDoc, { includeFrontMatter: true })
-  }, [updatedDoc])
+    return exportAsMarkdownFile(getUpdatedDoc(), { includeFrontMatter: true })
+  }, [getUpdatedDoc])
 
   const exportAsHtml = useCallback(() => {
     const previewStyle = defaultPreviewStyle({
@@ -99,7 +99,7 @@ export function useDocActionContextMenu({
     })
     try {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
-      exportAsHtmlFile(updatedDoc, settings, previewStyle)
+      exportAsHtmlFile(getUpdatedDoc(), settings, previewStyle)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -108,9 +108,10 @@ export function useDocActionContextMenu({
         description: error.message,
       })
     }
-  }, [updatedDoc, settings, pushMessage])
+  }, [getUpdatedDoc, settings, pushMessage])
 
   const exportAsPdf = useCallback(async () => {
+    const updatedDoc = getUpdatedDoc()
     if (updatedDoc.head == null) {
       return
     }
@@ -143,7 +144,7 @@ export function useDocActionContextMenu({
         description: error.message,
       })
     }
-  }, [updatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
+  }, [getUpdatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
 
   const open = useCallback(
     (event: MouseEvent) => {

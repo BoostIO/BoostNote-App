@@ -64,7 +64,6 @@ import DocShare from '../../../../../molecules/DocShare'
 import plur from 'plur'
 import styled from '../../../../../../lib/styled'
 import IconMdi from '../../../../../atoms/IconMdi'
-import DynamicExports from './DynamicExports'
 import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
@@ -80,7 +79,6 @@ interface DocContextMenuProps {
   backLinks: SerializedDoc[]
   revisionHistory?: SerializedRevision[]
   team: SerializedTeam
-  editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
   openRenameDocForm?: () => void
   sendingRename?: boolean
@@ -91,7 +89,6 @@ const DocContextMenu = ({
   currentDoc,
   contributors,
   backLinks,
-  editorRef,
   revisionHistory,
   restoreRevision,
   openRenameDocForm,
@@ -817,13 +814,6 @@ const DocContextMenu = ({
                   <div className='context__break' />
                 </>
               )}
-              <div className='context__break' />
-              <DynamicExports
-                openModal={openModal}
-                currentDoc={currentDoc}
-                editorRef={editorRef}
-                team={team}
-              />
             </div>
           </div>
         </div>

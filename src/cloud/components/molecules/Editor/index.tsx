@@ -694,6 +694,7 @@ const Editor = ({
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
     team,
+    editorRef,
     toggleBookmarkForDoc,
     togglePublicSharing,
     openGuestsModal,
@@ -836,7 +837,6 @@ const Editor = ({
             contributors={contributors}
             backLinks={backLinks}
             team={team}
-            editorRef={editorRef}
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
             openRenameDocForm={() => openRenameDocForm(doc)}
