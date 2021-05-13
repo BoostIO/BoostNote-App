@@ -1,4 +1,4 @@
-export const freePlanDocLimit = 10
+export const freePlanDocLimit = 30
 export const freeTrialPeriodDays = 7
 export const guestsPerMember = 3
 
