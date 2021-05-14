@@ -12,6 +12,7 @@ import Spinner from '../../../components/atoms/Spinner'
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
+  | 'tertiary'
   | 'danger'
   | 'icon'
   | 'icon-secondary'
@@ -231,6 +232,29 @@ const StyledButton = styled.button`
 
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.variants.secondary.text};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        filter: brightness(112%);
+      }
+    }
+  }
+
+  &.button__variant--tertiary {
+    background-color: ${({ theme }) => theme.colors.variants.tertiary.base};
+    color: ${({ theme }) => theme.colors.variants.tertiary.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.tertiary.text};
       border-right-color: transparent;
     }
 
