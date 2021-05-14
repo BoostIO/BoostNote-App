@@ -516,6 +516,7 @@ const DocContextMenu = ({
                       <UpgradeButton
                         className='context__badge'
                         origin='guest'
+                        variant='secondary'
                         query={{ teamId: team.id, docId: currentDoc.id }}
                       />
                     ) : (
@@ -536,9 +537,9 @@ const DocContextMenu = ({
                       </Button>
                     )}
                   </div>
-                  <div className='context__break' />
                   {backLinks.length > 0 && (
                     <>
+                      <div className='context__break' />
                       <div className='context__column'>
                         <label className='context__label'>
                           {backLinks.length}{' '}
@@ -564,7 +565,6 @@ const DocContextMenu = ({
                           ))}
                         </ul>
                       </div>
-                      <div className='context__break' />
                     </>
                   )}
                 </>
@@ -749,10 +749,6 @@ const Container = styled.div`
 
   .context__flexible__button + div {
     margin: ${({ theme }) => theme.space.xsmall}px 0;
-  }
-
-  .context__badge {
-    background: ${({ theme }) => theme.primaryBackgroundColor};
   }
 
   .context__label + .context__badge {

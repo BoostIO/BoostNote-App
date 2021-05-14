@@ -25,7 +25,6 @@ import {
   borderedInputStyle,
   baseIconStyle,
   secondaryButtonStyle,
-  inverseSecondaryButtonStyle,
   inputStyle,
   primaryButtonStyle,
 } from '../../lib/styled/styleFunctions'
@@ -41,6 +40,7 @@ import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
 import { useToast } from '../../../shared/lib/stores/toast'
+import Button from '../../../shared/components/atoms/Button'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -329,6 +329,8 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
     openInBrowser(docUrl)
   }, [docUrl])
 
+  const havingPro = subscription != null && subscription.plan === 'pro'
+
   return (
     <>
       {usingElectron && (
@@ -393,8 +395,11 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
               uncheckedIcon={false}
               checkedIcon={false}
               height={20}
-              width={45}
-              onColor='#5580DC'
+              width={30}
+              onColor='#004774'
+              offColor='#3D3F44'
+              offHandleColor='#1E2024'
+              handleDiameter={14}
             />
           </div>
         </Flexbox>
@@ -435,9 +440,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   <Flexbox flex='1 1 auto' wrap='wrap'>
                     Regenerate Link
                   </Flexbox>
-                  <button
+                  <Button
+                    variant='secondary'
+                    size='sm'
                     disabled={sending != 'idle'}
-                    id='regenerate__share__link'
                     onClick={regenerateCallback}
                   >
                     {sending === 'regenerating' ? (
@@ -445,7 +451,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     ) : (
                       'Regenerate'
                     )}
-                  </button>
+                  </Button>
                 </Flexbox>
                 <Flexbox justifyContent='space-between' className='share__row'>
                   <Flexbox
@@ -458,26 +464,34 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       subscription.plan === 'standard') && (
                       <UpgradeButton
                         tabIndex={-1}
+                        variant='secondary'
                         origin='share.password'
                         className='upgrade__badge'
                         query={{ teamId: team.id, docId: currentDoc.id }}
                       />
                     )}
                   </Flexbox>
-                  <div className='share__row__switch'>
-                    <Switch
-                      disabled={subscription == null || sending !== 'idle'}
-                      type='switch'
-                      id='shared-custom-switch-password'
-                      onChange={togglePassword}
-                      checked={shareLink.password != null || showPasswordForm}
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                      height={16}
-                      width={45}
-                      onColor='#5580DC'
-                    />
-                  </div>
+                  {!(
+                    subscription == null || subscription.plan === 'standard'
+                  ) && (
+                    <div className='share__row__switch'>
+                      <Switch
+                        disabled={subscription == null || sending !== 'idle'}
+                        type='switch'
+                        id='shared-custom-switch-password'
+                        onChange={togglePassword}
+                        checked={shareLink.password != null || showPasswordForm}
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        height={20}
+                        width={30}
+                        onColor='#004774'
+                        offColor='#3D3F44'
+                        offHandleColor='#1E2024'
+                        handleDiameter={14}
+                      />
+                    </div>
+                  )}
                 </Flexbox>
                 {(shareLink.password != null || showPasswordForm) && (
                   <form
@@ -507,30 +521,35 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row__label'
                   >
                     <span>Expiration Date</span>
-                    {(subscription == null ||
-                      subscription.plan === 'standard') && (
+                    {!havingPro && (
                       <UpgradeButton
                         tabIndex={-1}
+                        variant='secondary'
                         origin='share.expire'
                         className='upgrade__badge'
                         query={{ teamId: team.id, docId: currentDoc.id }}
                       />
                     )}
                   </Flexbox>
-                  <div className='share__row__switch'>
-                    <Switch
-                      disabled={subscription == null || sending !== 'idle'}
-                      type='switch'
-                      id='shared-custom-switch'
-                      onChange={toggleExpire}
-                      checked={shareLink.expireAt != null || showExpireForm}
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                      height={16}
-                      width={45}
-                      onColor='#5580DC'
-                    />
-                  </div>
+                  {havingPro && (
+                    <div className='share__row__switch'>
+                      <Switch
+                        disabled={subscription == null || sending !== 'idle'}
+                        type='switch'
+                        id='shared-custom-switch'
+                        onChange={toggleExpire}
+                        checked={shareLink.expireAt != null || showExpireForm}
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        height={20}
+                        width={30}
+                        onColor='#004774'
+                        offColor='#3D3F44'
+                        offHandleColor='#1E2024'
+                        handleDiameter={14}
+                      />
+                    </div>
+                  )}
                 </Flexbox>
                 {(shareLink.expireAt != null || showExpireForm) && (
                   <form
@@ -667,18 +686,6 @@ const Container = styled.div`
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     line-height: ${({ theme }) => theme.fontSizes.small}px;
-  }
-
-  #regenerate__share__link {
-    ${inverseSecondaryButtonStyle}
-    height: 20px;
-    font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
-    line-height: ${({ theme }) => theme.fontSizes.xsmall}px;
-
-    svg {
-      left: 0;
-      top: 0;
-    }
   }
 
   .react-datepicker-wrapper {
