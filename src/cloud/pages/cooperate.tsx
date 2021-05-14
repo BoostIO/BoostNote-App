@@ -9,7 +9,6 @@ import { useElectron } from '../lib/stores/electron'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
 import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
-import { moreHeaderId } from '../components/organisms/Sidebar/SidebarMore'
 import { mdiDomain } from '@mdi/js'
 import Icon from '../components/atoms/Icon'
 import { baseIconStyle } from '../lib/styled/styleFunctions'
@@ -76,7 +75,7 @@ const CooperatePage = () => {
           setToLocalStorage(team.id, {
             folders: doc.parentFolderId != null ? [doc.parentFolderId] : [],
             workspaces: [doc.workspaceId],
-            links: [moreHeaderId],
+            links: [],
           })
 
           window.location.href = getDocLinkHref(doc, team, 'index', {
