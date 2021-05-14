@@ -548,7 +548,8 @@ const Container = styled.div`
   }
 
   .sidebar__tree__scroller {
-    padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px 0
+      ${({ theme }) => theme.sizes.spaces.md}px 0;
     flex: 1 1 auto;
   }
 
