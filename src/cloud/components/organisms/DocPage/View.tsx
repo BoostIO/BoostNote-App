@@ -141,7 +141,9 @@ const ViewPage = ({
         </ColoredBlock>
       )}
       <Container
-        className={cc([!preferences.docContextIsHidden && 'with__context'])}
+        className={cc([
+          preferences.docContextMode !== 'hidden' && 'with__context',
+        ])}
       >
         <StyledViewDocLayout>
           <StyledTitle>{getDocTitle(doc, 'Untitled..')}</StyledTitle>
