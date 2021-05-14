@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from '../../../../../../../shared/lib/styled'
 import Spinner from '../../../../../../../shared/components/atoms/Spinner'
 
@@ -9,14 +9,12 @@ interface DocPropertyValueButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const DocPropertyValueButton = ({
-  sending,
-  children,
-  disabled,
-  onClick,
-}: DocPropertyValueButtonProps) => {
+const DocPropertyValueButton = forwardRef<
+  HTMLButtonElement,
+  DocPropertyValueButtonProps
+>(({ sending, children, disabled, onClick }, ref) => {
   return (
-    <ButtonContainer disabled={disabled} onClick={onClick}>
+    <ButtonContainer ref={ref} disabled={disabled} onClick={onClick}>
       {sending != null ? (
         children
       ) : (
@@ -26,7 +24,7 @@ const DocPropertyValueButton = ({
       )}
     </ButtonContainer>
   )
-}
+})
 
 export default DocPropertyValueButton
 
