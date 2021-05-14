@@ -240,7 +240,15 @@ const Application = ({
   }, [])
 
   const getFoldEvents = useCallback(
-    (type: CollapsableType, key: string) => {
+    (type: CollapsableType, key: string, reversed?: boolean) => {
+      if (reversed) {
+        return {
+          fold: () => unfoldItem(type, key),
+          unfold: () => foldItem(type, key),
+          toggle: () => toggleItem(type, key),
+        }
+      }
+
       return {
         fold: () => foldItem(type, key),
         unfold: () => unfoldItem(type, key),
@@ -358,6 +366,7 @@ const Application = ({
       cloudSidebaCategoryLabels.find((categoryLabel) => categoryLabel === item)
     )
 
+    console.log(orderedCategories)
     const orderedTree = tree.sort((categoryA, categoryB) => {
       if (
         orderedCategories.indexOf(categoryA.label) >
@@ -925,7 +934,11 @@ function mapTree(
   sideBarOpenedFolderIdsSet: Set<string>,
   sideBarOpenedWorkspaceIdsSet: Set<string>,
   toggleItem: (type: CollapsableType, id: string) => void,
-  getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
+  getFoldEvents: (
+    type: CollapsableType,
+    key: string,
+    reversed?: boolean
+  ) => FoldingProps,
   push: (url: string) => void,
   openModal: (cmp: JSX.Element) => void,
   toggleDocBookmark: (
@@ -1430,8 +1443,8 @@ function mapTree(
     const key = (category.label || '').toLocaleLowerCase()
     const foldKey = `fold-${key}`
     const hideKey = `hide-${key}`
-    category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
-    category.folding = getFoldEvents('links', foldKey)
+    category.folded = sideBarOpenedLinksIdsSet.has(foldKey)
+    category.folding = getFoldEvents('links', foldKey, true)
     category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
     category.toggleHidden = () => toggleItem('links', hideKey)
   })
