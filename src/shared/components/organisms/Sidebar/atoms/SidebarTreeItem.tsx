@@ -257,10 +257,6 @@ const Container = styled.div<{ depth: number }>`
       text-transform: uppercase !important;
     }
 
-    .sidebar__tree__item__icon {
-      color: currentColor !important;
-    }
-
     &.focused {
       box-shadow: 0px 0px 0px 1px
         ${({ theme }) => theme.colors.variants.primary.base};
