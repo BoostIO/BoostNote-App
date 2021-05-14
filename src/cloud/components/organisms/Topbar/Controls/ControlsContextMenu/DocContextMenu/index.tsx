@@ -58,7 +58,7 @@ import plur from 'plur'
 import styled from '../../../../../../lib/styled'
 import IconMdi from '../../../../../atoms/IconMdi'
 import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
-import Button from '../../../../../atoms/Button'
+import Button from '../../../../../../../shared/components/atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
@@ -80,7 +80,6 @@ const DocContextMenu = ({
   currentDoc,
   contributors,
   backLinks,
-  revisionHistory,
   restoreRevision,
 }: DocContextMenuProps) => {
   const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
@@ -460,81 +459,20 @@ const DocContextMenu = ({
                 </div>
               </div>
               <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiHistory}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  History
-                </label>
-                <div className='context__content'>
-                  {(subscription == null ||
-                    subscription.plan === 'standard') && (
-                    <Flexbox
-                      justifyContent='flex-end'
-                      style={{ width: '100%' }}
-                    >
-                      <UpgradeButton
-                        origin='revision'
-                        query={{ teamId: team.id, docId: currentDoc.id }}
-                      />
-                    </Flexbox>
-                  )}
-                </div>
-              </div>
-              <div className='context__row'>
-                <div className='context__content'>
-                  {revisionHistory != null && revisionHistory.length > 0 && (
-                    <ul className='context__list'>
-                      {revisionHistory.map((rev) => {
-                        const creators = rev.creators || []
-                        return (
-                          <li className='context__revision' key={rev.id}>
-                            {creators.length > 0 ? (
-                              <Flexbox alignItems='center' wrap='wrap'>
-                                {creators.map((user) => (
-                                  <UserIcon
-                                    key={user.id}
-                                    user={usersMap.get(user.id) || user}
-                                    className='context__revision__user subtle'
-                                  />
-                                ))}
-                                <span className='context__revision__names'>
-                                  {' '}
-                                  {creators
-                                    .map((user) => user.displayName)
-                                    .join(',')}{' '}
-                                  updated doc
-                                </span>
-                              </Flexbox>
-                            ) : (
-                              'Doc has been updated'
-                            )}
-                            <span className='context__revision__date'>
-                              {getFormattedDateTime(rev.created)}
-                            </span>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  )}
-
-                  <button
-                    className='context__flexible__button'
-                    onClick={revisionNavigateCallback}
-                    id='dc-context-top-revisions'
+                <div className='context__content single__line'>
+                  <Button
                     disabled={subscription == null}
+                    variant='primary'
+                    size='sm'
+                    iconPath={mdiHistory}
+                    iconSize={16}
+                    onClick={revisionNavigateCallback}
+                    className='context__content__button'
                   >
-                    <Icon
-                      path={mdiHistory}
-                      className='context__icon'
-                      size={18}
-                    />
                     {subscription != null && subscription.plan === 'standard'
                       ? `See revisions ( last ${revisionHistoryStandardDays} days)`
                       : 'See full revisions'}
-                  </button>
+                  </Button>
                 </div>
               </div>
               <div className='context__break' />
@@ -832,7 +770,7 @@ const Container = styled.div`
     flex: 0 0 auto;
   }
 
-  context__backlink + context__backlink {
+  .context__backlink + .context__backlink {
     margin-top: ${({ theme }) => theme.space.xsmall}px;
   }
 
@@ -898,6 +836,10 @@ const Container = styled.div`
     .placeholder {
       width: ${docContextWidth + 45}px;
     }
+  }
+
+  .context__content__button {
+    width: 100%;
   }
 `
 
