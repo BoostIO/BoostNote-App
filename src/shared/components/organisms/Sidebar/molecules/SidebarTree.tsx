@@ -37,7 +37,6 @@ export interface SidebarNavCategory {
   toggleHidden: () => void
   folding?: FoldingProps
   rows: SidebarTreeChildRow[]
-  isOnlyCategoryDisplayed?: boolean
   lastCategory?: boolean
   drag?: {
     onDragStart: () => void
@@ -147,9 +146,6 @@ const SidebarTree = ({
                 category={{
                   ...category,
                   lastCategory: i === tree.length - 1,
-                  isOnlyCategoryDisplayed:
-                    !category.folded &&
-                    tree.filter((category) => !category.folded).length === 1,
                 }}
                 draggingCategory={draggingCategory}
                 setDraggingCategory={setDraggingCategory}
@@ -234,8 +230,6 @@ const SidebarCategory = ({
           className={cc([
             'sidebar__category__items',
             creationFormIsOpened && `sidebar__category__items--silenced`,
-            category.isOnlyCategoryDisplayed &&
-              'sidebar__category__items--full',
           ])}
         >
           {showCreateForm && (
@@ -569,10 +563,6 @@ const Container = styled.div`
 
   .sidebar__category__items {
     padding: 4px 0;
-  }
-
-  .sidebar__category__items--full {
-    height: 100%;
   }
 
   .sidebar__category__items--silenced .sidebar__tree__item {
