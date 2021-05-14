@@ -248,6 +248,7 @@ const Container = styled.div<{ depth: number }>`
   &.sidebar__category {
     .sidebar__tree__item__label {
       font-weight: bold;
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
 
     border-top: 1px solid transparent;

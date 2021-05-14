@@ -1,8 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import {
-  SidebarOrderedCategoriesDelimiter,
-  usePreferences,
-} from '../lib/stores/preferences'
+import { usePreferences } from '../lib/stores/preferences'
 import { usePage } from '../lib/stores/pageStore'
 import {
   useGlobalKeyDownHandler,
@@ -147,6 +144,10 @@ import ButtonGroup from '../../shared/components/atoms/ButtonGroup'
 import Button from '../../shared/components/atoms/Button'
 import TemplatesModal from './organisms/Modal/contents/TemplatesModal'
 import { CreateWorkspaceRequestBody } from '../api/teams/workspaces'
+import {
+  cloudSidebaCategoryLabels,
+  cloudSidebarOrderedCategoriesDelimiter,
+} from '../lib/sidebar'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -346,8 +347,15 @@ const Application = ({
       return undefined
     }
 
-    const orderedCategories = preferences.sidebarOrderedCategories.split(
-      SidebarOrderedCategoriesDelimiter
+    const orderedCategories = Array.from(
+      new Set([
+        ...preferences.sidebarOrderedCategories.split(
+          cloudSidebarOrderedCategoriesDelimiter
+        ),
+        ...cloudSidebaCategoryLabels,
+      ])
+    ).filter((item) =>
+      cloudSidebaCategoryLabels.find((categoryLabel) => categoryLabel === item)
     )
 
     const orderedTree = tree.sort((categoryA, categoryB) => {
@@ -393,7 +401,7 @@ const Application = ({
 
           setPreferences({
             sidebarOrderedCategories: reArrangedArray.join(
-              SidebarOrderedCategoriesDelimiter
+              cloudSidebarOrderedCategoriesDelimiter
             ),
           })
 
@@ -1422,7 +1430,7 @@ function mapTree(
     const key = (category.label || '').toLocaleLowerCase()
     const foldKey = `fold-${key}`
     const hideKey = `hide-${key}`
-    category.folded = sideBarOpenedLinksIdsSet.has(foldKey)
+    category.folded = !sideBarOpenedLinksIdsSet.has(foldKey)
     category.folding = getFoldEvents('links', foldKey)
     category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
     category.toggleHidden = () => toggleItem('links', hideKey)

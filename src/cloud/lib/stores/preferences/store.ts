@@ -4,6 +4,10 @@ import { localLiteStorage } from 'ltstrg'
 import { Preferences } from './types'
 import { preferencesKey } from '../../localStorageKeys'
 import { useSetState } from 'react-use'
+import {
+  cloudSidebaCategoryLabels,
+  cloudSidebarOrderedCategoriesDelimiter,
+} from '../../sidebar'
 
 function savePreferencesToLocalStorage(preferences: Partial<Preferences>) {
   localLiteStorage.setItem(preferencesKey, JSON.stringify(preferences))
@@ -20,7 +24,9 @@ const basePreferences: Preferences = {
   sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
-  sidebarOrderedCategories: 'Bookmarks|Workspaces|Private|Labels|More',
+  sidebarOrderedCategories: cloudSidebaCategoryLabels.join(
+    cloudSidebarOrderedCategoriesDelimiter
+  ),
 }
 
 function getExistingPreferences() {
