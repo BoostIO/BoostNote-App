@@ -817,8 +817,6 @@ const Editor = ({
             team={team}
             restoreRevision={onRestoreRevisionCallback}
             revisionHistory={revisionHistory}
-            openRenameDocForm={() => openRenameDocForm(doc)}
-            sendingRename={sendingMap.has(doc.id)}
           />
         ) : null,
       }}
