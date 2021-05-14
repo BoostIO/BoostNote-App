@@ -12,8 +12,8 @@ import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import { DraggedTo, onDragLeaveCb, SidebarDragState } from '../../../../lib/dnd'
 import { mdiDotsHorizontal } from '@mdi/js'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
-import { scrollbarOverlay } from '../../../../lib/styled/styleFunctions'
 import { useContextMenu } from '../../../../lib/stores/contextMenu'
+import VerticalScroller from '../../../atoms/VerticalScroller'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
@@ -136,26 +136,28 @@ const SidebarTree = ({
         {topRows != null && (
           <div className='sidebar__tree__rows--top'>{topRows}</div>
         )}
-        {tree.map((category, i) => {
-          if (category.hidden) {
-            return null
-          }
+        <VerticalScroller className='sidebar__tree__scroller'>
+          {tree.map((category, i) => {
+            if (category.hidden) {
+              return null
+            }
 
-          return (
-            <SidebarCategory
-              category={{
-                ...category,
-                lastCategory: i === tree.length - 1,
-                isOnlyCategoryDisplayed:
-                  !category.folded &&
-                  tree.filter((category) => !category.folded).length === 1,
-              }}
-              draggingCategory={draggingCategory}
-              setDraggingCategory={setDraggingCategory}
-              key={`sidebar__category__${i}`}
-            />
-          )
-        })}
+            return (
+              <SidebarCategory
+                category={{
+                  ...category,
+                  lastCategory: i === tree.length - 1,
+                  isOnlyCategoryDisplayed:
+                    !category.folded &&
+                    tree.filter((category) => !category.folded).length === 1,
+                }}
+                draggingCategory={draggingCategory}
+                setDraggingCategory={setDraggingCategory}
+                key={`sidebar__category__${i}`}
+              />
+            )
+          })}
+        </VerticalScroller>
       </SidebarContextList>
     </Container>
   )
@@ -172,8 +174,6 @@ const SidebarCategory = ({
 }) => {
   const [creationFormIsOpened, setCreationFormIsOpened] = useState(false)
   const [draggingItem, setDraggingItem] = useState(false)
-  const [inScroll, setInScroll] = useState(false)
-  const scrollTimer = useRef<any>()
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [placeholder, setPlaceholder] = useState('')
   const creationCallbackRef = useRef<((val: string) => Promise<void>) | null>(
@@ -181,13 +181,6 @@ const SidebarCategory = ({
   )
   const [draggedOver, setDraggedOver] = useState(false)
   const dragRef = useRef<HTMLDivElement>(null)
-
-  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
-    setInScroll(true)
-    scrollTimer.current = setTimeout(() => {
-      setInScroll(false)
-    }, 600)
-  }, [])
 
   const controls = useMemo(
     () =>
@@ -241,11 +234,9 @@ const SidebarCategory = ({
           className={cc([
             'sidebar__category__items',
             creationFormIsOpened && `sidebar__category__items--silenced`,
-            inScroll && 'sidebar__category__items--scrolling',
             category.isOnlyCategoryDisplayed &&
               'sidebar__category__items--full',
           ])}
-          onScroll={onScrollHandler}
         >
           {showCreateForm && (
             <SidebarTreeForm
@@ -562,20 +553,22 @@ const Container = styled.div`
     flex-direction: column;
   }
 
-  .sidebar__category {
-    flex: 0 0 auto;
+  .sidebar__tree__scroller {
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
+    flex: 1 1 auto;
   }
 
-  .sidebar__category + .sidebar__category {
-    border-top: none;
+  .sidebar__category {
+    flex: 0 0 auto;
+    border: none;
+  }
+
+  .sidebar__category__wrapper + .sidebar__category__wrapper {
+    margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .sidebar__category__items {
     padding: 4px 0;
-    flex-shrink: 2;
-    min-height: 50px;
-    ${(theme) =>
-      scrollbarOverlay(theme, 'y', 'sidebar__category__items--scrolling')}
   }
 
   .sidebar__category__items--full {

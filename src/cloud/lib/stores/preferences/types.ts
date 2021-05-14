@@ -15,5 +15,3 @@ export interface Preferences {
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   sidebarOrderedCategories: string
 }
-
-export const SidebarOrderedCategoriesDelimiter = '|'
