@@ -366,7 +366,6 @@ const Application = ({
       cloudSidebaCategoryLabels.find((categoryLabel) => categoryLabel === item)
     )
 
-    console.log(orderedCategories)
     const orderedTree = tree.sort((categoryA, categoryB) => {
       if (
         orderedCategories.indexOf(categoryA.label) >
