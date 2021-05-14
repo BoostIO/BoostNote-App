@@ -37,7 +37,7 @@ export interface SidebarNavCategory {
   toggleHidden: () => void
   folding?: FoldingProps
   rows: SidebarTreeChildRow[]
-  shrink?: 1 | 2 | 3
+  isOnlyCategoryDisplayed?: boolean
   lastCategory?: boolean
   drag?: {
     onDragStart: () => void
@@ -146,6 +146,9 @@ const SidebarTree = ({
               category={{
                 ...category,
                 lastCategory: i === tree.length - 1,
+                isOnlyCategoryDisplayed:
+                  !category.folded &&
+                  tree.filter((category) => !category.folded).length === 1,
               }}
               draggingCategory={draggingCategory}
               setDraggingCategory={setDraggingCategory}
@@ -224,6 +227,7 @@ const SidebarCategory = ({
           category.lastCategory && 'sidebar__category--last',
           !category.folded && 'sidebar__category--open',
         ])}
+        isCategory={true}
         id={`category-${category.label}`}
         label={category.label}
         labelClick={category.folding?.toggle}
@@ -236,9 +240,10 @@ const SidebarCategory = ({
         <div
           className={cc([
             'sidebar__category__items',
-            `sidebar__category__items__shrink${category.shrink || '1'}`,
             creationFormIsOpened && `sidebar__category__items--silenced`,
             inScroll && 'sidebar__category__items--scrolling',
+            category.isOnlyCategoryDisplayed &&
+              'sidebar__category__items--full',
           ])}
           onScroll={onScrollHandler}
         >
@@ -568,21 +573,13 @@ const Container = styled.div`
   .sidebar__category__items {
     padding: 4px 0;
     flex-shrink: 2;
+    min-height: 50px;
     ${(theme) =>
       scrollbarOverlay(theme, 'y', 'sidebar__category__items--scrolling')}
   }
 
-  .sidebar__category__items__shrink1 {
-    flex-shrink: 1;
-    min-height: 50px;
-  }
-  .sidebar__category__items__shrink2 {
-    flex-shrink: 2;
-    min-height: 50px;
-  }
-  .sidebar__category__items__shrink3 {
-    flex-shrink: 3;
-    min-height: 50px;
+  .sidebar__category__items--full {
+    height: 100%;
   }
 
   .sidebar__category__items--silenced .sidebar__tree__item {

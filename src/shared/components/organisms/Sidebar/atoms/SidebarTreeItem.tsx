@@ -23,6 +23,7 @@ interface SidebarTreeItemProps {
   controls?: ControlButtonProps[]
   contextControls?: MenuItem[]
   active?: boolean
+  isCategory?: boolean
 }
 
 interface SharedProps {
@@ -46,6 +47,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
   controls,
   contextControls,
   active,
+  isCategory,
 }) => {
   const { popup } = useContextMenu()
   const LabelTag = labelHref != null ? 'a' : 'button'
@@ -75,6 +77,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
       className={cc([
         className,
         'sidebar__tree__item',
+        isCategory && 'sidebar__category',
         focused && 'focused',
         active && 'sidebar__tree__item--active',
       ])}
@@ -243,6 +246,10 @@ const Container = styled.div<{ depth: number }>`
   }
 
   &.sidebar__category {
+    .sidebar__tree__item__label {
+      font-weight: bold;
+    }
+
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     .sidebar__tree__item__label {
@@ -252,11 +259,14 @@ const Container = styled.div<{ depth: number }>`
     .sidebar__tree__item__icon {
       color: currentColor !important;
     }
+
     &.focused {
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      box-shadow: 0px 0px 0px 1px
+        ${({ theme }) => theme.colors.variants.primary.base};
     }
     &:hover {
-      background-color: ${({ theme }) => theme.colors.background.quaternary};
+      box-shadow: 0px 0px 0px 1px
+        ${({ theme }) => theme.colors.variants.primary.base};
     }
   }
 `

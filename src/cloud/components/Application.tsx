@@ -1279,7 +1279,6 @@ function mapTree(
   }
   tree.push({
     label: 'Workspaces',
-    shrink: 2,
     rows: navTree,
     controls: [
       {
@@ -1292,7 +1291,6 @@ function mapTree(
   if (!team.personal) {
     tree.push({
       label: 'Private',
-      shrink: 2,
       rows:
         personalWorkspace != null
           ? arrayItems
