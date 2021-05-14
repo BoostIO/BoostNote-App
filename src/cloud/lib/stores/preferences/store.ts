@@ -21,7 +21,6 @@ const basePreferences: Preferences = {
   sideBarWidth: 250,
   lastEditorMode: 'edit',
   lastEditorEditLayout: 'split',
-  sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
   sidebarOrderedCategories: cloudSidebaCategoryLabels.join(

@@ -10,7 +10,6 @@ export interface Preferences {
   lastEditorMode: 'edit' | 'preview'
   lastEditorEditLayout: LayoutMode
   workspaceManagerIsOpen: boolean
-  sidebarBookmarksAreUnfolded: boolean
   lastSidebarState: SidebarState | undefined
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   sidebarOrderedCategories: string
