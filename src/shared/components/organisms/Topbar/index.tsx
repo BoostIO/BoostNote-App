@@ -187,7 +187,12 @@ const Topbar: AppComponent<TopbarProps> = ({
         <div className='topbar__controls'>
           {controls.map((control, i) => {
             if (control.type === 'separator') {
-              return <div className='topbar__controls__separator' />
+              return (
+                <div
+                  key={`topbar__control__${i}`}
+                  className='topbar__controls__separator'
+                />
+              )
             }
 
             return (
