@@ -24,7 +24,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  left: 40px;
+  left: 0;
   top: 0;
   right: 0;
   bottom: 0;
