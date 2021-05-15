@@ -12,8 +12,8 @@ import {
   revisionHistoryStandardDays,
   standardPlanStorageMb,
 } from '../../../lib/subscription'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import cc from 'classcat'
+import Button from '../../../../shared/components/atoms/Button'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -67,7 +67,7 @@ const PlanTables = ({
             onTrialCallback()
           }}
         >
-          Try it for free
+          7 days free trial
         </StyledTrialLink>
       </p>
     )
@@ -83,20 +83,25 @@ const PlanTables = ({
               <label>Free</label>
               <div className='pricing'>
                 <span>$0</span>
+                <div>
+                  per user
+                  <br />
+                  per month
+                </div>
               </div>
 
               {selectedPlan === 'free' ? (
-                <CustomButton
+                <Button
                   className='upgrade-btn'
                   disabled={true}
-                  variant='inverse-secondary'
+                  variant='secondary'
                 >
                   Current Plan
-                </CustomButton>
+                </Button>
               ) : (
-                <CustomButton onClick={onFreeCallback} className='upgrade-btn'>
+                <Button onClick={onFreeCallback} className='upgrade-btn'>
                   Downgrade
-                </CustomButton>
+                </Button>
               )}
             </td>
 
@@ -104,23 +109,24 @@ const PlanTables = ({
               <label>Standard</label>
               <div className='pricing'>
                 <span>$3</span>
-                <div>per member per month</div>
+                <div>
+                  per user
+                  <br />
+                  per month
+                </div>
               </div>
               {selectedPlan === 'standard' ? (
-                <CustomButton
+                <Button
                   className='upgrade-btn'
                   disabled={true}
-                  variant='inverse-secondary'
+                  variant='secondary'
                 >
                   Current Plan
-                </CustomButton>
+                </Button>
               ) : (
-                <CustomButton
-                  onClick={onStandardCallback}
-                  className='upgrade-btn'
-                >
+                <Button onClick={onStandardCallback} className='upgrade-btn'>
                   {selectedPlan === 'free' ? 'Upgrade' : 'Downgrade'}
-                </CustomButton>
+                </Button>
               )}
             </td>
 
@@ -128,21 +134,25 @@ const PlanTables = ({
               <label>Pro</label>
               <div className='pricing'>
                 <span>$8</span>
-                <div>per member per month</div>
+                <div>
+                  per user
+                  <br />
+                  per month
+                </div>
               </div>
 
               {selectedPlan === 'pro' ? (
-                <CustomButton
+                <Button
                   className='upgrade-btn'
                   disabled={true}
-                  variant='inverse-secondary'
+                  variant='secondary'
                 >
                   Current Plan
-                </CustomButton>
+                </Button>
               ) : (
-                <CustomButton onClick={onProCallback} className='upgrade-btn'>
+                <Button onClick={onProCallback} className='upgrade-btn'>
                   Upgrade
-                </CustomButton>
+                </Button>
               )}
               {freeTrialContent}
             </td>
@@ -351,12 +361,6 @@ const Container = styled.div`
   .upgrade-btn {
     width: 100%;
     margin: ${({ theme }) => theme.fontSizes.xsmall}px 0;
-    padding: 0px ${({ theme }) => theme.space.xxsmall}px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    line-height: inherit;
   }
 
   tr td {
@@ -366,9 +370,8 @@ const Container = styled.div`
     text-align: left;
     min-height: 30px;
 
-    &:not(.first) {
-      padding: ${({ theme }) => theme.space.xsmall}px
-        ${({ theme }) => theme.space.small}px;
+    &:not(.first):not(.header) {
+      padding: ${({ theme }) => theme.space.xsmall}px;
     }
 
     &.first {
