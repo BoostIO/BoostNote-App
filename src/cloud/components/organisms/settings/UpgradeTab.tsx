@@ -11,11 +11,11 @@ import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../../lib/consts'
-import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -98,14 +98,14 @@ const UpgradeTab = () => {
               <StyledFYI>
                 * For larger businesses or those in highly regulated industries,
                 please{' '}
-                <CustomLink
+                <SettingLink
                   href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
                   target='_blank'
                   rel='noopener noreferrer'
                   isReactLink={false}
                 >
                   contact our sales department
-                </CustomLink>
+                </SettingLink>
                 .
               </StyledFYI>
             </section>
