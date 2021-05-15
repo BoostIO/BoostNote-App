@@ -7,7 +7,7 @@ import {
   isSingleKeyEventOutsideOfInput,
 } from '../../../lib/keyboard'
 import { useTranslation } from 'react-i18next'
-import { mdiDomain, mdiAccountCircleOutline } from '@mdi/js'
+import { mdiDomain, mdiAccountCircleOutline, mdiClose } from '@mdi/js'
 import PersonalInfoTab from './PersonalInfoTab'
 import { usePage } from '../../../lib/stores/pageStore'
 import TeamInfoTab from './TeamInfoTab'
@@ -29,6 +29,8 @@ import SettingSidenavHeader from '../../../../shared/components/organisms/Settin
 import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
 import SettingMain from '../../../../shared/components/organisms/Settings/atoms/SettingMain'
 import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
+import Icon from '../../../../shared/components/atoms/Icon'
+import SettingCloseButton from '../../../../shared/components/organisms/Settings/atoms/SettingCloseButton'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -196,7 +198,17 @@ const SettingsComponent = () => {
             )}
         </SettingSidenav>
       }
-      content={<SettingMain ref={contentSideRef}>{content}</SettingMain>}
+      content={
+        <SettingMain ref={contentSideRef}>
+          {content}
+          <SettingCloseButton
+            className='settings__close-btn'
+            onClick={toggleClosed}
+          >
+            <Icon path={mdiClose} size={26} />
+          </SettingCloseButton>
+        </SettingMain>
+      }
     ></Settings>
   )
 }
