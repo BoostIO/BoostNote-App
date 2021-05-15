@@ -14,6 +14,7 @@ import {
 } from '../../../lib/subscription'
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
+import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -60,7 +61,7 @@ const PlanTables = ({
 
     return (
       <p>
-        <StyledTrialLink
+        <SettingLink
           href='#'
           onClick={(e: any) => {
             e.preventDefault()
@@ -68,7 +69,7 @@ const PlanTables = ({
           }}
         >
           7 days free trial
-        </StyledTrialLink>
+        </SettingLink>
       </p>
     )
   }, [subscription, team, onTrialCallback])
@@ -298,16 +299,6 @@ const PlanTables = ({
     </Container>
   )
 }
-
-const StyledTrialLink = styled.a`
-  text-decoration: underline;
-  font-size: ${({ theme }) => theme.fontSizes.default}px;
-  transition: 200ms color;
-  color: ${({ theme }) => theme.primaryTextColor};
-  &:hover {
-    text-decoration: none;
-  }
-`
 
 const Container = styled.div`
   width: 100%;
