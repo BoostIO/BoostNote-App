@@ -87,29 +87,27 @@ const UpgradeTab = () => {
               />
             )}
             <section>
-              <p className='text--small'>
-                <PlanTables
-                  team={team}
-                  subscription={subscription}
-                  selectedPlan='free'
-                  onStandardCallback={() => onUpgradeCallback('standard')}
-                  onProCallback={() => onUpgradeCallback('pro')}
-                  onTrialCallback={() => setShowTrialPopup(true)}
-                />
-                <StyledFYI>
-                  * For larger businesses or those in highly regulated
-                  industries, please{' '}
-                  <CustomLink
-                    href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    isReactLink={false}
-                  >
-                    contact our sales department
-                  </CustomLink>
-                  .
-                </StyledFYI>
-              </p>
+              <PlanTables
+                team={team}
+                subscription={subscription}
+                selectedPlan='free'
+                onStandardCallback={() => onUpgradeCallback('standard')}
+                onProCallback={() => onUpgradeCallback('pro')}
+                onTrialCallback={() => setShowTrialPopup(true)}
+              />
+              <StyledFYI>
+                * For larger businesses or those in highly regulated industries,
+                please{' '}
+                <CustomLink
+                  href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  isReactLink={false}
+                >
+                  contact our sales department
+                </CustomLink>
+                .
+              </StyledFYI>
             </section>
           </>
         }
