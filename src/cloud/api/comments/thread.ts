@@ -23,7 +23,7 @@ export async function getThreads(doc: string): Promise<Thread[]> {
 export interface CreateThreadRequestBody {
   doc: string
   comment?: string
-  selection: Thread['selection']
+  selection?: Thread['selection']
   context?: string
 }
 

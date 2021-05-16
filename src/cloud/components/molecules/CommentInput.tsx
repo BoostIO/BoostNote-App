@@ -69,7 +69,7 @@ const InputContainer = styled.div`
   & textarea {
     resize: none;
     width: 100%;
-    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    border: 1px solid ${({ theme }) => theme.colors.border.second};
     height: 60px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
     color: ${({ theme }) => theme.colors.text.primary};

@@ -9,7 +9,7 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 
-interface ThreadActionProps {
+export interface ThreadActionProps {
   thread: Thread
   onClose: (thread: Thread) => any
   onOpen: (thread: Thread) => any
