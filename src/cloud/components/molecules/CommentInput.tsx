@@ -72,7 +72,7 @@ const InputContainer = styled.div`
     border: 1px solid ${({ theme }) => theme.colors.border.main};
     height: 60px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
-    color: white;
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `
 
