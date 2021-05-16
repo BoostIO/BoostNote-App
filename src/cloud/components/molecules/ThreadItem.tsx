@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
 import { Thread } from '../../interfaces/db/comments'
 import {
@@ -11,10 +11,13 @@ import UserIcon from '../atoms/UserIcon'
 import { capitalize } from '../../lib/utils/string'
 import Icon from '../../../shared/components/atoms/Icon'
 import styled from '../../../shared/lib/styled'
+import useThreadActions, {
+  ThreadActionProps,
+} from '../../../shared/lib/hooks/useThreadMenuActions'
+import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 
-interface ThreadListItemProps {
-  thread: Thread
-  onClick: (thread: Thread) => void
+type ThreadListItemProps = ThreadActionProps & {
+  onSelect: (thread: Thread) => void
 }
 
 const smallUserIconStyle = { width: '24px', height: '24px', lineHeight: '20px' }
@@ -24,9 +27,22 @@ const extraSmallUserIconStyle = {
   lineHeight: '16px',
   fontSize: '16px',
 }
-function ThreadItem({ thread, onClick }: ThreadListItemProps) {
+function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
+  const actions = useThreadActions({ thread, ...rest })
+  const { popup } = useContextMenu()
+
+  const openActionMenu: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      console.log('afawffw')
+      event.preventDefault()
+      event.stopPropagation()
+      popup(event, actions)
+    },
+    [actions, popup]
+  )
+
   return (
-    <StyledListItem onClick={() => onClick(thread)}>
+    <StyledListItem onClick={() => onSelect(thread)}>
       <div>
         <div className='thread__info__line'>
           <Icon
@@ -45,7 +61,9 @@ function ThreadItem({ thread, onClick }: ThreadListItemProps) {
             <UserIcon style={smallUserIconStyle} user={thread.status.by} />
           )}
         </div>
-        <Icon className='thread__action' size={20} path={mdiDotsVertical} />
+        <div onClick={openActionMenu}>
+          <Icon className='thread__action' size={20} path={mdiDotsVertical} />
+        </div>
       </div>
       <div>
         <div className='thread__info__line'>
