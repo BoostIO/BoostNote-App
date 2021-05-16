@@ -14,7 +14,7 @@ export function useDocThreads(docId: string) {
 }
 
 export function useThreadComments(thread: Thread) {
-  const { observeThread } = useComments()
+  const { observeComments: observeThread } = useComments()
   const [comments, setComments] = useState<Comment[] | null>(null)
 
   useEffect(() => {
