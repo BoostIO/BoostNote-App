@@ -1,7 +1,10 @@
 import { callApi } from '../../lib/client'
 import { Thread } from '../../interfaces/db/comments'
 
-type SerializedThread = Thread & { status: { at: string } }
+type SerializedThread = Thread & {
+  status: { at: string }
+  recentCommentTime: string
+}
 
 interface GetDocThreadsResponseBody {
   threads: SerializedThread[]
@@ -14,10 +17,7 @@ export async function getThreads(doc: string): Promise<Thread[]> {
       search: { doc },
     }
   )
-  return threads.map((thread) => ({
-    ...thread,
-    status: { ...thread.status, at: new Date(thread.status.at) },
-  }))
+  return threads.map(deserialize)
 }
 
 export interface CreateThreadRequestBody {
@@ -39,10 +39,7 @@ export async function createThread(
     { method: 'post', json: body }
   )
 
-  return {
-    ...thread,
-    status: { ...thread.status, at: new Date(thread.status.at) },
-  }
+  return deserialize(thread)
 }
 
 interface UpdateThreadResponseBody {
@@ -57,12 +54,17 @@ export async function setThreadStatus(
     `api/commentThreads/${id}`,
     { method: 'patch', json: { status: { type: status } } }
   )
-  return {
-    ...thread,
-    status: { ...thread.status, at: new Date(thread.status.at) },
-  }
+  return deserialize(thread)
 }
 
 export async function deleteThread(thread: { id: string }) {
   return callApi(`api/commentThreads/${thread.id}`, { method: 'delete' })
+}
+
+function deserialize(serialized: SerializedThread): Thread {
+  return {
+    ...serialized,
+    status: { ...serialized.status, at: new Date(serialized.status.at) },
+    lastCommentTime: new Date(serialized.lastCommentTime),
+  }
 }
