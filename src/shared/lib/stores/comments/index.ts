@@ -31,7 +31,9 @@ function useCommentsStore() {
   const threadObservers = useRef<Map<string, ThreadObserver[]>>(new Map())
   const pushErrorRef = useRef(pushApiErrorMessage)
   const handleError = useRef((promise: Promise<any>) =>
-    promise.catch(pushErrorRef.current)
+    promise.catch((err) => {
+      pushErrorRef.current(err)
+    })
   )
 
   useEffect(() => {
@@ -111,7 +113,7 @@ function useCommentsStore() {
     []
   )
 
-  const observeThread = useCallback(
+  const observeComments = useCallback(
     (thread: Thread, observer: ThreadObserver) => {
       defer(() => {
         const loaded = commentsCache.current.get(thread.id)
@@ -178,7 +180,7 @@ function useCommentsStore() {
     }
   })
 
-  return { observeDocThreads, observeThread, threadActions, commentActions }
+  return { observeDocThreads, observeComments, threadActions, commentActions }
 }
 
 function registerObservable<K, T>(key: K, observer: T, map: Map<K, T[]>) {
