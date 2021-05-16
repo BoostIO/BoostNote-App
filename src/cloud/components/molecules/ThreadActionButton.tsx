@@ -16,6 +16,7 @@ import {
   MenuItem,
 } from '../../../shared/lib/stores/contextMenu'
 import Flexbox from '../atoms/Flexbox'
+import useThreadActions from '../../../shared/lib/hooks/useThreadMenuActions'
 
 interface ThreadActionButtonProps {
   thread: Thread
@@ -31,45 +32,14 @@ function ThreadActionButton({
   onDelete,
 }: ThreadActionButtonProps) {
   const { popup } = useContextMenu()
-
-  const actions: MenuItem[] = useMemo(() => {
-    if (thread.status.type === 'outdated') {
-      return []
-    }
-
-    return thread.status.type === 'closed'
-      ? [
-          {
-            icon: <SuccessIcon path={mdiAlertCircleOutline} />,
-            type: MenuTypes.Normal,
-            label: 'Open',
-            onClick: () => onOpen(thread),
-          },
-        ]
-      : [
-          {
-            icon: <WarningIcon path={mdiAlertCircleCheckOutline} />,
-            type: MenuTypes.Normal,
-            label: 'Close',
-            onClick: () => onClose(thread),
-          },
-        ]
-  }, [thread, onClose, onOpen])
+  const actions = useThreadActions({ thread, onClose, onOpen, onDelete })
 
   const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, [
-        ...actions,
-        {
-          icon: mdiTrashCanOutline,
-          type: MenuTypes.Normal,
-          label: 'Delete',
-          onClick: () => onDelete(thread),
-        },
-      ])
+      popup(event, actions)
     },
-    [thread, onDelete, popup, actions]
+    [popup, actions]
   )
 
   const [variant, iconPath] = useMemo(() => {
@@ -92,13 +62,5 @@ function ThreadActionButton({
     </Button>
   )
 }
-
-const SuccessIcon = styled(Icon)`
-  color: ${({ theme }) => theme.colors.variants.success.base};
-`
-
-const WarningIcon = styled(Icon)`
-  color: ${({ theme }) => theme.colors.variants.danger.base};
-`
 
 export default ThreadActionButton
