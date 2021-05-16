@@ -9,6 +9,7 @@ export interface Thread {
   }
   context: string
   commentCount: number
+  lastCommentTime: Date
   contributors: SerializedUser[]
   doc: string
   selection?: { anchor: number[]; head: number[] }
