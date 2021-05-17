@@ -18,7 +18,7 @@ const EditorTemplateButton = ({
 
   const onClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
-      size: 'large',
+      width: 'large',
     })
   }, [openModal, onTemplatePickCallback])
 

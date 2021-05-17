@@ -2,14 +2,14 @@ export interface ModalElement {
   title?: React.ReactNode
   content: React.ReactNode
   showCloseIcon?: boolean
-  size: 'large' | 'default' | 'fit'
+  width: 'large' | 'default'
   onClose?: () => void
 }
 
-export interface ModalOpeningOptions {
+export type ModalOpeningOptions = {
   showCloseIcon?: boolean
   keepAll?: boolean
-  size?: 'large' | 'default' | 'fit'
+  width?: 'large' | 'default'
   title?: string
   onClose?: () => void
 }

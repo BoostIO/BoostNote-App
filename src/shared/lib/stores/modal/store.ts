@@ -11,7 +11,7 @@ function useModalStore(): ModalsContext {
       const modal: ModalElement = {
         content,
         ...options,
-        size: options.size || 'default',
+        width: options.width || 'default',
       }
       if (!options.keepAll) {
         setModals([modal])

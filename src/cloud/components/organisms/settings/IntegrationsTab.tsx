@@ -584,7 +584,7 @@ const IntegrationsTab = () => {
                   <button
                     className='item-info-request'
                     onClick={() =>
-                      openModal(<FeedbackModal />, { size: 'large' })
+                      openModal(<FeedbackModal />, { width: 'large' })
                     }
                   >
                     Please let us know your requests!

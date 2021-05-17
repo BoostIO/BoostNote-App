@@ -35,7 +35,7 @@ const Modal = () => {
           <div
             className={cc([
               'modal__window',
-              `modal__window__size--${modal.size}`,
+              `modal__window__width--${modal.width}`,
             ])}
           >
             {modal.showCloseIcon && (
@@ -90,32 +90,15 @@ const Container = styled.div`
     z-index: ${zIndexModals + 2};
     display: flex;
     position: relative;
-    width: 96%;
+    width: 900px;
+    max-width: 96%;
     background-color: ${({ theme }) => theme.colors.background.primary};
     box-shadow: ${({ theme }) => theme.colors.shadow};
     border-radius: 4px;
     overflow: auto;
 
-    &.modal__window__size--fit {
-      height: fit-content;
-      width: fit-content;
-      min-width: 400px;
-    }
-
-    &.modal__window__size--default {
-      width: 900px;
-      min-height: 200px;
-      max-height: 60vh;
-    }
-
-    &.modal__window__size--large {
+    &.modal__window__width--large {
       width: 1100px;
-      height: 80vh;
-    }
-
-    &.modal__window__size--full {
-      width: 100%;
-      height: 100%;
     }
   }
 

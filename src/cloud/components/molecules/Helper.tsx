@@ -94,7 +94,7 @@ const Helper = () => {
             href='#'
             onClick={(event) => {
               event.preventDefault()
-              openModal(<FeedbackModal />, { size: 'large' })
+              openModal(<FeedbackModal />, { width: 'large' })
             }}
           >
             <Icon path={mdiHeartOutline} className='icon' />

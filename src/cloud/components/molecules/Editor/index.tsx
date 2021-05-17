@@ -487,7 +487,7 @@ const Editor = ({
   const { openModal } = useModal()
   const onEditorTemplateToolClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
-      size: 'large',
+      width: 'large',
     })
   }, [openModal, onTemplatePickCallback])
 
