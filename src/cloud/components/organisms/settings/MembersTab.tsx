@@ -41,10 +41,10 @@ import { guestsPerMember } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
-import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -604,13 +604,9 @@ const MembersTab = () => {
                       They can be invited to individual documents but not an
                       entire workspace.
                       {` `}
-                      <SettingLink
-                        target='_blank'
-                        rel='noreferrer'
-                        href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
-                      >
+                      <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'>
                         See how it works <Icon path={mdiArrowRight} />
-                      </SettingLink>
+                      </ExternalLink>
                     </p>
                   </StyledGuestInactiveText>
                   <Button
