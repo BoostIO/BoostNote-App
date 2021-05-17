@@ -9,7 +9,7 @@ import {
 } from './styled'
 import styled from '../../../../lib/styled'
 import IconMdi from '../../../atoms/IconMdi'
-import Link from '../../../atoms/Link/Link'
+import CloudLink from '../../../atoms/Link/CloudLink'
 import { Url } from '../../../../lib/router'
 
 type SideNavNextLink = {
@@ -64,7 +64,7 @@ const SideNavigatorItem = ({
   const labelContent = useMemo(() => {
     if (href != null) {
       return (
-        <Link
+        <CloudLink
           className='itemLink'
           onFocus={() => setFocused(true)}
           id={`tree-${elementId}`}
@@ -72,7 +72,7 @@ const SideNavigatorItem = ({
           href={href}
         >
           <SideNavLabelStyle>{label}</SideNavLabelStyle>
-        </Link>
+        </CloudLink>
       )
     }
 

@@ -7,10 +7,10 @@ import { usePage } from '../../../lib/stores/pageStore'
 import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
 import Button from '../../../../shared/components/atoms/Button'
 import SettingTokenCreate from '../../../../shared/components/organisms/Settings/molecules/SettingTokenCreate'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -51,13 +51,10 @@ const ApiTab = () => {
                 <h2 style={{ margin: '0' }}>Access Tokens</h2>
                 <p>
                   See the{' '}
-                  <SettingLink
-                    href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'
-                    target='_blank'
-                  >
+                  <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'>
                     documentation for Boost Note for Teams API{' '}
                     <Icon path={mdiOpenInNew} />
-                  </SettingLink>
+                  </ExternalLink>
                 </p>
               </div>
               <Button

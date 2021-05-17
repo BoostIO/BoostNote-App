@@ -219,6 +219,8 @@ const Application = ({
     if (query.settings === 'upgrade') {
       openSettingsTab('teamUpgrade')
     }
+
+    openSettingsTab('personalInfo')
   })
 
   useEffect(() => {

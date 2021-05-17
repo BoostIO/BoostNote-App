@@ -10,6 +10,7 @@ interface HyperLinkProps {
   id?: string
   href: string
   className?: string
+  tabIndex?: number
   onContextMenu?: MouseEventHandler
   onFocus?: FocusEventHandler
   draggable?: boolean
@@ -57,10 +58,12 @@ const Container = styled.a`
   cursor: pointer;
 
   &:hover {
+    color: ${({ theme }) => theme.colors.text.link};
     text-decoration: underline;
   }
 
   &:focus {
+    color: ${({ theme }) => theme.colors.text.link};
     opacity: 0.8;
   }
 `

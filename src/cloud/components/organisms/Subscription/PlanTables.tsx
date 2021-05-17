@@ -14,7 +14,7 @@ import {
 } from '../../../lib/subscription'
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
-import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
+import Link from '../../../../shared/components/atoms/Link'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -61,7 +61,7 @@ const PlanTables = ({
 
     return (
       <p>
-        <SettingLink
+        <Link
           href='#'
           onClick={(e: any) => {
             e.preventDefault()
@@ -69,7 +69,7 @@ const PlanTables = ({
           }}
         >
           7 days free trial
-        </SettingLink>
+        </Link>
       </p>
     )
   }, [subscription, team, onTrialCallback])

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import TeamLink from '../../atoms/Link/TeamLink'
 import cc from 'classcat'
 import { usePage } from '../../../lib/stores/pageStore'
-import Link from '../../atoms/Link/Link'
+import CloudLink from '../../atoms/Link/CloudLink'
 import { getHexFromUUID } from '../../../lib/utils/string'
 import { stringify } from 'querystring'
 import IconMdi from '../../atoms/IconMdi'
@@ -95,7 +95,7 @@ const SidebarTeamPickerContext = ({
         {invites.map((invite) => {
           const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
           return (
-            <Link
+            <CloudLink
               href={`/invite?${stringify(query)}`}
               key={invite.id}
               className={cc(['team-link'])}
@@ -111,7 +111,7 @@ const SidebarTeamPickerContext = ({
                   <TeamSubtitle>- invited</TeamSubtitle>
                 </TeamLabel>
               </TeamContainer>
-            </Link>
+            </CloudLink>
           )
         })}
 
