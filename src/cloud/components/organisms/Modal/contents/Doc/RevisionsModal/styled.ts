@@ -135,7 +135,7 @@ export const StyledHeaderDescription = styled.span`
 export const StyledRevisionsModal = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 600px;
 
   .left {
     width: 300px;
