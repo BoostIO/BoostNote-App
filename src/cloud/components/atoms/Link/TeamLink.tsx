@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import querystring from 'querystring'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
-import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
+import CloudLink from './CloudLink'
 
 export type TeamLinkIntent =
   | 'index'
@@ -25,7 +25,6 @@ interface TeamLinkProps {
   team: TeamIdProps
   intent?: TeamLinkIntent
   className?: string
-  style?: React.CSSProperties
   children?: React.ReactNode
   query?: any
   beforeNavigate?: () => void
@@ -38,7 +37,6 @@ const TeamLink = ({
   intent = 'index',
   team,
   className,
-  style,
   children,
   query,
   beforeNavigate,
@@ -47,17 +45,16 @@ const TeamLink = ({
   tabIndex = 0,
 }: TeamLinkProps) => {
   return (
-    <SettingLink
+    <CloudLink
       href={getTeamLinkHref(team, intent, query)}
       className={className}
-      style={style}
       beforeNavigate={beforeNavigate}
       onFocus={onFocus}
       tabIndex={tabIndex}
       id={id}
     >
       {children}
-    </SettingLink>
+    </CloudLink>
   )
 }
 

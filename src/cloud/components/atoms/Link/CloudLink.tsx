@@ -1,31 +1,24 @@
-import React, {
-  FC,
-  useCallback,
-  MouseEventHandler,
-  CSSProperties,
-  FocusEvent,
-} from 'react'
+import React, { FC, useCallback, MouseEventHandler, FocusEvent } from 'react'
 import { useRouter, Url } from '../../../lib/router'
 import { stringifyUrl } from '../../../lib/utils/string'
+import Link from '../../../../shared/components/atoms/Link'
 
-export interface LinkProps {
+export interface CloudLinkProps {
   href: Url
   id?: string
   className?: string
   tabIndex?: number
   draggable?: boolean
-  style?: CSSProperties
   beforeNavigate?: () => void | Promise<void>
   onFocus?: (event: FocusEvent<HTMLAnchorElement>) => void
 }
 
-const Link: FC<LinkProps> = ({
+const CloudLink: FC<CloudLinkProps> = ({
   href,
   id,
   className,
   tabIndex,
   draggable,
-  style,
   beforeNavigate,
   onFocus,
   children,
@@ -44,7 +37,7 @@ const Link: FC<LinkProps> = ({
   )
 
   return (
-    <a
+    <Link
       href={stringifyUrl(href)}
       onClick={onClick}
       onFocus={onFocus}
@@ -52,11 +45,10 @@ const Link: FC<LinkProps> = ({
       className={className}
       tabIndex={tabIndex}
       draggable={draggable}
-      style={style}
     >
       {children}
-    </a>
+    </Link>
   )
 }
 
-export default Link
+export default CloudLink

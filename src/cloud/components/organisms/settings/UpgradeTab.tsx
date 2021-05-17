@@ -15,7 +15,7 @@ import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import SettingLink from '../../../../shared/components/organisms/Settings/atoms/SettingLink'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -98,14 +98,9 @@ const UpgradeTab = () => {
               <StyledFYI>
                 * For larger businesses or those in highly regulated industries,
                 please{' '}
-                <SettingLink
-                  href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  isReactLink={false}
-                >
+                <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>
                   contact our sales department
-                </SettingLink>
+                </ExternalLink>
                 .
               </StyledFYI>
             </section>
