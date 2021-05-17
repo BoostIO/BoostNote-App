@@ -146,18 +146,18 @@ const Container = styled.div`
 
   .modal__wrapper {
     display: flex;
+    margin: 0;
     min-width: 0;
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-    padding: ${({ theme }) => theme.sizes.spaces.sm}px
-      ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: ${({ theme }) => theme.sizes.spaces.df}px
+      ${({ theme }) => theme.sizes.spaces.md}px;
   }
 
   .modal__title {
     flex: 0 0 auto;
-    margin: ${({ theme }) => theme.sizes.spaces.sm}px 0
-      ${({ theme }) => theme.sizes.spaces.md}px 0;
+    margin: 0 0 ${({ theme }) => theme.sizes.spaces.md}px 0;
     font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
   }
 
