@@ -2,18 +2,22 @@ import React, { useState } from 'react'
 import styled from '../../../lib/styled'
 import { LoadingButton, ButtonProps } from '../../atoms/Button'
 import FormInput, { FormInputProps } from './atoms/FormInput'
-import { FormSelectProps } from './atoms/FormSelect'
+import FormSelect, { FormSelectProps } from './atoms/FormSelect'
 import cc from 'classcat'
 import { AppComponent } from '../../../lib/types'
-import { FormSelect } from '../../../../components/atoms/form'
 import FormEmoji, { FormEmojiProps } from './atoms/FormEmoji'
 
 interface FormProps {
   rows: FormRowProps[]
   onSubmit: React.FormEventHandler
 
-  submitButton?: ButtonProps & { label: React.ReactNode; spinning?: boolean }
+  submitButton?: LabelButtonProps
   onCancel?: () => void
+}
+
+type LabelButtonProps = ButtonProps & {
+  label: React.ReactNode
+  spinning?: boolean
 }
 
 export type FormRowProps = {
@@ -27,6 +31,8 @@ export type FormRowProps = {
       }
     | { type: 'select'; props: FormSelectProps }
     | { type: 'emoji'; props: FormEmojiProps }
+    | { type: 'button'; props: LabelButtonProps }
+    | { type: 'node'; element: React.ReactNode }
   )[]
 }
 
@@ -66,7 +72,13 @@ const Form: AppComponent<FormProps> = ({
                       <FormSelect {...item.props} />
                     ) : item.type === 'emoji' ? (
                       <FormEmoji {...item.props} />
-                    ) : null}
+                    ) : item.type === 'button' ? (
+                      <LoadingButton {...item.props}>
+                        {item.props.label}
+                      </LoadingButton>
+                    ) : (
+                      item.element
+                    )}
                   </div>
                 ))}
               </div>
@@ -120,12 +132,14 @@ const Container = styled.form`
     align-items: stretch;
   }
 
-  .form__row__item--emoji {
+  .form__row__item--emoji,
+  .form__row__item--button {
     flex: 0 0 auto;
   }
 
-  .form__row__item:not(.form__row__item--emoji),
-  .form__row__item:not(.form__row__item--emoji) > * {
+  .form__row__item:not(.form__row__item--emoji):not(.form__row__item--button),
+  .form__row__item:not(.form__row__item--emoji):not(.form__row__item--button)
+    > * {
     flex: 1 1 auto;
   }
 

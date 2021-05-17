@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react'
 import {
-  SectionRow,
   SectionList,
   SectionListItem,
   SectionInLineIcon,
@@ -19,12 +18,10 @@ import IconMdi from '../atoms/IconMdi'
 import { mdiClose } from '@mdi/js'
 import { Spinner } from '../atoms/Spinner'
 import ErrorBlock from '../atoms/ErrorBlock'
-import CustomButton from '../atoms/buttons/CustomButton'
-import { SelectChangeEventHandler } from '../../lib/utils/events'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import Flexbox from '../atoms/Flexbox'
-import SettingSelect from '../../../shared/components/organisms/Settings/atoms/SettingSelect'
-import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
+import Form from '../../../shared/components/molecules/Form'
+import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -130,13 +127,13 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
     [messageBox, team]
   )
 
-  const selectRole: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectRole = useCallback(
+    (option: FormSelectOption) => {
       if (userPermissions.role !== 'admin') {
         return
       }
 
-      setRole(event.target.value as TeamPermissionType)
+      setRole(option.value as TeamPermissionType)
     },
     [setRole, userPermissions]
   )
@@ -147,30 +144,48 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
         <h2>Invite with Email</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
-      <form onSubmit={submitInvite}>
-        <SectionRow>
-          <SettingInput
-            value={email}
-            onChange={onChangeHandler}
-            placeholder={'Email...'}
-          />
-          <SettingSelect
-            value={role}
-            onChange={selectRole}
-            style={{ width: 'auto', minWidth: 'initial', marginRight: 16 }}
-            disabled={userPermissions.role !== 'admin'}
-            options={
-              <>
-                <option value='admin'>admin</option>
-                <option value='member'>member</option>
-              </>
-            }
-          ></SettingSelect>
-          <CustomButton type='submit' variant='primary'>
-            Send
-          </CustomButton>
-        </SectionRow>
-      </form>
+      <Form
+        onSubmit={submitInvite}
+        rows={[
+          {
+            items: [
+              {
+                type: 'input',
+                props: {
+                  value: email,
+                  onChange: onChangeHandler,
+                  placeholder: 'Email...',
+                },
+              },
+              {
+                type: 'select',
+                props: {
+                  value: {
+                    label: role,
+                    value: role,
+                  },
+                  onChange: selectRole,
+                  isDisabled: userPermissions.role !== 'admin',
+                  options: [
+                    {
+                      label: 'admin',
+                      value: 'admin',
+                    },
+                    { label: 'member', value: 'member' },
+                  ],
+                },
+              },
+              {
+                type: 'button',
+                props: {
+                  type: 'submit',
+                  label: 'Send',
+                },
+              },
+            ],
+          },
+        ]}
+      ></Form>
       {role === 'admin' ? (
         <small>
           Admins can handle billing, remove or promote/demote members.

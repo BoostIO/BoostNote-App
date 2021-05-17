@@ -74,9 +74,15 @@ const Container = styled.div`
     width: 0;
   }
 
+  .form__select .form__select__control,
+  .form__select .form__select__indicator,
+  .form__select .form__select__indicators {
+    height: 32px;
+    min-height: 32px;
+  }
+
   .form__select .form__select__control {
     width: 100%;
-    height: 40px;
     color: ${({ theme }) => theme.colors.text.subtle};
     border: none;
     &.form__select__control--is-focused {
