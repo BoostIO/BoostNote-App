@@ -15,6 +15,8 @@ import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
 import {
   encodeRelativePosition,
   createRelativePositionFromTypeIndex,
+  createAbsolutePositionFromRelativePosition,
+  decodeRelativePosition,
 } from 'yjs'
 import {
   useGlobalKeyDownHandler,
@@ -83,6 +85,7 @@ import { useModal } from '../../../../shared/lib/stores/modal'
 import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
+import { HighlightRange } from '../../../lib/rehypeHighlight'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -212,6 +215,35 @@ const Editor = ({
     },
     [realtime, commentActions, setPreferences]
   )
+
+  const highlights = useMemo(() => {
+    if (commentState.mode === 'list_loading' || realtime == null) {
+      return []
+    }
+
+    const highlights: HighlightRange[] = []
+    for (const thread of commentState.threads) {
+      if (thread.selection != null && thread.status.type === 'open') {
+        const absoluteAnchor = createAbsolutePositionFromRelativePosition(
+          decodeRelativePosition(Uint8Array.from(thread.selection.anchor)),
+          realtime.doc
+        )
+        const absoluteHead = createAbsolutePositionFromRelativePosition(
+          decodeRelativePosition(Uint8Array.from(thread.selection.head)),
+          realtime.doc
+        )
+
+        if (absoluteAnchor != null && absoluteHead != null) {
+          highlights.push({
+            id: thread.id,
+            start: absoluteAnchor.index,
+            end: absoluteHead.index,
+          })
+        }
+      }
+    }
+    return highlights
+  }, [commentState, realtime])
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -896,6 +928,7 @@ const Editor = ({
               className='scroller'
               embeddableDocs={embeddableDocs}
               scrollerRef={previewRef}
+              highlights={highlights}
               SelectionMenu={({ selection }) => (
                 <StyledSelectionMenu>
                   <div onClick={() => newRangeThread(selection)}>
@@ -1038,6 +1071,10 @@ const StyledPreview = styled.div`
   }
   &.layout-editor {
     display: none;
+  }
+
+  & .inline-comment.active {
+    background-color: rgba(112, 84, 0, 0.8);
   }
 `
 

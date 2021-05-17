@@ -37,6 +37,7 @@ import SelectionTooltip from '../SelectionTooltip'
 import useSelectionLocation, {
   Rect,
 } from '../../../lib/selection/useSelectionLocation'
+import rehypeHighlight, { HighlightRange } from '../../../lib/rehypeHighlight'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -46,6 +47,7 @@ const schema = mergeDeepRight(gh, {
       'align',
       'data-line',
       'data-offset',
+      'data-inline-comment',
     ],
     input: [...gh.attributes['input'], 'checked'],
     pre: ['dataRaw'],
@@ -97,6 +99,7 @@ interface MarkdownViewProps {
   embeddableDocs?: Map<string, EmbedDoc>
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
+  highlights?: HighlightRange[]
 }
 
 const MarkdownView = ({
@@ -109,6 +112,7 @@ const MarkdownView = ({
   embeddableDocs,
   scrollerRef,
   SelectionMenu,
+  highlights,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
@@ -219,10 +223,18 @@ const MarkdownView = ({
         theme: settings['general.codeBlockTheme'],
       })
       .use(rehypeMermaid)
+      .use(rehypeHighlight, highlights || [])
       .use(rehypeReact, rehypeReactConfig)
 
     return parser
-  }, [settings, updateContent, shortcodeHandler, headerLinks, embeddableDocs])
+  }, [
+    settings,
+    updateContent,
+    shortcodeHandler,
+    headerLinks,
+    embeddableDocs,
+    highlights,
+  ])
 
   useEffect(() => {
     const renderContentCallback = async () => {
