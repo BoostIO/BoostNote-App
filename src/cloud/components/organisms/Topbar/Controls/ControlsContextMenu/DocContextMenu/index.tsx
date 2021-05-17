@@ -423,7 +423,8 @@ const DocContextMenu = ({
                             <GuestsModal
                               teamId={team.id}
                               docId={currentDoc.id}
-                            />
+                            />,
+                            { width: 'large' }
                           )
                         }
                         variant='transparent'
