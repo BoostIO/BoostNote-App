@@ -14,7 +14,6 @@ import FormEmoji, { FormEmojiProps } from './atoms/FormEmoji'
 interface FormProps {
   rows?: FormRowProps[]
   onSubmit?: React.FormEventHandler
-
   submitButton?: LabelButtonProps
   onCancel?: () => void
 }
@@ -52,6 +51,10 @@ const Form: AppComponent<FormProps> = ({
   return (
     <Container
       onSubmit={async (event: React.FormEvent) => {
+        if (onSubmit == null) {
+          return
+        }
+
         event.preventDefault()
         if (onSubmit == null) {
           return
