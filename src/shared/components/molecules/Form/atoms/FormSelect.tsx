@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Select from 'react-select'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
@@ -9,7 +9,7 @@ export interface FormSelectOption {
   value: string
 }
 
-export interface FormSelectProps {
+interface FormSelectCommonProps {
   id?: string
   options: FormSelectOption[]
   value?: FormSelectOption | FormSelectOption[]
@@ -27,6 +27,20 @@ export interface FormSelectProps {
   placeholder?: React.ReactNode
 }
 
+interface StandardFormSelectOptions {
+  value?: FormSelectOption
+  options: FormSelectOption[]
+  onChange: (val: any) => void
+}
+
+interface SimpleFormSelectOptions {
+  value: string
+  options: string[]
+  onChange: (val: string) => void
+}
+
+export type FormSelectProps = FormSelectCommonProps & StandardFormSelectOptions
+
 const FormSelect = ({
   id,
   options,
@@ -42,7 +56,7 @@ const FormSelect = ({
   name,
   filterOption,
   onMenuOpen,
-}: FormSelectProps) => {
+}: FormSelectProps & StandardFormSelectOptions) => {
   const [focused, setFocused] = useState(false)
   return (
     <Container>
@@ -71,6 +85,40 @@ const FormSelect = ({
         onMenuOpen={onMenuOpen}
       />
     </Container>
+  )
+}
+
+export type SimpleFormSelectProps = FormSelectCommonProps &
+  SimpleFormSelectOptions
+export const SimpleFormSelect = ({
+  options,
+  value,
+  onChange,
+  ...props
+}: SimpleFormSelectProps) => {
+  const convertedOptions = useMemo(() => {
+    return options.map((opt) => {
+      return {
+        label: opt,
+        value: opt,
+      }
+    })
+  }, [options])
+
+  const onSelectChange = useCallback(
+    (val: FormSelectOption) => {
+      onChange(val.value)
+    },
+    [onChange]
+  )
+
+  return (
+    <FormSelect
+      {...props}
+      options={convertedOptions}
+      value={value != null ? { label: value, value: value } : undefined}
+      onChange={onSelectChange}
+    />
   )
 }
 
