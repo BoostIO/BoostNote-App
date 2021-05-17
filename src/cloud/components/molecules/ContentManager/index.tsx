@@ -27,6 +27,7 @@ import { difference } from 'ramda'
 import ContentManagerArchivesBulkActions from './Actions/ContentManagerArchivesBulkActions'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
 import Tooltip from '../../atoms/Tooltip'
+import { usePreferences } from '../../../lib/stores/preferences'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -47,9 +48,10 @@ const ContentManager = ({
   page,
   workspacesMap,
 }: ContentManagerProps) => {
+  const { preferences, setPreferences } = usePreferences()
   const [sending] = useState<boolean>(false)
   const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
-    'Latest Updated'
+    preferences.folderSortingOrder
   )
   const [showArchived, setShowArchived] = useState<boolean>(page === 'archive')
   const [
@@ -227,9 +229,13 @@ const ContentManager = ({
     documents,
   ])
 
-  const onChangeOrder = useCallback((val: CustomSelectOption) => {
-    setOrder(val.data)
-  }, [])
+  const onChangeOrder = useCallback(
+    (val: CustomSelectOption) => {
+      setOrder(val.data)
+      setPreferences({ folderSortingOrder: val.data })
+    },
+    [setPreferences]
+  )
 
   return (
     <StyledContentManager>
