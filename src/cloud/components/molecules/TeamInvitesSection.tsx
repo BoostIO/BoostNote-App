@@ -21,7 +21,6 @@ import ErrorBlock from '../atoms/ErrorBlock'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import Flexbox from '../atoms/Flexbox'
 import Form from '../../../shared/components/molecules/Form'
-import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -128,12 +127,12 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   )
 
   const selectRole = useCallback(
-    (option: FormSelectOption) => {
+    (option: string) => {
       if (userPermissions.role !== 'admin') {
         return
       }
 
-      setRole(option.value as TeamPermissionType)
+      setRole(option as TeamPermissionType)
     },
     [setRole, userPermissions]
   )
@@ -158,21 +157,13 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
                 },
               },
               {
-                type: 'select',
+                type: 'select--string',
+
                 props: {
-                  value: {
-                    label: role,
-                    value: role,
-                  },
+                  value: role,
                   onChange: selectRole,
                   isDisabled: userPermissions.role !== 'admin',
-                  options: [
-                    {
-                      label: 'admin',
-                      value: 'admin',
-                    },
-                    { label: 'member', value: 'member' },
-                  ],
+                  options: ['admin', 'member'],
                 },
               },
               {

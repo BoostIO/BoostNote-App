@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import styled from '../../../lib/styled'
 import { LoadingButton, ButtonProps } from '../../atoms/Button'
 import FormInput, { FormInputProps } from './atoms/FormInput'
-import FormSelect, { FormSelectProps } from './atoms/FormSelect'
+import FormSelect, {
+  FormSelectProps,
+  SimpleFormSelect,
+  SimpleFormSelectProps,
+} from './atoms/FormSelect'
 import cc from 'classcat'
 import { AppComponent } from '../../../lib/types'
 import FormEmoji, { FormEmojiProps } from './atoms/FormEmoji'
@@ -30,6 +34,7 @@ export type FormRowProps = {
         props: FormInputProps & { ref?: React.Ref<HTMLInputElement> }
       }
     | { type: 'select'; props: FormSelectProps }
+    | { type: 'select--string'; props: SimpleFormSelectProps }
     | { type: 'emoji'; props: FormEmojiProps }
     | { type: 'button'; props: LabelButtonProps }
     | { type: 'node'; element: React.ReactNode }
@@ -70,6 +75,8 @@ const Form: AppComponent<FormProps> = ({
                       <FormInput {...item.props} />
                     ) : item.type === 'select' ? (
                       <FormSelect {...item.props} />
+                    ) : item.type === 'select--string' ? (
+                      <SimpleFormSelect {...item.props} />
                     ) : item.type === 'emoji' ? (
                       <FormEmoji {...item.props} />
                     ) : item.type === 'button' ? (
