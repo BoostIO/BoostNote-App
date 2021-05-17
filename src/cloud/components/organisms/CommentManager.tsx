@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { zIndexModalsBackground } from './Topbar/Controls/ControlsContextMenu/styled'
 import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import ThreadList from '../molecules/ThreadItem'
@@ -7,111 +7,109 @@ import Spinner from '../../../shared/components/atoms/Spinner'
 import { mdiArrowLeftBoldBoxOutline, mdiPlusBoxOutline } from '@mdi/js'
 import Icon from '../../../shared/components/atoms/Icon'
 import CommentList from '../molecules/CommentList'
-import { useComments } from '../../../shared/lib/stores/comments'
 import styled from '../../../shared/lib/styled'
 import CommentInput from '../molecules/CommentInput'
 import ThreadActionButton from '../molecules/ThreadActionButton'
 import Button from '../../../shared/components/atoms/Button'
+import { CreateThreadRequestBody } from '../../api/comments/thread'
 
-type Mode =
-  | { type: 'thread_list' }
-  | { type: 'thread'; thread: Thread }
+export type State =
+  | { mode: 'list_loading' }
+  | { mode: 'list'; threads: Thread[] }
+  | { mode: 'thread_loading'; thread: Thread; threads: Thread[] }
+  | { mode: 'thread'; thread: Thread; comments: Comment[]; threads: Thread[] }
   | {
-      type: 'new'
-      context?: string
+      mode: 'new_thread'
+      data: { context?: Thread['context']; selection?: Thread['selection'] }
+      threads: Thread[]
+    }
+
+export type ModeTransition =
+  | { mode: 'thread'; thread: Thread }
+  | { mode: 'list' }
+  | {
+      mode: 'new_thread'
+      context?: Thread['context']
       selection?: Thread['selection']
     }
 
-interface CommentManagerProps {
-  threads: Thread[] | null
-  mode?: Mode
-  docId: string
+export interface Actions {
+  setMode: (transition: ModeTransition) => void
+  createThread: (data: Omit<CreateThreadRequestBody, 'doc'>) => Promise<void>
+  reopenThread: (thread: Thread) => Promise<void>
+  closeThread: (thread: Thread) => Promise<void>
+  deleteThread: (thread: Thread) => Promise<void>
+  createComment: (thread: Thread, message: string) => Promise<void>
+  updateComment: (comment: Comment, message: string) => Promise<void>
+  deleteComment: (comment: Comment, message: string) => Promise<void>
 }
 
-function CommentManager({ docId, threads, mode }: CommentManagerProps) {
-  const [tabMode, setTabMode] = useState<Mode>({ type: 'thread_list' })
-  const {
-    observeComments,
-    commentActions: { create: createComment },
-    threadActions,
-  } = useComments()
-  const [comments, setComments] = useState<Comment[] | null>(null)
+interface CommentManagerProps extends Actions {
+  state: State
+}
 
-  useEffect(() => {
-    setTabMode(mode != null ? mode : { type: 'thread_list' })
-  }, [mode])
-
-  useEffect(() => {
-    setTabMode((prev) => {
-      if (threads == null) {
-        return prev
-      }
-
-      if (prev.type !== 'thread') {
-        return prev
-      }
-      const updatedThread = threads.find(
-        (thread) => thread.id === prev.thread.id
-      )
-      return updatedThread == null
-        ? { type: 'thread_list' }
-        : { ...prev, thread: updatedThread }
-    })
-  }, [threads])
-
-  useEffect(() => {
-    setComments(null)
-    if (tabMode.type === 'thread') {
-      return observeComments(tabMode.thread, setComments)
-    }
-    return undefined
-  }, [tabMode, observeComments])
-
+function CommentManager({
+  state,
+  setMode,
+  createThread,
+  reopenThread,
+  closeThread,
+  deleteThread,
+  createComment,
+}: CommentManagerProps) {
   const content = useMemo(() => {
-    switch (tabMode.type) {
-      case 'thread_list': {
+    switch (state.mode) {
+      case 'list_loading':
+      case 'thread_loading':
+        return (
+          <div className='thread__loading'>
+            <Spinner />
+          </div>
+        )
+      case 'list': {
         const onClick = (selectedThread: Thread) =>
-          setTabMode({ type: 'thread', thread: selectedThread })
-        return threads != null ? (
+          setMode({ mode: 'thread', thread: selectedThread })
+        return (
           <div>
-            {threads.map((thread) => (
+            {state.threads.map((thread) => (
               <div key={thread.id} className='thread__list__item'>
                 <ThreadList
                   thread={thread}
                   onSelect={onClick}
-                  onOpen={threadActions.reopen}
-                  onClose={threadActions.close}
-                  onDelete={threadActions.delete}
+                  onOpen={reopenThread}
+                  onClose={closeThread}
+                  onDelete={deleteThread}
                 />
               </div>
             ))}
             <div
               className='thread__create'
-              onClick={() => setTabMode({ type: 'new' })}
+              onClick={() => setMode({ mode: 'new_thread' })}
             >
               <Icon path={mdiPlusBoxOutline} /> <span>Create a new thread</span>
             </div>
           </div>
-        ) : (
-          <Spinner />
         )
       }
       case 'thread': {
-        return comments != null ? (
+        return (
           <div className='thread__content'>
             <div>
-              <div className='thread__context'>{tabMode.thread.context}</div>
-              <CommentList comments={comments} className='comment__list' />
-              {tabMode.thread.status.type === 'open' && (
+              <div className='thread__context'>{state.thread.context}</div>
+              <CommentList
+                comments={state.comments}
+                className='comment__list'
+              />
+              {state.thread.status.type === 'open' && (
                 <CommentInput
                   onSubmit={(message) => {
-                    createComment(tabMode.thread, message)
+                    createComment(state.thread, message)
                   }}
                 />
               )}
-              {tabMode.thread.status.type === 'closed' && (
+              {state.thread.status.type === 'closed' && (
                 <Button
-                  onClick={() => threadActions.reopen(tabMode.thread)}
+                  onClick={() => reopenThread(state.thread)}
                   variant='secondary'
                 >
                   Reopen
@@ -119,41 +117,46 @@ function CommentManager({ docId, threads, mode }: CommentManagerProps) {
               )}
             </div>
           </div>
-        ) : (
-          <Spinner />
         )
       }
-      case 'new': {
+      case 'new_thread': {
         return (
           <div className='thread__new'>
-            <div className='thread__context'>{tabMode.context}</div>
+            <div className='thread__context'>{state.data.context}</div>
             <CommentInput
               onSubmit={async (comment) => {
-                await threadActions.create({ ...tabMode, doc: docId, comment })
-                setTabMode({ type: 'thread_list' })
+                await createThread({ ...state.data, comment })
               }}
             />
           </div>
         )
       }
     }
-  }, [tabMode, threads, createComment, comments, threadActions, docId])
+  }, [
+    state,
+    createThread,
+    reopenThread,
+    closeThread,
+    deleteThread,
+    createComment,
+    setMode,
+  ])
 
   return (
     <Container>
       <div className='header'>
-        {tabMode.type !== 'thread_list' && (
-          <div onClick={() => setTabMode({ type: 'thread_list' })}>
+        {state.mode !== 'list' && (
+          <div onClick={() => setMode({ mode: 'list' })}>
             <Icon size={20} path={mdiArrowLeftBoldBoxOutline} />
           </div>
         )}
         <h4>Thread</h4>
-        {tabMode.type === 'thread' && (
+        {state.mode === 'thread' && (
           <ThreadActionButton
-            thread={tabMode.thread}
-            onClose={threadActions.close}
-            onOpen={threadActions.reopen}
-            onDelete={threadActions.delete}
+            thread={state.thread}
+            onClose={closeThread}
+            onOpen={reopenThread}
+            onDelete={deleteThread}
           />
         )}
       </div>
@@ -174,6 +177,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.background.secondary};
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+  position: relative;
   scrollbar-width: thin;
   &::-webkit-scrollbar {
     width: 6px;
@@ -245,6 +249,17 @@ const Container = styled.div`
 
   .thread__new {
     padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+
+  .thread__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    & > div {
+      width: 2em;
+      height: 2em;
+    }
   }
 `
 
