@@ -15,6 +15,7 @@ function savePreferencesToLocalStorage(preferences: Partial<Preferences>) {
 
 const basePreferences: Preferences = {
   docContextIsHidden: false,
+  folderSortingOrder: 'Latest Updated',
   sidebarIsHidden: false,
   sidebarIsHovered: false,
   sidebarTreeSortingOrder: 'last-updated',
