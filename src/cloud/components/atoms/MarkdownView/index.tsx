@@ -34,8 +34,6 @@ import { boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import { useRouter } from '../../../lib/router'
 import SelectionTooltip from '../SelectionTooltip'
-import Icon from '../Icon'
-import { mdiCommentTextOutline } from '@mdi/js'
 import useSelectionLocation, {
   Rect,
 } from '../../../lib/selection/useSelectionLocation'
@@ -74,12 +72,14 @@ type MarkdownViewState =
   | { type: 'loaded'; content: React.ReactNode }
   | { type: 'error'; err: Error }
 
+export interface SelectionContext {
+  start: number
+  end: number
+  text: string
+}
+
 interface SelectionState {
-  context: {
-    start: number
-    end: number
-    text: string
-  }
+  context: SelectionContext
   position: Rect
   selection: Selection
 }

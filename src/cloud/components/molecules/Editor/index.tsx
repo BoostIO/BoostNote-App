@@ -12,7 +12,10 @@ import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../../lib/editor/plugins/fileHandler'
 import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
-import { YText } from 'yjs/dist/src/internals'
+import {
+  encodeRelativePosition,
+  createRelativePositionFromTypeIndex,
+} from 'yjs'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
@@ -40,12 +43,11 @@ import {
   mdiFileDocumentOutline,
   mdiStar,
   mdiStarOutline,
-  mdiChevronLeft,
-  mdiChevronRight,
   mdiPencil,
   mdiEyeOutline,
   mdiViewSplitVertical,
   mdiCommentTextOutline,
+  mdiDotsHorizontal,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -68,7 +70,7 @@ import {
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
-import MarkdownView from '../../atoms/MarkdownView'
+import MarkdownView, { SelectionContext } from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
@@ -79,6 +81,8 @@ import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import Icon from '../../atoms/Icon'
+import CommentManager from '../../organisms/CommentManager'
+import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -179,6 +183,35 @@ const Editor = ({
     id: doc.id,
     userInfo,
   })
+
+  const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  const newRangeThread = useCallback(
+    (selection: SelectionContext) => {
+      if (realtime == null) {
+        return
+      }
+      const text = realtime.doc.getText('content')
+      const relativeAnchor = createRelativePositionFromTypeIndex(
+        text,
+        selection.start
+      )
+      const relativeHead = createRelativePositionFromTypeIndex(
+        text,
+        selection.end
+      )
+      setPreferences({ docContextMode: 'comment' })
+      commentActions.setMode({
+        mode: 'new_thread',
+        context: selection.text,
+        selection: {
+          anchor: Array.from(encodeRelativePosition(relativeAnchor)),
+          head: Array.from(encodeRelativePosition(relativeHead)),
+        },
+      })
+    },
+    [realtime, commentActions, setPreferences]
+  )
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -765,30 +798,41 @@ const Editor = ({
             },
             {
               variant: 'icon',
-              iconPath: preferences.docContextIsHidden
-                ? mdiChevronLeft
-                : mdiChevronRight,
+              iconPath: mdiCommentTextOutline,
               onClick: () =>
-                setPreferences({
-                  docContextIsHidden: !preferences.docContextIsHidden,
-                }),
+                setPreferences(({ docContextMode }) => ({
+                  docContextMode:
+                    docContextMode === 'comment' ? 'hidden' : 'comment',
+                })),
+            },
+            {
+              variant: 'icon',
+              iconPath: mdiDotsHorizontal,
+              onClick: () =>
+                setPreferences(({ docContextMode }) => ({
+                  docContextMode:
+                    docContextMode === 'context' ? 'hidden' : 'context',
+                })),
             },
           ],
         },
-        right: !preferences.docContextIsHidden ? (
-          <DocContextMenu
-            currentDoc={doc}
-            contributors={contributors}
-            backLinks={backLinks}
-            team={team}
-            editorRef={editorRef}
-            restoreRevision={onRestoreRevisionCallback}
-            revisionHistory={revisionHistory}
-            presence={{ user: userInfo, users: otherUsers, editorLayout }}
-            openRenameDocForm={() => openRenameDocForm(doc)}
-            sendingRename={sendingMap.has(doc.id)}
-          />
-        ) : null,
+        right:
+          preferences.docContextMode === 'context' ? (
+            <DocContextMenu
+              currentDoc={doc}
+              contributors={contributors}
+              backLinks={backLinks}
+              team={team}
+              editorRef={editorRef}
+              restoreRevision={onRestoreRevisionCallback}
+              revisionHistory={revisionHistory}
+              presence={{ user: userInfo, users: otherUsers, editorLayout }}
+              openRenameDocForm={() => openRenameDocForm(doc)}
+              sendingRename={sendingMap.has(doc.id)}
+            />
+          ) : preferences.docContextMode === 'comment' ? (
+            <CommentManager state={commentState} {...commentActions} />
+          ) : null,
       }}
     >
       <Container>
@@ -854,7 +898,7 @@ const Editor = ({
               scrollerRef={previewRef}
               SelectionMenu={({ selection }) => (
                 <StyledSelectionMenu>
-                  <div onClick={() => console.log(selection)}>
+                  <div onClick={() => newRangeThread(selection)}>
                     <Icon size={32} path={mdiCommentTextOutline} />
                   </div>
                 </StyledSelectionMenu>
