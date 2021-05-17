@@ -729,7 +729,7 @@ const Application = ({
                             type: MenuTypes.Normal,
                             label: 'Use a template',
                             onClick: () =>
-                              openModal(<TemplatesModal />, { size: 'large' }),
+                              openModal(<TemplatesModal />, { width: 'large' }),
                           },
                         ])
                       }}

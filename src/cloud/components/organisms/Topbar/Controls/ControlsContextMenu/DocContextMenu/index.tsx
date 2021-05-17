@@ -250,7 +250,7 @@ const DocContextMenu = ({
         restoreRevision={restoreRevision}
       />,
       {
-        size: 'large',
+        width: 'large',
       }
     )
     trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
@@ -423,10 +423,7 @@ const DocContextMenu = ({
                             <GuestsModal
                               teamId={team.id}
                               docId={currentDoc.id}
-                            />,
-                            {
-                              size: 'large',
-                            }
+                            />
                           )
                         }
                         variant='transparent'

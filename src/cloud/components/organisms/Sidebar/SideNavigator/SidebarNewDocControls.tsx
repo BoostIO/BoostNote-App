@@ -179,7 +179,7 @@ const SidebarNewDocControls = ({ disabled }: SidebarNewDocControlsProps) => {
           label: 'Create from a template',
           onClick: async () =>
             openModal(<TemplatesModal />, {
-              size: 'large',
+              width: 'large',
             }),
         },
         {

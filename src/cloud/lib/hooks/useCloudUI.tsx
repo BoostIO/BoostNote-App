@@ -56,7 +56,6 @@ export function useCloudUI() {
         />,
         {
           showCloseIcon: true,
-          size: 'default',
           title: 'Rename folder',
         }
       )
@@ -87,7 +86,6 @@ export function useCloudUI() {
         />,
         {
           showCloseIcon: true,
-          size: 'default',
           title: 'Rename doc',
         }
       )
@@ -131,7 +129,6 @@ export function useCloudUI() {
         />,
         {
           showCloseIcon: true,
-          size: 'default',
           title: 'Create new folder',
         }
       )
@@ -174,7 +171,6 @@ export function useCloudUI() {
         />,
         {
           showCloseIcon: true,
-          size: 'default',
           title: 'Create new doc',
         }
       )

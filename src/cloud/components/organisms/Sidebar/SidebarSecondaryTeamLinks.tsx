@@ -27,7 +27,7 @@ const SidebarSecondaryTeamLinks = () => {
         id='sidebar-templatesmodal'
         iconNode={mdiFileDocumentOutline}
         label={'Templates'}
-        onClick={() => openModal(<TemplatesModal />, { size: 'large' })}
+        onClick={() => openModal(<TemplatesModal />, { width: 'large' })}
         depth={1}
       />
 
