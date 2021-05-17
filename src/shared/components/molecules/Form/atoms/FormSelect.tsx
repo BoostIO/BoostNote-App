@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Select from 'react-select'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
+import { formInputHeight } from '../../../../lib/styled/styleFunctions'
 
 export interface FormSelectOption {
   label: string | React.ReactNode
@@ -41,7 +42,6 @@ const FormSelect = ({
   name,
   filterOption,
   onMenuOpen,
-  minWidth = '100px',
 }: FormSelectProps) => {
   const [focused, setFocused] = useState(false)
   return (
@@ -56,16 +56,6 @@ const FormSelect = ({
           focused && 'form__select--focused',
           isDisabled && 'form__select--disabled',
         ])}
-        styles={{
-          control: () => {
-            return {
-              minWidth,
-              minHeight: '32px',
-              display: 'flex',
-              borderRadius: '4px',
-            }
-          },
-        }}
         placeholder={placeholder}
         classNamePrefix={'form__select'}
         value={value}
@@ -89,9 +79,19 @@ const Container = styled.div`
     width: 0;
   }
 
-  .form__select .form__select__control {
-    width: 100%;
+  .form__select .form__select__control,
+  .form__select .form__select__indicator,
+  .form__select .form__select__indicators {
     height: 32px;
+    min-height: 32px;
+  }
+
+  .form__select .form__select__control {
+    display: flex; 
+    border-radius: ${({ theme }) => theme.borders.radius}px;
+    min-width: 100px;
+    width: 100%;
+    ${formInputHeight}
     color: ${({ theme }) => theme.colors.text.primary};
     border: none;
     &.form__select__control--is-focused {
