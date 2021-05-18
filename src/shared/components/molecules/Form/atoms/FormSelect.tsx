@@ -126,7 +126,7 @@ const Container = styled.div`
   .form__select .form__select__control,
   .form__select .form__select__indicator,
   .form__select .form__select__indicators {
-    ${formInputHeight()}
+    ${formInputHeight}
   }
 
   .form__select .form__select__control {

@@ -7,7 +7,12 @@ import {
   isSingleKeyEventOutsideOfInput,
 } from '../../../lib/keyboard'
 import { useTranslation } from 'react-i18next'
-import { mdiDomain, mdiAccountCircleOutline, mdiClose } from '@mdi/js'
+import {
+  mdiDomain,
+  mdiAccountCircleOutline,
+  mdiClose,
+  mdiHelpCircleOutline,
+} from '@mdi/js'
 import PersonalInfoTab from './PersonalInfoTab'
 import { usePage } from '../../../lib/stores/pageStore'
 import TeamInfoTab from './TeamInfoTab'
@@ -26,9 +31,14 @@ import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/molecules/SettingSidenavHeader'
-import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
+import SettingNavButtonItem, {
+  SettingNavLinkItem,
+} from '../../../../shared/components/organisms/Settings/atoms/SettingNavItem'
 import Button from '../../../../shared/components/atoms/Button'
-import styled from '../../../../shared/lib/styled'
+import SettingSidenav from '../../../../shared/components/organisms/Settings/molecules/SettingSidenav'
+import AppFeedbackForm from '../../molecules/AppFeedbackForm'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import { intercomAppId } from '../../../lib/consts'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -98,6 +108,14 @@ const SettingsComponent = () => {
         return <IntegrationsTab />
       case 'api':
         return <ApiTab />
+      case 'feedback':
+        return (
+          <SettingTabContent
+            title='Feedback'
+            description='Want a specific feature? Did you notice a bug? Let us know!'
+            body={<AppFeedbackForm />}
+          />
+        )
       default:
         return
     }
@@ -117,54 +135,58 @@ const SettingsComponent = () => {
   return (
     <Settings
       sidebar={
-        <SettingSidenav className='settings__sidenav' ref={menuRef}>
+        <SettingSidenav
+          className='settings__sidenav'
+          ref={menuRef}
+          footer={
+            team != null &&
+            currentUserPermissions != null &&
+            currentUserPermissions.role === 'admin' ? (
+              <TeamSubLimit />
+            ) : null
+          }
+        >
           <SettingSidenavHeader
             path={mdiAccountCircleOutline}
             text={'Account'}
             size={16}
           />
-          <SettingTabButton
+          <SettingNavButtonItem
             label={t('settings.personalInfo')}
             active={settingsTab === 'personalInfo'}
-            tab='personalInfo'
             id='settings-personalInfoTab-btn'
             onClick={() => openSettingsTab('personalInfo')}
           />
-          <SettingTabButton
+          <SettingNavButtonItem
             label={t('settings.preferences')}
             active={settingsTab === 'preferences'}
-            tab='preferences'
-            id='settings-personalInfoTab-btn'
+            id='settings-preferences-btn'
             onClick={() => openSettingsTab('preferences')}
           />
           <SettingSidenavHeader path={mdiDomain} text={'Space'} size={16} />
           {currentUserPermissions != null && (
             <>
-              <SettingTabButton
+              <SettingNavButtonItem
                 label={t('settings.teamInfo')}
                 active={settingsTab === 'teamInfo'}
-                tab='teamInfo'
                 id='settings-teamInfoTab-btn'
                 onClick={() => openSettingsTab('teamInfo')}
               />
-              <SettingTabButton
+              <SettingNavButtonItem
                 label={t('settings.teamMembers')}
                 active={settingsTab === 'teamMembers'}
-                tab='teamMembers'
                 id='settings-teamMembersTab-btn'
                 onClick={() => openSettingsTab('teamMembers')}
               />
-              <SettingTabButton
+              <SettingNavButtonItem
                 label={t('settings.integrations')}
                 active={settingsTab === 'integrations'}
-                tab='integrations'
                 id='settings-integrationsTab-btn'
                 onClick={() => openSettingsTab('integrations')}
               />
-              <SettingTabButton
+              <SettingNavButtonItem
                 label='API'
                 active={settingsTab === 'api'}
-                tab='api'
                 id='settings-apiTab-btn'
                 onClick={() => openSettingsTab('api')}
               />
@@ -175,25 +197,52 @@ const SettingsComponent = () => {
             currentUserPermissions.role === 'admin' && (
               <>
                 {subscription == null || subscription.status === 'trialing' ? (
-                  <SettingTabButton
+                  <SettingNavButtonItem
                     label={t('settings.teamUpgrade')}
                     active={settingsTab === 'teamUpgrade'}
-                    tab='teamUpgrade'
                     id='settings-teamUpgradeTab-btn'
                     onClick={() => openSettingsTab('teamUpgrade')}
                   />
                 ) : (
-                  <SettingTabButton
+                  <SettingNavButtonItem
                     label={t('settings.teamSubscription')}
                     active={settingsTab === 'teamSubscription'}
-                    tab='teamSubscription'
                     id='settings-teamBillingTab-btn'
                     onClick={() => openSettingsTab('teamSubscription')}
                   />
                 )}
-                <TeamSubLimit />
               </>
             )}
+
+          <SettingSidenavHeader
+            path={mdiHelpCircleOutline}
+            text={'Help'}
+            size={16}
+          />
+          <SettingNavLinkItem
+            label='Support Guide'
+            href='https://intercom.help/boostnote-for-teams/en/'
+            id='setting-support-link'
+          />
+
+          {intercomAppId != null && (
+            <SettingNavButtonItem
+              label='Send us a message'
+              id='settings-helper-btn'
+              className='helper-message'
+            />
+          )}
+          <SettingNavButtonItem
+            label='Feedback'
+            active={settingsTab === 'feedback'}
+            id='settings-feedback-btn'
+            onClick={() => openSettingsTab('feedback')}
+          />
+          <SettingNavLinkItem
+            label='Keyboard Shortcuts'
+            href='https://intercom.help/boostnote-for-teams/en/articles/4347206-keyboard-shortcuts'
+            id='setting-keyboard-shortcuts'
+          />
         </SettingSidenav>
       }
       content={
@@ -211,13 +260,5 @@ const SettingsComponent = () => {
     />
   )
 }
-
-const SettingSidenav = styled.nav`
-  width: 250px;
-  margin-bottom: 0;
-  margin-right: 0;
-  padding: ${({ theme }) => theme.sizes.spaces.sm}px;
-  overflow: hidden auto;
-`
 
 export default SettingsComponent
