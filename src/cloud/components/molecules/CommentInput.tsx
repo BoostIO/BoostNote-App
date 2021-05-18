@@ -73,6 +73,7 @@ const InputContainer = styled.div`
     height: 60px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
     color: ${({ theme }) => theme.colors.text.primary};
+    padding: 5px 10px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
