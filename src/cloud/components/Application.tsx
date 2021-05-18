@@ -220,7 +220,7 @@ const Application = ({
       openSettingsTab('teamUpgrade')
     }
 
-    openSettingsTab('api')
+    openSettingsTab('teamInfo')
   })
 
   useEffect(() => {
