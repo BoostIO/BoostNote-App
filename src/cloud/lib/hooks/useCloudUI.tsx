@@ -1,6 +1,6 @@
 import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
-import { FormRowProps } from '../../../shared/components/molecules/Form'
+import { FormRowProps } from '../../../shared/components/molecules/Form/layouts/FormRow'
 import EmojiInputForm from '../../../shared/components/organisms/EmojiInputForm'
 import { DialogIconTypes, useDialog } from '../../../shared/lib/stores/dialog'
 import { useModal } from '../../../shared/lib/stores/modal'

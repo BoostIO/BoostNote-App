@@ -29,7 +29,7 @@ interface StandardFormSelectOptions {
 
 interface SimpleFormSelectOptions {
   value: string
-  options: string[]
+  options: readonly string[]
   onChange: (val: string) => void
 }
 
@@ -178,6 +178,7 @@ const Container = styled.div`
   .form__select .form__select__menu {
     background-color: ${({ theme }) => theme.colors.background.primary};
     border: 1px solid ${({ theme }) => theme.colors.border.main};
+    overflow-y: visible !important;
   }
 
   .form__select .form__select__option {

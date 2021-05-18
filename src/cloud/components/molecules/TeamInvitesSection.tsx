@@ -158,7 +158,6 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
               },
               {
                 type: 'select--string',
-
                 props: {
                   value: role,
                   onChange: selectRole,
@@ -176,7 +175,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
             ],
           },
         ]}
-      ></Form>
+      />
       {role === 'admin' ? (
         <small>
           Admins can handle billing, remove or promote/demote members.
