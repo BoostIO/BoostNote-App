@@ -23,7 +23,7 @@ import StorageTab from './StorageTab'
 import MigrationPage from './MigrationTab'
 import { useMigrations } from '../../lib/migrate/store'
 import KeymapTab from './KeymapTab'
-import SettingTabButton from '../../shared/components/organisms/Settings/atoms/SettingTabButton'
+import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -177,29 +177,25 @@ const PreferencesModal = () => {
         </ModalHeader>
         <ModalBody>
           <TabNav>
-            <SettingTabButton
+            <SettingNavButtonItem
               label={t('about.about')}
               active={tab === 'about'}
-              tab='about'
               onClick={() => openTab('about')}
             />
-            <SettingTabButton
+            <SettingNavButtonItem
               label={t('preferences.keymap')}
               active={tab === 'keymap'}
-              tab='keymap'
               onClick={() => openTab('keymap')}
             />
-            <SettingTabButton
+            <SettingNavButtonItem
               label={t('general.general')}
               active={tab === 'general'}
-              tab='general'
               onClick={() => openTab('general')}
             />
             {currentStorage != null && (
-              <SettingTabButton
+              <SettingNavButtonItem
                 label='Space'
                 active={tab === 'storage' || tab === 'migration'}
-                tab={get(currentStorage.id) != null ? 'migration' : 'storage'}
                 onClick={() =>
                   openTab(
                     get(currentStorage.id) != null ? 'migration' : 'storage'
@@ -207,16 +203,14 @@ const PreferencesModal = () => {
                 }
               />
             )}
-            <SettingTabButton
+            <SettingNavButtonItem
               label={t('editor.editor')}
               active={tab === 'editor'}
-              tab='editor'
               onClick={() => openTab('editor')}
             />
-            <SettingTabButton
+            <SettingNavButtonItem
               label='Markdown'
               active={tab === 'markdown'}
-              tab='markdown'
               onClick={() => openTab('markdown')}
             />
           </TabNav>

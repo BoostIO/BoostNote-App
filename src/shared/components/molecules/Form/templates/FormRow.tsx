@@ -41,7 +41,11 @@ export type FormRowProps = {
   )[]
 }
 
-const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
+const FormRow: AppComponent<{ row: FormRowProps }> = ({
+  row,
+  className,
+  children,
+}) => {
   return (
     <Container
       className={cc([
@@ -84,6 +88,7 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
               )}
             </div>
           ))}
+          {children}
         </div>
       )}
       {row.description != null && (
