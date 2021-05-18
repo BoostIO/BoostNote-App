@@ -95,7 +95,7 @@ function updateThreads(threads: Thread[]) {
           (thread) => thread.id === oldState.thread.id
         )
         return updated != null
-          ? { ...oldState, thread: updated }
+          ? { ...oldState, thread: updated, threads }
           : { mode: 'list', threads }
       }
       case 'new_thread': {
