@@ -12,6 +12,7 @@ import CommentInput from '../molecules/CommentInput'
 import ThreadActionButton from '../molecules/ThreadActionButton'
 import Button from '../../../shared/components/atoms/Button'
 import { CreateThreadRequestBody } from '../../api/comments/thread'
+import { sortBy } from 'ramda'
 
 export type State =
   | { mode: 'list_loading' }
@@ -73,17 +74,19 @@ function CommentManager({
           setMode({ mode: 'thread', thread: selectedThread })
         return (
           <div>
-            {state.threads.map((thread) => (
-              <div key={thread.id} className='thread__list__item'>
-                <ThreadItem
-                  thread={thread}
-                  onSelect={onClick}
-                  onOpen={reopenThread}
-                  onClose={closeThread}
-                  onDelete={deleteThread}
-                />
-              </div>
-            ))}
+            {sortBy((thread) => thread.status.at, state.threads)
+              .reverse()
+              .map((thread) => (
+                <div key={thread.id} className='thread__list__item'>
+                  <ThreadItem
+                    thread={thread}
+                    onSelect={onClick}
+                    onOpen={reopenThread}
+                    onClose={closeThread}
+                    onDelete={deleteThread}
+                  />
+                </div>
+              ))}
             <div
               className='thread__create'
               onClick={() => setMode({ mode: 'new_thread' })}
