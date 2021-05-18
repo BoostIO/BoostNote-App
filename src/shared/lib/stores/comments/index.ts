@@ -15,6 +15,7 @@ import {
   createComment,
   updateCommentMessage,
   deleteComment,
+  getComment,
 } from '../../../../cloud/api/comments/comment'
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
@@ -80,7 +81,7 @@ function useCommentsStore() {
     }
   })
 
-  const removeCommentRef = useRef((comment: Comment) => {
+  const removeCommentRef = useRef((comment: { id: string; thread: string }) => {
     const currentComments = commentsCache.current.get(comment.thread) || []
     const filteredComments = currentComments.filter(
       (cmt) => cmt.id !== comment.id
@@ -190,8 +191,10 @@ function useCommentsStore() {
         case 'commentThreadCreated':
         case 'commentThreadUpdated': {
           try {
-            const thread = await getThread(event.data.threadId)
-            insertThreadsRef.current([thread])
+            if (threadsCache.current.has(event.data.threadId)) {
+              const thread = await getThread(event.data.threadId)
+              insertThreadsRef.current([thread])
+            }
           } catch {}
           break
         }
@@ -200,6 +203,23 @@ function useCommentsStore() {
             id: event.data.threadId,
             doc: event.data.docId,
           })
+        }
+        case 'commentCreated':
+        case 'commentUpdated': {
+          try {
+            if (commentsCache.current.has(event.data.threadId)) {
+              const comment = await getComment(event.data.commentId)
+              insertCommentsRef.current([comment])
+            }
+          } catch {}
+          break
+        }
+        case 'commentDeleted': {
+          removeCommentRef.current({
+            id: event.data.commentId,
+            thread: event.data.threadId,
+          })
+          break
         }
       }
     },

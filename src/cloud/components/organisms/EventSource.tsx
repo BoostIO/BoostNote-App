@@ -429,9 +429,10 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentThreadCreated':
           case 'commentThreadUpdated':
           case 'commentThreadDeleted':
-            if (event.userId == null || currentUser?.id !== event.userId) {
-              commentsEventListener(event)
-            }
+          case 'commentCreated':
+          case 'commentUpdated':
+          case 'commentDeleted':
+            commentsEventListener(event)
             break
         }
       }
@@ -451,7 +452,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
-    currentUser,
   ])
 
   return null

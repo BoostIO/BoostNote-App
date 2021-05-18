@@ -29,6 +29,9 @@ export type SseEventType =
   | 'commentThreadCreated'
   | 'commentThreadUpdated'
   | 'commentThreadDeleted'
+  | 'commentCreated'
+  | 'commentUpdated'
+  | 'commentDeleted'
 
 export interface SerializableAppEventProps {
   id: string
