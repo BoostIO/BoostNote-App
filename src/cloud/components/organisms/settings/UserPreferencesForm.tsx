@@ -10,76 +10,79 @@ import {
   GeneralEditorIndentSize,
 } from '../../../lib/stores/settings'
 import { useTranslation } from 'react-i18next'
-import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
-import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
+import Form from '../../../../shared/components/molecules/Form'
+import FormSelect, {
+  FormSelectOption,
+  SimpleFormSelect,
+} from '../../../../shared/components/molecules/Form/atoms/FormSelect'
+import FormRow from '../../../../shared/components/molecules/Form/layouts/FormRow'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
   const { t } = useTranslation()
 
-  const selectTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectTheme = useCallback(
+    (formOption: FormSelectOption) => {
       setSettings({
-        'general.theme': event.target.value as GeneralThemeOptions,
+        'general.theme': formOption.value as GeneralThemeOptions,
       })
       trackEvent(MixpanelActionTrackTypes.ThemeChangeApp, {
-        theme: event.target.value,
+        theme: formOption.value,
       })
     },
     [setSettings]
   )
 
-  const selectEditorTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorTheme = useCallback(
+    (value: string) => {
       setSettings({
-        'general.editorTheme': event.target.value as CodeMirrorEditorTheme,
+        'general.editorTheme': value as CodeMirrorEditorTheme,
       })
       trackEvent(MixpanelActionTrackTypes.ThemeChangeEditor, {
-        theme: event.target.value,
+        theme: value,
       })
     },
     [setSettings]
   )
 
-  const selectCodeBlockTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectCodeBlockTheme = useCallback(
+    (value: string) => {
       setSettings({
-        'general.codeBlockTheme': event.target.value as CodeMirrorEditorTheme,
+        'general.codeBlockTheme': value as CodeMirrorEditorTheme,
       })
 
       trackEvent(MixpanelActionTrackTypes.ThemeChangeCodeblock, {
-        theme: event.target.value,
+        theme: value,
       })
     },
     [setSettings]
   )
 
-  const selectEditorKeyMap: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorKeyMap = useCallback(
+    (value: string) => {
       setSettings({
-        'general.editorKeyMap': event.target.value as CodeMirrorKeyMap,
+        'general.editorKeyMap': value as CodeMirrorKeyMap,
       })
     },
     [setSettings]
   )
 
-  const selectIndentType: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectIndentType = useCallback(
+    (value: string) => {
       setSettings({
-        'general.editorIndentType': event.target
-          .value as GeneralEditorIndentType,
+        'general.editorIndentType': value as GeneralEditorIndentType,
       })
     },
     [setSettings]
   )
 
-  const selectIndentSize: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectIndentSize = useCallback(
+    (value: string) => {
       setSettings({
         'general.editorIndentSize': parseInt(
-          event.target.value,
+          value,
           10
         ) as GeneralEditorIndentSize,
       })
@@ -88,101 +91,104 @@ const UserPreferencesForm = () => {
   )
 
   return (
-    <>
-      <section>
-        <SettingSelect
-          label={t('settings.applicationTheme')}
-          value={settings['general.theme']}
-          onChange={selectTheme}
-          options={
-            <>
-              <option value='light'>{t('settings.light')}</option>
-              <option value='dark'>{t('settings.dark')}</option>
-            </>
-          }
-        ></SettingSelect>
-      </section>
-
-      <section>
-        <SettingSelect
-          label={t('settings.editorTheme')}
-          value={settings['general.editorTheme']}
-          onChange={selectEditorTheme}
-          options={
-            <>
-              {codeMirrorEditorThemes.map((val) => (
-                <option key={`theme-${val}`} value={val}>
-                  {val}
-                </option>
-              ))}
-            </>
-          }
-        ></SettingSelect>
-      </section>
-
-      <section>
-        <SettingSelect
-          label={t('settings.codeblockTheme')}
-          value={settings['general.codeBlockTheme']}
-          onChange={selectCodeBlockTheme}
-          options={
-            <>
-              {codeMirrorEditorThemes.map((val) => (
-                <option key={`theme-${val}`} value={val}>
-                  {val}
-                </option>
-              ))}
-            </>
-          }
-        ></SettingSelect>
-      </section>
-
-      <section>
-        <SettingSelect
-          label={t('settings.editorKeyMap')}
-          value={settings['general.editorKeyMap']}
-          onChange={selectEditorKeyMap}
-          options={
-            <>
-              {codeMirrorKeyMap.map((val) => (
-                <option key={val} value={val}>
-                  {val}
-                </option>
-              ))}
-            </>
-          }
-        ></SettingSelect>
-      </section>
-
-      <section>
-        <SettingSelect
-          label={'Editor Indent Type'}
-          value={settings['general.editorIndentType']}
-          onChange={selectIndentType}
-          options={
-            <>
-              <option value='spaces'>Spaces</option>
-              <option value='tab'>Tab</option>
-            </>
-          }
-        ></SettingSelect>
-      </section>
-
-      <section>
-        <SettingSelect
-          label={'Editor Indent Size'}
-          value={settings['general.editorIndentSize']}
-          onChange={selectIndentSize}
-          options={
-            <>
-              <option value='8'>8</option>
-              <option value='4'>4</option>
-              <option value='2'>2</option>
-            </>
-          }
-        ></SettingSelect>
-      </section>
-    </>
+    <Form
+      rows={[
+        {
+          title: t('settings.applicationTheme'),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormSelect
+                  options={[
+                    {
+                      label: t('settings.light'),
+                      value: 'light',
+                    },
+                    { label: t('settings.dark'), value: 'dark' },
+                  ]}
+                  value={{
+                    label: t(`settings.${settings['general.theme']}`),
+                    value: settings['general.theme'],
+                  }}
+                  onChange={selectTheme}
+                />
+              ),
+            },
+          ],
+        },
+        {
+          title: t('settings.editorTheme'),
+          items: [
+            {
+              type: 'select--string',
+              props: {
+                options: codeMirrorEditorThemes,
+                value: settings['general.editorTheme'],
+                onChange: selectEditorTheme,
+              },
+            },
+          ],
+        },
+        {
+          title: t('settings.codeblockTheme'),
+          items: [
+            {
+              type: 'select--string',
+              props: {
+                options: codeMirrorEditorThemes,
+                value: settings['general.codeBlockTheme'],
+                onChange: selectCodeBlockTheme,
+              },
+            },
+          ],
+        },
+        {
+          title: t('settings.editorKeyMap'),
+          items: [
+            {
+              type: 'select--string',
+              props: {
+                options: codeMirrorKeyMap,
+                value: settings['general.editorKeyMap'],
+                onChange: selectEditorKeyMap,
+              },
+            },
+          ],
+        },
+        {
+          title: 'Editor Indent Type',
+          items: [
+            {
+              type: 'node',
+              element: (
+                <SimpleFormSelect
+                  value={settings['general.editorIndentType']}
+                  onChange={selectIndentType}
+                  options={['spaces', 'tab']}
+                />
+              ),
+            },
+          ],
+        },
+      ]}
+    >
+      <FormRow
+        row={{
+          title: 'Editor Indent Size',
+          items: [
+            {
+              type: 'select--string',
+              props: {
+                options: ['8', '4', '2'],
+                value: settings['general.editorIndentSize'].toString(),
+                onChange: selectIndentSize,
+              },
+            },
+          ],
+        }}
+      />
+    </Form>
   )
 }
 

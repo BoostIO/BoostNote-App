@@ -27,7 +27,6 @@ import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/molecules/SettingSidenavHeader'
 import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
-import SettingMain from '../../../../shared/components/organisms/Settings/atoms/SettingMain'
 import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
 import Icon from '../../../../shared/components/atoms/Icon'
 import SettingCloseButton from '../../../../shared/components/organisms/Settings/atoms/SettingCloseButton'
@@ -199,7 +198,7 @@ const SettingsComponent = () => {
         </SettingSidenav>
       }
       content={
-        <SettingMain ref={contentSideRef}>
+        <div className='settings__content__wrapper' ref={contentSideRef}>
           {content}
           <SettingCloseButton
             className='settings__close-btn'
@@ -207,9 +206,9 @@ const SettingsComponent = () => {
           >
             <Icon path={mdiClose} size={26} />
           </SettingCloseButton>
-        </SettingMain>
+        </div>
       }
-    ></Settings>
+    />
   )
 }
 
