@@ -191,7 +191,7 @@ function useCommentsStore() {
         case 'commentThreadCreated':
         case 'commentThreadUpdated': {
           try {
-            if (threadsCache.current.has(event.data.threadId)) {
+            if (threadsCache.current.has(event.data.docId)) {
               const thread = await getThread(event.data.threadId)
               insertThreadsRef.current([thread])
             }
