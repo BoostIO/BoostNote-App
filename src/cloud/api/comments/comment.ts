@@ -17,6 +17,17 @@ export async function listThreadComments(thread: {
   return comments.map(deserialize)
 }
 
+interface GetCommentResponseBody {
+  comment: SerializedComment
+}
+
+export async function getComment(id: string) {
+  const { comment } = await callApi<GetCommentResponseBody>(
+    `api/comments/${id}`
+  )
+  return deserialize(comment)
+}
+
 interface CreateCommentResponseBody {
   comment: SerializedComment
 }
