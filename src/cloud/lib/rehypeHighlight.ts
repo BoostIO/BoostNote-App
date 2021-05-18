@@ -5,6 +5,7 @@ export interface HighlightRange {
   id: string
   start: number
   end: number
+  active: boolean
 }
 
 function rehypeHighlight(ranges: HighlightRange[]) {
@@ -66,7 +67,7 @@ function rehypeHighlight(ranges: HighlightRange[]) {
                   },
                 ],
                 properties: {
-                  class: 'inline-comment',
+                  class: `inline-comment ${range.active ? 'active' : ''}`,
                   'data-inline-comment': range.id,
                 },
                 position: transformedPosition,
