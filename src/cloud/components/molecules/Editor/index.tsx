@@ -245,6 +245,19 @@ const Editor = ({
     return highlights
   }, [commentState, realtime])
 
+  const commentClick = useCallback(
+    (id: string) => {
+      if (commentState.mode !== 'list_loading') {
+        const thread = commentState.threads.find((thread) => thread.id === id)
+        if (thread != null) {
+          setPreferences({ docContextMode: 'comment' })
+          commentActions.setMode({ mode: 'thread', thread })
+        }
+      }
+    },
+    [commentState, commentActions, setPreferences]
+  )
+
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
       setEditorLayout(target)
@@ -544,7 +557,7 @@ const Editor = ({
       if (realtime == null) {
         return
       }
-      const realtimeTitle = realtime.doc.getText('title') as YText
+      const realtimeTitle = realtime.doc.getText('title')
       realtimeTitle.delete(0, realtimeTitle.toString().length)
       setEditorRefContent(rev.content)
     },
@@ -929,6 +942,7 @@ const Editor = ({
               embeddableDocs={embeddableDocs}
               scrollerRef={previewRef}
               highlights={highlights}
+              commentClick={commentClick}
               SelectionMenu={({ selection }) => (
                 <StyledSelectionMenu>
                   <div onClick={() => newRangeThread(selection)}>
