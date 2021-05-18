@@ -5,6 +5,7 @@ import React, {
 } from 'react'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
+import { formInputHeight } from '../../../../lib/styled/styleFunctions'
 
 export interface FormInputProps {
   type?: 'text' | 'number' | 'email' | 'password'
@@ -98,7 +99,7 @@ const StyledInput = styled.input`
   padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-  height: 32px;
+  ${formInputHeight()}
   outline: none;
   background: none;
   border: 1px solid ${({ theme }) => theme.colors.border.main};

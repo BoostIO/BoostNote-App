@@ -6,7 +6,6 @@ import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -25,7 +24,6 @@ const TeamInfoTab = () => {
 
     return (
       <>
-        <SettingDivider />
         <section>
           <h2>Delete Space</h2>
           <p className='text--subtle'>
