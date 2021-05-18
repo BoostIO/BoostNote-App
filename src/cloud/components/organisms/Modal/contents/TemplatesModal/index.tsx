@@ -37,14 +37,11 @@ import {
 import {
   mdiTrashCanOutline,
   mdiFileDocumentOutline,
-  mdiEyeOutline,
-  mdiFileEditOutline,
   mdiClose,
   mdiContentSaveOutline,
 } from '@mdi/js'
 import Icon from '../../../../atoms/Icon'
 import EmojiIcon from '../../../../atoms/EmojiIcon'
-import CustomSwitch from '../../../../atoms/CustomSwitch'
 import { useSettings } from '../../../../../lib/stores/settings'
 import cc from 'classcat'
 import { useEmojiPicker } from '../../../../../lib/stores/emoji'
@@ -53,6 +50,7 @@ import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEdi
 import MarkdownView from '../../../../atoms/MarkdownView'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
+import Switch from '../../../../../../shared/components/atoms/Switch'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -385,10 +383,8 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                   />
                 </Flexbox>
                 <Flexbox flex='0 0 auto'>
-                  <CustomSwitch
+                  <Switch
                     className='switch'
-                    uncheckedIcon={<Icon path={mdiEyeOutline} size={16} />}
-                    checkedIcon={<Icon path={mdiFileEditOutline} size={16} />}
                     checked={!inPreview}
                     width={50}
                     height={20}

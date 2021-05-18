@@ -105,6 +105,10 @@ const StyledInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   color: ${({ theme }) => theme.colors.text.primary};
 
+  &:read-only {
+    filter: brightness(80%);
+  }
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
