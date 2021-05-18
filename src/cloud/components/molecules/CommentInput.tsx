@@ -31,9 +31,9 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
         ev.stopPropagation()
 
         if (ev.shiftKey) {
-          setComment((val) => `${val}\n`)
-        } else {
           submit(comment)
+        } else {
+          setComment((val) => `${val}\n`)
         }
       }
     },
