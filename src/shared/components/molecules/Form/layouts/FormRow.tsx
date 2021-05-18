@@ -11,6 +11,7 @@ import FormSelect, {
 } from '../atoms/FormSelect'
 import cc from 'classcat'
 import FormImage, { FormImageProps } from '../atoms/FormImage'
+import FormTextarea, { FormTextareaProps } from '../atoms/FormTextArea'
 
 export type FormRowButtonProps = ButtonProps & {
   label: React.ReactNode
@@ -25,6 +26,10 @@ export type FormRowProps = {
     | {
         type: 'input'
         props: FormInputProps & { ref?: React.Ref<HTMLInputElement> }
+      }
+    | {
+        type: 'textarea'
+        props: FormTextareaProps & { ref?: React.Ref<HTMLTextAreaElement> }
       }
     | { type: 'select'; props: FormSelectProps }
     | { type: 'select--string'; props: SimpleFormSelectProps }
@@ -52,6 +57,8 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
                 <FormSelect {...item.props} />
               ) : item.type === 'select--string' ? (
                 <SimpleFormSelect {...item.props} />
+              ) : item.type === 'textarea' ? (
+                <FormTextarea {...item.props} />
               ) : item.type === 'image' ? (
                 <FormImage {...item.props} />
               ) : item.type === 'emoji' ? (
