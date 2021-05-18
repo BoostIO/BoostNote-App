@@ -178,6 +178,9 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
 }
 
 const Description = styled.div`
+  .description {
+    display: block;
+  }
   .description + .description {
     margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
   }
