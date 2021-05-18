@@ -10,7 +10,6 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
 import rehypeSlug from 'rehype-slug'
-import styled from '../../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import { defaultPreviewStyle } from './styles'
 import 'katex/dist/katex.min.css'
@@ -38,6 +37,11 @@ import useSelectionLocation, {
   Rect,
 } from '../../../lib/selection/useSelectionLocation'
 import rehypeHighlight, { HighlightRange } from '../../../lib/rehypeHighlight'
+import rehypeGutters from '../../../lib/rehypeGutters'
+import { Node as UnistNode } from 'unist'
+import { mdiCommentTextOutline } from '@mdi/js'
+import Icon from '../../../../shared/components/atoms/Icon'
+import styled from '../../../../shared/lib/styled'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -66,6 +70,7 @@ const schema = mergeDeepRight(gh, {
     'chart(yaml)',
     'shortcode',
     'iframe',
+    'gutter',
   ],
 })
 
@@ -100,6 +105,7 @@ interface MarkdownViewProps {
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
   highlights?: HighlightRange[]
+  commentClick?: (id: string) => void
 }
 
 const MarkdownView = ({
@@ -113,6 +119,7 @@ const MarkdownView = ({
   scrollerRef,
   SelectionMenu,
   highlights,
+  commentClick,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
@@ -188,6 +195,19 @@ const MarkdownView = ({
                 )
               }
             : shortcodeHandler,
+        comment_icon: (props: any) => {
+          const id = props['data-comment']
+          return id != null ? (
+            <div
+              className='comment__icon'
+              onClick={() => commentClick && commentClick(id)}
+              onMouseOver={highlightComment(id)}
+              onMouseOut={unhighlightComment(id)}
+            >
+              <Icon path={mdiCommentTextOutline} size={20} />
+            </div>
+          ) : undefined
+        },
       },
     }
 
@@ -215,7 +235,6 @@ const MarkdownView = ({
       })
       .use(rehypeRaw)
       .use(rehypeSlug)
-      .use(rehypePosition)
       .use(rehypeSanitize, schema)
       .use(rehypeKatex)
       .use(rehypeCodeMirror, {
@@ -224,6 +243,8 @@ const MarkdownView = ({
       })
       .use(rehypeMermaid)
       .use(rehypeHighlight, highlights || [])
+      .use(rehypeGutters, makeCommentGutters(highlights || []))
+      .use(rehypePosition)
       .use(rehypeReact, rehypeReactConfig)
 
     return parser
@@ -234,6 +255,7 @@ const MarkdownView = ({
     headerLinks,
     embeddableDocs,
     highlights,
+    commentClick,
   ])
 
   useEffect(() => {
@@ -383,12 +405,36 @@ function isElement(node: Node): node is Element {
 const StyledMarkdownPreview = styled.div`
   position: relative;
   ${defaultPreviewStyle}
-  padding: 0 ${({ theme }) => theme.space.xsmall}px ${({ theme }) =>
-  theme.space.xxxlarge}px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.md}px ${({ theme }) =>
+  theme.sizes.spaces.xl}px;
+
+  .block__gutter {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    max-width: 40px;
+    display: none;
+  }
+
+
+  .with__gutter {
+    position: relative;
+    &:hover .block__gutter {
+      display: block;
+    }
+  }
+
+  .comment__icon {
+    color: ${({ theme }) => theme.colors.text.subtle}
+    &:hover {
+      color: ${({ theme }) => theme.colors.text.primary}
+    }
+  }
 `
 
 const StyledTooltipContent = styled.div`
-  background-color: ${({ theme }) => theme.contextMenuColor};
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  max-height: 50px;
   &:after {
     content: '';
     position: absolute;
@@ -399,8 +445,49 @@ const StyledTooltipContent = styled.div`
     height: 0;
     border-style: solid;
     border-width: 8px 12px 0 12px;
-    border-color: ${({ theme }) => theme.contextMenuColor} transparent
+    border-color: ${({ theme }) => theme.colors.border.second} transparent
       transparent transparent;
   }
 `
+
+function makeCommentGutters(highlights: HighlightRange[]) {
+  return (node: UnistNode): UnistNode | null => {
+    const posStart = node.position?.start.offset
+    const posEnd = node.position?.end.offset
+    if (posStart != null && posEnd != null) {
+      const allHighlights = highlights.filter(
+        (highlight) => highlight.start >= posStart && highlight.start <= posEnd
+      )
+      if (allHighlights.length > 0) {
+        return {
+          type: 'element',
+          tagName: 'div',
+          children: allHighlights.map((hi) => ({
+            type: 'element',
+            tagName: 'comment_icon',
+            properties: {
+              'data-comment': hi.id,
+            },
+          })),
+        }
+      }
+    }
+    return null
+  }
+}
+
+function highlightComment(id: string) {
+  return () =>
+    document
+      .querySelectorAll(`[data-inline-comment="${id}"]`)
+      .forEach((element) => element.classList.add('active'))
+}
+
+function unhighlightComment(id: string) {
+  return () =>
+    document
+      .querySelectorAll(`[data-inline-comment="${id}"]`)
+      .forEach((element) => element.classList.remove('active'))
+}
+
 export default MarkdownView
