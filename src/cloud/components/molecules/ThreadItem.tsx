@@ -90,6 +90,10 @@ const StyledListItem = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   cursor: default;
 
+  &:hover .thread__action {
+    display: block;
+  }
+
   & > div {
     &:first-child {
       margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
@@ -120,6 +124,7 @@ const StyledListItem = styled.div`
   }
 
   & .thread__action {
+    display: none;
     color: ${({ theme }) => theme.colors.text.subtle};
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary};
