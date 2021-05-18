@@ -52,7 +52,12 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
     >
       {row.title != null && <div className='form__row__title'>{row.title}</div>}
       {row.items != null && (
-        <div className='form__row__items'>
+        <div
+          className={cc([
+            'form__row__items',
+            row.items.length === 1 && 'form__row__items--single-item',
+          ])}
+        >
           {row.items.map((item, k) => (
             <div
               className={`form__row__item form__row__item--${item.type}`}
@@ -115,6 +120,10 @@ const Container = styled.div`
     flex-wrap: nowrap;
     align-items: stretch;
     justify-content: space-between;
+  }
+
+  .form__row__items--single-item {
+    max-width: 450px;
   }
 
   .form__row__item {
