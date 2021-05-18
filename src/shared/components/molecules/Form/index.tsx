@@ -3,7 +3,7 @@ import styled from '../../../lib/styled'
 import { LoadingButton } from '../../atoms/Button'
 import cc from 'classcat'
 import { AppComponent } from '../../../lib/types'
-import FormRow, { FormRowProps, FormRowButtonProps } from './layouts/FormRow'
+import FormRow, { FormRowProps, FormRowButtonProps } from './templates/FormRow'
 
 interface FormProps {
   rows: FormRowProps[]
