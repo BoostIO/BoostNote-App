@@ -33,7 +33,6 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
 
   const openActionMenu: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
-      console.log('afawffw')
       event.preventDefault()
       event.stopPropagation()
       popup(event, actions)

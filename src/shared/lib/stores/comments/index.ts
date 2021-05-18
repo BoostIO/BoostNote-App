@@ -7,6 +7,7 @@ import {
   CreateThreadRequestBody,
   setThreadStatus,
   deleteThread,
+  getThread,
 } from '../../../../cloud/api/comments/thread'
 import { useToast } from '../toast'
 import {
@@ -17,6 +18,7 @@ import {
 } from '../../../../cloud/api/comments/comment'
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
+import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
 
 type DocThreadsObserver = (threads: Thread[]) => void
 type ThreadObserver = (comments: Comment[]) => void
@@ -68,7 +70,7 @@ function useCommentsStore() {
     }
   })
 
-  const removeThreadRef = useRef((thread: Thread) => {
+  const removeThreadRef = useRef((thread: { id: string; doc: string }) => {
     const currentThreads = threadsCache.current.get(thread.doc) || []
     const filteredThreads = currentThreads.filter((thr) => thr.id !== thread.id)
     threadsCache.current.set(thread.doc, filteredThreads)
@@ -182,7 +184,35 @@ function useCommentsStore() {
     }
   })
 
-  return { observeDocThreads, observeComments, threadActions, commentActions }
+  const commentsEventListener = useCallback(
+    async (event: SerializedAppEvent) => {
+      switch (event.type) {
+        case 'commentThreadCreated':
+        case 'commentThreadUpdated': {
+          try {
+            const thread = await getThread(event.data.threadId)
+            insertThreadsRef.current([thread])
+          } catch {}
+          break
+        }
+        case 'commentThreadDeleted': {
+          removeThreadRef.current({
+            id: event.data.threadId,
+            doc: event.data.docId,
+          })
+        }
+      }
+    },
+    []
+  )
+
+  return {
+    observeDocThreads,
+    observeComments,
+    threadActions,
+    commentActions,
+    commentsEventListener,
+  }
 }
 
 function registerObservable<K, T>(key: K, observer: T, map: Map<K, T[]>) {
