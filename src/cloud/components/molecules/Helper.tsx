@@ -83,7 +83,10 @@ const Helper = () => {
             <span>Help &amp; support guide</span>
           </a>
           {intercomAppId != null && (
-            <button className='help__list__item' id='helper-message'>
+            <button
+              className='help__list__item helper-message'
+              id='helper-message'
+            >
               <Icon path={mdiChatProcessingOutline} className='icon' />
               <span>Send us a message</span>
             </button>

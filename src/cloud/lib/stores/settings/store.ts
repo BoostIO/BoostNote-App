@@ -30,6 +30,7 @@ export type SettingsTab =
   | 'teamUpgrade'
   | 'teamSubscription'
   | 'api'
+  | 'feedback'
 
 function useSettingsStore() {
   const { globalData, setPartialGlobalData } = useGlobalData()
