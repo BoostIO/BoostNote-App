@@ -86,7 +86,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
 }
 
 const StyledListItem = styled.div`
-  padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
+  padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   cursor: default;
 
