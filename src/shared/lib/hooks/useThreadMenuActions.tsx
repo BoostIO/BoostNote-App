@@ -24,7 +24,7 @@ function useThreadActions({
 }: ThreadActionProps) {
   const actions: MenuItem[] = useMemo(() => {
     const deleteAction: MenuItem = {
-      icon: mdiTrashCanOutline,
+      icon: <Icon path={mdiTrashCanOutline} />,
       type: MenuTypes.Normal,
       label: 'Delete',
       onClick: () => onDelete(thread),
