@@ -45,7 +45,6 @@ const ModalItem = ({
   const contentRef = useRef<HTMLDivElement>(null)
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
-      console.log('clicked')
       if (
         contentRef.current != null &&
         contentRef.current.contains(event.target as Node)
