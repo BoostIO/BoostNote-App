@@ -17,7 +17,7 @@ import FormSelect, {
   FormSelectOption,
   SimpleFormSelect,
 } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
-import FormRow from '../../../../shared/components/molecules/Form/layouts/FormRow'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
