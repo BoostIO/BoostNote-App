@@ -13,7 +13,7 @@ interface RangeTooltipProps {
 
 const STYLE: CSSProperties = {
   position: 'absolute',
-  transform: 'translate(-50%, calc(-100% - 12px))',
+  transform: 'translate(-50%, calc(-100% - 5px))',
 }
 
 function SelectionTooltip({

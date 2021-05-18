@@ -433,21 +433,10 @@ const StyledMarkdownPreview = styled.div`
 `
 
 const StyledTooltipContent = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.border.second};
+  border-radius: ${({ theme }) => theme.borders.radius}px;
   max-height: 50px;
-  &:after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    transform: translate(-50%, 0);
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px 12px 0 12px;
-    border-color: ${({ theme }) => theme.colors.border.second} transparent
-      transparent transparent;
-  }
 `
 
 function makeCommentGutters(highlights: HighlightRange[]) {
