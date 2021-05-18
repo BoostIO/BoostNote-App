@@ -1,22 +1,17 @@
 import React, { useMemo, useCallback } from 'react'
 import { Thread } from '../../interfaces/db/comments'
 import {
-  mdiTrashCanOutline,
   mdiAlertCircleOutline,
   mdiAlertCircleCheckOutline,
   mdiChevronDown,
 } from '@mdi/js'
 import Icon from '../../../shared/components/atoms/Icon'
-import styled from '../../../shared/lib/styled'
 import Button from '../../../shared/components/atoms/Button'
 import { capitalize } from '../../lib/utils/string'
-import {
-  useContextMenu,
-  MenuTypes,
-  MenuItem,
-} from '../../../shared/lib/stores/contextMenu'
+import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 import Flexbox from '../atoms/Flexbox'
 import useThreadActions from '../../../shared/lib/hooks/useThreadMenuActions'
+import styled from '../../../shared/lib/styled'
 
 interface ThreadActionButtonProps {
   thread: Thread
@@ -54,13 +49,17 @@ function ThreadActionButton({
   }, [thread.status.type])
 
   return (
-    <Button iconPath={iconPath} variant={variant} onClick={openActionMenu}>
+    <RoundButton iconPath={iconPath} variant={variant} onClick={openActionMenu}>
       <Flexbox alignItems='center'>
         {capitalize(thread.status.type)}
         <Icon path={mdiChevronDown} />
       </Flexbox>
-    </Button>
+    </RoundButton>
   )
 }
+
+const RoundButton = styled(Button)`
+  border-radius: 20px;
+`
 
 export default ThreadActionButton
