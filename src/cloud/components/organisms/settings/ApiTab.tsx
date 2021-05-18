@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import styled from '../../../lib/styled'
 import Spinner from '../../atoms/CustomSpinner'
 import { useApiTokens, withApiTokens } from '../../../lib/stores/apiTokens'
@@ -8,9 +8,9 @@ import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import Button from '../../../../shared/components/atoms/Button'
-import SettingTokenCreate from '../../../../shared/components/organisms/Settings/molecules/SettingTokenCreate'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import Form from '../../../../shared/components/molecules/Form'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -98,6 +98,46 @@ const ApiTab = () => {
   )
 }
 
+const SettingTokenCreate = ({
+  onCreate,
+}: {
+  onCreate: (val: string) => void
+}) => {
+  const [name, setName] = useState('')
+
+  const create = useCallback(() => {
+    onCreate(name)
+  }, [name, onCreate])
+
+  return (
+    <div className='setting__token__form'>
+      <h2>Create a new token</h2>
+      <Form
+        onSubmit={create}
+        submitButton={{ label: 'Create', disabled: name.length === 0 }}
+        rows={[
+          {
+            title: 'Name',
+            required: true,
+            items: [
+              {
+                type: 'input',
+                props: {
+                  placeholder: 'Your token name...',
+                  value: name,
+                  onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                    setName(e.target.value)
+                  },
+                },
+              },
+            ],
+          },
+        ]}
+      />
+    </div>
+  )
+}
+
 const StyledServiceList = styled.ul`
   background-color: ${({ theme }) => theme.baseBackgroundColor};
   padding-left: 0;
@@ -110,6 +150,10 @@ const StyledServiceListItem = styled.li`
   align-items: center;
   justify-content: space-between;
   padding: ${({ theme }) => theme.space.small}px;
+
+  .setting__token__form {
+    width: 100%;
+  }
 
   + li {
     border-top: 1px solid ${({ theme }) => theme.baseBorderColor};
