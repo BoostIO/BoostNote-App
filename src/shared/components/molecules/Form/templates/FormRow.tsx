@@ -21,6 +21,7 @@ export type FormRowButtonProps = ButtonProps & {
 export type FormRowProps = {
   layout?: 'column' | 'split'
   title?: React.ReactNode
+  required?: boolean
   description?: React.ReactNode
   items?: (
     | {
@@ -42,7 +43,13 @@ export type FormRowProps = {
 
 const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
   return (
-    <Container className={cc(['form__row', className])}>
+    <Container
+      className={cc([
+        'form__row',
+        row.required && 'form__row--required',
+        className,
+      ])}
+    >
       {row.title != null && <div className='form__row__title'>{row.title}</div>}
       {row.items != null && (
         <div className='form__row__items'>
@@ -86,7 +93,18 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
+  &.form__row--required .form__row__title::after {
+    content: '*';
+    color: ${({ theme }) => theme.colors.variants.danger.base};
+    filter: brightness(160%);
+    position: absolute;
+    right: -5px;
+    top: -3px;
+  }
+
   .form__row__title {
+    display: inline-block;
+    position: relative;
     filter: brightness(80%);
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
