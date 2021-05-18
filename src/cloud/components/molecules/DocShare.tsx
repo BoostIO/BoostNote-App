@@ -8,7 +8,6 @@ import {
   regenerateShareLink,
   updateShareLink,
 } from '../../api/share'
-import Switch from 'react-switch'
 import {
   mdiChevronDown,
   mdiChevronRight,
@@ -41,6 +40,7 @@ import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
 import { useToast } from '../../../shared/lib/stores/toast'
+import Switch from '../../../shared/components/atoms/Switch'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -386,15 +386,9 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           <div className='share__row__switch'>
             <Switch
               disabled={sending !== 'idle'}
-              type='switch'
               id='shared-custom-switch'
               onChange={togglePublicSharing}
               checked={shareLink != null}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              height={20}
-              width={45}
-              onColor='#5580DC'
             />
           </div>
         </Flexbox>
@@ -467,15 +461,12 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   <div className='share__row__switch'>
                     <Switch
                       disabled={subscription == null || sending !== 'idle'}
-                      type='switch'
                       id='shared-custom-switch-password'
                       onChange={togglePassword}
                       checked={shareLink.password != null || showPasswordForm}
-                      uncheckedIcon={false}
-                      checkedIcon={false}
                       height={16}
                       width={45}
-                      onColor='#5580DC'
+                      handleSize={12}
                     />
                   </div>
                 </Flexbox>
@@ -520,15 +511,12 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   <div className='share__row__switch'>
                     <Switch
                       disabled={subscription == null || sending !== 'idle'}
-                      type='switch'
                       id='shared-custom-switch'
                       onChange={toggleExpire}
                       checked={shareLink.expireAt != null || showExpireForm}
-                      uncheckedIcon={false}
-                      checkedIcon={false}
                       height={16}
                       width={45}
-                      onColor='#5580DC'
+                      handleSize={12}
                     />
                   </div>
                 </Flexbox>

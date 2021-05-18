@@ -12,12 +12,13 @@ import {
 import { Spinner } from '../atoms/Spinner'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
-import Switch from 'react-switch'
 import styled from '../../lib/styled'
-import CopyReadInput from '../atoms/CopyReadInput'
 import { getTeamURL, getOpenInviteURL } from '../../lib/utils/patterns'
 import { boostHubBaseUrl } from '../../lib/consts'
 import { useToast } from '../../../shared/lib/stores/toast'
+import Switch from '../../../shared/components/atoms/Switch'
+import Button from '../../../shared/components/atoms/Button'
+import FormCopyInput from '../../../shared/components/molecules/Form/atoms/FormCopyInput'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -173,15 +174,9 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         <h2 style={{ margin: 0 }}>Invite with an open Link</h2>
         <Switch
           disabled={fetching || sending}
-          type='switch'
           id='shared-custom-switch'
           onChange={toggleOpenInvite}
           checked={openInvite != null}
-          uncheckedIcon={false}
-          checkedIcon={false}
-          height={20}
-          width={45}
-          onColor='#5580DC'
         />
       </StyledFlex>
       {openInviteLink != null && (
@@ -189,12 +184,12 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
           <p>
             You can share this secret link to invite people to this workspace.
             Only admins can see it. You can{' '}
-            <StyledResetLinkButton onClick={resetInvite}>
+            <Button className='link-reset' variant='link' onClick={resetInvite}>
               reset the link
-            </StyledResetLinkButton>{' '}
+            </Button>{' '}
             to generate a new one.
           </p>
-          <CopyReadInput text={openInviteLink} />
+          <FormCopyInput text={openInviteLink} />
         </StyledOpenLinkSection>
       )}
       {sending && (
@@ -215,22 +210,13 @@ const StyledFlex = styled.div`
 `
 
 const StyledOpenLinkSection = styled.div`
+  .link-reset {
+    padding: 0;
+    margin: 0;
+  }
+
   p {
     margin-bottom: ${({ theme }) => theme.space.default}px;
-  }
-`
-
-const StyledResetLinkButton = styled.button`
-  background-color: transparent;
-  padding: 0;
-  color: ${({ theme }) => theme.primaryTextColor};
-  font-size: inherit;
-  display: inline;
-  cursor: pointer;
-
-  &:hover,
-  &:focus {
-    text-decoration: underline;
   }
 `
 

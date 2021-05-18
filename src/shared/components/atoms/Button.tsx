@@ -224,6 +224,7 @@ const StyledButton = styled.button`
       &:focus,
       &.button__state--active {
         opacity: 0.8;
+        text-decoration: underline;
       }
     }
   }
