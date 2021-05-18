@@ -1,14 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import {
-  SectionRow,
-  SectionList,
-  SectionListItem,
-} from '../organisms/settings/styled'
+import { SectionList, SectionListItem } from '../organisms/settings/styled'
 import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { useEffectOnce, useSet } from 'react-use'
 import { Spinner } from '../atoms/Spinner'
 import ErrorBlock from '../atoms/ErrorBlock'
-import CustomButton from '../atoms/buttons/CustomButton'
 import Flexbox from '../atoms/Flexbox'
 import { SerializedGuestInvite } from '../../interfaces/db/guest'
 import {
@@ -20,7 +15,7 @@ import Button from '../atoms/Button'
 import UserIcon from '../atoms/UserIcon'
 import { deleteGuestDoc } from '../../api/guests'
 import { usePage } from '../../lib/stores/pageStore'
-import SettingInput from '../../../shared/components/organisms/Settings/atoms/SettingInput'
+import Form from '../../../shared/components/molecules/Form'
 
 interface GuestInvitesSectionProps {
   docId: string
@@ -189,22 +184,32 @@ const GuestInvitesSection = ({ teamId, docId }: GuestInvitesSectionProps) => {
         <h2>Invite with Email</h2>
         {has('fetch') && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
-      <form onSubmit={submitInvite}>
-        <SectionRow>
-          <SettingInput
-            value={email}
-            onChange={onChangeHandler}
-            placeholder='Email...'
-          />
-          <CustomButton
-            type='submit'
-            variant='primary'
-            disabled={has('create')}
-          >
-            Send
-          </CustomButton>
-        </SectionRow>
-      </form>
+      <Form
+        onSubmit={submitInvite}
+        rows={[
+          {
+            items: [
+              {
+                type: 'input',
+                props: {
+                  value: email,
+                  placeholder: 'Email...',
+                  onChange: onChangeHandler,
+                },
+              },
+              {
+                type: 'button',
+                props: {
+                  variant: 'primary',
+                  label: 'Send',
+                  spinning: has('create'),
+                  disabled: has('create'),
+                },
+              },
+            ],
+          },
+        ]}
+      />
       <SectionList>
         {pendingInvites.map((invite) => (
           <SectionListItem key={invite.id} className='li'>

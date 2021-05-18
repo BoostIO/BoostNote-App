@@ -235,8 +235,6 @@ const Application = ({
     if (query.settings === 'upgrade') {
       openSettingsTab('teamUpgrade')
     }
-
-    openSettingsTab('teamInfo')
   })
 
   useEffect(() => {
