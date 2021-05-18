@@ -104,7 +104,7 @@ interface MarkdownViewProps {
   embeddableDocs?: Map<string, EmbedDoc>
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
-  highlights?: HighlightRange[]
+  comments?: HighlightRange[]
   commentClick?: (id: string) => void
 }
 
@@ -118,7 +118,7 @@ const MarkdownView = ({
   embeddableDocs,
   scrollerRef,
   SelectionMenu,
-  highlights,
+  comments,
   commentClick,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
@@ -242,8 +242,8 @@ const MarkdownView = ({
         theme: settings['general.codeBlockTheme'],
       })
       .use(rehypeMermaid)
-      .use(rehypeHighlight, highlights || [])
-      .use(rehypeGutters, makeCommentGutters(highlights || []))
+      .use(rehypeHighlight, comments || [])
+      .use(rehypeGutters, makeCommentGutters(comments || []))
       .use(rehypePosition)
       .use(rehypeReact, rehypeReactConfig)
 
@@ -254,7 +254,7 @@ const MarkdownView = ({
     shortcodeHandler,
     headerLinks,
     embeddableDocs,
-    highlights,
+    comments,
     commentClick,
   ])
 

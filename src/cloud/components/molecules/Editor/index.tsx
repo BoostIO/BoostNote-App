@@ -216,7 +216,7 @@ const Editor = ({
     [realtime, commentActions, setPreferences]
   )
 
-  const highlights = useMemo(() => {
+  const viewComments = useMemo(() => {
     if (commentState.mode === 'list_loading' || realtime == null) {
       return []
     }
@@ -238,6 +238,9 @@ const Editor = ({
             id: thread.id,
             start: absoluteAnchor.index,
             end: absoluteHead.index,
+            active:
+              commentState.mode === 'thread' &&
+              thread.id === commentState.thread.id,
           })
         }
       }
@@ -941,7 +944,7 @@ const Editor = ({
               className='scroller'
               embeddableDocs={embeddableDocs}
               scrollerRef={previewRef}
-              highlights={highlights}
+              comments={viewComments}
               commentClick={commentClick}
               SelectionMenu={({ selection }) => (
                 <StyledSelectionMenu>
