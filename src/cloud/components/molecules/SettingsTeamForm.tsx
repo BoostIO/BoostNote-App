@@ -161,13 +161,13 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
             ],
             description: (
               <Description>
-                <span className='description'>
+                <div className='description'>
                   Your url will look like this:
                   <span className='underlined'>{slugDomain}</span>
-                </span>
-                <span className='description'>
+                </div>
+                <div className='description'>
                   Caution: You can&#39;t change it after creating your team.
-                </span>
+                </div>
               </Description>
             ),
           }}
@@ -178,9 +178,6 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
 }
 
 const Description = styled.div`
-  .description {
-    display: block;
-  }
   .description + .description {
     margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
   }
