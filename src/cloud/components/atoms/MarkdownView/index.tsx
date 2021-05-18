@@ -413,9 +413,7 @@ const StyledMarkdownPreview = styled.div`
     left: 100%;
     top: 0;
     max-width: 40px;
-    display: none;
   }
-
 
   .with__gutter {
     position: relative;
