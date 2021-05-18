@@ -35,13 +35,15 @@ export type ModeTransition =
 
 export interface Actions {
   setMode: (transition: ModeTransition) => void
-  createThread: (data: Omit<CreateThreadRequestBody, 'doc'>) => Promise<void>
-  reopenThread: (thread: Thread) => Promise<void>
-  closeThread: (thread: Thread) => Promise<void>
-  deleteThread: (thread: Thread) => Promise<void>
-  createComment: (thread: Thread, message: string) => Promise<void>
-  updateComment: (comment: Comment, message: string) => Promise<void>
-  deleteComment: (comment: Comment, message: string) => Promise<void>
+  createThread: (
+    data: Omit<CreateThreadRequestBody, 'doc'>
+  ) => Promise<Thread | Error>
+  reopenThread: (thread: Thread) => Promise<Thread | Error>
+  closeThread: (thread: Thread) => Promise<Thread | Error>
+  deleteThread: (thread: Thread) => Promise<void | Error>
+  createComment: (thread: Thread, message: string) => Promise<void | Error>
+  updateComment: (comment: Comment, message: string) => Promise<void | Error>
+  deleteComment: (comment: Comment, message: string) => Promise<void | Error>
 }
 
 interface CommentManagerProps extends Actions {

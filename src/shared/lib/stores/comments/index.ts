@@ -33,10 +33,12 @@ function useCommentsStore() {
   )
   const threadObservers = useRef<Map<string, ThreadObserver[]>>(new Map())
   const pushErrorRef = useRef(pushApiErrorMessage)
-  const handleError = useRef((promise: Promise<any>) =>
-    promise.catch((err) => {
-      pushErrorRef.current(err)
-    })
+  const handleError = useRef(
+    <T>(promise: Promise<T>): Promise<T | Error> =>
+      promise.catch((err) => {
+        pushErrorRef.current(err)
+        return err
+      })
   )
 
   useEffect(() => {
@@ -165,22 +167,26 @@ function useCommentsStore() {
   const [threadActions] = useState(() => {
     const setStatus = (thread: Thread, status: 'closed' | 'open') =>
       handleError.current(
-        setThreadStatus(thread, status).then((comment) =>
-          insertThreadsRef.current([comment])
-        )
+        setThreadStatus(thread, status).then((thread) => {
+          insertThreadsRef.current([thread])
+          return thread
+        })
       )
     return {
       create: (body: CreateThreadRequestBody) =>
         handleError.current(
-          createThread(body).then((thread) =>
+          createThread(body).then((thread) => {
             insertThreadsRef.current([thread])
-          )
+            return thread
+          })
         ),
       reopen: (thread: Thread) => setStatus(thread, 'open'),
       close: (thread: Thread) => setStatus(thread, 'closed'),
       delete: async (thread: Thread) => {
-        await handleError.current(deleteThread(thread))
-        removeThreadRef.current(thread)
+        const result = await handleError.current(deleteThread(thread))
+        if (!(result instanceof Error)) {
+          removeThreadRef.current(thread)
+        }
       },
     }
   })
