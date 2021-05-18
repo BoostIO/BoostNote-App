@@ -216,12 +216,13 @@ const Editor = ({
     [realtime, commentActions, setPreferences]
   )
 
-  const viewComments = useMemo(() => {
+  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
+  const calculatePositions = useCallback(() => {
     if (commentState.mode === 'list_loading' || realtime == null) {
-      return []
+      return
     }
 
-    const highlights: HighlightRange[] = []
+    const comments: HighlightRange[] = []
     for (const thread of commentState.threads) {
       if (thread.selection != null && thread.status.type === 'open') {
         const absoluteAnchor = createAbsolutePositionFromRelativePosition(
@@ -234,7 +235,7 @@ const Editor = ({
         )
 
         if (absoluteAnchor != null && absoluteHead != null) {
-          highlights.push({
+          comments.push({
             id: thread.id,
             start: absoluteAnchor.index,
             end: absoluteHead.index,
@@ -245,8 +246,20 @@ const Editor = ({
         }
       }
     }
-    return highlights
+    setViewComments(comments)
   }, [commentState, realtime])
+
+  useEffect(() => {
+    if (realtime != null) {
+      realtime.doc.on('update', calculatePositions)
+      return () => realtime.doc.off('update', calculatePositions)
+    }
+    return undefined
+  }, [realtime, calculatePositions])
+
+  useEffect(() => {
+    calculatePositions()
+  }, [calculatePositions])
 
   const commentClick = useCallback(
     (id: string) => {
