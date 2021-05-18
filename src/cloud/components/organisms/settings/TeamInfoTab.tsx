@@ -52,7 +52,7 @@ const TeamInfoTab = () => {
       description={'Manage your space settings.'}
       body={
         <section>
-          <SettingsTeamForm team={team} teamConversion={false} header={false} />
+          <SettingsTeamForm team={team} teamConversion={false} />
         </section>
       }
       footer={adminContent}
