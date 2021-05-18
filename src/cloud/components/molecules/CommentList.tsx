@@ -31,7 +31,9 @@ export function CommentItem({ comment }: CommentItemProps) {
       <div className='comment__meta'>
         <UserIcon style={smallUserIconStyle} user={comment.user} />{' '}
         <strong>{comment.user.displayName}</strong>
-        <span>{format(comment.createdAt, 'Mo MMMM hh:mmaaa')}</span>
+        <span className='comment__meta__date'>
+          {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
+        </span>
       </div>
       <div className='comment__message'>{comment.message}</div>
     </CommentItemContainer>
@@ -46,8 +48,8 @@ const CommentItemContainer = styled.div`
     & :not(:last-child) {
       margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
-    & .comment__username {
-      font-weight: bold;
+    & .comment__meta__date {
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
 
