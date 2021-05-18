@@ -51,7 +51,14 @@ const Container = styled.div`
   .settings__content {
     flex: 1 1 100%;
     min-width: 0;
+    display: block;
+    height: 100vh;
     overflow: auto;
+  }
+
+  .settings__content__wrapper {
+    width: 100%;
+    height: auto;
   }
 `
 

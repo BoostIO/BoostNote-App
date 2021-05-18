@@ -49,8 +49,8 @@ const PlanTables = ({
       const trialEndDate = new Date(subscription.currentPeriodEnd * 1000)
       return (
         <p>
-          <span className='check'>&#x2713;</span> In free trial ({' '}
-          {formatDistanceToNow(trialEndDate, { includeSeconds: false })} left )
+          <span className='check'>&#x2713;</span> In free trial (
+          {formatDistanceToNow(trialEndDate, { includeSeconds: false })} left)
         </p>
       )
     }
