@@ -419,7 +419,7 @@ const MembersTab = () => {
           onClick: () => setShowTeamPersonalForm(false),
         }}
         body={<SettingsTeamForm team={team} teamConversion={true} />}
-      ></SettingTabContent>
+      />
     )
   }
 
