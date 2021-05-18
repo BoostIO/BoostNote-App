@@ -128,7 +128,11 @@ padding: 2px 8px;
 &${focusClass} {
   background: ${theme.colors.background.primary} !important;
   border: 1px solid ${theme.colors.variants.info.base} !important;
-}
+}`
+
+export const formInputHeight = () => `
+  height: 32px;
+  min-height: 32px;
 `
 
 /* ———————————–———————————–———————————–——–——

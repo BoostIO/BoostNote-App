@@ -24,7 +24,9 @@ const SettingTabContent = ({
           </p>
         </div>
         <div className='setting__tab__content__body'>{body}</div>
-        <div className='setting__tab__content__footer'>{footer}</div>
+        {footer != null && (
+          <div className='setting__tab__content__footer'>{footer}</div>
+        )}
       </div>
     </div>
   </Container>
@@ -34,6 +36,12 @@ const Container = styled.div`
   display: block;
   width: 100%;
   padding-top: ${({ theme }) => theme.sizes.spaces.xl}px;
+
+  .setting__tab__content__footer {
+    margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
+    padding-top: ${({ theme }) => theme.sizes.spaces.l}px;
+    border-top: 1px solid ${({ theme }) => theme.colors.border.main};
+  }
 
   .setting__tab__content__scrollable {
     width: 100%;

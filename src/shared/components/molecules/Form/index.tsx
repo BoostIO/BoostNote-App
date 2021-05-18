@@ -32,7 +32,11 @@ const Form: AppComponent<FormProps> = ({
           return
         }
         setSubmitState(true)
-        new Promise(() => onSubmit(event)).finally(() => setSubmitState(false))
+        new Promise(async (resolve) => {
+          await onSubmit(event)
+          setSubmitState(false)
+          resolve(true)
+        })
       }}
       className={cc(['form', className])}
     >
@@ -62,6 +66,6 @@ const Container = styled.form`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .form__row + .form__row {
-    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
   }
 `
