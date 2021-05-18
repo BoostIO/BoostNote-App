@@ -73,7 +73,6 @@ import {
   mdiArchiveOutline,
   mdiClockOutline,
   mdiCogOutline,
-  mdiDotsHorizontal,
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
@@ -84,13 +83,11 @@ import {
   mdiMagnify,
   mdiPaperclip,
   mdiPencil,
-  mdiPencilBoxMultipleOutline,
   mdiPlus,
   mdiPlusCircleOutline,
   mdiStar,
   mdiStarOutline,
   mdiTag,
-  mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
   mdiWeb,
 } from '@mdi/js'
@@ -140,14 +137,12 @@ import {
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
 import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
-import ButtonGroup from '../../shared/components/atoms/ButtonGroup'
-import Button from '../../shared/components/atoms/Button'
-import TemplatesModal from './organisms/Modal/contents/TemplatesModal'
 import { CreateWorkspaceRequestBody } from '../api/teams/workspaces'
 import {
   cloudSidebaCategoryLabels,
   cloudSidebarOrderedCategoriesDelimiter,
 } from '../lib/sidebar'
+import NewDocButton from './molecules/NewDocButton'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -169,7 +164,6 @@ const Application = ({
     tagsMap,
     currentParentFolderId,
     currentWorkspaceId,
-    currentPath,
   } = useNav()
   const {
     sideBarOpenedLinksIdsSet,
@@ -206,7 +200,6 @@ const Application = ({
     openNewFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
-    openNewDocForm,
   } = useCloudUI()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
   const { popup } = useContextMenu()
@@ -685,59 +678,7 @@ const Application = ({
                 },
               },
             ]}
-            treeTopRows={
-              team == null ? null : (
-                <>
-                  <ButtonGroup>
-                    <Button
-                      variant='primary'
-                      size='sm'
-                      iconPath={mdiTextBoxPlusOutline}
-                      id='sidebar-newdoc-btn'
-                      iconSize={16}
-                      onClick={() =>
-                        openNewDocForm(
-                          {
-                            team,
-                            parentFolderId: currentParentFolderId,
-                            workspaceId: currentWorkspaceId,
-                          },
-                          {
-                            precedingRows: [
-                              {
-                                description: `${
-                                  workspacesMap.get(currentWorkspaceId || '')
-                                    ?.name
-                                }${currentPath}`,
-                              },
-                            ],
-                          }
-                        )
-                      }
-                    >
-                      Create new doc
-                    </Button>
-                    <Button
-                      variant='primary'
-                      size='sm'
-                      iconPath={mdiDotsHorizontal}
-                      onClick={(event) => {
-                        event.preventDefault()
-                        popup(event, [
-                          {
-                            icon: mdiPencilBoxMultipleOutline,
-                            type: MenuTypes.Normal,
-                            label: 'Use a template',
-                            onClick: () =>
-                              openModal(<TemplatesModal />, { width: 'large' }),
-                          },
-                        ])
-                      }}
-                    />
-                  </ButtonGroup>
-                </>
-              )
-            }
+            treeTopRows={team == null ? null : <NewDocButton team={team} />}
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}

@@ -93,24 +93,3 @@ export const SectionFlexRow = styled.div`
     }
   }
 `
-
-export const SectionFlexDualButtons = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  &.marginTop {
-    margin-top: ${({ theme }) => theme.space.medium}px;
-  }
-
-  button {
-    margin-left: ${({ theme }) => theme.space.small}px;
-
-    svg {
-      position: relative !important;
-      transform: none !important;
-      top: initial !important;
-      left: initial !important;
-    }
-  }
-`

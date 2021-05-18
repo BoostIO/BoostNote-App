@@ -3,13 +3,11 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
 import { createSubscription } from '../../../api/teams/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { SectionFlexDualButtons } from '../../organisms/settings/styled'
 import { inputStyle } from '../../../lib/styled/styleFunctions'
 import styled from '../../../lib/styled'
 import Stripe, { StripeElementStyle } from '@stripe/stripe-js'
 import { useSettings } from '../../../lib/stores/settings'
 import { selectTheme } from '../../../lib/styled'
-import { Spinner } from '../../atoms/Spinner'
 import { usePage } from '../../../lib/stores/pageStore'
 import {
   stripeProPlanUnit,
@@ -23,7 +21,10 @@ import Icon from '../../../../components/atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
-import Button from '../../../../shared/components/atoms/Button'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
+import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -236,9 +237,7 @@ const SubscriptionForm = ({
           onChange={onPromoCodeInputChangeHandler}
         />
       )}
-      <SectionFlexDualButtons
-        style={{ justifyContent: 'flex-start', marginTop: '40px' }}
-      >
+      <ButtonGroup layout='spread' className='button__group' display='flex'>
         {onCancel != null && (
           <Button
             type='button'
@@ -249,13 +248,14 @@ const SubscriptionForm = ({
             Cancel
           </Button>
         )}
-        <Button
+        <LoadingButton
           type='submit'
           disabled={!stripe || sending || currentPlan == null}
+          spinning={sending}
         >
-          {sending ? <Spinner /> : 'Subscribe'}
-        </Button>
-      </SectionFlexDualButtons>
+          Subscribe
+        </LoadingButton>
+      </ButtonGroup>
     </StyledSubscriptionForm>
   )
 }
@@ -360,6 +360,10 @@ export const StyledSubscriptionForm = styled.form`
     svg {
       margin-left: ${({ theme }) => theme.space.xxsmall}px;
     }
+  }
+
+  .button__group {
+    margin-top: 40px;
   }
 `
 
