@@ -108,7 +108,19 @@ function useCommentsStore() {
       )
 
       if (!threadsCache.current.has(docId)) {
-        handleError.current(getThreads(docId).then(insertThreadsRef.current))
+        handleError.current(
+          getThreads(docId).then((threads) => {
+            if (threads.length === 0) {
+              threadsCache.current.set(docId, [])
+              const observers = docThreadsObservers.current.get(docId) || []
+              for (const observer of observers) {
+                observer([])
+              }
+            } else {
+              insertThreadsRef.current(threads)
+            }
+          })
+        )
       }
 
       return unobserve
@@ -132,7 +144,16 @@ function useCommentsStore() {
 
       if (!commentsCache.current.has(thread.id)) {
         handleError.current(
-          listThreadComments(thread).then(insertCommentsRef.current)
+          listThreadComments(thread).then((comments) => {
+            if (comments.length === 0) {
+              commentsCache.current.set(thread.id, [])
+              const observers = threadObservers.current.get(thread.id) || []
+              for (const observer of observers) {
+                observer([])
+              }
+            }
+            insertCommentsRef.current(comments)
+          })
         )
       }
 
