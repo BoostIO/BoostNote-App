@@ -354,8 +354,4 @@ const StyledButton = styled.button`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
   }
-
-  .button__spinner {
-    margin-top: 6px;
-  }
 `

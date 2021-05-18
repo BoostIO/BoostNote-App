@@ -3,19 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { saveUserInfo, updateUserIcon } from '../../../api/users'
 import { buildIconUrl } from '../../../api/files'
-import { Spinner } from '../../atoms/Spinner'
 import { useSettings } from '../../../lib/stores/settings'
 import AccountLink from '../../atoms/Link/AccountLink'
-import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { UserEmailNotificationType } from '../../../interfaces/db/userSettings'
 import { saveUserSettings } from '../../../api/users/settings'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import SettingInput from '../../../../shared/components/organisms/Settings/atoms/SettingInput'
-import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
-import Button from '../../../../shared/components/atoms/Button'
-import SettingDivider from '../../../../shared/components/organisms/Settings/atoms/SettingDivider'
-import SettingIconInput from '../../../../shared/components/organisms/Settings/molecules/SettingIconInput'
+import Form from '../../../../shared/components/molecules/Form'
 
 const PersonalInfoTab = () => {
   const {
@@ -92,19 +86,19 @@ const PersonalInfoTab = () => {
     return buildIconUrl(currentUser.icon.location)
   }, [currentUser])
 
-  const selectCurrentEmailNotifications: SelectChangeEventHandler = useCallback(
-    (event) => {
-      let value: UserEmailNotificationType | 'never'
-      switch (event.target.value) {
+  const selectCurrentEmailNotifications = useCallback(
+    (value: string | 'never') => {
+      let targetedValue: UserEmailNotificationType | 'never'
+      switch (value) {
         case 'daily':
         case 'weekly':
-          value = event.target.value
+          targetedValue = value
           break
         case 'never':
         default:
-          value = 'never'
+          targetedValue = 'never'
       }
-      setCurrentEmailNotifications(value)
+      setCurrentEmailNotifications(targetedValue)
     },
     []
   )
@@ -114,73 +108,54 @@ const PersonalInfoTab = () => {
       title={t('settings.personalInfo')}
       description={'Manage your Boost Note profile.'}
       body={
-        <>
-          {currentUser != null && (
-            <>
-              <section>
-                <SettingIconInput defaultUrl={iconUrl} onChange={setIconFile} />
-              </section>
-              <section>
-                <SettingInput
-                  label={'Name'}
-                  value={displayName}
-                  onChange={onChangeHandler}
-                ></SettingInput>
-              </section>
-            </>
-          )}
-
-          {currentUser != null && (
-            <section>
-              <SettingSelect
-                label={t('settings.notificationsFrequency')}
-                value={currentEmailNotifications}
-                onChange={selectCurrentEmailNotifications}
-                disabled={updating}
-                options={
-                  <>
-                    <option
-                      value='daily'
-                      selected={currentEmailNotifications === 'daily'}
-                    >
-                      Daily
-                    </option>
-                    <option
-                      value='weekly'
-                      selected={currentEmailNotifications === 'weekly'}
-                    >
-                      Weekly
-                    </option>
-                    <option
-                      value='never'
-                      selected={currentEmailNotifications == null}
-                    >
-                      Never
-                    </option>
-                  </>
-                }
-              ></SettingSelect>
-            </section>
-          )}
-
-          <section>
-            <Button
-              variant='primary'
-              onClick={updateHandler}
-              disabled={updating}
-            >
-              {updating ? (
-                <Spinner style={{ fontSize: 16 }} />
-              ) : (
-                t('general.update')
-              )}
-            </Button>
-          </section>
-        </>
+        currentUser == null ? null : (
+          <Form
+            onSubmit={updateHandler}
+            rows={[
+              {
+                title: 'Profile Picture',
+                items: [
+                  {
+                    type: 'image',
+                    props: { defaultUrl: iconUrl, onChange: setIconFile },
+                  },
+                ],
+              },
+              {
+                title: 'Name',
+                items: [
+                  {
+                    type: 'input',
+                    props: { value: displayName, onChange: onChangeHandler },
+                  },
+                ],
+              },
+              {
+                title: t('settings.notificationsFrequency'),
+                items: [
+                  {
+                    type: 'select--string',
+                    props: {
+                      value: currentEmailNotifications,
+                      onChange: selectCurrentEmailNotifications,
+                      isDisabled: updating,
+                      options: ['daily', 'weekly', 'never'],
+                    },
+                  },
+                ],
+              },
+            ]}
+            submitButton={{
+              variant: 'primary',
+              spinning: updating,
+              label: t('general.update'),
+              disabled: updating,
+            }}
+          />
+        )
       }
       footer={
         <>
-          <SettingDivider />
           <h2>{t('settings.account.delete')}</h2>
           <p className='text--subtle'>
             You may delete your account at any time, note that this is

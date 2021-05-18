@@ -170,6 +170,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
                 props: {
                   type: 'submit',
                   label: 'Send',
+                  disabled: sending,
                 },
               },
             ],

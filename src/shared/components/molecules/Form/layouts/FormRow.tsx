@@ -10,6 +10,7 @@ import FormSelect, {
   SimpleFormSelectProps,
 } from '../atoms/FormSelect'
 import cc from 'classcat'
+import FormImage, { FormImageProps } from '../atoms/FormImage'
 
 export type FormRowButtonProps = ButtonProps & {
   label: React.ReactNode
@@ -29,6 +30,7 @@ export type FormRowProps = {
     | { type: 'select--string'; props: SimpleFormSelectProps }
     | { type: 'emoji'; props: FormEmojiProps }
     | { type: 'button'; props: FormRowButtonProps }
+    | { type: 'image'; props: FormImageProps }
     | { type: 'node'; element: React.ReactNode }
   )[]
 }
@@ -50,6 +52,8 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
                 <FormSelect {...item.props} />
               ) : item.type === 'select--string' ? (
                 <SimpleFormSelect {...item.props} />
+              ) : item.type === 'image' ? (
+                <FormImage {...item.props} />
               ) : item.type === 'emoji' ? (
                 <FormEmoji {...item.props} />
               ) : item.type === 'button' ? (
@@ -73,6 +77,11 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({ row, className }) => {
 const Container = styled.div`
   .form__row__description {
     color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
+  .form__row__title {
+    filter: brightness(80%);
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .form__row__items {

@@ -40,11 +40,11 @@ import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import SettingSelect from '../../../../shared/components/organisms/Settings/atoms/SettingSelect'
 import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
 import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import { SimpleFormSelect } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -219,12 +219,10 @@ const MembersTab = () => {
 
   const changePermissionsRole = useCallback(
     async (
-      event: React.ChangeEvent<HTMLSelectElement>,
+      targetedRole,
       userPermissions,
       targetedPermissions: SerializedUserTeamPermissions
     ) => {
-      event.preventDefault()
-      const targetedRole = event.target.value
       if (
         team == null ||
         userPermissions.role !== 'admin' ||
@@ -536,32 +534,22 @@ const MembersTab = () => {
                                     }}
                                   />
                                 ) : (
-                                  <SettingSelect
+                                  <SimpleFormSelect
+                                    className='user--role--select'
                                     value={permission.role}
-                                    onChange={(e: any) =>
+                                    onChange={(value: string) =>
                                       changePermissionsRole(
-                                        e,
+                                        value,
                                         currentUserPermissions,
                                         permission
                                       )
                                     }
-                                    style={{
-                                      width: 'auto',
-                                      minWidth: 'initial',
-                                      height: 24,
-                                      marginRight: 16,
-                                    }}
-                                    disabled={
+                                    isDisabled={
                                       !currentUserIsAdmin ||
                                       targetPermissionsAreUsersOwn
                                     }
-                                    options={
-                                      <>
-                                        <option value='admin'>admin</option>
-                                        <option value='member'>member</option>
-                                      </>
-                                    }
-                                  ></SettingSelect>
+                                    options={['admin', 'member']}
+                                  />
                                 )}
                                 {(targetPermissionsAreUsersOwn ||
                                   currentUserIsAdmin) && (
@@ -737,11 +725,13 @@ const StyledMembersTable = styled.table`
 
     .user-action {
       position: relative;
-      select {
-        padding-left: 0;
-        padding-right: ${({ theme }) => theme.space.small}px;
-        background-color: transparent;
-        border: transparent;
+
+      .form__select__wrapper {
+        flex: 1 0 auto;
+      }
+
+      .form__select .form__select__control {
+        /* border: transparent; */
       }
     }
 

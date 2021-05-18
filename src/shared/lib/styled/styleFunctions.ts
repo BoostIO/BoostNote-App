@@ -115,6 +115,11 @@ export const hideScroll = () => `
     Form
 ———————————–———————————–———————————–——–—— */
 
+export const formInputHeight = () => `
+  height: 32px;
+  min-height: 32px;
+`
+
 /* ———————————–———————————–———————————–——–——
     Table
 ———————————–———————————–———————————–——–—— */
