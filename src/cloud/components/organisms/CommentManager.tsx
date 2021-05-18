@@ -174,7 +174,7 @@ function CommentManager({
 }
 
 const Container = styled.div`
-  z-index: ${zIndexModalsBackground + 1};
+  z-index: ${zIndexModalsBackground - 1};
   margin: auto;
   width: ${docContextWidth}px;
   height: 100vh;
