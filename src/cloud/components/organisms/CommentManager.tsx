@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { zIndexModalsBackground } from './Topbar/Controls/ControlsContextMenu/styled'
 import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
-import ThreadList from '../molecules/ThreadItem'
+import ThreadItem from '../molecules/ThreadItem'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
-import { mdiArrowLeftBoldBoxOutline, mdiPlusBoxOutline } from '@mdi/js'
+import { mdiPlusBoxOutline, mdiArrowLeft } from '@mdi/js'
 import Icon from '../../../shared/components/atoms/Icon'
 import CommentList from '../molecules/CommentList'
 import styled from '../../../shared/lib/styled'
@@ -75,7 +75,7 @@ function CommentManager({
           <div>
             {state.threads.map((thread) => (
               <div key={thread.id} className='thread__list__item'>
-                <ThreadList
+                <ThreadItem
                   thread={thread}
                   onSelect={onClick}
                   onOpen={reopenThread}
@@ -148,8 +148,11 @@ function CommentManager({
     <Container>
       <div className='header'>
         {state.mode !== 'list' && (
-          <div onClick={() => setMode({ mode: 'list' })}>
-            <Icon size={20} path={mdiArrowLeftBoldBoxOutline} />
+          <div
+            className='icon__wrapper'
+            onClick={() => setMode({ mode: 'list' })}
+          >
+            <Icon size={20} path={mdiArrowLeft} />
           </div>
         )}
         <h4>Thread</h4>
@@ -202,6 +205,10 @@ const Container = styled.div`
       &:not(:first-child) {
         margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
       }
+    }
+
+    .icon__wrapper {
+      height: 20px;
     }
   }
 
