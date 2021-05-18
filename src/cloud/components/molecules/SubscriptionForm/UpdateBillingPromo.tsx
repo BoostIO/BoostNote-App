@@ -1,14 +1,13 @@
 import React, { useState, useCallback } from 'react'
-import {
-  SectionIntroduction,
-  SectionFlexDualButtons,
-} from '../../organisms/settings/styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
+import { SectionIntroduction } from '../../organisms/settings/styled'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { StyledBillingInput } from '.'
-import { Spinner } from '../../atoms/Spinner'
 import { redeemPromo } from '../../../api/teams/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
+import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
@@ -68,15 +67,9 @@ const UpdateBillingPromoForm = ({
       <div>
         <SectionIntroduction>
           <p>You need to have a valid subscription to perform this action.</p>
-          <SectionFlexDualButtons>
-            <CustomButton
-              onClick={onCancel}
-              variant='secondary'
-              disabled={sending}
-            >
-              Cancel
-            </CustomButton>
-          </SectionFlexDualButtons>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
+            Cancel
+          </Button>
         </SectionIntroduction>
       </div>
     )
@@ -93,19 +86,20 @@ const UpdateBillingPromoForm = ({
           onChange={onPromoInputChangeHandler}
         />
 
-        <SectionFlexDualButtons>
-          <CustomButton
-            onClick={onCancel}
-            variant='secondary'
-            disabled={sending}
-          >
+        <ButtonGroup display='flex' layout='spread' justifyContent='flex-end'>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
             Cancel
-          </CustomButton>
+          </Button>
 
-          <CustomButton onClick={onSubmit} variant='primary' disabled={sending}>
-            {sending ? <Spinner /> : 'Apply'}
-          </CustomButton>
-        </SectionFlexDualButtons>
+          <LoadingButton
+            onClick={onSubmit}
+            variant='primary'
+            disabled={sending}
+            spinning={sending}
+          >
+            Apply
+          </LoadingButton>
+        </ButtonGroup>
       </SectionIntroduction>
     </div>
   )

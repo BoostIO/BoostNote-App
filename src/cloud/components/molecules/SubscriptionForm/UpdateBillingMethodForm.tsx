@@ -2,11 +2,8 @@ import React, { useState, useMemo, useCallback } from 'react'
 import {
   SectionIntroduction,
   SectionFlexRow,
-  SectionFlexDualButtons,
 } from '../../organisms/settings/styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { Spinner } from '../../atoms/Spinner'
 import { updateSubMethod } from '../../../api/teams/subscription/update'
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js'
 import {
@@ -18,6 +15,10 @@ import { useSettings } from '../../../lib/stores/settings'
 import { StyledCardElementContainer } from './index'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription
@@ -114,15 +115,9 @@ const UpdateBillingMethodForm = ({
       <div>
         <SectionIntroduction>
           <p>You need to have a valid subscription to perform this action.</p>
-          <SectionFlexDualButtons>
-            <CustomButton
-              onClick={onCancel}
-              variant='secondary'
-              disabled={sending}
-            >
-              Cancel
-            </CustomButton>
-          </SectionFlexDualButtons>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
+            Cancel
+          </Button>
         </SectionIntroduction>
       </div>
     )
@@ -147,7 +142,7 @@ const UpdateBillingMethodForm = ({
           </Alert>
         )}
 
-        <StyledCardElementContainer>
+        <StyledCardElementContainer style={{ marginBottom: 40 }}>
           <CardElement
             options={{
               style: stripeFormStyle,
@@ -156,23 +151,20 @@ const UpdateBillingMethodForm = ({
           />
         </StyledCardElementContainer>
 
-        <SectionFlexDualButtons className='marginTop'>
-          <CustomButton
-            onClick={onCancel}
-            variant='secondary'
-            disabled={sending}
-          >
+        <ButtonGroup display='flex' layout='spread' justifyContent='flex-end'>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
             Cancel
-          </CustomButton>
+          </Button>
 
-          <CustomButton
+          <LoadingButton
             onClick={onSubmit}
             variant='primary'
             disabled={usingDifferentCurrencyPricing || sending}
+            spinning={sending}
           >
-            {sending ? <Spinner /> : 'Update'}
-          </CustomButton>
-        </SectionFlexDualButtons>
+            Update
+          </LoadingButton>
+        </ButtonGroup>
       </SectionIntroduction>
     </div>
   )
