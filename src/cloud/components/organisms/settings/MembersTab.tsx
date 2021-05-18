@@ -25,7 +25,12 @@ import { useRouter } from '../../../lib/router'
 import cc from 'classcat'
 import { useNav } from '../../../lib/stores/nav'
 import Icon from '../../atoms/Icon'
-import { mdiArrowRight, mdiCardTextOutline, mdiChevronDown } from '@mdi/js'
+import {
+  mdiArrowLeft,
+  mdiArrowRight,
+  mdiCardTextOutline,
+  mdiChevronDown,
+} from '@mdi/js'
 import { deleteGuestDoc, getGuestsEmails } from '../../../api/guests'
 import { useSet } from 'react-use'
 import plur from 'plur'
@@ -405,13 +410,15 @@ const MembersTab = () => {
   if (team.personal && showTeamPersonalForm) {
     return (
       <SettingTabContent
-        body={
-          <SettingsTeamForm
-            team={team}
-            onCancel={() => setShowTeamPersonalForm(false)}
-            teamConversion={true}
-          />
-        }
+        title='Create team space'
+        description='Create a team space in order to invite your teammates'
+        backLink={{
+          variant: 'icon',
+          iconPath: mdiArrowLeft,
+          iconSize: 20,
+          onClick: () => setShowTeamPersonalForm(false),
+        }}
+        body={<SettingsTeamForm team={team} teamConversion={true} />}
       ></SettingTabContent>
     )
   }

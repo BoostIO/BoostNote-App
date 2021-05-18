@@ -60,6 +60,12 @@ const Container = styled.div`
     width: 100%;
     height: auto;
   }
+
+  .settings__close-btn {
+    position: absolute;
+    top: ${({ theme }) => theme.sizes.spaces.md}px;
+    right: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
 `
 
 export default Settings

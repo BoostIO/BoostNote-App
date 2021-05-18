@@ -1,4 +1,4 @@
-import { mdiArrowLeft, mdiDomain } from '@mdi/js'
+import { mdiDomain } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
 import slugify from 'slugify'
 import { buildIconUrl } from '../../api/files'
@@ -21,16 +21,9 @@ import SettingIconInputLabel from '../../../shared/components/organisms/Settings
 interface SettingsTeamFormProps {
   team: SerializedTeam
   teamConversion?: boolean
-  header?: boolean
-  onCancel?: () => void
 }
 
-const SettingsTeamForm = ({
-  team,
-  teamConversion,
-  header = true,
-  onCancel,
-}: SettingsTeamFormProps) => {
+const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
   const [name, setName] = useState<string>(!teamConversion ? team.name : '')
   const [domain, setDomain] = useState<string>(
     !teamConversion ? team.domain : ''
@@ -137,22 +130,6 @@ const SettingsTeamForm = ({
   return (
     <Container>
       <form onSubmit={updateHandler}>
-        {header && (
-          <Flexbox className='form__header'>
-            {onCancel != null && (
-              <Button
-                variant='secondary'
-                onClick={onCancel}
-                disabled={sending}
-                type='button'
-              >
-                <Icon path={mdiArrowLeft} />
-                Back
-              </Button>
-            )}
-            <h5>Create a team account in order to invite your teammates</h5>
-          </Flexbox>
-        )}
         <Flexbox className='form__row' alignItems='baseline'>
           <label>{label} icon</label>
           <Flexbox direction='column' alignItems='baseline'>

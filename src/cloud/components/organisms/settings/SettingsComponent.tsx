@@ -26,10 +26,9 @@ import ApiTab from './ApiTab'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/molecules/SettingSidenavHeader'
-import SettingSidenav from '../../../../shared/components/organisms/Settings/atoms/SettingSidenav'
 import SettingTabButton from '../../../../shared/components/organisms/Settings/atoms/SettingTabButton'
-import Icon from '../../../../shared/components/atoms/Icon'
-import SettingCloseButton from '../../../../shared/components/organisms/Settings/atoms/SettingCloseButton'
+import Button from '../../../../shared/components/atoms/Button'
+import styled from '../../../../shared/lib/styled'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -118,7 +117,7 @@ const SettingsComponent = () => {
   return (
     <Settings
       sidebar={
-        <SettingSidenav ref={menuRef}>
+        <SettingSidenav className='settings__sidenav' ref={menuRef}>
           <SettingSidenavHeader
             path={mdiAccountCircleOutline}
             text={'Account'}
@@ -200,16 +199,25 @@ const SettingsComponent = () => {
       content={
         <div className='settings__content__wrapper' ref={contentSideRef}>
           {content}
-          <SettingCloseButton
+          <Button
+            variant='icon'
             className='settings__close-btn'
             onClick={toggleClosed}
-          >
-            <Icon path={mdiClose} size={26} />
-          </SettingCloseButton>
+            iconPath={mdiClose}
+            iconSize={26}
+          />
         </div>
       }
     />
   )
 }
+
+const SettingSidenav = styled.nav`
+  width: 250px;
+  margin-bottom: 0;
+  margin-right: 0;
+  padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+  overflow: hidden auto;
+`
 
 export default SettingsComponent

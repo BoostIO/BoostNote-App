@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from '../../../../lib/styled'
+import Button, { ButtonProps } from '../../../atoms/Button'
 
 interface SettingTabContentProps {
   title?: React.ReactNode
   description?: React.ReactNode
   body: React.ReactNode
   footer?: React.ReactNode
+  backLink?: ButtonProps
 }
 
 const SettingTabContent = ({
@@ -13,10 +15,16 @@ const SettingTabContent = ({
   description,
   body,
   footer,
+  backLink,
 }: SettingTabContentProps) => (
   <Container className='setting__tab__content'>
     <div className='setting__tab__content__scrollable'>
       <div className='setting__tab__content__container'>
+        {backLink != null && (
+          <Button {...backLink} className='settings__tab__content__backlink'>
+            Back
+          </Button>
+        )}
         <div className='setting__tab__content__header'>
           <h1 className='setting__tab__content__header__title'>{title}</h1>
           <p className='setting__tab__content__header__description'>
@@ -36,6 +44,12 @@ const Container = styled.div`
   display: block;
   width: 100%;
   padding-top: ${({ theme }) => theme.sizes.spaces.xl}px;
+  position: relative;
+
+  .settings__tab__content__backlink {
+    position: absolute;
+    top: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
 
   .setting__tab__content__footer {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
