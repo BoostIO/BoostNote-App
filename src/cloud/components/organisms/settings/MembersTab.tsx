@@ -455,7 +455,9 @@ const MembersTab = () => {
                 <TopMargin />
                 <StyledMembersTable>
                   <thead className='table-header'>
-                    <th>User</th>
+                    <tr>
+                      <th>User</th>
+                    </tr>
                   </thead>
                   <tbody className='table-body'>
                     <tr key={currentUserPermissions.id}>
@@ -496,8 +498,10 @@ const MembersTab = () => {
                   </Flexbox>
                   <StyledMembersTable>
                     <thead className='table-header'>
-                      <th>User</th>
-                      <th>Access Level</th>
+                      <tr>
+                        <th>User</th>
+                        <th>Access Level</th>
+                      </tr>
                     </thead>
                     <tbody className='table-body'>
                       {permissions.map((permission) => {
@@ -628,8 +632,10 @@ const MembersTab = () => {
                   </p>
                   <StyledMembersTable>
                     <thead className='table-header'>
-                      <th>User</th>
-                      <th>Access Level</th>
+                      <tr>
+                        <th>User</th>
+                        <th>Access Level</th>
+                      </tr>
                     </thead>
                     <tbody className='table-body'>
                       {[...guestsMap.values()].map((guest) => (
