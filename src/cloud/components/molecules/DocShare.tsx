@@ -8,7 +8,6 @@ import {
   regenerateShareLink,
   updateShareLink,
 } from '../../api/share'
-import Switch from 'react-switch'
 import {
   mdiChevronDown,
   mdiChevronRight,
@@ -41,6 +40,7 @@ import { usingElectron, openInBrowser } from '../../lib/stores/electron'
 import UpgradeButton from '../UpgradeButton'
 import { useToast } from '../../../shared/lib/stores/toast'
 import Button from '../../../shared/components/atoms/Button'
+import Switch from '../../../shared/components/atoms/Switch'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -403,18 +403,9 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           <div className='share__row__switch'>
             <Switch
               disabled={sending !== 'idle'}
-              type='switch'
               id='shared-custom-switch'
               onChange={togglePublicSharing}
               checked={shareLink != null}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              height={20}
-              width={30}
-              onColor='#004774'
-              offColor='#3D3F44'
-              offHandleColor='#1E2024'
-              handleDiameter={14}
             />
           </div>
         </Flexbox>
@@ -493,18 +484,12 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     <div className='share__row__switch'>
                       <Switch
                         disabled={subscription == null || sending !== 'idle'}
-                        type='switch'
                         id='shared-custom-switch-password'
                         onChange={togglePassword}
                         checked={shareLink.password != null || showPasswordForm}
-                        uncheckedIcon={false}
-                        checkedIcon={false}
                         height={20}
                         width={30}
-                        onColor='#004774'
-                        offColor='#3D3F44'
-                        offHandleColor='#1E2024'
-                        handleDiameter={14}
+                        handleSize={14}
                       />
                     </div>
                   )}
@@ -553,7 +538,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     <div className='share__row__switch'>
                       <Switch
                         disabled={subscription == null || sending !== 'idle'}
-                        type='switch'
                         id='shared-custom-switch'
                         onChange={toggleExpire}
                         checked={shareLink.expireAt != null || showExpireForm}
@@ -561,10 +545,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                         checkedIcon={false}
                         height={20}
                         width={30}
-                        onColor='#004774'
-                        offColor='#3D3F44'
-                        offHandleColor='#1E2024'
-                        handleDiameter={14}
+                        handleSize={14}
                       />
                     </div>
                   )}

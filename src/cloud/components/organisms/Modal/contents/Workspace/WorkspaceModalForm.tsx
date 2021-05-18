@@ -17,10 +17,10 @@ import {
 import { SerializedTeam } from '../../../../../interfaces/db/team'
 import { useNav } from '../../../../../lib/stores/nav'
 import Flexbox from '../../../../atoms/Flexbox'
-import CustomSwitch from '../../../../atoms/CustomSwitch'
 import WorkspaceAccess from './WorkspaceAccess'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
+import Switch from '../../../../../../shared/components/atoms/Switch'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -225,7 +225,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                   </span>
                 )}
                 <Flexbox flex='0 0 auto'>
-                  <CustomSwitch
+                  <Switch
                     disabled={
                       sending ||
                       (workspace != null && workspace.default) ||
@@ -236,8 +236,6 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                     checked={!isPublic}
                     height={28}
                     width={60}
-                    uncheckedIcon={false}
-                    checkedIcon={false}
                   />
                 </Flexbox>
               </Flexbox>
