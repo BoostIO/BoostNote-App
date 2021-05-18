@@ -19,6 +19,7 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { getTemplate } from '../../api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
 import { getAccessToken } from '../../lib/stores/electron'
+import { useComments } from '../../../shared/lib/stores/comments'
 
 interface EventSourceProps {
   teamId: string
@@ -61,6 +62,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     globalDataRef,
     globalData: { currentUser, teams },
   } = useGlobalData()
+  const { commentsEventListener } = useComments()
+
   const setupEventSource = useCallback(
     (url: string) => {
       if (eventSourceRef.current != null) {
@@ -423,6 +426,12 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'guestRemoval':
           case 'guestUpdate':
             guestChangeEventHandler(event)
+          case 'commentThreadCreated':
+          case 'commentThreadUpdated':
+          case 'commentThreadDeleted':
+            if (event.userId == null || currentUser?.id !== event.userId) {
+              commentsEventListener(event)
+            }
             break
         }
       }
@@ -441,6 +450,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     tagChangeEventHandler,
     teamUpdateHandler,
     templateChangeEventHandler,
+    commentsEventListener,
+    currentUser,
   ])
 
   return null

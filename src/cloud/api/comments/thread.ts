@@ -20,6 +20,17 @@ export async function getThreads(doc: string): Promise<Thread[]> {
   return threads.map(deserialize)
 }
 
+interface GetThreadResponseBody {
+  thread: SerializedThread
+}
+
+export async function getThread(id: string): Promise<Thread> {
+  const { thread } = await callApi<GetThreadResponseBody>(
+    `api/commentThreads/${id}`
+  )
+  return deserialize(thread)
+}
+
 export interface CreateThreadRequestBody {
   doc: string
   comment?: string
