@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import styled from '../../../../lib/styled'
 import { AppComponent } from '../../../../lib/types'
 import cc from 'classcat'
-import Icon from '@mdi/react'
+import Icon from '../../../atoms/Icon'
 
 export interface FormImageProps {
   onChange?: (file: File) => void
@@ -64,6 +64,10 @@ const Container = styled.div`
   .form__image__wrapper {
     width: 90px;
     height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 
   .form__image--img {
@@ -77,7 +81,6 @@ const Container = styled.div`
 
   .form__image__label {
     position: relative;
-    cursor: pointer;
     margin-left: ${({ theme }) => theme.sizes.spaces.md}px;
 
     & > span {
