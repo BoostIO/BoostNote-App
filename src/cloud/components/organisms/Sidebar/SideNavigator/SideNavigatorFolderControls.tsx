@@ -36,7 +36,7 @@ import SideNavigatorIconButton from './SideNavigatorIconButton'
 import Tooltip from '../../../atoms/Tooltip'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../lib/hooks/useCloudUI'
+import { useCloudResourceModals } from '../../../../lib/hooks/useCloudResourceModals'
 
 interface SideNavigatorFolderControlsProps {
   folder: SerializedFolderWithBookmark
@@ -53,7 +53,7 @@ const SideNavigatorFolderControls = ({
   const { pushMessage, pushApiErrorMessage } = useToast()
   const { popup } = useContextMenu()
   const [sendingBookmark, setSendingBookmark] = useState<boolean>(false)
-  const { openRenameFolderForm } = useCloudUI()
+  const { openRenameFolderForm } = useCloudResourceModals()
 
   const toggleBookmark = useCallback(async () => {
     if (sendingBookmark) {

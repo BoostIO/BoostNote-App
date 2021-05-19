@@ -73,8 +73,8 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 
@@ -151,7 +151,7 @@ const Editor = ({
   })
   const { docsMap, workspacesMap, foldersMap } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
-  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
     openRenameDocForm,
     openRenameFolderForm,
@@ -161,7 +161,7 @@ const Editor = ({
     deleteOrArchiveDoc,
     deleteFolder,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const userInfo = useMemo(() => {
     return {

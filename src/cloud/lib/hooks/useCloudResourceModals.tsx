@@ -10,9 +10,9 @@ import { SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { useCloudUpdater } from './useCloudUpdater'
+import { useCloudApi } from './useCloudApi'
 
-export function useCloudUI() {
+export function useCloudResourceModals() {
   const { openModal, closeLastModal } = useModal()
   const { messageBox } = useDialog()
   const {
@@ -24,7 +24,7 @@ export function useCloudUI() {
     deleteFolderApi,
     deleteDocApi,
     toggleDocArchive,
-  } = useCloudUpdater()
+  } = useCloudApi()
 
   const openWorkspaceEditForm = useCallback(
     (wp: SerializedWorkspace) => {
