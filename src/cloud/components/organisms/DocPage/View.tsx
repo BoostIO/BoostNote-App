@@ -26,8 +26,8 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
 interface ViewPageProps {
@@ -56,7 +56,7 @@ const ViewPage = ({
   const { setPartialPageData, currentUserPermissions } = usePage()
   const { pushMessage } = useToast()
   const { preferences } = usePreferences()
-  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
     openRenameDocForm,
     openRenameFolderForm,
@@ -66,7 +66,7 @@ const ViewPage = ({
     deleteOrArchiveDoc: deleteDoc,
     deleteFolder,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const unarchiveHandler = useCallback(async () => {
     try {

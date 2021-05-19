@@ -5,7 +5,7 @@ import { useNav } from '../../../lib/stores/nav'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
 
 interface WorkspacePage {
@@ -21,7 +21,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     openNewDocForm,
     openWorkspaceEditForm,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
