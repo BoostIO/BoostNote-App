@@ -42,6 +42,10 @@ import { Node as UnistNode } from 'unist'
 import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
+import {
+  highlightComment,
+  unhighlightComment,
+} from '../../../../shared/lib/utils/comments'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -488,20 +492,6 @@ function makeCommentGutters(highlights: HighlightRange[]) {
     }
     return null
   }
-}
-
-function highlightComment(id: string) {
-  return () =>
-    document
-      .querySelectorAll(`[data-inline-comment="${id}"]`)
-      .forEach((element) => element.classList.add('active'))
-}
-
-function unhighlightComment(id: string) {
-  return () =>
-    document
-      .querySelectorAll(`[data-inline-comment="${id}"]`)
-      .forEach((element) => element.classList.remove('active'))
 }
 
 export default MarkdownView
