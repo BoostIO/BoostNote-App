@@ -241,11 +241,13 @@ const Editor = ({
               commentState.mode === 'thread' &&
               thread.id === commentState.thread.id,
           })
+        } else {
+          commentActions.threadOutdated(thread)
         }
       }
     }
     setViewComments(comments)
-  }, [commentState, realtime])
+  }, [commentState, realtime, commentActions])
 
   useEffect(() => {
     if (realtime != null) {

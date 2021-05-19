@@ -43,6 +43,7 @@ export interface Actions {
   reopenThread: (thread: Thread) => Promise<Thread | Error>
   closeThread: (thread: Thread) => Promise<Thread | Error>
   deleteThread: (thread: Thread) => Promise<void | Error>
+  threadOutdated: (thread: Thread) => Promise<Thread | Error>
   createComment: (thread: Thread, message: string) => Promise<void | Error>
   updateComment: (comment: Comment, message: string) => Promise<void | Error>
   deleteComment: (comment: Comment) => Promise<void | Error>
