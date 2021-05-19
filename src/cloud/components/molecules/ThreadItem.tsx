@@ -75,11 +75,6 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           ))}
           {thread.commentCount} replies {formatDate(thread.lastCommentTime)}
         </div>
-        <Icon
-          className='thread__action'
-          size={20}
-          path={mdiChevronDoubleRight}
-        />
       </div>
     </StyledListItem>
   )
