@@ -106,7 +106,11 @@ export function CommentItem({
           ))}
       </div>
       {editing ? (
-        <CommentInput onSubmit={submitComment} value={comment.message} />
+        <CommentInput
+          autoFocus={true}
+          onSubmit={submitComment}
+          value={comment.message}
+        />
       ) : (
         <div className='comment__message'>{comment.message}</div>
       )}
