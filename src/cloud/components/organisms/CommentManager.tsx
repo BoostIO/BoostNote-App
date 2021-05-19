@@ -14,6 +14,10 @@ import Button from '../../../shared/components/atoms/Button'
 import { CreateThreadRequestBody } from '../../api/comments/thread'
 import { sortBy } from 'ramda'
 import { SerializedUser } from '../../interfaces/db/user'
+import {
+  highlightComment,
+  unhighlightComment,
+} from '../../../shared/lib/utils/comments'
 
 export type State =
   | { mode: 'list_loading' }
@@ -83,7 +87,12 @@ function CommentManager({
             {sortBy((thread) => thread.status.at, state.threads)
               .reverse()
               .map((thread) => (
-                <div key={thread.id} className='thread__list__item'>
+                <div
+                  key={thread.id}
+                  onMouseOver={highlightComment(thread.id)}
+                  onMouseOut={unhighlightComment(thread.id)}
+                  className='thread__list__item'
+                >
                   <ThreadItem
                     thread={thread}
                     onSelect={onClick}
