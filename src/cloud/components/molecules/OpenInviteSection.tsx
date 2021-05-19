@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { SectionRow } from '../organisms/settings/styled'
 import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
@@ -33,6 +33,14 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   >(undefined)
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   useEffectOnce(() => {
     fetchOpenInvite()
@@ -43,13 +51,22 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       return
     }
     setFetching(true)
-    try {
-      const { invite } = await getOpenInvite(team)
-      setOpenInvite(invite)
-      setFetching(false)
-    } catch (error) {
-      pushApiErrorMessage(error)
-    }
+    getOpenInvite(team)
+      .then(({ invite }) => {
+        if (!mountedRef.current) {
+          return
+        }
+        setOpenInvite(invite)
+      })
+      .catch((error) => {
+        pushApiErrorMessage(error)
+      })
+      .then(() => {
+        if (!mountedRef.current) {
+          return
+        }
+        setFetching(false)
+      })
   }, [team, pushApiErrorMessage])
 
   const createInvite = useCallback(async () => {

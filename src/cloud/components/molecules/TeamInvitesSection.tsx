@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import {
   SectionList,
   SectionListItem,
@@ -36,6 +36,14 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   const [error, setError] = useState<unknown>()
   const { messageBox } = useDialog()
   const [role, setRole] = useState<TeamPermissionType>('member')
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   useEffectOnce(() => {
     fetchAndSetInvites()
@@ -46,13 +54,25 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
       return
     }
     setSending(true)
-    try {
-      const { invites } = await getTeamInvites(team)
-      setPendingInvites(invites)
-    } catch (error) {
-      setError(error)
-    }
-    setSending(false)
+    getTeamInvites(team)
+      .then(({ invites }) => {
+        if (!mountedRef.current) {
+          return
+        }
+        setPendingInvites(invites)
+      })
+      .catch((error) => {
+        if (!mountedRef.current) {
+          return
+        }
+        setError(error)
+      })
+      .finally(() => {
+        if (!mountedRef.current) {
+          return
+        }
+        setSending(false)
+      })
   }, [team])
 
   const onChangeHandler = useCallback(
