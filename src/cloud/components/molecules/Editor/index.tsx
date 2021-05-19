@@ -234,7 +234,11 @@ const Editor = ({
           realtime.doc
         )
 
-        if (absoluteAnchor != null && absoluteHead != null) {
+        if (
+          absoluteAnchor != null &&
+          absoluteHead != null &&
+          absoluteAnchor.index !== absoluteHead.index
+        ) {
           comments.push({
             id: thread.id,
             start: absoluteAnchor.index,
