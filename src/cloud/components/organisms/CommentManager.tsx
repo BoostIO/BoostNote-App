@@ -115,9 +115,7 @@ function CommentManager({
               />
               {state.thread.status.type === 'open' && (
                 <CommentInput
-                  onSubmit={(message) => {
-                    createComment(state.thread, message)
-                  }}
+                  onSubmit={(message) => createComment(state.thread, message)}
                   autoFocus={true}
                 />
               )}

@@ -11,6 +11,8 @@ import {
   MenuTypes,
 } from '../../../shared/lib/stores/contextMenu'
 import CommentInput from './CommentInput'
+import sortBy from 'ramda/es/sortBy'
+import prop from 'ramda/es/prop'
 
 interface CommentThreadProps {
   comments: Comment[]
@@ -30,7 +32,7 @@ function CommentList({
 }: CommentThreadProps) {
   return (
     <div className={className}>
-      {comments.map((comment) => (
+      {sortBy(prop('createdAt'), comments).map((comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}
