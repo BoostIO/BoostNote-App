@@ -118,6 +118,7 @@ function CommentManager({
                   onSubmit={(message) => {
                     createComment(state.thread, message)
                   }}
+                  autoFocus={true}
                 />
               )}
               {state.thread.status.type === 'closed' && (

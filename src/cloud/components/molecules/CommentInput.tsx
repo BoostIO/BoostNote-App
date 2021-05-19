@@ -1,16 +1,29 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import Button from '../../../shared/components/atoms/Button'
 import styled from '../../../shared/lib/styled'
 import Flexbox from '../atoms/Flexbox'
+import { useEffectOnce } from 'react-use'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
   value?: string
+  autoFocus?: boolean
 }
 
-export function CommentInput({ onSubmit, value = '' }: CommentInputProps) {
+export function CommentInput({
+  onSubmit,
+  value = '',
+  autoFocus = false,
+}: CommentInputProps) {
   const [comment, setComment] = useState(value)
   const [working, setWorking] = useState(false)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffectOnce(() => {
+    if (inputRef.current && autoFocus) {
+      inputRef.current.focus()
+    }
+  })
 
   useEffect(() => {
     setComment(value)
@@ -55,6 +68,7 @@ export function CommentInput({ onSubmit, value = '' }: CommentInputProps) {
   return (
     <InputContainer>
       <textarea
+        ref={inputRef}
         disabled={working}
         value={comment}
         onChange={onChange}
