@@ -1,15 +1,20 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Button from '../../../shared/components/atoms/Button'
 import styled from '../../../shared/lib/styled'
 import Flexbox from '../atoms/Flexbox'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
+  value?: string
 }
 
-export function CommentInput({ onSubmit }: CommentInputProps) {
-  const [comment, setComment] = useState('')
+export function CommentInput({ onSubmit, value = '' }: CommentInputProps) {
+  const [comment, setComment] = useState(value)
   const [working, setWorking] = useState(false)
+
+  useEffect(() => {
+    setComment(value)
+  }, [value])
 
   const submit = useCallback(
     async (comment: string) => {

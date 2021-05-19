@@ -13,6 +13,7 @@ import ThreadActionButton from '../molecules/ThreadActionButton'
 import Button from '../../../shared/components/atoms/Button'
 import { CreateThreadRequestBody } from '../../api/comments/thread'
 import { sortBy } from 'ramda'
+import { SerializedUser } from '../../interfaces/db/user'
 
 export type State =
   | { mode: 'list_loading' }
@@ -44,7 +45,8 @@ export interface Actions {
   deleteThread: (thread: Thread) => Promise<void | Error>
   createComment: (thread: Thread, message: string) => Promise<void | Error>
   updateComment: (comment: Comment, message: string) => Promise<void | Error>
-  deleteComment: (comment: Comment, message: string) => Promise<void | Error>
+  deleteComment: (comment: Comment) => Promise<void | Error>
+  user?: SerializedUser
 }
 
 interface CommentManagerProps extends Actions {
@@ -59,6 +61,9 @@ function CommentManager({
   closeThread,
   deleteThread,
   createComment,
+  updateComment,
+  deleteComment,
+  user,
 }: CommentManagerProps) {
   const content = useMemo(() => {
     switch (state.mode) {
@@ -104,6 +109,9 @@ function CommentManager({
               <CommentList
                 comments={state.comments}
                 className='comment__list'
+                updateComment={updateComment}
+                deleteComment={deleteComment}
+                user={user}
               />
               {state.thread.status.type === 'open' && (
                 <CommentInput
@@ -144,7 +152,10 @@ function CommentManager({
     closeThread,
     deleteThread,
     createComment,
+    updateComment,
+    deleteComment,
     setMode,
+    user,
   ])
 
   return (
@@ -268,10 +279,6 @@ const Container = styled.div`
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
-    & > div {
-      width: 2em;
-      height: 2em;
-    }
   }
 `
 
