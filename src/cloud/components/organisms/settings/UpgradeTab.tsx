@@ -115,7 +115,7 @@ const UpgradeTab = () => {
       title={t('settings.teamUpgrade')}
       body={
         <section>
-          <p className='text--small'>
+          <div className='text--small'>
             {currentUserPermissions.role !== 'admin' ? (
               <ColoredBlock variant='danger'>
                 Only admins can access this content.
@@ -138,7 +138,7 @@ const UpgradeTab = () => {
                 </SectionRow>
               )
             )}
-          </p>
+          </div>
         </section>
       }
     ></SettingTabContent>

@@ -81,7 +81,7 @@ const SubscriptionTab = () => {
       title={t('settings.teamSubscription')}
       body={
         <section>
-          <p className='text--small'>
+          <div className='text--small'>
             {formtab == null ? (
               <SubscriptionManagement
                 subscription={subscription}
@@ -115,7 +115,7 @@ const SubscriptionTab = () => {
                 ) : null}
               </StyledBillingContainer>
             )}
-          </p>
+          </div>
         </section>
       }
     ></SettingTabContent>

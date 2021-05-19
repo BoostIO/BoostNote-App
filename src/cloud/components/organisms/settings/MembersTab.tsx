@@ -86,21 +86,40 @@ const MembersTab = () => {
   const [showTeamPersonalForm, setShowTeamPersonalForm] = useState<boolean>(
     false
   )
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   const fetchUserEmails = useCallback(
     async (teamId: string, ids: string[]) => {
       add('userEmails')
-      try {
-        const res = await getUserEmailsFromPermissions(teamId, ids)
-        setUserEmailsMap(() =>
-          res.permissionEmails.reduce((acc, val) => {
-            acc.set(val.id, val.email)
-            return acc
-          }, new Map<string, string>())
-        )
-      } catch (error) {}
-      currentUserEmailIds.current = ids
-      remove('userEmails')
+      getUserEmailsFromPermissions(teamId, ids)
+        .then((res) => {
+          if (!mountedRef.current) {
+            return
+          }
+          setUserEmailsMap(() =>
+            res.permissionEmails.reduce((acc, val) => {
+              acc.set(val.id, val.email)
+              return acc
+            }, new Map<string, string>())
+          )
+        })
+        .catch(() => {
+          //
+        })
+        .finally(() => {
+          if (!mountedRef.current) {
+            return
+          }
+          currentUserEmailIds.current = ids
+          remove('userEmails')
+        })
     },
     [add, remove]
   )
@@ -108,17 +127,25 @@ const MembersTab = () => {
   const fetchGuestsEmails = useCallback(
     async (teamId: string, ids: string[]) => {
       add('guestEmails')
-      try {
-        const res = await getGuestsEmails({ teamId })
-        setGuestEmailsMap(() =>
-          res.guestsEmails.reduce((acc, val) => {
-            acc.set(val.id, val.email)
-            return acc
-          }, new Map<string, string>())
-        )
-      } catch (error) {}
-      currentGuestsEmailIds.current = ids
-      remove('guestEmails')
+      getGuestsEmails({ teamId })
+        .then((res) => {
+          if (!mountedRef.current) {
+            return
+          }
+          setGuestEmailsMap(() =>
+            res.guestsEmails.reduce((acc, val) => {
+              acc.set(val.id, val.email)
+              return acc
+            }, new Map<string, string>())
+          )
+        })
+        .catch(() => {
+          //
+        })
+        .finally(() => {
+          currentGuestsEmailIds.current = ids
+          remove('guestEmails')
+        })
     },
     [add, remove]
   )
