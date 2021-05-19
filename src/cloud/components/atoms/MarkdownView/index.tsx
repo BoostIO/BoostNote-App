@@ -215,7 +215,7 @@ const MarkdownView = ({
         comment_count: (props: any) => {
           return props.count != null ? (
             <div className='comment__count'>
-              <Icon path={mdiCommentTextOutline} /> {props.count}
+              <Icon path={mdiCommentTextOutline} /> <span>{props.count}</span>
             </div>
           ) : undefined
         },
