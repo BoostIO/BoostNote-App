@@ -149,6 +149,7 @@ function CommentManager({
               onSubmit={async (comment) => {
                 await createThread({ ...state.data, comment })
               }}
+              autoFocus={true}
             />
           </div>
         )
