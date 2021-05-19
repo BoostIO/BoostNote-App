@@ -1,18 +1,18 @@
 import { useCallback, useRef } from 'react'
-import { UpdateDocRequestBody } from '../../api/teams/docs'
-import { UpdateFolderRequestBody } from '../../api/teams/folders'
-import { moveResource } from '../../api/teams/resources'
-import { SerializedDoc } from '../../interfaces/db/doc'
-import { SerializedFolder } from '../../interfaces/db/folder'
-import { NavResource } from '../../interfaces/resources'
-import { useNav } from '../stores/nav'
-import { usePage } from '../stores/pageStore'
-import { getResourceId } from '../utils/patterns'
-import { SidebarDragState } from '../../../shared/lib/dnd'
-import { useToast } from '../../../shared/lib/stores/toast'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
+import { UpdateDocRequestBody } from '../../../api/teams/docs'
+import { UpdateFolderRequestBody } from '../../../api/teams/folders'
+import { moveResource } from '../../../api/teams/resources'
+import { SerializedDoc } from '../../../interfaces/db/doc'
+import { SerializedFolder } from '../../../interfaces/db/folder'
+import { NavResource } from '../../../interfaces/resources'
+import { useNav } from '../../stores/nav'
+import { usePage } from '../../stores/pageStore'
+import { getResourceId } from '../../utils/patterns'
+import { SidebarDragState } from '../../../../shared/lib/dnd'
+import { useToast } from '../../../../shared/lib/stores/toast'
+import { getMapFromEntityArray } from '../../../../shared/lib/utils/array'
 
-export function useCloudDnd() {
+export function useCloudSidebarDnd() {
   const draggedCategory = useRef<string>()
   const draggedResource = useRef<NavResource>()
   const {

@@ -29,7 +29,7 @@ import { MetaKeyText } from '../../../../../lib/keyboard'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiStar, mdiTrashCan, mdiStarOutline, mdiPencil } from '@mdi/js'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../../lib/hooks/useCloudUI'
+import { useCloudResourceModals } from '../../../../../lib/hooks/useCloudResourceModals'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -44,7 +44,7 @@ const FolderContextMenu = ({
   const { updateFoldersMap, deleteFolderHandler } = useNav()
   const { setPartialPageData } = usePage()
   const { pushMessage } = useToast()
-  const { openRenameFolderForm } = useCloudUI()
+  const { openRenameFolderForm } = useCloudResourceModals()
 
   const menuRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
