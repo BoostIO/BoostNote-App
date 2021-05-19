@@ -20,12 +20,6 @@ type ThreadListItemProps = ThreadActionProps & {
 }
 
 const smallUserIconStyle = { width: '24px', height: '24px', lineHeight: '20px' }
-const extraSmallUserIconStyle = {
-  width: '20px',
-  height: '20px',
-  lineHeight: '16px',
-  fontSize: '16px',
-}
 function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
   const actions = useThreadActions({ thread, ...rest })
   const { popup } = useContextMenu()
@@ -65,13 +59,6 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
       </div>
       <div>
         <div className='thread__info__line'>
-          {thread.contributors.slice(0, 2).map((user) => (
-            <UserIcon
-              key={user.id}
-              user={user}
-              style={extraSmallUserIconStyle}
-            />
-          ))}
           {thread.commentCount} replies {formatDate(thread.lastCommentTime)}
         </div>
       </div>
