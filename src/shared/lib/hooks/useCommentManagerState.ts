@@ -68,6 +68,7 @@ function useCommentManagerState(docId: string): [State, Actions] {
       reopenThread: threadActions.reopen,
       closeThread: threadActions.close,
       deleteThread: threadActions.delete,
+      threadOutdated: threadActions.outdated,
       createComment: commentActions.create,
       updateComment: commentActions.updateMessage,
       deleteComment: commentActions.delete,

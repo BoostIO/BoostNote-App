@@ -165,7 +165,7 @@ function useCommentsStore() {
   )
 
   const [threadActions] = useState(() => {
-    const setStatus = (thread: Thread, status: 'closed' | 'open') =>
+    const setStatus = (thread: Thread, status: Thread['status']['type']) =>
       handleError.current(
         setThreadStatus(thread, status).then((thread) => {
           insertThreadsRef.current([thread])
@@ -182,6 +182,7 @@ function useCommentsStore() {
         ),
       reopen: (thread: Thread) => setStatus(thread, 'open'),
       close: (thread: Thread) => setStatus(thread, 'closed'),
+      outdated: (thread: Thread) => setStatus(thread, 'outdated'),
       delete: async (thread: Thread) => {
         const result = await handleError.current(deleteThread(thread))
         if (!(result instanceof Error)) {
