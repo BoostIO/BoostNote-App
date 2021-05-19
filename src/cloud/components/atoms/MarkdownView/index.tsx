@@ -446,8 +446,9 @@ const StyledMarkdownPreview = styled.div`
   }
 
   .comment__count {
+    height: 20px;
     display: flex;
-    align-content: center;
+    align-items: center;
     color: ${({ theme }) => theme.colors.icon.default} 
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
     & svg {
