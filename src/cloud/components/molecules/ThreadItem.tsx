@@ -4,7 +4,6 @@ import { Thread } from '../../interfaces/db/comments'
 import {
   mdiAlertCircleOutline,
   mdiDotsVertical,
-  mdiChevronDoubleRight,
   mdiAlertCircleCheckOutline,
 } from '@mdi/js'
 import UserIcon from '../atoms/UserIcon'
@@ -115,7 +114,7 @@ const StyledListItem = styled.div`
   }
 
   & .thread__status__outdated {
-    color: ${({ theme }) => theme.colors.variants.secondary.base};
+    color: ${({ theme }) => theme.colors.icon.default};
   }
 
   & .thread__action {
