@@ -1,4 +1,5 @@
 import { SerializedUser } from './user'
+import { RelativePosition } from 'yjs'
 
 export interface Thread {
   id: string
@@ -12,7 +13,7 @@ export interface Thread {
   lastCommentTime: Date
   contributors: SerializedUser[]
   doc: string
-  selection?: { anchor: number[]; head: number[] }
+  selection?: { anchor: RelativePosition; head: RelativePosition }
 }
 
 export interface Comment {

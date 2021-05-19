@@ -195,21 +195,15 @@ const Editor = ({
         return
       }
       const text = realtime.doc.getText('content')
-      const relativeAnchor = createRelativePositionFromTypeIndex(
-        text,
-        selection.start
-      )
-      const relativeHead = createRelativePositionFromTypeIndex(
-        text,
-        selection.end
-      )
+      const anchor = createRelativePositionFromTypeIndex(text, selection.start)
+      const head = createRelativePositionFromTypeIndex(text, selection.end)
       setPreferences({ docContextMode: 'comment' })
       commentActions.setMode({
         mode: 'new_thread',
         context: selection.text,
         selection: {
-          anchor: Array.from(encodeRelativePosition(relativeAnchor)),
-          head: Array.from(encodeRelativePosition(relativeHead)),
+          anchor,
+          head,
         },
       })
     },
@@ -226,11 +220,11 @@ const Editor = ({
     for (const thread of commentState.threads) {
       if (thread.selection != null && thread.status.type === 'open') {
         const absoluteAnchor = createAbsolutePositionFromRelativePosition(
-          decodeRelativePosition(Uint8Array.from(thread.selection.anchor)),
+          thread.selection.anchor,
           realtime.doc
         )
         const absoluteHead = createAbsolutePositionFromRelativePosition(
-          decodeRelativePosition(Uint8Array.from(thread.selection.head)),
+          thread.selection.head,
           realtime.doc
         )
 
