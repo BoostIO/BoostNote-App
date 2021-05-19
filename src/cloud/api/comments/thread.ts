@@ -1,9 +1,14 @@
 import { callApi } from '../../lib/client'
 import { Thread } from '../../interfaces/db/comments'
+import { decodeRelativePosition, encodeRelativePosition } from 'yjs'
 
 type SerializedThread = Thread & {
   status: { at: string }
   recentCommentTime: string
+  selection?: {
+    anchor: number[]
+    head: number[]
+  }
 }
 
 interface GetDocThreadsResponseBody {
@@ -47,7 +52,15 @@ export async function createThread(
 ): Promise<Thread> {
   const { thread } = await callApi<CreateThreadResponseBody>(
     `api/commentThreads`,
-    { method: 'post', json: body }
+    {
+      method: 'post',
+      json: {
+        doc: body.doc,
+        comment: body.comment,
+        selection: serializeSelection(body.selection),
+        context: body.context,
+      },
+    }
   )
 
   return deserialize(thread)
@@ -72,10 +85,34 @@ export async function deleteThread(thread: { id: string }) {
   return callApi(`api/commentThreads/${thread.id}`, { method: 'delete' })
 }
 
+function serializeSelection(
+  selection: Thread['selection']
+): SerializedThread['selection'] {
+  return (selection != null
+    ? {
+        anchor: Array.from(encodeRelativePosition(selection.anchor)),
+        head: Array.from(encodeRelativePosition(selection.head)),
+      }
+    : undefined) as SerializedThread['selection']
+}
+
 function deserialize(serialized: SerializedThread): Thread {
+  const selection =
+    serialized.selection != null
+      ? {
+          anchor: decodeRelativePosition(
+            Uint8Array.from(serialized.selection.anchor)
+          ),
+          head: decodeRelativePosition(
+            Uint8Array.from(serialized.selection.head)
+          ),
+        }
+      : undefined
+
   return {
     ...serialized,
     status: { ...serialized.status, at: new Date(serialized.status.at) },
     lastCommentTime: new Date(serialized.lastCommentTime),
+    selection,
   }
 }
