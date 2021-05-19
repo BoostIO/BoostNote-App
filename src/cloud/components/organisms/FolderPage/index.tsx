@@ -33,8 +33,8 @@ import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
 import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
 enum FolderHeaderActions {
@@ -53,7 +53,7 @@ const FolderPage = () => {
   } = useNav()
   const { openEmojiPicker } = useEmojiPicker()
   const [sending, setSending] = useState<number>()
-  const { toggleFolderBookmark, sendingMap } = useCloudUpdater()
+  const { toggleFolderBookmark, sendingMap } = useCloudApi()
   const { push } = useRouter()
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const {
@@ -65,7 +65,7 @@ const FolderPage = () => {
     openWorkspaceEditForm,
     deleteOrArchiveDoc,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {

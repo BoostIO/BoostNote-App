@@ -26,7 +26,7 @@ import { useGlobalData } from '../../../../lib/stores/globalData'
 import { usePage } from '../../../../lib/stores/pageStore'
 import IconMdi from '../../../atoms/IconMdi'
 import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useCloudUI } from '../../../../lib/hooks/useCloudUI'
+import { useCloudResourceModals } from '../../../../lib/hooks/useCloudResourceModals'
 
 interface SideNavigatorWorkspaceControlsProps {
   workspace: SerializedWorkspace
@@ -57,7 +57,7 @@ const SideNavigatorWorkspaceControls = ({
   const { popup } = useContextMenu()
   const { messageBox } = useDialog()
   const { pushApiErrorMessage, pushMessage } = useToast()
-  const { openWorkspaceEditForm } = useCloudUI()
+  const { openWorkspaceEditForm } = useCloudResourceModals()
 
   const createChildDoc = useCallback(async () => {
     try {

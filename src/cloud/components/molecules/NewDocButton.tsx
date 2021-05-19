@@ -13,7 +13,7 @@ import {
 import { useModal } from '../../../shared/lib/stores/modal'
 import styled from '../../../shared/lib/styled'
 import { SerializedTeam } from '../../interfaces/db/team'
-import { useCloudUI } from '../../lib/hooks/useCloudUI'
+import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useNav } from '../../lib/stores/nav'
 import TemplatesModal from '../organisms/Modal/contents/TemplatesModal'
 
@@ -24,7 +24,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
     currentPath,
     currentParentFolderId,
   } = useNav()
-  const { openNewDocForm } = useCloudUI()
+  const { openNewDocForm } = useCloudResourceModals()
   const { popup } = useContextMenu()
   const { openModal } = useModal()
 

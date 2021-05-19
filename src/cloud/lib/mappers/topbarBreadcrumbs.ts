@@ -20,7 +20,10 @@ import {
 } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { CloudNewResourceRequestBody, UIFormOptions } from '../hooks/useCloudUI'
+import {
+  CloudNewResourceRequestBody,
+  UIFormOptions,
+} from '../hooks/useCloudResourceModals'
 import { getDocTitle, prefixFolders } from '../utils/patterns'
 import { getHexFromUUID } from '../utils/string'
 import { topParentId } from './topbarTree'

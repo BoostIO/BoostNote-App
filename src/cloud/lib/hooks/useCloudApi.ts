@@ -61,7 +61,7 @@ import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 
-export function useCloudUpdater() {
+export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
   const {
     updateWorkspacesMap,
