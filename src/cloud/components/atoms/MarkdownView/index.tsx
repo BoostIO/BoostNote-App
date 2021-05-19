@@ -208,6 +208,13 @@ const MarkdownView = ({
             </div>
           ) : undefined
         },
+        comment_count: (props: any) => {
+          return props.count != null ? (
+            <div className='comment__count'>
+              <Icon path={mdiCommentTextOutline} /> {props.count}
+            </div>
+          ) : undefined
+        },
       },
     }
 
@@ -417,16 +424,26 @@ const StyledMarkdownPreview = styled.div`
 
   .with__gutter {
     position: relative;
-    &:hover .block__gutter {
+    &:hover .comment__icon {
       display: block;
+    }
+
+    &:hover .comment__count {
+      display: none;
     }
   }
 
   .comment__icon {
+    display: none;
     color: ${({ theme }) => theme.colors.text.subtle}
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary}
     }
+  }
+
+  .comment__count {
+    display: flex;
+    color: ${({ theme }) => theme.colors.icon.default} 
   }
 `
 
@@ -446,16 +463,26 @@ function makeCommentGutters(highlights: HighlightRange[]) {
         (highlight) => highlight.start >= posStart && highlight.start <= posEnd
       )
       if (allHighlights.length > 0) {
+        const links = allHighlights.map((hi) => ({
+          type: 'element',
+          tagName: 'comment_icon',
+          properties: {
+            'data-comment': hi.id,
+          },
+        }))
         return {
           type: 'element',
           tagName: 'div',
-          children: allHighlights.map((hi) => ({
-            type: 'element',
-            tagName: 'comment_icon',
-            properties: {
-              'data-comment': hi.id,
+          children: [
+            {
+              type: 'element',
+              tagName: 'comment_count',
+              properties: {
+                count: allHighlights.length,
+              },
             },
-          })),
+            ...links,
+          ],
         }
       }
     }
