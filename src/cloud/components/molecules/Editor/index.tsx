@@ -892,7 +892,11 @@ const Editor = ({
               sendingRename={sendingMap.has(doc.id)}
             />
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager state={commentState} {...commentActions} />
+            <CommentManager
+              state={commentState}
+              user={user}
+              {...commentActions}
+            />
           ) : null,
       }}
     >

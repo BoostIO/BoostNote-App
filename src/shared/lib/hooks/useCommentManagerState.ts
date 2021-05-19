@@ -53,9 +53,10 @@ function useCommentManagerState(docId: string): [State, Actions] {
   const createThread: Actions['createThread'] = useCallback(
     async (data) => {
       const thread = await threadActions.create({ doc: docId, ...data })
-      if (thread != null) {
+      if (!(thread instanceof Error)) {
         setMode({ mode: 'thread', thread })
       }
+      return thread
     },
     [threadActions, docId, setMode]
   )
