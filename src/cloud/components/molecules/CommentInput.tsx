@@ -48,7 +48,7 @@ export function CommentInput({
         ev.preventDefault()
         ev.stopPropagation()
 
-        if (ev.shiftKey) {
+        if (ev.ctrlKey || ev.metaKey) {
           submit(comment)
         } else {
           setComment((val) => `${val}\n`)
