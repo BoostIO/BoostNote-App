@@ -148,6 +148,7 @@ import {
   cloudSidebaCategoryLabels,
   cloudSidebarOrderedCategoriesDelimiter,
 } from '../lib/sidebar'
+import CreateSmartFolderModal from './organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -1295,6 +1296,31 @@ function mapTree(
     tree.push({
       label: 'Bookmarks',
       rows: bookmarked,
+    })
+  }
+
+  if (!team.personal) {
+    tree.push({
+      label: 'Smart Folders',
+      rows: [],
+      footer: (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '0 13px',
+          }}
+        >
+          <Button
+            onClick={() => {
+              openModal(<CreateSmartFolderModal />)
+            }}
+          >
+            Add Smart Folder
+          </Button>
+        </div>
+      ),
     })
   }
   tree.push({
