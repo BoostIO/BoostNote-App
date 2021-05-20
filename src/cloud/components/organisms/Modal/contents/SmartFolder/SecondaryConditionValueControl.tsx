@@ -1,5 +1,8 @@
 import React from 'react'
-import { EditibleSecondaryCondition, DateConditionValue } from './interfaces'
+import {
+  EditibleSecondaryCondition,
+  EditibleDateConditionValue,
+} from './interfaces'
 import DocStatusSelect from './DocStatusSelect'
 import { DocStatus } from '../../../../../interfaces/db/doc'
 import DocLabelSelect from './DocLabelSelect'
@@ -19,7 +22,9 @@ const SecondaryConditionccValueControl = ({
     case 'due_date':
     case 'creation_date':
     case 'update_date':
-      const updateDateValue = (dateConditionValue: DateConditionValue) => {
+      const updateDateValue = (
+        dateConditionValue: EditibleDateConditionValue | null
+      ) => {
         update({
           type: condition.type,
           value: dateConditionValue,

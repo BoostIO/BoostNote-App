@@ -1,10 +1,11 @@
 import React from 'react'
-import { DateConditionValue, DateConditionValueType } from './interfaces'
+import { DateConditionValueType } from '../../../../../interfaces/db/smartFolder'
 import FormSelect from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
+import { EditibleDateConditionValue } from './interfaces'
 
 interface DateValueTypeSelectProps {
-  value: DateConditionValue
-  update: (dateConditionValue: DateConditionValue) => void
+  value: EditibleDateConditionValue | null
+  update: (dateConditionValue: EditibleDateConditionValue) => void
 }
 
 const DateConditionValueTypeSelect = ({
@@ -22,7 +23,11 @@ const DateConditionValueTypeSelect = ({
         'after',
         'before',
       ] as DateConditionValueType[]).map(getOptionByValueType)}
-      value={getOptionByValueType(dateConditionValue.type)}
+      value={
+        dateConditionValue != null
+          ? getOptionByValueType(dateConditionValue.type)
+          : undefined
+      }
       onChange={(selectedOption) => {
         const nextDateConditionValue = getDefaultDateConditionValueByValueType(
           selectedOption.value
@@ -35,7 +40,7 @@ const DateConditionValueTypeSelect = ({
 
 export default DateConditionValueTypeSelect
 
-function getOptionByValueType(dateValueType: DateConditionValueType) {
+function getOptionByValueType(dateValueType: DateConditionValueType | null) {
   switch (dateValueType) {
     case '7_days':
       return {
@@ -79,7 +84,7 @@ function getOptionByValueType(dateValueType: DateConditionValueType) {
 
 function getDefaultDateConditionValueByValueType(
   dateValueType: DateConditionValueType
-): DateConditionValue {
+): EditibleDateConditionValue {
   switch (dateValueType) {
     case '7_days':
       return {

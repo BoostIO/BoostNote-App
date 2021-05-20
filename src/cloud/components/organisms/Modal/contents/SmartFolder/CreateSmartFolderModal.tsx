@@ -9,9 +9,15 @@ import Form from '../../../../../../shared/components/molecules/Form'
 import FormInput from '../../../../../../shared/components/molecules/Form/atoms/FormInput'
 import Switch from 'react-switch'
 import SecondaryConditionItem from './SecondaryConditionItem'
+import { useModal } from '../../../../../../shared/lib/stores/modal'
+import { createSmartFolder } from '../../../../../api/teams/smart-folder'
+import { usePage } from '../../../../../lib/stores/pageStore'
 
 const CreateSmartFolderModal = () => {
   const [name, setName] = useState('')
+
+  const { closeLastModal: closeModal } = useModal()
+  const { team } = usePage()
 
   const [makingPrivate, setMakingPrivate] = useState(false)
 
@@ -57,6 +63,22 @@ const CreateSmartFolderModal = () => {
       return newConditions
     })
   }, [])
+
+  const submit = useCallback(async () => {
+    if (team == null) {
+      return
+    }
+    const smartFolder = await createSmartFolder(team, {
+      name,
+      condition: {
+        type: primaryConditionType,
+        conditions: JSON.parse(JSON.stringify(secondaryConditions)),
+      },
+      private: makingPrivate,
+    })
+
+    console.log(smartFolder)
+  }, [team, name, primaryConditionType, secondaryConditions, makingPrivate])
 
   return (
     <Container>
@@ -169,8 +191,12 @@ const CreateSmartFolderModal = () => {
 
         <div className='form__row'>
           <div>
-            <Button variant='primary'>Create</Button>
-            <Button variant='secondary'>Cancel</Button>
+            <Button variant='primary' onClick={submit}>
+              Create
+            </Button>
+            <Button variant='secondary' onClick={closeModal}>
+              Cancel
+            </Button>
           </div>
         </div>
       </Form>

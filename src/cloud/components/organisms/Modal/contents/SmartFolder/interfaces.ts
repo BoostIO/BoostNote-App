@@ -1,117 +1,53 @@
-import { DocStatus } from '../../../../../interfaces/db/doc'
+import {
+  StatusCondition,
+  LabelsCondition,
+  AssigneesCondition,
+  TodayDateConditionValue,
+  InWeekDateConditionValue,
+  InMonthDateConditionValue,
+} from '../../../../../interfaces/db/smartFolder'
 
-export type AndCondition = {
-  type: 'and'
-  conditions: SecondaryCondition[]
-}
-
-export type OrCondition = {
-  type: 'or'
-  conditions: SecondaryCondition[]
-}
-
-export type StatusCondition = {
-  type: 'status'
-  value: DocStatus
-}
-
-export type LabelsCondition = {
-  type: 'labels'
-  value: string[]
-}
-
-export type DueDateCondition = {
-  type: 'due_date'
-  startDate: string // Date string, relative date(today-x)
-  endDate: string
-}
-
-export type CreationDateCondition = {
-  type: 'creation_date'
-  startDate: string // Date string, relative date(today-x)
-  endDate: string
-}
-
-export type UpdateDateCondition = {
-  type: 'creation_date'
-  startDate: string // Date string, relative date(today-x)
-  endDate: string
-}
-
-export type AssigneesCondition = {
-  type: 'assignees'
-  value: string[]
-}
-export type PrimaryCondition = AndCondition | OrCondition
-
-export type SecondaryCondition =
-  | StatusCondition
-  | LabelsCondition
-  | DueDateCondition
-  | CreationDateCondition
-  | UpdateDateCondition
-  | AssigneesCondition
-
-export type DateConditionValueType =
-  | 'today'
-  | '7_days'
-  | '30_days'
-  | 'specific'
-  | 'between'
-  | 'after'
-  | 'before'
-
-export type TodayDateConditionValue = {
-  type: 'today'
-}
-export type InWeekDateConditionValue = {
-  type: '7_days'
-}
-export type InMonthDateConditionValue = {
-  type: '30_days'
-}
-
-export type SpecificDateConditionValue = {
-  type: 'specific'
-  date: Date | null
-}
-
-export type BetweenDateConditionValue = {
+export type EditibleBetweenDateConditionValue = {
   type: 'between'
   from: Date | null
   to: Date | null
 }
 
-export type AfterDateConditionValue = {
+export type EditibleAfterDateConditionValue = {
   type: 'after'
   date: Date | null
 }
 
-export type BeforeDateConditionValue = {
+export type EditibleBeforeDateConditionValue = {
   type: 'before'
   date: Date | null
 }
 
-export type DateConditionValue =
+export type EditibleSpecificDateConditionValue = {
+  type: 'specific'
+  date: Date | null
+}
+
+export type EditibleDateConditionValue =
   | TodayDateConditionValue
   | InWeekDateConditionValue
   | InMonthDateConditionValue
-  | SpecificDateConditionValue
-  | BetweenDateConditionValue
-  | AfterDateConditionValue
-  | BeforeDateConditionValue
+  | EditibleSpecificDateConditionValue
+  | EditibleBeforeDateConditionValue
+  | EditibleAfterDateConditionValue
+  | EditibleBetweenDateConditionValue
 
 export type EditibleDueDateCondition = {
   type: 'due_date'
-  value: DateConditionValue
+  value: EditibleDateConditionValue | null
 }
 export type EditibleCreationDateCondition = {
   type: 'creation_date'
-  value: DateConditionValue
+  value: EditibleDateConditionValue | null
 }
 export type EditibleUpdateDateCondition = {
   type: 'update_date'
-  value: DateConditionValue
+  value: EditibleDateConditionValue | null
 }
 
 export type NullSecondaryCondition = {

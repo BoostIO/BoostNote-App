@@ -1,33 +1,35 @@
 import React, { forwardRef } from 'react'
-import {
-  DateConditionValue,
-  BetweenDateConditionValue,
-  SpecificDateConditionValue,
-  BeforeDateConditionValue,
-  AfterDateConditionValue,
-} from './interfaces'
+import { DateConditionValue } from '../../../../../interfaces/db/smartFolder'
 import DateConditionValueTypeSelect from './DateConditionValueTypeSelect'
 import DatePicker from 'react-datepicker'
 import { format as formatDate } from 'date-fns'
 import { mdiCalendar, mdiCalendarStart, mdiCalendarEnd } from '@mdi/js'
 import Icon from '../../../../../../shared/components/atoms/Icon'
 import styled from '../../../../../../shared/lib/styled'
+import {
+  EditibleDateConditionValue,
+  EditibleBetweenDateConditionValue,
+  EditibleSpecificDateConditionValue,
+  EditibleBeforeDateConditionValue,
+  EditibleAfterDateConditionValue,
+} from './interfaces'
 
 interface DocDateSelectProps {
-  value: DateConditionValue
-  update: (value: DateConditionValue) => void
+  value: EditibleDateConditionValue | null
+  update: (value: EditibleDateConditionValue | null) => void
 }
 
 const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
   return (
     <>
       <DateConditionValueTypeSelect value={value} update={update} />
-      {(value.type === 'specific' ||
-        value.type === 'before' ||
-        value.type === 'after') && (
-        <SpecificDatePicker value={value} update={update} />
-      )}
-      {value.type === 'between' && (
+      {value != null &&
+        (value.type === 'specific' ||
+          value.type === 'before' ||
+          value.type === 'after') && (
+          <SpecificDatePicker value={value} update={update} />
+        )}
+      {value != null && value.type === 'between' && (
         <DateRangePicker value={value} update={update} />
       )}
     </>
@@ -38,9 +40,9 @@ export default DocDateSelect
 
 interface SpecificDatePickerProps {
   value:
-    | SpecificDateConditionValue
-    | BeforeDateConditionValue
-    | AfterDateConditionValue
+    | EditibleSpecificDateConditionValue
+    | EditibleBeforeDateConditionValue
+    | EditibleAfterDateConditionValue
   update: (value: DateConditionValue) => void
 }
 
@@ -62,8 +64,8 @@ const SpecificDatePicker = ({ value, update }: SpecificDatePickerProps) => {
 }
 
 interface DateRangePickerProps {
-  value: BetweenDateConditionValue
-  update: (value: DateConditionValue) => void
+  value: EditibleBetweenDateConditionValue
+  update: (value: EditibleBetweenDateConditionValue) => void
 }
 
 const DateRangePicker = ({ value, update }: DateRangePickerProps) => {

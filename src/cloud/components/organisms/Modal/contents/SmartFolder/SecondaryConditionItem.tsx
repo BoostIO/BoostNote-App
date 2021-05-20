@@ -1,14 +1,16 @@
 import React from 'react'
 import { mdiPlus, mdiMinus } from '@mdi/js'
 import {
-  EditibleSecondaryCondition,
   StatusCondition,
   LabelsCondition,
+  AssigneesCondition,
+} from '../../../../../interfaces/db/smartFolder'
+import {
+  EditibleSecondaryCondition,
   EditibleDueDateCondition,
   EditibleCreationDateCondition,
   EditibleUpdateDateCondition,
   EditibleSecondaryConditionType,
-  AssigneesCondition,
 } from './interfaces'
 import SecondaryConditionValueControl from './SecondaryConditionValueControl'
 import FormSelect from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
