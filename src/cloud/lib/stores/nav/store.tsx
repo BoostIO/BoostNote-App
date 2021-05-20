@@ -58,6 +58,7 @@ import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
 export * from './types'
 
 function useNavStore(pageProps: any): NavContext {
@@ -105,6 +106,29 @@ function useNavStore(pageProps: any): NavContext {
   const [docsMap, setDocsMap] = useState<
     Map<string, SerializedDocWithBookmark>
   >(initData.docsData)
+  const [smartFoldersMap, setSmartFoldersMap] = useState<
+    Map<string, SerializedSmartFolder>
+  >(initData.smartFoldersData)
+
+  const updateSmartFoldersMap = useCallback(
+    (...mappedTags: [string, SerializedSmartFolder][]) =>
+      setSmartFoldersMap((prevMap) => {
+        return new Map([...prevMap, ...mappedTags])
+      }),
+    []
+  )
+
+  const removeFromSmartFoldersMap = useCallback(
+    (...ids: string[]) =>
+      setSmartFoldersMap((prevMap) => {
+        const newMap = new Map(prevMap)
+        ids.forEach((workspaceId) => {
+          newMap.delete(workspaceId)
+        })
+        return newMap
+      }),
+    []
+  )
 
   const [workspacesMap, setWorkspacesMap] = useState<
     Map<string, SerializedWorkspace>
@@ -207,7 +231,7 @@ function useNavStore(pageProps: any): NavContext {
         prevTeamId.current = team.id
 
         const [
-          { folders, docs, tags = [], workspaces = [] },
+          { folders, docs, tags = [], workspaces = [], smartFolders = [] },
           { templates = [] },
         ] = await Promise.all([getResources(team.id), getAllTemplates(team.id)])
 
@@ -217,12 +241,14 @@ function useNavStore(pageProps: any): NavContext {
           tags,
           workspaces,
           templates,
+          smartFolders,
         })
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
         setTagsMap(maps.tagsData)
         setWorkspacesMap(maps.workspacesData)
         setTemplatesMap(maps.templatesData)
+        setSmartFoldersMap(maps.smartFoldersData)
         setInitialLoadDone(true)
       }
     }
@@ -769,6 +795,9 @@ function useNavStore(pageProps: any): NavContext {
     docsMap,
     updateDocsMap,
     removeFromDocsMap,
+    smartFoldersMap,
+    updateSmartFoldersMap,
+    removeFromSmartFoldersMap,
     createFolderHandler,
     updateFolderHandler,
     createDocHandler,
@@ -830,6 +859,7 @@ interface CreateMapsFromPagePropsProps {
   tagsData: Map<string, SerializedTag>
   workspacesData: Map<string, SerializedWorkspace>
   templatesData: Map<string, SerializedTemplate>
+  smartFoldersData: Map<string, SerializedSmartFolder>
 }
 
 function getTagsFoldersDocsMapsFromProps(
@@ -842,6 +872,7 @@ function getTagsFoldersDocsMapsFromProps(
       tagsData: new Map(),
       workspacesData: new Map(),
       templatesData: new Map(),
+      smartFoldersData: new Map(),
     }
   }
 
@@ -851,6 +882,7 @@ function getTagsFoldersDocsMapsFromProps(
     tags = [],
     workspaces = [],
     templates = [],
+    smartFolders = [],
   } = pageProps
 
   const foldersData = getMapFromEntityArray(
@@ -862,6 +894,9 @@ function getTagsFoldersDocsMapsFromProps(
     workspaces as SerializedWorkspace[]
   )
   const templatesData = getMapFromEntityArray(templates as SerializedTemplate[])
+  const smartFoldersData = getMapFromEntityArray(
+    smartFolders as SerializedSmartFolder[]
+  )
 
   return {
     foldersData,
@@ -869,5 +904,6 @@ function getTagsFoldersDocsMapsFromProps(
     tagsData,
     workspacesData,
     templatesData,
+    smartFoldersData,
   }
 }

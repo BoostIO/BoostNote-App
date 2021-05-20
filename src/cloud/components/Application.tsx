@@ -149,6 +149,8 @@ import {
   cloudSidebarOrderedCategoriesDelimiter,
 } from '../lib/sidebar'
 import CreateSmartFolderModal from './organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
+import { SerializedSmartFolder } from '../interfaces/db/smartFolder'
+import { getSmartFolderHref } from '../lib/href'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -168,6 +170,7 @@ const Application = ({
     foldersMap,
     workspacesMap,
     tagsMap,
+    smartFoldersMap,
     currentParentFolderId,
     currentWorkspaceId,
     currentPath,
@@ -292,6 +295,7 @@ const Application = ({
       foldersMap,
       workspacesMap,
       tagsMap,
+      smartFoldersMap,
       treeSendingMap,
       sideBarOpenedLinksIdsSet,
       sideBarOpenedFolderIdsSet,
@@ -324,6 +328,7 @@ const Application = ({
     foldersMap,
     workspacesMap,
     tagsMap,
+    smartFoldersMap,
     treeSendingMap,
     sideBarOpenedFolderIdsSet,
     sideBarOpenedLinksIdsSet,
@@ -929,6 +934,7 @@ function mapTree(
   foldersMap: Map<string, SerializedFolderWithBookmark>,
   workspacesMap: Map<string, SerializedWorkspace>,
   tagsMap: Map<string, SerializedTag>,
+  smartFoldersMap: Map<string, SerializedSmartFolder>,
   treeSendingMap: Map<string, string>,
   sideBarOpenedLinksIdsSet: Set<string>,
   sideBarOpenedFolderIdsSet: Set<string>,
@@ -992,10 +998,11 @@ function mapTree(
   const currentPathWithDomain = `${process.env.BOOST_HUB_BASE_URL}${currentPath}`
   const items = new Map<string, CloudTreeItem>()
 
-  const [docs, folders, workspaces] = [
+  const [docs, folders, workspaces, smartFolders] = [
     getMapValues(docsMap),
     getMapValues(foldersMap),
     getMapValues(workspacesMap),
+    getMapValues(smartFoldersMap),
   ]
 
   let personalWorkspace: SerializedWorkspace | undefined
@@ -1302,7 +1309,20 @@ function mapTree(
   if (!team.personal) {
     tree.push({
       label: 'Smart Folders',
-      rows: [],
+      rows: smartFolders.map((smartFolder) => {
+        const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
+          smartFolder,
+          team,
+          'index'
+        )}`
+        return {
+          id: smartFolder.id,
+          label: smartFolder.name,
+          depth: 0,
+          active: href === currentPathWithDomain,
+          navigateTo: () => push(href),
+        }
+      }),
       footer: (
         <div
           style={{

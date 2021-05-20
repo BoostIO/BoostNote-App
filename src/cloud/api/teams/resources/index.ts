@@ -5,6 +5,7 @@ import querystring from 'querystring'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { callApi } from '../../../lib/client'
+import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
 
 export interface GetTiedResourcesRequestBody {
   folderIds: string[]
@@ -64,6 +65,7 @@ export interface GetResourcesResponseBody {
   docs: SerializedDocWithBookmark[]
   workspaces: SerializedWorkspace[]
   tags?: SerializedTag[]
+  smartFolders?: SerializedSmartFolder[]
 }
 
 export async function getResources(
