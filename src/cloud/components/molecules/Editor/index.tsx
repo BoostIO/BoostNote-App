@@ -13,10 +13,8 @@ import attachFileHandlerToCodeMirrorEditor, {
 } from '../../../lib/editor/plugins/fileHandler'
 import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
 import {
-  encodeRelativePosition,
   createRelativePositionFromTypeIndex,
   createAbsolutePositionFromRelativePosition,
-  decodeRelativePosition,
 } from 'yjs'
 import {
   useGlobalKeyDownHandler,

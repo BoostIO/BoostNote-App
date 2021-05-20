@@ -22,9 +22,9 @@ import { downloadBlob, printIframe } from '../../../../../../lib/download'
 import Icon from '../../../../../atoms/Icon'
 import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
-import { selectTheme } from '../../../../../../lib/styled'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
 import { ModalOpeningOptions } from '../../../../../../../shared/lib/stores/modal'
+import { selectV2Theme as selectTheme } from '../../../../../../../shared/lib/styled/styleFunctions'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
