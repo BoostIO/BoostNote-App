@@ -28,6 +28,7 @@ import { SerializedTeam } from '../../../../../../interfaces/db/team'
 import {
   updateDocStatus,
   updateDocDueDate,
+  updateDocAssignees,
 } from '../../../../../../api/teams/docs'
 import RevisionsModal from '../../../../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
@@ -65,6 +66,7 @@ import { useToast } from '../../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../../shared/lib/stores/modal'
 import DocStatusSelect from './DocStatusSelect'
 import DocDueDateSelect from './DocDueDateSelect'
+import DocAssigneeSelect from './DocAssigneeSelect'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -194,7 +196,7 @@ const DocContextMenu = ({
       } catch (error) {
         pushMessage({
           title: 'Error',
-          description: 'Could not archive this doc',
+          description: 'Could not change status',
         })
       }
       setSendingUpdateStatus(false)
@@ -226,10 +228,44 @@ const DocContextMenu = ({
       } catch (error) {
         pushMessage({
           title: 'Error',
-          description: 'Could not archive this doc',
+          description: 'Could not update due date',
         })
       }
       setSendingDueDate(false)
+    },
+    [
+      currentDoc,
+      pushMessage,
+      sendingUpdateStatus,
+      setPartialPageData,
+      updateDocsMap,
+    ]
+  )
+
+  const [sendingAssignees, setSendingAssignees] = useState(false)
+
+  const sendUpdateDocAssignees = useCallback(
+    async (newAssignees: string[]) => {
+      if (sendingUpdateStatus || currentDoc == null) {
+        return
+      }
+
+      setSendingAssignees(true)
+      try {
+        const data = await updateDocAssignees(
+          currentDoc.teamId,
+          currentDoc.id,
+          newAssignees
+        )
+        updateDocsMap([data.doc.id, data.doc])
+        setPartialPageData({ pageDoc: data.doc })
+      } catch (error) {
+        pushMessage({
+          title: 'Error',
+          description: 'Could not update assignees',
+        })
+      }
+      setSendingAssignees(false)
     },
     [
       currentDoc,
@@ -260,9 +296,17 @@ const DocContextMenu = ({
                 </label>
                 <div className='context__content'>
                   <span>
-                    {currentDoc.assignees?.map((assignee) => {
-                      return <li>{assignee.user?.uniqueName}</li>
-                    })}
+                    <DocAssigneeSelect
+                      disabled={sendingAssignees}
+                      value={
+                        currentDoc.assignees != null
+                          ? currentDoc.assignees.map(
+                              (assignee) => assignee.userId
+                            )
+                          : []
+                      }
+                      update={sendUpdateDocAssignees}
+                    />
                   </span>
                 </div>
               </div>

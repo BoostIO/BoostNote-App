@@ -136,3 +136,25 @@ export async function updateDocDueDate(
 
   return data
 }
+
+export interface UpdateDocAssigneesResponseBody {
+  doc: SerializedDocWithBookmark
+}
+
+export async function updateDocAssignees(
+  teamId: string,
+  docId: string,
+  assignees: string[]
+) {
+  const data = await callApi<UpdateDocAssigneesResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/assignees`,
+    {
+      method: 'put',
+      json: {
+        assignees,
+      },
+    }
+  )
+
+  return data
+}
