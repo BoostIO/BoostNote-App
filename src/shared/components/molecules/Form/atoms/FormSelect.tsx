@@ -11,7 +11,7 @@ export interface FormSelectOption {
 export interface FormSelectProps {
   id?: string
   options: FormSelectOption[]
-  value?: FormSelectOption
+  value?: FormSelectOption | FormSelectOption[]
   onChange: (val: any) => void
   closeMenuOnSelect?: boolean
   className?: string
@@ -22,6 +22,7 @@ export interface FormSelectProps {
   name?: string
   filterOption?: (option: FormSelectOption, rawInput: string) => boolean
   onMenuOpen?: () => void
+  minWidth?: string | number
 }
 
 const FormSelect = ({
@@ -38,6 +39,7 @@ const FormSelect = ({
   name,
   filterOption,
   onMenuOpen,
+  minWidth = '100px',
 }: FormSelectProps) => {
   const [focused, setFocused] = useState(false)
   return (
@@ -52,6 +54,16 @@ const FormSelect = ({
           focused && 'form__select--focused',
           isDisabled && 'form__select--disabled',
         ])}
+        styles={{
+          control: () => {
+            return {
+              minWidth,
+              minHeight: '32px',
+              display: 'flex',
+              borderRadius: '4px',
+            }
+          },
+        }}
         classNamePrefix={'form__select'}
         value={value}
         filterOption={filterOption}
@@ -76,7 +88,7 @@ const Container = styled.div`
 
   .form__select .form__select__control {
     width: 100%;
-    height: 40px;
+    height: 32px;
     color: ${({ theme }) => theme.colors.text.subtle};
     border: none;
     &.form__select__control--is-focused {
