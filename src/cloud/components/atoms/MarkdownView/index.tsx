@@ -10,7 +10,6 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
 import rehypeSlug from 'rehype-slug'
-import styled from '../../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import { defaultPreviewStyle } from './styles'
 import 'katex/dist/katex.min.css'
@@ -33,10 +32,27 @@ import remarkDocEmbed, { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../../lib/consts'
 import { usingElectron } from '../../../lib/stores/electron'
 import { useRouter } from '../../../lib/router'
+import SelectionTooltip from '../SelectionTooltip'
+import useSelectionLocation, {
+  Rect,
+} from '../../../lib/selection/useSelectionLocation'
+import rehypeHighlight, { HighlightRange } from '../../../lib/rehypeHighlight'
+import rehypeGutters from '../../../lib/rehypeGutters'
+import { Node as UnistNode } from 'unist'
+import { mdiCommentTextOutline } from '@mdi/js'
+import Icon from '../../../../shared/components/atoms/Icon'
+import styled from '../../../../shared/lib/styled'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
-    '*': [...gh.attributes['*'], 'className', 'align', 'data-line'],
+    '*': [
+      ...gh.attributes['*'],
+      'className',
+      'align',
+      'data-line',
+      'data-offset',
+      'data-inline-comment',
+    ],
     input: [...gh.attributes['input'], 'checked'],
     pre: ['dataRaw'],
     shortcode: ['entityId', 'identifier'],
@@ -54,6 +70,7 @@ const schema = mergeDeepRight(gh, {
     'chart(yaml)',
     'shortcode',
     'iframe',
+    'gutter',
   ],
 })
 
@@ -61,6 +78,18 @@ type MarkdownViewState =
   | { type: 'loading' }
   | { type: 'loaded'; content: React.ReactNode }
   | { type: 'error'; err: Error }
+
+export interface SelectionContext {
+  start: number
+  end: number
+  text: string
+}
+
+interface SelectionState {
+  context: SelectionContext
+  position: Rect
+  selection: Selection
+}
 
 interface MarkdownViewProps {
   content: string
@@ -74,6 +103,9 @@ interface MarkdownViewProps {
   className?: string
   embeddableDocs?: Map<string, EmbedDoc>
   scrollerRef?: React.RefObject<HTMLDivElement>
+  SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
+  comments?: HighlightRange[]
+  commentClick?: (id: string[]) => void
 }
 
 const MarkdownView = ({
@@ -85,6 +117,9 @@ const MarkdownView = ({
   className,
   embeddableDocs,
   scrollerRef,
+  SelectionMenu,
+  comments,
+  commentClick,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
@@ -160,6 +195,18 @@ const MarkdownView = ({
                 )
               }
             : shortcodeHandler,
+        comment_count: (props: any) => {
+          return props.count != null && props.comments != null ? (
+            <div
+              className='comment__count'
+              onClick={() =>
+                commentClick && commentClick(props.comments.split(' '))
+              }
+            >
+              <Icon path={mdiCommentTextOutline} /> <span>{props.count}</span>
+            </div>
+          ) : null
+        },
       },
     }
 
@@ -187,7 +234,6 @@ const MarkdownView = ({
       })
       .use(rehypeRaw)
       .use(rehypeSlug)
-      .use(rehypePosition)
       .use(rehypeSanitize, schema)
       .use(rehypeKatex)
       .use(rehypeCodeMirror, {
@@ -195,10 +241,21 @@ const MarkdownView = ({
         theme: settings['general.codeBlockTheme'],
       })
       .use(rehypeMermaid)
+      .use(rehypeHighlight, comments || [])
+      .use(rehypeGutters, makeCommentGutters(comments || []))
+      .use(rehypePosition)
       .use(rehypeReact, rehypeReactConfig)
 
     return parser
-  }, [settings, updateContent, shortcodeHandler, headerLinks, embeddableDocs])
+  }, [
+    settings,
+    updateContent,
+    shortcodeHandler,
+    headerLinks,
+    embeddableDocs,
+    comments,
+    commentClick,
+  ])
 
   useEffect(() => {
     const renderContentCallback = async () => {
@@ -262,9 +319,44 @@ const MarkdownView = ({
     }
   }, [state])
 
+  const defaultRef = useRef<HTMLElement>(null)
+  const selectionInfo = useSelectionLocation(scrollerRef || defaultRef)
+  const [selectionState, setSelectionState] = useState<SelectionState | null>(
+    null
+  )
+
+  useEffect(() => {
+    if (
+      selectionInfo.selection.type === 'none' ||
+      selectionInfo.location == null ||
+      selectionInfo.location.local == null
+    ) {
+      setSelectionState(null)
+    } else {
+      const context = getSelectionContext(selectionInfo.selection.selection)
+      if (context != null) {
+        setSelectionState({
+          position: selectionInfo.location.local,
+          context,
+          selection: selectionInfo.selection.selection,
+        })
+      }
+    }
+  }, [selectionInfo])
+
   return (
-    <StyledMarkdownPreview className={className} ref={scrollerRef}>
+    <StyledMarkdownPreview
+      className={className}
+      ref={scrollerRef || defaultRef}
+    >
       {displayContent}
+      {selectionState != null && SelectionMenu && (
+        <SelectionTooltip rect={selectionState.position} bufferTop={50}>
+          <StyledTooltipContent>
+            <SelectionMenu selection={selectionState.context} />
+          </StyledTooltipContent>
+        </SelectionTooltip>
+      )}
     </StyledMarkdownPreview>
   )
 }
@@ -278,10 +370,103 @@ function triggerCollapse(event: Event) {
   }
 }
 
+function getSelectionContext(
+  selection: Selection
+): SelectionState['context'] | null {
+  const anchor = selection.anchorNode
+  const focus = selection.focusNode
+  if (anchor == null || focus == null) return null
+  if (!anchor.TEXT_NODE || !focus.TEXT_NODE) return null
+  const offset1 = getOffset(anchor)
+  const offset2 = getOffset(focus)
+  if (offset1 == null || offset2 == null) return null
+
+  const rangeStart = offset1 + selection.anchorOffset
+  const rangeEnd = offset2 + selection.focusOffset
+  return {
+    start: Math.min(rangeStart, rangeEnd),
+    end: Math.max(rangeStart, rangeEnd),
+    text: selection.toString(),
+  }
+}
+
+function getOffset(node: Node) {
+  const nonTextNode = node.TEXT_NODE ? node.parentElement : node
+  if (nonTextNode == null || !isElement(nonTextNode)) return null
+  const offset = parseInt(nonTextNode.getAttribute('data-offset') || '', 10)
+  return isNaN(offset) ? null : offset
+}
+
+function isElement(node: Node): node is Element {
+  return node.nodeType === 1
+}
+
 const StyledMarkdownPreview = styled.div`
+  position: relative;
   ${defaultPreviewStyle}
-  padding: 0 ${({ theme }) => theme.space.xsmall}px ${({ theme }) =>
-  theme.space.xxxlarge}px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.md}px ${({ theme }) =>
+  theme.sizes.spaces.xl}px;
+
+  .block__gutter {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    max-width: 40px;
+  }
+
+  .with__gutter {
+    position: relative;
+  }
+
+  .comment__count {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.icon.default} 
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+    &:hover {
+      color: ${({ theme }) => theme.colors.text.primary}
+    }
+    & svg {
+      margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+  }
 `
+
+const StyledTooltipContent = styled.div`
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.border.second};
+  border-radius: ${({ theme }) => theme.borders.radius}px;
+  max-height: 50px;
+`
+
+function makeCommentGutters(highlights: HighlightRange[]) {
+  return (node: UnistNode): UnistNode | null => {
+    const posStart = node.position?.start.offset
+    const posEnd = node.position?.end.offset
+    if (posStart != null && posEnd != null) {
+      const allHighlights = highlights.filter(
+        (highlight) => highlight.start >= posStart && highlight.start <= posEnd
+      )
+      if (allHighlights.length > 0) {
+        return {
+          type: 'element',
+          tagName: 'div',
+          children: [
+            {
+              type: 'element',
+              tagName: 'comment_count',
+              properties: {
+                count: allHighlights.length,
+                comments: allHighlights.map(({ id }) => id),
+              },
+            },
+          ],
+        }
+      }
+    }
+    return null
+  }
+}
 
 export default MarkdownView

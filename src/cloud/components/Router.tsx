@@ -58,6 +58,7 @@ import Dialog from '../../shared/components/organisms/Dialog/Dialog'
 import ContextMenu from '../../shared/components/molecules/ContextMenu'
 import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 import CloudModal from './organisms/CloudModal'
+import { CommentsProvider } from '../../shared/lib/stores/comments'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -66,7 +67,8 @@ const CombinedProvider = combineProviders(
   PreferencesProvider,
   SettingsProvider,
   SearchProvider,
-  ExternalEntitiesProvider
+  ExternalEntitiesProvider,
+  CommentsProvider
 )
 
 const V2CombinedProvider = combineProviders(
@@ -75,7 +77,8 @@ const V2CombinedProvider = combineProviders(
   V2WindowProvider,
   V2ContextMenuProvider,
   V2ModalProvider,
-  V2DialogProvider
+  V2DialogProvider,
+  CommentsProvider
 )
 
 interface PageInfo {

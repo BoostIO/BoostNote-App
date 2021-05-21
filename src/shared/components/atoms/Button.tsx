@@ -19,6 +19,7 @@ export type ButtonVariant =
   | 'link'
   | 'transparent'
   | 'warning'
+  | 'success'
 
 export interface ButtonProps {
   variant?: ButtonVariant
@@ -186,6 +187,29 @@ const StyledButton = styled.button`
 
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.variants.primary.text};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        filter: brightness(112%);
+      }
+    }
+  }
+
+  &.button__variant--success {
+    background-color: ${({ theme }) => theme.colors.variants.success.base};
+    color: ${({ theme }) => theme.colors.variants.success.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.success.text};
       border-right-color: transparent;
     }
 

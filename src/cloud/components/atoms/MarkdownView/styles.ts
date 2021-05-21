@@ -1,6 +1,6 @@
-import { StyledProps } from '../../../lib/styled/styleFunctions'
+import { BaseTheme } from '../../../../shared/lib/styled/types'
 
-export const defaultPreviewStyle = ({ theme }: StyledProps) => `
+export const defaultPreviewStyle = ({ theme }: { theme: BaseTheme }) => `
 
 .CodeMirror {
   height: inherit;
@@ -8,11 +8,11 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
 
 .doc-embed {
   padding: 0;
-  border: 1px solid ${theme.baseBorderColor};
+  border: 1px solid ${theme.colors.border.second};
   border-radius: 3px;
-  margin-bottom: ${theme.space.xsmall}px;
+  margin-bottom: ${theme.sizes.spaces.xsm}px;
 
-  color: ${theme.baseTextColor};
+  color: ${theme.colors.text.primary};
 
   .doc-embed-wrapper {
     display: flex;
@@ -24,15 +24,15 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    padding-top: ${theme.space.xxsmall}px;
-    padding-left: ${theme.space.xxsmall}px;
+    padding-top: ${theme.sizes.spaces.xsm}px;
+    padding-left: ${theme.sizes.spaces.xsm}px;
     cursor: pointer;
     overflow: hidden;
 
     .threadline {
       flex: 1 1 auto;
       width: 1px;
-      background: ${theme.subtleBackgroundColor};
+      background: ${theme.colors.background.secondary};
       transition: 0.2s
       display: block;
       margin: auto;
@@ -40,7 +40,7 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
 
     &:hover .threadline {
       width: 1px;
-      background: ${theme.emphasizedIconColor}
+      background: ${theme.colors.icon.hover}
     }
   }
 
@@ -76,7 +76,7 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
     & > div {
       flex: 1;
       min-width: 0;
-      padding: ${theme.space.xsmall}px ${theme.space.small}px ${theme.space.xsmall}px ${theme.space.xxsmall}px;
+      padding: ${theme.sizes.spaces.xsm}px ${theme.sizes.spaces.sm}px ${theme.sizes.spaces.xsm}px ${theme.sizes.spaces.xsm}px;
     }
 
     h1, a {
@@ -107,7 +107,7 @@ export const defaultPreviewStyle = ({ theme }: StyledProps) => `
   }
 
   .doc-embed-content {
-    padding: 0 ${theme.space.small}px;
+    padding: 0 ${theme.sizes.spaces.sm}px;
   }
 }
 

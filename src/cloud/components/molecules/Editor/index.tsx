@@ -12,7 +12,10 @@ import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../../lib/editor/plugins/fileHandler'
 import { uploadFile, buildTeamFileUrl } from '../../../api/teams/files'
-import { YText } from 'yjs/dist/src/internals'
+import {
+  createRelativePositionFromTypeIndex,
+  createAbsolutePositionFromRelativePosition,
+} from 'yjs'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
@@ -40,12 +43,12 @@ import {
   mdiFileDocumentOutline,
   mdiStar,
   mdiStarOutline,
-  mdiChevronLeft,
-  mdiChevronRight,
   mdiPencil,
   mdiEyeOutline,
   mdiViewSplitVertical,
+  mdiCommentTextOutline,
   mdiDotsHorizontal,
+  mdiFormatListBulleted,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -68,7 +71,7 @@ import {
 } from '../../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../lib/editor/components/CodeMirrorEditor'
-import MarkdownView from '../../atoms/MarkdownView'
+import MarkdownView, { SelectionContext } from '../../atoms/MarkdownView'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
@@ -81,6 +84,10 @@ import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 import { useDocActionContextMenu } from './useDocActionContextMenu'
+import Icon from '../../atoms/Icon'
+import CommentManager from '../../organisms/CommentManager'
+import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
+import { HighlightRange } from '../../../lib/rehypeHighlight'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -181,6 +188,94 @@ const Editor = ({
     id: doc.id,
     userInfo,
   })
+
+  const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  const newRangeThread = useCallback(
+    (selection: SelectionContext) => {
+      if (realtime == null) {
+        return
+      }
+      const text = realtime.doc.getText('content')
+      const anchor = createRelativePositionFromTypeIndex(text, selection.start)
+      const head = createRelativePositionFromTypeIndex(text, selection.end)
+      setPreferences({ docContextMode: 'comment' })
+      commentActions.setMode({
+        mode: 'new_thread',
+        context: selection.text,
+        selection: {
+          anchor,
+          head,
+        },
+      })
+    },
+    [realtime, commentActions, setPreferences]
+  )
+
+  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
+  const calculatePositions = useCallback(() => {
+    if (commentState.mode === 'list_loading' || realtime == null) {
+      return
+    }
+
+    const comments: HighlightRange[] = []
+    for (const thread of commentState.threads) {
+      if (thread.selection != null && thread.status.type === 'open') {
+        const absoluteAnchor = createAbsolutePositionFromRelativePosition(
+          thread.selection.anchor,
+          realtime.doc
+        )
+        const absoluteHead = createAbsolutePositionFromRelativePosition(
+          thread.selection.head,
+          realtime.doc
+        )
+
+        if (
+          absoluteAnchor != null &&
+          absoluteHead != null &&
+          absoluteAnchor.index !== absoluteHead.index
+        ) {
+          comments.push({
+            id: thread.id,
+            start: absoluteAnchor.index,
+            end: absoluteHead.index,
+            active:
+              commentState.mode === 'thread' &&
+              thread.id === commentState.thread.id,
+          })
+        } else if (connState === 'synced') {
+          commentActions.threadOutdated(thread)
+        }
+      }
+    }
+    setViewComments(comments)
+  }, [commentState, realtime, commentActions, connState])
+
+  useEffect(() => {
+    if (realtime != null) {
+      realtime.doc.on('update', calculatePositions)
+      return () => realtime.doc.off('update', calculatePositions)
+    }
+    return undefined
+  }, [realtime, calculatePositions])
+
+  useEffect(() => {
+    calculatePositions()
+  }, [calculatePositions])
+
+  const commentClick = useCallback(
+    (ids: string[]) => {
+      if (commentState.mode !== 'list_loading') {
+        const idSet = new Set(ids)
+        setPreferences({ docContextMode: 'comment' })
+        commentActions.setMode({
+          mode: 'list',
+          filter: (thread) => idSet.has(thread.id),
+        })
+      }
+    },
+    [commentState, commentActions, setPreferences]
+  )
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -481,7 +576,7 @@ const Editor = ({
       if (realtime == null) {
         return
       }
-      const realtimeTitle = realtime.doc.getText('title') as YText
+      const realtimeTitle = realtime.doc.getText('title')
       realtimeTitle.delete(0, realtimeTitle.toString().length)
       setEditorRefContent(rev.content)
     },
@@ -799,26 +894,43 @@ const Editor = ({
             {
               type: 'button',
               variant: 'icon',
-              iconPath: preferences.docContextIsHidden
-                ? mdiChevronLeft
-                : mdiChevronRight,
+              iconPath: mdiCommentTextOutline,
+              active: preferences.docContextMode === 'comment',
               onClick: () =>
-                setPreferences({
-                  docContextIsHidden: !preferences.docContextIsHidden,
-                }),
+                setPreferences(({ docContextMode }) => ({
+                  docContextMode:
+                    docContextMode === 'comment' ? 'hidden' : 'comment',
+                })),
+            },
+            {
+              variant: 'icon',
+              iconPath: mdiFormatListBulleted,
+              active: preferences.docContextMode === 'context',
+              onClick: () =>
+                setPreferences(({ docContextMode }) => ({
+                  docContextMode:
+                    docContextMode === 'context' ? 'hidden' : 'context',
+                })),
             },
           ] as TopbarControlProps[],
         },
-        right: !preferences.docContextIsHidden ? (
-          <DocContextMenu
-            currentDoc={doc}
-            contributors={contributors}
-            backLinks={backLinks}
-            team={team}
-            restoreRevision={onRestoreRevisionCallback}
-            revisionHistory={revisionHistory}
-          />
-        ) : null,
+        right:
+          preferences.docContextMode === 'context' ? (
+            <DocContextMenu
+              currentDoc={doc}
+              contributors={contributors}
+              backLinks={backLinks}
+              team={team}
+              restoreRevision={onRestoreRevisionCallback}
+              revisionHistory={revisionHistory}
+            />
+          ) : preferences.docContextMode === 'comment' ? (
+            <CommentManager
+              state={commentState}
+              user={user}
+              {...commentActions}
+            />
+          ) : null,
       }}
     >
       <Container>
@@ -882,6 +994,15 @@ const Editor = ({
               className='scroller'
               embeddableDocs={embeddableDocs}
               scrollerRef={previewRef}
+              comments={viewComments}
+              commentClick={commentClick}
+              SelectionMenu={({ selection }) => (
+                <StyledSelectionMenu>
+                  <div onClick={() => newRangeThread(selection)}>
+                    <Icon size={32} path={mdiCommentTextOutline} />
+                  </div>
+                </StyledSelectionMenu>
+              )}
             />
           </StyledPreview>
         </StyledEditor>
@@ -1025,6 +1146,18 @@ const StyledPreview = styled.div`
   &.layout-editor {
     display: none;
   }
+
+  & .inline-comment.active,
+  .inline-comment.hv-active {
+    background-color: rgba(112, 84, 0, 0.8);
+  }
+`
+
+const StyledSelectionMenu = styled.div`
+  display: flex;
+  padding: 8px;
+  max-height: 50px;
+  cursor: pointer;
 `
 
 const StyledEditor = styled.div`

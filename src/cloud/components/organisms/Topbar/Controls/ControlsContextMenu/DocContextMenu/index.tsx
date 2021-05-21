@@ -273,7 +273,9 @@ const DocContextMenu = ({
   )
 
   return (
-    <Container className={cc([!preferences.docContextIsHidden && 'active'])}>
+    <Container
+      className={cc([preferences.docContextMode !== 'hidden' && 'active'])}
+    >
       <div ref={menuRef} className='context__menu'>
         <div className='context__container'>
           <div className='context__scroll__container'>

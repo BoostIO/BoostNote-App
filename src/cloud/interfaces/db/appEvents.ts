@@ -26,6 +26,12 @@ export type SseEventType =
   | 'templateDelete'
   | 'guestUpdate'
   | 'guestRemoval'
+  | 'commentThreadCreated'
+  | 'commentThreadUpdated'
+  | 'commentThreadDeleted'
+  | 'commentCreated'
+  | 'commentUpdated'
+  | 'commentDeleted'
 
 export interface SerializableAppEventProps {
   id: string

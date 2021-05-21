@@ -33,6 +33,7 @@ import Button from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
 import DocStatusIcon from '../../atoms/DocStatusIcon'
 import { isChildNode } from '../../../../shared/lib/dom'
+import { usePreferences } from '../../../lib/stores/preferences'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -55,10 +56,11 @@ const ContentManager = ({
   page,
   workspacesMap,
 }: ContentManagerProps) => {
+  const { preferences, setPreferences } = usePreferences()
   const [sending] = useState<boolean>(false)
   const [contentTab, setContentTab] = useState<ContentTab>('all')
   const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
-    'Latest Updated'
+    preferences.folderSortingOrder
   )
   const [
     selectedFolderSet,
@@ -197,9 +199,13 @@ const ContentManager = ({
     resetFolders()
   }, [resetDocs, resetFolders])
 
-  const onChangeOrder = useCallback((val: CustomSelectOption) => {
-    setOrder(val.data)
-  }, [])
+  const onChangeOrder = useCallback(
+    (val: CustomSelectOption) => {
+      setOrder(val.data)
+      setPreferences({ folderSortingOrder: val.data })
+    },
+    [setPreferences]
+  )
 
   const [
     showingStatusFilterContextMenu,
