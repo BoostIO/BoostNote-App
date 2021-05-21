@@ -14,6 +14,7 @@ import { SerializedTag } from '../../../interfaces/db/tag'
 import IconMdi from '../../atoms/IconMdi'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import cc from 'classcat'
 
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark
@@ -80,7 +81,9 @@ const DocTagsList = ({ doc, team }: DocTagsListProps) => {
 
   return (
     <StyledDocTagsListContainer>
-      <StyledDocTagsList>
+      <StyledDocTagsList
+        className={cc([(doc.tags || []).length === 0 && 'list--empty'])}
+      >
         {listContent}{' '}
         {tags.length > maxTagsDisplayed && (
           <StyledToolbarExpandTag
