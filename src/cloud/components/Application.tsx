@@ -87,7 +87,6 @@ import {
   mdiPencilBoxMultipleOutline,
   mdiPlus,
   mdiPlusCircleOutline,
-  mdiPlusOutline,
   mdiStar,
   mdiStarOutline,
   mdiTag,
@@ -1325,7 +1324,7 @@ function mapTree(
     }),
     controls: [
       {
-        icon: mdiPlusOutline,
+        icon: mdiPlus,
         onClick: () => {
           openModal(<CreateSmartFolderModal />)
         },
