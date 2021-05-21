@@ -16,9 +16,8 @@ function rehypeHighlight(ranges: HighlightRange[]) {
         node.children = node.children.flatMap((child) => {
           if (
             child.type === 'text' &&
-            child.position != null &&
-            child.position.start.offset != null &&
-            child.position.end.offset != null &&
+            child.position?.start?.offset != null &&
+            child.position?.end?.offset != null &&
             typeof child.value === 'string' &&
             containsPartialPosition(child.position)(range)
           ) {
