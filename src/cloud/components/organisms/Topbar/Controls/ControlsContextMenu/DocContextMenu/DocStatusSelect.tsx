@@ -203,5 +203,5 @@ const StatusView = ({ status }: { status?: DocStatus | null }) => {
         </div>
       )
   }
-  return <div className='status status--empty'>Empty</div>
+  return <div className='status status--empty'>No status</div>
 }

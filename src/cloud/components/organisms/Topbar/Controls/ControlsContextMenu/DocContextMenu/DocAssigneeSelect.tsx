@@ -1,24 +1,28 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo, useCallback, useState } from 'react'
 import { usePage } from '../../../../../../lib/stores/pageStore'
 import { SerializedUser } from '../../../../../../interfaces/db/user'
-import FormSelect, {
-  FormSelectOption,
-} from '../../../../../../../shared/components/molecules/Form/atoms/FormSelect'
+import { FormSelectOption } from '../../../../../../../shared/components/molecules/Form/atoms/FormSelect'
 import styled from '../../../../../../../shared/lib/styled'
 import UserIcon from '../../../../../atoms/UserIcon'
+import Select from 'react-select'
+import cc from 'classcat'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
-  value: string[]
+  defaultValue: string[]
   update: (value: string[]) => void
+  isLoading: boolean
 }
 
 const DocAssigneeSelect = ({
   disabled = false,
-  value,
+  defaultValue,
+  isLoading,
   update,
 }: DocAssigneeSelectProps) => {
   const { permissions } = usePage()
+  const [focused, setFocused] = useState(false)
+  const [value, setValue] = useState(defaultValue)
 
   const options = useMemo(() => {
     if (permissions == null) {
@@ -43,22 +47,139 @@ const DocAssigneeSelect = ({
   }, [permissions, value])
 
   const updateAssignees = useCallback(
-    (selectedOptions: FormSelectOption[]) => {
-      update(selectedOptions.map((option) => option.value))
+    (selectedOptions: any) => {
+      const value = (selectedOptions as FormSelectOption[]).map(
+        (option) => option.value
+      )
+      setValue(value)
+      update(value)
     },
-    [update]
+    [update, setValue]
   )
 
   return (
-    <FormSelect
-      isMulti
-      isDisabled={disabled}
-      options={options}
-      value={selectedOptions}
-      onChange={updateAssignees}
-    />
+    <SelectContainer>
+      <Select
+        isMulti
+        className={cc([
+          'form__select',
+          focused && 'form__select--focused',
+          disabled && 'form__select--disabled',
+        ])}
+        id='assignee-select'
+        classNamePrefix='form__select'
+        isDisabled={disabled}
+        options={options}
+        value={selectedOptions}
+        isClearable={false}
+        onChange={updateAssignees}
+        placeholder={'Unassigned'}
+        isLoading={isLoading}
+        isSearchable={false}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
+    </SelectContainer>
   )
 }
+
+const SelectContainer = styled.div`
+  .assignee__item__icon {
+    width: 20px;
+    height: 20px;
+    fon-size: 12px;
+    line-height: 18px;
+    margin-right: 4px;
+  }
+
+  .form__select .form__select__indicator-separator {
+    width: 0;
+  }
+
+  .form__select .form__select__dropdown-indicator {
+    display: none;
+  }
+
+  .form__select .form__select__control,
+  .form__select .form__select__value-container {
+    height: 32px !important;
+    min-height: 32px !important;
+    background: none !important;
+    border: 1px solid transparent !important;
+  }
+
+  .form__select .form__select__control {
+    width: 100%;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    border: none;
+    &:hover {
+      background: ${({ theme }) => theme.colors.background.primary} !important;
+    }
+    &.form__select__control--is-focused {
+      background: ${({ theme }) => theme.colors.background.primary} !important;
+      border: 1px solid ${({ theme }) => theme.colors.variants.primary.base} !important;
+    }
+  }
+
+  .form__select .form__select__value-container {
+    align-items: flex-start !important;
+    flex-wrap: wrap;
+  }
+  .form__select .form__select__multi-value {
+    position: relative;
+    height: 100%;
+    background: none;
+    margin: 0;
+  }
+
+  .form__select .form__select__multi-value__remove {
+    height: auto;
+    position: absolute;
+    top: 2px;
+    right: -9px;
+    background: none !important;
+    &:hover {
+      color: ${({ theme }) => theme.colors.variants.primary.text};
+    }
+  }
+
+  .form__select .form__select__value-container,
+  .form__select .form__select__multi-value__label,
+  .form__select .form__select__multi-value__remove {
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
+  .form__select .form__select__menu {
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
+  }
+
+  .form__select .form__select__option {
+    color: ${({ theme }) => theme.colors.text.secondary};
+    cursor: default;
+    &.form__select__option--is-disabled {
+      color: ${({ theme }) => theme.colors.text.subtle};
+      cursor: not-allowed;
+    }
+
+    &.form__select__option--is-selected,
+    &:active:not(.form__select__option--is-disabled) {
+      background-color: ${({ theme }) => theme.colors.variants.primary.base};
+      color: ${({ theme }) => theme.colors.variants.primary.text};
+    }
+
+    &.form__select__option--is-focused {
+      transition: 0.2s;
+      color: ${({ theme }) => theme.colors.text.primary};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    }
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
+      transition: 0.2s;
+    }
+  }
+`
 
 export default DocAssigneeSelect
 
@@ -71,16 +192,7 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
   return {
     label: (
       <ItemContainer>
-        <UserIcon
-          user={user}
-          style={{
-            width: '20px',
-            height: '20px',
-            fontSize: '12px',
-            lineHeight: '18px',
-            marginRight: '4px',
-          }}
-        />
+        <UserIcon user={user} className='assignee__item__icon' />
         {user.uniqueName}
       </ItemContainer>
     ),
@@ -98,8 +210,10 @@ function getSelectedOptionsByUserId(
       console.warn(`User Id ${userId} does not exist in page props`)
       return options
     }
-    const option = getOptionByUser(user)
-    options.push(option)
+    options.push({
+      value: user.id,
+      label: <UserIcon user={user} className='assignee__item__icon' />,
+    })
     return options
   }, [])
 }

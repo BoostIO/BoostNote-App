@@ -23,6 +23,7 @@ export interface FormSelectProps {
   filterOption?: (option: FormSelectOption, rawInput: string) => boolean
   onMenuOpen?: () => void
   minWidth?: string | number
+  placeholder?: React.ReactNode
 }
 
 const FormSelect = ({
@@ -36,6 +37,7 @@ const FormSelect = ({
   isLoading = false,
   isMulti = false,
   isSearchable = false,
+  placeholder = 'Select...',
   name,
   filterOption,
   onMenuOpen,
@@ -64,6 +66,7 @@ const FormSelect = ({
             }
           },
         }}
+        placeholder={placeholder}
         classNamePrefix={'form__select'}
         value={value}
         filterOption={filterOption}

@@ -297,8 +297,9 @@ const DocContextMenu = ({
                 <div className='context__content'>
                   <span>
                     <DocAssigneeSelect
+                      isLoading={sendingAssignees}
                       disabled={sendingAssignees}
-                      value={
+                      defaultValue={
                         currentDoc.assignees != null
                           ? currentDoc.assignees.map(
                               (assignee) => assignee.userId
