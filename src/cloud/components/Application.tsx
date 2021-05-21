@@ -1306,43 +1306,42 @@ function mapTree(
     })
   }
 
-  if (!team.personal) {
-    tree.push({
-      label: 'Smart Folders',
-      rows: smartFolders.map((smartFolder) => {
-        const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
-          smartFolder,
-          team,
-          'index'
-        )}`
-        return {
-          id: smartFolder.id,
-          label: smartFolder.name,
-          depth: 0,
-          active: href === currentPathWithDomain,
-          navigateTo: () => push(href),
-        }
-      }),
-      footer: (
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '0 13px',
+  tree.push({
+    label: 'Smart Folders',
+    rows: smartFolders.map((smartFolder) => {
+      const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
+        smartFolder,
+        team,
+        'index'
+      )}`
+      return {
+        id: smartFolder.id,
+        label: smartFolder.name,
+        depth: 0,
+        active: href === currentPathWithDomain,
+        navigateTo: () => push(href),
+      }
+    }),
+    footer: (
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0 13px',
+        }}
+      >
+        <Button
+          onClick={() => {
+            openModal(<CreateSmartFolderModal />)
           }}
         >
-          <Button
-            onClick={() => {
-              openModal(<CreateSmartFolderModal />)
-            }}
-          >
-            Add Smart Folder
-          </Button>
-        </div>
-      ),
-    })
-  }
+          Add Smart Folder
+        </Button>
+      </div>
+    ),
+  })
+
   tree.push({
     label: 'Workspaces',
     rows: navTree,

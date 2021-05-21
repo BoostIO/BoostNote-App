@@ -547,32 +547,54 @@ const DocContextMenu = ({
                     justifyContent='space-between'
                   >
                     {guestsOnThisDoc.length === 0 ? (
-                      <label className='context__label'>
-                        <Icon
-                          path={mdiAccountMultiplePlusOutline}
-                          className='context__icon'
-                          size={18}
-                        />
-                        Guests
-                        <div className='context__tooltip'>
-                          <div className='context__tooltip__text'>
-                            Guests are outsiders who you want to work with on
-                            specific documents. They can be invited to
-                            individual documents but not entire workspaces.
+                      <Flexbox
+                        direction='column'
+                        flex='0 1 auto'
+                        justifyContent='flex-start'
+                        alignItems='flex-start'
+                        className='content__row__label__column'
+                      >
+                        <label className='context__label'>
+                          <Icon
+                            path={mdiAccountMultiplePlusOutline}
+                            className='context__icon'
+                            size={18}
+                          />
+                          Guests
+                          <div className='context__tooltip'>
+                            <div className='context__tooltip__text'>
+                              Guests are outsiders who you want to work with on
+                              specific documents. They can be invited to
+                              individual documents but not entire workspaces.
+                            </div>
+                            ?
                           </div>
-                          ?
-                        </div>
-                      </label>
+                        </label>
+                        <span className='context__label__description'>
+                          They can see and edit this doc
+                        </span>
+                      </Flexbox>
                     ) : (
-                      <label className='context__label'>
-                        <Icon
-                          path={mdiAccountMultiplePlusOutline}
-                          className='context__icon'
-                          size={18}
-                        />
-                        {guestsOnThisDoc.length}{' '}
-                        {plur('Guest', guestsOnThisDoc.length)}
-                      </label>
+                      <Flexbox
+                        direction='column'
+                        flex='0 1 auto'
+                        justifyContent='flex-start'
+                        alignItems='flex-start'
+                        className='content__row__label__column'
+                      >
+                        <label className='context__label'>
+                          <Icon
+                            path={mdiAccountMultiplePlusOutline}
+                            className='context__icon'
+                            size={18}
+                          />
+                          {guestsOnThisDoc.length}{' '}
+                          {plur('Guest', guestsOnThisDoc.length)}
+                        </label>
+                        <span className='context__label__description'>
+                          They can see and edit this doc
+                        </span>
+                      </Flexbox>
                     )}
                     {subscription == null ||
                     subscription.plan === 'standard' ? (
