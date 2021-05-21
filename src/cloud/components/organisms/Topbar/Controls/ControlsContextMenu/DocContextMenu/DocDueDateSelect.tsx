@@ -32,7 +32,7 @@ const DocDueDateSelect = ({
       onChange={onDueDateChange}
       popperPlacement='top-end'
       customInput={
-        <DocPropertyValueButton sending={sending}>
+        <DocPropertyValueButton sending={sending} empty={dueDate == null}>
           {dueDate != null
             ? formatDate(dueDate, 'MMM dd, yyyy')
             : 'Add due date'}

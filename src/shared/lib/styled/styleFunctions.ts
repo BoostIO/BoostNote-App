@@ -126,7 +126,7 @@ color: ${theme.colors.text.primary};
 &:hover {
   background: ${theme.colors.background.primary} !important;
 }
-&.${focusClass} {
+&${focusClass} {
   background: ${theme.colors.background.primary} !important;
   border: 1px solid ${theme.colors.variants.info.base} !important;
 }

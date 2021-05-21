@@ -97,9 +97,15 @@ const SelectContainer = styled.div`
     width: 0;
   }
 
-  .form__select .form__select__dropdown-indicator,
-  .form__select .form__select__indicators {
+  .form__select .form__select__dropdown-indicator {
     display: none;
+  }
+
+  .form__select .form__select__indicators {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .form__select .form__select__control,
@@ -110,11 +116,22 @@ const SelectContainer = styled.div`
     border: 1px solid transparent !important;
   }
 
+  .form__select .form__select__placeholder {
+    color: ${({ theme }) => theme.colors.text.subtle};
+    margin: 0;
+  }
+
   .form__select .form__select__control {
     width: 100%;
     position: relative;
+    &:hover,
+    &.form__select__control--is-focused {
+      .form__select__placeholder {
+        color: ${({ theme }) => theme.colors.text.primary};
+      }
+    }
     ${({ theme }) =>
-      contextMenuFormItem({ theme }, 'form__select__control--is-focused')}
+      contextMenuFormItem({ theme }, '.form__select__control--is-focused')}
   }
 
   .form__select .form__select__value-container {
@@ -122,6 +139,7 @@ const SelectContainer = styled.div`
     flex-wrap: wrap;
     padding: 0 !important;
     top: 0;
+    left: 5px;
     position: absolute;
     width: 100%;
   }
