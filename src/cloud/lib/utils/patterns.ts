@@ -32,7 +32,7 @@ export function getOpenInviteURL(invite: SerializedOpenInvite) {
 export function getFolderURL(folder: SerializedFolder) {
   return [
     '/',
-    folder.pathname !== '' ? slugify(folder.name) + '-' : '',
+    folder.pathname !== '' ? slugify(folder.name).replace('.', '') + '-' : '',
     prefixFolders,
     getHexFromUUID(folder.id),
   ].join('')
@@ -41,7 +41,7 @@ export function getFolderURL(folder: SerializedFolder) {
 export function getDocURL(doc: SerializedDoc) {
   return [
     '/',
-    doc.title !== '' ? slugify(doc.title) + '-' : '',
+    doc.title !== '' ? slugify(doc.title).replace('.', '') + '-' : '',
     prefixDocs,
     getHexFromUUID(doc.id),
   ].join('')
@@ -50,7 +50,7 @@ export function getDocURL(doc: SerializedDoc) {
 export function getWorkspaceURL(workspace: SerializedWorkspace) {
   return [
     '/workspaces/',
-    workspace.name !== '' ? slugify(workspace.name) + '-' : '',
+    workspace.name !== '' ? slugify(workspace.name).replace('.', '') + '-' : '',
     prefixWorspaces,
     getHexFromUUID(workspace.id),
   ].join('')
