@@ -254,6 +254,7 @@ function useCommentsStore() {
             id: event.data.threadId,
             doc: event.data.docId,
           })
+          break
         }
         case 'commentCreated':
         case 'commentUpdated': {
