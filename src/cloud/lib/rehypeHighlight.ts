@@ -82,11 +82,20 @@ function rehypeHighlight(ranges: HighlightRange[]) {
                 localEnd,
                 end.length
               )
-              children.push({
-                type: 'text',
-                value: end,
+              const wrappedChild = {
+                type: 'element',
+                tagName: 'span',
+                children: [
+                  {
+                    type: 'text',
+                    value: end,
+                    position: transformedPosition,
+                  },
+                ],
                 position: transformedPosition,
-              })
+                generatedBy: range.id,
+              }
+              children.push(wrappedChild)
             }
             return children
           }

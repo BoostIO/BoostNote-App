@@ -395,6 +395,7 @@ function getSelectionContext(
 
   const rangeStart = offset1 + selection.anchorOffset
   const rangeEnd = offset2 + selection.focusOffset
+  console.log(rangeStart, rangeEnd)
   return {
     start: Math.min(rangeStart, rangeEnd),
     end: Math.max(rangeStart, rangeEnd),
