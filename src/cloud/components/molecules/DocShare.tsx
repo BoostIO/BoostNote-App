@@ -12,11 +12,11 @@ import Switch from 'react-switch'
 import {
   mdiChevronDown,
   mdiChevronRight,
-  mdiLinkPlus,
   mdiOpenInNew,
   mdiClipboardTextOutline,
   mdiLinkVariant,
   mdiClipboardCheckOutline,
+  mdiWeb,
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
 import copy from 'copy-to-clipboard'
@@ -179,7 +179,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           const updatedDoc = { ...currentDoc, shareLink: link }
           updateDocsMap([currentDoc.id, updatedDoc])
           setPartialPageData({ pageDoc: updatedDoc })
-          setShowPasswordForm(false)
         } catch {
           pushMessage({
             title: 'Error',
@@ -188,6 +187,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
         }
         setSending('idle')
       }
+      setShowPasswordForm(false)
     },
     [currentDoc, pushMessage, updateDocsMap, setPartialPageData]
   )
@@ -212,7 +212,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           const updatedDoc = { ...currentDoc, shareLink: link }
           updateDocsMap([currentDoc.id, updatedDoc])
           setPartialPageData({ pageDoc: updatedDoc })
-          setShowExpireForm(false)
         } catch {
           pushMessage({
             title: 'Error',
@@ -221,6 +220,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
         }
         setSending('idle')
       }
+      setShowExpireForm(false)
     },
     [currentDoc, pushMessage, updateDocsMap, setPartialPageData]
   )
@@ -380,11 +380,26 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
         </>
       )}
       <Container className='context__column'>
-        <Flexbox className='share__row'>
-          <label className='share__row__label'>
-            <IconMdi path={mdiLinkPlus} size={18} className='context__icon' />
-            Public Sharing
-          </label>
+        <Flexbox
+          className='share__row'
+          justifyContent='space-between'
+          alignItems='center'
+        >
+          <Flexbox
+            direction='column'
+            flex='0 1 auto'
+            justifyContent='flex-start'
+            alignItems='flex-start'
+            className='content__row__label__column'
+          >
+            <label className='context__label'>
+              <IconMdi path={mdiWeb} size={18} className='context__icon' />
+              Public Sharing
+            </label>
+            <span className='context__label__description'>
+              Anyone with this link can access
+            </span>
+          </Flexbox>
           <div className='share__row__switch'>
             <Switch
               disabled={sending !== 'idle'}
@@ -457,7 +472,8 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   <Flexbox
                     flex='1 1 auto'
                     wrap='wrap'
-                    className='share__row__label'
+                    className='share__row'
+                    justifyContent='space-between'
                   >
                     <span>Password Protect</span>
                     {(subscription == null ||
@@ -502,6 +518,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       id='share__link__password'
                       value={passwordText}
                       onChange={updatePasswordText}
+                      autoComplete={'off'}
                       readOnly={sending === 'password'}
                       placeholder='Password...'
                     />
@@ -518,7 +535,8 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   <Flexbox
                     flex='1 1 auto'
                     wrap='wrap'
-                    className='share__row__label'
+                    className='share__row'
+                    justifyContent='space-between'
                   >
                     <span>Expiration Date</span>
                     {!havingPro && (

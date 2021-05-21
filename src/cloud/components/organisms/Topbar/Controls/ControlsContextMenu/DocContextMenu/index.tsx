@@ -49,14 +49,9 @@ import {
   navigateToPreviousFocusableWithin,
 } from '../../../../../../lib/dom'
 import cc from 'classcat'
-import {
-  linkText,
-  topbarIconButtonStyle,
-} from '../../../../../../lib/styled/styleFunctions'
 import Icon from '../../../../../atoms/Icon'
 import DocShare from '../../../../../molecules/DocShare'
 import plur from 'plur'
-import styled from '../../../../../../lib/styled'
 import IconMdi from '../../../../../atoms/IconMdi'
 import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../../../shared/components/atoms/Button'
@@ -67,6 +62,7 @@ import { useModal } from '../../../../../../../shared/lib/stores/modal'
 import DocStatusSelect from './DocStatusSelect'
 import DocDueDateSelect from './DocDueDateSelect'
 import DocAssigneeSelect from './DocAssigneeSelect'
+import styled from '../../../../../../../shared/lib/styled'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -509,23 +505,36 @@ const DocContextMenu = ({
                   </div>
                 </div>
               )}
-              <div className='context__row'>
-                <div className='context__content single__line'>
-                  <Button
-                    disabled={subscription == null}
-                    variant='primary'
-                    size='sm'
-                    iconPath={mdiHistory}
-                    iconSize={16}
-                    onClick={revisionNavigateCallback}
-                    className='context__content__button'
-                  >
-                    {subscription != null && subscription.plan === 'standard'
-                      ? `See revisions ( last ${revisionHistoryStandardDays} days)`
-                      : 'See full revisions'}
-                  </Button>
-                </div>
-              </div>
+              <Flexbox className='context__row' justifyContent='space-between'>
+                <label className='context__label'>
+                  <IconMdi
+                    path={mdiHistory}
+                    size={18}
+                    className='context__icon'
+                  />{' '}
+                  History
+                </label>
+                <Flexbox className='context__content' justifyContent='flex-end'>
+                  {subscription == null ? (
+                    <UpgradeButton
+                      className='context__badge'
+                      origin='revision'
+                      variant='secondary'
+                      query={{ teamId: team.id, docId: currentDoc.id }}
+                    />
+                  ) : (
+                    <Button
+                      variant='primary'
+                      onClick={revisionNavigateCallback}
+                      size='sm'
+                    >
+                      {subscription != null && subscription.plan === 'standard'
+                        ? `See last ${revisionHistoryStandardDays} days`
+                        : 'See full history'}
+                    </Button>
+                  )}
+                </Flexbox>
+              </Flexbox>
               <div className='context__break' />
               {currentUserPermissions != null && (
                 <>
@@ -533,7 +542,10 @@ const DocContextMenu = ({
                     <div className='context__header'>SHARE</div>
                   </div>
                   <DocShare currentDoc={currentDoc} team={team} />
-                  <div className='context__row'>
+                  <Flexbox
+                    className='context__row'
+                    justifyContent='space-between'
+                  >
                     {guestsOnThisDoc.length === 0 ? (
                       <label className='context__label'>
                         <Icon
@@ -587,12 +599,12 @@ const DocContextMenu = ({
                         {guestsOnThisDoc.length > 0 ? 'Manage' : 'Invite'}
                       </Button>
                     )}
-                  </div>
+                  </Flexbox>
                   {backLinks.length > 0 && (
                     <>
                       <div className='context__break' />
                       <div className='context__column'>
-                        <label className='context__label'>
+                        <label className='context__label context__header'>
                           {backLinks.length}{' '}
                           {plur('Backlink', backLinks.length)}
                         </label>
@@ -636,23 +648,23 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${({ theme }) => theme.subtleBackgroundColor};
-    color: ${({ theme }) => theme.baseTextColor};
+    background: ${({ theme }) => theme.colors.background.secondary};
+    color: ${({ theme }) => theme.colors.text.primary};
     width: 20px;
     height: 20px;
-    margin-left: ${({ theme }) => theme.space.xxsmall}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
     .context__tooltip__text {
       display: none;
       border-radius: 3px;
       position: absolute;
       bottom: 100%;
-      background: ${({ theme }) => theme.baseBackgroundColor};
+      background: ${({ theme }) => theme.colors.background.primary};
       width: ${docContextWidth - 40}px;
-      padding: ${({ theme }) => theme.space.xsmall}px;
+      padding: ${({ theme }) => theme.sizes.spaces.xsm}px;
       left: 50%;
       transform: translateX(-50%);
-      line-height: ${({ theme }) => theme.fontSizes.medium}px;
+      line-height: ${({ theme }) => theme.sizes.fonts.md}px;
     }
 
     &:hover {
@@ -669,10 +681,10 @@ const Container = styled.div`
     height: 100vh;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid ${({ theme }) => theme.subtleBorderColor};
+    border-left: 1px solid ${({ theme }) => theme.colors.border.main};
     border-radius: 0px;
-    background-color: ${({ theme }) => theme.contextMenuColor};
-    color: ${({ theme }) => theme.baseTextColor};
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .context__container {
@@ -684,7 +696,7 @@ const Container = styled.div`
   .context__scroll__container {
     height: 100%;
     overflow: auto;
-    padding: ${({ theme }) => theme.space.xsmall}px 0;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     scrollbar-width: thin;
     &::-webkit-scrollbar {
       width: 6px;
@@ -703,12 +715,13 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     line-height: 32px;
-    font-size: ${({ theme }) => theme.fontSizes.default}px;
-    padding: 0px ${({ theme }) => theme.space.small}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    padding: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
     height: fit-content;
   }
   .context__header {
-    font-size: ${({ theme }) => theme.fontSizes.medium}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px !important;
+    color: ${({ theme }) => theme.colors.text.secondary} !important;
   }
 
   .context__column {
@@ -718,12 +731,12 @@ const Container = styled.div`
   .context__label {
     display: flex;
     align-items: center;
-    color: ${({ theme }) => theme.baseTextColor};
+    color: ${({ theme }) => theme.colors.text.secondary};
     font-size: 13px;
     width: 120px;
     flex: 0 0 auto;
     margin-bottom: 0;
-    margin-right: ${({ theme }) => theme.space.small}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     cursor: inherit;
   }
 
@@ -731,6 +744,7 @@ const Container = styled.div`
     line-height: inherit;
     min-height: 30px;
     flex: 1;
+    color: ${({ theme }) => theme.colors.text.primary};
 
     &.single__line {
       display: flex;
@@ -744,17 +758,9 @@ const Container = styled.div`
   .context__break {
     display: block;
     height: 1px;
-    margin: ${({ theme }) => theme.space.xsmall}px
-      ${({ theme }) => theme.space.small}px;
-    background-color: ${({ theme }) => theme.subtleBorderColor};
-  }
-
-  .context__toggle {
-    ${topbarIconButtonStyle}
-    position: absolute;
-    top: 6px;
-    left: -41px;
-    z-index: ${zIndexModalsBackground + 2};
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
+    background-color: ${({ theme }) => theme.colors.border.second};
   }
 
   .context__button {
@@ -777,29 +783,40 @@ const Container = styled.div`
     align-items: center;
     background: none;
     outline: none;
-    color: ${({ theme }) => theme.baseTextColor};
+    color: ${({ theme }) => theme.colors.text.primary};
     cursor: pointer;
     font-size: 13px;
     &:hover,
     &:focus {
-      background-color: ${({ theme }) => theme.subtleBackgroundColor};
-      color: ${({ theme }) => theme.emphasizedTextColor};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
+      color: ${({ theme }) => theme.colors.text.primary};
     }
 
     &:disabled {
-      color: ${({ theme }) => theme.subtleTextColor};
+      color: ${({ theme }) => theme.colors.text.subtle};
 
       &:hover,
       &:focus {
-        color: ${({ theme }) => theme.subtleTextColor} !important;
+        color: ${({ theme }) => theme.colors.text.subtle} !important;
         background-color: transparent;
         cursor: not-allowed;
       }
     }
   }
 
+  .content__row__label__column {
+    height: 50px;
+    > * {
+      line-height: 26px;
+    }
+    .context__label__description {
+      color: ${({ theme }) => theme.colors.text.subtle};
+      line-height: 15px;
+    }
+  }
+
   .context__flexible__button + div {
-    margin: ${({ theme }) => theme.space.xsmall}px 0;
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
   }
 
   .context__label + .context__badge {
@@ -813,71 +830,42 @@ const Container = styled.div`
   }
 
   .context__icon {
-    margin-right: ${({ theme }) => theme.space.xsmall}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     flex: 0 0 auto;
   }
 
   .context__backlink + .context__backlink {
-    margin-top: ${({ theme }) => theme.space.xsmall}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   .context__backlink {
-    ${linkText};
     display: flex;
     align-items: end;
     line-height: 18px;
     text-decoration: none;
-  }
 
-  .context__list + .context__flexible__button {
-    margin-top: ${({ theme }) => theme.space.default}px;
-  }
+    transition: 200ms color;
+    color: ${({ theme }) => theme.colors.text.primary};
 
-  .context__revision + .context__revision {
-    margin-top: ${({ theme }) => theme.space.default}px;
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      text-decoration: underline;
+    }
 
-    &::before {
-      height: 15px;
-      width: 1px;
-      background-color: ${({ theme }) => theme.subtleBackgroundColor};
-      content: '';
-      position: absolute;
-      left: 11px;
-      top: -19px;
+    &:disabled {
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
 
-  .context__revision {
-    display: flex;
-    flex-wrap: wrap;
-    line-height: 18px;
-    align-items: baseline;
-    position: relative;
-  }
-
-  .context__revision__user {
-    display: inline-block;
-  }
-
-  .context__revision__user + .context__revision__names {
-    padding-left: ${({ theme }) => theme.space.xsmall}px;
-  }
-
-  .context__revision__date {
-    display: block;
-    width: 100%;
-    padding-top: ${({ theme }) => theme.space.xxsmall}px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    font-size: 13px;
+  .context__list + .context__flexible__button {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   &.active {
     .context__menu {
       right: 0px;
-    }
-
-    .context__toggle {
-      left: -41px;
     }
 
     .placeholder {
