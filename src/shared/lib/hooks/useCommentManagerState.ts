@@ -131,7 +131,11 @@ function transitionState(transition: ModeTransition) {
 
     switch (transition.mode) {
       case 'list':
-        return { mode: 'list', threads: state.threads }
+        return {
+          mode: 'list',
+          threads: state.threads,
+          filter: transition.filter,
+        }
       case 'thread': {
         const thread = state.threads.find(
           (thread) => thread.id === transition.thread.id

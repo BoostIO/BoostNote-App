@@ -21,7 +21,7 @@ import {
 
 export type State =
   | { mode: 'list_loading' }
-  | { mode: 'list'; threads: Thread[] }
+  | { mode: 'list'; threads: Thread[]; filter?: (thread: Thread) => boolean }
   | { mode: 'thread_loading'; thread: Thread; threads: Thread[] }
   | { mode: 'thread'; thread: Thread; comments: Comment[]; threads: Thread[] }
   | {
@@ -32,7 +32,7 @@ export type State =
 
 export type ModeTransition =
   | { mode: 'thread'; thread: Thread }
-  | { mode: 'list' }
+  | { mode: 'list'; filter?: (thread: Thread) => boolean }
   | {
       mode: 'new_thread'
       context?: Thread['context']
@@ -82,9 +82,13 @@ function CommentManager({
       case 'list': {
         const onClick = (selectedThread: Thread) =>
           setMode({ mode: 'thread', thread: selectedThread })
+        const threads =
+          state.filter != null
+            ? state.threads.filter(state.filter)
+            : state.threads
         return (
           <div>
-            {sortBy((thread) => thread.status.at, state.threads)
+            {sortBy((thread) => thread.status.at, threads)
               .reverse()
               .map((thread) => (
                 <div
@@ -99,6 +103,7 @@ function CommentManager({
                     onOpen={reopenThread}
                     onClose={closeThread}
                     onDelete={deleteThread}
+                    showContext={state.filter != null}
                   />
                 </div>
               ))}
@@ -171,7 +176,7 @@ function CommentManager({
   return (
     <Container>
       <div className='header'>
-        {state.mode !== 'list' && (
+        {(state.mode !== 'list' || state.filter != null) && (
           <div
             className='icon__wrapper'
             onClick={() => setMode({ mode: 'list' })}
@@ -256,6 +261,10 @@ const Container = styled.div`
     white-space: pre-wrap;
     color: white;
     background-color: #705400;
+    &.small {
+      margin: 0;
+      margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
   }
 
   .thread__list__item {
