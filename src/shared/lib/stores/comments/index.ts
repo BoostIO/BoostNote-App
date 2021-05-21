@@ -20,13 +20,18 @@ import {
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
 import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
+import { max } from 'date-fns'
+import sortBy from 'ramda/es/sortBy'
+import take from 'ramda/es/take'
+import uniqBy from 'ramda/es/uniqBy'
 
 type DocThreadsObserver = (threads: Thread[]) => void
 type ThreadObserver = (comments: Comment[]) => void
 
 function useCommentsStore() {
   const { pushApiErrorMessage } = useToast()
-  const threadsCache = useRef<Map<string, Thread[]>>(new Map())
+  const threadsCache = useRef<Map<string, Thread>>(new Map())
+  const docThreadsCache = useRef<Map<string, Thread[]>>(new Map())
   const commentsCache = useRef<Map<string, Comment[]>>(new Map())
   const docThreadsObservers = useRef<Map<string, DocThreadsObserver[]>>(
     new Map()
@@ -46,12 +51,16 @@ function useCommentsStore() {
   }, [pushApiErrorMessage])
 
   const insertThreadsRef = useRef((threads: Thread[]) => {
+    for (const thread of threads) {
+      threadsCache.current.set(thread.id, thread)
+    }
+
     const partioned = groupBy(prop('doc'), threads)
     const docIds = Object.keys(partioned)
     for (const docId of docIds) {
-      const existing = threadsCache.current.get(docId) || []
+      const existing = docThreadsCache.current.get(docId) || []
       const merged = mergeOnId(existing, partioned[docId])
-      threadsCache.current.set(docId, merged)
+      docThreadsCache.current.set(docId, merged)
       const observers = docThreadsObservers.current.get(docId) || []
       for (const observer of observers) {
         observer(merged)
@@ -62,6 +71,7 @@ function useCommentsStore() {
   const insertCommentsRef = useRef((comments: Comment[]) => {
     const partioned = groupBy(prop('thread'), comments)
     const threadIds = Object.keys(partioned)
+    const updatedThreads: Thread[] = []
     for (const threadId of threadIds) {
       const existing = commentsCache.current.get(threadId) || []
       const merged = mergeOnId(existing, partioned[threadId])
@@ -70,13 +80,26 @@ function useCommentsStore() {
       for (const observer of observers) {
         observer(merged)
       }
+
+      const thread = threadsCache.current.get(threadId)
+      if (thread != null) {
+        updatedThreads.push({
+          ...thread,
+          commentCount: merged.length,
+          contributors: getContributors(merged),
+          lastCommentTime: max(merged.map(prop('createdAt'))),
+        })
+      }
     }
+
+    insertThreadsRef.current(updatedThreads)
   })
 
   const removeThreadRef = useRef((thread: { id: string; doc: string }) => {
-    const currentThreads = threadsCache.current.get(thread.doc) || []
+    threadsCache.current.delete(thread.id)
+    const currentThreads = docThreadsCache.current.get(thread.doc) || []
     const filteredThreads = currentThreads.filter((thr) => thr.id !== thread.id)
-    threadsCache.current.set(thread.doc, filteredThreads)
+    docThreadsCache.current.set(thread.doc, filteredThreads)
     const observers = docThreadsObservers.current.get(thread.doc) || []
     for (const observer of observers) {
       observer(filteredThreads)
@@ -98,7 +121,7 @@ function useCommentsStore() {
   const observeDocThreads = useCallback(
     (docId: string, observer: DocThreadsObserver) => {
       defer(() => {
-        const loaded = threadsCache.current.get(docId)
+        const loaded = docThreadsCache.current.get(docId)
         if (loaded != null) {
           observer(loaded)
         }
@@ -109,11 +132,11 @@ function useCommentsStore() {
         docThreadsObservers.current
       )
 
-      if (!threadsCache.current.has(docId)) {
+      if (!docThreadsCache.current.has(docId)) {
         handleError.current(
           getThreads(docId).then((threads) => {
             if (threads.length === 0) {
-              threadsCache.current.set(docId, [])
+              docThreadsCache.current.set(docId, [])
               const observers = docThreadsObservers.current.get(docId) || []
               for (const observer of observers) {
                 observer([])
@@ -219,7 +242,7 @@ function useCommentsStore() {
         case 'commentThreadCreated':
         case 'commentThreadUpdated': {
           try {
-            if (threadsCache.current.has(event.data.docId)) {
+            if (docThreadsCache.current.has(event.data.docId)) {
               const thread = await getThread(event.data.threadId)
               insertThreadsRef.current([thread])
             }
@@ -292,6 +315,13 @@ function mergeOnId<T extends { id: string }>(arr1: T[], arr2: T[]): T[] {
   })
   replaced.push(...arr2Map.values())
   return replaced
+}
+
+function getContributors(comments: Comment[]) {
+  return take(
+    3,
+    uniqBy(prop('id'), sortBy(prop('createdAt'), comments).map(prop('user')))
+  )
 }
 
 export const {
