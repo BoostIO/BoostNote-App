@@ -6,11 +6,13 @@ import { createTag } from '../../../api/teams/tags'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import { Spinner } from '../../atoms/Spinner'
-import styled from '../../../lib/styled'
-import { inputStyle } from '../../../lib/styled/styleFunctions'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { isChildNode } from '../../../lib/dom'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import { contextMenuFormItem } from '../../../../shared/lib/styled/styleFunctions'
+import styled from '../../../../shared/lib/styled'
+import FormInput from '../../../../shared/components/molecules/Form/atoms/FormInput'
+import cc from 'classcat'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
@@ -147,15 +149,25 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   })
 
   return (
-    <Container>
+    <Container className={cc([(doc.tags || []).length === 0 && 'empty'])}>
       {!showInput ? (
-        <button
-          className='tag__add'
-          id='tag__add__btn'
-          onClick={activateAndFocus}
-        >
-          <IconMdi path={mdiPlus} size={16} />
-        </button>
+        (doc.tags || []).length === 0 ? (
+          <button
+            className='tag__add--empty'
+            id='tag__add__btn'
+            onClick={activateAndFocus}
+          >
+            Add a label
+          </button>
+        ) : (
+          <button
+            className='tag__add'
+            id='tag__add__btn'
+            onClick={activateAndFocus}
+          >
+            <IconMdi path={mdiPlus} size={16} />
+          </button>
+        )
       ) : (
         <div
           className='tag__add__input__container'
@@ -169,7 +181,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
               style={{ marginTop: '-6px' }}
             />
           )}
-          <input
+          <FormInput
             id='autocomplete-tags'
             ref={inputRef}
             className='autocomplete__input'
@@ -203,8 +215,29 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
 const Container = styled.div`
   margin-top: 6px;
 
+  &.empty {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .tag__add--empty {
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    background: transparent;
+    outline: 0;
+    width: 100%;
+    display: block;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    height: 32px;
+    border-radius: 4px;
+    &:hover {
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+    ${({ theme }) => contextMenuFormItem({ theme }, ':focus')};
+    text-align: left;
+  }
+
   .tag__add {
-    font-size: ${({ theme }) => theme.fontSizes.default}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     border-radius: 100%;
     width: 25px;
     height: 25px;
@@ -212,14 +245,14 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     background: none;
-    border: 1px solid ${({ theme }) => theme.subtleBorderColor};
-    color: ${({ theme }) => theme.subtleTextColor};
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    color: ${({ theme }) => theme.colors.text.subtle};
     margin: 0 4px;
     padding: 0;
 
     &:hover,
     &:focus {
-      color: ${({ theme }) => theme.emphasizedTextColor} !important;
+      color: ${({ theme }) => theme.colors.text.primary} !important;
     }
   }
 
@@ -229,19 +262,16 @@ const Container = styled.div`
   }
 
   .autocomplete__input {
-    ${inputStyle};
     line-height: inherit !important;
     height: 28px !important;
     width: 100%;
     margin-top: 4px;
-    padding: ${({ theme }) => theme.space.xxsmall}px
-      ${({ theme }) => theme.space.xsmall}px;
   }
 
   .autocomplete__container {
     z-index: 9000;
     position: absolute;
-    padding: ${({ theme }) => theme.space.xsmall}px 0;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     width: 100%;
     height: auto;
     max-width: auto;
@@ -254,23 +284,23 @@ const Container = styled.div`
     border: none;
     left: 0;
     top: 100%;
-    background-color: ${({ theme }) => theme.baseBackgroundColor};
-    box-shadow: ${({ theme }) => theme.baseShadowColor};
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    box-shadow: ${({ theme }) => theme.colors.shadow};
   }
 
   .autocomplete__option {
     width: 100%;
-    padding: 0 ${({ theme }) => theme.space.xsmall}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: ${({ theme }) => theme.subtleTextColor};
+    color: ${({ theme }) => theme.colors.text.subtle};
     text-decoration: none;
 
     &:hover,
     &:focus {
-      background: ${({ theme }) => theme.transparentPrimaryBackgroundColor};
-      color: ${({ theme }) => theme.primaryTextColor};
+      background: ${({ theme }) => theme.colors.background.quaternary};
+      color: ${({ theme }) => theme.colors.text.primary};
     }
   }
 `
