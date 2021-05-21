@@ -545,6 +545,7 @@ const DocContextMenu = ({
                   <Flexbox
                     className='context__row'
                     justifyContent='space-between'
+                    style={{ alignItems: 'center' }}
                   >
                     {guestsOnThisDoc.length === 0 ? (
                       <Flexbox
@@ -616,7 +617,7 @@ const DocContextMenu = ({
                             { width: 'large' }
                           )
                         }
-                        variant='transparent'
+                        variant='primary'
                       >
                         {guestsOnThisDoc.length > 0 ? 'Manage' : 'Invite'}
                       </Button>
