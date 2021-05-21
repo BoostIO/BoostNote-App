@@ -1,20 +1,28 @@
 import React, { forwardRef } from 'react'
 import styled from '../../../../../../../shared/lib/styled'
 import Spinner from '../../../../../../../shared/components/atoms/Spinner'
+import { contextMenuFormItem } from '../../../../../../../shared/lib/styled/styleFunctions'
+import cc from 'classcat'
 
 interface DocPropertyValueButtonProps {
   children: React.ReactNode
   disabled?: boolean
   sending?: boolean
+  empty?: boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const DocPropertyValueButton = forwardRef<
   HTMLButtonElement,
   DocPropertyValueButtonProps
->(({ sending, children, disabled, onClick }, ref) => {
+>(({ sending, children, disabled, empty, onClick }, ref) => {
   return (
-    <ButtonContainer ref={ref} disabled={disabled} onClick={onClick}>
+    <ButtonContainer
+      ref={ref}
+      disabled={disabled}
+      onClick={onClick}
+      className={cc([empty && 'doc__property__button--empty'])}
+    >
       {sending != null ? (
         children
       ) : (
@@ -31,11 +39,10 @@ export default DocPropertyValueButton
 const ButtonContainer = styled.button`
   display: flex;
   width: 100%;
-  height: 30px;
+  height: 32px;
   display: flex;
   justify-content: left;
   align-items: center;
-  padding: 0 10px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   outline: none;
   border-radius: 4px;
@@ -46,15 +53,12 @@ const ButtonContainer = styled.button`
   color: inherit;
   box-sizing: border-box;
   transition: 200ms background-color;
+  ${({ theme }) => contextMenuFormItem({ theme }, ':focus')}
 
-  background: none;
-  border: 1px solid transparent;
-  color: ${({ theme }) => theme.colors.text.subtle};
-  padding: 0 3px !important;
-
-  &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
+  &.doc__property__button--empty {
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
+
   .button__spinner {
     border-color: ${({ theme }) => theme.colors.variants.primary.text};
     border-right-color: transparent;

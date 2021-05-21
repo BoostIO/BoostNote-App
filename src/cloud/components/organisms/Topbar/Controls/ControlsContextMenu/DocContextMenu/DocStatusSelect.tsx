@@ -32,6 +32,7 @@ const DocStatusSelect = ({
     <Container>
       <DocPropertyValueButton
         sending={sending}
+        empty={status == null}
         onClick={(event) => {
           popup(event, [
             {
@@ -122,9 +123,6 @@ const Container = styled.div`
   .status {
     display: flex;
     align-items: center;
-  }
-  .status--empty {
-    color: ${({ theme }) => theme.subtleTextColor};
   }
   .status_icon {
     margin-right: 5px;
