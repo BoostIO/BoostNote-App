@@ -120,9 +120,7 @@ const DocPage = ({
     )
   }
 
-  return docIsEditable &&
-    currentDoc.archivedAt == null &&
-    currentUser != null ? (
+  return docIsEditable && currentUser != null ? (
     <EditPage
       team={team}
       doc={currentDoc}
