@@ -17,10 +17,16 @@ import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 
 type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
+  showContext: boolean
 }
 
 const smallUserIconStyle = { width: '24px', height: '24px', lineHeight: '20px' }
-function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
+function ThreadItem({
+  thread,
+  onSelect,
+  showContext,
+  ...rest
+}: ThreadListItemProps) {
   const actions = useThreadActions({ thread, ...rest })
   const { popup } = useContextMenu()
 
@@ -35,7 +41,10 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
 
   return (
     <StyledListItem onClick={() => onSelect(thread)}>
-      <div>
+      {showContext && (
+        <div className='thread__context small'>{thread.context}</div>
+      )}
+      <div className='thread__row'>
         <div className='thread__info__line'>
           <Icon
             size={20}
@@ -75,10 +84,8 @@ const StyledListItem = styled.div`
     display: block;
   }
 
-  & > div {
-    &:first-child {
-      margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
-    }
+  & .thread__row {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
     display: flex;
     align-items: center;
     justify-content: space-between;

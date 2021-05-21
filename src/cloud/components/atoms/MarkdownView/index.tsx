@@ -42,10 +42,6 @@ import { Node as UnistNode } from 'unist'
 import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
-import {
-  highlightComment,
-  unhighlightComment,
-} from '../../../../shared/lib/utils/comments'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -109,7 +105,7 @@ interface MarkdownViewProps {
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
   comments?: HighlightRange[]
-  commentClick?: (id: string) => void
+  commentClick?: (id: string[]) => void
 }
 
 const MarkdownView = ({
@@ -199,25 +195,17 @@ const MarkdownView = ({
                 )
               }
             : shortcodeHandler,
-        comment_icon: (props: any) => {
-          const id = props['data-comment']
-          return id != null ? (
-            <div
-              className='comment__icon'
-              onClick={() => commentClick && commentClick(id)}
-              onMouseOver={highlightComment(id, 'hv-active')}
-              onMouseOut={unhighlightComment(id, 'hv-active')}
-            >
-              <Icon path={mdiCommentTextOutline} size={20} />
-            </div>
-          ) : undefined
-        },
         comment_count: (props: any) => {
-          return props.count != null ? (
-            <div className='comment__count'>
+          return props.count != null && props.comments != null ? (
+            <div
+              className='comment__count'
+              onClick={() =>
+                commentClick && commentClick(props.comments.split(' '))
+              }
+            >
               <Icon path={mdiCommentTextOutline} /> <span>{props.count}</span>
             </div>
-          ) : undefined
+          ) : null
         },
       },
     }
@@ -429,21 +417,6 @@ const StyledMarkdownPreview = styled.div`
 
   .with__gutter {
     position: relative;
-    &:hover .comment__icon {
-      display: block;
-    }
-
-    &:hover .comment__count {
-      display: none;
-    }
-  }
-
-  .comment__icon {
-    display: none;
-    color: ${({ theme }) => theme.colors.text.subtle}
-    &:hover {
-      color: ${({ theme }) => theme.colors.text.primary}
-    }
   }
 
   .comment__count {
@@ -452,6 +425,9 @@ const StyledMarkdownPreview = styled.div`
     align-items: center;
     color: ${({ theme }) => theme.colors.icon.default} 
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+    &:hover {
+      color: ${({ theme }) => theme.colors.text.primary}
+    }
     & svg {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
@@ -474,13 +450,6 @@ function makeCommentGutters(highlights: HighlightRange[]) {
         (highlight) => highlight.start >= posStart && highlight.start <= posEnd
       )
       if (allHighlights.length > 0) {
-        const links = allHighlights.map((hi) => ({
-          type: 'element',
-          tagName: 'comment_icon',
-          properties: {
-            'data-comment': hi.id,
-          },
-        }))
         return {
           type: 'element',
           tagName: 'div',
@@ -490,9 +459,9 @@ function makeCommentGutters(highlights: HighlightRange[]) {
               tagName: 'comment_count',
               properties: {
                 count: allHighlights.length,
+                comments: allHighlights.map(({ id }) => id),
               },
             },
-            ...links,
           ],
         }
       }

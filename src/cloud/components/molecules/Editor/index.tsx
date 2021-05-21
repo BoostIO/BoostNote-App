@@ -260,13 +260,14 @@ const Editor = ({
   }, [calculatePositions])
 
   const commentClick = useCallback(
-    (id: string) => {
+    (ids: string[]) => {
       if (commentState.mode !== 'list_loading') {
-        const thread = commentState.threads.find((thread) => thread.id === id)
-        if (thread != null) {
-          setPreferences({ docContextMode: 'comment' })
-          commentActions.setMode({ mode: 'thread', thread })
-        }
+        const idSet = new Set(ids)
+        setPreferences({ docContextMode: 'comment' })
+        commentActions.setMode({
+          mode: 'list',
+          filter: (thread) => idSet.has(thread.id),
+        })
       }
     },
     [commentState, commentActions, setPreferences]
