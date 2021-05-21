@@ -9,16 +9,17 @@ import { Rect } from '../../lib/selection/useSelectionLocation'
 
 interface RangeTooltipProps {
   rect: Rect
+  bufferTop?: number
 }
 
 const STYLE: CSSProperties = {
   position: 'absolute',
-  transform: 'translate(-50%, calc(-100% - 5px))',
 }
 
 function SelectionTooltip({
   children,
   rect,
+  bufferTop = -1,
 }: PropsWithChildren<RangeTooltipProps>) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<CSSProperties>({ display: 'none' })
@@ -29,7 +30,8 @@ function SelectionTooltip({
       return
     }
 
-    const top = rect.y
+    const topClose = rect.y < bufferTop
+    const top = topClose ? rect.y + rect.height : rect.y
     let left = rect.x
 
     left = left + rect.width / 2
@@ -50,8 +52,9 @@ function SelectionTooltip({
       ...STYLE,
       left: left + 'px',
       top: top + 'px',
+      transform: `translate(-50%, ${topClose ? '0' : 'calc(-100% - 5px)'})`,
     })
-  }, [rect])
+  }, [rect, bufferTop])
 
   return (
     <div style={style} ref={containerRef}>
