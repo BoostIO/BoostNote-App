@@ -383,37 +383,39 @@ const DocContextMenu = ({
                   </span>
                 </div>
               </div>
-              <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiAccountCircleOutline}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  Updated by
-                </label>
-                <div className='context__content'>
-                  <Flexbox wrap='wrap'>
-                    {currentDoc.head != null ? (
-                      (currentDoc.head.creators || []).length > 0 ? (
-                        <>
-                          {(currentDoc.head.creators || []).map((user) => (
-                            <UserIcon
-                              key={user.id}
-                              user={usersMap.get(user.id) || user}
-                              className='subtle'
-                            />
-                          ))}
-                        </>
+              {!team.personal && (
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <IconMdi
+                      path={mdiAccountCircleOutline}
+                      size={18}
+                      className='context__icon'
+                    />{' '}
+                    Updated by
+                  </label>
+                  <div className='context__content'>
+                    <Flexbox wrap='wrap'>
+                      {currentDoc.head != null ? (
+                        (currentDoc.head.creators || []).length > 0 ? (
+                          <>
+                            {(currentDoc.head.creators || []).map((user) => (
+                              <UserIcon
+                                key={user.id}
+                                user={usersMap.get(user.id) || user}
+                                className='subtle'
+                              />
+                            ))}
+                          </>
+                        ) : (
+                          ''
+                        )
                       ) : (
-                        ''
-                      )
-                    ) : (
-                      <div>Unknown</div>
-                    )}
-                  </Flexbox>
+                        <div>Unknown</div>
+                      )}
+                    </Flexbox>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className='context__row'>
                 <label className='context__label'>
                   <IconMdi
@@ -439,69 +441,73 @@ const DocContextMenu = ({
                   </Flexbox>
                 </div>
               </div>
-              <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiAccountCircleOutline}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  Updated by
-                </label>
-                <div className='context__content'>
-                  <Flexbox wrap='wrap'>
-                    {currentDoc.head != null ? (
-                      (currentDoc.head.creators || []).length > 0 ? (
-                        <>
-                          {(currentDoc.head.creators || []).map((user) => (
-                            <UserIcon
-                              key={user.id}
-                              user={usersMap.get(user.id) || user}
-                              className='subtle'
-                            />
-                          ))}
-                        </>
+              {!team.personal && (
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <IconMdi
+                      path={mdiAccountCircleOutline}
+                      size={18}
+                      className='context__icon'
+                    />{' '}
+                    Updated by
+                  </label>
+                  <div className='context__content'>
+                    <Flexbox wrap='wrap'>
+                      {currentDoc.head != null ? (
+                        (currentDoc.head.creators || []).length > 0 ? (
+                          <>
+                            {(currentDoc.head.creators || []).map((user) => (
+                              <UserIcon
+                                key={user.id}
+                                user={usersMap.get(user.id) || user}
+                                className='subtle'
+                              />
+                            ))}
+                          </>
+                        ) : (
+                          ''
+                        )
                       ) : (
-                        ''
-                      )
-                    ) : (
-                      <div>Unknown</div>
-                    )}
-                  </Flexbox>
+                        <div>Unknown</div>
+                      )}
+                    </Flexbox>
+                  </div>
                 </div>
-              </div>
-              <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiAccountMultiple}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  {plur('Contributor', contributorsState.contributors.length)}
-                </label>
-                <div className='context__content'>
-                  <Flexbox wrap='wrap'>
-                    {contributorsState.contributors.map((contributor) => (
-                      <UserIcon
-                        key={contributor.id}
-                        user={usersMap.get(contributor.id) || contributor}
-                        className='subtle'
-                      />
-                    ))}
+              )}
+              {!team.personal && (
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <IconMdi
+                      path={mdiAccountMultiple}
+                      size={18}
+                      className='context__icon'
+                    />{' '}
+                    {plur('Contributor', contributorsState.contributors.length)}
+                  </label>
+                  <div className='context__content'>
+                    <Flexbox wrap='wrap'>
+                      {contributorsState.contributors.map((contributor) => (
+                        <UserIcon
+                          key={contributor.id}
+                          user={usersMap.get(contributor.id) || contributor}
+                          className='subtle'
+                        />
+                      ))}
 
-                    {contributors.length > 5 && (
-                      <SmallButton
-                        variant='transparent'
-                        onClick={() => setSliceContributors((prev) => !prev)}
-                      >
-                        {contributorsState.sliced > 0
-                          ? `+${contributorsState.sliced}`
-                          : '-'}
-                      </SmallButton>
-                    )}
-                  </Flexbox>
+                      {contributors.length > 5 && (
+                        <SmallButton
+                          variant='transparent'
+                          onClick={() => setSliceContributors((prev) => !prev)}
+                        >
+                          {contributorsState.sliced > 0
+                            ? `+${contributorsState.sliced}`
+                            : '-'}
+                        </SmallButton>
+                      )}
+                    </Flexbox>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className='context__row'>
                 <div className='context__content single__line'>
                   <Button
