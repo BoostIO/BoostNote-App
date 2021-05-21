@@ -142,6 +142,7 @@ const CommentItemContainer = styled.div`
 
   & .comment__message {
     white-space: pre-wrap;
+    word-break: break-word;
   }
 `
 
