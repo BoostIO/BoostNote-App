@@ -93,6 +93,9 @@ import {
   mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
   mdiWeb,
+  mdiPlayCircleOutline,
+  mdiPauseCircleOutline,
+  mdiCheckCircleOutline,
 } from '@mdi/js'
 import { getColorFromString } from '../../shared/lib/string'
 import {
@@ -150,7 +153,7 @@ import {
 } from '../lib/sidebar'
 import CreateSmartFolderModal from './organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
 import { SerializedSmartFolder } from '../interfaces/db/smartFolder'
-import { getSmartFolderHref } from '../lib/href'
+import { getSmartFolderHref, getDocStatusHref } from '../lib/href'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -1462,13 +1465,46 @@ function mapTree(
         navigateTo: () => push(getTeamLinkHref(team, 'shared')),
         depth: 0,
       },
+    ],
+  })
+
+  tree.push({
+    label: 'Status',
+    rows: [
       {
-        id: 'sidenav-archived',
-        label: 'Archived',
+        id: 'sidenav-status-in-progress',
+        label: 'In Progress',
+        defaultIcon: mdiPlayCircleOutline,
+        href: getDocStatusHref(team, 'in-progress'),
+        active: getDocStatusHref(team, 'in-progress') === currentPath,
+        navigateTo: () => push(getDocStatusHref(team, 'in-progress')),
+        depth: 0,
+      },
+      {
+        id: 'sidenav-status-paused',
+        label: 'Paused',
+        defaultIcon: mdiPauseCircleOutline,
+        href: getDocStatusHref(team, 'paused'),
+        active: getDocStatusHref(team, 'paused') === currentPath,
+        navigateTo: () => push(getDocStatusHref(team, 'paused')),
+        depth: 0,
+      },
+      {
+        id: 'sidenav-status-completed',
+        label: 'Completed',
+        defaultIcon: mdiCheckCircleOutline,
+        href: getDocStatusHref(team, 'completed'),
+        active: getDocStatusHref(team, 'completed') === currentPath,
+        navigateTo: () => push(getDocStatusHref(team, 'completed')),
+        depth: 0,
+      },
+      {
+        id: 'sidenav-status-archived',
+        label: 'In Progress',
         defaultIcon: mdiArchiveOutline,
-        href: getTeamLinkHref(team, 'archived'),
-        active: getTeamLinkHref(team, 'archived') === currentPath,
-        navigateTo: () => push(getTeamLinkHref(team, 'archived')),
+        href: getDocStatusHref(team, 'archived'),
+        active: getDocStatusHref(team, 'archived') === currentPath,
+        navigateTo: () => push(getDocStatusHref(team, 'archived')),
         depth: 0,
       },
     ],

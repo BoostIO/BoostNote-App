@@ -60,6 +60,7 @@ import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 import CloudModal from './organisms/CloudModal'
 import { CommentsProvider } from '../../shared/lib/stores/comments'
 import SmartFolderPage from '../pages/[teamId]/smart-folders/[smartFolderId]'
+import DocStatusShowPage from '../pages/[teamId]/status/[docStatus]'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -431,10 +432,14 @@ function getPageComponent(pathname: string): PageSpec | null {
           getInitialProps: WorkspaceShowPage.getInitialProps,
         }
       case 'smart-folders':
-        console.log('smart folder fetch')
         return {
           Component: SmartFolderPage,
           getInitialProps: SmartFolderPage.getInitialProps,
+        }
+      case 'status':
+        return {
+          Component: DocStatusShowPage,
+          getInitialProps: DocStatusShowPage.getInitialProps,
         }
       default:
         return {

@@ -20,3 +20,19 @@ export function getSmartFolderHref(
   }
   return `${basePathname}/${intent}${queryPathName}`
 }
+
+export type DocStatusRouteIntent =
+  | 'in-progress'
+  | 'paused'
+  | 'completed'
+  | 'archived'
+
+export function getDocStatusHref(
+  team: SerializedTeam,
+  intent: DocStatusRouteIntent,
+  query?: any
+) {
+  const basePathname = `${getTeamURL(team)}/status`
+  const queryPathName = query != null ? `?${querystring.stringify(query)}` : ''
+  return `${basePathname}/${intent}${queryPathName}`
+}
