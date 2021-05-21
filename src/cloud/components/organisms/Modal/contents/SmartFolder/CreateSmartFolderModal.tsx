@@ -12,6 +12,8 @@ import SecondaryConditionItem from './SecondaryConditionItem'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
 import { createSmartFolder } from '../../../../../api/teams/smart-folder'
 import { usePage } from '../../../../../lib/stores/pageStore'
+import { useNav } from '../../../../../lib/stores/nav'
+import { useToast } from '../../../../../../shared/lib/stores/toast'
 
 const CreateSmartFolderModal = () => {
   const [name, setName] = useState('')
@@ -20,6 +22,8 @@ const CreateSmartFolderModal = () => {
   const { team } = usePage()
 
   const [makingPrivate, setMakingPrivate] = useState(false)
+  const { updateSmartFoldersMap } = useNav()
+  const [sending, setSending] = useState(false)
 
   const [primaryConditionType, setPrimaryConditionType] = useState<
     'and' | 'or'
@@ -64,21 +68,38 @@ const CreateSmartFolderModal = () => {
     })
   }, [])
 
+  const { pushApiErrorMessage } = useToast()
   const submit = useCallback(async () => {
     if (team == null) {
       return
     }
-    const smartFolder = await createSmartFolder(team, {
-      name,
-      condition: {
-        type: primaryConditionType,
-        conditions: JSON.parse(JSON.stringify(secondaryConditions)),
-      },
-      private: makingPrivate,
-    })
-
-    console.log(smartFolder)
-  }, [team, name, primaryConditionType, secondaryConditions, makingPrivate])
+    setSending(true)
+    try {
+      const { smartFolder } = await createSmartFolder(team, {
+        name,
+        condition: {
+          type: primaryConditionType,
+          conditions: JSON.parse(JSON.stringify(secondaryConditions)),
+        },
+        private: makingPrivate,
+      })
+      updateSmartFoldersMap([smartFolder.id, smartFolder])
+      closeModal()
+    } catch (error) {
+      console.error(error)
+      pushApiErrorMessage(error)
+      setSending(false)
+    }
+  }, [
+    team,
+    name,
+    primaryConditionType,
+    secondaryConditions,
+    makingPrivate,
+    updateSmartFoldersMap,
+    closeModal,
+    pushApiErrorMessage,
+  ])
 
   return (
     <Container>
@@ -191,7 +212,7 @@ const CreateSmartFolderModal = () => {
 
         <div className='form__row'>
           <div>
-            <Button variant='primary' onClick={submit}>
+            <Button variant='primary' onClick={submit} disabled={sending}>
               Create
             </Button>
             <Button variant='secondary' onClick={closeModal}>
