@@ -88,7 +88,7 @@ const SelectContainer = styled.div`
   .assignee__item__icon {
     width: 20px;
     height: 20px;
-    fon-size: 12px;
+    font-size: 12px;
     line-height: 18px;
     margin-right: 4px;
   }
