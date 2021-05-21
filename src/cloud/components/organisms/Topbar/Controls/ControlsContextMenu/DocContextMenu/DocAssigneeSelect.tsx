@@ -6,6 +6,7 @@ import styled from '../../../../../../../shared/lib/styled'
 import UserIcon from '../../../../../atoms/UserIcon'
 import Select from 'react-select'
 import cc from 'classcat'
+import { contextMenuFormItem } from '../../../../../../../shared/lib/styled/styleFunctions'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -96,7 +97,8 @@ const SelectContainer = styled.div`
     width: 0;
   }
 
-  .form__select .form__select__dropdown-indicator {
+  .form__select .form__select__dropdown-indicator,
+  .form__select .form__select__indicators {
     display: none;
   }
 
@@ -110,21 +112,20 @@ const SelectContainer = styled.div`
 
   .form__select .form__select__control {
     width: 100%;
-    color: ${({ theme }) => theme.colors.text.subtle};
-    border: none;
-    &:hover {
-      background: ${({ theme }) => theme.colors.background.primary} !important;
-    }
-    &.form__select__control--is-focused {
-      background: ${({ theme }) => theme.colors.background.primary} !important;
-      border: 1px solid ${({ theme }) => theme.colors.variants.primary.base} !important;
-    }
+    position: relative;
+    ${({ theme }) =>
+      contextMenuFormItem({ theme }, 'form__select__control--is-focused')}
   }
 
   .form__select .form__select__value-container {
     align-items: flex-start !important;
     flex-wrap: wrap;
+    padding: 0 !important;
+    top: 0;
+    position: absolute;
+    width: 100%;
   }
+
   .form__select .form__select__multi-value {
     position: relative;
     height: 100%;
