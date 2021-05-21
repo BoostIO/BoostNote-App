@@ -63,6 +63,7 @@ import DocStatusSelect from './DocStatusSelect'
 import DocDueDateSelect from './DocDueDateSelect'
 import DocAssigneeSelect from './DocAssigneeSelect'
 import styled from '../../../../../../../shared/lib/styled'
+import { format as formatDate } from 'date-fns'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -217,7 +218,9 @@ const DocContextMenu = ({
         const data = await updateDocDueDate(
           currentDoc.teamId,
           currentDoc.id,
-          newDate
+          newDate != null
+            ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+            : null
         )
         updateDocsMap([data.doc.id, data.doc])
         setPartialPageData({ pageDoc: data.doc })
