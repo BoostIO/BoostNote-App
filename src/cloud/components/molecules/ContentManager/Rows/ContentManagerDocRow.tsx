@@ -277,11 +277,8 @@ const ContentmanagerDocRow = ({
       itemLink={
         <DocLink doc={doc} team={team} id={`cm-doc-${doc.id}`}>
           <ContentManagerRowLinkContent
-            label={
-              doc.archivedAt != null
-                ? `( Archived ) ${getDocTitle(doc, 'Untitled')}`
-                : getDocTitle(doc, 'Untitled')
-            }
+            status={doc.status}
+            label={getDocTitle(doc, 'Untitled')}
             defaultIcon={mdiFileDocumentOutline}
             emoji={doc.emoji}
             date={doc.updatedAt}
@@ -290,10 +287,7 @@ const ContentmanagerDocRow = ({
           />
         </DocLink>
       }
-      className={cc([
-        doc.archivedAt != null && 'archived',
-        showPath && 'expanded',
-      ])}
+      className={cc([showPath && 'expanded'])}
       rowActions={
         <Flexbox flex='0 0 auto' className='actions'>
           {actions.map((action) => (

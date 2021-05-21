@@ -20,7 +20,7 @@ const ContentManagerRow = ({
   onSelect,
 }: ContentManagerRowProps) => (
   <StyledContentManagerRow className={cc([className])}>
-    <Checkbox checked={checked} onChange={onSelect} />
+    <Checkbox className='checkbox' checked={checked} onChange={onSelect} />
     <Flexbox
       flex={'1 1 auto'}
       style={{

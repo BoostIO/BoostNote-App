@@ -4,8 +4,11 @@ import { getFormattedBoosthubDateTime } from '../../../../lib/date'
 import EmojiIcon from '../../../atoms/EmojiIcon'
 import { SerializedUser } from '../../../../interfaces/db/user'
 import EditorsIcons from '../../../atoms/EditorsIcons'
+import { DocStatus } from '../../../../interfaces/db/doc'
+import DocStatusIcon from '../../../atoms/DocStatusIcon'
 
 interface ContentManagerRowLinkContentProps {
+  status?: DocStatus
   label: string
   emoji?: string
   defaultIcon?: string
@@ -15,6 +18,7 @@ interface ContentManagerRowLinkContentProps {
 }
 
 const ContentManagerRowLinkContent = ({
+  status,
   defaultIcon,
   label,
   emoji,
@@ -28,7 +32,8 @@ const ContentManagerRowLinkContent = ({
     className='cm-row-link-content'
   >
     <Flexbox flex={'1 1 auto'}>
-      <EmojiIcon defaultIcon={defaultIcon} emoji={emoji} size={20} />
+      {status && <DocStatusIcon status={status} className='status-icon' />}
+      <EmojiIcon defaultIcon={defaultIcon} emoji={emoji} size={16} />
       {path != null ? (
         <Flexbox
           className='label'

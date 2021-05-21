@@ -1,18 +1,10 @@
-import React, { useMemo, useState, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
-import {
-  mdiLock,
-  mdiTextBoxPlusOutline,
-  mdiFolderMultiplePlusOutline,
-} from '@mdi/js'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useNav } from '../../../lib/stores/nav'
-import EmojiIcon from '../../atoms/EmojiIcon'
-import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import ContentManager from '../../molecules/ContentManager'
 import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
-import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
 
@@ -20,16 +12,10 @@ interface WorkspacePage {
   workspace: SerializedWorkspace
 }
 
-enum WorkspaceHeaderActions {
-  newDoc = 0,
-  newFolder = 1,
-}
-
 const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { team } = usePage()
   const { docsMap, foldersMap } = useNav()
   const { query, push } = useRouter()
-  const [sending, setSending] = useState<number>()
   const {
     openNewFolderForm,
     openNewDocForm,
@@ -88,46 +74,6 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     return map
   }, [workspace])
 
-  const openCreateDocForm = useCallback(() => {
-    openNewDocForm(
-      {
-        team,
-        workspaceId: workspace.id,
-      },
-      {
-        precedingRows: [
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
-            ),
-          },
-        ],
-        beforeSubmitting: () => setSending(WorkspaceHeaderActions.newDoc),
-        afterSubmitting: () => setSending(undefined),
-      }
-    )
-  }, [openNewDocForm, workspace, team, topbarBreadcrumbs])
-
-  const openCreateFolderForm = useCallback(() => {
-    openNewFolderForm(
-      {
-        team,
-        workspaceId: workspace.id,
-      },
-      {
-        precedingRows: [
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topbarBreadcrumbs} />
-            ),
-          },
-        ],
-        beforeSubmitting: () => setSending(WorkspaceHeaderActions.newFolder),
-        afterSubmitting: () => setSending(undefined),
-      }
-    )
-  }, [openNewFolderForm, workspace, team, topbarBreadcrumbs])
-
   if (team == null) {
     return <Application content={{}} />
   }
@@ -136,40 +82,9 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     <Application
       initialSidebarState={query.onboarding != null ? 'tree' : undefined}
       content={{
-        reduced: true,
         topbar: {
           breadcrumbs: topbarBreadcrumbs,
         },
-        header: (
-          <>
-            {!workspace.public && (
-              <EmojiIcon
-                defaultIcon={mdiLock}
-                style={{ marginRight: 10 }}
-                size={20}
-              />
-            )}
-            <span style={{ marginRight: 10 }}>{workspace.name}</span>
-            <RightLayoutHeaderButtons
-              buttons={[
-                {
-                  disabled: sending != null,
-                  sending: sending === WorkspaceHeaderActions.newDoc,
-                  tooltip: 'Create new doc',
-                  iconPath: mdiTextBoxPlusOutline,
-                  onClick: openCreateDocForm,
-                },
-                {
-                  disabled: sending != null,
-                  sending: sending === WorkspaceHeaderActions.newFolder,
-                  tooltip: 'Create new folder',
-                  iconPath: mdiFolderMultiplePlusOutline,
-                  onClick: openCreateFolderForm,
-                },
-              ]}
-            />
-          </>
-        ),
       }}
     >
       <ContentManager

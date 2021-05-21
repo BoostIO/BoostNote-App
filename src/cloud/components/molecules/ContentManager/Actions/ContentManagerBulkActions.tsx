@@ -36,7 +36,6 @@ interface ContentManagerBulkActionsProps {
   selectedFolders: Set<string>
   updating: string[]
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
-  setShowArchived: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 enum BulkActions {
@@ -54,7 +53,6 @@ const ContentManagerBulkActions = ({
   foldersMap,
   updating,
   setUpdating,
-  setShowArchived,
 }: ContentManagerBulkActionsProps) => {
   const [sending, setSending] = useState<number>()
   const {
@@ -185,7 +183,6 @@ const ContentManagerBulkActions = ({
       await archiveSingleDoc(team.id, docId)
     }
     setSending(undefined)
-    setShowArchived(true)
     setUpdating((prev) => difference(prev, patternedIds))
   }, [
     team,
@@ -193,7 +190,6 @@ const ContentManagerBulkActions = ({
     selectedDocs,
     setUpdating,
     selectedDocsAreUpdating,
-    setShowArchived,
   ])
 
   const bulkUnarchiveCallback = useCallback(async () => {

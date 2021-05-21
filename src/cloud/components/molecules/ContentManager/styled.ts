@@ -7,11 +7,12 @@ export const StyledContentManager = styled.div`
 `
 
 export const StyledContentManagerHeaderRow = styled.div`
-  padding: 3px ${({ theme }) => theme.space.xxsmall}px
-    ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.xxsmall}px;
-  border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
+  padding: 0 8px;
+  height: 30px;
   border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
+  .checkbox {
+    margin-left: 8px;
+  }
 `
 
 export const StyledContentManagerSelector = styled.button`
@@ -50,7 +51,7 @@ export const StyledContentManagerRow = styled.div`
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
   font-size: 13px;
-  padding: 0 ${({ theme }) => theme.space.xxsmall}px;
+  padding: 0 8px;
 
   &.expanded {
     height: 60px;
@@ -93,7 +94,13 @@ export const StyledContentManagerRow = styled.div`
     height: 100%;
     color: ${({ theme }) => theme.baseTextColor};
     text-decoration: none;
-    padding: 0 ${({ theme }) => theme.space.xxsmall}px;
+  }
+
+  .checkbox {
+    margin-right: 8px;
+  }
+  .status-icon {
+    margin-right: 4px;
   }
 
   .date {
@@ -113,24 +120,9 @@ export const StyledContentManagerRow = styled.div`
     text-overflow: ellipsis;
   }
 
-  &:not(.parent) a {
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
-    padding-left: ${({ theme }) => theme.space.xsmall}px;
-  }
-
   &.parent {
     font-size: ${({ theme }) => theme.fontSizes.xxlarge}px;
     padding-left: 2px;
-  }
-
-  &.archived a {
-    color: ${({ theme }) => theme.subtleTextColor};
-  }
-
-  .cm-row-link-content {
-    svg {
-      color: #329bbe !important;
-    }
   }
 `
 

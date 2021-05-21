@@ -229,26 +229,26 @@ const FolderPage = () => {
     )
   }, [openNewDocForm, currentFolder, team, topBarBreadcrumbs])
 
-  const openCreateFolderForm = useCallback(() => {
-    openNewFolderForm(
-      {
-        team,
-        workspaceId: currentFolder?.workspaceId,
-        parentFolderId: currentFolder?.id,
-      },
-      {
-        precedingRows: [
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
-            ),
-          },
-        ],
-        beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
-        afterSubmitting: () => setSending(undefined),
-      }
-    )
-  }, [openNewFolderForm, currentFolder, team, topBarBreadcrumbs])
+  // const openCreateFolderForm = useCallback(() => {
+  //   openNewFolderForm(
+  //     {
+  //       team,
+  //       workspaceId: currentFolder?.workspaceId,
+  //       parentFolderId: currentFolder?.id,
+  //     },
+  //     {
+  //       precedingRows: [
+  //         {
+  //           description: (
+  //             <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+  //           ),
+  //         },
+  //       ],
+  //       beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
+  //       afterSubmitting: () => setSending(undefined),
+  //     }
+  //   )
+  // }, [openNewFolderForm, currentFolder, team, topBarBreadcrumbs])
 
   if (team == null) {
     return (
@@ -277,7 +277,6 @@ const FolderPage = () => {
   return (
     <Application
       content={{
-        reduced: true,
         topbar: {
           breadcrumbs: topBarBreadcrumbs,
           children: (
@@ -305,46 +304,6 @@ const FolderPage = () => {
             },
           ],
         },
-        header: (
-          <>
-            <EmojiIcon
-              defaultIcon={mdiFolderOutline}
-              emoji={currentFolder.emoji}
-              onClick={onEmojiClick}
-              style={{ marginRight: 10 }}
-              tooltip='Icon'
-              size={20}
-            />
-            <span
-              style={{
-                marginRight: 10,
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                overflowX: 'hidden',
-              }}
-            >
-              {currentFolder.name}
-            </span>
-            <RightLayoutHeaderButtons
-              buttons={[
-                {
-                  disabled: sending != null,
-                  sending: sending === FolderHeaderActions.newDoc,
-                  tooltip: 'Create new doc',
-                  iconPath: mdiTextBoxPlusOutline,
-                  onClick: openCreateDocForm,
-                },
-                {
-                  disabled: sending != null,
-                  sending: sending === FolderHeaderActions.newFolder,
-                  tooltip: 'Create new folder',
-                  iconPath: mdiFolderMultiplePlusOutline,
-                  onClick: openCreateFolderForm,
-                },
-              ]}
-            />
-          </>
-        ),
       }}
     >
       {showContextMenu && (
