@@ -72,6 +72,7 @@ export enum MixpanelActionTrackTypes {
   UpgradeRevision = 'upgrade.origin.revision',
   UpgradeGuest = 'upgrade.origin.guest',
   UpgradeLimit = 'upgrade.origin.limit',
+  UpgradeDiscount = 'upgrade.origin.discount',
   WorkspaceOpen = 'workspace.open',
   WorkspaceCreate = 'workspace.create',
   WorkspaceDelete = 'workspace.delete',
@@ -100,6 +101,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.UpgradePassword
   | MixpanelActionTrackTypes.UpgradeRevision
   | MixpanelActionTrackTypes.DocFeatureRevision
+  | MixpanelActionTrackTypes.UpgradeDiscount
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 

@@ -58,6 +58,7 @@ import {
   mdiDownload,
   mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
+  mdiGiftOutline,
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
@@ -87,6 +88,11 @@ import {
 import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
 import NewDocButton from './molecules/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
+import { SerializedSubscription } from '../interfaces/db/subscription'
+import { isEligibleForDiscount } from '../lib/subscription'
+import { trackEvent } from '../api/track'
+import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
+import DiscountModal from './organisms/Modal/contents/DiscountModal'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -113,6 +119,7 @@ const Application = ({
     permissions = [],
     guestsMap,
     currentUserPermissions,
+    subscription,
   } = usePage()
   const { openModal } = useModal()
   const {
@@ -180,9 +187,18 @@ const Application = ({
       openModal,
       openSettingsTab,
       sidebarState,
-      team
+      team,
+      subscription
     )
-  }, [sidebarState, openModal, openSettingsTab, team, openState, showSpaces])
+  }, [
+    sidebarState,
+    openModal,
+    openSettingsTab,
+    team,
+    openState,
+    showSpaces,
+    subscription,
+  ])
 
   const topbarTree = useMemo(() => {
     if (team == null) {
@@ -617,7 +633,8 @@ function mapToolbarRows(
   openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   openSettingsTab: (tab: SettingsTab) => void,
   sidebarState?: SidebarState,
-  team?: SerializedTeam
+  team?: SerializedTeam,
+  subscription?: SerializedSubscription
 ) {
   const rows: SidebarToolbarRow[] = []
   if (team != null) {
@@ -652,6 +669,18 @@ function mapToolbarRows(
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
   })
+
+  if (team != null && subscription == null && isEligibleForDiscount(team)) {
+    rows.push({
+      tooltip: 'New user discount~',
+      icon: mdiGiftOutline,
+      onClick: () => {
+        trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
+        openModal(<DiscountModal team={team} />)
+      },
+    })
+  }
+
   rows.push({
     tooltip: 'Import',
     icon: mdiDownload,
