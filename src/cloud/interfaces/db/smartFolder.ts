@@ -52,7 +52,7 @@ export type CreationDateCondition = {
 }
 
 export type UpdateDateCondition = {
-  type: 'creation_date'
+  type: 'update_date'
   value: DateConditionValue
 }
 

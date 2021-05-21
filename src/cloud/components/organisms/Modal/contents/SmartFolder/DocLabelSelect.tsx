@@ -28,7 +28,11 @@ const DocLabelSelect = ({ value, update }: DocLabelSelect) => {
     <FormSelect
       isMulti
       options={options}
-      value={value.map(getOptionByTagName)}
+      value={
+        value
+          .map((tagId) => getOptionByTagName(tagId, tagsMap))
+          .filter((tag) => tag != null) as FormSelectOption[]
+      }
       onChange={updateTag}
     />
   )
@@ -39,13 +43,21 @@ export default DocLabelSelect
 function getOptionByTag(tag: SerializedTag) {
   return {
     label: tag.text,
-    value: tag.text,
+    value: tag.id,
   }
 }
 
-function getOptionByTagName(tagName: string) {
+function getOptionByTagName(
+  tagId: string,
+  tagsMap: Map<string, SerializedTag>
+) {
+  const tag = tagsMap.get(tagId)
+  if (tag == null) {
+    return undefined
+  }
+
   return {
-    label: tagName,
-    value: tagName,
+    label: tag.text,
+    value: tag.id,
   }
 }
