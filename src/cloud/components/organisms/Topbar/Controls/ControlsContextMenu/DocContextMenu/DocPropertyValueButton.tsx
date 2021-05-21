@@ -53,6 +53,7 @@ const ButtonContainer = styled.button`
   color: inherit;
   box-sizing: border-box;
   transition: 200ms background-color;
+  color: ${({ theme }) => theme.colors.text.primary};
   ${({ theme }) => contextMenuFormItem({ theme }, ':focus')}
 
   &.doc__property__button--empty {

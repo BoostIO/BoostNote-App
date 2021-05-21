@@ -122,7 +122,6 @@ export const contextMenuFormItem = (
 background: none;
 border: 1px solid transparent;
 padding: 2px 8px;
-color: ${theme.colors.text.subtle};
 &:hover {
   background: ${theme.colors.background.primary} !important;
 }
