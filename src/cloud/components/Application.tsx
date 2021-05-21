@@ -87,6 +87,7 @@ import {
   mdiPencilBoxMultipleOutline,
   mdiPlus,
   mdiPlusCircleOutline,
+  mdiPlusOutline,
   mdiStar,
   mdiStarOutline,
   mdiTag,
@@ -1322,24 +1323,15 @@ function mapTree(
         navigateTo: () => push(href),
       }
     }),
-    footer: (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '0 13px',
-        }}
-      >
-        <Button
-          onClick={() => {
-            openModal(<CreateSmartFolderModal />)
-          }}
-        >
-          Add Smart Folder
-        </Button>
-      </div>
-    ),
+    controls: [
+      {
+        icon: mdiPlusOutline,
+        onClick: () => {
+          openModal(<CreateSmartFolderModal />)
+        },
+        tooltip: 'Add smart folder',
+      },
+    ],
   })
 
   tree.push({
