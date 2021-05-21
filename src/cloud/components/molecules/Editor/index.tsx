@@ -239,13 +239,13 @@ const Editor = ({
               commentState.mode === 'thread' &&
               thread.id === commentState.thread.id,
           })
-        } else {
+        } else if (connState === 'synced') {
           commentActions.threadOutdated(thread)
         }
       }
     }
     setViewComments(comments)
-  }, [commentState, realtime, commentActions])
+  }, [commentState, realtime, commentActions, connState])
 
   useEffect(() => {
     if (realtime != null) {
