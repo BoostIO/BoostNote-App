@@ -11,6 +11,7 @@ export type SidebarToolbarRow = {
   active?: boolean
   tooltip?: string
   position?: 'top' | 'bottom'
+  pelletVariant?: 'primary' | 'danger' | 'warning'
   onClick?: () => void
 }
 
@@ -49,50 +50,60 @@ const SidebarToolbar: AppComponent<SidebarToolbarProps> = ({
       <div className='sidebar__toolbar__scroller'>
         <div className='sidebar__toolbar__top'>
           {sortedRows.top.map((row, i) => (
-            <WithTooltip tooltip={row.tooltip} key={`top-${i}`} side='right'>
-              <button
-                className={cc([
-                  'sidebar__toolbar__item',
-                  row.active && 'sidebar__toolbar__item--active',
-                ])}
-                onClick={row.onClick}
-                disabled={row.onClick == null}
-                tabIndex={-1}
-              >
-                {typeof row.icon === 'string' ? (
-                  <Icon size={iconSize} path={row.icon} />
-                ) : (
-                  row.icon
-                )}
-              </button>
-            </WithTooltip>
+            <SidebarToolbarItem
+              row={row}
+              iconSize={iconSize}
+              key={`top-${i}`}
+            />
           ))}
         </div>
         <div className='sidebar__toolbar__bottom'>
           {sortedRows.bottom.map((row, i) => (
-            <WithTooltip tooltip={row.tooltip} key={`bottom-${i}`} side='right'>
-              <button
-                className={cc([
-                  'sidebar__toolbar__item',
-                  row.active && 'sidebar__toolbar__item--active',
-                ])}
-                onClick={row.onClick}
-                disabled={row.onClick == null}
-                tabIndex={-1}
-              >
-                {typeof row.icon === 'string' ? (
-                  <Icon size={iconSize} path={row.icon} />
-                ) : (
-                  row.icon
-                )}
-              </button>
-            </WithTooltip>
+            <SidebarToolbarItem
+              row={row}
+              iconSize={iconSize}
+              key={`bottom-${i}`}
+            />
           ))}
         </div>
       </div>
     </Container>
   )
 }
+
+const SidebarToolbarItem = ({
+  row,
+  iconSize,
+}: {
+  row: SidebarToolbarRow
+  iconSize: IconSize
+}) => (
+  <WithTooltip tooltip={row.tooltip} side='right'>
+    <button
+      className={cc([
+        'sidebar__toolbar__item',
+        row.active && 'sidebar__toolbar__item--active',
+      ])}
+      onClick={row.onClick}
+      disabled={row.onClick == null}
+      tabIndex={-1}
+    >
+      {row.pelletVariant != null && (
+        <div
+          className={cc([
+            'sidebar__toolbar__item__pellet',
+            `sidebar__toolbar__item__pellet--${row.pelletVariant}`,
+          ])}
+        />
+      )}
+      {typeof row.icon === 'string' ? (
+        <Icon size={iconSize} path={row.icon} />
+      ) : (
+        row.icon
+      )}
+    </button>
+  </WithTooltip>
+)
 
 export default SidebarToolbar
 
@@ -147,6 +158,7 @@ const Container = styled.div<{ iconSize: number }>`
       margin: 0 0 ${toolbarSpacing}px 0;
       position: relative;
       justify-content: center;
+      position: relative;
 
       &:hover,
       &.sidebar__toolbar__item--active {
@@ -156,6 +168,31 @@ const Container = styled.div<{ iconSize: number }>`
       &.sidebar__toolbar__item--active {
         border-left-color: ${({ theme }) => theme.colors.text.primary};
       }
+    }
+  }
+
+  .sidebar__toolbar__item__pellet {
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    right: 2px;
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.colors.background.secondary};
+
+    &.sidebar__toolbar__item__pellet--danger {
+      background: ${({ theme }) => theme.colors.variants.danger.base};
+      filter: brightness(160%);
+    }
+
+    &.sidebar__toolbar__item__pellet--info {
+      background: ${({ theme }) => theme.colors.variants.info.base};
+    }
+
+    &.sidebar__toolbar__item__pellet--warning {
+      background: ${({ theme }) => theme.colors.variants.warning.base};
     }
   }
 `

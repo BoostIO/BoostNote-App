@@ -150,6 +150,8 @@ const Application = ({
     if (query.settings === 'upgrade') {
       openSettingsTab('teamUpgrade')
     }
+
+    openModal(<DiscountModal team={team!} />)
   })
 
   useEffect(() => {
@@ -672,8 +674,10 @@ function mapToolbarRows(
 
   if (team != null && subscription == null && isEligibleForDiscount(team)) {
     rows.push({
-      tooltip: 'New user discount~',
+      position: 'bottom',
+      tooltip: 'Get the new user discount!',
       icon: mdiGiftOutline,
+      pelletVariant: 'danger',
       onClick: () => {
         trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
         openModal(<DiscountModal team={team} />)
