@@ -1105,7 +1105,8 @@ const StyledPreview = styled.div`
     display: none;
   }
 
-  & .inline-comment.active {
+  & .inline-comment.active,
+  .inline-comment.hv-active {
     background-color: rgba(112, 84, 0, 0.8);
   }
 `

@@ -205,8 +205,8 @@ const MarkdownView = ({
             <div
               className='comment__icon'
               onClick={() => commentClick && commentClick(id)}
-              onMouseOver={highlightComment(id)}
-              onMouseOut={unhighlightComment(id)}
+              onMouseOver={highlightComment(id, 'hv-active')}
+              onMouseOut={unhighlightComment(id, 'hv-active')}
             >
               <Icon path={mdiCommentTextOutline} size={20} />
             </div>
