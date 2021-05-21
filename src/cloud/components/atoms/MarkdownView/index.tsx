@@ -363,7 +363,7 @@ const MarkdownView = ({
     >
       {displayContent}
       {selectionState != null && SelectionMenu && (
-        <SelectionTooltip rect={selectionState.position}>
+        <SelectionTooltip rect={selectionState.position} bufferTop={50}>
           <StyledTooltipContent>
             <SelectionMenu selection={selectionState.context} />
           </StyledTooltipContent>
