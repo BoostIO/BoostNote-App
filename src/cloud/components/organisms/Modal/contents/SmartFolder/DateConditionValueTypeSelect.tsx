@@ -44,12 +44,12 @@ function getOptionByValueType(dateValueType: DateConditionValueType | null) {
   switch (dateValueType) {
     case '7_days':
       return {
-        label: '7 days',
+        label: 'Last 7 days',
         value: '7_days',
       }
     case '30_days':
       return {
-        label: '30 days',
+        label: 'Last 30 days',
         value: '30_days',
       }
     case 'specific':
