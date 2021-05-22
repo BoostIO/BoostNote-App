@@ -152,8 +152,14 @@ import {
   cloudSidebarOrderedCategoriesDelimiter,
 } from '../lib/sidebar'
 import CreateSmartFolderModal from './organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
+import UpdateSmartFolderModal from './organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
 import { SerializedSmartFolder } from '../interfaces/db/smartFolder'
 import { getSmartFolderHref, getDocStatusHref } from '../lib/href'
+import { deleteSmartFolder } from '../api/teams/smart-folder'
+import {
+  useDialog,
+  MessageBoxDialogOptions,
+} from '../../shared/lib/stores/dialog'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -167,6 +173,7 @@ const Application = ({
   initialSidebarState,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { preferences, setPreferences } = usePreferences()
+  const { messageBox } = useDialog()
   const {
     initialLoadDone,
     docsMap,
@@ -177,6 +184,7 @@ const Application = ({
     currentParentFolderId,
     currentWorkspaceId,
     currentPath,
+    removeFromSmartFoldersMap,
   } = useNav()
   const {
     sideBarOpenedLinksIdsSet,
@@ -321,6 +329,8 @@ const Application = ({
       openRenameFolderForm,
       openRenameDocForm,
       openWorkspaceEditForm,
+      messageBox,
+      removeFromSmartFoldersMap,
       team
     )
   }, [
@@ -333,8 +343,8 @@ const Application = ({
     tagsMap,
     smartFoldersMap,
     treeSendingMap,
-    sideBarOpenedFolderIdsSet,
     sideBarOpenedLinksIdsSet,
+    sideBarOpenedFolderIdsSet,
     sideBarOpenedWorkspaceIdsSet,
     toggleItem,
     getFoldEvents,
@@ -348,15 +358,17 @@ const Application = ({
     deleteFolder,
     createFolder,
     createDoc,
+    draggedResource,
     dropInDocOrFolder,
-    dropInWorkspace,
-    updateFolder,
-    updateDoc,
     openRenameFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
-    draggedResource,
+    messageBox,
     team,
+    dropInWorkspace,
+    updateFolder,
+    updateDoc,
+    removeFromSmartFoldersMap,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {
@@ -992,6 +1004,8 @@ function mapTree(
   openRenameFolderForm: (folder: SerializedFolder) => void,
   openRenameDocForm: (doc: SerializedDoc) => void,
   openWorkspaceEditForm: (wp: SerializedWorkspace) => void,
+  messageBox: (options: MessageBoxDialogOptions) => void,
+  removeFromSmartFoldersMap: (...ids: string[]) => void,
   team?: SerializedTeam
 ) {
   if (!initialLoadDone || team == null) {
@@ -1323,6 +1337,43 @@ function mapTree(
         depth: 0,
         active: href === currentPathWithDomain,
         navigateTo: () => push(href),
+        contextControls: [
+          {
+            type: MenuTypes.Normal,
+            icon: mdiPencil,
+            label: 'Edit',
+            onClick: () => {
+              openModal(<UpdateSmartFolderModal smartFolder={smartFolder} />)
+            },
+          },
+          {
+            type: MenuTypes.Normal,
+            icon: mdiTrashCanOutline,
+            label: 'Delete',
+            onClick: () => {
+              messageBox({
+                title: `Delete ${smartFolder.name}?`,
+                message: `Are you sure to delete this smart folder?`,
+                buttons: [
+                  {
+                    variant: 'secondary',
+                    label: 'Cancel',
+                    cancelButton: true,
+                    defaultButton: true,
+                  },
+                  {
+                    variant: 'danger',
+                    label: 'Delete',
+                    onClick: async () => {
+                      await deleteSmartFolder(team, smartFolder)
+                      removeFromSmartFoldersMap(smartFolder.id)
+                    },
+                  },
+                ],
+              })
+            },
+          },
+        ],
       }
     }),
     controls: [

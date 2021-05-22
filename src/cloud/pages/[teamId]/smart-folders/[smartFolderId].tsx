@@ -7,10 +7,6 @@ import Application from '../../../components/Application'
 import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import {
-  getSmartFolderShowPageData,
-  SmartFolderShowPageResponseBody,
-} from '../../../api/pages/teams/smart-folders'
-import {
   AssigneesCondition,
   LabelsCondition,
   DueDateCondition,
@@ -21,6 +17,8 @@ import {
 } from '../../../interfaces/db/smartFolder'
 import { format as formatDate, addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
+import { getTeamIndexPageData } from '../../../api/pages/teams'
+import { useRouter } from '../../../lib/router'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -113,12 +111,15 @@ function validateDateValue(
   return false
 }
 
-const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
+const SmartFolderPage = () => {
   const { team } = usePage()
-  const { docsMap, initialLoadDone, workspacesMap } = useNav()
+  const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
+  const { pathname } = useRouter()
+  const [, , , smartFolderId] = pathname.split('/')
 
+  const smartFolder = smartFoldersMap.get(smartFolderId)
   const documents = useMemo(() => {
-    if (smartFolder.condition.conditions.length === 0) {
+    if (smartFolder == null || smartFolder.condition.conditions.length === 0) {
       return []
     }
     const docs = [...docsMap].map(([_docId, doc]) => doc)
@@ -218,7 +219,7 @@ const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
   }, [docsMap, smartFolder])
 
   const pageTitle = useMemo(() => {
-    if (team == null) {
+    if (team == null || smartFolder == null) {
       return 'BoostHub'
     }
 
@@ -258,7 +259,7 @@ const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
           reduced: true,
         }}
       >
-        <ErrorLayout message={'The folder has been deleted'} />
+        <ErrorLayout message={'The smart folder has been deleted'} />
       </Application>
     )
   }
@@ -283,7 +284,7 @@ const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
 }
 
 SmartFolderPage.getInitialProps = async (params: GetInitialPropsParameters) => {
-  const result = await getSmartFolderShowPageData(params)
+  const result = await getTeamIndexPageData(params)
   return result
 }
 

@@ -33,6 +33,8 @@ export type SseEventType =
   | 'commentUpdated'
   | 'commentDeleted'
   | 'smartFolderCreate'
+  | 'smartFolderUpdate'
+  | 'smartFolderDelete'
 
 export interface SerializableAppEventProps {
   id: string

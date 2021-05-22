@@ -57,6 +57,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateTemplatesMap,
     removeFromTemplatesMap,
     updateSmartFoldersMap,
+    removeFromSmartFoldersMap,
   } = useNav()
   const {
     setPartialGlobalData,
@@ -383,6 +384,12 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     },
     [updateSmartFoldersMap]
   )
+  const smartFolderDeleteHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      removeFromSmartFoldersMap(event.data.smartFolderId)
+    },
+    [removeFromSmartFoldersMap]
+  )
 
   /// re-assign handler on change
   useEffect(() => {
@@ -444,7 +451,12 @@ const EventSource = ({ teamId }: EventSourceProps) => {
             commentsEventListener(event)
             break
           case 'smartFolderCreate':
+          case 'smartFolderUpdate':
             smartFolderUpdateHandler(event)
+            break
+
+          case 'smartFolderDelete':
+            smartFolderDeleteHandler(event)
             break
         }
       }
@@ -465,6 +477,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     templateChangeEventHandler,
     commentsEventListener,
     smartFolderUpdateHandler,
+    smartFolderDeleteHandler,
   ])
 
   return null
