@@ -15,7 +15,7 @@ const ErrorBlock = ({ error, style }: ErrorAlertProps) => {
   useEffect(() => {
     try {
       async function fetchData() {
-        const rawMessage = await getErrorMessage(error)
+        const rawMessage = (await getErrorMessage(error)) || ''
         if (nodeEnv === 'development') {
           setMessage(
             rawMessage.split('\n').map((message, index) => {
