@@ -41,7 +41,7 @@ export const lightTheme: BaseTheme = {
       },
       warning: {
         base: '#FFBB33',
-        text: '#fff',
+        text: '#000',
       },
       success: {
         base: '#00C851',
