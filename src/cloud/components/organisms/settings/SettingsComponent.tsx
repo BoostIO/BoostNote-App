@@ -42,10 +42,15 @@ import { intercomAppId } from '../../../lib/consts'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
-  const { closed, toggleClosed, settingsTab } = useSettings()
+  const {
+    closed,
+    toggleClosed,
+    settingsTab,
+    openSettingsTab,
+    settingsOpeningOptions,
+  } = useSettings()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
-  const { openSettingsTab } = useSettings()
   const { team, subscription, currentUserPermissions } = usePage<
     PageStoreWithTeam
   >()
@@ -101,7 +106,7 @@ const SettingsComponent = () => {
       case 'teamMembers':
         return <MembersTab />
       case 'teamUpgrade':
-        return <UpgradeTab />
+        return <UpgradeTab {...settingsOpeningOptions} />
       case 'teamSubscription':
         return <SubscriptionTab />
       case 'integrations':
@@ -119,7 +124,7 @@ const SettingsComponent = () => {
       default:
         return
     }
-  }, [settingsTab, currentUserPermissions])
+  }, [settingsTab, currentUserPermissions, settingsOpeningOptions])
 
   useEffect(() => {
     if (closed) {

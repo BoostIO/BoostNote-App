@@ -1,15 +1,34 @@
 import React from 'react'
 import styled from '../../../../../shared/lib/styled'
-import { SerializedTeam } from '../../../../interfaces/db/team'
 import Countdown from 'react-countdown'
 import { newTeamDiscountDays } from '../../../../lib/subscription'
 import PlanTables from '../../Subscription/PlanTables'
+import { useSettings } from '../../../../lib/stores/settings'
+import { useModal } from '../../../../../shared/lib/stores/modal'
+import { usePage } from '../../../../lib/stores/pageStore'
+import Banner from '../../../../../shared/components/atoms/Banner'
+import { mdiExclamation } from '@mdi/js'
+import TeamSubLimit from '../../settings/TeamSubLimit'
 
-interface DiscountModalProps {
-  team: SerializedTeam
-}
+const DiscountModal = () => {
+  const { openSettingsTab } = useSettings()
+  const { closeAllModals } = useModal()
+  const { team, subscription } = usePage()
 
-const DiscountModal = ({ team }: DiscountModalProps) => {
+  if (team == null) {
+    return null
+  }
+
+  if (subscription != null) {
+    return (
+      <Container className='discount__modal'>
+        <Banner variant='danger' iconPath={mdiExclamation}>
+          You are already subscribed
+        </Banner>
+      </Container>
+    )
+  }
+
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
 
@@ -21,7 +40,41 @@ const DiscountModal = ({ team }: DiscountModalProps) => {
         </h3>
         <div className='discount__modal__description'>Time remaining</div>
         <Countdown renderer={DiscountCountdown} date={eligibilityEnd} />
-        <PlanTables team={team} selectedPlan={'free'} discounted={true} />
+        <PlanTables
+          team={team}
+          selectedPlan={'free'}
+          discounted={true}
+          freePlanFooter={
+            <TeamSubLimit
+              padded={false}
+              onLimitClick={() => {
+                openSettingsTab('teamUpgrade', {
+                  initialPlan: 'standard',
+                  tabState: 'form',
+                })
+                closeAllModals()
+              }}
+            />
+          }
+          onStandardCallback={() => {
+            openSettingsTab('teamUpgrade', {
+              initialPlan: 'standard',
+              tabState: 'form',
+            })
+            closeAllModals()
+          }}
+          onProCallback={() => {
+            openSettingsTab('teamUpgrade', {
+              initialPlan: 'pro',
+              tabState: 'form',
+            })
+            closeAllModals()
+          }}
+          onTrialCallback={() => {
+            openSettingsTab('teamUpgrade', { showTrialPopup: true })
+            closeAllModals()
+          }}
+        />
       </header>
     </Container>
   )
@@ -96,7 +149,7 @@ const Container = styled.div`
     flex-wrap: nowrap;
     justify-content: center;
     align-items: top;
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xl}px;
   }
 
   .countdown__column {
