@@ -286,32 +286,34 @@ const DocContextMenu = ({
               <div className='context__row'>
                 <div className='context__header'>DOC INFO</div>
               </div>
-              <div className='context__row'>
-                <label className='context__label'>
-                  <IconMdi
-                    path={mdiAccountCircleOutline}
-                    size={18}
-                    className='context__icon'
-                  />{' '}
-                  Assignees
-                </label>
-                <div className='context__content'>
-                  <span>
-                    <DocAssigneeSelect
-                      isLoading={sendingAssignees}
-                      disabled={sendingAssignees}
-                      defaultValue={
-                        currentDoc.assignees != null
-                          ? currentDoc.assignees.map(
-                              (assignee) => assignee.userId
-                            )
-                          : []
-                      }
-                      update={sendUpdateDocAssignees}
-                    />
-                  </span>
+              {!team.personal && (
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <IconMdi
+                      path={mdiAccountCircleOutline}
+                      size={18}
+                      className='context__icon'
+                    />{' '}
+                    Assignees
+                  </label>
+                  <div className='context__content'>
+                    <span>
+                      <DocAssigneeSelect
+                        isLoading={sendingAssignees}
+                        disabled={sendingAssignees}
+                        defaultValue={
+                          currentDoc.assignees != null
+                            ? currentDoc.assignees.map(
+                                (assignee) => assignee.userId
+                              )
+                            : []
+                        }
+                        update={sendUpdateDocAssignees}
+                      />
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className='context__row'>
                 <label className='context__label'>

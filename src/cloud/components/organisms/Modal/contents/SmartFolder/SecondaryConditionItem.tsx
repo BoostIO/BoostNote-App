@@ -21,6 +21,7 @@ interface SecondaryConditionItemProps {
   update: (newSecondaryCondition: EditibleSecondaryCondition) => void
   addNext: () => void
   remove: () => void
+  personalOnly: boolean
 }
 
 const SecondaryConditionItem = ({
@@ -28,6 +29,7 @@ const SecondaryConditionItem = ({
   update,
   addNext,
   remove,
+  personalOnly,
 }: SecondaryConditionItemProps) => {
   return (
     <div className='form__row'>
@@ -35,14 +37,16 @@ const SecondaryConditionItem = ({
         <div className='form__row__item form__row__item--shrink'>
           <FormSelect
             value={getSecondaryConditionOptionByType(condition.type)}
-            options={([
-              'status',
-              'labels',
-              'due_date',
-              'assignees',
-              'creation_date',
-              'update_date',
-            ] as EditibleSecondaryConditionType[]).map(
+            options={((personalOnly
+              ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
+              : [
+                  'status',
+                  'labels',
+                  'due_date',
+                  'assignees',
+                  'creation_date',
+                  'update_date',
+                ]) as EditibleSecondaryConditionType[]).map(
               getSecondaryConditionOptionByType
             )}
             minWidth='140px'

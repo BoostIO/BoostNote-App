@@ -101,6 +101,10 @@ const CreateSmartFolderModal = () => {
     pushApiErrorMessage,
   ])
 
+  if (team == null) {
+    return null
+  }
+
   return (
     <Container>
       <h2 className='modal__heading'>Create a Smart Folder</h2>
@@ -164,51 +168,54 @@ const CreateSmartFolderModal = () => {
               update={updateSecondaryCondition}
               addNext={insertConditionNext}
               remove={removeCondition}
+              personalOnly={team?.personal}
             />
           )
         })}
 
         <StyledModalSeparator />
-        <div className='form__row'>
-          <div className='form__row__items'>
-            <div className='form__row__item'>
-              <div>
-                <h3>Make Private</h3>
-                <p>
-                  {makingPrivate ? (
-                    <>
-                      This smart folder will become private. Only you can see
-                      it.
-                    </>
-                  ) : (
-                    <>
-                      The smart folder will become public. Every member on
-                      workspace can see it.
-                    </>
-                  )}
-                </p>
+        {!team.personal && (
+          <div className='form__row'>
+            <div className='form__row__items'>
+              <div className='form__row__item'>
+                <div>
+                  <h3>Make Private</h3>
+                  <p>
+                    {makingPrivate ? (
+                      <>
+                        This smart folder will become private. Only you can see
+                        it.
+                      </>
+                    ) : (
+                      <>
+                        The smart folder will become public. Every member on
+                        workspace can see it.
+                      </>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <div className='form__row__item form__row__item--shrink form__row__item--align-items-center'>
+                <Switch
+                  type='switch'
+                  id='shared-custom-switch'
+                  checked={makingPrivate}
+                  onChange={(checked) => {
+                    setMakingPrivate(checked)
+                  }}
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  height={20}
+                  width={30}
+                  onColor='#004774'
+                  offColor='#3D3F44'
+                  offHandleColor='#1E2024'
+                  handleDiameter={14}
+                />
               </div>
             </div>
-            <div className='form__row__item form__row__item--shrink form__row__item--align-items-center'>
-              <Switch
-                type='switch'
-                id='shared-custom-switch'
-                checked={makingPrivate}
-                onChange={(checked) => {
-                  setMakingPrivate(checked)
-                }}
-                uncheckedIcon={false}
-                checkedIcon={false}
-                height={20}
-                width={30}
-                onColor='#004774'
-                offColor='#3D3F44'
-                offHandleColor='#1E2024'
-                handleDiameter={14}
-              />
-            </div>
           </div>
-        </div>
+        )}
 
         <div className='form__row'>
           <div>
