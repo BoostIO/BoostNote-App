@@ -746,7 +746,7 @@ const Container = styled.div`
     align-items: flex-start;
     line-height: 32px;
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-    padding: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
+    padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
     height: fit-content;
   }
   .context__header {
