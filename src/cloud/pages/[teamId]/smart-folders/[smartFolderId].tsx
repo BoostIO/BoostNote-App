@@ -269,6 +269,7 @@ const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
         reduced: true,
         topbar: {
           controls: [],
+          children: smartFolder.name,
         },
       }}
     >
