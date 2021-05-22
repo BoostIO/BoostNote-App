@@ -56,6 +56,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateFoldersMap,
     updateTemplatesMap,
     removeFromTemplatesMap,
+    updateSmartFoldersMap,
   } = useNav()
   const {
     setPartialGlobalData,
@@ -376,6 +377,13 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     ]
   )
 
+  const smartFolderUpdateHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      updateSmartFoldersMap([event.data.smartFolder.id, event.data.smartFolder])
+    },
+    [updateSmartFoldersMap]
+  )
+
   /// re-assign handler on change
   useEffect(() => {
     if (eventSourceRef.current != null && eventSourceSetupCounter > 0) {
@@ -383,6 +391,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         (reconnectionDelayRef.current = defaultReconnectionDelay)
       eventSourceRef.current.onmessage = (eventData: MessageEvent) => {
         const event = JSON.parse(eventData.data) as SerializedAppEvent
+
         switch (event.type) {
           case 'teamUpdate':
             teamUpdateHandler(event)
@@ -434,6 +443,9 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentDeleted':
             commentsEventListener(event)
             break
+          case 'smartFolderCreate':
+            smartFolderUpdateHandler(event)
+            break
         }
       }
     }
@@ -452,6 +464,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
+    smartFolderUpdateHandler,
   ])
 
   return null

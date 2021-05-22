@@ -170,11 +170,6 @@ const SmartFolderPage = ({ smartFolder }: SmartFolderShowPageResponseBody) => {
               }
             }
           case 'due_date':
-            console.log(
-              doc.dueDate,
-              typeof doc.dueDate,
-              secondaryCondition.value
-            )
             if (validateDueDate(doc, secondaryCondition)) {
               if (primaryConditionType === 'and') {
                 break
