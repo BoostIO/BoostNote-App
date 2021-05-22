@@ -422,13 +422,19 @@ const StyledMarkdownPreview = styled.div`
     height: 20px;
     display: flex;
     align-items: center;
-    color: ${({ theme }) => theme.colors.icon.default} 
+    color: ${({ theme }) => theme.colors.icon.default}
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary}
     }
-    & svg {
+
+    svg {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+
+    span {
+      line-height: 1;
+      margin-top: -3px;
     }
   }
 `
