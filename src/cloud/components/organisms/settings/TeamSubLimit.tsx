@@ -4,7 +4,13 @@ import { usePage } from '../../../lib/stores/pageStore'
 import { useSettings } from '../../../lib/stores/settings'
 import styled from '../../../../shared/lib/styled'
 
-const TeamSubLimit = () => {
+const TeamSubLimit = ({
+  padded = true,
+  onLimitClick,
+}: {
+  padded?: boolean
+  onLimitClick?: () => void
+}) => {
   const { subscription, team, currentSubInfo } = usePage()
   const { openSettingsTab } = useSettings()
 
@@ -18,12 +24,18 @@ const TeamSubLimit = () => {
 
   if (currentSubInfo.trialing) {
     return (
-      <Container>
+      <Container
+        className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
+      >
         <a
           className='upgrade-link'
           href='#'
           onClick={(e: any) => {
             e.preventDefault()
+            if (onLimitClick != null) {
+              onLimitClick()
+              return
+            }
             openSettingsTab('teamUpgrade')
           }}
         >
@@ -41,12 +53,18 @@ const TeamSubLimit = () => {
   }
 
   return (
-    <Container>
+    <Container
+      className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
+    >
       <a
         className='upgrade-link'
         href='#'
         onClick={(e: any) => {
           e.preventDefault()
+          if (onLimitClick != null) {
+            onLimitClick()
+            return
+          }
           openSettingsTab('teamUpgrade')
         }}
       >
@@ -76,6 +94,13 @@ const TeamSubLimit = () => {
 const Container = styled.nav`
   width: 100%;
   margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
+
+  &.sub__limit--stripped {
+    margin: 0;
+    > * {
+      margin: 0 !important;
+    }
+  }
 
   h6 {
     margin: 0;

@@ -10,6 +10,7 @@ import {
   toggleSettingsMembersEventEmitter,
 } from '../../utils/events'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import { UpgradeTabOpeningOptions } from '../../../components/organisms/settings/UpgradeTab'
 
 export const baseUserSettings: UserSettings = {
   'general.theme': 'dark',
@@ -32,10 +33,16 @@ export type SettingsTab =
   | 'api'
   | 'feedback'
 
+export type SettingsTabOpeningOptions = UpgradeTabOpeningOptions
+
 function useSettingsStore() {
   const { globalData, setPartialGlobalData } = useGlobalData()
   const { currentUserSettings, currentUser } = globalData
   const [settingsTab, setSettingsTab] = useState<SettingsTab>('personalInfo')
+  const [settingsOpeningOptions, setSettingsOpeningOptions] = useState<
+    SettingsTabOpeningOptions
+  >()
+
   const { pushMessage } = useToast()
   const { t } = useTranslation()
 
@@ -94,6 +101,7 @@ function useSettingsStore() {
 
   const closeSettingsTab = useCallback(() => {
     setClosed(true)
+    setSettingsOpeningOptions(undefined)
   }, [setClosed])
 
   const currentLanguage = mergedUserSettings['general.language']
@@ -103,8 +111,9 @@ function useSettingsStore() {
   }, [i18n, currentLanguage])
 
   const openSettingsTab = useCallback(
-    (tab: SettingsTab) => {
+    (tab: SettingsTab, options?: SettingsTabOpeningOptions) => {
       setClosed(false)
+      setSettingsOpeningOptions(options)
       setSettingsTab(tab)
       return
     },
@@ -155,6 +164,7 @@ function useSettingsStore() {
     settings: mergedUserSettings,
     setSettings,
     settingsTab,
+    settingsOpeningOptions,
     openSettingsTab,
     closeSettingsTab,
     emailNotifications,

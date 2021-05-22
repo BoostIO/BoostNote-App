@@ -16,12 +16,29 @@ import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import {
+  isEligibleForDiscount,
+  newTeamDiscountDays,
+} from '../../../lib/subscription'
+import Banner from '../../../../shared/components/atoms/Banner'
+import { mdiGift } from '@mdi/js'
+import { format } from 'date-fns'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
 type UpgradeTabs = 'plans' | 'form'
 
-const UpgradeTab = () => {
+export interface UpgradeTabOpeningOptions {
+  tabState?: UpgradeTabs
+  showTrialPopup?: boolean
+  initialPlan?: UpgradePlans
+}
+
+const UpgradeTab = ({
+  tabState: defaultTabState = 'plans',
+  showTrialPopup: defaultShowTrial = false,
+  initialPlan: defaultInitialPlan = 'standard',
+}: UpgradeTabOpeningOptions) => {
   const { t } = useTranslation()
   const {
     team,
@@ -29,13 +46,15 @@ const UpgradeTab = () => {
     updateTeamSubscription,
     permissions = [],
   } = usePage<PageStoreWithTeam>()
-  const [tabState, setTabState] = useState<UpgradeTabs>('plans')
+  const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
   const {
     globalData: { currentUser },
   } = useGlobalData()
-  const [showTrialPopup, setShowTrialPopup] = useState(false)
-  const [initialPlan, setInitialPlan] = useState<UpgradePlans>('standard')
+  const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
+  const [initialPlan, setInitialPlan] = useState<UpgradePlans>(
+    defaultInitialPlan
+  )
 
   useEffect(() => {
     if (subscription != null && subscription.status !== 'trialing') {
@@ -73,6 +92,9 @@ const UpgradeTab = () => {
     return null
   }
 
+  const eligibilityEnd = new Date(team.createdAt)
+  eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
+  const teamIsEligibleForDiscount = isEligibleForDiscount(team)
   if (tabState === 'plans') {
     return (
       <SettingTabContent
@@ -87,6 +109,12 @@ const UpgradeTab = () => {
               />
             )}
             <section>
+              {teamIsEligibleForDiscount && (
+                <Banner variant='warning' iconPath={mdiGift}>
+                  You will receive a discount as long as you subscribe before{' '}
+                  <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
+                </Banner>
+              )}
               <PlanTables
                 team={team}
                 subscription={subscription}
@@ -94,6 +122,7 @@ const UpgradeTab = () => {
                 onStandardCallback={() => onUpgradeCallback('standard')}
                 onProCallback={() => onUpgradeCallback('pro')}
                 onTrialCallback={() => setShowTrialPopup(true)}
+                discounted={teamIsEligibleForDiscount}
               />
               <StyledFYI>
                 * For larger businesses or those in highly regulated industries,

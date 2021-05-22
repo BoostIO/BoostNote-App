@@ -150,8 +150,6 @@ const Application = ({
     if (query.settings === 'upgrade') {
       openSettingsTab('teamUpgrade')
     }
-
-    openModal(<DiscountModal team={team!} />)
   })
 
   useEffect(() => {
@@ -680,7 +678,7 @@ function mapToolbarRows(
       pelletVariant: 'danger',
       onClick: () => {
         trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
-        openModal(<DiscountModal team={team} />)
+        openModal(<DiscountModal />, { showCloseIcon: true, width: 'large' })
       },
     })
   }
