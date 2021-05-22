@@ -965,7 +965,7 @@ const Editor = ({
               SelectionMenu={({ selection }) => (
                 <StyledSelectionMenu>
                   <div onClick={() => newRangeThread(selection)}>
-                    <Icon size={32} path={mdiCommentTextOutline} />
+                    <Icon size={21} path={mdiCommentTextOutline} />
                   </div>
                 </StyledSelectionMenu>
               )}
@@ -1115,7 +1115,7 @@ const StyledPreview = styled.div`
 const StyledSelectionMenu = styled.div`
   display: flex;
   padding: 8px;
-  max-height: 50px;
+  max-height: 37px;
   cursor: pointer;
 `
 
