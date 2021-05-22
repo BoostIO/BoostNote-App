@@ -52,7 +52,7 @@ interface CommentItemProps {
   editable?: boolean
 }
 
-const smallUserIconStyle = { width: '24px', height: '24px', lineHeight: '20px' }
+const smallUserIconStyle = { width: '32px', height: '32px', lineHeight: '28px' }
 export function CommentItem({
   comment,
   editable,
@@ -90,38 +90,49 @@ export function CommentItem({
 
   return (
     <CommentItemContainer>
-      <div className='comment__meta'>
+      <div className='comment__icon'>
         <UserIcon style={smallUserIconStyle} user={comment.user} />{' '}
-        <strong>{comment.user.displayName}</strong>
-        <span className='comment__meta__date'>
-          {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
-        </span>
-        {editable &&
-          (editing ? (
-            <div onClick={() => setEditing(false)}>
-              <Icon path={mdiClose} />
-            </div>
-          ) : (
-            <div onClick={openContextMenu}>
-              <Icon path={mdiDotsVertical} />
-            </div>
-          ))}
       </div>
-      {editing ? (
-        <CommentInput
-          autoFocus={true}
-          onSubmit={submitComment}
-          value={comment.message}
-        />
-      ) : (
-        <div className='comment__message'>{comment.message}</div>
-      )}
+      <div className='comment__content'>
+        <div className='comment__meta'>
+          <strong>{comment.user.displayName}</strong>
+          <span className='comment__meta__date'>
+            {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
+          </span>
+          {editable &&
+            (editing ? (
+              <div onClick={() => setEditing(false)}>
+                <Icon path={mdiClose} />
+              </div>
+            ) : (
+              <div onClick={openContextMenu} className='comment__meta__menu'>
+                <Icon path={mdiDotsVertical} />
+              </div>
+            ))}
+        </div>
+        {editing ? (
+          <CommentInput
+            autoFocus={true}
+            onSubmit={submitComment}
+            value={comment.message}
+          />
+        ) : (
+          <div className='comment__message'>{comment.message}</div>
+        )}
+      </div>
     </CommentItemContainer>
   )
 }
 
 const CommentItemContainer = styled.div`
-  & .comment__meta {
+  display: flex;
+
+  .comment__icon {
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+
+  .comment__meta {
     display: flex;
     align-items: center;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -130,6 +141,7 @@ const CommentItemContainer = styled.div`
     }
     & .comment__meta__date {
       color: ${({ theme }) => theme.colors.text.subtle};
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
       flex-grow: 1;
     }
     & svg {
@@ -140,7 +152,16 @@ const CommentItemContainer = styled.div`
     }
   }
 
-  & .comment__message {
+  .comment__meta__menu {
+    display: none;
+    height: 18px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .comment__message {
     white-space: pre-wrap;
     word-break: break-word;
   }

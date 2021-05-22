@@ -253,6 +253,12 @@ const Container = styled.div`
       & > div {
         margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
       }
+
+      &:hover {
+        .comment__meta__menu {
+          display: block;
+        }
+      }
     }
   }
 

@@ -424,7 +424,9 @@ const StyledMarkdownPreview = styled.div`
     align-items: center;
     color: ${({ theme }) => theme.colors.icon.default}
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+
     &:hover {
+      cursor: pointer;
       color: ${({ theme }) => theme.colors.text.primary}
     }
 
