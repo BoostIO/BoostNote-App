@@ -18,6 +18,7 @@ import { difference } from 'ramda'
 import DocOnlyContentManagerBulkActions from './Actions/DocOnlyContentManagerBulkActions'
 import { usePreferences } from '../../../lib/stores/preferences'
 import { StyledContentManagerHeader } from '.'
+import EmptyRow from './Rows/EmptyRow'
 
 interface DocOnlyContentManagerProps {
   team: SerializedTeam
@@ -144,6 +145,7 @@ const DocOnlyContentManager = ({
             showPath={page != null}
           />
         ))}
+        {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
       </StyledContentManagerList>
     </StyledContentManager>
   )

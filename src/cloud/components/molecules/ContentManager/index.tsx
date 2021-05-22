@@ -34,6 +34,7 @@ import styled from '../../../../shared/lib/styled'
 import DocStatusIcon from '../../atoms/DocStatusIcon'
 import { isChildNode } from '../../../../shared/lib/dom'
 import { usePreferences } from '../../../lib/stores/preferences'
+import EmptyRow from './Rows/EmptyRow'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -313,6 +314,8 @@ const ContentManager = ({
                 onSelect={() => toggleFolder(folder.id)}
               />
             ))}
+
+            {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
           </>
         )}
         {(contentTab === 'all' || contentTab === 'docs') && (
@@ -432,6 +435,7 @@ const ContentManager = ({
                 showPath={page != null}
               />
             ))}
+            {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
           </>
         )}
       </StyledContentManagerList>
