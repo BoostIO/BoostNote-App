@@ -20,7 +20,11 @@ const ContentManagerRow = ({
   onSelect,
 }: ContentManagerRowProps) => (
   <StyledContentManagerRow className={cc([className])}>
-    <Checkbox className='checkbox' checked={checked} onChange={onSelect} />
+    <Checkbox
+      className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
+      checked={checked}
+      onChange={onSelect}
+    />
     <Flexbox
       flex={'1 1 auto'}
       style={{
@@ -68,6 +72,10 @@ const StyledContentManagerRow = styled.div`
     .date {
       display: none;
     }
+
+    .row__checkbox {
+      opacity: 1;
+    }
   }
 
   .link {
@@ -94,8 +102,13 @@ const StyledContentManagerRow = styled.div`
     text-decoration: none;
   }
 
-  .checkbox {
-    margin-right: 8px;
+  .row__checkbox {
+    opacity: 0;
+    margin-right: 4px;
+
+    &.row__checkbox--checked {
+      opacity: 1;
+    }
   }
   .status-icon {
     margin-right: 4px;

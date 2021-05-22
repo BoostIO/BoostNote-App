@@ -35,6 +35,7 @@ import DocStatusIcon from '../../atoms/DocStatusIcon'
 import { isChildNode } from '../../../../shared/lib/dom'
 import { usePreferences } from '../../../lib/stores/preferences'
 import EmptyRow from './Rows/EmptyRow'
+import cc from 'classcat'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -234,6 +235,9 @@ const ContentManager = ({
     []
   )
 
+  const folderCategoryChecked = orderedFolders.length > 0 && selectingAllFolders
+  const documentCategoryChecked = orderedDocs.length > 0 && selectingAllDocs
+
   return (
     <StyledContentManager>
       <StyledContentManagerHeader>
@@ -297,8 +301,11 @@ const ContentManager = ({
           <>
             <StyledContentManagerListHeader>
               <Checkbox
-                className='header__checkbox'
-                checked={orderedFolders.length > 0 && selectingAllFolders}
+                className={cc([
+                  'header__checkbox',
+                  folderCategoryChecked && 'header__checkbox--checked',
+                ])}
+                checked={folderCategoryChecked}
                 onChange={selectingAllFolders ? resetFolders : selectAllFolders}
               />
               <div className='header__label'>FOLDERS</div>
@@ -322,8 +329,11 @@ const ContentManager = ({
           <>
             <StyledContentManagerListHeader>
               <Checkbox
-                className='header__checkbox'
-                checked={orderedDocs.length > 0 && selectingAllDocs}
+                className={cc([
+                  'header__checkbox',
+                  documentCategoryChecked && 'header__checkbox--checked',
+                ])}
+                checked={documentCategoryChecked}
                 onChange={selectingAllDocs ? resetDocs : selectAllDocs}
               />
               <div className='header__label'>DOCUMENTS</div>
@@ -477,7 +487,18 @@ export const StyledContentManagerListHeader = styled.div`
   }
 
   .header__checkbox {
+    opacity: 0;
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+
+    &.header__checkbox--checked {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    .header__checkbox {
+      opacity: 1;
+    }
   }
   .header__control {
   }
