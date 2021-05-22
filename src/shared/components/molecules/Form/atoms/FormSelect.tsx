@@ -92,11 +92,14 @@ const Container = styled.div`
   .form__select .form__select__control {
     width: 100%;
     height: 32px;
-    color: ${({ theme }) => theme.colors.text.subtle};
+    color: ${({ theme }) => theme.colors.text.primary};
     border: none;
     &.form__select__control--is-focused {
       box-shadow: ${({ theme }) => theme.colors.shadow};
     }
+  }
+  .form__select {
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .form__select .form__select__input {
@@ -117,7 +120,7 @@ const Container = styled.div`
   .form__select .form__select__dropdown-indicator,
   .form__select .form__select__multi-value__label,
   .form__select .form__select__multi-value__remove {
-    color: ${({ theme }) => theme.colors.text.subtle};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .form__select .form__select__multi-value {

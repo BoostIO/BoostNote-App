@@ -235,6 +235,11 @@ const CreateSmartFolderModal = () => {
 export default CreateSmartFolderModal
 
 const Container = styled.div`
+  color: ${({ theme }) => theme.colors.text.primary};
+  .modal__heading,
+  .form__row__item {
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
   .form__row__item.form__row__item--shrink {
     flex: 0;
   }

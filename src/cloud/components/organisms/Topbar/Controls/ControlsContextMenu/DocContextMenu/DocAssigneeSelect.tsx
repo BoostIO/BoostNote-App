@@ -165,7 +165,7 @@ const SelectContainer = styled.div`
   .form__select .form__select__value-container,
   .form__select .form__select__multi-value__label,
   .form__select .form__select__multi-value__remove {
-    color: ${({ theme }) => theme.colors.text.subtle};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .form__select .form__select__menu {
