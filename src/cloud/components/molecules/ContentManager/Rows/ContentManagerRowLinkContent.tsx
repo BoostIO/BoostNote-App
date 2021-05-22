@@ -34,8 +34,8 @@ const ContentManagerRowLinkContent = ({
     <Flexbox flex={'1 1 auto'}>
       {status && <DocStatusIcon status={status} className='status-icon' />}
       <EmojiIcon
+        className='emoji-icon'
         defaultIcon={defaultIcon}
-        color={'#004774'}
         emoji={emoji}
         size={16}
       />
