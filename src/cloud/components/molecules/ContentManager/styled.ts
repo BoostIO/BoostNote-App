@@ -3,7 +3,8 @@ import styled from '../../../lib/styled'
 export const StyledContentManager = styled.div`
   display: block;
   width: 100%;
-  padding-bottom: ${({ theme }) => theme.space.medium}px;
+  padding: 0 ${({ theme }) => theme.space.large}px
+    ${({ theme }) => theme.space.medium}px;
 `
 
 export const StyledContentManagerHeaderRow = styled.div`

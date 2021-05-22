@@ -14,6 +14,8 @@ import { createSmartFolder } from '../../../../../api/teams/smart-folder'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../lib/stores/nav'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { getSmartFolderHref } from '../../../../../lib/href'
+import { useRouter } from '../../../../../lib/router'
 
 const CreateSmartFolderModal = () => {
   const [name, setName] = useState('')
@@ -24,6 +26,7 @@ const CreateSmartFolderModal = () => {
   const [makingPrivate, setMakingPrivate] = useState(false)
   const { updateSmartFoldersMap } = useNav()
   const [sending, setSending] = useState(false)
+  const { push } = useRouter()
 
   const [primaryConditionType, setPrimaryConditionType] = useState<
     'and' | 'or'
@@ -85,6 +88,7 @@ const CreateSmartFolderModal = () => {
       })
       updateSmartFoldersMap([smartFolder.id, smartFolder])
       closeModal()
+      push(getSmartFolderHref(smartFolder, team, 'index'))
     } catch (error) {
       console.error(error)
       pushApiErrorMessage(error)
@@ -93,6 +97,7 @@ const CreateSmartFolderModal = () => {
   }, [
     team,
     name,
+    push,
     primaryConditionType,
     secondaryConditions,
     makingPrivate,
