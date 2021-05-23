@@ -14,4 +14,5 @@ export interface Preferences {
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   sidebarOrderedCategories: string
   folderSortingOrder: 'Latest Updated' | 'Title A-Z' | 'Title Z-A'
+  version?: number
 }
