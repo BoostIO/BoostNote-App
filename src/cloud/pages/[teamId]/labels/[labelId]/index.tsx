@@ -7,7 +7,6 @@ import {
 import { useNav } from '../../../../lib/stores/nav'
 import { usePage } from '../../../../lib/stores/pageStore'
 import ColoredBlock from '../../../../components/atoms/ColoredBlock'
-import ContentManager from '../../../../components/molecules/ContentManager'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
 import { topParentId } from '../../../../lib/mappers/topbarTree'
