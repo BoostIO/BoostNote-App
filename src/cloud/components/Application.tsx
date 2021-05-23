@@ -1553,7 +1553,7 @@ function mapTree(
       },
       {
         id: 'sidenav-status-archived',
-        label: 'In Progress',
+        label: 'Archived',
         defaultIcon: mdiArchiveOutline,
         href: getDocStatusHref(team, 'archived'),
         active: getDocStatusHref(team, 'archived') === currentPath,
