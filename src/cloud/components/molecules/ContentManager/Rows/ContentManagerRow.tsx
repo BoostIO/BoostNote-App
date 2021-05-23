@@ -46,6 +46,7 @@ const StyledContentManagerRow = styled.div`
   align-items: center;
   height: 40px;
   flex: 1 1 auto;
+  flex-shrink: 0;
   width: 100%;
   &:first-child {
     border-top: 1px solid ${({ theme }) => theme.colors.border.second};
