@@ -792,7 +792,7 @@ const Editor = ({
         topbar: {
           breadcrumbs,
           children:
-            currentUserPermissions != null ? (
+            !team.personal && currentUserPermissions != null ? (
               <StyledTopbarChildrenContainer>
                 <LoadingButton
                   variant='icon'
