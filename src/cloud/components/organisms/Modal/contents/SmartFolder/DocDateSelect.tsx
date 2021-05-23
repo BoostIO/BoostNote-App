@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { DateConditionValue } from '../../../../../interfaces/db/smartFolder'
 import DateConditionValueTypeSelect from './DateConditionValueTypeSelect'
 import DatePicker from 'react-datepicker'
@@ -50,17 +50,31 @@ const SpecificDatePicker = ({ value, update }: SpecificDatePickerProps) => {
   const updateDate = (newDate: Date) => {
     update({
       ...value,
-      date: newDate,
+      date: normalizeLocalDate(newDate),
     })
   }
 
+  const localDate = useMemo(() => {
+    return value.date != null ? localizeDate(value.date) : null
+  }, [value])
+
   return (
     <DatePicker
-      selected={value.date}
+      selected={localDate}
       onChange={updateDate}
-      customInput={<DatePickerButton date={value.date} />}
+      customInput={<DatePickerButton date={localDate} />}
     />
   )
+}
+
+export function normalizeLocalDate(date: Date) {
+  return new Date(formatDate(date, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+}
+
+export function localizeDate(date: Date) {
+  const [dateString] = date.toISOString().split('T')
+
+  return new Date(dateString)
 }
 
 interface DateRangePickerProps {
@@ -72,34 +86,45 @@ const DateRangePicker = ({ value, update }: DateRangePickerProps) => {
   const updateFromDate = (date: Date) => {
     update({
       ...value,
-      from: date,
+      from: normalizeLocalDate(date),
     })
   }
   const updateToDate = (date: Date) => {
     update({
       ...value,
-      to: date,
+      to: normalizeLocalDate(date),
     })
   }
+
+  const localFromDate = useMemo(() => {
+    return value.from != null ? localizeDate(value.from) : null
+  }, [value])
+
+  const localToDate = useMemo(() => {
+    return value.to != null ? localizeDate(value.to) : null
+  }, [value])
   return (
     <>
       <DatePicker
-        selected={value.from}
+        selected={localFromDate}
         onChange={updateFromDate}
         placeholderText='Select Start Date'
         customInput={
           <DatePickerButton
-            date={value.from}
+            date={localFromDate}
             customIconPath={mdiCalendarStart}
           />
         }
       />
       <DatePicker
-        selected={value.to}
+        selected={localToDate}
         onChange={updateToDate}
         placeholderText='Select End Date'
         customInput={
-          <DatePickerButton date={value.to} customIconPath={mdiCalendarEnd} />
+          <DatePickerButton
+            date={localToDate}
+            customIconPath={mdiCalendarEnd}
+          />
         }
       />
     </>

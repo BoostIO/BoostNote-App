@@ -15,11 +15,12 @@ import {
   SerializeDateProps,
   UpdateDateCondition,
 } from '../../../interfaces/db/smartFolder'
-import { format as formatDate, addDays, subDays } from 'date-fns'
+import { addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import { useRouter } from '../../../lib/router'
 import styled from '../../../../shared/lib/styled'
+import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -86,28 +87,35 @@ function validateDateValue(
   targetDate: Date,
   dateConditionValue: SerializeDateProps<DateConditionValue>
 ) {
-  const todayDate = new Date(formatDate(new Date(), `yyyy-MM-dd`))
+  const todayDate = localizeDate(new Date())
   const tomorrow = addDays(todayDate, 1)
+  const localizedTargetDate = localizeDate(targetDate)
 
   switch (dateConditionValue.type) {
     case 'today':
-      return targetDate >= todayDate && targetDate < tomorrow
+      return localizedTargetDate >= todayDate && localizedTargetDate < tomorrow
     case '7_days':
       const weekAgo = subDays(todayDate, 7)
-      return targetDate >= weekAgo && targetDate < tomorrow
+      return localizedTargetDate >= weekAgo && localizedTargetDate < tomorrow
     case '30_days':
       const monthAgo = subDays(todayDate, 30)
-      return targetDate >= monthAgo && targetDate < tomorrow
+      return localizedTargetDate >= monthAgo && localizedTargetDate < tomorrow
     case 'after':
       const afterDate = new Date(dateConditionValue.date)
-      return targetDate >= afterDate
+      return localizedTargetDate >= afterDate
+    case 'specific':
+      const specificDate = new Date(dateConditionValue.date)
+      return (
+        localizedTargetDate >= specificDate &&
+        localizedTargetDate < addDays(specificDate, 1)
+      )
     case 'before':
       const beforeDate = new Date(dateConditionValue.date)
-      return targetDate < beforeDate
+      return localizedTargetDate < beforeDate
     case 'between':
       const fromDate = new Date(dateConditionValue.from)
       const toDate = new Date(dateConditionValue.to)
-      return targetDate >= fromDate && targetDate <= toDate
+      return localizedTargetDate >= fromDate && localizedTargetDate <= toDate
   }
   return false
 }
