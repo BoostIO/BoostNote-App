@@ -268,7 +268,6 @@ const SmartFolderPage = () => {
   return (
     <Application
       content={{
-        reduced: true,
         topbar: {
           controls: [],
           children: <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>,

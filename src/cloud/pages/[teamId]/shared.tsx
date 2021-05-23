@@ -3,14 +3,13 @@ import { getSharedDocsListData } from '../../api/pages/teams/shared'
 import { usePage } from '../../lib/stores/pageStore'
 import { useNav } from '../../lib/stores/nav'
 import { useTitle } from 'react-use'
-import EmojiIcon from '../../components/atoms/EmojiIcon'
 import { mdiWeb } from '@mdi/js'
-import ContentManager from '../../components/molecules/ContentManager'
 import Application from '../../components/Application'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import { useRouter } from '../../lib/router'
 import { topParentId } from '../../lib/mappers/topbarTree'
+import DocOnlyContentManager from '../../components/molecules/ContentManager/DocOnlyContentManager'
 
 const SharedDocsListPage = () => {
   const { team } = usePage()
@@ -30,7 +29,6 @@ const SharedDocsListPage = () => {
   return (
     <Application
       content={{
-        reduced: true,
         topbar: {
           breadcrumbs: [
             {
@@ -45,22 +43,11 @@ const SharedDocsListPage = () => {
             },
           ],
         },
-        header: (
-          <>
-            <EmojiIcon
-              defaultIcon={mdiWeb}
-              style={{ marginRight: 10 }}
-              size={16}
-            />
-            <span style={{ marginRight: 10 }}>Shared</span>
-          </>
-        ),
       }}
     >
-      <ContentManager
+      <DocOnlyContentManager
         team={team}
         documents={sharedDocs}
-        folders={[]}
         page='shared'
         workspacesMap={workspacesMap}
       />

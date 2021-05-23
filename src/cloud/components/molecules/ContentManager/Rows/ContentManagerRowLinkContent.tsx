@@ -32,7 +32,9 @@ const ContentManagerRowLinkContent = ({
     className='cm-row-link-content'
   >
     <Flexbox flex={'1 1 auto'}>
-      {status && <DocStatusIcon status={status} className='status-icon' />}
+      {status && (
+        <DocStatusIcon status={status} className='status-icon' size={16} />
+      )}
       <EmojiIcon
         className='emoji-icon'
         defaultIcon={defaultIcon}

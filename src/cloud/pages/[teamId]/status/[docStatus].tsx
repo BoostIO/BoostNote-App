@@ -9,6 +9,8 @@ import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import { useRouter } from '../../../lib/router'
+import styled from '../../../../shared/lib/styled'
+import DocStatusIcon from '../../../components/atoms/DocStatusIcon'
 
 const DocStatusShowPage = () => {
   const { team } = usePage()
@@ -28,6 +30,22 @@ const DocStatusShowPage = () => {
       case 'in-progress':
       default:
         return 'in_progress'
+    }
+  }, [pathname])
+
+  const docStatusLabel = useMemo(() => {
+    const [, , , status] = pathname.split('/')
+
+    switch (status) {
+      case 'paused':
+        return 'Paused'
+      case 'completed':
+        return 'Completed'
+      case 'archived':
+        return 'Archived'
+      case 'in-progress':
+      default:
+        return 'In Progress'
     }
   }, [pathname])
 
@@ -74,9 +92,17 @@ const DocStatusShowPage = () => {
   return (
     <Application
       content={{
-        reduced: true,
         topbar: {
-          controls: [],
+          children: (
+            <TopbarLabel>
+              <DocStatusIcon
+                status={docStatus}
+                size={16}
+                className='topbar-label__icon'
+              />
+              {docStatusLabel}
+            </TopbarLabel>
+          ),
         },
       }}
     >
@@ -97,3 +123,12 @@ DocStatusShowPage.getInitialProps = async (
 }
 
 export default DocStatusShowPage
+
+const TopbarLabel = styled.div`
+  color: ${({ theme }) => theme.colors.text.primary};
+  display: flex;
+  align-items: center;
+  .topbar-label__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+`
