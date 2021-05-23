@@ -19,6 +19,7 @@ import DocOnlyContentManagerBulkActions from './Actions/DocOnlyContentManagerBul
 import { usePreferences } from '../../../lib/stores/preferences'
 import { StyledContentManagerHeader } from '.'
 import EmptyRow from './Rows/EmptyRow'
+import cc from 'classcat'
 
 interface DocOnlyContentManagerProps {
   team: SerializedTeam
@@ -98,7 +99,7 @@ const DocOnlyContentManager = ({
   )
 
   const selectingAllDocs = useMemo(() => {
-    return orderedDocs.every((doc) => hasDoc(doc.id))
+    return orderedDocs.length > 0 && orderedDocs.every((doc) => hasDoc(doc.id))
   }, [orderedDocs, hasDoc])
 
   return (
@@ -106,9 +107,12 @@ const DocOnlyContentManager = ({
       <StyledContentManagerHeader>
         <div className='header__left'>
           <Checkbox
-            checked={orderedDocs.length > 0 && selectingAllDocs}
+            checked={selectingAllDocs}
             disabled={orderedDocs.length === 0}
-            className='header__left__checkbox'
+            className={cc([
+              'header__left__checkbox',
+              selectingAllDocs && 'header__left__checkbox--checked',
+            ])}
             onChange={selectingAllDocs ? resetDocs : selectAllDocs}
           />
           <DocOnlyContentManagerBulkActions

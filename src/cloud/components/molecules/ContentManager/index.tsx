@@ -174,14 +174,20 @@ const ContentManager = ({
   }, [])
 
   const selectingAllDocs = useMemo(() => {
-    return orderedDocs.every((doc) => hasDoc(doc.id))
+    return orderedDocs.length > 0 && orderedDocs.every((doc) => hasDoc(doc.id))
   }, [orderedDocs, hasDoc])
 
   const selectingAllFolders = useMemo(() => {
-    return orderedFolders.every((folder) => hasFolder(folder.id))
+    return (
+      orderedFolders.length > 0 &&
+      orderedFolders.every((folder) => hasFolder(folder.id))
+    )
   }, [orderedFolders, hasFolder])
 
-  const selectingAllItems = selectingAllDocs && selectingAllFolders
+  const selectingAllItems =
+    (selectingAllDocs && selectingAllFolders) ||
+    (orderedFolders.length === 0 && selectingAllDocs) ||
+    (orderedDocs.length === 0 && selectingAllFolders)
 
   const selectAllDocs = useCallback(() => {
     orderedDocs.forEach((doc) => addDoc(doc.id))
@@ -235,20 +241,17 @@ const ContentManager = ({
     []
   )
 
-  const folderCategoryChecked = orderedFolders.length > 0 && selectingAllFolders
-  const documentCategoryChecked = orderedDocs.length > 0 && selectingAllDocs
-
   return (
     <StyledContentManager>
       <StyledContentManagerHeader>
         <div className='header__left'>
           <Checkbox
-            checked={
-              orderedDocs.length + orderedFolders.length > 0 &&
-              selectingAllItems
-            }
+            checked={selectingAllItems}
             disabled={orderedDocs.length + orderedFolders.length === 0}
-            className='header__left__checkbox'
+            className={cc([
+              'header__left__checkbox',
+              selectingAllItems && 'header__left__checkbox--checked',
+            ])}
             onChange={selectingAllItems ? unselectAllItems : selectAllItems}
           />
 
@@ -303,9 +306,9 @@ const ContentManager = ({
               <Checkbox
                 className={cc([
                   'header__checkbox',
-                  folderCategoryChecked && 'header__checkbox--checked',
+                  selectingAllFolders && 'header__checkbox--checked',
                 ])}
-                checked={folderCategoryChecked}
+                checked={selectingAllFolders}
                 onChange={selectingAllFolders ? resetFolders : selectAllFolders}
               />
               <div className='header__label'>FOLDERS</div>
@@ -331,9 +334,9 @@ const ContentManager = ({
               <Checkbox
                 className={cc([
                   'header__checkbox',
-                  documentCategoryChecked && 'header__checkbox--checked',
+                  selectingAllDocs && 'header__checkbox--checked',
                 ])}
-                checked={documentCategoryChecked}
+                checked={selectingAllDocs}
                 onChange={selectingAllDocs ? resetDocs : selectAllDocs}
               />
               <div className='header__label'>DOCUMENTS</div>
@@ -470,6 +473,16 @@ export const StyledContentManagerHeader = styled.div`
   }
   .header__left__checkbox {
     margin-right: 8px;
+    opacity: 0;
+    &.header__left__checkbox--checked {
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    .header__left__checkbox {
+      opacity: 1;
+    }
   }
 `
 
