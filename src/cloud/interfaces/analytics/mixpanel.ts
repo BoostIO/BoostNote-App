@@ -76,6 +76,15 @@ export enum MixpanelActionTrackTypes {
   WorkspaceCreate = 'workspace.create',
   WorkspaceDelete = 'workspace.delete',
   ZapierLinkOpen = 'zapier.link.open',
+  DocCommentThreadCreate = 'doc.thread.add',
+  DocCommentThreadEdit = 'doc.thread.edit',
+  DocCommentThreadDelete = 'doc.thread.delete',
+  LineCommentThreadCreate = 'line.thread.create',
+  LineCommentThreadEdit = 'line.thread.edit',
+  LineCommentThreadDelete = 'line.thread.delete',
+  CommentCreate = 'comment.create',
+  CommentUpdate = 'comment.update',
+  CommentDelete = 'comment.delete',
 }
 
 export type MixpanelFrontEvent =
@@ -156,6 +165,19 @@ export type MixpanelOpenInviteEvent =
   | MixpanelActionTrackTypes.OpenInviteCreate
   | MixpanelActionTrackTypes.OpenInviteDelete
   | MixpanelActionTrackTypes.OpenInviteReset
+
+export type MixpanelCommentThreadEvent =
+  | MixpanelActionTrackTypes.DocCommentThreadCreate
+  | MixpanelActionTrackTypes.DocCommentThreadEdit
+  | MixpanelActionTrackTypes.DocCommentThreadDelete
+  | MixpanelActionTrackTypes.LineCommentThreadCreate
+  | MixpanelActionTrackTypes.LineCommentThreadEdit
+  | MixpanelActionTrackTypes.LineCommentThreadDelete
+
+export type MixpanelCommentEvent =
+  | MixpanelActionTrackTypes.CommentCreate
+  | MixpanelActionTrackTypes.CommentUpdate
+  | MixpanelActionTrackTypes.CommentDelete
 
 export type MixpanelUserProfile = {
   $first_name?: string
