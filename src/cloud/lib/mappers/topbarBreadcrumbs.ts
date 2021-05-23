@@ -348,7 +348,7 @@ export function mapWorkspaceBreadcrumb(
     item: workspace,
     label: workspace.name,
     active: true,
-    icon: workspace.default ? undefined : mdiLock,
+    icon: workspace.public ? undefined : mdiLock,
     parentId: topParentId,
     link: {
       href: getWorkspaceHref(workspace, team, 'index'),
