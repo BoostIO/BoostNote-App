@@ -1201,7 +1201,10 @@ function mapTree(
       bookmarked: doc.bookmarked,
       emoji: doc.emoji,
       defaultIcon: mdiFileDocumentOutline,
-      archived: doc.archivedAt != null,
+      hidden:
+        doc.archivedAt != null ||
+        doc.status === 'archived' ||
+        doc.status === 'completed',
       children: [],
       href,
       active: href === currentPathWithDomain,
@@ -1742,7 +1745,7 @@ function buildChildrenNavRows(
       return acc
     }
 
-    if (childRow.archived) {
+    if (childRow.hidden) {
       return acc
     }
 
@@ -1780,7 +1783,7 @@ type CloudTreeItem = {
   defaultIcon?: string
   emoji?: string
   bookmarked?: boolean
-  archived?: boolean
+  hidden?: boolean
   children: string[]
   folding?: FoldingProps
   folded?: boolean
