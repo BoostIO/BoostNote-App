@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
@@ -13,34 +13,34 @@ import {
 } from '../../../lib/shortcuts'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import {
-  mdiFolderOutline,
-  mdiTextBoxPlusOutline,
-  mdiFolderMultiplePlusOutline,
+  // mdiFolderOutline,
+  // mdiTextBoxPlusOutline,
+  // mdiFolderMultiplePlusOutline,
   mdiStarOutline,
   mdiStar,
   mdiDotsHorizontal,
 } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import EmojiIcon from '../../atoms/EmojiIcon'
+// import EmojiIcon from '../../atoms/EmojiIcon'
 import ContentManager from '../../molecules/ContentManager'
-import { useEmojiPicker } from '../../../lib/stores/emoji'
-import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
-import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
+// import { useEmojiPicker } from '../../../lib/stores/emoji'
+// import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
+// import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Application from '../../Application'
 import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
-import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
+// import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudUI } from '../../../lib/hooks/useCloudUI'
 import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
-enum FolderHeaderActions {
-  newDoc = 0,
-  newFolder = 1,
-}
+// enum FolderHeaderActions {
+//   newDoc = 0,
+//   newFolder = 1,
+// }
 
 const FolderPage = () => {
   const { pageFolder, team } = usePage()
@@ -51,8 +51,8 @@ const FolderPage = () => {
     workspacesMap,
     currentWorkspaceId,
   } = useNav()
-  const { openEmojiPicker } = useEmojiPicker()
-  const [sending, setSending] = useState<number>()
+  // const { openEmojiPicker } = useEmojiPicker()
+  // const [sending, setSending] = useState<number>()
   const { toggleFolderBookmark, sendingMap } = useCloudUpdater()
   const { push } = useRouter()
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
@@ -142,15 +142,15 @@ const FolderPage = () => {
 
   useTitle(pageTitle)
 
-  const onEmojiClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      openEmojiPicker(event, {
-        item: currentFolder,
-        type: 'folder',
-      } as EmojiResource)
-    },
-    [currentFolder, openEmojiPicker]
-  )
+  // const onEmojiClick = useCallback(
+  //   (event: React.MouseEvent<HTMLDivElement>) => {
+  //     openEmojiPicker(event, {
+  //       item: currentFolder,
+  //       type: 'folder',
+  //     } as EmojiResource)
+  //   },
+  //   [currentFolder, openEmojiPicker]
+  // )
 
   useEffect(() => {
     if (currentFolder == null) {
@@ -208,26 +208,26 @@ const FolderPage = () => {
     return map
   }, [currentWorkspace])
 
-  const openCreateDocForm = useCallback(() => {
-    openNewDocForm(
-      {
-        team,
-        workspaceId: currentFolder?.workspaceId,
-        parentFolderId: currentFolder?.id,
-      },
-      {
-        precedingRows: [
-          {
-            description: (
-              <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
-            ),
-          },
-        ],
-        beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
-        afterSubmitting: () => setSending(undefined),
-      }
-    )
-  }, [openNewDocForm, currentFolder, team, topBarBreadcrumbs])
+  // const openCreateDocForm = useCallback(() => {
+  //   openNewDocForm(
+  //     {
+  //       team,
+  //       workspaceId: currentFolder?.workspaceId,
+  //       parentFolderId: currentFolder?.id,
+  //     },
+  //     {
+  //       precedingRows: [
+  //         {
+  //           description: (
+  //             <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
+  //           ),
+  //         },
+  //       ],
+  //       beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
+  //       afterSubmitting: () => setSending(undefined),
+  //     }
+  //   )
+  // }, [openNewDocForm, currentFolder, team, topBarBreadcrumbs])
 
   // const openCreateFolderForm = useCallback(() => {
   //   openNewFolderForm(
