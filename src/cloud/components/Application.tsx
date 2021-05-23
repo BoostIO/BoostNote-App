@@ -96,6 +96,7 @@ import {
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
   mdiCheckCircleOutline,
+  mdiFolderCogOutline,
 } from '@mdi/js'
 import { getColorFromString } from '../../shared/lib/string'
 import {
@@ -1334,6 +1335,7 @@ function mapTree(
       return {
         id: smartFolder.id,
         label: smartFolder.name,
+        defaultIcon: mdiFolderCogOutline,
         depth: 0,
         active: href === currentPathWithDomain,
         navigateTo: () => push(href),
