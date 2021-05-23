@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, useCallback } from 'react'
 import { StyledModalSeparator } from '../Forms/styled'
-import FormSelect from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
+import FormSelect, {
+  FormSelectOption,
+} from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
 import Button from '../../../../../../shared/components/atoms/Button'
 import { mdiPlus } from '@mdi/js'
 import styled from '../../../../../../shared/lib/styled'
@@ -86,12 +88,9 @@ const UpdateSmartFolderModal = ({
     setName(event.target.value)
   }, [])
 
-  const updatePrimaryConditionType = useCallback(
-    (newConditionType: 'and' | 'or') => {
-      setPrimaryConditionType(newConditionType)
-    },
-    []
-  )
+  const updatePrimaryConditionType = useCallback((option: FormSelectOption) => {
+    setPrimaryConditionType(option.value as any)
+  }, [])
 
   const insertSecondaryConditionByIndex = useCallback(
     (condition: EditibleSecondaryCondition, index: number) => {
