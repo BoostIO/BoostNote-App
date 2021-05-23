@@ -47,6 +47,9 @@ const StyledContentManagerRow = styled.div`
   height: 40px;
   flex: 1 1 auto;
   width: 100%;
+  &:first-child {
+    border-top: 1px solid ${({ theme }) => theme.colors.border.second};
+  }
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
   font-size: 13px;
   padding: 0 8px;
