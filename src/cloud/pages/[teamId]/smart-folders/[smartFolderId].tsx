@@ -18,7 +18,6 @@ import {
 import { addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
-import { useRouter } from '../../../lib/router'
 import styled from '../../../../shared/lib/styled'
 import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
 
@@ -120,11 +119,11 @@ function validateDateValue(
   return false
 }
 
-const SmartFolderPage = () => {
+const SmartFolderPage = (params: any) => {
   const { team } = usePage()
   const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
-  const { pathname } = useRouter()
-  const [, , , smartFolderId] = pathname.split('/')
+
+  const { smartFolderId } = params
 
   const smartFolder = smartFoldersMap.get(smartFolderId)
   const documents = useMemo(() => {
@@ -293,7 +292,12 @@ const SmartFolderPage = () => {
 
 SmartFolderPage.getInitialProps = async (params: GetInitialPropsParameters) => {
   const result = await getTeamIndexPageData(params)
-  return result
+
+  const [, , , smartFolderId] = params.pathname.split('/')
+  return {
+    ...result,
+    smartFolderId,
+  }
 }
 
 export default SmartFolderPage
