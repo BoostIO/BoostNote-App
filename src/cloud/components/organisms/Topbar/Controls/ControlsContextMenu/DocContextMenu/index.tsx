@@ -275,6 +275,8 @@ const DocContextMenu = ({
     ]
   )
 
+  const creator = usersMap.get(currentDoc.userId)
+
   return (
     <Container
       className={cc([preferences.docContextMode !== 'hidden' && 'active'])}
@@ -387,7 +389,7 @@ const DocContextMenu = ({
                   </span>
                 </div>
               </div>
-              {!team.personal && (
+              {!team.personal && creator != null && (
                 <div className='context__row'>
                   <label className='context__label'>
                     <IconMdi
@@ -395,27 +397,15 @@ const DocContextMenu = ({
                       size={18}
                       className='context__icon'
                     />{' '}
-                    Updated by
+                    Created by
                   </label>
                   <div className='context__content'>
                     <Flexbox wrap='wrap'>
-                      {currentDoc.head != null ? (
-                        (currentDoc.head.creators || []).length > 0 ? (
-                          <>
-                            {(currentDoc.head.creators || []).map((user) => (
-                              <UserIcon
-                                key={user.id}
-                                user={usersMap.get(user.id) || user}
-                                className='subtle'
-                              />
-                            ))}
-                          </>
-                        ) : (
-                          ''
-                        )
-                      ) : (
-                        <div>Unknown</div>
-                      )}
+                      <UserIcon
+                        key={creator.id}
+                        user={creator}
+                        className='subtle'
+                      />
                     </Flexbox>
                   </div>
                 </div>
@@ -472,7 +462,7 @@ const DocContextMenu = ({
                           ''
                         )
                       ) : (
-                        <div>Unknown</div>
+                        ''
                       )}
                     </Flexbox>
                   </div>

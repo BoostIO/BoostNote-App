@@ -29,6 +29,7 @@ export interface SerializableDocProps {
   status?: DocStatus
   dueDate: string
   assignees?: SerializedDocAssignee[]
+  userId?: string
 }
 
 export interface SerializedUnserializableDocProps {
@@ -42,6 +43,7 @@ export interface SerializedUnserializableDocProps {
   workspace?: SerializedWorkspace
   shareLink?: SerializedShareLink
   collaborationToken?: string
+  user?: SerializedUser
 }
 
 export type SerializedDoc = SerializedUnserializableDocProps &
