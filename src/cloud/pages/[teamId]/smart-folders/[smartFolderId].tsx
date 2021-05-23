@@ -19,6 +19,7 @@ import { format as formatDate, addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import { useRouter } from '../../../lib/router'
+import styled from '../../../../shared/lib/styled'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -270,7 +271,7 @@ const SmartFolderPage = () => {
         reduced: true,
         topbar: {
           controls: [],
-          children: smartFolder.name,
+          children: <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>,
         },
       }}
     >
@@ -289,3 +290,7 @@ SmartFolderPage.getInitialProps = async (params: GetInitialPropsParameters) => {
 }
 
 export default SmartFolderPage
+
+const SmartFolderLabel = styled.div`
+  color: ${({ theme }) => theme.colors.text.primary};
+`
