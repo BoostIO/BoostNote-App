@@ -103,7 +103,6 @@ function CommentManager({
                     onOpen={reopenThread}
                     onClose={closeThread}
                     onDelete={deleteThread}
-                    showContext={state.filter != null}
                   />
                 </div>
               ))}
@@ -264,6 +263,9 @@ const Container = styled.div`
     &.small {
       margin: 0;
       margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
