@@ -404,3 +404,7 @@ const StyledButton = styled.button`
     margin-top: 6px;
   }
 `
+
+export const RoundButton = styled(Button)`
+  border-radius: 20px;
+`

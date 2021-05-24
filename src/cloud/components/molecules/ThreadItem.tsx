@@ -15,7 +15,7 @@ import useThreadActions, {
 } from '../../../shared/lib/hooks/useThreadMenuActions'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 
-type ThreadListItemProps = ThreadActionProps & {
+export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
 }
 
