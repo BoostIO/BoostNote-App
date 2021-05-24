@@ -16,7 +16,7 @@ import useThreadActions, {
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 import { withLiveUser } from '../../../shared/lib/injectors'
 
-type ThreadListItemProps = ThreadActionProps & {
+export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
 }
 
