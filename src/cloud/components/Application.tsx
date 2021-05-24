@@ -148,7 +148,7 @@ const Application = ({
 
   useEffectOnce(() => {
     if (query.settings === 'upgrade') {
-      openSettingsTab('teamUpgrade', { initialPlan: 'pro', tabState: 'form' })
+      openSettingsTab('teamUpgrade')
     }
   })
 

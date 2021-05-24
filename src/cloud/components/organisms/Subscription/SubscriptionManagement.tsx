@@ -134,9 +134,6 @@ const SubscriptionManagement = ({
       return
     }
 
-    console.log(subscription.couponId)
-    console.log(newUserProCouponId)
-    console.log(newUserStandardCouponId)
     switch (subscription.couponId) {
       case newUserProCouponId:
         return discountPlans.newUserPro
