@@ -1,12 +1,15 @@
 import React, { useMemo, useCallback } from 'react'
 import { Thread } from '../../interfaces/db/comments'
-import { mdiChevronDown } from '@mdi/js'
+import {
+  mdiChevronDown,
+  mdiAlertCircleOutline,
+  mdiAlertCircleCheckOutline,
+} from '@mdi/js'
 import Icon from '../../../shared/components/atoms/Icon'
 import { capitalize } from '../../lib/utils/string'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 import Flexbox from '../atoms/Flexbox'
 import useThreadActions from '../../../shared/lib/hooks/useThreadMenuActions'
-import { getStatusIcon } from '../../../shared/lib/utils/comments'
 import { RoundButton } from '../../../shared/components/atoms/Button'
 
 interface ThreadActionButtonProps {
@@ -33,9 +36,16 @@ function ThreadActionButton({
     [popup, actions]
   )
 
-  const [variant, iconPath] = useMemo(() => getStatusIcon(thread.status.type), [
-    thread.status.type,
-  ])
+  const [variant, iconPath] = useMemo(() => {
+    switch (thread.status.type) {
+      case 'open':
+        return ['success' as const, mdiAlertCircleOutline]
+      case 'closed':
+        return ['danger' as const, mdiAlertCircleCheckOutline]
+      case 'outdated':
+        return ['secondary' as const, mdiAlertCircleCheckOutline]
+    }
+  }, [thread.status.type])
 
   return (
     <RoundButton iconPath={iconPath} variant={variant} onClick={openActionMenu}>
