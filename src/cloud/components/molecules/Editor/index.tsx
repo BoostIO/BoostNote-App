@@ -220,7 +220,7 @@ const Editor = ({
 
     const comments: HighlightRange[] = []
     for (const thread of commentState.threads) {
-      if (thread.selection != null && thread.status.type === 'open') {
+      if (thread.selection != null && thread.status.type !== 'outdated') {
         const absoluteAnchor = createAbsolutePositionFromRelativePosition(
           thread.selection.anchor,
           realtime.doc
@@ -233,7 +233,8 @@ const Editor = ({
         if (
           absoluteAnchor != null &&
           absoluteHead != null &&
-          absoluteAnchor.index !== absoluteHead.index
+          absoluteAnchor.index !== absoluteHead.index &&
+          thread.status.type === 'open'
         ) {
           comments.push({
             id: thread.id,
