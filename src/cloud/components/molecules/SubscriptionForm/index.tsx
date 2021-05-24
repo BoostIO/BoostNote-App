@@ -175,10 +175,7 @@ const SubscriptionForm = ({
         />
         <FormRow
           row={{
-            title:
-              ongoingTrial != null
-                ? `Your free trial will be stopped`
-                : undefined,
+            title: ongoingTrial ? `Your free trial will be stopped` : undefined,
           }}
         >
           <Button
