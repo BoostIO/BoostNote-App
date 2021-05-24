@@ -4,13 +4,15 @@ import {
   SectionFlexRow,
 } from '../../organisms/settings/styled'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { StyledBillingInput } from '.'
 import { updateSubEmail } from '../../../api/teams/subscription/update'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import Button, {
   LoadingButton,
 } from '../../../../shared/components/atoms/Button'
 import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import Form from '../../../../shared/components/molecules/Form'
+import styled from '../../../../shared/lib/styled'
 
 interface UpdateBillingEmailFormProps {
   sub?: SerializedSubscription
@@ -64,28 +66,41 @@ const UpdateBillingEmailForm = ({
   }
 
   return (
-    <div>
-      <SectionIntroduction>
-        <p>Update your billing email</p>
-        <SectionFlexRow>
-          <label>Current Email</label>
-          <span className='value'>{sub.email}</span>
-        </SectionFlexRow>
+    <Container>
+      <p>Update your billing email</p>
+      <SectionFlexRow>
+        <label>Current Email</label>
+        <span className='value'>{sub.email}</span>
+      </SectionFlexRow>
 
-        <StyledBillingInput
-          style={{ marginTop: 0 }}
-          placeholder='Billing Email'
-          value={email}
-          onChange={onEmailInputChangeHandler}
+      <Form onSubmit={onSubmit} rows={[]}>
+        <FormRow
+          row={{
+            fullWidth: true,
+            items: [
+              {
+                type: 'input',
+                props: {
+                  placeholder: 'Billing Email',
+                  value: email,
+                  onChange: onEmailInputChangeHandler,
+                },
+              },
+            ],
+          }}
         />
-
-        <ButtonGroup display='flex' layout='spread' justifyContent='flex-end'>
+        <ButtonGroup
+          display='flex'
+          layout='spread'
+          justifyContent='flex-end'
+          className='button__group'
+        >
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
             Cancel
           </Button>
 
           <LoadingButton
-            onClick={onSubmit}
+            type='submit'
             variant='primary'
             disabled={sending}
             spinning={sending}
@@ -93,9 +108,17 @@ const UpdateBillingEmailForm = ({
             Update
           </LoadingButton>
         </ButtonGroup>
-      </SectionIntroduction>
-    </div>
+      </Form>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  width: 100%;
+
+  .button__group {
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
+`
 
 export default UpdateBillingEmailForm
