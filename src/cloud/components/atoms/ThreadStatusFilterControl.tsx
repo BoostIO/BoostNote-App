@@ -1,9 +1,5 @@
 import React, { useCallback } from 'react'
-import {
-  mdiChevronDown,
-  mdiCircleOutline,
-  mdiAlertCircleOutline,
-} from '@mdi/js'
+import { mdiChevronDown, mdiAlertCircleOutline } from '@mdi/js'
 import { capitalize } from '../../lib/utils/string'
 import {
   useContextMenu,
@@ -16,7 +12,6 @@ import Icon, {
   PrimaryIcon,
   WarningIcon,
 } from '../../../shared/components/atoms/Icon'
-import Flexbox from './Flexbox'
 import { RoundButton } from '../../../shared/components/atoms/Button'
 import styled from '../../../shared/lib/styled'
 
