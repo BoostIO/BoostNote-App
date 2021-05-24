@@ -1,5 +1,5 @@
-import { mdiOpenInNew } from '@mdi/js'
-import React, { useCallback, useState } from 'react'
+import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
+import React, { useCallback, useMemo, useState } from 'react'
 import Icon from '../../../../components/atoms/Icon'
 import Spinner from '../../../../components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
@@ -10,14 +10,19 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getFormattedDateFromUnixTimestamp } from '../../../lib/date'
 import { usePage } from '../../../lib/stores/pageStore'
-import { UpgradePlans } from '../../../lib/stripe'
+import { discountPlans, UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
-import Button from '../../atoms/Button'
 import Flexbox from '../../atoms/Flexbox'
 import { SectionIntroduction } from '../settings/styled'
 import PlanTables from './PlanTables'
 import Alert from '../../../../components/atoms/Alert'
 import SubscriptionCostSummary from './SubscriptionCostSummary'
+import Banner from '../../../../shared/components/atoms/Banner'
+import Button from '../../../../shared/components/atoms/Button'
+import {
+  newUserProCouponId,
+  newUserStandardCouponId,
+} from '../../../lib/consts'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -123,7 +128,25 @@ const SubscriptionManagement = ({
     targetedPlan === 'Pro' ? 'Upgrade' : 'Downgrade'
 
   const usingJpyPricing = (subscription.cardBrand || '').toLowerCase() === 'jcb'
-  console.log(subscription)
+
+  const currentSubscriptionDiscount = useMemo(() => {
+    if (subscription.couponId == null) {
+      return
+    }
+
+    console.log(subscription.couponId)
+    console.log(newUserProCouponId)
+    console.log(newUserStandardCouponId)
+    switch (subscription.couponId) {
+      case newUserProCouponId:
+        return discountPlans.newUserPro
+      case newUserStandardCouponId:
+        return discountPlans.newUserStandard
+      default:
+        return discountPlans.migration
+    }
+  }, [subscription.couponId])
+
   return (
     <>
       <SectionIntroduction>
@@ -131,7 +154,7 @@ const SubscriptionManagement = ({
           plan={subscription.plan}
           seats={subscription.seats}
           usingJpyPricing={usingJpyPricing}
-          discounted={subscription.discountId != null}
+          discount={currentSubscriptionDiscount}
         />
         {usingJpyPricing && (
           <Alert variant='secondary'>
@@ -246,6 +269,11 @@ const SubscriptionManagement = ({
               <h3>
                 {subscriptionPlanChange} to {targetedPlan}
               </h3>
+              {currentSubscriptionDiscount?.percentageOff !== 100 && (
+                <Banner variant='warning' iconPath={mdiGiftOff}>
+                  Changing plans will end your current discount.
+                </Banner>
+              )}
               {targetedPlan === 'Free' ? (
                 <>
                   <p>
@@ -277,7 +305,6 @@ const SubscriptionManagement = ({
                     className='popup__billing'
                     seats={subscription.seats}
                     plan={'pro'}
-                    discounted={subscription.discountId != null}
                     usingJpyPricing={usingJpyPricing}
                   />
                 </>
@@ -303,13 +330,16 @@ const SubscriptionManagement = ({
                     className='popup__billing'
                     seats={subscription.seats}
                     plan={'standard'}
-                    discounted={subscription.discountId != null}
                     usingJpyPricing={usingJpyPricing}
                   />
                 </>
               )}
             </Flexbox>
-            <Flexbox flex='0 0 auto' direction='column'>
+            <Flexbox
+              flex='0 0 auto'
+              direction='column'
+              className='button__group'
+            >
               <Button
                 variant='primary'
                 className='btn'
@@ -324,7 +354,7 @@ const SubscriptionManagement = ({
                 )}
               </Button>
               <Button
-                variant='outline-secondary'
+                variant='bordered'
                 className='btn'
                 onClick={() => setTargetedPlan(undefined)}
                 disabled={sending}
@@ -351,6 +381,17 @@ const StyledPopup = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
+  font-size: 13px;
+
+  .button__group {
+    button {
+      margin: 0;
+    }
+
+    button + button {
+      margin-top: 8px;
+    }
+  }
 
   .popup__background {
     z-index: 8011;

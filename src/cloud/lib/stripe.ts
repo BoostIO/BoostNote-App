@@ -5,23 +5,25 @@ export const stripeStandardJpyPlanUnit = 300
 
 export type UpgradePlans = 'standard' | 'pro'
 
-type DiscountParameters = {
+export type CloudDiscountParameters = {
   durationInMonths: number
-  amountOff: number
   percentageOff: number
 }
 
-type Discounts = Record<UpgradePlans, DiscountParameters>
+type DiscountPlan = 'newUserStandard' | 'newUserPro' | 'migration'
+export type CloudDiscounts = Record<DiscountPlan, CloudDiscountParameters>
 
-export const newUserDiscountPlans: Discounts = {
-  standard: {
+export const discountPlans: CloudDiscounts = {
+  newUserStandard: {
     durationInMonths: 3,
-    amountOff: 1,
     percentageOff: 33,
   },
-  pro: {
+  newUserPro: {
     durationInMonths: 3,
-    amountOff: 4,
     percentageOff: 50,
+  },
+  migration: {
+    durationInMonths: 1,
+    percentageOff: 100,
   },
 }
