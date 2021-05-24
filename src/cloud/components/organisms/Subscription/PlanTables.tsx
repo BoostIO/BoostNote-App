@@ -7,7 +7,7 @@ import {
   stripeProPlanUnit,
   stripeStandardPlanUnit,
   UpgradePlans,
-  discountPlans,
+  newUserDiscountPlans,
 } from '../../../lib/stripe'
 import {
   freePlanDocLimit,
@@ -136,7 +136,9 @@ const PlanTables = ({
             </span>
             {discounted && (
               <span className='plan__item__price__discount'>
-                ${stripeStandardPlanUnit - discountPlans.standard.amountOff}
+                $
+                {stripeStandardPlanUnit -
+                  newUserDiscountPlans.standard.amountOff}
               </span>
             )}
             <div className='plan__item__price__description'>
@@ -146,9 +148,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.standard.percentageOff}% OFF for{' '}
-            {discountPlans.standard.durationInMonths}{' '}
-            {plur('month', discountPlans.standard.durationInMonths)}
+            {newUserDiscountPlans.standard.percentageOff}% OFF for{' '}
+            {newUserDiscountPlans.standard.durationInMonths}{' '}
+            {plur('month', newUserDiscountPlans.standard.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>
@@ -198,7 +200,7 @@ const PlanTables = ({
             </span>
             {discounted && (
               <span className='plan__item__price__discount'>
-                ${stripeProPlanUnit - discountPlans.pro.amountOff}
+                ${stripeProPlanUnit - newUserDiscountPlans.pro.amountOff}
               </span>
             )}
             <div className='plan__item__price__description'>
@@ -208,9 +210,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.pro.percentageOff}% OFF for{' '}
-            {discountPlans.pro.durationInMonths}{' '}
-            {plur('month', discountPlans.pro.durationInMonths)}
+            {newUserDiscountPlans.pro.percentageOff}% OFF for{' '}
+            {newUserDiscountPlans.pro.durationInMonths}{' '}
+            {plur('month', newUserDiscountPlans.pro.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>

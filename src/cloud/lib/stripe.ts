@@ -13,7 +13,7 @@ type DiscountParameters = {
 
 type Discounts = Record<UpgradePlans, DiscountParameters>
 
-export const discountPlans: Discounts = {
+export const newUserDiscountPlans: Discounts = {
   standard: {
     durationInMonths: 3,
     amountOff: 1,

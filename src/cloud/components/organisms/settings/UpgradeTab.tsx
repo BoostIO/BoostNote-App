@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionRow } from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -142,37 +141,40 @@ const UpgradeTab = ({
   return (
     <SettingTabContent
       title={t('settings.teamUpgrade')}
+      description={
+        <>
+          Confirm and enter your payment information (Service provided by{' '}
+          <ExternalLink href='https://stripe.com/'>Stripe</ExternalLink>)
+        </>
+      }
       body={
-        <section>
-          <div className='text--small'>
-            {currentUserPermissions.role !== 'admin' ? (
-              <ColoredBlock variant='danger'>
-                Only admins can access this content.
-              </ColoredBlock>
-            ) : (
-              !(subscription != null && subscription.status === 'active') && (
-                <SectionRow>
-                  <Elements stripe={stripePromise}>
-                    <SubscriptionForm
-                      team={team}
-                      initialPlan={initialPlan}
-                      ongoingTrial={
-                        subscription != null &&
-                        subscription.status === 'trialing'
-                      }
-                      onSuccess={onSuccessCallback}
-                      onCancel={onCancelCallback}
-                    />
-                  </Elements>
-                </SectionRow>
-              )
-            )}
-          </div>
-        </section>
+        <SubscriptionFormContainer>
+          {currentUserPermissions.role !== 'admin' ? (
+            <ColoredBlock variant='danger'>
+              Only admins can access this content.
+            </ColoredBlock>
+          ) : (
+            !(subscription != null && subscription.status === 'active') && (
+              <Elements stripe={stripePromise}>
+                <SubscriptionForm
+                  team={team}
+                  initialPlan={initialPlan}
+                  ongoingTrial={
+                    subscription != null && subscription.status === 'trialing'
+                  }
+                  onSuccess={onSuccessCallback}
+                  onCancel={onCancelCallback}
+                />
+              </Elements>
+            )
+          )}
+        </SubscriptionFormContainer>
       }
     ></SettingTabContent>
   )
 }
+
+const SubscriptionFormContainer = styled.div``
 
 const StyledFYI = styled.p`
   .type-link {
