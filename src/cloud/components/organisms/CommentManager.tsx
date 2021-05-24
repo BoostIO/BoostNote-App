@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { zIndexModalsBackground } from './Topbar/Controls/ControlsContextMenu/styled'
 import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
-import ThreadItem from '../molecules/ThreadItem'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
 import { mdiPlusBoxOutline, mdiArrowLeft } from '@mdi/js'
@@ -12,12 +11,12 @@ import CommentInput from '../molecules/CommentInput'
 import ThreadActionButton from '../molecules/ThreadActionButton'
 import Button from '../../../shared/components/atoms/Button'
 import { CreateThreadRequestBody } from '../../api/comments/thread'
-import { sortBy } from 'ramda'
 import { SerializedUser } from '../../interfaces/db/user'
-import {
-  highlightComment,
-  unhighlightComment,
-} from '../../../shared/lib/utils/comments'
+import ThreadList from '../molecules/ThreadList'
+import ThreadStatusFilterControl, {
+  StatusFilter,
+} from '../atoms/ThreadStatusFilterControl'
+import { partitionOnStatus } from '../../../shared/lib/utils/comments'
 
 export type State =
   | { mode: 'list_loading' }
@@ -70,6 +69,22 @@ function CommentManager({
   deleteComment,
   user,
 }: CommentManagerProps) {
+  const [statusFilter, setStatusFitler] = useState<StatusFilter>('open')
+  const partitioned = useMemo(() => {
+    return partitionOnStatus(state.mode === 'list_loading' ? [] : state.threads)
+  }, [state])
+
+  const counts = useMemo(() => {
+    return {
+      all: state.mode === 'list_loading' ? 0 : state.threads.length,
+      open: partitioned.open.length,
+      closed: partitioned.closed.length,
+      outdated: partitioned.outdated.length,
+    }
+  }, [partitioned, state])
+
+  console.log(statusFilter)
+
   const content = useMemo(() => {
     switch (state.mode) {
       case 'list_loading':
@@ -80,39 +95,28 @@ function CommentManager({
           </div>
         )
       case 'list': {
-        const onClick = (selectedThread: Thread) =>
-          setMode({ mode: 'thread', thread: selectedThread })
+        const stateThreads =
+          statusFilter === 'all' ? state.threads : partitioned[statusFilter]
         const threads =
           state.filter != null
-            ? state.threads.filter(state.filter)
-            : state.threads
+            ? stateThreads.filter(state.filter)
+            : stateThreads
         return (
-          <div>
-            {sortBy((thread) => thread.lastCommentTime, threads)
-              .reverse()
-              .map((thread) => (
-                <div
-                  key={thread.id}
-                  onMouseOver={highlightComment(thread.id)}
-                  onMouseOut={unhighlightComment(thread.id)}
-                  className='thread__list__item'
-                >
-                  <ThreadItem
-                    thread={thread}
-                    onSelect={onClick}
-                    onOpen={reopenThread}
-                    onClose={closeThread}
-                    onDelete={deleteThread}
-                  />
-                </div>
-              ))}
+          <>
+            <ThreadList
+              threads={threads}
+              onSelect={(thread) => setMode({ mode: 'thread', thread })}
+              onOpen={reopenThread}
+              onClose={closeThread}
+              onDelete={deleteThread}
+            />
             <div
               className='thread__create'
               onClick={() => setMode({ mode: 'new_thread' })}
             >
               <Icon path={mdiPlusBoxOutline} /> <span>Create a new thread</span>
             </div>
-          </div>
+          </>
         )
       }
       case 'thread': {
@@ -170,6 +174,8 @@ function CommentManager({
     deleteComment,
     setMode,
     user,
+    statusFilter,
+    partitioned,
   ])
 
   return (
@@ -184,6 +190,13 @@ function CommentManager({
           </div>
         )}
         <h4>Thread</h4>
+        {state.mode === 'list' && (
+          <ThreadStatusFilterControl
+            value={statusFilter}
+            onChange={setStatusFitler}
+            counts={counts}
+          />
+        )}
         {state.mode === 'thread' && (
           <ThreadActionButton
             thread={state.thread}
@@ -266,13 +279,6 @@ const Container = styled.div`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-  }
-
-  .thread__list__item {
-    padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
   }
 

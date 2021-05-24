@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon as MdiIcon } from '@mdi/react'
 import cc from 'classcat'
+import styled from '../../lib/styled'
 
 export type IconSize = 16 | 20 | 26 | 34
 
@@ -31,4 +32,15 @@ const Icon = ({
   />
 )
 
+export const PrimaryIcon = styled(Icon)`
+  color: ${({ theme }) => theme.colors.variants.primary.base};
+`
+
+export const SuccessIcon = styled(Icon)`
+  color: ${({ theme }) => theme.colors.variants.success.base};
+`
+
+export const WarningIcon = styled(Icon)`
+  color: ${({ theme }) => theme.colors.variants.danger.base};
+`
 export default Icon
