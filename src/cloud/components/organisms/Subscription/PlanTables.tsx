@@ -4,10 +4,10 @@ import { useMediaQuery } from 'react-responsive'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import {
+  discountPlans,
   stripeProPlanUnit,
   stripeStandardPlanUnit,
   UpgradePlans,
-  newUserDiscountPlans,
 } from '../../../lib/stripe'
 import {
   freePlanDocLimit,
@@ -137,8 +137,11 @@ const PlanTables = ({
             {discounted && (
               <span className='plan__item__price__discount'>
                 $
-                {stripeStandardPlanUnit -
-                  newUserDiscountPlans.standard.amountOff}
+                {Math.round(
+                  stripeStandardPlanUnit -
+                    stripeStandardPlanUnit *
+                      (discountPlans.newUserStandard.percentageOff / 100)
+                )}
               </span>
             )}
             <div className='plan__item__price__description'>
@@ -148,9 +151,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {newUserDiscountPlans.standard.percentageOff}% OFF for{' '}
-            {newUserDiscountPlans.standard.durationInMonths}{' '}
-            {plur('month', newUserDiscountPlans.standard.durationInMonths)}
+            {discountPlans.newUserStandard.percentageOff}% OFF for{' '}
+            {discountPlans.newUserStandard.durationInMonths}{' '}
+            {plur('month', discountPlans.newUserStandard.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>
@@ -200,7 +203,12 @@ const PlanTables = ({
             </span>
             {discounted && (
               <span className='plan__item__price__discount'>
-                ${stripeProPlanUnit - newUserDiscountPlans.pro.amountOff}
+                $
+                {Math.round(
+                  stripeProPlanUnit -
+                    stripeProPlanUnit *
+                      (discountPlans.newUserPro.percentageOff / 100)
+                )}
               </span>
             )}
             <div className='plan__item__price__description'>
@@ -210,9 +218,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {newUserDiscountPlans.pro.percentageOff}% OFF for{' '}
-            {newUserDiscountPlans.pro.durationInMonths}{' '}
-            {plur('month', newUserDiscountPlans.pro.durationInMonths)}
+            {discountPlans.newUserPro.percentageOff}% OFF for{' '}
+            {discountPlans.newUserPro.durationInMonths}{' '}
+            {plur('month', discountPlans.newUserPro.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>
@@ -258,6 +266,7 @@ const Container = styled.div`
   flex-direction: row;
   flex-wrap: nowrap;
   flex: 1 1 auto;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .plan__item__footer {
     position: absolute;
