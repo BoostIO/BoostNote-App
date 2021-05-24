@@ -34,7 +34,6 @@ import { useSettings } from '../../../lib/stores/settings'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { defaultPreviewStyle } from '../../atoms/MarkdownView/styles'
-import { selectTheme } from '../../../lib/styled'
 import { saveDocAsTemplate } from '../../../api/teams/docs/templates'
 
 import {
@@ -47,6 +46,7 @@ import { downloadBlob, printIframe } from '../../../lib/download'
 import { useNav } from '../../../lib/stores/nav'
 import MoveItemModal from '../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import { selectV2Theme } from '../../../../shared/lib/styled/styleFunctions'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
@@ -95,7 +95,7 @@ export function useDocActionContextMenu({
 
   const exportAsHtml = useCallback(() => {
     const previewStyle = defaultPreviewStyle({
-      theme: selectTheme(settings['general.theme']),
+      theme: selectV2Theme(settings['general.theme']),
     })
     try {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
@@ -117,7 +117,7 @@ export function useDocActionContextMenu({
     }
     try {
       const previewStyle = defaultPreviewStyle({
-        theme: selectTheme(settings['general.theme']),
+        theme: selectV2Theme(settings['general.theme']),
       })
       const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
       const htmlString = await convertMarkdownToPdfExportableHtml(

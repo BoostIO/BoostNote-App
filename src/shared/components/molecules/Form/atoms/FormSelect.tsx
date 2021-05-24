@@ -12,9 +12,6 @@ export interface FormSelectOption {
 
 interface FormSelectCommonProps {
   id?: string
-  options: FormSelectOption[]
-  value?: FormSelectOption | FormSelectOption[]
-  onChange: (val: any) => void
   closeMenuOnSelect?: boolean
   className?: string
   isDisabled?: boolean
@@ -29,13 +26,13 @@ interface FormSelectCommonProps {
 }
 
 interface StandardFormSelectOptions {
-  value?: FormSelectOption
+  value?: FormSelectOption | FormSelectOption[]
   options: FormSelectOption[]
   onChange: (val: any) => void
 }
 
 interface SimpleFormSelectOptions {
-  value: string
+  value: string | string[]
   options: readonly string[]
   onChange: (val: string) => void
 }
@@ -118,7 +115,13 @@ export const SimpleFormSelect = ({
       {...props}
       options={convertedOptions}
       value={
-        value != null ? { label: capitalize(value), value: value } : undefined
+        value != null
+          ? typeof value === 'string'
+            ? { label: capitalize(value), value: value }
+            : value.map((val) => {
+                return { label: capitalize(val), value: val }
+              })
+          : undefined
       }
       onChange={onSelectChange}
     />

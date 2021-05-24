@@ -275,7 +275,8 @@ const DocContextMenu = ({
     ]
   )
 
-  const creator = usersMap.get(currentDoc.userId)
+  const creator =
+    currentDoc.userId != null ? usersMap.get(currentDoc.userId) : undefined
 
   return (
     <Container
