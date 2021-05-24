@@ -160,7 +160,6 @@ const SubscriptionForm = ({
         </FormRow>
         <FormRow
           row={{
-            fullWidth: true,
             items: [
               {
                 type: 'input',
@@ -194,7 +193,6 @@ const SubscriptionForm = ({
         {showPromoCode && (
           <FormRow
             row={{
-              fullWidth: true,
               items: [
                 {
                   type: 'input',

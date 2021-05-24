@@ -83,7 +83,6 @@ const UpdateBillingPromoForm = ({
       <Form onSubmit={onSubmit} rows={[]}>
         <FormRow
           row={{
-            fullWidth: true,
             items: [
               {
                 type: 'input',
