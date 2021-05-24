@@ -541,8 +541,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                         id='shared-custom-switch'
                         onChange={toggleExpire}
                         checked={shareLink.expireAt != null || showExpireForm}
-                        uncheckedIcon={false}
-                        checkedIcon={false}
                         height={20}
                         width={30}
                         handleSize={14}
