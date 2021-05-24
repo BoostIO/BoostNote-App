@@ -136,12 +136,7 @@ const UpdateBillingMethodForm = ({
             />
           </FormRow>
 
-          <ButtonGroup
-            display='flex'
-            layout='spread'
-            justifyContent='flex-end'
-            className='button__group'
-          >
+          <ButtonGroup display='flex' layout='spread' className='button__group'>
             <Button onClick={onCancel} variant='secondary' disabled={sending}>
               Cancel
             </Button>

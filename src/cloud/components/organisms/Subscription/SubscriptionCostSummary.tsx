@@ -9,7 +9,7 @@ import {
   stripeStandardJpyPlanUnit,
   stripeStandardPlanUnit,
   UpgradePlans,
-  newUserDiscountPlans,
+  CloudDiscountParameters,
 } from '../../../lib/stripe'
 import Icon from '../../../../shared/components/atoms/Icon'
 import { mdiGiftOutline } from '@mdi/js'
@@ -18,23 +18,18 @@ interface SubscriptionCostSummaryProps {
   plan: UpgradePlans
   seats: number
   usingJpyPricing: boolean
-  discounted?: boolean
+  discount?: CloudDiscountParameters
 }
 
 const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
   plan,
   seats,
-  discounted,
+  discount,
   usingJpyPricing,
   children,
   className,
 }) => {
   const currencyMarker = usingJpyPricing ? '¥' : '$'
-  const discount = discounted
-    ? plan === 'pro'
-      ? newUserDiscountPlans.pro
-      : newUserDiscountPlans.standard
-    : undefined
 
   const pricePerUnit = useMemo(() => {
     switch (plan) {
@@ -47,18 +42,6 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
           : stripeStandardPlanUnit
     }
   }, [plan, usingJpyPricing])
-
-  const discountedPricePerUnit = useMemo(() => {
-    if (discount == null) {
-      return 0
-    }
-
-    if (!usingJpyPricing) {
-      return discount.amountOff
-    }
-
-    return discount.amountOff * 100
-  }, [discount, usingJpyPricing])
 
   return (
     <Container className={cc(['subscription__cost__summary', className])}>
@@ -95,7 +78,12 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
         </strong>
         <strong className='subscription__cost__summary__row__calcuration'>
           {currencyMarker}
-          {pricePerUnit * seats - discountedPricePerUnit * seats}
+          {Math.round(
+            pricePerUnit * seats -
+              pricePerUnit *
+                seats *
+                (discount == null ? 0 : discount.percentageOff / 100)
+          )}
         </strong>
       </div>
       {children}

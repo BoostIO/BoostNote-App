@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react'
 import styled from '../../../lib/styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import Flexbox from '../../atoms/Flexbox'
 import Spinner from '../../atoms/CustomSpinner'
 import { startTeamFreeTrial } from '../../../api/teams/subscription/trial'
@@ -8,6 +7,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { usePage } from '../../../lib/stores/pageStore'
 import { freeTrialPeriodDays } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Button from '../../../../shared/components/atoms/Button'
 
 interface FreeTrialPopupProps {
   team: SerializedTeam
@@ -56,8 +56,8 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
           </p>
           <p>No credit card information is necessary for now.</p>
         </Flexbox>
-        <Flexbox flex='0 0 auto' direction='column'>
-          <CustomButton
+        <Flexbox flex='0 0 auto' direction='column' className='button__group'>
+          <Button
             variant='primary'
             className='btn'
             disabled={sending}
@@ -68,15 +68,15 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
             ) : (
               'Start Free Trial'
             )}
-          </CustomButton>
-          <CustomButton
-            variant='inverse-secondary'
+          </Button>
+          <Button
+            variant='bordered'
             className='btn'
             onClick={onCloseCallback}
             disabled={sending}
           >
             Cancel
-          </CustomButton>
+          </Button>
         </Flexbox>
       </StyledFreeTrialPopupContainer>
     </StyledFreeTrialPopup>
@@ -96,6 +96,15 @@ const StyledFreeTrialPopup = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
+  .button__group {
+    button {
+      margin: 0;
+    }
+
+    button + button {
+      margin-top: 8px;
+    }
+  }
 `
 
 const StyledFreeTrialPopupBackground = styled.div`
