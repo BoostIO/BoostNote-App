@@ -23,7 +23,6 @@ export type FormRowProps = {
   title?: React.ReactNode
   required?: boolean
   description?: React.ReactNode
-  fullWidth?: boolean
   items?: (
     | {
         type: 'input'
@@ -60,9 +59,7 @@ const FormRow: AppComponent<{ row?: FormRowProps }> = ({
       <div
         className={cc([
           'form__row__items',
-          !row.fullWidth &&
-            items.length === 1 &&
-            'form__row__items--single-item',
+          items.length <= 1 && 'form__row__items--single-item',
         ])}
       >
         {items.map((item, k) => (
