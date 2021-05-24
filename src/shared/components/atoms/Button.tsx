@@ -20,6 +20,7 @@ export type ButtonVariant =
   | 'transparent'
   | 'warning'
   | 'success'
+  | 'bordered'
 
 export interface ButtonProps {
   variant?: ButtonVariant
@@ -323,6 +324,39 @@ const StyledButton = styled.button`
     }
   }
 
+  &.button__variant--bordered {
+    background; transparent;
+    color: ${({ theme }) => theme.colors.text.secondary};
+    border: 1px solid ${({ theme }) => theme.colors.border.second};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.text.secondary};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: background: ${({ theme }) =>
+          theme.colors.variants.secondary.text};
+        filter: brightness(103%);
+      }
+      &:hover {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: background: ${({ theme }) =>
+          theme.colors.variants.secondary.text};
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: background: ${({ theme }) =>
+          theme.colors.variants.secondary.text};
+        filter: brightness(112%);
+      }
+    }
+  }
+
   &.button__variant--warning {
     background-color: ${({ theme }) => theme.colors.variants.warning.base};
     color: ${({ theme }) => theme.colors.variants.warning.text};
@@ -389,6 +423,7 @@ const StyledButton = styled.button`
       }
     }
   }
+  
 
   &.button__size--lg {
     height: 40px;

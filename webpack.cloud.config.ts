@@ -74,6 +74,8 @@ module.exports = (env, argv) => {
         'GOOGLE_CLIENT_ID',
         'INTERCOM_APP_ID',
         'STRIPE_PUBLISHABLE_KEY',
+        'COUPONS_NEW_USER_STANDARD',
+        'COUPONS_NEW_USER_PRO',
       ]),
       new CopyPlugin({
         patterns: [

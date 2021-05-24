@@ -10,6 +10,8 @@ import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
 import Form from '../../../../shared/components/molecules/Form'
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 import styled from '../../../../shared/lib/styled'
+import Banner from '../../../../shared/components/atoms/Banner'
+import { mdiGiftOff } from '@mdi/js'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
@@ -79,6 +81,11 @@ const UpdateBillingPromoForm = ({
 
   return (
     <Container>
+      {sub.couponId != null && (
+        <Banner variant='warning' iconPath={mdiGiftOff}>
+          Applying a promotion code will end your current discount
+        </Banner>
+      )}
       <p>Apply a promotion code</p>
       <Form onSubmit={onSubmit} rows={[]}>
         <FormRow
@@ -96,12 +103,7 @@ const UpdateBillingPromoForm = ({
           }}
         />
 
-        <ButtonGroup
-          display='flex'
-          layout='spread'
-          justifyContent='flex-end'
-          className='button__group'
-        >
+        <ButtonGroup display='flex' layout='spread' className='button__group'>
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
             Cancel
           </Button>

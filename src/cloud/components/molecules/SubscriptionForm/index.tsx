@@ -6,7 +6,7 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import Stripe from '@stripe/stripe-js'
 import { useSettings } from '../../../lib/stores/settings'
 import { usePage } from '../../../lib/stores/pageStore'
-import { UpgradePlans } from '../../../lib/stripe'
+import { discountPlans, UpgradePlans } from '../../../lib/stripe'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import Button, {
@@ -20,6 +20,7 @@ import Form from '../../../../shared/components/molecules/Form'
 import styled from '../../../../shared/lib/styled'
 import FormStripeInput from '../../../../shared/components/molecules/Form/atoms/FormStripeInput'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import Banner from '../../../../shared/components/atoms/Banner'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -136,6 +137,21 @@ const SubscriptionForm = ({
 
   const numberOfMembers = permissions.length
 
+  const eligibleDiscount = useMemo(() => {
+    if (!isEligibleForDiscount(team)) {
+      return
+    }
+
+    switch (currentPlan) {
+      case 'pro':
+        return discountPlans.newUserPro
+      case 'standard':
+        return discountPlans.newUserStandard
+      default:
+        return
+    }
+  }, [currentPlan, team])
+
   return (
     <Container>
       <Form rows={[]} onSubmit={handleSubmit}>
@@ -143,7 +159,7 @@ const SubscriptionForm = ({
           usingJpyPricing={usingJpyPricing}
           plan={currentPlan}
           seats={numberOfMembers}
-          discounted={isEligibleForDiscount(team)}
+          discount={eligibleDiscount}
         />
         {usingJpyPricing && (
           <Alert variant='secondary'>
@@ -191,20 +207,28 @@ const SubscriptionForm = ({
         </FormRow>
 
         {showPromoCode && (
-          <FormRow
-            row={{
-              items: [
-                {
-                  type: 'input',
-                  props: {
-                    placeholder: 'Promo Code',
-                    value: promoCode,
-                    onChange: onPromoCodeInputChangeHandler,
+          <>
+            {isEligibleForDiscount(team) && (
+              <Banner variant='warning'>
+                Applying a promotion code will prevent you to receive other
+                discounts
+              </Banner>
+            )}
+            <FormRow
+              row={{
+                items: [
+                  {
+                    type: 'input',
+                    props: {
+                      placeholder: 'Promo Code',
+                      value: promoCode,
+                      onChange: onPromoCodeInputChangeHandler,
+                    },
                   },
-                },
-              ],
-            }}
-          />
+                ],
+              }}
+            />
+          </>
         )}
         <ButtonGroup layout='spread' className='button__group' display='flex'>
           {onCancel != null && (
