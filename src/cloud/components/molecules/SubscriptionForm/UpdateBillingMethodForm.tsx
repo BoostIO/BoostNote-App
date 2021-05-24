@@ -6,19 +6,18 @@ import {
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { updateSubMethod } from '../../../api/teams/subscription/update'
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js'
-import {
-  StripeElementStyle,
-  StripeCardElementChangeEvent,
-} from '@stripe/stripe-js'
-import { selectTheme } from '../../../lib/styled'
+import { StripeCardElementChangeEvent } from '@stripe/stripe-js'
 import { useSettings } from '../../../lib/stores/settings'
-import { StyledCardElementContainer } from './index'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
 import Button, {
   LoadingButton,
 } from '../../../../shared/components/atoms/Button'
+import FormStripeInput from '../../../../shared/components/molecules/Form/atoms/FormStripeInput'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import Form from '../../../../shared/components/molecules/Form'
+import styled from '../../../../shared/lib/styled'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription
@@ -69,20 +68,6 @@ const UpdateBillingMethodForm = ({
     }
   }
 
-  const stripeFormStyle: StripeElementStyle = useMemo(() => {
-    const theme = selectTheme(settings['general.theme'])
-    return {
-      base: {
-        color: theme.emphasizedTextColor,
-        fontFamily: theme.fontFamily,
-        fontSize: `${theme.fontSizes.default}px`,
-        '::placeholder': {
-          color: theme.subtleTextColor,
-        },
-      },
-    }
-  }, [settings])
-
   const currentCardBrand = sub?.cardBrand
 
   const [newCardBrand, setNewCardBrand] = useState('unknown')
@@ -124,7 +109,7 @@ const UpdateBillingMethodForm = ({
   }
 
   return (
-    <div>
+    <Container>
       <SectionIntroduction>
         <p>Update your Credit Card</p>
         <SectionFlexRow>
@@ -142,32 +127,46 @@ const UpdateBillingMethodForm = ({
           </Alert>
         )}
 
-        <StyledCardElementContainer style={{ marginBottom: 40 }}>
-          <CardElement
-            options={{
-              style: stripeFormStyle,
-            }}
-            onChange={handleCardElementChange}
-          />
-        </StyledCardElementContainer>
+        <Form rows={[]} onSubmit={onSubmit}>
+          <FormRow>
+            <FormStripeInput
+              className='form__row__item'
+              theme={settings['general.theme']}
+              onChange={handleCardElementChange}
+            />
+          </FormRow>
 
-        <ButtonGroup display='flex' layout='spread' justifyContent='flex-end'>
-          <Button onClick={onCancel} variant='secondary' disabled={sending}>
-            Cancel
-          </Button>
-
-          <LoadingButton
-            onClick={onSubmit}
-            variant='primary'
-            disabled={usingDifferentCurrencyPricing || sending}
-            spinning={sending}
+          <ButtonGroup
+            display='flex'
+            layout='spread'
+            justifyContent='flex-end'
+            className='button__group'
           >
-            Update
-          </LoadingButton>
-        </ButtonGroup>
+            <Button onClick={onCancel} variant='secondary' disabled={sending}>
+              Cancel
+            </Button>
+
+            <LoadingButton
+              type='submit'
+              variant='primary'
+              disabled={usingDifferentCurrencyPricing || sending}
+              spinning={sending}
+            >
+              Update
+            </LoadingButton>
+          </ButtonGroup>
+        </Form>
       </SectionIntroduction>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  width: 100%;
+
+  .button__group {
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
+`
 
 export default UpdateBillingMethodForm

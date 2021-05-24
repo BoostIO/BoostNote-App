@@ -12,6 +12,7 @@ export interface SerializableTeamProps {
   icon?: SerializedIcon
   state: TeamOnboardingState
   personal: boolean
+  discountId?: string
 }
 
 export interface SerializedUnserializableTeamProps {

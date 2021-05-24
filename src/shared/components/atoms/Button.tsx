@@ -211,7 +211,7 @@ const StyledButton = styled.button`
     padding: 0;
     border: 0;
     height: auto !important;
-    display: inline;
+    display: inline-flex;
 
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.text.link};
