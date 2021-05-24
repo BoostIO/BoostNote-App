@@ -88,7 +88,7 @@ function CommentManager({
             : state.threads
         return (
           <div>
-            {sortBy((thread) => thread.status.at, threads)
+            {sortBy((thread) => thread.lastCommentTime, threads)
               .reverse()
               .map((thread) => (
                 <div
