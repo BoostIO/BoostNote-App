@@ -125,6 +125,5 @@ const SubscriptionTab = () => {
 export default SubscriptionTab
 
 const StyledBillingContainer = styled.div`
-  width: 540px;
   margin-top: ${({ theme }) => theme.space.default}px;
 `

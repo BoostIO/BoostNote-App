@@ -23,6 +23,7 @@ export type FormRowProps = {
   title?: React.ReactNode
   required?: boolean
   description?: React.ReactNode
+  fullWidth?: boolean
   items?: (
     | {
         type: 'input'
@@ -41,11 +42,12 @@ export type FormRowProps = {
   )[]
 }
 
-const FormRow: AppComponent<{ row: FormRowProps }> = ({
-  row,
+const FormRow: AppComponent<{ row?: FormRowProps }> = ({
+  row = { required: false, title: '', items: [] },
   className,
   children,
 }) => {
+  const items = row.items || []
   return (
     <Container
       className={cc([
@@ -55,42 +57,40 @@ const FormRow: AppComponent<{ row: FormRowProps }> = ({
       ])}
     >
       {row.title != null && <div className='form__row__title'>{row.title}</div>}
-      {row.items != null && (
-        <div
-          className={cc([
-            'form__row__items',
-            row.items.length === 1 && 'form__row__items--single-item',
-          ])}
-        >
-          {row.items.map((item, k) => (
-            <div
-              className={`form__row__item form__row__item--${item.type}`}
-              key={`form__row__item--${k}`}
-            >
-              {item.type === 'input' ? (
-                <FormInput {...item.props} />
-              ) : item.type === 'select' ? (
-                <FormSelect {...item.props} />
-              ) : item.type === 'select--string' ? (
-                <SimpleFormSelect {...item.props} />
-              ) : item.type === 'textarea' ? (
-                <FormTextarea {...item.props} />
-              ) : item.type === 'image' ? (
-                <FormImage {...item.props} />
-              ) : item.type === 'emoji' ? (
-                <FormEmoji {...item.props} />
-              ) : item.type === 'button' ? (
-                <LoadingButton {...item.props}>
-                  {item.props.label}
-                </LoadingButton>
-              ) : (
-                item.element
-              )}
-            </div>
-          ))}
-          {children}
-        </div>
-      )}
+      <div
+        className={cc([
+          'form__row__items',
+          !row.fullWidth &&
+            items.length === 1 &&
+            'form__row__items--single-item',
+        ])}
+      >
+        {items.map((item, k) => (
+          <div
+            className={`form__row__item form__row__item--${item.type}`}
+            key={`form__row__item--${k}`}
+          >
+            {item.type === 'input' ? (
+              <FormInput {...item.props} />
+            ) : item.type === 'select' ? (
+              <FormSelect {...item.props} />
+            ) : item.type === 'select--string' ? (
+              <SimpleFormSelect {...item.props} />
+            ) : item.type === 'textarea' ? (
+              <FormTextarea {...item.props} />
+            ) : item.type === 'image' ? (
+              <FormImage {...item.props} />
+            ) : item.type === 'emoji' ? (
+              <FormEmoji {...item.props} />
+            ) : item.type === 'button' ? (
+              <LoadingButton {...item.props}>{item.props.label}</LoadingButton>
+            ) : (
+              item.element
+            )}
+          </div>
+        ))}
+        {children}
+      </div>
       {row.description != null && (
         <div className='form__row__description'>{row.description}</div>
       )}
