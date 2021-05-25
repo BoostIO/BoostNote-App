@@ -28,14 +28,21 @@ import ContentmanagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
-import { mdiFormatListChecks } from '@mdi/js'
-import Button from '../../../../shared/components/atoms/Button'
+import {
+  mdiFilePlusOutline,
+  mdiFolderPlusOutline,
+  mdiFormatListChecks,
+} from '@mdi/js'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
 import DocStatusIcon from '../../atoms/DocStatusIcon'
 import { isChildNode } from '../../../../shared/lib/dom'
 import { usePreferences } from '../../../lib/stores/preferences'
 import EmptyRow from './Rows/EmptyRow'
 import cc from 'classcat'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -43,11 +50,19 @@ export type ContentManagerParent =
 
 type ContentTab = 'all' | 'folders' | 'docs'
 
+enum FolderHeaderActions {
+  newDoc = 0,
+  newFolder = 1,
+}
+
 interface ContentManagerProps {
   team: SerializedTeam
   documents: SerializedDocWithBookmark[]
   folders: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
+  currentWorkspaceId?: string
+  currentFolderId?: string
+  showCreateButtons?: boolean
   page?: 'archive' | 'tag' | 'shared'
 }
 
@@ -57,13 +72,18 @@ const ContentManager = ({
   folders,
   page,
   workspacesMap,
+  currentFolderId,
+  currentWorkspaceId,
+  showCreateButtons = true,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
-  const [sending] = useState<boolean>(false)
+  const [sending, setSending] = useState<number>()
   const [contentTab, setContentTab] = useState<ContentTab>('all')
+  const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
     preferences.folderSortingOrder
   )
+
   const [
     selectedFolderSet,
     {
@@ -241,6 +261,38 @@ const ContentManager = ({
     []
   )
 
+  const openCreateDocForm = useCallback(() => {
+    openNewDocForm(
+      {
+        team,
+        workspaceId: currentWorkspaceId,
+        parentFolderId: currentFolderId,
+      },
+      {
+        precedingRows: [],
+        beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
+        afterSubmitting: () => setSending(undefined),
+        skipRedirect: true,
+      }
+    )
+  }, [openNewDocForm, currentWorkspaceId, currentFolderId, team])
+
+  const openCreateFolderForm = useCallback(() => {
+    openNewFolderForm(
+      {
+        team,
+        workspaceId: currentWorkspaceId,
+        parentFolderId: currentFolderId,
+      },
+      {
+        precedingRows: [],
+        beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
+        afterSubmitting: () => setSending(undefined),
+        skipRedirect: true,
+      }
+    )
+  }, [openNewFolderForm, currentWorkspaceId, currentFolderId, team])
+
   return (
     <StyledContentManager>
       <StyledContentManagerHeader>
@@ -312,6 +364,19 @@ const ContentManager = ({
                 onChange={selectingAllFolders ? resetFolders : selectAllFolders}
               />
               <div className='header__label'>FOLDERS</div>
+              {showCreateButtons && (
+                <div className='header__control'>
+                  <LoadingButton
+                    variant='transparent'
+                    className='header__control__button'
+                    iconPath={mdiFolderPlusOutline}
+                    iconSize={16}
+                    spinning={sending === FolderHeaderActions.newFolder}
+                    disabled={sending != null}
+                    onClick={openCreateFolderForm}
+                  />
+                </div>
+              )}
             </StyledContentManagerListHeader>
             {orderedFolders.map((folder) => (
               <ContentmanagerFolderRow
@@ -348,6 +413,17 @@ const ContentManager = ({
                   iconSize={16}
                   onClick={() => setShowingStatusFilterContextMenu(true)}
                 />
+                {showCreateButtons && (
+                  <LoadingButton
+                    variant='transparent'
+                    className='header__control__button'
+                    iconPath={mdiFilePlusOutline}
+                    iconSize={16}
+                    spinning={sending === FolderHeaderActions.newDoc}
+                    disabled={sending != null}
+                    onClick={openCreateDocForm}
+                  />
+                )}
               </div>
               {showingStatusFilterContextMenu && (
                 <div

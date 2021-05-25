@@ -94,7 +94,10 @@ export function useCloudResourceModals() {
   )
 
   const openNewFolderForm = useCallback(
-    (body: CloudNewResourceRequestBody, options?: UIFormOptions) => {
+    (
+      body: CloudNewResourceRequestBody,
+      options?: UIFormOptions & { skipRedirect?: boolean }
+    ) => {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFolderOutline}
@@ -120,7 +123,10 @@ export function useCloudResourceModals() {
                 description: '',
                 emoji,
               },
-              closeLastModal
+              {
+                skipRedirect: options?.skipRedirect,
+                afterSuccess: closeLastModal,
+              }
             )
             if (options?.afterSubmitting != null) {
               options.afterSubmitting()
@@ -137,7 +143,10 @@ export function useCloudResourceModals() {
   )
 
   const openNewDocForm = useCallback(
-    (body: CloudNewResourceRequestBody, options?: UIFormOptions) => {
+    (
+      body: CloudNewResourceRequestBody,
+      options?: UIFormOptions & { skipRedirect?: boolean }
+    ) => {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
@@ -162,7 +171,10 @@ export function useCloudResourceModals() {
                 title: inputValue,
                 emoji,
               },
-              closeLastModal
+              {
+                skipRedirect: options?.skipRedirect,
+                afterSuccess: closeLastModal,
+              }
             )
             if (options?.afterSubmitting != null) {
               options.afterSubmitting()
