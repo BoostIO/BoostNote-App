@@ -26,7 +26,7 @@ const Banner: AppComponent<BannerProps> = ({
 const Container = styled.div`
   display: flex;
   width: 100%;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   overflow: hidden;
   white-space: none;
   padding: ${({ theme }) => theme.sizes.spaces.df}px
