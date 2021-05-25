@@ -10,7 +10,6 @@ import AccountDeletePage from '../pages/account/delete'
 
 import { SidebarCollapseProvider } from '../lib/stores/sidebarCollapse'
 import { combineProviders } from '../lib/utils/context'
-import { EmojiPickerProvider } from '../lib/stores/emoji'
 import { OnboardingProvider } from '../lib/stores/onboarding'
 import { SettingsProvider, useSettings } from '../lib/stores/settings'
 
@@ -26,7 +25,6 @@ import { intercomAppId } from '../lib/consts'
 import GlobalStyle from './GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import SettingsComponent from './organisms/settings/SettingsComponent'
-import EmojiPicker from './molecules/EmojiPicker'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import ResourceIndex from '../pages/[teamId]/[resourceId]'
 import TeamIndex from '../pages/[teamId]'
@@ -60,10 +58,10 @@ import CloudModal from './organisms/CloudModal'
 import { CommentsProvider } from '../../shared/lib/stores/comments'
 import SmartFolderPage from '../pages/[teamId]/smart-folders/[smartFolderId]'
 import DocStatusShowPage from '../pages/[teamId]/status/[docStatus]'
+import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
-  EmojiPickerProvider,
   OnboardingProvider,
   PreferencesProvider,
   SettingsProvider,

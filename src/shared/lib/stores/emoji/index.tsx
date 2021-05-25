@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react'
-import { EmojiPickerContext } from './types'
-import { createStoreContext } from '../../utils/context'
-import { useWindow } from '../window'
 import {
+  EmojiPickerContext,
   EmojiPickerHeight,
   EmojiPickerWidth,
-} from '../../../components/molecules/EmojiPicker'
+} from './types'
+import { createStoreContext } from '../../utils/context'
+import { useWindow } from '../window'
 
 function useEmojiPickerStore(): EmojiPickerContext {
   const [closed, setClosed] = useState(true)

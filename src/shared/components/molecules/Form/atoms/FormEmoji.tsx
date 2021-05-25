@@ -6,10 +6,10 @@ import React, {
 } from 'react'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
-import { useEmojiPicker } from '../../../../../cloud/lib/stores/emoji'
 import Icon from '../../../atoms/Icon'
 import { Emoji } from 'emoji-mart'
 import { formInputHeight } from '../../../../lib/styled/styleFunctions'
+import { useEmoji } from '../../../../lib/stores/emoji'
 
 export interface FormEmojiProps {
   emoji?: string
@@ -53,12 +53,12 @@ const FormEmoji = React.forwardRef<HTMLDivElement, FormEmojiProps>(
     },
     ref
   ) => {
-    const { openEmojiPickerWithCallback } = useEmojiPicker()
+    const { openEmojiPicker } = useEmoji()
     const emojiPickerClickHandler = useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        openEmojiPickerWithCallback(event, setEmoji)
+        openEmojiPicker(event, setEmoji)
       },
-      [openEmojiPickerWithCallback, setEmoji]
+      [openEmojiPicker, setEmoji]
     )
 
     return (

@@ -89,7 +89,7 @@ const ModalItem = ({
   )
 }
 
-const zIndexModals = 8001
+export const zIndexModals = 8001
 const Container = styled.div`
   z-index: ${zIndexModals};
 
