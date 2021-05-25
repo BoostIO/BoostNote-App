@@ -37,11 +37,6 @@ import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModal
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
-// enum FolderHeaderActions {
-//   newDoc = 0,
-//   newFolder = 1,
-// }
-
 const FolderPage = () => {
   const { pageFolder, team } = usePage()
   const {

@@ -23,7 +23,6 @@ import Checkbox from '../../atoms/Checkbox'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { CustomSelectOption } from '../../atoms/Select/CustomSelect'
 import SortingOption, { sortingOrders } from './SortingOption'
-import { Spinner } from '../../atoms/Spinner'
 import ContentmanagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
@@ -50,11 +49,6 @@ export type ContentManagerParent =
 
 type ContentTab = 'all' | 'folders' | 'docs'
 
-enum FolderHeaderActions {
-  newDoc = 0,
-  newFolder = 1,
-}
-
 interface ContentManagerProps {
   team: SerializedTeam
   documents: SerializedDocWithBookmark[]
@@ -77,7 +71,9 @@ const ContentManager = ({
   showCreateButtons = true,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
-  const [sending, setSending] = useState<number>()
+  const [sendingAction, setSendingAction] = useState<
+    'new-doc' | 'new-folder' | undefined
+  >()
   const [contentTab, setContentTab] = useState<ContentTab>('all')
   const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
@@ -270,8 +266,8 @@ const ContentManager = ({
       },
       {
         precedingRows: [],
-        beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
-        afterSubmitting: () => setSending(undefined),
+        beforeSubmitting: () => setSendingAction('new-doc'),
+        afterSubmitting: () => setSendingAction(undefined),
         skipRedirect: true,
       }
     )
@@ -286,8 +282,8 @@ const ContentManager = ({
       },
       {
         precedingRows: [],
-        beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
-        afterSubmitting: () => setSending(undefined),
+        beforeSubmitting: () => setSendingAction('new-folder'),
+        afterSubmitting: () => setSendingAction(undefined),
         skipRedirect: true,
       }
     )
@@ -342,12 +338,6 @@ const ContentManager = ({
         </div>
 
         <div className='header__right'>
-          {sending && (
-            <Spinner
-              className='relative'
-              style={{ top: -4, left: 0, marginRight: 10 }}
-            />
-          )}
           <SortingOption value={order} onChange={onChangeOrder} />
         </div>
       </StyledContentManagerHeader>
@@ -371,8 +361,8 @@ const ContentManager = ({
                     className='header__control__button'
                     iconPath={mdiFolderPlusOutline}
                     iconSize={16}
-                    spinning={sending === FolderHeaderActions.newFolder}
-                    disabled={sending != null}
+                    spinning={sendingAction === 'new-folder'}
+                    disabled={sendingAction != null}
                     onClick={openCreateFolderForm}
                   />
                 </div>
@@ -419,8 +409,8 @@ const ContentManager = ({
                     className='header__control__button'
                     iconPath={mdiFilePlusOutline}
                     iconSize={16}
-                    spinning={sending === FolderHeaderActions.newDoc}
-                    disabled={sending != null}
+                    spinning={sendingAction === 'new-doc'}
+                    disabled={sendingAction != null}
                     onClick={openCreateDocForm}
                   />
                 )}
