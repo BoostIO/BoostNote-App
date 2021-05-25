@@ -18,45 +18,36 @@ export type FormRowButtonProps = ButtonProps & {
   spinning?: boolean
 }
 
-type FormItemExpandOptions = 'shrink' | 'grow'
 export type FormItemProps =
   | {
       type: 'input'
-      expand?: FormItemExpandOptions
       props: FormInputProps & { ref?: React.Ref<HTMLInputElement> }
     }
   | {
       type: 'textarea'
-      expand?: FormItemExpandOptions
       props: FormTextareaProps & { ref?: React.Ref<HTMLTextAreaElement> }
     }
-  | { type: 'select'; expand?: FormItemExpandOptions; props: FormSelectProps }
+  | { type: 'select'; props: FormSelectProps }
   | {
       type: 'select--string'
-      expand?: FormItemExpandOptions
       props: SimpleFormSelectProps
     }
-  | { type: 'emoji'; expand?: FormItemExpandOptions; props: FormEmojiProps }
+  | { type: 'emoji'; props: FormEmojiProps }
   | {
       type: 'button'
-      expand?: FormItemExpandOptions
       props: FormRowButtonProps
     }
-  | { type: 'image'; expand?: FormItemExpandOptions; props: FormImageProps }
-  | { type: 'node'; expand?: FormItemExpandOptions; element: React.ReactNode }
+  | { type: 'image'; props: FormImageProps }
+  | { type: 'node'; element: React.ReactNode }
 
 const FormRowItem: AppComponent<{
   item?: FormItemProps
-  expand?: FormItemExpandOptions
-}> = ({ item, className, children, expand }) => {
+}> = ({ item, className, children }) => {
   return (
     <Container
       className={cc([
         `form__row__item`,
         `form__row__item--${item?.type || 'node'}`,
-        expand != null
-          ? `form__row__item--${expand}`
-          : `form__row__item--${item?.expand || 'grow'}`,
         className,
       ])}
     >
@@ -95,12 +86,8 @@ const Container = styled.div`
     flex: 0 0 auto;
   }
 
-  &.form__row__item.form__row__item--shrink {
-    flex: 0 1 0%;
-  }
-
-  &.form__row__item:not(.form__row__item--shrink):not(.form__row__item--emoji):not(.form__row__item--button),
-  &.form__row__item:not(.form__row__item--shrink):not(.form__row__item--emoji):not(.form__row__item--button)
+  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button),
+  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button)
     > * {
     flex: 1 1 auto;
   }

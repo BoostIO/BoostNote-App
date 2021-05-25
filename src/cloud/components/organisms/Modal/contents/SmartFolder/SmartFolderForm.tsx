@@ -119,36 +119,35 @@ const SmartFolderForm = ({
             items: [{ type: 'node', element: <StyledModalSeparator /> }],
           }}
         />
-        <FormRow
-          fullWidth={true}
-          row={{
-            items: [
-              {
-                type: 'select',
-                expand: 'shrink',
-                props: {
-                  options: [
-                    { label: 'All', value: 'and' },
-                    { label: 'Any', value: 'or' },
-                  ],
-                  value: getPrimaryConditionOptionByType(primaryConditionType),
-                  onChange: updatePrimaryConditionType,
-                },
+        <FormRow fullWidth={true}>
+          <FormRowItem
+            className='form__row__item--shrink'
+            item={{
+              type: 'select',
+              props: {
+                options: [
+                  { label: 'All', value: 'and' },
+                  { label: 'Any', value: 'or' },
+                ],
+                value: getPrimaryConditionOptionByType(primaryConditionType),
+                onChange: updatePrimaryConditionType,
               },
-              {
-                type: 'button',
-                expand: 'shrink',
-                props: {
-                  iconPath: mdiPlus,
-                  variant: 'secondary',
-                  label: '',
-                  onClick: () =>
-                    insertSecondaryConditionByIndex({ type: 'null' }, 0),
-                },
+            }}
+          />
+          <FormRowItem
+            className='form__row__item--shrink'
+            item={{
+              type: 'button',
+              props: {
+                iconPath: mdiPlus,
+                variant: 'secondary',
+                label: '',
+                onClick: () =>
+                  insertSecondaryConditionByIndex({ type: 'null' }, 0),
               },
-            ],
-          }}
-        />
+            }}
+          />
+        </FormRow>
 
         {secondaryConditions.map((condition, index) => {
           const updateSecondaryCondition = (
@@ -206,7 +205,7 @@ const SmartFolderForm = ({
               </p>
             </div>
           </FormRowItem>
-          <FormRowItem expand='shrink'>
+          <FormRowItem className='form__row__item--shrink'>
             <Switch
               id='shared-custom-switch'
               checked={makingPrivate}
@@ -251,12 +250,11 @@ const Container = styled.div`
   .form__row__item {
     color: ${({ theme }) => theme.colors.text.primary};
   }
+
   .form__row__item.form__row__item--shrink {
-    flex: 0;
+    flex: 0 1 0% !important;
   }
-  .form__row__item.form__row__item--align-items-center {
-    align-items: center;
-  }
+
   .modal__heading {
   }
 
