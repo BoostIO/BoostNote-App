@@ -13,7 +13,6 @@ import {
 import CommentInput from './CommentInput'
 import sortBy from 'ramda/es/sortBy'
 import prop from 'ramda/es/prop'
-import { withLiveUser } from '../../../shared/lib/injectors'
 
 interface CommentThreadProps {
   comments: Comment[]
@@ -92,7 +91,7 @@ export function CommentItem({
   return (
     <CommentItemContainer>
       <div className='comment__meta'>
-        <LiveUserIcon style={smallUserIconStyle} user={comment.user} />{' '}
+        <UserIcon style={smallUserIconStyle} user={comment.user} />{' '}
         <strong>{comment.user.displayName}</strong>
         <span className='comment__meta__date'>
           {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
@@ -120,8 +119,6 @@ export function CommentItem({
     </CommentItemContainer>
   )
 }
-
-const LiveUserIcon = withLiveUser(UserIcon)
 
 const CommentItemContainer = styled.div`
   & .comment__meta {
