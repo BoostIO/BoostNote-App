@@ -293,6 +293,7 @@ const SubscriptionManagement = ({
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
+                      style={{ marginLeft: 3 }}
                     >
                       Learn more
                       <Icon path={mdiOpenInNew} />
@@ -318,6 +319,7 @@ const SubscriptionManagement = ({
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
+                      style={{ marginLeft: 3 }}
                     >
                       Learn more
                       <Icon path={mdiOpenInNew} />
