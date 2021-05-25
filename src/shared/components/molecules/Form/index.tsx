@@ -3,10 +3,12 @@ import styled from '../../../lib/styled'
 import { LoadingButton } from '../../atoms/Button'
 import cc from 'classcat'
 import { AppComponent } from '../../../lib/types'
-import FormRow, { FormRowProps, FormRowButtonProps } from './templates/FormRow'
+import FormRow, { FormRowProps } from './templates/FormRow'
+import { FormRowButtonProps } from './templates/FormRowItem'
 
 interface FormProps {
   rows?: FormRowProps[]
+  fullWidth?: boolean
   onSubmit?: React.FormEventHandler
   submitButton?: FormRowButtonProps
   onCancel?: () => void
@@ -15,6 +17,7 @@ interface FormProps {
 const Form: AppComponent<FormProps> = ({
   onSubmit,
   rows = [],
+  fullWidth,
   submitButton,
   children,
   className,
@@ -41,7 +44,14 @@ const Form: AppComponent<FormProps> = ({
       className={cc(['form', className])}
     >
       {rows.map((row, i) => {
-        return <FormRow row={row} className='form__row' key={`row--${i}`} />
+        return (
+          <FormRow
+            row={row}
+            className='form__row'
+            key={`row--${i}`}
+            fullWidth={fullWidth}
+          />
+        )
       })}
       {children}
       {submitButton != null && (
