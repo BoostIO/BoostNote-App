@@ -54,7 +54,7 @@ const Container = styled.a`
   transition: 200ms color;
   text-decoration: none;
   color: ${({ theme }) => theme.colors.text.link}
-  padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+  padding: 0 2px;
   cursor: pointer;
 
   &:hover {
