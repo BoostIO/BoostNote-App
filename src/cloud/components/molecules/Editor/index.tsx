@@ -274,17 +274,18 @@ const Editor = ({
         if (
           absoluteAnchor != null &&
           absoluteHead != null &&
-          absoluteAnchor.index !== absoluteHead.index &&
-          thread.status.type === 'open'
+          absoluteAnchor.index !== absoluteHead.index
         ) {
-          comments.push({
-            id: thread.id,
-            start: absoluteAnchor.index,
-            end: absoluteHead.index,
-            active:
-              commentState.mode === 'thread' &&
-              thread.id === commentState.thread.id,
-          })
+          if (thread.status.type === 'open') {
+            comments.push({
+              id: thread.id,
+              start: absoluteAnchor.index,
+              end: absoluteHead.index,
+              active:
+                commentState.mode === 'thread' &&
+                thread.id === commentState.thread.id,
+            })
+          }
         } else if (connState === 'synced') {
           commentActions.threadOutdated(thread)
         }
