@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import React, { useMemo } from 'react'
 import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
