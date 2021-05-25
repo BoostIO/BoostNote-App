@@ -13,8 +13,9 @@ import {
   EditibleSecondaryConditionType,
 } from './interfaces'
 import SecondaryConditionValueControl from './SecondaryConditionValueControl'
-import FormSelect from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
 import Button from '../../../../../../shared/components/atoms/Button'
+import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
+import FormRowItem from '../../../../../../shared/components/molecules/Form/templates/FormRowItem'
 
 interface SecondaryConditionItemProps {
   condition: EditibleSecondaryCondition
@@ -31,47 +32,52 @@ const SecondaryConditionItem = ({
   remove,
   personalOnly,
 }: SecondaryConditionItemProps) => {
+  const validConditions = personalOnly
+    ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
+    : [
+        'status',
+        'labels',
+        'due_date',
+        'assignees',
+        'creation_date',
+        'update_date',
+      ]
+
   return (
-    <div className='form__row'>
-      <div className='form__row__items'>
-        <div className='form__row__item form__row__item--shrink'>
-          <FormSelect
-            value={getSecondaryConditionOptionByType(condition.type)}
-            options={((personalOnly
-              ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
-              : [
-                  'status',
-                  'labels',
-                  'due_date',
-                  'assignees',
-                  'creation_date',
-                  'update_date',
-                ]) as EditibleSecondaryConditionType[]).map(
-              getSecondaryConditionOptionByType
-            )}
-            minWidth='140px'
-            onChange={(selectedOption: {
-              label: string
-              value: EditibleSecondaryConditionType
-            }) => {
-              const newSecondaryCondition = getDefaultEditibleSecondaryConditionByType(
-                selectedOption.value
-              )
-
-              update(newSecondaryCondition)
-            }}
-          />
-        </div>
-
-        <SecondaryConditionValueControl condition={condition} update={update} />
-
-        <div className='form__row__item'></div>
-        <div className='form__row__item form__row__item--shrink'>
-          <Button variant='secondary' iconPath={mdiPlus} onClick={addNext} />
-          <Button variant='secondary' iconPath={mdiMinus} onClick={remove} />
-        </div>
-      </div>
-    </div>
+    <FormRow
+      fullWidth={true}
+      row={{
+        items: [
+          {
+            type: 'select',
+            expand: 'shrink',
+            props: {
+              value: getSecondaryConditionOptionByType(condition.type),
+              options: (validConditions as EditibleSecondaryConditionType[]).map(
+                getSecondaryConditionOptionByType
+              ),
+              minWidth: 140,
+              onChange: (selectedOption: {
+                label: string
+                value: EditibleSecondaryConditionType
+              }) => {
+                const newSecondaryCondition = getDefaultEditibleSecondaryConditionByType(
+                  selectedOption.value
+                )
+                update(newSecondaryCondition)
+              },
+            },
+          },
+        ],
+      }}
+    >
+      <SecondaryConditionValueControl condition={condition} update={update} />
+      <FormRowItem />
+      <FormRowItem expand='shrink'>
+        <Button variant='secondary' iconPath={mdiPlus} onClick={addNext} />
+        <Button variant='secondary' iconPath={mdiMinus} onClick={remove} />
+      </FormRowItem>
+    </FormRow>
   )
 }
 

@@ -8,6 +8,7 @@ import { DocStatus } from '../../../../../interfaces/db/doc'
 import DocLabelSelect from './DocLabelSelect'
 import DocAssigneeSelect from './DocAssigneeSelect'
 import DocDateSelect from './DocDateSelect'
+import FormRowItem from '../../../../../../shared/components/molecules/Form/templates/FormRowItem'
 
 interface SecondaryConditionValueControlProps {
   condition: EditibleSecondaryCondition
@@ -31,9 +32,9 @@ const SecondaryConditionccValueControl = ({
         })
       }
       return (
-        <div className='form__row__item form__row__item--shrink form__row__item form__row__item--align-items-center'>
+        <FormRowItem expand='shrink'>
           <DocDateSelect value={condition.value} update={updateDateValue} />
-        </div>
+        </FormRowItem>
       )
     case 'labels':
       const updateLabels = (newLabels: string[]) => {
@@ -43,9 +44,9 @@ const SecondaryConditionccValueControl = ({
         })
       }
       return (
-        <div className='form__row__item'>
+        <FormRowItem>
           <DocLabelSelect value={condition.value} update={updateLabels} />
-        </div>
+        </FormRowItem>
       )
     case 'status':
       const updateDocStatus = (docStatus: DocStatus) => {
@@ -55,9 +56,9 @@ const SecondaryConditionccValueControl = ({
         })
       }
       return (
-        <div className='form__row__item form__row__item--shrink'>
+        <FormRowItem expand='shrink'>
           <DocStatusSelect value={condition.value} update={updateDocStatus} />
-        </div>
+        </FormRowItem>
       )
     case 'assignees':
       const updateDocAssignees = (docAssignees: string[]) => {
@@ -68,12 +69,12 @@ const SecondaryConditionccValueControl = ({
       }
 
       return (
-        <div className='form__row__item'>
+        <FormRowItem>
           <DocAssigneeSelect
             value={condition.value}
             update={updateDocAssignees}
           />
-        </div>
+        </FormRowItem>
       )
     case 'null':
     default:
