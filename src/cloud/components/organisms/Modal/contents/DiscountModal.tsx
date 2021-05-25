@@ -48,10 +48,7 @@ const DiscountModal = () => {
             <TeamSubLimit
               padded={false}
               onLimitClick={() => {
-                openSettingsTab('teamUpgrade', {
-                  initialPlan: 'standard',
-                  tabState: 'form',
-                })
+                openSettingsTab('teamUpgrade')
                 closeAllModals()
               }}
             />
