@@ -67,8 +67,8 @@ export interface UpdateSmartFolderResponseBody {
 }
 
 export async function deleteSmartFolder(
-  team: SerializedTeam,
-  smartFolder: SerializedSmartFolder
+  team: { id: string },
+  smartFolder: { id: string }
 ) {
   const data = await callApi<CreateSmartFolderResponseBody>(
     `/api/teams/${team.id}/smart-folders/${smartFolder.id}`,
