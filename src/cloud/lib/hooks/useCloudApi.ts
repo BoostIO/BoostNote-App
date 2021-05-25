@@ -59,6 +59,7 @@ import {
 import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
+import { deleteSmartFolder } from '../../api/teams/smart-folder'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -73,6 +74,7 @@ export function useCloudApi() {
     removeFromDocsMap,
     removeFromFoldersMap,
     setCurrentPath,
+    removeFromSmartFoldersMap,
   } = useNav()
   const { push } = useRouter()
 
@@ -462,6 +464,18 @@ export function useCloudApi() {
     ]
   )
 
+  const deleteSmartFolderApi = useCallback(
+    async (target: { id: string; teamId: string }) => {
+      return send(target.id, 'delete', {
+        api: () => deleteSmartFolder({ id: target.teamId }, { id: target.id }),
+        cb: () => {
+          removeFromSmartFoldersMap(target.id)
+        },
+      })
+    },
+    [removeFromSmartFoldersMap, send]
+  )
+
   return {
     sendingMap,
     createWorkspace: createWorkspaceApi,
@@ -477,5 +491,6 @@ export function useCloudApi() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
+    deleteSmartFolder: deleteSmartFolderApi,
   }
 }

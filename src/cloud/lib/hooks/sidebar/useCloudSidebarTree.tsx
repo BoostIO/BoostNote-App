@@ -2,12 +2,16 @@ import React, { useCallback, useMemo } from 'react'
 import {
   mdiApplicationCog,
   mdiArchiveOutline,
+  mdiCheckCircleOutline,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
+  mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
   mdiPaperclip,
+  mdiPauseCircleOutline,
   mdiPencil,
+  mdiPlayCircleOutline,
   mdiPlus,
   mdiStar,
   mdiStarOutline,
@@ -53,19 +57,25 @@ import { getDocId, getDocTitle, getFolderId } from '../../utils/patterns'
 import { useCloudApi } from '../useCloudApi'
 import { useCloudResourceModals } from '../useCloudResourceModals'
 import { useCloudSidebarDnd } from './useCloudSidebarDnd'
+import { getDocStatusHref, getSmartFolderHref } from '../../href'
+import CreateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
+import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
+import { useDialog } from '../../../../shared/lib/stores/dialog'
 
 export function useCloudSidebarTree() {
   const { team } = usePage()
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
+  const { messageBox } = useDialog()
 
   const {
     initialLoadDone,
-    tagsMap,
     docsMap,
     foldersMap,
     workspacesMap,
+    tagsMap,
+    smartFoldersMap,
   } = useNav()
 
   const {
@@ -94,6 +104,7 @@ export function useCloudSidebarTree() {
     toggleFolderBookmark,
     updateDoc,
     updateFolder,
+    deleteSmartFolder,
   } = useCloudApi()
 
   const {
@@ -130,11 +141,13 @@ export function useCloudSidebarTree() {
 
     const currentPathWithDomain = `${process.env.BOOST_HUB_BASE_URL}${pathname}`
     const items = new Map<string, CloudTreeItem>()
+    const sortingOrder = preferences.sidebarTreeSortingOrder
 
-    const [docs, folders, workspaces] = [
+    const [docs, folders, workspaces, smartFolders] = [
       getMapValues(docsMap),
       getMapValues(foldersMap),
       getMapValues(workspacesMap),
+      getMapValues(smartFoldersMap),
     ]
 
     let personalWorkspace: SerializedWorkspace | undefined
@@ -238,8 +251,7 @@ export function useCloudSidebarTree() {
           draggedResource.current = undefined
         },
         dropIn: true,
-        dropAround:
-          preferences.sidebarTreeSortingOrder === 'drag' ? true : false,
+        dropAround: sortingOrder === 'drag' ? true : false,
         controls: [
           {
             icon: mdiFilePlusOutline,
@@ -317,12 +329,14 @@ export function useCloudSidebarTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
-        archived: doc.archivedAt != null,
+        hidden:
+          doc.archivedAt != null ||
+          doc.status === 'archived' ||
+          doc.status === 'completed',
         children: [],
         href,
         active: href === currentPathWithDomain,
-        dropAround:
-          preferences.sidebarTreeSortingOrder === 'drag' ? true : false,
+        dropAround: sortingOrder === 'drag' ? true : false,
         navigateTo: () => push(href),
         onDrop: (position: SidebarDragState) =>
           dropInDocOrFolder({ type: 'doc', result: doc }, position),
@@ -409,12 +423,7 @@ export function useCloudSidebarTree() {
         acc.push({
           ...val,
           depth: 0,
-          rows: buildChildrenNavRows(
-            preferences.sidebarTreeSortingOrder,
-            val.children,
-            1,
-            items
-          ),
+          rows: buildChildrenNavRows(sortingOrder, val.children, 1, items),
         })
         return acc
       }, [] as SidebarTreeChildRow[])
@@ -465,6 +474,71 @@ export function useCloudSidebarTree() {
         rows: orderedBookmarked,
       })
     }
+
+    tree.push({
+      label: 'Smart Folders',
+      rows: smartFolders.map((smartFolder) => {
+        const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
+          smartFolder,
+          team,
+          'index'
+        )}`
+        return {
+          id: smartFolder.id,
+          label: smartFolder.name,
+          defaultIcon: mdiFolderCogOutline,
+          depth: 0,
+          active: href === currentPathWithDomain,
+          navigateTo: () => push(href),
+          contextControls: [
+            {
+              type: MenuTypes.Normal,
+              icon: mdiPencil,
+              label: 'Edit',
+              onClick: () => {
+                openModal(<UpdateSmartFolderModal smartFolder={smartFolder} />)
+              },
+            },
+            {
+              type: MenuTypes.Normal,
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => {
+                messageBox({
+                  title: `Delete ${smartFolder.name}?`,
+                  message: `Are you sure to delete this smart folder?`,
+                  buttons: [
+                    {
+                      variant: 'secondary',
+                      label: 'Cancel',
+                      cancelButton: true,
+                      defaultButton: true,
+                    },
+                    {
+                      variant: 'danger',
+                      label: 'Delete',
+                      onClick: async () => {
+                        await deleteSmartFolder(smartFolder)
+                      },
+                    },
+                  ],
+                })
+              },
+            },
+          ],
+        }
+      }),
+      controls: [
+        {
+          icon: mdiPlus,
+          onClick: () => {
+            openModal(<CreateSmartFolderModal />)
+          },
+          tooltip: 'Add smart folder',
+        },
+      ],
+    })
+
     tree.push({
       label: 'Workspaces',
       rows: navTree,
@@ -488,7 +562,7 @@ export function useCloudSidebarTree() {
                     ...val,
                     depth: 0,
                     rows: buildChildrenNavRows(
-                      preferences.sidebarTreeSortingOrder,
+                      sortingOrder,
                       val.children,
                       1,
                       items
@@ -594,13 +668,46 @@ export function useCloudSidebarTree() {
           navigateTo: () => push(getTeamLinkHref(team, 'shared')),
           depth: 0,
         },
+      ],
+    })
+
+    tree.push({
+      label: 'Status',
+      rows: [
         {
-          id: 'sidenav-archived',
+          id: 'sidenav-status-in-progress',
+          label: 'In Progress',
+          defaultIcon: mdiPlayCircleOutline,
+          href: getDocStatusHref(team, 'in-progress'),
+          active: getDocStatusHref(team, 'in-progress') === pathname,
+          navigateTo: () => push(getDocStatusHref(team, 'in-progress')),
+          depth: 0,
+        },
+        {
+          id: 'sidenav-status-paused',
+          label: 'Paused',
+          defaultIcon: mdiPauseCircleOutline,
+          href: getDocStatusHref(team, 'paused'),
+          active: getDocStatusHref(team, 'paused') === pathname,
+          navigateTo: () => push(getDocStatusHref(team, 'paused')),
+          depth: 0,
+        },
+        {
+          id: 'sidenav-status-completed',
+          label: 'Completed',
+          defaultIcon: mdiCheckCircleOutline,
+          href: getDocStatusHref(team, 'completed'),
+          active: getDocStatusHref(team, 'completed') === pathname,
+          navigateTo: () => push(getDocStatusHref(team, 'completed')),
+          depth: 0,
+        },
+        {
+          id: 'sidenav-status-archived',
           label: 'Archived',
           defaultIcon: mdiArchiveOutline,
-          href: getTeamLinkHref(team, 'archived'),
-          active: getTeamLinkHref(team, 'archived') === pathname,
-          navigateTo: () => push(getTeamLinkHref(team, 'archived')),
+          href: getDocStatusHref(team, 'archived'),
+          active: getDocStatusHref(team, 'archived') === pathname,
+          navigateTo: () => push(getDocStatusHref(team, 'archived')),
           depth: 0,
         },
       ],
@@ -625,9 +732,10 @@ export function useCloudSidebarTree() {
     foldersMap,
     workspacesMap,
     tagsMap,
+    smartFoldersMap,
     treeSendingMap,
-    sideBarOpenedFolderIdsSet,
     sideBarOpenedLinksIdsSet,
+    sideBarOpenedFolderIdsSet,
     sideBarOpenedWorkspaceIdsSet,
     toggleItem,
     getFoldEvents,
@@ -641,15 +749,17 @@ export function useCloudSidebarTree() {
     deleteFolder,
     createFolder,
     createDoc,
+    draggedResource,
     dropInDocOrFolder,
-    dropInWorkspace,
-    updateFolder,
-    updateDoc,
     openRenameFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
-    draggedResource,
+    messageBox,
     team,
+    dropInWorkspace,
+    updateFolder,
+    updateDoc,
+    deleteSmartFolder,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {
@@ -783,6 +893,7 @@ type CloudTreeItem = {
   label: string
   defaultIcon?: string
   emoji?: string
+  hidden?: boolean
   bookmarked?: boolean
   archived?: boolean
   children: string[]
