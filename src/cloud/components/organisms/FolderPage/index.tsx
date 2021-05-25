@@ -208,48 +208,6 @@ const FolderPage = () => {
     return map
   }, [currentWorkspace])
 
-  // const openCreateDocForm = useCallback(() => {
-  //   openNewDocForm(
-  //     {
-  //       team,
-  //       workspaceId: currentFolder?.workspaceId,
-  //       parentFolderId: currentFolder?.id,
-  //     },
-  //     {
-  //       precedingRows: [
-  //         {
-  //           description: (
-  //             <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
-  //           ),
-  //         },
-  //       ],
-  //       beforeSubmitting: () => setSending(FolderHeaderActions.newDoc),
-  //       afterSubmitting: () => setSending(undefined),
-  //     }
-  //   )
-  // }, [openNewDocForm, currentFolder, team, topBarBreadcrumbs])
-
-  // const openCreateFolderForm = useCallback(() => {
-  //   openNewFolderForm(
-  //     {
-  //       team,
-  //       workspaceId: currentFolder?.workspaceId,
-  //       parentFolderId: currentFolder?.id,
-  //     },
-  //     {
-  //       precedingRows: [
-  //         {
-  //           description: (
-  //             <FlattenedBreadcrumbs breadcrumbs={topBarBreadcrumbs} />
-  //           ),
-  //         },
-  //       ],
-  //       beforeSubmitting: () => setSending(FolderHeaderActions.newFolder),
-  //       afterSubmitting: () => setSending(undefined),
-  //     }
-  //   )
-  // }, [openNewFolderForm, currentFolder, team, topBarBreadcrumbs])
-
   if (team == null) {
     return (
       <Application
@@ -317,6 +275,8 @@ const FolderPage = () => {
         documents={childDocs}
         folders={childFolders}
         workspacesMap={workspaceMap}
+        currentFolderId={currentFolder.id}
+        currentWorkspaceId={currentFolder.workspaceId}
       />
     </Application>
   )

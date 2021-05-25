@@ -84,7 +84,7 @@ export function useCloudApi() {
     async (
       team: SerializedTeam,
       body: CreateWorkspaceRequestBody,
-      options: {
+      options?: {
         skipRedirect?: boolean
         afterSuccess?: (workspace: SerializedWorkspace) => void
       }
@@ -93,7 +93,7 @@ export function useCloudApi() {
         api: () => createWorkspace({ id: team.id }, body),
         cb: (res: CreateWorkspaceResponseBody) => {
           updateWorkspacesMap([res.workspace.id, res.workspace])
-          if (!options.skipRedirect) {
+          if (!options?.skipRedirect) {
             push(
               {
                 pathname: `${getTeamURL(team)}${getWorkspaceURL(
@@ -103,8 +103,8 @@ export function useCloudApi() {
               { new: true }
             )
           }
-          if (options.afterSuccess != null) {
-            options.afterSuccess(res.workspace)
+          if (options?.afterSuccess != null) {
+            options?.afterSuccess(res.workspace)
           }
         },
       })
@@ -116,7 +116,10 @@ export function useCloudApi() {
     async (
       team: SerializedTeam,
       body: CreateDocRequestBody,
-      afterSuccess?: () => void
+      options?: {
+        skipRedirect?: boolean
+        afterSuccess?: (doc: SerializedDoc) => void
+      }
     ) => {
       await send(shortid.generate(), 'create', {
         api: () => createDoc({ id: team.id }, body),
@@ -125,14 +128,16 @@ export function useCloudApi() {
           if (res.doc.parentFolder != null) {
             updateParentFolderOfDoc(res.doc)
           }
-          push(
-            {
-              pathname: `${getTeamURL(team)}${getDocURL(res.doc)}`,
-            },
-            { new: true }
-          )
-          if (afterSuccess != null) {
-            afterSuccess()
+          if (!options?.skipRedirect) {
+            push(
+              {
+                pathname: `${getTeamURL(team)}${getDocURL(res.doc)}`,
+              },
+              { new: true }
+            )
+          }
+          if (options?.afterSuccess != null) {
+            options?.afterSuccess(res.doc)
           }
         },
       })
@@ -144,7 +149,10 @@ export function useCloudApi() {
     async (
       team: SerializedTeam,
       body: CreateFolderRequestBody,
-      afterSuccess?: () => void
+      options?: {
+        skipRedirect?: boolean
+        afterSuccess?: (folder: SerializedFolder) => void
+      }
     ) => {
       await send(shortid.generate(), 'create', {
         api: () => createFolder(team, body),
@@ -157,14 +165,31 @@ export function useCloudApi() {
               childFoldersIds: [],
             },
           ])
-          push(`${getTeamURL(team)}${getFolderURL(res.folder)}`)
-          if (afterSuccess != null) {
-            afterSuccess()
+          if (res.folder.parentFolderId != null) {
+            const parentFolder = foldersMap.get(res.folder.parentFolderId)
+            if (parentFolder != null) {
+              updateFoldersMap([
+                parentFolder.id,
+                {
+                  ...parentFolder,
+                  childFoldersIds: [
+                    ...parentFolder.childFoldersIds,
+                    res.folder.id,
+                  ],
+                },
+              ])
+            }
+          }
+          if (!options?.skipRedirect) {
+            push(`${getTeamURL(team)}${getFolderURL(res.folder)}`)
+          }
+          if (options?.afterSuccess != null) {
+            options?.afterSuccess(res.folder)
           }
         },
       })
     },
-    [push, send, updateFoldersMap]
+    [push, send, updateFoldersMap, foldersMap]
   )
 
   const toggleDocArchive = useCallback(

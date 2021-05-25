@@ -92,6 +92,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
         documents={childDocs}
         folders={childFolders}
         workspacesMap={workspaceMap}
+        currentWorkspaceId={workspace.id}
       />
     </Application>
   )
