@@ -41,7 +41,6 @@ import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
 import SettingsPage from '../pages/settings'
-import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
@@ -259,7 +258,6 @@ const Router = () => {
                 <ContextMenu />
                 <EmojiPicker />
                 <Dialog />
-                <Helper />
               </V2ThemeProvider>
             </CustomThemeProvider>
           </NavProvider>
