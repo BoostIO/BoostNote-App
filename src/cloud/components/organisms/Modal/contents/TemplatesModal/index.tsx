@@ -44,13 +44,13 @@ import Icon from '../../../../atoms/Icon'
 import EmojiIcon from '../../../../atoms/EmojiIcon'
 import { useSettings } from '../../../../../lib/stores/settings'
 import cc from 'classcat'
-import { useEmojiPicker } from '../../../../../lib/stores/emoji'
 import Tooltip from '../../../../atoms/Tooltip'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../../../atoms/MarkdownView'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
 import Switch from '../../../../../../shared/components/atoms/Switch'
+import { useEmoji } from '../../../../../../shared/lib/stores/emoji'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -83,7 +83,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { settings } = useSettings()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
-  const { openEmojiPickerWithCallback } = useEmojiPicker()
+  const { openEmojiPicker } = useEmoji()
 
   useEffect(() => {
     if (selectedTemplateId == null || templatesMap.has(selectedTemplateId)) {
@@ -292,9 +292,9 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
 
   const emojiPickerClickHandler = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      openEmojiPickerWithCallback(event, setEmoji)
+      openEmojiPicker(event, setEmoji)
     },
-    [openEmojiPickerWithCallback]
+    [openEmojiPicker]
   )
 
   const changesAreUnsaved =

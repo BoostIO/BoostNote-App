@@ -2,11 +2,11 @@ import React, { useCallback } from 'react'
 import { SideNavIconStyle } from './styled'
 import IconMdi from '../../../atoms/IconMdi'
 import Tooltip from '../../../atoms/Tooltip'
-import { useEmojiPicker } from '../../../../lib/stores/emoji'
 import { SerializedFolder } from '../../../../interfaces/db/folder'
 import { SerializedDoc } from '../../../../interfaces/db/doc'
 import { Emoji } from 'emoji-mart'
 import cc from 'classcat'
+import { useEmoji } from '../../../../../shared/lib/stores/emoji'
 
 export type EmojiPickerDoc = {
   type: 'doc'
@@ -29,17 +29,18 @@ type SideNavIconProps = {
 const SideNavIcon = ({
   mdiPath,
   item,
-  type,
   className,
   size = 16,
 }: SideNavIconProps) => {
-  const { openEmojiPicker } = useEmojiPicker()
+  const { openEmojiPicker } = useEmoji()
 
   const onClickHandler = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      openEmojiPicker(event, { item, type } as EmojiResource)
+      openEmojiPicker(event, () => {
+        console.log('unhandled')
+      })
     },
-    [item, type, openEmojiPicker]
+    [openEmojiPicker]
   )
 
   return (

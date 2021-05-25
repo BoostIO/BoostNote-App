@@ -10,3 +10,6 @@ export interface EmojiPickerContext {
   ): void
   closeEmojiPicker(): void
 }
+
+export const EmojiPickerWidth = 350
+export const EmojiPickerHeight = 380
