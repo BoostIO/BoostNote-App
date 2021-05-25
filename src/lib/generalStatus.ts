@@ -4,6 +4,7 @@ import { useSetState } from 'react-use'
 import { generalStatusKey } from './localStorageKeys'
 import { createStoreContext } from './context'
 import { getFolderItemId, getStorageItemId } from './nav'
+import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'
 
@@ -18,6 +19,8 @@ export interface GeneralStatus {
     name: string
     domain: string
     iconUrl?: string
+    createdAt: string
+    subscription?: SerializedSubscription
   }[]
   showingNoteContextMenu: boolean
 }

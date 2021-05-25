@@ -113,6 +113,7 @@ const BoostHubSignInForm = () => {
               id: team.id,
               name: team.name,
               domain: team.domain,
+              createdAt: team.createdAt,
               iconUrl:
                 team.icon != null
                   ? getBoostHubTeamIconUrl(team.icon.location)

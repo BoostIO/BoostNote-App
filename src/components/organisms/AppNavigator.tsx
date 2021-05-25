@@ -14,6 +14,7 @@ import {
   mdiPlus,
   mdiMenu,
   mdiCloudOffOutline,
+  mdiGiftOutline,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
@@ -44,11 +45,13 @@ import {
   boostHubToggleSidebarSearchEventEmitter,
   boostHubToggleSidebarTimelineEventEmitter,
   boostHubToggleSidebarTreeEventEmitter,
+  boostHubOpenDiscountModalEventEmitter,
 } from '../../lib/events'
 import { useSearchModal } from '../../lib/searchModal'
 import { SidebarState } from '../../shared/lib/sidebar'
 import CloudIntroModal from './CloudIntroModal'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
+import { isEligibleForDiscount } from '../../cloud/lib/subscription'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()
@@ -245,7 +248,7 @@ const TopLevelNavigator = () => {
         : null
 
     if (boosthubTeam != null) {
-      return [
+      const rows: SidebarToolbarRow[] = [
         {
           tooltip: 'Spaces',
           active: showSpaces,
@@ -277,27 +280,47 @@ const TopLevelNavigator = () => {
           icon: mdiClockOutline,
           onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
         },
-        {
-          tooltip: 'Import',
-          icon: mdiDownload,
+      ]
+
+      if (
+        boosthubTeam.subscription == null &&
+        isEligibleForDiscount(boosthubTeam)
+      ) {
+        rows.push({
           position: 'bottom',
-          onClick: boostHubOpenImportModalEventEmitter.dispatch,
-        },
-        {
-          tooltip: 'Members',
-          active: false,
-          icon: mdiAccountMultiplePlusOutline,
-          position: 'bottom',
-          onClick: boostHubToggleSettingsMembersEventEmitter.dispatch,
-        },
-        {
-          tooltip: 'Settings',
-          active: false,
-          icon: mdiCog,
-          position: 'bottom',
-          onClick: boostHubToggleSettingsEventEmitter.dispatch,
-        },
-      ] as SidebarToolbarRow[]
+          tooltip: 'Get the new user discount!',
+          icon: mdiGiftOutline,
+          pelletVariant: 'danger',
+          onClick: boostHubOpenDiscountModalEventEmitter.dispatch,
+        })
+      }
+
+      rows.push(
+        ...([
+          {
+            tooltip: 'Import',
+            icon: mdiDownload,
+            position: 'bottom',
+            onClick: boostHubOpenImportModalEventEmitter.dispatch,
+          },
+          {
+            tooltip: 'Members',
+            active: false,
+            icon: mdiAccountMultiplePlusOutline,
+            position: 'bottom',
+            onClick: boostHubToggleSettingsMembersEventEmitter.dispatch,
+          },
+          {
+            tooltip: 'Settings',
+            active: false,
+            icon: mdiCog,
+            position: 'bottom',
+            onClick: boostHubToggleSettingsEventEmitter.dispatch,
+          },
+        ] as SidebarToolbarRow[])
+      )
+
+      return rows
     }
 
     const activeStorage = values(storageMap).find(

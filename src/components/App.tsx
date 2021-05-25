@@ -153,6 +153,8 @@ const App = () => {
             id: team.id,
             name: team.name,
             domain: team.domain,
+            createdAt: team.createdAt,
+            subscription: team.subscription,
             iconUrl:
               team.icon != null
                 ? getBoostHubTeamIconUrl(team.icon.location)

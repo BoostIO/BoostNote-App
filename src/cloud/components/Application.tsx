@@ -14,6 +14,7 @@ import { shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './atoms/AnnouncementAlert'
 import {
+  modalDiscountEventEmitter,
   modalImportEventEmitter,
   newFolderEventEmitter,
   searchEventEmitter,
@@ -364,6 +365,20 @@ const Application = ({
       modalImportEventEmitter.unlisten(openImportModal)
     }
   }, [openImportModal])
+
+  useEffect(() => {
+    const openDiscountModal = () => {
+      if (team == null) {
+        return
+      }
+      trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
+      openModal(<DiscountModal />, { showCloseIcon: true, width: 'large' })
+    }
+    modalDiscountEventEmitter.listen(openDiscountModal)
+    return () => {
+      modalDiscountEventEmitter.unlisten(openDiscountModal)
+    }
+  }, [openModal, team])
 
   useEffect(() => {
     if (!usingElectron) {
