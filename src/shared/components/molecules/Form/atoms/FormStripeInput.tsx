@@ -69,4 +69,8 @@ const Container = styled.div`
     flex-direction: row !important;
     align-items: center !important;
   }
+
+  .__PrivateStripeElement{ 
+    width: 100%;
+  }
 `
