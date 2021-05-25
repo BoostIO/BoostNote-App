@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { zIndexModalsBackground } from './Topbar/Controls/ControlsContextMenu/styled'
+import React, { useMemo } from 'react'
 import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
@@ -210,7 +210,6 @@ function CommentManager({
 }
 
 const Container = styled.div`
-  z-index: ${zIndexModalsBackground - 1};
   margin: auto;
   width: ${docContextWidth}px;
   height: 100vh;
