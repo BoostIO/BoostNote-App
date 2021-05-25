@@ -23,6 +23,7 @@ import {
   newUserProCouponId,
   newUserStandardCouponId,
 } from '../../../lib/consts'
+import { useElectron } from '../../../lib/stores/electron'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -42,6 +43,7 @@ const SubscriptionManagement = ({
   const [showPlanTables, setShowPlanTables] = useState(false)
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
+  const { usingElectron, sendToElectron } = useElectron()
   const [fetchingHistory, setFetchingHistory] = useState<boolean>(false)
   const { pushApiErrorMessage, pushMessage } = useToast()
   const [targetedPlan, setTargetedPlan] = useState<
@@ -63,6 +65,16 @@ const SubscriptionManagement = ({
     setFetchingHistory(false)
   }, [fetchingHistory, subscription.teamId, pushApiErrorMessage])
 
+  const sendElectronEvent = useCallback(
+    (subscription: SerializedSubscription, action: 'delete' | 'update') => {
+      if (!usingElectron) {
+        return
+      }
+      sendToElectron(`subscription-${action}`, subscription)
+    },
+    [usingElectron, sendToElectron]
+  )
+
   const cancellingCallback = useCallback(() => {
     if (subscription.status === 'canceled') {
       return
@@ -72,8 +84,10 @@ const SubscriptionManagement = ({
       .then(({ subscription }) => {
         if (subscription.status === 'inactive') {
           updateTeamSubscription(undefined)
+          sendElectronEvent(subscription, 'delete')
         } else {
           updateTeamSubscription(subscription)
+          sendElectronEvent(subscription, 'update')
         }
 
         setSending(false)
@@ -86,7 +100,13 @@ const SubscriptionManagement = ({
         })
         setSending(false)
       })
-  }, [subscription, updateTeamSubscription, pushMessage, setSending])
+  }, [
+    subscription,
+    updateTeamSubscription,
+    pushMessage,
+    setSending,
+    sendElectronEvent,
+  ])
 
   const updatingPlanCallback = useCallback(
     (plan: UpgradePlans) => {
@@ -97,6 +117,7 @@ const SubscriptionManagement = ({
       updateSubPlan(subscription.teamId, { plan })
         .then(({ subscription }) => {
           updateTeamSubscription(subscription)
+          sendElectronEvent(subscription, 'update')
           setSending(false)
           setTargetedPlan(undefined)
         })
@@ -108,7 +129,13 @@ const SubscriptionManagement = ({
           setSending(false)
         })
     },
-    [subscription, updateTeamSubscription, pushMessage, setSending]
+    [
+      subscription,
+      updateTeamSubscription,
+      pushMessage,
+      setSending,
+      sendElectronEvent,
+    ]
   )
 
   const onChangePlanCallback = useCallback(() => {

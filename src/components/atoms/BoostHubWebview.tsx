@@ -29,6 +29,8 @@ import {
   boostHubReloadAllWebViewsEventEmitter,
   boostHubCreateLocalSpaceEventEmitter,
   boostHubSidebarStateEventEmitter,
+  boostHubSubscriptionDeleteEventEmitter,
+  boostHubSubscriptionUpdateEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
@@ -153,6 +155,16 @@ const BoostHubWebview = ({
           break
         case 'sidebar--state':
           boostHubSidebarStateEventEmitter.dispatch(event.args[0])
+          break
+        case 'subscription-update':
+          boostHubSubscriptionUpdateEventEmitter.dispatch({
+            subscription: event.args[0],
+          })
+          break
+        case 'subscription-delete':
+          boostHubSubscriptionDeleteEventEmitter.dispatch({
+            subscription: event.args[0],
+          })
           break
         case 'team-delete':
           boostHubTeamDeleteEventEmitter.dispatch({ team: event.args[0] })
