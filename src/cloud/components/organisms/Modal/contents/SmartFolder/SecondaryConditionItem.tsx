@@ -44,36 +44,32 @@ const SecondaryConditionItem = ({
       ]
 
   return (
-    <FormRow
-      fullWidth={true}
-      row={{
-        items: [
-          {
-            type: 'select',
-            expand: 'shrink',
-            props: {
-              value: getSecondaryConditionOptionByType(condition.type),
-              options: (validConditions as EditibleSecondaryConditionType[]).map(
-                getSecondaryConditionOptionByType
-              ),
-              minWidth: 140,
-              onChange: (selectedOption: {
-                label: string
-                value: EditibleSecondaryConditionType
-              }) => {
-                const newSecondaryCondition = getDefaultEditibleSecondaryConditionByType(
-                  selectedOption.value
-                )
-                update(newSecondaryCondition)
-              },
+    <FormRow fullWidth={true}>
+      <FormRowItem
+        className='form__row__item--shrink'
+        item={{
+          type: 'select',
+          props: {
+            value: getSecondaryConditionOptionByType(condition.type),
+            options: (validConditions as EditibleSecondaryConditionType[]).map(
+              getSecondaryConditionOptionByType
+            ),
+            minWidth: 140,
+            onChange: (selectedOption: {
+              label: string
+              value: EditibleSecondaryConditionType
+            }) => {
+              const newSecondaryCondition = getDefaultEditibleSecondaryConditionByType(
+                selectedOption.value
+              )
+              update(newSecondaryCondition)
             },
           },
-        ],
-      }}
-    >
+        }}
+      />
       <SecondaryConditionValueControl condition={condition} update={update} />
       <FormRowItem />
-      <FormRowItem expand='shrink'>
+      <FormRowItem className='form__row__item--shrink'>
         <Button variant='secondary' iconPath={mdiPlus} onClick={addNext} />
         <Button variant='secondary' iconPath={mdiMinus} onClick={remove} />
       </FormRowItem>

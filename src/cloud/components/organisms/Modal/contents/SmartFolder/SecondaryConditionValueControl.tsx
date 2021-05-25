@@ -32,7 +32,7 @@ const SecondaryConditionccValueControl = ({
         })
       }
       return (
-        <FormRowItem expand='shrink'>
+        <FormRowItem className='form__row__item--shrink'>
           <DocDateSelect value={condition.value} update={updateDateValue} />
         </FormRowItem>
       )
@@ -56,7 +56,7 @@ const SecondaryConditionccValueControl = ({
         })
       }
       return (
-        <FormRowItem expand='shrink'>
+        <FormRowItem className='form__row__item--shrink'>
           <DocStatusSelect value={condition.value} update={updateDocStatus} />
         </FormRowItem>
       )
