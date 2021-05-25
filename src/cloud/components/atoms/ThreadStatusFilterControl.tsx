@@ -41,7 +41,7 @@ function ThreadStatusFilterControl({
   return (
     <FilterButton variant='icon_secondary' onClick={openActionMenu}>
       <ThreadFilterIcon status={value} />
-      <span>
+      <span className='filter__text'>
         {capitalize(value)} ({counts[value]})
       </span>
       <Icon path={mdiChevronDown} />
@@ -55,11 +55,11 @@ const FilterButton = styled(RoundButton)`
     align-items: center;
     min-width: 120px;
 
-    & svg:first-child {
+    & > svg:first-child {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
 
-    & span {
+    & > span.filter__text {
       flex-grow: 1;
       text-align: left;
     }
