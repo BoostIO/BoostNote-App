@@ -12,7 +12,6 @@ import {
   mdiAccountMultiple,
   mdiContentSaveOutline,
 } from '@mdi/js'
-import { zIndexModalsBackground } from '../styled'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
@@ -696,7 +695,6 @@ const Container = styled.div`
   }
 
   .context__menu {
-    z-index: ${zIndexModalsBackground + 1};
     margin: auto;
     width: ${docContextWidth}px;
     height: 100vh;
