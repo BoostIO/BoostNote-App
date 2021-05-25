@@ -11,6 +11,7 @@ import {
 } from '../../lib/styled/styleFunctions'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import {
+  boostHubOpenDiscountModalEventEmitter,
   boostHubOpenImportModalEventEmitter,
   boostHubToggleSettingsEventEmitter,
   boostHubToggleSettingsMembersEventEmitter,
@@ -50,6 +51,11 @@ const BoostHubTeamsShowPage = ({
       webviewControlRef.current!.sendMessage('modal-import')
     }
     boostHubOpenImportModalEventEmitter.listen(toggleOpenImportModalHandler)
+
+    const toggleOpenDiscountModalHandler = () => {
+      webviewControlRef.current!.sendMessage('modal-discount')
+    }
+    boostHubOpenDiscountModalEventEmitter.listen(toggleOpenDiscountModalHandler)
 
     const toggleSettingsHandler = () => {
       webviewControlRef.current!.sendMessage('toggle-settings')
@@ -129,6 +135,9 @@ const BoostHubTeamsShowPage = ({
     addIpcListener('apply-italic-style', applyItalicStyle)
 
     return () => {
+      boostHubOpenDiscountModalEventEmitter.unlisten(
+        toggleOpenDiscountModalHandler
+      )
       boostHubOpenImportModalEventEmitter.unlisten(toggleOpenImportModalHandler)
       boostHubToggleSettingsEventEmitter.unlisten(toggleSettingsHandler)
       boostHubToggleSettingsMembersEventEmitter.unlisten(

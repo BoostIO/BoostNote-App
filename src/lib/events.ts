@@ -139,3 +139,7 @@ export type boostHubSidebarStateEvent = CustomEvent<{ state: SidebarState }>
 export const boostHubSidebarStateEventEmitter = createCustomEventEmitter<{
   state: SidebarState
 }>('BoostHub:sidebarStateUpdate')
+
+export const boostHubOpenDiscountModalEventEmitter = createCustomEventEmitter(
+  'BoostHub:openDiscountModal'
+)

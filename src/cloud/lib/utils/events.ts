@@ -86,3 +86,6 @@ export const toggleSettingsMembersEventEmitter = createCustomEventEmitter(
 )
 
 export const modalImportEventEmitter = createCustomEventEmitter('modal-import')
+export const modalDiscountEventEmitter = createCustomEventEmitter(
+  'modal-discount'
+)
