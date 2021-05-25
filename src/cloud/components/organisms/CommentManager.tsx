@@ -83,8 +83,6 @@ function CommentManager({
     }
   }, [partitioned, state])
 
-  console.log(statusFilter)
-
   const content = useMemo(() => {
     switch (state.mode) {
       case 'list_loading':
