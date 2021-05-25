@@ -22,6 +22,7 @@ import {
 import Banner from '../../../../shared/components/atoms/Banner'
 import { mdiGift } from '@mdi/js'
 import { format } from 'date-fns'
+import { useElectron } from '../../../lib/stores/electron'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -45,6 +46,7 @@ const UpgradeTab = ({
     updateTeamSubscription,
     permissions = [],
   } = usePage<PageStoreWithTeam>()
+  const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
   const {
@@ -69,8 +71,11 @@ const UpgradeTab = ({
   const onSuccessCallback = useCallback(
     (sub) => {
       updateTeamSubscription(sub)
+      if (usingElectron) {
+        sendToElectron('subscription-update', sub)
+      }
     },
-    [updateTeamSubscription]
+    [updateTeamSubscription, usingElectron, sendToElectron]
   )
 
   const onCancelCallback = useCallback(() => {
