@@ -269,13 +269,6 @@ const Container = styled.div`
     white-space: pre-wrap;
     color: white;
     background-color: #705400;
-    &.small {
-      margin: 0;
-      margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 
   .thread__create {
