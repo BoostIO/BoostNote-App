@@ -15,7 +15,7 @@ import { mdiGiftOff } from '@mdi/js'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
-  onSuccess: () => void
+  onSuccess: (subscription: SerializedSubscription) => void
   onCancel: () => void
 }
 
@@ -36,13 +36,15 @@ const UpdateBillingPromoForm = ({
 
     try {
       setSending(true)
-      await redeemPromo(sub.teamId, { code: promoCode })
+      const { subscription } = await redeemPromo(sub.teamId, {
+        code: promoCode,
+      })
       pushMessage({
         title: 'Promo Code',
         description: `Applied promo code '${promoCode}' to your subscription`,
         type: 'success',
       })
-      onSuccess()
+      onSuccess(subscription)
     } catch (error) {
       if (error.response.status === 403) {
         pushMessage({
