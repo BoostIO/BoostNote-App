@@ -14,7 +14,6 @@ import useThreadActions, {
   ThreadActionProps,
 } from '../../../shared/lib/hooks/useThreadMenuActions'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
-import { withLiveUser } from '../../../shared/lib/injectors'
 
 type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
@@ -52,7 +51,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
             {formatStatus(thread.status)} {thread.status.by != null ? 'by' : ''}
           </span>
           {thread.status.by != null && (
-            <LiveUserIcon style={smallUserIconStyle} user={thread.status.by} />
+            <UserIcon style={smallUserIconStyle} user={thread.status.by} />
           )}
         </div>
         <div onClick={openActionMenu}>
@@ -112,8 +111,6 @@ const StyledListItem = styled.div`
     }
   }
 `
-
-const LiveUserIcon = withLiveUser(UserIcon)
 
 function formatDate(date: Date) {
   return isToday(date)

@@ -121,7 +121,7 @@ const Editor = ({
   backLinks,
   revisionHistory,
 }: EditorProps) => {
-  const { currentUserPermissions } = usePage()
+  const { currentUserPermissions, permissions } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -190,6 +190,47 @@ const Editor = ({
   })
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  const normalizedCommentState = useMemo(() => {
+    if (commentState.mode === 'list_loading' || permissions == null) {
+      return commentState
+    }
+
+    const normalizedState = { ...commentState }
+
+    const updatedUsers = new Map(
+      permissions.map((permission) => [permission.user.id, permission.user])
+    )
+
+    normalizedState.threads = normalizedState.threads.map((thread) => {
+      if (thread.status.by == null) {
+        return thread
+      }
+      const normalizedUser =
+        updatedUsers.get(thread.status.by.id) || thread.status.by
+
+      return { ...thread, status: { ...thread.status, by: normalizedUser } }
+    })
+
+    if (normalizedState.mode === 'thread') {
+      if (normalizedState.thread.status.by != null) {
+        const normalizedUser =
+          updatedUsers.get(normalizedState.thread.status.by.id) ||
+          normalizedState.thread.status.by
+        normalizedState.thread = {
+          ...normalizedState.thread,
+          status: { ...normalizedState.thread.status, by: normalizedUser },
+        }
+      }
+
+      normalizedState.comments = normalizedState.comments.map((comment) => {
+        const normalizedUser = updatedUsers.get(comment.user.id) || comment.user
+        return { ...comment, user: normalizedUser }
+      })
+    }
+
+    return normalizedState
+  }, [commentState, permissions])
 
   const newRangeThread = useCallback(
     (selection: SelectionContext) => {
@@ -927,7 +968,7 @@ const Editor = ({
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager
-              state={commentState}
+              state={normalizedCommentState}
               user={user}
               {...commentActions}
             />
