@@ -38,7 +38,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
         <div className='thread__info__line'>
           <Icon
             size={20}
-            className={`thread__status ${thread.status.type}`}
+            className={`thread__status thread__status--${thread.status.type}`}
             path={
               thread.status.type === 'open'
                 ? mdiAlertCircleOutline
@@ -47,7 +47,9 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           />
           <div
             className={`thread__item__context ${
-              thread.selection != null ? 'highlighted' : ''
+              thread.selection != null
+                ? 'thrad__item__context--highlighted'
+                : ''
             }`}
           >
             {thread.selection != null ? thread.context : 'Full doc thread'}
@@ -98,7 +100,7 @@ const StyledListItem = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
 
-      &.highlighted {
+      &.thrad__item__context--highlighted {
         color: white;
         background-color: #705400;
       }
@@ -107,15 +109,15 @@ const StyledListItem = styled.div`
 
   & .thread__status {
     flex-shrink: 0;
-    &.open {
+    &.thread__status--open {
       color: ${({ theme }) => theme.colors.variants.success.base};
     }
 
-    &.closed {
+    &.thread__status--closed {
       color: ${({ theme }) => theme.colors.variants.danger.base};
     }
 
-    &.outdated {
+    &.thread__status--outdated {
       color: ${({ theme }) => theme.colors.icon.default};
     }
   }
