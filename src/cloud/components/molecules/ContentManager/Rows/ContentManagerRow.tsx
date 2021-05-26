@@ -129,6 +129,7 @@ const StyledContentManagerRow = styled.div`
 
   .label {
     flex: 1 1 auto;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px 0 0;
     white-space: nowrap;
     overflow: hidden;
