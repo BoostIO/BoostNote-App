@@ -108,6 +108,19 @@ function useNavStore(pageProps: any): NavContext {
     Map<string, SerializedSmartFolder>
   >(new Map())
 
+  const [appEventsMap, setAppEventsMap] = useState<
+    Map<string, SerializedAppEvent>
+  >(new Map())
+
+  const updateAppEventsMap = useCallback(
+    (...mappedEvents: [string, SerializedAppEvent][]) => {
+      setAppEventsMap((prevMap) => {
+        return new Map([...prevMap, ...mappedEvents])
+      })
+    },
+    []
+  )
+
   const updateSmartFoldersMap = useCallback(
     (...mappedTags: [string, SerializedSmartFolder][]) =>
       setSmartFoldersMap((prevMap) => {
@@ -227,7 +240,14 @@ function useNavStore(pageProps: any): NavContext {
         prevTeamId.current = team.id
 
         const [
-          { folders, docs, tags = [], workspaces = [], smartFolders = [] },
+          {
+            folders,
+            docs,
+            tags = [],
+            workspaces = [],
+            smartFolders = [],
+            appEvents = [],
+          },
           { templates = [] },
         ] = await Promise.all([getResources(team.id), getAllTemplates(team.id)])
 
@@ -238,6 +258,7 @@ function useNavStore(pageProps: any): NavContext {
           workspaces,
           templates,
           smartFolders,
+          appEvents,
         })
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
@@ -245,6 +266,7 @@ function useNavStore(pageProps: any): NavContext {
         setWorkspacesMap(maps.workspacesData)
         setTemplatesMap(maps.templatesData)
         setSmartFoldersMap(maps.smartFoldersData)
+        setAppEventsMap(maps.appEventsData)
         setInitialLoadDone(true)
       }
     }
@@ -792,6 +814,8 @@ function useNavStore(pageProps: any): NavContext {
     updateDocsMap,
     removeFromDocsMap,
     smartFoldersMap,
+    appEventsMap,
+    updateAppEventsMap,
     updateSmartFoldersMap,
     removeFromSmartFoldersMap,
     createFolderHandler,
@@ -856,6 +880,7 @@ interface CreateMapsFromPagePropsProps {
   workspacesData: Map<string, SerializedWorkspace>
   templatesData: Map<string, SerializedTemplate>
   smartFoldersData: Map<string, SerializedSmartFolder>
+  appEventsData: Map<string, SerializedAppEvent>
 }
 
 function getTagsFoldersDocsMapsFromProps(
@@ -869,6 +894,7 @@ function getTagsFoldersDocsMapsFromProps(
       workspacesData: new Map(),
       templatesData: new Map(),
       smartFoldersData: new Map(),
+      appEventsData: new Map(),
     }
   }
 
@@ -879,6 +905,7 @@ function getTagsFoldersDocsMapsFromProps(
     workspaces = [],
     templates = [],
     smartFolders = [],
+    appEvents = [],
   } = pageProps
 
   const foldersData = getMapFromEntityArray(
@@ -893,6 +920,7 @@ function getTagsFoldersDocsMapsFromProps(
   const smartFoldersData = getMapFromEntityArray(
     smartFolders as SerializedSmartFolder[]
   )
+  const appEventsData = getMapFromEntityArray(appEvents as SerializedAppEvent[])
 
   return {
     foldersData,
@@ -901,5 +929,6 @@ function getTagsFoldersDocsMapsFromProps(
     workspacesData,
     templatesData,
     smartFoldersData,
+    appEventsData,
   }
 }
