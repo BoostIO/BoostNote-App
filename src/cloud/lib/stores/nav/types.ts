@@ -54,8 +54,9 @@ export interface NavContext {
   updateDocsMap: (...mappedDoc: [string, SerializedDocWithBookmark][]) => void
   updateParentFolderOfDoc: (doc: SerializedDocWithBookmark) => void
   removeFromDocsMap: (...ids: string[]) => void
-
   smartFoldersMap: Map<string, SerializedSmartFolder>
+  appEventsMap: Map<string, SerializedAppEvent>
+  updateAppEventsMap: (...mappedEvents: [string, SerializedAppEvent][]) => void
   updateSmartFoldersMap: (
     ...smartFolders: [string, SerializedSmartFolder][]
   ) => void
