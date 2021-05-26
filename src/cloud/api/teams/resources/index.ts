@@ -6,6 +6,7 @@ import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { callApi } from '../../../lib/client'
 import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
+import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 
 export interface GetTiedResourcesRequestBody {
   folderIds: string[]
@@ -66,6 +67,7 @@ export interface GetResourcesResponseBody {
   workspaces: SerializedWorkspace[]
   tags?: SerializedTag[]
   smartFolders?: SerializedSmartFolder[]
+  appEvents?: SerializedAppEvent[]
 }
 
 export async function getResources(
