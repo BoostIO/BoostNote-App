@@ -48,10 +48,14 @@ import {
 } from '../api/search'
 import { SidebarToolbarRow } from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import { mapUsers } from '../../shared/lib/mappers/users'
-import { SerializedDoc } from '../interfaces/db/doc'
+import { SerializedDoc, SerializedDocWithBookmark } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
 import { compareDateString } from '../../shared/lib/date'
-import { getDocTitle, getTeamURL } from '../lib/utils/patterns'
+import {
+  getDocTitle,
+  getTeamURL,
+  getOriginalDocId,
+} from '../lib/utils/patterns'
 import {
   mdiAccountMultiplePlusOutline,
   mdiClockOutline,
@@ -94,6 +98,7 @@ import { isEligibleForDiscount } from '../lib/subscription'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
+import { compareAsc } from 'date-fns'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -114,6 +119,7 @@ const Application = ({
     workspacesMap,
     currentParentFolderId,
     currentWorkspaceId,
+    appEventsMap,
   } = useNav()
   const {
     team,
@@ -271,8 +277,29 @@ const Application = ({
   )
 
   const timelineRows = useMemo(() => {
-    return mapTimelineItems([...docsMap.values()], push, team)
-  }, [docsMap, push, team])
+    const appEvents = [...appEventsMap.values()].sort((a, b) =>
+      compareAsc(new Date(a.createdAt), new Date(b.createdAt))
+    )
+
+    const docs: SerializedDocWithBookmark[] = []
+    let count = 0
+    for (const appEvent of appEvents) {
+      const { resource } = appEvent.data || {}
+      if (typeof resource !== 'string') {
+        continue
+      }
+      const doc = docsMap.get(getOriginalDocId(resource))
+      if (doc != null) {
+        docs.push(doc)
+
+        if (count++ > 3) {
+          break
+        }
+      }
+    }
+
+    return mapTimelineItems(docs, push, team)
+  }, [appEventsMap, docsMap, push, team])
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
