@@ -725,6 +725,7 @@ const Container = styled.div`
   .context__scroll {
     flex: 1 1 auto;
     width: 100%;
+    height: 100%;
     overflow: hidden auto;
   }
 
