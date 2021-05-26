@@ -190,7 +190,7 @@ const SmartFolderForm = ({
         <FormRow fullWidth={true} className='privacy-row'>
           <FormRowItem>
             <div>
-              <h3>Make Private</h3>
+              <h3 className='privacy-row__label'>Make Private</h3>
               <p>
                 {makingPrivate ? (
                   <>
@@ -267,6 +267,10 @@ const Container = styled.div`
     .form__row__items {
       align-items: center !important;
     }
+  }
+
+  .privacy-row__label {
+    margin-top: 0;
   }
 `
 

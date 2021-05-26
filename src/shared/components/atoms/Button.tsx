@@ -146,7 +146,7 @@ export const LoadingButton = ({
 export default Button
 
 const StyledButton = styled.button`
-  padding: 0 ${({ theme }) => theme.sizes.spaces.md}px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
@@ -325,7 +325,7 @@ const StyledButton = styled.button`
   }
 
   &.button__variant--bordered {
-    background; transparent;
+    background-color: transparent;
     color: ${({ theme }) => theme.colors.text.secondary};
     border: 1px solid ${({ theme }) => theme.colors.border.second};
 
@@ -337,21 +337,18 @@ const StyledButton = styled.button`
     &:not(.button__state--disabled) {
       &.focus {
         background: ${({ theme }) => theme.colors.variants.secondary.base};
-        color: background: ${({ theme }) =>
-          theme.colors.variants.secondary.text};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
         filter: brightness(103%);
       }
       &:hover {
         background: ${({ theme }) => theme.colors.variants.secondary.base};
-        color: background: ${({ theme }) =>
-          theme.colors.variants.secondary.text};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
         filter: brightness(106%);
       }
       &:active,
       &.button__state--active {
         background: ${({ theme }) => theme.colors.variants.secondary.base};
-        color: background: ${({ theme }) =>
-          theme.colors.variants.secondary.text};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
         filter: brightness(112%);
       }
     }
@@ -423,7 +420,6 @@ const StyledButton = styled.button`
       }
     }
   }
-  
 
   &.button__size--lg {
     height: 40px;

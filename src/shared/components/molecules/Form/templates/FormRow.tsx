@@ -13,7 +13,7 @@ export type FormRowProps = {
 }
 
 const FormRow: AppComponent<{ row?: FormRowProps; fullWidth?: boolean }> = ({
-  row = { required: false, title: '', items: [] },
+  row = { required: false, title: null, items: [] },
   className,
   children,
   fullWidth,
