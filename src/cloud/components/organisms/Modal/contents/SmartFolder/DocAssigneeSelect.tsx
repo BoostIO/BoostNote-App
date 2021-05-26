@@ -76,7 +76,7 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
           }}
         />
 
-        {user.uniqueName}
+        {user.displayName}
       </ItemContainer>
     ),
     value: user.id,
