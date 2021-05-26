@@ -338,6 +338,21 @@ function useNavStore(pageProps: any): NavContext {
   const updateDocsMap = useCallback(
     (...mappedDocs: [string, SerializedDocWithBookmark][]) =>
       setDocsMap((prevMap) => {
+        const newMap = new Map([...prevMap])
+
+        for (const [id, doc] of mappedDocs) {
+          const existingDoc = newMap.get(id)
+          if (existingDoc == null) {
+            newMap.set(id, doc)
+            continue
+          }
+          newMap.set(id, {
+            ...existingDoc,
+            ...doc,
+            head: doc.head == null ? existingDoc.head : doc.head,
+          })
+        }
+
         return new Map([...prevMap, ...mappedDocs])
       }),
     []
