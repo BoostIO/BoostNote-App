@@ -275,7 +275,8 @@ const Container = styled.div`
     width: 100%;
     height: auto;
     max-width: auto;
-    max-height: 70vh;
+    max-height: 150px;
+    overflow-y: auto;
     border-style: solid;
     border-width: 1px;
     border-radius: 4px;
@@ -290,6 +291,7 @@ const Container = styled.div`
 
   .autocomplete__option {
     width: 100%;
+    flex-shrink: 0;
     padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
     overflow: hidden;
     text-overflow: ellipsis;
