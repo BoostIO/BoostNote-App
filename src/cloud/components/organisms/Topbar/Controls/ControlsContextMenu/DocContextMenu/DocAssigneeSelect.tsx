@@ -7,6 +7,7 @@ import UserIcon from '../../../../../atoms/UserIcon'
 import Select from 'react-select'
 import cc from 'classcat'
 import { contextMenuFormItem } from '../../../../../../../shared/lib/styled/styleFunctions'
+import { textOverflow } from '../../../../../../../lib/styled/styleFunctions'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -85,14 +86,6 @@ const DocAssigneeSelect = ({
 }
 
 const SelectContainer = styled.div`
-  .assignee__item__icon {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    line-height: 18px;
-    margin-right: 4px;
-  }
-
   .form__select .form__select__indicator-separator {
     width: 0;
   }
@@ -110,8 +103,8 @@ const SelectContainer = styled.div`
 
   .form__select .form__select__control,
   .form__select .form__select__value-container {
-    height: 32px !important;
-    min-height: 32px !important;
+    height: 30px !important;
+    min-height: 30px !important;
     background: none !important;
     border: 1px solid transparent !important;
   }
@@ -154,8 +147,8 @@ const SelectContainer = styled.div`
   .form__select .form__select__multi-value__remove {
     height: auto;
     position: absolute;
-    top: 2px;
-    right: -9px;
+    top: 0px;
+    right: -16px;
     background: none !important;
     &:hover {
       color: ${({ theme }) => theme.colors.variants.primary.text};
@@ -205,6 +198,19 @@ export default DocAssigneeSelect
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  height: 30px;
+  .assignee__item__label {
+    ${textOverflow}
+  }
+
+  .assignee__item__icon {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 18px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
 `
 
 function getOptionByUser(user: SerializedUser): FormSelectOption {
@@ -212,7 +218,7 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
     label: (
       <ItemContainer>
         <UserIcon user={user} className='assignee__item__icon' />
-        {user.uniqueName}
+        <div className='assignee__item__label'>{user.displayName}</div>
       </ItemContainer>
     ),
     value: user.id,
@@ -229,10 +235,7 @@ function getSelectedOptionsByUserId(
       console.warn(`User Id ${userId} does not exist in page props`)
       return options
     }
-    options.push({
-      value: user.id,
-      label: <UserIcon user={user} className='assignee__item__icon' />,
-    })
+    options.push(getOptionByUser(user))
     return options
   }, [])
 }
