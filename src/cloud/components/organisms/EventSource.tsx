@@ -60,6 +60,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     removeFromTemplatesMap,
     updateSmartFoldersMap,
     removeFromSmartFoldersMap,
+    updateAppEventsMap,
   } = useNav()
   const {
     setPartialGlobalData,
@@ -479,6 +480,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
             smartFolderDeleteHandler(event)
             break
         }
+        updateAppEventsMap([event.id, event])
       }
     }
     return
@@ -498,6 +500,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     commentsEventListener,
     smartFolderUpdateHandler,
     smartFolderDeleteHandler,
+    updateAppEventsMap,
   ])
 
   return null
