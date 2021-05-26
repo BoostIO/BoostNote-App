@@ -1,6 +1,5 @@
 import {
   mdiApplicationCog,
-  mdiArchive,
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
   mdiLock,
@@ -57,7 +56,7 @@ export function mapTopbarBreadcrumbs(
     options: UIFormOptions
   ) => void,
   editWorkspace?: (wp: SerializedWorkspace) => void,
-  deleteOrArchiveDoc?: (doc: SerializedDoc) => void,
+  deleteDoc?: (doc: SerializedDoc) => void,
   deleteFolder?: (folder: SerializedFolder) => void,
   deleteWorkspace?: (wp: SerializedWorkspace) => void
 ) {
@@ -75,7 +74,7 @@ export function mapTopbarBreadcrumbs(
         : { type: 'workspace', item: workspacesMap.get(pageDoc.workspaceId) }
 
     items.unshift(
-      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteOrArchiveDoc)
+      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteDoc)
     )
   }
 
@@ -191,7 +190,7 @@ function getDocBreadcrumb(
   active: boolean,
   push: (url: string) => void,
   renameDoc?: (doc: SerializedDoc) => void,
-  deleteOrArchiveDoc?: (doc: SerializedDoc) => void
+  deleteDoc?: (doc: SerializedDoc) => void
 ): TopbarBreadcrumbProps & AddedProperties {
   return {
     label: getDocTitle(doc, 'Untitled'),
@@ -215,19 +214,13 @@ function getDocBreadcrumb(
             },
           ]
         : []),
-      ...(deleteOrArchiveDoc != null
+      ...(deleteDoc != null
         ? [
-            doc.archivedAt != null
-              ? {
-                  icon: mdiTrashCanOutline,
-                  label: 'Delete',
-                  onClick: () => deleteOrArchiveDoc(doc),
-                }
-              : {
-                  icon: mdiArchive,
-                  label: 'Archive',
-                  onClick: () => deleteOrArchiveDoc(doc),
-                },
+            {
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => deleteDoc(doc),
+            },
           ]
         : []),
     ],

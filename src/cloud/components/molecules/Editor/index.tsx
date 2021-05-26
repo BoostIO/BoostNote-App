@@ -169,7 +169,7 @@ const Editor = ({
     openNewFolderForm,
     openNewDocForm,
     openWorkspaceEditForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteFolder,
     deleteWorkspace,
   } = useCloudResourceModals()
@@ -733,7 +733,7 @@ const Editor = ({
       openNewDocForm,
       openNewFolderForm,
       openWorkspaceEditForm,
-      deleteOrArchiveDoc,
+      deleteDoc,
       deleteFolder,
       deleteWorkspace
     )
@@ -748,7 +748,7 @@ const Editor = ({
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteFolder,
     openWorkspaceEditForm,
     deleteWorkspace,

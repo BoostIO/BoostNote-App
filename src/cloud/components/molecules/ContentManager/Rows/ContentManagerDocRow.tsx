@@ -6,8 +6,6 @@ import { getDocTitle, getDocId } from '../../../../lib/utils/patterns'
 import {
   mdiStarOutline,
   mdiStar,
-  mdiArchiveOutline,
-  mdiFileUndoOutline,
   mdiTrashCanOutline,
   mdiFolderMoveOutline,
   mdiFileDocumentOutline,
@@ -24,7 +22,6 @@ import {
 } from '../../../../api/teams/docs/bookmarks'
 import { useNav } from '../../../../lib/stores/nav'
 import Flexbox from '../../../atoms/Flexbox'
-import { updateDocStatus } from '../../../../api/teams/docs'
 import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
@@ -50,7 +47,7 @@ enum ActionsIds {
   Delete = 3,
 }
 
-const ContentmanagerDocRow = ({
+const ContentManagerDocRow = ({
   team,
   doc,
   checked,
@@ -104,33 +101,6 @@ const ContentmanagerDocRow = ({
       setUpdating((prev) => prev.filter((id) => id !== patternedId))
     },
     [team, pushMessage, updateDocsMap, updating, setUpdating]
-  )
-
-  const toggleArchived = useCallback(
-    async (doc: SerializedDocWithBookmark) => {
-      if (updating) {
-        return
-      }
-      const patternedId = getDocId(doc)
-      setUpdating((prev) => [...prev, patternedId])
-      setSending(ActionsIds.Archive)
-      try {
-        const data = await updateDocStatus(
-          doc.teamId,
-          doc.id,
-          doc.archivedAt == null ? 'archived' : null
-        )
-        updateDocsMap([data.doc.id, data.doc])
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not alter archive for this doc',
-        })
-      }
-      setSending(undefined)
-      setUpdating((prev) => prev.filter((id) => id !== patternedId))
-    },
-    [pushMessage, updateDocsMap, updating, setUpdating]
   )
 
   const deleteDoc = useCallback(
@@ -212,33 +182,15 @@ const ContentmanagerDocRow = ({
       })
     }
 
-    actions.push(
-      doc.archivedAt == null
-        ? {
-            iconPath: mdiArchiveOutline,
-            id: ActionsIds.Archive,
-            tooltip: 'Archive',
-            onClick: () => toggleArchived(doc),
-          }
-        : {
-            iconPath: mdiFileUndoOutline,
-            id: ActionsIds.Archive,
-            tooltip: 'Unarchive',
-            onClick: () => toggleArchived(doc),
-          }
-    )
-
-    if (doc.archivedAt != null) {
-      actions.push({
-        iconPath: mdiTrashCanOutline,
-        id: ActionsIds.Delete,
-        tooltip: 'Delete permanently',
-        onClick: () => deleteDoc(doc),
-      })
-    }
+    actions.push({
+      iconPath: mdiTrashCanOutline,
+      id: ActionsIds.Delete,
+      tooltip: 'Delete permanently',
+      onClick: () => deleteDoc(doc),
+    })
 
     return actions
-  }, [doc, toggleDocBookmark, toggleArchived, deleteDoc, openMoveForm])
+  }, [doc, toggleDocBookmark, deleteDoc, openMoveForm])
 
   const editors = useMemo(() => {
     if (
@@ -305,4 +257,4 @@ const ContentmanagerDocRow = ({
   )
 }
 
-export default ContentmanagerDocRow
+export default ContentManagerDocRow

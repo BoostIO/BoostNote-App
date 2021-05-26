@@ -58,7 +58,7 @@ const FolderPage = () => {
     openNewDocForm,
     deleteFolder,
     openWorkspaceEditForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteWorkspace,
   } = useCloudResourceModals()
 
@@ -87,7 +87,7 @@ const FolderPage = () => {
       openNewDocForm,
       openNewFolderForm,
       openWorkspaceEditForm,
-      deleteOrArchiveDoc,
+      deleteDoc,
       deleteFolder,
       deleteWorkspace
     )
@@ -101,7 +101,7 @@ const FolderPage = () => {
     openRenameDocForm,
     openNewFolderForm,
     openNewDocForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteWorkspace,
     deleteFolder,
     openWorkspaceEditForm,
