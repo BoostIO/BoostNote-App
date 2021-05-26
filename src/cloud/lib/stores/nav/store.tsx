@@ -98,17 +98,15 @@ function useNavStore(pageProps: any): NavContext {
     )
   }, [pageFolder, pageDoc])
 
-  const initData = getTagsFoldersDocsMapsFromProps(pageProps)
-
   const [foldersMap, setFoldersMap] = useState<
     Map<string, SerializedFolderWithBookmark>
-  >(initData.foldersData)
+  >(new Map())
   const [docsMap, setDocsMap] = useState<
     Map<string, SerializedDocWithBookmark>
-  >(initData.docsData)
+  >(new Map())
   const [smartFoldersMap, setSmartFoldersMap] = useState<
     Map<string, SerializedSmartFolder>
-  >(initData.smartFoldersData)
+  >(new Map())
 
   const updateSmartFoldersMap = useCallback(
     (...mappedTags: [string, SerializedSmartFolder][]) =>
@@ -132,7 +130,7 @@ function useNavStore(pageProps: any): NavContext {
 
   const [workspacesMap, setWorkspacesMap] = useState<
     Map<string, SerializedWorkspace>
-  >(initData.workspacesData)
+  >(new Map())
   const updateWorkspacesMap = useCallback(
     (...mappedWorkspaces: [string, SerializedWorkspace][]) =>
       setWorkspacesMap((prevMap) => {
@@ -152,9 +150,7 @@ function useNavStore(pageProps: any): NavContext {
     []
   )
 
-  const [tagsMap, setTagsMap] = useState<Map<string, SerializedTag>>(
-    initData.tagsData
-  )
+  const [tagsMap, setTagsMap] = useState<Map<string, SerializedTag>>(new Map())
   const updateTagsMap = useCallback(
     (...mappedTags: [string, SerializedTag][]) =>
       setTagsMap((prevMap) => {
@@ -177,7 +173,7 @@ function useNavStore(pageProps: any): NavContext {
 
   const [templatesMap, setTemplatesMap] = useState<
     Map<string, SerializedTemplate>
-  >(initData.templatesData)
+  >(new Map())
 
   const updateTemplatesMap = useCallback(
     (...mappedTemplates: [string, SerializedTemplate][]) =>
