@@ -63,7 +63,7 @@ const ViewPage = ({
     openWorkspaceEditForm,
     openNewDocForm,
     openNewFolderForm,
-    deleteOrArchiveDoc: deleteDoc,
+    deleteDoc,
     deleteFolder,
     deleteWorkspace,
   } = useCloudResourceModals()

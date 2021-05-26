@@ -23,7 +23,7 @@ import Checkbox from '../../atoms/Checkbox'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { CustomSelectOption } from '../../atoms/Select/CustomSelect'
 import SortingOption, { sortingOrders } from './SortingOption'
-import ContentmanagerDocRow from './Rows/ContentManagerDocRow'
+import ContentManagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
@@ -502,7 +502,7 @@ const ContentManager = ({
               )}
             </StyledContentManagerListHeader>
             {orderedDocs.map((doc) => (
-              <ContentmanagerDocRow
+              <ContentManagerDocRow
                 doc={doc}
                 key={doc.id}
                 workspace={workspacesMap.get(doc.workspaceId)}

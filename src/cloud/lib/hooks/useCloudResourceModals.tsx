@@ -23,7 +23,6 @@ export function useCloudResourceModals() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
-    toggleDocArchive,
   } = useCloudApi()
 
   const openWorkspaceEditForm = useCallback(
@@ -242,37 +241,11 @@ export function useCloudResourceModals() {
     [messageBox, deleteFolderApi]
   )
 
-  const deleteOrArchiveDoc = useCallback(
+  const deleteDoc = useCallback(
     async (
       target: { id: string; archivedAt?: string; teamId: string },
       title = 'this document'
     ) => {
-      if (target.archivedAt == null) {
-        return messageBox({
-          title: `Archive ${title}`,
-          message: `Are you sure to archive this content?`,
-          iconType: DialogIconTypes.Warning,
-          buttons: [
-            {
-              variant: 'secondary',
-              label: 'Cancel',
-              cancelButton: true,
-              defaultButton: true,
-            },
-            {
-              variant: 'warning',
-              label: 'archive',
-              onClick: async () => {
-                await toggleDocArchive(
-                  target.teamId,
-                  target.id,
-                  target.archivedAt
-                )
-              },
-            },
-          ],
-        })
-      }
       messageBox({
         title: `Delete ${title}`,
         message: `Are you sure to remove for good this content?`,
@@ -294,7 +267,7 @@ export function useCloudResourceModals() {
         ],
       })
     },
-    [messageBox, deleteDocApi, toggleDocArchive]
+    [messageBox, deleteDocApi]
   )
 
   return {
@@ -305,7 +278,7 @@ export function useCloudResourceModals() {
     openRenameDocForm,
     deleteFolder,
     deleteWorkspace,
-    deleteOrArchiveDoc,
+    deleteDoc,
   }
 }
 

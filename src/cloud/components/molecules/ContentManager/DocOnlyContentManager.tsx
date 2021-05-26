@@ -13,7 +13,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { CustomSelectOption } from '../../atoms/Select/CustomSelect'
 import SortingOption, { sortingOrders } from './SortingOption'
 import { Spinner } from '../../atoms/Spinner'
-import ContentmanagerDocRow from './Rows/ContentManagerDocRow'
+import ContentManagerDocRow from './Rows/ContentManagerDocRow'
 import { difference } from 'ramda'
 import DocOnlyContentManagerBulkActions from './Actions/DocOnlyContentManagerBulkActions'
 import { usePreferences } from '../../../lib/stores/preferences'
@@ -137,7 +137,7 @@ const DocOnlyContentManager = ({
       </StyledContentManagerHeader>
       <StyledContentManagerList>
         {orderedDocs.map((doc) => (
-          <ContentmanagerDocRow
+          <ContentManagerDocRow
             doc={doc}
             key={doc.id}
             workspace={workspacesMap.get(doc.workspaceId)}
