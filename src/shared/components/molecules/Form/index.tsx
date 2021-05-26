@@ -76,6 +76,6 @@ const Container = styled.form`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .form__row + .form__row {
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
