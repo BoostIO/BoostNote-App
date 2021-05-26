@@ -191,6 +191,14 @@ const SelectContainer = styled.div`
       transition: 0.2s;
     }
   }
+
+  .form__select__multi-value__label {
+    margin: 0;
+    padding: 0;
+    .assignee__item__label {
+      display: none;
+    }
+  }
 `
 
 export default DocAssigneeSelect
