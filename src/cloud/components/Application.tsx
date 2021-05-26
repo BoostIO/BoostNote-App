@@ -292,7 +292,7 @@ const Application = ({
       if (doc != null) {
         docs.push(doc)
 
-        if (count++ > 3) {
+        if (count++ > 20) {
           break
         }
       }
