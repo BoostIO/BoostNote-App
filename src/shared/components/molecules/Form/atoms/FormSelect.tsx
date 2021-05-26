@@ -140,7 +140,7 @@ const Container = styled.div`
   }
 
   .form__select .form__select__control {
-    display: flex; 
+    display: flex;
     border-radius: ${({ theme }) => theme.borders.radius}px;
     min-width: 100px;
     width: 100%;
@@ -176,6 +176,9 @@ const Container = styled.div`
       border: none !important;
       box-shadow: none !important;
     }
+  }
+  .form__select__value-container {
+    padding: 0 4px;
   }
 
   .form__select .form__select__single-value,
