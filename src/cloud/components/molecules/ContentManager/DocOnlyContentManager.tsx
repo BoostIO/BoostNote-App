@@ -25,7 +25,7 @@ interface DocOnlyContentManagerProps {
   team: SerializedTeam
   documents: SerializedDocWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
-  page?: 'archive' | 'tag' | 'shared'
+  page?: 'archive' | 'tag' | 'shared' | 'smart-folder'
 }
 
 const DocOnlyContentManager = ({

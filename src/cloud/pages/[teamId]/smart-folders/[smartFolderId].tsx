@@ -284,6 +284,7 @@ const SmartFolderPage = (params: any) => {
       <DocOnlyContentManager
         team={team}
         documents={documents}
+        page='smart-folder'
         workspacesMap={workspacesMap}
       />
     </Application>
