@@ -18,7 +18,7 @@ import { usePage } from '../../lib/stores/pageStore'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getTemplate } from '../../api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
-import { getAccessToken } from '../../lib/stores/electron'
+import { getAccessToken, useElectron } from '../../lib/stores/electron'
 import { useComments } from '../../../shared/lib/stores/comments'
 
 interface EventSourceProps {
@@ -32,6 +32,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
   const eventSourceRef = useRef<EventSource | undefined>()
   const [eventSourceSetupCounter, { inc }] = useNumber(0)
   const reconnectionDelayRef = useRef<number>(defaultReconnectionDelay)
+  const { usingElectron, sendToElectron } = useElectron()
+
   const {
     team,
     removeUserInPermissions,
@@ -169,13 +171,20 @@ const EventSource = ({ teamId }: EventSourceProps) => {
 
   const subscriptionChangeEventHandler = useCallback(
     (event: SerializedAppEvent) => {
+      console.log(event)
       if (event.data.subscription.status === 'inactive') {
         updateTeamSubscription(undefined)
+        if (usingElectron) {
+          sendToElectron('subscription-delete', event.data.subscription)
+        }
       } else {
         updateTeamSubscription(event.data.subscription)
+        if (usingElectron) {
+          sendToElectron('subscription-update', event.data.subscription)
+        }
       }
     },
-    [updateTeamSubscription]
+    [updateTeamSubscription, usingElectron, sendToElectron]
   )
 
   const permissionsUpdateEventHandler = useCallback(
@@ -209,8 +218,19 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         })
         setPartialGlobalData({ teams: updatedTeams })
       }
+
+      if (usingElectron) {
+        sendToElectron('team-update', event.data.team)
+      }
     },
-    [setPartialGlobalData, setPartialPageData, teams, team]
+    [
+      setPartialGlobalData,
+      setPartialPageData,
+      teams,
+      team,
+      usingElectron,
+      sendToElectron,
+    ]
   )
 
   const tagChangeEventHandler = useCallback(
