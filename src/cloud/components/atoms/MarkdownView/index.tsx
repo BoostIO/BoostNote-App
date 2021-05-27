@@ -6,6 +6,7 @@ import remarkMath from 'remark-math'
 import remarkRehype from 'remark-rehype'
 import rehypeKatex from 'rehype-katex'
 import rehypeReact from 'rehype-react'
+import remarkAbmonitions from 'remark-admonitions'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
@@ -13,6 +14,7 @@ import rehypeSlug from 'rehype-slug'
 import { useEffectOnce } from 'react-use'
 import { defaultPreviewStyle } from './styles'
 import 'katex/dist/katex.min.css'
+import 'remark-admonitions/styles/classic.css'
 import { useSettings } from '../../../lib/stores/settings'
 import {
   remarkCharts,
@@ -42,6 +44,12 @@ import { Node as UnistNode } from 'unist'
 import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
+
+const remarkAdmonitionOptions = {
+  tag: ':::',
+  icons: 'emoji',
+  infima: false,
+}
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -223,6 +231,7 @@ const MarkdownView = ({
       .use(remarkParse)
       .use(remarkShortcodes)
       .use(remarkDocEmbed, { contentMap: embeddableDocs })
+      .use(remarkAbmonitions, remarkAdmonitionOptions)
       .use(remarkMath)
       .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
       .use(remarkCharts)
@@ -422,7 +431,7 @@ const StyledMarkdownPreview = styled.div`
     height: 20px;
     display: flex;
     align-items: center;
-    color: ${({ theme }) => theme.colors.icon.default} 
+    color: ${({ theme }) => theme.colors.icon.default};
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary}
