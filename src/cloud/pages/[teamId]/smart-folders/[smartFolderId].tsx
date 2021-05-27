@@ -152,7 +152,7 @@ const SmartFolderPage = (params: any) => {
             }
           case 'assignees':
             if (validateAssignees(doc, secondaryCondition)) {
-              if (primaryConditionType !== 'and') {
+              if (primaryConditionType === 'and') {
                 break
               } else {
                 return true
