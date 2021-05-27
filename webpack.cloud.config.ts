@@ -94,13 +94,6 @@ module.exports = (env, argv) => {
           {
             from: path.join(
               __dirname,
-              'node_modules/bootstrap/dist/css/bootstrap.min.css'
-            ),
-            to: 'app/bootstrap/bootstrap.min.css',
-          },
-          {
-            from: path.join(
-              __dirname,
               'node_modules/remark-admonitions/styles/classic.css'
             ),
             to: 'app/remark-admonitions/classic.css',
@@ -163,15 +156,6 @@ module.exports = (env, argv) => {
             path.join(
               __dirname,
               'node_modules/remark-admonitions/styles/classic.css'
-            )
-          )
-        )
-        app.use(
-          '/app/bootstrap/bootstrap.min.css',
-          express.static(
-            path.join(
-              __dirname,
-              'node_modules/bootstrap/dist/css/bootstrap.min.css'
             )
           )
         )
