@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkSlug from 'remark-slug'
 import remarkMath from 'remark-math'
-import remarkAbmonitions from 'remark-admonitions'
+import remarkAdmonitions from 'remark-admonitions'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeReact from 'rehype-react'
@@ -265,7 +265,7 @@ const MarkdownPreviewer = ({
     return unified()
       .use(remarkParse)
       .use(remarkEmoji, { emoticon: false })
-      .use(remarkAbmonitions, remarkAdmonitionOptions)
+      .use(remarkAdmonitions, remarkAdmonitionOptions)
       .use(remarkMath)
       .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
       .use(remarkCharts)

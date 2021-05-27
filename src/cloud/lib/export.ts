@@ -1,7 +1,7 @@
 import unified from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import remarkAbmonitions from 'remark-admonitions'
+import remarkAdmonitions from 'remark-admonitions'
 import remarkMath from 'remark-math'
 import rehypeDocument from 'rehype-document'
 import rehypeStringify from 'rehype-stringify'
@@ -45,7 +45,7 @@ export const exportAsHtmlFile = async (
   const file = await unified()
     .use(remarkParse)
     .use(remarkMath)
-    .use(remarkAbmonitions, remarkAdmonitionOptions)
+    .use(remarkAdmonitions, remarkAdmonitionOptions)
     .use([remarkRehype, { allowDangerousHTML: false }])
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
@@ -197,7 +197,7 @@ export async function convertMarkdownToPdfExportableHtml(
 ): Promise<string> {
   const file = await unified()
     .use(remarkParse)
-    .use(remarkAbmonitions, remarkAdmonitionOptions)
+    .use(remarkAdmonitions, remarkAdmonitionOptions)
     .use(remarkMath)
     .use([remarkRehype, { allowDangerousHTML: true }])
     .use(rehypeRaw)

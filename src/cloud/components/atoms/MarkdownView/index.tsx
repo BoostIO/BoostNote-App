@@ -6,7 +6,7 @@ import remarkMath from 'remark-math'
 import remarkRehype from 'remark-rehype'
 import rehypeKatex from 'rehype-katex'
 import rehypeReact from 'rehype-react'
-import remarkAbmonitions from 'remark-admonitions'
+import remarkAdmonitions from 'remark-admonitions'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
@@ -229,7 +229,7 @@ const MarkdownView = ({
       .use(remarkParse)
       .use(remarkShortcodes)
       .use(remarkDocEmbed, { contentMap: embeddableDocs })
-      .use(remarkAbmonitions, remarkAdmonitionOptions)
+      .use(remarkAdmonitions, remarkAdmonitionOptions)
       .use(remarkMath)
       .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
       .use(remarkCharts)
