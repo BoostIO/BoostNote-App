@@ -13,8 +13,6 @@ import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
 import rehypeSlug from 'rehype-slug'
 import { useEffectOnce } from 'react-use'
 import { defaultPreviewStyle } from './styles'
-import 'katex/dist/katex.min.css'
-import 'remark-admonitions/styles/classic.css'
 import { useSettings } from '../../../lib/stores/settings'
 import {
   remarkCharts,

@@ -52,6 +52,9 @@ const App = () => {
   }
   return (
     <>
+      <link href='/app/katex/katex.min.css' rel='stylesheet' />
+      <link href='/app/remark-admonitions/classic.css' rel='stylesheet' />
+
       <V2ToastProvider>
         <GlobalDataProvider>
           <RealtimeConnProvider>
@@ -76,6 +79,7 @@ const App = () => {
                 ga('send', 'pageview');`,
         }}
       />
+
       {nodeEnv === 'production' && (
         <script
           type='text/javascript'
