@@ -75,18 +75,7 @@ const GeneralTab = () => {
             value={preferences['general.language']}
             onChange={selectLanguage}
           >
-            <option value='de'>🇩🇪Deutsch</option>
             <option value='en-US'>🇺🇸English (US)</option>
-            <option value='es-ES'>🇪🇸Español (España)</option>
-            <option value='fr-FR'>🇫🇷Français (France)</option>
-            <option value='it-IT'>🇮🇹️Italiano (Italia)</option>
-            <option value='ja'>🇯🇵日本語</option>
-            <option value='ko'>🇰🇷한국어</option>
-            <option value='pt-BR'>🇧🇷Português (BR)</option>
-            <option value='uk-UA'>🇺🇦Українська</option>
-            <option value='zh-CN'>🇨🇳中文 (CN)</option>
-            <option value='zh-HK'>🇭🇰中文 (HK)</option>
-            <option value='zh-TW'>🇹🇼中文 (TW)</option>
           </SectionSelect>
         </SectionControl>
       </Section>
