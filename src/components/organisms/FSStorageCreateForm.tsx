@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import FormFolderSelector from '../atoms/FormFolderSelector'
+import { FormFolderSelectorInput } from '../atoms/form'
 import { useToast } from '../../shared/lib/stores/toast'
 import Form from '../../shared/components/molecules/Form'
+import { openDialog } from '../../lib/exports'
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -28,6 +29,11 @@ const FSStorageCreateForm = () => {
       })
     }
   }, [createStorage, location, name, push, report, pushMessage])
+
+  const openDialogAndStoreLocation = useCallback(async () => {
+    const location = await openDialog()
+    setLocation(location)
+  }, [setLocation])
 
   return (
     <Form
@@ -52,8 +58,25 @@ const FSStorageCreateForm = () => {
             {
               type: 'node',
               element: (
-                <FormFolderSelector value={location} setValue={setLocation} />
+                <FormFolderSelectorInput
+                  type='text'
+                  onClick={openDialogAndStoreLocation}
+                  readOnly
+                  value={
+                    location.trim().length === 0
+                      ? t('folder.noLocationSelected')
+                      : location
+                  }
+                />
               ),
+            },
+            {
+              type: 'button',
+              props: {
+                label: 'Select Folder',
+                variant: 'primary',
+                onClick: openDialogAndStoreLocation,
+              },
             },
           ],
         },

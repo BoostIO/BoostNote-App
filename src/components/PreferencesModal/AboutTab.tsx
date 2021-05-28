@@ -72,20 +72,18 @@ const AboutContents = styled.div`
       }
     }
   }
-`
 
-interface PrimaryLinkProps {
-  href: string
-  children: string
-}
-
-const PrimaryLinkContainer = styled.div`
   .about__tab__primary__link {
     :hover {
       text-decoration: underline;
     }
   }
 `
+
+interface PrimaryLinkProps {
+  href: string
+  children: string
+}
 
 const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   const handleClick = useCallback(
@@ -97,15 +95,13 @@ const PrimaryLink = ({ href, children }: PrimaryLinkProps) => {
   )
 
   return (
-    <PrimaryLinkContainer>
-      <Link
-        className={cc(['about__tab__primary__link'])}
-        href={href}
-        onClick={handleClick}
-      >
-        {children}
-      </Link>
-    </PrimaryLinkContainer>
+    <Link
+      className={cc(['about__tab__primary__link'])}
+      href={href}
+      onClick={handleClick}
+    >
+      {children}
+    </Link>
   )
 }
 

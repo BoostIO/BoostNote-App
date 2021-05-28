@@ -1,24 +1,21 @@
 import React, { useCallback, useRef, useState } from 'react'
-import ProgressBar from '../atoms/ProgressBar'
-import styled from '../../lib/styled/styled'
-import { border } from '../../lib/styled/styleFunctions'
-import { usePreferences } from '../../lib/preferences'
-import { usePreviewStyle } from '../../lib/preview'
-import { useToast } from '../../lib/toast'
+import ProgressBar from '../../atoms/ProgressBar'
+import { usePreferences } from '../../../lib/preferences'
+import { usePreviewStyle } from '../../../lib/preview'
 import {
   getPathByName,
   mkdir,
   showOpenDialog,
   writeFile,
-} from '../../lib/electronOnly'
+} from '../../../lib/electronOnly'
 import {
   convertNoteDocToMarkdownString,
   convertNoteDocToPdfBuffer,
   exportNoteAsHtmlFile,
   getValidNoteTitle,
-} from '../../lib/exports'
+} from '../../../lib/exports'
 import { useTranslation } from 'react-i18next'
-import { useDb } from '../../lib/db'
+import { useDb } from '../../../lib/db'
 import { useEffectOnce, useSetState } from 'react-use'
 import {
   AllDocsMap,
@@ -26,22 +23,26 @@ import {
   FolderDoc,
   NoteDoc,
   ObjectMap,
-} from '../../lib/db/types'
-import { entries, keys, values } from '../../lib/db/utils'
+} from '../../../lib/db/types'
+import { entries, keys, values } from '../../../lib/db/utils'
 import { join } from 'path'
-import { filenamify } from '../../lib/string'
+import { filenamify } from '../../../lib/string'
+import { useToast } from '../../../shared/lib/stores/toast'
+import styled from '../../../shared/lib/styled'
+import { border } from '../../../shared/lib/styled/styleFunctions'
 
-interface ExportProcedureData {
+export interface ExportProcedureData {
   folderName: string
   folderPathname: string
   exportType: string
   recursive: boolean
   exportingStorage: boolean
+  exportLocation?: string
 }
 
 interface ExportProgressItemProps {
-  storageId: string
-  exportSettings: ExportProcedureData
+  workspaceId: string
+  exportProcedureData: ExportProcedureData
   onFinish: () => void
 }
 
@@ -61,8 +62,8 @@ function convertValueToPercentage(value: number) {
 }
 
 const ExportProgressItem = ({
-  storageId,
-  exportSettings,
+  workspaceId,
+  exportProcedureData,
   onFinish,
 }: ExportProgressItemProps) => {
   const { preferences } = usePreferences()
@@ -140,21 +141,21 @@ const ExportProgressItem = ({
           return
         }
 
-        if (folderPath == '/' && !exportSettings.exportingStorage) {
+        if (folderPath == '/' && !exportProcedureData.exportingStorage) {
           continue
         }
 
-        if (!exportSettings.exportingStorage) {
+        if (!exportProcedureData.exportingStorage) {
           if (
-            exportSettings.recursive &&
-            folderPath != exportSettings.folderPathname &&
-            !folderPath.startsWith(exportSettings.folderPathname + '/')
+            exportProcedureData.recursive &&
+            folderPath != exportProcedureData.folderPathname &&
+            !folderPath.startsWith(exportProcedureData.folderPathname + '/')
           ) {
             continue
           }
           if (
-            !exportSettings.recursive &&
-            folderPath != exportSettings.folderPathname
+            !exportProcedureData.recursive &&
+            folderPath != exportProcedureData.folderPathname
           ) {
             continue
           }
@@ -162,7 +163,9 @@ const ExportProgressItem = ({
 
         const fullPath = join(
           rootDir,
-          folderPath.substring(folderPath.indexOf(exportSettings.folderName))
+          folderPath.substring(
+            folderPath.indexOf(exportProcedureData.folderName)
+          )
         )
 
         setExportState({
@@ -175,10 +178,10 @@ const ExportProgressItem = ({
       }
     },
     [
-      exportSettings.exportingStorage,
-      exportSettings.folderName,
-      exportSettings.folderPathname,
-      exportSettings.recursive,
+      exportProcedureData.exportingStorage,
+      exportProcedureData.folderName,
+      exportProcedureData.folderPathname,
+      exportProcedureData.recursive,
       isExportingCanceled,
       setExportState,
     ]
@@ -186,7 +189,7 @@ const ExportProgressItem = ({
 
   const getNotesForExport = useCallback(
     (noteMap: ObjectMap<NoteDoc>): NoteDoc[] => {
-      if (exportSettings.exportingStorage) {
+      if (exportProcedureData.exportingStorage) {
         return values(noteMap)
       }
 
@@ -196,17 +199,17 @@ const ExportProgressItem = ({
           continue
         }
         if (
-          exportSettings.recursive &&
-          noteDoc.folderPathname != exportSettings.folderPathname &&
+          exportProcedureData.recursive &&
+          noteDoc.folderPathname != exportProcedureData.folderPathname &&
           !noteDoc.folderPathname.startsWith(
-            exportSettings.folderPathname + '/'
+            exportProcedureData.folderPathname + '/'
           )
         ) {
           continue
         }
         if (
-          !exportSettings.recursive &&
-          noteDoc.folderPathname != exportSettings.folderPathname
+          !exportProcedureData.recursive &&
+          noteDoc.folderPathname != exportProcedureData.folderPathname
         ) {
           continue
         }
@@ -216,9 +219,9 @@ const ExportProgressItem = ({
       return notesToExport
     },
     [
-      exportSettings.exportingStorage,
-      exportSettings.folderPathname,
-      exportSettings.recursive,
+      exportProcedureData.exportingStorage,
+      exportProcedureData.folderPathname,
+      exportProcedureData.recursive,
     ]
   )
 
@@ -236,18 +239,20 @@ const ExportProgressItem = ({
           return exportingNoteIndex
         }
 
-        const noteExportFolder = exportSettings.recursive
+        const noteExportFolder = exportProcedureData.recursive
           ? noteDoc.folderPathname.substring(
-              exportSettings.folderPathname.indexOf(exportSettings.folderName)
+              exportProcedureData.folderPathname.indexOf(
+                exportProcedureData.folderName
+              )
             )
-          : exportSettings.folderName
+          : exportProcedureData.folderName
 
         const exportNoteFilenameWithoutExtension = `${filenamify(
           getValidNoteTitle(noteDoc)
         )}`
         const exportNotePathname = join(
           join(rootDir, noteExportFolder),
-          `${exportNoteFilenameWithoutExtension}.${exportSettings.exportType}`
+          `${exportNoteFilenameWithoutExtension}.${exportProcedureData.exportType}`
         )
         setExportState({
           exportProgressValue: convertValueToPercentage(
@@ -262,7 +267,7 @@ const ExportProgressItem = ({
           )}`,
         })
 
-        switch (exportSettings.exportType) {
+        switch (exportProcedureData.exportType) {
           case 'html':
             await exportNoteAsHtmlFile(
               join(rootDir, noteExportFolder),
@@ -326,10 +331,10 @@ const ExportProgressItem = ({
     [
       getNotesForExport,
       isExportingCanceled,
-      exportSettings.recursive,
-      exportSettings.folderPathname,
-      exportSettings.folderName,
-      exportSettings.exportType,
+      exportProcedureData.recursive,
+      exportProcedureData.folderPathname,
+      exportProcedureData.folderName,
+      exportProcedureData.exportType,
       setExportState,
       preferences,
       pushMessage,
@@ -340,24 +345,28 @@ const ExportProgressItem = ({
   )
 
   const startExportingNotes = useCallback(async () => {
-    const savePathname = await openDialog()
+    const savePathname =
+      exportProcedureData.exportLocation != null &&
+      exportProcedureData.exportLocation != ''
+        ? exportProcedureData.exportLocation
+        : await openDialog()
     if (!savePathname) {
       return
     }
 
-    const storage = storageMap[storageId]
+    const storage = storageMap[workspaceId]
     if (!storage) {
       pushMessage({
-        title: 'Cannot find storage',
-        description: 'Please check storage and try again later.',
+        title: 'Cannot find workspace',
+        description: 'Please check workspace exists and try again later.',
       })
-      console.warn('Storage ID cannot be found: ' + storageId)
+      console.warn('Workspace ID cannot be found: ' + workspaceId)
       return
     }
 
     setShowExportProgress(true)
     try {
-      const rootDir = exportSettings.exportingStorage
+      const rootDir = exportProcedureData.exportingStorage
         ? join(savePathname, storage.name)
         : savePathname
       const allDocsMap: AllDocsMap = await storage.db.getAllDocsMap()
@@ -365,10 +374,10 @@ const ExportProgressItem = ({
 
       setExportState({ exportOperation: 'Creating directories' })
       try {
-        if (exportSettings.recursive) {
+        if (exportProcedureData.recursive) {
           await createExportDirectories(folderMap, rootDir)
         } else {
-          await mkdir(join(rootDir, exportSettings.folderName))
+          await mkdir(join(rootDir, exportProcedureData.folderName))
         }
       } catch (err) {
         addExportError('Cannot make directories: ' + err)
@@ -391,6 +400,7 @@ const ExportProgressItem = ({
             })
           } else {
             pushMessage({
+              type: 'success',
               title: 'Export finished',
               description: `Exported ${exportedNotesCount} notes successfully.`,
             })
@@ -417,19 +427,20 @@ const ExportProgressItem = ({
       console.warn('Errors during export: ', exportErrors)
     }
   }, [
+    exportProcedureData.exportLocation,
+    exportProcedureData.exportingStorage,
+    exportProcedureData.recursive,
+    exportProcedureData.folderName,
     openDialog,
     storageMap,
-    storageId,
+    workspaceId,
     pushMessage,
-    exportSettings.exportingStorage,
-    exportSettings.recursive,
-    exportSettings.folderName,
     setExportState,
     exportErrors,
-    isExportingCanceled,
     createExportDirectories,
     addExportError,
     exportNotes,
+    isExportingCanceled,
   ])
 
   useEffectOnce(() => {
@@ -539,7 +550,7 @@ const ProgressContainerItem = styled.div`
   margin-left: -240px;
   margin-top: 300px;
 
-  background-color: ${({ theme }) => theme.navBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   max-width: 750px;
   max-height: 480px;
   z-index: 6002;
@@ -560,7 +571,7 @@ const ProgressContainerItem = styled.div`
   }
 
   progress[value]::-webkit-progress-value {
-    background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.variants.primary.base};
     border-radius: 2px;
   }
 `

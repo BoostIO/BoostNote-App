@@ -1,14 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import {
-  FormPrimaryButton,
-  FormSecondaryButton,
-  FormHeading,
-  FormLabelGroup,
-  FormLabelGroupLabel,
-  FormLabelGroupContent,
-  FormControlGroup,
-} from '../atoms/form'
-import FormFolderSelector from '../atoms/FormFolderSelector'
+import { FormHeading, FormFolderSelectorInput } from '../atoms/form'
 import { useDb } from '../../lib/db'
 import { excludeNoteIdPrefix } from '../../lib/db/utils'
 import { join } from 'path'
@@ -16,8 +7,11 @@ import { writeFile, prepareDirectory } from '../../lib/electronOnly'
 import { entries } from '../../lib/db/utils'
 import { useRouter } from '../../lib/router'
 import { usePreferences } from '../../lib/preferences'
-import Icon from '../atoms/Icon'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
+import Form from '../../shared/components/molecules/Form'
+import { openDialog } from '../../lib/exports'
+import { useTranslation } from 'react-i18next'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface ConvertPouchStorageProps {
   storageId: string
@@ -31,6 +25,7 @@ const ConvertPouchStorage = ({
   const { push } = useRouter()
   const { setClosed } = usePreferences()
   const { storageMap, createStorage } = useDb()
+  const { t } = useTranslation()
   const [newStorageLocation, setNewStorageLocation] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [newStorageName, setNewStorageName] = useState('')
@@ -115,6 +110,11 @@ const ConvertPouchStorage = ({
     push,
   ])
 
+  const openDialogAndStoreLocation = useCallback(async () => {
+    const location = await openDialog()
+    setNewStorageLocation(location)
+  }, [setNewStorageLocation])
+
   return (
     <>
       <FormHeading depth={2}>
@@ -144,23 +144,51 @@ const ConvertPouchStorage = ({
               : errorMessage}
           </p>
 
-          <FormLabelGroup>
-            <FormLabelGroupLabel>Choose Location</FormLabelGroupLabel>
-            <FormLabelGroupContent>
-              <FormFolderSelector
-                value={newStorageLocation}
-                setValue={setNewStorageLocation}
-              />
-            </FormLabelGroupContent>
-          </FormLabelGroup>
-          <FormControlGroup>
-            <FormSecondaryButton onClick={closeForm}>
-              Cancel
-            </FormSecondaryButton>
-            <FormPrimaryButton onClick={cloneAndConvertStorage}>
-              Convert to File System based Space
-            </FormPrimaryButton>
-          </FormControlGroup>
+          <Form
+            rows={[
+              {
+                title: 'Choose Location',
+                items: [
+                  {
+                    type: 'node',
+                    element: (
+                      <FormFolderSelectorInput
+                        type='text'
+                        onClick={openDialogAndStoreLocation}
+                        readOnly
+                        value={
+                          newStorageLocation.trim().length === 0
+                            ? t('folder.noLocationSelected')
+                            : newStorageLocation
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    type: 'button',
+                    props: {
+                      label: 'Select Folder',
+                      variant: 'primary',
+                      onClick: openDialogAndStoreLocation,
+                    },
+                  },
+                ],
+              },
+              {
+                items: [
+                  {
+                    type: 'button',
+                    props: {
+                      label: ' Convert to File System based Space',
+                      disabled: newStorageLocation.trim().length === 0,
+                      variant: 'primary',
+                      onClick: cloneAndConvertStorage,
+                    },
+                  },
+                ],
+              },
+            ]}
+          />
         </>
       )}
     </>

@@ -34,6 +34,7 @@ interface StandardFormSelectOptions {
 interface SimpleFormSelectOptions {
   value: string | string[]
   options: readonly string[]
+  labels?: readonly string[]
   onChange: (val: string) => void
 }
 
@@ -90,24 +91,48 @@ export type SimpleFormSelectProps = FormSelectCommonProps &
   SimpleFormSelectOptions
 export const SimpleFormSelect = ({
   options,
+  labels,
   value,
   onChange,
   ...props
 }: SimpleFormSelectProps) => {
   const convertedOptions = useMemo(() => {
+    if (labels != null && labels.length === options.length) {
+      return options.map((value, index) => {
+        return {
+          label: labels[index],
+          value: value,
+        }
+      })
+    }
     return options.map((opt) => {
       return {
         label: capitalize(opt),
         value: opt,
       }
     })
-  }, [options])
+  }, [labels, options])
 
   const onSelectChange = useCallback(
     (val: FormSelectOption) => {
       onChange(val.value)
     },
     [onChange]
+  )
+
+  const findLabel = useCallback(
+    (targetOption) => {
+      if (labels == null || labels.length != options.length) {
+        return capitalize(targetOption)
+      }
+      const optionIndex = options.indexOf(targetOption)
+      if (optionIndex == -1) {
+        return capitalize(targetOption)
+      } else {
+        return labels[optionIndex]
+      }
+    },
+    [options, labels]
   )
 
   return (
@@ -117,7 +142,10 @@ export const SimpleFormSelect = ({
       value={
         value != null
           ? typeof value === 'string'
-            ? { label: capitalize(value), value: value }
+            ? {
+                label: findLabel(value),
+                value: value,
+              }
             : value.map((val) => {
                 return { label: capitalize(val), value: val }
               })

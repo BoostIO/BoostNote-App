@@ -26,9 +26,9 @@ import {
   getWorkspaceHref,
 } from '../../../db/utils'
 import { LocalNewResourceRequestBody } from '../../hooks/local/useLocalUI'
-import { FormRowProps } from '../../../../shared/components/molecules/Form'
 import { TopbarBreadcrumbProps } from '../../../../shared/components/organisms/Topbar'
 import { topParentId } from '../../../../cloud/lib/mappers/topbarTree'
+import { FormRowProps } from '../../../../shared/components/molecules/Form/templates/FormRow'
 
 type AddedProperties =
   | { type: 'folder'; item: FolderDoc }

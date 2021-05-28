@@ -88,7 +88,7 @@ export default {
     'note.edit': 'Edit',
     'note.splitView': 'Split View',
     'note.preview': 'Preview',
-    'note.trash': 'Trash',
+    'note.archive': 'Archive',
     'note.export': 'Export',
 
     //Bookmark
@@ -133,6 +133,7 @@ export default {
 
     // Preferences
     'preferences.general': 'Preferences',
+    'preferences.generalTab': 'General',
 
     // Preferences GeneralTab
     'preferences.account': 'Account',
@@ -156,12 +157,7 @@ export default {
       'You can choose to enable or disable this option.',
     'preferences.analyticsLabel': 'Enable analytics to help improve Boostnote',
     'preferences.displayTutorialsLabel': 'Tutorials and FAQ',
-    'preferences.notesView': 'Note List View',
-    'preferences.notesViewDefault': 'Default',
-    'preferences.notesViewCompact': 'Compact',
     'preferences.autoSync': 'Enable auto sync',
-    'preferences.subfolders': 'Subfolders',
-    'preferences.subfoldersView': 'Show content of all subfolders',
 
     // Preferences KeymapTab
     'preferences.keymap': 'Keymap',

@@ -40,7 +40,6 @@ import {
 import remarkSlug from 'remark-slug'
 import { rehypePosition } from '../cloud/lib/rehypePosition'
 import remarkAdmonitions from 'remark-admonitions'
-import { MenuItemConstructorOptions } from 'electron'
 
 interface ImageData {
   name: string
@@ -667,34 +666,4 @@ export const exportNoteAsPdfFile = async (
       description: error.message,
     })
   }
-}
-
-export function getExportAsMenuItems(
-  folderName: string,
-  folderPathname: string,
-  recursive: boolean,
-  startExport: (
-    folderName: string,
-    folderPathname: string,
-    exportType: string,
-    recursive: boolean
-  ) => void
-): MenuItemConstructorOptions[] {
-  return [
-    {
-      type: 'normal',
-      label: 'Export as Markdown (.md)',
-      click: () => startExport(folderName, folderPathname, 'md', recursive),
-    },
-    {
-      type: 'normal',
-      label: 'Export as HTML (.html)',
-      click: () => startExport(folderName, folderPathname, 'html', recursive),
-    },
-    {
-      type: 'normal',
-      label: 'Export as PDF (.pdf)',
-      click: () => startExport(folderName, folderPathname, 'pdf', recursive),
-    },
-  ]
 }

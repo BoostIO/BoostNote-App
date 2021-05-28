@@ -12,6 +12,7 @@ import {
   mdiLinkPlus,
   mdiAccountMultiple,
   mdiHistory,
+  mdiArchive,
 } from '@mdi/js'
 import { isTagNameValid } from '../../lib/db/utils'
 import NoteDetailTagNavigator from '../molecules/NoteDetailTagNavigator'
@@ -291,15 +292,15 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
             <LabelIcon path={mdiRestore} />
             <ButtonLabel>{t('note.restore')}</ButtonLabel>
           </ButtonItem>
-          <ButtonItem title={t('note.trash')} onClick={purge}>
+          <ButtonItem title={t('note.delete')} onClick={purge}>
             <LabelIcon path={mdiTrashCanOutline} />
             <ButtonLabel>{t('note.delete')}</ButtonLabel>
           </ButtonItem>
         </>
       ) : (
-        <ButtonItem title={t('note.delete')} onClick={trash}>
-          <LabelIcon path={mdiTrashCanOutline} />
-          <ButtonLabel>Trash</ButtonLabel>
+        <ButtonItem title={t('note.archive')} onClick={trash}>
+          <LabelIcon path={mdiArchive} />
+          <ButtonLabel>Archive</ButtonLabel>
         </ButtonItem>
       )}
 

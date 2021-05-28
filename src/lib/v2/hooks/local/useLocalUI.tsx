@@ -18,10 +18,14 @@ import {
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { useGeneralStatus } from '../../../generalStatus'
 import { FormRowProps } from '../../../../shared/components/molecules/Form/templates/FormRow'
+import ExportProgressItem, {
+  ExportProcedureData,
+} from '../../../../components/molecules/Export/ExportProgressItem'
+import ExportSettingsComponent from '../../../../components/molecules/Export/ExportSettingsComponent'
 
 export function useLocalUI() {
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
-  const { openModal, closeLastModal } = useModal()
+  const { openModal, closeLastModal, closeAllModals } = useModal()
   const { messageBox } = useDialog()
   const {
     updateNote,
@@ -351,6 +355,29 @@ export function useLocalUI() {
     [messageBox, purgeNote, trashNote]
   )
 
+  const exportDocuments = useCallback(
+    (
+      workspace: NoteStorage,
+      exportSettings: LocalExportResourceRequestBody
+    ) => {
+      openModal(
+        <ExportSettingsComponent
+          exportSettings={exportSettings}
+          onStartExport={(exportProcedureData: ExportProcedureData) => {
+            openModal(
+              <ExportProgressItem
+                workspaceId={workspace.id}
+                exportProcedureData={exportProcedureData}
+                onFinish={() => closeAllModals()}
+              />
+            )
+          }}
+        />
+      )
+    },
+    [closeAllModals, openModal]
+  )
+
   return {
     openWorkspaceEditForm,
     openNewDocForm,
@@ -360,10 +387,17 @@ export function useLocalUI() {
     deleteFolder,
     // deleteWorkspace,
     deleteOrTrashNote: deleteOrArchiveDoc,
+    exportDocuments,
   }
 }
 
 export interface LocalNewResourceRequestBody {
   workspaceId?: string
   parentFolderPathname?: string
+}
+
+export interface LocalExportResourceRequestBody {
+  folderName: string
+  folderPathname: string
+  exportingStorage: boolean
 }

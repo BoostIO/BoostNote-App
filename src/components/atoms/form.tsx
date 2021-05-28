@@ -123,6 +123,23 @@ export const FormCheckItemContainer = styled.div`
   align-items: center;
 `
 
+export const FormFolderSelectorInput = styled.input`
+  display: block;
+  flex: 1;
+  padding: 0.375rem 0.75rem;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  ${border};
+  background-color: white;
+  cursor: pointer;
+  &:disabled {
+    color: gray;
+    background-color: #ccc;
+  }
+
+  margin-bottom: 7px;
+`
+
 export const FormCheckItem = ({
   children,
   id,

@@ -2,29 +2,18 @@ import React, {
   useCallback,
   useState,
   useMemo,
-  ChangeEventHandler,
   KeyboardEventHandler,
+  ChangeEventHandler,
 } from 'react'
-import {
-  Section,
-  SectionHeader,
-  SectionControl,
-  SectionSelect,
-  SectionInput,
-} from './styled'
+import { SectionControl } from './styled'
 import { useTranslation } from 'react-i18next'
-import {
-  usePreferences,
-  EditorIndentTypeOptions,
-  EditorIndentSizeOptions,
-  EditorKeyMapOptions,
-} from '../../lib/preferences'
-import { SelectChangeEventHandler } from '../../lib/events'
+import { usePreferences, EditorIndentSizeOptions } from '../../lib/preferences'
 import { themes } from '../../lib/CodeMirror'
-import { capitalize } from '../../lib/string'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import { useDebounce } from 'react-use'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
+import Form from '../../shared/components/molecules/Form'
+import { SimpleFormSelect } from '../../shared/components/molecules/Form/atoms/FormSelect'
 
 const defaultPreviewContent = `# hello-world.js
 
@@ -39,10 +28,10 @@ const EditorTab = () => {
   const { preferences, setPreferences } = usePreferences()
   const { report } = useAnalytics()
 
-  const selectEditorTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorTheme = useCallback(
+    (value) => {
       setPreferences({
-        'editor.theme': event.target.value,
+        'editor.theme': value,
       })
       report(analyticsEvents.updateEditorTheme)
     },
@@ -88,31 +77,28 @@ const EditorTab = () => {
     [fontFamily, setPreferences]
   )
 
-  const selectEditorIndentType: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorIndentType = useCallback(
+    (value) => {
       setPreferences({
-        'editor.indentType': event.target.value as EditorIndentTypeOptions,
+        'editor.indentType': value,
       })
     },
     [setPreferences]
   )
 
-  const selectEditorIndentSize: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorIndentSize = useCallback(
+    (value) => {
       setPreferences({
-        'editor.indentSize': parseInt(
-          event.target.value,
-          10
-        ) as EditorIndentSizeOptions,
+        'editor.indentSize': parseInt(value, 10) as EditorIndentSizeOptions,
       })
     },
     [setPreferences]
   )
 
-  const selectEditorKeyMap: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectEditorKeyMap = useCallback(
+    (value) => {
       setPreferences({
-        'editor.keyMap': event.target.value as EditorKeyMapOptions,
+        'editor.keyMap': value,
       })
     },
     [setPreferences]
@@ -131,90 +117,112 @@ const EditorTab = () => {
   const { t } = useTranslation()
   return (
     <div>
-      <Section>
-        <SectionHeader>{t('preferences.editorTheme')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.theme']}
-            onChange={selectEditorTheme}
-          >
-            <option value='default'>Default</option>
-            {themes.map((theme) => (
-              <option value={theme} key={theme}>
-                {capitalize(theme)}
-              </option>
-            ))}
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorFontSize')}</SectionHeader>
-        <SectionControl>
-          <SectionInput
-            type='number'
-            value={fontSize}
-            onChange={updateFontSize}
-          />{' '}
-          &emsp;px
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorFontFamily')}</SectionHeader>
-        <SectionControl>
-          <SectionInput
-            type='value'
-            value={fontFamily}
-            onChange={updateFontFamily}
-          />
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorIndentType')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.indentType']}
-            onChange={selectEditorIndentType}
-          >
-            <option value='spaces'>{t('preferences.spaces')}</option>
-            <option value='tab'>{t('preferences.tab')}</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorIndentSize')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.indentSize']}
-            onChange={selectEditorIndentSize}
-          >
-            <option value={2}>2</option>
-            <option value={4}>4</option>
-            <option value={8}>8</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorKeymap')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['editor.keyMap']}
-            onChange={selectEditorKeyMap}
-          >
-            <option value='default'>Default</option>
-            <option value='vim'>vim</option>
-            <option value='emacs'>emacs</option>
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.editorPreview')}</SectionHeader>
-        <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
-          <CustomizedCodeEditor
-            value={previewContent}
-            onChange={(newValue) => setPreviewContent(newValue)}
-          />
-        </SectionControl>
-      </Section>
+      <Form
+        rows={[
+          {
+            title: t('preferences.editorTheme'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SimpleFormSelect
+                    value={preferences['editor.theme']}
+                    onChange={selectEditorTheme}
+                    options={themes}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorFontSize'),
+            items: [
+              {
+                type: 'input',
+                props: {
+                  type: 'number',
+                  value: fontSize,
+                  onChange: updateFontSize,
+                },
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorFontFamily'),
+            items: [
+              {
+                type: 'input',
+                props: {
+                  type: 'text',
+                  value: fontFamily,
+                  onChange: updateFontFamily,
+                },
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorIndentType'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SimpleFormSelect
+                    value={preferences['editor.indentType']}
+                    onChange={selectEditorIndentType}
+                    options={['spaces', 'tabs']}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorIndentSize'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SimpleFormSelect
+                    value={preferences['editor.indentSize'] + ''}
+                    onChange={selectEditorIndentSize}
+                    options={['2', '4', '8']}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorKeymap'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SimpleFormSelect
+                    value={preferences['editor.keyMap'] + ''}
+                    onChange={selectEditorKeyMap}
+                    options={['default', 'vim', 'emacs']}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.editorPreview'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SectionControl onKeyDown={codeEditorKeydownInterceptor}>
+                    <CustomizedCodeEditor
+                      value={previewContent}
+                      onChange={(newValue) => setPreviewContent(newValue)}
+                    />
+                  </SectionControl>
+                ),
+              },
+            ],
+          },
+        ]}
+      />
     </div>
   )
 }

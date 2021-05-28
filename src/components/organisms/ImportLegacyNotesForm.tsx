@@ -8,8 +8,8 @@ import {
   FormLabel,
   FormTextInput,
   FormHeading,
+  FormFolderSelectorInput,
 } from '../atoms/form'
-import FormFolderSelector from '../atoms/FormFolderSelector'
 import {
   stat,
   readFile,
@@ -26,6 +26,9 @@ import { JsonObject } from 'type-fest'
 import { filenamify } from '../../lib/string'
 import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import Form from '../../shared/components/molecules/Form'
+import { openDialog } from '../../lib/exports'
+import { useTranslation } from 'react-i18next'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -33,6 +36,7 @@ interface ImportLegacyNotesFormProps {
 
 const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
   const { addAttachments, createFolder, createNote, initialize } = useDb()
+  const { t } = useTranslation()
 
   const [location, setLocation] = useState('')
   const [opened, setOpened] = useState(false)
@@ -263,6 +267,11 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
     []
   )
 
+  const openDialogAndStoreLocation = useCallback(async () => {
+    const location = await openDialog()
+    setLocation(location)
+  }, [setLocation])
+
   return (
     <>
       <FormHeading depth={2}>
@@ -289,10 +298,38 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
           {errorMessage != null && (
             <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
           )}
-          <FormGroup>
-            <FormLabel>Legacy Storage Location</FormLabel>
-            <FormFolderSelector value={location} setValue={setLocation} />
-          </FormGroup>
+          <Form
+            rows={[
+              {
+                title: 'Legacy Storage Location',
+                items: [
+                  {
+                    type: 'node',
+                    element: (
+                      <FormFolderSelectorInput
+                        type='text'
+                        onClick={openDialogAndStoreLocation}
+                        readOnly
+                        value={
+                          location.trim().length === 0
+                            ? t('folder.noLocationSelected')
+                            : location
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    type: 'button',
+                    props: {
+                      label: 'Select Folder',
+                      variant: 'primary',
+                      onClick: openDialogAndStoreLocation,
+                    },
+                  },
+                ],
+              },
+            ]}
+          />
           <FormGroup>
             <FormLabel>Destination Folder</FormLabel>
             <FormTextInput

@@ -64,6 +64,7 @@ const TimelinePage = ({ storage }: TimelinePageProps) => {
       const newEvents: TimelineEvent[] = []
       const notes = values(storage.noteMap)
       notes.forEach((note) => {
+        // todo: [komediruzecki-29/05/2021] Should be sorted by dates before, so we get latest events
         if (note.archivedAt != null) {
           newEvents.push({
             createdAt: note.archivedAt,

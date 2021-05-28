@@ -502,6 +502,7 @@ const SidebarContainer = ({
     openRenameFolderForm,
     openRenameDocForm,
     // deleteWorkspace,
+    exportDocuments,
   } = useLocalUI()
   const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
   const tree = useMemo(() => {
@@ -533,12 +534,13 @@ const SidebarContainer = ({
       (id: string) => dropInWorkspace(id, updateFolder, updateDocApi),
       openRenameFolderForm,
       openRenameDocForm,
-      openWorkspaceEditForm
+      openWorkspaceEditForm,
+      exportDocuments
     )
   }, [
+    storage,
     initialLoadDone,
     generalStatus.sidebarTreeSortingOrder,
-    storage,
     pathname,
     sideBarOpenedLinksIdsSet,
     sideBarOpenedFolderIdsSet,
@@ -557,6 +559,7 @@ const SidebarContainer = ({
     openRenameFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
+    exportDocuments,
     dropInWorkspace,
     updateFolder,
     updateDocApi,

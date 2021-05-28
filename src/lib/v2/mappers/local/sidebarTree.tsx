@@ -6,6 +6,7 @@ import {
 import {
   mdiApplicationCog,
   mdiArchiveOutline,
+  mdiExport,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
   mdiFolderPlusOutline,
@@ -34,17 +35,17 @@ import {
 } from '../../../db/types'
 import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
 import {
+  getArchiveHref,
   getAttachmentsHref,
+  getDocHref,
   getFolderHref,
   getFolderName,
   getFolderPathname,
-  getDocHref,
+  getLabelHref,
   getNoteTitle,
   getParentFolderPathname,
-  getWorkspaceHref,
-  getLabelHref,
   getTagName,
-  getArchiveHref,
+  getWorkspaceHref,
   isDirectSubPathname,
   values,
 } from '../../../db/utils'
@@ -55,6 +56,7 @@ import {
 } from '../../hooks/local/useLocalDB'
 import { NavResource } from '../../interfaces/resources'
 import { CollapsableType } from '../../stores/sidebarCollapse'
+import { LocalExportResourceRequestBody } from '../../hooks/local/useLocalUI'
 
 type LocalTreeItem = {
   id: string
@@ -167,7 +169,11 @@ export function mapTree(
   dropInWorkspace: (id: string) => void,
   openRenameFolderForm: (workspaceId: string, folder: FolderDoc) => void,
   openRenameNoteForm: (workspaceId: string, doc: NoteDoc) => void,
-  openWorkspaceEditForm: (workspace: NoteStorage) => void
+  openWorkspaceEditForm: (workspace: NoteStorage) => void,
+  exportDocuments: (
+    workspace: NoteStorage,
+    exportSettings: LocalExportResourceRequestBody
+  ) => void
 ) {
   if (!initialLoadDone || workspace == null) {
     return undefined
@@ -225,6 +231,17 @@ export function mapTree(
         icon: mdiTrashCanOutline,
         label: 'Delete',
         onClick: () => deleteWorkspace(workspace),
+      },
+      {
+        type: MenuTypes.Normal,
+        label: 'Export Workspace',
+        icon: mdiExport,
+        onClick: () =>
+          exportDocuments(workspace, {
+            folderName: workspace.name,
+            folderPathname: '/',
+            exportingStorage: true,
+          }),
       },
     ],
   })
@@ -318,6 +335,17 @@ export function mapTree(
             deleteFolder({
               workspaceId: workspace.id,
               pathname: folderPathname,
+            }),
+        },
+        {
+          type: MenuTypes.Normal,
+          label: 'Export Folder',
+          icon: mdiExport,
+          onClick: () =>
+            exportDocuments(workspace, {
+              folderName,
+              folderPathname,
+              exportingStorage: false,
             }),
         },
       ],

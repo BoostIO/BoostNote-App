@@ -24,20 +24,7 @@ export type GeneralThemeOptions =
   | 'dark'
   | 'sepia'
   | 'solarizedDark'
-export type GeneralLanguageOptions =
-  | 'de'
-  | 'en-US'
-  | 'es-ES'
-  | 'fr-FR'
-  | 'it-IT'
-  | 'ja'
-  | 'ko'
-  | 'pt-BR'
-  | 'uk-UA'
-  | 'zh-CN'
-  | 'zh-HK'
-  | 'zh-TW'
-export type GeneralNoteListViewOptions = 'default' | 'compact'
+export type GeneralLanguageOptions = 'en-US'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
@@ -56,9 +43,7 @@ export interface Preferences {
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.noteSorting': NoteSortingOptions
-  'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
-  'general.showSubfolderContents': boolean
 
   // Cloud Workspace
   'cloud.user': {
@@ -132,8 +117,6 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
-  'general.noteListView': 'default',
-  'general.showSubfolderContents': true,
 
   // BoostHub
   'cloud.user': null,
