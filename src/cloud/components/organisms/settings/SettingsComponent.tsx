@@ -225,6 +225,12 @@ const SettingsComponent = () => {
             size={16}
           />
           <SettingNavLinkItem
+            label='User Forum (New!)'
+            href='https://forum.boostnote.io/'
+            id='forum-link'
+          />
+
+          <SettingNavLinkItem
             label='Support Guide'
             href='https://intercom.help/boostnote-for-teams/en/'
             id='setting-support-link'
