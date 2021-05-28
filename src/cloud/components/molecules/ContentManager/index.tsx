@@ -268,7 +268,6 @@ const ContentManager = ({
         precedingRows: [],
         beforeSubmitting: () => setSendingAction('new-doc'),
         afterSubmitting: () => setSendingAction(undefined),
-        skipRedirect: true,
       }
     )
   }, [openNewDocForm, currentWorkspaceId, currentFolderId, team])
@@ -284,7 +283,6 @@ const ContentManager = ({
         precedingRows: [],
         beforeSubmitting: () => setSendingAction('new-folder'),
         afterSubmitting: () => setSendingAction(undefined),
-        skipRedirect: true,
       }
     )
   }, [openNewFolderForm, currentWorkspaceId, currentFolderId, team])
