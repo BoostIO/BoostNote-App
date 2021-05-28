@@ -210,7 +210,7 @@
     "remark-admonitions": "^1.2.1",
     "remark-emoji": "^2.1.0",
     "remark-math": "^2.0.1",
-    "remark-parse": "^9.0.0",
+    "remark-parse": "^8.0.0",
     "remark-rehype": "^7.0.0",
     "remark-shortcodes": "^0.3.1",
     "remark-slug": "^6.0.0",
