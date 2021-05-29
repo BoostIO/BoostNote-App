@@ -95,7 +95,9 @@ export function CommentItem({
       </div>
       <div className='comment__content'>
         <div className='comment__meta'>
-          <strong>{comment.user.displayName}</strong>
+          <span className='comment__meta__name'>
+            {comment.user.displayName}
+          </span>
           <span className='comment__meta__date'>
             {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
           </span>
@@ -128,28 +130,38 @@ const CommentItemContainer = styled.div`
   display: flex;
 
   .comment__icon {
+    width: 38px;
     margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
     margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+
+  .comment__content {
+    width: 100%;
   }
 
   .comment__meta {
     display: flex;
     align-items: center;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
-    & :not(:last-child) {
-      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-    }
-    & .comment__meta__date {
-      color: ${({ theme }) => theme.colors.text.subtle};
-      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
-      flex-grow: 1;
-    }
+
     & svg {
       color: ${({ theme }) => theme.colors.icon.default}
+
       &:hover {
         color: ${({ theme }) => theme.colors.icon.active}
       }
     }
+  }
+
+  .comment__meta__date {
+    flex-grow: 1;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  }
+
+  .comment__meta__name {
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    font-weight: bold;
   }
 
   .comment__meta__menu {
