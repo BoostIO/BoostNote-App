@@ -10,6 +10,7 @@ import { useGeneralStatus } from './generalStatus'
 import { usePreferences } from './preferences'
 import { useRouter } from './router'
 import { Cookie } from 'electron/main'
+import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -60,6 +61,22 @@ export const boostHubPreloadUrl = formatUrl({
 
 const boostHubDesktopGlobalDataUrl = `${boostHubBaseUrl}/api/desktop`
 
+export type DesktopGlobalDataResponseBody = {
+  user?: {
+    id: string
+    uniqueName: string
+    displayName: string
+  }
+  teams: {
+    id: string
+    name: string
+    domain: string
+    icon?: { location: string }
+    createdAt: string
+    subscription?: SerializedSubscription
+  }[]
+}
+
 export async function fetchDesktopGlobalData(token: string) {
   const data = await ky
     .get(boostHubDesktopGlobalDataUrl, {
@@ -68,19 +85,7 @@ export async function fetchDesktopGlobalData(token: string) {
       },
     })
     .json()
-  return data as {
-    user?: {
-      id: string
-      uniqueName: string
-      displayName: string
-    }
-    teams: {
-      id: string
-      name: string
-      domain: string
-      icon?: { location: string }
-    }[]
-  }
+  return data as DesktopGlobalDataResponseBody
 }
 
 export async function createDesktopAccessToken(

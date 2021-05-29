@@ -3,11 +3,13 @@ import { Picker, EmojiData } from 'emoji-mart'
 import styled from '../../lib/styled'
 import Button from '../atoms/Button'
 import { useWindow } from '../../lib/stores/window'
-import { useEmoji } from '../../lib/stores/emoji'
 import { useToast } from '../../lib/stores/toast'
-
-export const EmojiPickerWidth = 350
-export const EmojiPickerHeight = 380
+import { zIndexModals } from '../organisms/Modal/index'
+import { useEmoji } from '../../lib/stores/emoji'
+import {
+  EmojiPickerWidth,
+  EmojiPickerHeight,
+} from '../../lib/stores/emoji/types'
 
 const EmojiPicker = () => {
   const { closed, closeEmojiPicker, position, callback } = useEmoji()
@@ -93,7 +95,7 @@ const EmojiPicker = () => {
 const Container = styled.div`
   min-width: 130px;
   position: fixed;
-  z-index: 8002;
+  z-index: ${zIndexModals + 2};
   padding: 0;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   box-sizing: border-box;

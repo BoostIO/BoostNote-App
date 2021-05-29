@@ -22,19 +22,38 @@ const basePreferences: Preferences = {
   sideBarWidth: 250,
   lastEditorMode: 'edit',
   lastEditorEditLayout: 'split',
-  sidebarBookmarksAreUnfolded: false,
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
   sidebarOrderedCategories: cloudSidebaCategoryLabels.join(
     cloudSidebarOrderedCategoriesDelimiter
   ),
+  version: 1,
 }
 
 function getExistingPreferences() {
   try {
     const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
     if (stringifiedPreferences == null) return
-    return JSON.parse(stringifiedPreferences)
+    const existingPreferences = JSON.parse(stringifiedPreferences)
+    if (existingPreferences.version == null) {
+      existingPreferences.version = 1
+
+      const categories = existingPreferences.sidebarOrderedCategories.split(
+        cloudSidebarOrderedCategoriesDelimiter
+      ) as string[]
+      if (categories[0] === 'Bookmarks') {
+        categories.splice(1, 0, 'Smart Folders')
+      } else {
+        categories.splice(0, 0, 'Smart Folders')
+      }
+      console.info('Upgrade preferences from null to v1')
+
+      existingPreferences.sidebarOrderedCategories = [...new Set(categories)]
+        .filter((label) => label.length > 0)
+        .join(cloudSidebarOrderedCategoriesDelimiter)
+    }
+
+    return existingPreferences
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn(error.message)

@@ -3,32 +3,24 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
 import { createSubscription } from '../../../api/teams/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import {
-  SectionPrimaryButton,
-  SectionFlexDualButtons,
-  SectionDescription,
-  SectionSecondaryButton,
-  SectionParagraph,
-} from '../../organisms/settings/styled'
-import { inputStyle } from '../../../lib/styled/styleFunctions'
-import styled from '../../../lib/styled'
-import Stripe, { StripeElementStyle } from '@stripe/stripe-js'
+import Stripe from '@stripe/stripe-js'
 import { useSettings } from '../../../lib/stores/settings'
-import { selectTheme } from '../../../lib/styled'
-import { Spinner } from '../../atoms/Spinner'
 import { usePage } from '../../../lib/stores/pageStore'
-import {
-  stripeProPlanUnit,
-  stripeStandardPlanUnit,
-  UpgradePlans,
-  stripeProJpyPlanUnit,
-  stripeStandardJpyPlanUnit,
-} from '../../../lib/stripe'
-import plur from 'plur'
-import Icon from '../../../../components/atoms/Icon'
-import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import { discountPlans, UpgradePlans } from '../../../lib/stripe'
 import Alert from '../../../../components/atoms/Alert'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
+import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
+import SubscriptionCostSummary from '../../organisms/Subscription/SubscriptionCostSummary'
+import { isEligibleForDiscount } from '../../../lib/subscription'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import Form from '../../../../shared/components/molecules/Form'
+import styled from '../../../../shared/lib/styled'
+import FormStripeInput from '../../../../shared/components/molecules/Form/atoms/FormStripeInput'
+import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
+import Banner from '../../../../shared/components/atoms/Banner'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -130,20 +122,6 @@ const SubscriptionForm = ({
     }
   }
 
-  const stripeFormStyle: StripeElementStyle = useMemo(() => {
-    const theme = selectTheme(settings['general.theme'])
-    return {
-      base: {
-        color: theme.emphasizedTextColor,
-        fontFamily: theme.fontFamily,
-        fontSize: `${theme.fontSizes.default}px`,
-        '::placeholder': {
-          color: theme.subtleTextColor,
-        },
-      },
-    }
-  }, [settings])
-
   const [newCardBrand, setNewCardBrand] = useState('unknown')
 
   const handleCardElementChange = useCallback(
@@ -157,225 +135,135 @@ const SubscriptionForm = ({
     return newCardBrand.toLowerCase() === 'jcb'
   }, [newCardBrand])
 
-  const unitPrice = useMemo(() => {
-    if (currentPlan === 'pro') {
-      if (usingJpyPricing) {
-        return `¥${stripeProJpyPlanUnit}`
-      }
-      return `$${stripeProPlanUnit}`
-    }
-    if (usingJpyPricing) {
-      return `¥${stripeStandardJpyPlanUnit}`
-    }
-    return `$${stripeStandardPlanUnit}`
-  }, [currentPlan, usingJpyPricing])
-
   const numberOfMembers = permissions.length
 
-  const totalMonthlyPrice = useMemo(() => {
-    if (currentPlan === 'pro') {
-      if (usingJpyPricing) {
-        return `¥${stripeProJpyPlanUnit * numberOfMembers}`
-      }
-      return `$${stripeProPlanUnit * numberOfMembers}`
+  const eligibleDiscount = useMemo(() => {
+    if (!isEligibleForDiscount(team)) {
+      return
     }
-    if (usingJpyPricing) {
-      return `¥${stripeStandardJpyPlanUnit * numberOfMembers}`
+
+    switch (currentPlan) {
+      case 'pro':
+        return discountPlans.newUserPro
+      case 'standard':
+        return discountPlans.newUserStandard
+      default:
+        return
     }
-    return `$${stripeStandardPlanUnit * numberOfMembers}`
-  }, [currentPlan, usingJpyPricing, numberOfMembers])
+  }, [currentPlan, team])
 
   return (
-    <StyledSubscriptionForm onSubmit={handleSubmit}>
-      <SectionParagraph>
-        <StyledUpgradePlan>
-          <StyledCalcuration>
-            <span className='plan-name'>
-              {currentPlan === 'pro' ? 'Pro' : 'Standard'}
-            </span>{' '}
-            {unitPrice} &times; {permissions.length}{' '}
-            {plur('member', permissions.length)} &times; 1 month
-          </StyledCalcuration>
-        </StyledUpgradePlan>
-        <StyledTotal>
-          <label>Total Monthly Price</label>
-          <strong>{totalMonthlyPrice}</strong>
-        </StyledTotal>
-      </SectionParagraph>
-      {usingJpyPricing && (
-        <Alert variant='secondary'>
-          We can only accept JPY(Japanese Yen) when paying by JCB cards.
-        </Alert>
-      )}
-      <StyledPaymentHeader>Payment Method</StyledPaymentHeader>
-      <StyledCardElementContainer>
-        <CardElement
-          options={{
-            style: stripeFormStyle,
-          }}
-          onChange={handleCardElementChange}
+    <Container>
+      <Form rows={[]} onSubmit={handleSubmit}>
+        <SubscriptionCostSummary
+          usingJpyPricing={usingJpyPricing}
+          plan={currentPlan}
+          seats={numberOfMembers}
+          discount={eligibleDiscount}
         />
-      </StyledCardElementContainer>
-      <StyledBillingInput
-        placeholder='Billing Email'
-        value={email}
-        onChange={onEmailInputChangeHandler}
-      />
-      {ongoingTrial != null && (
-        <SectionDescription>
-          Your free trial will be stopped.
-        </SectionDescription>
-      )}
-      <button
-        type='button'
-        className='sub__coupon'
-        onClick={() => {
-          setShowPromoCode((prev) => !prev)
-        }}
-        disabled={sending}
-      >
-        <Icon path={showPromoCode ? mdiChevronDown : mdiChevronRight} />
-        Apply a coupon
-      </button>
-      {showPromoCode && (
-        <StyledBillingInput
-          style={{ marginTop: '0' }}
-          placeholder='Promo Code'
-          value={promoCode}
-          onChange={onPromoCodeInputChangeHandler}
-        />
-      )}
-      <SectionFlexDualButtons
-        style={{ justifyContent: 'flex-start', marginTop: '40px' }}
-      >
-        {onCancel != null && (
-          <SectionSecondaryButton
-            type='button'
-            disabled={sending}
-            onClick={onCancel}
-            style={{ marginLeft: 0 }}
-          >
-            Cancel
-          </SectionSecondaryButton>
+        {usingJpyPricing && (
+          <Alert variant='secondary'>
+            We can only accept JPY(Japanese Yen) when paying by JCB cards.
+          </Alert>
         )}
-        <SectionPrimaryButton
-          type='submit'
-          disabled={!stripe || sending || currentPlan == null}
+        <StyledPaymentHeader>Payment Method</StyledPaymentHeader>
+        <FormRow>
+          <FormStripeInput
+            theme={settings['general.theme']}
+            className='form__row__item'
+            onChange={handleCardElementChange}
+          />
+        </FormRow>
+        <FormRow
+          row={{
+            items: [
+              {
+                type: 'input',
+                props: {
+                  placeholder: 'Billing Email',
+                  value: email,
+                  onChange: onEmailInputChangeHandler,
+                },
+              },
+            ],
+          }}
+        />
+        <FormRow
+          row={{
+            title: ongoingTrial ? `Your free trial will be stopped` : undefined,
+          }}
         >
-          {sending ? <Spinner /> : 'Subscribe'}
-        </SectionPrimaryButton>
-      </SectionFlexDualButtons>
-    </StyledSubscriptionForm>
+          <Button
+            variant='link'
+            className='sub__coupon'
+            iconPath={showPromoCode ? mdiChevronDown : mdiChevronRight}
+            onClick={() => {
+              setShowPromoCode((prev) => !prev)
+            }}
+            disabled={sending}
+          >
+            Apply a coupon
+          </Button>
+        </FormRow>
+
+        {showPromoCode && (
+          <>
+            {isEligibleForDiscount(team) && (
+              <Banner variant='warning'>
+                Applying a promotion code will prevent you to receive other
+                discounts
+              </Banner>
+            )}
+            <FormRow
+              row={{
+                items: [
+                  {
+                    type: 'input',
+                    props: {
+                      placeholder: 'Promo Code',
+                      value: promoCode,
+                      onChange: onPromoCodeInputChangeHandler,
+                    },
+                  },
+                ],
+              }}
+            />
+          </>
+        )}
+        <ButtonGroup layout='spread' className='button__group' display='flex'>
+          {onCancel != null && (
+            <Button
+              type='button'
+              disabled={sending}
+              onClick={onCancel}
+              variant='secondary'
+            >
+              Cancel
+            </Button>
+          )}
+          <LoadingButton
+            type='submit'
+            disabled={!stripe || sending || currentPlan == null}
+            spinning={sending}
+          >
+            Subscribe
+          </LoadingButton>
+        </ButtonGroup>
+      </Form>
+    </Container>
   )
 }
 
 export default SubscriptionForm
 
-export const StyledUpgradePlan = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${({ theme }) => theme.space.small}px 0;
-  border: dashed ${({ theme }) => theme.subtleBorderColor};
-  border-width: 1px 0;
-`
-
-export const StyledCalcuration = styled.div`
-  .plan-name {
-    display: inline-block;
-    margin-right: ${({ theme }) => theme.space.xsmall}px;
-    padding: 2px ${({ theme }) => theme.space.xxsmall}px;
-    background-color: ${({ theme }) => theme.infoBackgroundColor};
-    border-radius: 3px;
-    color: ${({ theme }) => theme.whiteTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
-  }
-`
-
 export const StyledPaymentHeader = styled.h3`
-  margin: ${({ theme }) => theme.space.large}px 0
-    ${({ theme }) => theme.space.default}px;
-  font-size: ${({ theme }) => theme.fontSizes.medium}px;
+  margin: ${({ theme }) => theme.sizes.spaces.l}px 0
+    ${({ theme }) => theme.sizes.spaces.df}px;
+  font-size: ${({ theme }) => theme.sizes.fonts.md}px;
 `
 
-export const StyledTotal = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${({ theme }) => theme.space.small}px 0;
-  border-bottom: 2px solid ${({ theme }) => theme.subtleBorderColor};
-  font-size: ${({ theme }) => theme.fontSizes.large}px;
-
-  label {
-    margin: 0;
-    font-weight: bold;
+export const Container = styled.div`
+  .button__group {
+    margin-top: 40px;
   }
-`
-
-export const StyledBillingInput = styled.input`
-  ${inputStyle}
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 100%;
-  height: 40px;
-  margin: ${({ theme }) => theme.space.default}px 0;
-  padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
-  border-radius: 2px;
-`
-
-export const StyledBillingSeatsInput = styled.input`
-  ${inputStyle}
-  flex-grow: 0;
-  flex-shrink: 0;
-  text-align: right;
-  width: 100px;
-  height: 40px;
-  padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
-  border-radius: 2px;
-`
-
-export const StyledSubscriptionForm = styled.form`
-  width: 540px;
-  margin-top: ${({ theme }) => theme.space.default}px;
-
-  .btn-primary,
-  .btn-secondary {
-    margin-bottom: ${({ theme }) => theme.space.default}px;
-  }
-
-  .StripeElement {
-    margin-top: 2px;
-  }
-
-  .sub__coupon {
-    display: inline-flex;
-    align-items: center;
-    transition: 200ms color;
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0;
-    color: ${({ theme }) => theme.primaryTextColor};
-    margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
-
-    &:hover,
-    &:focus,
-    &:active {
-      text-decoration: underline;
-    }
-
-    svg {
-      margin-left: ${({ theme }) => theme.space.xxsmall}px;
-    }
-  }
-`
-
-export const StyledCardElementContainer = styled.div`
-  ${inputStyle}
-  height: 40px;
-  padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
-  border-radius: 2px;
 `

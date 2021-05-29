@@ -1,18 +1,11 @@
 import React, { FormEvent, useState, useCallback, useRef } from 'react'
 import CustomButton from '../../atoms/buttons/CustomButton'
-import { Spinner } from '../../atoms/Spinner'
-import { StyledAppFeedbackForm } from './styled'
-import { SelectChangeEventHandler } from '../../../lib/utils/events'
-import {
-  SectionSelect,
-  SectionHeader2,
-  SectionTextarea,
-} from '../../organisms/settings/styled'
 import { registerAppFeedback } from '../../../api/users/appfeedback'
 import { AppFeedbackTypeOption } from '../../../interfaces/db/userAppFeedback'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useEffectOnce } from 'react-use'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Form from '../../../../shared/components/molecules/Form'
 
 const typeOptions: AppFeedbackTypeOption[] = ['Feature Request', 'Bug Report']
 
@@ -60,13 +53,9 @@ const AppFeedbackForm = () => {
     ]
   )
 
-  const feedbackTypeChangeHandler: SelectChangeEventHandler = useCallback(
-    async (event) => {
-      event.preventDefault()
-      setFeedbackType(event.target.value as AppFeedbackTypeOption)
-    },
-    []
-  )
+  const feedbackTypeChangeHandler = useCallback(async (value: string) => {
+    setFeedbackType(value as AppFeedbackTypeOption)
+  }, [])
 
   const feedbackOnChangeEvent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -97,35 +86,38 @@ const AppFeedbackForm = () => {
   }
 
   return (
-    <StyledAppFeedbackForm onSubmit={sendFeedback}>
-      <SectionHeader2>Type of feedback</SectionHeader2>
-      <SectionSelect value={feedbackType} onChange={feedbackTypeChangeHandler}>
-        {typeOptions.map((val) => (
-          <option key={`select-type-${val}`} value={val}>
-            {val}
-          </option>
-        ))}
-      </SectionSelect>
-
-      <SectionHeader2>Free form</SectionHeader2>
-      <SectionTextarea
-        value={feedback}
-        ref={freeFormRef}
-        onChange={feedbackOnChangeEvent}
-      />
-
-      <div className='submit-row'>
-        <CustomButton
-          type='submit'
-          variant='primary'
-          className='submit-feedback'
-          disabled={sending}
-        >
-          {sending ? <Spinner /> : 'Send'}
-        </CustomButton>
-      </div>
-      <div className='clear' />
-    </StyledAppFeedbackForm>
+    <Form
+      onSubmit={sendFeedback}
+      rows={[
+        {
+          title: 'Type of Feedback',
+          items: [
+            {
+              type: 'select--string',
+              props: {
+                value: feedbackType,
+                onChange: feedbackTypeChangeHandler,
+                options: typeOptions,
+              },
+            },
+          ],
+        },
+        {
+          title: 'Free Form',
+          items: [
+            {
+              type: 'textarea',
+              props: {
+                value: feedback,
+                onChange: feedbackOnChangeEvent,
+                ref: freeFormRef,
+              },
+            },
+          ],
+        },
+      ]}
+      submitButton={{ label: 'Send' }}
+    />
   )
 }
 

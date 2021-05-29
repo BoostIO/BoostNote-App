@@ -7,7 +7,6 @@ import {
   mdiAlertCircleCheckOutline,
 } from '@mdi/js'
 import UserIcon from '../atoms/UserIcon'
-import { capitalize } from '../../lib/utils/string'
 import Icon from '../../../shared/components/atoms/Icon'
 import styled from '../../../shared/lib/styled'
 import useThreadActions, {
@@ -15,18 +14,12 @@ import useThreadActions, {
 } from '../../../shared/lib/hooks/useThreadMenuActions'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 
-type ThreadListItemProps = ThreadActionProps & {
+export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
-  showContext: boolean
 }
 
-const smallUserIconStyle = { width: '24px', height: '24px', lineHeight: '20px' }
-function ThreadItem({
-  thread,
-  onSelect,
-  showContext,
-  ...rest
-}: ThreadListItemProps) {
+const smallUserIconStyle = { width: '22px', height: '22px', lineHeight: '18px' }
+function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
   const actions = useThreadActions({ thread, ...rest })
   const { popup } = useContextMenu()
 
@@ -41,33 +34,36 @@ function ThreadItem({
 
   return (
     <StyledListItem onClick={() => onSelect(thread)}>
-      {showContext && (
-        <div className='thread__context small'>{thread.context}</div>
-      )}
       <div className='thread__row'>
         <div className='thread__info__line'>
           <Icon
             size={20}
-            className={`thread__status__${thread.status.type}`}
+            className={`thread__status thread__status--${thread.status.type}`}
             path={
               thread.status.type === 'open'
                 ? mdiAlertCircleOutline
                 : mdiAlertCircleCheckOutline
             }
           />
-          <span>
-            {formatStatus(thread.status)} {thread.status.by != null ? 'by' : ''}
-          </span>
-          {thread.status.by != null && (
-            <UserIcon style={smallUserIconStyle} user={thread.status.by} />
-          )}
+          <div
+            className={`thread__item__context ${
+              thread.selection != null
+                ? 'thrad__item__context--highlighted'
+                : ''
+            }`}
+          >
+            {thread.selection != null ? thread.context : 'Full doc thread'}
+          </div>
         </div>
-        <div onClick={openActionMenu}>
-          <Icon className='thread__action' size={20} path={mdiDotsVertical} />
+        <div onClick={openActionMenu} className='thread__action'>
+          <Icon size={20} path={mdiDotsVertical} />
         </div>
       </div>
       <div>
         <div className='thread__info__line'>
+          {thread.contributors.map((user) => (
+            <UserIcon key={user.id} style={smallUserIconStyle} user={user} />
+          ))}
           {thread.commentCount} replies {formatDate(thread.lastCommentTime)}
         </div>
       </div>
@@ -81,7 +77,7 @@ const StyledListItem = styled.div`
   cursor: default;
 
   &:hover .thread__action {
-    display: block;
+    opacity: 1;
   }
 
   & .thread__row {
@@ -94,25 +90,40 @@ const StyledListItem = styled.div`
   & .thread__info__line {
     display: flex;
     align-items: center;
+    overflow: hidden;
     & > * {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
+    & > .thread__item__context {
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.thrad__item__context--highlighted {
+        color: white;
+        background-color: #705400;
+      }
+    }
   }
 
-  & .thread__status__open {
-    color: ${({ theme }) => theme.colors.variants.success.base};
-  }
+  & .thread__status {
+    flex-shrink: 0;
+    &.thread__status--open {
+      color: ${({ theme }) => theme.colors.variants.success.base};
+    }
 
-  & .thread__status__closed {
-    color: ${({ theme }) => theme.colors.variants.danger.base};
-  }
+    &.thread__status--closed {
+      color: ${({ theme }) => theme.colors.variants.danger.base};
+    }
 
-  & .thread__status__outdated {
-    color: ${({ theme }) => theme.colors.icon.default};
+    &.thread__status--outdated {
+      color: ${({ theme }) => theme.colors.icon.default};
+    }
   }
-
   & .thread__action {
-    display: none;
+    height: 20px;
+    opacity 0;
     color: ${({ theme }) => theme.colors.text.subtle};
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary};
@@ -124,12 +135,6 @@ function formatDate(date: Date) {
   return isToday(date)
     ? `at ${format(date, 'KK:mm a')} today`
     : `${formatDistanceToNow(date)} ago`
-}
-
-function formatStatus({ type, at }: Thread['status']) {
-  return `${capitalize(
-    type === 'open' ? 'opened' : type
-  )} ${formatDistanceToNow(at)} ago`
 }
 
 export default ThreadItem

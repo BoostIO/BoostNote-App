@@ -10,7 +10,6 @@ import AccountDeletePage from '../pages/account/delete'
 
 import { SidebarCollapseProvider } from '../lib/stores/sidebarCollapse'
 import { combineProviders } from '../lib/utils/context'
-import { EmojiPickerProvider } from '../lib/stores/emoji'
 import { OnboardingProvider } from '../lib/stores/onboarding'
 import { SettingsProvider, useSettings } from '../lib/stores/settings'
 
@@ -26,7 +25,6 @@ import { intercomAppId } from '../lib/consts'
 import GlobalStyle from './GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import SettingsComponent from './organisms/settings/SettingsComponent'
-import EmojiPicker from './molecules/EmojiPicker'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import ResourceIndex from '../pages/[teamId]/[resourceId]'
 import TeamIndex from '../pages/[teamId]'
@@ -41,7 +39,6 @@ import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
 import SettingsPage from '../pages/settings'
-import Helper from './molecules/Helper'
 import OpenInvitePage from '../pages/[teamId]/invite'
 import Spinner from './atoms/CustomSpinner'
 import TagsShowPage from '../pages/[teamId]/labels/[labelId]'
@@ -59,10 +56,12 @@ import ContextMenu from '../../shared/components/molecules/ContextMenu'
 import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 import CloudModal from './organisms/CloudModal'
 import { CommentsProvider } from '../../shared/lib/stores/comments'
+import SmartFolderPage from '../pages/[teamId]/smart-folders/[smartFolderId]'
+import DocStatusShowPage from '../pages/[teamId]/status/[docStatus]'
+import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
-  EmojiPickerProvider,
   OnboardingProvider,
   PreferencesProvider,
   SettingsProvider,
@@ -257,7 +256,6 @@ const Router = () => {
                 <ContextMenu />
                 <EmojiPicker />
                 <Dialog />
-                <Helper />
               </V2ThemeProvider>
             </CustomThemeProvider>
           </NavProvider>
@@ -428,6 +426,16 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: WorkspaceShowPage,
           getInitialProps: WorkspaceShowPage.getInitialProps,
+        }
+      case 'smart-folders':
+        return {
+          Component: SmartFolderPage,
+          getInitialProps: SmartFolderPage.getInitialProps,
+        }
+      case 'status':
+        return {
+          Component: DocStatusShowPage,
+          getInitialProps: DocStatusShowPage.getInitialProps,
         }
       default:
         return {

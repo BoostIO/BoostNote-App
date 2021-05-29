@@ -1,6 +1,5 @@
 import {
   mdiApplicationCog,
-  mdiArchive,
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
   mdiLock,
@@ -20,7 +19,10 @@ import {
 } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { CloudNewResourceRequestBody, UIFormOptions } from '../hooks/useCloudUI'
+import {
+  CloudNewResourceRequestBody,
+  UIFormOptions,
+} from '../hooks/useCloudResourceModals'
 import { getDocTitle, prefixFolders } from '../utils/patterns'
 import { getHexFromUUID } from '../utils/string'
 import { topParentId } from './topbarTree'
@@ -54,7 +56,7 @@ export function mapTopbarBreadcrumbs(
     options: UIFormOptions
   ) => void,
   editWorkspace?: (wp: SerializedWorkspace) => void,
-  deleteOrArchiveDoc?: (doc: SerializedDoc) => void,
+  deleteDoc?: (doc: SerializedDoc) => void,
   deleteFolder?: (folder: SerializedFolder) => void,
   deleteWorkspace?: (wp: SerializedWorkspace) => void
 ) {
@@ -72,7 +74,7 @@ export function mapTopbarBreadcrumbs(
         : { type: 'workspace', item: workspacesMap.get(pageDoc.workspaceId) }
 
     items.unshift(
-      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteOrArchiveDoc)
+      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteDoc)
     )
   }
 
@@ -188,7 +190,7 @@ function getDocBreadcrumb(
   active: boolean,
   push: (url: string) => void,
   renameDoc?: (doc: SerializedDoc) => void,
-  deleteOrArchiveDoc?: (doc: SerializedDoc) => void
+  deleteDoc?: (doc: SerializedDoc) => void
 ): TopbarBreadcrumbProps & AddedProperties {
   return {
     label: getDocTitle(doc, 'Untitled'),
@@ -212,19 +214,13 @@ function getDocBreadcrumb(
             },
           ]
         : []),
-      ...(deleteOrArchiveDoc != null
+      ...(deleteDoc != null
         ? [
-            doc.archivedAt != null
-              ? {
-                  icon: mdiTrashCanOutline,
-                  label: 'Delete',
-                  onClick: () => deleteOrArchiveDoc(doc),
-                }
-              : {
-                  icon: mdiArchive,
-                  label: 'Archive',
-                  onClick: () => deleteOrArchiveDoc(doc),
-                },
+            {
+              icon: mdiTrashCanOutline,
+              label: 'Delete',
+              onClick: () => deleteDoc(doc),
+            },
           ]
         : []),
     ],
@@ -348,7 +344,7 @@ export function mapWorkspaceBreadcrumb(
     item: workspace,
     label: workspace.name,
     active: true,
-    icon: workspace.default ? undefined : mdiLock,
+    icon: workspace.public ? undefined : mdiLock,
     parentId: topParentId,
     link: {
       href: getWorkspaceHref(workspace, team, 'index'),

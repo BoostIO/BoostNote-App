@@ -42,6 +42,9 @@ import {
   boostHubToggleSettingsEventEmitter,
   boostHubLoginRequestEventEmitter,
   boostHubCreateLocalSpaceEventEmitter,
+  BoostHubSubscriptionDeleteEvent,
+  boostHubSubscriptionDeleteEventEmitter,
+  boostHubSubscriptionUpdateEventEmitter,
 } from '../lib/events'
 import { useRouteParams } from '../lib/routeParams'
 import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
@@ -153,6 +156,8 @@ const App = () => {
             id: team.id,
             name: team.name,
             domain: team.domain,
+            createdAt: team.createdAt,
+            subscription: team.subscription,
             iconUrl:
               team.icon != null
                 ? getBoostHubTeamIconUrl(team.icon.location)
@@ -295,6 +300,46 @@ const App = () => {
       })
     }
 
+    const boostHubSubscriptioUpdateEventHandler = (
+      event: BoostHubSubscriptionDeleteEvent
+    ) => {
+      const updatedSub = event.detail.subscription
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            if (updatedSub.teamId === team.id) {
+              map.set(team.id, { ...team, subscription: updatedSub })
+              return map
+            }
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+    }
+
+    const boostHubSubscriptionDeleteEventHandler = (
+      event: BoostHubSubscriptionDeleteEvent
+    ) => {
+      const deletedSub = event.detail.subscription
+      setGeneralStatus((previousGeneralStatus) => {
+        const teamMap =
+          previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
+            if (deletedSub.teamId === team.id) {
+              map.set(team.id, { ...team, subscription: undefined })
+              return map
+            }
+            map.set(team.id, team)
+            return map
+          }, new Map()) || new Map()
+        return {
+          boostHubTeams: [...teamMap.values()],
+        }
+      })
+    }
+
     const boostHubAccountDeleteEventHandler = () => {
       push(`/app`)
       setPreferences({
@@ -309,6 +354,12 @@ const App = () => {
       push(`/app/storages`)
     }
 
+    boostHubSubscriptionDeleteEventEmitter.listen(
+      boostHubSubscriptionDeleteEventHandler
+    )
+    boostHubSubscriptionUpdateEventEmitter.listen(
+      boostHubSubscriptioUpdateEventHandler
+    )
     boostHubTeamCreateEventEmitter.listen(boostHubTeamCreateEventHandler)
     boostHubTeamUpdateEventEmitter.listen(boostHubTeamUpdateEventHandler)
     boostHubTeamDeleteEventEmitter.listen(boostHubTeamDeleteEventHandler)
@@ -317,6 +368,12 @@ const App = () => {
       boostHubCreateLocalSpaceEventHandler
     )
     return () => {
+      boostHubSubscriptionDeleteEventEmitter.unlisten(
+        boostHubSubscriptionDeleteEventHandler
+      )
+      boostHubSubscriptionUpdateEventEmitter.unlisten(
+        boostHubSubscriptioUpdateEventHandler
+      )
       boostHubTeamCreateEventEmitter.unlisten(boostHubTeamCreateEventHandler)
       boostHubTeamUpdateEventEmitter.unlisten(boostHubTeamUpdateEventHandler)
       boostHubTeamDeleteEventEmitter.unlisten(boostHubTeamDeleteEventHandler)

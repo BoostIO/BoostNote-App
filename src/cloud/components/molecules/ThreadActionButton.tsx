@@ -1,17 +1,16 @@
 import React, { useMemo, useCallback } from 'react'
 import { Thread } from '../../interfaces/db/comments'
 import {
+  mdiChevronDown,
   mdiAlertCircleOutline,
   mdiAlertCircleCheckOutline,
-  mdiChevronDown,
 } from '@mdi/js'
 import Icon from '../../../shared/components/atoms/Icon'
-import Button from '../../../shared/components/atoms/Button'
 import { capitalize } from '../../lib/utils/string'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 import Flexbox from '../atoms/Flexbox'
 import useThreadActions from '../../../shared/lib/hooks/useThreadMenuActions'
-import styled from '../../../shared/lib/styled'
+import { RoundButton } from '../../../shared/components/atoms/Button'
 
 interface ThreadActionButtonProps {
   thread: Thread
@@ -57,9 +56,5 @@ function ThreadActionButton({
     </RoundButton>
   )
 }
-
-const RoundButton = styled(Button)`
-  border-radius: 20px;
-`
 
 export default ThreadActionButton

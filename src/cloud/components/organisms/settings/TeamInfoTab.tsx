@@ -1,19 +1,11 @@
 import React, { useMemo } from 'react'
-import {
-  Column,
-  Scrollable,
-  Container,
-  Section,
-  TabHeader,
-  SectionDescription,
-  SectionSeparator,
-} from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { useTranslation } from 'react-i18next'
 import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -32,11 +24,9 @@ const TeamInfoTab = () => {
 
     return (
       <>
-        <SectionSeparator />
-        <Section>
-          <SectionDescription>Space Deletion</SectionDescription>
-
-          <SectionDescription>
+        <section>
+          <h2>Delete Space</h2>
+          <p className='text--subtle'>
             Once you delete this space we will remove all associated data. There
             is no turning back.{' '}
             <TeamLink
@@ -46,8 +36,8 @@ const TeamInfoTab = () => {
             >
               {t('general.delete')}
             </TeamLink>
-          </SectionDescription>
-        </Section>
+          </p>
+        </section>
       </>
     )
   }, [team, , currentUserPermissions, t, closeSettingsTab])
@@ -57,21 +47,16 @@ const TeamInfoTab = () => {
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader>{t('settings.teamInfo')}</TabHeader>
-          <Section>
-            <SettingsTeamForm
-              team={team}
-              teamConversion={false}
-              header={false}
-            />
-            {adminContent}
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      title={t('settings.teamInfo')}
+      description={'Manage your space settings.'}
+      body={
+        <section>
+          <SettingsTeamForm team={team} teamConversion={false} />
+        </section>
+      }
+      footer={adminContent}
+    ></SettingTabContent>
   )
 }
 

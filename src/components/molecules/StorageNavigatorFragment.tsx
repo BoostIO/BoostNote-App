@@ -1,4 +1,5 @@
 import React, {
+  useState,
   useMemo,
   useCallback,
   MouseEventHandler,
@@ -33,6 +34,8 @@ import FolderNoteNavigatorFragment from './FolderNoteNavigatorFragment'
 import { useRouteParams, usePathnameWithoutNoteId } from '../../lib/routeParams'
 import NavigatorHeader from '../atoms/NavigatorHeader'
 import NavigatorSeparator from '../atoms/NavigatorSeparator'
+import { getExportAsMenuItems } from '../../lib/exports'
+import ExportProgressItem from './ExportProgressItem'
 
 interface StorageNavigatorFragmentProps {
   storage: NoteStorage
@@ -57,6 +60,15 @@ const StorageNavigatorFragment = ({
   const { report } = useAnalytics()
   const { preferences } = usePreferences()
   const storageId = storage.id
+
+  const [exportSettings, setExportSettings] = useState({
+    folderName: '',
+    folderPathname: '',
+    exportType: '',
+    recursive: false,
+    exportingStorage: true,
+  })
+  const [exportProcedureRunning, setExportProcedure] = useState(false)
 
   const createNoteInFolderAndRedirect = useCallback(
     async (folderPathname: string) => {
@@ -161,6 +173,36 @@ const StorageNavigatorFragment = ({
     showPromptToCreateFolder('/')
   }, [showPromptToCreateFolder])
 
+  const startStorageExport = useCallback(
+    (folderName, folderPathname, exportType, recursive) => {
+      setExportSettings({
+        folderName: folderName,
+        folderPathname: folderPathname,
+        exportType: exportType,
+        recursive: recursive,
+        exportingStorage: true,
+      })
+      setExportProcedure(true)
+    },
+    []
+  )
+
+  const getExportMenu = useCallback(
+    (menuLabel: string): MenuItemConstructorOptions => {
+      return {
+        type: 'submenu',
+        label: menuLabel,
+        submenu: getExportAsMenuItems(
+          storage.name,
+          '/',
+          true,
+          startStorageExport
+        ),
+      }
+    },
+    [startStorageExport, storage.name]
+  )
+
   const openWorkspaceContextMenu: MouseEventHandler = useCallback(
     (event) => {
       event.preventDefault()
@@ -176,11 +218,15 @@ const StorageNavigatorFragment = ({
           label: t('folder.create'),
           click: createNewFolderInRootFolder,
         },
+        {
+          type: 'separator',
+        },
+        getExportMenu('Export Storage'),
       ]
 
       openContextMenu({ menuItems })
     },
-    [createNewNoteInRootFolder, createNewFolderInRootFolder, t]
+    [createNewNoteInRootFolder, t, createNewFolderInRootFolder, getExportMenu]
   )
 
   const attachments = useMemo(() => Object.values(storage.attachmentMap), [
@@ -264,6 +310,13 @@ const StorageNavigatorFragment = ({
             event.preventDefault()
             // TODO: Implement context menu(restore all notes)
           }}
+        />
+      )}
+      {exportProcedureRunning && (
+        <ExportProgressItem
+          storageId={storage.id}
+          exportSettings={exportSettings}
+          onFinish={() => setExportProcedure(false)}
         />
       )}
     </>

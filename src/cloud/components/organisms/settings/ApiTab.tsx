@@ -1,24 +1,16 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import styled from '../../../lib/styled'
-import {
-  Section,
-  TabHeader,
-  Column,
-  Container,
-  Scrollable,
-  SectionSubtleText,
-  SectionHeader2,
-  PrimaryAnchor,
-} from './styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import Spinner from '../../atoms/CustomSpinner'
 import { useApiTokens, withApiTokens } from '../../../lib/stores/apiTokens'
 import TokenControl from '../../molecules/TokenControl'
-import TokenCreate from '../../molecules/TokenCreate'
 import { usePage } from '../../../lib/stores/pageStore'
-import Flexbox from '../../atoms/Flexbox'
 import Icon from '../../atoms/IconMdi'
 import { mdiOpenInNew } from '@mdi/js'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import Button from '../../../../shared/components/atoms/Button'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import Form from '../../../../shared/components/molecules/Form'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -42,44 +34,40 @@ const ApiTab = () => {
   }, [apiTokenState, team])
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <TabHeader>API</TabHeader>
-            <SectionSubtleText>
+    <SettingTabContent
+      title='API'
+      description='These tokens are available only to BoostIO.'
+      body={
+        <>
+          <section>
+            <p className='text--subtle'>
               These tokens are available only to{' '}
               {team != null ? team.name : 'your team'}.
-            </SectionSubtleText>
-          </Section>
-          <Section>
+            </p>
+          </section>
+          <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
-                <SectionHeader2 style={{ margin: '0' }}>
-                  Access Tokens
-                </SectionHeader2>
+                <h2 style={{ margin: '0' }}>Access Tokens</h2>
                 <p>
                   See the{' '}
-                  <PrimaryAnchor
-                    href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'
-                    target='_blank'
-                  >
+                  <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'>
                     documentation for Boost Note for Teams API{' '}
                     <Icon path={mdiOpenInNew} />
-                  </PrimaryAnchor>
+                  </ExternalLink>
                 </p>
               </div>
-              <CustomButton
+              <Button
                 onClick={() => setTokenCreateMode(!tokenCreateMode)}
                 disabled={apiTokenState.state === 'initialising'}
               >
                 {tokenCreateMode ? 'Close' : 'Generate Token'}
-              </CustomButton>
+              </Button>
             </Flexbox>
             {tokenCreateMode && (
               <StyledServiceList>
                 <StyledServiceListItem>
-                  <TokenCreate onCreate={createToken} />
+                  <SettingTokenCreate onCreate={createToken} />
                 </StyledServiceListItem>
               </StyledServiceList>
             )}
@@ -103,10 +91,50 @@ const ApiTab = () => {
                 })}
               </StyledServiceList>
             )}
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+          </section>
+        </>
+      }
+    ></SettingTabContent>
+  )
+}
+
+const SettingTokenCreate = ({
+  onCreate,
+}: {
+  onCreate: (val: string) => void
+}) => {
+  const [name, setName] = useState('')
+
+  const create = useCallback(() => {
+    onCreate(name)
+  }, [name, onCreate])
+
+  return (
+    <div className='setting__token__form'>
+      <h2>Create a new token</h2>
+      <Form
+        onSubmit={create}
+        submitButton={{ label: 'Create', disabled: name.length === 0 }}
+        rows={[
+          {
+            title: 'Name',
+            required: true,
+            items: [
+              {
+                type: 'input',
+                props: {
+                  placeholder: 'Your token name...',
+                  value: name,
+                  onChange: (e: ChangeEvent<HTMLInputElement>) => {
+                    setName(e.target.value)
+                  },
+                },
+              },
+            ],
+          },
+        ]}
+      />
+    </div>
   )
 }
 
@@ -122,6 +150,10 @@ const StyledServiceListItem = styled.li`
   align-items: center;
   justify-content: space-between;
   padding: ${({ theme }) => theme.space.small}px;
+
+  .setting__token__form {
+    width: 100%;
+  }
 
   + li {
     border-top: 1px solid ${({ theme }) => theme.baseBorderColor};

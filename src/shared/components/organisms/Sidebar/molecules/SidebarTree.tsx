@@ -37,6 +37,7 @@ export interface SidebarNavCategory {
   toggleHidden: () => void
   folding?: FoldingProps
   rows: SidebarTreeChildRow[]
+  footer?: React.ReactNode
   lastCategory?: boolean
   drag?: {
     onDragStart: () => void
@@ -254,6 +255,7 @@ const SidebarCategory = ({
               draggingCategory={draggingCategory}
             />
           ))}
+          {category.footer}
         </div>
       )}
     </React.Fragment>

@@ -45,7 +45,6 @@ const ModalItem = ({
   const contentRef = useRef<HTMLDivElement>(null)
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
-      console.log('clicked')
       if (
         contentRef.current != null &&
         contentRef.current.contains(event.target as Node)
@@ -90,7 +89,7 @@ const ModalItem = ({
   )
 }
 
-const zIndexModals = 8001
+export const zIndexModals = 8001
 const Container = styled.div`
   z-index: ${zIndexModals};
 

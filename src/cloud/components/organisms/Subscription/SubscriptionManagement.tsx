@@ -1,6 +1,5 @@
-import { mdiOpenInNew } from '@mdi/js'
-import plur from 'plur'
-import React, { useCallback, useState } from 'react'
+import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
+import React, { useCallback, useMemo, useState } from 'react'
 import Icon from '../../../../components/atoms/Icon'
 import Spinner from '../../../../components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
@@ -11,24 +10,20 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getFormattedDateFromUnixTimestamp } from '../../../lib/date'
 import { usePage } from '../../../lib/stores/pageStore'
-import {
-  stripeProPlanUnit,
-  stripeStandardPlanUnit,
-  UpgradePlans,
-  stripeProJpyPlanUnit,
-  stripeStandardJpyPlanUnit,
-} from '../../../lib/stripe'
+import { discountPlans, UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
-import Button from '../../atoms/Button'
 import Flexbox from '../../atoms/Flexbox'
-import {
-  StyledCalcuration,
-  StyledTotal,
-  StyledUpgradePlan,
-} from '../../molecules/SubscriptionForm'
-import { SectionIntroduction, SectionParagraph } from '../settings/styled'
+import { SectionIntroduction } from '../settings/styled'
 import PlanTables from './PlanTables'
 import Alert from '../../../../components/atoms/Alert'
+import SubscriptionCostSummary from './SubscriptionCostSummary'
+import Banner from '../../../../shared/components/atoms/Banner'
+import Button from '../../../../shared/components/atoms/Button'
+import {
+  newUserProCouponId,
+  newUserStandardCouponId,
+} from '../../../lib/consts'
+import { useElectron } from '../../../lib/stores/electron'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -48,6 +43,7 @@ const SubscriptionManagement = ({
   const [showPlanTables, setShowPlanTables] = useState(false)
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
+  const { usingElectron, sendToElectron } = useElectron()
   const [fetchingHistory, setFetchingHistory] = useState<boolean>(false)
   const { pushApiErrorMessage, pushMessage } = useToast()
   const [targetedPlan, setTargetedPlan] = useState<
@@ -69,6 +65,16 @@ const SubscriptionManagement = ({
     setFetchingHistory(false)
   }, [fetchingHistory, subscription.teamId, pushApiErrorMessage])
 
+  const sendElectronEvent = useCallback(
+    (subscription: SerializedSubscription, action: 'delete' | 'update') => {
+      if (!usingElectron) {
+        return
+      }
+      sendToElectron(`subscription-${action}`, subscription)
+    },
+    [usingElectron, sendToElectron]
+  )
+
   const cancellingCallback = useCallback(() => {
     if (subscription.status === 'canceled') {
       return
@@ -78,8 +84,10 @@ const SubscriptionManagement = ({
       .then(({ subscription }) => {
         if (subscription.status === 'inactive') {
           updateTeamSubscription(undefined)
+          sendElectronEvent(subscription, 'delete')
         } else {
           updateTeamSubscription(subscription)
+          sendElectronEvent(subscription, 'update')
         }
 
         setSending(false)
@@ -92,7 +100,13 @@ const SubscriptionManagement = ({
         })
         setSending(false)
       })
-  }, [subscription, updateTeamSubscription, pushMessage, setSending])
+  }, [
+    subscription,
+    updateTeamSubscription,
+    pushMessage,
+    setSending,
+    sendElectronEvent,
+  ])
 
   const updatingPlanCallback = useCallback(
     (plan: UpgradePlans) => {
@@ -103,6 +117,7 @@ const SubscriptionManagement = ({
       updateSubPlan(subscription.teamId, { plan })
         .then(({ subscription }) => {
           updateTeamSubscription(subscription)
+          sendElectronEvent(subscription, 'update')
           setSending(false)
           setTargetedPlan(undefined)
         })
@@ -114,7 +129,13 @@ const SubscriptionManagement = ({
           setSending(false)
         })
     },
-    [subscription, updateTeamSubscription, pushMessage, setSending]
+    [
+      subscription,
+      updateTeamSubscription,
+      pushMessage,
+      setSending,
+      sendElectronEvent,
+    ]
   )
 
   const onChangePlanCallback = useCallback(() => {
@@ -135,156 +156,118 @@ const SubscriptionManagement = ({
 
   const usingJpyPricing = (subscription.cardBrand || '').toLowerCase() === 'jcb'
 
+  const currentSubscriptionDiscount = useMemo(() => {
+    if (subscription.couponId == null) {
+      return
+    }
+
+    switch (subscription.couponId) {
+      case newUserProCouponId:
+        return discountPlans.newUserPro
+      case newUserStandardCouponId:
+        return discountPlans.newUserStandard
+      default:
+        return discountPlans.migration
+    }
+  }, [subscription.couponId])
+
   return (
     <>
-      <StyledBillingContainer>
-        <SectionIntroduction>
-          {subscription.plan === 'pro' ? (
-            <SectionParagraph>
-              <StyledUpgradePlan>
-                <StyledCalcuration>
-                  <span className='plan-name'>Pro</span>
-                  {!usingJpyPricing
-                    ? `$${stripeProPlanUnit} `
-                    : `¥${stripeProJpyPlanUnit} `}
-                  &times; {subscription.seats}{' '}
-                  {plur('member', subscription.seats)} &times; 1 month
-                </StyledCalcuration>
+      <SectionIntroduction>
+        <SubscriptionCostSummary
+          plan={subscription.plan}
+          seats={subscription.seats}
+          usingJpyPricing={usingJpyPricing}
+          discount={currentSubscriptionDiscount}
+        />
+        {usingJpyPricing && (
+          <Alert variant='secondary'>
+            We can only accept JPY(Japanese Yen) when paying by JCB cards.
+          </Alert>
+        )}
+        <StyledBillingDescription>
+          {subscription.currentPeriodEnd !== 0 ? (
+            subscription.status === 'canceled' ? (
+              <p>
+                Your subscription will be canceled on{' '}
+                {getFormattedDateFromUnixTimestamp(
+                  subscription.currentPeriodEnd
+                )}{' '}
+                upon reception of your last invoice .
+              </p>
+            ) : (
+              <p>
+                Will bill to the credit card ending in{' '}
                 <strong>
-                  {!usingJpyPricing
-                    ? `$${stripeProPlanUnit * subscription.seats}`
-                    : `¥${stripeProJpyPlanUnit * subscription.seats}`}
-                </strong>
-              </StyledUpgradePlan>
-              <StyledTotal>
-                <label>Total Monthly Price</label>
-
+                  {subscription.last4}
+                  {subscription.cardBrand != null &&
+                    ` (${subscription.cardBrand})`}
+                </strong>{' '}
+                at{' '}
                 <strong>
-                  {!usingJpyPricing
-                    ? `$${stripeProPlanUnit * subscription.seats}`
-                    : `¥${stripeProJpyPlanUnit * subscription.seats}`}
-                </strong>
-              </StyledTotal>
-            </SectionParagraph>
-          ) : subscription.plan === 'standard' ? (
-            <SectionParagraph>
-              <StyledUpgradePlan>
-                <StyledCalcuration>
-                  <span className='plan-name'>Standard</span>
-                  {!usingJpyPricing
-                    ? `$${stripeStandardPlanUnit} `
-                    : `¥${stripeStandardJpyPlanUnit} `}
-                  &times; {subscription.seats}{' '}
-                  {plur('member', subscription.seats)} &times; 1 month
-                </StyledCalcuration>
-                <span>
-                  {!usingJpyPricing
-                    ? `$${stripeStandardPlanUnit * subscription.seats}`
-                    : `¥${stripeStandardJpyPlanUnit * subscription.seats}`}
-                </span>
-              </StyledUpgradePlan>
-              <StyledTotal>
-                <label>Total Monthly Price</label>
-                <strong>
-                  {!usingJpyPricing
-                    ? `$${stripeStandardPlanUnit * subscription.seats}`
-                    : `¥${stripeStandardJpyPlanUnit * subscription.seats}`}
-                </strong>
-              </StyledTotal>
-            </SectionParagraph>
-          ) : null}
-          {usingJpyPricing && (
-            <Alert variant='secondary'>
-              We can only accept JPY(Japanese Yen) when paying by JCB cards.
-            </Alert>
-          )}
-          <StyledBillingDescription>
-            {subscription.currentPeriodEnd !== 0 ? (
-              subscription.status === 'canceled' ? (
-                <p>
-                  Your subscription will be canceled on{' '}
                   {getFormattedDateFromUnixTimestamp(
                     subscription.currentPeriodEnd
-                  )}{' '}
-                  upon reception of your last invoice .
-                </p>
-              ) : (
-                <p>
-                  Will bill to the credit card ending in{' '}
-                  <strong>
-                    {subscription.last4}
-                    {subscription.cardBrand != null &&
-                      ` (${subscription.cardBrand})`}
-                  </strong>{' '}
-                  at{' '}
-                  <strong>
-                    {getFormattedDateFromUnixTimestamp(
-                      subscription.currentPeriodEnd
-                    )}
-                  </strong>
-                  .{' '}
-                  <StyledBillingButton
-                    disabled={sending}
-                    onClick={onMethodClick}
-                  >
-                    Edit Card
-                  </StyledBillingButton>
-                </p>
-              )
-            ) : null}
+                  )}
+                </strong>
+                .{' '}
+                <StyledBillingButton disabled={sending} onClick={onMethodClick}>
+                  Edit Card
+                </StyledBillingButton>
+              </p>
+            )
+          ) : null}
 
-            <p>
-              Billing email is <strong>{subscription.email}</strong>.{' '}
-              <StyledBillingButton onClick={onEmailClick} disabled={sending}>
-                Edit Billing Email
-              </StyledBillingButton>
-            </p>
-            <p>
-              You can see the{' '}
+          <p>
+            Billing email is <strong>{subscription.email}</strong>.{' '}
+            <StyledBillingButton onClick={onEmailClick} disabled={sending}>
+              Edit Billing Email
+            </StyledBillingButton>
+          </p>
+          <p>
+            You can see the{' '}
+            <StyledBillingButton
+              disabled={fetchingHistory}
+              onClick={onInvoiceHistory}
+            >
+              Billing History
+              {fetchingHistory ? (
+                <Spinner
+                  style={{
+                    position: 'relative',
+                    left: 0,
+                    top: 0,
+                    transform: 'none',
+                  }}
+                />
+              ) : (
+                <Icon path={mdiOpenInNew} />
+              )}
+            </StyledBillingButton>
+          </p>
+          <p>
+            <StyledBillingButton onClick={onPromoClick} disabled={sending}>
+              Apply a coupon
+            </StyledBillingButton>
+          </p>
+          <p>
+            {showPlanTables ? (
               <StyledBillingButton
                 disabled={fetchingHistory}
-                onClick={onInvoiceHistory}
+                onClick={() => setShowPlanTables(false)}
               >
-                Billing History
-                {fetchingHistory ? (
-                  <Spinner
-                    style={{
-                      position: 'relative',
-                      left: 0,
-                      top: 0,
-                      transform: 'none',
-                    }}
-                  />
-                ) : (
-                  <Icon path={mdiOpenInNew} />
-                )}
+                Hide
               </StyledBillingButton>
-            </p>
-            <p>
-              <StyledBillingButton onClick={onPromoClick} disabled={sending}>
-                Apply a coupon
+            ) : (
+              <StyledBillingButton
+                disabled={fetchingHistory}
+                onClick={() => setShowPlanTables(true)}
+              >
+                Change plans
               </StyledBillingButton>
-            </p>
-            <p>
-              {showPlanTables ? (
-                <StyledBillingButton
-                  disabled={fetchingHistory}
-                  onClick={() => setShowPlanTables(false)}
-                >
-                  Hide
-                </StyledBillingButton>
-              ) : (
-                <StyledBillingButton
-                  disabled={fetchingHistory}
-                  onClick={() => setShowPlanTables(true)}
-                >
-                  Change plans
-                </StyledBillingButton>
-              )}
-            </p>
-          </StyledBillingDescription>
-        </SectionIntroduction>
-      </StyledBillingContainer>
+            )}
+          </p>
+        </StyledBillingDescription>
+      </SectionIntroduction>
       {showPlanTables && (
         <PlanTables
           selectedPlan={subscription.plan}
@@ -310,6 +293,11 @@ const SubscriptionManagement = ({
               <h3>
                 {subscriptionPlanChange} to {targetedPlan}
               </h3>
+              {currentSubscriptionDiscount?.percentageOff !== 100 && (
+                <Banner variant='warning' iconPath={mdiGiftOff}>
+                  Changing plans will end your current discount.
+                </Banner>
+              )}
               {targetedPlan === 'Free' ? (
                 <>
                   <p>
@@ -332,23 +320,18 @@ const SubscriptionManagement = ({
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
+                      style={{ marginLeft: 3 }}
                     >
                       Learn more
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
-                  <SectionParagraph className='popup__billing'>
-                    <StyledUpgradePlan>
-                      <StyledCalcuration>
-                        ${stripeProPlanUnit} &times; {subscription.seats}{' '}
-                        {plur('member', subscription.seats)} &times; 1 month
-                      </StyledCalcuration>
-                    </StyledUpgradePlan>
-                    <StyledTotal>
-                      <label>Total Monthly Price</label>
-                      <strong>${subscription.seats * stripeProPlanUnit}</strong>
-                    </StyledTotal>
-                  </SectionParagraph>
+                  <SubscriptionCostSummary
+                    className='popup__billing'
+                    seats={subscription.seats}
+                    plan={'pro'}
+                    usingJpyPricing={usingJpyPricing}
+                  />
                 </>
               ) : (
                 <>
@@ -363,29 +346,26 @@ const SubscriptionManagement = ({
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
+                      style={{ marginLeft: 3 }}
                     >
                       Learn more
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
-                  <SectionParagraph className='popup__billing'>
-                    <StyledUpgradePlan>
-                      <StyledCalcuration>
-                        ${stripeStandardPlanUnit} &times; {subscription.seats}{' '}
-                        {plur('member', subscription.seats)} &times; 1 month
-                      </StyledCalcuration>
-                    </StyledUpgradePlan>
-                    <StyledTotal>
-                      <label>Total Monthly Price</label>
-                      <strong>
-                        ${subscription.seats * stripeStandardPlanUnit}
-                      </strong>
-                    </StyledTotal>
-                  </SectionParagraph>
+                  <SubscriptionCostSummary
+                    className='popup__billing'
+                    seats={subscription.seats}
+                    plan={'standard'}
+                    usingJpyPricing={usingJpyPricing}
+                  />
                 </>
               )}
             </Flexbox>
-            <Flexbox flex='0 0 auto' direction='column'>
+            <Flexbox
+              flex='0 0 auto'
+              direction='column'
+              className='button__group'
+            >
               <Button
                 variant='primary'
                 className='btn'
@@ -400,7 +380,7 @@ const SubscriptionManagement = ({
                 )}
               </Button>
               <Button
-                variant='outline-secondary'
+                variant='bordered'
                 className='btn'
                 onClick={() => setTargetedPlan(undefined)}
                 disabled={sending}
@@ -427,6 +407,17 @@ const StyledPopup = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
+  font-size: 13px;
+
+  .button__group {
+    button {
+      margin: 0;
+    }
+
+    button + button {
+      margin-top: 8px;
+    }
+  }
 
   .popup__background {
     z-index: 8011;
@@ -495,11 +486,6 @@ const StyledPopup = styled.div`
   .popup__billing {
     width: 100%;
   }
-`
-
-const StyledBillingContainer = styled.div`
-  width: 540px;
-  margin-top: ${({ theme }) => theme.space.default}px;
 `
 
 const StyledBillingDescription = styled.div`

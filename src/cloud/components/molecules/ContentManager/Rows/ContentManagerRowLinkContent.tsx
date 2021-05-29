@@ -4,8 +4,12 @@ import { getFormattedBoosthubDateTime } from '../../../../lib/date'
 import EmojiIcon from '../../../atoms/EmojiIcon'
 import { SerializedUser } from '../../../../interfaces/db/user'
 import EditorsIcons from '../../../atoms/EditorsIcons'
+import { DocStatus } from '../../../../interfaces/db/doc'
+import DocStatusIcon from '../../../atoms/DocStatusIcon'
+import styled from '../../../../../shared/lib/styled'
 
 interface ContentManagerRowLinkContentProps {
+  status?: DocStatus
   label: string
   emoji?: string
   defaultIcon?: string
@@ -15,6 +19,7 @@ interface ContentManagerRowLinkContentProps {
 }
 
 const ContentManagerRowLinkContent = ({
+  status,
   defaultIcon,
   label,
   emoji,
@@ -28,7 +33,15 @@ const ContentManagerRowLinkContent = ({
     className='cm-row-link-content'
   >
     <Flexbox flex={'1 1 auto'}>
-      <EmojiIcon defaultIcon={defaultIcon} emoji={emoji} size={20} />
+      {status && (
+        <DocStatusIcon status={status} className='status-icon' size={16} />
+      )}
+      <EmojiIcon
+        className='emoji-icon'
+        defaultIcon={defaultIcon}
+        emoji={emoji}
+        size={16}
+      />
       {path != null ? (
         <Flexbox
           className='label'
@@ -36,7 +49,7 @@ const ContentManagerRowLinkContent = ({
           alignItems='baseline'
           justifyContent='center'
         >
-          <span className='subtle'>{path}</span>
+          <PathLabel>{path}</PathLabel>
           <span>{label}</span>
         </Flexbox>
       ) : (
@@ -54,3 +67,9 @@ const ContentManagerRowLinkContent = ({
 )
 
 export default ContentManagerRowLinkContent
+
+const PathLabel = styled.span`
+  color: ${({ theme }) => theme.colors.text.subtle};
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+  margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+`

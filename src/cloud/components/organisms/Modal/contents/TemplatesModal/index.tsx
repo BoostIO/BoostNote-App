@@ -37,22 +37,20 @@ import {
 import {
   mdiTrashCanOutline,
   mdiFileDocumentOutline,
-  mdiEyeOutline,
-  mdiFileEditOutline,
   mdiClose,
   mdiContentSaveOutline,
 } from '@mdi/js'
 import Icon from '../../../../atoms/Icon'
 import EmojiIcon from '../../../../atoms/EmojiIcon'
-import CustomSwitch from '../../../../atoms/CustomSwitch'
 import { useSettings } from '../../../../../lib/stores/settings'
 import cc from 'classcat'
-import { useEmojiPicker } from '../../../../../lib/stores/emoji'
 import Tooltip from '../../../../atoms/Tooltip'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import MarkdownView from '../../../../atoms/MarkdownView'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
+import Switch from '../../../../../../shared/components/atoms/Switch'
+import { useEmoji } from '../../../../../../shared/lib/stores/emoji'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -85,7 +83,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { settings } = useSettings()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
-  const { openEmojiPickerWithCallback } = useEmojiPicker()
+  const { openEmojiPicker } = useEmoji()
 
   useEffect(() => {
     if (selectedTemplateId == null || templatesMap.has(selectedTemplateId)) {
@@ -294,9 +292,9 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
 
   const emojiPickerClickHandler = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      openEmojiPickerWithCallback(event, setEmoji)
+      openEmojiPicker(event, setEmoji)
     },
-    [openEmojiPickerWithCallback]
+    [openEmojiPicker]
   )
 
   const changesAreUnsaved =
@@ -385,10 +383,8 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                   />
                 </Flexbox>
                 <Flexbox flex='0 0 auto'>
-                  <CustomSwitch
+                  <Switch
                     className='switch'
-                    uncheckedIcon={<Icon path={mdiEyeOutline} size={16} />}
-                    checkedIcon={<Icon path={mdiFileEditOutline} size={16} />}
                     checked={!inPreview}
                     width={50}
                     height={20}

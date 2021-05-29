@@ -5,6 +5,7 @@ export interface SerializeableSubscriptionProps {
   plan: UpgradePlans
   customerId: string
   subscriptionId: string
+  couponId?: string
   seats: number
   status:
     | 'active'

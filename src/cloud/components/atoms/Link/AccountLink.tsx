@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import querystring from 'querystring'
-import EmphasizedLink from './EmphasizedLink'
+import CloudLink from './CloudLink'
 
 export type AccountLinkIntent = 'delete'
 
@@ -16,22 +16,20 @@ interface AccountLinkProps {
 const AccountLink: FC<AccountLinkProps> = ({
   intent = 'delete',
   className,
-  style,
   children,
   query,
   draggable = false,
   beforeNavigate,
 }) => {
   return (
-    <EmphasizedLink
+    <CloudLink
       href={getAccountHref(intent, query)}
       beforeNavigate={beforeNavigate}
       className={className}
-      style={style}
       draggable={draggable}
     >
       {children}
-    </EmphasizedLink>
+    </CloudLink>
   )
 }
 

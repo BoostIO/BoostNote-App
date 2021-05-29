@@ -48,6 +48,7 @@ import {
   mdiViewSplitVertical,
   mdiCommentTextOutline,
   mdiDotsHorizontal,
+  mdiFormatListBulleted,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -76,10 +77,13 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
+import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
+import { useDocActionContextMenu } from './useDocActionContextMenu'
 import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
@@ -117,7 +121,7 @@ const Editor = ({
   backLinks,
   revisionHistory,
 }: EditorProps) => {
-  const { currentUserPermissions } = usePage()
+  const { currentUserPermissions, permissions } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -158,17 +162,17 @@ const Editor = ({
   })
   const { docsMap, workspacesMap, foldersMap } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
-  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
     openRenameDocForm,
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
     openWorkspaceEditForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteFolder,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const userInfo = useMemo(() => {
     return {
@@ -186,6 +190,47 @@ const Editor = ({
   })
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  const normalizedCommentState = useMemo(() => {
+    if (commentState.mode === 'list_loading' || permissions == null) {
+      return commentState
+    }
+
+    const normalizedState = { ...commentState }
+
+    const updatedUsers = new Map(
+      permissions.map((permission) => [permission.user.id, permission.user])
+    )
+
+    normalizedState.threads = normalizedState.threads.map((thread) => {
+      if (thread.status.by == null) {
+        return thread
+      }
+      const normalizedUser =
+        updatedUsers.get(thread.status.by.id) || thread.status.by
+
+      return { ...thread, status: { ...thread.status, by: normalizedUser } }
+    })
+
+    if (normalizedState.mode === 'thread') {
+      if (normalizedState.thread.status.by != null) {
+        const normalizedUser =
+          updatedUsers.get(normalizedState.thread.status.by.id) ||
+          normalizedState.thread.status.by
+        normalizedState.thread = {
+          ...normalizedState.thread,
+          status: { ...normalizedState.thread.status, by: normalizedUser },
+        }
+      }
+
+      normalizedState.comments = normalizedState.comments.map((comment) => {
+        const normalizedUser = updatedUsers.get(comment.user.id) || comment.user
+        return { ...comment, user: normalizedUser }
+      })
+    }
+
+    return normalizedState
+  }, [commentState, permissions])
 
   const newRangeThread = useCallback(
     (selection: SelectionContext) => {
@@ -216,7 +261,7 @@ const Editor = ({
 
     const comments: HighlightRange[] = []
     for (const thread of commentState.threads) {
-      if (thread.selection != null && thread.status.type === 'open') {
+      if (thread.selection != null && thread.status.type !== 'outdated') {
         const absoluteAnchor = createAbsolutePositionFromRelativePosition(
           thread.selection.anchor,
           realtime.doc
@@ -231,14 +276,16 @@ const Editor = ({
           absoluteHead != null &&
           absoluteAnchor.index !== absoluteHead.index
         ) {
-          comments.push({
-            id: thread.id,
-            start: absoluteAnchor.index,
-            end: absoluteHead.index,
-            active:
-              commentState.mode === 'thread' &&
-              thread.id === commentState.thread.id,
-          })
+          if (thread.status.type === 'open') {
+            comments.push({
+              id: thread.id,
+              start: absoluteAnchor.index,
+              end: absoluteHead.index,
+              active:
+                commentState.mode === 'thread' &&
+                thread.id === commentState.thread.id,
+            })
+          }
         } else if (connState === 'synced') {
           commentActions.threadOutdated(thread)
         }
@@ -686,7 +733,7 @@ const Editor = ({
       openNewDocForm,
       openNewFolderForm,
       openWorkspaceEditForm,
-      deleteOrArchiveDoc,
+      deleteDoc,
       deleteFolder,
       deleteWorkspace
     )
@@ -701,7 +748,7 @@ const Editor = ({
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
-    deleteOrArchiveDoc,
+    deleteDoc,
     deleteFolder,
     openWorkspaceEditForm,
     deleteWorkspace,
@@ -758,6 +805,17 @@ const Editor = ({
     }
   }, [toggleSplitEditMode])
 
+  const toggleBookmarkForDoc = useCallback(() => {
+    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+  }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
+
+  const { open: openDocActionContextMenu } = useDocActionContextMenu({
+    doc,
+    team,
+    editorRef,
+    toggleBookmarkForDoc,
+  })
+
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -777,22 +835,28 @@ const Editor = ({
         topbar: {
           breadcrumbs,
           children:
-            currentUserPermissions != null ? (
-              <LoadingButton
-                variant='icon'
-                disabled={sendingMap.has(doc.id)}
-                spinning={sendingMap.has(doc.id)}
-                size='sm'
-                iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                onClick={() =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-                }
-              />
+            !team.personal && currentUserPermissions != null ? (
+              <StyledTopbarChildrenContainer>
+                <LoadingButton
+                  variant='icon'
+                  disabled={sendingMap.has(doc.id)}
+                  spinning={sendingMap.has(doc.id)}
+                  size='sm'
+                  iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+                  onClick={toggleBookmarkForDoc}
+                />
+
+                <PresenceIcons user={userInfo} users={otherUsers} />
+              </StyledTopbarChildrenContainer>
             ) : null,
           controls: [
+            {
+              type: 'separator',
+            },
             ...(connState === 'reconnecting'
               ? [
                   {
+                    type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
                     label: 'Connecting...',
@@ -809,6 +873,7 @@ const Editor = ({
               : connState === 'disconnected'
               ? [
                   {
+                    type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
                     label: 'Reconnect',
@@ -825,6 +890,7 @@ const Editor = ({
               : connState === 'loaded'
               ? [
                   {
+                    type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
                     label: 'Syncing...',
@@ -839,26 +905,40 @@ const Editor = ({
                 ]
               : []),
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiPencil,
               active: editorLayout === 'editor',
               onClick: () => updateLayout('editor'),
             },
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiViewSplitVertical,
               active: editorLayout === 'split',
               onClick: () => updateLayout('split'),
             },
             {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiEyeOutline,
               active: editorLayout === 'preview',
               onClick: () => updateLayout('preview'),
             },
             {
+              type: 'separator',
+            },
+            {
+              type: 'button',
+              variant: 'icon',
+              iconPath: mdiDotsHorizontal,
+              onClick: openDocActionContextMenu,
+            },
+            {
+              type: 'button',
               variant: 'icon',
               iconPath: mdiCommentTextOutline,
+              active: preferences.docContextMode === 'comment',
               onClick: () =>
                 setPreferences(({ docContextMode }) => ({
                   docContextMode:
@@ -867,14 +947,15 @@ const Editor = ({
             },
             {
               variant: 'icon',
-              iconPath: mdiDotsHorizontal,
+              iconPath: mdiFormatListBulleted,
+              active: preferences.docContextMode === 'context',
               onClick: () =>
                 setPreferences(({ docContextMode }) => ({
                   docContextMode:
                     docContextMode === 'context' ? 'hidden' : 'context',
                 })),
             },
-          ],
+          ] as TopbarControlProps[],
         },
         right:
           preferences.docContextMode === 'context' ? (
@@ -883,16 +964,12 @@ const Editor = ({
               contributors={contributors}
               backLinks={backLinks}
               team={team}
-              editorRef={editorRef}
               restoreRevision={onRestoreRevisionCallback}
               revisionHistory={revisionHistory}
-              presence={{ user: userInfo, users: otherUsers, editorLayout }}
-              openRenameDocForm={() => openRenameDocForm(doc)}
-              sendingRename={sendingMap.has(doc.id)}
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager
-              state={commentState}
+              state={normalizedCommentState}
               user={user}
               {...commentActions}
             />
@@ -995,6 +1072,13 @@ const Container = styled.div`
   flex-grow: 1;
   width: 100%;
   height: 100%;
+`
+
+const StyledTopbarChildrenContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `
 
 const StyledBottomBar = styled.div`

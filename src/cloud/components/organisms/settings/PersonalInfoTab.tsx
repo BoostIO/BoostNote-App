@@ -1,32 +1,15 @@
 import React, { useCallback, useState, useMemo } from 'react'
-import {
-  Section,
-  TabHeader,
-  SectionLabel,
-  SectionInput,
-  SectionProfilePic,
-  Column,
-  Container,
-  Scrollable,
-  SectionFlexLeft,
-  SectionSeparator,
-  SectionDescription,
-  SectionSelect,
-  SectionHeader3,
-} from './styled'
 import { useTranslation } from 'react-i18next'
 import { useGlobalData } from '../../../lib/stores/globalData'
 import { saveUserInfo, updateUserIcon } from '../../../api/users'
 import { buildIconUrl } from '../../../api/files'
-import IconInput from '../../molecules/IconInput'
-import CustomButton from '../../atoms/buttons/CustomButton'
-import { Spinner } from '../../atoms/Spinner'
 import { useSettings } from '../../../lib/stores/settings'
 import AccountLink from '../../atoms/Link/AccountLink'
-import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { UserEmailNotificationType } from '../../../interfaces/db/userSettings'
 import { saveUserSettings } from '../../../api/users/settings'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import Form from '../../../../shared/components/molecules/Form'
 
 const PersonalInfoTab = () => {
   const {
@@ -103,117 +86,87 @@ const PersonalInfoTab = () => {
     return buildIconUrl(currentUser.icon.location)
   }, [currentUser])
 
-  const selectCurrentEmailNotifications: SelectChangeEventHandler = useCallback(
-    (event) => {
-      let value: UserEmailNotificationType | 'never'
-      switch (event.target.value) {
+  const selectCurrentEmailNotifications = useCallback(
+    (value: string | 'never') => {
+      let targetedValue: UserEmailNotificationType | 'never'
+      switch (value) {
         case 'daily':
         case 'weekly':
-          value = event.target.value
+          targetedValue = value
           break
         case 'never':
         default:
-          value = 'never'
+          targetedValue = 'never'
       }
-      setCurrentEmailNotifications(value)
+      setCurrentEmailNotifications(targetedValue)
     },
     []
   )
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabHeader className='marginTop'>
-            {t('settings.personalInfo')}
-          </TabHeader>
-          <Section>
-            {currentUser != null && (
-              <>
-                <SectionLabel>Display Name</SectionLabel>
-                <SectionInput value={displayName} onChange={onChangeHandler} />
-                <SectionProfilePic>
-                  <SectionLabel>Icon</SectionLabel>
-                  <IconInput
-                    shape='square'
-                    defaultUrl={iconUrl}
-                    onChange={setIconFile}
-                  />
-                </SectionProfilePic>
-              </>
-            )}
-
-            {currentUser != null && (
-              <>
-                <TabHeader style={{ marginTop: 20 }}>
-                  {t('settings.notifications')}
-                </TabHeader>
-                <Section>
-                  <SectionHeader3>
-                    {t('settings.notificationsFrequency')}
-                  </SectionHeader3>
-                  <SectionSelect
-                    value={currentEmailNotifications}
-                    onChange={selectCurrentEmailNotifications}
-                    disabled={updating}
-                  >
-                    <option
-                      value='daily'
-                      selected={currentEmailNotifications === 'daily'}
-                    >
-                      Daily
-                    </option>
-                    <option
-                      value='weekly'
-                      selected={currentEmailNotifications === 'weekly'}
-                    >
-                      Weekly
-                    </option>
-                    <option
-                      value='never'
-                      selected={currentEmailNotifications == null}
-                    >
-                      Never
-                    </option>
-                  </SectionSelect>
-                </Section>
-              </>
-            )}
-
-            <SectionFlexLeft>
-              <CustomButton
-                variant='primary'
-                onClick={updateHandler}
-                style={{ marginRight: 10, maxWidth: 150, textAlign: 'center' }}
-                disabled={updating}
-              >
-                {updating ? (
-                  <Spinner style={{ fontSize: 16 }} />
-                ) : (
-                  t('general.update')
-                )}
-              </CustomButton>
-              <CustomButton onClick={closeSettingsTab} variant='secondary'>
-                {t('general.cancel')}
-              </CustomButton>
-            </SectionFlexLeft>
-          </Section>
-          <SectionSeparator style={{ marginTop: 20 }} />
-          <Section>
-            <SectionDescription>
-              {t('settings.account.delete')}
-            </SectionDescription>
-            <SectionDescription>
-              You may delete your account at any time, note that this is
-              unrecoverable.{' '}
-              <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
-                {t('general.delete')}
-              </AccountLink>
-            </SectionDescription>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      title={t('settings.personalInfo')}
+      description={'Manage your Boost Note profile.'}
+      body={
+        currentUser == null ? null : (
+          <Form
+            onSubmit={updateHandler}
+            rows={[
+              {
+                title: 'Profile Picture',
+                items: [
+                  {
+                    type: 'image',
+                    props: { defaultUrl: iconUrl, onChange: setIconFile },
+                  },
+                ],
+              },
+              {
+                title: 'Name',
+                items: [
+                  {
+                    type: 'input',
+                    props: { value: displayName, onChange: onChangeHandler },
+                  },
+                ],
+              },
+              {
+                title: t('settings.notificationsFrequency'),
+                items: [
+                  {
+                    type: 'select--string',
+                    props: {
+                      value: currentEmailNotifications,
+                      onChange: selectCurrentEmailNotifications,
+                      isDisabled: updating,
+                      options: ['daily', 'weekly', 'never'],
+                    },
+                  },
+                ],
+              },
+            ]}
+            submitButton={{
+              variant: 'primary',
+              spinning: updating,
+              label: t('general.update'),
+              disabled: updating,
+            }}
+          />
+        )
+      }
+      footer={
+        <>
+          <h2>{t('settings.account.delete')}</h2>
+          <p className='text--subtle'>
+            You may delete your account at any time, note that this is
+            unrecoverable.{' '}
+            <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
+              {t('general.delete')}
+            </AccountLink>
+          </p>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
 

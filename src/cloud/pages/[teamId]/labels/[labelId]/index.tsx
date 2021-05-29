@@ -7,13 +7,13 @@ import {
 import { useNav } from '../../../../lib/stores/nav'
 import { usePage } from '../../../../lib/stores/pageStore'
 import ColoredBlock from '../../../../components/atoms/ColoredBlock'
-import ContentManager from '../../../../components/molecules/ContentManager'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
 import { topParentId } from '../../../../lib/mappers/topbarTree'
 import { mdiTag } from '@mdi/js'
 import { getTagHref } from '../../../../components/atoms/Link/TagLink'
 import { useRouter } from '../../../../lib/router'
+import DocOnlyContentManager from '../../../../components/molecules/ContentManager/DocOnlyContentManager'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
@@ -66,7 +66,6 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   return (
     <Application
       content={{
-        reduced: true,
         topbar: {
           breadcrumbs: [
             {
@@ -81,13 +80,11 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
             },
           ],
         },
-        header: <span>#{pageTag.text}</span>,
       }}
     >
-      <ContentManager
+      <DocOnlyContentManager
         team={team}
         documents={docs}
-        folders={[]}
         page='tag'
         workspacesMap={relatedWorkspaces}
       />

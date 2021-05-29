@@ -10,9 +10,9 @@ export interface Preferences {
   lastEditorMode: 'edit' | 'preview'
   lastEditorEditLayout: LayoutMode
   workspaceManagerIsOpen: boolean
-  sidebarBookmarksAreUnfolded: boolean
   lastSidebarState: SidebarState | undefined
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   sidebarOrderedCategories: string
   folderSortingOrder: 'Latest Updated' | 'Title A-Z' | 'Title Z-A'
+  version?: number
 }

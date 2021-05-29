@@ -10,7 +10,7 @@ import CustomButton from '../../atoms/buttons/CustomButton'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { unarchiveDoc } from '../../../api/teams/docs'
+import { updateDocStatus } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
 import { usePreferences } from '../../../lib/stores/preferences'
 import Application from '../../Application'
@@ -26,8 +26,8 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
-import { useCloudUpdater } from '../../../lib/hooks/useCloudUpdater'
-import { useCloudUI } from '../../../lib/hooks/useCloudUI'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
 interface ViewPageProps {
@@ -56,21 +56,21 @@ const ViewPage = ({
   const { setPartialPageData, currentUserPermissions } = usePage()
   const { pushMessage } = useToast()
   const { preferences } = usePreferences()
-  const { sendingMap, toggleDocBookmark } = useCloudUpdater()
+  const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
     openRenameDocForm,
     openRenameFolderForm,
     openWorkspaceEditForm,
     openNewDocForm,
     openNewFolderForm,
-    deleteOrArchiveDoc: deleteDoc,
+    deleteDoc,
     deleteFolder,
     deleteWorkspace,
-  } = useCloudUI()
+  } = useCloudResourceModals()
 
   const unarchiveHandler = useCallback(async () => {
     try {
-      const data = await unarchiveDoc(doc.teamId, doc.id)
+      const data = await updateDocStatus(doc.teamId, doc.id, null)
       updateDocsMap([data.doc.id, data.doc])
       setPartialPageData({ pageDoc: data.doc })
     } catch (error) {

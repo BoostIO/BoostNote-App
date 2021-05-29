@@ -78,3 +78,10 @@ export const StyledModalFormFlexGrowDiv = styled.div`
   width: 100%;
   flex: 1 1 auto;
 `
+
+export const StyledModalSeparator = styled.div`
+  height: 1px;
+  margin: 10px 0;
+  width: 100%;
+  background-color: ${({ theme }) => theme.subtleBackgroundColor};
+`

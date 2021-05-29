@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Select from 'react-select'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
+import { formInputHeight } from '../../../../lib/styled/styleFunctions'
+import { capitalize } from 'lodash'
 
 export interface FormSelectOption {
   label: string | React.ReactNode
   value: string
 }
 
-export interface FormSelectProps {
+interface FormSelectCommonProps {
   id?: string
-  options: FormSelectOption[]
-  value?: FormSelectOption
-  onChange: (val: any) => void
   closeMenuOnSelect?: boolean
   className?: string
   isDisabled?: boolean
@@ -22,7 +21,23 @@ export interface FormSelectProps {
   name?: string
   filterOption?: (option: FormSelectOption, rawInput: string) => boolean
   onMenuOpen?: () => void
+  minWidth?: string | number
+  placeholder?: React.ReactNode
 }
+
+interface StandardFormSelectOptions {
+  value?: FormSelectOption | FormSelectOption[]
+  options: FormSelectOption[]
+  onChange: (val: any) => void
+}
+
+interface SimpleFormSelectOptions {
+  value: string | string[]
+  options: readonly string[]
+  onChange: (val: string) => void
+}
+
+export type FormSelectProps = FormSelectCommonProps & StandardFormSelectOptions
 
 const FormSelect = ({
   id,
@@ -35,13 +50,14 @@ const FormSelect = ({
   isLoading = false,
   isMulti = false,
   isSearchable = false,
+  placeholder = 'Select...',
   name,
   filterOption,
   onMenuOpen,
-}: FormSelectProps) => {
+}: FormSelectProps & StandardFormSelectOptions) => {
   const [focused, setFocused] = useState(false)
   return (
-    <Container>
+    <Container className='form__select__wrapper'>
       <Select
         id={id}
         closeMenuOnSelect={closeMenuOnSelect}
@@ -52,6 +68,7 @@ const FormSelect = ({
           focused && 'form__select--focused',
           isDisabled && 'form__select--disabled',
         ])}
+        placeholder={placeholder}
         classNamePrefix={'form__select'}
         value={value}
         filterOption={filterOption}
@@ -69,26 +86,90 @@ const FormSelect = ({
   )
 }
 
+export type SimpleFormSelectProps = FormSelectCommonProps &
+  SimpleFormSelectOptions
+export const SimpleFormSelect = ({
+  options,
+  value,
+  onChange,
+  ...props
+}: SimpleFormSelectProps) => {
+  const convertedOptions = useMemo(() => {
+    return options.map((opt) => {
+      return {
+        label: capitalize(opt),
+        value: opt,
+      }
+    })
+  }, [options])
+
+  const onSelectChange = useCallback(
+    (val: FormSelectOption) => {
+      onChange(val.value)
+    },
+    [onChange]
+  )
+
+  return (
+    <FormSelect
+      {...props}
+      options={convertedOptions}
+      value={
+        value != null
+          ? typeof value === 'string'
+            ? { label: capitalize(value), value: value }
+            : value.map((val) => {
+                return { label: capitalize(val), value: val }
+              })
+          : undefined
+      }
+      onChange={onSelectChange}
+    />
+  )
+}
+
 const Container = styled.div`
   .form__select .form__select__indicator-separator {
     width: 0;
   }
 
+  .form__select .form__select__control,
+  .form__select .form__select__indicator,
+  .form__select .form__select__indicators {
+    ${formInputHeight}
+  }
+
   .form__select .form__select__control {
+    display: flex;
+    border-radius: ${({ theme }) => theme.borders.radius}px;
+    min-width: 100px;
     width: 100%;
-    height: 40px;
-    color: ${({ theme }) => theme.colors.text.subtle};
+    ${formInputHeight}
+    color: ${({ theme }) => theme.colors.text.primary};
     border: none;
     &.form__select__control--is-focused {
       box-shadow: ${({ theme }) => theme.colors.shadow};
     }
   }
+  .form__select {
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+
+  .form__select.form__select--disabled {
+    opacity: 0.4;
+    .form__select__single-value,
+    .form__select__value-container,
+    .form__select__dropdown-indicator,
+    .form__select__multi-value__label,
+    .form__select__multi-value__remove {
+      color: ${({ theme }) => theme.colors.text.subtle} !important;
+    }
+  }
 
   .form__select .form__select__input {
     opacity: inherit;
-    color: ${({ theme }) => theme.colors.text.primary};
+    color: ${({ theme }) => theme.colors.text.subtle};
     &.form__select__input--is-disabled {
-      opacity: 0.6;
     }
     input {
       outline: none !important;
@@ -96,13 +177,16 @@ const Container = styled.div`
       box-shadow: none !important;
     }
   }
+  .form__select__value-container {
+    padding: 0 4px;
+  }
 
   .form__select .form__select__single-value,
   .form__select .form__select__value-container,
   .form__select .form__select__dropdown-indicator,
   .form__select .form__select__multi-value__label,
   .form__select .form__select__multi-value__remove {
-    color: ${({ theme }) => theme.colors.text.subtle};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   .form__select .form__select__multi-value {
@@ -127,6 +211,7 @@ const Container = styled.div`
   .form__select .form__select__menu {
     background-color: ${({ theme }) => theme.colors.background.primary};
     border: 1px solid ${({ theme }) => theme.colors.border.main};
+    overflow-y: visible !important;
   }
 
   .form__select .form__select__option {

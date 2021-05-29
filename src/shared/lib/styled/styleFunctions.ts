@@ -115,6 +115,26 @@ export const hideScroll = () => `
     Form
 ———————————–———————————–———————————–——–—— */
 
+export const contextMenuFormItem = (
+  { theme }: StyledProps,
+  focusClass: string
+) => `
+background: none;
+border: 1px solid transparent;
+padding: 2px 8px;
+&:hover {
+  background: ${theme.colors.background.primary} !important;
+}
+&${focusClass} {
+  background: ${theme.colors.background.primary} !important;
+  border: 1px solid ${theme.colors.variants.info.base} !important;
+}`
+
+export const formInputHeight = () => `
+  height: 32px;
+  min-height: 32px;
+`
+
 /* ———————————–———————————–———————————–——–——
     Table
 ———————————–———————————–———————————–——–—— */

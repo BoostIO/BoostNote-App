@@ -2,7 +2,6 @@ import { callApi } from '../../../lib/client'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import report from '../../../lib/analytics'
-import { PermissionType } from 'aws-sdk/clients/workmail'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DestroyPermissionResponseBody {}
@@ -61,7 +60,7 @@ export interface AlterPermissionResponseBody {
 export async function updatePermissionRole(
   team: SerializedTeam,
   userPermissions: SerializedUserTeamPermissions,
-  role: PermissionType
+  role: string
 ) {
   const data = await callApi<AlterPermissionResponseBody>(
     `api/teams/${team.id}/permissions/${userPermissions.id}`,

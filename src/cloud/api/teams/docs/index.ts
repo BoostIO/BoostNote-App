@@ -2,6 +2,7 @@ import { callApi } from '../../../lib/client'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
+  DocStatus,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import report from '../../../lib/analytics'
@@ -92,27 +93,68 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   report('update_doc')
   return data
 }
-
-export interface ArchiveDocResponseBody {
+export interface UpdateDocStatusResponseBody {
   doc: SerializedDocWithBookmark
 }
 
-export async function archiveDoc(teamId: string, docId: string) {
-  const data = await callApi<ArchiveDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/archive`,
+export async function updateDocStatus(
+  teamId: string,
+  docId: string,
+  status: DocStatus | null
+) {
+  const data = await callApi<UpdateDocStatusResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/status`,
     {
       method: 'put',
+      json: {
+        status,
+      },
     }
   )
+
   return data
 }
 
-export async function unarchiveDoc(teamId: string, docId: string) {
-  const data = await callApi<ArchiveDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/archive`,
+export interface UpdateDocDueDateResponseBody {
+  doc: SerializedDocWithBookmark
+}
+
+export async function updateDocDueDate(
+  teamId: string,
+  docId: string,
+  dueDate: Date | null
+) {
+  const data = await callApi<UpdateDocStatusResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/due-date`,
     {
-      method: 'delete',
+      method: 'put',
+      json: {
+        dueDate,
+      },
     }
   )
+
+  return data
+}
+
+export interface UpdateDocAssigneesResponseBody {
+  doc: SerializedDocWithBookmark
+}
+
+export async function updateDocAssignees(
+  teamId: string,
+  docId: string,
+  assignees: string[]
+) {
+  const data = await callApi<UpdateDocAssigneesResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/assignees`,
+    {
+      method: 'put',
+      json: {
+        assignees,
+      },
+    }
+  )
+
   return data
 }

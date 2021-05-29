@@ -3,15 +3,17 @@ import styled from '../../../lib/styled'
 export const StyledContentManager = styled.div`
   display: block;
   width: 100%;
-  padding-bottom: ${({ theme }) => theme.space.medium}px;
+  padding: 0 ${({ theme }) => theme.space.large}px
+    ${({ theme }) => theme.space.medium}px;
 `
 
 export const StyledContentManagerHeaderRow = styled.div`
-  padding: 3px ${({ theme }) => theme.space.xxsmall}px
-    ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.xxsmall}px;
-  border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
+  padding: 0 8px;
+  height: 30px;
   border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
+  .checkbox {
+    margin-left: 8px;
+  }
 `
 
 export const StyledContentManagerSelector = styled.button`
@@ -39,99 +41,6 @@ export const StyledContentManagerSelectorControl = styled.div`
   justify-content: flex-end;
   font-size: 13px;
   position: relative;
-`
-
-export const StyledContentManagerRow = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  height: 40px;
-  flex: 1 1 auto;
-  width: 100%;
-  border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
-  font-size: 13px;
-  padding: 0 ${({ theme }) => theme.space.xxsmall}px;
-
-  &.expanded {
-    height: 60px;
-  }
-
-  .actions {
-    display: none;
-  }
-
-  &:hover {
-    background: ${({ theme }) => theme.subtleBackgroundColor};
-    .custom-check::before {
-      border-color: ${({ theme }) => theme.subtleTextColor};
-    }
-
-    .actions {
-      display: flex;
-    }
-
-    .date {
-      display: none;
-    }
-  }
-
-  .link {
-    overflow: hidden;
-  }
-
-  .subtle {
-    color: ${({ theme }) => theme.secondaryTextColor};
-    margin: 0;
-    font-size: ${({ theme }) => theme.fontSizes.xxsmall}px;
-  }
-
-  a {
-    width: 100%;
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    height: 100%;
-    color: ${({ theme }) => theme.baseTextColor};
-    text-decoration: none;
-    padding: 0 ${({ theme }) => theme.space.xxsmall}px;
-  }
-
-  .date {
-    flex: 0 2 auto;
-    font-size: 13px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .label {
-    flex: 1 1 auto;
-    margin: 0 ${({ theme }) => theme.space.xsmall}px 0 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  &:not(.parent) a {
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
-    padding-left: ${({ theme }) => theme.space.xsmall}px;
-  }
-
-  &.parent {
-    font-size: ${({ theme }) => theme.fontSizes.xxlarge}px;
-    padding-left: 2px;
-  }
-
-  &.archived a {
-    color: ${({ theme }) => theme.subtleTextColor};
-  }
-
-  .cm-row-link-content {
-    svg {
-      color: #329bbe !important;
-    }
-  }
 `
 
 export const StyledContentManagerList = styled.div`

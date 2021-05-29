@@ -128,13 +128,9 @@ const StyledLabel = styled.label`
     cursor: not-allowed;
   }
 
-  .icon {
-    color: ${({ theme }) => theme.baseIconColor};
-  }
-
   > span,
   > .margin-left {
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
+    margin-left: 4px;
   }
 
   span {

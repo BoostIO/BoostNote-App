@@ -27,9 +27,13 @@ export const StyledDocTagsList = styled.div`
   box-sizing: content-box;
   padding-bottom: 6px;
 
-  > div + div,
-  > div:first-child {
+  &:not(.list--empty) > div + div,
+  &:not(.list--empty) > div:first-child {
     margin-top: 6px !important;
+  }
+
+  &.list--empty {
+    width: 100%;
   }
 `
 

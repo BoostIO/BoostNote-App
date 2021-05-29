@@ -74,6 +74,8 @@ module.exports = (env, argv) => {
         'GOOGLE_CLIENT_ID',
         'INTERCOM_APP_ID',
         'STRIPE_PUBLISHABLE_KEY',
+        'COUPONS_NEW_USER_STANDARD',
+        'COUPONS_NEW_USER_PRO',
       ]),
       new CopyPlugin({
         patterns: [
@@ -88,13 +90,6 @@ module.exports = (env, argv) => {
           {
             from: path.join(__dirname, 'node_modules/katex/dist/katex.min.css'),
             to: 'app/katex/katex.min.css',
-          },
-          {
-            from: path.join(
-              __dirname,
-              'node_modules/bootstrap/dist/css/bootstrap.min.css'
-            ),
-            to: 'app/bootstrap/bootstrap.min.css',
           },
           {
             from: path.join(
@@ -161,15 +156,6 @@ module.exports = (env, argv) => {
             path.join(
               __dirname,
               'node_modules/remark-admonitions/styles/classic.css'
-            )
-          )
-        )
-        app.use(
-          '/app/bootstrap/bootstrap.min.css',
-          express.static(
-            path.join(
-              __dirname,
-              'node_modules/bootstrap/dist/css/bootstrap.min.css'
             )
           )
         )

@@ -12,6 +12,7 @@ import Spinner from '../../../components/atoms/Spinner'
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
+  | 'tertiary'
   | 'danger'
   | 'icon'
   | 'icon-secondary'
@@ -19,6 +20,7 @@ export type ButtonVariant =
   | 'transparent'
   | 'warning'
   | 'success'
+  | 'bordered'
 
 export interface ButtonProps {
   variant?: ButtonVariant
@@ -144,8 +146,7 @@ export const LoadingButton = ({
 export default Button
 
 const StyledButton = styled.button`
-  padding: 0 10px;
-  border-radius: 2px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   height: 32px;
   outline: none;
@@ -158,13 +159,17 @@ const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: Arial;
   box-sizing: border-box;
   transition: 200ms background-color;
   width: auto;
 
   & + * {
     margin-left: 5px;
+  }
+
+  .button__label {
+    display: flex;
+    align-items: center;
   }
 
   .button__icon {
@@ -232,7 +237,7 @@ const StyledButton = styled.button`
     padding: 0;
     border: 0;
     height: auto !important;
-    display: inline;
+    display: inline-flex;
 
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.text.link};
@@ -245,6 +250,7 @@ const StyledButton = styled.button`
       &:focus,
       &.button__state--active {
         opacity: 0.8;
+        text-decoration: underline;
       }
     }
   }
@@ -255,6 +261,29 @@ const StyledButton = styled.button`
 
     .button__spinner {
       border-color: ${({ theme }) => theme.colors.variants.secondary.text};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        filter: brightness(103%);
+      }
+      &:hover {
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        filter: brightness(112%);
+      }
+    }
+  }
+
+  &.button__variant--tertiary {
+    background-color: ${({ theme }) => theme.colors.variants.tertiary.base};
+    color: ${({ theme }) => theme.colors.variants.tertiary.text};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.variants.tertiary.text};
       border-right-color: transparent;
     }
 
@@ -290,6 +319,36 @@ const StyledButton = styled.button`
       }
       &:active,
       &.button__state--active {
+        filter: brightness(112%);
+      }
+    }
+  }
+
+  &.button__variant--bordered {
+    background-color: transparent;
+    color: ${({ theme }) => theme.colors.text.secondary};
+    border: 1px solid ${({ theme }) => theme.colors.border.second};
+
+    .button__spinner {
+      border-color: ${({ theme }) => theme.colors.text.secondary};
+      border-right-color: transparent;
+    }
+
+    &:not(.button__state--disabled) {
+      &.focus {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
+        filter: brightness(103%);
+      }
+      &:hover {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
+        filter: brightness(106%);
+      }
+      &:active,
+      &.button__state--active {
+        background: ${({ theme }) => theme.colors.variants.secondary.base};
+        color: ${({ theme }) => theme.colors.variants.secondary.text};
         filter: brightness(112%);
       }
     }
@@ -375,8 +434,8 @@ const StyledButton = styled.button`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.variants.info.base};
   }
+`
 
-  .button__spinner {
-    margin-top: 6px;
-  }
+export const RoundButton = styled(Button)`
+  border-radius: 20px;
 `

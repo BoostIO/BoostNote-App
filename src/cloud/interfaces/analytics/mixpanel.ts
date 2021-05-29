@@ -72,10 +72,20 @@ export enum MixpanelActionTrackTypes {
   UpgradeRevision = 'upgrade.origin.revision',
   UpgradeGuest = 'upgrade.origin.guest',
   UpgradeLimit = 'upgrade.origin.limit',
+  UpgradeDiscount = 'upgrade.origin.discount',
   WorkspaceOpen = 'workspace.open',
   WorkspaceCreate = 'workspace.create',
   WorkspaceDelete = 'workspace.delete',
   ZapierLinkOpen = 'zapier.link.open',
+  DocCommentThreadCreate = 'doc.thread.add',
+  DocCommentThreadEdit = 'doc.thread.edit',
+  DocCommentThreadDelete = 'doc.thread.delete',
+  LineCommentThreadCreate = 'line.thread.create',
+  LineCommentThreadEdit = 'line.thread.edit',
+  LineCommentThreadDelete = 'line.thread.delete',
+  CommentCreate = 'comment.create',
+  CommentUpdate = 'comment.update',
+  CommentDelete = 'comment.delete',
 }
 
 export type MixpanelFrontEvent =
@@ -100,6 +110,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.UpgradePassword
   | MixpanelActionTrackTypes.UpgradeRevision
   | MixpanelActionTrackTypes.DocFeatureRevision
+  | MixpanelActionTrackTypes.UpgradeDiscount
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
@@ -156,6 +167,19 @@ export type MixpanelOpenInviteEvent =
   | MixpanelActionTrackTypes.OpenInviteCreate
   | MixpanelActionTrackTypes.OpenInviteDelete
   | MixpanelActionTrackTypes.OpenInviteReset
+
+export type MixpanelCommentThreadEvent =
+  | MixpanelActionTrackTypes.DocCommentThreadCreate
+  | MixpanelActionTrackTypes.DocCommentThreadEdit
+  | MixpanelActionTrackTypes.DocCommentThreadDelete
+  | MixpanelActionTrackTypes.LineCommentThreadCreate
+  | MixpanelActionTrackTypes.LineCommentThreadEdit
+  | MixpanelActionTrackTypes.LineCommentThreadDelete
+
+export type MixpanelCommentEvent =
+  | MixpanelActionTrackTypes.CommentCreate
+  | MixpanelActionTrackTypes.CommentUpdate
+  | MixpanelActionTrackTypes.CommentDelete
 
 export type MixpanelUserProfile = {
   $first_name?: string

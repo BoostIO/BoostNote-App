@@ -8,6 +8,7 @@ import Tooltip from './Tooltip'
 interface EmojiIconProps {
   emoji?: string
   defaultIcon?: string
+  className?: string
   style?: React.CSSProperties
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
   size?: number
@@ -17,6 +18,7 @@ interface EmojiIconProps {
 const EmojiIcon = ({
   emoji,
   defaultIcon,
+  className,
   style,
   size = 32,
   tooltip,
@@ -32,7 +34,7 @@ const EmojiIcon = ({
         style={{ marginRight: 5, ...style }}
         grow={0}
         shrink={0}
-        className={cc([onClick != null && 'button'])}
+        className={cc([onClick != null && 'button', className])}
         onClick={onClick}
       >
         <Tooltip tooltip={tooltip}>
@@ -51,7 +53,7 @@ const EmojiIcon = ({
       style={{ marginRight: 5, ...style }}
       grow={0}
       shrink={0}
-      className={cc([onClick != null && 'button'])}
+      className={cc([onClick != null && 'button', className])}
       onClick={onClick}
     >
       {emoji != null ? (

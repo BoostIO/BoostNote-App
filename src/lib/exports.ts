@@ -40,6 +40,7 @@ import {
 import remarkSlug from 'remark-slug'
 import { rehypePosition } from '../cloud/lib/rehypePosition'
 import remarkAdmonitions from 'remark-admonitions'
+import { MenuItemConstructorOptions } from 'electron'
 
 interface ImageData {
   name: string
@@ -432,6 +433,10 @@ function revokeAttachmentsUrls(attachmentUrls: string[]) {
   })
 }
 
+export function getValidNoteTitle(note: NoteDoc): string {
+  return note.title ? note.title : 'Untitled-' + note._id
+}
+
 export function convertNoteDocToMarkdownString(
   note: NoteDoc,
   includeFrontMatter: boolean
@@ -524,7 +529,8 @@ export const exportNoteAsHtmlFile = async (
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
-  previewStyle?: string
+  previewStyle?: string,
+  silent?: boolean
 ): Promise<void> => {
   try {
     const markdownHtmlContent = await convertNoteDocToMarkdownHtmlString(
@@ -574,22 +580,28 @@ export const exportNoteAsHtmlFile = async (
     )
     await writeFile(saveLocation, htmlString)
   } catch (error) {
-    pushMessage({
-      title: 'Note processing failed',
-      description: 'Please check markdown syntax and try again later.',
-    })
-    console.warn(error)
+    if (silent !== null && silent === true) {
+      throw new Error(
+        error ? error.message : 'Note processing failed, check markdown syntax.'
+      )
+    } else {
+      pushMessage({
+        title: 'Note processing failed',
+        description: 'Please check markdown syntax and try again later.',
+      })
+      console.warn(error)
+    }
   }
 }
 
-export async function convertNoteDocToPdfBuffer(
+export const convertNoteDocToPdfBuffer = async (
   note: NoteDoc,
   codeBlockTheme: string,
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
   previewStyle?: string
-): Promise<Buffer> {
+): Promise<Buffer> => {
   const markdownHtmlContent = await convertNoteDocToMarkdownHtmlString(
     note,
     codeBlockTheme
@@ -645,7 +657,7 @@ export const exportNoteAsPdfFile = async (
       attachmentMap,
       previewStyle
     )
-    const pdfName = `${filenamify(note.title)}.pdf`
+    const pdfName = `${filenamify(getValidNoteTitle(note))}.pdf`
 
     downloadBlob(new Blob([pdfBuffer]), pdfName)
   } catch (error) {
@@ -655,4 +667,34 @@ export const exportNoteAsPdfFile = async (
       description: error.message,
     })
   }
+}
+
+export function getExportAsMenuItems(
+  folderName: string,
+  folderPathname: string,
+  recursive: boolean,
+  startExport: (
+    folderName: string,
+    folderPathname: string,
+    exportType: string,
+    recursive: boolean
+  ) => void
+): MenuItemConstructorOptions[] {
+  return [
+    {
+      type: 'normal',
+      label: 'Export as Markdown (.md)',
+      click: () => startExport(folderName, folderPathname, 'md', recursive),
+    },
+    {
+      type: 'normal',
+      label: 'Export as HTML (.html)',
+      click: () => startExport(folderName, folderPathname, 'html', recursive),
+    },
+    {
+      type: 'normal',
+      label: 'Export as PDF (.pdf)',
+      click: () => startExport(folderName, folderPathname, 'pdf', recursive),
+    },
+  ]
 }

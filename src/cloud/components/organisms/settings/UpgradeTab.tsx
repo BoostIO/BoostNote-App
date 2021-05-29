@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Column,
-  Scrollable,
-  Container,
-  Section,
-  SectionRow,
-  TabHeader,
-  StyledSmallFont,
-} from './styled'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -19,16 +10,35 @@ import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../../lib/consts'
-import CustomLink from '../../atoms/Link/CustomLink'
 import PlanTables from '../Subscription/PlanTables'
 import { UpgradePlans } from '../../../lib/stripe'
 import styled from '../../../lib/styled'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import {
+  isEligibleForDiscount,
+  newTeamDiscountDays,
+} from '../../../lib/subscription'
+import Banner from '../../../../shared/components/atoms/Banner'
+import { mdiGift } from '@mdi/js'
+import { format } from 'date-fns'
+import { useElectron } from '../../../lib/stores/electron'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
 type UpgradeTabs = 'plans' | 'form'
 
-const UpgradeTab = () => {
+export interface UpgradeTabOpeningOptions {
+  tabState?: UpgradeTabs
+  showTrialPopup?: boolean
+  initialPlan?: UpgradePlans
+}
+
+const UpgradeTab = ({
+  tabState: defaultTabState = 'plans',
+  showTrialPopup: defaultShowTrial = false,
+  initialPlan: defaultInitialPlan = 'standard',
+}: UpgradeTabOpeningOptions) => {
   const { t } = useTranslation()
   const {
     team,
@@ -36,13 +46,16 @@ const UpgradeTab = () => {
     updateTeamSubscription,
     permissions = [],
   } = usePage<PageStoreWithTeam>()
-  const [tabState, setTabState] = useState<UpgradeTabs>('plans')
+  const { usingElectron, sendToElectron } = useElectron()
+  const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
   const {
     globalData: { currentUser },
   } = useGlobalData()
-  const [showTrialPopup, setShowTrialPopup] = useState(false)
-  const [initialPlan, setInitialPlan] = useState<UpgradePlans>('standard')
+  const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
+  const [initialPlan, setInitialPlan] = useState<UpgradePlans>(
+    defaultInitialPlan
+  )
 
   useEffect(() => {
     if (subscription != null && subscription.status !== 'trialing') {
@@ -58,8 +71,11 @@ const UpgradeTab = () => {
   const onSuccessCallback = useCallback(
     (sub) => {
       updateTeamSubscription(sub)
+      if (usingElectron) {
+        sendToElectron('subscription-update', sub)
+      }
     },
-    [updateTeamSubscription]
+    [updateTeamSubscription, usingElectron, sendToElectron]
   )
 
   const onCancelCallback = useCallback(() => {
@@ -80,83 +96,90 @@ const UpgradeTab = () => {
     return null
   }
 
+  const eligibilityEnd = new Date(team.createdAt)
+  eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
+  const teamIsEligibleForDiscount = isEligibleForDiscount(team)
   if (tabState === 'plans') {
     return (
-      <Column>
-        {showTrialPopup && (
-          <FreeTrialPopup team={team} close={() => setShowTrialPopup(false)} />
-        )}
-        <Scrollable>
-          <Container>
-            <Section>
-              <StyledSmallFont>
-                <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
-                <PlanTables
-                  team={team}
-                  subscription={subscription}
-                  selectedPlan='free'
-                  onStandardCallback={() => onUpgradeCallback('standard')}
-                  onProCallback={() => onUpgradeCallback('pro')}
-                  onTrialCallback={() => setShowTrialPopup(true)}
-                />
-                <StyledFYI>
-                  * For larger businesses or those in highly regulated
-                  industries, please{' '}
-                  <CustomLink
-                    href='https://forms.gle/LqzQ2Tcfd6noWH6b9'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    isReactLink={false}
-                  >
-                    contact our sales department
-                  </CustomLink>
-                  .
-                </StyledFYI>
-              </StyledSmallFont>
-            </Section>
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        title={t('settings.teamUpgrade')}
+        description={'Choose your plan.'}
+        body={
+          <>
+            {showTrialPopup && (
+              <FreeTrialPopup
+                team={team}
+                close={() => setShowTrialPopup(false)}
+              />
+            )}
+            <section>
+              {teamIsEligibleForDiscount && (
+                <Banner variant='warning' iconPath={mdiGift}>
+                  You will receive a discount as long as you subscribe before{' '}
+                  <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
+                </Banner>
+              )}
+              <PlanTables
+                team={team}
+                subscription={subscription}
+                selectedPlan='free'
+                onStandardCallback={() => onUpgradeCallback('standard')}
+                onProCallback={() => onUpgradeCallback('pro')}
+                onTrialCallback={() => setShowTrialPopup(true)}
+                discounted={teamIsEligibleForDiscount}
+              />
+              <StyledFYI>
+                * For larger businesses or those in highly regulated industries,
+                please{' '}
+                <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>
+                  contact our sales department
+                </ExternalLink>
+                .
+              </StyledFYI>
+            </section>
+          </>
+        }
+      ></SettingTabContent>
     )
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <Section>
-            <StyledSmallFont>
-              <TabHeader>{t('settings.teamUpgrade')}</TabHeader>
-
-              {currentUserPermissions.role !== 'admin' ? (
-                <ColoredBlock variant='danger'>
-                  Only admins can access this content.
-                </ColoredBlock>
-              ) : (
-                !(subscription != null && subscription.status === 'active') && (
-                  <SectionRow>
-                    <Elements stripe={stripePromise}>
-                      <SubscriptionForm
-                        team={team}
-                        initialPlan={initialPlan}
-                        ongoingTrial={
-                          subscription != null &&
-                          subscription.status === 'trialing'
-                        }
-                        onSuccess={onSuccessCallback}
-                        onCancel={onCancelCallback}
-                      />
-                    </Elements>
-                  </SectionRow>
-                )
-              )}
-            </StyledSmallFont>
-          </Section>
-        </Container>
-      </Scrollable>
-    </Column>
+    <SettingTabContent
+      title={t('settings.teamUpgrade')}
+      description={
+        <>
+          Confirm and enter your payment information (Service provided by{' '}
+          <ExternalLink href='https://stripe.com/'>Stripe</ExternalLink>)
+        </>
+      }
+      body={
+        <SubscriptionFormContainer>
+          {currentUserPermissions.role !== 'admin' ? (
+            <ColoredBlock variant='danger'>
+              Only admins can access this content.
+            </ColoredBlock>
+          ) : (
+            !(subscription != null && subscription.status === 'active') && (
+              <Elements stripe={stripePromise}>
+                <SubscriptionForm
+                  team={team}
+                  initialPlan={initialPlan}
+                  ongoingTrial={
+                    subscription != null && subscription.status === 'trialing'
+                  }
+                  onSuccess={onSuccessCallback}
+                  onCancel={onCancelCallback}
+                />
+              </Elements>
+            )
+          )}
+        </SubscriptionFormContainer>
+      }
+    ></SettingTabContent>
   )
 }
+
+const SubscriptionFormContainer = styled.div``
 
 const StyledFYI = styled.p`
   .type-link {

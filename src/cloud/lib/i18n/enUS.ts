@@ -23,7 +23,7 @@ const enTranslation: TranslationSource = {
   'settings.teamInfo': 'Settings',
   'settings.title': 'Settings',
   'settings.personalInfo': 'Settings',
-  'settings.preferences': 'Theme and Preferences',
+  'settings.preferences': 'Preferences',
   'settings.teamMembers': 'Members',
   'settings.teamUpgrade': 'Upgrade',
   'settings.teamSubscription': 'Billing',
@@ -40,7 +40,7 @@ const enTranslation: TranslationSource = {
   'settings.editorKeyMap': 'Editor Keymap',
   'settings.light': 'Light',
   'settings.dark': 'Dark',
-  'settings.notificationsFrequency': 'Notification frequency',
+  'settings.notificationsFrequency': 'Email updates',
 
   // Settings Community
   'community.feature.requests': 'Feature Requests',

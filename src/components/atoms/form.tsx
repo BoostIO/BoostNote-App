@@ -230,7 +230,7 @@ export const FormSelect = styled.select`
   ${selectStyle};
   padding: 0 16px;
   width: 200px;
-  height: 40px;
+  height: 32px;
   border-radius: 2px;
   font-size: 14px;
 `
@@ -243,7 +243,7 @@ export const FormField = styled.div`
 
 export const FormLabelGroup = styled.div`
   margin-bottom: 1rem;
-  min-height: 40px;
+  min-height: 32px;
   &:last-child {
     margin-bottom: 0;
   }

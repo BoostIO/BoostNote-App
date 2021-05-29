@@ -1,3 +1,5 @@
+import { differenceInDays } from 'date-fns'
+
 export const freePlanDocLimit = 30
 export const freeTrialPeriodDays = 7
 export const guestsPerMember = 3
@@ -7,3 +9,15 @@ export const standardPlanStorageMb = 1000
 export const proPlanStorageMb = 10000
 
 export const revisionHistoryStandardDays = 7
+export const newTeamDiscountDays = 7
+
+export function isEligibleForDiscount(team: { createdAt: string }) {
+  if (
+    differenceInDays(Date.now(), new Date(team.createdAt)) <=
+    newTeamDiscountDays
+  ) {
+    return true
+  }
+
+  return false
+}

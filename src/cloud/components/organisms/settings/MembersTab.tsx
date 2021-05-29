@@ -1,16 +1,4 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
-import {
-  Section,
-  Column,
-  Container,
-  Scrollable,
-  TabHeader,
-  SectionHeader2,
-  StyledMembername,
-  SectionSelect,
-  SectionDescription,
-  PrimaryAnchor,
-} from './styled'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
 import {
@@ -33,16 +21,19 @@ import UserIcon from '../../atoms/UserIcon'
 import styled from '../../../lib/styled'
 import { arraysAreIdentical } from '../../../lib/utils/array'
 import { getUserEmailsFromPermissions } from '../../../api/teams/permissions/emails'
-import Flexbox from '../../atoms/Flexbox'
 import { useRouter } from '../../../lib/router'
 import cc from 'classcat'
 import { useNav } from '../../../lib/stores/nav'
 import Icon from '../../atoms/Icon'
-import { mdiArrowRight, mdiCardTextOutline, mdiChevronDown } from '@mdi/js'
+import {
+  mdiArrowLeft,
+  mdiArrowRight,
+  mdiCardTextOutline,
+  mdiChevronDown,
+} from '@mdi/js'
 import { deleteGuestDoc, getGuestsEmails } from '../../../api/guests'
 import { useSet } from 'react-use'
 import plur from 'plur'
-import Button from '../../atoms/Button'
 import {
   MenuTypes,
   useContextMenu,
@@ -53,6 +44,12 @@ import { getDocTitle } from '../../../lib/utils/patterns'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { guestsPerMember } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import Button from '../../../../shared/components/atoms/Button'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
+import { ExternalLink } from '../../../../shared/components/atoms/Link'
+import { SimpleFormSelect } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 
 const MembersTab = () => {
   const { t } = useTranslation()
@@ -89,21 +86,40 @@ const MembersTab = () => {
   const [showTeamPersonalForm, setShowTeamPersonalForm] = useState<boolean>(
     false
   )
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   const fetchUserEmails = useCallback(
     async (teamId: string, ids: string[]) => {
       add('userEmails')
-      try {
-        const res = await getUserEmailsFromPermissions(teamId, ids)
-        setUserEmailsMap(() =>
-          res.permissionEmails.reduce((acc, val) => {
-            acc.set(val.id, val.email)
-            return acc
-          }, new Map<string, string>())
-        )
-      } catch (error) {}
-      currentUserEmailIds.current = ids
-      remove('userEmails')
+      getUserEmailsFromPermissions(teamId, ids)
+        .then((res) => {
+          if (!mountedRef.current) {
+            return
+          }
+          setUserEmailsMap(() =>
+            res.permissionEmails.reduce((acc, val) => {
+              acc.set(val.id, val.email)
+              return acc
+            }, new Map<string, string>())
+          )
+        })
+        .catch(() => {
+          //
+        })
+        .finally(() => {
+          if (!mountedRef.current) {
+            return
+          }
+          currentUserEmailIds.current = ids
+          remove('userEmails')
+        })
     },
     [add, remove]
   )
@@ -111,17 +127,25 @@ const MembersTab = () => {
   const fetchGuestsEmails = useCallback(
     async (teamId: string, ids: string[]) => {
       add('guestEmails')
-      try {
-        const res = await getGuestsEmails({ teamId })
-        setGuestEmailsMap(() =>
-          res.guestsEmails.reduce((acc, val) => {
-            acc.set(val.id, val.email)
-            return acc
-          }, new Map<string, string>())
-        )
-      } catch (error) {}
-      currentGuestsEmailIds.current = ids
-      remove('guestEmails')
+      getGuestsEmails({ teamId })
+        .then((res) => {
+          if (!mountedRef.current) {
+            return
+          }
+          setGuestEmailsMap(() =>
+            res.guestsEmails.reduce((acc, val) => {
+              acc.set(val.id, val.email)
+              return acc
+            }, new Map<string, string>())
+          )
+        })
+        .catch(() => {
+          //
+        })
+        .finally(() => {
+          currentGuestsEmailIds.current = ids
+          remove('guestEmails')
+        })
     },
     [add, remove]
   )
@@ -227,12 +251,10 @@ const MembersTab = () => {
 
   const changePermissionsRole = useCallback(
     async (
-      event: React.ChangeEvent<HTMLSelectElement>,
+      targetedRole,
       userPermissions,
       targetedPermissions: SerializedUserTeamPermissions
     ) => {
-      event.preventDefault()
-      const targetedRole = event.target.value
       if (
         team == null ||
         userPermissions.role !== 'admin' ||
@@ -363,11 +385,8 @@ const MembersTab = () => {
           return {
             type: MenuTypes.Component,
             component: (
-              <Flexbox
-                justifyContent='space-between'
-                style={{ padding: '3px 5px' }}
-              >
-                <Flexbox flex='1 1 auto' style={{ marginRight: 10 }}>
+              <Flexbox justifyContent='space-between'>
+                <Flexbox flex='1 1 auto'>
                   {doc != null ? (
                     <EmojiIcon
                       defaultIcon={mdiCardTextOutline}
@@ -380,7 +399,7 @@ const MembersTab = () => {
                   {doc != null ? getDocTitle(doc, 'Untitled') : 'Untitled'}
                 </Flexbox>
                 <Button
-                  variant='outline-secondary'
+                  variant='secondary'
                   onClick={() => removeGuestAccess(guest.id, docId)}
                   size='sm'
                   disabled={has(guest.id)}
@@ -402,16 +421,14 @@ const MembersTab = () => {
 
   if (currentUserPermissions == null || team == null) {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <TabHeader>{t('settings.teamMembers')}</TabHeader>
-            <ColoredBlock variant='danger'>
-              You don&apos;t own any permissions.
-            </ColoredBlock>
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        title={t('settings.teamMembers')}
+        body={
+          <ColoredBlock variant='danger'>
+            You don&apos;t own any permissions.
+          </ColoredBlock>
+        }
+      ></SettingTabContent>
     )
   }
 
@@ -419,44 +436,46 @@ const MembersTab = () => {
 
   if (team.personal && showTeamPersonalForm) {
     return (
-      <Column>
-        <Scrollable>
-          <Container>
-            <SettingsTeamForm
-              team={team}
-              onCancel={() => setShowTeamPersonalForm(false)}
-              teamConversion={true}
-            />
-          </Container>
-        </Scrollable>
-      </Column>
+      <SettingTabContent
+        title='Create team space'
+        description='Create a team space in order to invite your teammates'
+        backLink={{
+          variant: 'icon',
+          iconPath: mdiArrowLeft,
+          iconSize: 20,
+          onClick: () => setShowTeamPersonalForm(false),
+        }}
+        body={<SettingsTeamForm team={team} teamConversion={true} />}
+      />
     )
   }
 
   return (
-    <Column>
-      <Scrollable>
-        <Container>
-          <TabSelector>
-            <button
-              className={cc([tab === 'member' && 'active'])}
-              onClick={() => setTab('member')}
-            >
-              Members ({permissions.length})
-            </button>
-            <button
-              className={cc([tab === 'guest' && 'active'])}
-              onClick={() => setTab('guest')}
-            >
-              Guests ({guestsMap.size})
-            </button>
-          </TabSelector>
-
+    <SettingTabContent
+      title={
+        <SettingTabSelector>
+          <button
+            className={cc([tab === 'member' && 'active'])}
+            onClick={() => setTab('member')}
+          >
+            Members ({permissions.length})
+          </button>
+          <button
+            className={cc([tab === 'guest' && 'active'])}
+            onClick={() => setTab('guest')}
+          >
+            Guests ({guestsMap.size})
+          </button>
+        </SettingTabSelector>
+      }
+      description={'Manage who access to this space.'}
+      body={
+        <>
           {tab === 'member' ? (
             team.personal ? (
-              <Section>
+              <section>
                 <Flexbox>
-                  <SectionHeader2>Current Members</SectionHeader2>
+                  <h2>Current Members</h2>
                   {fetching.has('userEmails') && (
                     <Spinner className='relative' style={{ top: 2 }} />
                   )}
@@ -470,7 +489,9 @@ const MembersTab = () => {
                 <TopMargin />
                 <StyledMembersTable>
                   <thead className='table-header'>
-                    <th>User</th>
+                    <tr>
+                      <th>User</th>
+                    </tr>
                   </thead>
                   <tbody className='table-body'>
                     <tr key={currentUserPermissions.id}>
@@ -493,7 +514,7 @@ const MembersTab = () => {
                     </tr>
                   </tbody>
                 </StyledMembersTable>
-              </Section>
+              </section>
             ) : (
               <>
                 {currentUserIsAdmin && (
@@ -502,17 +523,19 @@ const MembersTab = () => {
                   />
                 )}
                 <TeamInvitesSection userPermissions={currentUserPermissions} />
-                <Section>
+                <section>
                   <Flexbox>
-                    <SectionHeader2>Current Members</SectionHeader2>
+                    <h2>Current Members</h2>
                     {fetching.has('userEmails') && (
                       <Spinner className='relative' style={{ top: 2 }} />
                     )}
                   </Flexbox>
                   <StyledMembersTable>
                     <thead className='table-header'>
-                      <th>User</th>
-                      <th>Access Level</th>
+                      <tr>
+                        <th>User</th>
+                        <th>Access Level</th>
+                      </tr>
                     </thead>
                     <tbody className='table-body'>
                       {permissions.map((permission) => {
@@ -549,29 +572,22 @@ const MembersTab = () => {
                                     }}
                                   />
                                 ) : (
-                                  <SectionSelect
+                                  <SimpleFormSelect
+                                    className='user--role--select'
                                     value={permission.role}
-                                    onChange={(e: any) =>
+                                    onChange={(value: string) =>
                                       changePermissionsRole(
-                                        e,
+                                        value,
                                         currentUserPermissions,
                                         permission
                                       )
                                     }
-                                    style={{
-                                      width: 'auto',
-                                      minWidth: 'initial',
-                                      height: 24,
-                                      marginRight: 16,
-                                    }}
-                                    disabled={
+                                    isDisabled={
                                       !currentUserIsAdmin ||
                                       targetPermissionsAreUsersOwn
                                     }
-                                  >
-                                    <option value='admin'>admin</option>
-                                    <option value='member'>member</option>
-                                  </SectionSelect>
+                                    options={['admin', 'member']}
+                                  />
                                 )}
                                 {(targetPermissionsAreUsersOwn ||
                                   currentUserIsAdmin) && (
@@ -600,7 +616,7 @@ const MembersTab = () => {
                       })}
                     </tbody>
                   </StyledMembersTable>
-                </Section>{' '}
+                </section>{' '}
               </>
             )
           ) : (
@@ -608,43 +624,39 @@ const MembersTab = () => {
               {subscription == null || subscription.status === 'inactive' ? (
                 <>
                   <StyledGuestInactiveText>
-                    <SectionDescription>
+                    <p>
                       Upgrade to invite guests. Guests are people external to
                       your team who you want to work with on specific documents.
                       They can be invited to individual documents but not an
                       entire workspace.
                       {` `}
-                      <PrimaryAnchor
-                        target='_blank'
-                        rel='noreferrer'
-                        href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'
-                      >
+                      <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4874279-how-to-invite-guest-to-your-document'>
                         See how it works <Icon path={mdiArrowRight} />
-                      </PrimaryAnchor>
-                    </SectionDescription>
+                      </ExternalLink>
+                    </p>
                   </StyledGuestInactiveText>
-                  <CustomButton
+                  <Button
                     variant='primary'
                     onClick={() => {
                       openSettingsTab('teamUpgrade')
                     }}
                   >
                     Start Free Trial
-                  </CustomButton>
+                  </Button>
                 </>
               ) : (
-                <Section>
+                <section>
                   <Flexbox>
-                    <SectionHeader2>Current Guests</SectionHeader2>
+                    <h2>Current Guests</h2>
                     {fetching.has('guestEmails') && (
                       <Spinner className='relative' style={{ top: 2 }} />
                     )}
                   </Flexbox>
-                  <SectionDescription>
+                  <p>
                     Guests are people external to your team who you want to work
                     with on specific documents. They can be invited to
                     individual documents but not an entire workspace.
-                  </SectionDescription>
+                  </p>
                   <p>
                     {permissions.length > 0
                       ? `${
@@ -654,8 +666,10 @@ const MembersTab = () => {
                   </p>
                   <StyledMembersTable>
                     <thead className='table-header'>
-                      <th>User</th>
-                      <th>Access Level</th>
+                      <tr>
+                        <th>User</th>
+                        <th>Access Level</th>
+                      </tr>
                     </thead>
                     <tbody className='table-body'>
                       {[...guestsMap.values()].map((guest) => (
@@ -694,40 +708,15 @@ const MembersTab = () => {
                       ))}
                     </tbody>
                   </StyledMembersTable>
-                </Section>
+                </section>
               )}
             </>
           )}
-        </Container>
-      </Scrollable>
-    </Column>
+        </>
+      }
+    ></SettingTabContent>
   )
 }
-
-const TabSelector = styled.div`
-  display: flex;
-  button {
-    background: transparent;
-    margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
-    font-size: ${({ theme }) => theme.fontSizes.medium}px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    border-bottom: 1px solid transparent;
-    cursor: pointer;
-    outline: none;
-
-    &:hover {
-      color: ${({ theme }) => theme.emphasizedTextColor};
-    }
-
-    &.active {
-      color: ${({ theme }) => theme.emphasizedTextColor};
-      border-color: ${({ theme }) => theme.emphasizedTextColor};
-    }
-  }
-  button:first-of-type {
-    margin-right: ${({ theme }) => theme.space.medium}px;
-  }
-`
 
 const TopMargin = styled.div`
   margin-top: ${({ theme }) => theme.space.medium}px;
@@ -776,11 +765,13 @@ const StyledMembersTable = styled.table`
 
     .user-action {
       position: relative;
-      select {
-        padding-left: 0;
-        padding-right: ${({ theme }) => theme.space.small}px;
-        background-color: transparent;
-        border: transparent;
+
+      .form__select__wrapper {
+        flex: 1 0 auto;
+      }
+
+      .form__select .form__select__control {
+        /* border: transparent; */
       }
     }
 
@@ -793,6 +784,26 @@ const StyledMembersTable = styled.table`
 const StyledGuestInactiveText = styled.p`
   margin-top: ${({ theme }) => theme.space.medium}px;
   margin-bottom: ${({ theme }) => theme.space.default}px;
+  line-height: 1.6;
+`
+
+const StyledMembername = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+
+  p {
+    margin: 0;
+    color: ${({ theme }) => theme.baseTextColor};
+    padding-right: ${({ theme }) => theme.space.xsmall}px;
+  }
+
+  span {
+    color: ${({ theme }) => theme.subtleTextColor};
+    margin-left: ${({ theme }) => theme.space.xsmall}px;
+    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    padding: 2px 5px;
+  }
 `
 
 export default MembersTab

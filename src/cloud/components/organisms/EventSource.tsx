@@ -18,7 +18,7 @@ import { usePage } from '../../lib/stores/pageStore'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getTemplate } from '../../api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
-import { getAccessToken } from '../../lib/stores/electron'
+import { getAccessToken, useElectron } from '../../lib/stores/electron'
 import { useComments } from '../../../shared/lib/stores/comments'
 
 interface EventSourceProps {
@@ -32,6 +32,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
   const eventSourceRef = useRef<EventSource | undefined>()
   const [eventSourceSetupCounter, { inc }] = useNumber(0)
   const reconnectionDelayRef = useRef<number>(defaultReconnectionDelay)
+  const { usingElectron, sendToElectron } = useElectron()
+
   const {
     team,
     removeUserInPermissions,
@@ -56,6 +58,9 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateFoldersMap,
     updateTemplatesMap,
     removeFromTemplatesMap,
+    updateSmartFoldersMap,
+    removeFromSmartFoldersMap,
+    updateAppEventsMap,
   } = useNav()
   const {
     setPartialGlobalData,
@@ -167,13 +172,20 @@ const EventSource = ({ teamId }: EventSourceProps) => {
 
   const subscriptionChangeEventHandler = useCallback(
     (event: SerializedAppEvent) => {
+      console.log(event)
       if (event.data.subscription.status === 'inactive') {
         updateTeamSubscription(undefined)
+        if (usingElectron) {
+          sendToElectron('subscription-delete', event.data.subscription)
+        }
       } else {
         updateTeamSubscription(event.data.subscription)
+        if (usingElectron) {
+          sendToElectron('subscription-update', event.data.subscription)
+        }
       }
     },
-    [updateTeamSubscription]
+    [updateTeamSubscription, usingElectron, sendToElectron]
   )
 
   const permissionsUpdateEventHandler = useCallback(
@@ -207,8 +219,19 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         })
         setPartialGlobalData({ teams: updatedTeams })
       }
+
+      if (usingElectron) {
+        sendToElectron('team-update', event.data.team)
+      }
     },
-    [setPartialGlobalData, setPartialPageData, teams, team]
+    [
+      setPartialGlobalData,
+      setPartialPageData,
+      teams,
+      team,
+      usingElectron,
+      sendToElectron,
+    ]
   )
 
   const tagChangeEventHandler = useCallback(
@@ -376,6 +399,19 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     ]
   )
 
+  const smartFolderUpdateHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      updateSmartFoldersMap([event.data.smartFolder.id, event.data.smartFolder])
+    },
+    [updateSmartFoldersMap]
+  )
+  const smartFolderDeleteHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      removeFromSmartFoldersMap(event.data.smartFolderId)
+    },
+    [removeFromSmartFoldersMap]
+  )
+
   /// re-assign handler on change
   useEffect(() => {
     if (eventSourceRef.current != null && eventSourceSetupCounter > 0) {
@@ -383,6 +419,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         (reconnectionDelayRef.current = defaultReconnectionDelay)
       eventSourceRef.current.onmessage = (eventData: MessageEvent) => {
         const event = JSON.parse(eventData.data) as SerializedAppEvent
+
         switch (event.type) {
           case 'teamUpdate':
             teamUpdateHandler(event)
@@ -434,7 +471,16 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentDeleted':
             commentsEventListener(event)
             break
+          case 'smartFolderCreate':
+          case 'smartFolderUpdate':
+            smartFolderUpdateHandler(event)
+            break
+
+          case 'smartFolderDelete':
+            smartFolderDeleteHandler(event)
+            break
         }
+        updateAppEventsMap([event.id, event])
       }
     }
     return
@@ -452,6 +498,9 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
+    smartFolderUpdateHandler,
+    smartFolderDeleteHandler,
+    updateAppEventsMap,
   ])
 
   return null

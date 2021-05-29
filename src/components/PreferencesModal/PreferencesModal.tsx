@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
-import TabButton from './TabButton'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
 import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
@@ -24,6 +23,7 @@ import StorageTab from './StorageTab'
 import MigrationPage from './MigrationTab'
 import { useMigrations } from '../../lib/migrate/store'
 import KeymapTab from './KeymapTab'
+import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -177,43 +177,41 @@ const PreferencesModal = () => {
         </ModalHeader>
         <ModalBody>
           <TabNav>
-            <TabButton
+            <SettingNavButtonItem
               label={t('about.about')}
-              tab='about'
               active={tab === 'about'}
-              setTab={openTab}
+              onClick={() => openTab('about')}
             />
-            <TabButton
+            <SettingNavButtonItem
               label={t('preferences.keymap')}
-              tab='keymap'
               active={tab === 'keymap'}
-              setTab={openTab}
+              onClick={() => openTab('keymap')}
             />
-            <TabButton
+            <SettingNavButtonItem
               label={t('general.general')}
-              tab='general'
               active={tab === 'general'}
-              setTab={openTab}
+              onClick={() => openTab('general')}
             />
             {currentStorage != null && (
-              <TabButton
+              <SettingNavButtonItem
                 label='Space'
-                tab={get(currentStorage.id) != null ? 'migration' : 'storage'}
                 active={tab === 'storage' || tab === 'migration'}
-                setTab={openTab}
+                onClick={() =>
+                  openTab(
+                    get(currentStorage.id) != null ? 'migration' : 'storage'
+                  )
+                }
               />
             )}
-            <TabButton
+            <SettingNavButtonItem
               label={t('editor.editor')}
-              tab='editor'
               active={tab === 'editor'}
-              setTab={openTab}
+              onClick={() => openTab('editor')}
             />
-            <TabButton
+            <SettingNavButtonItem
               label='Markdown'
-              tab='markdown'
               active={tab === 'markdown'}
-              setTab={openTab}
+              onClick={() => openTab('markdown')}
             />
           </TabNav>
           <TabContent>{content}</TabContent>

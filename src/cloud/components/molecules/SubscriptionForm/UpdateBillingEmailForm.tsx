@@ -2,14 +2,17 @@ import React, { useState, useCallback } from 'react'
 import {
   SectionIntroduction,
   SectionFlexRow,
-  SectionFlexDualButtons,
 } from '../../organisms/settings/styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { StyledBillingInput } from '.'
-import { Spinner } from '../../atoms/Spinner'
 import { updateSubEmail } from '../../../api/teams/subscription/update'
 import { useToast } from '../../../../shared/lib/stores/toast'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
+import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import Form from '../../../../shared/components/molecules/Form'
+import styled from '../../../../shared/lib/styled'
 
 interface UpdateBillingEmailFormProps {
   sub?: SerializedSubscription
@@ -54,52 +57,62 @@ const UpdateBillingEmailForm = ({
       <div>
         <SectionIntroduction>
           <p>You need to have a valid subscription to perform this action.</p>
-          <SectionFlexDualButtons>
-            <CustomButton
-              onClick={onCancel}
-              variant='secondary'
-              disabled={sending}
-            >
-              Cancel
-            </CustomButton>
-          </SectionFlexDualButtons>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
+            Cancel
+          </Button>
         </SectionIntroduction>
       </div>
     )
   }
 
   return (
-    <div>
-      <SectionIntroduction>
-        <p>Update your billing email</p>
-        <SectionFlexRow>
-          <label>Current Email</label>
-          <span className='value'>{sub.email}</span>
-        </SectionFlexRow>
+    <Container>
+      <p>Update your billing email</p>
+      <SectionFlexRow>
+        <label>Current Email</label>
+        <span className='value'>{sub.email}</span>
+      </SectionFlexRow>
 
-        <StyledBillingInput
-          style={{ marginTop: 0 }}
-          placeholder='Billing Email'
-          value={email}
-          onChange={onEmailInputChangeHandler}
+      <Form onSubmit={onSubmit} rows={[]}>
+        <FormRow
+          row={{
+            items: [
+              {
+                type: 'input',
+                props: {
+                  placeholder: 'Billing Email',
+                  value: email,
+                  onChange: onEmailInputChangeHandler,
+                },
+              },
+            ],
+          }}
         />
-
-        <SectionFlexDualButtons>
-          <CustomButton
-            onClick={onCancel}
-            variant='secondary'
-            disabled={sending}
-          >
+        <ButtonGroup display='flex' layout='spread' className='button__group'>
+          <Button onClick={onCancel} variant='secondary' disabled={sending}>
             Cancel
-          </CustomButton>
+          </Button>
 
-          <CustomButton onClick={onSubmit} variant='primary' disabled={sending}>
-            {sending ? <Spinner /> : 'Update'}
-          </CustomButton>
-        </SectionFlexDualButtons>
-      </SectionIntroduction>
-    </div>
+          <LoadingButton
+            type='submit'
+            variant='primary'
+            disabled={sending}
+            spinning={sending}
+          >
+            Update
+          </LoadingButton>
+        </ButtonGroup>
+      </Form>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  width: 100%;
+
+  .button__group {
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
+`
 
 export default UpdateBillingEmailForm
