@@ -203,7 +203,8 @@ const MarkdownView = ({
                 commentClick && commentClick(props.comments.split(' '))
               }
             >
-              <Icon path={mdiCommentTextOutline} /> <span>{props.count}</span>
+              <Icon path={mdiCommentTextOutline} />{' '}
+              <span className='comment__count__number'>{props.count}</span>
             </div>
           ) : null
         },
@@ -433,11 +434,11 @@ const StyledMarkdownPreview = styled.div`
     svg {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
+  }
 
-    span {
-      line-height: 1;
-      margin-top: -3px;
-    }
+  .comment__count__number {
+    line-height: 1;
+    margin-top: -3px;
   }
 `
 
