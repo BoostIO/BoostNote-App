@@ -81,7 +81,7 @@ const Container = styled.div`
     }
   }
   .featureList > .featureListItem {
-    ${border}
+    ${border};
     display: flex;
     padding: 0 5px;
     margin-bottom: 20px;

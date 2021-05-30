@@ -13,7 +13,6 @@ import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
 import {
-  mdiFolderOutline,
   mdiLogin,
   mdiLogout,
   mdiMenu,
@@ -80,13 +79,7 @@ const SidebarContainer = ({
   storage,
   hideSidebar,
 }: SidebarContainerProps) => {
-  const {
-    createNote,
-    createStorage,
-    storageMap,
-    renameStorage,
-    removeStorage,
-  } = useDb()
+  const { createNote, storageMap, renameStorage, removeStorage } = useDb()
   const { pushMessage } = useToast()
   const { openModal, closeLastModal } = useModal()
   const { messageBox } = useDialog()
@@ -97,39 +90,28 @@ const SidebarContainer = ({
   const { t } = useTranslation()
   const boostHubUserInfo = preferences['cloud.user']
   const { signOut } = useBoostHub()
+  const {
+    updateFolder,
+    updateDocApi,
+    createFolder,
+    createDocApi,
+    deleteFolderApi,
+    toggleDocArchived,
+    toggleDocBookmark,
+    deleteStorageApi,
+  } = useLocalDB()
+  const {
+    openWorkspaceEditForm,
+    openNewDocForm,
+    openRenameFolderForm,
+    openRenameDocForm,
+    // deleteWorkspace,
+    exportDocuments,
+    openCreateStorageDialog,
+  } = useLocalUI()
+  const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
 
-  // todo: [komediruzecki-22/05/2021] add this to local UI as well
-  const openCreateStorageDialog = useCallback(() => {
-    openModal(
-      <BasicInputFormLocal
-        defaultIcon={mdiFolderOutline}
-        defaultInputValue={''}
-        defaultEmoji={undefined}
-        placeholder='Workspace name'
-        submitButtonProps={{
-          label: 'Create Space',
-        }}
-        onSubmit={async (workspaceName: string) => {
-          if (workspaceName == '') {
-            pushMessage({
-              title: 'Cannot rename workspace',
-              description: 'Workspace name should not be empty.',
-            })
-            closeLastModal()
-            return
-          }
-          const storage = await createStorage(workspaceName)
-          push(`/app/storages/${storage.id}/notes`)
-          closeLastModal()
-        }}
-      />,
-      {
-        showCloseIcon: true,
-        title: 'Create a space',
-      }
-    )
-  }, [closeLastModal, createStorage, openModal, push, pushMessage])
-
+  // todo: [komediruzecki-30/05/2021] Here we should add confirmation dialog for remove space
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
       if (storage == null) {
@@ -250,29 +232,6 @@ const SidebarContainer = ({
       openCreateStorageDialog,
     ]
   )
-
-  // const extraNewNoteLabel = useMemo<React.ReactNode | null>(() => {
-  //   switch (routeParams.name) {
-  //     case 'storages.notes':
-  //       if (routeParams.folderPathname !== '/') {
-  //         return (
-  //           <>
-  //             in <Icon className='icon' path={mdiFolderOutline} />{' '}
-  //             {getFolderNameFromPathname(routeParams.folderPathname)}
-  //           </>
-  //         )
-  //       }
-  //       break
-  //     case 'storages.tags.show':
-  //       return (
-  //         <>
-  //           with <Icon className='icon' path={mdiTag} />
-  //           {routeParams.tagName}
-  //         </>
-  //       )
-  //   }
-  //   return null
-  // }, [routeParams])
 
   const createNoteByRoute = useCallback(async () => {
     if (storage == null) {
@@ -486,25 +445,7 @@ const SidebarContainer = ({
     },
     [foldItem, unfoldItem, toggleItem]
   )
-  const {
-    updateFolder,
-    updateDocApi,
-    createFolder,
-    createDocApi,
-    deleteFolderApi,
-    toggleDocArchived,
-    toggleDocBookmark,
-    deleteStorageApi,
-  } = useLocalDB()
-  const {
-    openWorkspaceEditForm,
-    openNewDocForm,
-    openRenameFolderForm,
-    openRenameDocForm,
-    // deleteWorkspace,
-    exportDocuments,
-  } = useLocalUI()
-  const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
+
   const tree = useMemo(() => {
     if (storage == null) {
       return undefined

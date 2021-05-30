@@ -1,16 +1,19 @@
 import React, { MouseEventHandler } from 'react'
-import styled from '../../lib/styled'
-import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
 import Icon from '../../shared/components/atoms/Icon'
+import styled from '../../shared/lib/styled'
+import {
+  borderBottom,
+  flexCenter,
+} from '../../shared/lib/styled/styleFunctions'
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  ${borderBottom}
+  ${borderBottom};
   height: 40px;
 
-  color: ${({ theme }) => theme.uiTextColor};
+  color: ${({ theme }) => theme.colors.text.primary};
 `
 
 const IconContainer = styled.div`
