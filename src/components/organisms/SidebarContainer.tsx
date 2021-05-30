@@ -12,18 +12,11 @@ import { entries, getTimelineHref, values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
-import {
-  mdiLogin,
-  mdiLogout,
-  mdiMenu,
-  mdiPlus,
-  mdiTextBoxPlusOutline,
-} from '@mdi/js'
+import { mdiLogin, mdiLogout, mdiMenu, mdiPlus } from '@mdi/js'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useTranslation } from 'react-i18next'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../shared/lib/styled'
-import Button from '../../shared/components/atoms/Button'
 import Sidebar from '../../shared/components/organisms/Sidebar'
 import cc from 'classcat'
 import {
@@ -62,6 +55,7 @@ import {
   SidebarSpaceContentRow,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
+import NewDocButton from '../molecules/NewDocButton'
 
 interface SidebarContainerProps {
   hideSidebar?: boolean
@@ -93,7 +87,6 @@ const SidebarContainer = ({
   } = useLocalDB()
   const {
     openWorkspaceEditForm,
-    openNewDocForm,
     openRenameFolderForm,
     openRenameDocForm,
     removeWorkspace,
@@ -631,28 +624,10 @@ const SidebarContainer = ({
             },
           },
         ]}
-        // todo: See why its not full width
         treeTopRows={
-          workspace == null ? null : (
-            <Button
-              variant='primary'
-              size={'sm'}
-              iconPath={mdiTextBoxPlusOutline}
-              id='sidebar-newdoc-btn'
-              iconSize={16}
-              onClick={() =>
-                openNewDocForm({
-                  parentFolderPathname: '/',
-                  workspaceId: workspace.id,
-                })
-              }
-            >
-              Create new doc
-            </Button>
-          )
+          workspace == null ? null : <NewDocButton workspace={workspace} />
         }
         searchResults={searchResults}
-        // todo: no users?
         users={usersMap}
         timelineRows={timelineRows}
         timelineMore={
@@ -674,7 +649,4 @@ const SidebarContainer = ({
 
 export default SidebarContainer
 
-const NavigatorContainer = styled.nav`
-  //flex: 0 0 auto;
-  //min-width: 0;
-`
+const NavigatorContainer = styled.nav``

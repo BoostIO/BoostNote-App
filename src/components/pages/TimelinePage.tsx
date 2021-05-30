@@ -12,6 +12,7 @@ import TimelineList from '../molecules/Timeline/TimelineList'
 import styled from '../../shared/lib/styled'
 import { linkText } from '../../lib/styled/styleFunctionsLocal'
 import Button from '../../shared/components/atoms/Button'
+import { compareDateString } from '../../shared/lib/date'
 
 interface TimelinePageProps {
   storage: NoteStorage
@@ -50,7 +51,7 @@ function dateFormatDistanceToNow(date: Date) {
   return `${formatDistanceToNow(date)} ago`
 }
 
-const maxInitialEvents = 10
+const maxInitialEvents = 20
 
 const TimelinePage = ({ storage }: TimelinePageProps) => {
   const { push } = useRouter()
@@ -63,31 +64,38 @@ const TimelinePage = ({ storage }: TimelinePageProps) => {
     (amount: number) => {
       const newEvents: TimelineEvent[] = []
       const notes = values(storage.noteMap)
-      notes.forEach((note) => {
-        // todo: [komediruzecki-29/05/2021] Should be sorted by dates before, so we get latest events
-        if (note.archivedAt != null) {
-          newEvents.push({
-            createdAt: note.archivedAt,
-            type: 'archiveDoc',
-            id: note._id,
-            data: { ...note },
-          })
-        } else if (note.updatedAt) {
-          newEvents.push({
-            createdAt: note.updatedAt,
-            type: 'contentUpdate',
-            id: note._id,
-            data: { ...note },
-          })
-        } else {
-          newEvents.push({
-            createdAt: note.createdAt,
-            type: 'createDoc',
-            id: note._id,
-            data: { ...note },
-          })
-        }
-      })
+      notes
+        .sort((a, b) =>
+          compareDateString(
+            a.createdAt || a.updatedAt,
+            b.createdAt || b.updatedAt,
+            'DESC'
+          )
+        )
+        .forEach((note) => {
+          if (note.archivedAt != null) {
+            newEvents.push({
+              createdAt: note.archivedAt,
+              type: 'archiveDoc',
+              id: note._id,
+              data: { ...note },
+            })
+          } else if (note.updatedAt) {
+            newEvents.push({
+              createdAt: note.updatedAt,
+              type: 'contentUpdate',
+              id: note._id,
+              data: { ...note },
+            })
+          } else {
+            newEvents.push({
+              createdAt: note.createdAt,
+              type: 'createDoc',
+              id: note._id,
+              data: { ...note },
+            })
+          }
+        })
       setTotalNumberOfEvents(newEvents.length)
       setEvents(newEvents.slice(0, amount))
     },
