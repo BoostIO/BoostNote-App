@@ -9,7 +9,6 @@ import { useRouter } from '../../../lib/router'
 interface SignInFormProps {
   isSignup?: boolean
   redirectTo?: string
-  guestInviteId?: string
   inviteId?: string
   openInviteSlug?: string
   disabled?: boolean
@@ -19,7 +18,6 @@ const SignInForm = ({
   isSignup = false,
   redirectTo,
   inviteId,
-  guestInviteId,
   disabled: preventAction = false,
   openInviteSlug,
 }: SignInFormProps) => {
@@ -41,15 +39,11 @@ const SignInForm = ({
       query.inviteId = inviteId
     }
 
-    if (guestInviteId != null) {
-      query.guestInviteId = guestInviteId
-    }
-
     if (openInviteSlug != null) {
       query.openInviteSlug = openInviteSlug
     }
     return query
-  }, [redirectTo, isSignup, inviteId, openInviteSlug, guestInviteId])
+  }, [redirectTo, isSignup, inviteId, openInviteSlug])
 
   return (
     <>

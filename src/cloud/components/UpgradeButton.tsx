@@ -8,7 +8,7 @@ import { trackEvent } from '../api/track'
 import Button, { ButtonVariant } from '../../shared/components/atoms/Button'
 
 interface UpgradeBadgeProps {
-  origin: 'share.password' | 'share.expire' | 'revision' | 'guest' | 'limit'
+  origin: 'share.password' | 'share.expire' | 'revision' | 'limit'
   variant?: ButtonVariant
   label?: string
   tabIndex?: number
@@ -29,9 +29,6 @@ const UpgradeButton = ({
   const track = useCallback(async () => {
     let mixpanelEvent: MixpanelFrontEvent
     switch (origin) {
-      case 'guest':
-        mixpanelEvent = MixpanelActionTrackTypes.UpgradeGuest
-        break
       case 'limit':
         mixpanelEvent = MixpanelActionTrackTypes.UpgradeLimit
         break

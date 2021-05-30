@@ -5,7 +5,6 @@ import { SerializedUserTeamPermissions } from './db/userTeamPermissions'
 import { SerializedSubscription } from './db/subscription'
 import { SerializedTag } from './db/tag'
 import { SerializedWorkspace } from './db/workspace'
-import { SerializedGuest } from './db/guest'
 
 export interface GeneralAppProps {
   team: SerializedTeam
@@ -15,7 +14,6 @@ export interface GeneralAppProps {
   subscription?: SerializedSubscription
   workspaces: SerializedWorkspace[]
   tags: SerializedTag[]
-  guests: SerializedGuest[]
 }
 
 export interface TrgmProperty {

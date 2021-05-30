@@ -13,7 +13,6 @@ import {
   mdiAccountGroup,
   mdiClose,
   mdiTransitConnectionVariant,
-  mdiAccountArrowLeft,
   mdiLinkPlus,
   mdiConnection,
 } from '@mdi/js'
@@ -142,18 +141,6 @@ const CloudIntroModal = () => {
                     <p>
                       You can edit markdown documents with your colleagues
                       synchronously
-                    </p>
-                  </div>
-                </li>
-                <li className='featureListItem'>
-                  <div className='featureListItemIcon'>
-                    <Icon path={mdiAccountArrowLeft} />
-                  </div>
-                  <div className='featureListItemBody'>
-                    <h2>Guest Invitation</h2>
-                    <p>
-                      Invite guests to specific documents. You can collaborate
-                      with your customers, your friends and so on.
                     </p>
                   </div>
                 </li>
