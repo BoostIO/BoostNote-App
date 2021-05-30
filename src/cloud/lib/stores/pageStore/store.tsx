@@ -16,8 +16,6 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { freePlanDocLimit } from '../../subscription'
 import { SubscriptionInfo } from './types'
 import { getFormattedDateFromUnixTimestamp } from '../../date'
-import { SerializedGuest } from '../../../interfaces/db/guest'
-import { getMapFromEntityArray } from '../../utils/array'
 import { useGlobalData } from '../globalData'
 
 interface PageStoreProps {
@@ -30,15 +28,9 @@ function usePageDataStore(pageProps: any) {
     globalData: { currentUser },
   } = useGlobalData()
   const pageDataRef = useCommittedRef(pageData)
-  const [guestsMap, setGuestsMap] = useState<Map<string, SerializedGuest>>(
-    new Map()
-  )
 
   useEffect(() => {
     setPageData(pageProps)
-    setGuestsMap(
-      getMapFromEntityArray((pageProps.guests as SerializedGuest[]) || [])
-    )
   }, [pageProps])
 
   const [setPartialPageData, setPartialPageDataRef] = useRefCallback(
@@ -52,14 +44,6 @@ function usePageDataStore(pageProps: any) {
       })
     },
     [setPageData]
-  )
-
-  const updateGuestsMap = useCallback(
-    (...mappedGuests: [string, SerializedGuest][]) =>
-      setGuestsMap((prevMap) => {
-        return new Map([...prevMap, ...mappedGuests])
-      }),
-    []
   )
 
   const team: undefined | SerializedTeam = pageData.team
@@ -245,9 +229,6 @@ function usePageDataStore(pageProps: any) {
     setPageData,
     setPartialPageData,
     setPartialPageDataRef,
-    guestsMap,
-    setGuestsMap,
-    updateGuestsMap,
     currentUserPermissions,
   }
 }

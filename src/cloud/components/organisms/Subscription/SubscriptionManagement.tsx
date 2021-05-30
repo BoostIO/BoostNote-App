@@ -312,7 +312,7 @@ const SubscriptionManagement = ({
                   <p>
                     You will get access to advanced features such as unlimited
                     document revision history, setting password and expiration
-                    date for shared documents, guest invitations etc...
+                    date for shared documents, unlimited viewers etc...
                   </p>
                   <p>
                     The fee change is handled via Stripe&apos;s proration.
@@ -338,7 +338,7 @@ const SubscriptionManagement = ({
                   <p>
                     You will lose access to advanced features such as unlimited
                     document revision history, setting password and expiration
-                    date for shared document, guest invitation, etc...
+                    date for shared document, unlimited viewers, etc...
                   </p>
                   <p>
                     The fee change is handled via Stripe&apos;s proration.

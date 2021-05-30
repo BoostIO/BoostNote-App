@@ -124,7 +124,6 @@ const Application = ({
   const {
     team,
     permissions = [],
-    guestsMap,
     currentUserPermissions,
     subscription,
   } = usePage()
@@ -183,8 +182,8 @@ const Application = ({
   )
 
   const users = useMemo(() => {
-    return mapUsers(permissions, currentUser, [...guestsMap.values()])
-  }, [permissions, currentUser, guestsMap])
+    return mapUsers(permissions, currentUser)
+  }, [permissions, currentUser])
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(

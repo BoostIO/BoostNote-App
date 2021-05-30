@@ -186,9 +186,9 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
           <FormHeading depth={2}>⚠️ Notice</FormHeading>
           <ol>
             <li>
-              There are many advanced features like guest invitation for Cloud
-              space Pro plan. Please see pricing table. You can try the Pro plan
-              free for two weeks.
+              There are many advanced features like viewers invitation for Cloud
+              space Pro plan. Please see pricing table. A two weeks long free
+              trial for the Pro plan is also available.
             </li>
             <li>
               This operation does not account for already migrated documents.

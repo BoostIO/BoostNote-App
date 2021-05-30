@@ -20,10 +20,6 @@ export enum MixpanelActionTrackTypes {
   DocUnarchive = 'doc.unarchive',
   DocShareCreate = 'doc.share.create',
   DocTagAdd = 'doc.tags.add',
-  GuestCreate = 'guest.create',
-  GuestDelete = 'guest.delete',
-  GuestInviteCreate = 'guest.invite.create',
-  GuestInviteDelete = 'guest.invite.delete',
   ExportHtml = 'doc.export.html',
   ExportMd = 'doc.export.md',
   ExportPdf = 'doc.export.pdf',
@@ -70,7 +66,6 @@ export enum MixpanelActionTrackTypes {
   UpgradePassword = 'upgrade.origin.password',
   UpgradeExpirationDate = 'upgrade.origin.expiration.date',
   UpgradeRevision = 'upgrade.origin.revision',
-  UpgradeGuest = 'upgrade.origin.guest',
   UpgradeLimit = 'upgrade.origin.limit',
   UpgradeDiscount = 'upgrade.origin.discount',
   WorkspaceOpen = 'workspace.open',
@@ -105,7 +100,6 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.ExportHtml
   | MixpanelActionTrackTypes.DocLayoutEdit
   | MixpanelActionTrackTypes.UpgradeExpirationDate
-  | MixpanelActionTrackTypes.UpgradeGuest
   | MixpanelActionTrackTypes.UpgradeLimit
   | MixpanelActionTrackTypes.UpgradePassword
   | MixpanelActionTrackTypes.UpgradeRevision

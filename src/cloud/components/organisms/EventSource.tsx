@@ -11,7 +11,6 @@ import { getResources } from '../../api/teams/resources'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { SerializedTag } from '../../interfaces/db/tag'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
-import { SerializedGuest } from '../../interfaces/db/guest'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
@@ -42,8 +41,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateSinglePermission,
     removeSinglePermission,
     setPartialPageData,
-    updateGuestsMap,
-    setGuestsMap,
   } = usePage()
   const {
     removeFromTagsMap,
@@ -142,32 +139,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
       }
     },
     [updateUserInPermissions]
-  )
-
-  const guestChangeEventHandler = useCallback(
-    (event: SerializedAppEvent) => {
-      const { guest } = event.data as { guest?: SerializedGuest | string }
-      if (guest == null) {
-        return
-      }
-
-      if (event.type === 'guestRemoval') {
-        setGuestsMap((prevMap) => {
-          const newMap = new Map(prevMap)
-          newMap.delete(typeof guest === 'string' ? guest : guest!.id)
-          return newMap
-        })
-        return
-      }
-
-      if (typeof guest === 'string') {
-        return
-      }
-
-      updateGuestsMap([guest.id, guest])
-      return
-    },
-    [setGuestsMap, updateGuestsMap]
   )
 
   const subscriptionChangeEventHandler = useCallback(
@@ -460,9 +431,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'workspaceUpdate':
             workspaceChangeEventHandler(event)
             break
-          case 'guestRemoval':
-          case 'guestUpdate':
-            guestChangeEventHandler(event)
           case 'commentThreadCreated':
           case 'commentThreadUpdated':
           case 'commentThreadDeleted':
@@ -485,7 +453,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     }
     return
   }, [
-    guestChangeEventHandler,
     eventSourceResourceUpdateHandler,
     eventSourceSetupCounter,
     userRemovalEventHandler,

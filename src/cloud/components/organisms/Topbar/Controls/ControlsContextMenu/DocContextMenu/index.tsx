@@ -5,7 +5,6 @@ import {
   mdiHistory,
   mdiClockOutline,
   mdiLabelMultipleOutline,
-  mdiAccountMultiplePlusOutline,
   mdiArrowBottomLeft,
   mdiListStatus,
   mdiAccountCircleOutline,
@@ -52,7 +51,6 @@ import Icon from '../../../../../atoms/Icon'
 import DocShare from '../../../../../molecules/DocShare'
 import plur from 'plur'
 import IconMdi from '../../../../../atoms/IconMdi'
-import GuestsModal from '../../../../Modal/contents/Doc/GuestsModal'
 import Button from '../../../../../../../shared/components/atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
@@ -84,7 +82,6 @@ const DocContextMenu = ({
   const [sendingDueDate, setSendingDueDate] = useState(false)
   const { updateDocsMap } = useNav()
   const {
-    guestsMap,
     setPartialPageData,
     subscription,
     permissions = [],
@@ -102,15 +99,8 @@ const DocContextMenu = ({
       return acc
     }, new Map<string, SerializedUser>())
 
-    guestsMap.forEach((val) => users.set(val.user.id, val.user))
     return users
-  }, [permissions, guestsMap])
-
-  const guestsOnThisDoc = useMemo(() => {
-    return [...guestsMap.values()].filter((guest) =>
-      (guest.docsIds || []).includes(currentDoc.id)
-    )
-  }, [currentDoc, guestsMap])
+  }, [permissions])
 
   const contributorsState = useMemo(() => {
     let allContributors = contributors
@@ -539,87 +529,6 @@ const DocContextMenu = ({
                     <div className='context__header'>SHARE</div>
                   </div>
                   <DocShare currentDoc={currentDoc} team={team} />
-                  <Flexbox
-                    className='context__row'
-                    justifyContent='space-between'
-                    style={{ alignItems: 'center' }}
-                  >
-                    {guestsOnThisDoc.length === 0 ? (
-                      <Flexbox
-                        direction='column'
-                        flex='0 1 auto'
-                        justifyContent='flex-start'
-                        alignItems='flex-start'
-                        className='content__row__label__column'
-                      >
-                        <label className='context__label'>
-                          <Icon
-                            path={mdiAccountMultiplePlusOutline}
-                            className='context__icon'
-                            size={18}
-                          />
-                          Guests
-                          <div className='context__tooltip'>
-                            <div className='context__tooltip__text'>
-                              Guests are outsiders who you want to work with on
-                              specific documents. They can be invited to
-                              individual documents but not entire workspaces.
-                            </div>
-                            ?
-                          </div>
-                        </label>
-                        <span className='context__label__description'>
-                          They can see and edit this doc
-                        </span>
-                      </Flexbox>
-                    ) : (
-                      <Flexbox
-                        direction='column'
-                        flex='0 1 auto'
-                        justifyContent='flex-start'
-                        alignItems='flex-start'
-                        className='content__row__label__column'
-                      >
-                        <label className='context__label'>
-                          <Icon
-                            path={mdiAccountMultiplePlusOutline}
-                            className='context__icon'
-                            size={18}
-                          />
-                          {guestsOnThisDoc.length}{' '}
-                          {plur('Guest', guestsOnThisDoc.length)}
-                        </label>
-                        <span className='context__label__description'>
-                          They can see and edit this doc
-                        </span>
-                      </Flexbox>
-                    )}
-                    {subscription == null ||
-                    subscription.plan === 'standard' ? (
-                      <UpgradeButton
-                        className='context__badge'
-                        origin='guest'
-                        variant='secondary'
-                        query={{ teamId: team.id, docId: currentDoc.id }}
-                      />
-                    ) : (
-                      <Button
-                        size='sm'
-                        onClick={() =>
-                          openModal(
-                            <GuestsModal
-                              teamId={team.id}
-                              docId={currentDoc.id}
-                            />,
-                            { width: 'large' }
-                          )
-                        }
-                        variant='primary'
-                      >
-                        {guestsOnThisDoc.length > 0 ? 'Manage' : 'Invite'}
-                      </Button>
-                    )}
-                  </Flexbox>
                   {backLinks.length > 0 && (
                     <>
                       <div className='context__break' />

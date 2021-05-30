@@ -24,8 +24,6 @@ export type SseEventType =
   | 'teamUpdate'
   | 'templateUpdate'
   | 'templateDelete'
-  | 'guestUpdate'
-  | 'guestRemoval'
   | 'commentThreadCreated'
   | 'commentThreadUpdated'
   | 'commentThreadDeleted'
