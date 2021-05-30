@@ -22,6 +22,7 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import ArchivePage from './pages/ArchivePage'
 import LabelsPage from './pages/LabelsPage'
 import TimelinePage from './pages/TimelinePage'
+import PouchDbDeprecationPage from './pages/PouchDbDeprecationPage'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;
@@ -129,7 +130,11 @@ function useContent(
         break
       }
 
-      return <WikiNotePage storage={storage} />
+      return storage.type == 'pouch' ? (
+        <PouchDbDeprecationPage />
+      ) : (
+        <WikiNotePage storage={storage} />
+      )
     }
 
     case 'workspaces.labels.show': {
@@ -138,7 +143,12 @@ function useContent(
       if (storage == null) {
         break
       }
-      return <LabelsPage storage={storage} tagName={tagName} />
+
+      return storage.type == 'pouch' ? (
+        <PouchDbDeprecationPage />
+      ) : (
+        <LabelsPage storage={storage} tagName={tagName} />
+      )
     }
 
     case 'workspaces.archive': {
@@ -147,7 +157,12 @@ function useContent(
       if (storage == null) {
         break
       }
-      return <ArchivePage storage={storage} />
+
+      return storage.type == 'pouch' ? (
+        <PouchDbDeprecationPage />
+      ) : (
+        <ArchivePage storage={storage} />
+      )
     }
     case 'workspaces.attachments': {
       const { workspaceId } = routeParams
@@ -155,7 +170,12 @@ function useContent(
       if (storage == null) {
         break
       }
-      return <AttachmentsPage storage={storage} />
+
+      return storage.type == 'pouch' ? (
+        <PouchDbDeprecationPage />
+      ) : (
+        <AttachmentsPage storage={storage} />
+      )
     }
     case 'workspaces.timeline': {
       const { workspaceId } = routeParams
@@ -163,7 +183,12 @@ function useContent(
       if (storage == null) {
         break
       }
-      return <TimelinePage storage={storage} />
+
+      return storage.type == 'pouch' ? (
+        <PouchDbDeprecationPage />
+      ) : (
+        <TimelinePage storage={storage} />
+      )
     }
     case 'workspaces.create':
       return <StorageCreatePage />
