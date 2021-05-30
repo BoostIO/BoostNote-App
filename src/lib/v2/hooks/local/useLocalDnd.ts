@@ -74,9 +74,6 @@ export function useLocalDnd() {
 
       try {
         const originalResourceId = getResourceId(draggedResource.current)
-        console.log('Target res', targetedResource)
-        console.log('Target pos', targetedPosition)
-        console.log('Original Res ID', originalResourceId)
         if (draggedResource.current.type == 'doc') {
           if (targetedResource.type == 'folder') {
             // move doc to target item (folder) at position (before, in, after)
@@ -95,7 +92,6 @@ export function useLocalDnd() {
           // move folder
           if (targetedResource.type == 'folder') {
             // move folder inside target folder
-            console.log('Moving folder to', targetedPosition)
             if (targetedPosition == DraggedTo.insideFolder) {
               const folderResource = draggedResource.current?.result
               const folderOriginalPathname = getFolderPathname(
@@ -117,20 +113,7 @@ export function useLocalDnd() {
           }
         }
       } catch (error) {
-        // const pos = targetedPosition
-        // move resource (note/folder)
-        // const { folders, docs, workspaces } = await moveResource(
-        //   { id: draggedResource.current.result.teamId },
-        //   originalResourceId,
-        //   {
-        //     targetedPosition: pos,
-        //     targetedResourceId: getResourceId(targetedResource),
-        //   }
-        // )
-        // if (pageDoc != null && changedDocs.get(pageDoc.id) != null) {
-        //   setCurrentPath(changedDocs.get(pageDoc.id)!.folderPathname)
-        // }
-        console.warn('Error while DnD', error)
+        console.warn('Error while doing drag and drop', error)
         pushApiErrorMessage(error)
       }
     },

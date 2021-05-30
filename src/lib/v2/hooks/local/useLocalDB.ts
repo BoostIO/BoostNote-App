@@ -13,19 +13,6 @@ import { getFolderHref, getDocHref, getWorkspaceHref } from '../../../db/utils'
 import { join } from 'path'
 
 export function useLocalDB() {
-  // const { pageDoc, pageFolder, setPartialPageData } = usePage()
-  // const {
-  //   updateWorkspacesMap,
-  //   updateFoldersMap,
-  //   updateDocsMap,
-  //   updateParentFolderOfDoc,
-  //   removeFromWorkspacesMap,
-  //   foldersMap,
-  //   docsMap,
-  //   removeFromDocsMap,
-  //   removeFromFoldersMap,
-  //   setCurrentPath,
-  // } = useNav()
   const {
     createStorage,
     createNote,
@@ -96,11 +83,9 @@ export function useLocalDB() {
             folderName = folderName.slice(0, folderName.length - 1)
           }
           const folderPathname = join(body.destinationPathname, folderName)
-          console.log('got ', body, folderPathname)
           return createFolder(body.workspaceId, folderPathname)
         },
         cb: (folder: FolderDoc) => {
-          console.log('Created folder', folder)
           if (folder != null) {
             push(getFolderHref(folder, body.workspaceId))
             if (afterSuccess != null) {
@@ -123,8 +108,7 @@ export function useLocalDB() {
             return trashNote(workspaceId, docId)
           }
         },
-        cb: (res) => {
-          console.log('Archived doc...', res)
+        cb: () => {
           // updateDocsMap([res.doc.id, res.doc])
           // if (pageDoc != null && res.doc.id === pageDoc.id) {
           //   setPartialPageData({ pageDoc: res.doc })
@@ -145,8 +129,7 @@ export function useLocalDB() {
             return bookmarkNote(workspaceId, docId)
           }
         },
-        cb: (res) => {
-          console.log('Bookmarked doc...', res)
+        cb: () => {
           // updateDocsMap([res.doc.id, res.doc])
           // if (pageDoc != null && res.doc.id === pageDoc.id) {
           //   setPartialPageData({ pageDoc: res.doc })
@@ -161,8 +144,8 @@ export function useLocalDB() {
     async (workspace: NoteStorage) => {
       await send(workspace.id, 'delete', {
         api: () => removeStorage(workspace.id),
-        cb: (res) => {
-          console.log('Removed workspace...', res)
+        cb: () => {
+          // maybe push message to notify successfully update
         },
       })
     },
@@ -174,7 +157,7 @@ export function useLocalDB() {
       await send(target.workspaceId, 'delete', {
         api: () => removeFolder(target.workspaceId, target.pathname),
         cb: () => {
-          console.log('Removed folder...', target.pathname)
+          // maybe push message to notify successfully update
         },
       })
     },
@@ -186,7 +169,7 @@ export function useLocalDB() {
       return send(target.workspaceId, 'delete', {
         api: () => deleteNote(target.workspaceId, target.docId),
         cb: () => {
-          console.log('Removed doc...', target.docId)
+          // maybe push message to notify successfully update
         },
       })
     },
@@ -197,10 +180,10 @@ export function useLocalDB() {
     async (target: FolderDoc, body: UpdateFolderRequestBody) => {
       await send(target._id, 'update', {
         api: () =>
-          // not available, should add upsert folder props or find it?
+          // generic update not available, rename instead
           renameFolder(body.workspaceId, body.oldPathname, body.newPathname),
         cb: () => {
-          console.log('Updated folder...', target._id, body)
+          // maybe push message to notify successfully update
         },
       })
     },
@@ -211,8 +194,7 @@ export function useLocalDB() {
     async (docId: string, body: UpdateDocRequestBody) => {
       await send(docId, 'update', {
         api: () => updateNote(body.workspaceId, docId, body.docProps),
-        cb: (doc: NoteDoc) => {
-          console.log('Updated note...', doc)
+        cb: () => {
           // if (pageDoc != null && doc.id === pageDoc.id) {
           //   setPartialPageData({ pageDoc: doc })
           //   setCurrentPath(doc.folderPathname)
