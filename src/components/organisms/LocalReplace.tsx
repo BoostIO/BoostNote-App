@@ -8,7 +8,6 @@ import React, {
   useEffect,
 } from 'react'
 import CodeMirror, { MarkerRange, TextMarker } from 'codemirror'
-import Icon from '../atoms/Icon'
 import {
   mdiAlphabeticalVariant,
   mdiMagnify,
@@ -24,6 +23,7 @@ import { SearchResultItem } from '../atoms/search/SearchResultItem'
 import { usePreferences } from '../../lib/preferences'
 import { compareEventKeyWithKeymap } from '../../lib/keymap'
 import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface LocalReplaceProps {
   codeMirror: CodeMirror.EditorFromTextArea

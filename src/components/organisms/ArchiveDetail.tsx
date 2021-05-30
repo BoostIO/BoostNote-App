@@ -5,7 +5,6 @@ import FolderDetailListNoteItem from '../molecules/FolderDetailListNoteItem'
 import { usePreferences } from '../../lib/preferences'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
-import Icon from '../atoms/Icon'
 import { mdiArchive } from '@mdi/js'
 import { values } from '../../lib/db/utils'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +14,7 @@ import {
   borderBottom,
   selectStyle,
 } from '../../shared/lib/styled/styleFunctions'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface TrashDetailProps {
   storage: NoteStorage

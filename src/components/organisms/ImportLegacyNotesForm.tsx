@@ -24,11 +24,11 @@ import { isFolderPathnameValid } from '../../lib/db/utils'
 import { useDb } from '../../lib/db'
 import { JsonObject } from 'type-fest'
 import { filenamify } from '../../lib/string'
-import Icon from '../atoms/Icon'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Form from '../../shared/components/molecules/Form'
 import { openDialog } from '../../lib/exports'
 import { useTranslation } from 'react-i18next'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface ImportLegacyNotesFormProps {
   storageId: string

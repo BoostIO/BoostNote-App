@@ -1,6 +1,5 @@
 import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
-import Icon from '../../../../components/atoms/Icon'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { cancelSubscription } from '../../../api/teams/subscription'
@@ -24,6 +23,7 @@ import {
   newUserStandardCouponId,
 } from '../../../lib/consts'
 import { useElectron } from '../../../lib/stores/electron'
+import Icon from '../../../../shared/components/atoms/Icon'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription

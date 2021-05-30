@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import styled from '../../lib/styled'
-import Icon from './Icon'
 import { borderBottom, flexCenter } from '../../lib/styled/styleFunctions'
+import Icon from '../../shared/components/atoms/Icon'
 
 const Container = styled.div`
   display: flex;
