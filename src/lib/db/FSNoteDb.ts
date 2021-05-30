@@ -450,9 +450,8 @@ class FSNoteDb implements NoteDb {
   async updateTagByName(
     tagName: string,
     props?: Partial<TagDocEditibleProps>
-  ): Promise<void> {
-    await this.upsertTag(tagName, props)
-    await this.saveBoostNoteJSON()
+  ): Promise<TagDoc> {
+    return await this.upsertTag(tagName, props)
   }
 
   async removeTag(tagName: string): Promise<void> {

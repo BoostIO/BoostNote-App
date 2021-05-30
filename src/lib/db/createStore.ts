@@ -892,12 +892,22 @@ export function createDbStoreCreator(
           return
         }
 
-        await storage.db.updateTagByName(tag, props)
-        const newTagMap = { ...storageMap[storageId]!.tagMap }
+        const updatedTag = await storage.db.updateTagByName(tag, props)
+        const currentTagMap = storageMap[storageId]!.tagMap
+        const updatedTagMap = {
+          ...currentTagMap,
+          [tag]: {
+            ...currentTagMap[tag],
+            data: {
+              ...(currentTagMap[tag] != null ? currentTagMap[tag]!.data : {}),
+              ...(updatedTag != null ? updatedTag.data : {}),
+            },
+          } as PopulatedTagDoc,
+        }
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[storageId]!.tagMap = newTagMap
+            draft[storageId]!.tagMap = updatedTagMap
           })
         )
 

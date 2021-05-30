@@ -92,7 +92,6 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
   const updateTagColorByName = useCallback(
     async (tagName: string, color: string) => {
       if (note == null || tagName == null) {
-        // Notify user of failed tag color update
         pushMessage({
           title: 'Cannot update tag color.',
           description: 'Invalid note or tag.',
@@ -103,7 +102,7 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
         data: { color: color },
       })
     },
-    [storageId, note, updateTagByName, pushMessage]
+    [note, updateTagByName, storageId, pushMessage]
   )
 
   const updatedAt = useMemo(() => {

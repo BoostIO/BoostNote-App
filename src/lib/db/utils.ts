@@ -7,6 +7,7 @@ import {
   TagDoc,
   PouchNoteStorageData,
   NoteStorage,
+  PopulatedTagDoc,
 } from './types'
 import { generateId, escapeRegExp } from '../string'
 
@@ -243,4 +244,8 @@ export function isCloudStorageData(
   data: PouchNoteStorageData
 ): data is Required<PouchNoteStorageData> {
   return data.cloudStorage != null
+}
+
+export function normalizeTagColor(tag: PopulatedTagDoc): string {
+  return typeof tag.data.color == 'string' ? tag.data.color : ''
 }

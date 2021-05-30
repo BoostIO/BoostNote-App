@@ -15,6 +15,7 @@ import { isColorBright } from '../../lib/colors'
 import { tagBackgroundColor } from '../../shared/lib/styled/styleFunctions'
 import styled from '../../shared/lib/styled'
 import Icon from '../../shared/components/atoms/Icon'
+import { normalizeTagColor } from '../../lib/db/utils'
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;
@@ -84,9 +85,7 @@ const TagNavigatorListItem = ({
   const { report } = useAnalytics()
 
   const [colorPickerModal, showColorPickerModal] = useState(false)
-  const [tagColor, setTagColor] = useState(
-    typeof tag.data.color == 'string' ? tag.data.color : ''
-  )
+  const [tagColor, setTagColor] = useState(normalizeTagColor(tag))
 
   const openTagContextMenu = useCallback(() => {
     showColorPickerModal(true)
