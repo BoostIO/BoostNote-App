@@ -40,7 +40,7 @@ export function useLocalDnd() {
         updateFolder(folder, {
           workspaceId: workspaceId,
           oldPathname: getFolderPathname(folder._id),
-          newPathname: '/', // how to update this correctly (use actual local space DND implementation
+          newPathname: '/' + getFolderName(folder),
         })
       } else if (draggedResource.current.type === 'doc') {
         const doc = draggedResource.current.result

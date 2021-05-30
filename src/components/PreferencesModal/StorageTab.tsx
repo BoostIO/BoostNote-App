@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { NoteStorage } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
-import { useDialog, DialogIconTypes } from '../../lib/dialog'
 import { useTranslation } from 'react-i18next'
 import {
   FormHeading,
@@ -27,6 +26,7 @@ import { useToast } from '../../shared/lib/stores/toast'
 import Button from '../../shared/components/atoms/Button'
 import styled from '../../shared/lib/styled'
 import InlineLink from '../atoms/InlineLink'
+import { useDialog, DialogIconTypes } from '../../shared/lib/stores/dialog'
 
 interface StorageEditPageProps {
   storage: NoteStorage
@@ -49,22 +49,29 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
           ? "This operation won't delete the actual data files in your disk. You can add it to the app again."
           : t('storage.removeMessage'),
       iconType: DialogIconTypes.Warning,
-      buttons: [t('storage.remove'), t('general.cancel')],
-      defaultButtonIndex: 0,
-      cancelButtonIndex: 1,
-      onClose: async (value: number | null) => {
-        if (value === 0) {
-          try {
-            await db.removeStorage(storage.id)
-            router.push('/app')
-          } catch {
-            pushMessage({
-              title: t('general.networkError'),
-              description: `An error occurred while deleting space (id: ${storage.id})`,
-            })
-          }
-        }
-      },
+      buttons: [
+        {
+          variant: 'warning',
+          label: t('storage.remove'),
+          onClick: async () => {
+            try {
+              await db.removeStorage(storage.id)
+              router.push('/app')
+            } catch {
+              pushMessage({
+                title: t('general.networkError'),
+                description: `An error occurred while deleting space (id: ${storage.id})`,
+              })
+            }
+          },
+        },
+        {
+          label: t('general.cancel'),
+          cancelButton: true,
+          defaultButton: true,
+          variant: 'secondary',
+        },
+      ],
     })
   }, [storage, t, db, router, messageBox, pushMessage])
 

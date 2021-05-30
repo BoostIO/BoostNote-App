@@ -174,7 +174,7 @@ const Application = ({
           <SidebarContainer
             hideSidebar={hideSidebar}
             initialSidebarState={initialSidebarState}
-            storage={storage}
+            workspace={storage}
           />
         }
         pageBody={

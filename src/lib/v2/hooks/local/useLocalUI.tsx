@@ -1,5 +1,10 @@
 import React, { useCallback } from 'react'
-import { mdiFileDocumentOutline, mdiFolderOutline, mdiPencil } from '@mdi/js'
+import {
+  mdiFileDocumentOutline,
+  mdiFolderOutline,
+  mdiMessageQuestion,
+  mdiPencil,
+} from '@mdi/js'
 import { FolderDoc, NoteDoc, NoteStorage } from '../../../db/types'
 import { useDb } from '../../../db'
 import {
@@ -23,6 +28,7 @@ import ExportProgressItem, {
 } from '../../../../components/molecules/Export/ExportProgressItem'
 import ExportSettingsComponent from '../../../../components/molecules/Export/ExportSettingsComponent'
 import { useRouter } from '../../../router'
+import { useTranslation } from 'react-i18next'
 
 export function useLocalUI() {
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
@@ -38,9 +44,11 @@ export function useLocalUI() {
     purgeNote,
     renameStorage,
     createStorage,
+    removeStorage,
   } = useDb()
   const { pushMessage } = useToast()
   const { push } = useRouter()
+  const { t } = useTranslation()
 
   const openCreateStorageDialog = useCallback(() => {
     openModal(
@@ -63,7 +71,7 @@ export function useLocalUI() {
           }
           const storage = await createStorage(workspaceName)
           // todo: [komediruzecki-30/05/2021] should also update to proper initial screen (open sidebar state etc)
-          push(`/app/storages/${storage.id}/notes`)
+          push(`/app/storages/${storage.id}`)
           closeLastModal()
         }}
       />,
@@ -78,12 +86,10 @@ export function useLocalUI() {
     (workspace: NoteStorage) => {
       openModal(
         <BasicInputFormLocal
-          defaultIcon={mdiFolderOutline}
-          defaultInputValue={workspace != null ? workspace.name : 'Untitled'}
-          defaultEmoji={undefined}
-          placeholder='Workspace name'
+          defaultIcon={mdiMessageQuestion}
+          defaultInputValue={workspace.name}
           submitButtonProps={{
-            label: 'Update',
+            label: t('storage.rename'),
           }}
           onSubmit={async (workspaceName: string) => {
             if (workspaceName == '') {
@@ -94,17 +100,17 @@ export function useLocalUI() {
               closeLastModal()
               return
             }
-            await renameStorage(workspace.id, workspaceName)
+            renameStorage(workspace.id, workspaceName)
             closeLastModal()
           }}
         />,
         {
           showCloseIcon: true,
-          title: 'Rename workspace',
+          title: `Rename "${workspace.name}" Space`,
         }
       )
     },
-    [closeLastModal, openModal, pushMessage, renameStorage]
+    [closeLastModal, openModal, pushMessage, renameStorage, t]
   )
 
   const openRenameFolderForm = useCallback(
@@ -147,7 +153,6 @@ export function useLocalUI() {
                       : `${err}`
                     : 'Unknown error',
               })
-              return
             })
 
             // Should update the UI, again works weirdly in pouch DB, works ok in FS storage
@@ -280,31 +285,34 @@ export function useLocalUI() {
     [openModal, createNote, closeLastModal]
   )
 
-  // const deleteWorkspace = useCallback(
-  //   async (workspace: { id: string; teamId: string; default: boolean }) => {
-  //     if (workspace.default) {
-  //       return
-  //     }
-  //     messageBox({
-  //       title: `Delete the workspace?`,
-  //       message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
-  //       buttons: [
-  //         {
-  //           variant: 'secondary',
-  //           label: 'Cancel',
-  //           cancelButton: true,
-  //           defaultButton: true,
-  //         },
-  //         {
-  //           variant: 'danger',
-  //           label: 'Destroy All',
-  //           onClick: async () => await deleteWorkspaceApi(workspace),
-  //         },
-  //       ],
-  //     })
-  //   },
-  //   [messageBox, deleteWorkspaceApi]
-  // )
+  const removeWorkspace = useCallback(
+    async (workspace: NoteStorage) => {
+      messageBox({
+        title: `Remove "${workspace.name}" Space`,
+        message:
+          workspace.type === 'fs'
+            ? "This operation won't delete the actual space folder. You can add it to the app again."
+            : t('storage.removeMessage'),
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'warning',
+            label: t('storage.remove'),
+            onClick: () => {
+              removeStorage(workspace.id)
+            },
+          },
+          {
+            label: t('general.cancel'),
+            cancelButton: true,
+            defaultButton: true,
+            variant: 'secondary',
+          },
+        ],
+      })
+    },
+    [messageBox, removeStorage, t]
+  )
 
   const deleteFolder = useCallback(
     async (target: { workspaceName: string; folder: FolderDoc }) => {
@@ -420,7 +428,7 @@ export function useLocalUI() {
     openRenameFolderForm,
     openRenameDocForm,
     deleteFolder,
-    // deleteWorkspace,
+    removeWorkspace,
     deleteOrTrashNote: deleteOrArchiveDoc,
     exportDocuments,
     openCreateStorageDialog,

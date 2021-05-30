@@ -556,7 +556,14 @@ class FSNoteDb implements NoteDb {
         folderPathname: newFolderPathname,
       }
 
-      updatedFolderMap.get(newFolderPathname)!.noteIdSet.add(updatedNote._id)
+      const folderToUpdate = updatedFolderMap.get(newFolderPathname)
+      if (folderToUpdate != null && folderToUpdate.noteIdSet != null) {
+        folderToUpdate.noteIdSet.add(updatedNote._id)
+      } else {
+        console.warn(
+          `Folder not updated correctly ${folder}, for note: ${note}, on pathname: ${pathname}`
+        )
+      }
       updatedNotes.push(updatedNote)
     }
 

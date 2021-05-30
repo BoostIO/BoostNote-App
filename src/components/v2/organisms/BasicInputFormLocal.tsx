@@ -29,6 +29,7 @@ const BasicInputFormLocal = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState(defaultInputValue)
 
+  // seems to sometimes do some update on un-mounted component (called in openModal which closes itself)
   useEffectOnce(() => {
     if (inputRef.current != null && !inputIsDisabled) {
       inputRef.current.focus()

@@ -16,7 +16,6 @@ import {
   mdiLogin,
   mdiLogout,
   mdiMenu,
-  mdiMessageQuestion,
   mdiPlus,
   mdiTextBoxPlusOutline,
 } from '@mdi/js'
@@ -63,26 +62,19 @@ import {
   SidebarSpaceContentRow,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
-import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
-import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
-import { useToast } from '../../shared/lib/stores/toast'
-import { useModal } from '../../shared/lib/stores/modal'
 
 interface SidebarContainerProps {
   hideSidebar?: boolean
   initialSidebarState?: SidebarState
-  storage?: NoteStorage
+  workspace?: NoteStorage
 }
 
 const SidebarContainer = ({
   initialSidebarState,
-  storage,
+  workspace,
   hideSidebar,
 }: SidebarContainerProps) => {
-  const { createNote, storageMap, renameStorage, removeStorage } = useDb()
-  const { pushMessage } = useToast()
-  const { openModal, closeLastModal } = useModal()
-  const { messageBox } = useDialog()
+  const { createNote, storageMap } = useDb()
   const { push, hash, pathname } = useRouter()
   const { navigate } = useStorageRouter()
   const { preferences, openTab, togglePreferencesModal } = usePreferences()
@@ -98,85 +90,39 @@ const SidebarContainer = ({
     deleteFolderApi,
     toggleDocArchived,
     toggleDocBookmark,
-    deleteStorageApi,
   } = useLocalDB()
   const {
     openWorkspaceEditForm,
     openNewDocForm,
     openRenameFolderForm,
     openRenameDocForm,
-    // deleteWorkspace,
+    removeWorkspace,
     exportDocuments,
     openCreateStorageDialog,
   } = useLocalUI()
   const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
 
-  // todo: [komediruzecki-30/05/2021] Here we should add confirmation dialog for remove space
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
-      if (storage == null) {
+      if (workspace == null) {
         return
       }
       event.preventDefault()
       event.stopPropagation()
 
       const storages = values(storageMap)
-      const workspaceId = storage.id
+      const workspaceId = workspace.id
       openContextMenu({
         menuItems: [
           {
             type: 'normal',
             label: t('storage.rename'),
-            click: async () => {
-              openModal(
-                <BasicInputFormLocal
-                  defaultIcon={mdiMessageQuestion}
-                  defaultInputValue={storage.name}
-                  submitButtonProps={{
-                    label: t('storage.rename'),
-                  }}
-                  onSubmit={async (workspaceName: string) => {
-                    if (workspaceName == '') {
-                      pushMessage({
-                        title: 'Cannot rename workspace',
-                        description: 'Workspace name should not be empty.',
-                      })
-                      closeLastModal()
-                      return
-                    }
-                    renameStorage(storage.id, workspaceName)
-                    closeLastModal()
-                  }}
-                />,
-                {
-                  showCloseIcon: true,
-                  title: `Rename "${storage.name}" Space`,
-                }
-              )
-            },
+            click: () => openWorkspaceEditForm(workspace),
           },
           {
             type: 'normal',
             label: t('storage.remove'),
-            click: async () => {
-              messageBox({
-                title: `Remove "${storage.name}" Space`,
-                message:
-                  storage.type === 'fs'
-                    ? "This operation won't delete the actual space folder. You can add it to the app again."
-                    : t('storage.removeMessage'),
-                iconType: DialogIconTypes.Warning,
-                buttons: [
-                  {
-                    label: t('storage.remove'),
-                    onClick: () => {
-                      removeStorage(storage.id)
-                    },
-                  },
-                  { label: t('general.cancel') },
-                ],
-              })
-            },
+            click: () => removeWorkspace(workspace),
           },
           {
             type: 'separator',
@@ -218,15 +164,11 @@ const SidebarContainer = ({
       })
     },
     [
-      storage,
+      workspace,
       storageMap,
       t,
-      openModal,
-      renameStorage,
-      closeLastModal,
-      pushMessage,
-      messageBox,
-      removeStorage,
+      openWorkspaceEditForm,
+      removeWorkspace,
       togglePreferencesModal,
       navigate,
       openCreateStorageDialog,
@@ -234,10 +176,10 @@ const SidebarContainer = ({
   )
 
   const createNoteByRoute = useCallback(async () => {
-    if (storage == null) {
+    if (workspace == null) {
       return
     }
-    const workspaceId = storage.id
+    const workspaceId = workspace.id
     let folderPathname = '/'
     let tags: string[] = []
     let baseHrefAfterCreate = `/app/storages/${workspaceId}/notes`
@@ -263,7 +205,7 @@ const SidebarContainer = ({
     }
 
     push(`${baseHrefAfterCreate}/${note._id}#new`)
-  }, [storage, routeParams, push, createNote])
+  }, [workspace, routeParams, push, createNote])
 
   useEffect(() => {
     if (hash === '#new') {
@@ -319,7 +261,7 @@ const SidebarContainer = ({
   const { toggleShowingCloudIntroModal } = useCloudIntroModal()
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
-    if (storage != null) {
+    if (workspace != null) {
       return mapToolbarRows(
         showSpaces,
         setShowSpaces,
@@ -327,7 +269,7 @@ const SidebarContainer = ({
         openTab,
         toggleShowingCloudIntroModal,
         sidebarState,
-        storage
+        workspace
       )
     } else {
       return [
@@ -344,7 +286,7 @@ const SidebarContainer = ({
     openTab,
     showSpaces,
     sidebarState,
-    storage,
+    workspace,
     toggleShowingCloudIntroModal,
   ])
 
@@ -358,18 +300,18 @@ const SidebarContainer = ({
   }, [])
 
   const historyItems = useMemo(() => {
-    if (storage == null) {
+    if (workspace == null) {
       return []
     }
     return mapHistory(
       // implement history items for search
       [],
       push,
-      storage.noteMap,
-      storage.folderMap,
-      storage
+      workspace.noteMap,
+      workspace.folderMap,
+      workspace
     )
-  }, [push, storage])
+  }, [push, workspace])
   const { submit: submitSearch, sending: fetchingSearchResults } = useApi<
     { query: any },
     { results: NoteSearchData[] }
@@ -377,19 +319,19 @@ const SidebarContainer = ({
     api: ({ query }: { query: any }) => {
       // return new Promise(() => {
       return Promise.resolve({
-        results: getSearchResultItems(storage, query.query),
+        results: getSearchResultItems(workspace, query.query),
       })
       // })
     },
     cb: ({ results }) => {
       // console.log('got results', results)
-      setSearchResults(mapSearchResults(results, push, storage))
+      setSearchResults(mapSearchResults(results, push, workspace))
     },
   })
 
   const [isNotDebouncing, cancel] = useDebounce(
     async () => {
-      if (storage == null || sidebarSearchQuery.trim() === '') {
+      if (workspace == null || sidebarSearchQuery.trim() === '') {
         return
       }
 
@@ -447,16 +389,16 @@ const SidebarContainer = ({
   )
 
   const tree = useMemo(() => {
-    if (storage == null) {
+    if (workspace == null) {
       return undefined
     }
     return mapTree(
       initialLoadDone,
       generalStatus.sidebarTreeSortingOrder,
-      storage,
-      storage.noteMap,
-      storage.folderMap,
-      storage.tagMap,
+      workspace,
+      workspace.noteMap,
+      workspace.folderMap,
+      workspace.tagMap,
       pathname,
       sideBarOpenedLinksIdsSet,
       sideBarOpenedFolderIdsSet,
@@ -465,7 +407,7 @@ const SidebarContainer = ({
       getFoldEvents,
       push,
       toggleDocBookmark,
-      deleteStorageApi,
+      (workspace) => removeWorkspace(workspace),
       toggleDocArchived,
       deleteFolderApi,
       createFolder,
@@ -479,7 +421,7 @@ const SidebarContainer = ({
       exportDocuments
     )
   }, [
-    storage,
+    workspace,
     initialLoadDone,
     generalStatus.sidebarTreeSortingOrder,
     pathname,
@@ -490,7 +432,6 @@ const SidebarContainer = ({
     getFoldEvents,
     push,
     toggleDocBookmark,
-    deleteStorageApi,
     toggleDocArchived,
     deleteFolderApi,
     createFolder,
@@ -501,6 +442,7 @@ const SidebarContainer = ({
     openRenameDocForm,
     openWorkspaceEditForm,
     exportDocuments,
+    removeWorkspace,
     dropInWorkspace,
     updateFolder,
     updateDocApi,
@@ -514,7 +456,8 @@ const SidebarContainer = ({
   }, [routeParams])
 
   const spaces = useMemo(() => {
-    const activeWorkspaceId: string | null = storage == null ? null : storage.id
+    const activeWorkspaceId: string | null =
+      workspace == null ? null : workspace.id
     const allSpaces: SidebarSpace[] = []
     const onSpaceLinkClick = (
       event: React.MouseEvent,
@@ -525,7 +468,7 @@ const SidebarContainer = ({
     }
     const onSpaceContextMenu = (
       event: React.MouseEvent,
-      workspace: NoteStorage
+      space: NoteStorage
     ) => {
       event.preventDefault()
       event.stopPropagation()
@@ -533,58 +476,13 @@ const SidebarContainer = ({
         {
           type: 'normal',
           label: t('storage.rename'),
-          click: async () => {
-            openModal(
-              <BasicInputFormLocal
-                defaultIcon={mdiMessageQuestion}
-                defaultInputValue={workspace.name}
-                submitButtonProps={{
-                  label: t('storage.rename'),
-                }}
-                onSubmit={async (workspaceName: string) => {
-                  if (workspaceName == '') {
-                    pushMessage({
-                      title: 'Cannot rename workspace',
-                      description: 'Workspace name should not be empty.',
-                    })
-                    closeLastModal()
-                    return
-                  }
-                  await renameStorage(workspace.id, workspaceName)
-                  closeLastModal()
-                }}
-              />,
-              {
-                showCloseIcon: true,
-                title: `Rename "${workspace.name}" storage`,
-              }
-            )
-          },
+          click: () => openWorkspaceEditForm(space),
         },
         { type: 'separator' },
         {
           type: 'normal',
           label: t('storage.remove'),
-          click: async () => {
-            messageBox({
-              title: `Remove "${workspace.name}" storage`,
-              message:
-                workspace.type === 'fs'
-                  ? "This operation won't delete the actual storage folder. You can add it to the app again."
-                  : t('storage.removeMessage'),
-              iconType: DialogIconTypes.Warning,
-              // todo: [komediruzecki-22/05/2021] Test, maybe move to localUI and test remove..
-              buttons: [
-                {
-                  label: t('storage.remove'),
-                  onClick: () => {
-                    removeStorage(workspace.id)
-                  },
-                },
-                { label: t('general.cancel') },
-              ],
-            })
-          },
+          click: () => removeWorkspace(space),
         },
       ]
       openContextMenu({ menuItems })
@@ -620,28 +518,24 @@ const SidebarContainer = ({
 
     return allSpaces
   }, [
-    activeBoostHubTeamDomain,
-    closeLastModal,
-    generalStatus.boostHubTeams,
+    workspace,
     localSpaces,
-    messageBox,
+    generalStatus.boostHubTeams,
     navigate,
-    openModal,
-    push,
-    pushMessage,
-    removeStorage,
-    renameStorage,
-    storage,
-    storageMap,
     t,
+    openWorkspaceEditForm,
+    removeWorkspace,
+    activeBoostHubTeamDomain,
+    storageMap,
+    push,
   ])
 
   const timelineRows = useMemo(() => {
-    if (storage == null) {
+    if (workspace == null) {
       return []
     }
-    return mapTimelineItems(values(storage.noteMap), push, storage)
-  }, [push, storage])
+    return mapTimelineItems(values(workspace.noteMap), push, workspace)
+  }, [push, workspace])
 
   const spaceBottomRows = useMemo(() => {
     const rows: SidebarSpaceContentRow[] = []
@@ -739,7 +633,7 @@ const SidebarContainer = ({
         ]}
         // todo: See why its not full width
         treeTopRows={
-          storage == null ? null : (
+          workspace == null ? null : (
             <Button
               variant='primary'
               size={'sm'}
@@ -749,7 +643,7 @@ const SidebarContainer = ({
               onClick={() =>
                 openNewDocForm({
                   parentFolderPathname: '/',
-                  workspaceId: storage.id,
+                  workspaceId: workspace.id,
                 })
               }
             >
@@ -762,10 +656,10 @@ const SidebarContainer = ({
         users={usersMap}
         timelineRows={timelineRows}
         timelineMore={
-          storage != null
+          workspace != null
             ? {
                 variant: 'primary',
-                onClick: () => push(getTimelineHref(storage)),
+                onClick: () => push(getTimelineHref(workspace)),
               }
             : undefined
         }

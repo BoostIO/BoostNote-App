@@ -351,9 +351,6 @@ export function mapTree(
       ],
       parentId: parentFolderId,
       children: getFolderChildrenOrderedIds(folder, notes, folders),
-      // typeof folder.positions != null && typeof folder.positions !== 'string'
-      //   ? folder.positions.orderedIds
-      //   : [],
     })
   })
 
@@ -412,7 +409,6 @@ export function mapTree(
   const arrayItems = getMapValues(items)
   const tree: Partial<SidebarNavCategory>[] = []
 
-  // console.log('Array items', arrayItems)
   const bookmarked = arrayItems.reduce((acc, val) => {
     if (!val.bookmarked) {
       return acc
@@ -563,7 +559,6 @@ export function mapTree(
     category.hidden = sideBarOpenedLinksIdsSet.has(hideKey)
     category.toggleHidden = () => toggleItem('links', hideKey)
   })
-  // console.log('Got Sidebar tree', tree)
   return tree as SidebarNavCategory[]
 }
 

@@ -145,7 +145,6 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     openRenameFolderForm,
     openRenameDocForm,
     deleteFolder,
-    // deleteWorkspace,
     deleteOrTrashNote,
   } = useLocalUI()
 
