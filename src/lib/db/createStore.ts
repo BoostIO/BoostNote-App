@@ -288,10 +288,6 @@ export function createDbStoreCreator(
         try {
           folder = await storage.db.upsertFolder(pathname)
         } catch (error) {
-          // pushMessage({
-          //   title: 'Error',
-          //   description: 'Folder name is invalid.',
-          // })
           console.error(error)
           throw new Error('Folder name is invalid. Provided name: ' + pathname)
         }

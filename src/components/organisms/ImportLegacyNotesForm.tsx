@@ -29,6 +29,7 @@ import Form from '../../shared/components/molecules/Form'
 import { openDialog } from '../../lib/exports'
 import { useTranslation } from 'react-i18next'
 import Icon from '../../shared/components/atoms/Icon'
+import { useToast } from '../../shared/lib/stores/toast'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -37,6 +38,7 @@ interface ImportLegacyNotesFormProps {
 const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
   const { addAttachments, createFolder, createNote, initialize } = useDb()
   const { t } = useTranslation()
+  const { pushMessage } = useToast()
 
   const [location, setLocation] = useState('')
   const [opened, setOpened] = useState(false)
@@ -216,7 +218,12 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
         await createFolder(
           storageId,
           join(destinationFolderPathname, folderName)
-        )
+        ).catch((err) => {
+          pushMessage({
+            title: 'Error',
+            description: `Cannot create folder, reason: ${err}`,
+          })
+        })
       }
 
       for (const note of convertedNotes) {

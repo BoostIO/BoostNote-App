@@ -117,9 +117,11 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
   const noteId = note?._id
 
   const getCurrentPositionFromRoute = useCallback(() => {
-    let focusLine = 0
-    let focusColumn = 0
-    if (hash.startsWith('#L')) {
+    if (!hash.startsWith('#L')) {
+      return null
+    } else {
+      let focusLine = 0
+      let focusColumn = 0
       const focusData = hash.substring(2).split(',')
       if (focusData.length == 2) {
         focusLine = parseNumberStringOrReturnZero(focusData[0])
@@ -127,11 +129,10 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
       } else if (focusData.length == 1) {
         focusLine = parseNumberStringOrReturnZero(focusData[0])
       }
-    }
-
-    return {
-      line: focusLine,
-      ch: focusColumn,
+      return {
+        line: focusLine,
+        ch: focusColumn,
+      }
     }
   }, [hash])
 

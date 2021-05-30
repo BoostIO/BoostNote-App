@@ -236,7 +236,14 @@ export function useLocalUI() {
                   : '/',
                 inputValue
               )
-              await createFolder(body.workspaceId, folderPathname)
+              await createFolder(body.workspaceId, folderPathname).catch(
+                (err) => {
+                  pushMessage({
+                    title: 'Error',
+                    description: `Cannot create folder, reason: ${err}`,
+                  })
+                }
+              )
             } finally {
               closeLastModal()
             }
@@ -248,7 +255,7 @@ export function useLocalUI() {
         }
       )
     },
-    [openModal, createFolder, closeLastModal]
+    [openModal, createFolder, pushMessage, closeLastModal]
   )
 
   const openNewDocForm = useCallback(
