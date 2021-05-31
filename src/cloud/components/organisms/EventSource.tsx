@@ -143,7 +143,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
 
   const subscriptionChangeEventHandler = useCallback(
     (event: SerializedAppEvent) => {
-      console.log(event)
       if (event.data.subscription.status === 'inactive') {
         updateTeamSubscription(undefined)
         if (usingElectron) {

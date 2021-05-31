@@ -1,7 +1,7 @@
 import { SerializedUser } from './user'
 import { SerializedTeam } from './team'
 
-export type TeamPermissionType = 'admin' | 'member'
+export type TeamPermissionType = 'admin' | 'member' | 'viewer'
 
 export interface SerializableUserTeamPermissionsProps {
   id: string
