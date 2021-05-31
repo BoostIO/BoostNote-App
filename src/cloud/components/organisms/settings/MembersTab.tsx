@@ -202,16 +202,35 @@ const MembersTab = () => {
         return
       }
 
-      const changeIsDemotion = targetedRole === 'member'
-      const mboxContent = changeIsDemotion
-        ? {
-            title: 'Demote the member',
-            message: `This action will remove ${targetedPermissions.user.displayName}'s rights as an admin, he will fall back to being a member. Are you sure?`,
-          }
-        : {
-            title: 'Promote the member',
+      let mboxContent = { title: '', message: '' }
+      let changeIsDemotion = false
+      switch (targetedRole) {
+        case 'admin':
+          mboxContent = {
+            title: 'Promote to admin',
             message: `This action will promote ${targetedPermissions.user.displayName}'s to an admin, he will be granted access to team management and billing information. Are you sure?`,
           }
+          break
+        case 'member':
+          mboxContent = {
+            title:
+              targetedPermissions.role === 'viewer'
+                ? 'Promote to member'
+                : 'Demote to member',
+            message: `This action will change ${targetedPermissions.user.displayName}'s role to a regular member, he will be accounted for within the subscription and can actively participate within the team. However he will be unable to access any billing information. Are you sure?`,
+          }
+          if (targetedPermissions.role === 'admin') {
+            changeIsDemotion = true
+          }
+          break
+        case 'viewer':
+          mboxContent = {
+            title: 'Demote to viewer',
+            message: `This action will change ${targetedPermissions.user.displayName}'s role to a viewer. He will be removed from the subscription amount. He will be unable to edit in any way folder and documents moving forward but can still read as well as post comments. Are you sure?`,
+          }
+          changeIsDemotion = true
+          break
+      }
 
       messageBox({
         title: mboxContent.title,
@@ -233,7 +252,7 @@ const MembersTab = () => {
                 const data = await updatePermissionRole(
                   team,
                   targetedPermissions,
-                  changeIsDemotion ? 'member' : 'admin'
+                  targetedRole
                 )
 
                 setPartialPageData({
@@ -412,7 +431,7 @@ const MembersTab = () => {
                                     !currentUserIsAdmin ||
                                     targetPermissionsAreUsersOwn
                                   }
-                                  options={['admin', 'member']}
+                                  options={['admin', 'member', 'viewer']}
                                 />
                               )}
                               {(targetPermissionsAreUsersOwn ||

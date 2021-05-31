@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import {
   SectionList,
   SectionListItem,
@@ -35,7 +35,9 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   const [email, setEmail] = useState<string>('')
   const [error, setError] = useState<unknown>()
   const { messageBox } = useDialog()
-  const [role, setRole] = useState<TeamPermissionType>('member')
+  const [role, setRole] = useState<TeamPermissionType>(
+    userPermissions.role === 'viewer' ? 'viewer' : 'member'
+  )
   const mountedRef = useRef(false)
 
   useEffect(() => {
@@ -157,6 +159,17 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
     [setRole, userPermissions]
   )
 
+  const selectRoleOptions = useMemo(() => {
+    switch (userPermissions.role) {
+      case 'admin':
+        return ['admin', 'member', 'viewer']
+      case 'member':
+        return ['member', 'viewer']
+      case 'viewer':
+        return ['viewer']
+    }
+  }, [userPermissions.role])
+
   return (
     <section>
       <Flexbox>
@@ -181,8 +194,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
                 props: {
                   value: role,
                   onChange: selectRole,
-                  isDisabled: userPermissions.role !== 'admin',
-                  options: ['admin', 'member'],
+                  options: selectRoleOptions,
                 },
               },
               {
