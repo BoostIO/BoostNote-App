@@ -249,15 +249,16 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
     }
     setImporting(false)
   }, [
+    importing,
     destinationFolderPathname,
     location,
-    convertingSnippetNotes,
-    storageId,
-    addAttachments,
-    createFolder,
-    createNote,
-    importing,
     initialize,
+    addAttachments,
+    storageId,
+    convertingSnippetNotes,
+    createFolder,
+    pushMessage,
+    createNote,
   ])
 
   const updateConvertingSnippetNotes = useCallback(

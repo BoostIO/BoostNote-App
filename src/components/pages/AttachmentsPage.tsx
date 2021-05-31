@@ -66,7 +66,7 @@ const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
           label={`Attachments in ${storage.name}`}
         />
 
-        <AttachmentList storage={storage} />
+        <AttachmentList workspace={storage} />
       </Container>
     </Application>
   )

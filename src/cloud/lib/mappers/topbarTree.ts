@@ -57,7 +57,6 @@ export function mapTopbarTree(
   )
 
   folders.forEach((folder) => {
-    if (folder.pathname == '/') return
     const folderId = getFolderId(folder)
     const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
       folder,
@@ -113,5 +112,6 @@ export function mapTopbarTree(
       })
       items.set(parentId, parentArray)
     })
+
   return items
 }

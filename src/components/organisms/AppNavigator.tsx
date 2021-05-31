@@ -201,7 +201,6 @@ const TopLevelNavigator = () => {
                 type: 'normal',
                 label: t('storage.remove'),
                 click: async () => {
-                  // todo: [komediruzecki-22/05/2021] Test storage remove, message, action and errors
                   messageBox({
                     title: `Remove "${workspace.name}" storage`,
                     message:

@@ -312,7 +312,7 @@ const LocalReplace = ({
           <LocalReplaceIcon
             className={getNumberOfTextAreaRows != 1 ? 'alignStart' : ''}
           >
-            <Icon path={mdiMagnify} />
+            <Icon size={16} path={mdiMagnify} />
           </LocalReplaceIcon>
           <textarea
             onClick={focusReplaceTextAreaInput}

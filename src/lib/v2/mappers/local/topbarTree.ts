@@ -72,9 +72,6 @@ export function mapTopBarTree(
     .forEach((note) => {
       const noteId = note._id
       const href = getDocHref(note, storage.id)
-      // const href = `/app/storages/${storage.id}/notes${
-      //   note.folderPathname == '/' ? '' : note.folderPathname
-      // }/${note._id}`
       const parentFolderDoc = storage.folderMap[note.folderPathname]
       const parentId =
         parentFolderDoc != null
@@ -92,12 +89,11 @@ export function mapTopBarTree(
         parentId: parentFolderDoc != null ? parentFolderDoc._id : storage.id,
         link: {
           href,
-          navigateTo: () => push(href), // todo: push or replace?
+          navigateTo: () => push(href),
         },
       })
       items.set(parentId, parentArray)
     })
 
-  // console.log('Got items', items)
   return items
 }

@@ -45,6 +45,7 @@ export function useLocalUI() {
     renameStorage,
     createStorage,
     removeStorage,
+    removeAttachment,
   } = useDb()
   const { pushMessage } = useToast()
   const { push } = useRouter()
@@ -190,8 +191,7 @@ export function useLocalUI() {
           }}
           inputIsDisabled={false}
           onSubmit={async (inputValue: string) => {
-            // todo: [komediruzecki-22/05/2021] handle empty values - test
-            if (inputValue == '') {
+            if (inputValue.trim() == '') {
               pushMessage({
                 title: 'Cannot rename document',
                 description: 'Document name should not be empty.',
@@ -427,6 +427,31 @@ export function useLocalUI() {
     },
     [closeAllModals, openModal]
   )
+  const removeAttachmentApi = useCallback(
+    (workspaceId: string, attachmentId: string) => {
+      messageBox({
+        title: `Remove Attachment`,
+        message: 'The attachment will be deleted permanently.',
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'warning',
+            label: 'Delete Attachment',
+            onClick: () => {
+              removeAttachment(workspaceId, attachmentId)
+            },
+          },
+          {
+            variant: 'secondary',
+            label: 'Cancel',
+            cancelButton: true,
+            defaultButton: true,
+          },
+        ],
+      })
+    },
+    [messageBox, removeAttachment]
+  )
 
   return {
     openWorkspaceEditForm,
@@ -439,6 +464,7 @@ export function useLocalUI() {
     deleteOrTrashNote: deleteOrArchiveDoc,
     exportDocuments,
     openCreateStorageDialog,
+    removeAttachment: removeAttachmentApi,
   }
 }
 

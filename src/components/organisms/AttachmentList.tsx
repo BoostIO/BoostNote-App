@@ -1,13 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { NoteStorage, Attachment, AttachmentData } from '../../lib/db/types'
-import { useDb } from '../../lib/db'
 import { values } from '../../lib/db/utils'
 import { downloadBlob } from '../../lib/download'
 import { openNew } from '../../lib/platform'
 import { openContextMenu } from '../../lib/electronOnly'
 import copy from 'copy-to-clipboard'
 import styled from '../../shared/lib/styled'
-import { useDialog, DialogIconTypes } from '../../shared/lib/stores/dialog'
+import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
 
 const ListContainer = styled.div`
   display: flex;
@@ -23,16 +22,15 @@ const ListItem = styled.div`
 `
 
 interface AttachmentListItemProps {
-  storageId: string
+  workspaceId: string
   attachment: Attachment
 }
 
 const AttachmentListItem = ({
-  storageId,
+  workspaceId,
   attachment,
 }: AttachmentListItemProps) => {
-  const { messageBox } = useDialog()
-  const { removeAttachment } = useDb()
+  const { removeAttachment } = useLocalUI()
   const [data, setData] = useState<AttachmentData | null>(null)
   useEffect(() => {
     attachment.getData().then((data) => {
@@ -93,27 +91,10 @@ const AttachmentListItem = ({
                 copy(attachment.name)
               },
             },
-            // todo: [komediruzecki-22/05/2021] Remove attachment add to localUI component - test also
             {
               type: 'normal',
               label: 'Remove Attachment',
-              click: () => {
-                messageBox({
-                  title: `Remove Attachment`,
-                  message: 'The attachment will be deleted permanently.',
-                  iconType: DialogIconTypes.Warning,
-                  buttons: [
-                    {
-                      label: 'Delete Attachment',
-                      defaultButton: true,
-                      onClick: () => {
-                        removeAttachment(storageId, attachment.name)
-                      },
-                    },
-                    { label: 'Cancel', cancelButton: true },
-                  ],
-                })
-              },
+              click: () => removeAttachment(workspaceId, attachment.name),
             },
           ],
         })
@@ -122,11 +103,11 @@ const AttachmentListItem = ({
   )
 }
 interface AttachmentListProps {
-  storage: NoteStorage
+  workspace: NoteStorage
 }
 
-const AttachmentList = ({ storage }: AttachmentListProps) => {
-  const { attachmentMap } = storage
+const AttachmentList = ({ workspace }: AttachmentListProps) => {
+  const { attachmentMap } = workspace
 
   return (
     <ListContainer>
@@ -134,13 +115,13 @@ const AttachmentList = ({ storage }: AttachmentListProps) => {
         return values(attachmentMap).map((attachment) => {
           return (
             <AttachmentListItem
-              storageId={storage.id}
+              workspaceId={workspace.id}
               attachment={attachment}
               key={attachment.name}
             />
           )
         })
-      }, [attachmentMap, storage])}
+      }, [attachmentMap, workspace])}
     </ListContainer>
   )
 }

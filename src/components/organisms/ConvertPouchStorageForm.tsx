@@ -179,7 +179,7 @@ const ConvertPouchStorage = ({
                   {
                     type: 'button',
                     props: {
-                      label: ' Convert to File System based Space',
+                      label: 'Convert to File System based Space',
                       disabled: newStorageLocation.trim().length === 0,
                       variant: 'primary',
                       onClick: cloneAndConvertStorage,

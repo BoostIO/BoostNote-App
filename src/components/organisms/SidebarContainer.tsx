@@ -94,6 +94,29 @@ const SidebarContainer = ({
     openCreateStorageDialog,
   } = useLocalUI()
   const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
+  const { generalStatus, setGeneralStatus } = useGeneralStatus()
+  const { popup } = useContextMenu()
+  const [showSpaces, setShowSpaces] = useState(false)
+  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
+    hideSidebar != null && hideSidebar
+      ? undefined
+      : initialSidebarState != null
+      ? initialSidebarState
+      : generalStatus.lastSidebarState
+  )
+  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
+  const { toggleShowingCloudIntroModal } = useCloudIntroModal()
+  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
+  const usersMap = new Map<string, AppUser>()
+  const [initialLoadDone] = useState(true)
+  const {
+    sideBarOpenedLinksIdsSet,
+    sideBarOpenedFolderIdsSet,
+    sideBarOpenedStorageIdsSet,
+    toggleItem,
+    unfoldItem,
+    foldItem,
+  } = useSidebarCollapse()
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
@@ -231,19 +254,6 @@ const SidebarContainer = ({
     }
   }, [toggleShowSearchModal])
 
-  // Sidebar related items - properly implement after mapping
-  const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const { popup } = useContextMenu()
-  const [showSpaces, setShowSpaces] = useState(false)
-  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    hideSidebar != null && hideSidebar
-      ? undefined
-      : initialSidebarState != null
-      ? initialSidebarState
-      : generalStatus.lastSidebarState
-  )
-  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
-
   useEffect(() => {
     setGeneralStatus({ lastSidebarState: sidebarState })
   }, [sidebarState, setSidebarState, setGeneralStatus])
@@ -251,7 +261,6 @@ const SidebarContainer = ({
   const openState = useCallback((state: SidebarState) => {
     setSidebarState((prev) => (prev === state ? undefined : state))
   }, [])
-  const { toggleShowingCloudIntroModal } = useCloudIntroModal()
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     if (workspace != null) {
@@ -310,14 +319,11 @@ const SidebarContainer = ({
     { results: NoteSearchData[] }
   >({
     api: ({ query }: { query: any }) => {
-      // return new Promise(() => {
       return Promise.resolve({
         results: getSearchResultItems(workspace, query.query),
       })
-      // })
     },
     cb: ({ results }) => {
-      // console.log('got results', results)
       setSearchResults(mapSearchResults(results, push, workspace))
     },
   })
@@ -357,18 +363,6 @@ const SidebarContainer = ({
     600,
     [sidebarSearchQuery]
   )
-
-  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
-  const usersMap = new Map<string, AppUser>()
-  const [initialLoadDone] = useState(true)
-  const {
-    sideBarOpenedLinksIdsSet,
-    sideBarOpenedFolderIdsSet,
-    sideBarOpenedStorageIdsSet,
-    toggleItem,
-    unfoldItem,
-    foldItem,
-  } = useSidebarCollapse()
 
   const getFoldEvents = useCallback(
     (type: CollapsableType, key: string) => {

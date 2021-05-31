@@ -146,7 +146,6 @@ const App = () => {
               },
             },
           ],
-          // defaultButtonIndex: 0,
           iconType: DialogIconTypes.Warning,
         })
         return

@@ -413,7 +413,7 @@ export function mapStorageBreadcrumb(
             },
           ]
         : []),
-      ...(deleteWorkspace != null // !storage.default = one storage - always default?
+      ...(deleteWorkspace != null
         ? [
             {
               icon: mdiTrashCanOutline,

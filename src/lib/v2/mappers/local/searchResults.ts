@@ -107,10 +107,7 @@ export function mapSearchResults(
   }
 
   return results.reduce((acc, searchData) => {
-    // maybe get results as folder, folder title, note, note title, tags etc. results
-    // for now just use same result
-    // add search metadata (type and actual item)
-    console.log('Got result', searchData)
+    // todo: [komediruzecki-31/05/2021] Improve results types: folder, folder title, note, note title, tags
     if (searchData.item.type === 'folder') {
       const href = getFolderHref(searchData.item.result, storage.id)
       acc.push({

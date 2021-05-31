@@ -681,7 +681,7 @@ const LocalSearch = ({
           <LocalSearchIcon
             className={getNumberOfTextAreaRows != 1 ? 'alignStart' : ''}
           >
-            <Icon path={mdiMagnify} />
+            <Icon size={16} path={mdiMagnify} />
           </LocalSearchIcon>
           <textarea
             onClick={focusSearchTextAreaInput}

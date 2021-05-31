@@ -329,35 +329,6 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     storage.attachmentMap,
   ])
 
-  // const openTopbarSwitchSelectorContextMenu: MouseEventHandler<HTMLDivElement> = useCallback(
-  //   (event) => {
-  //     event.preventDefault()
-  //     openContextMenu({
-  //       menuItems: [
-  //         {
-  //           type: 'normal',
-  //           label: 'Use 2 toggles layout',
-  //           click: () => {
-  //             setPreferences({
-  //               'editor.controlMode': '2-toggles',
-  //             })
-  //           },
-  //         },
-  //         {
-  //           type: 'normal',
-  //           label: 'Use 3 buttons layout',
-  //           click: () => {
-  //             setPreferences({
-  //               'editor.controlMode': '3-buttons',
-  //             })
-  //           },
-  //         },
-  //       ],
-  //     })
-  //   },
-  //   [setPreferences]
-  // )
-
   const toggleBookmark = useCallback(() => {
     if (note == null) {
       return

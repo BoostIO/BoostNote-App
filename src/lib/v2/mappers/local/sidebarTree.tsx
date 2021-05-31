@@ -190,11 +190,11 @@ export function mapTree(
     id: workspace.id,
     label: workspace.name,
     defaultIcon: mdiLock,
-    children: getWorkspaceChildrenOrderedIds(notes, folders), // workspace.positions?.orderedIds || [],
+    children: getWorkspaceChildrenOrderedIds(notes, folders),
     folded: !sideBarOpenedWorkspaceIdsSet.has(workspace.id),
     folding: getFoldEvents('workspaces', workspace.id),
     href,
-    active: true, //  href === currentPathWithStorage,
+    active: href === currentPathWithWorkspace,
     navigateTo: () => push(href),
     dropIn: true,
     onDrop: () => dropInWorkspace(workspace.id),
@@ -218,7 +218,6 @@ export function mapTree(
           }),
       },
     ],
-    // todo: what is default for?
     contextControls: [
       {
         type: MenuTypes.Normal,
@@ -308,7 +307,7 @@ export function mapTree(
       ],
 
       contextControls: [
-        // todo: no control for bookmark for now (add bookmarked property to folder DB
+        // todo: no control for bookmark for now (add bookmarked property to folder DB)
         // {
         // type: MenuTypes.Normal,
         // icon: folder.bookmarked ? mdiStar : mdiStarOutline,
@@ -439,7 +438,6 @@ export function mapTree(
 
   const notesPerLabelIdMap = notes.reduce((acc, note) => {
     const noteLabelNames = note.tags || []
-    // maybe fetch tag Ids
     noteLabelNames.forEach((tagName) => {
       const label = labelMap[tagName]
       if (label) {
@@ -466,12 +464,7 @@ export function mapTree(
     })
     .reduce((acc, val) => {
       const tagName = getTagName(val._id)
-      // const noteIds: string[] | undefined = notesPerTagIdMap.get(tagName)
-      const href = getLabelHref(
-        workspace,
-        tagName
-        // noteIds != null && noteIds.length > 0 ? noteIds[0] : undefined
-      )
+      const href = getLabelHref(workspace, tagName)
       acc.push({
         id: val._id,
         depth: 0,
