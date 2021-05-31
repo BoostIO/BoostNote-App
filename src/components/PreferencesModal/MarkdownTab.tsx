@@ -1,23 +1,16 @@
 import React, { useState, useCallback } from 'react'
-import {
-  Section,
-  SectionHeader,
-  SectionControl,
-  SectionPrimaryButton,
-  SectionSecondaryButton,
-  SectionSelect,
-} from './styled'
+import { SectionHeader } from './styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
 import { usePreferences } from '../../lib/preferences'
-import { SelectChangeEventHandler } from '../../lib/events'
 import { themes } from '../../lib/CodeMirror'
-import { capitalize } from '../../lib/string'
 import { useTranslation } from 'react-i18next'
 import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
 import { FormCheckItem } from '../atoms/form'
 import styled from '../../shared/lib/styled'
 import { border, borderRight } from '../../shared/lib/styled/styleFunctions'
+import { SimpleFormSelect } from '../../shared/components/molecules/Form/atoms/FormSelect'
+import Form from '../../shared/components/molecules/Form'
 
 const EditorContainer = styled.div`
   ${border}
@@ -66,10 +59,10 @@ const MarkdownTab = () => {
 
   const { preferences, setPreferences } = usePreferences()
 
-  const selectCodeFenceTheme: SelectChangeEventHandler = useCallback(
-    (event) => {
+  const selectCodeFenceTheme = useCallback(
+    (codeBlockTheme) => {
       setPreferences({
-        'markdown.codeBlockTheme': event.target.value,
+        'markdown.codeBlockTheme': codeBlockTheme,
       })
     },
     [setPreferences]
@@ -96,67 +89,102 @@ const MarkdownTab = () => {
 
   return (
     <div>
-      <Section>
-        <SectionHeader>{t('preferences.previewStyle')}</SectionHeader>
-        <SectionControl>
-          <SectionPrimaryButton onClick={savePreviewStyle}>
-            {t('general.save')}
-          </SectionPrimaryButton>
-          <SectionSecondaryButton onClick={resetNewPreviewStyle}>
-            {t('preferences.defaultTheme')}
-          </SectionSecondaryButton>
-        </SectionControl>
-        <EditorContainer>
-          <CustomizedCodeEditor
-            value={newPreviewStyle}
-            onChange={updatePreviewStyle}
-            mode='css'
-          />
-        </EditorContainer>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.markdownCodeBlockTheme')}</SectionHeader>
-        <SectionControl>
-          <SectionSelect
-            value={preferences['markdown.codeBlockTheme']}
-            onChange={selectCodeFenceTheme}
-          >
-            <option value='default'>{t('general.default')}</option>
-            {themes.map((theme) => (
-              <option value={theme} key={theme}>
-                {capitalize(theme)}
-              </option>
-            ))}
-          </SectionSelect>
-        </SectionControl>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.markdownPreview')}</SectionHeader>
-        <PreviewContainer>
-          <div className='panel'>
-            <CustomizedCodeEditor
-              value={previewContent}
-              onChange={updatePreviewContent}
-            />
-          </div>
-          <div className='panel'>
-            <CustomizedMarkdownPreviewer content={previewContent} />
-          </div>
-        </PreviewContainer>
-      </Section>
-      <Section>
-        <SectionHeader>{t('preferences.markdownExport')}</SectionHeader>
-        <SectionControl>
-          <FormCheckItem
-            id='checkbox-include-front-matter'
-            type='checkbox'
-            checked={preferences['markdown.includeFrontMatter']}
-            onChange={toggleFrontMatterExport}
-          >
-            {t('preferences.markdownExportOption')}
-          </FormCheckItem>
-        </SectionControl>
-      </Section>
+      <SectionHeader>{t('preferences.markdownTab')}</SectionHeader>
+      <Form
+        fullWidth={true}
+        rows={[
+          {
+            title: t('preferences.previewStyle'),
+            items: [
+              {
+                type: 'button',
+                props: {
+                  label: t('general.save'),
+                  onClick: () => savePreviewStyle(),
+                },
+              },
+              {
+                type: 'button',
+                props: {
+                  variant: 'secondary',
+                  label: t('preferences.defaultTheme'),
+                  onClick: () => resetNewPreviewStyle(),
+                },
+              },
+            ],
+          },
+          {
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <EditorContainer>
+                    <CustomizedCodeEditor
+                      value={newPreviewStyle}
+                      onChange={updatePreviewStyle}
+                      mode='css'
+                    />
+                  </EditorContainer>
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.markdownCodeBlockTheme'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <SimpleFormSelect
+                    value={preferences['markdown.codeBlockTheme']}
+                    onChange={selectCodeFenceTheme}
+                    options={['default', ...themes.map((theme) => theme)]}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.markdownPreview'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <PreviewContainer>
+                    <div className='panel'>
+                      <CustomizedCodeEditor
+                        value={previewContent}
+                        onChange={updatePreviewContent}
+                      />
+                    </div>
+                    <div className='panel'>
+                      <CustomizedMarkdownPreviewer content={previewContent} />
+                    </div>
+                  </PreviewContainer>
+                ),
+              },
+            ],
+          },
+          {
+            title: t('preferences.markdownExport'),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <FormCheckItem
+                    id='checkbox-include-front-matter'
+                    type='checkbox'
+                    checked={preferences['markdown.includeFrontMatter']}
+                    onChange={toggleFrontMatterExport}
+                  >
+                    {t('preferences.markdownExportOption')}
+                  </FormCheckItem>
+                ),
+              },
+            ],
+          },
+        ]}
+      />
     </div>
   )
 }

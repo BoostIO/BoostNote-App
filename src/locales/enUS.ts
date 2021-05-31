@@ -174,6 +174,7 @@ export default {
     'preferences.editorPreview': 'Editor Preview',
 
     // Preferences MarkdownTab
+    'preferences.markdownTab': 'Markdown Settings',
     'preferences.previewStyle': 'Preview Style',
     'preferences.markdownCodeBlockTheme': 'Code Block Theme',
     'preferences.defaultTheme': 'Use default style',
