@@ -209,7 +209,8 @@ const MarkdownView = ({
                 commentClick && commentClick(props.comments.split(' '))
               }
             >
-              <Icon path={mdiCommentTextOutline} /> <span>{props.count}</span>
+              <Icon path={mdiCommentTextOutline} />{' '}
+              <span className='comment__count__number'>{props.count}</span>
             </div>
           ) : null
         },
@@ -428,15 +429,22 @@ const StyledMarkdownPreview = styled.div`
   .comment__count {
     height: 20px;
     display: flex;
-    align-items: center;
-    color: ${({ theme }) => theme.colors.icon.default};
+    align-items: flex-start;
+    color: ${({ theme }) => theme.colors.icon.default}
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+
     &:hover {
+      cursor: pointer;
       color: ${({ theme }) => theme.colors.text.primary}
     }
-    & svg {
+
+    svg {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
+  }
+
+  .comment__count__number {
+    line-height: 1;
   }
 `
 
