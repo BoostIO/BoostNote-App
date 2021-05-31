@@ -12,10 +12,10 @@ const PouchDbDeprecationPage = () => {
         reduced: true,
         header: (
           <>
-            <h3 style={{ marginRight: 10 }}>
+            <span style={{ marginRight: 10 }}>
               The local storage and legacy cloud storage are no longer
               supported.
-            </h3>
+            </span>
           </>
         ),
       }}
