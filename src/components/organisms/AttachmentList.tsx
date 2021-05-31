@@ -66,6 +66,7 @@ const AttachmentListItem = ({
       }}
       onContextMenu={(event: React.MouseEvent) => {
         event.preventDefault()
+        event.stopPropagation()
 
         openContextMenu({
           menuItems: [

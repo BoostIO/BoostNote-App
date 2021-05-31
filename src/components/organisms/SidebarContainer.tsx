@@ -120,11 +120,11 @@ const SidebarContainer = ({
 
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
+      event.preventDefault()
+      event.stopPropagation()
       if (workspace == null) {
         return
       }
-      event.preventDefault()
-      event.stopPropagation()
 
       const storages = values(storageMap)
       const workspaceId = workspace.id

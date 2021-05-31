@@ -87,9 +87,14 @@ const TagNavigatorListItem = ({
   const [colorPickerModal, showColorPickerModal] = useState(false)
   const [tagColor, setTagColor] = useState(normalizeTagColor(tag))
 
-  const openTagContextMenu = useCallback(() => {
-    showColorPickerModal(true)
-  }, [showColorPickerModal])
+  const openTagContextMenu = useCallback(
+    (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      showColorPickerModal(true)
+    },
+    [showColorPickerModal]
+  )
 
   const handleColorChangeComplete = useCallback(
     (newColor: string) => {
