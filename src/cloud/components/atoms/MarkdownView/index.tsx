@@ -429,8 +429,8 @@ const StyledMarkdownPreview = styled.div`
   .comment__count {
     height: 20px;
     display: flex;
-    align-items: center;
-    color: ${({ theme }) => theme.colors.icon.default};
+    align-items: flex-start;
+    color: ${({ theme }) => theme.colors.icon.default}
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
 
     &:hover {
@@ -445,7 +445,6 @@ const StyledMarkdownPreview = styled.div`
 
   .comment__count__number {
     line-height: 1;
-    margin-top: -3px;
   }
 `
 
