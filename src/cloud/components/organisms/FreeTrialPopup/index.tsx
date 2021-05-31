@@ -49,12 +49,21 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
       <StyledFreeTrialPopupContainer>
         <Flexbox flex='1 1 auto' direction='column' alignItems='flex-start'>
           <StyledFreeTrialTitle>Try the Pro Plan for free</StyledFreeTrialTitle>
-          <p>
-            You&apos;ll get access to most features of a paid Pro Plan such as
-            unlimited documents, revision history, etc... for{' '}
-            {freeTrialPeriodDays} days.
-          </p>
-          <p>No credit card information is necessary for now.</p>
+          <video
+            src='/app/static/videos/pro-intro.mp4'
+            className='intro-video'
+            autoPlay
+            muted
+            loop
+          ></video>
+          <div className='intro-text'>
+            <p>
+              You&apos;ll get access to most features of a paid Pro Plan such as
+              unlimited documents, revision history, etc... for{' '}
+              {freeTrialPeriodDays} days.
+            </p>
+            <p>No credit card information is necessary for now.</p>
+          </div>
         </Flexbox>
         <Flexbox flex='0 0 auto' direction='column' className='button__group'>
           <Button
@@ -130,7 +139,7 @@ const StyledFreeTrialPopupContainer = styled.div`
   max-width: 80vw;
   max-height: 80vh;
   width: 600px;
-  height: 400px;
+  height: 650px;
   background-color: ${({ theme }) => theme.baseBackgroundColor};
   box-shadow: ${({ theme }) => theme.baseShadowColor};
   border-radius: 4px;
@@ -147,10 +156,23 @@ const StyledFreeTrialPopupContainer = styled.div`
     border-color: ${({ theme }) => theme.whiteBorderColor};
     border-right-color: transparent;
   }
+
+  .intro-video {
+    max-width: 100%;
+  }
+
+  .intro-text {
+    margin: ${({ theme }) => theme.space.default}px 0;
+
+    p {
+      line-height: 1.6;
+    }
+  }
 `
 
-const StyledFreeTrialTitle = styled.h2`
+const StyledFreeTrialTitle = styled.h1`
   margin-bottom: ${({ theme }) => theme.space.default}px;
+  font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
 `
 
 export default FreeTrialPopup
