@@ -4,21 +4,25 @@ import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
 import { usePage } from '../../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'
 import {
-  getOpenInvite,
-  createOpenInvite,
-  cancelOpenInvite,
-  resetOpenInvite,
+  getOpenInvites,
+  createOpenInvites,
+  cancelOpenInvites,
 } from '../../api/teams/open-invites'
 import { Spinner } from '../atoms/Spinner'
-import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
+import {
+  SerializedUserTeamPermissions,
+  TeamPermissionType,
+} from '../../interfaces/db/userTeamPermissions'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
 import styled from '../../lib/styled'
 import { getTeamURL, getOpenInviteURL } from '../../lib/utils/patterns'
 import { boostHubBaseUrl } from '../../lib/consts'
 import { useToast } from '../../../shared/lib/stores/toast'
 import Switch from '../../../shared/components/atoms/Switch'
-import Button from '../../../shared/components/atoms/Button'
-import FormCopyInput from '../../../shared/components/molecules/Form/atoms/FormCopyInput'
+import copy from 'copy-to-clipboard'
+import Form from '../../../shared/components/molecules/Form'
+import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
+import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -28,12 +32,14 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   const { team } = usePage()
   const [fetching, setFetching] = useState<boolean>(true)
   const [sending, setSending] = useState<boolean>(false)
-  const [openInvite, setOpenInvite] = useState<
-    SerializedOpenInvite | undefined
-  >(undefined)
+  const [openInvites, setOpenInvites] = useState<SerializedOpenInvite[]>([])
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
   const mountedRef = useRef(false)
+  const [copyButtonLabel, setCopyButtonLabel] = useState<string>('Copy')
+  const [selectedInviteRole, setSelectedInviteRole] = useState<
+    TeamPermissionType
+  >('member')
 
   useEffect(() => {
     mountedRef.current = true
@@ -43,20 +49,23 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   }, [])
 
   useEffectOnce(() => {
-    fetchOpenInvite()
+    fetchOpenInvites()
   })
 
-  const fetchOpenInvite = useCallback(async () => {
+  const fetchOpenInvites = useCallback(async () => {
     if (team == null) {
       return
     }
     setFetching(true)
-    getOpenInvite(team)
-      .then(({ invite }) => {
+    getOpenInvites(team)
+      .then(({ invites }) => {
         if (!mountedRef.current) {
           return
         }
-        setOpenInvite(invite)
+        setOpenInvites(invites)
+        if (invites.length > 0) {
+          setSelectedInviteRole(invites[0].role)
+        }
       })
       .catch((error) => {
         pushApiErrorMessage(error)
@@ -69,68 +78,29 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       })
   }, [team, pushApiErrorMessage])
 
-  const createInvite = useCallback(async () => {
+  const createInvites = useCallback(async () => {
     if (team == null) {
       return
     }
 
     setSending(true)
     try {
-      const { invite } = await createOpenInvite(team)
-      setOpenInvite(invite)
+      const { invites } = await createOpenInvites(team)
+      setOpenInvites(invites)
     } catch (error) {
       pushApiErrorMessage(error)
     }
     setSending(false)
   }, [team, pushApiErrorMessage])
 
-  const cancelInvite = useCallback(
-    async (invite: SerializedOpenInvite) => {
-      if (team == null) {
-        return
-      }
-
-      messageBox({
-        title: `Cancel invite?`,
-        message: `Are you sure to cancel this invite? The link won't allow users to join anymore.`,
-        iconType: DialogIconTypes.Warning,
-        buttons: [
-          {
-            variant: 'secondary',
-            label: 'Cancel',
-            cancelButton: true,
-            defaultButton: true,
-          },
-          {
-            variant: 'danger',
-            label: 'Delete',
-            onClick: async () => {
-              //remove
-              setSending(true)
-              try {
-                await cancelOpenInvite(team, invite)
-                setOpenInvite(undefined)
-              } catch (error) {
-                pushApiErrorMessage(error)
-              }
-              setSending(false)
-              return
-            },
-          },
-        ],
-      })
-    },
-    [messageBox, team, pushApiErrorMessage]
-  )
-
-  const resetInvite = useCallback(async () => {
-    if (team == null || openInvite == null) {
+  const cancelInvites = useCallback(async () => {
+    if (team == null) {
       return
     }
 
     messageBox({
-      title: `Regenerate Link`,
-      message: `Are you sure to reset the current link and generate a new one? The previous link will be depreciated.`,
+      title: `Cancel invite?`,
+      message: `Are you sure to cancel this invite? The current links will be depreciated.`,
       iconType: DialogIconTypes.Warning,
       buttons: [
         {
@@ -141,16 +111,13 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
         {
           variant: 'danger',
-          label: 'Reset',
+          label: 'Delete',
           onClick: async () => {
             //remove
             setSending(true)
             try {
-              const { invite: newInvite } = await resetOpenInvite(
-                team,
-                openInvite
-              )
-              setOpenInvite(newInvite)
+              await cancelOpenInvites(team)
+              setOpenInvites([])
             } catch (error) {
               pushApiErrorMessage(error)
             }
@@ -160,28 +127,50 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
       ],
     })
-  }, [messageBox, team, pushApiErrorMessage, openInvite])
+  }, [messageBox, team, pushApiErrorMessage])
 
   const toggleOpenInvite = useCallback(() => {
-    if (openInvite != null) {
-      cancelInvite(openInvite)
+    if (openInvites.length !== 0) {
+      cancelInvites()
       return
     }
 
-    createInvite()
-  }, [openInvite, cancelInvite, createInvite])
+    createInvites()
+  }, [openInvites, cancelInvites, createInvites])
 
-  const openInviteLink = useMemo(() => {
-    if (openInvite == null || team == null) {
+  const selectedInvite = useMemo(() => {
+    if (openInvites.length === 0 || team == null) {
       return undefined
     }
 
-    return `${boostHubBaseUrl}${getTeamURL(team)}${getOpenInviteURL(
-      openInvite
-    )}`
-  }, [team, openInvite])
+    const selectedInvite = openInvites.find(
+      (invite) => invite.role === selectedInviteRole
+    )
+    if (selectedInvite == null) {
+      return undefined
+    }
 
-  if (userPermissions.role !== 'admin') {
+    return {
+      role: selectedInvite.role,
+      link: `${boostHubBaseUrl}${getTeamURL(team)}${getOpenInviteURL(
+        selectedInvite
+      )}`,
+    }
+  }, [team, openInvites, selectedInviteRole])
+
+  const onFormSubmit = useCallback(() => {
+    if (selectedInvite == null) {
+      return
+    }
+
+    copy(selectedInvite.link)
+    setCopyButtonLabel('✓ Copied')
+    setTimeout(() => {
+      setCopyButtonLabel('Copy')
+    }, 600)
+  }, [selectedInvite])
+
+  if (openInvites.length === 0 && userPermissions.role === 'viewer') {
     return null
   }
 
@@ -189,24 +178,52 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     <section>
       <StyledFlex>
         <h2 style={{ margin: 0 }}>Invite with an open Link</h2>
-        <Switch
-          disabled={fetching || sending}
-          id='shared-custom-switch'
-          onChange={toggleOpenInvite}
-          checked={openInvite != null}
-        />
+        {userPermissions.role !== 'viewer' && (
+          <Switch
+            disabled={fetching || sending}
+            id='shared-custom-switch'
+            onChange={toggleOpenInvite}
+            checked={openInvites.length !== 0}
+          />
+        )}
       </StyledFlex>
-      {openInviteLink != null && (
+      {selectedInvite != null && (
         <StyledOpenLinkSection>
-          <p>
-            You can share this secret link to invite people to this workspace.
-            Only admins can see it. You can{' '}
-            <Button className='link-reset' variant='link' onClick={resetInvite}>
-              reset the link
-            </Button>{' '}
-            to generate a new one.
-          </p>
-          <FormCopyInput text={openInviteLink} />
+          <Form onSubmit={onFormSubmit}>
+            <FormRow fullWidth={true}>
+              <FormRowItem
+                item={{
+                  type: 'input',
+                  props: {
+                    value: selectedInvite.link,
+                    readOnly: true,
+                  },
+                }}
+              />
+              <FormRowItem
+                flex='0 0 150px'
+                item={{
+                  type: 'select--string',
+                  props: {
+                    value: selectedInvite.role,
+                    onChange: (val) =>
+                      setSelectedInviteRole(val as TeamPermissionType),
+                    options: openInvites.map((invite) => invite.role),
+                  },
+                }}
+              />
+              <FormRowItem
+                flex='0 0 100px !important'
+                item={{
+                  type: 'button',
+                  props: {
+                    type: 'submit',
+                    label: copyButtonLabel,
+                  },
+                }}
+              />
+            </FormRow>
+          </Form>
         </StyledOpenLinkSection>
       )}
       {sending && (

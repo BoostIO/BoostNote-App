@@ -18,6 +18,12 @@ export type FormRowButtonProps = ButtonProps & {
   spinning?: boolean
 }
 
+interface FormRowItemProps {
+  flex?: string
+  alignItems?: string
+  item?: FormItemProps
+}
+
 export type FormItemProps =
   | {
       type: 'input'
@@ -40,9 +46,13 @@ export type FormItemProps =
   | { type: 'image'; props: FormImageProps }
   | { type: 'node'; element: React.ReactNode }
 
-const FormRowItem: AppComponent<{
-  item?: FormItemProps
-}> = ({ item, className, children }) => {
+const FormRowItem: AppComponent<FormRowItemProps> = ({
+  item,
+  className,
+  children,
+  alignItems = 'stretch',
+  flex,
+}) => {
   return (
     <Container
       className={cc([
@@ -50,6 +60,8 @@ const FormRowItem: AppComponent<{
         `form__row__item--${item?.type || 'node'}`,
         className,
       ])}
+      alignItems={alignItems}
+      flex={flex}
     >
       {item != null ? (
         item.type === 'input' ? (
@@ -75,12 +87,15 @@ const FormRowItem: AppComponent<{
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ alignItems: string; flex?: string }>`
   &.form__row__item {
     display: flex;
-    align-items: stretch;
+    align-items: ${({ alignItems }) => alignItems};
   }
 
+  ${({ flex }) =>
+    flex == null
+      ? `
   &.form__row__item--emoji,
   &.form__row__item--button {
     flex: 0 0 auto;
@@ -89,8 +104,15 @@ const Container = styled.div`
   &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button),
   &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button)
     > * {
-    flex: 1 1 auto;
-  }
+      flex: 1 1 auto;
+    }
+  `
+      : `
+  &.form__row__item,
+  &.form__row__item
+    > * {
+    flex: ${flex};
+  }`}
 `
 
 export default FormRowItem

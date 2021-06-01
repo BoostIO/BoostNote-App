@@ -5,7 +5,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 
 export interface TeamBulkInvitesPageData {
   team: SerializedTeam
-  openInvite?: SerializedOpenInvite
+  openInvites: SerializedOpenInvite[]
 }
 
 export async function getTeamBulkInvitesPageData({
