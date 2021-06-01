@@ -110,7 +110,8 @@ const StyledInput = styled.input`
   color: ${({ theme }) => theme.colors.text.primary};
 
   &:read-only {
-    filter: brightness(80%);
+    background: ${({ theme }) => theme.colors.background.secondary};
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 
   &:disabled {

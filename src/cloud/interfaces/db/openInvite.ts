@@ -1,8 +1,9 @@
 import { SerializedTeam } from './team'
+import { TeamPermissionType } from './userTeamPermissions'
 
 export interface SerializableOpenInviteProps {
   id: string
-  role: string
+  role: TeamPermissionType
   slug: string
   teamId: string
 }

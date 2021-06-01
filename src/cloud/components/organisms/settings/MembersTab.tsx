@@ -364,10 +364,11 @@ const MembersTab = () => {
             </section>
           ) : (
             <>
-              {currentUserIsAdmin && (
-                <OpenInvitesSection userPermissions={currentUserPermissions} />
-              )}
-              <TeamInvitesSection userPermissions={currentUserPermissions} />
+              <OpenInvitesSection userPermissions={currentUserPermissions} />
+              <TeamInvitesSection
+                userPermissions={currentUserPermissions}
+                subscription={subscription}
+              />
               <section>
                 <Flexbox>
                   <h2>Current Members</h2>

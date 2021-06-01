@@ -21,12 +21,19 @@ import ErrorBlock from '../atoms/ErrorBlock'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import Flexbox from '../atoms/Flexbox'
 import Form from '../../../shared/components/molecules/Form'
+import { SerializedSubscription } from '../../interfaces/db/subscription'
+import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
+import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
+  subscription?: SerializedSubscription
 }
 
-const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
+const TeamInvitesSection = ({
+  userPermissions,
+  subscription,
+}: TeamInvitesSectionProps) => {
   const { team } = usePage()
   const [sending, setSending] = useState<boolean>(true)
   const [pendingInvites, setPendingInvites] = useState<SerializedTeamInvite[]>(
@@ -160,15 +167,24 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   )
 
   const selectRoleOptions = useMemo(() => {
+    let roles: TeamPermissionType[] = []
     switch (userPermissions.role) {
       case 'admin':
-        return ['admin', 'member', 'viewer']
+        roles = ['admin', 'member']
+        break
       case 'member':
-        return ['member', 'viewer']
+        roles = ['member']
+        break
       case 'viewer':
-        return ['viewer']
+      default:
+        break
     }
-  }, [userPermissions.role])
+
+    if (subscription != null) {
+      roles.push('viewer')
+    }
+    return roles
+  }, [userPermissions.role, subscription])
 
   return (
     <section>
@@ -176,46 +192,54 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
         <h2>Invite with Email</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
-      <Form
-        onSubmit={submitInvite}
-        rows={[
-          {
-            items: [
-              {
-                type: 'input',
-                props: {
-                  value: email,
-                  onChange: onChangeHandler,
-                  placeholder: 'Email...',
-                },
+      <Form onSubmit={submitInvite}>
+        <FormRow fullWidth={true}>
+          <FormRowItem
+            item={{
+              type: 'input',
+              props: {
+                value: email,
+                onChange: onChangeHandler,
+                placeholder: 'Email...',
               },
-              {
-                type: 'select--string',
-                props: {
-                  value: role,
-                  onChange: selectRole,
-                  options: selectRoleOptions,
-                },
+            }}
+          />
+          <FormRowItem
+            flex='0 0 150px'
+            item={{
+              type: 'select--string',
+              props: {
+                value: role,
+                onChange: selectRole,
+                options: selectRoleOptions,
               },
-              {
-                type: 'button',
-                props: {
-                  type: 'submit',
-                  label: 'Send',
-                  disabled: sending,
-                },
+            }}
+          />
+          <FormRowItem
+            flex='0 0 100px !important'
+            item={{
+              type: 'button',
+              props: {
+                type: 'submit',
+                label: 'Send',
+                disabled: sending,
               },
-            ],
-          },
-        ]}
-      />
+            }}
+          />
+        </FormRow>
+      </Form>
       {role === 'admin' ? (
         <small>
           Admins can handle billing, remove or promote/demote members.
         </small>
-      ) : (
+      ) : role === 'member' ? (
         <small>
           Members can access all features, except team management, billing.
+        </small>
+      ) : (
+        <small>
+          Viewers can only navigate through documents, folders, write comments
+          and invite more viewers to the team.
         </small>
       )}
       <SectionList>
