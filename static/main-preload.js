@@ -16,6 +16,18 @@
     console.log('opening ...', url)
     electron.shell.openExternal(url)
   }
+
+  function openPath(fullPath, folderOnly = true) {
+    if (folderOnly) {
+      console.log('opening path in folder...', fullPath)
+      electron.shell.showItemInFolder(fullPath)
+    } else {
+      electron.shell.openPath(fullPath).finally(() => {
+        console.log('Opening...', fullPath)
+      })
+    }
+  }
+
   function readFile(pathname) {
     return new Promise((resolve, reject) => {
       fs.readFile(pathname, (error, result) => {
@@ -222,6 +234,7 @@
 
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
+  window.__ELECTRON_ONLY__.openPath = openPath
   window.__ELECTRON_ONLY__.readFile = readFile
   window.__ELECTRON_ONLY__.showOpenDialog = showOpenDialog
   window.__ELECTRON_ONLY__.showSaveDialog = showSaveDialog

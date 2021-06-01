@@ -14,6 +14,7 @@ import Icon from '../atoms/Icon'
 interface ToastItemProps {
   item: ToastMessage
   onClose: (item: ToastMessage) => void
+  onClick?: () => void
 }
 
 interface ToastItemState {
@@ -28,7 +29,11 @@ const Toast = () => {
     <Container className='toast'>
       {messages.map((message) => (
         <li key={message.id}>
-          <ToastItem item={message} onClose={removeMessage} />
+          <ToastItem
+            item={message}
+            onClose={removeMessage}
+            onClick={message.onClick}
+          />
         </li>
       ))}
     </Container>
@@ -92,6 +97,10 @@ const Container = styled.div`
     &.toast__item--info .toast__item__status {
       color: ${({ theme }) => theme.colors.variants.secondary.base};
     }
+
+    &.toast__item--button:hover {
+      background-color: ${({ theme }) => theme.colors.background.secondary};
+    }
   }
 `
 
@@ -124,12 +133,23 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
     this.props.onClose(this.props.item)
   }
 
+  onClickHandler = () => {
+    if (this.props.onClick != null) {
+      this.props.onClick()
+    }
+  }
+
   render() {
     return (
       <div
+        onClick={this.onClickHandler}
         onMouseEnter={this.pauseTimer}
         onMouseLeave={this.resumeTimer}
-        className={cc([`toast__item`, `toast__item--${this.props.item.type}`])}
+        className={cc([
+          `toast__item`,
+          `toast__item--${this.props.item.type}`,
+          this.props.onClick != null && 'toast__item--button',
+        ])}
       >
         <div className='toast__item__status'>
           <Icon

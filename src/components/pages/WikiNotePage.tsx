@@ -22,14 +22,14 @@ import {
   getPathByName,
   removeIpcListener,
   showSaveDialog,
-  writeFile,
+  openPath,
 } from '../../lib/electronOnly'
 import path from 'path'
 import pathParse from 'path-parse'
 import {
-  convertNoteDocToPdfBuffer,
   exportNoteAsHtmlFile,
   exportNoteAsMarkdownFile,
+  exportNoteAsPdfFile,
 } from '../../lib/exports'
 import {
   mdiChevronLeft,
@@ -156,7 +156,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     await bookmarkNote(storageId, noteId)
   }, [storageId, noteId, bookmarkNote])
 
-  const unbookmark = useCallback(async () => {
+  const unBookmark = useCallback(async () => {
     if (noteId == null) {
       return
     }
@@ -269,34 +269,26 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
               previewStyle
             )
             pushMessage({
+              onClick: () => {
+                if (result.filePath) {
+                  openPath(result.filePath)
+                }
+              },
               type: 'success',
               title: 'HTML export',
               description: 'HTML file exported successfully.',
             })
             return
           case '.pdf':
-            try {
-              const pdfBuffer = await convertNoteDocToPdfBuffer(
-                note,
-                preferences['markdown.codeBlockTheme'],
-                preferences['general.theme'],
-                pushMessage,
-                storage.attachmentMap,
-                previewStyle
-              )
-              await writeFile(result.filePath, pdfBuffer)
-              pushMessage({
-                type: 'success',
-                title: 'PDF export',
-                description: 'PDF file exported successfully.',
-              })
-            } catch (error) {
-              console.error(error)
-              pushMessage({
-                title: 'PDF export failed',
-                description: error.message,
-              })
-            }
+            await exportNoteAsPdfFile(
+              result.filePath,
+              note,
+              preferences['markdown.codeBlockTheme'],
+              preferences['general.theme'],
+              pushMessage,
+              storage.attachmentMap,
+              previewStyle
+            )
             return
           case '.md':
           default:
@@ -308,6 +300,11 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
               includeFrontMatter
             )
             pushMessage({
+              onClick: () => {
+                if (result.filePath) {
+                  openPath(result.filePath)
+                }
+              },
               type: 'success',
               title: 'Markdown export',
               description: 'Markdown file exported successfully.',
@@ -329,16 +326,16 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     storage.attachmentMap,
   ])
 
-  const toggleBookmark = useCallback(() => {
+  const toggleBookmark = useCallback(async () => {
     if (note == null) {
       return
     }
     if (note.data.bookmarked) {
-      unbookmark()
+      await unBookmark()
     } else {
-      bookmark()
+      await bookmark()
     }
-  }, [note, unbookmark, bookmark])
+  }, [note, unBookmark, bookmark])
 
   useEffect(() => {
     addIpcListener('toggle-bookmark', toggleBookmark)

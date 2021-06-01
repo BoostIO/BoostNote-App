@@ -9,7 +9,6 @@ import rehypeKatex from 'rehype-katex'
 import { mergeDeepRight } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { rehypeCodeMirror } from '../components/atoms/MarkdownPreviewer'
-import { downloadBlob } from './download'
 import { Attachment, NoteDoc, ObjectMap } from './db/types'
 import { filenamify } from './string'
 import React from 'react'
@@ -26,6 +25,7 @@ import {
   showOpenDialog,
   writeFile,
   readdir,
+  openPath,
 } from './electronOnly'
 import { join } from 'path'
 import { dev } from '../electron/consts'
@@ -640,6 +640,7 @@ export const convertNoteDocToPdfBuffer = async (
 }
 
 export const exportNoteAsPdfFile = async (
+  filePath: string,
   note: NoteDoc,
   codeBlockTheme: string,
   generalThemeName: string,
@@ -656,11 +657,17 @@ export const exportNoteAsPdfFile = async (
       attachmentMap,
       previewStyle
     )
-    const pdfName = `${filenamify(getValidNoteTitle(note))}.pdf`
-
-    downloadBlob(new Blob([pdfBuffer]), pdfName)
+    await writeFile(filePath, pdfBuffer)
+    pushMessage({
+      onClick: () => {
+        openPath(filePath)
+      },
+      type: 'success',
+      title: 'PDF export',
+      description: 'PDF file exported successfully.',
+    })
   } catch (error) {
-    console.warn(error)
+    console.error(error)
     pushMessage({
       title: 'PDF export failed',
       description: error.message,

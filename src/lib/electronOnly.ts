@@ -33,6 +33,7 @@ const __ELECTRON_ONLY__: {
     options: Electron.SaveDialogOptions
   ): Promise<Electron.SaveDialogReturnValue>
   openExternal(url: string): void
+  openPath(fullPath: string, folderOnly?: boolean): void
   parseCSON(value: string): JsonValue
   stringifyCSON(value: any): string
   openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
@@ -75,6 +76,7 @@ const {
   showOpenDialog,
   showSaveDialog,
   openExternal,
+  openPath,
   parseCSON,
   stringifyCSON,
   openNewWindow,
@@ -133,6 +135,7 @@ export {
   showOpenDialog,
   showSaveDialog,
   openExternal,
+  openPath,
   parseCSON,
   stringifyCSON,
   openNewWindow,

@@ -8,6 +8,7 @@ export interface ToastMessage {
   description: string
   type?: 'info' | 'error' | 'success'
   createdAt: Date
+  onClick?: () => void
 }
 
 interface ToastStore {
@@ -21,7 +22,7 @@ const useToastStore = (): ToastStore => {
   const [messages, setMessages] = useState<ToastMessage[]>([])
 
   const pushMessage = useCallback(
-    ({ title, description, type = 'error' }) => {
+    ({ title, description, type = 'error', onClick }) => {
       setMessages((prev) => {
         return [
           {
@@ -30,6 +31,7 @@ const useToastStore = (): ToastStore => {
             title,
             type,
             description,
+            onClick,
           },
           ...prev,
         ]

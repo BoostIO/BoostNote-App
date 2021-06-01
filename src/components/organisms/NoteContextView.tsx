@@ -32,6 +32,9 @@ import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import styled from '../../shared/lib/styled'
 import Icon from '../../shared/components/atoms/Icon'
 import { useToast } from '../../shared/lib/stores/toast'
+import { getPathByName, openPath, showSaveDialog } from '../../lib/electronOnly'
+import path, { join } from 'path'
+import { filenamify } from '../../lib/string'
 
 interface NoteContextViewProps {
   storage: NoteStorage
@@ -148,6 +151,11 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
       includeFrontMatter
     )
     pushMessage({
+      onClick: () => {
+        const exportedNoteName = `${filenamify(note.title)}`
+        const exportedNoteFilename = `${exportedNoteName}.md`
+        openPath(join(savePathname, exportedNoteFilename))
+      },
       type: 'success',
       title: 'Markdown export',
       description: 'Markdown file exported successfully.',
@@ -170,6 +178,11 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
       previewStyle
     )
     pushMessage({
+      onClick: () => {
+        const exportedNoteName = `${filenamify(note.title)}`
+        const exportedNoteFilename = `${exportedNoteName}.html`
+        openPath(join(savePathname, exportedNoteFilename))
+      },
       type: 'success',
       title: 'HTML export',
       description: 'HTML file exported successfully.',
@@ -177,19 +190,32 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
   }, [note, preferences, pushMessage, storage.attachmentMap, previewStyle])
 
   const exportAsPdf = useCallback(async () => {
-    await exportNoteAsPdfFile(
-      note,
-      preferences['markdown.codeBlockTheme'],
-      preferences['general.theme'],
-      pushMessage,
-      storage.attachmentMap,
-      previewStyle
-    )
-    // todo: [komediruzecki-23/05/2021] Pushes message after export is generated but not after user saved the file in dialog!
-    pushMessage({
-      type: 'success',
-      title: 'PDF export',
-      description: 'PDF file exported successfully.',
+    showSaveDialog({
+      properties: ['createDirectory', 'showOverwriteConfirmation'],
+      buttonLabel: 'Save',
+      defaultPath: path.join(
+        getPathByName('home'),
+        filenamify(note.title) + '.pdf'
+      ),
+      filters: [
+        {
+          name: 'PDF',
+          extensions: ['pdf'],
+        },
+      ],
+    }).then(async (result) => {
+      if (result.canceled || result.filePath == null) {
+        return
+      }
+      await exportNoteAsPdfFile(
+        result.filePath,
+        note,
+        preferences['markdown.codeBlockTheme'],
+        preferences['general.theme'],
+        pushMessage,
+        storage.attachmentMap,
+        previewStyle
+      )
     })
   }, [note, preferences, pushMessage, storage.attachmentMap, previewStyle])
 
