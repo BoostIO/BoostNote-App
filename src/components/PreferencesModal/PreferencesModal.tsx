@@ -24,6 +24,7 @@ import {
 } from '../../shared/lib/styled/styleFunctions'
 import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
 import Icon from '../../shared/components/atoms/Icon'
+import ExportTab from './ExportTab'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -143,6 +144,8 @@ const PreferencesModal = () => {
         return <EditorTab />
       case 'markdown':
         return <MarkdownTab />
+      case 'export':
+        return <ExportTab />
       case 'about':
         return <AboutTab />
       case 'storage':
@@ -212,6 +215,11 @@ const PreferencesModal = () => {
               label='Markdown'
               active={tab === 'markdown'}
               onClick={() => openTab('markdown')}
+            />
+            <SettingNavButtonItem
+              label='Export'
+              active={tab === 'export'}
+              onClick={() => openTab('export')}
             />
           </TabNav>
           <TabContent>{content}</TabContent>

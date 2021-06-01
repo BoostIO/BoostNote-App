@@ -179,7 +179,13 @@ export default {
     'preferences.markdownCodeBlockTheme': 'Code Block Theme',
     'preferences.defaultTheme': 'Use default style',
     'preferences.markdownPreview': 'Markdown Preview',
-    'preferences.markdownExport': 'Export',
-    'preferences.markdownExportOption': 'Include Front Matter',
+
+    // Preferences ExportTab
+    'preferences.exportTab': 'Export Settings',
+    'preferences.printBackground': 'Print Background',
+    'preferences.landscape': 'Landscape',
+    'preferences.marginType': 'Margins',
+    'preferences.pageSize': 'Page Size',
+    'preferences.includeFrontMatter': 'Include Front Matter',
   },
 }

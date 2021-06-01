@@ -287,6 +287,7 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
               preferences['general.theme'],
               pushMessage,
               storage.attachmentMap,
+              preferences['export.printOptions'],
               previewStyle
             )
             return

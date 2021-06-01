@@ -599,6 +599,7 @@ export const convertNoteDocToPdfBuffer = async (
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
+  printOpts: Electron.PrintToPDFOptions,
   previewStyle?: string
 ): Promise<Buffer> => {
   const markdownHtmlContent = await convertNoteDocToMarkdownHtmlString(
@@ -625,14 +626,6 @@ export const convertNoteDocToPdfBuffer = async (
   )
 
   try {
-    const printOpts = {
-      // Needed for codemirorr themes (backgrounds)
-      printBackground: true,
-      // Enable margins if header and footer is printed!
-      // No margins 1, default margins 0, 2 - minimum margins
-      marginsType: 0, // This could be chosen by user.
-      pageSize: 'A4', // This could be chosen by user.
-    }
     return await convertHtmlStringToPdfBuffer(htmlString, printOpts)
   } finally {
     revokeAttachmentsUrls(attachmentUrls)
@@ -646,6 +639,7 @@ export const exportNoteAsPdfFile = async (
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
+  printOptions: Electron.PrintToPDFOptions,
   previewStyle?: string
 ): Promise<void> => {
   try {
@@ -655,6 +649,7 @@ export const exportNoteAsPdfFile = async (
       generalThemeName,
       pushMessage,
       attachmentMap,
+      printOptions,
       previewStyle
     )
     await writeFile(filePath, pdfBuffer)

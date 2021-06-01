@@ -214,6 +214,7 @@ const NoteContextView = ({ storage, note }: NoteContextViewProps) => {
         preferences['general.theme'],
         pushMessage,
         storage.attachmentMap,
+        preferences['export.printOptions'],
         previewStyle
       )
     })

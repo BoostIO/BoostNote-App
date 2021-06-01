@@ -34,9 +34,23 @@ export type PreferencesTab =
   | 'keymap'
   | 'editor'
   | 'markdown'
+  | 'export'
   | 'storage'
   | 'migration'
   | 'general'
+export enum MarginType {
+  DefaultMargins = 0,
+  NoMargins = 1,
+  MinimumMargins = 2,
+}
+export enum PageSize {
+  A3 = 'A3',
+  A4 = 'A4',
+  A5 = 'A5',
+  Legal = 'Legal',
+  Letter = 'Letter',
+  Tabloid = 'Tabloid',
+}
 
 export interface Preferences {
   // General
@@ -66,6 +80,9 @@ export interface Preferences {
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
   'markdown.includeFrontMatter': boolean
+
+  // Export
+  'export.printOptions': Electron.PrintToPDFOptions
 
   // Keymap
   'general.keymap': Map<string, KeymapItem>
@@ -135,6 +152,14 @@ const basePreferences: Preferences = {
   'markdown.previewStyle': 'default',
   'markdown.codeBlockTheme': 'material-darker',
   'markdown.includeFrontMatter': true,
+
+  // Export
+  'export.printOptions': {
+    printBackground: false,
+    landscape: false,
+    marginsType: MarginType.NoMargins,
+    pageSize: PageSize.A4,
+  },
 
   // Keymap
   'general.keymap': new Map<string, KeymapItem>(),

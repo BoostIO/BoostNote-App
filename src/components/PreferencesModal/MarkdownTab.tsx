@@ -6,7 +6,6 @@ import { usePreferences } from '../../lib/preferences'
 import { themes } from '../../lib/CodeMirror'
 import { useTranslation } from 'react-i18next'
 import { usePreviewStyle, defaultPreviewStyle } from '../../lib/preview'
-import { FormCheckItem } from '../atoms/form'
 import styled from '../../shared/lib/styled'
 import { border, borderRight } from '../../shared/lib/styled/styleFunctions'
 import { SimpleFormSelect } from '../../shared/components/molecules/Form/atoms/FormSelect'
@@ -40,6 +39,7 @@ const PreviewContainer = styled.div`
 
 const MarkdownTab = () => {
   const { previewStyle, setPreviewStyle } = usePreviewStyle()
+  const { t } = useTranslation()
   const [newPreviewStyle, setNewPreviewStyle] = useState(previewStyle)
   const updatePreviewStyle = useCallback(
     (newValue: string) => {
@@ -75,17 +75,6 @@ const MarkdownTab = () => {
     },
     [setPreviewContent]
   )
-
-  const toggleFrontMatterExport: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      setPreferences({
-        'markdown.includeFrontMatter': event.target.checked,
-      })
-    },
-    [setPreferences]
-  )
-
-  const { t } = useTranslation()
 
   return (
     <div>
@@ -161,24 +150,6 @@ const MarkdownTab = () => {
                       <CustomizedMarkdownPreviewer content={previewContent} />
                     </div>
                   </PreviewContainer>
-                ),
-              },
-            ],
-          },
-          {
-            title: t('preferences.markdownExport'),
-            items: [
-              {
-                type: 'node',
-                element: (
-                  <FormCheckItem
-                    id='checkbox-include-front-matter'
-                    type='checkbox'
-                    checked={preferences['markdown.includeFrontMatter']}
-                    onChange={toggleFrontMatterExport}
-                  >
-                    {t('preferences.markdownExportOption')}
-                  </FormCheckItem>
                 ),
               },
             ],

@@ -311,6 +311,7 @@ const ExportProgressItem = ({
                 preferences['general.theme'],
                 pushMessage,
                 attachmentMap,
+                preferences['export.printOptions'],
                 previewStyle
               )
               await writeFile(exportNotePathname, pdfBuffer)
