@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
@@ -6,7 +6,6 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import SubscriptionForm from '../../molecules/SubscriptionForm'
 import { useSettings } from '../../../lib/stores/settings'
-import { useGlobalData } from '../../../lib/stores/globalData'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../../lib/consts'
@@ -44,14 +43,11 @@ const UpgradeTab = ({
     team,
     subscription,
     updateTeamSubscription,
-    permissions = [],
+    currentUserPermissions,
   } = usePage<PageStoreWithTeam>()
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
-  const {
-    globalData: { currentUser },
-  } = useGlobalData()
   const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
   const [initialPlan, setInitialPlan] = useState<UpgradePlans>(
     defaultInitialPlan
@@ -81,12 +77,6 @@ const UpgradeTab = ({
   const onCancelCallback = useCallback(() => {
     setTabState('plans')
   }, [])
-
-  const currentUserPermissions = useMemo(() => {
-    return permissions.find(
-      (permission) => permission.user.id === currentUser!.id
-    )
-  }, [currentUser, permissions])
 
   if (
     team == null ||

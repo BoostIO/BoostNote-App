@@ -135,7 +135,9 @@ const SubscriptionForm = ({
     return newCardBrand.toLowerCase() === 'jcb'
   }, [newCardBrand])
 
-  const numberOfMembers = permissions.length
+  const numberOfMembers = useMemo(() => {
+    return permissions.filter((p) => p.role !== 'viewer').length
+  }, [permissions])
 
   const eligibleDiscount = useMemo(() => {
     if (!isEligibleForDiscount(team)) {
