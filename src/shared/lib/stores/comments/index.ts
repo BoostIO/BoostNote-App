@@ -24,6 +24,7 @@ import { max } from 'date-fns'
 import sortBy from 'ramda/es/sortBy'
 import take from 'ramda/es/take'
 import uniqBy from 'ramda/es/uniqBy'
+import { mergeOnId } from '../../utils/array'
 
 type DocThreadsObserver = (threads: Thread[]) => void
 type ThreadObserver = (comments: Comment[]) => void
@@ -302,20 +303,6 @@ function registerObservable<K, T>(key: K, observer: T, map: Map<K, T[]>) {
 
 function defer(fn: () => any) {
   Promise.resolve().then(fn)
-}
-
-function mergeOnId<T extends { id: string }>(arr1: T[], arr2: T[]): T[] {
-  const arr2Map = new Map(arr2.map((item) => [item.id, item]))
-  const replaced = arr1.map((item) => {
-    const newItem = arr2Map.get(item.id)
-    if (newItem != null) {
-      arr2Map.delete(item.id)
-      return newItem
-    }
-    return item
-  })
-  replaced.push(...arr2Map.values())
-  return replaced
 }
 
 function getContributors(comments: Comment[]) {
