@@ -13,7 +13,7 @@ import styled from '../../../../shared/lib/styled'
 import DocStatusIcon from '../../../components/atoms/DocStatusIcon'
 
 const DocStatusShowPage = () => {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, initialLoadDone, workspacesMap } = useNav()
   const { pathname } = useRouter()
 
@@ -110,6 +110,7 @@ const DocStatusShowPage = () => {
         team={team}
         documents={documents}
         workspacesMap={workspacesMap}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

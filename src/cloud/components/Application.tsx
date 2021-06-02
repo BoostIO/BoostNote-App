@@ -126,6 +126,7 @@ const Application = ({
     permissions = [],
     currentUserPermissions,
     subscription,
+    currentUserIsCoreMember,
   } = usePage()
   const { openModal } = useModal()
   const {
@@ -484,7 +485,11 @@ const Application = ({
                 },
               },
             ]}
-            treeTopRows={team == null ? null : <NewDocButton team={team} />}
+            treeTopRows={
+              team != null && currentUserIsCoreMember ? (
+                <NewDocButton team={team} />
+              ) : null
+            }
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}

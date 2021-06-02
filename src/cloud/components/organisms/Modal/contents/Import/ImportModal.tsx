@@ -19,6 +19,7 @@ import { useNavigateToWorkspace } from '../../../../atoms/Link/WorkspaceLink'
 import { useNavigateToTeam } from '../../../../atoms/Link/TeamLink'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
+import ViewerRestrictedWrapper from '../../../../molecules/ViewerRestrictedWrapper'
 
 const ImportModal = () => {
   const [step, setStep] = useState<ImportStep>('source')
@@ -219,19 +220,25 @@ const ImportModal = () => {
   return (
     <ModalContainer>
       <StyledImportModalContainer>
-        <ImportModalHeader currentStep={step === 'guide' ? 'source' : step} />
-        {content}
+        <ViewerRestrictedWrapper>
+          <>
+            <ImportModalHeader
+              currentStep={step === 'guide' ? 'source' : step}
+            />
+            {content}
 
-        <form>
-          <input
-            type='file'
-            accept={accept}
-            multiple={true}
-            style={{ display: 'none' }}
-            ref={fileUploaderRef}
-            onChange={onFileUpload}
-          />
-        </form>
+            <form>
+              <input
+                type='file'
+                accept={accept}
+                multiple={true}
+                style={{ display: 'none' }}
+                ref={fileUploaderRef}
+                onChange={onFileUpload}
+              />
+            </form>
+          </>
+        </ViewerRestrictedWrapper>
       </StyledImportModalContainer>
     </ModalContainer>
   )

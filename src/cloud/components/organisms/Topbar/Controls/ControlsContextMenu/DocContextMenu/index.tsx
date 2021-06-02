@@ -86,6 +86,7 @@ const DocContextMenu = ({
     subscription,
     permissions = [],
     currentUserPermissions,
+    currentUserIsCoreMember,
   } = usePage()
   const { pushMessage } = useToast()
   const { openModal } = useModal()
@@ -150,7 +151,7 @@ const DocContextMenu = ({
     openModal(
       <RevisionsModal
         currentDoc={currentDoc}
-        restoreRevision={restoreRevision}
+        restoreRevision={currentUserIsCoreMember ? restoreRevision : undefined}
       />,
       {
         width: 'large',
@@ -159,7 +160,7 @@ const DocContextMenu = ({
     trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
       docId: currentDoc.id,
     })
-  }, [currentDoc, openModal, restoreRevision])
+  }, [currentDoc, openModal, restoreRevision, currentUserIsCoreMember])
 
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
@@ -292,7 +293,7 @@ const DocContextMenu = ({
                     <span>
                       <DocAssigneeSelect
                         isLoading={sendingAssignees}
-                        disabled={sendingAssignees}
+                        disabled={sendingAssignees || !currentUserIsCoreMember}
                         defaultValue={
                           currentDoc.assignees != null
                             ? currentDoc.assignees.map(
@@ -300,6 +301,7 @@ const DocContextMenu = ({
                               )
                             : []
                         }
+                        readOnly={!currentUserIsCoreMember}
                         update={sendUpdateDocAssignees}
                       />
                     </span>
@@ -321,6 +323,7 @@ const DocContextMenu = ({
                     status={currentDoc.status}
                     sending={sendingUpdateStatus}
                     onStatusChange={sendUpdateStatus}
+                    disabled={!currentUserIsCoreMember}
                   />
                 </div>
               </div>
@@ -340,6 +343,7 @@ const DocContextMenu = ({
                     sending={sendingDueDate}
                     dueDate={currentDoc.dueDate}
                     onDueDateChange={sendUpdateDocDueDate}
+                    disabled={!currentUserIsCoreMember}
                   />
                 </div>
               </div>
@@ -354,7 +358,11 @@ const DocContextMenu = ({
                   Labels
                 </label>
                 <div className='context__content'>
-                  <DocTagsList team={team} doc={currentDoc} />
+                  <DocTagsList
+                    team={team}
+                    doc={currentDoc}
+                    readOnly={!currentUserIsCoreMember}
+                  />
                 </div>
               </div>
 

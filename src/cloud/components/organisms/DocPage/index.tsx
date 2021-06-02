@@ -41,6 +41,7 @@ const DocPage = ({
     subscription,
     permissions = [],
     currentUserPermissions,
+    currentUserIsCoreMember,
   } = usePage()
   const { docsMap, setCurrentPath, deleteDocHandler } = useNav()
   const {
@@ -103,7 +104,7 @@ const DocPage = ({
 
   const docPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      if (currentDoc == null) {
+      if (currentDoc == null || !currentUserIsCoreMember) {
         return
       }
       if (isDocDeleteShortcut(event) && currentDoc.archivedAt != null) {
@@ -121,7 +122,14 @@ const DocPage = ({
         router.push(getDocLinkHref(currentDoc, team, 'index'))
       }
     }
-  }, [deleteDocHandler, currentDoc, docIsEditable, router, team])
+  }, [
+    deleteDocHandler,
+    currentDoc,
+    docIsEditable,
+    router,
+    team,
+    currentUserIsCoreMember,
+  ])
   useGlobalKeyDownHandler(docPageControlsKeyDownHandler)
 
   if (currentDoc == null || team == null) {

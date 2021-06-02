@@ -19,12 +19,14 @@ import DocPropertyValueButton from './DocPropertyValueButton'
 interface DocStatusSelectProps {
   sending?: boolean
   status?: DocStatus | null
+  disabled?: boolean
   onStatusChange: (status: DocStatus | null) => void
 }
 
 const DocStatusSelect = ({
   status,
   sending,
+  disabled,
   onStatusChange,
 }: DocStatusSelectProps) => {
   const { popup } = useContextMenu()
@@ -33,6 +35,7 @@ const DocStatusSelect = ({
       <DocPropertyValueButton
         sending={sending}
         empty={status == null}
+        disabled={disabled}
         onClick={(event) => {
           popup(event, [
             {

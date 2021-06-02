@@ -36,6 +36,7 @@ interface ContentManagerDocRowProps {
   updating: boolean
   showPath?: boolean
   checked?: boolean
+  currentUserIsCoreMember: boolean
   onSelect: (val: boolean) => void
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
 }
@@ -54,6 +55,7 @@ const ContentManagerDocRow = ({
   workspace,
   updating,
   showPath,
+  currentUserIsCoreMember,
   setUpdating,
   onSelect,
 }: ContentManagerDocRowProps) => {
@@ -173,6 +175,10 @@ const ContentManagerDocRow = ({
           }
     )
 
+    if (!currentUserIsCoreMember) {
+      return actions
+    }
+
     if (doc.archivedAt == null) {
       actions.push({
         iconPath: mdiFolderMoveOutline,
@@ -190,7 +196,7 @@ const ContentManagerDocRow = ({
     })
 
     return actions
-  }, [doc, toggleDocBookmark, deleteDoc, openMoveForm])
+  }, [doc, toggleDocBookmark, deleteDoc, openMoveForm, currentUserIsCoreMember])
 
   const editors = useMemo(() => {
     if (
@@ -226,6 +232,7 @@ const ContentManagerDocRow = ({
     <ContentManagerRow
       checked={checked}
       onSelect={onSelect}
+      showCheckbox={currentUserIsCoreMember}
       itemLink={
         <DocLink doc={doc} team={team} id={`cm-doc-${doc.id}`}>
           <ContentManagerRowLinkContent

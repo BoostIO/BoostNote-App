@@ -19,11 +19,12 @@ import cc from 'classcat'
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark
   team: SerializedTeam
+  readOnly: boolean
 }
 
 const maxTagsDisplayed = 4
 
-const DocTagsList = ({ doc, team }: DocTagsListProps) => {
+const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
   const [sending, setSending] = useState<boolean>(false)
   const { pushApiErrorMessage } = useToast()
   const { updateDocsMap } = useNav()
@@ -71,11 +72,12 @@ const DocTagsList = ({ doc, team }: DocTagsListProps) => {
             removing={removing}
             sending={sending}
             key={tag.id}
+            removable={!readOnly}
           />
         ))}
       </>
     )
-  }, [doc.tags, expanded, onDeleteHandler, removing, sending, team])
+  }, [doc.tags, expanded, onDeleteHandler, removing, sending, team, readOnly])
 
   const tags = doc.tags || []
 
@@ -100,7 +102,7 @@ const DocTagsList = ({ doc, team }: DocTagsListProps) => {
             )}
           </StyledToolbarExpandTag>
         )}
-        <TagsAutoCompleteInput team={team} doc={doc} />
+        {!readOnly && <TagsAutoCompleteInput team={team} doc={doc} />}
       </StyledDocTagsList>
     </StyledDocTagsListContainer>
   )

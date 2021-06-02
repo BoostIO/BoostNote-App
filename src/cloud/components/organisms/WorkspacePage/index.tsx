@@ -13,7 +13,7 @@ interface WorkspacePage {
 }
 
 const WorkspacePage = ({ workspace }: WorkspacePage) => {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
   const { query, push } = useRouter()
   const {
@@ -26,6 +26,10 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
       return []
+    }
+
+    if (!currentUserIsCoreMember) {
+      return [mapWorkspaceBreadcrumb(team, workspace, push)]
     }
 
     return [
@@ -47,6 +51,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     openNewDocForm,
     openWorkspaceEditForm,
     deleteWorkspace,
+    currentUserIsCoreMember,
   ])
 
   const childFolders = useMemo(() => {
@@ -93,6 +98,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
         folders={childFolders}
         workspacesMap={workspaceMap}
         currentWorkspaceId={workspace.id}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

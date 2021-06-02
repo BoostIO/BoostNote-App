@@ -10,6 +10,7 @@ interface ContentManagerRowProps {
   className?: string
   itemLink: any
   rowActions?: React.ReactNode
+  showCheckbox: boolean
 }
 
 const ContentManagerRow = ({
@@ -17,14 +18,17 @@ const ContentManagerRow = ({
   checked,
   itemLink,
   rowActions,
+  showCheckbox,
   onSelect,
 }: ContentManagerRowProps) => (
   <StyledContentManagerRow className={cc([className])}>
-    <Checkbox
-      className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
-      checked={checked}
-      onChange={onSelect}
-    />
+    {showCheckbox && (
+      <Checkbox
+        className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
+        checked={checked}
+        onChange={onSelect}
+      />
+    )}
     <Flexbox
       flex={'1 1 auto'}
       style={{
