@@ -78,7 +78,8 @@ window.__ELECTRON_ONLY__.openInBrowser = openInBrowser
 
 const handler = (event) => {
   event.preventDefault()
+  event.stopPropagation()
   sendToHost('open-context-menu')
 }
 window.addEventListener('contextmenu', handler)
-window.__ELECTRON_ONLY__.globalContextMenuIsConfigured
+window.__ELECTRON_ONLY__.globalContextMenuIsConfigured = true
