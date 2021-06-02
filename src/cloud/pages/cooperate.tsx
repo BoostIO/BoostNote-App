@@ -1,27 +1,29 @@
 import React, { useState, useCallback, FormEvent } from 'react'
-import Page from '../components/Page'
-import styled from '../lib/styled'
 import { createTeam, updateTeamIcon } from '../api/teams'
-import ErrorBlock from '../components/atoms/ErrorBlock'
-import TeamEditForm from '../components/molecules/TeamEditForm'
 import { getTeamLinkHref } from '../components/atoms/Link/TeamLink'
 import { useElectron } from '../lib/stores/electron'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
 import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
-import { mdiDomain } from '@mdi/js'
-import Icon from '../components/atoms/Icon'
-import { baseIconStyle } from '../lib/styled/styleFunctions'
 import { useGlobalData } from '../lib/stores/globalData'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import { getDocLinkHref } from '../components/atoms/Link/DocLink'
 import UsagePage from '../components/organisms/Onboarding/UsagePage'
+import styled from '../../shared/lib/styled'
+import OnboardingLayout from '../components/organisms/Onboarding/layouts/OnboardingLayout'
+import BulkInvitesForm from '../components/organisms/Onboarding/molecules/BulkInvitesForm'
+import { useToast } from '../../shared/lib/stores/toast'
+import CreateTeamForm from '../components/organisms/Onboarding/molecules/CreateTeamForm'
+import { SerializedTeam } from '../interfaces/db/team'
+import { SerializedDoc } from '../interfaces/db/doc'
+import { SerializedOpenInvite } from '../interfaces/db/openInvite'
+import { boostHubBaseUrl } from '../lib/consts'
+import { getOpenInviteURL, getTeamURL } from '../lib/utils/patterns'
 
 const CooperatePage = () => {
   const [name, setName] = useState<string>('')
   const [domain, setDomain] = useState<string>('')
   const [sending, setSending] = useState<boolean>(false)
-  const [error, setError] = useState<any>(null)
   const { usingElectron, sendToElectron } = useElectron()
   const { updateDocsMap } = useNav()
   const { setTeamInGlobal } = useGlobalData()
@@ -29,22 +31,18 @@ const CooperatePage = () => {
   const { setToLocalStorage } = useSidebarCollapse()
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [showTeamForm, setShowTeamForm] = useState(false)
+  const [state, setState] = useState<'usage' | 'create'>('usage')
+  const { pushApiErrorMessage } = useToast()
+  const [createTeamReturn, setCreateTeamReturn] = useState<{
+    team: SerializedTeam
+    doc: SerializedDoc
+    openInvite: SerializedOpenInvite
+  }>()
 
-  const changeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      if (
-        event.target != null &&
-        event.target.files != null &&
-        event.target.files.length > 0
-      ) {
-        const file = event.target.files[0]
-        setIconFile(file)
-        setFileUrl(URL.createObjectURL(file))
-      }
-    },
-    []
-  )
+  const changeHandler = useCallback((file: File) => {
+    setIconFile(file)
+    setFileUrl(URL.createObjectURL(file))
+  }, [])
 
   const createTeamCallback = useCallback(
     async (personal: boolean) => {
@@ -52,7 +50,7 @@ const CooperatePage = () => {
       try {
         const body = personal ? { personal: true } : { name, domain }
 
-        const { team, doc } = await createTeam(body)
+        const { team, doc, openInvite } = await createTeam(body)
 
         if (usingElectron) {
           sendToElectron('team-create', {
@@ -77,18 +75,22 @@ const CooperatePage = () => {
             workspaces: [doc.workspaceId],
             links: [],
           })
+        }
 
+        if (personal && doc != null) {
           window.location.href = getDocLinkHref(doc, team, 'index', {
             onboarding: true,
           })
+        } else if (doc != null && openInvite != null) {
+          setCreateTeamReturn({ team, doc, openInvite })
         } else {
-          window.location.href = getTeamLinkHref(team, 'invites', {
+          window.location.href = getTeamLinkHref(team, 'index', {
             onboarding: true,
           })
         }
       } catch (error) {
         setSending(false)
-        setError(error)
+        pushApiErrorMessage(error)
       }
     },
     [
@@ -100,6 +102,7 @@ const CooperatePage = () => {
       sendToElectron,
       updateDocsMap,
       setPartialPageData,
+      pushApiErrorMessage,
       setToLocalStorage,
     ]
   )
@@ -117,60 +120,68 @@ const CooperatePage = () => {
       if (val === 'personal') {
         return createTeamCallback(true)
       }
-      setShowTeamForm(true)
+      setState('create')
       return
     },
     [createTeamCallback]
   )
 
-  if (!showTeamForm) {
+  if (createTeamReturn != null) {
     return (
-      <UsagePage onUsage={onUsageCallback} sending={sending} error={error} />
+      <OnboardingLayout
+        title='Invite co-workers to your team'
+        subtitle='Boost Note is meant to be used with your team. Invite some co-workers to test it out with!'
+        contentWidth={600}
+      >
+        <Container>
+          <BulkInvitesForm
+            openInviteLink={`${boostHubBaseUrl}${getTeamURL(
+              createTeamReturn.team
+            )}${getOpenInviteURL(createTeamReturn.openInvite)}`}
+            teamId={createTeamReturn.team.id}
+            onProceed={() => {
+              return (window.location.href = getDocLinkHref(
+                createTeamReturn.doc,
+                createTeamReturn.team,
+                'index',
+                {
+                  onboarding: true,
+                }
+              ))
+            }}
+          />
+        </Container>
+      </OnboardingLayout>
     )
   }
 
-  return (
-    <Page>
-      <Container>
-        <div className='settings__wrap'>
-          <h1>Create a team account</h1>
-          <p>Please tell us your team information.</p>
+  if (state === 'usage') {
+    return <UsagePage onUsage={onUsageCallback} sending={sending} />
+  }
 
-          <div className='row'>
-            <div className='profile__row'>
-              {fileUrl != null ? (
-                <img src={fileUrl} className='profile__pic' />
-              ) : (
-                <Icon path={mdiDomain} className='profile__icon' size={100} />
-              )}
-            </div>
-            <label htmlFor='profile' className='profile__label'>
-              {fileUrl == null ? 'Add a photo' : 'Change your photo'}
-            </label>
-            <input
-              id='profile'
-              name='profile'
-              accept='image/*'
-              type='file'
-              onChange={changeHandler}
-            />
-          </div>
-          <TeamEditForm
-            fullPage={true}
-            name={name}
-            domain={domain}
-            setName={setName}
-            setDomain={setDomain}
-            sending={sending}
-            disabled={sending}
-            onSubmit={handleSubmit}
-            showSubmitButton={true}
-            goBack={() => setShowTeamForm(false)}
-          />
-          {error != null && <ErrorBlock error={error} />}
-        </div>
+  return (
+    <OnboardingLayout
+      title='Create a team account'
+      subtitle='Please tell us your team information.'
+      contentWidth={600}
+    >
+      <Container>
+        <CreateTeamForm
+          fullPage={true}
+          name={name}
+          domain={domain}
+          setName={setName}
+          setDomain={setDomain}
+          sending={sending}
+          disabled={sending}
+          onSubmit={handleSubmit}
+          fileUrl={fileUrl != null ? fileUrl : undefined}
+          onFileChange={changeHandler}
+          showSubmitButton={true}
+          goBack={() => setState('usage')}
+        />
       </Container>
-    </Page>
+    </OnboardingLayout>
   )
 }
 
@@ -181,67 +192,13 @@ CooperatePage.getInitialProps = async (_params: GetInitialPropsParameters) => {
 export default CooperatePage
 
 const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
+  text-align: left;
 
-  .profile__icon {
-    width: 100px;
-    height: 100px;
-    color: ${({ theme }) => theme.secondaryBorderColor};
+  .button__variant--bordered {
+    width: 300px !important;
   }
 
-  .profile__row {
-    margin: ${({ theme }) => theme.space.xxlarge}px 0
-      ${({ theme }) => theme.space.small}px 0;
-    text-align: center;
-  }
-
-  .profile__label {
-    font-size: ${({ theme }) => theme.fontSizes.large}px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    font-weight: 300;
-    text-align: center;
-    display: block;
-    cursor: pointer;
-    ${baseIconStyle}
-  }
-
-  #profile {
-    display: none;
-  }
-
-  .profile__pic {
-    display: block;
-    margin: auto;
-    object-fit: cover;
-    width: 100px;
-    height: 100px;
-    background: ${({ theme }) => theme.secondaryBackgroundColor};
-    border: 1px solid ${({ theme }) => theme.secondaryBorderColor};
-    border-radius: 100%;
-  }
-
-  .settings__wrap {
-    position: relative;
-    width: 600px;
-    max-width: 96%;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  h1 {
-    color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
-    margin-top: ${({ theme }) => theme.space.xxxlarge}px;
-  }
-
-  .row {
-    margin: 20px 0;
-    display: block;
-    position: relative;
-    label {
-      color: ${({ theme }) => theme.subtleTextColor};
-    }
+  .end__row {
+    margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
   }
 `

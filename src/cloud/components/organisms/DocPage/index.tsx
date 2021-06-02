@@ -36,7 +36,12 @@ const DocPage = ({
   backLinks,
   revisionHistory,
 }: DocPageProps) => {
-  const { team, subscription, permissions = [] } = usePage()
+  const {
+    team,
+    subscription,
+    permissions = [],
+    currentUserPermissions,
+  } = usePage()
   const { docsMap, setCurrentPath, deleteDocHandler } = useNav()
   const {
     globalData: { currentUser },
@@ -75,16 +80,26 @@ const DocPage = ({
   }, [currentDoc, setCurrentPath])
 
   const docIsEditable = useMemo(() => {
+    if (
+      currentUserPermissions == null ||
+      currentUserPermissions.role === 'viewer'
+    ) {
+      return false
+    }
+
     if (subscription == null) {
       return true
     }
 
-    if (subscription.seats >= permissions.length) {
+    if (
+      subscription.seats >=
+      permissions.filter((p) => p.role !== 'viewer').length
+    ) {
       return true
     }
 
     return false
-  }, [subscription, permissions])
+  }, [subscription, permissions, currentUserPermissions])
 
   const docPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {

@@ -47,7 +47,7 @@ export interface CreateBulkInvitesResponseBody {
 }
 
 export async function createTeamInvitesInBulk(
-  team: SerializedTeam,
+  team: { id: string },
   body: CreateBulkInvitesRequestBody
 ) {
   const data = await callApi<CreateBulkInvitesResponseBody>(

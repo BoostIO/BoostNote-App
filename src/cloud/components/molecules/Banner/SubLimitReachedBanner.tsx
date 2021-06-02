@@ -1,47 +1,72 @@
 import React from 'react'
 import { useSettings } from '../../../lib/stores/settings'
 import { usePage } from '../../../lib/stores/pageStore'
-import Banner from '.'
-import CustomButton from '../../atoms/buttons/CustomButton'
-import styled from '../../../lib/styled'
 import { freePlanDocLimit } from '../../../lib/subscription'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import Banner from '../../../../shared/components/atoms/Banner'
+import Button from '../../../../shared/components/atoms/Button'
+import styled from '../../../../shared/lib/styled'
 
 const DocLimitReachedBanner = () => {
-  const { subscription } = usePage()
+  const { subscription, currentUserIsCoreMember } = usePage()
   const { openSettingsTab } = useSettings()
 
+  if (!currentUserIsCoreMember) {
+    return (
+      <Container className='doc__edit__limit'>
+        <Banner variant='warning' className='doc__edit__limit'>
+          Only core members can edit documents. Viewers can add comments, or see
+          updates in realtime. Consider asking your team to get promoted and
+          participate as well.
+        </Banner>
+      </Container>
+    )
+  }
+
   return (
-    <Banner className='center' variant='danger'>
-      <p>
-        <StyledLabel>
+    <Container className='doc__edit__limit'>
+      <Banner variant='warning' className='doc__edit__limit'>
+        <span className='limit__reached__banner__label'>
           {subscription == null
             ? `Your workspace exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
             : `Your workspace exceeds the limit of your current plan. (${subscription.seats} team members)`}
-        </StyledLabel>
-        <CustomButton
-          style={{
-            height: '28px',
-            lineHeight: '10px',
-            padding: '0 10px',
-          }}
-          variant='danger'
+        </span>
+        <Button
+          variant='primary'
+          className='limit__reached__banner__button'
           onClick={() => {
             trackEvent(MixpanelActionTrackTypes.UpgradeLimit)
             openSettingsTab('teamUpgrade')
           }}
         >
           Upgrade
-        </CustomButton>
-      </p>
-    </Banner>
+        </Button>
+      </Banner>
+    </Container>
   )
 }
 
-const StyledLabel = styled.span`
-  display: inline-block;
-  margin-right: ${({ theme }) => theme.space.small}px;
+const Container = styled.div`
+  width: 100%;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+  .doc__edit__limit {
+    width: 100%;
+
+    .banner__content {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .limit__reached__banner__label {
+    display: inline-block;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .limit__reached__banner__button {
+    flex: 0 0 auto;
+  }
 `
 
 export default DocLimitReachedBanner

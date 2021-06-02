@@ -1,16 +1,13 @@
-import React, { useCallback } from 'react'
+import React, { useMemo, useRef } from 'react'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
 import DocLimitReachedBanner from '../../molecules/Banner/SubLimitReachedBanner'
-import { getDocTitle } from '../../../lib/utils/patterns'
+import { getDocURL, getTeamURL } from '../../../lib/utils/patterns'
 import styled from '../../../lib/styled'
-import CustomButton from '../../atoms/buttons/CustomButton'
-import ColoredBlock from '../../atoms/ColoredBlock'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { updateDocStatus } from '../../../api/teams/docs'
 import { usePage } from '../../../lib/stores/pageStore'
 import { usePreferences } from '../../../lib/stores/preferences'
 import Application from '../../Application'
@@ -18,17 +15,14 @@ import { rightSideTopBarHeight } from '../RightSideTopBar/styled'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { SerializedUser } from '../../../interfaces/db/user'
 import MarkdownView from '../../atoms/MarkdownView'
-import cc from 'classcat'
-import DocContextMenu, {
-  docContextWidth,
-} from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import { mdiStar, mdiStarOutline } from '@mdi/js'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
+import { EmbedDoc } from '../../../lib/docEmbedPlugin'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -45,17 +39,10 @@ const ViewPage = ({
   contributors,
   backLinks,
 }: ViewPageProps) => {
-  const { hoverSidebarOn } = usePreferences()
-  const {
-    updateDocsMap,
-    deleteDocHandler,
-    foldersMap,
-    workspacesMap,
-  } = useNav()
+  const {} = usePreferences()
+  const { foldersMap, workspacesMap, docsMap } = useNav()
   const { push } = useRouter()
-  const { setPartialPageData, currentUserPermissions } = usePage()
-  const { pushMessage } = useToast()
-  const { preferences } = usePreferences()
+  const { currentUserIsCoreMember } = usePage()
   const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
     openRenameDocForm,
@@ -67,19 +54,38 @@ const ViewPage = ({
     deleteFolder,
     deleteWorkspace,
   } = useCloudResourceModals()
+  const initialRenderDone = useRef(false)
+  const previewRef = useRef<HTMLDivElement>(null)
 
-  const unarchiveHandler = useCallback(async () => {
-    try {
-      const data = await updateDocStatus(doc.teamId, doc.id, null)
-      updateDocsMap([data.doc.id, data.doc])
-      setPartialPageData({ pageDoc: data.doc })
-    } catch (error) {
-      pushMessage({
-        title: 'Error',
-        description: 'Could not unarchive this doc',
-      })
+  const onRender = useRef(() => {
+    if (!initialRenderDone.current && window.location.hash) {
+      const ele = document.getElementById(window.location.hash.substr(1))
+      if (ele != null) {
+        ele.scrollIntoView(true)
+      }
+      initialRenderDone.current = true
     }
-  }, [doc, pushMessage, updateDocsMap, setPartialPageData])
+  })
+
+  const embeddableDocs = useMemo(() => {
+    const embedMap = new Map<string, EmbedDoc>()
+    if (team == null) {
+      return embedMap
+    }
+
+    for (const doc of docsMap.values()) {
+      if (doc.head != null) {
+        const current = `${location.protocol}//${location.host}`
+        const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
+        embedMap.set(doc.id, {
+          title: doc.title,
+          content: doc.head.content,
+          link,
+        })
+      }
+    }
+    return embedMap
+  }, [docsMap, team])
 
   return (
     <Application
@@ -92,69 +98,52 @@ const ViewPage = ({
             workspacesMap,
             push,
             { pageDoc: doc },
-            currentUserPermissions != null ? openRenameFolderForm : undefined,
-            currentUserPermissions != null ? openRenameDocForm : undefined,
-            currentUserPermissions != null ? openNewDocForm : undefined,
-            currentUserPermissions != null ? openNewFolderForm : undefined,
-            currentUserPermissions != null ? openWorkspaceEditForm : undefined,
-            currentUserPermissions != null ? deleteDoc : undefined,
-            currentUserPermissions != null ? deleteFolder : undefined,
-            currentUserPermissions != null ? deleteWorkspace : undefined
+            currentUserIsCoreMember ? openRenameFolderForm : undefined,
+            currentUserIsCoreMember ? openRenameDocForm : undefined,
+            currentUserIsCoreMember ? openNewDocForm : undefined,
+            currentUserIsCoreMember ? openNewFolderForm : undefined,
+            currentUserIsCoreMember ? openWorkspaceEditForm : undefined,
+            currentUserIsCoreMember ? deleteDoc : undefined,
+            currentUserIsCoreMember ? deleteFolder : undefined,
+            currentUserIsCoreMember ? deleteWorkspace : undefined
           ),
-          children:
-            currentUserPermissions != null ? (
-              <LoadingButton
-                variant='icon'
-                disabled={sendingMap.has(doc.id)}
-                spinning={sendingMap.has(doc.id)}
-                size='sm'
-                iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                onClick={() =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-                }
-              />
-            ) : null,
+          children: (
+            <LoadingButton
+              variant='icon'
+              disabled={sendingMap.has(doc.id)}
+              spinning={sendingMap.has(doc.id)}
+              size='sm'
+              iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+              onClick={() =>
+                toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+              }
+            />
+          ),
         },
         right: (
-          <>
-            <DocContextMenu
-              currentDoc={doc}
-              team={team}
-              contributors={contributors}
-              backLinks={backLinks}
-            />
-          </>
+          <DocContextMenu
+            currentDoc={doc}
+            team={team}
+            contributors={contributors}
+            backLinks={backLinks}
+          />
         ),
       }}
     >
-      {doc.archivedAt != null && (
-        <ColoredBlock variant='warning' className='float-on-top'>
-          <p>The document has been archived.</p>
-          {currentUserPermissions != null && (
-            <>
-              <CustomButton onClick={unarchiveHandler}>Unarchive</CustomButton>
-              <CustomButton onClick={() => deleteDocHandler(doc)}>
-                Delete
-              </CustomButton>
-            </>
-          )}
-        </ColoredBlock>
-      )}
-      <Container
-        className={cc([
-          preferences.docContextMode !== 'hidden' && 'with__context',
-        ])}
-      >
-        <StyledViewDocLayout>
-          <StyledTitle>{getDocTitle(doc, 'Untitled..')}</StyledTitle>
-          <StyledBannerWrap>
+      <Container>
+        <div className='view__wrapper'>
+          <div className='view__content'>
             {!editable && <DocLimitReachedBanner />}
-          </StyledBannerWrap>
-          <StyledHoverZone onMouseEnter={() => hoverSidebarOn()} />
-          <StyledContent>
             {doc.head != null ? (
               <>
-                <MarkdownView content={doc.head.content} />
+                <MarkdownView
+                  content={doc.head.content}
+                  headerLinks={true}
+                  onRender={onRender.current}
+                  className='scroller'
+                  embeddableDocs={embeddableDocs}
+                  scrollerRef={previewRef}
+                />
               </>
             ) : (
               <>
@@ -163,76 +152,58 @@ const ViewPage = ({
                 </StyledPlaceholderContent>
               </>
             )}
-          </StyledContent>
-        </StyledViewDocLayout>
+          </div>
+        </div>
       </Container>
     </Application>
   )
 }
 
-const StyledViewDocLayout = styled.div`
-  ${rightSidePageLayout}
-  margin: 0 auto;
-`
-
-const StyledContent = styled.div`
-  border: 0;
-  outline: 0;
-  resize: none;
-  background: none;
-  color: ${({ theme }) => theme.emphasizedTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.default}px;
-  display: block;
-  width: 100%;
-  flex: 1 1 auto;
-`
-
-const StyledTitle = styled.h2`
-  display: block;
-  margin-bottom: ${({ theme }) => theme.space.default}px;
-  width: 100%;
-  background: 0;
-  color: ${({ theme }) => theme.emphasizedTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.xxxxlarge}px;
-  text-align: left;
-  text-overflow: ellipsis;
-  outline: 0;
-  overflow: hidden;
-  padding-top: calc(
-    ${rightSideTopBarHeight}px + ${({ theme }) => theme.space.large}px
-  );
-`
-
 const StyledPlaceholderContent = styled.div`
   color: ${({ theme }) => theme.subtleTextColor};
 `
 
-const StyledBannerWrap = styled.div`
-  width: 100%;
-`
-
-const StyledHoverZone = styled.div`
-  position: absolute;
-  height: 100vh;
-  top: 0px;
-  left: 0px;
-  width: 200px;
-  transform: translate3d(-100%, 0, 0);
-`
-
 const Container = styled.div`
+  margin: 0;
+  padding: 0;
+  padding-top: ${rightSideTopBarHeight}px;
+  min-height: calc(100vh - ${rightSideTopBarHeight}px);
+  height: auto;
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 100%;
-  height: 100%;
-  @media screen and (min-width: 1020px) {
-    &.with__context {
-      max-width: calc(100% - ${docContextWidth}px + 12px) !important;
 
-      .float-on-top {
-        max-width: calc(100% - ${docContextWidth}px + 12px) !important;
-      }
+  .cm-link {
+    text-decoration: none;
+  }
+
+  .view__wrapper {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    position: relative;
+    top: 0;
+    bottom: 0px;
+    width: 100%;
+    height: auto;
+    min-height: calc(
+      100vh - ${rightSideTopBarHeight}px -
+        ${({ theme }) => theme.space.xlarge}px
+    );
+    font-size: 15px;
+    ${rightSidePageLayout}
+    margin: auto;
+    padding: 0 ${({ theme }) => theme.space.xlarge}px;
+  }
+
+  &.view__content {
+    height: 100%;
+    width: 50%;
+    padding-top: ${({ theme }) => theme.space.small}px;
+    margin: 0 auto;
+    width: 100%;
+
+    & .inline-comment.active,
+    .inline-comment.hv-active {
+      background-color: rgba(112, 84, 0, 0.8);
     }
   }
 `

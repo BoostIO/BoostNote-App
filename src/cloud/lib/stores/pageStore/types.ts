@@ -35,6 +35,7 @@ export interface PageDataContext<D> {
   setPartialPageData: (data: D) => void
   setPartialPageDataRef: React.MutableRefObject<(data: D) => void>
   currentUserPermissions?: SerializedUserTeamPermissions
+  currentUserIsCoreMember: boolean
 }
 
 export interface PageDataProps {
