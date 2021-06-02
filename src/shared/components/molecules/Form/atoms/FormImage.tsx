@@ -9,10 +9,12 @@ export interface FormImageProps {
   defaultUrl?: string
   defaultIcon?: string
   label?: string
+  iconSize?: 50 | 100
 }
 
 const FormImage: AppComponent<FormImageProps> = ({
   className,
+  iconSize = 50,
   defaultIcon,
   defaultUrl,
   label = 'Select Image...',
@@ -38,10 +40,14 @@ const FormImage: AppComponent<FormImageProps> = ({
   )
 
   return (
-    <Container className={cc(['form__image', className])}>
+    <Container className={cc(['form__image', className])} iconSize={iconSize}>
       <div className='form__image__wrapper'>
         {fileUrl == null && defaultUrl == null && defaultIcon != null ? (
-          <Icon path={defaultIcon} className='form__image--icon' size={50} />
+          <Icon
+            path={defaultIcon}
+            className='form__image--icon'
+            size={iconSize}
+          />
         ) : (
           <img
             className='form__image--img'
@@ -57,13 +63,13 @@ const FormImage: AppComponent<FormImageProps> = ({
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ iconSize: number }>`
   display: flex;
   align-items: center;
 
   .form__image__wrapper {
-    width: 90px;
-    height: 90px;
+    width: ${({ iconSize }) => (iconSize as number) + 40}px;
+    height: ${({ iconSize }) => (iconSize as number) + 40}px;
     display: flex;
     align-items: center;
     justify-content: center;

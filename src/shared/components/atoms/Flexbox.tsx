@@ -58,9 +58,11 @@ const Flexbox: AppComponent<FlexboxProps> = ({
   </Container>
 )
 
-const Container = styled.div`
+const Container = styled.div<{ flex?: string }>`
   min-width: 0;
   display: flex;
+
+  ${({ flex }) => (flex != null ? `flex: ${flex};` : '')}
 
   &.flexbox__direction--unset {
     flex-direction: unset;

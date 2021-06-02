@@ -95,7 +95,10 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
 export default FormTextarea
 
 const StyledTextarea = styled.textarea`
-  padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
+  padding: ${({ theme }) => theme.sizes.spaces.df}px
+    ${({ theme }) => theme.sizes.spaces.sm}px
+    ${({ theme }) => theme.sizes.spaces.df}px
+    ${({ theme }) => theme.sizes.spaces.sm}px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   outline: none;

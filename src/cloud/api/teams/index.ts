@@ -3,6 +3,7 @@ import { SerializedIcon } from '../../interfaces/db/icon'
 import report from '../../lib/analytics'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { callApi } from '../../lib/client'
+import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
 
 export interface ListTeamsResponseBody {
   teams: SerializedTeam[]
@@ -22,6 +23,7 @@ export interface CreateTeamRequestBody {
 export interface CreateTeamResponseBody {
   team: SerializedTeam
   doc?: SerializedDocWithBookmark
+  openInvite?: SerializedOpenInvite
 }
 
 export async function createTeam(body: CreateTeamRequestBody) {

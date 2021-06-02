@@ -1,149 +1,140 @@
 import React, { useState } from 'react'
-import Page from '../../Page'
 import cc from 'classcat'
 import styled from '../../../lib/styled'
-import ErrorBlock from '../../atoms/ErrorBlock'
 import {
   mdiCheckboxBlankCircleOutline,
   mdiCheckCircleOutline,
   mdiChevronRight,
 } from '@mdi/js'
-import Flexbox from '../../atoms/Flexbox'
-import Button from '../../atoms/Button'
 import { useRouter } from '../../../lib/router'
 import { usingElectron, sendToHost } from '../../../lib/stores/electron'
-import Spinner from '../../../../shared/components/atoms/Spinner'
-import Icon from '../../atoms/Icon'
+import Button, {
+  LoadingButton,
+} from '../../../../shared/components/atoms/Button'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import OnboardingLayout from './layouts/OnboardingLayout'
+import Icon from '../../../../shared/components/atoms/Icon'
 
 interface UsagePageProps {
   onUsage: (val: 'personal' | 'team') => void
   sending: boolean
-  error: unknown
 }
 
-const UsagePage = ({ onUsage, sending, error }: UsagePageProps) => {
+const UsagePage = ({ onUsage, sending }: UsagePageProps) => {
   const [type, setType] = useState<'personal' | 'team'>('personal')
   const router = useRouter()
 
   return (
-    <Page>
-      <Container>
-        <div className='settings__wrap'>
-          <h1>How are you planning to use Boost Note?</h1>
-          <p>We&apos;ll streamline your setup experience accordingly</p>
-
-          <form
-            onSubmit={(event) => {
-              event.preventDefault()
-              onUsage(type)
-            }}
+    <OnboardingLayout
+      title='How are you planning to use Boost Note?'
+      subtitle="We'll streamline your setup experience accordingly"
+      contentWidth={1020}
+    >
+      <Container
+        onSubmit={(event: any) => {
+          event.preventDefault()
+          onUsage(type)
+        }}
+      >
+        <Flexbox justifyContent='space-between' className='row'>
+          <div
+            className={cc(['account__type', type === 'personal' && 'active'])}
+            onClick={() => setType('personal')}
           >
-            <Flexbox justifyContent='space-between' className='row'>
-              <div
-                className={cc([
-                  'account__type',
-                  type === 'personal' && 'active',
-                ])}
-                onClick={() => setType('personal')}
-              >
-                <img src='/app/static/images/sozai1.svg' />
-                <strong>Cloud space for myself</strong>
-                <p>
-                  Write fast, think deeply. Organize Your personal wiki with
-                  powerful features.
-                </p>
-                <Icon
-                  className='account__type__icon'
-                  path={
-                    type === 'personal'
-                      ? mdiCheckCircleOutline
-                      : mdiCheckboxBlankCircleOutline
-                  }
-                  size={30}
-                />
-              </div>
-              <div
-                className={cc(['account__type', type === 'team' && 'active'])}
-                onClick={() => setType('team')}
-              >
-                <img src='/app/static/images/sozai2.svg' />
-                <strong>Cloud space with my team</strong>
-                <p>
-                  Collaborate smoothly with real-time markdown co-authoring and
-                  team optimized features.
-                  <br />
-                </p>
-                <Icon
-                  className='account__type__icon'
-                  path={
-                    type === 'team'
-                      ? mdiCheckCircleOutline
-                      : mdiCheckboxBlankCircleOutline
-                  }
-                  size={30}
-                />
-              </div>
-            </Flexbox>
-            {error != null && (
-              <ErrorBlock error={error} style={{ marginBottom: 32 }} />
-            )}
-            <Flexbox justifyContent='center' direction='column'>
-              <Button type='submit' disabled={sending} variant='primary'>
-                {sending ? (
-                  <Spinner style={{ position: 'relative', top: 0, left: 0 }} />
-                ) : (
-                  'Get started for free'
-                )}
-              </Button>
-              {!usingElectron && router.goBack != null && (
-                <Button
-                  type='button'
-                  disabled={sending}
-                  variant='transparent'
-                  onClick={() => router.goBack!()}
-                >
-                  <Flexbox alignItems='center'>
-                    <Icon path={mdiChevronRight} />
-                    <span>Go Back</span>
-                  </Flexbox>
-                </Button>
-              )}
-              {usingElectron && (
-                <Button
-                  type='button'
-                  variant='transparent'
-                  onClick={() => {
-                    sendToHost('create-local-space')
-                  }}
-                >
-                  <Flexbox alignItems='center'>Create a local space</Flexbox>
-                </Button>
-              )}
-            </Flexbox>
-          </form>
-        </div>
+            <img src='/app/static/images/sozai1.svg' />
+            <strong>Cloud space for myself</strong>
+            <p>
+              Write fast, think deeply. Organize Your personal wiki with
+              powerful features.
+            </p>
+            <Icon
+              className='account__type__icon'
+              path={
+                type === 'personal'
+                  ? mdiCheckCircleOutline
+                  : mdiCheckboxBlankCircleOutline
+              }
+              size={34}
+            />
+          </div>
+          <div
+            className={cc(['account__type', type === 'team' && 'active'])}
+            onClick={() => setType('team')}
+          >
+            <img src='/app/static/images/sozai2.svg' />
+            <strong>Cloud space with my team</strong>
+            <p>
+              Collaborate smoothly with real-time markdown co-authoring and team
+              optimized features.
+              <br />
+            </p>
+            <Icon
+              className='account__type__icon'
+              path={
+                type === 'team'
+                  ? mdiCheckCircleOutline
+                  : mdiCheckboxBlankCircleOutline
+              }
+              size={34}
+            />
+          </div>
+        </Flexbox>
+        <Flexbox justifyContent='center' direction='column'>
+          <LoadingButton
+            type='submit'
+            disabled={sending}
+            variant='bordered'
+            spinning={sending}
+            size='lg'
+            className='submit__button'
+          >
+            Get started for free
+          </LoadingButton>
+          {!usingElectron && router.goBack != null && (
+            <Button
+              type='button'
+              disabled={sending}
+              variant='transparent'
+              onClick={() => router.goBack!()}
+            >
+              <Flexbox alignItems='center'>
+                <Icon path={mdiChevronRight} />
+                <span>Go Back</span>
+              </Flexbox>
+            </Button>
+          )}
+          {usingElectron && (
+            <Button
+              type='button'
+              variant='transparent'
+              onClick={() => {
+                sendToHost('create-local-space')
+              }}
+            >
+              <Flexbox alignItems='center'>Create a local space</Flexbox>
+            </Button>
+          )}
+        </Flexbox>
       </Container>
-    </Page>
+    </OnboardingLayout>
   )
 }
 
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const Container = styled.form`
+  text-align: left;
+  margin-top: ${({ theme }) => theme.space.large}px;
+  .row {
+    margin: ${({ theme }) => theme.space.large}px 0;
+    position: relative;
+  }
+
+  .submit__button {
+    width: 300px;
+  }
+
   .local-space {
     text-align: center;
     margin-bottom: 30px;
-  }
-  .settings__wrap {
-    position: relative;
-    width: 1020px;
-    max-width: 96%;
-    margin: 0 auto;
-    text-align: center;
   }
   .account__type__icon {
     position: absolute;
@@ -186,19 +177,6 @@ const Container = styled.div`
       display: block;
       font-size: ${({ theme }) => theme.fontSizes.large}px;
       margin-bottom: ${({ theme }) => theme.space.small}px;
-    }
-  }
-  h1 {
-    color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
-    margin-top: ${({ theme }) => theme.space.xxxlarge}px;
-  }
-  form {
-    text-align: left;
-    margin-top: ${({ theme }) => theme.space.large}px;
-    .row {
-      margin: ${({ theme }) => theme.space.large}px 0;
-      position: relative;
     }
   }
 `

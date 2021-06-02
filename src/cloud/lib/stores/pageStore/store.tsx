@@ -63,6 +63,12 @@ function usePageDataStore(pageProps: any) {
     return permissions.find((p) => p.userId === currentUser.id)
   }, [currentUser, permissions])
 
+  const currentUserIsCoreMember = useMemo(() => {
+    return (
+      currentUserPermissions != null && currentUserPermissions.role !== 'viewer'
+    )
+  }, [currentUserPermissions])
+
   const updateTeamSubscription = useCallback(
     (sub?: Partial<SerializedSubscription>) => {
       if (sub == null) {
@@ -230,6 +236,7 @@ function usePageDataStore(pageProps: any) {
     setPartialPageData,
     setPartialPageDataRef,
     currentUserPermissions,
+    currentUserIsCoreMember,
   }
 }
 
