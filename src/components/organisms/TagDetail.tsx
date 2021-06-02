@@ -5,14 +5,14 @@ import FolderDetailListNoteItem from '../molecules/FolderDetailListNoteItem'
 import { usePreferences } from '../../lib/preferences'
 import NoteSortingOptionsFragment from '../molecules/NoteSortingOptionsFragment'
 import { NoteSortingOptions } from '../../lib/sort'
-import Icon from '../atoms/Icon'
 import { mdiTag } from '@mdi/js'
-import styled from '../../lib/styled'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 import {
-  flexCenter,
   borderBottom,
+  flexCenter,
   selectStyle,
-} from '../../lib/styled/styleFunctions'
+} from '../../shared/lib/styled/styleFunctions'
 
 interface TagDetailProps {
   storage: NoteStorage
@@ -86,7 +86,7 @@ const TagDetail = ({ storage, tagName }: TagDetailProps) => {
         {tagName}
       </Header>
       <Control>
-        <div className='left'></div>
+        <div className='left' />
         <div className='right'>
           <select onChange={selectNoteSorting} value={noteSorting}>
             {<NoteSortingOptionsFragment />}
@@ -117,7 +117,7 @@ const Header = styled.h1`
     font-size: 25px;
     width: 25px;
     height: 25px;
-    ${flexCenter}
+    ${flexCenter};
     margin-right: 4px;
   }
 `
@@ -134,7 +134,7 @@ const Control = styled.div`
     align-items: center;
 
     select {
-      ${selectStyle}
+      ${selectStyle};
       width: 120px;
       height: 25px;
       margin-bottom: 10px;

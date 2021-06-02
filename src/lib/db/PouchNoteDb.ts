@@ -407,9 +407,11 @@ export default class PouchNoteDb implements NoteDb {
     if (note == null)
       throw createNotFoundError(`The note \`${noteId}\` does not exist`)
 
+    const now = getNow()
     const noteDocProps = {
       ...note,
       trashed: true,
+      archivedAt: now,
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 
@@ -435,6 +437,7 @@ export default class PouchNoteDb implements NoteDb {
     const noteDocProps = {
       ...note,
       trashed: false,
+      archivedAt: undefined,
     }
     const { rev } = await this.pouchDb.put<NoteDoc>(noteDocProps)
 

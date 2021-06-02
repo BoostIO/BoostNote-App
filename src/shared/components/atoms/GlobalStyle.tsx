@@ -25,10 +25,17 @@ button {
   }
 }
 
+input,
+button {
+  margin: 0;
+  border: 0;
+  outline: none;
+}
+
 .icon {
   transition: 100ms color;
 }
-    
+
 /* total width */
 scrollbar-width: 8px;
 scrollbar-height: 8px;
@@ -72,7 +79,7 @@ export default createGlobalStyle<BaseTheme>`
     box-sizing: border-box;
     &:focus {outline: none;}
   }
-  
+
   input,
   select,
   button {
@@ -81,19 +88,28 @@ export default createGlobalStyle<BaseTheme>`
     }
   }
 
+  input,
+  button {
+    margin: 0;
+    border: 0;
+    outline: none;
+  }
+
+  input {
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+  }
+
   .icon {
     transition: 100ms color;
   }
 
   /* total width */
-  scrollbar-width: 8px;
-  scrollbar-height: 8px;
   ::-webkit-scrollbar {
     background-color: transparent;
     width: 8px;
     height: 8px;
   }
-  
+
 
   /* background of the scrollbar except button or resizer */
   ::-webkit-scrollbar-track {

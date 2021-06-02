@@ -7,7 +7,6 @@ import { useRouter } from '../../lib/router'
 import { GeneralStatus, useGeneralStatus } from '../../lib/generalStatus'
 import CloudWorkspaceSelect from '../molecules/CloudWorkspaceSelect'
 import Flexbox from '../../cloud/components/atoms/Flexbox'
-import Icon from '../atoms/Icon'
 import { mdiAlert, mdiCheckCircle, mdiTea } from '@mdi/js'
 import ProgressBar from '../atoms/ProgressBar'
 import { usePreferences } from '../../lib/preferences'
@@ -24,6 +23,7 @@ import { useMigrations, MigrationInfo } from '../../lib/migrate/store'
 import plur from 'plur'
 import { useStorageRouter } from '../../lib/storageRouter'
 import styled from '../../lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -220,7 +220,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
       <div>
         <FormHeading>2. Migrating</FormHeading>
         <Flexbox justifyContent='center' direction='column'>
-          <Icon path={mdiTea} size={42} />
+          <Icon path={mdiTea} size={50} />
           <h3>Migration is processing...</h3>
           <p>
             This may take a while. Feel free to have a cup of tea while waiting.
@@ -276,7 +276,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
         direction='column'
       >
         <Flexbox justifyContent='center' alignItems='center' direction='column'>
-          <Icon size={42} path={mdiCheckCircle} />
+          <Icon size={50} path={mdiCheckCircle} />
           <h3>Migration has completed!</h3>
         </Flexbox>
         <p>

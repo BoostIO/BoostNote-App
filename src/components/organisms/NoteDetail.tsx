@@ -5,14 +5,8 @@ import {
   Attachment,
   NoteStorage,
 } from '../../lib/db/types'
-import styled from '../../lib/styled'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
 import CustomizedMarkdownPreviewer from '../atoms/CustomizedMarkdownPreviewer'
-import {
-  borderRight,
-  backgroundColor,
-  borderTop,
-} from '../../lib/styled/styleFunctions'
 import { ViewModeType } from '../../lib/generalStatus'
 import {
   convertItemListToArray,
@@ -28,6 +22,12 @@ import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import { Position } from 'codemirror'
 import LocalSearch from './LocalSearch'
 import { SearchReplaceOptions } from '../../lib/search/search'
+import {
+  borderTop,
+  backgroundColor,
+  borderRight,
+} from '../../shared/lib/styled/styleFunctions'
+import styled from '../../shared/lib/styled'
 
 type NoteDetailProps = {
   note: NoteDoc
@@ -38,7 +38,7 @@ type NoteDetailProps = {
     props: Partial<NoteDocEditibleProps>
   ) => Promise<void | NoteDoc>
   viewMode: ViewModeType
-  initialCursorPosition: EditorPosition
+  initialCursorPosition: EditorPosition | null
   addAttachments(storageId: string, files: File[]): Promise<Attachment[]>
 }
 
@@ -47,6 +47,7 @@ type NoteDetailState = {
   prevNoteId: string
   content: string
   currentCursor: EditorPosition
+  initialCursorSet: boolean
   searchOptions: SearchReplaceOptions
   showSearch: boolean
   showReplace: boolean
@@ -67,6 +68,7 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
       line: 0,
       ch: 0,
     },
+    initialCursorSet: false,
     searchOptions: {
       regexSearch: false,
       caseSensitiveSearch: false,
@@ -95,10 +97,12 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     this.codeMirror = codeMirror
 
     // Update cursor if needed
-    if (this.props.initialCursorPosition) {
-      this.codeMirror.focus()
-      this.codeMirror.setCursor(this.props.initialCursorPosition)
-    }
+    this.codeMirror.focus()
+    this.codeMirror.setCursor(
+      !this.state.initialCursorSet && this.props.initialCursorPosition != null
+        ? this.props.initialCursorPosition
+        : this.state.currentCursor
+    )
   }
 
   static getDerivedStateFromProps(
@@ -111,11 +115,16 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
         prevStorageId: storage.id,
         prevNoteId: note._id,
         content: note.content,
+        initialCursorSet: props.initialCursorPosition != null,
         currentCursor: {
-          line: props.initialCursorPosition
-            ? props.initialCursorPosition.line
-            : 0,
-          ch: props.initialCursorPosition ? props.initialCursorPosition.ch : 0,
+          line:
+            props.initialCursorPosition != null
+              ? props.initialCursorPosition.line
+              : state.currentCursor.line,
+          ch:
+            props.initialCursorPosition != null
+              ? props.initialCursorPosition.ch
+              : state.currentCursor.ch,
         },
         searchOptions: {
           regexSearch: false,
@@ -547,13 +556,13 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   }
 
   render() {
-    const { note, storage, viewMode, initialCursorPosition } = this.props
+    const { note, storage, viewMode } = this.props
     const { currentCursor, currentSelections } = this.state
 
     const codeEditor = (
       <CustomizedCodeEditor
         className='editor'
-        key={note._id + initialCursorPosition.line}
+        key={note._id}
         codeMirrorRef={this.codeMirrorRef}
         value={this.state.content}
         onChange={this.updateContent}
@@ -644,6 +653,8 @@ const Container = styled.div`
     }
     z-index: 5001;
   }
+
+  overflow: hidden;
 `
 
 const SearchBarContainer = styled.div`

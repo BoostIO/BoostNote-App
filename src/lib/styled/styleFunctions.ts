@@ -1,5 +1,4 @@
 import { BaseTheme } from './BaseTheme'
-import { isColorBright } from '../colors'
 
 interface StyledProps {
   theme: BaseTheme
@@ -34,15 +33,6 @@ transition: 200ms color;
 &:active,
 &:focus {
   color: ${theme.noteDetailActiveIconColor};
-}`
-
-export const closeIconColor = ({ theme }: StyledProps) => `
-color: ${theme.closeIconColor};
-transition: 200ms color;
-&:hover,
-&:active,
-&:focus {
-  color: ${theme.closeActiveIconColor};
 }`
 
 export const textColor = ({ theme }: StyledProps) =>
@@ -206,17 +196,3 @@ export const flexCenter = () => `display: flex;
 align-items: center;
 justify-content: center;
 `
-
-export const tagBackgroundColor = ({
-  theme,
-  color,
-}: StyledProps & TagStyleProps) => `
-background-color: ${color || theme.secondaryBackgroundColor};
-  &:hover {
-    filter: brightness(${
-      isColorBright(color || theme.secondaryBackgroundColor) ? 85 : 115
-    }%
-    );
-    background-color: ${color || theme.secondaryBackgroundColor};
-  }
-}`

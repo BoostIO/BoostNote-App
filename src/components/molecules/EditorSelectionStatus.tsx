@@ -1,6 +1,6 @@
 import React from 'react'
 import { EditorPosition } from '../../lib/CodeMirror'
-import styled from '../../lib/styled'
+import styled from '../../shared/lib/styled'
 
 interface EditorSelectionStatusProps {
   cursor: EditorPosition
@@ -46,6 +46,6 @@ const Container = styled.div`
   padding: 0 5px;
   height: 24px;
   font-size: 14px;
-  color: ${({ theme }) => theme.uiTextColor};
+  color: ${({ theme }) => theme.colors.text.primary};
   user-select: none;
 `

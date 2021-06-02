@@ -11,7 +11,10 @@ import AttachmentList from '../organisms/AttachmentList'
 import { mdiPaperclip } from '@mdi/js'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { NoteStorage } from '../../lib/db/types'
-import StorageLayout from '../atoms/StorageLayout'
+import Application from '../Application'
+import { topParentId } from '../../cloud/lib/mappers/topbarTree'
+import { getAttachmentsHref } from '../../lib/db/utils'
+import { push } from 'mixpanel-browser'
 
 const Container = styled.div`
   height: 100%;
@@ -23,12 +26,30 @@ interface AttachmentsPageProps {
 
 const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
   const routeParams = useRouteParams() as StorageAttachmentsRouteParams
-  const { storageId } = routeParams
+  const { workspaceId } = routeParams
 
   const { addAttachments } = useDb()
 
+  const attachmentsHref = getAttachmentsHref(storage)
   return (
-    <StorageLayout storage={storage}>
+    <Application
+      content={{
+        topbar: {
+          breadcrumbs: [
+            {
+              label: 'Attachments',
+              active: true,
+              parentId: topParentId,
+              icon: mdiPaperclip,
+              link: {
+                href: attachmentsHref,
+                navigateTo: () => push([attachmentsHref]),
+              },
+            },
+          ],
+        },
+      }}
+    >
       <Container
         onDragOver={(event: React.DragEvent) => {
           event.preventDefault()
@@ -37,7 +58,7 @@ const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
           event.preventDefault()
 
           const files = getFileList(event)
-          addAttachments(storageId, files)
+          addAttachments(workspaceId, files)
         }}
       >
         <PageDraggableHeader
@@ -45,9 +66,9 @@ const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
           label={`Attachments in ${storage.name}`}
         />
 
-        <AttachmentList storage={storage} />
+        <AttachmentList workspace={storage} />
       </Container>
-    </StorageLayout>
+    </Application>
   )
 }
 

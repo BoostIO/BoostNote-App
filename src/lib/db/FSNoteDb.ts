@@ -324,10 +324,11 @@ class FSNoteDb implements NoteDb {
     if (noteDoc.trashed) {
       return noteDoc
     }
-
+    const now = getNow()
     const newNoteDoc = {
       ...noteDoc,
       trashed: true,
+      archivedAt: now,
     }
 
     await writeFile(notePathname, JSON.stringify(newNoteDoc))
@@ -355,6 +356,7 @@ class FSNoteDb implements NoteDb {
     const newNoteDoc = {
       ...noteDoc,
       trashed: false,
+      archivedAt: undefined,
     }
 
     await writeFile(notePathname, JSON.stringify(newNoteDoc))
@@ -448,9 +450,8 @@ class FSNoteDb implements NoteDb {
   async updateTagByName(
     tagName: string,
     props?: Partial<TagDocEditibleProps>
-  ): Promise<void> {
-    await this.upsertTag(tagName, props)
-    await this.saveBoostNoteJSON()
+  ): Promise<TagDoc> {
+    return await this.upsertTag(tagName, props)
   }
 
   async removeTag(tagName: string): Promise<void> {
@@ -555,7 +556,14 @@ class FSNoteDb implements NoteDb {
         folderPathname: newFolderPathname,
       }
 
-      updatedFolderMap.get(newFolderPathname)!.noteIdSet.add(updatedNote._id)
+      const folderToUpdate = updatedFolderMap.get(newFolderPathname)
+      if (folderToUpdate != null && folderToUpdate.noteIdSet != null) {
+        folderToUpdate.noteIdSet.add(updatedNote._id)
+      } else {
+        console.warn(
+          `Folder not updated correctly ${folder}, for note: ${note}, on pathname: ${pathname}`
+        )
+      }
       updatedNotes.push(updatedNote)
     }
 

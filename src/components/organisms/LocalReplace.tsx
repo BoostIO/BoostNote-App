@@ -8,13 +8,11 @@ import React, {
   useEffect,
 } from 'react'
 import CodeMirror, { MarkerRange, TextMarker } from 'codemirror'
-import Icon from '../atoms/Icon'
 import {
   mdiAlphabeticalVariant,
   mdiMagnify,
   mdiSubdirectoryArrowLeft,
 } from '@mdi/js'
-import styled from '../../lib/styled/styled'
 import {
   LocalSearchInputLeft,
   SearchResultNavigationDirection,
@@ -24,6 +22,8 @@ import LocalSearchButton from '../atoms/search/LocalSearchButton'
 import { SearchResultItem } from '../atoms/search/SearchResultItem'
 import { usePreferences } from '../../lib/preferences'
 import { compareEventKeyWithKeymap } from '../../lib/keymap'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
 
 interface LocalReplaceProps {
   codeMirror: CodeMirror.EditorFromTextArea
@@ -312,7 +312,7 @@ const LocalReplace = ({
           <LocalReplaceIcon
             className={getNumberOfTextAreaRows != 1 ? 'alignStart' : ''}
           >
-            <Icon path={mdiMagnify} />
+            <Icon size={16} path={mdiMagnify} />
           </LocalReplaceIcon>
           <textarea
             onClick={focusReplaceTextAreaInput}
@@ -377,7 +377,7 @@ const ReplaceRightContainer = styled.div`
   align-content: stretch;
   align-self: stretch;
   align-items: flex-start;
-  background-color: ${({ theme }) => theme.searchSecondaryBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
 `
 
 const ReplaceStyledButton = styled.button`
@@ -393,16 +393,16 @@ const ReplaceStyledButton = styled.button`
 
   overflow: hidden;
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navItemColor};
+  color: ${({ theme }) => theme.colors.text.secondary};
   &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 
   &:disabled {
     cursor: default;
     opacity: 0.5;
     &:hover {
-      color: ${({ theme }) => theme.navItemColor};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
 `
@@ -413,7 +413,7 @@ const LocalReplaceContainer = styled.div`
   z-index: 5001;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.navBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
 `
 const LocalReplaceIcon = styled.div`
   display: flex;

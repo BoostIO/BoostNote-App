@@ -5,15 +5,15 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled from '../../lib/styled'
 import {
   getGenericShortcutString,
   KeymapItemEditableProps,
 } from '../../lib/keymap'
-import { inputStyle } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
-import { useToast } from '../../lib/toast'
-import { KeymapItemButton } from '../PreferencesModal/KeymapTab'
+import styled from '../../shared/lib/styled'
+import { inputStyle } from '../../shared/lib/styled/styleFunctions'
+import { useToast } from '../../shared/lib/stores/toast'
+import Button from '../../shared/components/atoms/Button'
 
 const invalidShortcutInputs = [' ']
 const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift']
@@ -152,23 +152,19 @@ const KeymapItemSection = ({
             onKeyDown={fetchInputShortcuts}
           />
         )}
-        <KeymapItemButton onClick={toggleChangingShortcut}>
+        <Button variant={'primary'} onClick={toggleChangingShortcut}>
           {currentShortcut == null
             ? 'Assign'
             : changingShortcut
             ? 'Apply'
             : 'Change'}
-        </KeymapItemButton>
+        </Button>
         {changingShortcut && (
-          <KeymapItemButton onClick={handleCancelKeymapChange}>
-            Cancel
-          </KeymapItemButton>
+          <Button onClick={handleCancelKeymapChange}>Cancel</Button>
         )}
 
         {currentShortcut != null && !changingShortcut && (
-          <KeymapItemButton onClick={handleRemoveKeymap}>
-            Un-assign
-          </KeymapItemButton>
+          <Button onClick={handleRemoveKeymap}>Un-assign</Button>
         )}
       </KeymapItemInputSection>
     </KeymapItemSectionContainer>
@@ -184,9 +180,10 @@ const ShortcutItemStyle = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
-  color: ${({ theme }) => theme.primaryButtonLabelColor};
-  border: 1px solid ${({ theme }) => theme.borderColor};
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  color: ${({ theme }) => theme.colors.text.primary};
+
+  border: 1px solid ${({ theme }) => theme.colors.border.main};
   border-radius: 4px;
 `
 

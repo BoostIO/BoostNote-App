@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react'
-import styled from '../../lib/styled'
-import { border, secondaryButtonStyle } from '../../lib/styled/styleFunctions'
 import ModalContainer from '../molecules/ModalContainer'
-import Icon from '../atoms/Icon'
 import { mdiClose } from '@mdi/js'
 import Image from '../atoms/Image'
 import { useRouter } from '../../lib/router'
@@ -11,6 +8,12 @@ import {
   featureBoostHubSignIn,
 } from '../../lib/checkedFeatures'
 import { usePreferences } from '../../lib/preferences'
+import Icon from '../../shared/components/atoms/Icon'
+import styled from '../../shared/lib/styled'
+import {
+  border,
+  secondaryButtonStyle,
+} from '../../shared/lib/styled/styleFunctions'
 
 interface CreateWorkspaceModalProps {
   closeModal: () => void
@@ -72,11 +75,11 @@ export default CreateWorkspaceModal
 const StyledContainer = styled.div`
   position: relative;
   margin: 50px auto;
-  background-color: ${({ theme }) => theme.navBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   max-width: 800px;
   max-height: 500px;
   z-index: 6002;
-  ${border}
+  ${border};
   border-radius: 10px;
   padding: 15px;
   overflow: hidden;
@@ -94,14 +97,14 @@ const StyledContainer = styled.div`
     outline: none;
 
     transition: color 200ms ease-in-out;
-    color: ${({ theme }) => theme.navButtonColor};
+    color: ${({ theme }) => theme.colors.text.primary};
     &:hover {
-      color: ${({ theme }) => theme.navButtonHoverColor};
+      color: ${({ theme }) => theme.colors.text.link};
     }
 
     &:active,
     &.active {
-      color: ${({ theme }) => theme.navButtonActiveColor};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
   .header {
@@ -115,7 +118,7 @@ const StyledContainer = styled.div`
   .option {
     width: 300px;
     height: 300px;
-    ${secondaryButtonStyle}
+    ${secondaryButtonStyle};
     border-radius: 10px;
     overflow: hidden;
 

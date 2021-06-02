@@ -34,6 +34,10 @@ const commonTheme: SharedTheme = {
       xl: 40,
     },
   },
+
+  // Search & Selection specific colors
+  codeEditorMarkedTextBackgroundColor: '#ffdb70',
+  codeEditorSelectedTextBackgroundColor: '#ffc107',
 }
 
 export default commonTheme

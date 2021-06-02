@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from 'react'
 import Image from '../atoms/Image'
-import Icon from '../atoms/Icon'
 import {
   mdiAccountPlus,
   mdiHistory,
@@ -18,12 +17,6 @@ import {
   mdiLinkPlus,
   mdiConnection,
 } from '@mdi/js'
-import styled from '../../lib/styled'
-import {
-  flexCenter,
-  border,
-  closeIconColor,
-} from '../../lib/styled/styleFunctions'
 import { openNew } from '../../lib/platform'
 import { boostHubLearnMorePageUrl } from '../../lib/boosthub'
 import cc from 'classcat'
@@ -32,6 +25,13 @@ import { usePreferences } from '../../lib/preferences'
 import { useRouter } from '../../lib/router'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { useGeneralStatus } from '../../lib/generalStatus'
+import styled from '../../shared/lib/styled'
+import {
+  closeIconColor,
+  border,
+  flexCenter,
+} from '../../shared/lib/styled/styleFunctions'
+import Icon from '../../shared/components/atoms/Icon'
 
 const CloudIntroModal = () => {
   const { preferences, openTab } = usePreferences()
@@ -254,7 +254,7 @@ const CloudIntroModal = () => {
 export default CloudIntroModal
 
 const Container = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   height: 100%;
   position: fixed;
   top: 0;
@@ -264,7 +264,6 @@ const Container = styled.div`
   z-index: 10000;
   display: flex;
   align-items: center;
-  height: 100%;
 
   .content {
     justify-content: center;
@@ -283,7 +282,7 @@ const Container = styled.div`
     margin-bottom: 15px;
     .switch__group {
       border-radius: 4px;
-      background-color: ${({ theme }) => theme.navItemHoverBackgroundColor};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
       padding: 5px 5px;
     }
     .switch__button {
@@ -291,11 +290,11 @@ const Container = styled.div`
       background-color: transparent;
       border: none;
       cursor: pointer;
-      color: ${({ theme }) => theme.navItemColor};
+      color: ${({ theme }) => theme.colors.text.secondary};
       padding: 5px 10px;
       border-radius: 4px;
       &.active {
-        background-color: ${({ theme }) => theme.navItemActiveBackgroundColor};
+        background-color: ${({ theme }) => theme.colors.background.tertiary};
       }
     }
     .switch__button__icon {
@@ -315,8 +314,8 @@ const Container = styled.div`
     height: 30px;
   }
   .disabled-tooltip__content {
-    color: ${({ theme }) => theme.tooltipTextColor};
-    background-color: ${({ theme }) => theme.tooltipBackgroundColor};
+    color: ${({ theme }) => theme.colors.text.primary};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     padding: 5px;
     border-radius: 4px;
     margin: 0;
@@ -343,50 +342,56 @@ const IntroContainer = styled.div`
   .featureList {
     list-style: none;
     width: 300px;
-    margin: 0;
-    margin-right: 20px;
+    margin: 0 20px 0 0;
     padding: 0;
     & > .featureLearnMoreItem {
       text-align: right;
-      color: ${({ theme }) => theme.primaryColor};
+      color: ${({ theme }) => theme.colors.text.primary};
       cursor: pointer;
+
       &:hover {
         text-decoration: underline;
       }
     }
   }
+
   .featureList > .featureListItem {
-    ${border}
+    ${border};
     display: flex;
-    padding: 0 5px;
     margin-bottom: 20px;
     border-radius: 5px;
     padding: 10px 5px 10px 10px;
-    background-color: ${({ theme }) => theme.navItemBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+
     & > .featureListItemIcon {
-      ${flexCenter}
+      ${flexCenter};
       font-size: 24px;
       width: 24px;
       height: 24px;
     }
+
     & > .featureListItemBody {
       margin-left: 7px;
+
       & > h2 {
         font-size: 18px;
         margin-top: 0;
         margin-bottom: 10px;
       }
+
       & > p {
         font-size: 14px;
         margin: 0;
       }
     }
   }
+
   .screenShot {
     flex: 1;
+
     img {
       width: 100%;
-      ${border}
+      ${border};
       border-radius: 5px;
     }
   }

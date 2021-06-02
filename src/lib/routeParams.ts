@@ -6,32 +6,37 @@ export interface BaseRouteParams {
 }
 
 export interface StorageCreate extends BaseRouteParams {
-  name: 'storages.create'
+  name: 'workspaces.create'
 }
 
 export interface StorageNotesRouteParams extends BaseRouteParams {
-  name: 'storages.notes'
-  storageId: string
+  name: 'workspaces.notes'
+  workspaceId: string
   folderPathname: string
   noteId?: string
 }
 
 export interface StorageTrashCanRouteParams extends BaseRouteParams {
-  name: 'storages.trashCan'
-  storageId: string
+  name: 'workspaces.archive'
+  workspaceId: string
   noteId?: string
 }
 
 export interface StorageTagsRouteParams extends BaseRouteParams {
-  name: 'storages.tags.show'
-  storageId: string
+  name: 'workspaces.labels.show'
+  workspaceId: string
   tagName: string
   noteId?: string
 }
 
 export interface StorageAttachmentsRouteParams extends BaseRouteParams {
-  name: 'storages.attachments'
-  storageId: string
+  name: 'workspaces.attachments'
+  workspaceId: string
+}
+
+export interface StorageTimelineRouteParams extends BaseRouteParams {
+  name: 'workspaces.timeline'
+  workspaceId: string
 }
 
 export interface BoostHubLoginRouteParams extends BaseRouteParams {
@@ -61,6 +66,7 @@ export type AllRouteParams =
   | StorageTrashCanRouteParams
   | StorageTagsRouteParams
   | StorageAttachmentsRouteParams
+  | StorageTimelineRouteParams
   | UnknownRouteParams
   | BoostHubTeamsShowRouteParams
   | BoostHubTeamsCreateRouteParams
@@ -103,7 +109,7 @@ export const useRouteParams = () => {
 
     if (names[0] === 'storages' && names[1] == null) {
       return {
-        name: 'storages.create',
+        name: 'workspaces.create',
       }
     }
 
@@ -112,11 +118,11 @@ export const useRouteParams = () => {
         name: 'unknown',
       }
     }
-    const storageId = names[1]
+    const workspaceId = names[1]
     if (names[2] == null || names[2].length === 0) {
       return {
-        name: 'storages.notes',
-        storageId,
+        name: 'workspaces.notes',
+        workspaceId,
         folderPathname: '/',
       }
     }
@@ -126,8 +132,8 @@ export const useRouteParams = () => {
       const restNames = names.slice(3)
       if (restNames[0] == null || restNames[0] === '') {
         return {
-          name: 'storages.notes',
-          storageId,
+          name: 'workspaces.notes',
+          workspaceId,
           folderPathname: '/',
         }
       }
@@ -148,8 +154,8 @@ export const useRouteParams = () => {
       }
 
       return {
-        name: 'storages.notes',
-        storageId,
+        name: 'workspaces.notes',
+        workspaceId,
         folderPathname:
           folderNames.length === 0 ? '/' : '/' + folderNames.join('/'),
         noteId,
@@ -158,25 +164,32 @@ export const useRouteParams = () => {
 
     if (names[2] === 'tags') {
       return {
-        name: 'storages.tags.show',
-        storageId,
+        name: 'workspaces.labels.show',
+        workspaceId,
         tagName: names[3],
         noteId: /^note:/.test(names[4]) ? names[4] : undefined,
       }
     }
 
-    if (names[2] === 'trashcan') {
+    if (names[2] === 'archive') {
       return {
-        name: 'storages.trashCan',
-        storageId,
+        name: 'workspaces.archive',
+        workspaceId,
         noteId: /^note:/.test(names[3]) ? names[3] : undefined,
       }
     }
 
     if (names[2] === 'attachments') {
       return {
-        name: 'storages.attachments',
-        storageId,
+        name: 'workspaces.attachments',
+        workspaceId,
+      }
+    }
+
+    if (names[2] === 'timeline') {
+      return {
+        name: 'workspaces.timeline',
+        workspaceId,
       }
     }
 
@@ -191,14 +204,14 @@ export const usePathnameWithoutNoteId = () => {
   const routeParams = useRouteParams()
   return useMemo(() => {
     switch (routeParams.name) {
-      case 'storages.notes':
-        return `/app/storages/${routeParams.storageId}/notes${
+      case 'workspaces.notes':
+        return `/app/storages/${routeParams.workspaceId}/notes${
           routeParams.folderPathname === '/' ? '' : routeParams.folderPathname
         }`
-      case 'storages.tags.show':
-        return `/app/storages/${routeParams.storageId}/tags/${routeParams.tagName}`
-      case 'storages.trashCan':
-        return `/app/storages/${routeParams.storageId}/trashcan`
+      case 'workspaces.labels.show':
+        return `/app/storages/${routeParams.workspaceId}/tags/${routeParams.tagName}`
+      case 'workspaces.archive':
+        return `/app/storages/${routeParams.workspaceId}/archive`
     }
     return pathname
   }, [routeParams, pathname])
@@ -209,12 +222,12 @@ export const useActiveStorageId = () => {
   return useMemo(() => {
     switch (routeParams.name) {
       default:
-        return routeParams.storageId
+        return routeParams.workspaceId
       case 'boosthub.account.delete':
       case 'boosthub.teams.create':
       case 'boosthub.teams.show':
       case 'boosthub.login':
-      case 'storages.create':
+      case 'workspaces.create':
       case 'unknown':
         return null
     }

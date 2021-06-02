@@ -3,8 +3,8 @@ import { usePreferences } from '../../lib/preferences'
 import { openContextMenu } from '../../lib/electronOnly'
 import { MenuItemConstructorOptions } from 'electron'
 import BottomBarButton from '../atoms/BottomBarButton'
-import Icon from '../atoms/Icon'
 import { mdiKeyboard } from '@mdi/js'
+import Icon from '../../shared/components/atoms/Icon'
 
 const EditorKeyMapSelect = () => {
   const { preferences, setPreferences } = usePreferences()

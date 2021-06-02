@@ -1,16 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import {
-  FormGroup,
-  FormLabel,
-  FormPrimaryButton,
-  FormTextInput,
-} from '../atoms/form'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
-import { useToast } from '../../lib/toast'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
-import FormFolderSelector from '../atoms/FormFolderSelector'
+import { FormFolderSelectorInput } from '../atoms/form'
+import { useToast } from '../../shared/lib/stores/toast'
+import Form from '../../shared/components/molecules/Form'
+import { openDialog } from '../../lib/exports'
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -25,6 +21,7 @@ const FSStorageCreateForm = () => {
       const storage = await createStorage(name, { type: 'fs', location })
       report(analyticsEvents.createStorage)
       push(`/app/storages/${storage.id}/notes`)
+      // todo: [komediruzecki-21/05/2021] Not opening sidebar and proper welcome screen, just empty list of notes
     } catch (error) {
       pushMessage({
         title: 'Something went wrong',
@@ -33,32 +30,71 @@ const FSStorageCreateForm = () => {
     }
   }, [createStorage, location, name, push, report, pushMessage])
 
-  return (
-    <>
-      <FormGroup>
-        <FormLabel>{t('storage.name')}</FormLabel>
-        <FormTextInput
-          type='text'
-          value={name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setName(e.target.value)
-          }
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormLabel>Location</FormLabel>
+  const openDialogAndStoreLocation = useCallback(async () => {
+    const location = await openDialog()
+    setLocation(location)
+  }, [setLocation])
 
-        <FormFolderSelector value={location} setValue={setLocation} />
-      </FormGroup>
-      <FormGroup>
-        <FormPrimaryButton
-          onClick={createStorageCallback}
-          disabled={name.trim().length === 0 || location.trim().length === 0}
-        >
-          {t('storage.create')}
-        </FormPrimaryButton>
-      </FormGroup>
-    </>
+  return (
+    <Form
+      rows={[
+        {
+          title: t('storage.name'),
+          items: [
+            {
+              type: 'input',
+              props: {
+                type: 'text',
+                value: name,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value),
+              },
+            },
+          ],
+        },
+        {
+          title: 'Location',
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormFolderSelectorInput
+                  type='text'
+                  onClick={openDialogAndStoreLocation}
+                  readOnly
+                  value={
+                    location.trim().length === 0
+                      ? t('folder.noLocationSelected')
+                      : location
+                  }
+                />
+              ),
+            },
+            {
+              type: 'button',
+              props: {
+                label: 'Select Folder',
+                variant: 'primary',
+                onClick: openDialogAndStoreLocation,
+              },
+            },
+          ],
+        },
+        {
+          items: [
+            {
+              type: 'button',
+              props: {
+                label: t('storage.create'),
+                disabled:
+                  name.trim().length === 0 || location.trim().length === 0,
+                onClick: createStorageCallback,
+              },
+            },
+          ],
+        },
+      ]}
+    />
   )
 }
 

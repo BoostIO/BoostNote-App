@@ -18,7 +18,6 @@ import {
   NewWindowEvent,
 } from 'electron'
 import { useEffectOnce } from 'react-use'
-import styled from '../../lib/styled'
 import { openNew } from '../../lib/platform'
 import {
   boostHubNavigateRequestEventEmitter,
@@ -35,6 +34,7 @@ import {
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
+import styled from '../../shared/lib/styled'
 
 export interface WebviewControl {
   focus(): void

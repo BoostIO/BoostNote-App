@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
 import Image from '../atoms/Image'
-import Icon from '../atoms/Icon'
 import { mdiAccountPlus, mdiHistory, mdiChartBar } from '@mdi/js'
 import styled from '../../lib/styled'
 import { flexCenter, border } from '../../lib/styled/styleFunctions'
 import { openNew } from '../../lib/platform'
 import { boostHubLearnMorePageUrl } from '../../lib/boosthub'
+import Icon from '../../shared/components/atoms/Icon'
 
 const BoostHubFeatureIntro = () => {
   const openLearnMorePage = useCallback(() => {
@@ -81,7 +81,7 @@ const Container = styled.div`
     }
   }
   .featureList > .featureListItem {
-    ${border}
+    ${border};
     display: flex;
     padding: 0 5px;
     margin-bottom: 20px;

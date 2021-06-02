@@ -259,12 +259,6 @@ export function getTemplateFromKeymap(
         //   click: createEmitIpcMenuItemHandler('focus-side-navigator'),
         //   accelerator: mac ? 'Cmd + 0' : 'Ctrl + 0',
         // },
-        {
-          type: 'normal',
-          label: 'Toggle Side Navigator',
-          click: createEmitIpcMenuItemHandler('toggle-side-navigator'),
-          accelerator: mac ? 'Cmd + Shift + 0' : 'Ctrl + Shift + 0',
-        },
         { type: 'separator' },
         {
           type: 'normal',

@@ -6,7 +6,7 @@ import React, {
 import styled from '../../lib/styled'
 import cc from 'classcat'
 
-interface HyperLinkProps {
+export interface HyperLinkProps {
   id?: string
   href: string
   className?: string

@@ -40,6 +40,9 @@ export interface SharedTheme {
       [key in Sizes]: number
     }
   }
+
+  codeEditorMarkedTextBackgroundColor: string
+  codeEditorSelectedTextBackgroundColor: string
 }
 
 /** background color gradient => starting from main color, fade more and more towards the opposite BW ***/

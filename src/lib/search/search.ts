@@ -1,4 +1,4 @@
-import { NoteDoc } from '../db/types'
+import { FolderDoc, NoteDoc } from '../db/types'
 import { EditorPosition } from '../CodeMirror'
 
 export interface SearchResult {
@@ -15,11 +15,32 @@ export interface TagSearchResult {
   matchString: string
 }
 
+type FolderSearchResult = {
+  type: 'folder'
+  result: FolderDoc
+}
+
+type NoteSearchResult = {
+  type: 'note'
+  result: NoteDoc
+}
+
+type NoteContentSearchResult = {
+  type: 'noteContent'
+  result: NoteDoc
+  context: string
+}
+
+export type SearchResultItem =
+  | FolderSearchResult
+  | NoteSearchResult
+  | NoteContentSearchResult
+
 export interface NoteSearchData {
   titleSearchResult: string | null
   tagSearchResults: TagSearchResult[]
   results: SearchResult[]
-  note: NoteDoc
+  item: SearchResultItem
 }
 
 export interface SearchReplaceOptions {
@@ -35,6 +56,15 @@ export const MAX_SEARCH_CONTENT_LENGTH_PER_NOTE =
 export const SEARCH_DEBOUNCE_TIMEOUT = 350
 export const GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE = true
 export const LOCAL_MERGE_SAME_LINE_RESULTS_INTO_ONE = false
+
+export interface GetSearchResultsRequestQuery {
+  query: string
+  body?: boolean
+  title?: boolean
+  parentFolderId?: string
+  tagId?: string
+  archived?: boolean
+}
 
 export function getSearchResultKey(noteId: string, searchItemId: string) {
   return `${noteId}${searchItemId}`
@@ -98,5 +128,6 @@ export function getMatchData(
       matchString: matchStr,
     })
   }
+
   return data
 }

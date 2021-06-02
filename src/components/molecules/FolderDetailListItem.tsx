@@ -1,15 +1,13 @@
 import React, { ReactNode, MouseEventHandler } from 'react'
-import styled from '../../lib/styled'
-import {
-  borderBottom,
-  textOverflow,
-  flexCenter,
-} from '../../lib/styled/styleFunctions'
-import Icon from '../atoms/Icon'
+import { textOverflow, flexCenter } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
+import styled from '../../shared/lib/styled'
+import { borderBottom } from '../../shared/lib/styled/styleFunctions'
+import Icon, { IconSize } from '../../shared/components/atoms/Icon'
 
 interface FolderDetailListItemProps {
   iconPath?: string
+  iconSize?: IconSize
   label: string
   onClick?: MouseEventHandler<HTMLDivElement>
   meta?: ReactNode
@@ -18,6 +16,7 @@ interface FolderDetailListItemProps {
 
 const FolderDetailListItem = ({
   iconPath,
+  iconSize = 20,
   label,
   onClick,
   meta,
@@ -27,7 +26,7 @@ const FolderDetailListItem = ({
     <Container>
       <div className='clickable' onClick={onClick}>
         <div className='icon'>
-          {iconPath != null && <Icon path={iconPath} />}
+          {iconPath != null && <Icon path={iconPath} size={iconSize} />}
         </div>
         <div className={cc(['label', label.trim().length === 0 && 'subtle'])}>
           {label.trim().length === 0 ? 'Untitled' : label}
@@ -47,7 +46,7 @@ const Container = styled.li`
   height: 40px;
   ${borderBottom}
   &:hover {
-    background-color: ${({ theme }) => theme.noteNavItemBackgroundColor};
+    background-color: ${({ theme }) => theme.colors.background.secondary};
     & > .control {
       display: flex;
     }
@@ -64,20 +63,22 @@ const Container = styled.li`
   .icon {
     width: 40px;
     height: 40px;
-    ${flexCenter}
+    ${flexCenter};
+
+    color: ${({ theme }) => theme.colors.text.link};
   }
   .label {
     flex: 1;
     ${textOverflow}
     &.subtle {
-      color: ${({ theme }) => theme.disabledUiTextColor};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
   & > .control {
     display: none;
   }
   & > .meta {
-    color: ${({ theme }) => theme.disabledUiTextColor};
+    color: ${({ theme }) => theme.colors.text.disabled};
     ${textOverflow}
   }
 `

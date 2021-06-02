@@ -16,7 +16,6 @@ import visit from 'unist-util-visit'
 import { Node, Parent } from 'unist'
 import CodeMirror from '../../lib/CodeMirror'
 import h from 'hastscript'
-import styled from '../../lib/styled'
 import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
@@ -31,6 +30,7 @@ import {
   remarkPlantUML,
 } from '../../cloud/lib/charts'
 import { rehypePosition } from '../../cloud/lib/rehypePosition'
+import styled from '../../shared/lib/styled'
 
 const schema = mergeDeepRight(gh, {
   attributes: {

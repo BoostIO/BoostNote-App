@@ -6,7 +6,7 @@ const enTranslation: TranslationSource = {
   'general.cancel': 'Cancel',
   'general.update': 'Update',
   'general.attachments': 'Attachments',
-  'general.trash': 'Trash',
+  'general.archive': 'Archive',
   'general.allnote': 'All Notes',
   'general.signin': 'Sign In',
   'general.signinCheck': 'Signing in...',

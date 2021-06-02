@@ -9,7 +9,6 @@ import rehypeKatex from 'rehype-katex'
 import { mergeDeepRight } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { rehypeCodeMirror } from '../components/atoms/MarkdownPreviewer'
-import { downloadBlob } from './download'
 import { Attachment, NoteDoc, ObjectMap } from './db/types'
 import { filenamify } from './string'
 import React from 'react'
@@ -26,6 +25,7 @@ import {
   showOpenDialog,
   writeFile,
   readdir,
+  openPath,
 } from './electronOnly'
 import { join } from 'path'
 import { dev } from '../electron/consts'
@@ -40,7 +40,6 @@ import {
 import remarkSlug from 'remark-slug'
 import { rehypePosition } from '../cloud/lib/rehypePosition'
 import remarkAdmonitions from 'remark-admonitions'
-import { MenuItemConstructorOptions } from 'electron'
 
 interface ImageData {
   name: string
@@ -600,6 +599,7 @@ export const convertNoteDocToPdfBuffer = async (
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
+  printOpts: Electron.PrintToPDFOptions,
   previewStyle?: string
 ): Promise<Buffer> => {
   const markdownHtmlContent = await convertNoteDocToMarkdownHtmlString(
@@ -626,14 +626,6 @@ export const convertNoteDocToPdfBuffer = async (
   )
 
   try {
-    const printOpts = {
-      // Needed for codemirorr themes (backgrounds)
-      printBackground: true,
-      // Enable margins if header and footer is printed!
-      // No margins 1, default margins 0, 2 - minimum margins
-      marginsType: 0, // This could be chosen by user.
-      pageSize: 'A4', // This could be chosen by user.
-    }
     return await convertHtmlStringToPdfBuffer(htmlString, printOpts)
   } finally {
     revokeAttachmentsUrls(attachmentUrls)
@@ -641,11 +633,13 @@ export const convertNoteDocToPdfBuffer = async (
 }
 
 export const exportNoteAsPdfFile = async (
+  filePath: string,
   note: NoteDoc,
   codeBlockTheme: string,
   generalThemeName: string,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
+  printOptions: Electron.PrintToPDFOptions,
   previewStyle?: string
 ): Promise<void> => {
   try {
@@ -655,46 +649,23 @@ export const exportNoteAsPdfFile = async (
       generalThemeName,
       pushMessage,
       attachmentMap,
+      printOptions,
       previewStyle
     )
-    const pdfName = `${filenamify(getValidNoteTitle(note))}.pdf`
-
-    downloadBlob(new Blob([pdfBuffer]), pdfName)
+    await writeFile(filePath, pdfBuffer)
+    pushMessage({
+      onClick: () => {
+        openPath(filePath)
+      },
+      type: 'success',
+      title: 'PDF export',
+      description: 'PDF file exported successfully.',
+    })
   } catch (error) {
-    console.warn(error)
+    console.error(error)
     pushMessage({
       title: 'PDF export failed',
       description: error.message,
     })
   }
-}
-
-export function getExportAsMenuItems(
-  folderName: string,
-  folderPathname: string,
-  recursive: boolean,
-  startExport: (
-    folderName: string,
-    folderPathname: string,
-    exportType: string,
-    recursive: boolean
-  ) => void
-): MenuItemConstructorOptions[] {
-  return [
-    {
-      type: 'normal',
-      label: 'Export as Markdown (.md)',
-      click: () => startExport(folderName, folderPathname, 'md', recursive),
-    },
-    {
-      type: 'normal',
-      label: 'Export as HTML (.html)',
-      click: () => startExport(folderName, folderPathname, 'html', recursive),
-    },
-    {
-      type: 'normal',
-      label: 'Export as PDF (.pdf)',
-      click: () => startExport(folderName, folderPathname, 'pdf', recursive),
-    },
-  ]
 }

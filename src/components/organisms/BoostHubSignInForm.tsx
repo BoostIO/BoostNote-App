@@ -27,13 +27,13 @@ import {
   boostHubLoginRequestEventEmitter,
 } from '../../lib/events'
 import { useRouter } from '../../lib/router'
-import Icon from '../atoms/Icon'
 import { mdiLoading } from '@mdi/js'
 import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
-import styled from '../../lib/styled'
 import { osName } from '../../lib/platform'
 import { fetchDesktopGlobalData } from '../../lib/boosthub'
 import { boostHubBaseUrl } from '../../cloud/lib/consts'
+import Icon from '../../shared/components/atoms/Icon'
+import styled from '../../shared/lib/styled'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -292,9 +292,9 @@ const Container = styled.div`
     right: 0;
     bottom: 30px;
     margin-left: 40px;
-    color: ${({ theme }) => theme.uiTextColor};
+    color: ${({ theme }) => theme.colors.text.primary};
     &:hover {
-      color: ${({ theme }) => theme.textColor};
+      color: ${({ theme }) => theme.colors.text.link};
     }
     cursor: pointer;
   }

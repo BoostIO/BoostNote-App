@@ -1,21 +1,12 @@
 import React, { useMemo, useCallback } from 'react'
-import styled from '../../lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
 import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
-import {
-  backgroundColor,
-  closeIconColor,
-  border,
-  flexCenter,
-  borderBottom,
-  borderLeft,
-} from '../../lib/styled/styleFunctions'
+import { flexCenter } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
-import Icon from '../atoms/Icon'
 import { mdiClose, mdiHammerWrench } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
@@ -23,7 +14,17 @@ import StorageTab from './StorageTab'
 import MigrationPage from './MigrationTab'
 import { useMigrations } from '../../lib/migrate/store'
 import KeymapTab from './KeymapTab'
+import styled from '../../shared/lib/styled'
+import {
+  border,
+  backgroundColor,
+  borderBottom,
+  borderLeft,
+  closeIconColor,
+} from '../../shared/lib/styled/styleFunctions'
 import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
+import Icon from '../../shared/components/atoms/Icon'
+import ExportTab from './ExportTab'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -112,11 +113,11 @@ const PreferencesModal = () => {
   const currentStorage = useMemo(() => {
     let storageId: string
     switch (routeParams.name) {
-      case 'storages.notes':
-      case 'storages.tags.show':
-      case 'storages.attachments':
-      case 'storages.trashCan':
-        storageId = routeParams.storageId
+      case 'workspaces.notes':
+      case 'workspaces.labels.show':
+      case 'workspaces.attachments':
+      case 'workspaces.archive':
+        storageId = routeParams.workspaceId
         break
       default:
         return null
@@ -143,6 +144,8 @@ const PreferencesModal = () => {
         return <EditorTab />
       case 'markdown':
         return <MarkdownTab />
+      case 'export':
+        return <ExportTab />
       case 'about':
         return <AboutTab />
       case 'storage':
@@ -168,7 +171,7 @@ const PreferencesModal = () => {
       <ContentContainer>
         <ModalHeader>
           <ModalTitle>
-            <Icon size={24} path={mdiHammerWrench} />
+            <Icon size={26} path={mdiHammerWrench} />
             {t('preferences.general')}
           </ModalTitle>
           <CloseButton onClick={togglePreferencesModal}>
@@ -212,6 +215,11 @@ const PreferencesModal = () => {
               label='Markdown'
               active={tab === 'markdown'}
               onClick={() => openTab('markdown')}
+            />
+            <SettingNavButtonItem
+              label='Export'
+              active={tab === 'export'}
+              onClick={() => openTab('export')}
             />
           </TabNav>
           <TabContent>{content}</TabContent>

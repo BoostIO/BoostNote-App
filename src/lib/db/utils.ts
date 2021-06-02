@@ -6,6 +6,8 @@ import {
   FolderDoc,
   TagDoc,
   PouchNoteStorageData,
+  NoteStorage,
+  PopulatedTagDoc,
 } from './types'
 import { generateId, escapeRegExp } from '../string'
 
@@ -44,6 +46,58 @@ export function prependNoteIdPrefix(noteId: string): string {
   return noteId
 }
 
+export function getWorkspaceHref(storage: NoteStorage, query?: any): string {
+  return `/app/storages/${storage.id}?${query}`
+}
+
+export function getTimelineHref(storage: NoteStorage, query?: any): string {
+  return `/app/storages/${storage.id}/timeline${
+    query != null ? `?${query}` : ''
+  }`
+}
+
+export function getArchiveHref(storage: NoteStorage): string {
+  return `/app/storages/${storage.id}/archive`
+}
+
+export function getLabelHref(
+  storage: NoteStorage,
+  tagName: string,
+  noteId?: string
+): string {
+  if (noteId != null) {
+    return `/app/storages/${storage.id}/tags/${tagName}/${noteId}`
+  }
+  return `/app/storages/${storage.id}/tags/${tagName}`
+}
+
+export function getAttachmentsHref(storage: NoteStorage): string {
+  return `/app/storages/${storage.id}/attachments`
+}
+
+export function getNoteTitle(note: NoteDoc, fallback: string) {
+  return note.title != '' ? note.title : fallback
+}
+
+export function getDocHref(note: NoteDoc, storageId: string) {
+  return getDocHrefRaw(note._id, storageId)
+}
+
+export function getDocHrefRaw(noteId: string, storageId: string) {
+  return `/app/storages/${storageId}/notes/${noteId}`
+}
+
+export function getFolderName(
+  folderDoc: FolderDoc,
+  fallback = 'Untitled'
+): string {
+  const folderName = getFolderNameFromPathname(getFolderPathname(folderDoc._id))
+  if (folderName != null) {
+    return folderName
+  }
+  return fallback
+}
+
 export function getFolderId(pathname: string): string {
   return `${FOLDER_ID_PREFIX}${pathname}`
 }
@@ -59,6 +113,19 @@ export function getParentFolderPathname(pathname: string): string {
 export function getFolderNameFromPathname(pathname: string): string | null {
   if (pathname === '/') return null
   return pathname.split('/').slice(-1)[0]
+}
+
+export function getFolderHref(
+  folder: FolderDoc,
+  storageId: string,
+  query?: any
+): string {
+  const folderPathname = getFolderPathname(folder._id)
+  return `/app/storages/${storageId}/${
+    folderPathname == '/'
+      ? ''
+      : 'notes' + folderPathname + `${query != null ? '?' + query : ''}`
+  }`
 }
 
 export function getTagId(name: string): string {
@@ -177,4 +244,8 @@ export function isCloudStorageData(
   data: PouchNoteStorageData
 ): data is Required<PouchNoteStorageData> {
   return data.cloudStorage != null
+}
+
+export function normalizeTagColor(tag: PopulatedTagDoc): string {
+  return typeof tag.data.color == 'string' ? tag.data.color : ''
 }

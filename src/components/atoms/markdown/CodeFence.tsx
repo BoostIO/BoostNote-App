@@ -1,10 +1,10 @@
 import React from 'react'
-import styled from '../../../lib/styled'
 import copy from 'copy-to-clipboard'
-import Icon from '../Icon'
 import { mdiContentCopy, mdiContentSave } from '@mdi/js'
 import { flexCenter } from '../../../lib/styled/styleFunctions'
 import { downloadBlob } from '../../../lib/download'
+import styled from '../../../shared/lib/styled'
+import Icon from '../../../shared/components/atoms/Icon'
 
 const CodeFenceContainer = styled.div`
   position: relative;
@@ -27,14 +27,14 @@ const CodeFenceButton = styled.button`
   cursor: pointer;
 
   transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.navButtonColor};
+  color: ${({ theme }) => theme.colors.text.primary};
   &:hover {
-    color: ${({ theme }) => theme.navButtonHoverColor};
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 
   &:active,
   &.active {
-    color: ${({ theme }) => theme.navButtonActiveColor};
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 `
 

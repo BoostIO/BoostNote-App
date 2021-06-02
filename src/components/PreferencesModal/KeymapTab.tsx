@@ -4,7 +4,8 @@ import { usePreferences } from '../../lib/preferences'
 import { getGenericShortcutString, KeymapItem } from '../../lib/keymap'
 import { useTranslation } from 'react-i18next'
 import KeymapItemSection from '../atoms/KeymapItemSection'
-import styled from '../../lib/styled/styled'
+import styled from '../../shared/lib/styled'
+import Button from '../../shared/components/atoms/Button'
 
 const KeymapTab = () => {
   const {
@@ -33,9 +34,9 @@ const KeymapTab = () => {
       <KeymapHeaderSection>
         <SectionHeader>{t('preferences.keymap')}</SectionHeader>
         <SectionResetKeymap>
-          <KeymapItemButton onClick={() => resetKeymap()}>
+          <Button variant='danger' onClick={() => resetKeymap()}>
             Restore
-          </KeymapItemButton>
+          </Button>
         </SectionResetKeymap>
       </KeymapHeaderSection>
       <KeymapItemList>
@@ -71,33 +72,6 @@ const KeymapHeaderSection = styled.div`
 const SectionResetKeymap = styled.div`
   margin-left: auto;
   align-self: center;
-`
-
-export const KeymapItemButton = styled.button`
-  min-width: 88px;
-  max-width: 120px;
-  height: 32px;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  background-color: ${({ theme }) => theme.primaryButtonBackgroundColor};
-  border: 1px solid ${({ theme }) => theme.borderColor};
-  border-radius: 4px;
-
-  transition: color 200ms ease-in-out;
-  color: ${({ theme }) => theme.primaryButtonLabelColor};
-
-  text-align: center;
-  padding: 5px;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.borderColor};
-    background: ${({ theme }) => theme.primaryButtonHoverBackgroundColor};
-  }
 `
 
 export default KeymapTab

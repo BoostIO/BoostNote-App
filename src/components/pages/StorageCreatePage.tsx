@@ -1,29 +1,30 @@
 import React from 'react'
 import FSStorageCreateForm from '../organisms/FSStorageCreateForm'
-import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiBookPlusMultiple } from '@mdi/js'
-import PageScrollableContent from '../atoms/PageScrollableContent'
-import styled from '../../lib/styled'
+import Application from '../Application'
+import EmojiIcon from '../../cloud/components/atoms/EmojiIcon'
 
 const StorageCreatePage = () => {
   return (
-    <PageContainer>
-      <PageDraggableHeader
-        iconPath={mdiBookPlusMultiple}
-        label='Create Local Workspace'
-      />
-      <PageScrollableContent>
-        <FSStorageCreateForm />
-      </PageScrollableContent>
-    </PageContainer>
+    <Application
+      hideSidebar={true}
+      content={{
+        reduced: true,
+        header: (
+          <>
+            <EmojiIcon
+              defaultIcon={mdiBookPlusMultiple}
+              style={{ marginRight: 10 }}
+              size={16}
+            />
+            <span style={{ marginRight: 10 }}>Create Local Workspace</span>
+          </>
+        ),
+      }}
+    >
+      <FSStorageCreateForm />
+    </Application>
   )
 }
 
 export default StorageCreatePage
-
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-`

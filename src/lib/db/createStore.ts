@@ -11,6 +11,7 @@ import {
   TagDoc,
   NoteStorageData,
   TagDocEditibleProps,
+  FolderDoc,
 } from './types'
 import { useState, useCallback } from 'react'
 import ow from 'ow'
@@ -27,11 +28,10 @@ import PouchDB from './PouchDB'
 import { LiteStorage } from 'ltstrg'
 import { produce, enableMapSet } from 'immer'
 import { RouterStore } from '../router'
-import { values } from '../db/utils'
+import { values } from './utils'
 import { storageDataListKey } from '../localStorageKeys'
 import { TAG_ID_PREFIX } from './consts'
 import { difference } from 'ramda'
-import { useToast } from '../toast'
 import { useRefState } from '../hooks'
 import FSNoteDb from './FSNoteDb'
 
@@ -47,13 +47,16 @@ export interface DbStore {
   ) => Promise<NoteStorage>
   removeStorage: (id: string) => Promise<void>
   renameStorage: (id: string, name: string) => void
-  createFolder: (storageName: string, pathname: string) => Promise<void>
+  createFolder: (
+    storageId: string,
+    pathname: string
+  ) => Promise<FolderDoc | undefined>
   renameFolder: (
-    storageName: string,
+    storageId: string,
     pathname: string,
     newName: string
   ) => Promise<void>
-  removeFolder: (storageName: string, pathname: string) => Promise<void>
+  removeFolder: (storageId: string, pathname: string) => Promise<void>
   createNote(
     storageId: string,
     noteProps: Partial<NoteDocEditibleProps>
@@ -104,7 +107,6 @@ export function createDbStoreCreator(
     const [storageMap, storageMapRef, setStorageMap] = useRefState<
       ObjectMap<NoteStorage>
     >({})
-    const { pushMessage } = useToast()
 
     const createNote = useCallback(
       async (
@@ -286,12 +288,8 @@ export function createDbStoreCreator(
         try {
           folder = await storage.db.upsertFolder(pathname)
         } catch (error) {
-          pushMessage({
-            title: 'Error',
-            description: 'Folder name is invalid.',
-          })
           console.error(error)
-          return
+          throw new Error('Folder name is invalid. Provided name: ' + pathname)
         }
         const parentFolders = await storage.db.getFoldersByPathnames(
           getAllParentFolderPathnames(pathname)
@@ -312,8 +310,9 @@ export function createDbStoreCreator(
             })
           })
         )
+        return folder
       },
-      [storageMap, setStorageMap, pushMessage]
+      [storageMap, setStorageMap]
     )
 
     const renameFolder = useCallback(
@@ -889,12 +888,22 @@ export function createDbStoreCreator(
           return
         }
 
-        await storage.db.updateTagByName(tag, props)
-        const newTagMap = { ...storageMap[storageId]!.tagMap }
+        const updatedTag = await storage.db.updateTagByName(tag, props)
+        const currentTagMap = storageMap[storageId]!.tagMap
+        const updatedTagMap = {
+          ...currentTagMap,
+          [tag]: {
+            ...currentTagMap[tag],
+            data: {
+              ...(currentTagMap[tag] != null ? currentTagMap[tag]!.data : {}),
+              ...(updatedTag != null ? updatedTag.data : {}),
+            },
+          } as PopulatedTagDoc,
+        }
 
         setStorageMap(
           produce((draft: ObjectMap<NoteStorage>) => {
-            draft[storageId]!.tagMap = newTagMap
+            draft[storageId]!.tagMap = updatedTagMap
           })
         )
 
@@ -1136,8 +1145,9 @@ export function getStorageDataList(
   const serializedStorageDataList = liteStorage.getItem(storageDataListKey)
   try {
     const parsedStorageDataList = JSON.parse(serializedStorageDataList || '[]')
-    if (!Array.isArray(parsedStorageDataList))
+    if (!Array.isArray(parsedStorageDataList)) {
       throw new Error('storage data is corrupted')
+    }
 
     return parsedStorageDataList.reduce<PouchNoteStorageData[]>(
       (validatedList, parsedStorageData) => {

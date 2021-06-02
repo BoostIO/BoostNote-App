@@ -24,33 +24,40 @@ export type GeneralThemeOptions =
   | 'dark'
   | 'sepia'
   | 'solarizedDark'
-export type GeneralLanguageOptions =
-  | 'de'
-  | 'en-US'
-  | 'es-ES'
-  | 'fr-FR'
-  | 'it-IT'
-  | 'ja'
-  | 'ko'
-  | 'pt-BR'
-  | 'uk-UA'
-  | 'zh-CN'
-  | 'zh-HK'
-  | 'zh-TW'
-export type GeneralNoteListViewOptions = 'default' | 'compact'
+export type GeneralLanguageOptions = 'en-US'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
 export type EditorKeyMapOptions = 'default' | 'vim' | 'emacs'
 export type EditorControlModeOptions = '2-toggles' | '3-buttons'
+export type PreferencesTab =
+  | 'about'
+  | 'keymap'
+  | 'editor'
+  | 'markdown'
+  | 'export'
+  | 'storage'
+  | 'migration'
+  | 'general'
+export enum MarginType {
+  DefaultMargins = 0,
+  NoMargins = 1,
+  MinimumMargins = 2,
+}
+export enum PageSize {
+  A3 = 'A3',
+  A4 = 'A4',
+  A5 = 'A5',
+  Legal = 'Legal',
+  Letter = 'Letter',
+  Tabloid = 'Tabloid',
+}
 
 export interface Preferences {
   // General
   'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.noteSorting': NoteSortingOptions
-  'general.noteListView': GeneralNoteListViewOptions
   'general.enableAnalytics': boolean
-  'general.showSubfolderContents': boolean
 
   // Cloud Workspace
   'cloud.user': {
@@ -73,6 +80,9 @@ export interface Preferences {
   'markdown.previewStyle': string
   'markdown.codeBlockTheme': string
   'markdown.includeFrontMatter': boolean
+
+  // Export
+  'export.printOptions': Electron.PrintToPDFOptions
 
   // Keymap
   'general.keymap': Map<string, KeymapItem>
@@ -124,8 +134,6 @@ const basePreferences: Preferences = {
   'general.theme': 'dark',
   'general.noteSorting': 'updated-date-dsc',
   'general.enableAnalytics': true,
-  'general.noteListView': 'default',
-  'general.showSubfolderContents': true,
 
   // BoostHub
   'cloud.user': null,
@@ -145,6 +153,14 @@ const basePreferences: Preferences = {
   'markdown.codeBlockTheme': 'material-darker',
   'markdown.includeFrontMatter': true,
 
+  // Export
+  'export.printOptions': {
+    printBackground: false,
+    landscape: false,
+    marginsType: MarginType.NoMargins,
+    pageSize: PageSize.A4,
+  },
+
   // Keymap
   'general.keymap': new Map<string, KeymapItem>(),
 }
@@ -154,7 +170,7 @@ function usePreferencesStore() {
     ...initialPreferences,
   })
 
-  const [tab, setTab] = useState('about')
+  const [tab, setSettingsTab] = useState<PreferencesTab>('about')
 
   const mergedPreferences = useMemo(() => {
     const preferencesKeymap = preferences['general.keymap']
@@ -178,16 +194,16 @@ function usePreferencesStore() {
   const [closed, setClosed] = useState(true)
   const togglePreferencesModal = useCallback(() => {
     if (closed) {
-      setTab('about')
+      setSettingsTab('about')
       setClosed(false)
     } else {
       setClosed(true)
     }
   }, [closed, setClosed])
 
-  const openTab = useCallback(
-    (tab: string) => {
-      setTab(tab)
+  const openSettingsTab = useCallback(
+    (tab: PreferencesTab) => {
+      setSettingsTab(tab)
       if (closed) {
         setClosed(false)
       }
@@ -379,7 +395,7 @@ function usePreferencesStore() {
 
   return {
     tab,
-    openTab,
+    openTab: openSettingsTab,
     closed,
     setClosed,
     togglePreferencesModal,

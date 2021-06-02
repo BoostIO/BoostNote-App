@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo } from 'react'
 import FolderDetailListItem from './FolderDetailListItem'
 import {
-  mdiCardTextOutline,
   mdiTrashCanOutline,
   mdiStar,
   mdiStarOutline,
-  mdiRestore,
+  mdiFileDocumentOutline,
+  mdiArchive,
+  mdiFileUndoOutline,
 } from '@mdi/js'
 import { NoteDoc } from '../../lib/db/types'
 import { useRouter } from '../../lib/router'
@@ -67,7 +68,7 @@ const FolderDetailListNoteItem = ({
 
   return (
     <FolderDetailListItem
-      iconPath={mdiCardTextOutline}
+      iconPath={mdiFileDocumentOutline}
       label={note.title}
       onClick={navigateToFolder}
       meta={meta}
@@ -81,21 +82,21 @@ const FolderDetailListNoteItem = ({
               onClick={toggleBookmark}
             />
             <FolderDetailListItemControlButton
-              iconPath={mdiTrashCanOutline}
-              title='Trash Note'
+              iconPath={mdiArchive}
+              title='Archive Note'
               onClick={trash}
             />
           </>
         ) : (
           <>
             <FolderDetailListItemControlButton
-              iconPath={mdiRestore}
+              iconPath={mdiFileUndoOutline}
               title='Restore Note'
               onClick={untrash}
             />
             <FolderDetailListItemControlButton
               iconPath={mdiTrashCanOutline}
-              title='Delete Note'
+              title='Delete permanently'
               onClick={purge}
             />
           </>

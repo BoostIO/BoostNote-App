@@ -1,10 +1,7 @@
 import React, { useCallback, useState } from 'react'
-import Icon from './Icon'
-import styled from '../../lib/styled'
 import { mdiClose } from '@mdi/js'
 import {
   flexCenter,
-  tagBackgroundColor,
   TagStyleProps,
   textOverflow,
 } from '../../lib/styled/styleFunctions'
@@ -15,6 +12,10 @@ import DialogColorPicker from './dialog/DialogColorPicker'
 import { PopulatedTagDoc } from '../../lib/db/types'
 import { BaseTheme } from '../../lib/styled/BaseTheme'
 import { isColorBright } from '../../lib/colors'
+import { tagBackgroundColor } from '../../shared/lib/styled/styleFunctions'
+import styled from '../../shared/lib/styled'
+import Icon from '../../shared/components/atoms/Icon'
+import { normalizeTagColor } from '../../lib/db/utils'
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;
@@ -38,7 +39,7 @@ const TagItemAnchor = styled.button<BaseTheme & TagStyleProps>`
   ${textOverflow};
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright((color as string) || theme.secondaryBackgroundColor)
+      isColorBright((color as string) || theme.colors.background.secondary)
         ? 100
         : 0}%
   );
@@ -53,7 +54,7 @@ const TagRemoveButton = styled.button<BaseTheme & TagStyleProps>`
   color: #fff;
   filter: invert(
     ${({ theme, color }) =>
-      isColorBright((color as string) || theme.secondaryBackgroundColor)
+      isColorBright((color as string) || theme.colors.background.secondary)
         ? 100
         : 0}%
   );
@@ -84,13 +85,16 @@ const TagNavigatorListItem = ({
   const { report } = useAnalytics()
 
   const [colorPickerModal, showColorPickerModal] = useState(false)
-  const [tagColor, setTagColor] = useState(
-    typeof tag.data.color == 'string' ? tag.data.color : ''
-  )
+  const [tagColor, setTagColor] = useState(normalizeTagColor(tag))
 
-  const openTagContextMenu = useCallback(() => {
-    showColorPickerModal(true)
-  }, [showColorPickerModal])
+  const openTagContextMenu = useCallback(
+    (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      showColorPickerModal(true)
+    },
+    [showColorPickerModal]
+  )
 
   const handleColorChangeComplete = useCallback(
     (newColor: string) => {

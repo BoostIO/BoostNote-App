@@ -4,8 +4,8 @@ import { convertFileListToArray } from './dom'
 const noteFormat = 'application/x-boost-note-json'
 
 export interface TransferrableNoteData {
-  storageId: string
-  note: NoteDoc
+  workspaceId: string
+  doc: NoteDoc
 }
 
 export function getTransferrableNoteData(
@@ -23,7 +23,7 @@ export function getTransferrableNoteData(
 
 export function setTransferrableNoteData(
   event: React.DragEvent | DragEvent,
-  storageId: string,
+  workspaceId: string,
   note: NoteDoc
 ) {
   if (event.dataTransfer == null) {
@@ -32,7 +32,7 @@ export function setTransferrableNoteData(
   event.dataTransfer.setData(
     noteFormat,
     JSON.stringify({
-      storageId,
+      workspaceId: workspaceId,
       note,
     })
   )
