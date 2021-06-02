@@ -25,6 +25,7 @@ interface DocOnlyContentManagerProps {
   team: SerializedTeam
   documents: SerializedDocWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
+  currentUserIsCoreMember: boolean
   page?: 'archive' | 'tag' | 'shared' | 'smart-folder'
 }
 
@@ -33,6 +34,7 @@ const DocOnlyContentManager = ({
   documents,
   page,
   workspacesMap,
+  currentUserIsCoreMember,
 }: DocOnlyContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
   const [sending] = useState<boolean>(false)
@@ -104,37 +106,39 @@ const DocOnlyContentManager = ({
 
   return (
     <StyledContentManager>
-      <StyledContentManagerHeader>
-        <div className='header__left'>
-          <Checkbox
-            checked={selectingAllDocs}
-            disabled={orderedDocs.length === 0}
-            className={cc([
-              'header__left__checkbox',
-              selectingAllDocs && 'header__left__checkbox--checked',
-            ])}
-            onChange={selectingAllDocs ? resetDocs : selectAllDocs}
-          />
-          <DocOnlyContentManagerBulkActions
-            selectedDocs={selectedDocSet}
-            documentsMap={currentDocumentsRef.current}
-            workspacesMap={workspacesMap}
-            team={team}
-            updating={updating}
-            setUpdating={setUpdating}
-          />
-        </div>
-
-        <div className='header__right'>
-          {sending && (
-            <Spinner
-              className='relative'
-              style={{ top: -4, left: 0, marginRight: 10 }}
+      {currentUserIsCoreMember && (
+        <StyledContentManagerHeader>
+          <div className='header__left'>
+            <Checkbox
+              checked={selectingAllDocs}
+              disabled={orderedDocs.length === 0}
+              className={cc([
+                'header__left__checkbox',
+                selectingAllDocs && 'header__left__checkbox--checked',
+              ])}
+              onChange={selectingAllDocs ? resetDocs : selectAllDocs}
             />
-          )}
-          <SortingOption value={order} onChange={onChangeOrder} />
-        </div>
-      </StyledContentManagerHeader>
+            <DocOnlyContentManagerBulkActions
+              selectedDocs={selectedDocSet}
+              documentsMap={currentDocumentsRef.current}
+              workspacesMap={workspacesMap}
+              team={team}
+              updating={updating}
+              setUpdating={setUpdating}
+            />
+          </div>
+
+          <div className='header__right'>
+            {sending && (
+              <Spinner
+                className='relative'
+                style={{ top: -4, left: 0, marginRight: 10 }}
+              />
+            )}
+            <SortingOption value={order} onChange={onChangeOrder} />
+          </div>
+        </StyledContentManagerHeader>
+      )}
       <StyledContentManagerList>
         {orderedDocs.map((doc) => (
           <ContentManagerDocRow
@@ -147,6 +151,7 @@ const DocOnlyContentManager = ({
             checked={hasDoc(doc.id)}
             onSelect={() => toggleDoc(doc.id)}
             showPath={page != null}
+            currentUserIsCoreMember={currentUserIsCoreMember}
           />
         ))}
         {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}

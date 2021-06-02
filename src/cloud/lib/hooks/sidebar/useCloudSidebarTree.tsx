@@ -63,7 +63,7 @@ import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents
 import { useDialog } from '../../../../shared/lib/stores/dialog'
 
 export function useCloudSidebarTree() {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
@@ -162,6 +162,60 @@ export function useCloudSidebarTree() {
         team,
         'index'
       )}`
+
+      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
+        ? {
+            dropIn: true,
+            onDrop: () => dropInWorkspace(wp.id, updateFolder, updateDoc),
+            controls: [
+              {
+                icon: mdiFilePlusOutline,
+                onClick: undefined,
+                placeholder: 'Doc title..',
+                create: (title: string) =>
+                  createDoc(team, {
+                    workspaceId: wp.id,
+                    title,
+                  }),
+              },
+              {
+                icon: mdiFolderPlusOutline,
+                onClick: undefined,
+                placeholder: 'Folder name..',
+                create: (folderName: string) =>
+                  createFolder(team, {
+                    workspaceId: wp.id,
+                    description: '',
+                    folderName,
+                  }),
+              },
+            ],
+            contextControls: wp.default
+              ? [
+                  {
+                    type: MenuTypes.Normal,
+                    icon: mdiApplicationCog,
+                    label: 'Edit',
+                    onClick: () => openWorkspaceEditForm(wp),
+                  },
+                ]
+              : [
+                  {
+                    type: MenuTypes.Normal,
+                    icon: mdiApplicationCog,
+                    label: 'Edit',
+                    onClick: () => openWorkspaceEditForm(wp),
+                  },
+                  {
+                    type: MenuTypes.Normal,
+                    icon: mdiTrashCanOutline,
+                    label: 'Delete',
+                    onClick: () => deleteWorkspace(wp),
+                  },
+                ],
+          }
+        : {}
+
       items.set(wp.id, {
         id: wp.id,
         lastUpdated: wp.updatedAt,
@@ -173,54 +227,7 @@ export function useCloudSidebarTree() {
         href,
         active: href === currentPathWithDomain,
         navigateTo: () => push(href),
-        dropIn: true,
-        onDrop: () => dropInWorkspace(wp.id, updateFolder, updateDoc),
-        controls: [
-          {
-            icon: mdiFilePlusOutline,
-            onClick: undefined,
-            placeholder: 'Doc title..',
-            create: (title: string) =>
-              createDoc(team, {
-                workspaceId: wp.id,
-                title,
-              }),
-          },
-          {
-            icon: mdiFolderPlusOutline,
-            onClick: undefined,
-            placeholder: 'Folder name..',
-            create: (folderName: string) =>
-              createFolder(team, {
-                workspaceId: wp.id,
-                description: '',
-                folderName,
-              }),
-          },
-        ],
-        contextControls: wp.default
-          ? [
-              {
-                type: MenuTypes.Normal,
-                icon: mdiApplicationCog,
-                label: 'Edit',
-                onClick: () => openWorkspaceEditForm(wp),
-              },
-            ]
-          : [
-              {
-                type: MenuTypes.Normal,
-                icon: mdiApplicationCog,
-                label: 'Edit',
-                onClick: () => openWorkspaceEditForm(wp),
-              },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiTrashCanOutline,
-                label: 'Delete',
-                onClick: () => deleteWorkspace(wp),
-              },
-            ],
+        ...coreRestrictedFeatures,
       })
     })
 
@@ -231,6 +238,89 @@ export function useCloudSidebarTree() {
         team,
         'index'
       )}`
+
+      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
+        ? {
+            onDrop: (position: SidebarDragState) =>
+              dropInDocOrFolder({ type: 'folder', result: folder }, position),
+            onDragStart: () => {
+              draggedResource.current = { type: 'folder', result: folder }
+            },
+            onDragEnd: () => {
+              draggedResource.current = undefined
+            },
+            dropIn: true,
+            dropAround: sortingOrder === 'drag' ? true : false,
+            controls: [
+              {
+                icon: mdiFilePlusOutline,
+                onClick: undefined,
+                placeholder: 'Doc title..',
+                create: (title: string) =>
+                  createDoc(team, {
+                    parentFolderId: folder.id,
+                    workspaceId: folder.workspaceId,
+                    title,
+                  }),
+              },
+              {
+                icon: mdiFolderPlusOutline,
+                onClick: undefined,
+                placeholder: 'Folder name..',
+                create: (folderName: string) =>
+                  createFolder(team, {
+                    parentFolderId: folder.id,
+                    workspaceId: folder.workspaceId,
+                    description: '',
+                    folderName,
+                  }),
+              },
+            ],
+            contextControls: [
+              {
+                type: MenuTypes.Normal,
+                icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                label:
+                  treeSendingMap.get(folder.id) === 'bookmark'
+                    ? '...'
+                    : folder.bookmarked
+                    ? 'Bookmarked'
+                    : 'Bookmark',
+                onClick: () =>
+                  toggleFolderBookmark(
+                    folder.teamId,
+                    folder.id,
+                    folder.bookmarked
+                  ),
+              },
+              {
+                type: MenuTypes.Normal,
+                icon: mdiPencil,
+                label: 'Rename',
+                onClick: () => openRenameFolderForm(folder),
+              },
+              {
+                type: MenuTypes.Normal,
+                icon: mdiTrashCanOutline,
+                label: 'Delete',
+                onClick: () => deleteFolder(folder),
+              },
+            ],
+          }
+        : {
+            controls: [
+              {
+                icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                onClick: () =>
+                  toggleFolderBookmark(
+                    folder.teamId,
+                    folder.id,
+                    folder.bookmarked
+                  ),
+              },
+            ],
+          }
+
       items.set(folderId, {
         id: folderId,
         lastUpdated: folder.updatedAt,
@@ -242,67 +332,7 @@ export function useCloudSidebarTree() {
         href,
         active: href === currentPathWithDomain,
         navigateTo: () => push(href),
-        onDrop: (position: SidebarDragState) =>
-          dropInDocOrFolder({ type: 'folder', result: folder }, position),
-        onDragStart: () => {
-          draggedResource.current = { type: 'folder', result: folder }
-        },
-        onDragEnd: () => {
-          draggedResource.current = undefined
-        },
-        dropIn: true,
-        dropAround: sortingOrder === 'drag' ? true : false,
-        controls: [
-          {
-            icon: mdiFilePlusOutline,
-            onClick: undefined,
-            placeholder: 'Doc title..',
-            create: (title: string) =>
-              createDoc(team, {
-                parentFolderId: folder.id,
-                workspaceId: folder.workspaceId,
-                title,
-              }),
-          },
-          {
-            icon: mdiFolderPlusOutline,
-            onClick: undefined,
-            placeholder: 'Folder name..',
-            create: (folderName: string) =>
-              createFolder(team, {
-                parentFolderId: folder.id,
-                workspaceId: folder.workspaceId,
-                description: '',
-                folderName,
-              }),
-          },
-        ],
-        contextControls: [
-          {
-            type: MenuTypes.Normal,
-            icon: folder.bookmarked ? mdiStar : mdiStarOutline,
-            label:
-              treeSendingMap.get(folder.id) === 'bookmark'
-                ? '...'
-                : folder.bookmarked
-                ? 'Bookmarked'
-                : 'Bookmark',
-            onClick: () =>
-              toggleFolderBookmark(folder.teamId, folder.id, folder.bookmarked),
-          },
-          {
-            type: MenuTypes.Normal,
-            icon: mdiPencil,
-            label: 'Rename',
-            onClick: () => openRenameFolderForm(folder),
-          },
-          {
-            type: MenuTypes.Normal,
-            icon: mdiTrashCanOutline,
-            label: 'Delete',
-            onClick: () => deleteFolder(folder),
-          },
-        ],
+        ...coreRestrictedFeatures,
         parentId:
           folder.parentFolderId == null
             ? folder.workspaceId
@@ -322,6 +352,56 @@ export function useCloudSidebarTree() {
         team,
         'index'
       )}`
+
+      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
+        ? {
+            dropAround: sortingOrder === 'drag' ? true : false,
+            navigateTo: () => push(href),
+            onDrop: (position: SidebarDragState) =>
+              dropInDocOrFolder({ type: 'doc', result: doc }, position),
+            onDragStart: () => {
+              draggedResource.current = { type: 'doc', result: doc }
+            },
+            onDragEnd: () => {
+              draggedResource.current = undefined
+            },
+            contextControls: [
+              {
+                type: MenuTypes.Normal,
+                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                label:
+                  treeSendingMap.get(doc.id) === 'bookmark'
+                    ? '...'
+                    : doc.bookmarked
+                    ? 'Bookmarked'
+                    : 'Bookmark',
+                onClick: () =>
+                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+              },
+              {
+                type: MenuTypes.Normal,
+                icon: mdiPencil,
+                label: 'Rename',
+                onClick: () => openRenameDocForm(doc),
+              },
+              {
+                type: MenuTypes.Normal,
+                icon: mdiTrashCanOutline,
+                label: 'Delete',
+                onClick: () => deleteDoc(doc),
+              },
+            ],
+          }
+        : {
+            controls: [
+              {
+                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                onClick: () =>
+                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+              },
+            ],
+          }
+
       items.set(docId, {
         id: docId,
         lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
@@ -336,42 +416,7 @@ export function useCloudSidebarTree() {
         children: [],
         href,
         active: href === currentPathWithDomain,
-        dropAround: sortingOrder === 'drag' ? true : false,
-        navigateTo: () => push(href),
-        onDrop: (position: SidebarDragState) =>
-          dropInDocOrFolder({ type: 'doc', result: doc }, position),
-        onDragStart: () => {
-          draggedResource.current = { type: 'doc', result: doc }
-        },
-        onDragEnd: () => {
-          draggedResource.current = undefined
-        },
-        contextControls: [
-          {
-            type: MenuTypes.Normal,
-            icon: doc.bookmarked ? mdiStar : mdiStarOutline,
-            label:
-              treeSendingMap.get(doc.id) === 'bookmark'
-                ? '...'
-                : doc.bookmarked
-                ? 'Bookmarked'
-                : 'Bookmark',
-            onClick: () =>
-              toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
-          },
-          {
-            type: MenuTypes.Normal,
-            icon: mdiPencil,
-            label: 'Rename',
-            onClick: () => openRenameDocForm(doc),
-          },
-          {
-            type: MenuTypes.Normal,
-            icon: mdiTrashCanOutline,
-            label: 'Delete',
-            onClick: () => deleteDoc(doc),
-          },
-        ],
+        ...coreRestrictedFeatures,
         parentId:
           doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
       })
@@ -490,67 +535,75 @@ export function useCloudSidebarTree() {
           depth: 0,
           active: href === currentPathWithDomain,
           navigateTo: () => push(href),
-          contextControls: [
-            {
-              type: MenuTypes.Normal,
-              icon: mdiPencil,
-              label: 'Edit',
-              onClick: () => {
-                openModal(<UpdateSmartFolderModal smartFolder={smartFolder} />)
-              },
-            },
-            {
-              type: MenuTypes.Normal,
-              icon: mdiTrashCanOutline,
-              label: 'Delete',
-              onClick: () => {
-                messageBox({
-                  title: `Delete ${smartFolder.name}?`,
-                  message: `Are you sure to delete this smart folder?`,
-                  buttons: [
-                    {
-                      variant: 'secondary',
-                      label: 'Cancel',
-                      cancelButton: true,
-                      defaultButton: true,
-                    },
-                    {
-                      variant: 'danger',
-                      label: 'Delete',
-                      onClick: async () => {
-                        await deleteSmartFolder(smartFolder)
-                      },
-                    },
-                  ],
-                })
-              },
-            },
-          ],
+          contextControls: !currentUserIsCoreMember
+            ? undefined
+            : [
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiPencil,
+                  label: 'Edit',
+                  onClick: () => {
+                    openModal(
+                      <UpdateSmartFolderModal smartFolder={smartFolder} />
+                    )
+                  },
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiTrashCanOutline,
+                  label: 'Delete',
+                  onClick: () => {
+                    messageBox({
+                      title: `Delete ${smartFolder.name}?`,
+                      message: `Are you sure to delete this smart folder?`,
+                      buttons: [
+                        {
+                          variant: 'secondary',
+                          label: 'Cancel',
+                          cancelButton: true,
+                          defaultButton: true,
+                        },
+                        {
+                          variant: 'danger',
+                          label: 'Delete',
+                          onClick: async () => {
+                            await deleteSmartFolder(smartFolder)
+                          },
+                        },
+                      ],
+                    })
+                  },
+                },
+              ],
         }
       }),
-      controls: [
-        {
-          icon: mdiPlus,
-          onClick: () => {
-            openModal(<CreateSmartFolderModal />)
-          },
-          tooltip: 'Add smart folder',
-        },
-      ],
+      controls: currentUserIsCoreMember
+        ? [
+            {
+              icon: mdiPlus,
+              onClick: () => {
+                openModal(<CreateSmartFolderModal />)
+              },
+              tooltip: 'Add smart folder',
+            },
+          ]
+        : undefined,
     })
 
     tree.push({
       label: 'Workspaces',
       rows: navTree,
-      controls: [
-        {
-          icon: mdiPlus,
-          onClick: () => openModal(<CreateWorkspaceModal />),
-        },
-      ],
+      controls: currentUserIsCoreMember
+        ? [
+            {
+              icon: mdiPlus,
+              onClick: () => openModal(<CreateWorkspaceModal />),
+            },
+          ]
+        : undefined,
     })
 
-    if (!team.personal) {
+    if (!team.personal && currentUserIsCoreMember) {
       tree.push({
         label: 'Private',
         rows:
@@ -760,6 +813,7 @@ export function useCloudSidebarTree() {
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
+    currentUserIsCoreMember,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

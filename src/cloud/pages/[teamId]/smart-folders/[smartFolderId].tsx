@@ -120,7 +120,7 @@ function validateDateValue(
 }
 
 const SmartFolderPage = (params: any) => {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
 
   const { smartFolderId } = params
@@ -286,6 +286,7 @@ const SmartFolderPage = (params: any) => {
         documents={documents}
         page='smart-folder'
         workspacesMap={workspacesMap}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

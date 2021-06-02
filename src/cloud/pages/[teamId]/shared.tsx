@@ -12,7 +12,7 @@ import { topParentId } from '../../lib/mappers/topbarTree'
 import DocOnlyContentManager from '../../components/molecules/ContentManager/DocOnlyContentManager'
 
 const SharedDocsListPage = () => {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, workspacesMap } = useNav()
   const { push } = useRouter()
 
@@ -50,6 +50,7 @@ const SharedDocsListPage = () => {
         documents={sharedDocs}
         page='shared'
         workspacesMap={workspacesMap}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

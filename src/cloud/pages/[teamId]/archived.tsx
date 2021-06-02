@@ -13,7 +13,7 @@ import { topParentId } from '../../lib/mappers/topbarTree'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
 
 const ArchivedPage = () => {
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, workspacesMap } = useNav()
   const { push } = useRouter()
 
@@ -65,6 +65,7 @@ const ArchivedPage = () => {
         page='archive'
         workspacesMap={workspacesMap}
         showCreateButtons={false}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

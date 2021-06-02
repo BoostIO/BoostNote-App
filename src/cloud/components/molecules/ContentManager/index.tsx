@@ -54,6 +54,7 @@ interface ContentManagerProps {
   documents: SerializedDocWithBookmark[]
   folders: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
+  currentUserIsCoreMember: boolean
   currentWorkspaceId?: string
   currentFolderId?: string
   showCreateButtons?: boolean
@@ -68,7 +69,8 @@ const ContentManager = ({
   workspacesMap,
   currentFolderId,
   currentWorkspaceId,
-  showCreateButtons = true,
+  currentUserIsCoreMember,
+  showCreateButtons = currentUserIsCoreMember ? true : false,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
   const [sendingAction, setSendingAction] = useState<
@@ -100,6 +102,7 @@ const ContentManager = ({
       reset: resetDocs,
     },
   ] = useSet<string>(new Set())
+
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithBookmark>(
       documents.map((doc) => [doc.id, doc])
@@ -291,15 +294,17 @@ const ContentManager = ({
     <StyledContentManager>
       <StyledContentManagerHeader>
         <div className='header__left'>
-          <Checkbox
-            checked={selectingAllItems}
-            disabled={orderedDocs.length + orderedFolders.length === 0}
-            className={cc([
-              'header__left__checkbox',
-              selectingAllItems && 'header__left__checkbox--checked',
-            ])}
-            onChange={selectingAllItems ? unselectAllItems : selectAllItems}
-          />
+          {currentUserIsCoreMember && (
+            <Checkbox
+              checked={selectingAllItems}
+              disabled={orderedDocs.length + orderedFolders.length === 0}
+              className={cc([
+                'header__left__checkbox',
+                selectingAllItems && 'header__left__checkbox--checked',
+              ])}
+              onChange={selectingAllItems ? unselectAllItems : selectAllItems}
+            />
+          )}
 
           <Button
             variant='transparent'
@@ -323,16 +328,18 @@ const ContentManager = ({
             DOCUMENTS
           </Button>
 
-          <ContentManagerBulkActions
-            selectedDocs={selectedDocSet}
-            selectedFolders={selectedFolderSet}
-            documentsMap={currentDocumentsRef.current}
-            foldersMap={currentFoldersRef.current}
-            workspacesMap={workspacesMap}
-            team={team}
-            updating={updating}
-            setUpdating={setUpdating}
-          />
+          {currentUserIsCoreMember && (
+            <ContentManagerBulkActions
+              selectedDocs={selectedDocSet}
+              selectedFolders={selectedFolderSet}
+              documentsMap={currentDocumentsRef.current}
+              foldersMap={currentFoldersRef.current}
+              workspacesMap={workspacesMap}
+              team={team}
+              updating={updating}
+              setUpdating={setUpdating}
+            />
+          )}
         </div>
 
         <div className='header__right'>
@@ -343,14 +350,18 @@ const ContentManager = ({
         {(contentTab === 'all' || contentTab === 'folders') && (
           <>
             <StyledContentManagerListHeader>
-              <Checkbox
-                className={cc([
-                  'header__checkbox',
-                  selectingAllFolders && 'header__checkbox--checked',
-                ])}
-                checked={selectingAllFolders}
-                onChange={selectingAllFolders ? resetFolders : selectAllFolders}
-              />
+              {currentUserIsCoreMember && (
+                <Checkbox
+                  className={cc([
+                    'header__checkbox',
+                    selectingAllFolders && 'header__checkbox--checked',
+                  ])}
+                  checked={selectingAllFolders}
+                  onChange={
+                    selectingAllFolders ? resetFolders : selectAllFolders
+                  }
+                />
+              )}
               <div className='header__label'>FOLDERS</div>
               {showCreateButtons && (
                 <div className='header__control'>
@@ -375,6 +386,7 @@ const ContentManager = ({
                 setUpdating={setUpdating}
                 checked={hasFolder(folder.id)}
                 onSelect={() => toggleFolder(folder.id)}
+                currentUserIsCoreMember={currentUserIsCoreMember}
               />
             ))}
 
@@ -384,14 +396,16 @@ const ContentManager = ({
         {(contentTab === 'all' || contentTab === 'docs') && (
           <>
             <StyledContentManagerListHeader>
-              <Checkbox
-                className={cc([
-                  'header__checkbox',
-                  selectingAllDocs && 'header__checkbox--checked',
-                ])}
-                checked={selectingAllDocs}
-                onChange={selectingAllDocs ? resetDocs : selectAllDocs}
-              />
+              {currentUserIsCoreMember && (
+                <Checkbox
+                  className={cc([
+                    'header__checkbox',
+                    selectingAllDocs && 'header__checkbox--checked',
+                  ])}
+                  checked={selectingAllDocs}
+                  onChange={selectingAllDocs ? resetDocs : selectAllDocs}
+                />
+              )}
               <div className='header__label'>DOCUMENTS</div>
               <div className='header__control'>
                 <Button
@@ -510,6 +524,7 @@ const ContentManager = ({
                 checked={hasDoc(doc.id)}
                 onSelect={() => toggleDoc(doc.id)}
                 showPath={page != null}
+                currentUserIsCoreMember={currentUserIsCoreMember}
               />
             ))}
             {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}

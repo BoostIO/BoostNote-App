@@ -17,7 +17,7 @@ import DocOnlyContentManager from '../../../../components/molecules/ContentManag
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { push } = useRouter()
 
   const pageTag = useMemo(() => {
@@ -87,6 +87,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
         documents={docs}
         page='tag'
         workspacesMap={relatedWorkspaces}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )

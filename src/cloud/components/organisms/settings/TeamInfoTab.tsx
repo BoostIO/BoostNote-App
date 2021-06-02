@@ -6,6 +6,7 @@ import { useSettings } from '../../../lib/stores/settings'
 import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
+import ViewerRestrictedWrapper from '../../molecules/ViewerRestrictedWrapper'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -51,9 +52,11 @@ const TeamInfoTab = () => {
       title={t('settings.teamInfo')}
       description={'Manage your space settings.'}
       body={
-        <section>
-          <SettingsTeamForm team={team} teamConversion={false} />
-        </section>
+        <ViewerRestrictedWrapper>
+          <section>
+            <SettingsTeamForm team={team} teamConversion={false} />
+          </section>
+        </ViewerRestrictedWrapper>
       }
       footer={adminContent}
     ></SettingTabContent>

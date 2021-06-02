@@ -14,12 +14,14 @@ interface DocAssigneeSelectProps {
   defaultValue: string[]
   update: (value: string[]) => void
   isLoading: boolean
+  readOnly: boolean
 }
 
 const DocAssigneeSelect = ({
   disabled = false,
   defaultValue,
   isLoading,
+  readOnly,
   update,
 }: DocAssigneeSelectProps) => {
   const { permissions } = usePage()
@@ -67,6 +69,7 @@ const DocAssigneeSelect = ({
           'form__select',
           focused && 'form__select--focused',
           disabled && 'form__select--disabled',
+          readOnly && 'form__select--readOnly',
         ])}
         id='assignee-select'
         classNamePrefix='form__select'
@@ -86,6 +89,10 @@ const DocAssigneeSelect = ({
 }
 
 const SelectContainer = styled.div`
+  .form__select--readOnly .form__select__multi-value__remove {
+    display: none;
+  }
+
   .form__select .form__select__indicator-separator {
     width: 0;
   }

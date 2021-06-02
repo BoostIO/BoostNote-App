@@ -11,11 +11,13 @@ interface DocDueDateSelectProps {
   sending?: boolean
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
+  disabled?: boolean
 }
 
 const DocDueDateSelect = ({
   className,
   sending,
+  disabled,
   dueDate: dueDateString,
   onDueDateChange,
 }: DocDueDateSelectProps) => {
@@ -31,7 +33,7 @@ const DocDueDateSelect = ({
     <Container>
       <DatePicker
         wrapperClassName={className}
-        disabled={sending}
+        disabled={sending || disabled}
         selected={dueDate}
         onChange={onDueDateChange}
         popperPlacement='top-end'

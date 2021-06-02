@@ -11,6 +11,7 @@ import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import { ExternalLink } from '../../../../shared/components/atoms/Link'
 import Form from '../../../../shared/components/molecules/Form'
+import ViewerRestrictedWrapper from '../../molecules/ViewerRestrictedWrapper'
 
 const ApiTab = () => {
   const { team } = usePage()
@@ -41,7 +42,7 @@ const ApiTab = () => {
           team != null ? team.name : 'your team'
         }`}
       body={
-        <>
+        <ViewerRestrictedWrapper>
           <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
@@ -89,7 +90,7 @@ const ApiTab = () => {
               </StyledServiceList>
             )}
           </section>
-        </>
+        </ViewerRestrictedWrapper>
       }
     ></SettingTabContent>
   )

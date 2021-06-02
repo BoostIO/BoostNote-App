@@ -38,7 +38,7 @@ import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 
 const FolderPage = () => {
-  const { pageFolder, team } = usePage()
+  const { pageFolder, team, currentUserIsCoreMember } = usePage()
   const {
     docsMap,
     foldersMap,
@@ -74,6 +74,13 @@ const FolderPage = () => {
     if (team == null) {
       return []
     }
+
+    if (!currentUserIsCoreMember) {
+      return mapTopbarBreadcrumbs(team, foldersMap, workspacesMap, push, {
+        pageFolder: currentFolder,
+      })
+    }
+
     return mapTopbarBreadcrumbs(
       team,
       foldersMap,
@@ -105,6 +112,7 @@ const FolderPage = () => {
     deleteWorkspace,
     deleteFolder,
     openWorkspaceEditForm,
+    currentUserIsCoreMember,
   ])
 
   const childDocs = useMemo(() => {
@@ -137,16 +145,6 @@ const FolderPage = () => {
 
   useTitle(pageTitle)
 
-  // const onEmojiClick = useCallback(
-  //   (event: React.MouseEvent<HTMLDivElement>) => {
-  //     openEmojiPicker(event, {
-  //       item: currentFolder,
-  //       type: 'folder',
-  //     } as EmojiResource)
-  //   },
-  //   [currentFolder, openEmojiPicker]
-  // )
-
   useEffect(() => {
     if (currentFolder == null) {
       setCurrentPath('/')
@@ -157,7 +155,7 @@ const FolderPage = () => {
 
   const folderPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      if (team == null || pageFolder == null) {
+      if (team == null || pageFolder == null || !currentUserIsCoreMember) {
         return
       }
 
@@ -184,6 +182,7 @@ const FolderPage = () => {
     pageFolder,
     deleteFolder,
     toggleFolderBookmark,
+    currentUserIsCoreMember,
   ])
   useGlobalKeyDownHandler(folderPageControlsKeyDownHandler)
 
@@ -272,6 +271,7 @@ const FolderPage = () => {
         workspacesMap={workspaceMap}
         currentFolderId={currentFolder.id}
         currentWorkspaceId={currentFolder.workspaceId}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
   )
