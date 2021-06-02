@@ -26,7 +26,9 @@ import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
-import Sidebar from '../../shared/components/organisms/Sidebar'
+import Sidebar, {
+  PopOverState,
+} from '../../shared/components/organisms/Sidebar'
 import { MenuTypes, useContextMenu } from '../../shared/lib/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
@@ -67,6 +69,7 @@ import {
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
+  mdiBell,
 } from '@mdi/js'
 import { getColorFromString } from '../../shared/lib/string'
 import { buildIconUrl } from '../api/files'
@@ -100,6 +103,8 @@ import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { compareAsc } from 'date-fns'
 import { SidebarTreeControl } from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
+import { Notification } from '../interfaces/db/notifications'
+import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -136,7 +141,7 @@ const Application = ({
   const { push, query, pathname, goBack, goForward } = useRouter()
   const { history, searchHistory, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
-  const [showSpaces, setShowSpaces] = useState(false)
+  const [popOverState, setPopOverState] = useState<PopOverState>(null)
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     initialSidebarState != null
@@ -189,8 +194,8 @@ const Application = ({
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(
-      showSpaces,
-      setShowSpaces,
+      popOverState,
+      setPopOverState,
       openState,
       openModal,
       openSettingsTab,
@@ -204,7 +209,7 @@ const Application = ({
     openSettingsTab,
     team,
     openState,
-    showSpaces,
+    popOverState,
     subscription,
   ])
 
@@ -415,6 +420,7 @@ const Application = ({
     sendToElectron('sidebar--state', { state: sidebarState })
   }, [usingElectron, , sendToElectron, sidebarState])
 
+<<<<<<< HEAD
   const treeControls: SidebarTreeControl[] = useMemo(() => {
     return [
       {
@@ -474,6 +480,21 @@ const Application = ({
       isNotDebouncing: isNotDebouncing() === true,
     }
   }, [isNotDebouncing, fetchingSearchResults])
+=======
+  const {
+    state: notificationState,
+    getMore: getMoreNotifications,
+    setViewed,
+  } = useNotificationState(team?.id)
+  const notificationClick = useCallback(
+    (notification: Notification) => {
+      setPopOverState(null)
+      setViewed(notification)
+      push(notification.link)
+    },
+    [push, setViewed]
+  )
+>>>>>>> 1cbfca40... integrate notifications
 
   return (
     <>
@@ -503,8 +524,13 @@ const Application = ({
           <Sidebar
             className={cc(['application__sidebar'])}
             showToolbar={!usingElectron}
+<<<<<<< HEAD
             showSpaces={showSpaces}
             onSpacesBlur={onSpacesBlurCallback}
+=======
+            popOver={popOverState}
+            onSpacesBlur={() => setPopOverState(null)}
+>>>>>>> 1cbfca40... integrate notifications
             toolbarRows={toolbarRows}
             spaces={spaces}
             spaceBottomRows={spaceBottomRows}
@@ -521,8 +547,26 @@ const Application = ({
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}
+<<<<<<< HEAD
             timelineMore={timelineMore}
             sidebarSearchState={sidebarSearchState}
+=======
+            timelineMore={
+              team != null && pathname !== getTeamLinkHref(team, 'timeline')
+                ? {
+                    variant: 'primary',
+                    onClick: () => push(getTeamLinkHref(team, 'timeline')),
+                  }
+                : undefined
+            }
+            sidebarSearchState={{
+              fetching: fetchingSearchResults,
+              isNotDebouncing: isNotDebouncing() === true,
+            }}
+            notificationState={notificationState}
+            getMoreNotifications={getMoreNotifications}
+            notificationClick={notificationClick}
+>>>>>>> 1cbfca40... integrate notifications
           />
         }
         pageBody={
@@ -691,8 +735,8 @@ function mapHistory(
 }
 
 function mapToolbarRows(
-  showSpaces: boolean,
-  setShowSpaces: React.Dispatch<React.SetStateAction<boolean>>,
+  popOverState: PopOverState,
+  setPopOverState: React.Dispatch<React.SetStateAction<PopOverState>>,
   openState: (sidebarState: SidebarState) => void,
   openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   openSettingsTab: (tab: SettingsTab) => void,
@@ -704,7 +748,7 @@ function mapToolbarRows(
   if (team != null) {
     rows.push({
       tooltip: 'Spaces',
-      active: showSpaces,
+      active: popOverState === 'spaces',
       icon: (
         <RoundedImage
           size={26}
@@ -712,7 +756,8 @@ function mapToolbarRows(
           url={team.icon != null ? buildIconUrl(team.icon.location) : undefined}
         />
       ),
-      onClick: () => setShowSpaces((prev) => !prev),
+      onClick: () =>
+        setPopOverState((prev) => (prev === 'spaces' ? null : 'spaces')),
     })
   }
   rows.push({
@@ -732,6 +777,15 @@ function mapToolbarRows(
     active: sidebarState === 'timeline',
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
+  })
+  rows.push({
+    tooltip: 'Notifications',
+    active: popOverState === 'notifications',
+    icon: mdiBell,
+    onClick: () =>
+      setPopOverState((prev) =>
+        prev === 'notifications' ? null : 'notifications'
+      ),
   })
 
   if (team != null && subscription == null && isEligibleForDiscount(team)) {
