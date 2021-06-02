@@ -36,15 +36,12 @@ const ApiTab = () => {
   return (
     <SettingTabContent
       title='API'
-      description='These tokens are available only to BoostIO.'
+      description={`
+        These tokens are available only to ${
+          team != null ? team.name : 'your team'
+        }`}
       body={
         <>
-          <section>
-            <p className='text--subtle'>
-              These tokens are available only to{' '}
-              {team != null ? team.name : 'your team'}.
-            </p>
-          </section>
           <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
