@@ -60,6 +60,7 @@ import { CommentsProvider } from '../../shared/lib/stores/comments'
 import SmartFolderPage from '../pages/[teamId]/smart-folders/[smartFolderId]'
 import DocStatusShowPage from '../pages/[teamId]/status/[docStatus]'
 import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
+import { NotificationsProvider } from '../../shared/lib/stores/notifications'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -78,7 +79,8 @@ const V2CombinedProvider = combineProviders(
   V2ContextMenuProvider,
   V2ModalProvider,
   V2DialogProvider,
-  CommentsProvider
+  CommentsProvider,
+  NotificationsProvider
 )
 
 interface PageInfo {

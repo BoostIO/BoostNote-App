@@ -23,10 +23,17 @@ import SidebarTimeline, {
 import { AppUser } from '../../../lib/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
 import { ControlButtonProps } from '../../../lib/types'
+import SidebarPopOver from './atoms/SidebarPopOver'
+import NotificationList, {
+  NotificationState,
+} from '../../molecules/NotificationList'
+import { Notification } from '../../../../cloud/interfaces/db/notifications'
+
+export type PopOverState = null | 'spaces' | 'notifications'
 
 type SidebarProps = {
   showToolbar: boolean
-  showSpaces: boolean
+  popOver: PopOverState
   sidebarState?: SidebarState
   toolbarRows: SidebarToolbarRow[]
   sidebarExpandedWidth?: number
@@ -44,12 +51,15 @@ type SidebarProps = {
   users: Map<string, AppUser>
   timelineRows: SidebarTimelineRow[]
   timelineMore?: ButtonProps
+  notificationState: NotificationState
+  getMoreNotifications: () => void
+  notificationClick?: (notification: Notification) => void
 } & SidebarSpaceProps
 
 const Sidebar = ({
   showToolbar,
-  showSpaces,
-  onSpacesBlur,
+  popOver,
+  onSpacesBlur: onPopOverBlur,
   sidebarState,
   toolbarRows,
   spaces,
@@ -69,6 +79,9 @@ const Sidebar = ({
   timelineRows,
   timelineMore,
   users,
+  notificationState,
+  getMoreNotifications,
+  notificationClick,
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
@@ -78,12 +91,23 @@ const Sidebar = ({
           className='sidebar__context__icons'
         />
       )}
-      {showSpaces && (
-        <SidebarSpaces
-          spaces={spaces}
-          spaceBottomRows={spaceBottomRows}
-          onSpacesBlur={onSpacesBlur}
-        />
+      {popOver === 'spaces' && (
+        <SidebarPopOver>
+          <SidebarSpaces
+            spaces={spaces}
+            spaceBottomRows={spaceBottomRows}
+            onSpacesBlur={onPopOverBlur}
+          />
+        </SidebarPopOver>
+      )}
+      {popOver === 'notifications' && (
+        <SidebarPopOver onClose={onPopOverBlur}>
+          <NotificationList
+            state={notificationState}
+            getMore={getMoreNotifications}
+            onClick={notificationClick}
+          />
+        </SidebarPopOver>
       )}
       {sidebarState != null && (
         <WidthEnlarger
