@@ -94,3 +94,17 @@ export function sortByAttributeDesc<T>(attribute: keyof T, array: T[]) {
 export function getMapValues<T>(map: Map<string, T>): T[] {
   return [...map.values()]
 }
+
+export function mergeOnId<T extends { id: string }>(arr1: T[], arr2: T[]): T[] {
+  const arr2Map = new Map(arr2.map((item) => [item.id, item]))
+  const replaced = arr1.map((item) => {
+    const newItem = arr2Map.get(item.id)
+    if (newItem != null) {
+      arr2Map.delete(item.id)
+      return newItem
+    }
+    return item
+  })
+  replaced.push(...arr2Map.values())
+  return replaced
+}
