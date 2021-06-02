@@ -143,7 +143,18 @@ const DocPage = ({
     )
   }
 
-  return docIsEditable && currentUser != null ? (
+  if (currentUser == null) {
+    return (
+      <Application content={{}}>
+        <ColoredBlock variant='danger' style={{ marginTop: '100px' }}>
+          <h3>Oops...</h3>
+          <p>You need to be connected to access this document.</p>
+        </ColoredBlock>
+      </Application>
+    )
+  }
+
+  return docIsEditable ? (
     <EditPage
       team={team}
       doc={currentDoc}
@@ -159,6 +170,8 @@ const DocPage = ({
       editable={docIsEditable}
       contributors={contributors}
       backLinks={currentBacklinks}
+      user={currentUser}
+      revisionHistory={revisionHistory}
     />
   )
 }

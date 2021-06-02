@@ -812,6 +812,7 @@ const Editor = ({
   const { open: openDocActionContextMenu } = useDocActionContextMenu({
     doc,
     team,
+    currentUserIsCoreMember: true,
     editorRef,
     toggleBookmarkForDoc,
   })
