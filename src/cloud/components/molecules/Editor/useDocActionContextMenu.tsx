@@ -50,6 +50,7 @@ import { selectV2Theme } from '../../../../shared/lib/styled/styleFunctions'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
+  currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   toggleBookmarkForDoc: () => void
 }
@@ -57,6 +58,7 @@ export interface DocActionContextMenuParams {
 export function useDocActionContextMenu({
   team,
   doc,
+  currentUserIsCoreMember,
   editorRef,
   toggleBookmarkForDoc,
 }: DocActionContextMenuParams) {
@@ -197,6 +199,26 @@ export function useDocActionContextMenu({
 
   const open = useCallback(
     (event: MouseEvent) => {
+      const membersRestrictedMenuItems: MenuItem[] = currentUserIsCoreMember
+        ? [
+            createMenuItem({
+              label: 'Save as Template',
+              iconPath: mdiPaletteOutline,
+              onClick: createTemplate,
+            }),
+            createMenuItem({
+              label: 'Move to',
+              iconPath: mdiArrowRight,
+              onClick: openMoveForm,
+            }),
+            createMenuItem({
+              label: 'Delete',
+              iconPath: mdiTrashCanOutline,
+              onClick: openDeleteDocDialog,
+            }),
+          ]
+        : []
+
       popup(event, [
         doc.bookmarked
           ? createMenuItem({
@@ -244,21 +266,7 @@ export function useDocActionContextMenu({
           onClick: exportAsPdf,
         }),
         { type: MenuTypes.Separator },
-        createMenuItem({
-          label: 'Save as Template',
-          iconPath: mdiPaletteOutline,
-          onClick: createTemplate,
-        }),
-        createMenuItem({
-          label: 'Move to',
-          iconPath: mdiArrowRight,
-          onClick: openMoveForm,
-        }),
-        createMenuItem({
-          label: 'Delete',
-          iconPath: mdiTrashCanOutline,
-          onClick: openDeleteDocDialog,
-        }),
+        ...membersRestrictedMenuItems,
       ])
     },
     [
@@ -272,6 +280,7 @@ export function useDocActionContextMenu({
       createTemplate,
       openMoveForm,
       openDeleteDocDialog,
+      currentUserIsCoreMember,
     ]
   )
 
