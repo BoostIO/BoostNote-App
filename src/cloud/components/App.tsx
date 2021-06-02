@@ -38,6 +38,7 @@ const App = () => {
     }
     const handler = (event: MouseEvent) => {
       event.preventDefault()
+      event.stopPropagation()
       sendToHost('open-context-menu')
     }
     window.addEventListener('contextmenu', handler)
