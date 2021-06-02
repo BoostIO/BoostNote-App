@@ -8,7 +8,7 @@ import {
   addIpcListener,
   removeIpcListener,
 } from '../../lib/electronOnly'
-import { entries, getTimelineHref, values } from '../../lib/db/utils'
+import { getTimelineHref, values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { useRouteParams } from '../../lib/routeParams'
@@ -118,6 +118,8 @@ const SidebarContainer = ({
     foldItem,
   } = useSidebarCollapse()
 
+  const localSpaces = useMemo(() => values(storageMap), [storageMap])
+
   const openStorageContextMenu = useCallback(
     (event: React.MouseEvent) => {
       event.preventDefault()
@@ -126,7 +128,6 @@ const SidebarContainer = ({
         return
       }
 
-      const storages = values(storageMap)
       const workspaceId = workspace.id
       openContextMenu({
         menuItems: [
@@ -153,7 +154,7 @@ const SidebarContainer = ({
           {
             type: 'separator',
           },
-          ...storages
+          ...localSpaces
             .filter((storage) => {
               return storage.id !== workspaceId
             })
@@ -181,7 +182,7 @@ const SidebarContainer = ({
     },
     [
       workspace,
-      storageMap,
+      localSpaces,
       t,
       openWorkspaceEditForm,
       removeWorkspace,
@@ -292,7 +293,6 @@ const SidebarContainer = ({
     toggleShowingCloudIntroModal,
   ])
 
-  const localSpaces = values(storageMap)
   const sidebarResize = useCallback(
     (width: number) => setGeneralStatus({ sideBarWidth: width }),
     [setGeneralStatus]
@@ -492,7 +492,7 @@ const SidebarContainer = ({
         icon: boostHubTeam.iconUrl,
         active: activeBoostHubTeamDomain === boostHubTeam.domain,
         tooltip: `${osName === 'macos' ? '⌘' : 'Ctrl'} ${
-          entries(storageMap).length + index + 1
+          localSpaces.length + index + 1
         }`,
         linkProps: {
           onClick: (event) => {
@@ -513,7 +513,6 @@ const SidebarContainer = ({
     openWorkspaceEditForm,
     removeWorkspace,
     activeBoostHubTeamDomain,
-    storageMap,
     push,
   ])
 
