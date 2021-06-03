@@ -765,11 +765,12 @@ function mapToolbarRows(
   rows.push({
     tooltip: 'Notifications',
     active: popOverState === 'notifications',
-    icon: newNotifications ? <NotifyIcon path={mdiBell} /> : mdiBell,
+    icon: newNotifications ? (
+      <NotifyIcon count={newNotifications} path={mdiBell} />
+    ) : (
+      mdiBell
+    ),
     onClick: () => {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission()
-      }
       setPopOverState((prev) =>
         prev === 'notifications' ? null : 'notifications'
       )

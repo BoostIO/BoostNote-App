@@ -127,6 +127,11 @@ function useNotificationStore() {
           cacheRef.current,
           observersRef.current
         )
+        setCounts((prev) => {
+          return {
+            [updated.team]: Math.max(0, (prev[updated.team] || 1) - 1),
+          }
+        })
       } catch (error) {
         pushApiErrorMessage(error)
       }
@@ -138,7 +143,6 @@ function useNotificationStore() {
     async (event: SerializedAppEvent) => {
       switch (event.type) {
         case 'notificationCreated': {
-          console.log(event)
           if (cacheRef.current.has(event.data.teamId)) {
             const notification = await getNotification(
               event.data.notificationId
@@ -148,9 +152,6 @@ function useNotificationStore() {
               cacheRef.current,
               observersRef.current
             )
-            if (Notification.permission === 'granted') {
-              new Notification(notification.title)
-            }
           }
           setCounts((prev) => {
             return {
