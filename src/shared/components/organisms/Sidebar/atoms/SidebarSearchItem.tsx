@@ -218,7 +218,8 @@ const Container = styled.div<{ depth: number }>`
   }
 
   .sidebar__search__highlight {
-    background: #6a320f;
+    color: ${({ theme }) => theme.sidebarSearchHighlightTextColor};
+    background: ${({ theme }) => theme.sidebarSearchHighlightBackgroundColor};
   }
 
   .sidebar__search__item__icon {
