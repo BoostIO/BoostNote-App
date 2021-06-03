@@ -7,8 +7,6 @@ import {
   getNotification,
   setNotificationViewed,
 } from '../../../../cloud/api/notifications'
-import groupBy from 'ramda/es/groupBy'
-import prop from 'ramda/es/prop'
 import { mergeOnId } from '../../utils/array'
 import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
 
@@ -50,7 +48,7 @@ function useNotificationStore() {
             }
 
             insertNotifications(
-              notifications,
+              { [teamId]: notifications },
               cacheRef.current,
               observersRef.current
             )
@@ -84,7 +82,7 @@ function useNotificationStore() {
           }
 
           insertNotifications(
-            notifications,
+            { [team]: notifications },
             cacheRef.current,
             observersRef.current
           )
@@ -107,7 +105,7 @@ function useNotificationStore() {
           }
 
           insertNotifications(
-            notifications,
+            { [team]: notifications },
             cacheRef.current,
             observersRef.current
           )
@@ -124,7 +122,11 @@ function useNotificationStore() {
     async (notification: UserNotification) => {
       try {
         const updated = await setNotificationViewed(notification)
-        insertNotifications([updated], cacheRef.current, observersRef.current)
+        insertNotifications(
+          { [updated.team]: [updated] },
+          cacheRef.current,
+          observersRef.current
+        )
       } catch (error) {
         pushApiErrorMessage(error)
       }
@@ -142,11 +144,10 @@ function useNotificationStore() {
               event.data.notificationId
             )
             insertNotifications(
-              [notification],
+              { [notification.team]: [notification] },
               cacheRef.current,
               observersRef.current
             )
-            console.log(Notification.permission)
             if (Notification.permission === 'granted') {
               new Notification(notification.title)
             }
@@ -173,15 +174,14 @@ function useNotificationStore() {
 }
 
 function insertNotifications(
-  notifications: UserNotification[],
+  notifications: Record<string, UserNotification[]>,
   cache: Map<string, UserNotification[]>,
   observersMap: Map<string, Set<Observer>>
 ) {
-  const partioned = groupBy(prop('team'), notifications)
-  const teams = Object.keys(partioned)
+  const teams = Object.keys(notifications)
   for (const teamId of teams) {
     const existing = cache.get(teamId) || []
-    const merged = mergeOnId(existing, partioned[teamId])
+    const merged = mergeOnId(existing, notifications[teamId])
     cache.set(teamId, merged)
     const observers = observersMap.get(teamId) || new Set()
     for (const observer of observers) {
