@@ -50,6 +50,7 @@ export function CommentInput({
   const {
     state,
     onKeyDownListener,
+    onCompositionEndListener,
     closeSuggestions,
     setSelection,
     triggerAction,
@@ -130,6 +131,7 @@ export function CommentInput({
         ref={inputRef}
         onKeyDown={onKeyDown}
         contentEditable={!working}
+        onCompositionEnd={onCompositionEndListener}
       ></div>
       <Flexbox justifyContent='flex-end'>
         <Button disabled={working} onClick={submit}>
