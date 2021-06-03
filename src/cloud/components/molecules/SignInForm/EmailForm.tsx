@@ -91,12 +91,6 @@ const EmailForm = ({
           onClick={() => {
             setDisabled(true)
             setSending(true)
-            console.log(
-              `/api/oauth/email/callback?${stringify({
-                code,
-                email,
-              })}`
-            )
             window.location.href = `${boostHubBaseUrl}/api/oauth/email/callback?${stringify(
               {
                 code,
