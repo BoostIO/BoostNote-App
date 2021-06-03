@@ -233,6 +233,14 @@ const Editor = ({
     return normalizedState
   }, [commentState, permissions])
 
+  const users = useMemo(() => {
+    if (permissions == null) {
+      return []
+    }
+
+    return permissions.map((permission) => permission.user)
+  }, [permissions])
+
   const newRangeThread = useCallback(
     (selection: SelectionContext) => {
       if (realtime == null) {
@@ -980,6 +988,7 @@ const Editor = ({
             <CommentManager
               state={normalizedCommentState}
               user={user}
+              users={users}
               {...commentActions}
             />
           ) : null,

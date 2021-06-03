@@ -20,6 +20,7 @@ interface CommentThreadProps {
   updateComment: (comment: Comment, message: string) => Promise<any>
   deleteComment: (comment: Comment) => Promise<any>
   user?: SerializedUser
+  users: SerlializedUser[]
 }
 
 // unnecessary, move up and rename file to CommentItem
@@ -29,6 +30,7 @@ function CommentList({
   updateComment,
   deleteComment,
   user,
+  users,
 }: CommentThreadProps) {
   return (
     <div className={className}>
@@ -39,6 +41,7 @@ function CommentList({
           updateComment={updateComment}
           deleteComment={deleteComment}
           editable={user != null && comment.user.id === user.id}
+          users={users}
         />
       ))}
     </div>
@@ -50,6 +53,7 @@ interface CommentItemProps {
   updateComment: (comment: Comment, message: string) => Promise<any>
   deleteComment: (comment: Comment) => Promise<any>
   editable?: boolean
+  users: SerializedUser[]
 }
 
 const smallUserIconStyle = { width: '32px', height: '32px', lineHeight: '28px' }
@@ -58,6 +62,7 @@ export function CommentItem({
   editable,
   updateComment,
   deleteComment,
+  users,
 }: CommentItemProps) {
   const [editing, setEditing] = useState(false)
   const { popup } = useContextMenu()
@@ -117,6 +122,7 @@ export function CommentItem({
             autoFocus={true}
             onSubmit={submitComment}
             value={comment.message}
+            users={users}
           />
         ) : (
           <div className='comment__message'>{comment.message}</div>

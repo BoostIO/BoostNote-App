@@ -50,6 +50,7 @@ export interface Actions {
   updateComment: (comment: Comment, message: string) => Promise<void | Error>
   deleteComment: (comment: Comment) => Promise<void | Error>
   user?: SerializedUser
+  users: SerializedUser[]
 }
 
 interface CommentManagerProps extends Actions {
@@ -67,6 +68,7 @@ function CommentManager({
   updateComment,
   deleteComment,
   user,
+  users,
 }: CommentManagerProps) {
   const [statusFilter, setStatusFitler] = useState<StatusFilter>('open')
   const partitioned = useMemo(() => {
@@ -127,11 +129,13 @@ function CommentManager({
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 user={user}
+                users={users}
               />
               {state.thread.status.type === 'open' && (
                 <CommentInput
                   onSubmit={(message) => createComment(state.thread, message)}
                   autoFocus={true}
+                  users={users}
                 />
               )}
               {state.thread.status.type === 'closed' && (
@@ -155,6 +159,7 @@ function CommentManager({
                 await createThread({ ...state.data, comment })
               }}
               autoFocus={true}
+              users={users}
             />
           </div>
         )
@@ -171,6 +176,7 @@ function CommentManager({
     deleteComment,
     setMode,
     user,
+    users,
     statusFilter,
     partitioned,
   ])
