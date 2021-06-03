@@ -79,10 +79,11 @@ export function CommentInput({
         setWorking(true)
         let content = ''
         for (let i = 0; i < inputRef.current.childNodes.length; i++) {
-          if (i > 0) {
+          const node = inputRef.current.childNodes[i]
+          if (i > 0 && !node.TEXT_NODE) {
             content += '\n'
           }
-          content += inputRef.current.childNodes[i].textContent
+          content += node.textContent
         }
         await onSubmit(content)
         resetInitialContent(inputRef.current)

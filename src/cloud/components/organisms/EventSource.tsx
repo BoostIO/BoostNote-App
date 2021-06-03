@@ -19,6 +19,7 @@ import { getTemplate } from '../../api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
 import { getAccessToken, useElectron } from '../../lib/stores/electron'
 import { useComments } from '../../../shared/lib/stores/comments'
+import { useNotifications } from '../../../shared/lib/stores/notifications'
 
 interface EventSourceProps {
   teamId: string
@@ -65,6 +66,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     globalData: { currentUser, teams },
   } = useGlobalData()
   const { commentsEventListener } = useComments()
+  const { notificationsEventListener } = useNotifications()
 
   const setupEventSource = useCallback(
     (url: string) => {
@@ -446,6 +448,9 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'smartFolderDelete':
             smartFolderDeleteHandler(event)
             break
+          case 'notificationCreated':
+            notificationsEventListener(event)
+            break
         }
         updateAppEventsMap([event.id, event])
       }
@@ -467,6 +472,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     smartFolderUpdateHandler,
     smartFolderDeleteHandler,
     updateAppEventsMap,
+    notificationsEventListener,
   ])
 
   return null
