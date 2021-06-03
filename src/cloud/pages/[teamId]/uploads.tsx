@@ -32,7 +32,7 @@ const UploadListPage = ({
   const [sending, setSending] = useState<boolean>(false)
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
-  const { subscription, permissions } = usePage()
+  const { subscription, permissions, currentUserIsCoreMember } = usePage()
   const { openSettingsTab } = useSettings()
 
   const onDeleteHandler = useCallback(
@@ -121,7 +121,9 @@ const UploadListPage = ({
                   team={team}
                   key={`file-${i}`}
                   className={cc([i % 3 == 2 && 'last', sending && 'disabled'])}
-                  onDeleteHandler={onDeleteHandler}
+                  onDeleteHandler={
+                    currentUserIsCoreMember ? onDeleteHandler : undefined
+                  }
                 />
               ))}
           </FileItemList>
