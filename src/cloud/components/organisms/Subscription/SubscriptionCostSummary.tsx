@@ -13,6 +13,7 @@ import {
 } from '../../../lib/stripe'
 import Icon from '../../../../shared/components/atoms/Icon'
 import { mdiGiftOutline } from '@mdi/js'
+import { viewerStandardPlanLimit } from '../../../lib/subscription'
 
 interface SubscriptionCostSummaryProps {
   plan: UpgradePlans
@@ -72,6 +73,15 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
           </div>
         </div>
       )}
+
+      <div className='subscription__cost__summary__row'>
+        <div className='subscription__cost__summary__row__description'>
+          {plan === 'pro'
+            ? 'Unlimited viewers'
+            : `${viewerStandardPlanLimit} viewers`}
+        </div>
+        <div className='subscription__cost__summary__row__calcuration'>$0</div>
+      </div>
       <div className='subscription__cost__summary__row--total'>
         <strong className='subscription__cost__summary__row__description'>
           Total Monthly Price

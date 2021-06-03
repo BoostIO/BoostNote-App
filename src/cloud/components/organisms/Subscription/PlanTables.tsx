@@ -15,6 +15,7 @@ import {
   proPlanStorageMb,
   revisionHistoryStandardDays,
   standardPlanStorageMb,
+  viewerStandardPlanLimit,
 } from '../../../lib/subscription'
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
@@ -158,6 +159,9 @@ const PlanTables = ({
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
+            <span>{viewerStandardPlanLimit} viewers for free</span>
+          </div>
+          <div className='plan__item__perk'>
             <span>Support development</span>
           </div>
           <div className='plan__item__perk'>
@@ -225,7 +229,7 @@ const PlanTables = ({
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>Guest invite</span>
+            <span>Unlimited viewers for free</span>
           </div>
           <div className='plan__item__perk'>
             <span>Password and expiration date when sharing</span>
