@@ -16,8 +16,8 @@ const ViewerRestrictedWrapper: AppComponent<ViewerRestrictedWrapperProps> = ({
   if (!currentUserIsCoreMember) {
     return showBanner ? (
       <Banner variant='warning'>
-        This feature is restricted to core members only. Consider asking your
-        team members to promote you to a core member role.
+        This feature is restricted to members only. Consider asking your team
+        members to promote you to a member role.
       </Banner>
     ) : null
   }
