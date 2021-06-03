@@ -43,6 +43,8 @@ export interface SharedTheme {
 
   codeEditorMarkedTextBackgroundColor: string
   codeEditorSelectedTextBackgroundColor: string
+  sidebarSearchHighlightTextColor: string
+  sidebarSearchHighlightBackgroundColor: string
 }
 
 /** background color gradient => starting from main color, fade more and more towards the opposite BW ***/
@@ -85,4 +87,4 @@ export interface ChangingThemes {
 
 export type BaseTheme = SharedTheme & ChangingThemes
 
-export type ThemeTypes = 'light' | 'dark'
+export type ThemeTypes = 'light' | 'dark' | 'sepia' | 'solarizedDark'

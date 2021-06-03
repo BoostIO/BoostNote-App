@@ -1,5 +1,7 @@
 import { darkTheme } from './dark'
 import { lightTheme } from './light'
+import { sepiaTheme } from './sepia'
+import { solarizedDarkTheme } from './solarizedDark'
 import { BaseTheme, ThemeTypes } from './types'
 import { isColorBright } from '../../../lib/colors'
 import { TagStyleProps } from '../../../lib/styled/styleFunctions'
@@ -12,6 +14,10 @@ export function selectV2Theme(theme: ThemeTypes) {
   switch (theme) {
     case 'light':
       return lightTheme
+    case 'sepia':
+      return sepiaTheme
+    case 'solarizedDark':
+      return solarizedDarkTheme
     case 'dark':
     default:
       return darkTheme

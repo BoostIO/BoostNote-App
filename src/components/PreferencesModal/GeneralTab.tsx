@@ -45,6 +45,7 @@ const GeneralTab = () => {
                     value={preferences['general.theme']}
                     onChange={selectTheme}
                     options={['dark', 'light', 'sepia', 'solarizedDark']}
+                    labels={['Dark', 'Light', 'Sepia', 'Solarized Dark']}
                   />
                 ),
               },
