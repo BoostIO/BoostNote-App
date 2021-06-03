@@ -16,7 +16,7 @@ const DocLimitReachedBanner = () => {
     return (
       <Container className='doc__edit__limit'>
         <Banner variant='warning' className='doc__edit__limit'>
-          Only core members can edit documents. Viewers can add comments, or see
+          Only members can edit documents. Viewers can add comments, or see
           updates in realtime. Consider asking your team to get promoted and
           participate as well.
         </Banner>
