@@ -9,7 +9,6 @@ import { NoteDoc, NoteStorage } from '../../lib/db/types'
 import { useEffectOnce, useDebounce } from 'react-use'
 import { excludeNoteIdPrefix } from '../../lib/db/utils'
 import { useSearchModal } from '../../lib/searchModal'
-import { flexCenter, textOverflow } from '../../lib/styled/styleFunctions'
 import { mdiMagnify, mdiClose, mdiCardTextOutline } from '@mdi/js'
 import SearchModalNoteResultItem from '../molecules/SearchModalNoteResultItem'
 import { useStorageRouter } from '../../lib/storageRouter'
@@ -29,6 +28,8 @@ import {
   border,
   borderBottom,
   borderTop,
+  flexCenter,
+  textOverflow,
 } from '../../shared/lib/styled/styleFunctions'
 import {
   getSearchResultItems,

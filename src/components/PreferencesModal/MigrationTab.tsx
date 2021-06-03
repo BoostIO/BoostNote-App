@@ -22,8 +22,8 @@ import Alert from '../atoms/Alert'
 import { useMigrations, MigrationInfo } from '../../lib/migrate/store'
 import plur from 'plur'
 import { useStorageRouter } from '../../lib/storageRouter'
-import styled from '../../lib/styled'
 import Icon from '../../shared/components/atoms/Icon'
+import styled from '../../shared/lib/styled'
 
 interface MigrationPageProps {
   storage: NoteStorage

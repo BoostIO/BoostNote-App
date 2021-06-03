@@ -5,7 +5,6 @@ import {
   useRouteParams,
 } from '../../lib/routeParams'
 import { useDb } from '../../lib/db'
-import styled from '../../lib/styled'
 import { getFileList } from '../../lib/dnd'
 import AttachmentList from '../organisms/AttachmentList'
 import { mdiPaperclip } from '@mdi/js'
@@ -14,7 +13,8 @@ import { NoteStorage } from '../../lib/db/types'
 import Application from '../Application'
 import { topParentId } from '../../cloud/lib/mappers/topbarTree'
 import { getAttachmentsHref } from '../../lib/db/utils'
-import { push } from 'mixpanel-browser'
+import { useRouter } from '../../lib/router'
+import styled from '../../shared/lib/styled'
 
 const Container = styled.div`
   height: 100%;
@@ -29,6 +29,7 @@ const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
   const { workspaceId } = routeParams
 
   const { addAttachments } = useDb()
+  const { push } = useRouter()
 
   const attachmentsHref = getAttachmentsHref(storage)
   return (
@@ -43,7 +44,7 @@ const AttachmentsPage = ({ storage }: AttachmentsPageProps) => {
               icon: mdiPaperclip,
               link: {
                 href: attachmentsHref,
-                navigateTo: () => push([attachmentsHref]),
+                navigateTo: () => push(attachmentsHref),
               },
             },
           ],

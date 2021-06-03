@@ -7,7 +7,6 @@ import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import '../lib/analytics'
 import CodeMirrorStyle from './CodeMirrorStyle'
-import styled from '../lib/styled'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../lib/router'
 import { values, keys } from '../lib/db/utils'
@@ -56,6 +55,7 @@ import { useCloudIntroModal } from '../lib/cloudIntroModal'
 import CloudIntroModal from './organisms/CloudIntroModal'
 import AppNavigator from './organisms/AppNavigator'
 import Toast from '../shared/components/organisms/Toast'
+import styled from '../shared/lib/styled'
 
 const LoadingText = styled.div`
   margin: 30px;

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import styled from '../../lib/styled'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import {
@@ -56,6 +55,7 @@ import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
 import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
 import { useModal } from '../../shared/lib/stores/modal'
 import { useToast } from '../../shared/lib/stores/toast'
+import styled from '../../shared/lib/styled'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()

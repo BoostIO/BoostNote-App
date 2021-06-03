@@ -3,8 +3,8 @@ import React, { useRef } from 'react'
 import styled from '../../../../lib/styled'
 import Icon from '../../../atoms/Icon'
 import cc from 'classcat'
-import { textOverflow } from '../../../../../lib/styled/styleFunctions'
 import WithTooltip from '../../../atoms/WithTooltip'
+import { textOverflow } from '../../../../lib/styled/styleFunctions'
 
 export interface TopbarBreadcrumbItemProps {
   id: string

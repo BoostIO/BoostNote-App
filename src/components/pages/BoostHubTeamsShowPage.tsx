@@ -1,14 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
-import styled from '../../lib/styled'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
-import {
-  borderBottom,
-  border,
-  uiTextColor,
-  textOverflow,
-} from '../../lib/styled/styleFunctions'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import {
   boostHubOpenDiscountModalEventEmitter,
@@ -21,6 +14,13 @@ import {
 } from '../../lib/events'
 import { FormSecondaryButton } from '../atoms/form'
 import { DidFailLoadEvent } from 'electron/main'
+import styled from '../../shared/lib/styled'
+import {
+  border,
+  borderBottom,
+  textOverflow,
+} from '../../shared/lib/styled/styleFunctions'
+import { uiTextColor } from '../../lib/styled/styleFunctionsLocal'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -239,12 +239,12 @@ const Container = styled.div`
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    ${borderBottom}
+    ${borderBottom};
     justify-content: center;
     .url {
       width: 100%;
       max-width: 450px;
-      ${border}
+      ${border};
       height: 24px;
       padding: 0 5px;
       border-radius: 4px;
@@ -265,14 +265,14 @@ const Container = styled.div`
       cursor: pointer;
 
       transition: color 200ms ease-in-out;
-      color: ${({ theme }) => theme.navButtonColor};
+      color: ${({ theme }) => theme.colors.text.primary};
       &:hover {
-        color: ${({ theme }) => theme.navButtonHoverColor};
+        color: ${({ theme }) => theme.colors.text.secondary};
       }
 
       &:active,
       &.active {
-        color: ${({ theme }) => theme.navButtonActiveColor};
+        color: ${({ theme }) => theme.colors.text.link};
       }
     }
   }
@@ -298,7 +298,7 @@ const ReloadView = styled.div`
   right: 0;
   bottom: 0;
   z-index: 1000;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   align-items: center;
   justify-content: center;

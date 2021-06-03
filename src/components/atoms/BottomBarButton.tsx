@@ -1,7 +1,6 @@
 import React, { MouseEventHandler, FC } from 'react'
-import { flexCenter } from '../../lib/styled/styleFunctions'
 import styled from '../../shared/lib/styled'
-import { borderLeft } from '../../shared/lib/styled/styleFunctions'
+import { borderLeft, flexCenter } from '../../shared/lib/styled/styleFunctions'
 
 interface BottomBarButtonProps {
   className?: string

@@ -367,3 +367,17 @@ export const linkText = ({ theme }: StyledProps) => `
     color: ${theme.colors.text.subtle};
   }
 `
+
+export const uiTextColor = ({
+  theme,
+}: StyledProps) => `color: ${theme.colors.text.primary};
+transition: 200ms color;
+&:hover,
+&:focus,
+&:active,
+&.active{
+  color: ${theme.colors.text.subtle};
+}
+&:disabled {
+  color: ${theme.colors.text.disabled};
+}`
