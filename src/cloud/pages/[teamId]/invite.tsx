@@ -97,7 +97,7 @@ const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
 
 const StyledInvitePage = styled.div`
   height: 100vh;
-  background-color: ${({ theme }) => theme.subtleBackgroundColor};
+  background-color: ${({ theme }) => theme.boldBackgroundColor};
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -126,6 +126,7 @@ const StyledInvitePageCard = styled.div`
   box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
   border-radius: 5px;
   text-align: center;
+
   h1 {
     margin-bottom: ${({ theme }) => theme.space.default}px;
   }

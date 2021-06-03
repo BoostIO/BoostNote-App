@@ -59,7 +59,8 @@ export async function getErrorMessage(error: unknown): Promise<string> {
   if (isAxiosError(error)) {
     return error.response!.data
   }
-  return (error as Error).message
+
+  return typeof error === 'string' ? error : (error as Error).message
 }
 
 function isAxiosError(error: unknown): error is AxiosError {

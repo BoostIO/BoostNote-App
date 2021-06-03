@@ -2,10 +2,10 @@ import React, { useState, useCallback, FormEventHandler } from 'react'
 import styled from '../../../lib/styled'
 import CustomButton from '../../atoms/buttons/CustomButton'
 import { Spinner } from '../../atoms/Spinner'
-import CustomLink from '../../atoms/Link/CustomLink'
 import { stringify } from 'querystring'
 import cc from 'classcat'
 import { createLoginEmailRequest } from '../../../api/auth/email'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 interface EmailFormProps {
   query?: any
@@ -85,25 +85,33 @@ const EmailForm = ({
           placeholder='Paste signin code'
           onChange={codeChangeHandler}
         />
-        <CustomLink
+        <CustomButton
           variant='primary'
           className={cc(['submit-email', linkIsDisabled && 'disabled'])}
           onClick={() => {
             setDisabled(true)
             setSending(true)
+            console.log(
+              `/api/oauth/email/callback?${stringify({
+                code,
+                email,
+              })}`
+            )
+            window.location.href = `${boostHubBaseUrl}/api/oauth/email/callback?${stringify(
+              {
+                code,
+                email,
+              }
+            )}`
           }}
-          href={
-            !linkIsDisabled
-              ? `/api/oauth/email/callback?${stringify({ code, email })}`
-              : '#'
-          }
+          disabled={linkIsDisabled}
         >
           {sending ? (
             <Spinner className='relative' />
           ) : (
             'Continue with signin code'
           )}
-        </CustomLink>
+        </CustomButton>
       </StyledEmailForm>
     )
   }
