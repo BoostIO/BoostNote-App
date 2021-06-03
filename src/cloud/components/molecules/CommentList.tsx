@@ -20,7 +20,7 @@ interface CommentThreadProps {
   updateComment: (comment: Comment, message: string) => Promise<any>
   deleteComment: (comment: Comment) => Promise<any>
   user?: SerializedUser
-  users: SerlializedUser[]
+  users: SerializedUser[]
 }
 
 // unnecessary, move up and rename file to CommentItem

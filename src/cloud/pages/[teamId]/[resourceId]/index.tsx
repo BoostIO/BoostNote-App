@@ -8,6 +8,7 @@ import {
 import DocPage from '../../../components/organisms/DocPage'
 import FolderPage from '../../../components/organisms/FolderPage'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
+import { parse as parseQuery } from 'querystring'
 
 const ResourceIndex = (props: ResourceShowPageResponseBody) => {
   const content = useMemo(() => {
@@ -21,6 +22,7 @@ const ResourceIndex = (props: ResourceShowPageResponseBody) => {
             contributors={props.contributors || []}
             backLinks={props.backLinks || []}
             revisionHistory={props.revisionHistory || []}
+            thread={props.thread}
           />
         )
         break
@@ -42,7 +44,8 @@ const ResourceIndex = (props: ResourceShowPageResponseBody) => {
 
 ResourceIndex.getInitialProps = async (params: GetInitialPropsParameters) => {
   const result = await getResourceShowPageData(params)
-  return result
+  const query = parseQuery(params.search.slice(1))
+  return { ...result, thread: query.thread }
 }
 
 export default ResourceIndex

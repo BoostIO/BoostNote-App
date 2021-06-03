@@ -50,11 +50,11 @@ export interface Actions {
   updateComment: (comment: Comment, message: string) => Promise<void | Error>
   deleteComment: (comment: Comment) => Promise<void | Error>
   user?: SerializedUser
-  users: SerializedUser[]
 }
 
 interface CommentManagerProps extends Actions {
   state: State
+  users: SerializedUser[]
 }
 
 function CommentManager({
