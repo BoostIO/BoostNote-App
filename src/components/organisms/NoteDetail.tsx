@@ -19,7 +19,7 @@ import EditorIndentationStatus from '../molecules/EditorIndentationStatus'
 import EditorThemeSelect from '../molecules/EditorThemeSelect'
 import EditorKeyMapSelect from '../molecules/EditorKeyMapSelect'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
-import { Position } from 'codemirror'
+import { MarkerRange, Position } from 'codemirror'
 import LocalSearch from './LocalSearch'
 import { SearchReplaceOptions } from '../../lib/search/search'
 import {
@@ -47,7 +47,6 @@ type NoteDetailState = {
   prevNoteId: string
   content: string
   currentCursor: EditorPosition
-  initialCursorSet: boolean
   searchOptions: SearchReplaceOptions
   showSearch: boolean
   showReplace: boolean
@@ -68,7 +67,6 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
       line: 0,
       ch: 0,
     },
-    initialCursorSet: false,
     searchOptions: {
       regexSearch: false,
       caseSensitiveSearch: false,
@@ -94,15 +92,27 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
   codeMirror?: CodeMirror.EditorFromTextArea
 
   codeMirrorRef = (codeMirror: CodeMirror.EditorFromTextArea) => {
+    const oldCodeMirror = this.codeMirror
     this.codeMirror = codeMirror
+    if (oldCodeMirror != null && this.state.showSearch) {
+      const oldMarkers = oldCodeMirror.getAllMarks()
+      oldMarkers.forEach((marker) => {
+        const markPos: MarkerRange = marker.find() as MarkerRange
+        if (!markPos) {
+          return
+        }
+        codeMirror.markText(markPos.from, markPos.to, {
+          className: marker['className'],
+          attributes: marker['attributes'],
+        })
+        marker.clear()
+      })
+      if (oldMarkers.length > 0) {
+        this.toggleSearch(true, this.codeMirror)
+      }
+    }
 
-    // Update cursor if needed
-    this.codeMirror.focus()
-    this.codeMirror.setCursor(
-      !this.state.initialCursorSet && this.props.initialCursorPosition != null
-        ? this.props.initialCursorPosition
-        : this.state.currentCursor
-    )
+    this.setInitialCursor()
   }
 
   static getDerivedStateFromProps(
@@ -110,21 +120,20 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     state: NoteDetailState
   ): NoteDetailState {
     const { note, storage } = props
-    if (storage.id !== state.prevStorageId || note._id !== state.prevNoteId) {
+    if (storage.id !== state.prevStorageId || note._id != state.prevNoteId) {
       return {
         prevStorageId: storage.id,
         prevNoteId: note._id,
         content: note.content,
-        initialCursorSet: props.initialCursorPosition != null,
         currentCursor: {
           line:
             props.initialCursorPosition != null
               ? props.initialCursorPosition.line
-              : state.currentCursor.line,
+              : 0,
           ch:
             props.initialCursorPosition != null
               ? props.initialCursorPosition.ch
-              : state.currentCursor.ch,
+              : 0,
         },
         searchOptions: {
           regexSearch: false,
@@ -152,7 +161,22 @@ class NoteDetail extends React.Component<NoteDetailProps, NoteDetailState> {
     return state
   }
 
+  setInitialCursor() {
+    if (this.codeMirror == null) {
+      return
+    }
+    this.focusOnEditor()
+    this.codeMirror.setCursor(
+      this.props.initialCursorPosition != null
+        ? this.props.initialCursorPosition
+        : this.state.currentCursor
+    )
+  }
+
   componentDidUpdate(_prevProps: NoteDetailProps, prevState: NoteDetailState) {
+    if (this.props.initialCursorPosition != null) {
+      this.setInitialCursor()
+    }
     const { note } = this.props
     if (prevState.prevNoteId !== note._id) {
       if (this.queued) {

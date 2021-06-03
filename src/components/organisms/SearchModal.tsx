@@ -35,6 +35,7 @@ import {
   getSearchRegex,
 } from '../../lib/v2/mappers/local/searchResults'
 import Icon from '../../shared/components/atoms/Icon'
+import { useGeneralStatus } from '../../lib/generalStatus'
 
 interface SearchModalProps {
   storage: NoteStorage
@@ -47,6 +48,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
   const [searchValue, setSearchValue] = useState('')
   const [resultList, setResultList] = useState<NoteSearchData[]>([])
   const [searching, setSearching] = useState(false)
+  const { setGeneralStatus } = useGeneralStatus()
   const { toggleShowSearchModal } = useSearchModal()
   const searchTextAreaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -73,10 +75,13 @@ const SearchModal = ({ storage }: SearchModalProps) => {
 
   const navFocusEditor = useCallback(
     (noteId: string, lineNum: number, lineColumn = 0) => {
+      setGeneralStatus({
+        focusOnEditorCursor: true,
+      })
       toggleShowSearchModal()
       _navFocusEditor(storage.id, noteId, '/', `${lineNum},${lineColumn}`)
     },
-    [toggleShowSearchModal, _navFocusEditor, storage.id]
+    [setGeneralStatus, toggleShowSearchModal, _navFocusEditor, storage.id]
   )
 
   useDebounce(
@@ -111,7 +116,7 @@ const SearchModal = ({ storage }: SearchModalProps) => {
       toggleShowSearchModal()
       _navigateToNote(storage.id, noteId)
     },
-    [storage.id, _navigateToNote, toggleShowSearchModal]
+    [toggleShowSearchModal, _navigateToNote, storage.id]
   )
 
   const handleSearchInputKeyDown = useCallback(
