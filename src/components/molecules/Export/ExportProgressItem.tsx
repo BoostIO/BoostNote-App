@@ -5,6 +5,7 @@ import { usePreviewStyle } from '../../../lib/preview'
 import {
   getPathByName,
   mkdir,
+  openPath,
   showOpenDialog,
   writeFile,
 } from '../../../lib/electronOnly'
@@ -401,6 +402,11 @@ const ExportProgressItem = ({
             })
           } else {
             pushMessage({
+              onClick: () => {
+                if (rootDir) {
+                  openPath(rootDir)
+                }
+              },
               type: 'success',
               title: 'Export finished',
               description: `Exported ${exportedNotesCount} notes successfully.`,

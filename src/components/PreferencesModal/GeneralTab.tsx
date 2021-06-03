@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { SectionHeader } from './styled'
-import { usePreferences, GeneralThemeOptions } from '../../lib/preferences'
+import { usePreferences } from '../../lib/preferences'
 import { useTranslation } from 'react-i18next'
 import { useAnalytics, analyticsEvents } from '../../lib/analytics'
 import { getNoteSortingOptionLabel, noteSortingOptions } from '../../lib/sort'
@@ -15,7 +15,7 @@ const GeneralTab = () => {
   const selectTheme = useCallback(
     (value) => {
       setPreferences({
-        'general.theme': value as GeneralThemeOptions,
+        'general.theme': value,
       })
       report(analyticsEvents.updateUiTheme)
     },
