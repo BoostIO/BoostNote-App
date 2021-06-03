@@ -99,7 +99,6 @@ function useSuggestions<T>(
 }
 
 function doAction<T>(state: State<T>): State<T> {
-  console.log(state)
   if (state.display.type === 'disabled') {
     return state
   }
