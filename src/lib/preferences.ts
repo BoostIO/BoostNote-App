@@ -17,13 +17,8 @@ import {
   KeymapItem,
   KeymapItemEditableProps,
 } from './keymap'
+import { ThemeTypes } from '../shared/lib/styled/types'
 
-export type GeneralThemeOptions =
-  | 'auto'
-  | 'light'
-  | 'dark'
-  | 'sepia'
-  | 'solarizedDark'
 export type GeneralLanguageOptions = 'en-US'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'
 export type EditorIndentSizeOptions = 2 | 4 | 8
@@ -55,7 +50,7 @@ export enum PageSize {
 export interface Preferences {
   // General
   'general.language': GeneralLanguageOptions
-  'general.theme': GeneralThemeOptions
+  'general.theme': ThemeTypes
   'general.noteSorting': NoteSortingOptions
   'general.enableAnalytics': boolean
 

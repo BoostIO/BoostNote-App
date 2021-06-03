@@ -1,4 +1,4 @@
-import styled from '../../lib/styled'
+import styled from '../../shared/lib/styled'
 
 const PageContainer = styled.div`
   overflow-x: hidden;

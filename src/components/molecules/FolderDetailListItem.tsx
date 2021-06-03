@@ -1,8 +1,11 @@
 import React, { ReactNode, MouseEventHandler } from 'react'
-import { textOverflow, flexCenter } from '../../lib/styled/styleFunctions'
 import cc from 'classcat'
 import styled from '../../shared/lib/styled'
-import { borderBottom } from '../../shared/lib/styled/styleFunctions'
+import {
+  borderBottom,
+  textOverflow,
+  flexCenter,
+} from '../../shared/lib/styled/styleFunctions'
 import Icon, { IconSize } from '../../shared/components/atoms/Icon'
 
 interface FolderDetailListItemProps {

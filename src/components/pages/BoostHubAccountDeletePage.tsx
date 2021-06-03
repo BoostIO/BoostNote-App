@@ -2,8 +2,8 @@ import React from 'react'
 import { boostHubAccountDeletePageUrl } from '../../lib/boosthub'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiAccountGroup } from '@mdi/js'
-import styled from '../../lib/styled'
 import BoostHubWebview from '../atoms/BoostHubWebview'
+import styled from '../../shared/lib/styled'
 
 const BoostHubAccountDeletePage = () => {
   return (

@@ -6,8 +6,10 @@ import styled from '../../../../../../../shared/lib/styled'
 import UserIcon from '../../../../../atoms/UserIcon'
 import Select from 'react-select'
 import cc from 'classcat'
-import { contextMenuFormItem } from '../../../../../../../shared/lib/styled/styleFunctions'
-import { textOverflow } from '../../../../../../../lib/styled/styleFunctions'
+import {
+  contextMenuFormItem,
+  textOverflow,
+} from '../../../../../../../shared/lib/styled/styleFunctions'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean

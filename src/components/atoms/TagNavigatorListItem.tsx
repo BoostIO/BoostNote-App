@@ -1,21 +1,24 @@
 import React, { useCallback, useState } from 'react'
 import { mdiClose } from '@mdi/js'
-import {
-  flexCenter,
-  TagStyleProps,
-  textOverflow,
-} from '../../lib/styled/styleFunctions'
 import { useRouter } from '../../lib/router'
 import { useTranslation } from 'react-i18next'
 import { analyticsEvents, useAnalytics } from '../../lib/analytics'
 import DialogColorPicker from './dialog/DialogColorPicker'
 import { PopulatedTagDoc } from '../../lib/db/types'
-import { BaseTheme } from '../../lib/styled/BaseTheme'
 import { isColorBright } from '../../lib/colors'
-import { tagBackgroundColor } from '../../shared/lib/styled/styleFunctions'
+import {
+  flexCenter,
+  tagBackgroundColor,
+  textOverflow,
+} from '../../shared/lib/styled/styleFunctions'
 import styled from '../../shared/lib/styled'
 import Icon from '../../shared/components/atoms/Icon'
 import { normalizeTagColor } from '../../lib/db/utils'
+import { BaseTheme } from '../../shared/lib/styled/types'
+
+export interface TagStyleProps {
+  color: string
+}
 
 const TagItem = styled.li<BaseTheme & TagStyleProps>`
   border-radius: 4px;

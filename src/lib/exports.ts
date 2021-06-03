@@ -15,7 +15,6 @@ import React from 'react'
 import remarkEmoji from 'remark-emoji'
 import rehypeReact from 'rehype-react'
 import CodeFence from '../components/atoms/markdown/CodeFence'
-import { getGlobalCss, selectTheme } from './styled/styleUtil'
 import yaml from 'yaml'
 import {
   convertHtmlStringToPdfBuffer,
@@ -40,6 +39,9 @@ import {
 import remarkSlug from 'remark-slug'
 import { rehypePosition } from '../cloud/lib/rehypePosition'
 import remarkAdmonitions from 'remark-admonitions'
+import { getGlobalCss } from '../shared/components/atoms/GlobalStyle'
+import { selectV2Theme } from '../shared/lib/styled/styleFunctions'
+import { ThemeTypes } from '../shared/lib/styled/types'
 
 interface ImageData {
   name: string
@@ -205,7 +207,7 @@ function getCssLinkCommonPath(prependFilePrefix = false) {
 
 async function getExportStylesInfo(
   codeBlockTheme: string,
-  generalThemeName: string,
+  generalThemeName: ThemeTypes,
   previewStyle?: string
 ) {
   const cssStyles: CssStyleInfo[] = []
@@ -213,7 +215,7 @@ async function getExportStylesInfo(
   const cssFileRoot = getCssLinkCommonPath(false)
   const markdownCodeBlockTheme =
     codeBlockTheme === 'solarized-dark' ? 'solarized' : codeBlockTheme
-  const appThemeCss = getGlobalCss(selectTheme(generalThemeName))
+  const appThemeCss = getGlobalCss(selectV2Theme(generalThemeName))
 
   if (appThemeCss) {
     cssStyles.push({ filename: 'globalTheme.css', content: appThemeCss })
@@ -304,7 +306,7 @@ ${getPrintStyleForExports()}
 
 async function generateCssForPrintToPdf(
   codeBlockTheme: string,
-  generalThemeName: string,
+  generalThemeName: ThemeTypes,
   previewStyle?: string
 ) {
   const cssStyleInfos: CssStyleInfo[] = await getExportStylesInfo(
@@ -525,7 +527,7 @@ export const exportNoteAsHtmlFile = async (
   saveFilename: string,
   note: NoteDoc,
   codeBlockTheme: string,
-  generalThemeName: string,
+  generalThemeName: ThemeTypes,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
   previewStyle?: string,
@@ -596,7 +598,7 @@ export const exportNoteAsHtmlFile = async (
 export const convertNoteDocToPdfBuffer = async (
   note: NoteDoc,
   codeBlockTheme: string,
-  generalThemeName: string,
+  generalThemeName: ThemeTypes,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
   printOpts: Electron.PrintToPDFOptions,
@@ -636,7 +638,7 @@ export const exportNoteAsPdfFile = async (
   filePath: string,
   note: NoteDoc,
   codeBlockTheme: string,
-  generalThemeName: string,
+  generalThemeName: ThemeTypes,
   pushMessage: (context: any) => any,
   attachmentMap: ObjectMap<Attachment>,
   printOptions: Electron.PrintToPDFOptions,

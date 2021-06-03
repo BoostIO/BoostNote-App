@@ -4,7 +4,6 @@ import { useRouteParams, AllRouteParams } from '../lib/routeParams'
 import StorageCreatePage from './pages/StorageCreatePage'
 import { useDb } from '../lib/db'
 import AttachmentsPage from './pages/AttachmentsPage'
-import styled from '../lib/styled'
 import WikiNotePage from './pages/WikiNotePage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
@@ -23,6 +22,7 @@ import ArchivePage from './pages/ArchivePage'
 import LabelsPage from './pages/LabelsPage'
 import TimelinePage from './pages/TimelinePage'
 import PouchDbDeprecationPage from './pages/PouchDbDeprecationPage'
+import styled from '../shared/lib/styled'
 
 const NotFoundPageContainer = styled.div`
   padding: 15px 25px;

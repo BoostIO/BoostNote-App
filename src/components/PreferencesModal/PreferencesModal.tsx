@@ -5,7 +5,6 @@ import GeneralTab from './GeneralTab'
 import EditorTab from './EditorTab'
 import MarkdownTab from './MarkdownTab'
 import AboutTab from './AboutTab'
-import { flexCenter } from '../../lib/styled/styleFunctions'
 import { useTranslation } from 'react-i18next'
 import { mdiClose, mdiHammerWrench } from '@mdi/js'
 import { useDb } from '../../lib/db'
@@ -21,6 +20,7 @@ import {
   borderBottom,
   borderLeft,
   closeIconColor,
+  flexCenter,
 } from '../../shared/lib/styled/styleFunctions'
 import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
 import Icon from '../../shared/components/atoms/Icon'

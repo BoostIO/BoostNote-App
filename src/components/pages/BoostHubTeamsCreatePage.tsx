@@ -1,10 +1,10 @@
 import React, { useRef, useState, useCallback } from 'react'
 import { boostHubTeamsCreatePageUrl } from '../../lib/boosthub'
-import styled from '../../lib/styled'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import { FormSecondaryButton } from '../atoms/form'
 import { DidFailLoadEvent } from 'electron/main'
 import { useRouter } from '../../lib/router'
+import styled from '../../shared/lib/styled'
 
 const BoostHubTeamsCreatePage = () => {
   const controlRef = useRef<WebviewControl>()
@@ -87,7 +87,7 @@ const ReloadView = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1000;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   align-items: center;
   justify-content: center;

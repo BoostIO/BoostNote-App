@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../lib/styled'
+import styled from '../../shared/lib/styled'
 
 interface AlertProps {
   variant?: 'primary' | 'secondary' | 'danger'
@@ -21,7 +21,7 @@ const Container = styled.div`
   }
 
   &.alert--variant-primary {
-    background-color: ${({ theme }) => theme.primaryColor};
+    background-color: ${({ theme }) => theme.colors.background.primary};
   }
   &.alert--variant-secondary {
     background-color: #34363a;
@@ -72,6 +72,6 @@ const Container = styled.div`
   }
 
   a {
-    color: ${({ theme }) => theme.primaryColor};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `

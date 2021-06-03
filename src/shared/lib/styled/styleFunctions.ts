@@ -4,7 +4,7 @@ import { sepiaTheme } from './sepia'
 import { solarizedDarkTheme } from './solarizedDark'
 import { BaseTheme, ThemeTypes } from './types'
 import { isColorBright } from '../../../lib/colors'
-import { TagStyleProps } from '../../../lib/styled/styleFunctions'
+import { TagStyleProps } from '../../../components/atoms/TagNavigatorListItem'
 
 export interface StyledProps {
   theme: BaseTheme
@@ -326,7 +326,6 @@ export const rightSidePageLayout = () => `
   max-width: 920px;
 `
 
-// refactor to local specific
 export const flexCenter = () => `display: flex;
 align-items: center;
 justify-content: center;
