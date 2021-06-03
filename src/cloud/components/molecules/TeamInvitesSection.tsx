@@ -248,9 +248,12 @@ const TeamInvitesSection = ({
             <label>{invite.email}</label>
             <div>
               {invite.role}{' '}
-              <SectionInLineIcon onClick={() => cancelInvite(invite)}>
-                <IconMdi path={mdiClose} />
-              </SectionInLineIcon>
+              {(invite.role === userPermissions.role ||
+                userPermissions.role !== 'viewer') && (
+                <SectionInLineIcon onClick={() => cancelInvite(invite)}>
+                  <IconMdi path={mdiClose} />
+                </SectionInLineIcon>
+              )}
             </div>
           </SectionListItem>
         ))}

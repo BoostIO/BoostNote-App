@@ -79,6 +79,13 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
           {plan === 'pro'
             ? 'Unlimited viewers'
             : `${viewerStandardPlanLimit} viewers`}
+          <div className='context__tooltip'>
+            <div className='context__tooltip__text'>
+              Viewers can only navigate through documents, folders, write
+              comments and invite more viewers to the team.
+            </div>
+            ?
+          </div>
         </div>
         <div className='subscription__cost__summary__row__calcuration'>$0</div>
       </div>
@@ -105,6 +112,39 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+
+  .context__tooltip {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${({ theme }) => theme.colors.background.tertiary};
+    color: ${({ theme }) => theme.colors.text.primary};
+    width: 20px;
+    height: 20px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    position: relative;
+
+    .context__tooltip__text {
+      display: none;
+      border-radius: 3px;
+      position: absolute;
+      bottom: 120%;
+      color: ${({ theme }) => theme.colors.text.secondary};
+      background: ${({ theme }) => theme.colors.background.tertiary};
+      width: 300px;
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px
+        ${({ theme }) => theme.sizes.spaces.df}px;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: ${({ theme }) => theme.sizes.fonts.md}px;
+    }
+    &:hover {
+      .context__tooltip__text {
+        display: block;
+      }
+    }
+  }
 
   .subscription__cost__summary__discount__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
