@@ -155,19 +155,23 @@ const FolderPage = () => {
 
   const folderPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
-      if (team == null || pageFolder == null || !currentUserIsCoreMember) {
-        return
-      }
-
-      if (isFolderEditShortcut(event)) {
-        preventKeyboardEventPropagation(event)
-        openRenameFolderForm(pageFolder)
+      if (team == null || pageFolder == null) {
         return
       }
 
       if (isFolderBookmarkShortcut(event)) {
         preventKeyboardEventPropagation(event)
         toggleFolderBookmark(team.id, pageFolder.id, pageFolder.bookmarked)
+        return
+      }
+
+      if (!currentUserIsCoreMember) {
+        return
+      }
+
+      if (isFolderEditShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        openRenameFolderForm(pageFolder)
         return
       }
       if (isFolderDeleteShortcut(event)) {
@@ -262,6 +266,7 @@ const FolderPage = () => {
         <FolderContextMenu
           currentFolder={currentFolder}
           closeContextMenu={() => setShowContextMenu(false)}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )}
       <ContentManager

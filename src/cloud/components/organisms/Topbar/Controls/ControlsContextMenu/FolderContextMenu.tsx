@@ -34,11 +34,13 @@ import { useCloudResourceModals } from '../../../../../lib/hooks/useCloudResourc
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
   closeContextMenu: () => void
+  currentUserIsCoreMember: boolean
 }
 
 const FolderContextMenu = ({
   closeContextMenu,
   currentFolder,
+  currentUserIsCoreMember,
 }: FolderContextMenuProps) => {
   const [sendingBookmark, setSendingBookmark] = useState<boolean>(false)
   const { updateFoldersMap, deleteFolderHandler } = useNav()
@@ -118,25 +120,27 @@ const FolderContextMenu = ({
       <ControlsContextMenuBackground closeContextMenu={closeContextMenu} />
       <StyledContextMenuContainer ref={menuRef} onBlur={onBlurHandler}>
         <Scrollable>
-          <ContextMenuItem
-            label={
-              <div>
-                <StyledMenuItem>
-                  <StyledIcon>
-                    <IconMdi path={mdiPencil} />
-                  </StyledIcon>
-                  Rename
-                </StyledMenuItem>
-              </div>
-            }
-            disabled={sendingBookmark}
-            onClick={() => {
-              openRenameFolderForm(currentFolder)
-              closeContextMenu()
-            }}
-            id='fD-context-top-edit'
-            tooltip='E'
-          />
+          {currentUserIsCoreMember && (
+            <ContextMenuItem
+              label={
+                <div>
+                  <StyledMenuItem>
+                    <StyledIcon>
+                      <IconMdi path={mdiPencil} />
+                    </StyledIcon>
+                    Rename
+                  </StyledMenuItem>
+                </div>
+              }
+              disabled={sendingBookmark}
+              onClick={() => {
+                openRenameFolderForm(currentFolder)
+                closeContextMenu()
+              }}
+              id='fD-context-top-edit'
+              tooltip='E'
+            />
+          )}
           <ContextMenuItem
             label={
               sendingBookmark ? (
@@ -166,21 +170,23 @@ const FolderContextMenu = ({
             id='fD-context-top-bookmark'
             tooltip='B'
           />
-          <ContextMenuItem
-            label={
-              <div>
-                <StyledMenuItem>
-                  <StyledIcon>
-                    <IconMdi path={mdiTrashCan} />
-                  </StyledIcon>
-                  Delete
-                </StyledMenuItem>
-              </div>
-            }
-            onClick={() => deleteFolderHandler(currentFolder)}
-            id='fd-context-top-delete'
-            tooltip={`${MetaKeyText()} + Shift + Delete`}
-          />
+          {currentUserIsCoreMember && (
+            <ContextMenuItem
+              label={
+                <div>
+                  <StyledMenuItem>
+                    <StyledIcon>
+                      <IconMdi path={mdiTrashCan} />
+                    </StyledIcon>
+                    Delete
+                  </StyledMenuItem>
+                </div>
+              }
+              onClick={() => deleteFolderHandler(currentFolder)}
+              id='fd-context-top-delete'
+              tooltip={`${MetaKeyText()} + Shift + Delete`}
+            />
+          )}
         </Scrollable>
         <StyledFooter>
           Last updated:
