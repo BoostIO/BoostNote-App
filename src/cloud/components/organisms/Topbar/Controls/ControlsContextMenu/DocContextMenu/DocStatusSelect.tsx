@@ -20,6 +20,7 @@ interface DocStatusSelectProps {
   sending?: boolean
   status?: DocStatus | null
   disabled?: boolean
+  isReadOnly: boolean
   onStatusChange: (status: DocStatus | null) => void
 }
 
@@ -27,6 +28,7 @@ const DocStatusSelect = ({
   status,
   sending,
   disabled,
+  isReadOnly,
   onStatusChange,
 }: DocStatusSelectProps) => {
   const { popup } = useContextMenu()
@@ -34,6 +36,7 @@ const DocStatusSelect = ({
     <Container>
       <DocPropertyValueButton
         sending={sending}
+        isReadOnly={isReadOnly}
         empty={status == null}
         disabled={disabled}
         onClick={(event) => {

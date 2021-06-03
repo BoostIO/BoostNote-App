@@ -324,6 +324,7 @@ const DocContextMenu = ({
                     sending={sendingUpdateStatus}
                     onStatusChange={sendUpdateStatus}
                     disabled={!currentUserIsCoreMember}
+                    isReadOnly={!currentUserIsCoreMember}
                   />
                 </div>
               </div>
@@ -344,6 +345,7 @@ const DocContextMenu = ({
                     dueDate={currentDoc.dueDate}
                     onDueDateChange={sendUpdateDocDueDate}
                     disabled={!currentUserIsCoreMember}
+                    isReadOnly={!currentUserIsCoreMember}
                   />
                 </div>
               </div>

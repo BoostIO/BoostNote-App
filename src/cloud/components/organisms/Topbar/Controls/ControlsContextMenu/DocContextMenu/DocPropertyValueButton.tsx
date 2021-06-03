@@ -9,19 +9,23 @@ interface DocPropertyValueButtonProps {
   disabled?: boolean
   sending?: boolean
   empty?: boolean
+  isReadOnly: boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const DocPropertyValueButton = forwardRef<
   HTMLButtonElement,
   DocPropertyValueButtonProps
->(({ sending, children, disabled, empty, onClick }, ref) => {
+>(({ sending, children, disabled, empty, onClick, isReadOnly }, ref) => {
   return (
     <ButtonContainer
       ref={ref}
       disabled={disabled}
       onClick={onClick}
-      className={cc([empty && 'doc__property__button--empty'])}
+      className={cc([
+        empty && 'doc__property__button--empty',
+        isReadOnly && 'doc__property__button--readOnly',
+      ])}
     >
       {sending != null ? (
         children
@@ -55,6 +59,13 @@ const ButtonContainer = styled.button`
   transition: 200ms background-color;
   color: ${({ theme }) => theme.colors.text.primary};
   ${({ theme }) => contextMenuFormItem({ theme }, ':focus')}
+
+  &.doc__property__button--readOnly {
+    cursor: not-allowed;
+    &:hover {
+      background: none !important;
+    }
+  }
 
   &.doc__property__button--empty {
     color: ${({ theme }) => theme.colors.text.subtle};

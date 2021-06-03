@@ -9,6 +9,7 @@ import { mdiClose } from '@mdi/js'
 interface DocDueDateSelectProps {
   className?: string
   sending?: boolean
+  isReadOnly: boolean
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
   disabled?: boolean
@@ -18,6 +19,7 @@ const DocDueDateSelect = ({
   className,
   sending,
   disabled,
+  isReadOnly,
   dueDate: dueDateString,
   onDueDateChange,
 }: DocDueDateSelectProps) => {
@@ -38,7 +40,11 @@ const DocDueDateSelect = ({
         onChange={onDueDateChange}
         popperPlacement='top-end'
         customInput={
-          <DocPropertyValueButton sending={sending} empty={dueDate == null}>
+          <DocPropertyValueButton
+            sending={sending}
+            empty={dueDate == null}
+            isReadOnly={isReadOnly}
+          >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
               : 'Add due date'}
