@@ -36,7 +36,16 @@ function useSuggestions<T>(
     display: { type: 'disabled' },
   })
 
-  // oncompositionend
+  const onCompositionEndListener: React.CompositionEventHandler = useCallback(
+    (ev) => {
+      if (ev.data === '@' || ev.data === '＠') {
+        setState(open)
+      } else {
+        setState(appendFilter(ev.data))
+      }
+    },
+    []
+  )
 
   const onKeyDownListener: React.KeyboardEventHandler = useCallback(
     (ev) => {
@@ -92,6 +101,7 @@ function useSuggestions<T>(
   return {
     state: state.display,
     onKeyDownListener,
+    onCompositionEndListener,
     closeSuggestions,
     triggerAction,
     setSelection,
