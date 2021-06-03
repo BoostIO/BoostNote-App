@@ -28,6 +28,7 @@ interface DocPageProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]
+  thread?: string
 }
 
 const DocPage = ({
@@ -35,6 +36,7 @@ const DocPage = ({
   contributors,
   backLinks,
   revisionHistory,
+  thread,
 }: DocPageProps) => {
   const {
     team,
@@ -162,6 +164,7 @@ const DocPage = ({
       contributors={contributors}
       backLinks={currentBacklinks}
       revisionHistory={revisionHistory}
+      thread={thread}
     />
   ) : (
     <ViewPage

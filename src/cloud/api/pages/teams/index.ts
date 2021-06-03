@@ -44,7 +44,8 @@ export type FolderPageResourceProps = {
 
 export type ResourceSplitProps = DocPageResourceProps | FolderPageResourceProps
 
-export type ResourceShowPageResponseBody = GeneralAppProps & ResourceSplitProps
+export type ResourceShowPageResponseBody = GeneralAppProps &
+  ResourceSplitProps & { thread?: string }
 
 export async function getResourceShowPageData({
   pathname,

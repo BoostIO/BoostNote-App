@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useCallback, useRef, useMemo } from 'react'
 import Button from '../../../shared/components/atoms/Button'
 import styled from '../../../shared/lib/styled'
 import Flexbox from '../atoms/Flexbox'

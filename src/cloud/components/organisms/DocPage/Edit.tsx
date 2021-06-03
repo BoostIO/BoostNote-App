@@ -17,6 +17,7 @@ interface EditPageProps {
   contributors: SerializedUser[]
   revisionHistory: SerializedRevision[]
   backLinks: SerializedDoc[]
+  thread?: string
 }
 
 const EditPage = ({
@@ -26,6 +27,7 @@ const EditPage = ({
   contributors,
   revisionHistory,
   backLinks,
+  thread,
 }: EditPageProps) => {
   return (
     <StyledDocEditPage>
@@ -36,6 +38,7 @@ const EditPage = ({
         contributors={contributors}
         backLinks={backLinks}
         revisionHistory={revisionHistory}
+        thread={thread}
       />
     </StyledDocEditPage>
   )
