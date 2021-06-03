@@ -4,10 +4,7 @@ import styled from '../../lib/styled'
 const TitleComponent = () => (
   <StyledTitle>
     <a href='/'>
-      <img
-        src='/app/static/images/logo_boostnote_forteams.svg'
-        alt='Boost Note for Teams'
-      />
+      <img src='/static/images/logo_with_text_white.svg' alt='Boost Note' />
     </a>
   </StyledTitle>
 )
