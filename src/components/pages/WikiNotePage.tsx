@@ -46,6 +46,7 @@ import {
 import NoteContextView from '../organisms/NoteContextView'
 import Application from '../Application'
 import { useToast } from '../../shared/lib/stores/toast'
+import { useSidebarSearch } from '../../lib/search/stores/store'
 
 interface WikiNotePageProps {
   storage: NoteStorage
@@ -70,8 +71,8 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
   const { pushMessage } = useToast()
   const storageId = storage.id
   const { updateNote, addAttachments } = useDb()
-
   const { push, goBack, goForward } = useRouter()
+  const { addVisitedToHistory } = useSidebarSearch()
 
   const note = useMemo(() => {
     switch (routeParams.name) {
@@ -463,6 +464,12 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
       }
     }
   }, [generalStatus.focusOnEditorCursor, hash, setGeneralStatus])
+
+  useEffect(() => {
+    if (note != null) {
+      addVisitedToHistory(note)
+    }
+  }, [addVisitedToHistory, note])
 
   return (
     <Application

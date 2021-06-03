@@ -56,6 +56,7 @@ import {
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
 import NewDocButton from '../molecules/NewDocButton'
+import { useSidebarSearch } from '../../lib/search/stores/store'
 
 interface SidebarContainerProps {
   hideSidebar?: boolean
@@ -117,6 +118,7 @@ const SidebarContainer = ({
     unfoldItem,
     foldItem,
   } = useSidebarCollapse()
+  const { history, searchHistory, addToSearchHistory } = useSidebarSearch()
 
   const localSpaces = useMemo(() => values(storageMap), [storageMap])
 
@@ -306,14 +308,13 @@ const SidebarContainer = ({
       return []
     }
     return mapHistory(
-      // implement history items for search
-      [],
+      history || [],
       push,
       workspace.noteMap,
       workspace.folderMap,
       workspace
     )
-  }, [push, workspace])
+  }, [history, push, workspace])
   const { submit: submitSearch, sending: fetchingSearchResults } = useApi<
     { query: any },
     { results: NoteSearchData[] }
@@ -356,8 +357,7 @@ const SidebarContainer = ({
           { query: '' }
         )
 
-      // todo: implement search history for local space
-      // addToSearchHistory(searchParams.query)
+      addToSearchHistory(searchParams.query)
       await submitSearch({ query: searchParams })
     },
     600,
@@ -584,8 +584,7 @@ const SidebarContainer = ({
         sidebarResize={sidebarResize}
         searchQuery={sidebarSearchQuery}
         setSearchQuery={setSearchQuery}
-        // todo: add search history for local space (or use general search history when a shared component)
-        searchHistory={[]}
+        searchHistory={searchHistory}
         recentPages={historyItems}
         treeControls={[
           {

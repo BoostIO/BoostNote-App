@@ -22,6 +22,7 @@ import { CreateWorkspaceModalProvider } from './lib/createWorkspaceModal'
 import { CloudIntroModalProvider } from './lib/cloudIntroModal'
 import { MigrationProvider } from './lib/migrate/store'
 import { DialogProvider } from './lib/dialog'
+import { LocalSpaceSidebarSearchProvider } from './lib/search/stores/store'
 
 const V2CombinedProvider = combineProviders(
   V2ToastProvider,
@@ -29,7 +30,8 @@ const V2CombinedProvider = combineProviders(
   V2WindowProvider,
   V2ContextMenuProvider,
   V2ModalProvider,
-  V2DialogProvider
+  V2DialogProvider,
+  LocalSpaceSidebarSearchProvider
 )
 
 const CombinedProvider = combineProviders(
