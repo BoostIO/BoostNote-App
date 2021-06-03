@@ -23,6 +23,7 @@ export type SidebarSpaceContentRow = {
 export type SidebarSpace = {
   label: string
   active?: boolean
+  notificationCount?: number
   icon?: string
   tooltip?: string
   linkProps: React.AnchorHTMLAttributes<{}>
@@ -88,6 +89,11 @@ const SidebarSpace = ({
     <span className='sidebar__spaces__label'>{row.label}</span>
     {row.active && (
       <Icon size={20} path={mdiCheck} className='sidebar__spaces__icon' />
+    )}
+    {!row.active && row.notificationCount != null && (
+      <div className='sidebar__spaces__notifications'>
+        {row.notificationCount}
+      </div>
     )}
     {row.tooltip != null && (
       <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
@@ -194,6 +200,16 @@ const Container = styled.div`
       flex: 0 0 auto;
       display: flex;
       justify-content: center;
+    }
+
+    .sidebar__spaces__notifications {
+      background-color: ${({ theme }) => theme.colors.variants.danger.base};
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 `

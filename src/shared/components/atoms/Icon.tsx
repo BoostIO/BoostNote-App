@@ -5,12 +5,13 @@ import styled from '../../lib/styled'
 
 export type IconSize = 16 | 20 | 26 | 34 | 50 | 100
 
-interface IconProps {
+export interface IconProps {
   path: string
   color?: string
   size?: IconSize
   className?: string
   spin?: boolean
+  notify?: boolean
 }
 
 const Icon = ({
