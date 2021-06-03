@@ -1,6 +1,6 @@
 import { createStoreContext } from '../../utils/context'
 import { useState, useRef, useCallback } from 'react'
-import { Notification } from '../../../../cloud/interfaces/db/notifications'
+import { Notification as UserNotification } from '../../../../cloud/interfaces/db/notifications'
 import { useToast } from '../toast'
 import {
   listNotifications,
@@ -12,11 +12,11 @@ import prop from 'ramda/es/prop'
 import { mergeOnId } from '../../utils/array'
 import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
 
-type Observer = (notifications: Notification[]) => void
+type Observer = (notifications: UserNotification[]) => void
 
 function useNotificationStore() {
   const { pushApiErrorMessage } = useToast()
-  const cacheRef = useRef<Map<string, Notification[]>>(new Map())
+  const cacheRef = useRef<Map<string, UserNotification[]>>(new Map())
   const observersRef = useRef<Map<string, Set<Observer>>>(new Map())
   const [counts, setCounts] = useState<Record<string, number>>({})
   const oldestAllRef = useRef<Map<string, Date>>(new Map())
@@ -121,7 +121,7 @@ function useNotificationStore() {
   )
 
   const setViewed = useCallback(
-    async (notification: Notification) => {
+    async (notification: UserNotification) => {
       try {
         const updated = await setNotificationViewed(notification)
         insertNotifications([updated], cacheRef.current, observersRef.current)
@@ -136,6 +136,7 @@ function useNotificationStore() {
     async (event: SerializedAppEvent) => {
       switch (event.type) {
         case 'notificationCreated': {
+          console.log(event)
           if (cacheRef.current.has(event.data.teamId)) {
             const notification = await getNotification(
               event.data.notificationId
@@ -145,6 +146,10 @@ function useNotificationStore() {
               cacheRef.current,
               observersRef.current
             )
+            console.log(Notification.permission)
+            if (Notification.permission === 'granted') {
+              new Notification(notification.title)
+            }
           }
           setCounts((prev) => {
             return {
@@ -168,8 +173,8 @@ function useNotificationStore() {
 }
 
 function insertNotifications(
-  notifications: Notification[],
-  cache: Map<string, Notification[]>,
+  notifications: UserNotification[],
+  cache: Map<string, UserNotification[]>,
   observersMap: Map<string, Set<Observer>>
 ) {
   const partioned = groupBy(prop('team'), notifications)

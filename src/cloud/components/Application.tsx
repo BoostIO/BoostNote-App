@@ -103,7 +103,7 @@ import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { compareAsc } from 'date-fns'
 import { SidebarTreeControl } from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
-import { Notification } from '../interfaces/db/notifications'
+import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 
 interface ApplicationProps {
@@ -420,7 +420,6 @@ const Application = ({
     sendToElectron('sidebar--state', { state: sidebarState })
   }, [usingElectron, , sendToElectron, sidebarState])
 
-<<<<<<< HEAD
   const treeControls: SidebarTreeControl[] = useMemo(() => {
     return [
       {
@@ -460,7 +459,7 @@ const Application = ({
   }, [team, currentUserIsCoreMember])
 
   const onSpacesBlurCallback = useCallback(() => {
-    setShowSpaces(false)
+    setPopOverState(null)
   }, [])
 
   const spaceBottomRows = useMemo(() => buildSpacesBottomRows(push), [push])
@@ -480,21 +479,20 @@ const Application = ({
       isNotDebouncing: isNotDebouncing() === true,
     }
   }, [isNotDebouncing, fetchingSearchResults])
-=======
+
   const {
     state: notificationState,
     getMore: getMoreNotifications,
     setViewed,
   } = useNotificationState(team?.id)
   const notificationClick = useCallback(
-    (notification: Notification) => {
+    (notification: UserNotification) => {
       setPopOverState(null)
       setViewed(notification)
       push(notification.link)
     },
     [push, setViewed]
   )
->>>>>>> 1cbfca40... integrate notifications
 
   return (
     <>
@@ -523,14 +521,9 @@ const Application = ({
         sidebar={
           <Sidebar
             className={cc(['application__sidebar'])}
-            showToolbar={!usingElectron}
-<<<<<<< HEAD
-            showSpaces={showSpaces}
-            onSpacesBlur={onSpacesBlurCallback}
-=======
             popOver={popOverState}
-            onSpacesBlur={() => setPopOverState(null)}
->>>>>>> 1cbfca40... integrate notifications
+            showToolbar={!usingElectron}
+            onSpacesBlur={onSpacesBlurCallback}
             toolbarRows={toolbarRows}
             spaces={spaces}
             spaceBottomRows={spaceBottomRows}
@@ -547,26 +540,11 @@ const Application = ({
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}
-<<<<<<< HEAD
             timelineMore={timelineMore}
             sidebarSearchState={sidebarSearchState}
-=======
-            timelineMore={
-              team != null && pathname !== getTeamLinkHref(team, 'timeline')
-                ? {
-                    variant: 'primary',
-                    onClick: () => push(getTeamLinkHref(team, 'timeline')),
-                  }
-                : undefined
-            }
-            sidebarSearchState={{
-              fetching: fetchingSearchResults,
-              isNotDebouncing: isNotDebouncing() === true,
-            }}
             notificationState={notificationState}
             getMoreNotifications={getMoreNotifications}
             notificationClick={notificationClick}
->>>>>>> 1cbfca40... integrate notifications
           />
         }
         pageBody={
@@ -782,10 +760,14 @@ function mapToolbarRows(
     tooltip: 'Notifications',
     active: popOverState === 'notifications',
     icon: mdiBell,
-    onClick: () =>
+    onClick: () => {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
       setPopOverState((prev) =>
         prev === 'notifications' ? null : 'notifications'
-      ),
+      )
+    },
   })
 
   if (team != null && subscription == null && isEligibleForDiscount(team)) {
