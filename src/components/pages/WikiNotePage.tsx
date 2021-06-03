@@ -116,26 +116,6 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
   }, [routeParams, storage.noteMap])
   const noteId = note?._id
 
-  const getCurrentPositionFromRoute = useCallback(() => {
-    if (!hash.startsWith('#L')) {
-      return null
-    } else {
-      let focusLine = 0
-      let focusColumn = 0
-      const focusData = hash.substring(2).split(',')
-      if (focusData.length == 2) {
-        focusLine = parseNumberStringOrReturnZero(focusData[0])
-        focusColumn = parseNumberStringOrReturnZero(focusData[1])
-      } else if (focusData.length == 1) {
-        focusLine = parseNumberStringOrReturnZero(focusData[0])
-      }
-      return {
-        line: focusLine,
-        ch: focusColumn,
-      }
-    }
-  }, [hash])
-
   const topbarTree = useMemo(() => {
     return mapTopBarTree(storage.noteMap, storage.folderMap, storage, push)
   }, [push, storage])
@@ -460,6 +440,29 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     toggleContextView,
     topbarTree,
   ])
+
+  const getCurrentPositionFromRoute = useCallback(() => {
+    if (!hash.startsWith('#L') || !generalStatus.focusOnEditorCursor) {
+      return null
+    } else {
+      let focusLine = 0
+      let focusColumn = 0
+      const focusData = hash.substring(2).split(',')
+      if (focusData.length == 2) {
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
+        focusColumn = parseNumberStringOrReturnZero(focusData[1])
+      } else if (focusData.length == 1) {
+        focusLine = parseNumberStringOrReturnZero(focusData[0])
+      }
+      setGeneralStatus({
+        focusOnEditorCursor: false,
+      })
+      return {
+        line: focusLine,
+        ch: focusColumn,
+      }
+    }
+  }, [generalStatus.focusOnEditorCursor, hash, setGeneralStatus])
 
   return (
     <Application

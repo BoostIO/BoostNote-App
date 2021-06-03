@@ -26,6 +26,7 @@ export interface GeneralStatus {
   showingNoteContextMenu: boolean
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   lastSidebarState: SidebarState
+  focusOnEditorCursor: boolean
 }
 
 function loadGeneralStatus(): Partial<GeneralStatus> {
@@ -56,6 +57,7 @@ const baseGeneralStatus: GeneralStatus = {
   showingNoteContextMenu: false,
   sidebarTreeSortingOrder: 'last-updated',
   lastSidebarState: 'tree',
+  focusOnEditorCursor: false,
 }
 
 function useGeneralStatusStore() {
