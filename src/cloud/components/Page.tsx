@@ -9,7 +9,7 @@ interface PageProps {
 
 const Page: React.FC<PageProps> = ({
   children,
-  title = 'Boost Note is a powerful, lightspeed collaborative workspace for developer teams',
+  title = 'Boost Note | Develop as one, grow as one',
   privatePage = false,
   calendly = true,
 }) => (
@@ -21,7 +21,17 @@ const Page: React.FC<PageProps> = ({
   >
     <Helmet>
       <title>{title}</title>
-      <meta property='og:image' content='/static/images/ogp.jpg' />
+      <meta name='og:title' content={title} />
+      <meta property='og:site_name' content='Boost Note' />
+      <meta name='og:type' content='website' />
+      <meta
+        property='og:image'
+        content='https://boostnote.io/static/images/ogp.jpg'
+      />
+      <meta
+        property='og:description'
+        content='Boost Note is a powerful, lightspeed collaborative workspace for developer teams.'
+      />
       <link
         href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@900&display=swap'
         rel='stylesheet'
