@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NoteStorage } from '../../lib/db/types'
 import NoteDetail from '../organisms/NoteDetail'
 import {
@@ -116,6 +116,10 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
     return undefined
   }, [routeParams, storage.noteMap])
   const noteId = note?._id
+
+  const [previousNoteId, setPreviousNoteId] = useState<string | undefined>(
+    noteId
+  )
 
   const topbarTree = useMemo(() => {
     return mapTopBarTree(storage.noteMap, storage.folderMap, storage, push)
@@ -466,10 +470,11 @@ const WikiNotePage = ({ storage }: WikiNotePageProps) => {
   }, [generalStatus.focusOnEditorCursor, hash, setGeneralStatus])
 
   useEffect(() => {
-    if (note != null) {
+    if (noteId != null && note != null && noteId != previousNoteId) {
       addVisitedToHistory(note)
+      setPreviousNoteId(noteId)
     }
-  }, [addVisitedToHistory, note])
+  }, [addVisitedToHistory, note, noteId, previousNoteId, setPreviousNoteId])
 
   return (
     <Application
