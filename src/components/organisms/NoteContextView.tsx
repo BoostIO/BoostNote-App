@@ -352,8 +352,7 @@ export default NoteContextView
 
 const Container = styled.div`
   padding: 4px 0;
-  width: 400px;
-  // overflow-y: auto;
+  width: 350px;
   border-left: 1px solid ${({ theme }) => theme.colors.border.second};
   border-radius: 0;
   height: 100vh;

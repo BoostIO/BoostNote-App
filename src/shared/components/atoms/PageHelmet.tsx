@@ -7,7 +7,7 @@ interface PageHelmetProps {
 }
 
 const PageHelmet: React.FC<PageHelmetProps> = ({
-  title = 'Boost Note - An open sourced markdown editor for developers',
+  title = 'Boost Note - markdown editor for developers',
   indexing,
 }) => (
   <Helmet>
