@@ -12,6 +12,7 @@ import {
   usingElectron,
   getCurrentDesktopAppVersion,
 } from '../../lib/stores/electron'
+import UpgradeIntroButton from '../UpgradeIntroButton'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
@@ -123,10 +124,11 @@ const AnnouncementAlert = () => {
       <StyledAnnouncementAlert>
         <p>
           Your number of documents exceeds the capacity of the free plan.
-          <UpgradeButton
+          <UpgradeIntroButton
             origin='limit'
             variant='link'
             label='Start your free trial'
+            popupVariant='doc-limit'
           />
           now.
         </p>
