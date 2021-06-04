@@ -54,6 +54,7 @@ import IconMdi from '../../../../../atoms/IconMdi'
 import Button from '../../../../../../../shared/components/atoms/Button'
 import { revisionHistoryStandardDays } from '../../../../../../lib/subscription'
 import UpgradeButton from '../../../../../UpgradeButton'
+import UpgradeIntroButton from '../../../../../UpgradeIntroButton'
 import { useToast } from '../../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../../shared/lib/stores/modal'
 import DocStatusSelect from './DocStatusSelect'
@@ -513,10 +514,11 @@ const DocContextMenu = ({
                 </label>
                 <Flexbox className='context__content' justifyContent='flex-end'>
                   {subscription == null ? (
-                    <UpgradeButton
+                    <UpgradeIntroButton
                       className='context__badge'
                       origin='revision'
                       variant='secondary'
+                      popupVariant='version-history'
                       query={{ teamId: team.id, docId: currentDoc.id }}
                     />
                   ) : (
