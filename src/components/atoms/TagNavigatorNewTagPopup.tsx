@@ -50,6 +50,7 @@ const Container = styled.div`
   }
 
   .autocomplete__option {
+    flex-shrink: 0;
     width: 100%;
     padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
     overflow: hidden;

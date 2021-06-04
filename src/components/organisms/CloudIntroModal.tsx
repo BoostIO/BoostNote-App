@@ -31,6 +31,7 @@ import {
   flexCenter,
 } from '../../shared/lib/styled/styleFunctions'
 import Icon from '../../shared/components/atoms/Icon'
+import Button from '../../shared/components/atoms/Button'
 
 const CloudIntroModal = () => {
   const { preferences, openTab } = usePreferences()
@@ -103,7 +104,8 @@ const CloudIntroModal = () => {
           </h4>
           <div className='switch'>
             <div className='switch__group'>
-              <button
+              <Button
+                variant={'icon-secondary'}
                 className={cc([
                   'switch__button',
                   activeTab === 'team' && 'active',
@@ -111,10 +113,12 @@ const CloudIntroModal = () => {
                 onClick={() => {
                   setActiveTab('team')
                 }}
+                iconPath={mdiAccountGroup}
+                iconSize={20}
               >
-                <Icon className='switch__button__icon' path={mdiAccountGroup} />
+                {/*<Icon className='switch__button__icon' path={mdiAccountGroup} />*/}
                 With My Team
-              </button>
+              </Button>
               <button
                 className={cc([
                   'switch__button',

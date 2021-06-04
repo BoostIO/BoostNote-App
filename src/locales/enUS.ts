@@ -98,7 +98,7 @@ export default {
     //About
     'about.about': 'About',
     'about.boostnoteDescription':
-      'An open source note-taking app made for programmers just like you.',
+      'Note-taking app made for programmers just like you.',
     'about.website': 'Official Website',
     'about.boostWiki': 'Boost Note for Team',
     'about.platform': 'Cross-platform',
