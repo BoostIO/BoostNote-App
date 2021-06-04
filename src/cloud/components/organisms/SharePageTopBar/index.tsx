@@ -9,12 +9,7 @@ const SharePageTopbar = ({ children }: React.PropsWithChildren<{}>) => (
           href='/'
           style={{ color: 'white', display: 'flex', alignItems: 'center' }}
         >
-          <img
-            src='/app/static/images/apple-icon-180x180.png'
-            alt='Boost Note'
-            style={{ marginRight: 10 }}
-          />
-          <span style={{ fontSize: '1.5em' }}>Boost Note</span>
+          <img src='/static/images/logo_with_text_white.svg' alt='Boost Note' />
         </a>
       </StyledLogo>
       {children}
