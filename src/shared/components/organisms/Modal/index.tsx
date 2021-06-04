@@ -130,6 +130,10 @@ const Container = styled.div`
     display: block;
     float: center;
 
+    &.modal__window__width--small {
+      width: 600px;
+    }
+
     &.modal__window__width--large {
       width: 1100px;
     }
