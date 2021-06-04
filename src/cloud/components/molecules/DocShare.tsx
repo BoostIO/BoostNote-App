@@ -37,10 +37,10 @@ import { boostHubBaseUrl } from '../../lib/consts'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../atoms/Link/DocLink'
 import { usingElectron, openInBrowser } from '../../lib/stores/electron'
-import UpgradeButton from '../UpgradeButton'
 import { useToast } from '../../../shared/lib/stores/toast'
 import Button from '../../../shared/components/atoms/Button'
 import Switch from '../../../shared/components/atoms/Switch'
+import UpgradeIntroButton from '../UpgradeIntroButton'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -469,9 +469,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     <span>Password Protect</span>
                     {(subscription == null ||
                       subscription.plan === 'standard') && (
-                      <UpgradeButton
+                      <UpgradeIntroButton
                         tabIndex={-1}
                         variant='secondary'
+                        popupVariant='sharing-options'
                         origin='share.password'
                         className='upgrade__badge'
                         query={{ teamId: team.id, docId: currentDoc.id }}
@@ -525,9 +526,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                   >
                     <span>Expiration Date</span>
                     {!havingPro && (
-                      <UpgradeButton
+                      <UpgradeIntroButton
                         tabIndex={-1}
                         variant='secondary'
+                        popupVariant='sharing-options'
                         origin='share.expire'
                         className='upgrade__badge'
                         query={{ teamId: team.id, docId: currentDoc.id }}
