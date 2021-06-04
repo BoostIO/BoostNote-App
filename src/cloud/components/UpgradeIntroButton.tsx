@@ -32,9 +32,6 @@ const UpgradeIntroButton = ({
   const track = useCallback(async () => {
     let mixpanelEvent: MixpanelFrontEvent
     switch (origin) {
-      case 'guest':
-        mixpanelEvent = MixpanelActionTrackTypes.UpgradeGuest
-        break
       case 'limit':
         mixpanelEvent = MixpanelActionTrackTypes.UpgradeLimit
         break
