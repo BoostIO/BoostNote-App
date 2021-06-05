@@ -13,6 +13,9 @@ import {
   mdiLock,
   mdiPaperclip,
   mdiPencil,
+  mdiSortAlphabeticalAscending,
+  mdiSortAlphabeticalDescending,
+  mdiSortClockAscending,
   mdiStar,
   mdiStarOutline,
   mdiTag,
@@ -593,7 +596,38 @@ function buildChildrenNavRows(
     case 'last-updated':
       return sortByAttributeDesc('lastUpdated', rows)
     case 'drag':
+    // todo: [komediruzecki-05/06/2021] Implement dragged based order (orderedIds)
     default:
       return rows
+  }
+}
+
+export const SidebarTreeSortingOrders = {
+  lastUpdated: {
+    value: 'last-updated',
+    label: 'Last updated',
+    icon: mdiSortClockAscending,
+  },
+  aZ: {
+    value: 'a-z',
+    label: 'Title A-Z',
+    icon: mdiSortAlphabeticalAscending,
+  },
+  zA: {
+    value: 'z-a',
+    label: 'Title Z-A',
+    icon: mdiSortAlphabeticalDescending,
+  },
+  // todo: [komediruzecki-05/06/2021] Enable once implemented (or use shared one)
+  // dragDrop: {
+  //   value: 'drag',
+  //   label: 'Drag and drop',
+  //   icon: mdiMouseMoveDown,
+  // },
+} as {
+  [title: string]: {
+    value: SidebarTreeSortingOrder
+    label: string
+    icon: string
   }
 }

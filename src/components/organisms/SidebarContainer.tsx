@@ -24,10 +24,7 @@ import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../shared/lib/styled'
 import Sidebar from '../../shared/components/organisms/Sidebar'
 import cc from 'classcat'
-import {
-  SidebarState,
-  SidebarTreeSortingOrders,
-} from '../../shared/lib/sidebar'
+import { SidebarState } from '../../shared/lib/sidebar'
 import { MenuTypes, useContextMenu } from '../../shared/lib/stores/contextMenu'
 import { SidebarToolbarRow } from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import { mapToolbarRows } from '../../lib/v2/mappers/local/sidebarRows'
@@ -46,7 +43,10 @@ import {
   mapSearchResults,
 } from '../../lib/v2/mappers/local/searchResults'
 import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
-import { mapTree } from '../../lib/v2/mappers/local/sidebarTree'
+import {
+  mapTree,
+  SidebarTreeSortingOrders,
+} from '../../lib/v2/mappers/local/sidebarTree'
 import { useLocalDB } from '../../lib/v2/hooks/local/useLocalDB'
 import { useLocalDnd } from '../../lib/v2/hooks/local/useLocalDnd'
 import { CollapsableType } from '../../lib/v2/stores/sidebarCollapse'
@@ -641,7 +641,9 @@ const SidebarContainer = ({
                 ? SidebarTreeSortingOrders.zA.icon
                 : generalStatus.sidebarTreeSortingOrder === 'last-updated'
                 ? SidebarTreeSortingOrders.lastUpdated.icon
-                : SidebarTreeSortingOrders.dragDrop.icon,
+                : SidebarTreeSortingOrders.lastUpdated.icon,
+            // todo: [komediruzecki-05/06/2021] When drag and drop order is implemented enable this
+            // : SidebarTreeSortingOrders.dragDrop.icon,
             onClick: (event) => {
               popup(
                 event,
