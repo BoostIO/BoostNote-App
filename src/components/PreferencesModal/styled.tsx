@@ -1,9 +1,5 @@
 import styled from '../../shared/lib/styled'
-import {
-  selectStyle,
-  inputStyle,
-  tableStyle,
-} from '../../shared/lib/styled/styleFunctions'
+import { selectStyle, inputStyle } from '../../shared/lib/styled/styleFunctions'
 
 export const Section = styled.section`
   margin-bottom: 2em;
@@ -16,10 +12,6 @@ export const SectionHeader = styled.h3`
 
 export const SectionSubtleText = styled.p`
   color: ${({ theme }) => theme.colors.text.disabled};
-`
-
-export const SectionMargin = styled.section`
-  margin: 100px;
 `
 
 export const SectionControl = styled.div`
@@ -50,10 +42,6 @@ export const SectionInput = styled.input`
   height: 35px;
   border-radius: 2px;
   font-size: 14px;
-`
-
-export const SectionTable = styled.table`
-  ${tableStyle}
 `
 
 export const SectionListSelect = styled.div`

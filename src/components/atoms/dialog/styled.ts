@@ -1,9 +1,6 @@
 import { getColorBrightness } from '../../../lib/colors'
 import styled from '../../../shared/lib/styled'
-import {
-  border,
-  secondaryButtonStyle,
-} from '../../../shared/lib/styled/styleFunctions'
+import { border } from '../../../shared/lib/styled/styleFunctions'
 import { backgroundColor } from '../../../shared/lib/styled/styleFunctions'
 
 const dialogZIndex = 8000
@@ -47,14 +44,6 @@ export const DialogMessage = styled.p`
   padding: 0;
   font-size: 12px;
   margin-bottom: 20px;
-`
-
-export const DialogButton = styled.button`
-  padding: 5px 10px;
-  border-radius: 2px;
-  margin-left: 8px;
-  user-select: none;
-  ${secondaryButtonStyle}
 `
 
 export const tagItemHeightSize = `18px`
