@@ -119,8 +119,8 @@ export const FormCheckItemContainer = styled.div`
 `
 
 export const FormFolderSelectorInput = styled.input`
-  display: block;
   flex: 1;
+  width: 100%;
   padding: 0.375rem 0.75rem;
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
