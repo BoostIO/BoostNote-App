@@ -41,8 +41,6 @@ import {
   boostHubSubscriptionUpdateEventEmitter,
 } from '../lib/events'
 import { useRouteParams } from '../lib/routeParams'
-import { useCreateWorkspaceModal } from '../lib/createWorkspaceModal'
-import CreateWorkspaceModal from './organisms/CreateWorkspaceModal'
 import { useStorageRouter } from '../lib/storageRouter'
 import ExternalStyle from './ExternalStyle'
 import { selectV2Theme } from '../shared/lib/styled/styleFunctions'
@@ -423,11 +421,6 @@ const App = () => {
 
   useBoostNoteProtocol()
 
-  const {
-    showCreateWorkspaceModal,
-    toggleShowCreateWorkspaceModal,
-  } = useCreateWorkspaceModal()
-
   const { showingCloudIntroModal } = useCloudIntroModal()
 
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {
@@ -459,11 +452,6 @@ const App = () => {
               showingCloudIntroModal && <CloudIntroModal />
             )}
             <Router />
-            {showCreateWorkspaceModal && (
-              <CreateWorkspaceModal
-                closeModal={toggleShowCreateWorkspaceModal}
-              />
-            )}
           </>
         ) : (
           <LoadingText>Loading Data...</LoadingText>

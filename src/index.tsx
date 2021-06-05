@@ -18,7 +18,6 @@ import { StorageRouterProvider } from './lib/storageRouter'
 import { SearchModalProvider } from './lib/searchModal'
 import { CheckedFeaturesProvider } from './lib/checkedFeatures'
 import { BoostHubStoreProvider } from './lib/boosthub'
-import { CreateWorkspaceModalProvider } from './lib/createWorkspaceModal'
 import { CloudIntroModalProvider } from './lib/cloudIntroModal'
 import { MigrationProvider } from './lib/migrate/store'
 import { DialogProvider } from './lib/dialog'
@@ -46,7 +45,6 @@ const CombinedProvider = combineProviders(
   StorageRouterProvider,
   RouterProvider,
   CheckedFeaturesProvider,
-  CreateWorkspaceModalProvider,
   CloudIntroModalProvider
 )
 
