@@ -96,7 +96,7 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </FormLabelGroupContent>
       </FormLabelGroup>
       <FormControlGroup>
-        <Button vairant={'primary'} onClick={updateStorageName}>
+        <Button variant={'primary'} onClick={updateStorageName}>
           Save
         </Button>
       </FormControlGroup>
