@@ -156,6 +156,16 @@ const SidebarContainer = ({
           },
           {
             type: 'normal',
+            label: 'Export Workspace',
+            click: () =>
+              exportDocuments(workspace, {
+                folderName: workspace.name,
+                folderPathname: '/',
+                exportingStorage: true,
+              }),
+          },
+          {
+            type: 'normal',
             label: 'Preferences',
             click: () => {
               togglePreferencesModal()
