@@ -91,7 +91,6 @@ const SidebarContainer = ({
     openRenameDocForm,
     removeWorkspace,
     exportDocuments,
-    openCreateStorageDialog,
   } = useLocalUI()
   const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
@@ -102,7 +101,7 @@ const SidebarContainer = ({
       ? undefined
       : initialSidebarState != null
       ? initialSidebarState
-      : generalStatus.lastSidebarState
+      : generalStatus.lastSidebarStateLocalSpace
   )
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const { toggleShowingCloudIntroModal } = useCloudIntroModal()
@@ -138,8 +137,10 @@ const SidebarContainer = ({
           },
           {
             type: 'normal',
-            label: t('storage.remove'),
-            click: () => removeWorkspace(workspace),
+            label: 'New Space',
+            click: () => {
+              push('/app/storages')
+            },
           },
           {
             type: 'separator',
@@ -172,23 +173,21 @@ const SidebarContainer = ({
           },
           {
             type: 'normal',
-            label: 'New Space',
-            click: () => {
-              openCreateStorageDialog()
-            },
+            label: t('storage.remove'),
+            click: () => removeWorkspace(workspace),
           },
         ],
       })
     },
     [
       workspace,
-      localSpaces,
       t,
+      localSpaces,
       openWorkspaceEditForm,
       removeWorkspace,
       togglePreferencesModal,
       navigate,
-      openCreateStorageDialog,
+      push,
     ]
   )
 
@@ -256,7 +255,7 @@ const SidebarContainer = ({
   }, [toggleShowSearchModal])
 
   useEffect(() => {
-    setGeneralStatus({ lastSidebarState: sidebarState })
+    setGeneralStatus({ lastSidebarStateLocalSpace: sidebarState })
   }, [sidebarState, setSidebarState, setGeneralStatus])
 
   const openState = useCallback((state: SidebarState) => {
@@ -451,6 +450,10 @@ const SidebarContainer = ({
       workspace: NoteStorage
     ) => {
       event.preventDefault()
+      setGeneralStatus({ lastSidebarStateLocalSpace: 'tree' })
+      if (sidebarState == undefined) {
+        setSidebarState('tree')
+      }
       navigate(workspace.id)
     }
     const onSpaceContextMenu = (
@@ -508,7 +511,9 @@ const SidebarContainer = ({
     workspace,
     localSpaces,
     generalStatus.boostHubTeams,
+    sidebarState,
     navigate,
+    setGeneralStatus,
     t,
     openWorkspaceEditForm,
     removeWorkspace,

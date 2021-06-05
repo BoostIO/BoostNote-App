@@ -7,6 +7,8 @@ import { FormFolderSelectorInput } from '../atoms/form'
 import { useToast } from '../../shared/lib/stores/toast'
 import Form from '../../shared/components/molecules/Form'
 import { openDialog } from '../../lib/exports'
+import { useGeneralStatus } from '../../lib/generalStatus'
+import { getWorkspaceHref } from '../../lib/db/utils'
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -16,19 +18,29 @@ const FSStorageCreateForm = () => {
   const { createStorage } = useDb()
   const { pushMessage } = useToast()
   const { report } = useAnalytics()
+  const { setGeneralStatus } = useGeneralStatus()
+
   const createStorageCallback = useCallback(async () => {
     try {
-      const storage = await createStorage(name, { type: 'fs', location })
+      const workspace = await createStorage(name, { type: 'fs', location })
       report(analyticsEvents.createStorage)
-      push(`/app/storages/${storage.id}/notes`)
-      // todo: [komediruzecki-21/05/2021] Not opening sidebar and proper welcome screen, just empty list of notes
+      setGeneralStatus({ lastSidebarStateLocalSpace: 'tree' })
+      push(getWorkspaceHref(workspace))
     } catch (error) {
       pushMessage({
         title: 'Something went wrong',
         description: error.toString(),
       })
     }
-  }, [createStorage, location, name, push, report, pushMessage])
+  }, [
+    createStorage,
+    name,
+    location,
+    report,
+    setGeneralStatus,
+    push,
+    pushMessage,
+  ])
 
   const openDialogAndStoreLocation = useCallback(async () => {
     const location = await openDialog()

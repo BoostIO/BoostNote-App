@@ -26,6 +26,7 @@ export interface GeneralStatus {
   showingNoteContextMenu: boolean
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
   lastSidebarState: SidebarState
+  lastSidebarStateLocalSpace: SidebarState
   focusOnEditorCursor: boolean
 }
 
@@ -57,6 +58,7 @@ const baseGeneralStatus: GeneralStatus = {
   showingNoteContextMenu: false,
   sidebarTreeSortingOrder: 'last-updated',
   lastSidebarState: 'tree',
+  lastSidebarStateLocalSpace: 'tree',
   focusOnEditorCursor: false,
 }
 
