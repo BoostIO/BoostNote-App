@@ -1,12 +1,9 @@
 import React, { useState, useCallback, FormEvent, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  SectionHeader,
-  SectionInput,
-  SectionPrimaryButton,
-} from '../PreferencesModal/styled'
+import { SectionHeader, SectionInput } from '../PreferencesModal/styled'
 import ky from 'ky'
 import { FormBlockquote } from '../atoms/form'
+import Button from '../../shared/components/atoms/Button'
 
 type Status = 'idle' | 'sending' | 'done'
 
@@ -60,12 +57,13 @@ const SubscribeNewsLettersForm = () => {
                 placeholder='E-mail'
                 style={{ marginRight: '0.5em' }}
               />
-              <SectionPrimaryButton
+              <Button
+                variant={'primary'}
                 type='submit'
                 disabled={status === 'sending'}
               >
                 {t('newsletter.subscribe')}
-              </SectionPrimaryButton>
+              </Button>
             </div>
           </form>
         </>

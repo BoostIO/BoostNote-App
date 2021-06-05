@@ -1,11 +1,6 @@
 import React from 'react'
 import styled from '../../shared/lib/styled'
-import {
-  border,
-  selectStyle,
-  primaryButtonStyle,
-  secondaryButtonStyle,
-} from '../../shared/lib/styled/styleFunctions'
+import { border, selectStyle } from '../../shared/lib/styled/styleFunctions'
 
 interface FormHeadingProps {
   depth?: number
@@ -163,51 +158,6 @@ export const FormCheckItem = ({
     </FormCheckItemContainer>
   )
 }
-
-export const FormPrimaryButton = styled.button`
-  ${primaryButtonStyle};
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  margin-left: 0.375rem;
-  &:first-child {
-    margin-left: 0;
-  }
-`
-
-export const FormSecondaryButton = styled.button`
-  ${secondaryButtonStyle};
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  margin-left: 0.375rem;
-  &:first-child {
-    margin-left: 0;
-  }
-`
-
-export const FormTransparentButton = styled.button`
-  background-color: transparent;
-  border: none;
-  color: ${({ theme }) => theme.colors.text.primary};
-  background-color: ${({ theme }) => theme.colors.background.primary};
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  margin-left: 0.375rem;
-  cursor: pointer;
-  &:first-child {
-    margin-left: 0;
-  }
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.text.secondary};
-    background-color: ${({ theme }) => theme.colors.background.secondary};
-  }
-`
 
 export const FormSelect = styled.select`
   ${selectStyle};

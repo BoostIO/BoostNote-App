@@ -7,7 +7,6 @@ import {
   FormHeading,
   FormGroup,
   FormTextInput,
-  FormPrimaryButton,
   FormLabelGroup,
   FormLabelGroupLabel,
   FormLabelGroupContent,
@@ -97,7 +96,9 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
         </FormLabelGroupContent>
       </FormLabelGroup>
       <FormControlGroup>
-        <FormPrimaryButton onClick={updateStorageName}>Save</FormPrimaryButton>
+        <Button vairant={'primary'} onClick={updateStorageName}>
+          Save
+        </Button>
       </FormControlGroup>
 
       <hr />
@@ -147,9 +148,9 @@ const StorageEditPage = ({ storage }: StorageEditPageProps) => {
       </Alert>
 
       <FormGroup>
-        <FormPrimaryButton onClick={() => openTab('migration')}>
+        <Button variant={'primary'} onClick={() => openTab('migration')}>
           Start Migration
-        </FormPrimaryButton>
+        </Button>
       </FormGroup>
 
       {storage.type === 'fs' && (

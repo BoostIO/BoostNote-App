@@ -7,13 +7,7 @@ import React, {
 } from 'react'
 import { setAsDefaultProtocolClient, setCookie } from '../../lib/electronOnly'
 import { usePreferences } from '../../lib/preferences'
-import {
-  FormPrimaryButton,
-  FormGroup,
-  FormTextInput,
-  FormBlockquote,
-  FormSecondaryButton,
-} from '../atoms/form'
+import { FormGroup, FormTextInput, FormBlockquote } from '../atoms/form'
 import { generateId } from '../../lib/string'
 import {
   openLoginPage,
@@ -34,6 +28,7 @@ import { fetchDesktopGlobalData } from '../../lib/boosthub'
 import { boostHubBaseUrl } from '../../cloud/lib/consts'
 import Icon from '../../shared/components/atoms/Icon'
 import styled from '../../shared/lib/styled'
+import Button from '../../shared/components/atoms/Button'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()
@@ -176,13 +171,13 @@ const BoostHubSignInForm = () => {
             <BoostHubFeatureIntro />
           </div>
           <div className='control'>
-            <FormPrimaryButton onClick={startLoginRequest}>
+            <Button variant={'primary'} onClick={startLoginRequest}>
               Sign Up
-            </FormPrimaryButton>
+            </Button>
 
-            <FormSecondaryButton onClick={startLoginRequest}>
+            <Button variant={'secondary'} onClick={startLoginRequest}>
               Sign In
-            </FormSecondaryButton>
+            </Button>
           </div>
           <div className='control'>
             <a
@@ -205,9 +200,9 @@ const BoostHubSignInForm = () => {
             &nbsp;Waiting for signing in from browser...
           </p>
           <FormGroup style={{ textAlign: 'center' }}>
-            <FormPrimaryButton onClick={openLoginRequestPage}>
+            <Button variant={'primary'} onClick={openLoginRequestPage}>
               Open request signing in page again
-            </FormPrimaryButton>
+            </Button>
           </FormGroup>
           <FormGroup style={{ textAlign: 'center' }}>
             <a className='control-link' onClick={cancelSigningIn}>
@@ -230,13 +225,14 @@ const BoostHubSignInForm = () => {
                 />
               </FormGroup>
               <FormGroup style={{ textAlign: 'center' }}>
-                <FormPrimaryButton
+                <Button
+                  variant={'primary'}
                   onClick={() => {
                     login(code)
                   }}
                 >
                   Sign In
-                </FormPrimaryButton>
+                </Button>
               </FormGroup>
             </>
           ) : (
