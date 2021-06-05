@@ -146,12 +146,7 @@ app.on('ready', () => {
       return
     }
     const menuItemId = args[0]
-    const newAcceleratorShortcut =
-      args[1] == null
-        ? undefined
-        : MAC
-        ? args[1].replace('Ctrl', 'Cmd')
-        : args[1]
+    const newAcceleratorShortcut = args[1] == null ? undefined : args[1]
 
     keymap.set(menuItemId, newAcceleratorShortcut)
     applyMenuTemplate(getTemplateFromKeymap(keymap))

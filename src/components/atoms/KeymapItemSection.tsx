@@ -16,7 +16,7 @@ import { useToast } from '../../shared/lib/stores/toast'
 import Button from '../../shared/components/atoms/Button'
 
 const invalidShortcutInputs = [' ']
-const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift']
+const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift', 'meta']
 
 interface KeymapItemSectionProps {
   keymapKey: string
@@ -65,6 +65,7 @@ const KeymapItemSection = ({
     }
 
     setInputError(false)
+
     const shortcut: KeymapItemEditableProps = {
       key: event.key.toUpperCase(),
       keycode: event.keyCode,
@@ -72,6 +73,7 @@ const KeymapItemSection = ({
         ctrl: event.ctrlKey,
         alt: event.altKey,
         shift: event.shiftKey,
+        meta: event.metaKey,
       },
     }
     setCurrentShortcut(shortcut)
