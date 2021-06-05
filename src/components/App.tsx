@@ -430,12 +430,12 @@ const App = () => {
     return routeParams.domain
   }, [routeParams])
 
-  const boosthubTeam =
+  const showingAppNavigator =
     activeBoostHubTeamDomain != null
       ? generalStatus.boostHubTeams.find(
           (team) => team.domain === activeBoostHubTeamDomain
-        )
-      : null
+        ) != null
+      : routeParams.name == 'boosthub.teams.create'
 
   return (
     <ThemeProvider theme={selectV2Theme(preferences['general.theme'] as any)}>
@@ -446,7 +446,7 @@ const App = () => {
       >
         {initialized ? (
           <>
-            {boosthubTeam != null ? (
+            {showingAppNavigator != null ? (
               <AppNavigator />
             ) : (
               showingCloudIntroModal && <CloudIntroModal />
