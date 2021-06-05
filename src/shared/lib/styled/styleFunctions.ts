@@ -164,50 +164,6 @@ export const contextMenuShadow = ({ theme }: StyledProps) =>
 /* ———————————–———————————–———————————–——–——
     Button
 ———————————–———————————–———————————–——–—— */
-export const primaryButtonStyle = ({ theme }: StyledProps) => `border: none;
-background-color: ${theme.colors.variants.primary.base};
-color: ${theme.colors.variants.primary.text};
-font-size: 13px;
-
-&:hover,
-&:active,
-&.active {
-  cursor: pointer;
-  color: ${theme.colors.variants.secondary.base};
-}
-&:focus {
-  box-shadow: 0 0 0 2px ${theme.colors.variants.primary.base};
-}
-&:disabled,
-&.disabled {
-  opacity: .5;
-  cursor: default;
-}
-`
-
-export const secondaryButtonStyle = ({ theme }: StyledProps) => `border: none;
-background-color: ${theme.colors.variants.secondary.base};
-color: ${theme.colors.variants.secondary.text};
-${border};
-font-size: 13px;
-
-&:hover,
-&:active,
-&.active {
-  cursor: pointer;
-  color: ${theme.colors.text.secondary};
-  background-color: ${theme.colors.background.quaternary};
-}
-&:focus {
-  box-shadow: 0 0 0 2px ${theme.colors.variants.secondary.base};
-}
-&:disabled,
-&.disabled {
-  opacity: .5;
-  cursor: default;
-}
-`
-
 export const closeIconColor = ({ theme }: StyledProps) => `
 color: ${theme.colors.text.subtle};
 transition: 200ms color;
@@ -267,32 +223,6 @@ color: ${theme.colors.text.primary};
 /* ———————————–———————————–———————————–——–——
     Table
 ———————————–———————————–———————————–——–—— */
-export const tableStyle = ({ theme }: StyledProps) => `
-  width: 100%;
-  border: 1px solid ${theme.colors.border.main};
-  border-collapse: collapse;
-  color: ${theme.colors.text.link};
-  text-align: left;
-
-  th, td {
-    padding: ${theme.sizes.spaces.xsm}px ${theme.sizes.spaces.sm}px;
-    border: 1px solid ${theme.colors.border.main};
-    font-weight: 400;
-  }
-
-  thead th {
-    font-size: ${theme.sizes.fonts.l}px;
-    font-weight: 500;
-
-    span {
-      display: block;
-    }
-  }
-
-  tbody td {
-    text-align: center;
-  }
-`
 
 /* ———————————–———————————–———————————–——–——
     Responsive Styles
