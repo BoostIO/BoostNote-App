@@ -22,11 +22,7 @@ import ArchivePage from './pages/ArchivePage'
 import LabelsPage from './pages/LabelsPage'
 import TimelinePage from './pages/TimelinePage'
 import PouchDbDeprecationPage from './pages/PouchDbDeprecationPage'
-import styled from '../shared/lib/styled'
-
-const NotFoundPageContainer = styled.div`
-  padding: 15px 25px;
-`
+import NotFoundErrorPage from './pages/NotFoundErrorPage'
 
 const Router = () => {
   const routeParams = useRouteParams()
@@ -194,10 +190,12 @@ function useContent(
       return <StorageCreatePage />
   }
   return (
-    <NotFoundPageContainer>
-      <h1>Page not found</h1>
-      <p>Check the URL or click other link in the left side navigation.</p>
-    </NotFoundPageContainer>
+    <NotFoundErrorPage
+      title={'Page not found'}
+      description={
+        'Check the URL or click other link in the left side navigation.'
+      }
+    />
   )
 }
 
