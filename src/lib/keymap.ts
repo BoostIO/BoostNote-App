@@ -1,10 +1,10 @@
-import { osName } from './platform'
 import { KeyboardEvent } from 'react'
 
 interface ModifierItem {
   ctrl?: boolean
   shift?: boolean
   alt?: boolean
+  meta?: boolean
 }
 
 export interface KeymapItemEditableProps {
@@ -118,6 +118,7 @@ export function compareEventKeyWithKeymap(
       ctrl: event.ctrlKey,
       shift: event.shiftKey,
       alt: event.altKey,
+      meta: event.metaKey,
     },
     keycode: event.keyCode,
   }
@@ -130,11 +131,7 @@ export function createCodemirrorTypeKeymap(
   let keymapString = ''
   if (keymapProps.modifiers != null) {
     if (keymapProps.modifiers.ctrl != null) {
-      keymapString += keymapProps.modifiers.ctrl
-        ? osName == 'macos'
-          ? 'Cmd-'
-          : 'Ctrl-'
-        : ''
+      keymapString += keymapProps.modifiers.ctrl ? 'Ctrl-' : ''
     }
     if (keymapProps.modifiers.shift != null) {
       keymapString += keymapProps.modifiers.shift ? 'Shift-' : ''
@@ -142,13 +139,17 @@ export function createCodemirrorTypeKeymap(
     if (keymapProps.modifiers.alt != null) {
       keymapString += keymapProps.modifiers.alt ? 'Alt-' : ''
     }
+    if (keymapProps.modifiers.meta != null) {
+      keymapString += keymapProps.modifiers.meta ? 'Cmd-' : ''
+    }
   }
 
   const keyLowercase = keymapProps.key.toLowerCase()
   if (
     keyLowercase != 'control' &&
     keyLowercase != 'shift' &&
-    keyLowercase != 'alt'
+    keyLowercase != 'alt' &&
+    keyLowercase != 'meta'
   ) {
     keymapString += keymapProps.key
   }
@@ -240,6 +241,12 @@ export function getMenuAcceleratorForKeymapItem(
     }
     if (keymapProps.modifiers.shift != null) {
       keymapString += keymapProps.modifiers.shift ? 'Shift + ' : ''
+    }
+    if (keymapProps.modifiers.alt != null) {
+      keymapString += keymapProps.modifiers.alt ? 'Alt + ' : ''
+    }
+    if (keymapProps.modifiers.meta != null) {
+      keymapString += keymapProps.modifiers.meta ? 'Meta + ' : ''
     }
   }
   keymapString += keymapProps.key
