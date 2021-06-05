@@ -27,7 +27,6 @@ import ExportProgressItem, {
   ExportProcedureData,
 } from '../../../../components/molecules/Export/ExportProgressItem'
 import ExportSettingsComponent from '../../../../components/molecules/Export/ExportSettingsComponent'
-import { useRouter } from '../../../router'
 import { useTranslation } from 'react-i18next'
 
 export function useLocalUI() {
@@ -43,45 +42,11 @@ export function useLocalUI() {
     trashNote,
     purgeNote,
     renameStorage,
-    createStorage,
     removeStorage,
     removeAttachment,
   } = useDb()
   const { pushMessage } = useToast()
-  const { push } = useRouter()
   const { t } = useTranslation()
-
-  const openCreateStorageDialog = useCallback(() => {
-    openModal(
-      <BasicInputFormLocal
-        defaultIcon={mdiFolderOutline}
-        defaultInputValue={''}
-        defaultEmoji={undefined}
-        placeholder='Workspace name'
-        submitButtonProps={{
-          label: 'Create Space',
-        }}
-        onSubmit={async (workspaceName: string) => {
-          if (workspaceName == '') {
-            pushMessage({
-              title: 'Cannot rename workspace',
-              description: 'Workspace name should not be empty.',
-            })
-            closeLastModal()
-            return
-          }
-          const storage = await createStorage(workspaceName)
-          // todo: [komediruzecki-30/05/2021] should also update to proper initial screen (open sidebar state etc)
-          push(`/app/storages/${storage.id}`)
-          closeLastModal()
-        }}
-      />,
-      {
-        showCloseIcon: true,
-        title: 'Create a space',
-      }
-    )
-  }, [closeLastModal, createStorage, openModal, push, pushMessage])
 
   const openWorkspaceEditForm = useCallback(
     (workspace: NoteStorage) => {
@@ -463,7 +428,6 @@ export function useLocalUI() {
     removeWorkspace,
     deleteOrTrashNote: deleteOrArchiveDoc,
     exportDocuments,
-    openCreateStorageDialog,
     removeAttachment: removeAttachmentApi,
   }
 }
