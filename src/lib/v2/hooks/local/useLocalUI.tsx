@@ -1,13 +1,9 @@
-import React, { useCallback } from 'react'
-import {
-  mdiFileDocumentOutline,
-  mdiFolderOutline,
-  mdiMessageQuestion,
-  mdiPencil,
-} from '@mdi/js'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { mdiFileDocumentOutline, mdiFolderOutline, mdiPencil } from '@mdi/js'
 import { FolderDoc, NoteDoc, NoteStorage } from '../../../db/types'
 import { useDb } from '../../../db'
 import {
+  getFolderHref,
   getFolderNameFromPathname,
   getFolderPathname,
   getNoteTitle,
@@ -28,6 +24,7 @@ import ExportProgressItem, {
 } from '../../../../components/molecules/Export/ExportProgressItem'
 import ExportSettingsComponent from '../../../../components/molecules/Export/ExportSettingsComponent'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from '../../../router'
 
 export function useLocalUI() {
   const { openSideNavFolderItemRecursively } = useGeneralStatus()
@@ -46,13 +43,29 @@ export function useLocalUI() {
     removeAttachment,
   } = useDb()
   const { pushMessage } = useToast()
+  const { push } = useRouter()
   const { t } = useTranslation()
+
+  const [openingModal, setOpeningModal] = useState<boolean>(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (openingModal && inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  }, [inputRef, openingModal])
+
+  const closeModalAndUpdateState = useCallback(() => {
+    closeLastModal()
+    setOpeningModal(false)
+  }, [closeLastModal])
 
   const openWorkspaceEditForm = useCallback(
     (workspace: NoteStorage) => {
+      setOpeningModal(true)
       openModal(
         <BasicInputFormLocal
-          defaultIcon={mdiMessageQuestion}
+          inputRef={inputRef}
+          defaultIcon={mdiPencil}
           defaultInputValue={workspace.name}
           submitButtonProps={{
             label: t('storage.rename'),
@@ -63,11 +76,11 @@ export function useLocalUI() {
                 title: 'Cannot rename workspace',
                 description: 'Workspace name should not be empty.',
               })
-              closeLastModal()
+              closeModalAndUpdateState()
               return
             }
             renameStorage(workspace.id, workspaceName)
-            closeLastModal()
+            closeModalAndUpdateState()
           }}
         />,
         {
@@ -76,18 +89,19 @@ export function useLocalUI() {
         }
       )
     },
-    [closeLastModal, openModal, pushMessage, renameStorage, t]
+    [closeModalAndUpdateState, openModal, pushMessage, renameStorage, t]
   )
 
   const openRenameFolderForm = useCallback(
     (workspaceId: string, folder: FolderDoc) => {
       const folderPathname = getFolderPathname(folder._id)
       const folderName = getFolderNameFromPathname(folderPathname)
+      setOpeningModal(true)
       openModal(
         <BasicInputFormLocal
+          inputRef={inputRef}
           defaultIcon={mdiFolderOutline}
           defaultInputValue={folderName != null ? folderName : 'Untitled'}
-          defaultEmoji={undefined}
           placeholder='Folder name'
           submitButtonProps={{
             label: 'Update',
@@ -98,7 +112,7 @@ export function useLocalUI() {
                 title: 'Cannot rename folder',
                 description: 'Folder name should not be empty.',
               })
-              closeLastModal()
+              closeModalAndUpdateState()
               return
             }
             const newFolderPathname = join(
@@ -121,11 +135,10 @@ export function useLocalUI() {
               })
             })
 
-            // Should update the UI, again works weirdly in pouch DB, works ok in FS storage
-            // does not update the note properly?
-            // push(`/app/storages/${storageId}/notes${newFolderPathname}`)
+            // todo: [komediruzecki-05/06/2021] Test if this works correct, no hidden notes in sidebar
+            push(`/app/storages/${workspaceId}/notes${newFolderPathname}`)
             openSideNavFolderItemRecursively(workspaceId, newFolderPathname)
-            closeLastModal()
+            closeModalAndUpdateState()
           }}
         />,
         {
@@ -137,19 +150,21 @@ export function useLocalUI() {
     [
       openModal,
       renameFolder,
-      closeLastModal,
+      push,
       openSideNavFolderItemRecursively,
+      closeModalAndUpdateState,
       pushMessage,
     ]
   )
 
   const openRenameDocForm = useCallback(
     (workspaceId: string, doc: NoteDoc) => {
+      setOpeningModal(true)
       openModal(
         <BasicInputFormLocal
+          inputRef={inputRef}
           defaultIcon={mdiFileDocumentOutline}
           defaultInputValue={getNoteTitle(doc, 'Untitled')}
-          defaultEmoji={mdiPencil}
           placeholder='Note title'
           submitButtonProps={{
             label: 'Update',
@@ -161,10 +176,11 @@ export function useLocalUI() {
                 title: 'Cannot rename document',
                 description: 'Document name should not be empty.',
               })
+              closeModalAndUpdateState()
             } else {
               await updateNote(workspaceId, doc._id, { title: inputValue })
             }
-            closeLastModal()
+            closeModalAndUpdateState()
           }}
         />,
         {
@@ -173,13 +189,15 @@ export function useLocalUI() {
         }
       )
     },
-    [closeLastModal, openModal, pushMessage, updateNote]
+    [closeModalAndUpdateState, openModal, pushMessage, updateNote]
   )
 
   const openNewFolderForm = useCallback(
     (body: LocalNewResourceRequestBody, prevRows?: FormRowProps[]) => {
+      setOpeningModal(true)
       openModal(
         <BasicInputFormLocal
+          inputRef={inputRef}
           defaultIcon={mdiFolderOutline}
           placeholder='Folder name'
           submitButtonProps={{
@@ -201,16 +219,25 @@ export function useLocalUI() {
                   : '/',
                 inputValue
               )
-              await createFolder(body.workspaceId, folderPathname).catch(
-                (err) => {
-                  pushMessage({
-                    title: 'Error',
-                    description: `Cannot create folder, reason: ${err}`,
-                  })
-                }
-              )
+              const folderDoc = await createFolder(
+                body.workspaceId,
+                folderPathname
+              ).catch((err) => {
+                pushMessage({
+                  title: 'Error',
+                  description: `Cannot create folder, reason: ${err}`,
+                })
+              })
+
+              if (
+                folderDoc != null &&
+                body.navigateToFolder != null &&
+                body.navigateToFolder
+              ) {
+                push(getFolderHref(folderDoc, body.workspaceId))
+              }
             } finally {
-              closeLastModal()
+              closeModalAndUpdateState()
             }
           }}
         />,
@@ -220,13 +247,15 @@ export function useLocalUI() {
         }
       )
     },
-    [openModal, createFolder, pushMessage, closeLastModal]
+    [openModal, createFolder, pushMessage, push, closeModalAndUpdateState]
   )
 
   const openNewDocForm = useCallback(
     (body: LocalNewResourceRequestBody, prevRows?: FormRowProps[]) => {
+      setOpeningModal(true)
       openModal(
         <BasicInputFormLocal
+          inputRef={inputRef}
           defaultIcon={mdiFileDocumentOutline}
           placeholder='Document title'
           submitButtonProps={{
@@ -245,7 +274,7 @@ export function useLocalUI() {
                   ? body.parentFolderPathname
                   : '/',
             })
-            closeLastModal()
+            closeModalAndUpdateState()
           }}
         />,
         {
@@ -254,7 +283,7 @@ export function useLocalUI() {
         }
       )
     },
-    [openModal, createNote, closeLastModal]
+    [openModal, createNote, closeModalAndUpdateState]
   )
 
   const removeWorkspace = useCallback(
@@ -435,6 +464,7 @@ export function useLocalUI() {
 export interface LocalNewResourceRequestBody {
   workspaceId?: string
   parentFolderPathname?: string
+  navigateToFolder?: boolean
 }
 
 export interface LocalExportResourceRequestBody {
