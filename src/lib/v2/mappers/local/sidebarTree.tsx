@@ -10,7 +10,6 @@ import {
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
   mdiFolderPlusOutline,
-  mdiLock,
   mdiPaperclip,
   mdiPencil,
   mdiSortAlphabeticalAscending,
@@ -132,6 +131,45 @@ function getFolderChildrenOrderedIds(
   return children
 }
 
+export function mapTreeControls(
+  workspace: NoteStorage,
+  deleteWorkspace: (workspace: NoteStorage) => void,
+  openWorkspaceEditForm: (workspace: NoteStorage) => void,
+  exportDocuments: (
+    workspace: NoteStorage,
+    exportSettings: LocalExportResourceRequestBody
+  ) => void
+) {
+  if (workspace == null) {
+    return []
+  }
+  return [
+    {
+      type: MenuTypes.Normal,
+      icon: mdiApplicationCog,
+      label: 'Edit',
+      onClick: () => openWorkspaceEditForm(workspace),
+    },
+    {
+      type: MenuTypes.Normal,
+      icon: mdiTrashCanOutline,
+      label: 'Delete',
+      onClick: () => deleteWorkspace(workspace),
+    },
+    {
+      type: MenuTypes.Normal,
+      label: 'Export Workspace',
+      icon: mdiExport,
+      onClick: () =>
+        exportDocuments(workspace, {
+          folderName: workspace.name,
+          folderPathname: '/',
+          exportingStorage: true,
+        }),
+    },
+  ] as MenuItem[]
+}
+
 export function mapTree(
   initialLoadDone: boolean,
   sortingOrder: SidebarTreeSortingOrder,
@@ -188,65 +226,67 @@ export function mapTree(
   const items = new Map<string, LocalTreeItem>()
   const [notes, folders] = [values(docMap), values(folderMap)]
 
-  const href = getWorkspaceHref(workspace)
-  items.set(workspace.id, {
-    id: workspace.id,
-    label: workspace.name,
-    defaultIcon: mdiLock,
-    children: getWorkspaceChildrenOrderedIds(notes, folders),
-    folded: !sideBarOpenedWorkspaceIdsSet.has(workspace.id),
-    folding: getFoldEvents('workspaces', workspace.id),
-    href,
-    active: href === currentPathWithWorkspace,
-    navigateTo: () => push(href),
-    dropIn: true,
-    onDrop: () => dropInWorkspace(workspace.id),
-    controls: [
-      {
-        icon: mdiFilePlusOutline,
-        onClick: undefined,
-        placeholder: 'Note title..',
-        create: (title: string) =>
-          createNote({ workspaceId: workspace.id, docProps: { title: title } }),
-      },
-      {
-        icon: mdiFolderPlusOutline,
-        onClick: undefined,
-        placeholder: 'Folder name..',
-        create: (folderName: string) =>
-          createFolder({
-            workspaceId: workspace.id,
-            folderName: folderName,
-            destinationPathname: '/',
-          }),
-      },
-    ],
-    contextControls: [
-      {
-        type: MenuTypes.Normal,
-        icon: mdiApplicationCog,
-        label: 'Edit',
-        onClick: () => openWorkspaceEditForm(workspace),
-      },
-      {
-        type: MenuTypes.Normal,
-        icon: mdiTrashCanOutline,
-        label: 'Delete',
-        onClick: () => deleteWorkspace(workspace),
-      },
-      {
-        type: MenuTypes.Normal,
-        label: 'Export Workspace',
-        icon: mdiExport,
-        onClick: () =>
-          exportDocuments(workspace, {
-            folderName: workspace.name,
-            folderPathname: '/',
-            exportingStorage: true,
-          }),
-      },
-    ],
-  })
+  // const href = getWorkspaceHref(workspace)
+  // todo: [komediruzecki-05/06/2021] Fix drop in workspace - fix folder drop in folder -> disappears from tree - must be fixed
+  // todo: see to expand root item to have context menu items as well on drop
+  // items.set(workspace.id, {
+  //   id: workspace.id,
+  //   label: workspace.name,
+  //   defaultIcon: mdiLock,
+  //   children: getWorkspaceChildrenOrderedIds(notes, folders),
+  //   folded: !sideBarOpenedWorkspaceIdsSet.has(workspace.id),
+  //   folding: getFoldEvents('workspaces', workspace.id),
+  //   href,
+  //   active: href === currentPathWithWorkspace,
+  //   navigateTo: () => push(href),
+  //   dropIn: true,
+  //   onDrop: () => dropInWorkspace(workspace.id),
+  //   controls: [
+  //     {
+  //       icon: mdiFilePlusOutline,
+  //       onClick: undefined,
+  //       placeholder: 'Note title..',
+  //       create: (title: string) =>
+  //         createNote({ workspaceId: workspace.id, docProps: { title: title } }),
+  //     },
+  //     {
+  //       icon: mdiFolderPlusOutline,
+  //       onClick: undefined,
+  //       placeholder: 'Folder name..',
+  //       create: (folderName: string) =>
+  //         createFolder({
+  //           workspaceId: workspace.id,
+  //           folderName: folderName,
+  //           destinationPathname: '/',
+  //         }),
+  //     },
+  //   ],
+  //   contextControls: [
+  //     {
+  //       type: MenuTypes.Normal,
+  //       icon: mdiApplicationCog,
+  //       label: 'Edit',
+  //       onClick: () => openWorkspaceEditForm(workspace),
+  //     },
+  //     {
+  //       type: MenuTypes.Normal,
+  //       icon: mdiTrashCanOutline,
+  //       label: 'Delete',
+  //       onClick: () => deleteWorkspace(workspace),
+  //     },
+  //     {
+  //       type: MenuTypes.Normal,
+  //       label: 'Export Workspace',
+  //       icon: mdiExport,
+  //       onClick: () =>
+  //         exportDocuments(workspace, {
+  //           folderName: workspace.name,
+  //           folderPathname: '/',
+  //           exportingStorage: true,
+  //         }),
+  //     },
+  //   ],
+  // })
 
   folders.forEach((folder) => {
     const folderId = folder._id
@@ -429,7 +469,7 @@ export function mapTree(
   }, [] as SidebarTreeChildRow[])
 
   const navTree = arrayItems
-    .filter((item) => item.parentId == null)
+    .filter((item) => item.parentId == workspace.id)
     .reduce((acc, val) => {
       acc.push({
         ...val,
@@ -487,7 +527,7 @@ export function mapTree(
     })
   }
   tree.push({
-    label: 'Workspace',
+    label: workspace.name,
     rows: navTree,
     controls: [
       {
@@ -512,6 +552,12 @@ export function mapTree(
           }),
       },
     ],
+    contextControls: mapTreeControls(
+      workspace,
+      deleteWorkspace,
+      openWorkspaceEditForm,
+      exportDocuments
+    ),
   })
   if (labels.length > 0) {
     tree.push({

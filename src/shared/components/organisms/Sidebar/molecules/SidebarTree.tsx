@@ -37,6 +37,7 @@ export interface SidebarNavCategory {
   toggleHidden: () => void
   folding?: FoldingProps
   rows: SidebarTreeChildRow[]
+  contextControls?: MenuItem[]
   footer?: React.ReactNode
   lastCategory?: boolean
   drag?: {
@@ -224,6 +225,7 @@ const SidebarCategory = ({
         folding={category.folding}
         folded={category.folded}
         controls={controls}
+        contextControls={category.contextControls}
         depth={-1}
       />
       {!category.folded && (
