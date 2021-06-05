@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
-import { useEffectOnce } from 'react-use'
+import React, { useState } from 'react'
 import Form from '../../../shared/components/molecules/Form'
 import { ButtonProps } from '../../../shared/components/atoms/Button'
 import { FormRowProps } from '../../../shared/components/molecules/Form/templates/FormRow'
 
 interface EmojiInputFormProps {
+  inputRef?: React.Ref<HTMLInputElement>
   prevRows?: FormRowProps[]
   defaultInputValue?: string
   placeholder?: string
@@ -25,16 +25,10 @@ const BasicInputFormLocal = ({
   submitButtonProps,
   inputIsDisabled,
   onSubmit,
+  inputRef,
+  defaultIcon,
 }: EmojiInputFormProps) => {
-  const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState(defaultInputValue)
-
-  // seems to sometimes do some update on un-mounted component (called in openModal which closes itself)
-  useEffectOnce(() => {
-    if (inputRef.current != null && !inputIsDisabled) {
-      inputRef.current.focus()
-    }
-  })
 
   return (
     <Form
@@ -42,6 +36,14 @@ const BasicInputFormLocal = ({
         ...prevRows,
         {
           items: [
+            {
+              type: 'button',
+              props: {
+                label: '',
+                variant: 'icon',
+                iconPath: defaultIcon,
+              },
+            },
             {
               type: 'input',
               props: {

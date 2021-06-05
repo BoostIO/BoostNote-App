@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
 import {
@@ -147,6 +147,7 @@ const TopLevelNavigator = () => {
     return rows
   }, [boostHubUserInfo, push, signOut])
 
+  const inputRef = useRef<HTMLInputElement>(null)
   const spaces = useMemo(() => {
     const spaces: SidebarSpace[] = []
 
@@ -170,9 +171,9 @@ const TopLevelNavigator = () => {
                 click: async () => {
                   openModal(
                     <BasicInputFormLocal
+                      inputRef={inputRef}
                       defaultIcon={mdiMessageQuestion}
                       defaultInputValue={workspace.name}
-                      defaultEmoji={undefined}
                       placeholder='Workspace name'
                       submitButtonProps={{
                         label: t('storage.rename'),

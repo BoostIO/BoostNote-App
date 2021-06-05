@@ -11,7 +11,12 @@ import {
 import { getTimelineHref, values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
-import { useRouteParams } from '../../lib/routeParams'
+import {
+  BoostHubTeamsShowRouteParams,
+  StorageNotesRouteParams,
+  StorageTagsRouteParams,
+  useRouteParams,
+} from '../../lib/routeParams'
 import { mdiLogin, mdiLogout, mdiMenu, mdiPlus } from '@mdi/js'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useTranslation } from 'react-i18next'
@@ -72,14 +77,17 @@ const SidebarContainer = ({
   const { push, hash, pathname } = useRouter()
   const { navigate } = useStorageRouter()
   const { preferences, openTab, togglePreferencesModal } = usePreferences()
-  const routeParams = useRouteParams()
+  const routeParams = useRouteParams() as
+    | StorageTagsRouteParams
+    | StorageNotesRouteParams
+    | BoostHubTeamsShowRouteParams
   const { t } = useTranslation()
   const boostHubUserInfo = preferences['cloud.user']
   const { signOut } = useBoostHub()
   const {
     updateFolder,
     updateDocApi,
-    createFolder,
+    createFolderApi,
     createDocApi,
     deleteFolderApi,
     toggleDocArchived,
@@ -87,6 +95,7 @@ const SidebarContainer = ({
   } = useLocalDB()
   const {
     openWorkspaceEditForm,
+    openNewFolderForm,
     openRenameFolderForm,
     openRenameDocForm,
     removeWorkspace,
@@ -191,6 +200,27 @@ const SidebarContainer = ({
     ]
   )
 
+  const createFolderByRoute = useCallback(async () => {
+    if (workspace == null) {
+      return
+    }
+    const workspaceId = workspace.id
+    let folderPathname = '/'
+    switch (routeParams.name) {
+      case 'workspaces.notes':
+        if (routeParams.folderPathname !== '/') {
+          folderPathname = routeParams.folderPathname
+        }
+        break
+    }
+
+    await openNewFolderForm({
+      workspaceId: workspaceId,
+      parentFolderPathname: folderPathname,
+      navigateToFolder: true,
+    })
+  }, [workspace, routeParams, openNewFolderForm])
+
   const createNoteByRoute = useCallback(async () => {
     if (workspace == null) {
       return
@@ -233,14 +263,24 @@ const SidebarContainer = ({
   }, [push, hash])
 
   useEffect(() => {
-    const handler = () => {
-      createNoteByRoute()
+    const handler = async () => {
+      await createNoteByRoute()
     }
     addIpcListener('new-note', handler)
     return () => {
       removeIpcListener('new-note', handler)
     }
   }, [createNoteByRoute])
+
+  useEffect(() => {
+    const handler = async () => {
+      await createFolderByRoute()
+    }
+    addIpcListener('new-folder', handler)
+    return () => {
+      removeIpcListener('new-folder', handler)
+    }
+  }, [createFolderByRoute, createNoteByRoute])
 
   const { toggleShowSearchModal } = useSearchModal()
 
@@ -396,7 +436,7 @@ const SidebarContainer = ({
       (workspace) => removeWorkspace(workspace),
       toggleDocArchived,
       deleteFolderApi,
-      createFolder,
+      createFolderApi,
       createDocApi,
       draggedResource,
       dropInDocOrFolder,
@@ -420,7 +460,7 @@ const SidebarContainer = ({
     toggleDocBookmark,
     toggleDocArchived,
     deleteFolderApi,
-    createFolder,
+    createFolderApi,
     createDocApi,
     draggedResource,
     dropInDocOrFolder,
