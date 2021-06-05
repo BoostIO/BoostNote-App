@@ -1,10 +1,10 @@
 import React, { useRef, useState, useCallback } from 'react'
 import { boostHubTeamsCreatePageUrl } from '../../lib/boosthub'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
-import { FormSecondaryButton } from '../atoms/form'
 import { DidFailLoadEvent } from 'electron/main'
 import { useRouter } from '../../lib/router'
 import styled from '../../shared/lib/styled'
+import Button from '../../shared/components/atoms/Button'
 
 const BoostHubTeamsCreatePage = () => {
   const controlRef = useRef<WebviewControl>()
@@ -50,13 +50,16 @@ const BoostHubTeamsCreatePage = () => {
               <p className='description'>
                 Please check your internet connection.
               </p>
-              <FormSecondaryButton onClick={reloadWebview}>
+              <Button variant={'secondary'} onClick={reloadWebview}>
                 Reload Page
-              </FormSecondaryButton>
+              </Button>
 
-              <FormSecondaryButton onClick={navigateToCreateLocalSpacePage}>
+              <Button
+                variant={'secondary'}
+                onClick={navigateToCreateLocalSpacePage}
+              >
                 Create Local Space
-              </FormSecondaryButton>
+              </Button>
             </div>
           </ReloadView>
         )}

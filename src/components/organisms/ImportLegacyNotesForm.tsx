@@ -1,8 +1,6 @@
 import React, { useState, useCallback, ChangeEvent } from 'react'
 import {
   FormGroup,
-  FormPrimaryButton,
-  FormSecondaryButton,
   FormBlockquote,
   FormCheckItem,
   FormLabel,
@@ -30,6 +28,7 @@ import { openDialog } from '../../lib/exports'
 import { useTranslation } from 'react-i18next'
 import Icon from '../../shared/components/atoms/Icon'
 import { useToast } from '../../shared/lib/stores/toast'
+import Button from '../../shared/components/atoms/Button'
 
 interface ImportLegacyNotesFormProps {
   storageId: string
@@ -356,10 +355,12 @@ const ImportLegacyNotesForm = ({ storageId }: ImportLegacyNotesFormProps) => {
             </FormCheckItem>
           </FormGroup>
           <FormGroup>
-            <FormPrimaryButton onClick={importNotes}>Import</FormPrimaryButton>
-            <FormSecondaryButton onClick={closeForm}>
+            <Button variant={'primary'} onClick={importNotes}>
+              Import
+            </Button>
+            <Button variant={'secondary'} onClick={closeForm}>
               Cancel
-            </FormSecondaryButton>
+            </Button>
           </FormGroup>
         </>
       ) : (

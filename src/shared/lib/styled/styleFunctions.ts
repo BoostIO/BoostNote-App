@@ -173,6 +173,7 @@ font-size: 13px;
 &:active,
 &.active {
   cursor: pointer;
+  color: ${theme.colors.variants.secondary.base};
 }
 &:focus {
   box-shadow: 0 0 0 2px ${theme.colors.variants.primary.base};
@@ -195,7 +196,7 @@ font-size: 13px;
 &.active {
   cursor: pointer;
   color: ${theme.colors.text.secondary};
-  background-color: ${theme.colors.variants.primary.base};
+  background-color: ${theme.colors.background.quaternary};
 }
 &:focus {
   box-shadow: 0 0 0 2px ${theme.colors.variants.secondary.base};

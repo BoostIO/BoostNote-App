@@ -19,7 +19,6 @@ import {
 import { openNew } from '../../lib/platform'
 import { boostHubLearnMorePageUrl } from '../../lib/boosthub'
 import cc from 'classcat'
-import { FormPrimaryButton, FormSecondaryButton } from '../atoms/form'
 import { usePreferences } from '../../lib/preferences'
 import { useRouter } from '../../lib/router'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
@@ -116,10 +115,9 @@ const CloudIntroModal = () => {
                 iconPath={mdiAccountGroup}
                 iconSize={20}
               >
-                {/*<Icon className='switch__button__icon' path={mdiAccountGroup} />*/}
                 With My Team
               </Button>
-              <button
+              <Button
                 className={cc([
                   'switch__button',
                   activeTab === 'personal' && 'active',
@@ -127,10 +125,11 @@ const CloudIntroModal = () => {
                 onClick={() => {
                   setActiveTab('personal')
                 }}
+                iconPath={mdiAccount}
+                iconSize={20}
               >
-                <Icon className='switch__button__icon' path={mdiAccount} />
                 For Myself
-              </button>
+              </Button>
             </div>
           </div>
           <IntroContainer>
@@ -213,12 +212,16 @@ const CloudIntroModal = () => {
             </div>
           </IntroContainer>
           <div className='form-group'>
-            {cloudSpaces.length === 0 && (
-              <FormPrimaryButton onClick={navigateToCreateSpacePageOrLogIn}>
+            {cloudSpaces.length !== 0 && (
+              <Button
+                variant={'primary'}
+                onClick={navigateToCreateSpacePageOrLogIn}
+              >
                 Get Started
-              </FormPrimaryButton>
+              </Button>
             )}
-            <FormSecondaryButton
+            <Button
+              variant={'secondary'}
               className={cc([userInfo == null && 'disabled'])}
               onClick={() => {
                 openTab('migration')
@@ -228,7 +231,7 @@ const CloudIntroModal = () => {
               onMouseLeave={hideDisabledMigrationTooltip}
             >
               Migrate this local space to your cloud space
-            </FormSecondaryButton>
+            </Button>
           </div>
           <div className='disabled-tooltip'>
             {userInfo == null && showingDisabledMigrationTooltip && (
@@ -274,7 +277,7 @@ const Container = styled.div`
     .switch__group {
       border-radius: 4px;
       background-color: ${({ theme }) => theme.colors.background.quaternary};
-      padding: 5px 5px;
+      padding: 3px 3px;
     }
     .switch__button {
       width: 160px;

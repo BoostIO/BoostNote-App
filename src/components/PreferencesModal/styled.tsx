@@ -1,8 +1,6 @@
 import styled from '../../shared/lib/styled'
 import {
   selectStyle,
-  primaryButtonStyle,
-  secondaryButtonStyle,
   inputStyle,
   tableStyle,
 } from '../../shared/lib/styled/styleFunctions'
@@ -45,30 +43,11 @@ export const SectionSelect = styled.select`
   font-size: 14px;
 `
 
-export const SectionPrimaryButton = styled.button`
-  ${primaryButtonStyle};
-  padding: 0 16px;
-  height: 40px;
-  border-radius: 2px;
-  cursor: pointer;
-  vertical-align: middle;
-  align-items: center;
-`
-
-export const SectionSecondaryButton = styled.button`
-  ${secondaryButtonStyle};
-  padding: 0 16px;
-  height: 40px;
-  border-radius: 2px;
-  cursor: pointer;
-  align-items: center;
-`
-
 export const SectionInput = styled.input`
   ${inputStyle};
   padding: 0 16px;
   width: 200px;
-  height: 40px;
+  height: 35px;
   border-radius: 2px;
   font-size: 14px;
 `

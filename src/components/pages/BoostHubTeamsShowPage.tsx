@@ -12,7 +12,6 @@ import {
   boostHubToggleSidebarTimelineEventEmitter,
   boostHubToggleSidebarTreeEventEmitter,
 } from '../../lib/events'
-import { FormSecondaryButton } from '../atoms/form'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../shared/lib/styled'
 import {
@@ -21,6 +20,7 @@ import {
   textOverflow,
 } from '../../shared/lib/styled/styleFunctions'
 import { uiTextColor } from '../../lib/styled/styleFunctionsLocal'
+import Button from '../../shared/components/atoms/Button'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean
@@ -215,9 +215,9 @@ const BoostHubTeamsShowPage = ({
             <p className='description'>
               Please check your internet connection.
             </p>
-            <FormSecondaryButton onClick={reloadWebview}>
+            <Button variant={'secondary'} onClick={reloadWebview}>
               Reload Page
-            </FormSecondaryButton>
+            </Button>
           </div>
         </ReloadView>
       )}
