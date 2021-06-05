@@ -9,6 +9,15 @@ import Form from '../../shared/components/molecules/Form'
 import { openDialog } from '../../lib/exports'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { getWorkspaceHref } from '../../lib/db/utils'
+import styled from '../../shared/lib/styled'
+import Button from '../../shared/components/atoms/Button'
+import ButtonGroup from '../../shared/components/atoms/ButtonGroup'
+
+const FormFolderSelectButtonContainer = styled.div`
+  .form__folder__select__button--width {
+    width: 100%;
+  }
+`
 
 const FSStorageCreateForm = () => {
   const [name, setName] = useState('')
@@ -56,6 +65,7 @@ const FSStorageCreateForm = () => {
             {
               type: 'input',
               props: {
+                className: 'workspace__create__form__space__name',
                 type: 'text',
                 value: name,
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -70,25 +80,28 @@ const FSStorageCreateForm = () => {
             {
               type: 'node',
               element: (
-                <FormFolderSelectorInput
-                  type='text'
-                  onClick={openDialogAndStoreLocation}
-                  readOnly
-                  value={
-                    location.trim().length === 0
-                      ? t('folder.noLocationSelected')
-                      : location
-                  }
-                />
+                <ButtonGroup>
+                  <FormFolderSelectorInput
+                    type='text'
+                    onClick={openDialogAndStoreLocation}
+                    readOnly
+                    value={
+                      location.trim().length === 0
+                        ? t('folder.noLocationSelected')
+                        : location
+                    }
+                  />
+                  <FormFolderSelectButtonContainer>
+                    <Button
+                      className={'form__folder__select__button--width'}
+                      variant={'primary'}
+                      onClick={openDialogAndStoreLocation}
+                    >
+                      Select
+                    </Button>
+                  </FormFolderSelectButtonContainer>
+                </ButtonGroup>
               ),
-            },
-            {
-              type: 'button',
-              props: {
-                label: 'Select Folder',
-                variant: 'primary',
-                onClick: openDialogAndStoreLocation,
-              },
             },
           ],
         },
