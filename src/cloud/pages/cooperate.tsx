@@ -50,7 +50,7 @@ const CooperatePage = () => {
       try {
         const body = personal ? { personal: true } : { name, domain }
 
-        const { team, doc, openInvite } = await createTeam(body)
+        const { team, doc, openInvite, initialFolders } = await createTeam(body)
 
         if (usingElectron) {
           sendToElectron('team-create', {
@@ -70,12 +70,15 @@ const CooperatePage = () => {
         if (doc != null) {
           updateDocsMap([doc.id, doc])
           setPartialPageData({ pageDoc: doc, team })
-          setToLocalStorage(team.id, {
-            folders: doc.parentFolderId != null ? [doc.parentFolderId] : [],
-            workspaces: [doc.workspaceId],
-            links: [],
-          })
         }
+
+        setToLocalStorage(team.id, {
+          folders: initialFolders.map((folder) => folder.id),
+          workspaces: [
+            ...new Set(initialFolders.map((folder) => folder.workspaceId)),
+          ],
+          links: [],
+        })
 
         if (personal && doc != null) {
           window.location.href = getDocLinkHref(doc, team, 'index', {
