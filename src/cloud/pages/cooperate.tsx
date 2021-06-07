@@ -73,7 +73,9 @@ const CooperatePage = () => {
         }
 
         setToLocalStorage(team.id, {
-          folders: initialFolders.map((folder) => folder.id),
+          folders: initialFolders
+            .filter((f) => f.parentFolder == null)
+            .map((folder) => folder.id),
           workspaces: [
             ...new Set(initialFolders.map((folder) => folder.workspaceId)),
           ],
