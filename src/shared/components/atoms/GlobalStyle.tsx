@@ -20,9 +20,6 @@ body {
 input,
 select,
 button {
-  &:hover {
-    cursor: pointer;
-  }
   &:focus {
     outline: none;
   }
@@ -33,6 +30,13 @@ button {
   margin: 0;
   border: 0;
   outline: none;
+}
+
+select,
+button {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .icon {
@@ -86,9 +90,6 @@ export default createGlobalStyle<BaseTheme>`
   input,
   select,
   button {
-    &:hover {
-      cursor: pointer;
-    }
     &:focus {
       outline: none;
     }
@@ -99,6 +100,13 @@ export default createGlobalStyle<BaseTheme>`
     margin: 0;
     border: 0;
     outline: none;
+  }
+
+  select,
+  button {
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   input {
