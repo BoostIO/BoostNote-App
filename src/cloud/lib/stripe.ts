@@ -10,10 +10,14 @@ export type CloudDiscountParameters = {
   percentageOff: number
 }
 
-type DiscountPlan = 'newUserStandard' | 'newUserPro' | 'migration'
+type DiscountPlan = 'newUserStandard' | 'newUserPro' | 'migration' | 'newSpace'
 export type CloudDiscounts = Record<DiscountPlan, CloudDiscountParameters>
 
 export const discountPlans: CloudDiscounts = {
+  newSpace: {
+    durationInMonths: 1,
+    percentageOff: 100,
+  },
   newUserStandard: {
     durationInMonths: 3,
     percentageOff: 33,

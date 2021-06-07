@@ -141,7 +141,7 @@ const PlanTables = ({
                 {Math.round(
                   stripeStandardPlanUnit -
                     stripeStandardPlanUnit *
-                      (discountPlans.newUserStandard.percentageOff / 100)
+                      (discountPlans.newSpace.percentageOff / 100)
                 )}
               </span>
             )}
@@ -152,9 +152,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.newUserStandard.percentageOff}% OFF for{' '}
-            {discountPlans.newUserStandard.durationInMonths}{' '}
-            {plur('month', discountPlans.newUserStandard.durationInMonths)}
+            {discountPlans.newSpace.percentageOff}% OFF for{' '}
+            {discountPlans.newSpace.durationInMonths}{' '}
+            {plur('month', discountPlans.newSpace.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>
@@ -211,7 +211,7 @@ const PlanTables = ({
                 {Math.round(
                   stripeProPlanUnit -
                     stripeProPlanUnit *
-                      (discountPlans.newUserPro.percentageOff / 100)
+                      (discountPlans.newSpace.percentageOff / 100)
                 )}
               </span>
             )}
@@ -222,9 +222,9 @@ const PlanTables = ({
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.newUserPro.percentageOff}% OFF for{' '}
-            {discountPlans.newUserPro.durationInMonths}{' '}
-            {plur('month', discountPlans.newUserPro.durationInMonths)}
+            {discountPlans.newSpace.percentageOff}% OFF for{' '}
+            {discountPlans.newSpace.durationInMonths}{' '}
+            {plur('month', discountPlans.newSpace.durationInMonths)}
           </div>
         )}
         <div className='plan__item__perks'>
