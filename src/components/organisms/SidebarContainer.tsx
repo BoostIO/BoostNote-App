@@ -85,8 +85,6 @@ const SidebarContainer = ({
   const boostHubUserInfo = preferences['cloud.user']
   const { signOut } = useBoostHub()
   const {
-    updateFolder,
-    updateDocApi,
     createFolderApi,
     createDocApi,
     deleteFolderApi,
@@ -101,7 +99,7 @@ const SidebarContainer = ({
     removeWorkspace,
     exportDocuments,
   } = useLocalUI()
-  const { draggedResource, dropInDocOrFolder, dropInWorkspace } = useLocalDnd()
+  const { draggedResource, dropInDocOrFolder } = useLocalDnd()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { popup } = useContextMenu()
   const [showSpaces, setShowSpaces] = useState(false)
@@ -120,7 +118,6 @@ const SidebarContainer = ({
   const {
     sideBarOpenedLinksIdsSet,
     sideBarOpenedFolderIdsSet,
-    sideBarOpenedStorageIdsSet,
     toggleItem,
     unfoldItem,
     foldItem,
@@ -203,10 +200,11 @@ const SidebarContainer = ({
       t,
       localSpaces,
       openWorkspaceEditForm,
-      removeWorkspace,
+      push,
+      exportDocuments,
       togglePreferencesModal,
       navigate,
-      push,
+      removeWorkspace,
     ]
   )
 
@@ -438,7 +436,6 @@ const SidebarContainer = ({
       pathname,
       sideBarOpenedLinksIdsSet,
       sideBarOpenedFolderIdsSet,
-      sideBarOpenedStorageIdsSet,
       toggleItem,
       getFoldEvents,
       push,
@@ -450,7 +447,6 @@ const SidebarContainer = ({
       createDocApi,
       draggedResource,
       dropInDocOrFolder,
-      (id: string) => dropInWorkspace(id, updateFolder, updateDocApi),
       openRenameFolderForm,
       openRenameDocForm,
       openWorkspaceEditForm,
@@ -463,7 +459,6 @@ const SidebarContainer = ({
     pathname,
     sideBarOpenedLinksIdsSet,
     sideBarOpenedFolderIdsSet,
-    sideBarOpenedStorageIdsSet,
     toggleItem,
     getFoldEvents,
     push,
@@ -479,9 +474,6 @@ const SidebarContainer = ({
     openWorkspaceEditForm,
     exportDocuments,
     removeWorkspace,
-    dropInWorkspace,
-    updateFolder,
-    updateDocApi,
   ])
 
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {

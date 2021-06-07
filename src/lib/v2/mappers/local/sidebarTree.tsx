@@ -83,31 +83,6 @@ type LocalTreeItem = {
   onDrop?: (position?: SidebarDragState) => void
 }
 
-function getWorkspaceChildrenOrderedIds(
-  notes: NoteDoc[],
-  folders: FolderDoc[],
-  rootPathname = '/'
-): string[] {
-  const children: string[] = []
-  notes.forEach((note) => {
-    if (note.folderPathname == rootPathname) {
-      children.push(note._id)
-    }
-  })
-
-  folders.forEach((folder) => {
-    const folderPathname = getFolderPathname(folder._id)
-    if (folderPathname === '/') {
-      return
-    }
-    const parentFolderPathname = getParentFolderPathname(folderPathname)
-    if (parentFolderPathname === rootPathname) {
-      children.push(folder._id)
-    }
-  })
-  return children
-}
-
 function getFolderChildrenOrderedIds(
   parentFolder: FolderDoc,
   notes: NoteDoc[],
@@ -180,7 +155,6 @@ export function mapTree(
   currentRouterPath: string,
   sideBarOpenedLinksIdsSet: Set<string>,
   sideBarOpenedFolderIdsSet: Set<string>,
-  sideBarOpenedWorkspaceIdsSet: Set<string>,
   toggleItem: (type: CollapsableType, id: string) => void,
   getFoldEvents: (type: CollapsableType, key: string) => FoldingProps,
   push: (url: string) => void,
@@ -207,7 +181,6 @@ export function mapTree(
     targetedResource: NavResource,
     targetedPosition: SidebarDragState
   ) => void,
-  dropInWorkspace: (id: string) => void,
   openRenameFolderForm: (workspaceId: string, folder: FolderDoc) => void,
   openRenameNoteForm: (workspaceId: string, doc: NoteDoc) => void,
   openWorkspaceEditForm: (workspace: NoteStorage) => void,
@@ -225,68 +198,6 @@ export function mapTree(
   )}/${currentRouterPath}`
   const items = new Map<string, LocalTreeItem>()
   const [notes, folders] = [values(docMap), values(folderMap)]
-
-  // const href = getWorkspaceHref(workspace)
-  // todo: [komediruzecki-05/06/2021] Fix drop in workspace - fix folder drop in folder -> disappears from tree - must be fixed
-  // todo: see to expand root item to have context menu items as well on drop
-  // items.set(workspace.id, {
-  //   id: workspace.id,
-  //   label: workspace.name,
-  //   defaultIcon: mdiLock,
-  //   children: getWorkspaceChildrenOrderedIds(notes, folders),
-  //   folded: !sideBarOpenedWorkspaceIdsSet.has(workspace.id),
-  //   folding: getFoldEvents('workspaces', workspace.id),
-  //   href,
-  //   active: href === currentPathWithWorkspace,
-  //   navigateTo: () => push(href),
-  //   dropIn: true,
-  //   onDrop: () => dropInWorkspace(workspace.id),
-  //   controls: [
-  //     {
-  //       icon: mdiFilePlusOutline,
-  //       onClick: undefined,
-  //       placeholder: 'Note title..',
-  //       create: (title: string) =>
-  //         createNote({ workspaceId: workspace.id, docProps: { title: title } }),
-  //     },
-  //     {
-  //       icon: mdiFolderPlusOutline,
-  //       onClick: undefined,
-  //       placeholder: 'Folder name..',
-  //       create: (folderName: string) =>
-  //         createFolder({
-  //           workspaceId: workspace.id,
-  //           folderName: folderName,
-  //           destinationPathname: '/',
-  //         }),
-  //     },
-  //   ],
-  //   contextControls: [
-  //     {
-  //       type: MenuTypes.Normal,
-  //       icon: mdiApplicationCog,
-  //       label: 'Edit',
-  //       onClick: () => openWorkspaceEditForm(workspace),
-  //     },
-  //     {
-  //       type: MenuTypes.Normal,
-  //       icon: mdiTrashCanOutline,
-  //       label: 'Delete',
-  //       onClick: () => deleteWorkspace(workspace),
-  //     },
-  //     {
-  //       type: MenuTypes.Normal,
-  //       label: 'Export Workspace',
-  //       icon: mdiExport,
-  //       onClick: () =>
-  //         exportDocuments(workspace, {
-  //           folderName: workspace.name,
-  //           folderPathname: '/',
-  //           exportingStorage: true,
-  //         }),
-  //     },
-  //   ],
-  // })
 
   folders.forEach((folder) => {
     const folderId = folder._id

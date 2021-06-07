@@ -174,10 +174,6 @@ class FSNoteDb implements NoteDb {
     return JSON.parse(rawContent)
   }
 
-  async getNotesByFolder(folderPathname: string) {
-    folderPathname
-  }
-
   async getAllDocsMap(): Promise<AllDocsMap> {
     const notes = await this.loadAllNotes()
     const noteMap = notes.reduce((map, note) => {
