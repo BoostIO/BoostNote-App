@@ -296,11 +296,16 @@ const SubscriptionManagement = ({
               <h3>
                 {subscriptionPlanChange} to {targetedPlan}
               </h3>
-              {currentSubscriptionDiscount?.percentageOff !== 100 && (
-                <Banner variant='warning' iconPath={mdiGiftOff}>
-                  Changing plans will end your current discount.
-                </Banner>
-              )}
+              {subscription.couponId != null &&
+                [
+                  newUserStandardCouponId,
+                  newUserProCouponId,
+                  newSpaceCouponId,
+                ].includes(subscription.couponId) && (
+                  <Banner variant='warning' iconPath={mdiGiftOff}>
+                    Changing plans will end your current discount.
+                  </Banner>
+                )}
               {targetedPlan === 'Free' ? (
                 <>
                   <p>
