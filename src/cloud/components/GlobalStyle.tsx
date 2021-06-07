@@ -20,6 +20,9 @@ body {
 input,
 select,
 button {
+  &:hover {
+    cursor: pointer;
+  }
   &:focus {
     outline: none;
   }
@@ -80,6 +83,9 @@ export default createGlobalStyle<BaseTheme>`
   input,
   select,
   button {
+    &:hover {
+      cursor: pointer;
+    }
     &:focus {
       outline: none;
     }
