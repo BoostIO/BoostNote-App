@@ -18,7 +18,7 @@ const basePreferences: Preferences = {
   docContextMode: 'context',
   sidebarIsHidden: false,
   sidebarIsHovered: false,
-  sidebarTreeSortingOrder: 'last-updated',
+  sidebarTreeSortingOrder: 'drag',
   sideBarWidth: 250,
   lastEditorMode: 'edit',
   lastEditorEditLayout: 'split',
