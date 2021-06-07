@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
-import styled from '../../lib/styled'
+import styled from '../../../shared/lib/styled'
 import { useOnboarding } from '../../lib/stores/onboarding'
 import IconMdi from './IconMdi'
-import { mdiClose } from '@mdi/js'
+import { mdiAlertOutline, mdiClose } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
 import UpgradeButton from '../UpgradeButton'
@@ -44,8 +44,8 @@ const AnnouncementAlert = () => {
     !hidingOutdatedDesktopClientAlert
   ) {
     return (
-      <StyledAnnouncementAlertWrapper>
-        <StyledAnnouncementAlert className='pad-0'>
+      <StyledAnnouncementAlertWrapper className='centered'>
+        <StyledAnnouncementAlert className='banner'>
           <p>
             Please update the desktop app. This version is outdated (current
             version: {currentDesktopAppVersion}, required version: &gt;=0.16.0).
@@ -65,8 +65,8 @@ const AnnouncementAlert = () => {
     currentOnboardingState.trialAnnouncement
   ) {
     return (
-      <StyledAnnouncementAlertWrapper>
-        <StyledAnnouncementAlert className='pad-0'>
+      <StyledAnnouncementAlertWrapper className='centered'>
+        <StyledAnnouncementAlert className='banner'>
           <p>
             We&apos;ve changed the free plan. Please see
             <div onClick={() => setOnboarding({ trialAnnouncement: false })}>
@@ -103,8 +103,11 @@ const AnnouncementAlert = () => {
     currentUserPermissions.role === 'admin'
   ) {
     return (
-      <StyledAnnouncementAlertWrapper>
-        <StyledAnnouncementAlert>
+      <StyledAnnouncementAlertWrapper className='left'>
+        <StyledAnnouncementAlert className='box'>
+          <span>
+            <IconMdi path={mdiAlertOutline} size={21} />
+          </span>
           <p>
             You are not eligible for a free trial anymore. Please
             <UpgradeButton origin='limit' variant='link' label='Upgrade' />
@@ -120,8 +123,11 @@ const AnnouncementAlert = () => {
   }
 
   return (
-    <StyledAnnouncementAlertWrapper>
-      <StyledAnnouncementAlert>
+    <StyledAnnouncementAlertWrapper className='left'>
+      <StyledAnnouncementAlert className='box'>
+        <span>
+          <IconMdi path={mdiAlertOutline} size={21} />
+        </span>
         <p>
           Your number of documents exceeds the capacity of the free plan.
           <UpgradeIntroButton
@@ -141,55 +147,83 @@ export default AnnouncementAlert
 
 const StyledAnnouncementAlertWrapper = styled.div`
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 40px;
+  bottom: ${({ theme }) => theme.sizes.spaces.xl}px;
   width: fit-content;
   z-index: 100;
+
+  &.centered {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.left {
+    left: 52px;
+  }
 `
 
 const StyledAnnouncementAlert = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.dangerBackgroundColor};
-  color: ${({ theme }) => theme.whiteTextColor};
+  align-items: center
+  background-color: ${({ theme }) => theme.colors.variants.danger.base};
   border-radius: 3px;
-  padding: ${({ theme }) => theme.space.small}px
-    ${({ theme }) => theme.space.default}px;
-  align-items: center;
+  color: ${({ theme }) => theme.colors.variants.danger.text};
 
   div {
     display: inline-block;
   }
 
-  &.pad-0 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    p {
-      padding-left: ${({ theme }) => theme.space.default}px;
-      padding-right: ${({ theme }) => theme.space.default}px;
-    }
-  }
-
   p {
     margin: 0;
+    line-height: 1.6;
   }
 
   a {
-    text-decoration: underline;
     margin-left: 3px;
     margin-right: 3px;
-    color: ${({ theme }) => theme.whiteTextColor};
+    color: ${({ theme }) => theme.colors.variants.danger.text};
+    text-decoration: underline;
+  }
+
+  &.banner {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    p {
+      padding-left: ${({ theme }) => theme.sizes.spaces.df}px;
+      padding-right: ${({ theme }) => theme.sizes.spaces.df}px;
+    }
+  }
+
+  &.box {
+    width: 330px;
+    padding: ${({ theme }) => theme.sizes.spaces.df}px;
+    border-left: 3px solid #FF425E;
+
+    span {
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+      color: #FF425E;
+    }
+  }
+
+  .button__label {
+    color: ${({ theme }) => theme.colors.variants.danger.text};
+    text-decoration: underline;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 `
 
 const StyledAnnouncementAlertButton = styled.button`
-  outline: 0;
-  background: 0;
-  height: 100%;
   width: 50px;
-  color: ${({ theme }) => theme.whiteTextColor};
+  height: 100%;
+  background: 0;
+  color: ${({ theme }) => theme.colors.variants.danger.text};
+  outline: 0;
+
   &:hover {
-    color: #ccc;
+    opacity: 0.8;
   }
 `
