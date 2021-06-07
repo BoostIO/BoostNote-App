@@ -76,6 +76,7 @@ module.exports = (env, argv) => {
         'STRIPE_PUBLISHABLE_KEY',
         'COUPONS_NEW_USER_STANDARD',
         'COUPONS_NEW_USER_PRO',
+        'COUPONS_NEW_SPACE',
       ]),
       new CopyPlugin({
         patterns: [

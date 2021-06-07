@@ -12,3 +12,4 @@ export const googleClientId = process.env.GOOGLE_CLIENT_ID || 'elidid'
 
 export const newUserStandardCouponId = process.env.COUPONS_NEW_USER_STANDARD
 export const newUserProCouponId = process.env.COUPONS_NEW_USER_PRO
+export const newSpaceCouponId = process.env.COUPONS_NEW_SPACE

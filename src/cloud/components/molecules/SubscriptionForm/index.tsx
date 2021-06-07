@@ -145,12 +145,8 @@ const SubscriptionForm = ({
     }
 
     switch (currentPlan) {
-      case 'pro':
-        return discountPlans.newUserPro
-      case 'standard':
-        return discountPlans.newUserStandard
       default:
-        return
+        return discountPlans.newSpace
     }
   }, [currentPlan, team])
 

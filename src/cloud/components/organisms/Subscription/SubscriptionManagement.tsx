@@ -19,6 +19,7 @@ import SubscriptionCostSummary from './SubscriptionCostSummary'
 import Banner from '../../../../shared/components/atoms/Banner'
 import Button from '../../../../shared/components/atoms/Button'
 import {
+  newSpaceCouponId,
   newUserProCouponId,
   newUserStandardCouponId,
 } from '../../../lib/consts'
@@ -166,6 +167,8 @@ const SubscriptionManagement = ({
         return discountPlans.newUserPro
       case newUserStandardCouponId:
         return discountPlans.newUserStandard
+      case newSpaceCouponId:
+        return discountPlans.newSpace
       default:
         return discountPlans.migration
     }
