@@ -438,7 +438,7 @@ export function mapTree(
     })
   }
   tree.push({
-    label: workspace.name,
+    label: 'Workspace',
     rows: navTree,
     controls: [
       {
