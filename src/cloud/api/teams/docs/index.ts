@@ -8,6 +8,14 @@ import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import report from '../../../lib/analytics'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 
+interface GetDocResponseBody {
+  doc: SerializedDocWithBookmark
+}
+
+export function getDoc(id: string, team: string) {
+  return callApi<GetDocResponseBody>(`api/teams/${team}/docs/${id}`)
+}
+
 export interface CreateDocRequestBody {
   workspaceId?: string
   parentFolderId?: string
