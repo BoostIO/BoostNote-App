@@ -804,7 +804,7 @@ function mapSpaces(
 function buildSpacesBottomRows(push: (url: string) => void) {
   return [
     {
-      label: 'Create an account',
+      label: 'Create a space',
       icon: mdiPlusCircleOutline,
       linkProps: {
         href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,

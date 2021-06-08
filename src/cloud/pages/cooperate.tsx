@@ -166,7 +166,7 @@ const CooperatePage = () => {
 
   return (
     <OnboardingLayout
-      title='Create a team account'
+      title='Create a team space'
       subtitle='Please tell us your team information.'
       contentWidth={600}
     >
