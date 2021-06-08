@@ -1,4 +1,4 @@
-import unified, { Plugin } from 'unified'
+import unified, { Plugin, Processor } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkShortcodes from 'remark-shortcodes'
 import visit from 'unist-util-visit'
@@ -18,108 +18,147 @@ export interface EmbedDoc {
 }
 
 interface Options {
-  contentMap?: Map<string, EmbedDoc>
-  content?: boolean
+  showContent?: boolean
+  getEmbed?: (
+    id: string
+  ) => Promise<EmbedDoc | undefined> | EmbedDoc | undefined
 }
 
-const remarkDocEmbed: Plugin = function ({
-  contentMap,
-  content = true,
-}: Options = {}) {
-  const parser = unified()
-    .use(remarkParse)
-    .use(remarkShortcodes)
-    .use(removePosition)
-    .use(remarkDocEmbed, { contentMap, content: false })
+type ContentResult = [EmbedNode, EmbedDoc | undefined]
 
-  return (tree) => {
-    if (contentMap == null) {
+const remarkDocEmbed: Plugin = function ({
+  getEmbed,
+  showContent = true,
+}: Options = {}) {
+  return async (tree) => {
+    if (getEmbed == null) {
       return
     }
 
-    visit(tree, isDocEmbedNode, (node) => {
-      const doc = contentMap.get(node.attributes.id)
-      const cast = node as any
+    const embeds: EmbedNode[] = []
+    visit(tree, isDocEmbedNode, (node) => embeds.push(node))
 
-      cast.type = 'parent'
-      cast.data = {
-        hName: 'div',
-        hProperties: {
-          className: ['doc-embed', 'collapsed'],
-        },
-      }
-
-      if (doc == null) {
-        cast.children = [
-          makeWrapperNode(
-            [
-              makeWrapperNode(
-                [
-                  makeHeadingNode('Doc Not Found'),
-                  makeParagraphNode(
-                    'This could mean a document with the given ID does not exist or has been deleted'
-                  ),
-                ],
-                {
-                  className: 'doc-embed-error',
-                }
-              ),
-            ],
-            {
-              className: 'doc-embed-header',
-            }
-          ),
-        ]
-        return
-      }
-
-      const bodyNodes: Node[] = []
-      const titleSection = makeTitleSectionNode(doc.title, doc.link)
-
-      bodyNodes.push(
-        makeWrapperNode([titleSection], {
-          className: ['doc-embed-header'],
-        })
-      )
-
-      if (content) {
-        const parsed = parser.runSync(parser.parse(doc.content))
-        bodyNodes.push(
-          makeWrapperNode(parsed.children as Node[], {
-            className: ['doc-embed-content'],
-          })
-        )
-      }
-
-      const bodyWrapper = makeWrapperNode(
-        content
-          ? [
-              makeWrapperNode(
-                [
-                  makeIconNode(mdiChevronDown),
-                  {
-                    type: 'parent',
-                    data: {
-                      hName: 'i',
-                      hProperties: { className: 'threadline' },
-                    },
-                  },
-                ],
-                {
-                  className: 'collapse-trigger',
-                }
-              ),
-              makeWrapperNode(bodyNodes, { className: 'embed-body' }),
-            ]
-          : bodyNodes,
-        {
-          className: ['doc-embed-wrapper'],
+    const withDocs = await Promise.all(
+      embeds.map(
+        async (node): Promise<ContentResult> => {
+          try {
+            const embedContent = await getEmbed(node.attributes.id)
+            return [node, embedContent]
+          } catch (err) {
+            return [node, undefined]
+          }
         }
       )
+    )
 
-      cast.children = [bodyWrapper]
-    })
+    const parser = unified()
+      .use(remarkParse)
+      .use(remarkShortcodes)
+      .use(removePosition)
+      .use(remarkDocEmbed, { getEmbed, showContent: false })
+
+    await Promise.all(
+      withDocs.map(([node, content]) => {
+        return content != null
+          ? buildEmbedNode(node, content, parser, showContent)
+          : buildMissingNode(node)
+      })
+    )
   }
+}
+
+function buildMissingNode(node: Node) {
+  node.type = 'parent'
+  node.data = {
+    hName: 'div',
+    hProperties: {
+      className: ['doc-embed', 'collapsed'],
+    },
+  }
+  node.children = [
+    makeWrapperNode(
+      [
+        makeWrapperNode(
+          [
+            makeHeadingNode('Doc Not Found'),
+            makeParagraphNode(
+              'This could mean a document with the given ID does not exist or has been deleted'
+            ),
+          ],
+          {
+            className: 'doc-embed-error',
+          }
+        ),
+      ],
+      {
+        className: 'doc-embed-header',
+      }
+    ),
+  ]
+  return
+}
+
+async function buildEmbedNode(
+  node: EmbedNode,
+  content: EmbedDoc,
+  parser: Processor,
+  showContent: boolean
+) {
+  const cast = node as any
+
+  cast.type = 'parent'
+  cast.data = {
+    hName: 'div',
+    hProperties: {
+      className: ['doc-embed', 'collapsed'],
+    },
+  }
+
+  const bodyNodes: Node[] = []
+  const titleSection = makeTitleSectionNode(content.title, content.link)
+
+  bodyNodes.push(
+    makeWrapperNode([titleSection], {
+      className: ['doc-embed-header'],
+    })
+  )
+
+  if (showContent) {
+    const parsed = await parser.run(parser.parse(content.content))
+    bodyNodes.push(
+      makeWrapperNode(parsed.children as Node[], {
+        className: ['doc-embed-content'],
+      })
+    )
+  }
+
+  const bodyWrapper = makeWrapperNode(
+    content
+      ? [
+          makeWrapperNode(
+            [
+              makeIconNode(mdiChevronDown),
+              {
+                type: 'parent',
+                data: {
+                  hName: 'i',
+                  hProperties: { className: 'threadline' },
+                },
+              },
+            ],
+            {
+              className: 'collapse-trigger',
+            }
+          ),
+          makeWrapperNode(bodyNodes, { className: 'embed-body' }),
+        ]
+      : bodyNodes,
+    {
+      className: ['doc-embed-wrapper'],
+    }
+  )
+
+  cast.children = [bodyWrapper]
 }
 
 const removePosition: Plugin = function () {

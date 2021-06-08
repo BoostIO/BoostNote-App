@@ -108,6 +108,9 @@ interface MarkdownViewProps {
   onRender?: () => void
   className?: string
   embeddableDocs?: Map<string, EmbedDoc>
+  getEmbed?: (
+    id: string
+  ) => Promise<EmbedDoc | undefined> | EmbedDoc | undefined
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
   comments?: HighlightRange[]
@@ -121,7 +124,7 @@ const MarkdownView = ({
   headerLinks = true,
   onRender,
   className,
-  embeddableDocs,
+  getEmbed,
   scrollerRef,
   SelectionMenu,
   comments,
@@ -229,7 +232,9 @@ const MarkdownView = ({
     const parser = unified()
       .use(remarkParse)
       .use(remarkShortcodes)
-      .use(remarkDocEmbed, { contentMap: embeddableDocs })
+      .use(remarkDocEmbed, {
+        getEmbed,
+      })
       .use(remarkAdmonitions, remarkAdmonitionOptions)
       .use(remarkMath)
       .use(remarkPlantUML, { server: 'http://www.plantuml.com/plantuml' })
@@ -260,7 +265,7 @@ const MarkdownView = ({
     updateContent,
     shortcodeHandler,
     headerLinks,
-    embeddableDocs,
+    getEmbed,
     comments,
     commentClick,
   ])
@@ -297,6 +302,7 @@ const MarkdownView = ({
           onRenderRef.current()
         }
       } catch (err) {
+        console.error(err)
         setState({ type: 'error', err })
       }
     }
