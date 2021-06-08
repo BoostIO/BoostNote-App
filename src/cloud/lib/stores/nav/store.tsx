@@ -45,6 +45,7 @@ import {
   CreateDocRequestBody,
   updateDoc,
   UpdateDocRequestBody,
+  getDoc,
 } from '../../../api/teams/docs'
 import { NavResource } from '../../../interfaces/resources'
 import { SidebarDragState } from '../../dnd'
@@ -420,6 +421,40 @@ function useNavStore(pageProps: any): NavContext {
       updateWorkspacesMap,
       setPartialPageData,
     ]
+  )
+
+  const pendingLoads = useRef<Map<string, Promise<SerializedDocWithBookmark>>>(
+    new Map()
+  )
+  const loadedDocs = useRef<Set<string>>(new Set())
+  const loadDoc = useCallback(
+    async (id: string, reload = false) => {
+      const current = docsMap.get(id)
+      if (
+        current != null &&
+        (current.head != null || loadedDocs.current.has(id)) &&
+        !reload
+      ) {
+        return current
+      }
+
+      console.log(pendingLoads.current.has(id))
+      if (pendingLoads.current.has(id)) {
+        return pendingLoads.current.get(id)
+      }
+
+      try {
+        const promise = getDoc(id, team!.id).then((data) => data.doc)
+        pendingLoads.current.set(id, promise)
+        const doc = await promise
+        updateDocsMap([doc.id, doc])
+        return doc
+      } finally {
+        loadedDocs.current.add(id)
+        pendingLoads.current.delete(id)
+      }
+    },
+    [team, updateDocsMap, docsMap]
   )
 
   const updateDocHandler = useCallback(
@@ -825,6 +860,7 @@ function useNavStore(pageProps: any): NavContext {
     foldersMap,
     updateFoldersMap,
     removeFromFoldersMap,
+    loadDoc,
     docsMap,
     updateDocsMap,
     removeFromDocsMap,
