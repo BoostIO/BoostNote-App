@@ -25,6 +25,7 @@ import {
 import SettingNavButtonItem from '../../shared/components/organisms/Settings/atoms/SettingNavItem'
 import Icon from '../../shared/components/atoms/Icon'
 import ExportTab from './ExportTab'
+import SponsorTab from './SponsorTab'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;
@@ -148,6 +149,8 @@ const PreferencesModal = () => {
         return <ExportTab />
       case 'about':
         return <AboutTab />
+      case 'sponsor':
+        return <SponsorTab />
       case 'storage':
         if (currentStorage != null) {
           return <StorageTab storage={currentStorage} />
@@ -220,6 +223,11 @@ const PreferencesModal = () => {
               label='Export'
               active={tab === 'export'}
               onClick={() => openTab('export')}
+            />
+            <SettingNavButtonItem
+              label='Sponsor'
+              active={tab === 'sponsor'}
+              onClick={() => openTab('sponsor')}
             />
           </TabNav>
           <TabContent>{content}</TabContent>

@@ -30,6 +30,7 @@ export type PreferencesTab =
   | 'editor'
   | 'markdown'
   | 'export'
+  | 'sponsor'
   | 'storage'
   | 'migration'
   | 'general'
