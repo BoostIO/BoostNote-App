@@ -1,4 +1,5 @@
 import { KeyboardEvent } from 'react'
+import { osName } from '../shared/lib/platform'
 
 interface ModifierItem {
   ctrl?: boolean
@@ -27,9 +28,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: 'P',
         keycode: 80,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Toggles global search modal dialog',
       isMenuType: true,
@@ -41,9 +45,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: 'F',
         keycode: 70,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Toggles local editor search modal dialog',
     },
@@ -54,9 +61,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: 'H',
         keycode: 72,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Toggles local editor replace modal dialog',
     },
@@ -67,9 +77,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: 'S',
         keycode: 83,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Export open document (save as)',
       isMenuType: true,
@@ -81,9 +94,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: 'E',
         keycode: 69,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Toggles preview mode in editor',
       isMenuType: true,
@@ -95,9 +111,12 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       shortcutMainStroke: {
         key: '\\',
         keycode: 220,
-        modifiers: {
-          ctrl: true,
-        },
+        modifiers:
+          osName === 'macos'
+            ? { meta: true }
+            : {
+                ctrl: true,
+              },
       },
       description: 'Toggles split edit mode in editor',
       isMenuType: true,
