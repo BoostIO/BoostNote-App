@@ -160,7 +160,7 @@ const Editor = ({
       },
     ],
   })
-  const { docsMap, workspacesMap, foldersMap } = useNav()
+  const { docsMap, workspacesMap, foldersMap, loadDoc } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
@@ -637,25 +637,22 @@ const Editor = ({
     setScrollSync(not)
   }, [])
 
-  const embeddableDocs = useMemo(() => {
-    const embedMap = new Map<string, EmbedDoc>()
-    if (team == null) {
-      return embedMap
-    }
-
-    for (const doc of docsMap.values()) {
-      if (doc.head != null) {
-        const current = `${location.protocol}//${location.host}`
-        const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
-        embedMap.set(doc.id, {
-          title: doc.title,
-          content: doc.head.content,
-          link,
-        })
+  const getEmbed = useCallback(
+    async (id: string) => {
+      const doc = await loadDoc(id)
+      if (doc == null || team == null) {
+        return undefined
       }
-    }
-    return embedMap
-  }, [docsMap, team])
+      const current = `${location.protocol}//${location.host}`
+      const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
+      return {
+        title: doc.title,
+        content: doc.head != null ? doc.head.content : '',
+        link,
+      }
+    },
+    [loadDoc, team]
+  )
 
   const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
     if (shortcodeConvertMenu == null || editorRef.current == null) {
@@ -1036,7 +1033,7 @@ const Editor = ({
               headerLinks={editorLayout === 'preview'}
               onRender={onRender.current}
               className='scroller'
-              embeddableDocs={embeddableDocs}
+              getEmbed={getEmbed}
               scrollerRef={previewRef}
               comments={viewComments}
               commentClick={commentClick}
