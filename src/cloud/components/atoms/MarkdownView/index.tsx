@@ -302,7 +302,6 @@ const MarkdownView = ({
           onRenderRef.current()
         }
       } catch (err) {
-        console.error(err)
         setState({ type: 'error', err })
       }
     }
