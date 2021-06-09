@@ -87,6 +87,7 @@ import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../lib/rehypeHighlight'
+import { getDocLinkHref } from '../../atoms/Link/DocLink'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -638,12 +639,15 @@ const Editor = ({
 
   const getEmbed = useCallback(
     async (id: string) => {
-      const doc = await loadDoc(id)
-      if (doc == null || team == null) {
+      if (team == null) {
+        return undefined
+      }
+      const doc = await loadDoc(id, team.id)
+      if (doc == null) {
         return undefined
       }
       const current = `${location.protocol}//${location.host}`
-      const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
+      const link = `${current}${getDocLinkHref(doc, team, 'index')}`
       return {
         title: doc.title,
         content: doc.head != null ? doc.head.content : '',
