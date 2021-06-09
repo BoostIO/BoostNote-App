@@ -429,13 +429,13 @@ function useNavStore(pageProps: any): NavContext {
   const loadedDocs = useRef<Set<string>>(new Set())
   const loadDoc = useCallback(
     async (id: string, team: string, reload = false) => {
-      const current = docsMap.get(id)
+      const loadedDoc = docsMap.get(id)
       if (
-        current != null &&
-        (current.head != null || loadedDocs.current.has(id)) &&
+        loadedDoc != null &&
+        (loadedDoc.head != null || loadedDocs.current.has(id)) &&
         !reload
       ) {
-        return current
+        return loadedDoc
       }
 
       if (pendingLoads.current.has(id)) {
