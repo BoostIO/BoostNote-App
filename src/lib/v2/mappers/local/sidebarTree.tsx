@@ -309,6 +309,9 @@ export function mapTree(
   })
 
   notes.forEach((doc) => {
+    if (doc.trashed) {
+      return
+    }
     const noteId = doc._id
     const href = getDocHref(doc, workspace.id)
     const bookmarked = !!doc.data.bookmarked
