@@ -4,7 +4,6 @@ import {
   SerializedDoc,
 } from '../../../interfaces/db/doc'
 import DocLimitReachedBanner from '../../molecules/Banner/SubLimitReachedBanner'
-import { getDocURL, getTeamURL } from '../../../lib/utils/patterns'
 import styled from '../../../lib/styled'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
@@ -28,7 +27,6 @@ import {
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
-import { EmbedDoc } from '../../../lib/docEmbedPlugin'
 import useRealtime from '../../../lib/editor/hooks/useRealtime'
 import { buildIconUrl } from '../../../api/files'
 import { getColorFromString } from '../../../lib/utils/string'
@@ -45,6 +43,7 @@ import { useDocActionContextMenu } from '../../molecules/Editor/useDocActionCont
 import CommentManager from '../CommentManager'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
+import { getDocLinkHref } from '../../atoms/Link/DocLink'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -66,7 +65,7 @@ const ViewPage = ({
   revisionHistory,
 }: ViewPageProps) => {
   const { preferences, setPreferences } = usePreferences()
-  const { foldersMap, workspacesMap, docsMap } = useNav()
+  const { foldersMap, workspacesMap, loadDoc } = useNav()
   const { push } = useRouter()
   const { currentUserIsCoreMember, permissions } = usePage()
   const { sendingMap, toggleDocBookmark } = useCloudApi()
@@ -114,26 +113,6 @@ const ViewPage = ({
       initialRenderDone.current = true
     }
   })
-
-  const embeddableDocs = useMemo(() => {
-    const embedMap = new Map<string, EmbedDoc>()
-    if (team == null) {
-      return embedMap
-    }
-
-    for (const doc of docsMap.values()) {
-      if (doc.head != null) {
-        const current = `${location.protocol}//${location.host}`
-        const link = `${current}${getTeamURL(team)}${getDocURL(doc)}`
-        embedMap.set(doc.id, {
-          title: doc.title,
-          content: doc.head.content,
-          link,
-        })
-      }
-    }
-    return embedMap
-  }, [docsMap, team])
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
 
@@ -301,6 +280,25 @@ const ViewPage = ({
     }
   }, [connState])
 
+  const getEmbed = useCallback(
+    async (id: string) => {
+      if (team == null) {
+        return undefined
+      }
+      const doc = await loadDoc(id, team.id)
+      if (doc == null) {
+        return undefined
+      }
+      const current = `${location.protocol}//${location.host}`
+      const link = `${current}${getDocLinkHref(doc, team, 'index')}`
+      return {
+        title: doc.title,
+        content: doc.head != null ? doc.head.content : '',
+        link,
+      }
+    },
+    [loadDoc, team]
+  )
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -464,8 +462,8 @@ const ViewPage = ({
                 content={realtimeContent}
                 headerLinks={true}
                 onRender={onRender.current}
+                getEmbed={getEmbed}
                 className='scroller'
-                embeddableDocs={embeddableDocs}
                 scrollerRef={previewRef}
                 comments={viewComments}
                 commentClick={commentClick}
