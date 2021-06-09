@@ -440,7 +440,6 @@ const SidebarContainer = ({
       getFoldEvents,
       push,
       toggleDocBookmark,
-      (workspace) => removeWorkspace(workspace),
       toggleDocArchived,
       deleteFolderApi,
       createFolderApi,
@@ -449,7 +448,6 @@ const SidebarContainer = ({
       dropInDocOrFolder,
       openRenameFolderForm,
       openRenameDocForm,
-      openWorkspaceEditForm,
       exportDocuments
     )
   }, [
@@ -471,9 +469,7 @@ const SidebarContainer = ({
     dropInDocOrFolder,
     openRenameFolderForm,
     openRenameDocForm,
-    openWorkspaceEditForm,
     exportDocuments,
-    removeWorkspace,
   ])
 
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {

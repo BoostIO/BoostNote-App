@@ -4,7 +4,6 @@ import {
   sortByAttributeDesc,
 } from '../../../../shared/lib/utils/array'
 import {
-  mdiApplicationCog,
   mdiArchiveOutline,
   mdiExport,
   mdiFileDocumentOutline,
@@ -108,8 +107,6 @@ function getFolderChildrenOrderedIds(
 
 export function mapTreeControls(
   workspace: NoteStorage,
-  deleteWorkspace: (workspace: NoteStorage) => void,
-  openWorkspaceEditForm: (workspace: NoteStorage) => void,
   exportDocuments: (
     workspace: NoteStorage,
     exportSettings: LocalExportResourceRequestBody
@@ -119,18 +116,6 @@ export function mapTreeControls(
     return []
   }
   return [
-    {
-      type: MenuTypes.Normal,
-      icon: mdiApplicationCog,
-      label: 'Edit',
-      onClick: () => openWorkspaceEditForm(workspace),
-    },
-    {
-      type: MenuTypes.Normal,
-      icon: mdiTrashCanOutline,
-      label: 'Delete',
-      onClick: () => deleteWorkspace(workspace),
-    },
     {
       type: MenuTypes.Normal,
       label: 'Export Workspace',
@@ -163,7 +148,6 @@ export function mapTree(
     docId: string,
     bookmarked: boolean
   ) => void,
-  deleteWorkspace: (workspace: NoteStorage) => void,
   toggleNoteArchived: (
     workspaceId: string,
     docId: string,
@@ -183,7 +167,6 @@ export function mapTree(
   ) => void,
   openRenameFolderForm: (workspaceId: string, folder: FolderDoc) => void,
   openRenameNoteForm: (workspaceId: string, doc: NoteDoc) => void,
-  openWorkspaceEditForm: (workspace: NoteStorage) => void,
   exportDocuments: (
     workspace: NoteStorage,
     exportSettings: LocalExportResourceRequestBody
@@ -463,12 +446,7 @@ export function mapTree(
           }),
       },
     ],
-    contextControls: mapTreeControls(
-      workspace,
-      deleteWorkspace,
-      openWorkspaceEditForm,
-      exportDocuments
-    ),
+    contextControls: mapTreeControls(workspace, exportDocuments),
   })
   if (labels.length > 0) {
     tree.push({
