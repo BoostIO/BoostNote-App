@@ -82,6 +82,24 @@ type LocalTreeItem = {
   onDrop?: (position?: SidebarDragState) => void
 }
 
+function getWorkspaceChildrenOrdered(
+  sortingOrder: SidebarTreeSortingOrder,
+  workspaceRows: LocalTreeItem[]
+): LocalTreeItem[] {
+  switch (sortingOrder) {
+    case 'a-z':
+      return sortByAttributeAsc('label', workspaceRows)
+    case 'z-a':
+      return sortByAttributeDesc('label', workspaceRows)
+    case 'last-updated':
+      return sortByAttributeDesc('lastUpdated', workspaceRows)
+    case 'drag':
+    default:
+      return workspaceRows
+    // todo: [komediruzecki-09/06/2021] Implement drag and drop (ordered Ids)
+  }
+}
+
 function getFolderChildrenOrderedIds(
   parentFolder: FolderDoc,
   notes: NoteDoc[],
@@ -362,16 +380,21 @@ export function mapTree(
     return acc
   }, [] as SidebarTreeChildRow[])
 
-  const navTree = arrayItems
-    .filter((item) => item.parentId == workspace.id)
-    .reduce((acc, val) => {
-      acc.push({
-        ...val,
-        depth: 0,
-        rows: buildChildrenNavRows(sortingOrder, val.children, 1, items),
-      })
-      return acc
-    }, [] as SidebarTreeChildRow[])
+  const workspaceRows = arrayItems.filter(
+    (item) => item.parentId == workspace.id
+  )
+  const orderedWorkspaceRows = getWorkspaceChildrenOrdered(
+    sortingOrder,
+    workspaceRows
+  )
+  const navTree = orderedWorkspaceRows.reduce((acc, val) => {
+    acc.push({
+      ...val,
+      depth: 0,
+      rows: buildChildrenNavRows(sortingOrder, val.children, 1, items),
+    })
+    return acc
+  }, [] as SidebarTreeChildRow[])
 
   const notesPerLabelIdMap = notes.reduce((acc, note) => {
     const noteLabelNames = note.tags || []
