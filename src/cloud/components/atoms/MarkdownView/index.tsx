@@ -107,7 +107,6 @@ interface MarkdownViewProps {
   headerLinks?: boolean
   onRender?: () => void
   className?: string
-  embeddableDocs?: Map<string, EmbedDoc>
   getEmbed?: (
     id: string
   ) => Promise<EmbedDoc | undefined> | EmbedDoc | undefined

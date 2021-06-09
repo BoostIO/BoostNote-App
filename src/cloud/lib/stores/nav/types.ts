@@ -50,7 +50,10 @@ export interface NavContext {
     ...mappedFolder: [string, SerializedFolderWithBookmark][]
   ) => void
   removeFromFoldersMap: (...ids: string[]) => void
-  loadDoc: (id: string, team: string) => Promise<SerializedDocWithBookmark>
+  loadDoc: (
+    id: string,
+    team: string
+  ) => Promise<SerializedDocWithBookmark | undefined>
   docsMap: Map<string, SerializedDocWithBookmark>
   updateDocsMap: (...mappedDoc: [string, SerializedDocWithBookmark][]) => void
   updateParentFolderOfDoc: (doc: SerializedDocWithBookmark) => void
