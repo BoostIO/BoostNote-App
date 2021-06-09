@@ -8,6 +8,7 @@ import {
   getFolderPathname,
   getNoteTitle,
   getParentFolderPathname,
+  getDocHref,
 } from '../../../db/utils'
 import { join } from 'path'
 import BasicInputFormLocal from '../../../../components/v2/organisms/BasicInputFormLocal'
@@ -267,13 +268,18 @@ export function useLocalUI() {
               return
             }
 
-            await createNote(body.workspaceId, {
+            const note = await createNote(body.workspaceId, {
               title: inputValue,
               folderPathname:
                 body.parentFolderPathname != null
                   ? body.parentFolderPathname
                   : '/',
             })
+
+            if (note != null) {
+              push(getDocHref(note, body.workspaceId))
+            }
+
             closeModalAndUpdateState()
           }}
         />,
@@ -283,7 +289,7 @@ export function useLocalUI() {
         }
       )
     },
-    [openModal, createNote, closeModalAndUpdateState]
+    [openModal, createNote, push, closeModalAndUpdateState]
   )
 
   const removeWorkspace = useCallback(
