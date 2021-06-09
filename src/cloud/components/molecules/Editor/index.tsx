@@ -22,7 +22,7 @@ import {
 } from '../../../lib/keyboard'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { isEditSessionSaveShortcut } from '../../../lib/shortcuts'
-import { getDocTitle, getTeamURL, getDocURL } from '../../../lib/utils/patterns'
+import { getDocTitle } from '../../../lib/utils/patterns'
 import { SerializedUser } from '../../../interfaces/db/user'
 import EditorToolbar from './EditorToolbar'
 import { usePreferences } from '../../../lib/stores/preferences'
