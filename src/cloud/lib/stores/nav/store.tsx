@@ -438,7 +438,6 @@ function useNavStore(pageProps: any): NavContext {
         return current
       }
 
-      console.log(pendingLoads.current.has(id))
       if (pendingLoads.current.has(id)) {
         return pendingLoads.current.get(id)
       }
