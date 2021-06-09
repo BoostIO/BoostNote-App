@@ -428,7 +428,7 @@ function useNavStore(pageProps: any): NavContext {
   )
   const loadedDocs = useRef<Set<string>>(new Set())
   const loadDoc = useCallback(
-    async (id: string, reload = false) => {
+    async (id: string, team: string, reload = false) => {
       const current = docsMap.get(id)
       if (
         current != null &&
@@ -443,7 +443,7 @@ function useNavStore(pageProps: any): NavContext {
       }
 
       try {
-        const promise = getDoc(id, team!.id).then((data) => data.doc)
+        const promise = getDoc(id, team).then((data) => data.doc)
         pendingLoads.current.set(id, promise)
         const doc = await promise
         updateDocsMap([doc.id, doc])
@@ -453,7 +453,7 @@ function useNavStore(pageProps: any): NavContext {
         pendingLoads.current.delete(id)
       }
     },
-    [team, updateDocsMap, docsMap]
+    [updateDocsMap, docsMap]
   )
 
   const updateDocHandler = useCallback(
