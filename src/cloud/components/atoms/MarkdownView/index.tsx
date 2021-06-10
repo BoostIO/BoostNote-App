@@ -42,6 +42,7 @@ import { Node as UnistNode } from 'unist'
 import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
+import throttle from 'lodash.throttle'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -269,51 +270,57 @@ const MarkdownView = ({
     commentClick,
   ])
 
-  useEffect(() => {
-    const renderContentCallback = async () => {
-      try {
-        checkboxIndexRef.current = 0
-        const result = (await markdownProcessor.process(content)) as any
-        setState({
-          type: 'loaded',
-          content: result.result,
-        })
-        document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
-          trigger.addEventListener('click', triggerCollapse)
-        })
-        document
-          .querySelectorAll('.doc-embed-header a')
-          .forEach((docEmbedLink) => {
-            docEmbedLink.addEventListener('click', (event) => {
-              if (
-                ((event as MouseEvent).ctrlKey ||
-                  (event as MouseEvent).metaKey) &&
-                !usingElectron
-              ) {
-                return
-              }
+  const processorRef = useRef(markdownProcessor)
 
-              event.preventDefault()
-              push((event.target as HTMLAnchorElement).href)
-            })
+  const renderContentRef = useRef(
+    throttle(
+      async (content: string) => {
+        try {
+          checkboxIndexRef.current = 0
+          const result = (await processorRef.current.process(content)) as any
+          setState({
+            type: 'loaded',
+            content: result.result,
           })
-        if (onRenderRef.current != null) {
-          onRenderRef.current()
+          document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
+            trigger.addEventListener('click', triggerCollapse)
+          })
+          document
+            .querySelectorAll('.doc-embed-header a')
+            .forEach((docEmbedLink) => {
+              docEmbedLink.addEventListener('click', (event) => {
+                if (
+                  ((event as MouseEvent).ctrlKey ||
+                    (event as MouseEvent).metaKey) &&
+                  !usingElectron
+                ) {
+                  return
+                }
+
+                event.preventDefault()
+                push((event.target as HTMLAnchorElement).href)
+              })
+            })
+          if (onRenderRef.current != null) {
+            onRenderRef.current()
+          }
+        } catch (err) {
+          setState({ type: 'error', err })
         }
-      } catch (err) {
-        setState({ type: 'error', err })
-      }
-    }
-    modeLoadCallbackRef.current = renderContentCallback
-    renderContentCallback()
-  }, [content, markdownProcessor, push])
+      },
+      100,
+      { trailing: true }
+    )
+  )
+
+  useEffect(() => {
+    processorRef.current = markdownProcessor
+    modeLoadCallbackRef.current = () => renderContentRef.current(content)
+    renderContentRef.current(content)
+  }, [content, markdownProcessor])
 
   useEffectOnce(() => {
-    const callback = () => {
-      if (modeLoadCallbackRef.current != null) {
-        modeLoadCallbackRef.current()
-      }
-    }
+    const callback = () => modeLoadCallbackRef.current?.call(null)
     window.addEventListener('codemirror-mode-load', callback)
     return () => {
       window.removeEventListener('codemirror-mode-load', callback)
