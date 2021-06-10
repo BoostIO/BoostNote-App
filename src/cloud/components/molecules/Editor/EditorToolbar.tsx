@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect } from 'react'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { SerializedTeam } from '../../../interfaces/db/team'
 import {
   mdiFormatBold,
   mdiFormatItalic,
@@ -25,8 +23,6 @@ import {
 } from '../../../lib/utils/events'
 
 interface EditorToolbarProps {
-  currentDoc: SerializedDocWithBookmark
-  team: SerializedTeam
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
 }
 
@@ -559,4 +555,4 @@ function handleSelectionReplace(
   editor.setSelection(newSelectionAnchor, newSelectionHead)
 }
 
-export default EditorToolbar
+export default React.memo(EditorToolbar)
