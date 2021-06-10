@@ -99,6 +99,7 @@ import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { compareAsc } from 'date-fns'
+import { SidebarTreeControl } from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -414,6 +415,67 @@ const Application = ({
     sendToElectron('sidebar--state', { state: sidebarState })
   }, [usingElectron, , sendToElectron, sidebarState])
 
+  const treeControls: SidebarTreeControl[] = useMemo(() => {
+    console.log('tree controls')
+    return [
+      {
+        icon:
+          preferences.sidebarTreeSortingOrder === 'a-z'
+            ? SidebarTreeSortingOrders.aZ.icon
+            : preferences.sidebarTreeSortingOrder === 'z-a'
+            ? SidebarTreeSortingOrders.zA.icon
+            : preferences.sidebarTreeSortingOrder === 'last-updated'
+            ? SidebarTreeSortingOrders.lastUpdated.icon
+            : SidebarTreeSortingOrders.dragDrop.icon,
+        onClick: (event) => {
+          popup(
+            event,
+            Object.values(SidebarTreeSortingOrders).map((sort) => {
+              return {
+                type: MenuTypes.Normal,
+                onClick: () =>
+                  setPreferences({
+                    sidebarTreeSortingOrder: sort.value,
+                  }),
+                label: sort.label,
+                icon: sort.icon,
+                active: sort.value === preferences.sidebarTreeSortingOrder,
+              }
+            })
+          )
+        },
+      },
+    ]
+  }, [preferences, popup, setPreferences])
+
+  const treeTopRows = useMemo(() => {
+    return team != null && currentUserIsCoreMember ? (
+      <NewDocButton team={team} />
+    ) : null
+  }, [team, currentUserIsCoreMember])
+
+  const onSpacesBlurCallback = useCallback(() => {
+    setShowSpaces(false)
+  }, [])
+
+  const spaceBottomRows = useMemo(() => buildSpacesBottomRows(push), [push])
+
+  const timelineMore = useMemo(() => {
+    return team != null && pathname !== getTeamLinkHref(team, 'timeline')
+      ? {
+          variant: 'primary' as const,
+          onClick: () => push(getTeamLinkHref(team, 'timeline')),
+        }
+      : undefined
+  }, [team, pathname, push])
+
+  const sidebarSearchState = useMemo(() => {
+    return {
+      fetching: fetchingSearchResults,
+      isNotDebouncing: isNotDebouncing() === true,
+    }
+  }, [isNotDebouncing, fetchingSearchResults])
+
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
@@ -443,10 +505,10 @@ const Application = ({
             className={cc(['application__sidebar'])}
             showToolbar={!usingElectron}
             showSpaces={showSpaces}
-            onSpacesBlur={() => setShowSpaces(false)}
+            onSpacesBlur={onSpacesBlurCallback}
             toolbarRows={toolbarRows}
             spaces={spaces}
-            spaceBottomRows={buildSpacesBottomRows(push)}
+            spaceBottomRows={spaceBottomRows}
             sidebarExpandedWidth={preferences.sideBarWidth}
             sidebarState={sidebarState}
             tree={treeWithOrderedCategories}
@@ -455,56 +517,13 @@ const Application = ({
             setSearchQuery={setSearchQuery}
             searchHistory={searchHistory}
             recentPages={historyItems}
-            treeControls={[
-              {
-                icon:
-                  preferences.sidebarTreeSortingOrder === 'a-z'
-                    ? SidebarTreeSortingOrders.aZ.icon
-                    : preferences.sidebarTreeSortingOrder === 'z-a'
-                    ? SidebarTreeSortingOrders.zA.icon
-                    : preferences.sidebarTreeSortingOrder === 'last-updated'
-                    ? SidebarTreeSortingOrders.lastUpdated.icon
-                    : SidebarTreeSortingOrders.dragDrop.icon,
-                onClick: (event) => {
-                  popup(
-                    event,
-                    Object.values(SidebarTreeSortingOrders).map((sort) => {
-                      return {
-                        type: MenuTypes.Normal,
-                        onClick: () =>
-                          setPreferences({
-                            sidebarTreeSortingOrder: sort.value,
-                          }),
-                        label: sort.label,
-                        icon: sort.icon,
-                        active:
-                          sort.value === preferences.sidebarTreeSortingOrder,
-                      }
-                    })
-                  )
-                },
-              },
-            ]}
-            treeTopRows={
-              team != null && currentUserIsCoreMember ? (
-                <NewDocButton team={team} />
-              ) : null
-            }
+            treeControls={treeControls}
+            treeTopRows={treeTopRows}
             searchResults={searchResults}
             users={users}
             timelineRows={timelineRows}
-            timelineMore={
-              team != null && pathname !== getTeamLinkHref(team, 'timeline')
-                ? {
-                    variant: 'primary',
-                    onClick: () => push(getTeamLinkHref(team, 'timeline')),
-                  }
-                : undefined
-            }
-            sidebarSearchState={{
-              fetching: fetchingSearchResults,
-              isNotDebouncing: isNotDebouncing() === true,
-            }}
+            timelineMore={timelineMore}
+            sidebarSearchState={sidebarSearchState}
           />
         }
         pageBody={
