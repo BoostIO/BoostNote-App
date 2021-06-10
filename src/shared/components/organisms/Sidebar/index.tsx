@@ -130,7 +130,7 @@ const Sidebar = ({
   )
 }
 
-export default Sidebar
+export default React.memo(Sidebar)
 
 const SidebarContainer = styled.div`
   display: flex;
