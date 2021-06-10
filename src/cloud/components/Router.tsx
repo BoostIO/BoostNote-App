@@ -23,6 +23,7 @@ import * as intercom from '../lib/intercom'
 import { intercomAppId } from '../lib/consts'
 
 import GlobalStyle from './GlobalStyle'
+import GlobalStyleV2 from '../../shared/components/atoms/GlobalStyle'
 import CodeMirrorStyle from './atoms/CodeMirrorStyle'
 import SettingsComponent from './organisms/settings/SettingsComponent'
 import { GetInitialPropsParameters } from '../interfaces/pages'
@@ -248,7 +249,7 @@ const Router = () => {
               <V2ThemeProvider>
                 {<pageInfo.Component {...pageInfo.pageProps} />}
 
-                <GlobalStyle />
+                <GlobalStyleV2 />
                 <CodeMirrorStyle />
                 <CloudModal />
                 <Toast />
