@@ -88,6 +88,7 @@ import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../lib/rehypeHighlight'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
+import throttle from 'lodash.throttle'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -534,19 +535,26 @@ const Editor = ({
         })
       }
     })
-    editor.on('cursorActivity', (codeMirror: CodeMirror.Editor) => {
-      const doc = codeMirror.getDoc()
-      const { line, ch } = doc.getCursor()
-      const selections = doc.listSelections()
+    editor.on(
+      'cursorActivity',
+      throttle(
+        (codeMirror: CodeMirror.Editor) => {
+          const doc = codeMirror.getDoc()
+          const { line, ch } = doc.getCursor()
+          const selections = doc.listSelections()
 
-      setSelection({
-        currentCursor: {
-          line,
-          ch,
+          setSelection({
+            currentCursor: {
+              line,
+              ch,
+            },
+            currentSelections: selections,
+          })
         },
-        currentSelections: selections,
-      })
-    })
+        500,
+        { trailing: true }
+      )
+    )
   }, [])
 
   useEffect(() => {
@@ -987,11 +995,7 @@ const Editor = ({
                 onClick={toggleScrollSync}
                 className='scroll-sync'
               />
-              <EditorToolbar
-                editorRef={editorRef}
-                team={team}
-                currentDoc={doc}
-              />
+              <EditorToolbar editorRef={editorRef} />
               <EditorToolbarUpload
                 editorRef={editorRef}
                 fileUploadHandlerRef={fileUploadHandlerRef}
