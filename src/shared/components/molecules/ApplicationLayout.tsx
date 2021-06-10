@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '../../lib/styled'
-import GlobalStyle from '../atoms/GlobalStyle'
 
 interface ApplicationLayoutProps {
   sidebar: React.ReactNode
@@ -13,7 +12,6 @@ const ApplicationLayout = ({ sidebar, pageBody }: ApplicationLayoutProps) => (
       <div className='application__sidebar'>{sidebar}</div>
       <div className='application__content'>{pageBody}</div>
     </div>
-    <GlobalStyle />
   </Container>
 )
 
