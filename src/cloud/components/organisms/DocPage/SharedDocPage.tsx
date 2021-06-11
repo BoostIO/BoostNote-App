@@ -17,7 +17,6 @@ interface SharedDocPageProps {
 }
 
 const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
-  const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userInfo] = useState(() => ({
     id: '#Guest',
@@ -37,12 +36,9 @@ const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
   useEffect(() => {
     if (realtime != null) {
       const content = realtime.doc.getText('content')
-      const title = realtime.doc.getText('title')
       setContent(content.toJSON())
-      setTitle(title.toJSON())
       realtime.doc.on('update', () => {
         setContent(content.toJSON())
-        setTitle(title.toJSON())
       })
     }
   }, [realtime])
@@ -90,7 +86,7 @@ const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
       )}
       {loaded ? (
         <>
-          <StyledTitle>{title}</StyledTitle>
+          <StyledTitle>{doc.title}</StyledTitle>
           <StyledContent>
             <MarkdownView
               content={content}
