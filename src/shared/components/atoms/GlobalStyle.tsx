@@ -43,6 +43,11 @@ button {
   transition: 100ms color;
 }
 
+th,
+td {
+  background-color: ${theme.colors.background.primary};
+}
+
 /* total width */
 scrollbar-width: 8px;
 scrollbar-height: 8px;
@@ -113,6 +118,11 @@ export default createGlobalStyle<BaseTheme>`
     font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   }
 
+  th,
+  td {
+    background-color: ${({ theme }) => theme.colors.background.primary};
+  }
+  
   .icon {
     transition: 100ms color;
   }
