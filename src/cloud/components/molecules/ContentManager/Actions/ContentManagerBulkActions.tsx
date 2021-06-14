@@ -1,17 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import Flexbox from '../../../atoms/Flexbox'
 import HeaderAction from './HeaderAction'
-import {
-  mdiFileUndoOutline,
-  mdiFolderMoveOutline,
-  mdiArchiveOutline,
-  mdiTrashCanOutline,
-} from '@mdi/js'
+import { mdiFolderMoveOutline, mdiTrashCanOutline } from '@mdi/js'
 import { SerializedDocWithBookmark } from '../../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import { useNav } from '../../../../lib/stores/nav'
 import { difference } from 'ramda'
-import { updateDocStatus, destroyDoc } from '../../../../api/teams/docs'
+import { destroyDoc } from '../../../../api/teams/docs'
 import {
   getDocIdFromString,
   getFolderIdFromString,
@@ -40,9 +35,7 @@ interface ContentManagerBulkActionsProps {
 
 enum BulkActions {
   move = 0,
-  archive = 1,
-  unarchive = 2,
-  delete = 3,
+  delete = 1,
 }
 
 const ContentManagerBulkActions = ({
@@ -151,66 +144,6 @@ const ContentManagerBulkActions = ({
     () => openModal(<MoveItemModal onSubmit={bulkMoveCallback} />),
     [openModal, bulkMoveCallback]
   )
-
-  const archiveSingleDoc = useCallback(
-    async (teamId: string, docId: string) => {
-      try {
-        const data = await updateDocStatus(teamId, docId, 'archived')
-        updateDocsMap([data.doc.id, data.doc])
-      } catch (err) {}
-    },
-    [updateDocsMap]
-  )
-
-  const unArchiveSingleDoc = useCallback(
-    async (teamId: string, docId: string) => {
-      try {
-        const data = await updateDocStatus(teamId, docId, null)
-        updateDocsMap([data.doc.id, data.doc])
-      } catch (err) {}
-    },
-    [updateDocsMap]
-  )
-
-  const bulkArchiveCallback = useCallback(async () => {
-    if (selectedDocs.size === 0 || selectedDocsAreUpdating) {
-      return
-    }
-    const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
-    setUpdating((prev) => [...prev, ...patternedIds])
-    setSending(BulkActions.archive)
-    for (const docId of selectedDocs.values()) {
-      await archiveSingleDoc(team.id, docId)
-    }
-    setSending(undefined)
-    setUpdating((prev) => difference(prev, patternedIds))
-  }, [
-    team,
-    archiveSingleDoc,
-    selectedDocs,
-    setUpdating,
-    selectedDocsAreUpdating,
-  ])
-
-  const bulkUnarchiveCallback = useCallback(async () => {
-    if (selectedDocs.size === 0 || selectedDocsAreUpdating) {
-      return
-    }
-    const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
-    setUpdating((prev) => [...prev, ...patternedIds])
-    setSending(BulkActions.unarchive)
-    for (const docId of selectedDocs.values()) {
-      await unArchiveSingleDoc(team.id, docId)
-    }
-    setSending(undefined)
-    setUpdating((prev) => difference(prev, patternedIds))
-  }, [
-    team,
-    unArchiveSingleDoc,
-    selectedDocs,
-    setUpdating,
-    selectedDocsAreUpdating,
-  ])
 
   const deleteSingleFolder = useCallback(
     async (team: SerializedTeam, target?: SerializedFolderWithBookmark) => {
@@ -346,68 +279,8 @@ const ContentManagerBulkActions = ({
     team,
   ])
 
-  const archiveBulkButtons = useMemo(() => {
-    if (selectedDocs.size === 0) {
-      return null
-    }
-
-    const docs = [...documentsMap.values()].filter((doc) =>
-      selectedDocs.has(doc.id)
-    )
-    const nodes = []
-    const hasOneArchivedDocSelected =
-      docs.find((doc) => doc.archivedAt != null) != null
-
-    if (docs.find((doc) => doc.archivedAt == null) != null) {
-      nodes.push(
-        <HeaderAction
-          action={{
-            iconPath: mdiArchiveOutline,
-            onClick: bulkArchiveCallback,
-            tooltip: 'Archive',
-          }}
-          key='archive'
-          disabled={selectedDocsAreUpdating}
-          sending={sending === BulkActions.archive}
-        />
-      )
-    }
-
-    if (hasOneArchivedDocSelected) {
-      nodes.push(
-        <HeaderAction
-          action={{
-            iconPath: mdiFileUndoOutline,
-            onClick: bulkUnarchiveCallback,
-            tooltip: 'Unarchive',
-          }}
-          key='unarchive'
-          disabled={selectedDocsAreUpdating}
-          sending={sending === BulkActions.unarchive}
-        />
-      )
-    }
-
-    return nodes
-  }, [
-    selectedDocs,
-    documentsMap,
-    bulkArchiveCallback,
-    bulkUnarchiveCallback,
-    sending,
-    selectedDocsAreUpdating,
-  ])
-
   const trashBulkButton = useMemo(() => {
     if (selectedFolders.size === 0 && selectedDocs.size === 0) {
-      return null
-    }
-
-    const docs = [...documentsMap.values()].filter((doc) =>
-      selectedDocs.has(doc.id)
-    )
-
-    if (docs.find((doc) => doc.archivedAt == null) != null) {
       return null
     }
 
@@ -423,7 +296,6 @@ const ContentManagerBulkActions = ({
       />
     )
   }, [
-    documentsMap,
     selectedDocsAreUpdating,
     sending,
     bulkDeleteCallback,
@@ -447,7 +319,6 @@ const ContentManagerBulkActions = ({
         disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
         sending={sending === BulkActions.move}
       />
-      {archiveBulkButtons}
       {trashBulkButton}
     </Flexbox>
   )

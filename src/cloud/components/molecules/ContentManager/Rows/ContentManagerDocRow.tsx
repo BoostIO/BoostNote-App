@@ -191,7 +191,7 @@ const ContentManagerDocRow = ({
     actions.push({
       iconPath: mdiTrashCanOutline,
       id: ActionsIds.Delete,
-      tooltip: 'Delete permanently',
+      tooltip: 'Delete',
       onClick: () => deleteDoc(doc),
     })
 
