@@ -142,7 +142,7 @@ const NotificationItem = ({ notification, onClick }: NotificationItemProps) => {
 }
 
 const NotificationListContainer = styled.div`
-  min-width: 450px;
+  width: 600px;
   min-height: 200px;
 
   & .notification__list__header {
