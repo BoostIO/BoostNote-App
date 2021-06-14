@@ -69,7 +69,8 @@ import {
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
-  mdiBell,
+  mdiBellOutline,
+  mdiBellRingOutline,
 } from '@mdi/js'
 import { getColorFromString } from '../../shared/lib/string'
 import { buildIconUrl } from '../api/files'
@@ -766,9 +767,13 @@ function mapToolbarRows(
     tooltip: 'Notifications',
     active: popOverState === 'notifications',
     icon: newNotifications ? (
-      <NotifyIcon count={newNotifications} path={mdiBell} />
+      <NotifyIcon
+        size={26}
+        count={newNotifications}
+        path={mdiBellRingOutline}
+      />
     ) : (
-      mdiBell
+      mdiBellOutline
     ),
     onClick: () => {
       setPopOverState((prev) =>
