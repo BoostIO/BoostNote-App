@@ -10,14 +10,11 @@ import {
 import ContextMenuItem from './ControlsContextMenuItem'
 import {
   StyledContextMenuContainer,
-  StyledFooter,
   Scrollable,
   StyledMenuItem,
-  StyledIcon,
 } from './styled'
 import ControlsContextMenuBackground from './ControlsContextMenuBackground'
 import { SerializedFolderWithBookmark } from '../../../../../interfaces/db/folder'
-import { getFormattedBoosthubDate } from '../../../../../lib/date'
 import { useEffectOnce } from 'react-use'
 import {
   useGlobalKeyDownHandler,
@@ -125,9 +122,7 @@ const FolderContextMenu = ({
               label={
                 <div>
                   <StyledMenuItem>
-                    <StyledIcon>
-                      <IconMdi path={mdiPencil} />
-                    </StyledIcon>
+                    <IconMdi className='icon' size={16} path={mdiPencil} />
                     Rename
                   </StyledMenuItem>
                 </div>
@@ -148,18 +143,14 @@ const FolderContextMenu = ({
               ) : currentFolder.bookmarked ? (
                 <div>
                   <StyledMenuItem>
-                    <StyledIcon>
-                      <IconMdi path={mdiStar} />
-                    </StyledIcon>
+                    <IconMdi className='icon' size={16} path={mdiStar} />
                     Unbookmark
                   </StyledMenuItem>
                 </div>
               ) : (
                 <div>
                   <StyledMenuItem>
-                    <StyledIcon>
-                      <IconMdi path={mdiStarOutline} />
-                    </StyledIcon>
+                    <IconMdi className='icon' size={16} path={mdiStarOutline} />
                     Bookmark
                   </StyledMenuItem>
                 </div>
@@ -175,9 +166,7 @@ const FolderContextMenu = ({
               label={
                 <div>
                   <StyledMenuItem>
-                    <StyledIcon>
-                      <IconMdi path={mdiTrashCan} />
-                    </StyledIcon>
+                    <IconMdi className='icon' size={16} path={mdiTrashCan} />
                     Delete
                   </StyledMenuItem>
                 </div>
@@ -188,10 +177,6 @@ const FolderContextMenu = ({
             />
           )}
         </Scrollable>
-        <StyledFooter>
-          Last updated:
-          <div>{getFormattedBoosthubDate(currentFolder.updatedAt)}</div>
-        </StyledFooter>
       </StyledContextMenuContainer>
     </>
   )
