@@ -87,13 +87,15 @@ const SidebarSpace = ({
       <RoundedImage url={row.icon} alt={row.label} size={30} />
     </div>
     <span className='sidebar__spaces__label'>{row.label}</span>
-    {row.active && (
-      <Icon size={20} path={mdiCheck} className='sidebar__spaces__icon' />
-    )}
-    {!row.active && row.notificationCount != null && (
+    {row.notificationCount != null && (
       <div className='sidebar__spaces__notifications'>
         {row.notificationCount}
       </div>
+    )}
+    {row.active ? (
+      <Icon size={20} path={mdiCheck} className='sidebar__spaces__icon' />
+    ) : (
+      <div className='sidebar__spaces__spacer'></div>
     )}
     {row.tooltip != null && (
       <span className='sidebar__spaces__tooltip'>{row.tooltip}</span>
@@ -203,13 +205,19 @@ const Container = styled.div`
     }
 
     .sidebar__spaces__notifications {
-      background-color: ${({ theme }) => theme.colors.variants.danger.base};
+      background-color: #cd4400;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+      margin-right: 5px;
+    }
+
+    .sidebar__spaces__spacer {
+      width: 20px;
     }
   }
 `
