@@ -17,7 +17,8 @@ export const isActiveElementAnInput = () => {
 
   if (
     activeElement != null &&
-    inputs.indexOf(activeElement.tagName.toLowerCase()) !== -1
+    ((activeElement as HTMLElement).isContentEditable ||
+      inputs.indexOf(activeElement.tagName.toLowerCase()) !== -1)
   ) {
     return true
   }
