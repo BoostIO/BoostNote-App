@@ -1,9 +1,6 @@
 import React from 'react'
-import styled from '../../../../../lib/styled'
-import {
-  baseIconStyle,
-  tooltipText,
-} from '../../../../../lib/styled/styleFunctions'
+import { menuHeight } from '../../../../../../shared/lib/stores/contextMenu'
+import styled from '../../../../../../shared/lib/styled'
 
 interface ContextMenuItemProps {
   label: string | React.ReactNode
@@ -30,10 +27,8 @@ const ContextMenuItem = ({
         id={id}
         className={className}
       >
-        <div>
-          <span>{label}</span>
-          <span className='tooltip-text'>{tooltip}</span>
-        </div>
+        <span>{label}</span>
+        <span className='tooltip-text'>{tooltip}</span>
       </StyledContextMenuItem>
     )
   }
@@ -51,57 +46,52 @@ const ContextMenuItem = ({
 }
 
 const StyledContextMenuItem = styled.button`
-  ${baseIconStyle}
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  height: 35px;
-  padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
-  background: none;
-  color: ${({ theme }) => theme.baseTextColor};
-  cursor: pointer;
-  font-size: 13px;
-  line-height: ${({ theme }) => theme.fontSizes.small}px;
+  height: ${menuHeight}px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+  background-color: transparent;
+  border: none;
+  box-sizing: border-box;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   text-align: left;
-  white-space: nowrap;
+  transition: 200ms color;
 
-  &.bigger-height {
-    height: 40px;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.background.quaternary};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
-  &:hover,
   &:focus {
-    background-color: ${({ theme }) => theme.subtleBackgroundColor};
-    color: ${({ theme }) => theme.emphasizedTextColor};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   &:disabled {
-    color: ${({ theme }) => theme.subtleTextColor};
+    color: ${({ theme }) => theme.colors.text.subtle};
 
     &:hover,
     &:focus {
-      color: ${({ theme }) => theme.subtleTextColor} !important;
+      color: ${({ theme }) => theme.colors.text.subtle};
       background-color: transparent;
       cursor: not-allowed;
     }
   }
 
-  > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   span.tooltip-text {
-    ${tooltipText}
     width: auto;
     min-width: 30px;
-    padding: 2px 5px;
-    position: relative;
-    right: initial;
     height: auto;
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
-    line-height: ${({ theme }) => theme.fontSizes.small}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.md}px;
+    padding: 2px 5px;
+    border: 1px solid ${({ theme }) => theme.colors.background.tertiary};
+    border-radius: 2px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    line-height: ${({ theme }) => theme.sizes.fonts.sm}px;
+    text-align: center;
   }
 `
 
