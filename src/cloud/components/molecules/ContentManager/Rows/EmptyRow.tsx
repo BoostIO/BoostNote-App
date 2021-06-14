@@ -22,4 +22,8 @@ const Container = styled.div`
   padding: 0 ${({ theme }) => theme.sizes.spaces.l}px;
   color: ${({ theme }) => theme.colors.text.subtle};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+
+  p {
+    padding-left: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
 `
