@@ -57,7 +57,7 @@ const StyledContentManagerRow = styled.div`
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
   font-size: 13px;
-  padding: 0 8px;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.l}px;
 
   &.expanded {
     height: 60px;
