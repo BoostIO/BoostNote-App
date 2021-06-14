@@ -9,14 +9,19 @@ import {
   mdiSortAlphabeticalAscending,
   mdiSortAlphabeticalDescending,
 } from '@mdi/js'
-import styled from '../../../lib/styled'
+import styled from '../../../../shared/lib/styled'
+import { menuHeight } from '../../../../shared/lib/stores/contextMenu'
 
 export const sortingOrders: CustomSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <IconMdi path={mdiSortClockAscending} size={20} />{' '}
-        <span className='label'>Latest Updated</span>
+        <IconMdi
+          path={mdiSortClockAscending}
+          size={16}
+          className='select__option__icon'
+        />{' '}
+        <span className='select__option__label'>Latest Updated</span>
       </Flexbox>
     ),
     value: 'Latest Updated',
@@ -25,8 +30,12 @@ export const sortingOrders: CustomSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <IconMdi path={mdiSortAlphabeticalAscending} size={20} />{' '}
-        <span className='label'>Title A-Z</span>
+        <IconMdi
+          path={mdiSortAlphabeticalAscending}
+          size={16}
+          className='select__option__icon'
+        />{' '}
+        <span className='select__option__label'>Title A-Z</span>
       </Flexbox>
     ),
     value: 'Title A-Z',
@@ -35,8 +44,12 @@ export const sortingOrders: CustomSelectOption[] = [
   {
     label: (
       <Flexbox>
-        <IconMdi path={mdiSortAlphabeticalDescending} size={20} />{' '}
-        <span className='label'>Title Z-A</span>
+        <IconMdi
+          path={mdiSortAlphabeticalDescending}
+          size={16}
+          className='select__option__icon'
+        />{' '}
+        <span className='select__option__label'>Title Z-A</span>
       </Flexbox>
     ),
     value: 'Title Z-A',
@@ -66,15 +79,7 @@ const SortingOption = ({ value, onChange }: SortingOptionProps) => {
 }
 
 const StyledSortingOption = styled.div`
-  margin-left: ${({ theme }) => theme.space.small}px;
-
-  .rc-select {
-    font-size: 13px;
-
-    svg {
-      margin-right: ${({ theme }) => theme.space.xsmall}px;
-    }
-  }
+  margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
 
   .select__control {
     flex-wrap: inherit;
@@ -88,10 +93,15 @@ const StyledSortingOption = styled.div`
 
     .select__single-value,
     .select__dropdown-indicator {
-      color: ${({ theme }) => theme.baseTextColor} !important;
+      color: ${({ theme }) => theme.colors.text.primary} !important;
       transition: color 150ms;
 
-      .label {
+      .select__option__icon {
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      .select__option__label {
         display: none;
       }
     }
@@ -108,7 +118,7 @@ const StyledSortingOption = styled.div`
     &:hover {
       .select__single-value,
       .select__dropdown-indicator {
-        color: ${({ theme }) => theme.emphasizedTextColor} !important;
+        color: ${({ theme }) => theme.colors.text.secondary} !important;
       }
     }
   }
@@ -116,11 +126,47 @@ const StyledSortingOption = styled.div`
   .select__menu {
     right: 0;
     width: 180px;
-    background-color: ${({ theme }) => theme.baseBackgroundColor};
-    box-shadow: ${({ theme }) => theme.baseShadowColor};
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    box-shadow: ${({ theme }) => theme.colors.shadow};
   }
-  .select__option:hover {
-    background-color: ${({ theme }) => theme.emphasizedBackgroundColor};
+
+  .select__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: ${menuHeight}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+    background-color: transparent;
+    border: none;
+    box-sizing: border-box;
+    color: ${({ theme }) => theme.colors.text.primary};
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    text-align: left;
+    transition: 200ms color;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+    &:focus,
+    &--is-selected {
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+    &:disabled {
+      color: ${({ theme }) => theme.colors.text.subtle};
+      &:hover,
+      &:focus {
+        color: ${({ theme }) => theme.colors.text.subtle};
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .select__option__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 
