@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { ModalBody, ModalContainer, ModalLine, ModaLineHeader } from '../styled'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
 import { Spinner } from '../../../../atoms/Spinner'
 import ErrorBlock from '../../../../atoms/ErrorBlock'
 import { StyledModalForm, StyledModalFormInput } from '../Forms/styled'
@@ -21,6 +20,7 @@ import WorkspaceAccess from './WorkspaceAccess'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
 import Switch from '../../../../../../shared/components/atoms/Switch'
+import Button from '../../../../../../shared/components/atoms/Button'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -234,8 +234,6 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                     id='make-private-switch'
                     onChange={togglePrivate}
                     checked={!isPublic}
-                    height={28}
-                    width={60}
                   />
                 </Flexbox>
               </Flexbox>
@@ -267,20 +265,11 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
           </ModalLine>
         )}
         <ModalLine className='justify-end svg-initial-style'>
-          <CustomButton
-            variant='transparent'
-            className='rounded mr-2 size-l'
-            onClick={closeLastModal}
-            type='button'
-          >
+          <Button variant='transparent' onClick={closeLastModal} type='button'>
             Cancel
-          </CustomButton>
-          <CustomButton
-            variant='primary'
-            className='rounded size-l'
-            type='submit'
-            disabled={sending}
-          >
+          </Button>
+          <div className='spacer-sm'></div>
+          <Button variant='primary' type='submit' disabled={sending}>
             {sending ? (
               <Spinner size={16} style={{ fontSize: 16, marginRight: 0 }} />
             ) : workspace != null ? (
@@ -288,7 +277,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
             ) : (
               'Create'
             )}
-          </CustomButton>
+          </Button>
         </ModalLine>
       </StyledModalForm>
     </ModalBody>

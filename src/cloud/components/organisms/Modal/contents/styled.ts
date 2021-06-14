@@ -100,6 +100,10 @@ export const ModalLine = styled.div`
     overflow: hidden auto;
     flex-grow: 1;
   }
+
+  .spacer-sm {
+    width: ${({ theme }) => theme.space.small}px;
+  }
 `
 
 export const ModaLineHeader = styled.h3`
