@@ -1,9 +1,6 @@
 export enum MixpanelActionTrackTypes {
   AccountCreate = 'account.create',
   AccountDelete = 'account.delete',
-  BlockCreate = 'block.create',
-  BlockEdit = 'block.edit',
-  BlockDelete = 'block.delete',
   DocArchive = 'doc.archive',
   DocBookmarkCreate = 'doc.bookmark.create',
   DocBookmarkDelete = 'doc.bookmark.delete',
@@ -151,11 +148,6 @@ export type MixpanelFolderEvent =
   | MixpanelActionTrackTypes.FolderEmoji
   | MixpanelActionTrackTypes.FolderBookmarkCreate
   | MixpanelActionTrackTypes.FolderBookmarkDelete
-
-export type MixpanelBlockEvent =
-  | MixpanelActionTrackTypes.BlockCreate
-  | MixpanelActionTrackTypes.BlockEdit
-  | MixpanelActionTrackTypes.BlockDelete
 
 export type MixpanelOpenInviteEvent =
   | MixpanelActionTrackTypes.OpenInviteCreate
