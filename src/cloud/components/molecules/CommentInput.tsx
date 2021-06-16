@@ -138,7 +138,7 @@ export function CommentInput({
           Post
         </Button>
       </Flexbox>
-      {state.type === 'enabled' && (
+      {state.type === 'enabled' && state.suggestions.length > 0 && (
         <div
           className='comment__input__suggestions'
           style={{

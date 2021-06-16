@@ -135,7 +135,17 @@ const NotificationItem = ({ notification, onClick }: NotificationItemProps) => {
         <div className='notification__item__date'>
           {format(notification.createdAt, 'kk:mm MMM Mo')}
         </div>
-        <div className='notification__item_content'>{notification.content}</div>
+        <div
+          className={cc([
+            'notification__item__context',
+            notification.contextType,
+          ])}
+        >
+          <span>{notification.context}</span>
+        </div>
+        <div className='notification__item__content'>
+          {notification.content}
+        </div>
       </div>
     </NotificationItemContainer>
   )
@@ -239,9 +249,18 @@ const NotificationItemContainer = styled.a`
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
-  & .notification__item_content {
+  & .notification__item__content {
     white-space: pre-wrap;
     word-break: break-word;
+  }
+
+  & .notification__item__context {
+    white-space: nowrap;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+
+    &.mention > span {
+      background-color: #705400;
+    }
   }
 
   & .notification__item__icon {
