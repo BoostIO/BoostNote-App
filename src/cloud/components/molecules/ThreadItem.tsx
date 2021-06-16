@@ -48,7 +48,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           <div
             className={`thread__item__context ${
               thread.selection != null
-                ? 'thrad__item__context--highlighted'
+                ? 'thread__item__context--highlighted'
                 : ''
             }`}
           >
@@ -100,7 +100,7 @@ const StyledListItem = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
 
-      &.thrad__item__context--highlighted {
+      &.thread__item__context--highlighted {
         color: white;
         background-color: #705400;
       }

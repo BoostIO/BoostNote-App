@@ -49,12 +49,12 @@ export interface Actions {
   createComment: (thread: Thread, message: string) => Promise<void | Error>
   updateComment: (comment: Comment, message: string) => Promise<void | Error>
   deleteComment: (comment: Comment) => Promise<void | Error>
-  user?: SerializedUser
 }
 
 interface CommentManagerProps extends Actions {
   state: State
-  users: SerializedUser[]
+  user?: SerializedUser
+  users?: SerializedUser[]
 }
 
 function CommentManager({
@@ -83,6 +83,10 @@ function CommentManager({
       outdated: partitioned.outdated.length,
     }
   }, [partitioned, state])
+
+  const usersOrEmpty = useMemo(() => {
+    return users != null ? users : []
+  }, [users])
 
   const content = useMemo(() => {
     switch (state.mode) {
@@ -129,13 +133,13 @@ function CommentManager({
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 user={user}
-                users={users}
+                users={usersOrEmpty}
               />
               {state.thread.status.type === 'open' && (
                 <CommentInput
                   onSubmit={(message) => createComment(state.thread, message)}
                   autoFocus={true}
-                  users={users}
+                  users={usersOrEmpty}
                 />
               )}
               {state.thread.status.type === 'closed' && (

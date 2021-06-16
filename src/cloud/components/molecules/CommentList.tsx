@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Comment } from '../../interfaces/db/comments'
 import styled from '../../../shared/lib/styled'
 import UserIcon from '../atoms/UserIcon'
@@ -23,7 +23,6 @@ interface CommentThreadProps {
   users: SerializedUser[]
 }
 
-// unnecessary, move up and rename file to CommentItem
 function CommentList({
   comments,
   className,
@@ -32,9 +31,13 @@ function CommentList({
   user,
   users,
 }: CommentThreadProps) {
+  const sorted = useMemo(() => {
+    return sortBy(prop('createdAt'), comments)
+  }, [comments])
+
   return (
     <div className={className}>
-      {sortBy(prop('createdAt'), comments).map((comment) => (
+      {sorted.map((comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}

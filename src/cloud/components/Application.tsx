@@ -763,24 +763,27 @@ function mapToolbarRows(
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
   })
-  rows.push({
-    tooltip: 'Notifications',
-    active: popOverState === 'notifications',
-    icon: newNotifications ? (
-      <NotifyIcon
-        size={26}
-        count={newNotifications}
-        path={mdiBellRingOutline}
-      />
-    ) : (
-      mdiBellOutline
-    ),
-    onClick: () => {
-      setPopOverState((prev) =>
-        prev === 'notifications' ? null : 'notifications'
-      )
-    },
-  })
+
+  if (team != null && !team.personal) {
+    rows.push({
+      tooltip: 'Notifications',
+      active: popOverState === 'notifications',
+      icon: newNotifications ? (
+        <NotifyIcon
+          size={26}
+          count={newNotifications}
+          path={mdiBellRingOutline}
+        />
+      ) : (
+        mdiBellOutline
+      ),
+      onClick: () => {
+        setPopOverState((prev) =>
+          prev === 'notifications' ? null : 'notifications'
+        )
+      },
+    })
+  }
 
   if (team != null && subscription == null && isEligibleForDiscount(team)) {
     rows.push({
