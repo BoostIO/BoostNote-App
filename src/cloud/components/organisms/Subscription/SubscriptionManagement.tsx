@@ -184,12 +184,13 @@ const SubscriptionManagement = ({
               Please check your billing history to handle any unpaid or failed
               charges.
             </p>
-            <StyledBillingButton
+            <Button
               onClick={onInvoiceHistory}
               disabled={fetchingHistory}
+              className='subscription__management__warning'
             >
               Billing History
-            </StyledBillingButton>
+            </Button>
           </Alert>
         )}
         <SubscriptionCostSummary

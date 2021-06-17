@@ -53,6 +53,11 @@ export const SectionIntroduction = styled.div`
     margin: ${({ theme }) => theme.space.medium}px 0
       ${({ theme }) => theme.space.small}px 0;
   }
+
+  & .subscription__management__warning {
+    background-color: transparent;
+    border-color: white;
+  }
 `
 
 export const SectionFlexRow = styled.div`
