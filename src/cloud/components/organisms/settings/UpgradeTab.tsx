@@ -54,7 +54,11 @@ const UpgradeTab = ({
   )
 
   useEffect(() => {
-    if (subscription != null && subscription.status !== 'trialing') {
+    if (
+      subscription != null &&
+      subscription.status !== 'trialing' &&
+      subscription.status !== 'incomplete'
+    ) {
       openSettingsTab('teamSubscription')
     }
   }, [subscription, openSettingsTab])
@@ -70,8 +74,9 @@ const UpgradeTab = ({
       if (usingElectron) {
         sendToElectron('subscription-update', sub)
       }
+      openSettingsTab('teamSubscription')
     },
-    [updateTeamSubscription, usingElectron, sendToElectron]
+    [updateTeamSubscription, usingElectron, sendToElectron, openSettingsTab]
   )
 
   const onCancelCallback = useCallback(() => {
