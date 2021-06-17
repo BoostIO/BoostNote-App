@@ -107,6 +107,8 @@ const SubscriptionForm = ({
               error.message ||
               'Your subscription is pending and needs further action.',
           })
+        } else {
+          result.subscription.status = 'active'
         }
       }
       setSending(false)
