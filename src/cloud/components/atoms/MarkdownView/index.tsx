@@ -43,6 +43,7 @@ import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
 import throttle from 'lodash.throttle'
+import CodeFence from '../../../../components/atoms/markdown/CodeFence'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -217,6 +218,7 @@ const MarkdownView = ({
             </div>
           ) : null
         },
+        pre: CodeFence,
       },
     }
 
