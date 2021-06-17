@@ -8,12 +8,6 @@ interface Element extends Parent {
   properties: { [key: string]: any }
 }
 
-function getMime(name: string) {
-  const modeInfo = CodeMirror.findModeByName(name)
-  if (modeInfo == null) return null
-  return modeInfo.mime || modeInfo.mimes![0]
-}
-
 export interface RehypeCodeMirrorOptions {
   ignoreMissing: boolean
   plainText: string[]
@@ -66,34 +60,44 @@ function rehypeCodeMirror(options: Partial<RehypeCodeMirrorOptions>) {
       }
       parent.properties.className = classNames
 
+      const rawContent = node.children[0].value as string
+      // TODO: Stop using html attribute after exposing HAST Node is shipped
+      parent.properties['data-raw'] = rawContent
+
       if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
         return
       }
 
+      const cmResult = [] as Node[]
       if (lang != null) {
-        const mime = getMime(lang)
-        if (mime != null) {
-          const rawContent = node.children[0].value as string
-          const cmResult = [] as Node[]
-          CodeMirror.runMode(rawContent, mime, (text, style) => {
-            cmResult.push(
-              h(
-                'span',
-                {
-                  className: style
-                    ? 'cm-' + style.replace(/ +/g, ' cm-')
-                    : undefined,
-                },
-                text
-              )
-            )
-          })
-          node.children = cmResult
-          return
-        } else if (!ignoreMissing) {
+        const modeInfo = CodeMirror.findModeByName(lang)
+        if (modeInfo == null) {
+          if (ignoreMissing) {
+            return
+          }
+
           throw new Error(`Unknown language: \`${lang}\` is not registered`)
         }
+        const mime = modeInfo.mime || modeInfo.mimes?.[0]
+        parent.properties['data-ext'] = modeInfo.ext?.[0]
+        parent.properties['data-mime'] = mime
+
+        CodeMirror.runMode(rawContent, mime, (text, style) => {
+          cmResult.push(
+            h(
+              'span',
+              {
+                className: style
+                  ? 'cm-' + style.replace(/ +/g, ' cm-')
+                  : undefined,
+              },
+              text
+            )
+          )
+        })
       }
+
+      node.children = cmResult
     }
 
     // Get the programming language of `node`.
