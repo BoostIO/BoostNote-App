@@ -90,19 +90,15 @@ const SubscriptionForm = ({
     }
 
     try {
-      const {
-        requiresAction,
-        clientSecret,
-        subscription,
-      } = await createSubscription(team, {
+      const result = await createSubscription(team, {
         source: source.id,
         email,
         code: showPromoCode && promoCode.length > 0 ? promoCode : undefined,
         plan: currentPlan,
       })
 
-      if (requiresAction) {
-        const { error } = await stripe.confirmCardPayment(clientSecret)
+      if (result.requiresAction) {
+        const { error } = await stripe.confirmCardPayment(result.clientSecret)
         if (error) {
           pushMessage({
             type: 'info',
@@ -111,11 +107,10 @@ const SubscriptionForm = ({
               error.message ||
               'Your subscription is pending and needs further action.',
           })
-          return setSending(false)
         }
       }
       setSending(false)
-      onSuccess(subscription)
+      onSuccess(result.subscription)
     } catch (error) {
       pushApiErrorMessage(error)
       setSending(false)

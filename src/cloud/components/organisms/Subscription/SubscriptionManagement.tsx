@@ -1,4 +1,4 @@
-import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
+import { mdiGiftOff, mdiOpenInNew, mdiExclamation } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
@@ -177,6 +177,21 @@ const SubscriptionManagement = ({
   return (
     <>
       <SectionIntroduction>
+        {subscription.status === 'incomplete' && (
+          <Alert variant='danger'>
+            <h2>Your payment may require action!</h2>
+            <p>
+              Please check your billing history to handle any unpaid or failed
+              charges.
+            </p>
+            <StyledBillingButton
+              onClick={onInvoiceHistory}
+              disabled={fetchingHistory}
+            >
+              Billing History
+            </StyledBillingButton>
+          </Alert>
+        )}
         <SubscriptionCostSummary
           plan={subscription.plan}
           seats={subscription.seats}
