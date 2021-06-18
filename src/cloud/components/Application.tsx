@@ -416,7 +416,6 @@ const Application = ({
   }, [usingElectron, , sendToElectron, sidebarState])
 
   const treeControls: SidebarTreeControl[] = useMemo(() => {
-    console.log('tree controls')
     return [
       {
         icon:
