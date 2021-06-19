@@ -147,7 +147,7 @@ const MigrationPage = ({ storage }: MigrationPageProps) => {
             </FormSelect>
           </Flexbox>
           <Flexbox justifyContent='space-between'>
-            <p>Workspace</p>
+            <p>Folder</p>
             <div>
               <CloudWorkspaceSelect
                 onChange={selectWorkspace}

@@ -136,7 +136,7 @@ export function mapTreeControls(
   return [
     {
       type: MenuTypes.Normal,
-      label: 'Export Workspace',
+      label: 'Export Folder',
       icon: mdiExport,
       onClick: () =>
         exportDocuments(workspace, {
@@ -447,7 +447,7 @@ export function mapTree(
     })
   }
   tree.push({
-    label: 'Workspace',
+    label: 'Folder',
     rows: navTree,
     controls: [
       {

@@ -195,7 +195,7 @@ const TopLevelNavigator = () => {
                       inputRef={inputRef}
                       defaultIcon={mdiMessageQuestion}
                       defaultInputValue={workspace.name}
-                      placeholder='Workspace name'
+                      placeholder='Folder name'
                       submitButtonProps={{
                         label: t('storage.rename'),
                       }}
@@ -203,7 +203,7 @@ const TopLevelNavigator = () => {
                         if (workspaceName == '' || workspaceName == null) {
                           pushMessage({
                             title: 'Cannot rename workspace',
-                            description: 'Workspace name should not be empty.',
+                            description: 'Folder name should not be empty.',
                           })
                           return
                         }

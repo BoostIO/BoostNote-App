@@ -75,7 +75,7 @@ export function useLocalUI() {
             if (workspaceName == '') {
               pushMessage({
                 title: 'Cannot rename workspace',
-                description: 'Workspace name should not be empty.',
+                description: 'Folder name should not be empty.',
               })
               closeModalAndUpdateState()
               return
