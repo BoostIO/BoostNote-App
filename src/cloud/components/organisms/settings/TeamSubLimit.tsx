@@ -41,7 +41,7 @@ const TeamSubLimit = ({
         >
           <h6>Upgrade to go unlimited</h6>
           <p className='note-limit'>
-            Your workspace&apos;s trial of the Pro plan lasts through{' '}
+            Your folder&apos;s trial of the Pro plan lasts through{' '}
             {currentSubInfo.info.formattedEndDate}
           </p>
           <p className='note-limit'>

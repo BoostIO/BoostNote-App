@@ -74,7 +74,7 @@ export function useLocalUI() {
           onSubmit={async (workspaceName: string) => {
             if (workspaceName == '') {
               pushMessage({
-                title: 'Cannot rename workspace',
+                title: 'Cannot rename folder',
                 description: 'Folder name should not be empty.',
               })
               closeModalAndUpdateState()

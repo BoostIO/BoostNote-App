@@ -198,8 +198,8 @@ const SmartFolderForm = ({
                   </>
                 ) : (
                   <>
-                    The smart folder will become public. Every member on
-                    workspace can see it.
+                    The smart folder will become public. Every member on folder
+                    can see it.
                   </>
                 )}
               </p>

@@ -202,7 +202,7 @@ const TopLevelNavigator = () => {
                       onSubmit={async (workspaceName: string | null) => {
                         if (workspaceName == '' || workspaceName == null) {
                           pushMessage({
-                            title: 'Cannot rename workspace',
+                            title: 'Cannot rename folder',
                             description: 'Folder name should not be empty.',
                           })
                           return
