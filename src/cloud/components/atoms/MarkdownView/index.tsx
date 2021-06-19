@@ -9,7 +9,7 @@ import rehypeReact from 'rehype-react'
 import remarkAdmonitions from 'remark-admonitions'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
-import rehypeCodeMirror from '../../../lib/rehypeCodeMirror'
+import rehypeCodeMirror from '../../../../shared/lib/codemirror/rehypeCodeMirror'
 import rehypeSlug from 'rehype-slug'
 import { useEffectOnce } from 'react-use'
 import { defaultPreviewStyle } from './styles'
@@ -43,7 +43,7 @@ import { mdiCommentTextOutline } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
 import throttle from 'lodash.throttle'
-import CodeFence from '../../../../components/atoms/markdown/CodeFence'
+import CodeFence from '../../../../shared/components/atoms/markdown/CodeFence'
 
 const remarkAdmonitionOptions = {
   tag: ':::',

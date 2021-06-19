@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import CodeMirror from '../../lib/editor/CodeMirror'
+import CodeMirror from '../../../cloud/lib/editor/CodeMirror'
 
 interface HighlightedCodeProps {
   value: string

@@ -20,7 +20,7 @@ import {
   GLOBAL_MERGE_SAME_LINE_RESULTS_INTO_ONE,
 } from '../../lib/search/search'
 import CustomizedCodeEditor from '../atoms/CustomizedCodeEditor'
-import CodeMirror from 'codemirror'
+import CodeMirror from '../../lib/CodeMirror'
 import cc from 'classcat'
 import styled from '../../shared/lib/styled'
 import { BaseTheme } from '../../shared/lib/styled/types'

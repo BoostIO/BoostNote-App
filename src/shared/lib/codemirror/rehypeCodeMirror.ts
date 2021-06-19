@@ -1,4 +1,4 @@
-import CodeMirror from './editor/CodeMirror'
+import CodeMirror from 'codemirror'
 import visit from 'unist-util-visit'
 import h from 'hastscript'
 import { Node, Parent } from 'unist'
@@ -21,6 +21,7 @@ function isElement(node: Node, tagName: string): node is Element {
   return node.tagName === tagName
 }
 
+// todo: [komediruzecki-20/06/2021] Since CodeMirror.getMode is overwritten, maybe we should pass particular CodeMirror instance here
 function rehypeCodeMirror(options: Partial<RehypeCodeMirrorOptions>) {
   const settings = options || {}
   const ignoreMissing = settings.ignoreMissing || false
