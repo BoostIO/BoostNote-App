@@ -1,7 +1,7 @@
 export const cloudSidebaCategoryLabels = [
   'Bookmarks',
   'Smart Folders',
-  'Workspaces',
+  'Folders',
   'Private',
   'Labels',
   'More',

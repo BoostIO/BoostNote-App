@@ -591,7 +591,7 @@ export function useCloudSidebarTree() {
     })
 
     tree.push({
-      label: 'Workspaces',
+      label: 'Folders',
       rows: navTree,
       controls: currentUserIsCoreMember
         ? [
