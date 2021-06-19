@@ -147,7 +147,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
           await submitEditWorkSpaceHandler(team, workspace, body)
           pushMessage({
             title: 'Success',
-            description: 'Your workspace has been updated',
+            description: 'Your folder has been updated',
             type: 'success',
           })
         } else {
@@ -202,7 +202,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
             </ModalLine>
             <ModalLine style={{ marginBottom: 30 }}>
               <span>
-                This default workspace is public and can&apos;t have its access
+                This default folder is public and can&apos;t have its access
                 modified.
               </span>
             </ModalLine>
@@ -216,11 +216,11 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
               <Flexbox justifyContent='space-between'>
                 {isPublic ? (
                   <span>
-                    This workspace is public. Anyone from the team can access it
+                    This folder is public. Anyone from the team can access it
                   </span>
                 ) : (
                   <span>
-                    This workspace is private.{' '}
+                    This folder is private.{' '}
                     {isOwner && 'You can set individual member access below.'}
                   </span>
                 )}
@@ -242,7 +242,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         )}
 
         {!isOwner && (
-          <small>Only the workspace owner can change its access.</small>
+          <small>Only the folder owner can change its access.</small>
         )}
 
         {!isPublic && (

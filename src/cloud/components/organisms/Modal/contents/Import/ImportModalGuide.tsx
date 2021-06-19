@@ -66,7 +66,7 @@ const ImportModalGuide = ({
                 Settings
               </li>
               <li>
-                Scroll down to Export, and click Export all workspace content
+                Scroll down to Export, and click Export all folder content
               </li>
               <li>Export file as Markdown or HTML</li>
               <li>Upload files in Boost Note for Teams</li>

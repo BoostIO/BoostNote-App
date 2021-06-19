@@ -23,7 +23,7 @@ const WorkspaceShowPage = ({
       <Application content={{}}>
         <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
           <h3>Oops...</h3>
-          <p>The workspace has been deleted.</p>
+          <p>The folder has been deleted.</p>
         </ColoredBlock>
       </Application>
     )

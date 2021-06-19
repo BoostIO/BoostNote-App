@@ -43,7 +43,7 @@ export function useCloudSidebarDnd() {
       if (draggedResource.current.result.workspaceId === workspaceId) {
         pushMessage({
           title: 'Oops',
-          description: 'Resource is already present in this workspace',
+          description: 'Resource is already present in this folder',
         })
         return
       }

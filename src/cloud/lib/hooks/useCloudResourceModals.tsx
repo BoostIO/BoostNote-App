@@ -195,8 +195,8 @@ export function useCloudResourceModals() {
         return
       }
       messageBox({
-        title: `Delete the workspace?`,
-        message: `Are you sure to delete this workspace? You will not be able to revert this action.`,
+        title: `Delete the folder?`,
+        message: `Are you sure to delete this folder? You will not be able to revert this action.`,
         buttons: [
           {
             variant: 'secondary',

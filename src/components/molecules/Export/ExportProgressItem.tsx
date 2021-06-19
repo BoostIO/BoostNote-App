@@ -359,8 +359,8 @@ const ExportProgressItem = ({
     const storage = storageMap[workspaceId]
     if (!storage) {
       pushMessage({
-        title: 'Cannot find workspace',
-        description: 'Please check workspace exists and try again later.',
+        title: 'Cannot find folder',
+        description: 'Please check folder exists and try again later.',
       })
       console.warn('Folder ID cannot be found: ' + workspaceId)
       return
