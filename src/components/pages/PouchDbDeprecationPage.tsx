@@ -29,7 +29,7 @@ const PouchDbDeprecationPage = () => {
               {
                 type: 'button',
                 props: {
-                  label: 'Convert to File System Workspace',
+                  label: 'Convert to File System Folder',
                   onClick: () => openTab('storage'),
                 },
               },
@@ -48,7 +48,7 @@ const PouchDbDeprecationPage = () => {
           },
           {
             title:
-              'You can also export the storage by selecting an app navigator tree, clicking on the context menu of workspace item and selecting "Export Workspace".',
+              'You can also export the storage by selecting an app navigator tree, clicking on the context menu of workspace item and selecting "Export Folder".',
             description:
               'Follow further export options and instructions to export all of your notes in desired format. Modify export options in Preferences | Export Settings tab.',
           },

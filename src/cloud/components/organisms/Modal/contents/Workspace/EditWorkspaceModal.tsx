@@ -9,7 +9,7 @@ interface EditWorkspaceModalProps {
 const EditWorkspaceModal = ({ workspace }: EditWorkspaceModalProps) => {
   return (
     <ModalContainer style={{ overflow: 'auto ' }}>
-      <h2 style={{ margin: 0 }}>Edit your Workspace</h2>
+      <h2 style={{ margin: 0 }}>Edit your Folder</h2>
       <WorkspaceModalForm workspace={workspace} />
     </ModalContainer>
   )

@@ -141,7 +141,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
       setSending(true)
       try {
         if (body.name.trim() === '') {
-          throw new Error('Workspace name has to be filled.')
+          throw new Error('Folder name has to be filled.')
         }
         if (workspace != null) {
           await submitEditWorkSpaceHandler(team, workspace, body)
@@ -189,7 +189,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         </ModalLine>
         <ModalLine className='svg-initial-style' style={{ marginBottom: 30 }}>
           <StyledModalFormInput
-            placeholder='Workspace name'
+            placeholder='Folder name'
             value={name}
             onChange={onChangeWorkspaceNameHandler}
           />

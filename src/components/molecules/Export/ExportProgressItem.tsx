@@ -362,7 +362,7 @@ const ExportProgressItem = ({
         title: 'Cannot find workspace',
         description: 'Please check workspace exists and try again later.',
       })
-      console.warn('Workspace ID cannot be found: ' + workspaceId)
+      console.warn('Folder ID cannot be found: ' + workspaceId)
       return
     }
 

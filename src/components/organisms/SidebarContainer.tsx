@@ -153,7 +153,7 @@ const SidebarContainer = ({
           },
           {
             type: 'normal',
-            label: 'Export Workspace',
+            label: 'Export Folder',
             click: () =>
               exportDocuments(workspace, {
                 folderName: workspace.name,

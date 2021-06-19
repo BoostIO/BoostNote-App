@@ -5,7 +5,7 @@ import WorkspaceModalForm from './WorkspaceModalForm'
 const CreateWorkspaceModal = () => {
   return (
     <ModalContainer style={{ overflow: 'auto' }}>
-      <h2 style={{ margin: 0 }}>Create a Workspace</h2>
+      <h2 style={{ margin: 0 }}>Create a Folder</h2>
       <WorkspaceModalForm />
     </ModalContainer>
   )
