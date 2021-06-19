@@ -23,12 +23,8 @@ const dispatchModeLoad = debounce(() => {
 }, 300)
 
 export async function requireMode(mode: string) {
-  try {
-    await import(`codemirror/mode/${mode}/${mode}.js`)
-    dispatchModeLoad()
-  } catch (error) {
-    console.warn(error)
-  }
+  await import(`codemirror/mode/${mode}/${mode}.js`)
+  dispatchModeLoad()
 }
 
 export function getCodeMirrorTheme(theme?: string) {
@@ -53,8 +49,16 @@ function loadMode(_CodeMirror: any) {
     const modeObj = originalGetMode(config, mime)
     if (modeObj.name === 'null' && typeof mime === 'string') {
       const mode = findModeByMIME(mime)
-      if (mode != null) {
-        requireMode(mode.mode)
+      if (
+        mode != null &&
+        mode.mode != null &&
+        mode.mode !== 'null' &&
+        // the user set mime string to 'null', leads codemirror to constantly rerender the mode PEG.js ('pegjs')
+        mode.mime !== 'null'
+      ) {
+        requireMode(mode.mode).catch((error) => {
+          console.warn(error)
+        })
       }
     }
     return modeObj
