@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
-import unified, { Plugin } from 'unified'
+import unified from 'unified'
 import remarkEmoji from 'remark-emoji'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
@@ -12,16 +12,12 @@ import rehypeReact from 'rehype-react'
 import rehypeKatex from 'rehype-katex'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { mergeDeepRight } from 'ramda'
-import visit from 'unist-util-visit'
-import { Node, Parent } from 'unist'
-import CodeMirror from '../../lib/CodeMirror'
-import h from 'hastscript'
 import cc from 'classcat'
 import { openNew } from '../../lib/platform'
 import { Attachment, ObjectMap } from '../../lib/db/types'
 import MarkdownCheckbox from './markdown/MarkdownCheckbox'
 import AttachmentImage from './markdown/AttachmentImage'
-import CodeFence from './markdown/CodeFence'
+import CodeFence from '../../shared/components/atoms/markdown/CodeFence'
 import {
   Chart,
   Flowchart,
@@ -31,6 +27,7 @@ import {
 } from '../../cloud/lib/charts'
 import { rehypePosition } from '../../cloud/lib/rehypePosition'
 import styled from '../../shared/lib/styled'
+import rehypeCodeMirror from '../../shared/lib/codemirror/rehypeCodeMirror'
 
 const schema = mergeDeepRight(gh, {
   attributes: {
@@ -52,127 +49,6 @@ const schema = mergeDeepRight(gh, {
     'iframe',
   ],
 })
-
-interface Element extends Parent {
-  type: 'element'
-  properties: { [key: string]: any }
-}
-
-interface RehypeCodeMirrorOptions {
-  ignoreMissing: boolean
-  plainText: string[]
-  theme: string
-}
-
-function isElement(node: Node | undefined, tagName: string): node is Element {
-  if (node == null) {
-    return false
-  }
-  return node.tagName === tagName
-}
-
-function rehypeCodeMirrorAttacher(options: Partial<RehypeCodeMirrorOptions>) {
-  const settings = options || {}
-  const ignoreMissing = settings.ignoreMissing || false
-  const theme = settings.theme || 'default'
-  const plainText = settings.plainText || []
-  return function (tree: Node) {
-    visit<Element>(tree, 'element', visitor)
-
-    return tree
-
-    function visitor(node: Element, _index: number, parent?: Node) {
-      if (!isElement(parent, 'pre') || !isElement(node, 'code')) {
-        return
-      }
-
-      const lang = language(node)
-
-      const classNames =
-        parent.properties.className != null
-          ? [...parent.properties.className]
-          : []
-      if (theme === 'solarized-dark') {
-        classNames.push(`cm-s-solarized`, `cm-s-dark`, 'CodeMirror')
-      } else {
-        classNames.push(`cm-s-${theme}`, 'CodeMirror')
-      }
-      if (lang != null) {
-        classNames.push('language-' + lang)
-      }
-      parent.properties.className = classNames
-
-      const rawContent = node.children[0].value as string
-      // TODO: Stop using html attribute after exposing HAST Node is shipped
-      parent.properties['data-raw'] = rawContent
-
-      if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
-        return
-      }
-
-      const cmResult = [] as Node[]
-      if (lang != null) {
-        const modeInfo = CodeMirror.findModeByName(lang)
-        if (modeInfo == null) {
-          if (ignoreMissing) {
-            return
-          }
-
-          throw new Error(`Unknown language: \`${lang}\` is not registered`)
-        }
-        const mime = modeInfo.mime || modeInfo.mimes?.[0]
-        parent.properties['data-ext'] = modeInfo.ext?.[0]
-        parent.properties['data-mime'] = mime
-
-        CodeMirror.runMode(rawContent, mime, (text, style) => {
-          cmResult.push(
-            h(
-              'span',
-              {
-                className: style
-                  ? 'cm-' + style.replace(/ +/g, ' cm-')
-                  : undefined,
-              },
-              text
-            )
-          )
-        })
-      }
-
-      node.children = cmResult
-    }
-
-    // Get the programming language of `node`.
-    function language(node: Element) {
-      const className = node.properties.className || []
-      const length = className.length
-      let index = -1
-      let value
-
-      while (++index < length) {
-        value = className[index]
-
-        if (value === 'no-highlight' || value === 'nohighlight') {
-          return false
-        }
-
-        if (value.slice(0, 5) === 'lang-') {
-          return value.slice(5)
-        }
-
-        if (value.slice(0, 9) === 'language-') {
-          return value.slice(9)
-        }
-      }
-
-      return null
-    }
-  }
-}
-
-export const rehypeCodeMirror = rehypeCodeMirrorAttacher as Plugin<
-  [Partial<RehypeCodeMirrorOptions>?]
->
 
 interface MarkdownPreviewerProps {
   content: string

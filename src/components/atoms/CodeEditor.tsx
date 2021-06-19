@@ -1,5 +1,5 @@
 import React from 'react'
-import CodeMirror, { getCodeMirrorTheme } from '../../lib/CodeMirror'
+import { getCodeMirrorTheme } from '../../lib/CodeMirror'
 import {
   EditorIndentTypeOptions,
   EditorIndentSizeOptions,
@@ -8,6 +8,7 @@ import {
 import { osName } from '../../lib/platform'
 import styled from '../../shared/lib/styled'
 import { borderRight } from '../../shared/lib/styled/styleFunctions'
+import CodeMirror from '../../lib/CodeMirror'
 
 const StyledContainer = styled.div`
   .CodeMirror {

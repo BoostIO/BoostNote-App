@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import CodeMirror from '../CodeMirror'
+import CodeMirror from '../../editor/CodeMirror'
 import { CodeMirrorBinding } from 'y-codemirror'
 import { useEffectOnce } from 'react-use'
 import { WebsocketProvider } from 'y-websocket'
