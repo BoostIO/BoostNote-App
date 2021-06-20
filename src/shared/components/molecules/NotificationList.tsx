@@ -63,16 +63,23 @@ const NotificationList = ({
             <Spinner />
           </div>
         )}
-        {state.type !== 'loading' && notifications.length > 0 ? (
+        {state.type !== 'loading' && (
           <>
-            {' '}
-            {notifications.map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                notification={notification}
-                onClick={onClick}
-              />
-            ))}
+            {notifications.length > 0 ? (
+              notifications.map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                  onClick={onClick}
+                />
+              ))
+            ) : (
+              <div className='notification__list__empty'>
+                <Icon path={mdiBellOutline} /> No{' '}
+                {tab === 'inbox' ? 'new ' : ''}
+                notifications
+              </div>
+            )}
             {tab === 'all' && (
               <div className='notification__list__more'>
                 {state.type === 'working' ? (
@@ -83,11 +90,6 @@ const NotificationList = ({
               </div>
             )}
           </>
-        ) : (
-          <div className='notification__list__empty'>
-            <Icon path={mdiBellOutline} /> No {tab === 'inbox' ? 'new ' : ''}
-            notifications
-          </div>
         )}
       </div>
     </NotificationListContainer>
@@ -124,13 +126,17 @@ const NotificationItem = ({ notification, onClick }: NotificationItemProps) => {
         ])}
       ></div>
       {notification.source != null ? (
-        <UserIcon style={smallUserIconStyle} user={notification.source} />
+        <UserIcon
+          className='notification__item__user'
+          style={smallUserIconStyle}
+          user={notification.source}
+        />
       ) : (
         <div className='notification__item__icon'>
           <Icon path={mdiAlertCircleOutline} size={20} />
         </div>
       )}
-      <div>
+      <div className='notification__item__content'>
         <div className='notification__item__title'>{notification.title}</div>
         <div className='notification__item__date'>
           {format(notification.createdAt, 'kk:mm MMM Mo')}
@@ -211,7 +217,8 @@ const NotificationListContainer = styled.div`
 
 const NotificationItemContainer = styled.a`
   text-decoration: none;
-  padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
+  padding: ${({ theme }) => theme.sizes.spaces.df}px
+    ${({ theme }) => theme.sizes.spaces.sm}px;
   display: flex;
   align-items: baseline;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -219,10 +226,7 @@ const NotificationItemContainer = styled.a`
   & > div {
     &:not(:last-child) {
       margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-    }
-
-    &:first-child {
-      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+      flex: 0 0 auto;
     }
   }
 
@@ -231,12 +235,18 @@ const NotificationItemContainer = styled.a`
   }
 
   & .notification__item__viewed__indicator {
+    flex: 0 0 auto;
     width: ${({ theme }) => theme.sizes.spaces.sm}px;
     height: ${({ theme }) => theme.sizes.spaces.sm}px;
     border-radius: 50%;
     &.notification__item__viewed__indicator--unviewed {
       background-color: ${({ theme }) => theme.colors.variants.tertiary.base};
     }
+  }
+
+  & .notification__item__content {
+    flex: 0 1 auto;
+    min-width: 200px;
   }
 
   & .notification__item__title {
@@ -258,8 +268,12 @@ const NotificationItemContainer = styled.a`
     white-space: nowrap;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
 
-    &.mention > span {
-      background-color: #705400;
+    &.mention {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      & > span {
+        background-color: #705400;
+      }
     }
   }
 
