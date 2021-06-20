@@ -13,6 +13,7 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { UpgradeTabOpeningOptions } from '../../../components/organisms/settings/UpgradeTab'
 
 export const baseUserSettings: UserSettings = {
+  'general.language': 'en-US',
   'general.theme': 'dark',
   'general.editorTheme': 'default',
   'general.codeBlockTheme': 'default',
