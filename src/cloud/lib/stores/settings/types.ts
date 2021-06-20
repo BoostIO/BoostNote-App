@@ -1,9 +1,11 @@
 export type GeneralThemeOptions = 'light' | 'dark'
 export type GeneralEditorIndentType = 'spaces' | 'tab'
 export type GeneralEditorIndentSize = 2 | 4 | 8
+export type GeneralLanguageOptions = 'en-US' | 'ja' | 'fr' | 'kr'
 
 export interface UserSettings {
   // General
+  'general.language': GeneralLanguageOptions
   'general.theme': GeneralThemeOptions
   'general.editorTheme': CodeMirrorEditorTheme
   'general.codeBlockTheme': CodeMirrorEditorTheme
