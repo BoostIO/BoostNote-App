@@ -16,7 +16,6 @@ import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel
 import Form from '../../../../shared/components/molecules/Form'
 import FormSelect, {
   FormSelectOption,
-  SimpleFormSelect,
 } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 import { lngKeys } from '../../../lib/i18n/types'
@@ -81,9 +80,9 @@ const UserPreferencesForm = () => {
   )
 
   const selectIndentType = useCallback(
-    (value: string) => {
+    (option: FormSelectOption) => {
       setSettings({
-        'general.editorIndentType': value as GeneralEditorIndentType,
+        'general.editorIndentType': option.value as GeneralEditorIndentType,
       })
     },
     [setSettings]
@@ -203,14 +202,21 @@ const UserPreferencesForm = () => {
           title: t(lngKeys.SettingsIndentType),
           items: [
             {
-              type: 'node',
-              element: (
-                <SimpleFormSelect
-                  value={settings['general.editorIndentType']}
-                  onChange={selectIndentType}
-                  options={['spaces', 'tab']}
-                />
-              ),
+              type: 'select',
+              props: {
+                value: {
+                  label:
+                    settings['general.editorIndentType'] === 'spaces'
+                      ? t(lngKeys.Spaces)
+                      : t(lngKeys.Tabs),
+                  value: settings['general.editorIndentType'],
+                },
+                onChange: selectIndentType,
+                options: [
+                  { label: t(lngKeys.Spaces), value: 'spaces' },
+                  { label: t(lngKeys.Tabs), value: 'tab' },
+                ],
+              },
             },
           ],
         },

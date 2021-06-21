@@ -39,6 +39,7 @@ import SettingSidenav from '../../../../shared/components/organisms/Settings/mol
 import AppFeedbackForm from '../../molecules/AppFeedbackForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import { intercomAppId } from '../../../lib/consts'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -153,38 +154,42 @@ const SettingsComponent = () => {
         >
           <SettingSidenavHeader
             path={mdiAccountCircleOutline}
-            text={'Account'}
+            text={t(lngKeys.SettingsAccount)}
             size={16}
           />
           <SettingNavButtonItem
-            label={t('settings.personalInfo')}
+            label={t(lngKeys.SettingsPersonalInfo)}
             active={settingsTab === 'personalInfo'}
             id='settings-personalInfoTab-btn'
             onClick={() => openSettingsTab('personalInfo')}
           />
           <SettingNavButtonItem
-            label={t('settings.preferences')}
+            label={t(lngKeys.SettingsPreferences)}
             active={settingsTab === 'preferences'}
             id='settings-preferences-btn'
             onClick={() => openSettingsTab('preferences')}
           />
-          <SettingSidenavHeader path={mdiDomain} text={'Space'} size={16} />
+          <SettingSidenavHeader
+            path={mdiDomain}
+            text={t(lngKeys.SettingsSpace)}
+            size={16}
+          />
           {currentUserPermissions != null && (
             <>
               <SettingNavButtonItem
-                label={t('settings.teamInfo')}
+                label={t(lngKeys.SettingsTeamInfo)}
                 active={settingsTab === 'teamInfo'}
                 id='settings-teamInfoTab-btn'
                 onClick={() => openSettingsTab('teamInfo')}
               />
               <SettingNavButtonItem
-                label={t('settings.teamMembers')}
+                label={t(lngKeys.SettingsTeamMembers)}
                 active={settingsTab === 'teamMembers'}
                 id='settings-teamMembersTab-btn'
                 onClick={() => openSettingsTab('teamMembers')}
               />
               <SettingNavButtonItem
-                label={t('settings.integrations')}
+                label={t(lngKeys.SettingsIntegrations)}
                 active={settingsTab === 'integrations'}
                 id='settings-integrationsTab-btn'
                 onClick={() => openSettingsTab('integrations')}
@@ -203,14 +208,14 @@ const SettingsComponent = () => {
               <>
                 {subscription == null || subscription.status === 'trialing' ? (
                   <SettingNavButtonItem
-                    label={t('settings.teamUpgrade')}
+                    label={t(lngKeys.SettingsTeamUpgrade)}
                     active={settingsTab === 'teamUpgrade'}
                     id='settings-teamUpgradeTab-btn'
                     onClick={() => openSettingsTab('teamUpgrade')}
                   />
                 ) : (
                   <SettingNavButtonItem
-                    label={t('settings.teamSubscription')}
+                    label={t(lngKeys.SettingsTeamSubscription)}
                     active={settingsTab === 'teamSubscription'}
                     id='settings-teamBillingTab-btn'
                     onClick={() => openSettingsTab('teamSubscription')}
@@ -225,7 +230,7 @@ const SettingsComponent = () => {
             size={16}
           />
           <SettingNavLinkItem
-            label='User Forum (New!)'
+            label={t(lngKeys.SettingsUserForum)}
             href='https://forum.boostnote.io/'
             id='forum-link'
           />

@@ -1,5 +1,6 @@
 export enum lngKeys {
   GeneralError = 'general.error',
+  GeneralCreate = 'general.create',
   GeneralCancel = 'general.cancel',
   GeneralUpdate = 'general.update',
   GeneralAttachments = 'general.attachments',
@@ -41,16 +42,22 @@ export enum lngKeys {
   SettingsNotifFrequencies = 'settings.notificationsFrequency',
   SettingsIndentType = 'settings.indentType',
   SettingsIndentSize = 'settings.indentSize',
-
+  SettingsSpace = 'settings.space',
+  SettingsSpaceDelete = 'settings.space.delete',
+  SettingsSpaceDeleteWarning = 'settings.space.delete.warning',
   CommunityFeatureRequests = 'community.feature.requests',
-
   ManagePreferences = 'manage.preferences',
   ManageProfile = 'manage.profile',
+  ManageSpaceSettings = 'manage.space.settings',
   ProfilePicture = 'profile.picture',
   Name = 'name',
   SettingsAccountDeleteWarning = 'settings.account.delete.warning',
+  FormSelectImage = 'form.image.select',
+  FormChangeImage = 'form.image.change',
+  Spaces = 'spaces',
+  Tabs = 'tabs',
 
-  SelectImage = 'select.image',
+  SettingsUserForum = 'settings.user.forum',
 }
 
 export type TranslationSource = {

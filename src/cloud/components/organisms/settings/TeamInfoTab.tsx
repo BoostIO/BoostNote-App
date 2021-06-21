@@ -7,6 +7,7 @@ import TeamLink from '../../atoms/Link/TeamLink'
 import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import ViewerRestrictedWrapper from '../../molecules/ViewerRestrictedWrapper'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const TeamInfoTab = () => {
   const { team, currentUserPermissions } = usePage<PageStoreWithTeam>()
@@ -26,16 +27,15 @@ const TeamInfoTab = () => {
     return (
       <>
         <section>
-          <h2>Delete Space</h2>
+          <h2>{t(lngKeys.SettingsSpaceDelete)}</h2>
           <p className='text--subtle'>
-            Once you delete this space we will remove all associated data. There
-            is no turning back.{' '}
+            {t(lngKeys.SettingsSpaceDeleteWarning)}{' '}
             <TeamLink
               intent='delete'
               team={team}
               beforeNavigate={() => closeSettingsTab()}
             >
-              {t('general.delete')}
+              {t(lngKeys.GeneralDelete)}
             </TeamLink>
           </p>
         </section>
@@ -49,8 +49,8 @@ const TeamInfoTab = () => {
 
   return (
     <SettingTabContent
-      title={t('settings.teamInfo')}
-      description={'Manage your space settings.'}
+      title={t(lngKeys.SettingsTeamInfo)}
+      description={t(lngKeys.ManageSpaceSettings)}
       body={
         <ViewerRestrictedWrapper>
           <section>
@@ -59,7 +59,7 @@ const TeamInfoTab = () => {
         </ViewerRestrictedWrapper>
       }
       footer={adminContent}
-    ></SettingTabContent>
+    />
   )
 }
 
