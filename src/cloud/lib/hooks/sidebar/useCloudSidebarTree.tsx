@@ -409,6 +409,7 @@ export function useCloudSidebarTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
+        archived: doc.archivedAt != null,
         hidden:
           doc.archivedAt != null ||
           doc.status === 'archived' ||
