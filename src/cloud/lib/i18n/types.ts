@@ -51,6 +51,7 @@ export enum lngKeys {
   ManageSpaceSettings = 'manage.space.settings',
   ProfilePicture = 'profile.picture',
   Name = 'name',
+  Logo = 'logo',
   SettingsAccountDeleteWarning = 'settings.account.delete.warning',
   FormSelectImage = 'form.image.select',
   FormChangeImage = 'form.image.change',

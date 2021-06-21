@@ -121,7 +121,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       onSubmit={updateHandler}
       rows={[
         {
-          title: 'Logo',
+          title: t(lngKeys.Logo),
           items: [
             {
               type: 'image',

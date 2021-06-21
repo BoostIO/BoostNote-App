@@ -68,6 +68,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.Name]: 'Nom',
   [lngKeys.Spaces]: 'espaces',
   [lngKeys.Tabs]: 'tabulations',
+  [lngKeys.Logo]: 'Logo',
 }
 
 export default {
