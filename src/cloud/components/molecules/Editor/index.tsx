@@ -1158,9 +1158,15 @@ const StyledLoadingView = styled.div`
 const ToolbarRow = styled.div`
   display: flex;
   flex-wrap: nowrap;
-  align-items: end;
-  margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
-  border-bottom: solid 1px ${({ theme }) => theme.divideBorderColor};
+  position: absolute;
+  bottom: ${({ theme }) => theme.space.large}px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: fit-content;
+  background-color: ${({ theme }) => theme.boldBackgroundColor};
+  border: solid 1px ${({ theme }) => theme.divideBorderColor};
+  border-radius: 5px;
 `
 
 const StyledEditorWrapper = styled.div`

@@ -55,7 +55,7 @@ export const StyledEditorToolDropdownContainer = styled.div`
   z-index: 9000;
   position: absolute;
   padding: ${({ theme }) => theme.space.xsmall}px 0;
-  width: auto;
+  width: 110px;
   height: auto;
   min-width: 100%;
   border-style: solid;
@@ -65,7 +65,7 @@ export const StyledEditorToolDropdownContainer = styled.div`
   flex-direction: column;
   border: none;
   left: 0;
-  top: 100%;
+  bottom: 100%;
   background-color: ${({ theme }) => theme.baseBackgroundColor};
   box-shadow: ${({ theme }) => theme.baseShadowColor};
 `

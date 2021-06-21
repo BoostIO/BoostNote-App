@@ -8,7 +8,6 @@ import {
   useGlobalKeyDownHandler,
   useUpDownNavigationListener,
 } from '../../../lib/keyboard'
-import ControlsContextMenuBackground from '../../organisms/Topbar/Controls/ControlsContextMenu/ControlsContextMenuBackground'
 import {
   mdiFormatHeader1,
   mdiFormatHeader2,
@@ -80,7 +79,6 @@ const EditorHeaderToolDropdown = ({
 
   return (
     <>
-      <ControlsContextMenuBackground closeContextMenu={closeDropdowndown} />
       <StyledEditorToolDropdownContainer ref={menuRef} onBlur={onBlurHandler}>
         {options.map((option) => (
           <ContextMenuItem
@@ -107,9 +105,12 @@ export default EditorHeaderToolDropdown
 const StyledMenuItem = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 `
 
 const StyledIcon = styled.div`
+  display: flex;
+  align-items: center;
   padding-right: ${({ theme }) => theme.space.small}px;
   font-size: 21px;
 `
