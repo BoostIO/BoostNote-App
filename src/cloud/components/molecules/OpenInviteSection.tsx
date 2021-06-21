@@ -23,12 +23,16 @@ import copy from 'copy-to-clipboard'
 import Form from '../../../shared/components/molecules/Form'
 import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
+import { lngKeys } from '../../lib/i18n/types'
+import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
+import { useI18n } from '../../lib/hooks/useI18n'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
 }
 
 const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
+  const { t, getRoleLabel } = useI18n()
   const { team } = usePage()
   const [fetching, setFetching] = useState<boolean>(true)
   const [sending, setSending] = useState<boolean>(false)
@@ -36,7 +40,9 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
   const mountedRef = useRef(false)
-  const [copyButtonLabel, setCopyButtonLabel] = useState<string>('Copy')
+  const [copyButtonLabel, setCopyButtonLabel] = useState<string>(
+    t(lngKeys.Copy)
+  )
   const [selectedInviteRole, setSelectedInviteRole] = useState<
     TeamPermissionType
   >('member')
@@ -99,8 +105,8 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     }
 
     messageBox({
-      title: `Cancel invite?`,
-      message: `Are you sure to cancel this invite? The current links will be depreciated.`,
+      title: t(lngKeys.CancelInvite),
+      message: t(lngKeys.CancelInviteOpenLinkMessage),
       iconType: DialogIconTypes.Warning,
       buttons: [
         {
@@ -111,7 +117,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
         {
           variant: 'danger',
-          label: 'Delete',
+          label: t(lngKeys.GeneralDelete),
           onClick: async () => {
             //remove
             setSending(true)
@@ -127,7 +133,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
       ],
     })
-  }, [messageBox, team, pushApiErrorMessage])
+  }, [messageBox, team, pushApiErrorMessage, t])
 
   const toggleOpenInvite = useCallback(() => {
     if (openInvites.length !== 0) {
@@ -164,11 +170,11 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     }
 
     copy(selectedInvite.link)
-    setCopyButtonLabel('✓ Copied')
+    setCopyButtonLabel(`✓ ${t(lngKeys.Copied)}`)
     setTimeout(() => {
-      setCopyButtonLabel('Copy')
+      setCopyButtonLabel(t(lngKeys.Copy))
     }, 600)
-  }, [selectedInvite])
+  }, [selectedInvite, t])
 
   if (openInvites.length === 0 && userPermissions.role === 'viewer') {
     return null
@@ -177,7 +183,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   return (
     <section>
       <StyledFlex>
-        <h2 style={{ margin: 0 }}>Invite with an open Link</h2>
+        <h2 style={{ margin: 0 }}>{t(lngKeys.InviteWithOpenLink)}</h2>
         {userPermissions.role !== 'viewer' && (
           <Switch
             disabled={fetching || sending}
@@ -203,12 +209,20 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
               <FormRowItem
                 flex='0 0 150px'
                 item={{
-                  type: 'select--string',
+                  type: 'select',
                   props: {
-                    value: selectedInvite.role,
-                    onChange: (val) =>
-                      setSelectedInviteRole(val as TeamPermissionType),
-                    options: openInvites.map((invite) => invite.role),
+                    value: {
+                      label: getRoleLabel(selectedInvite.role),
+                      value: selectedInvite.role,
+                    },
+                    onChange: (val: FormSelectOption) =>
+                      setSelectedInviteRole(val.value as TeamPermissionType),
+                    options: openInvites.map((invite) => {
+                      return {
+                        label: getRoleLabel(invite.role),
+                        value: invite.role,
+                      }
+                    }),
                   },
                 }}
               />

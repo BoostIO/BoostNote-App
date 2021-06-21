@@ -48,7 +48,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       slugify(domain.trim().replace(/[^a-zA-Z0-9\-]/g, ''), {
         replacement: '-',
         lower: true,
-      })
+      }).toLocaleLowerCase()
     )
   }, [domain])
 
@@ -114,7 +114,9 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
     ]
   )
 
-  const label = teamConversion ? 'Team' : 'Space'
+  const labels = teamConversion
+    ? { name: t(lngKeys.TeamName), domain: t(lngKeys.TeamDomain) }
+    : { name: t(lngKeys.SpaceName), domain: t(lngKeys.SpaceDomain) }
 
   return (
     <Form
@@ -134,7 +136,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
           ],
         },
         {
-          title: `${label} name`,
+          title: labels.name,
           items: [
             {
               type: 'input',
@@ -155,7 +157,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       {teamConversion && team.personal && (
         <FormRow
           row={{
-            title: `${label} domain`,
+            title: labels.domain,
             items: [
               {
                 type: 'input',
@@ -168,11 +170,11 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
             description: (
               <Description>
                 <div className='description'>
-                  Your url will look like this:
+                  {t(lngKeys.TeamDomainShow)}
                   <span className='underlined'>{slugDomain}</span>
                 </div>
                 <div className='description'>
-                  Caution: You can&#39;t change it after creating your team.
+                  {t(lngKeys.TeamDomainWarning)}
                 </div>
               </Description>
             ),
