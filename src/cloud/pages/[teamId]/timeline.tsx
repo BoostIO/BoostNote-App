@@ -21,6 +21,7 @@ import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { useRouter } from '../../lib/router'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
 import { topParentId } from '../../lib/mappers/topbarTree'
+import { useNav } from '../../lib/stores/nav'
 
 export interface TimelineUser {
   user: SerializedUser
@@ -31,6 +32,7 @@ export interface TimelineUser {
 const TimelinePage = ({ team, events }: TimelinePageData) => {
   const { push } = useRouter()
   const { permissions = [] } = usePage()
+  const { workspacesMap } = useNav()
 
   const { today, thisWeek, others } = useMemo(() => {
     const todayDate = new Date()
@@ -117,7 +119,6 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
       <LazyDefaultLayout>
         <Application
           content={{
-            reduced: true,
             topbar: {
               breadcrumbs: [
                 {
@@ -132,16 +133,6 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                 },
               ],
             },
-            header: (
-              <>
-                <EmojiIcon
-                  defaultIcon={mdiClockOutline}
-                  style={{ marginRight: 10 }}
-                  size={16}
-                />
-                <span style={{ marginRight: 10 }}>Timeline</span>
-              </>
-            ),
           }}
         >
           <StyledTimelinePage>
@@ -152,6 +143,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                 events={today}
                 usersMap={usersMap}
                 timeFormat={dateFormatDistanceToNow}
+                workspacesMap={workspacesMap}
               />
             ) : (
               <>
@@ -164,6 +156,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
               team={team}
               events={thisWeek}
               usersMap={usersMap}
+              workspacesMap={workspacesMap}
             />
 
             <TimelineList
@@ -171,6 +164,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
               team={team}
               events={others}
               usersMap={usersMap}
+              workspacesMap={workspacesMap}
             />
             {events.length !== 10 && events.length % 10 === 0 && (
               <div className='more-button'>
@@ -217,8 +211,9 @@ const StyledTimelinePage = styled.div`
   h2 {
     color: ${({ theme }) => theme.subtleTextColor};
     font-size: ${({ theme }) => theme.fontSizes.default}px;
-    padding: ${({ theme }) => theme.space.xsmall}px 0;
-    margin-top: ${({ theme }) => theme.space.large}px;
+    padding: ${({ theme }) => theme.space.xsmall}px
+      ${({ theme }) => theme.space.xlarge}px;
+    margin-top: ${({ theme }) => theme.space.medium}px;
     margin-bottom: 0;
     border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
   }
