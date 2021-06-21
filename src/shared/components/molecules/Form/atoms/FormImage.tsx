@@ -23,8 +23,12 @@ const FormImage: AppComponent<FormImageProps> = ({
   onChange,
 }) => {
   const { t } = useTranslation()
-  const [label] = useState(
-    initialLabel == null ? `${t(lngKeys.SelectImage)}...` : initialLabel
+  const [label, setLabel] = useState(
+    initialLabel == null
+      ? defaultUrl == null
+        ? `${t(lngKeys.FormSelectImage)}...`
+        : `${t(lngKeys.FormChangeImage)}...`
+      : initialLabel
   )
   const [fileUrl, setFileUrl] = useState<string | null>(null)
 
@@ -37,12 +41,15 @@ const FormImage: AppComponent<FormImageProps> = ({
       ) {
         const file = event.target.files[0]
         setFileUrl(URL.createObjectURL(file))
+        if (initialLabel == null) {
+          setLabel(`${t(lngKeys.FormChangeImage)}...`)
+        }
         if (onChange != null) {
           onChange(file)
         }
       }
     },
-    [onChange]
+    [onChange, initialLabel, t]
   )
 
   return (

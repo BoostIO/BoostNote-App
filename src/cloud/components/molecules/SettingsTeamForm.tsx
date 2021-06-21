@@ -13,6 +13,8 @@ import { useToast } from '../../../shared/lib/stores/toast'
 import Form from '../../../shared/components/molecules/Form'
 import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
 import styled from '../../../shared/lib/styled'
+import { useTranslation } from 'react-i18next'
+import { lngKeys } from '../../lib/i18n/types'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -34,6 +36,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
   const { setTeamInGlobal } = useGlobalData()
   const { pushMessage } = useToast()
   const router = useRouter()
+  const { t } = useTranslation()
 
   const slugDomain = useMemo(() => {
     if (domain == null) {
@@ -126,7 +129,6 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
                 defaultUrl: fileUrl != null ? fileUrl : undefined,
                 defaultIcon: mdiDomain,
                 onChange: changeHandler,
-                label: fileUrl == null ? 'Add a photo' : 'Change your photo',
               },
             },
           ],
@@ -144,7 +146,11 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
           ],
         },
       ]}
-      submitButton={{ label: teamConversion ? 'Create' : 'Update' }}
+      submitButton={{
+        label: teamConversion
+          ? t(lngKeys.GeneralCreate)
+          : t(lngKeys.GeneralUpdate),
+      }}
     >
       {teamConversion && team.personal && (
         <FormRow

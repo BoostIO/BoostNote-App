@@ -3,6 +3,7 @@ import { TranslationSource, lngKeys } from './types'
 const frTranslation: TranslationSource = {
   //General
   [lngKeys.GeneralError]: 'Erreur',
+  [lngKeys.GeneralCreate]: 'Créer',
   [lngKeys.GeneralCancel]: 'Annuler',
   [lngKeys.GeneralUpdate]: 'Mettre à jour',
   [lngKeys.GeneralAttachments]: 'Pièces jointes',
@@ -30,6 +31,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsTeamSubscription]: 'Facturation',
   [lngKeys.SettingsIntegrations]: 'Intégrations',
   [lngKeys.SettingsAppFeedback]: 'Feedback',
+  [lngKeys.SettingsSpace]: 'Espace',
+  [lngKeys.SettingsSpaceDelete]: 'Supprimer cet espace',
+  [lngKeys.SettingsSpaceDeleteWarning]:
+    'Toutes les données associées à cet espace seront supprimées. Cette action est irréversible.',
 
   // settings UserTab
   [lngKeys.SettingsAccount]: 'Compte',
@@ -39,24 +44,30 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: "Thème de l'éditeur",
   [lngKeys.SettingsCodeBlockTheme]: 'Thème des blocs de code',
   [lngKeys.SettingsEditorKeyMap]: "KeyMap pour l'éditeur",
-  [lngKeys.SettingsLight]: 'Blanc',
+  [lngKeys.SettingsLight]: 'Clair',
   [lngKeys.SettingsDark]: 'Sombre',
   [lngKeys.SettingsNotifFrequencies]: 'Fréquence de mises à jour par mail',
   [lngKeys.SettingsIndentType]: "Type d'indentation pour l'éditeur",
   [lngKeys.SettingsIndentSize]: "Taille de l'indentation pour l'éditeur",
+  [lngKeys.SettingsUserForum]: "Forum d'utilisateurs (nouveau!)",
 
   // Settings Community
   [lngKeys.CommunityFeatureRequests]: 'Demande de fonctionnalités',
-
   [lngKeys.ManagePreferences]: 'Gérez vos préférences.',
   [lngKeys.ManageProfile]: 'Gérez votre profil.',
-  [lngKeys.ProfilePicture]: 'Image de profil',
-  [lngKeys.Name]: 'Nom',
+  [lngKeys.ManageSpaceSettings]: 'Gérez les paramètres de votre espace.',
   [lngKeys.SettingsAccountDeleteWarning]:
     'Vous pouvez supprimer votre compte à tout moment. Veuillez noter cependant que cette action est irréversible',
 
   //forms
-  [lngKeys.SelectImage]: 'Choisissez une image',
+  [lngKeys.FormSelectImage]: 'Choisissez une image',
+  [lngKeys.FormChangeImage]: 'Changez votre image',
+
+  //Language
+  [lngKeys.ProfilePicture]: 'Image de profil',
+  [lngKeys.Name]: 'Nom',
+  [lngKeys.Spaces]: 'espaces',
+  [lngKeys.Tabs]: 'tabulations',
 }
 
 export default {
