@@ -199,7 +199,7 @@ const ContentManagerBulkActions = ({
 
   const deleteSingleDoc = useCallback(
     async (team: SerializedTeam, target?: SerializedDocWithBookmark) => {
-      if (target == null || target.archivedAt == null) {
+      if (target == null) {
         return
       }
       try {
@@ -227,6 +227,7 @@ const ContentManagerBulkActions = ({
     ) {
       return
     }
+
     messageBox({
       title: `Delete the selected items?`,
       message: `Selected folders, their content, and the selected archived documents will be permanently deleted.`,
