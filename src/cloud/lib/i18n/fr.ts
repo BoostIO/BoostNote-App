@@ -27,7 +27,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsPersonalInfo]: 'Paramètres',
   [lngKeys.SettingsPreferences]: 'Préférences',
   [lngKeys.SettingsTeamMembers]: 'Membres',
-  [lngKeys.SettingsTeamUpgrade]: 'Upgrade',
+  [lngKeys.SettingsTeamUpgrade]: 'Mise à niveau',
   [lngKeys.SettingsTeamSubscription]: 'Facturation',
   [lngKeys.SettingsIntegrations]: 'Intégrations',
   [lngKeys.SettingsAppFeedback]: 'Feedback',
@@ -35,10 +35,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsSpaceDelete]: 'Supprimer cet espace',
   [lngKeys.SettingsSpaceDeleteWarning]:
     'Toutes les données associées à cet espace seront supprimées. Cette action est irréversible.',
-
-  // settings UserTab
   [lngKeys.SettingsAccount]: 'Compte',
   [lngKeys.SettingsAccountDelete]: 'Supprimer votre compte',
+  [lngKeys.SettingsAccountDeleteWarning]:
+    'Vous pouvez supprimer votre compte à tout moment. Veuillez noter cependant que cette action est irréversible',
   [lngKeys.SettingsUILanguage]: "Langue de l'interface",
   [lngKeys.SettingsApplicationTheme]: "Thème de l'appplication",
   [lngKeys.SettingsEditorTheme]: "Thème de l'éditeur",
@@ -50,14 +50,51 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: "Type d'indentation pour l'éditeur",
   [lngKeys.SettingsIndentSize]: "Taille de l'indentation pour l'éditeur",
   [lngKeys.SettingsUserForum]: "Forum d'utilisateurs (nouveau!)",
-
-  // Settings Community
-  [lngKeys.CommunityFeatureRequests]: 'Demande de fonctionnalités',
   [lngKeys.ManagePreferences]: 'Gérez vos préférences.',
   [lngKeys.ManageProfile]: 'Gérez votre profil.',
   [lngKeys.ManageSpaceSettings]: 'Gérez les paramètres de votre espace.',
-  [lngKeys.SettingsAccountDeleteWarning]:
-    'Vous pouvez supprimer votre compte à tout moment. Veuillez noter cependant que cette action est irréversible',
+  [lngKeys.ManageTeamMembers]: 'Gérez qui peut accéder à cet espace.',
+  [lngKeys.CurrentMembers]: 'Membres courants',
+  [lngKeys.AddMembers]: 'Ajouter des membres',
+  [lngKeys.MembersAccessLevel]: "Niveau d'accès",
+  [lngKeys.TeamCreate]: 'Créer un espace collaboratif',
+  [lngKeys.TeamCreateSubtitle]:
+    'Convertissez votre espace en un espace collaboratif pour inviter des équipiers.',
+  [lngKeys.TeamName]: "Nom de l'équipe",
+  [lngKeys.TeamDomain]: "Domaine de l'équipe",
+  [lngKeys.SpaceName]: "Nom de l'espace",
+  [lngKeys.SpaceDomain]: "Domaine de l'espace",
+  [lngKeys.TeamDomainShow]: "L'url sera:",
+  [lngKeys.TeamDomainWarning]:
+    'Attention: Vous ne pourrez pas changer de domaine après cette étape.',
+  [lngKeys.InviteWithOpenLink]: 'Inviter avec un lien ouvert',
+  [lngKeys.InviteEmail]: 'Inviter par email',
+  [lngKeys.RoleMemberDescription]:
+    "Les membres peuvent accéder à toutes les fonctionnalités excepté pour la facturation ainsi que la gestion de l'équipe",
+  [lngKeys.RoleAdminDescription]:
+    "Les administrateurs peuvent accéder à la facturation, ainsi que promouvoir ou rétrograder les membres de l'équipe.",
+  [lngKeys.RoleViewerDescription]:
+    "Les observateurs peuvent seulement naviger dans les différents dossiers ou documents, écrire des commentaires ou inviter d'autres observateurs dans l'équipe.",
+  [lngKeys.CancelInvite]: "Annuler l'invitation?",
+  [lngKeys.CancelInviteOpenLinkMessage]:
+    'Êtes vous certain de vouloir annuler cette invitation? Les liens actuels vont être désactivés.',
+  [lngKeys.CancelInviteEmailMessage]:
+    "Êtes vous certain de vouloir annuler cette invitation? L'utilisateur invité ne pourra plus rejoindre l'équipe.",
+  [lngKeys.RoleAdminPromote]:
+    "Vous allez promouvoir {{user}} au rang d'admin, ils vont pouvoir accéder à la gestion d'équipe ainsi qu'aux informations de facturation. Êtes vous certain?",
+  [lngKeys.RoleMemberChange]:
+    "Vous allez changer le role de {{user}} en celui d'un membre, ils vont être comptés lors de la facturation et peuvent participer activement dans l'équipe. Ils ne pourront cependant pas accéder aux informations de facturation. Êtes vous certain?",
+  [lngKeys.RoleViewerDemote]:
+    "Vous allez rétrograder {{user}} au rang d'observateur. Ils vont être sortis du calcul de facturation. Ils vont être incapables d'éditer ou de créer des dossiers ou documents, ils pourront cependant lire ainsi qu'écrire des commentaires. Êtes vous certain?",
+  [lngKeys.TeamLeave]: "Quitter l'espace",
+  [lngKeys.TeamLeaveWarning]:
+    "Êtes vous certain de vouloir quitter cet espace? Vous ne pourrez plus accéder à son contenu. Le dernier membre de l'espace doit le supprimer complèment.",
+  [lngKeys.RemovingMember]: 'Supprimer un membre',
+  [lngKeys.RemovingMemberWarning]:
+    'Vous allez supprimer {{user}} de cet espace.  Êtes vous certain? ',
+
+  // Settings Community
+  [lngKeys.CommunityFeatureRequests]: 'Demande de fonctionnalités',
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
@@ -69,6 +106,19 @@ const frTranslation: TranslationSource = {
   [lngKeys.Spaces]: 'espaces',
   [lngKeys.Tabs]: 'tabulations',
   [lngKeys.Logo]: 'Logo',
+  [lngKeys.User]: 'Utilisateur',
+  [lngKeys.Back]: 'Revenir',
+  [lngKeys.Admin]: 'Admin',
+  [lngKeys.Member]: 'Membre',
+  [lngKeys.Viewer]: 'Observateur',
+  [lngKeys.See]: 'Voir',
+  [lngKeys.Copy]: 'Copier',
+  [lngKeys.Copied]: 'Copié',
+  [lngKeys.Send]: 'Envoyer',
+  [lngKeys.Leave]: 'Quitter',
+  [lngKeys.Remove]: 'Enlever',
+  [lngKeys.Demote]: 'Rétrograder',
+  [lngKeys.Promote]: 'Promouvoir',
 }
 
 export default {

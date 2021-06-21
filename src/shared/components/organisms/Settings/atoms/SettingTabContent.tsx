@@ -1,4 +1,6 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 import styled from '../../../../lib/styled'
 import Button, { ButtonProps } from '../../../atoms/Button'
 
@@ -16,29 +18,32 @@ const SettingTabContent = ({
   body,
   footer,
   backLink,
-}: SettingTabContentProps) => (
-  <Container className='setting__tab__content'>
-    <div className='setting__tab__content__scrollable'>
-      <div className='setting__tab__content__container'>
-        {backLink != null && (
-          <Button {...backLink} className='settings__tab__content__backlink'>
-            Back
-          </Button>
-        )}
-        <div className='setting__tab__content__header'>
-          <h1 className='setting__tab__content__header__title'>{title}</h1>
-          <p className='setting__tab__content__header__description'>
-            {description}
-          </p>
+}: SettingTabContentProps) => {
+  const { t } = useTranslation()
+  return (
+    <Container className='setting__tab__content'>
+      <div className='setting__tab__content__scrollable'>
+        <div className='setting__tab__content__container'>
+          {backLink != null && (
+            <Button {...backLink} className='settings__tab__content__backlink'>
+              {t(lngKeys.Back)}
+            </Button>
+          )}
+          <div className='setting__tab__content__header'>
+            <h1 className='setting__tab__content__header__title'>{title}</h1>
+            <p className='setting__tab__content__header__description'>
+              {description}
+            </p>
+          </div>
+          <div className='setting__tab__content__body'>{body}</div>
+          {footer != null && (
+            <div className='setting__tab__content__footer'>{footer}</div>
+          )}
         </div>
-        <div className='setting__tab__content__body'>{body}</div>
-        {footer != null && (
-          <div className='setting__tab__content__footer'>{footer}</div>
-        )}
       </div>
-    </div>
-  </Container>
-)
+    </Container>
+  )
+}
 
 const Container = styled.div`
   display: block;

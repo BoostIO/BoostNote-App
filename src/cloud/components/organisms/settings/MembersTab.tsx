@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
 import {
   useDialog,
@@ -34,10 +33,13 @@ import SettingTabContent from '../../../../shared/components/organisms/Settings/
 import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
-import { SimpleFormSelect } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
+import FormSelect, {
+  FormSelectOption,
+} from '../../../../shared/components/molecules/Form/atoms/FormSelect'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 const MembersTab = () => {
-  const { t } = useTranslation()
   const {
     team,
     permissions = [],
@@ -63,6 +65,7 @@ const MembersTab = () => {
     false
   )
   const mountedRef = useRef(false)
+  const { t, getRoleLabel } = useI18n()
 
   useEffect(() => {
     mountedRef.current = true
@@ -125,15 +128,16 @@ const MembersTab = () => {
       }
 
       const mboxContent = {
-        title: 'Leave the team',
-        message:
-          'Are you sure to leave the team and not being able to access any of its content? The last team member has to completely delete the team.',
+        title: t(lngKeys.TeamLeave),
+        message: t(lngKeys.TeamLeaveWarning),
       }
 
       const currentUserId = currentUser != null ? currentUser.id : ''
       if (currentUserId !== permission.user.id) {
-        mboxContent.title = 'Removing a member'
-        mboxContent.message = `Are you sure to want removing ${permission.user.displayName} from this team`
+        mboxContent.title = t(lngKeys.RemovingMember)
+        mboxContent.message = t(lngKeys.RemovingMemberWarning, {
+          user: permission.user.displayName,
+        })
       }
 
       messageBox({
@@ -143,13 +147,13 @@ const MembersTab = () => {
         buttons: [
           {
             variant: 'secondary',
-            label: 'Cancel',
+            label: t(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: 'Delete',
+            label: t(lngKeys.GeneralDelete),
             onClick: async () => {
               //remove
               setSending(`${permission.id}-delete`)
@@ -184,6 +188,7 @@ const MembersTab = () => {
       setPartialPageData,
       team,
       setClosed,
+      t,
     ]
   )
 
@@ -207,17 +212,21 @@ const MembersTab = () => {
       switch (targetedRole) {
         case 'admin':
           mboxContent = {
-            title: 'Promote to admin',
-            message: `This action will promote ${targetedPermissions.user.displayName}'s to an admin, he will be granted access to team management and billing information. Are you sure?`,
+            title: t(lngKeys.Promote),
+            message: t(lngKeys.RoleAdminPromote, {
+              user: targetedPermissions.user.displayName,
+            }),
           }
           break
         case 'member':
           mboxContent = {
             title:
               targetedPermissions.role === 'viewer'
-                ? 'Promote to member'
-                : 'Demote to member',
-            message: `This action will change ${targetedPermissions.user.displayName}'s role to a regular member, he will be accounted for within the subscription and can actively participate within the team. However he will be unable to access any billing information. Are you sure?`,
+                ? t(lngKeys.Promote)
+                : t(lngKeys.Demote),
+            message: t(lngKeys.RoleMemberChange, {
+              user: targetedPermissions.user.displayName,
+            }),
           }
           if (targetedPermissions.role === 'admin') {
             changeIsDemotion = true
@@ -225,8 +234,10 @@ const MembersTab = () => {
           break
         case 'viewer':
           mboxContent = {
-            title: 'Demote to viewer',
-            message: `This action will change ${targetedPermissions.user.displayName}'s role to a viewer. He will be removed from the subscription amount. He will be unable to edit in any way folder and documents moving forward but can still read as well as post comments. Are you sure?`,
+            title: t(lngKeys.Demote),
+            message: t(lngKeys.RoleViewerDemote, {
+              user: targetedPermissions.user.displayName,
+            }),
           }
           changeIsDemotion = true
           break
@@ -239,13 +250,13 @@ const MembersTab = () => {
         buttons: [
           {
             variant: 'secondary',
-            label: 'Cancel',
+            label: t(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: changeIsDemotion ? 'danger' : 'primary',
-            label: changeIsDemotion ? 'Demote' : 'Promote',
+            label: changeIsDemotion ? t(lngKeys.Demote) : t(lngKeys.Promote),
             onClick: async () => {
               setSending(`${targetedPermissions.id}-change`)
               try {
@@ -270,7 +281,7 @@ const MembersTab = () => {
         ],
       })
     },
-    [pushApiErrorMessage, messageBox, permissions, setPartialPageData, team]
+    [pushApiErrorMessage, messageBox, permissions, setPartialPageData, team, t]
   )
 
   if (currentUserPermissions == null || team == null) {
@@ -291,8 +302,8 @@ const MembersTab = () => {
   if (team.personal && showTeamPersonalForm) {
     return (
       <SettingTabContent
-        title='Create team space'
-        description='Create a team space in order to invite your teammates'
+        title={t(lngKeys.TeamCreate)}
+        description={t(lngKeys.TeamCreateSubtitle)}
         backLink={{
           variant: 'icon',
           iconPath: mdiArrowLeft,
@@ -312,17 +323,17 @@ const MembersTab = () => {
             className={cc([tab === 'member' && 'active'])}
             onClick={() => setTab('member')}
           >
-            Members ({permissions.length})
+            {t(lngKeys.SettingsTeamMembers)} ({permissions.length})
           </button>
         </SettingTabSelector>
       }
-      description={'Manage who access to this space.'}
+      description={t(lngKeys.ManageTeamMembers)}
       body={
         <>
           {team.personal ? (
             <section>
               <Flexbox>
-                <h2>Current Members</h2>
+                <h2>{t(lngKeys.CurrentMembers)}</h2>
                 {fetching.has('userEmails') && (
                   <Spinner className='relative' style={{ top: 2 }} />
                 )}
@@ -331,13 +342,13 @@ const MembersTab = () => {
                 variant='primary'
                 onClick={() => setShowTeamPersonalForm(true)}
               >
-                Add members
+                {t(lngKeys.AddMembers)}
               </Button>
               <TopMargin />
               <StyledMembersTable>
                 <thead className='table-header'>
                   <tr>
-                    <th>User</th>
+                    <th>{t(lngKeys.User)}</th>
                   </tr>
                 </thead>
                 <tbody className='table-body'>
@@ -371,7 +382,7 @@ const MembersTab = () => {
               />
               <section>
                 <Flexbox>
-                  <h2>Current Members</h2>
+                  <h2>{t(lngKeys.AddMembers)}</h2>
                   {fetching.has('userEmails') && (
                     <Spinner className='relative' style={{ top: 2 }} />
                   )}
@@ -379,8 +390,8 @@ const MembersTab = () => {
                 <StyledMembersTable>
                   <thead className='table-header'>
                     <tr>
-                      <th>User</th>
-                      <th>Access Level</th>
+                      <th>{t(lngKeys.User)}</th>
+                      <th>{t(lngKeys.MembersAccessLevel)}</th>
                     </tr>
                   </thead>
                   <tbody className='table-body'>
@@ -418,12 +429,15 @@ const MembersTab = () => {
                                   }}
                                 />
                               ) : (
-                                <SimpleFormSelect
+                                <FormSelect
                                   className='user--role--select'
-                                  value={permission.role}
-                                  onChange={(value: string) =>
+                                  value={{
+                                    label: getRoleLabel(permission.role),
+                                    value: permission.role,
+                                  }}
+                                  onChange={(option: FormSelectOption) =>
                                     changePermissionsRole(
-                                      value,
+                                      option.value,
                                       currentUserPermissions,
                                       permission
                                     )
@@ -432,7 +446,17 @@ const MembersTab = () => {
                                     !currentUserIsAdmin ||
                                     targetPermissionsAreUsersOwn
                                   }
-                                  options={['admin', 'member', 'viewer']}
+                                  options={[
+                                    { label: t(lngKeys.Admin), value: 'admin' },
+                                    {
+                                      label: t(lngKeys.Member),
+                                      value: 'member',
+                                    },
+                                    {
+                                      label: t(lngKeys.Viewer),
+                                      value: 'viewer',
+                                    },
+                                  ]}
                                 />
                               )}
                               {(targetPermissionsAreUsersOwn ||
@@ -447,9 +471,9 @@ const MembersTab = () => {
                                     <Spinner />
                                   ) : currentUserPermissions.id ===
                                     permission.id ? (
-                                    'Leave'
+                                    t(lngKeys.Leave)
                                   ) : (
-                                    'Remove'
+                                    t(lngKeys.Remove)
                                   )}
                                 </CustomButton>
                               )}

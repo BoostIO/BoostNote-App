@@ -24,6 +24,9 @@ import Form from '../../../shared/components/molecules/Form'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
 import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
+import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -46,6 +49,7 @@ const TeamInvitesSection = ({
     userPermissions.role === 'viewer' ? 'viewer' : 'member'
   )
   const mountedRef = useRef(false)
+  const { t, getRoleLabel } = useI18n()
 
   useEffect(() => {
     mountedRef.current = true
@@ -121,8 +125,8 @@ const TeamInvitesSection = ({
       }
 
       messageBox({
-        title: `Cancel?`,
-        message: `Are you sure to retract this invite? The user won't be able to join the team anymore.`,
+        title: t(lngKeys.CancelInvite),
+        message: t(lngKeys.CancelInviteEmailMessage),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
@@ -152,28 +156,31 @@ const TeamInvitesSection = ({
         ],
       })
     },
-    [messageBox, team]
+    [messageBox, team, t]
   )
 
   const selectRole = useCallback(
-    (option: string) => {
+    (option: FormSelectOption) => {
       if (userPermissions.role !== 'admin') {
         return
       }
 
-      setRole(option as TeamPermissionType)
+      setRole(option.value as TeamPermissionType)
     },
     [setRole, userPermissions]
   )
 
   const selectRoleOptions = useMemo(() => {
-    let roles: TeamPermissionType[] = []
+    let roles: FormSelectOption[] = []
     switch (userPermissions.role) {
       case 'admin':
-        roles = ['admin', 'member']
+        roles = [
+          { label: t(lngKeys.Admin), value: 'admin' },
+          { label: t(lngKeys.Member), value: 'member' },
+        ]
         break
       case 'member':
-        roles = ['member']
+        roles = [{ label: t(lngKeys.Member), value: 'member' }]
         break
       case 'viewer':
       default:
@@ -181,15 +188,15 @@ const TeamInvitesSection = ({
     }
 
     if (subscription != null) {
-      roles.push('viewer')
+      roles.push({ label: t(lngKeys.Viewer), value: 'viewer' })
     }
     return roles
-  }, [userPermissions.role, subscription])
+  }, [userPermissions.role, subscription, t])
 
   return (
     <section>
       <Flexbox>
-        <h2>Invite with Email</h2>
+        <h2>{t(lngKeys.InviteEmail)}</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
       <Form onSubmit={submitInvite}>
@@ -207,9 +214,9 @@ const TeamInvitesSection = ({
           <FormRowItem
             flex='0 0 150px'
             item={{
-              type: 'select--string',
+              type: 'select',
               props: {
-                value: role,
+                value: { label: getRoleLabel(role), value: role },
                 onChange: selectRole,
                 options: selectRoleOptions,
               },
@@ -221,7 +228,7 @@ const TeamInvitesSection = ({
               type: 'button',
               props: {
                 type: 'submit',
-                label: 'Send',
+                label: t(lngKeys.Send),
                 disabled: sending,
               },
             }}
@@ -229,25 +236,18 @@ const TeamInvitesSection = ({
         </FormRow>
       </Form>
       {role === 'admin' ? (
-        <small>
-          Admins can handle billing, remove or promote/demote members.
-        </small>
+        <small>{t(lngKeys.RoleAdminDescription)}</small>
       ) : role === 'member' ? (
-        <small>
-          Members can access all features, except team management, billing.
-        </small>
+        <small>{t(lngKeys.RoleMemberDescription)}</small>
       ) : (
-        <small>
-          Viewers can only navigate through documents, folders, write comments
-          and invite more viewers to the team.
-        </small>
+        <small>{t(lngKeys.RoleViewerDescription)}</small>
       )}
       <SectionList>
         {pendingInvites.map((invite) => (
           <SectionListItem key={invite.id} className='li'>
             <label>{invite.email}</label>
             <div>
-              {invite.role}{' '}
+              {getRoleLabel(invite.role as TeamPermissionType)}{' '}
               {(invite.role === userPermissions.role ||
                 userPermissions.role !== 'viewer') && (
                 <SectionInLineIcon onClick={() => cancelInvite(invite)}>
