@@ -68,6 +68,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.Name]: 'Name',
   [lngKeys.Spaces]: 'spaces',
   [lngKeys.Tabs]: 'tab',
+  [lngKeys.Logo]: 'Logo',
 }
 
 export default {
