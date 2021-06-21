@@ -10,7 +10,7 @@ import {
   StyledNavTagsList,
 } from '../../organisms/Sidebar/SideNavigator/styled'
 import cc from 'classcat'
-import { mdiCardTextOutline } from '@mdi/js'
+import { mdiFileDocumentOutline } from '@mdi/js'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { getFormattedBoosthubDate } from '../../../lib/date'
 import SideNavIcon from '../../organisms/Sidebar/SideNavigator/SideNavIcon'
@@ -26,6 +26,7 @@ interface TimelineListItemProps {
   team: SerializedTeam
   id: string
   editors: TimelineUser[]
+  path?: string
 }
 
 const TimelineListItem = ({
@@ -34,6 +35,7 @@ const TimelineListItem = ({
   team,
   id,
   editors,
+  path,
 }: TimelineListItemProps) => {
   const [focused, setFocused] = useState(false)
 
@@ -95,7 +97,7 @@ const TimelineListItem = ({
       <div className={cc(['sideNavWrapper'])}>
         <SideNavClickableButtonStyle>
           <SideNavIcon
-            mdiPath={mdiCardTextOutline}
+            mdiPath={mdiFileDocumentOutline}
             item={item}
             type='doc'
             className='marginLeft'
@@ -108,7 +110,8 @@ const TimelineListItem = ({
             id={id}
           >
             <SideNavLabelStyle>
-              {getDocTitle(item, 'Untitled')}
+              <PathLabel>{path}</PathLabel>
+              <span>{getDocTitle(item, 'Untitled')}</span>
             </SideNavLabelStyle>
             {item.tags != null && item.tags.length > 0 && (
               <StyledNavTagsList>
@@ -155,6 +158,13 @@ const StyledUsersListItem = styled.div`
   ${userIconStyle}
   width: 24px;
   height: 24px;
+`
+
+const PathLabel = styled.span`
+  display: block;
+  color: ${({ theme }) => theme.subtleTextColor};
+  font-size: ${({ theme }) => theme.fontSizes.default}px;
+  margin-bottom: ${({ theme }) => theme.space.xxsmall}px;
 `
 
 export default TimelineListItem

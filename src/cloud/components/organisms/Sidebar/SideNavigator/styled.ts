@@ -201,6 +201,10 @@ export const SideNavClickableButtonStyle = styled.div`
 `
 
 export const SideNavLabelStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: center;
   min-width: 30px;
   overflow: hidden;
   white-space: nowrap !important;
@@ -211,6 +215,7 @@ export const SideNavLabelStyle = styled.div`
   text-align: left;
   text-overflow: ellipsis;
   font-size: ${({ theme }) => theme.fontSizes.small}px;
+  line-height: normal;
 `
 
 export const StyledNavTagsList = styled.div`
@@ -267,6 +272,7 @@ export const SideNavIconStyle = styled.div`
 
   &.emoji-icon {
     flex-shrink: 0;
+    color: #329bbe;
   }
 
   &:hover {

@@ -9,6 +9,7 @@ import styled from '../../../lib/styled'
 import { getHexFromUUID } from '../../../lib/utils/string'
 import TimelineListItem from './TimelineListItem'
 import { TimelineUser } from '../../../pages/[teamId]/timeline'
+import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 
 export interface TimelineListProps {
   heading: string
@@ -16,6 +17,7 @@ export interface TimelineListProps {
   events: SerializedAppEvent[]
   timeFormat?: (date: Date) => string
   usersMap: Map<string, TimelineUser>
+  workspacesMap: Map<string, SerializedWorkspace>
 }
 
 const TimelineList = ({
@@ -23,6 +25,7 @@ const TimelineList = ({
   team,
   events,
   usersMap,
+  workspacesMap,
 }: TimelineListProps) => {
   const { docsMap } = useNav()
   const listRef = React.createRef<HTMLDivElement>()
@@ -73,6 +76,10 @@ const TimelineList = ({
                 []
               )
 
+              const path = `/${
+                workspacesMap.get(timelineDoc.doc.workspaceId)?.name
+              }${timelineDoc.doc.folderPathname}`
+
               return (
                 <TimelineListItem
                   item={timelineDoc.doc}
@@ -80,6 +87,7 @@ const TimelineList = ({
                   team={team}
                   id={childId}
                   editors={editors}
+                  path={path}
                 />
               )
             })}
@@ -151,7 +159,7 @@ const StyledTimelineListContent = styled.div`
   .sideNavWrapper {
     width: 100%;
     flex: inherit;
-    padding: 0 ${({ theme }) => theme.space.xxsmall}px;
+    padding: 0 ${({ theme }) => theme.space.xlarge}px;
     z-index: initial !important;
   }
 
@@ -160,7 +168,7 @@ const StyledTimelineListContent = styled.div`
   }
 
   .itemLink {
-    padding: 0 ${({ theme }) => theme.space.xsmall}px;
+    padding-right: ${({ theme }) => theme.space.xsmall}px;
 
     > div {
       font-size: ${({ theme }) => theme.fontSizes.default}px;
