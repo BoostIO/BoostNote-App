@@ -1,4 +1,4 @@
-import { mdiGiftOff, mdiOpenInNew, mdiExclamation } from '@mdi/js'
+import { mdiGiftOff, mdiOpenInNew } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import { useToast } from '../../../../shared/lib/stores/toast'
