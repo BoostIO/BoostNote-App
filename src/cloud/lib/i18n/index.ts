@@ -1,9 +1,13 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from './enUS'
+import fr from './fr'
 
 const resources = {
   'en-US': enUS,
+  fr: fr,
+  ja: enUS,
+  kr: enUS,
 }
 
 i18n

@@ -3,6 +3,8 @@ import styled from '../../../../lib/styled'
 import { AppComponent } from '../../../../lib/types'
 import cc from 'classcat'
 import Icon from '../../../atoms/Icon'
+import { useTranslation } from 'react-i18next'
+import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 
 export interface FormImageProps {
   onChange?: (file: File) => void
@@ -17,9 +19,13 @@ const FormImage: AppComponent<FormImageProps> = ({
   iconSize = 50,
   defaultIcon,
   defaultUrl,
-  label = 'Select Image...',
+  label: initialLabel,
   onChange,
 }) => {
+  const { t } = useTranslation()
+  const [label] = useState(
+    initialLabel == null ? `${t(lngKeys.SelectImage)}...` : initialLabel
+  )
   const [fileUrl, setFileUrl] = useState<string | null>(null)
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(

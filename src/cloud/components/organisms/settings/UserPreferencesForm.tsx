@@ -8,6 +8,7 @@ import {
   CodeMirrorKeyMap,
   GeneralEditorIndentType,
   GeneralEditorIndentSize,
+  GeneralLanguageOptions,
 } from '../../../lib/stores/settings'
 import { useTranslation } from 'react-i18next'
 import { trackEvent } from '../../../api/track'
@@ -18,10 +19,20 @@ import FormSelect, {
   SimpleFormSelect,
 } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
   const { t } = useTranslation()
+
+  const selectLanguage = useCallback(
+    (formOption: FormSelectOption) => {
+      setSettings({
+        'general.language': formOption.value as GeneralLanguageOptions,
+      })
+    },
+    [setSettings]
+  )
 
   const selectTheme = useCallback(
     (formOption: FormSelectOption) => {
@@ -94,7 +105,39 @@ const UserPreferencesForm = () => {
     <Form
       rows={[
         {
-          title: t('settings.applicationTheme'),
+          title: t(lngKeys.SettingsUILanguage),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormSelect
+                  options={[
+                    {
+                      label: 'English (US)',
+                      value: 'en-US',
+                    },
+                    { label: '日本語', value: 'ja' },
+                    { label: 'Français', value: 'fr' },
+                  ]}
+                  value={{
+                    label:
+                      settings['general.language'] === 'en-US'
+                        ? 'English (US)'
+                        : settings['general.language'] === 'fr'
+                        ? 'Français'
+                        : settings['general.language'] === 'ja'
+                        ? '日本語'
+                        : '',
+                    value: settings['general.language'],
+                  }}
+                  onChange={selectLanguage}
+                />
+              ),
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsApplicationTheme),
           items: [
             {
               type: 'node',
@@ -118,7 +161,7 @@ const UserPreferencesForm = () => {
           ],
         },
         {
-          title: t('settings.editorTheme'),
+          title: t(lngKeys.SettingsEditorTheme),
           items: [
             {
               type: 'select--string',
@@ -131,7 +174,7 @@ const UserPreferencesForm = () => {
           ],
         },
         {
-          title: t('settings.codeblockTheme'),
+          title: t(lngKeys.SettingsCodeBlockTheme),
           items: [
             {
               type: 'select--string',
@@ -144,7 +187,7 @@ const UserPreferencesForm = () => {
           ],
         },
         {
-          title: t('settings.editorKeyMap'),
+          title: t(lngKeys.SettingsEditorKeyMap),
           items: [
             {
               type: 'select--string',
@@ -157,7 +200,7 @@ const UserPreferencesForm = () => {
           ],
         },
         {
-          title: 'Editor Indent Type',
+          title: t(lngKeys.SettingsIndentType),
           items: [
             {
               type: 'node',
@@ -175,7 +218,7 @@ const UserPreferencesForm = () => {
     >
       <FormRow
         row={{
-          title: 'Editor Indent Size',
+          title: t(lngKeys.SettingsIndentSize),
           items: [
             {
               type: 'select--string',

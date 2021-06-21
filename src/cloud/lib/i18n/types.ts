@@ -1,44 +1,58 @@
+export enum lngKeys {
+  GeneralError = 'general.error',
+  GeneralCancel = 'general.cancel',
+  GeneralUpdate = 'general.update',
+  GeneralAttachments = 'general.attachments',
+  GeneralArchive = 'general.archive',
+  GeneralSignin = 'general.signin',
+  GeneralSigningIn = 'general.signingin',
+  GeneralSignout = 'general.signout',
+  GeneralSave = 'general.save',
+  GeneralDefault = 'general.default',
+  GeneralDelete = 'general.delete',
+  GeneralDaily = 'general.daily',
+  GeneralWeekly = 'general.weekly',
+  GeneralNever = 'general.never',
+
+  //settings
+  SettingsInfo = 'settings.info',
+  SettingsGeneral = 'settings.general',
+  SettingsNotifications = 'settings.notifications',
+  SettingsTitle = 'settings.title',
+  SettingsPersonalInfo = 'settings.personalInfo',
+  SettingsPreferences = 'settings.preferences',
+  SettingsTeamInfo = 'settings.teamInfo',
+  SettingsTeamMembers = 'settings.teamMembers',
+  SettingsTeamUpgrade = 'settings.teamUpgrade',
+  SettingsTeamSubscription = 'settings.teamSubscription',
+  SettingsIntegrations = 'settings.integrations',
+  SettingsAppFeedback = 'settings.appFeedback',
+
+  //UserTab
+  SettingsAccount = 'settings.account',
+  SettingsAccountDelete = 'settings.account.delete',
+  SettingsUILanguage = 'settings.interfaceLanguage',
+  SettingsApplicationTheme = 'settings.applicationTheme',
+  SettingsEditorTheme = 'settings.editorTheme',
+  SettingsCodeBlockTheme = 'settings.codeblockTheme',
+  SettingsEditorKeyMap = 'settings.editorKeyMap',
+  SettingsLight = 'settings.light',
+  SettingsDark = 'settings.dark',
+  SettingsNotifFrequencies = 'settings.notificationsFrequency',
+  SettingsIndentType = 'settings.indentType',
+  SettingsIndentSize = 'settings.indentSize',
+
+  CommunityFeatureRequests = 'community.feature.requests',
+
+  ManagePreferences = 'manage.preferences',
+  ManageProfile = 'manage.profile',
+  ProfilePicture = 'profile.picture',
+  Name = 'name',
+  SettingsAccountDeleteWarning = 'settings.account.delete.warning',
+
+  SelectImage = 'select.image',
+}
+
 export type TranslationSource = {
-  'general.error': string
-  'general.cancel': string
-  'general.update': string
-  'general.attachments': string
-  'general.archive': string
-  'general.allnote': string
-  'general.signin': string
-  'general.signinCheck': string
-  'general.signOut': string
-  'general.save': string
-  'general.default': string
-  'general.networkError': string
-  'general.delete': string
-
-  // Settings
-  'settings.info': string
-  'settings.general': string
-  'settings.notifications': string
-  'settings.title': string
-  'settings.personalInfo': string
-  'settings.preferences': string
-  'settings.teamInfo': string
-  'settings.teamMembers': string
-  'settings.teamUpgrade': string
-  'settings.teamSubscription': string
-  'settings.integrations': string
-  'settings.appFeedback': string
-
-  // Settings UserTab
-  'settings.account': string
-  'settings.account.delete': string
-  'settings.interfaceLanguage': string
-  'settings.applicationTheme': string
-  'settings.editorTheme': string
-  'settings.codeblockTheme': string
-  'settings.editorKeyMap': string
-  'settings.light': string
-  'settings.dark': string
-  'settings.notificationsFrequency': string
-
-  // Settings Community
-  'community.feature.requests': string
+  [key in lngKeys]: string
 }
