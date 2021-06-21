@@ -10,13 +10,14 @@ import {
   mdiCheckboxMarkedOutline,
   mdiFormatHeaderPound,
   mdiCodeNotEqualVariant,
+  mdiPageNextOutline,
 } from '@mdi/js'
 import { Position } from 'codemirror'
 import EditorToolButton from './EditorToolButton'
 import { StyledEditorToolList } from './styled'
-import EditorToolHeaderDropdown from './EditorHeaderTool'
+import EditorHeaderToolDropdown from './EditorHeaderTool'
+import EditorAdmonitionToolDropdown from './EditorAdmonitionTool'
 import { FormattingTool } from './types'
-import EditorIntegrationToolButton from './EditorIntegrationToolButton'
 import {
   applyBoldStyleEventEmitter,
   applyItalicStyleEventEmitter,
@@ -93,6 +94,62 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         case 'header6':
           formattingOptions = { markerLeft: '###### ' }
           break
+        case 'admonitionNote':
+          formattingOptions = {
+            markerLeft: ':::note',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionInfo':
+          formattingOptions = {
+            markerLeft: ':::info',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionTip':
+          formattingOptions = {
+            markerLeft: ':::tip',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionImportant':
+          formattingOptions = {
+            markerLeft: ':::important',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionDanger':
+          formattingOptions = {
+            markerLeft: ':::danger',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionWarning':
+          formattingOptions = {
+            markerLeft: ':::warning',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionCaution':
+          formattingOptions = {
+            markerLeft: ':::caution',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
+        case 'admonitionSecondary':
+          formattingOptions = {
+            markerLeft: ':::secondary',
+            markerRight: ':::',
+            breakLine: true,
+          }
+          break
         case 'code':
           formattingOptions = { markerLeft: '`', markerRight: '`' }
           break
@@ -160,8 +217,7 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
 
   return (
     <StyledEditorToolList>
-      <EditorIntegrationToolButton />
-      <EditorToolHeaderDropdown
+      <EditorHeaderToolDropdown
         path={mdiFormatHeaderPound}
         tooltip='Add header text'
         onFormatCallback={onFormatCallback}
@@ -176,6 +232,11 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         tooltip='Insert a quote'
         onClick={() => onFormatCallback('quote')}
       />
+      <EditorAdmonitionToolDropdown
+        path={mdiPageNextOutline}
+        tooltip='Add admonition'
+        onFormatCallback={onFormatCallback}
+      />
       <EditorToolButton
         path={mdiFormatListBulleted}
         tooltip='Add a bulleted list'
@@ -189,7 +250,6 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
       <EditorToolButton
         path={mdiCheckboxMarkedOutline}
         tooltip='Add a task list'
-        style={{ marginRight: 20 }}
         onClick={() => onFormatCallback('taskList')}
       />
       <EditorToolButton
@@ -387,7 +447,7 @@ function getLineBreaksFromFormat(
   const nextLine = editor.getLine(anchor.line + 1) || ''
   linebreaks.afterWord = nextLine.trim() === '' ? 0 : 1
 
-  if (markerRight === '```') {
+  if (markerRight === '```' || markerRight === ':::') {
     linebreaks.beforeWord = 1
     linebreaks.afterMark = linebreaks.afterWord
     linebreaks.afterWord = 1
