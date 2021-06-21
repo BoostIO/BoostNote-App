@@ -230,7 +230,7 @@ const ContentManagerBulkActions = ({
 
     messageBox({
       title: `Delete the selected items?`,
-      message: `Selected folders, their content, and the selected archived documents will be permanently deleted.`,
+      message: `Selected folders, their content, and the selected documents will be permanently deleted.`,
       iconType: DialogIconTypes.Warning,
       buttons: [
         {
