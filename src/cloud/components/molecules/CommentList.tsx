@@ -13,6 +13,7 @@ import {
 import CommentInput from './CommentInput'
 import sortBy from 'ramda/es/sortBy'
 import prop from 'ramda/es/prop'
+import { toText } from '../../lib/comments'
 
 interface CommentThreadProps {
   comments: Comment[]
@@ -96,6 +97,10 @@ export function CommentItem({
     [comment, updateComment]
   )
 
+  const content = useMemo(() => {
+    return toText(comment.message, users)
+  }, [comment.message, users])
+
   return (
     <CommentItemContainer>
       <div className='comment__icon'>
@@ -128,7 +133,7 @@ export function CommentItem({
             users={users}
           />
         ) : (
-          <div className='comment__message'>{comment.message}</div>
+          <div className='comment__message'>{content}</div>
         )}
       </div>
     </CommentItemContainer>

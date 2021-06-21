@@ -6,6 +6,7 @@ import { useEffectOnce } from 'react-use'
 import useSuggestions from '../../../shared/lib/hooks/useSuggestions'
 import { SerializedUser } from '../../interfaces/db/user'
 import UserIcon from '../atoms/UserIcon'
+import { makeMentionElement, fromNode, toFragment } from '../../lib/comments'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -28,21 +29,27 @@ export function CommentInput({
       return
     }
 
-    const range = getSelection()?.getRangeAt(0)
+    const selection = getSelection()
+    if (selection == null) {
+      return
+    }
+    const range = selection.getRangeAt(0)
     if (range == null) {
       return
     }
-    const newRange = new Range()
-    newRange.setStart(range.startContainer, range.startOffset - hint.length - 1)
-    newRange.setEnd(range.endContainer, range.endOffset)
+    range.setStart(range.startContainer, range.startOffset - hint.length - 1)
+    range.setEnd(range.endContainer, range.endOffset)
     range.deleteContents()
-    range.insertNode(document.createTextNode(item.uniqueName + ' '))
-    range.collapse(false)
+    const mentionNode = makeMentionElement(item.id, item.displayName)
+    range.insertNode(mentionNode)
+    range.setStartAfter(mentionNode)
+    selection.removeAllRanges()
+    selection.addRange(range)
   })
 
   const userSuggestions = useMemo(() => {
     return users.map((user) => ({
-      key: user.uniqueName,
+      key: user.displayName,
       item: user,
     }))
   }, [users])
@@ -60,11 +67,7 @@ export function CommentInput({
     if (inputRef.current) {
       inputRef.current.addEventListener('blur', closeSuggestions)
       if (value.length > 0) {
-        for (const line of value.split('\n')) {
-          const child = document.createElement('div')
-          child.textContent = line
-          inputRef.current.appendChild(child)
-        }
+        inputRef.current.appendChild(toFragment(value))
       } else {
         resetInitialContent(inputRef.current)
       }
@@ -78,17 +81,11 @@ export function CommentInput({
     if (inputRef.current != null) {
       try {
         setWorking(true)
-        let content = ''
-        for (let i = 0; i < inputRef.current.childNodes.length; i++) {
-          const node = inputRef.current.childNodes[i]
-          if (i > 0 && !node.TEXT_NODE) {
-            content += '\n'
-          }
-          content += node.textContent
+        await onSubmit(fromNode(inputRef.current).trim())
+        if (inputRef.current != null) {
+          resetInitialContent(inputRef.current)
+          inputRef.current.focus()
         }
-        await onSubmit(content)
-        resetInitialContent(inputRef.current)
-        inputRef.current.focus()
       } finally {
         setWorking(false)
       }
