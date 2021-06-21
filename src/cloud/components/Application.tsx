@@ -109,6 +109,7 @@ import { Notification as UserNotification } from '../interfaces/db/notifications
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 import { useNotifications } from '../../shared/lib/stores/notifications'
 import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
+import '../lib/i18n'
 
 interface ApplicationProps {
   content: ContentLayoutProps

@@ -10,6 +10,8 @@ import { saveUserSettings } from '../../../api/users/settings'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import Form from '../../../../shared/components/molecules/Form'
+import { lngKeys } from '../../../lib/i18n/types'
+import { FormSelectOption } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 
 const PersonalInfoTab = () => {
   const {
@@ -87,7 +89,8 @@ const PersonalInfoTab = () => {
   }, [currentUser])
 
   const selectCurrentEmailNotifications = useCallback(
-    (value: string | 'never') => {
+    (formOption: FormSelectOption) => {
+      const value = formOption.value || 'never'
       let targetedValue: UserEmailNotificationType | 'never'
       switch (value) {
         case 'daily':
@@ -105,15 +108,15 @@ const PersonalInfoTab = () => {
 
   return (
     <SettingTabContent
-      title={t('settings.personalInfo')}
-      description={'Manage your Boost Note profile.'}
+      title={t(lngKeys.SettingsAccount)}
+      description={t(lngKeys.ManageProfile)}
       body={
         currentUser == null ? null : (
           <Form
             onSubmit={updateHandler}
             rows={[
               {
-                title: 'Profile Picture',
+                title: t(lngKeys.ProfilePicture),
                 items: [
                   {
                     type: 'image',
@@ -122,7 +125,7 @@ const PersonalInfoTab = () => {
                 ],
               },
               {
-                title: 'Name',
+                title: t(lngKeys.Name),
                 items: [
                   {
                     type: 'input',
@@ -131,15 +134,27 @@ const PersonalInfoTab = () => {
                 ],
               },
               {
-                title: t('settings.notificationsFrequency'),
+                title: t(lngKeys.SettingsNotifFrequencies),
                 items: [
                   {
-                    type: 'select--string',
+                    type: 'select',
                     props: {
-                      value: currentEmailNotifications,
+                      value: {
+                        label:
+                          currentEmailNotifications === 'daily'
+                            ? t(lngKeys.GeneralDaily)
+                            : currentEmailNotifications === 'weekly'
+                            ? t(lngKeys.GeneralWeekly)
+                            : t(lngKeys.GeneralNever),
+                        value: currentEmailNotifications,
+                      },
                       onChange: selectCurrentEmailNotifications,
                       isDisabled: updating,
-                      options: ['daily', 'weekly', 'never'],
+                      options: [
+                        { label: t(lngKeys.GeneralDaily), value: 'daily' },
+                        { label: t(lngKeys.GeneralWeekly), value: 'weekly' },
+                        { label: t(lngKeys.GeneralNever), value: 'never' },
+                      ],
                     },
                   },
                 ],
@@ -148,7 +163,7 @@ const PersonalInfoTab = () => {
             submitButton={{
               variant: 'primary',
               spinning: updating,
-              label: t('general.update'),
+              label: t(lngKeys.GeneralUpdate),
               disabled: updating,
             }}
           />
@@ -156,12 +171,11 @@ const PersonalInfoTab = () => {
       }
       footer={
         <>
-          <h2>{t('settings.account.delete')}</h2>
+          <h2>{t(lngKeys.SettingsAccountDelete)}</h2>
           <p className='text--subtle'>
-            You may delete your account at any time, note that this is
-            unrecoverable.{' '}
+            {t(lngKeys.SettingsAccountDeleteWarning)}.{' '}
             <AccountLink beforeNavigate={closeSettingsTab} intent='delete'>
-              {t('general.delete')}
+              {t(lngKeys.GeneralDelete)}
             </AccountLink>
           </p>
         </>
