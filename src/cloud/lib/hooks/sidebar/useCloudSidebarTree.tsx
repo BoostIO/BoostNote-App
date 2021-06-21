@@ -61,6 +61,7 @@ import { getDocStatusHref, getSmartFolderHref } from '../../href'
 import CreateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
 import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
 import { useDialog } from '../../../../shared/lib/stores/dialog'
+import { DocStatus } from '../../../interfaces/db/doc'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -409,7 +410,7 @@ export function useCloudSidebarTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
-        archived: doc.archivedAt != null,
+        status: doc.status,
         hidden:
           doc.archivedAt != null ||
           doc.status === 'archived' ||
@@ -911,7 +912,7 @@ function buildChildrenNavRows(
       return acc
     }
 
-    if (childRow.archived) {
+    if (childRow.status === 'archived' || childRow.status === 'completed') {
       return acc
     }
 
@@ -950,7 +951,7 @@ type CloudTreeItem = {
   emoji?: string
   hidden?: boolean
   bookmarked?: boolean
-  archived?: boolean
+  status?: DocStatus
   children: string[]
   folding?: FoldingProps
   folded?: boolean
