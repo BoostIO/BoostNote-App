@@ -25,7 +25,7 @@ const EditorHeaderTool = ({
 
   return (
     <StyledEditorToolButtonContainer>
-      <Tooltip tooltip={tooltip} side='top'>
+      <Tooltip tooltip={tooltip} side='bottom'>
         <StyledEditorToolButton
           onClick={() => setOpenDropdown((prev) => !prev)}
           style={style}
