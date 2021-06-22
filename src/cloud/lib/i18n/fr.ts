@@ -166,6 +166,41 @@ const frTranslation: TranslationSource = {
   [lngKeys.PaymentMethodJpy]:
     'Nous pouvons seulement accepter JPY(Japanese Yen) par les paiments effectués avec les cartes JCB.',
 
+  [lngKeys.BillingActionRequired]:
+    'Votre paiment peut demander une action de votre part!',
+  [lngKeys.BillingHistory]: 'Historique de paiment',
+  [lngKeys.BillingHistoryCheck]:
+    'Veuillez vérifier votre historique de paiment pour gérer des charges non payées ou qui ont échouées.',
+  [lngKeys.BillingCancelledAt]:
+    'Votre abonnement va être annulé le {{date}} lors de la réception de votre dernière facture.',
+  [lngKeys.BillingToCard]:
+    'La carte se terminant en {{cardEnd}} va être chargée le {{date}}.',
+  [lngKeys.BillingEditCard]: 'Changer la Carte',
+  [lngKeys.BillingEmail]: "L'email de facturation est {{email}}",
+  [lngKeys.BillingEditEmail]: "Changer l'email",
+  [lngKeys.BillingCanSeeThe]: "Vous pouvez voir l' ",
+  [lngKeys.BillingChangePlan]: 'Changez votre Plan',
+  [lngKeys.BillingUpdateCard]: 'Mettre à jour votre carte de crédit',
+  [lngKeys.BillingCurrentCard]: 'Carte de crédit courante',
+  [lngKeys.BillingUpdateEmail]: 'Mettre à jour votre email de facturation',
+  [lngKeys.BillingCurrentEmail]: 'Email courante',
+  [lngKeys.BillingChangeJCB]:
+    "Changer de carte lorsque l'une de ces cartes est JCB requiert l'annulation manuelle de votre abonnement actuel. Veuillez annuler votre abonnement et vous abonner de nouveau avec votre nouvelle carte.",
+  [lngKeys.BillingApplyPromoWarning]:
+    'Utiliser un code de promotion va annuler votre promotion actuelle.',
+  [lngKeys.BillingApplyPromo]: 'Utiliser un coupon de promotion',
+
+  [lngKeys.BillingChangePlanDiscountStop]:
+    'Changer de plan va terminer votre promotion actuelle.',
+  [lngKeys.BillingChangePlanStripeProration]:
+    'Les changements de frais sont automatiquement gérés par Stripe et leur proration',
+  [lngKeys.BillingChangePlanFreeDisclaimer]:
+    'Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que documents illimités, historique de révisions pour les documents, espace de stockage etc...',
+  [lngKeys.BillingChangePlanProDisclaimer]:
+    "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
+  [lngKeys.BillingChangePlanStandardDisclaimer]:
+    "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
+
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',
@@ -203,7 +238,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.Close]: 'Fermer',
   [lngKeys.ThisSpace]: 'cet espace',
   [lngKeys.Token]: 'Jeton',
-  [lngKeys.Apply]: 'Utiliser',
+  [lngKeys.Apply]: 'Appliquer',
+  [lngKeys.Update]: 'Mettre à jour',
+  [lngKeys.LearnMore]: 'En apprendre plus',
+  [lngKeys.DoYouWishToProceed]: 'Désirez vous continuer?',
 }
 
 export default {

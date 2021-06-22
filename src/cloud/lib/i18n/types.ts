@@ -142,6 +142,30 @@ export enum lngKeys {
   PaymentMethodJpy = 'plan.method.jpy',
   UnlimitedViewers = 'viewers.unlimited',
 
+  BillingActionRequired = 'billing.action.required',
+  BillingHistory = 'billing.history',
+  BillingHistoryCheck = 'billing.history.check',
+  BillingCancelledAt = 'billing.cancelled.at',
+  BillingToCard = 'billing.card.to',
+  BillingEditCard = 'billing.card.edit',
+  BillingEmail = 'billing.email',
+  BillingEditEmail = 'billing.email.edit',
+  BillingCanSeeThe = 'billing.can.see',
+  BillingChangePlan = 'billing.plan.change',
+  BillingUpdateCard = 'billing.card.update',
+  BillingCurrentCard = 'billing.card.current',
+  BillingUpdateEmail = 'billing.email.update',
+  BillingCurrentEmail = 'billing.email.current',
+  BillingChangeJCB = 'billing.card.jcb',
+  BillingApplyPromoWarning = 'billing.promo.warning',
+  BillingApplyPromo = 'billing.promo',
+
+  BillingChangePlanDiscountStop = 'billing.plan.change.discount.stop',
+  BillingChangePlanFreeDisclaimer = 'billing.plan.change.free.disclaimer',
+  BillingChangePlanProDisclaimer = 'billing.plan.change.pro.disclaimer',
+  BillingChangePlanStandardDisclaimer = 'billing.plan.change.standard.disclaimer',
+  BillingChangePlanStripeProration = 'billing.plan.change.stripe.proration',
+
   Back = 'back',
 
   members = 'members',
@@ -176,7 +200,9 @@ export enum lngKeys {
   Close = 'close',
   Token = 'token',
   Apply = 'apply',
-
+  Update = 'update',
+  LearnMore = 'learn.more',
+  DoYouWishToProceed = 'do.you.wish.to.proceed',
   SettingsUserForum = 'settings.user.forum',
 }
 

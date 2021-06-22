@@ -25,6 +25,8 @@ import {
 } from '../../../lib/consts'
 import { useElectron } from '../../../lib/stores/electron'
 import Icon from '../../../../shared/components/atoms/Icon'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -41,6 +43,7 @@ const SubscriptionManagement = ({
   onEmailClick,
   onPromoClick,
 }: SubscriptionManagementProps) => {
+  const { t } = useI18n()
   const [showPlanTables, setShowPlanTables] = useState(false)
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
@@ -179,17 +182,14 @@ const SubscriptionManagement = ({
       <SectionIntroduction>
         {subscription.status === 'incomplete' && (
           <Alert variant='danger'>
-            <h2>Your payment may require action!</h2>
-            <p>
-              Please check your billing history to handle any unpaid or failed
-              charges.
-            </p>
+            <h2>{t(lngKeys.BillingActionRequired)}</h2>
+            <p>{t(lngKeys.BillingHistoryCheck)}</p>
             <Button
               onClick={onInvoiceHistory}
               disabled={fetchingHistory}
               className='subscription__management__warning'
             >
-              Billing History
+              {t(lngKeys.BillingHistory)}
             </Button>
           </Alert>
         )}
@@ -200,55 +200,53 @@ const SubscriptionManagement = ({
           discount={currentSubscriptionDiscount}
         />
         {usingJpyPricing && (
-          <Alert variant='secondary'>
-            We can only accept JPY(Japanese Yen) when paying by JCB cards.
-          </Alert>
+          <Alert variant='secondary'>{t(lngKeys.PaymentMethodJpy)}</Alert>
         )}
         <StyledBillingDescription>
           {subscription.currentPeriodEnd !== 0 ? (
             subscription.status === 'canceled' ? (
               <p>
-                Your subscription will be canceled on{' '}
-                {getFormattedDateFromUnixTimestamp(
-                  subscription.currentPeriodEnd
-                )}{' '}
-                upon reception of your last invoice .
+                {t(lngKeys.BillingCancelledAt, {
+                  date: getFormattedDateFromUnixTimestamp(
+                    subscription.currentPeriodEnd
+                  ),
+                })}
               </p>
             ) : (
               <p>
-                Will bill to the credit card ending in{' '}
-                <strong>
-                  {subscription.last4}
-                  {subscription.cardBrand != null &&
-                    ` (${subscription.cardBrand})`}
-                </strong>{' '}
-                at{' '}
-                <strong>
-                  {getFormattedDateFromUnixTimestamp(
+                {t(lngKeys.BillingToCard, {
+                  cardEnd: `${subscription.last4} ${
+                    subscription.cardBrand != null
+                      ? `(${subscription.cardBrand})`
+                      : ''
+                  }`,
+                  date: getFormattedDateFromUnixTimestamp(
                     subscription.currentPeriodEnd
-                  )}
-                </strong>
-                .{' '}
+                  ),
+                })}{' '}
                 <StyledBillingButton disabled={sending} onClick={onMethodClick}>
-                  Edit Card
+                  {t(lngKeys.BillingEditCard)}
                 </StyledBillingButton>
               </p>
             )
           ) : null}
 
           <p>
-            Billing email is <strong>{subscription.email}</strong>.{' '}
+            {t(lngKeys.BillingEmail, {
+              email: subscription.email,
+            })}
+            .{' '}
             <StyledBillingButton onClick={onEmailClick} disabled={sending}>
-              Edit Billing Email
+              {t(lngKeys.BillingEditEmail)}
             </StyledBillingButton>
           </p>
           <p>
-            You can see the{' '}
+            {t(lngKeys.BillingCanSeeThe)}
             <StyledBillingButton
               disabled={fetchingHistory}
               onClick={onInvoiceHistory}
             >
-              Billing History
+              {t(lngKeys.BillingHistory)}
               {fetchingHistory ? (
                 <Spinner
                   style={{
@@ -265,7 +263,7 @@ const SubscriptionManagement = ({
           </p>
           <p>
             <StyledBillingButton onClick={onPromoClick} disabled={sending}>
-              Apply a coupon
+              {t(lngKeys.ApplyCoupon)}
             </StyledBillingButton>
           </p>
           <p>
@@ -274,14 +272,14 @@ const SubscriptionManagement = ({
                 disabled={fetchingHistory}
                 onClick={() => setShowPlanTables(false)}
               >
-                Hide
+                {t(lngKeys.Hide)}
               </StyledBillingButton>
             ) : (
               <StyledBillingButton
                 disabled={fetchingHistory}
                 onClick={() => setShowPlanTables(true)}
               >
-                Change plans
+                {t(lngKeys.BillingChangePlan)}
               </StyledBillingButton>
             )}
           </p>
@@ -309,9 +307,7 @@ const SubscriptionManagement = ({
           />
           <div className='popup__container'>
             <Flexbox flex='1 1 auto' direction='column' alignItems='flex-start'>
-              <h3>
-                {subscriptionPlanChange} to {targetedPlan}
-              </h3>
+              <h3>{subscriptionPlanChange}</h3>
               {subscription.couponId != null &&
                 [
                   newUserStandardCouponId,
@@ -319,34 +315,26 @@ const SubscriptionManagement = ({
                   newSpaceCouponId,
                 ].includes(subscription.couponId) && (
                   <Banner variant='warning' iconPath={mdiGiftOff}>
-                    Changing plans will end your current discount.
+                    {t(lngKeys.BillingChangePlanDiscountStop)}
                   </Banner>
                 )}
               {targetedPlan === 'Free' ? (
                 <>
-                  <p>
-                    You will lose access immediately to advanced features such
-                    as unlimited documents, document revision history, bigger
-                    storage size etc...
-                  </p>
-                  <p>Do you wish to downgrade nonetheless?</p>
+                  <p>{t(lngKeys.BillingChangePlanFreeDisclaimer)}</p>
+                  <p>{t(lngKeys.DoYouWishToProceed)}</p>
                 </>
               ) : targetedPlan === 'Pro' ? (
                 <>
+                  <p>{t(lngKeys.BillingChangePlanProDisclaimer)}</p>
                   <p>
-                    You will get access to advanced features such as unlimited
-                    document revision history, setting password and expiration
-                    date for shared documents, unlimited viewers etc...
-                  </p>
-                  <p>
-                    The fee change is handled via Stripe&apos;s proration.
+                    {t(lngKeys.BillingChangePlanStripeProration)}
                     <a
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
                       style={{ marginLeft: 3 }}
                     >
-                      Learn more
+                      {t(lngKeys.LearnMore)}
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
@@ -359,20 +347,16 @@ const SubscriptionManagement = ({
                 </>
               ) : (
                 <>
+                  <p>{t(lngKeys.BillingChangePlanStandardDisclaimer)}</p>
                   <p>
-                    You will lose access to advanced features such as unlimited
-                    document revision history, setting password and expiration
-                    date for shared document, unlimited viewers, etc...
-                  </p>
-                  <p>
-                    The fee change is handled via Stripe&apos;s proration.
+                    {t(lngKeys.BillingChangePlanStripeProration)}
                     <a
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
                       style={{ marginLeft: 3 }}
                     >
-                      Learn more
+                      {t(lngKeys.LearnMore)}
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
@@ -410,7 +394,7 @@ const SubscriptionManagement = ({
                 disabled={sending}
                 type='button'
               >
-                Cancel
+                {t(lngKeys.GeneralCancel)}
               </Button>
             </Flexbox>
           </div>

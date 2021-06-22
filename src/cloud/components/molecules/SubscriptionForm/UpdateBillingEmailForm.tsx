@@ -13,6 +13,8 @@ import ButtonGroup from '../../../../shared/components/atoms/ButtonGroup'
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 import Form from '../../../../shared/components/molecules/Form'
 import styled from '../../../../shared/lib/styled'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface UpdateBillingEmailFormProps {
   sub?: SerializedSubscription
@@ -28,6 +30,7 @@ const UpdateBillingEmailForm = ({
   const { pushApiErrorMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [email, setEmail] = useState<string>(sub != null ? sub.email : '')
+  const { t } = useI18n()
 
   const onSubmit = async (event: any) => {
     event.preventDefault()
@@ -67,9 +70,9 @@ const UpdateBillingEmailForm = ({
 
   return (
     <Container>
-      <p>Update your billing email</p>
+      <p>{t(lngKeys.BillingUpdateEmail)}</p>
       <SectionFlexRow>
-        <label>Current Email</label>
+        <label>{t(lngKeys.BillingCurrentEmail)}</label>
         <span className='value'>{sub.email}</span>
       </SectionFlexRow>
 
@@ -90,7 +93,7 @@ const UpdateBillingEmailForm = ({
         />
         <ButtonGroup display='flex' layout='spread' className='button__group'>
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
-            Cancel
+            {t(lngKeys.GeneralCancel)}
           </Button>
 
           <LoadingButton
@@ -99,7 +102,7 @@ const UpdateBillingEmailForm = ({
             disabled={sending}
             spinning={sending}
           >
-            Update
+            {t(lngKeys.Update)}
           </LoadingButton>
         </ButtonGroup>
       </Form>
