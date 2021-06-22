@@ -7,7 +7,10 @@ import {
   ModeTransition,
 } from '../../../cloud/components/organisms/CommentManager'
 
-function useCommentManagerState(docId: string): [State, Actions] {
+function useCommentManagerState(
+  docId: string,
+  initialThread?: string
+): [State, Actions] {
   const {
     observeDocThreads,
     observeComments,
@@ -15,12 +18,25 @@ function useCommentManagerState(docId: string): [State, Actions] {
     commentActions,
   } = useComments()
   const [state, setState] = useState<State>({ mode: 'list_loading' })
+  const initialThreadRef = useRef(initialThread)
+
+  useEffect(() => {
+    initialThreadRef.current = initialThread
+  }, [initialThread])
 
   useEffect(() => {
     setState({ mode: 'list_loading' })
-    return observeDocThreads(docId, (threads) =>
+    return observeDocThreads(docId, (threads) => {
       setState(updateThreads(threads))
-    )
+      if (initialThreadRef.current != null) {
+        setState(
+          transitionState({
+            mode: 'thread',
+            thread: { id: initialThreadRef.current } as Thread,
+          })
+        )
+      }
+    })
   }, [docId, observeDocThreads])
 
   const unobserveRef = useRef<() => void>()
