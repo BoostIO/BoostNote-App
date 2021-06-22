@@ -17,6 +17,7 @@ import {
   toggleSettingsMembersEventEmitter,
   modalImportEventEmitter,
   modalDiscountEventEmitter,
+  toggleSidebarNotificationsEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
@@ -159,6 +160,9 @@ const useElectronStore = (): ElectronStore => {
     })
     addHostListener('toggle-sidebar-search', () => {
       toggleSidebarSearchEventEmitter.dispatch()
+    })
+    addHostListener('toggle-sidebar-notifications', () => {
+      toggleSidebarNotificationsEventEmitter.dispatch()
     })
     addHostListener('toggle-settings-members', () => {
       toggleSettingsMembersEventEmitter.dispatch()

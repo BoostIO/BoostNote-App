@@ -15,6 +15,8 @@ import {
   mdiCloudOffOutline,
   mdiGiftOutline,
   mdiMessageQuestion,
+  mdiBellOutline,
+  mdiBellRingOutline,
 } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
@@ -45,6 +47,7 @@ import {
   boostHubToggleSidebarTimelineEventEmitter,
   boostHubToggleSidebarTreeEventEmitter,
   boostHubOpenDiscountModalEventEmitter,
+  boostHubToggleSidebarNotificationsEventEmitter,
 } from '../../lib/events'
 import { useSearchModal } from '../../lib/searchModal'
 import { SidebarState } from '../../shared/lib/sidebar'
@@ -56,6 +59,7 @@ import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
 import { useModal } from '../../shared/lib/stores/modal'
 import { useToast } from '../../shared/lib/stores/toast'
 import styled from '../../shared/lib/styled'
+import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()
@@ -79,6 +83,7 @@ const TopLevelNavigator = () => {
     showingCloudIntroModal,
     toggleShowingCloudIntroModal,
   } = useCloudIntroModal()
+  const [notificationCount, setNotificationCount] = useState(0)
 
   useEffect(() => {
     const boostHubSidebarStateEventHandler = (
@@ -310,6 +315,19 @@ const TopLevelNavigator = () => {
           active: sidebarState === 'timeline' && !showSpaces,
           icon: mdiClockOutline,
           onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
+        },
+        {
+          tooltip: 'Notifications',
+          icon: notificationCount ? (
+            <NotifyIcon
+              size={26}
+              count={notificationCount}
+              path={mdiBellRingOutline}
+            />
+          ) : (
+            mdiBellOutline
+          ),
+          onClick: boostHubToggleSidebarNotificationsEventEmitter.dispatch,
         },
       ]
 

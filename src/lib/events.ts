@@ -128,6 +128,9 @@ export const boostHubToggleSidebarSearchEventEmitter = createCustomEventEmitter(
 export const boostHubToggleSidebarTimelineEventEmitter = createCustomEventEmitter(
   'BoostHub:toggleSidebarTimeline'
 )
+export const boostHubToggleSidebarNotificationsEventEmitter = createCustomEventEmitter(
+  'BoostHub:toggleSidebarNotifications'
+)
 export const boostHubToggleSettingsMembersEventEmitter = createCustomEventEmitter(
   'BoostHub:toggleSettingsMembers'
 )

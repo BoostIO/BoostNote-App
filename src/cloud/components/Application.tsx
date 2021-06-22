@@ -21,6 +21,7 @@ import {
   toggleSidebarSearchEventEmitter,
   toggleSidebarTimelineEventEmitter,
   toggleSidebarTreeEventEmitter,
+  toggleSidebarNotificationsEventEmitter,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
@@ -392,6 +393,15 @@ const Application = ({
       toggleSidebarTimelineEventEmitter.unlisten(toggleSidebarTimeline)
     }
   }, [toggleSidebarTimeline])
+
+  useEffect(() => {
+    const handler = () =>
+      setPopOverState((prev) =>
+        prev !== 'notifications' ? 'notifications' : null
+      )
+    toggleSidebarNotificationsEventEmitter.listen(handler)
+    return () => toggleSidebarNotificationsEventEmitter.unlisten(handler)
+  }, [])
 
   const openImportModal = useCallback(() => {
     closeSettingsTab()
