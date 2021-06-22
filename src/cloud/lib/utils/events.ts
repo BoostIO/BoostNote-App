@@ -77,6 +77,10 @@ export const toggleSidebarSearchEventEmitter = createCustomEventEmitter(
   'sidebar-search'
 )
 
+export const toggleSidebarNotificationsEventEmitter = createCustomEventEmitter(
+  'sidebar-notifications'
+)
+
 export const toggleSidebarImportEventEmitter = createCustomEventEmitter(
   'sidebar-search'
 )

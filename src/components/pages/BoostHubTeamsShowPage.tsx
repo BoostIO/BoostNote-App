@@ -11,6 +11,7 @@ import {
   boostHubToggleSidebarSearchEventEmitter,
   boostHubToggleSidebarTimelineEventEmitter,
   boostHubToggleSidebarTreeEventEmitter,
+  boostHubToggleSidebarNotificationsEventEmitter,
 } from '../../lib/events'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../shared/lib/styled'
@@ -78,6 +79,12 @@ const BoostHubTeamsShowPage = ({
     }
     boostHubToggleSidebarSearchEventEmitter.listen(toggleSidebarSearchHandler)
 
+    const toggleSidebarNotificationsHandler = () => {
+      webviewControlRef.current!.sendMessage('toggle-sidebar-notifications')
+    }
+    boostHubToggleSidebarNotificationsEventEmitter.listen(
+      toggleSidebarNotificationsHandler
+    )
     const toggleSettingsMembersHandler = () => {
       webviewControlRef.current!.sendMessage('toggle-settings-members')
     }
@@ -150,6 +157,9 @@ const BoostHubTeamsShowPage = ({
         toggleSidebarTimelineHandler
       )
       boostHubToggleSidebarTreeEventEmitter.unlisten(toggleSidebarTreeHandler)
+      boostHubToggleSidebarNotificationsEventEmitter.unlisten(
+        toggleSidebarNotificationsHandler
+      )
       removeIpcListener('new-note', newNoteHandler)
       removeIpcListener('new-folder', newFolderHandler)
       removeIpcListener('save-as', saveAsHandler)
