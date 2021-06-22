@@ -93,8 +93,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.RemovingMember]: 'Supprimer un membre',
   [lngKeys.RemovingMemberWarning]:
     'Vous allez supprimer {{user}} de cet espace. Êtes vous certain? ',
+  [lngKeys.ExternalEntity]: 'Entités externes',
+  [lngKeys.ExternalEntityOpenInBrowser]:
+    'Ouvrir dans un navigateur pour activer',
   [lngKeys.ExternalEntityDescription]:
-    'Boost Note va vous montrer du contenu externe tel des issues Github, Google Docs, cartes Trello et plus encore. Que voudriez vous voir sur Boost Note?',
+    'Boost Note va vous montrer du contenu externe tel que des issues Github, Google Docs, cartes Trello et plus encore. Que voudriez vous voir sur Boost Note?',
   [lngKeys.ExternalEntityRequest]: 'Laissez nous savoir vos demandes!',
 
   // Settings Community

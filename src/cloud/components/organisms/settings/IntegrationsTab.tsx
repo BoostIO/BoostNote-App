@@ -503,7 +503,7 @@ const IntegrationsTab = () => {
             </StyledServiceList>
           </section>
           <section>
-            <h2>External Entity</h2>
+            <h2>{t(lngKeys.ExternalEntity)}</h2>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info'>
@@ -541,7 +541,7 @@ const IntegrationsTab = () => {
                             openNew(`${boostHubBaseUrl}/${team?.domain}`)
                           }}
                         >
-                          Open in Browser to enable GitHub app
+                          {t(lngKeys.ExternalEntityOpenInBrowser)}
                         </Button>
                       ) : (
                         <ServiceConnect
@@ -550,7 +550,7 @@ const IntegrationsTab = () => {
                           service='github'
                           onConnect={connectionState.actions.addConnection}
                         >
-                          Enable
+                          {t(lngKeys.Enable)}
                         </ServiceConnect>
                       )
                     ) : (
@@ -559,7 +559,7 @@ const IntegrationsTab = () => {
                         className='item-btn'
                         onClick={removeGithubConnection}
                       >
-                        Disable
+                        {t(lngKeys.Disable)}
                       </Button>
                     )}
                   </>

@@ -76,6 +76,9 @@ export enum lngKeys {
   CancelInvite = 'invite.cancel',
   CancelInviteOpenLinkMessage = 'invite.cancel.openlink.message',
   CancelInviteEmailMessage = 'invite.cancel.email.message',
+
+  ExternalEntity = 'external.entity',
+  ExternalEntityOpenInBrowser = 'external.entity.open.browser',
   ExternalEntityDescription = 'external.entity.description',
   ExternalEntityRequest = 'external.entity.request',
 
