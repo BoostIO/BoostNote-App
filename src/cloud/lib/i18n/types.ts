@@ -91,8 +91,16 @@ export enum lngKeys {
   CommunityFeedbackType = 'community.feedback.type',
   CommunityFeedbackFreeForm = 'community.feedback.freeform',
 
+  ManageApi = 'manage.api',
+  AccessTokens = 'tokens.access',
+  CreateTokens = 'tokens.create',
+  TokensName = 'tokens.name.placeholder',
+  GenerateToken = 'tokens.generate',
+  TokensDocumentation = 'tokens.documentation',
+
   Back = 'back',
 
+  ThisSpace = 'this.space',
   ProfilePicture = 'profile.picture',
   Name = 'name',
   Logo = 'logo',
@@ -116,6 +124,11 @@ export enum lngKeys {
   Enable = 'enable',
   Disable = 'disable',
   SendMore = 'send.more',
+  Show = 'show',
+  Hide = 'hide',
+  Save = 'save',
+  Close = 'close',
+  Token = 'token',
 
   SettingsUserForum = 'settings.user.forum',
 }

@@ -98,8 +98,6 @@ const enTranslation: TranslationSource = {
   [lngKeys.ExternalEntityDescription]:
     'Boost Note show you the external content such as Github issues, Trello cards, Google Docs, and much more automatically. What do you want to see on Boost Note?',
   [lngKeys.ExternalEntityRequest]: 'Please let us know your requests!',
-
-  // Settings Community
   [lngKeys.CommunityFeedback]: 'Feedback',
   [lngKeys.CommunityFeatureRequests]: 'Feature Requests',
   [lngKeys.CommunityFeedbackSubtitle]:
@@ -110,6 +108,12 @@ const enTranslation: TranslationSource = {
     'Your feedback is always appreciated! Thank you for reaching out.',
   [lngKeys.CommunityFeedbackType]: 'Type of Feedback',
   [lngKeys.CommunityFeedbackFreeForm]: 'Free Form',
+  [lngKeys.ManageApi]: 'These tokens are available only to {{space}}',
+  [lngKeys.AccessTokens]: 'Access Tokens',
+  [lngKeys.GenerateToken]: 'Generate Token',
+  [lngKeys.CreateTokens]: 'Create a new token',
+  [lngKeys.TokensName]: 'Your token name...',
+  [lngKeys.TokensDocumentation]: 'documentation for Boost Note for Teams API',
 
   [lngKeys.FormSelectImage]: 'Select Image',
   [lngKeys.FormChangeImage]: 'Change Image',
@@ -136,6 +140,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.Promote]: 'Promote',
   [lngKeys.Enable]: 'Enable',
   [lngKeys.Disable]: 'Disable',
+  [lngKeys.Show]: 'Show',
+  [lngKeys.Hide]: 'Hide',
+  [lngKeys.Save]: 'Save',
+  [lngKeys.Close]: 'Close',
+  [lngKeys.ThisSpace]: 'this space',
+  [lngKeys.Token]: 'Token',
 }
 
 export default {

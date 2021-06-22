@@ -12,11 +12,15 @@ import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import { ExternalLink } from '../../../../shared/components/atoms/Link'
 import Form from '../../../../shared/components/molecules/Form'
 import ViewerRestrictedWrapper from '../../molecules/ViewerRestrictedWrapper'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
+import { TFunction } from 'i18next'
 
 const ApiTab = () => {
   const { team } = usePage()
   const apiTokenState = useApiTokens()
   const [tokenCreateMode, setTokenCreateMode] = useState(false)
+  const { t } = useI18n()
 
   const createToken = useCallback(
     (name: string) => {
@@ -37,20 +41,19 @@ const ApiTab = () => {
   return (
     <SettingTabContent
       title='API'
-      description={`
-        These tokens are available only to ${
-          team != null ? team.name : 'your team'
-        }`}
+      description={t(lngKeys.ManageApi, {
+        space: team != null ? team.name : t(lngKeys.ThisSpace),
+      })}
       body={
         <ViewerRestrictedWrapper>
           <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
-                <h2 style={{ margin: '0' }}>Access Tokens</h2>
+                <h2 style={{ margin: '0' }}>{t(lngKeys.AccessTokens)}</h2>
                 <p>
-                  See the{' '}
+                  {t(lngKeys.See)}:{' '}
                   <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'>
-                    documentation for Boost Note API{' '}
+                    {t(lngKeys.TokensDocumentation)}{' '}
                     <Icon path={mdiOpenInNew} />
                   </ExternalLink>
                 </p>
@@ -59,13 +62,13 @@ const ApiTab = () => {
                 onClick={() => setTokenCreateMode(!tokenCreateMode)}
                 disabled={apiTokenState.state === 'initialising'}
               >
-                {tokenCreateMode ? 'Close' : 'Generate Token'}
+                {tokenCreateMode ? t(lngKeys.Close) : t(lngKeys.GenerateToken)}
               </Button>
             </Flexbox>
             {tokenCreateMode && (
               <StyledServiceList>
                 <StyledServiceListItem>
-                  <SettingTokenCreate onCreate={createToken} />
+                  <SettingTokenCreate onCreate={createToken} t={t} />
                 </StyledServiceListItem>
               </StyledServiceList>
             )}
@@ -98,8 +101,10 @@ const ApiTab = () => {
 
 const SettingTokenCreate = ({
   onCreate,
+  t,
 }: {
   onCreate: (val: string) => void
+  t: TFunction
 }) => {
   const [name, setName] = useState('')
 
@@ -109,19 +114,22 @@ const SettingTokenCreate = ({
 
   return (
     <div className='setting__token__form'>
-      <h2>Create a new token</h2>
+      <h2>{t(lngKeys.CreateTokens)}</h2>
       <Form
         onSubmit={create}
-        submitButton={{ label: 'Create', disabled: name.length === 0 }}
+        submitButton={{
+          label: t(lngKeys.GeneralCreate),
+          disabled: name.length === 0,
+        }}
         rows={[
           {
-            title: 'Name',
+            title: t(lngKeys.Name),
             required: true,
             items: [
               {
                 type: 'input',
                 props: {
-                  placeholder: 'Your token name...',
+                  placeholder: t(lngKeys.TokensName),
                   value: name,
                   onChange: (e: ChangeEvent<HTMLInputElement>) => {
                     setName(e.target.value)
