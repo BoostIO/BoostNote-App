@@ -436,6 +436,10 @@ const Application = ({
     sendToElectron('sidebar--state', { state: sidebarState })
   }, [usingElectron, , sendToElectron, sidebarState])
 
+  useEffect(() => {
+    setPopOverState(null)
+  }, [sidebarState])
+
   const treeControls: SidebarTreeControl[] = useMemo(() => {
     return [
       {
