@@ -92,7 +92,7 @@ const Sidebar = ({
         />
       )}
       {popOver === 'spaces' && (
-        <SidebarPopOver>
+        <SidebarPopOver className='sidebar__popover__indent'>
           <SidebarSpaces
             spaces={spaces}
             spaceBottomRows={spaceBottomRows}
@@ -101,7 +101,10 @@ const Sidebar = ({
         </SidebarPopOver>
       )}
       {popOver === 'notifications' && (
-        <SidebarPopOver onClose={onPopOverBlur}>
+        <SidebarPopOver
+          onClose={onPopOverBlur}
+          className={cc([showToolbar && 'sidebar__popover__indent'])}
+        >
           <NotificationList
             state={notificationState}
             getMore={getMoreNotifications}
@@ -187,5 +190,9 @@ const SidebarContainer = styled.div`
   .sidebar--expanded__wrapper {
     height: 100%;
     overflow: auto;
+  }
+
+  .sidebar__popover__indent {
+    left: 35px;
   }
 `
