@@ -25,6 +25,8 @@ import {
 import copy from 'copy-to-clipboard'
 import CustomButton from '../atoms/buttons/CustomButton'
 import Tooltip from '../atoms/Tooltip'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
 
 interface TokenControlProps {
   token: SerializedApiToken
@@ -38,6 +40,7 @@ const TokenControl = ({ token, onUpdate, onDelete }: TokenControlProps) => {
   const [edit, setEdit] = useState(false)
   const inputRef = useRef<HTMLInputElement>()
   const [clipIcon, setClipIcon] = useState<string>(mdiContentCopy)
+  const { t } = useI18n()
 
   const copyButtonHandler = () => {
     copy(token.token)
@@ -76,7 +79,7 @@ const TokenControl = ({ token, onUpdate, onDelete }: TokenControlProps) => {
               <SmallButton variant='transparent' onClick={() => setEdit(false)}>
                 <IconMdi path={mdiClose} size={18} />
               </SmallButton>
-              <SmallButton onClick={onSave}>Save</SmallButton>
+              <SmallButton onClick={onSave}>{t(lngKeys.Save)}</SmallButton>
             </div>
           </>
         ) : (
@@ -101,10 +104,10 @@ const TokenControl = ({ token, onUpdate, onDelete }: TokenControlProps) => {
         alignItems='center'
         style={{ height: 26 }}
       >
-        <span style={{ flex: ' 0 0 auto' }}>Token:</span>
+        <span style={{ flex: ' 0 0 auto' }}>{t(lngKeys.Token)}:</span>
         <Flexbox flex='1 1 auto' style={{ margin: '0 15px', height: '100%' }}>
           <StyledReadOnlyInput readOnly={true} value={displayContent} />
-          <Tooltip tooltip='copy'>
+          <Tooltip tooltip={t(lngKeys.Copy)}>
             <StyledClipboardButton
               className='copy-button'
               onClick={copyButtonHandler}
@@ -125,7 +128,7 @@ const TokenControl = ({ token, onUpdate, onDelete }: TokenControlProps) => {
             flex: '0 0 auto',
           }}
         >
-          {hide ? 'Show' : 'Hide'}
+          {hide ? t(lngKeys.Show) : t(lngKeys.Hide)}
         </CustomButton>
       </Flexbox>
     </StyledTokenControl>

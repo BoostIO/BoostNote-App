@@ -99,8 +99,6 @@ const frTranslation: TranslationSource = {
   [lngKeys.ExternalEntityDescription]:
     'Boost Note va vous montrer du contenu externe tel que des issues Github, Google Docs, cartes Trello et plus encore. Que voudriez vous voir sur Boost Note?',
   [lngKeys.ExternalEntityRequest]: 'Laissez nous savoir vos demandes!',
-
-  // Settings Community
   [lngKeys.CommunityFeedback]: 'Feedback',
   [lngKeys.CommunityFeatureRequests]: 'Demande de fonctionnalités',
   [lngKeys.CommunityFeedbackSubtitle]:
@@ -112,6 +110,12 @@ const frTranslation: TranslationSource = {
     'Votre feedback est très apprécié. Merci de nous avoir contacté.',
   [lngKeys.CommunityFeedbackType]: 'Type de Feedback',
   [lngKeys.CommunityFeedbackFreeForm]: 'Formulaire libre',
+  [lngKeys.ManageApi]: 'Ces jetons sont utilisables seulement pour {{space}}',
+  [lngKeys.AccessTokens]: "Jeton d'accès",
+  [lngKeys.GenerateToken]: 'Générer un jeton',
+  [lngKeys.CreateTokens]: 'Créer un nouveau jeton',
+  [lngKeys.TokensName]: 'Nom du jeton...',
+  [lngKeys.TokensDocumentation]: "documentation pour l'API de Boost Note",
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
@@ -139,6 +143,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.Promote]: 'Promouvoir',
   [lngKeys.Enable]: 'Activer',
   [lngKeys.Disable]: 'Désactiver',
+  [lngKeys.Show]: 'Montrer',
+  [lngKeys.Hide]: 'Cacher',
+  [lngKeys.Save]: 'Sauvegarder',
+  [lngKeys.Close]: 'Fermer',
+  [lngKeys.ThisSpace]: 'cet espace',
+  [lngKeys.Token]: 'Jeton',
 }
 
 export default {
