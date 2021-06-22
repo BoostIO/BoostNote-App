@@ -43,11 +43,11 @@ export enum lngKeys {
   SettingsSpace = 'settings.space',
   SettingsSpaceDelete = 'settings.space.delete',
   SettingsSpaceDeleteWarning = 'settings.space.delete.warning',
-  CommunityFeatureRequests = 'community.feature.requests',
   ManagePreferences = 'manage.preferences',
   ManageProfile = 'manage.profile',
   ManageSpaceSettings = 'manage.space.settings',
-  ManageTeamMembers = 'manager.team.members',
+  ManageTeamMembers = 'manage.team.members',
+  ManageIntegrations = 'manage.integrations',
 
   CurrentMembers = 'members.current',
   AddMembers = 'members.add',
@@ -73,10 +73,20 @@ export enum lngKeys {
   TeamLeaveWarning = 'team.leave.warning',
   RemovingMember = 'role.member.remove',
   RemovingMemberWarning = 'role.member.remove.warning',
-
   CancelInvite = 'invite.cancel',
   CancelInviteOpenLinkMessage = 'invite.cancel.openlink.message',
   CancelInviteEmailMessage = 'invite.cancel.email.message',
+  ExternalEntityDescription = 'external.entity.description',
+  ExternalEntityRequest = 'external.entity.request',
+
+  CommunityFeedback = 'community.feedback',
+  CommunityFeatureRequests = 'community.feature.requests',
+  CommunityFeedbackSubtitle = 'community.feedback.subtitle',
+  CommunityBugReport = 'community.bug.report',
+  CommunityFeedbackSendError = 'community.feedback.send.error',
+  CommunityFeedbackSendSuccess = 'community.feedback.send.success',
+  CommunityFeedbackType = 'community.feedback.type',
+  CommunityFeedbackFreeForm = 'community.feedback.freeform',
 
   Back = 'back',
 
@@ -100,6 +110,9 @@ export enum lngKeys {
   Send = 'send',
   Promote = 'promote',
   Demote = 'demote',
+  Enable = 'enable',
+  Disable = 'disable',
+  SendMore = 'send.more',
 
   SettingsUserForum = 'settings.user.forum',
 }
