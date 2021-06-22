@@ -117,8 +117,12 @@ const enTranslation: TranslationSource = {
 
   [lngKeys.FormSelectImage]: 'Select Image',
   [lngKeys.FormChangeImage]: 'Change Image',
+  [lngKeys.SupportGuide]: 'Support Guide',
+  [lngKeys.SendUsAMessage]: 'Send us a message',
+  [lngKeys.KeyboardShortcuts]: 'Keyboard Shortcuts',
 
   //Language
+  [lngKeys.Help]: 'Help',
   [lngKeys.ProfilePicture]: 'Profile Picture',
   [lngKeys.Name]: 'Name',
   [lngKeys.Spaces]: 'spaces',

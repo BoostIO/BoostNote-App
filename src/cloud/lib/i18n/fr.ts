@@ -120,8 +120,12 @@ const frTranslation: TranslationSource = {
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',
+  [lngKeys.SupportGuide]: 'Support',
+  [lngKeys.SendUsAMessage]: 'Contacte nous',
+  [lngKeys.KeyboardShortcuts]: 'Raccourcis clavier',
 
   //Language
+  [lngKeys.Help]: 'Aide',
   [lngKeys.ProfilePicture]: 'Image de profil',
   [lngKeys.Name]: 'Nom',
   [lngKeys.Spaces]: 'espaces',

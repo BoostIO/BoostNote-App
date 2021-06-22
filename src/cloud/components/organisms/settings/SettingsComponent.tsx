@@ -226,7 +226,7 @@ const SettingsComponent = () => {
 
           <SettingSidenavHeader
             path={mdiHelpCircleOutline}
-            text={'Help'}
+            text={t(lngKeys.Help)}
             size={16}
           />
           <SettingNavLinkItem
@@ -236,26 +236,26 @@ const SettingsComponent = () => {
           />
 
           <SettingNavLinkItem
-            label='Support Guide'
+            label={t(lngKeys.SupportGuide)}
             href='https://intercom.help/boostnote-for-teams/en/'
             id='setting-support-link'
           />
 
           {intercomAppId != null && (
             <SettingNavButtonItem
-              label='Send us a message'
+              label={t(lngKeys.SendUsAMessage)}
               id='settings-helper-btn'
               className='helper-message'
             />
           )}
           <SettingNavButtonItem
-            label='Feedback'
+            label={t(lngKeys.CommunityFeedback)}
             active={settingsTab === 'feedback'}
             id='settings-feedback-btn'
             onClick={() => openSettingsTab('feedback')}
           />
           <SettingNavLinkItem
-            label='Keyboard Shortcuts'
+            label={t(lngKeys.KeyboardShortcuts)}
             href='https://intercom.help/boostnote-for-teams/en/articles/4347206-keyboard-shortcuts'
             id='setting-keyboard-shortcuts'
           />
