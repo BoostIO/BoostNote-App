@@ -3,11 +3,13 @@ import React, { useEffect, useRef } from 'react'
 
 interface SidebarPopOverProps {
   onClose?: () => void
+  className?: string
 }
 
 const SidebarPopOver = ({
   children,
   onClose,
+  className,
 }: React.PropsWithChildren<SidebarPopOverProps>) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -31,7 +33,7 @@ const SidebarPopOver = ({
   }, [onClose])
 
   return (
-    <SidebarPopOverContainer ref={containerRef}>
+    <SidebarPopOverContainer className={className} ref={containerRef}>
       {children}
     </SidebarPopOverContainer>
   )
@@ -40,7 +42,6 @@ const SidebarPopOver = ({
 const SidebarPopOverContainer = styled.div`
   position: fixed;
   top: 15px;
-  left: 35px;
   background: ${({ theme }) => theme.colors.background.primary};
   z-index: 101;
   box-shadow: ${({ theme }) => theme.colors.shadow};
