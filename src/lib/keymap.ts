@@ -122,6 +122,42 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       isMenuType: true,
     },
   ],
+  [
+    'insertLocaleDateString',
+    {
+      shortcutMainStroke: {
+        key: '/',
+        keycode: 191,
+        modifiers:
+          osName === 'macos'
+            ? { meta: true, shift: true }
+            : {
+                ctrl: true,
+                shift: true,
+              },
+      },
+      description: 'Inserts locale date',
+      isMenuType: false,
+    },
+  ],
+  [
+    'insertDateAndTimeString',
+    {
+      shortcutMainStroke: {
+        key: '/',
+        keycode: 191,
+        modifiers:
+          osName === 'macos'
+            ? { meta: true, alt: true }
+            : {
+                ctrl: true,
+                alt: true,
+              },
+      },
+      description: 'Inserts date and time',
+      isMenuType: false,
+    },
+  ],
 ])
 
 export function compareEventKeyWithKeymap(
@@ -149,17 +185,17 @@ export function createCodemirrorTypeKeymap(
 ) {
   let keymapString = ''
   if (keymapProps.modifiers != null) {
-    if (keymapProps.modifiers.ctrl != null) {
-      keymapString += keymapProps.modifiers.ctrl ? 'Ctrl-' : ''
-    }
     if (keymapProps.modifiers.shift != null) {
       keymapString += keymapProps.modifiers.shift ? 'Shift-' : ''
     }
-    if (keymapProps.modifiers.alt != null) {
-      keymapString += keymapProps.modifiers.alt ? 'Alt-' : ''
-    }
     if (keymapProps.modifiers.meta != null) {
       keymapString += keymapProps.modifiers.meta ? 'Cmd-' : ''
+    }
+    if (keymapProps.modifiers.ctrl != null) {
+      keymapString += keymapProps.modifiers.ctrl ? 'Ctrl-' : ''
+    }
+    if (keymapProps.modifiers.alt != null) {
+      keymapString += keymapProps.modifiers.alt ? 'Alt-' : ''
     }
   }
 

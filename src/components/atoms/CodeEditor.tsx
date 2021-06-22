@@ -94,6 +94,8 @@ class CodeEditor extends React.Component<CodeEditorProps> {
   codeMirror?: CodeMirror.EditorFromTextArea
   prevLocalSearchShortcut?: string
   prevLocalReplaceShortcut?: string
+  prevInsertLocaleDateShortcut?: string
+  prevInsertDateAndTimeShortcut?: string
 
   componentDidMount() {
     const indentSize = this.props.indentSize == null ? 2 : this.props.indentSize
@@ -172,10 +174,16 @@ class CodeEditor extends React.Component<CodeEditorProps> {
       localSearchShortcut,
       localReplaceShortcut,
     ] = this.getCurrentSearchKeymaps()
+    const [
+      insertLocaleDateShortcut,
+      insertDateAndTimeShortcut,
+    ] = this.getCurrentDateKeymaps()
     if (
       this.props.keyMap !== prevProps.keyMap ||
       this.prevLocalSearchShortcut != localSearchShortcut ||
-      this.prevLocalReplaceShortcut != localReplaceShortcut
+      this.prevLocalReplaceShortcut != localReplaceShortcut ||
+      this.prevInsertLocaleDateShortcut != insertLocaleDateShortcut ||
+      this.prevInsertDateAndTimeShortcut != insertDateAndTimeShortcut
     ) {
       this.codeMirror.setOption('extraKeys', this.getExtraKeys(keyMap))
     }
@@ -203,6 +211,24 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     return [localSearchShortcut, localReplaceShortcut]
   }
 
+  getCurrentDateKeymaps(): string[] {
+    let insertLocaleDateShortcut = this.props.getCustomKeymap(
+      'insertLocaleDateString'
+    )
+    let insertDateAndTimeShortcut = this.props.getCustomKeymap(
+      'insertDateAndTimeString'
+    )
+    if (insertLocaleDateShortcut == null) {
+      insertLocaleDateShortcut =
+        osName === 'macos' ? 'Shift-Cmd-/' : 'Shift-Ctrl-/'
+    }
+    if (insertDateAndTimeShortcut == null) {
+      insertDateAndTimeShortcut =
+        osName === 'macos' ? 'Cmd-Alt-/' : 'Ctrl-Alt-/'
+    }
+    return [insertLocaleDateShortcut, insertDateAndTimeShortcut]
+  }
+
   getExtraKeys = (keyMapStyle: string) => {
     const [
       localSearchShortcut,
@@ -222,13 +248,33 @@ class CodeEditor extends React.Component<CodeEditorProps> {
     }
     extraKeys[localSearchShortcut] = (cm: CodeMirror.Editor) =>
       this.handleOnLocalSearchToggle(cm, true)
-
     extraKeys[localReplaceShortcut] = (cm: CodeMirror.Editor) =>
       this.handleOnLocalSearchReplaceToggle(cm, true)
 
+    const [
+      insertLocaleDateShortcut,
+      insertDateAndTimeShortcut,
+    ] = this.getCurrentDateKeymaps()
+    extraKeys[insertLocaleDateShortcut] = (cm: CodeMirror.Editor) =>
+      this.handleInsertLocaleDateString(cm)
+    extraKeys[insertDateAndTimeShortcut] = (cm: CodeMirror.Editor) =>
+      this.handleInsertLocaleString(cm)
+
     this.prevLocalSearchShortcut = localSearchShortcut
     this.prevLocalReplaceShortcut = localReplaceShortcut
+    this.prevInsertLocaleDateShortcut = insertLocaleDateShortcut
+    this.prevInsertDateAndTimeShortcut = insertDateAndTimeShortcut
     return extraKeys
+  }
+
+  handleInsertLocaleDateString = (editor: CodeMirror.Editor) => {
+    const dateNow = new Date()
+    editor.replaceSelection(dateNow.toLocaleDateString())
+  }
+
+  handleInsertLocaleString = (editor: CodeMirror.Editor) => {
+    const dateNow = new Date()
+    editor.replaceSelection(dateNow.toLocaleString())
   }
 
   handleOnLocalSearchReplaceToggle = (
