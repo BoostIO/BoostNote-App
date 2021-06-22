@@ -19,12 +19,13 @@ const SidebarTreeForm = ({
   createCallback,
 }: SideNavigatorFolderFormProps) => {
   const [sending, setSending] = useState<boolean>(false)
-  const [name, setName] = useState<string>('')
+  const [name, setName] = useState<string>('Untitled')
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffectOnce(() => {
     if (inputRef.current != null) {
       inputRef.current.focus()
+      inputRef.current.setSelectionRange(0, name.length)
     }
   })
 
