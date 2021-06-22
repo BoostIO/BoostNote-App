@@ -14,9 +14,8 @@ export function toText(comment: string, users: SerializedUser[] = []) {
 export function makeMentionElement(id: string, defaultName: string) {
   const mentionNode = document.createElement('span')
   mentionNode.setAttribute('data-mention', id)
-  mentionNode.setAttribute('data-label', defaultName)
+  mentionNode.setAttribute('data-label', `@${defaultName}`)
   mentionNode.addEventListener('focus', () => console.log('afafawfaf'))
-  mentionNode.appendChild(document.createTextNode(`@${defaultName}`))
   return mentionNode
 }
 
@@ -48,14 +47,11 @@ export function fromNode(node: Node): string {
     return ''
   }
 
-  if (
-    node.tagName === 'SPAN' &&
-    node.hasAttribute('data-mention') &&
-    node.hasAttribute('data-label')
-  ) {
-    return `:m:${node.getAttribute('data-mention')}:${node.getAttribute(
-      'data-label'
-    )}:m:`
+  if (isMention(node)) {
+    const label = node.getAttribute('data-label') || ''
+    return `:m:${node.getAttribute('data-mention')}:${
+      label.startsWith('@') ? label.substr(1) : label
+    }:m:`
   }
 
   const result = []
@@ -68,6 +64,15 @@ export function fromNode(node: Node): string {
   }
 
   return result.join('')
+}
+
+export function isMention(node: Node) {
+  return (
+    isElement(node) &&
+    node.tagName === 'SPAN' &&
+    node.hasAttribute('data-mention') &&
+    node.hasAttribute('data-label')
+  )
 }
 
 function isElement(node: Node): node is Element {
