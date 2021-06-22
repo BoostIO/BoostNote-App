@@ -232,6 +232,11 @@
     return electron.remote.session.defaultSession.cookies.remove(url, name)
   }
 
+  function setBadgeCount(count) {
+    const { app } = electron.remote
+    return app.setBadgeCount(count)
+  }
+
   window.__ELECTRON_ONLY__ = {}
   window.__ELECTRON_ONLY__.openExternal = openExternal
   window.__ELECTRON_ONLY__.openPath = openPath
@@ -264,5 +269,6 @@
   window.__ELECTRON_ONLY__.setCookie = setCookie
   window.__ELECTRON_ONLY__.getCookie = getCookie
   window.__ELECTRON_ONLY__.removeCookie = removeCookie
+  window.__ELECTRON_ONLY__.setBadgeCount = setBadgeCount
   window.__ELECTRON_ONLY__.got = got
 })()

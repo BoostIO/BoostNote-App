@@ -1,5 +1,5 @@
 import { createStoreContext } from '../../utils/context'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Notification as UserNotification } from '../../../../cloud/interfaces/db/notifications'
 import { useToast } from '../toast'
 import {
@@ -9,6 +9,7 @@ import {
 } from '../../../../cloud/api/notifications'
 import { mergeOnId } from '../../utils/array'
 import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
+import { useElectron } from '../../../../cloud/lib/stores/electron'
 
 type Observer = (notifications: UserNotification[]) => void
 
@@ -18,6 +19,13 @@ function useNotificationStore() {
   const observersRef = useRef<Map<string, Set<Observer>>>(new Map())
   const [counts, setCounts] = useState<Record<string, number>>({})
   const oldestAllRef = useRef<Map<string, Date>>(new Map())
+  const { sendToElectron, usingElectron } = useElectron()
+
+  useEffect(() => {
+    if (usingElectron) {
+      sendToElectron('notification-counts', counts)
+    }
+  }, [sendToElectron, usingElectron, counts])
 
   const observeTeamNotifications = useCallback(
     (teamId: string, observer: Observer) => {

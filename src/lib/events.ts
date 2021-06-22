@@ -148,6 +148,10 @@ export const boostHubOpenDiscountModalEventEmitter = createCustomEventEmitter(
   'BoostHub:openDiscountModal'
 )
 
+export const boosthubNotificationCountsEventEmitter = createCustomEventEmitter<
+  Record<string, number>
+>('BoostHub:notificationCounts')
+
 type BoostHubSubscriptionEventDetail = { subscription: SerializedSubscription }
 
 export type BoostHubSubscriptionUpdateEvent = CustomEvent<

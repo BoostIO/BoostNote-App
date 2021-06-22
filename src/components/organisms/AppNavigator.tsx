@@ -21,7 +21,7 @@ import {
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu } from '../../lib/electronOnly'
+import { openContextMenu, setBadgeCount } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useBoostHub } from '../../lib/boosthub'
@@ -48,6 +48,7 @@ import {
   boostHubToggleSidebarTreeEventEmitter,
   boostHubOpenDiscountModalEventEmitter,
   boostHubToggleSidebarNotificationsEventEmitter,
+  boosthubNotificationCountsEventEmitter,
 } from '../../lib/events'
 import { useSearchModal } from '../../lib/searchModal'
 import { SidebarState } from '../../shared/lib/sidebar'
@@ -83,7 +84,9 @@ const TopLevelNavigator = () => {
     showingCloudIntroModal,
     toggleShowingCloudIntroModal,
   } = useCloudIntroModal()
-  const [notificationCount, setNotificationCount] = useState(0)
+  const [notificationCounts, setNotificationCounts] = useState<
+    Record<string, number>
+  >({})
 
   useEffect(() => {
     const boostHubSidebarStateEventHandler = (
@@ -99,6 +102,19 @@ const TopLevelNavigator = () => {
       )
     }
   }, [])
+
+  useEffect(() => {
+    const handler = (event: CustomEvent<Record<string, number>>) =>
+      setNotificationCounts(event.detail)
+    boosthubNotificationCountsEventEmitter.listen(handler)
+    return () => boosthubNotificationCountsEventEmitter.unlisten(handler)
+  }, [])
+
+  useEffect(() => {
+    setBadgeCount(
+      Object.values(notificationCounts).reduce((prev, curr) => prev + curr, 0)
+    )
+  }, [notificationCounts])
 
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {
     if (routeParams.name !== 'boosthub.teams.show') {
@@ -318,15 +334,16 @@ const TopLevelNavigator = () => {
         },
         {
           tooltip: 'Notifications',
-          icon: notificationCount ? (
-            <NotifyIcon
-              size={26}
-              count={notificationCount}
-              path={mdiBellRingOutline}
-            />
-          ) : (
-            mdiBellOutline
-          ),
+          icon:
+            notificationCounts[boosthubTeam.id] != null ? (
+              <NotifyIcon
+                size={26}
+                count={notificationCounts[boosthubTeam.id]}
+                path={mdiBellRingOutline}
+              />
+            ) : (
+              mdiBellOutline
+            ),
           onClick: boostHubToggleSidebarNotificationsEventEmitter.dispatch,
         },
       ]
@@ -428,6 +445,7 @@ const TopLevelNavigator = () => {
       },
     ] as SidebarToolbarRow[]
   }, [
+    notificationCounts,
     activeBoostHubTeamDomain,
     generalStatus.boostHubTeams,
     storageMap,
