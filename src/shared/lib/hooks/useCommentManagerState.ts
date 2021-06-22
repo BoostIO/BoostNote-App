@@ -35,6 +35,7 @@ function useCommentManagerState(
             thread: { id: initialThreadRef.current } as Thread,
           })
         )
+        initialThreadRef.current = ''
       }
     })
   }, [docId, observeDocThreads])

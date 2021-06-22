@@ -1,6 +1,7 @@
 node_modules/*
 .DS_Store
 .env
+.env.dev
 .env.local
 .env.staging
 .env.production
