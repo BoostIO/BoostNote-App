@@ -1,18 +1,22 @@
 import React, { FormEvent, useState, useCallback, useRef } from 'react'
-import CustomButton from '../../atoms/buttons/CustomButton'
 import { registerAppFeedback } from '../../../api/users/appfeedback'
 import { AppFeedbackTypeOption } from '../../../interfaces/db/userAppFeedback'
 import ColoredBlock from '../../atoms/ColoredBlock'
 import { useEffectOnce } from 'react-use'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import Form from '../../../../shared/components/molecules/Form'
-
-const typeOptions: AppFeedbackTypeOption[] = ['Feature Request', 'Bug Report']
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
+import Button from '../../../../shared/components/atoms/Button'
+import { FormSelectOption } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 
 const AppFeedbackForm = () => {
-  const [feedbackType, setFeedbackType] = useState<AppFeedbackTypeOption>(
-    'Feature Request'
-  )
+  const { t } = useI18n()
+
+  const [feedbackType, setFeedbackType] = useState<FormSelectOption>({
+    label: t(lngKeys.CommunityFeatureRequests),
+    value: 'Feature Request',
+  })
   const [feedback, setFeedback] = useState<string>('')
   const [sending, setSending] = useState<boolean>(false)
   const { pushMessage } = useToast()
@@ -33,12 +37,15 @@ const AppFeedbackForm = () => {
       }
       setSending(true)
       try {
-        await registerAppFeedback({ type: feedbackType, feedback })
+        await registerAppFeedback({
+          type: feedbackType.value as AppFeedbackTypeOption,
+          feedback,
+        })
         setShowSuccessMessage(true)
       } catch (error) {
         pushMessage({
-          title: 'Error',
-          description: `Could not send your feedback`,
+          title: t(lngKeys.GeneralError),
+          description: t(lngKeys.CommunityFeedbackSendError),
         })
       }
       setSending(false)
@@ -50,12 +57,16 @@ const AppFeedbackForm = () => {
       feedback,
       feedbackType,
       setShowSuccessMessage,
+      t,
     ]
   )
 
-  const feedbackTypeChangeHandler = useCallback(async (value: string) => {
-    setFeedbackType(value as AppFeedbackTypeOption)
-  }, [])
+  const feedbackTypeChangeHandler = useCallback(
+    async (value: FormSelectOption) => {
+      setFeedbackType(value)
+    },
+    []
+  )
 
   const feedbackOnChangeEvent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -66,21 +77,24 @@ const AppFeedbackForm = () => {
   )
 
   const resetForm = useCallback(() => {
-    setFeedbackType('Feature Request')
+    setFeedbackType({
+      label: t(lngKeys.CommunityFeatureRequests),
+      value: 'Feature Request',
+    })
     setFeedback('')
     setShowSuccessMessage(false)
-  }, [])
+  }, [t])
 
   if (showSuccessMessage) {
     return (
       <div>
         <ColoredBlock variant='success'>
-          Your feedback is always appreciated! Thank you for reaching out.
+          {t(lngKeys.CommunityFeedbackSendSuccess)}
         </ColoredBlock>
 
-        <CustomButton variant='secondary' onClick={resetForm}>
-          Send more
-        </CustomButton>
+        <Button variant='secondary' onClick={resetForm}>
+          {t(lngKeys.SendMore)}
+        </Button>
       </div>
     )
   }
@@ -90,20 +104,29 @@ const AppFeedbackForm = () => {
       onSubmit={sendFeedback}
       rows={[
         {
-          title: 'Type of Feedback',
+          title: t(lngKeys.CommunityFeedbackType),
           items: [
             {
-              type: 'select--string',
+              type: 'select',
               props: {
                 value: feedbackType,
                 onChange: feedbackTypeChangeHandler,
-                options: typeOptions,
+                options: [
+                  {
+                    label: t(lngKeys.CommunityFeatureRequests),
+                    value: 'Feature Request',
+                  },
+                  {
+                    label: t(lngKeys.CommunityBugReport),
+                    value: 'Bug Report',
+                  },
+                ],
               },
             },
           ],
         },
         {
-          title: 'Free Form',
+          title: t(lngKeys.CommunityFeedbackFreeForm),
           items: [
             {
               type: 'textarea',
@@ -116,7 +139,7 @@ const AppFeedbackForm = () => {
           ],
         },
       ]}
-      submitButton={{ label: 'Send' }}
+      submitButton={{ label: t(lngKeys.Send) }}
     />
   )
 }

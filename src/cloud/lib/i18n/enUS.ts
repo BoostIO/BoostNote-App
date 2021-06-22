@@ -54,6 +54,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.ManageProfile]: 'Manage your Boost Note profile.',
   [lngKeys.ManageSpaceSettings]: "Manage your space's settings.",
   [lngKeys.ManageTeamMembers]: 'Manage who has access to this space.',
+  [lngKeys.ManageIntegrations]:
+    'Connect 3rd party content to your Boost Note for Teams documents.',
   [lngKeys.CurrentMembers]: 'Current members',
   [lngKeys.MembersAccessLevel]: 'Access level',
   [lngKeys.AddMembers]: 'Add members',
@@ -91,9 +93,21 @@ const enTranslation: TranslationSource = {
   [lngKeys.RemovingMember]: 'Removing a member',
   [lngKeys.RemovingMemberWarning]:
     'You will be removing {{user}} from this team. Are you sure?',
+  [lngKeys.ExternalEntityDescription]:
+    'Boost Note show you the external content such as Github issues, Trello cards, Google Docs, and much more automatically. What do you want to see on Boost Note?',
+  [lngKeys.ExternalEntityRequest]: 'Please let us know your requests!',
 
   // Settings Community
+  [lngKeys.CommunityFeedback]: 'Feedback',
   [lngKeys.CommunityFeatureRequests]: 'Feature Requests',
+  [lngKeys.CommunityFeedbackSubtitle]:
+    'Want a specific feature? Did you notice a bug? Let us know!',
+  [lngKeys.CommunityBugReport]: 'Bug Report',
+  [lngKeys.CommunityFeedbackSendError]: 'Could not send your feedback',
+  [lngKeys.CommunityFeedbackSendSuccess]:
+    'Your feedback is always appreciated! Thank you for reaching out.',
+  [lngKeys.CommunityFeedbackType]: 'Type of Feedback',
+  [lngKeys.CommunityFeedbackFreeForm]: 'Free Form',
 
   [lngKeys.FormSelectImage]: 'Select Image',
   [lngKeys.FormChangeImage]: 'Change Image',
@@ -113,10 +127,13 @@ const enTranslation: TranslationSource = {
   [lngKeys.Copy]: 'Copy',
   [lngKeys.Copied]: 'Copied',
   [lngKeys.Send]: 'Send',
+  [lngKeys.SendMore]: 'Send More',
   [lngKeys.Leave]: 'Leave',
   [lngKeys.Remove]: 'Remove',
   [lngKeys.Demote]: 'Demote',
   [lngKeys.Promote]: 'Promote',
+  [lngKeys.Enable]: 'Enable',
+  [lngKeys.Disable]: 'Disable',
 }
 
 export default {

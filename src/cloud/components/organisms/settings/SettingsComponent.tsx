@@ -117,15 +117,15 @@ const SettingsComponent = () => {
       case 'feedback':
         return (
           <SettingTabContent
-            title='Feedback'
-            description='Want a specific feature? Did you notice a bug? Let us know!'
+            title={t(lngKeys.CommunityFeedback)}
+            description={t(lngKeys.CommunityFeedbackSubtitle)}
             body={<AppFeedbackForm />}
           />
         )
       default:
         return
     }
-  }, [settingsTab, currentUserPermissions, settingsOpeningOptions])
+  }, [settingsTab, currentUserPermissions, settingsOpeningOptions, t])
 
   useEffect(() => {
     if (closed) {

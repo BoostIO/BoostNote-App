@@ -16,11 +16,14 @@ import { usePage } from '../../../lib/stores/pageStore'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import Button from '../../../../shared/components/atoms/Button'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const IntegrationsTab = () => {
   const { openModal } = useModal()
   const connectionState = useServiceConnections()
   const { team } = usePage()
+  const { t } = useI18n()
 
   const githubConnection = useMemo(() => {
     return connectionState.type !== 'initialising'
@@ -40,8 +43,8 @@ const IntegrationsTab = () => {
 
   return (
     <SettingTabContent
-      title='Integrations'
-      description='Connect 3rd party content to your Boost Note documents.'
+      title={t(lngKeys.SettingsIntegrations)}
+      description={t(lngKeys.ManageIntegrations)}
       body={
         <>
           <section>
@@ -61,7 +64,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('global')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -91,7 +94,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('github')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -116,7 +119,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('trello')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -141,7 +144,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('slack')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -166,7 +169,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('gmail')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -194,7 +197,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-calendar')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -222,7 +225,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-drive')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -247,7 +250,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('jira')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -272,7 +275,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('miro')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -297,7 +300,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('dropbox')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -322,7 +325,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('airtable')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -347,7 +350,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('clickup')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -376,7 +379,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('lambda')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -401,7 +404,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('mailchimp')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -426,7 +429,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('intercom')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -452,7 +455,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('stripe')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -474,7 +477,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('asana')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -493,7 +496,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('zapier')}
                   >
-                    See
+                    {t(lngKeys.See)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -564,16 +567,14 @@ const IntegrationsTab = () => {
               </StyledServiceListItem>
               <StyledServiceListItem>
                 <p>
-                  Boost Note will show you the external content such as Github
-                  issues, Trello cards, Google Docs, and much more
-                  automatically. What do you want on Boost Note?
+                  {t(lngKeys.ExternalEntityDescription)}
                   <button
                     className='item-info-request'
                     onClick={() =>
                       openModal(<FeedbackModal />, { width: 'large' })
                     }
                   >
-                    Please let us know your requests!
+                    {t(lngKeys.ExternalEntityRequest)}
                   </button>
                 </p>
               </StyledServiceListItem>

@@ -30,6 +30,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsTeamUpgrade]: 'Mise à niveau',
   [lngKeys.SettingsTeamSubscription]: 'Facturation',
   [lngKeys.SettingsIntegrations]: 'Intégrations',
+  [lngKeys.ManageIntegrations]: 'Connectez du contenu tiers à votre espace.',
   [lngKeys.SettingsAppFeedback]: 'Feedback',
   [lngKeys.SettingsSpace]: 'Espace',
   [lngKeys.SettingsSpaceDelete]: 'Supprimer cet espace',
@@ -91,10 +92,23 @@ const frTranslation: TranslationSource = {
     "Êtes vous certain de vouloir quitter cet espace? Vous ne pourrez plus accéder à son contenu. Le dernier membre de l'espace doit le supprimer complèment.",
   [lngKeys.RemovingMember]: 'Supprimer un membre',
   [lngKeys.RemovingMemberWarning]:
-    'Vous allez supprimer {{user}} de cet espace.  Êtes vous certain? ',
+    'Vous allez supprimer {{user}} de cet espace. Êtes vous certain? ',
+  [lngKeys.ExternalEntityDescription]:
+    'Boost Note va vous montrer du contenu externe tel des issues Github, Google Docs, cartes Trello et plus encore. Que voudriez vous voir sur Boost Note?',
+  [lngKeys.ExternalEntityRequest]: 'Laissez nous savoir vos demandes!',
 
   // Settings Community
+  [lngKeys.CommunityFeedback]: 'Feedback',
   [lngKeys.CommunityFeatureRequests]: 'Demande de fonctionnalités',
+  [lngKeys.CommunityFeedbackSubtitle]:
+    'Voulez vous une fonctionnalité spécifique? Avez vous encontré un bug? Contactez nous',
+  [lngKeys.CommunityBugReport]: 'Reporter un bug',
+  [lngKeys.CommunityFeedbackSendError]:
+    "Nous n'avons pas pu envoyer votre feedback",
+  [lngKeys.CommunityFeedbackSendSuccess]:
+    'Votre feedback est très apprécié. Merci de nous avoir contacté.',
+  [lngKeys.CommunityFeedbackType]: 'Type de Feedback',
+  [lngKeys.CommunityFeedbackFreeForm]: 'Formulaire libre',
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
@@ -115,10 +129,13 @@ const frTranslation: TranslationSource = {
   [lngKeys.Copy]: 'Copier',
   [lngKeys.Copied]: 'Copié',
   [lngKeys.Send]: 'Envoyer',
+  [lngKeys.SendMore]: 'Envoyer de nouveau',
   [lngKeys.Leave]: 'Quitter',
   [lngKeys.Remove]: 'Enlever',
   [lngKeys.Demote]: 'Rétrograder',
   [lngKeys.Promote]: 'Promouvoir',
+  [lngKeys.Enable]: 'Activer',
+  [lngKeys.Disable]: 'Désactiver',
 }
 
 export default {
