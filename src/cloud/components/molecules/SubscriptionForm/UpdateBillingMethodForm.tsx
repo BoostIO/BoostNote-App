@@ -18,6 +18,8 @@ import FormStripeInput from '../../../../shared/components/molecules/Form/atoms/
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 import Form from '../../../../shared/components/molecules/Form'
 import styled from '../../../../shared/lib/styled'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface UpdateBillingMethodFormProps {
   sub?: SerializedSubscription
@@ -30,6 +32,7 @@ const UpdateBillingMethodForm = ({
   onSuccess,
   onCancel,
 }: UpdateBillingMethodFormProps) => {
+  const { t } = useI18n()
   const stripe = useStripe()
   const elements = useElements()
   const { pushApiErrorMessage } = useToast()
@@ -111,20 +114,16 @@ const UpdateBillingMethodForm = ({
   return (
     <Container>
       <SectionIntroduction>
-        <p>Update your Credit Card</p>
+        <p>{t(lngKeys.BillingUpdateCard)}</p>
         <SectionFlexRow>
-          <label>Current Credit Card</label>
+          <label>{t(lngKeys.BillingCurrentCard)}</label>
           <span className='value'>
             **** **** **** {sub.last4}
             {sub.cardBrand != null && ` (${sub.cardBrand})`}
           </span>
         </SectionFlexRow>
         {usingDifferentCurrencyPricing && (
-          <Alert variant='danger'>
-            Switching payment method from/to JCB card requires canceling
-            existing active subscription. Please cancel the existing one and
-            subscribe again with a new card.
-          </Alert>
+          <Alert variant='danger'>{t(lngKeys.BillingChangeJCB)}</Alert>
         )}
 
         <Form rows={[]} onSubmit={onSubmit}>
@@ -138,7 +137,7 @@ const UpdateBillingMethodForm = ({
 
           <ButtonGroup display='flex' layout='spread' className='button__group'>
             <Button onClick={onCancel} variant='secondary' disabled={sending}>
-              Cancel
+              {t(lngKeys.GeneralCancel)}
             </Button>
 
             <LoadingButton
@@ -147,7 +146,7 @@ const UpdateBillingMethodForm = ({
               disabled={usingDifferentCurrencyPricing || sending}
               spinning={sending}
             >
-              Update
+              {t(lngKeys.Update)}
             </LoadingButton>
           </ButtonGroup>
         </Form>

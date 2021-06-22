@@ -12,6 +12,8 @@ import FormRow from '../../../../shared/components/molecules/Form/templates/Form
 import styled from '../../../../shared/lib/styled'
 import Banner from '../../../../shared/components/atoms/Banner'
 import { mdiGiftOff } from '@mdi/js'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 interface UpdateBillingPromoFormProps {
   sub?: SerializedSubscription
@@ -27,6 +29,7 @@ const UpdateBillingPromoForm = ({
   const { pushApiErrorMessage, pushMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [promoCode, setPromoCode] = useState<string>('')
+  const { t } = useI18n()
 
   const onSubmit = async (event: any) => {
     event.preventDefault()
@@ -85,10 +88,10 @@ const UpdateBillingPromoForm = ({
     <Container>
       {sub.couponId != null && (
         <Banner variant='warning' iconPath={mdiGiftOff}>
-          Applying a promotion code will end your current discount
+          {t(lngKeys.BillingApplyPromoWarning)}
         </Banner>
       )}
-      <p>Apply a promotion code</p>
+      <p>{t(lngKeys.BillingApplyPromo)}</p>
       <Form onSubmit={onSubmit} rows={[]}>
         <FormRow
           row={{
@@ -96,7 +99,7 @@ const UpdateBillingPromoForm = ({
               {
                 type: 'input',
                 props: {
-                  placeholder: 'Promo Code',
+                  placeholder: t(lngKeys.PromoCode),
                   value: promoCode,
                   onChange: onPromoInputChangeHandler,
                 },
@@ -107,7 +110,7 @@ const UpdateBillingPromoForm = ({
 
         <ButtonGroup display='flex' layout='spread' className='button__group'>
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
-            Cancel
+            {t(lngKeys.GeneralCancel)}
           </Button>
 
           <LoadingButton
@@ -116,7 +119,7 @@ const UpdateBillingPromoForm = ({
             disabled={sending}
             spinning={sending}
           >
-            Apply
+            {t(lngKeys.Apply)}
           </LoadingButton>
         </ButtonGroup>
       </Form>

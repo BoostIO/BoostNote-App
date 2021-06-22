@@ -169,6 +169,41 @@ const enTranslation: TranslationSource = {
   [lngKeys.PaymentMethodJpy]:
     'We can only accept JPY(Japanese Yen) when paying by JCB cards.',
   [lngKeys.UnlimitedViewers]: 'Unlimited viewers',
+
+  [lngKeys.BillingActionRequired]: 'Your payment may require action!',
+  [lngKeys.BillingHistory]: 'Billing History',
+  [lngKeys.BillingHistoryCheck]:
+    'Please check your billing history to handle any unpaid or failed charges.',
+  [lngKeys.BillingCancelledAt]:
+    'Your subscription will be canceled on {{date}} upon reception of your last invoice.',
+  [lngKeys.BillingToCard]:
+    'Will bill to the credit card ending in {{cardEnd}} at {{date}}.',
+  [lngKeys.BillingEditCard]: 'Edit Card',
+  [lngKeys.BillingEmail]: 'Billing email is {{email}}',
+  [lngKeys.BillingEditEmail]: 'Edit Email',
+  [lngKeys.BillingCanSeeThe]: 'You can see the ',
+  [lngKeys.BillingChangePlan]: 'Change plans',
+  [lngKeys.BillingUpdateCard]: 'Update your Credit Card',
+  [lngKeys.BillingCurrentCard]: 'Current Credit Card',
+  [lngKeys.BillingUpdateEmail]: 'Update your billing email',
+  [lngKeys.BillingCurrentEmail]: 'Current Email',
+  [lngKeys.BillingChangeJCB]:
+    'Switching payment method from/to JCB card requires canceling existing active subscription. Please cancel the existing one and subscribe again with a new card.',
+  [lngKeys.BillingApplyPromoWarning]:
+    'Applying a promotion code will end your current discount',
+  [lngKeys.BillingApplyPromo]: 'Apply a promotion code',
+
+  [lngKeys.BillingChangePlanDiscountStop]:
+    'Changing plans will end your current discount.',
+  [lngKeys.BillingChangePlanStripeProration]:
+    "The fee change is handled via Stripe's proration.",
+  [lngKeys.BillingChangePlanFreeDisclaimer]:
+    'You will lose access immediately to advanced features such as unlimited documents, document revision history, bigger storage size etc...',
+  [lngKeys.BillingChangePlanProDisclaimer]:
+    'You will get access to advanced features such as unlimited document revision history, setting password and expiration date for shared documents, unlimited viewers etc...',
+  [lngKeys.BillingChangePlanStandardDisclaimer]:
+    'You will lose access to advanced features such as unlimited document revision history, setting password and expiration date for shared document, unlimited viewers, etc...',
+
   //Language
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',
@@ -200,6 +235,9 @@ const enTranslation: TranslationSource = {
   [lngKeys.ThisSpace]: 'this space',
   [lngKeys.Token]: 'Token',
   [lngKeys.Apply]: 'Apply',
+  [lngKeys.Update]: 'Update',
+  [lngKeys.LearnMore]: 'Learn More',
+  [lngKeys.DoYouWishToProceed]: 'Do you wish to proceed?',
 }
 
 export default {
