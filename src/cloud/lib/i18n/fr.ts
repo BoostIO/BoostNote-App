@@ -116,6 +116,14 @@ const frTranslation: TranslationSource = {
   [lngKeys.CreateTokens]: 'Créer un nouveau jeton',
   [lngKeys.TokensName]: 'Nom du jeton...',
   [lngKeys.TokensDocumentation]: "documentation pour l'API de Boost Note",
+  [lngKeys.SettingsSubLimitTrialTitle]: 'Upgrade pour accès illimité',
+  [lngKeys.SettingsSubLimitTrialDate]:
+    "Votre essai gratuit du plan pro est actif jusqu'à: {{date}}",
+  [lngKeys.SettingsSubLimitTrialUpgrade]:
+    "Vous pouvez mettre à niveau à tout moment durant l'essai gratuit.",
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
+  [lngKeys.SettingsSubLimitTrialEnd]:
+    'Votre essai gratuit a expiré. Veuillez mettre à niveau votre espace',
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
