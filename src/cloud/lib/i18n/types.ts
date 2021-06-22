@@ -98,8 +98,13 @@ export enum lngKeys {
   GenerateToken = 'tokens.generate',
   TokensDocumentation = 'tokens.documentation',
 
+  SupportGuide = 'support.guide',
+  SendUsAMessage = 'send.us.a.message',
+  KeyboardShortcuts = 'keyboard.shortcuts',
+
   Back = 'back',
 
+  Help = 'help',
   ThisSpace = 'this.space',
   ProfilePicture = 'profile.picture',
   Name = 'name',
