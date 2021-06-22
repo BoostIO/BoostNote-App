@@ -61,6 +61,7 @@ const __ELECTRON_ONLY__: {
   setCookie(cookieDetails: CookiesSetDetails): Promise<void>
   getCookie(filter: CookiesGetFilter): Promise<Cookie[]>
   removeCookie(url: string, name: string): Promise<void>
+  setBadgeCount(count: number): boolean
   got: Got
 } = (window as any).__ELECTRON_ONLY__
 
@@ -95,6 +96,7 @@ const {
   setCookie,
   getCookie,
   removeCookie,
+  setBadgeCount,
   got,
 } = __ELECTRON_ONLY__ || {}
 
@@ -154,5 +156,6 @@ export {
   setCookie,
   getCookie,
   removeCookie,
+  setBadgeCount,
   got,
 }

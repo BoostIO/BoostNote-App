@@ -30,6 +30,7 @@ import {
   boostHubSidebarStateEventEmitter,
   boostHubSubscriptionDeleteEventEmitter,
   boostHubSubscriptionUpdateEventEmitter,
+  boosthubNotificationCountsEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
@@ -155,6 +156,9 @@ const BoostHubWebview = ({
           break
         case 'sidebar--state':
           boostHubSidebarStateEventEmitter.dispatch(event.args[0])
+          break
+        case 'notification-counts':
+          boosthubNotificationCountsEventEmitter.dispatch(event.args[0])
           break
         case 'subscription-update':
           boostHubSubscriptionUpdateEventEmitter.dispatch({
