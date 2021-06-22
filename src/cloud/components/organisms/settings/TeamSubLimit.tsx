@@ -3,6 +3,8 @@ import cc from 'classcat'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useSettings } from '../../../lib/stores/settings'
 import styled from '../../../../shared/lib/styled'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const TeamSubLimit = ({
   padded = true,
@@ -13,6 +15,7 @@ const TeamSubLimit = ({
 }) => {
   const { subscription, team, currentSubInfo } = usePage()
   const { openSettingsTab } = useSettings()
+  const { t } = useI18n()
 
   if (
     (subscription != null && subscription.status === 'active') ||
@@ -39,13 +42,14 @@ const TeamSubLimit = ({
             openSettingsTab('teamUpgrade')
           }}
         >
-          <h6>Upgrade to go unlimited</h6>
+          <h6>{t(lngKeys.SettingsSubLimitTrialTitle)}</h6>
           <p className='note-limit'>
-            Your space&apos;s trial of the Pro plan lasts through{' '}
-            {currentSubInfo.info.formattedEndDate}
+            {t(lngKeys.SettingsSubLimitTrialDate, {
+              date: currentSubInfo.info.formattedEndDate,
+            })}
           </p>
           <p className='note-limit'>
-            You can upgrade at anytime during your trial.
+            {t(lngKeys.SettingsSubLimitTrialUpgrade)}
           </p>
         </a>
       </Container>
@@ -69,7 +73,9 @@ const TeamSubLimit = ({
         }}
       >
         <p className='note-limit'>
-          {currentSubInfo.info.progressLabel} notes used
+          {t(lngKeys.SettingsSubLimitUsed, {
+            docsNb: currentSubInfo.info.progressLabel,
+          })}
         </p>
         <div className='progress-sm'>
           <div
@@ -82,9 +88,7 @@ const TeamSubLimit = ({
         </div>
         <p>{currentSubInfo.info.label}</p>
         {currentSubInfo.info.trialIsOver && (
-          <p className='text-danger'>
-            Your pro plan trial has ended. Please upgrade now
-          </p>
+          <p className='text-danger'>{t(lngKeys.SettingsSubLimitTrialEnd)}</p>
         )}
       </a>
     </Container>

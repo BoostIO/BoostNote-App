@@ -102,6 +102,12 @@ export enum lngKeys {
   SendUsAMessage = 'send.us.a.message',
   KeyboardShortcuts = 'keyboard.shortcuts',
 
+  SettingsSubLimitTrialTitle = 'settings.sub.limit.trial.title',
+  SettingsSubLimitTrialDate = 'settings.sub.limit.trial.date',
+  SettingsSubLimitTrialUpgrade = 'settings.sub.limit.trial.upgrade',
+  SettingsSubLimitUsed = 'settings.sub.limit.used',
+  SettingsSubLimitTrialEnd = 'settings.sub.limit.trial.end',
+
   Back = 'back',
 
   Help = 'help',
