@@ -93,6 +93,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.RemovingMember]: 'Removing a member',
   [lngKeys.RemovingMemberWarning]:
     'You will be removing {{user}} from this team. Are you sure?',
+  [lngKeys.ExternalEntity]: 'External Entity',
+  [lngKeys.ExternalEntityOpenInBrowser]: 'Open in browser to enable',
   [lngKeys.ExternalEntityDescription]:
     'Boost Note show you the external content such as Github issues, Trello cards, Google Docs, and much more automatically. What do you want to see on Boost Note?',
   [lngKeys.ExternalEntityRequest]: 'Please let us know your requests!',
