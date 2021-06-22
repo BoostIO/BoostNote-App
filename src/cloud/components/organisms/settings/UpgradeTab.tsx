@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { usePage } from '../../../lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../interfaces/pageStore'
 import { Elements } from '@stripe/react-stripe-js'
@@ -22,6 +21,8 @@ import Banner from '../../../../shared/components/atoms/Banner'
 import { mdiGift } from '@mdi/js'
 import { format } from 'date-fns'
 import { useElectron } from '../../../lib/stores/electron'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -38,7 +39,7 @@ const UpgradeTab = ({
   showTrialPopup: defaultShowTrial = false,
   initialPlan: defaultInitialPlan = 'standard',
 }: UpgradeTabOpeningOptions) => {
-  const { t } = useTranslation()
+  const { t } = useI18n()
   const {
     team,
     subscription,
@@ -97,8 +98,8 @@ const UpgradeTab = ({
   if (tabState === 'plans') {
     return (
       <SettingTabContent
-        title={t('settings.teamUpgrade')}
-        description={'Choose your plan.'}
+        title={t(lngKeys.SettingsTeamUpgrade)}
+        description={t(lngKeys.PlanChoose)}
         body={
           <>
             {showTrialPopup && (
@@ -110,7 +111,7 @@ const UpgradeTab = ({
             <section>
               {teamIsEligibleForDiscount && (
                 <Banner variant='warning' iconPath={mdiGift}>
-                  You will receive a discount as long as you subscribe before{' '}
+                  {t(lngKeys.PlanDiscountUntil)}{' '}
                   <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
                 </Banner>
               )}
@@ -124,10 +125,9 @@ const UpgradeTab = ({
                 discounted={teamIsEligibleForDiscount}
               />
               <StyledFYI>
-                * For larger businesses or those in highly regulated industries,
-                please{' '}
+                * {t(lngKeys.PlanBusinessIntro)}{' '}
                 <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>
-                  contact our sales department
+                  {t(lngKeys.PlanBusinessLink)}
                 </ExternalLink>
                 .
               </StyledFYI>
@@ -140,10 +140,10 @@ const UpgradeTab = ({
 
   return (
     <SettingTabContent
-      title={t('settings.teamUpgrade')}
+      title={t(lngKeys.SettingsTeamUpgrade)}
       description={
         <>
-          Confirm and enter your payment information (Service provided by{' '}
+          {t(lngKeys.UpgradeSubtitle)} (Service provided by{' '}
           <ExternalLink href='https://stripe.com/'>Stripe</ExternalLink>)
         </>
       }
