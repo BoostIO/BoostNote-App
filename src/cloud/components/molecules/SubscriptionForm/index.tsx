@@ -21,6 +21,8 @@ import styled from '../../../../shared/lib/styled'
 import FormStripeInput from '../../../../shared/components/molecules/Form/atoms/FormStripeInput'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import Banner from '../../../../shared/components/atoms/Banner'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface SubscriptionFormProps {
   team: SerializedTeam
@@ -51,6 +53,7 @@ const SubscriptionForm = ({
   const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )
+  const { t } = useI18n()
 
   const onEmailInputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,11 +160,9 @@ const SubscriptionForm = ({
           discount={eligibleDiscount}
         />
         {usingJpyPricing && (
-          <Alert variant='secondary'>
-            We can only accept JPY(Japanese Yen) when paying by JCB cards.
-          </Alert>
+          <Alert variant='secondary'>{t(lngKeys.PaymentMethodJpy)}</Alert>
         )}
-        <StyledPaymentHeader>Payment Method</StyledPaymentHeader>
+        <StyledPaymentHeader>{t(lngKeys.PaymentMethod)}</StyledPaymentHeader>
         <FormRow>
           <FormStripeInput
             theme={settings['general.theme']}
@@ -185,7 +186,7 @@ const SubscriptionForm = ({
         />
         <FormRow
           row={{
-            title: ongoingTrial ? `Your free trial will be stopped` : undefined,
+            title: ongoingTrial ? t(lngKeys.TrialWillBeStopped) : undefined,
           }}
         >
           <Button
@@ -197,7 +198,7 @@ const SubscriptionForm = ({
             }}
             disabled={sending}
           >
-            Apply a coupon
+            {t(lngKeys.ApplyCoupon)}
           </Button>
         </FormRow>
 
@@ -205,8 +206,7 @@ const SubscriptionForm = ({
           <>
             {isEligibleForDiscount(team) && (
               <Banner variant='warning'>
-                Applying a promotion code will prevent you to receive other
-                discounts
+                {t(lngKeys.PlanDiscountCouponWarning)}
               </Banner>
             )}
             <FormRow
@@ -215,7 +215,7 @@ const SubscriptionForm = ({
                   {
                     type: 'input',
                     props: {
-                      placeholder: 'Promo Code',
+                      placeholder: t(lngKeys.PromoCode),
                       value: promoCode,
                       onChange: onPromoCodeInputChangeHandler,
                     },
@@ -233,7 +233,7 @@ const SubscriptionForm = ({
               onClick={onCancel}
               variant='secondary'
             >
-              Cancel
+              {t(lngKeys.GeneralCancel)}
             </Button>
           )}
           <LoadingButton
@@ -241,7 +241,7 @@ const SubscriptionForm = ({
             disabled={!stripe || sending || currentPlan == null}
             spinning={sending}
           >
-            Subscribe
+            {t(lngKeys.Subscribe)}
           </LoadingButton>
         </ButtonGroup>
       </Form>

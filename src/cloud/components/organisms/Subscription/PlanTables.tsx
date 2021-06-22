@@ -20,7 +20,8 @@ import {
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
-import plur from 'plur'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -45,6 +46,7 @@ const PlanTables = ({
   discounted,
   freePlanFooter,
 }: PlanTablesProps) => {
+  const { t } = useI18n()
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1080 })
 
   const freeTrialContent = useMemo(() => {
@@ -56,8 +58,12 @@ const PlanTables = ({
       const trialEndDate = new Date(subscription.currentPeriodEnd * 1000)
       return (
         <p>
-          <span className='check'>&#x2713;</span> In free trial (
-          {formatDistanceToNow(trialEndDate, { includeSeconds: false })} left)
+          <span className='check'>&#x2713;</span>{' '}
+          {t(lngKeys.PlanInTrial, {
+            remaining: formatDistanceToNow(trialEndDate, {
+              includeSeconds: false,
+            }),
+          })}
         </p>
       )
     }
@@ -75,10 +81,10 @@ const PlanTables = ({
           onTrialCallback()
         }}
       >
-        7 days free trial
+        {t(lngKeys.PlanTrial, { days: 7 })}
       </Button>
     )
-  }, [subscription, team, onTrialCallback])
+  }, [subscription, team, onTrialCallback, t])
 
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
@@ -88,19 +94,23 @@ const PlanTables = ({
           <div className='plan__item__price'>
             <span className='plan__item__price__default'>$0</span>
             <div className='plan__item__price__description'>
-              per member per month
+              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>Unlimited members</span>
+            <span>{t(lngKeys.PlanFreePerk1)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{freePlanDocLimit} docs per team</span>
+            <span>{t(lngKeys.PlanFreePerk2, { docs: freePlanDocLimit })}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{freePlanStorageMb}MB per member</span>
+            <span>
+              {t(lngKeys.PlanStoragePerk, {
+                storageSize: `${freePlanStorageMb}MB`,
+              })}
+            </span>
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -146,35 +156,45 @@ const PlanTables = ({
               </span>
             )}
             <div className='plan__item__price__description'>
-              per member per month
+              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.newSpace.percentageOff}% OFF for{' '}
-            {discountPlans.newSpace.durationInMonths}{' '}
-            {plur('month', discountPlans.newSpace.durationInMonths)}
+            {t(lngKeys.PlanDiscountDetail, {
+              off: discountPlans.newSpace.percentageOff,
+              month: discountPlans.newSpace.durationInMonths,
+            })}
           </div>
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>{viewerStandardPlanLimit} viewers for free</span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>Support development</span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>Unlimited documents</span>
-          </div>
-          <div className='plan__item__perk'>
             <span>
-              Last {revisionHistoryStandardDays} days of your docs&apos;s
-              revision history
+              {t(lngKeys.PlanStandardPerk1, {
+                viewersSize: viewerStandardPlanLimit,
+              })}
             </span>
           </div>
           <div className='plan__item__perk'>
-            <span>{standardPlanStorageMb / 1000}GB per member</span>
+            <span>{t(lngKeys.PlanStandardPerk2)}</span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>{t(lngKeys.PlanStandardPerk3)}</span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {t(lngKeys.PlanStandardPerk4, {
+                days: revisionHistoryStandardDays,
+              })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {t(lngKeys.PlanStoragePerk, {
+                storageSize: `${standardPlanStorageMb / 1000}GB`,
+              })}
+            </span>
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -216,29 +236,34 @@ const PlanTables = ({
               </span>
             )}
             <div className='plan__item__price__description'>
-              per member per month
+              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {discountPlans.newSpace.percentageOff}% OFF for{' '}
-            {discountPlans.newSpace.durationInMonths}{' '}
-            {plur('month', discountPlans.newSpace.durationInMonths)}
+            {t(lngKeys.PlanDiscountDetail, {
+              off: discountPlans.newSpace.percentageOff,
+              month: discountPlans.newSpace.durationInMonths,
+            })}
           </div>
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>Unlimited viewers for free</span>
+            <span>{t(lngKeys.PlanProPerk1)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>Password and expiration date when sharing</span>
+            <span>{t(lngKeys.PlanProPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>Full access to your docs&apos;s revision history</span>
+            <span>{t(lngKeys.PlanProPerk3)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{proPlanStorageMb / 1000}GB per member</span>
+            <span>
+              {t(lngKeys.PlanStoragePerk, {
+                storageSize: `${proPlanStorageMb / 1000}GB`,
+              })}
+            </span>
           </div>
         </div>
         <div className='plan__item__footer'>

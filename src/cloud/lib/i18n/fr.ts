@@ -75,7 +75,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.RoleAdminDescription]:
     "Les administrateurs peuvent accéder à la facturation, ainsi que promouvoir ou rétrograder les membres de l'équipe.",
   [lngKeys.RoleViewerDescription]:
-    "Les observateurs peuvent seulement naviger dans les différents dossiers ou documents, écrire des commentaires ou inviter d'autres observateurs dans l'équipe.",
+    "Les observateurs peuvent seulement naviguer dans les différents dossiers ou documents, écrire des commentaires ou inviter d'autres observateurs à joindre l'espace.",
   [lngKeys.CancelInvite]: "Annuler l'invitation?",
   [lngKeys.CancelInviteOpenLinkMessage]:
     'Êtes vous certain de vouloir annuler cette invitation? Les liens actuels vont être désactivés.',
@@ -124,15 +124,57 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Votre essai gratuit a expiré. Veuillez mettre à niveau votre espace',
+  [lngKeys.SettingsSubLimitUnderFreePlan]:
+    "Sans abonnement, vous pouvez créer jusqu'à {{limit}} documents.",
+
+  [lngKeys.PlanChoose]: 'Choisissez votre plan.',
+  [lngKeys.PlanDiscountUntil]:
+    'Vous allez recevoir une promotion si vous vous abonnez avant le ',
+  [lngKeys.PlanDiscountDetail]: '{{off}}% OFF pour {{month}} mois',
+  [lngKeys.PlanDiscountLabel]: 'promotion de {{month}} mois',
+  [lngKeys.PlanDiscountCouponWarning]:
+    "Utiliser un coupon de promotion vous empêchera de recevoir d'autres réductions",
+  [lngKeys.PlanBusinessIntro]:
+    'Pour les grandes entreprises ou pour ceux qui opèrent dans des industries sévèrement régulées, veuillez',
+  [lngKeys.PlanBusinessLink]: 'contacter notre département de ventes',
+  [lngKeys.PlanPerMember]: 'par membre',
+  [lngKeys.PlanPerMonth]: 'par mois',
+  [lngKeys.PlanFreePerk1]: 'Membres illimités',
+  [lngKeys.PlanFreePerk2]: '{{docs}} documents par espace',
+  [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
+  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} observateurs sans frais',
+  [lngKeys.PlanStandardPerk2]: 'Soutenir le dévelopement',
+  [lngKeys.PlanStandardPerk3]: 'Documents illimités',
+  [lngKeys.PlanStandardPerk4]:
+    "Derniers {{days}} jours d'historique des révisions de vos documents",
+  [lngKeys.PlanProPerk1]: 'Observateurs illimités sans frais',
+  [lngKeys.PlanProPerk2]: "Mot de passe et date d'expiration lors de partage",
+  [lngKeys.PlanProPerk3]:
+    "Accès complet à l'historique des revisions de vos documents",
+  [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
+  [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
+  [lngKeys.UpgradeSubtitle]: 'Entrez et confirmez vos informations de paiement',
+  [lngKeys.Viewers]: 'observateurs',
+  [lngKeys.Month]: 'mois',
+  [lngKeys.TotalMonthlyPrice]: 'Prix mensuel total',
+  [lngKeys.PaymentMethod]: 'Méthode de paiement',
+  [lngKeys.TrialWillBeStopped]: 'Votre essai gratuit va être stoppé',
+  [lngKeys.ApplyCoupon]: 'Utiliser un coupon',
+  [lngKeys.PromoCode]: 'Code promotionnel',
+  [lngKeys.Subscribe]: "S'abonner",
+  [lngKeys.UnlimitedViewers]: "Nombre illimité d'observateurs",
+  [lngKeys.PaymentMethodJpy]:
+    'Nous pouvons seulement accepter JPY(Japanese Yen) par les paiments effectués avec les cartes JCB.',
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',
   [lngKeys.SupportGuide]: 'Support',
-  [lngKeys.SendUsAMessage]: 'Contacte nous',
+  [lngKeys.SendUsAMessage]: 'Contactez nous',
   [lngKeys.KeyboardShortcuts]: 'Raccourcis clavier',
 
   //Language
+  [lngKeys.members]: 'membres',
   [lngKeys.Help]: 'Aide',
   [lngKeys.ProfilePicture]: 'Image de profil',
   [lngKeys.Name]: 'Nom',
@@ -161,6 +203,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.Close]: 'Fermer',
   [lngKeys.ThisSpace]: 'cet espace',
   [lngKeys.Token]: 'Jeton',
+  [lngKeys.Apply]: 'Utiliser',
 }
 
 export default {

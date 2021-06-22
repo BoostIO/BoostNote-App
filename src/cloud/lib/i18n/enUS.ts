@@ -129,8 +129,48 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} docs used',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Your pro plan trial has ended. Please upgrade now',
+  [lngKeys.SettingsSubLimitUnderFreePlan]:
+    'Under the free plan, you can create up to {{limit}} docs.',
 
+  [lngKeys.PlanChoose]: 'Choose your plan.',
+  [lngKeys.PlanDiscountUntil]:
+    'You will receive a discount as long as you subscribe before ',
+  [lngKeys.PlanDiscountDetail]: '{{off}}% OFF for {{month}} month',
+  [lngKeys.PlanDiscountLabel]: '{{month}} month discount',
+  [lngKeys.PlanDiscountCouponWarning]:
+    'Applying a promotion code will prevent you to receive other discounts',
+  [lngKeys.PlanBusinessIntro]:
+    'For larger businesses or those in highly regulated industries, please',
+  [lngKeys.PlanBusinessLink]: 'contact our sales department',
+  [lngKeys.PlanPerMember]: 'per member',
+  [lngKeys.PlanPerMonth]: 'per month',
+  [lngKeys.PlanFreePerk1]: 'Unlimited members',
+  [lngKeys.PlanFreePerk2]: '{{docs}} docs per team',
+  [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
+  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} viewers for free',
+  [lngKeys.PlanStandardPerk2]: 'Support development',
+  [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
+  [lngKeys.PlanStandardPerk4]:
+    "Last {{days}} days of your docs's revision history",
+  [lngKeys.PlanProPerk1]: 'Unlimited viewers for free',
+  [lngKeys.PlanProPerk2]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk3]: "Full access to your docs' revision history",
+  [lngKeys.PlanTrial]: '{{days}} days free trial',
+  [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
+  [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
+  [lngKeys.Viewers]: 'viewers',
+  [lngKeys.Month]: 'month',
+  [lngKeys.TotalMonthlyPrice]: 'Total Monthly Price',
+  [lngKeys.PaymentMethod]: 'Payment Method',
+  [lngKeys.TrialWillBeStopped]: 'Your free trial will be stopped',
+  [lngKeys.ApplyCoupon]: 'Apply a coupon',
+  [lngKeys.PromoCode]: 'Promo Code',
+  [lngKeys.Subscribe]: 'Subscribe',
+  [lngKeys.PaymentMethodJpy]:
+    'We can only accept JPY(Japanese Yen) when paying by JCB cards.',
+  [lngKeys.UnlimitedViewers]: 'Unlimited viewers',
   //Language
+  [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',
   [lngKeys.ProfilePicture]: 'Profile Picture',
   [lngKeys.Name]: 'Name',
@@ -159,6 +199,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.Close]: 'Close',
   [lngKeys.ThisSpace]: 'this space',
   [lngKeys.Token]: 'Token',
+  [lngKeys.Apply]: 'Apply',
 }
 
 export default {

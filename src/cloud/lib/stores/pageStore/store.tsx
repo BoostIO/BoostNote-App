@@ -17,6 +17,8 @@ import { freePlanDocLimit } from '../../subscription'
 import { SubscriptionInfo } from './types'
 import { getFormattedDateFromUnixTimestamp } from '../../date'
 import { useGlobalData } from '../globalData'
+import { useI18n } from '../../hooks/useI18n'
+import { lngKeys } from '../../i18n/types'
 
 interface PageStoreProps {
   pageProps: any
@@ -28,6 +30,7 @@ function usePageDataStore(pageProps: any) {
     globalData: { currentUser },
   } = useGlobalData()
   const pageDataRef = useCommittedRef(pageData)
+  const { t } = useI18n()
 
   useEffect(() => {
     setPageData(pageProps)
@@ -197,7 +200,9 @@ function usePageDataStore(pageProps: any) {
     overLimit = docCount >= freePlanDocLimit
     rate = docCount === 0 ? 0 : Math.ceil((docCount / freePlanDocLimit) * 100)
     progressLabel = `${docCount}/${freePlanDocLimit}`
-    label = `Under the free plan, you can create up to ${freePlanDocLimit} docs.`
+    label = t(lngKeys.SettingsSubLimitUnderFreePlan, {
+      limit: freePlanDocLimit,
+    })
 
     return {
       trialing: false,
@@ -210,7 +215,7 @@ function usePageDataStore(pageProps: any) {
         linkLabel,
       },
     }
-  }, [subscription, team])
+  }, [subscription, team, t])
 
   return {
     pageData,
