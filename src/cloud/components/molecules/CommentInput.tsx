@@ -178,6 +178,10 @@ const InputContainer = styled.div`
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
+  & [data-label]:before {
+    content: attr(data-label);
+  }
+
   & .comment__input__suggestions {
     position: fixed;
     right: 0;
