@@ -112,7 +112,7 @@ export function CommentItem({
             {comment.user.displayName}
           </span>
           <span className='comment__meta__date'>
-            {format(comment.createdAt, 'Mo MMMM hh:mmaaa')}
+            {format(comment.createdAt, 'do MMMM hh:mmaaa')}
           </span>
           {editable &&
             (editing ? (
