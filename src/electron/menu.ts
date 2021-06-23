@@ -195,7 +195,7 @@ export function getTemplateFromKeymap(
       submenu: [
         {
           type: 'submenu',
-          label: 'Switch Folder',
+          label: 'Switch Space',
           submenu: [
             {
               type: 'normal',
