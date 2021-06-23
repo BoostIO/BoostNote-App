@@ -101,13 +101,6 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
             breakLine: true,
           }
           break
-        case 'admonitionInfo':
-          formattingOptions = {
-            markerLeft: ':::info',
-            markerRight: ':::',
-            breakLine: true,
-          }
-          break
         case 'admonitionTip':
           formattingOptions = {
             markerLeft: ':::tip',
@@ -132,20 +125,6 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         case 'admonitionWarning':
           formattingOptions = {
             markerLeft: ':::warning',
-            markerRight: ':::',
-            breakLine: true,
-          }
-          break
-        case 'admonitionCaution':
-          formattingOptions = {
-            markerLeft: ':::caution',
-            markerRight: ':::',
-            breakLine: true,
-          }
-          break
-        case 'admonitionSecondary':
-          formattingOptions = {
-            markerLeft: ':::secondary',
             markerRight: ':::',
             breakLine: true,
           }
