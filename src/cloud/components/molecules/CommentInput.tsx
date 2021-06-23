@@ -6,7 +6,12 @@ import { useEffectOnce } from 'react-use'
 import useSuggestions from '../../../shared/lib/hooks/useSuggestions'
 import { SerializedUser } from '../../interfaces/db/user'
 import UserIcon from '../atoms/UserIcon'
-import { makeMentionElement, fromNode, toFragment } from '../../lib/comments'
+import {
+  makeMentionElement,
+  fromNode,
+  toFragment,
+  isMention,
+} from '../../lib/comments'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -42,9 +47,8 @@ export function CommentInput({
     range.deleteContents()
     const mentionNode = makeMentionElement(item.id, item.displayName)
     range.insertNode(mentionNode)
-    range.setStartAfter(mentionNode)
     selection.removeAllRanges()
-    selection.addRange(range)
+    selection.addRange(setRangeAfterCompat(new Range(), mentionNode))
   })
 
   const userSuggestions = useMemo(() => {
@@ -108,6 +112,13 @@ export function CommentInput({
         ev.stopPropagation()
         return
       }
+
+      if (ev.key === 'Backspace' || ev.key === 'Delete') {
+        const mentionNode = getMentionInSelection()
+        if (mentionNode != null) {
+          mentionNode.parentNode?.removeChild(mentionNode)
+        }
+      }
     },
     [submit, onKeyDownListener]
   )
@@ -121,6 +132,21 @@ export function CommentInput({
     [triggerAction]
   )
 
+  const beforeInputHandler: React.FormEventHandler = useCallback(() => {
+    const mentionNode = getMentionInSelection()
+    const selection = getSelection()
+    if (mentionNode != null && selection != null) {
+      const range = selection.getRangeAt(0)
+      if (range.startOffset === 0) {
+        setRangeBeforeCompat(range, mentionNode)
+      } else {
+        setRangeAfterCompat(range, mentionNode)
+      }
+      selection.removeAllRanges()
+      selection.addRange(range)
+    }
+  }, [])
+
   return (
     <InputContainer>
       <div
@@ -129,6 +155,8 @@ export function CommentInput({
         onKeyDown={onKeyDown}
         contentEditable={!working}
         onCompositionEnd={onCompositionEndListener}
+        onClick={closeSuggestions}
+        onBeforeInput={beforeInputHandler}
       ></div>
       <Flexbox justifyContent='flex-end'>
         <Button disabled={working} onClick={submit}>
@@ -178,10 +206,6 @@ const InputContainer = styled.div`
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
-  & [data-label]:before {
-    content: attr(data-label);
-  }
-
   & .comment__input__suggestions {
     position: fixed;
     right: 0;
@@ -215,6 +239,57 @@ function resetInitialContent(element: Element) {
   const child = document.createElement('div')
   child.appendChild(document.createElement('br'))
   element.appendChild(child)
+}
+
+function getMentionInSelection() {
+  const selection = getSelection()
+  if (selection == null) return null
+  const range = selection.getRangeAt(0)
+  const elementNode =
+    range.startContainer.nodeType === Node.TEXT_NODE
+      ? range.startContainer.parentElement
+      : range.startContainer
+  return elementNode != null && isMention(elementNode) ? elementNode : null
+}
+
+function setRangeAfterCompat(range: Range, node: Node) {
+  if (
+    node.nextSibling != null &&
+    node.nextSibling.textContent != null &&
+    node.nextSibling.textContent.length > 0
+  ) {
+    range.selectNode(node.nextSibling)
+    range.collapse(false)
+    return range
+  }
+
+  range.setEndAfter(node)
+  range.collapse(false)
+  const textNode = document.createTextNode('\u00A0')
+  range.insertNode(textNode)
+  range.selectNodeContents(textNode)
+  range.collapse(false)
+  return range
+}
+
+function setRangeBeforeCompat(range: Range, node: Node) {
+  if (
+    node.previousSibling != null &&
+    node.previousSibling.textContent != null &&
+    node.previousSibling.textContent.length > 0
+  ) {
+    range.selectNode(node.previousSibling)
+    range.collapse(true)
+    return range
+  }
+
+  if (node.parentNode != null) {
+    const textNode = document.createTextNode('\u00A0')
+    node.parentNode.insertBefore(textNode, node)
+    range.selectNodeContents(textNode)
+    range.collapse(true)
+  }
+  return range
 }
 
 export default CommentInput
