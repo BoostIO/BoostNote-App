@@ -473,7 +473,7 @@ const Application = ({
                   setPreferences({
                     sidebarTreeSortingOrder: sort.value,
                   }),
-                label: sort.label,
+                label: t(`sort.${sort.value}`),
                 icon: sort.icon,
                 active: sort.value === preferences.sidebarTreeSortingOrder,
               }
@@ -482,7 +482,7 @@ const Application = ({
         },
       },
     ]
-  }, [preferences, popup, setPreferences])
+  }, [preferences, popup, setPreferences, t])
 
   const treeTopRows = useMemo(() => {
     return team != null && currentUserIsCoreMember ? (
@@ -556,7 +556,11 @@ const Application = ({
         sidebar={
           <Sidebar
             className={cc(['application__sidebar'])}
+<<<<<<< HEAD
             popOver={popOverState}
+=======
+            t={t}
+>>>>>>> Explorer without statuses
             showToolbar={!usingElectron}
             onSpacesBlur={onSpacesBlurCallback}
             toolbarRows={toolbarRows}

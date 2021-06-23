@@ -630,6 +630,7 @@ const SidebarContainer = ({
         // todo: add search history for local space (or use general search history when a shared component)
         searchHistory={[]}
         recentPages={historyItems}
+        t={t}
         treeControls={[
           {
             icon:

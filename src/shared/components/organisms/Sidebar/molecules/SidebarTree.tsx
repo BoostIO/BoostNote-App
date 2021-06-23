@@ -14,11 +14,14 @@ import { mdiDotsHorizontal } from '@mdi/js'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { useContextMenu } from '../../../../lib/stores/contextMenu'
 import VerticalScroller from '../../../atoms/VerticalScroller'
+import { TFunction } from 'i18next'
+import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
   treeControls?: ControlButtonProps[]
   topRows?: React.ReactNode
+  t: TFunction
 }
 
 export type SidebarTreeControl = {
@@ -31,6 +34,7 @@ export type SidebarTreeChildRow = SidebarNavRow & Partial<SidebarFoldingNavRow>
 
 export interface SidebarNavCategory {
   label: string
+  title: string
   folded: boolean
   controls?: SidebarNavControls[]
   hidden: boolean
@@ -85,13 +89,14 @@ const SidebarTree = ({
   tree,
   treeControls = [],
   topRows,
+  t,
 }: SidebarTreeProps) => {
   const { popup } = useContextMenu()
   const [draggingCategory, setDraggingCategory] = useState(false)
 
   return (
     <Container className='sidebar__tree'>
-      <SidebarHeader label='Explorer'>
+      <SidebarHeader label={t(lngKeys.Explorer)}>
         {treeControls.map((control, i) => (
           <Button
             variant='icon'
@@ -123,7 +128,9 @@ const SidebarTree = ({
                     label: (
                       <span>
                         <Checkbox checked={!category.hidden} />
-                        <span style={{ paddingLeft: 6 }}>{category.label}</span>
+                        <span style={{ paddingLeft: 6 }}>
+                          {category.title || category.label}
+                        </span>
                       </span>
                     ),
                   }
@@ -220,7 +227,7 @@ const SidebarCategory = ({
         ])}
         isCategory={true}
         id={`category-${category.label}`}
-        label={category.label}
+        label={category.title || category.label}
         labelClick={category.folding?.toggle}
         folding={category.folding}
         folded={category.folded}

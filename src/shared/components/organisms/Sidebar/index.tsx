@@ -23,6 +23,7 @@ import SidebarTimeline, {
 import { AppUser } from '../../../lib/mappers/users'
 import Button, { ButtonProps } from '../../atoms/Button'
 import { ControlButtonProps } from '../../../lib/types'
+<<<<<<< HEAD
 import SidebarPopOver from './atoms/SidebarPopOver'
 import NotificationList, {
   NotificationState,
@@ -30,6 +31,9 @@ import NotificationList, {
 import { Notification } from '../../../../cloud/interfaces/db/notifications'
 
 export type PopOverState = null | 'spaces' | 'notifications'
+=======
+import { TFunction } from 'i18next'
+>>>>>>> Explorer without statuses
 
 type SidebarProps = {
   showToolbar: boolean
@@ -51,9 +55,13 @@ type SidebarProps = {
   users: Map<string, AppUser>
   timelineRows: SidebarTimelineRow[]
   timelineMore?: ButtonProps
+<<<<<<< HEAD
   notificationState?: NotificationState
   getMoreNotifications?: () => void
   notificationClick?: (notification: Notification) => void
+=======
+  t: TFunction
+>>>>>>> Explorer without statuses
 } & SidebarSpaceProps
 
 const Sidebar = ({
@@ -79,9 +87,13 @@ const Sidebar = ({
   timelineRows,
   timelineMore,
   users,
+<<<<<<< HEAD
   notificationState,
   getMoreNotifications,
   notificationClick,
+=======
+  t,
+>>>>>>> Explorer without statuses
 }: SidebarProps) => {
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
@@ -130,6 +142,7 @@ const Sidebar = ({
                   tree={tree}
                   topRows={treeTopRows}
                   treeControls={treeControls}
+                  t={t}
                 />
               )
             ) : sidebarState === 'search' ? (
