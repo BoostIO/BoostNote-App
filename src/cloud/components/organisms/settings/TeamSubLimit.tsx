@@ -86,7 +86,13 @@ const TeamSubLimit = ({
             style={{ width: `${currentSubInfo.info.rate}%` }}
           />
         </div>
-        <p>{currentSubInfo.info.label}</p>
+        {currentSubInfo.info.docLimit != null && (
+          <p>
+            {t(lngKeys.SettingsSubLimitUnderFreePlan, {
+              limit: currentSubInfo.info.docLimit,
+            })}
+          </p>
+        )}
         {currentSubInfo.info.trialIsOver && (
           <p className='text-danger'>{t(lngKeys.SettingsSubLimitTrialEnd)}</p>
         )}

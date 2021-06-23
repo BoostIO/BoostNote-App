@@ -17,8 +17,6 @@ import { freePlanDocLimit } from '../../subscription'
 import { SubscriptionInfo } from './types'
 import { getFormattedDateFromUnixTimestamp } from '../../date'
 import { useGlobalData } from '../globalData'
-import { useI18n } from '../../hooks/useI18n'
-import { lngKeys } from '../../i18n/types'
 
 interface PageStoreProps {
   pageProps: any
@@ -30,7 +28,6 @@ function usePageDataStore(pageProps: any) {
     globalData: { currentUser },
   } = useGlobalData()
   const pageDataRef = useCommittedRef(pageData)
-  const { t } = useI18n()
 
   useEffect(() => {
     setPageData(pageProps)
@@ -170,7 +167,6 @@ function usePageDataStore(pageProps: any) {
   )
 
   const currentSubInfo: SubscriptionInfo | undefined = useMemo(() => {
-    let label = ''
     let progressLabel = ''
     let rate = 0
     let overLimit = false
@@ -200,14 +196,11 @@ function usePageDataStore(pageProps: any) {
     overLimit = docCount >= freePlanDocLimit
     rate = docCount === 0 ? 0 : Math.ceil((docCount / freePlanDocLimit) * 100)
     progressLabel = `${docCount}/${freePlanDocLimit}`
-    label = t(lngKeys.SettingsSubLimitUnderFreePlan, {
-      limit: freePlanDocLimit,
-    })
 
     return {
       trialing: false,
       info: {
-        label,
+        docLimit: freePlanDocLimit,
         trialIsOver,
         progressLabel,
         rate,
@@ -215,7 +208,7 @@ function usePageDataStore(pageProps: any) {
         linkLabel,
       },
     }
-  }, [subscription, team, t])
+  }, [subscription, team])
 
   return {
     pageData,
