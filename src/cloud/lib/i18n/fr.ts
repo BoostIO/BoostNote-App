@@ -217,6 +217,15 @@ const frTranslation: TranslationSource = {
   [lngKeys.CreateNewSpace]: 'Créer un nouvel espace',
   [lngKeys.DownloadDesktopApp]: "Télécharger l'application de bureau",
 
+  [lngKeys.ToolbarTooltipsSpaces]: 'Espaces',
+  [lngKeys.ToolbarTooltipsTree]: 'Navigation',
+  [lngKeys.ToolbarTooltipsSearch]: 'Rechercher',
+  [lngKeys.ToolbarTooltipsTimeline]: 'Chronologie',
+  [lngKeys.ToolbarTooltipsDiscount]: 'Promotion pour nouveaux utilisateurs!',
+  [lngKeys.ToolbarTooltipsImport]: 'Importer',
+  [lngKeys.ToolbarTooltipsMembers]: 'Membres',
+  [lngKeys.ToolbarTooltipsSettings]: 'Paramètres',
+
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',

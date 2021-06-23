@@ -204,8 +204,14 @@ const Application = ({
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(
+<<<<<<< HEAD
       popOverState,
       setPopOverState,
+=======
+      t,
+      showSpaces,
+      setShowSpaces,
+>>>>>>> toolbar tooltips
       openState,
       openModal,
       openSettingsTab,
@@ -215,6 +221,7 @@ const Application = ({
       team != null ? counts[team.id] : 0
     )
   }, [
+    t,
     sidebarState,
     openModal,
     openSettingsTab,
@@ -741,8 +748,14 @@ function mapHistory(
 }
 
 function mapToolbarRows(
+<<<<<<< HEAD
   popOverState: PopOverState,
   setPopOverState: React.Dispatch<React.SetStateAction<PopOverState>>,
+=======
+  t: TFunction,
+  showSpaces: boolean,
+  setShowSpaces: React.Dispatch<React.SetStateAction<boolean>>,
+>>>>>>> toolbar tooltips
   openState: (sidebarState: SidebarState) => void,
   openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   openSettingsTab: (tab: SettingsTab) => void,
@@ -754,8 +767,13 @@ function mapToolbarRows(
   const rows: SidebarToolbarRow[] = []
   if (team != null) {
     rows.push({
+<<<<<<< HEAD
       tooltip: 'Spaces',
       active: popOverState === 'spaces',
+=======
+      tooltip: t(lngKeys.ToolbarTooltipsSpaces),
+      active: showSpaces,
+>>>>>>> toolbar tooltips
       icon: (
         <RoundedImage
           size={26}
@@ -768,19 +786,19 @@ function mapToolbarRows(
     })
   }
   rows.push({
-    tooltip: 'Tree',
+    tooltip: t(lngKeys.ToolbarTooltipsTree),
     active: sidebarState === 'tree',
     icon: mdiFileDocumentMultipleOutline,
     onClick: () => openState('tree'),
   })
   rows.push({
-    tooltip: 'Search',
+    tooltip: t(lngKeys.ToolbarTooltipsSearch),
     active: sidebarState === 'search',
     icon: mdiMagnify,
     onClick: () => openState('search'),
   })
   rows.push({
-    tooltip: 'Timeline',
+    tooltip: t(lngKeys.ToolbarTooltipsTimeline),
     active: sidebarState === 'timeline',
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
@@ -810,7 +828,7 @@ function mapToolbarRows(
   if (team != null && subscription == null && isEligibleForDiscount(team)) {
     rows.push({
       position: 'bottom',
-      tooltip: 'Get the new user discount!',
+      tooltip: t(lngKeys.ToolbarTooltipsDiscount),
       icon: mdiGiftOutline,
       pelletVariant: 'danger',
       onClick: () => {
@@ -821,20 +839,20 @@ function mapToolbarRows(
   }
 
   rows.push({
-    tooltip: 'Import',
+    tooltip: t(lngKeys.ToolbarTooltipsImport),
     icon: mdiDownload,
     position: 'bottom',
     onClick: () => openModal(<ImportModal />, { showCloseIcon: true }),
   })
   rows.push({
-    tooltip: 'Members',
+    tooltip: t(lngKeys.ToolbarTooltipsMembers),
     active: sidebarState === 'members',
     icon: mdiAccountMultiplePlusOutline,
     position: 'bottom',
     onClick: () => openSettingsTab('teamMembers'),
   })
   rows.push({
-    tooltip: 'Settings',
+    tooltip: t(lngKeys.ToolbarTooltipsSettings),
     active: sidebarState === 'settings',
     icon: mdiCogOutline,
     position: 'bottom',

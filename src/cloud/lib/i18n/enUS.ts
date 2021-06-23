@@ -220,6 +220,15 @@ const enTranslation: TranslationSource = {
   [lngKeys.CreateNewSpace]: 'Create a new space',
   [lngKeys.DownloadDesktopApp]: 'Download the desktop app',
 
+  [lngKeys.ToolbarTooltipsSpaces]: 'Spaces',
+  [lngKeys.ToolbarTooltipsTree]: 'Tree',
+  [lngKeys.ToolbarTooltipsSearch]: 'Search',
+  [lngKeys.ToolbarTooltipsTimeline]: 'Timeline',
+  [lngKeys.ToolbarTooltipsDiscount]: 'Get the new user discount',
+  [lngKeys.ToolbarTooltipsImport]: 'Import',
+  [lngKeys.ToolbarTooltipsMembers]: 'Members',
+  [lngKeys.ToolbarTooltipsSettings]: 'Settings',
+
   //Language
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',

@@ -180,6 +180,15 @@ export enum lngKeys {
   CreateNewSpace = 'spaces.create',
   DownloadDesktopApp = 'modals.spaces.download',
 
+  ToolbarTooltipsSpaces = 'toolbar.tooltips.spaces',
+  ToolbarTooltipsTree = 'toolbar.tooltips.tree',
+  ToolbarTooltipsSearch = 'toolbar.tooltips.search',
+  ToolbarTooltipsTimeline = 'toolbar.tooltips.timeline',
+  ToolbarTooltipsDiscount = 'toolbar.tooltips.discount',
+  ToolbarTooltipsImport = 'toolbar.tooltips.import',
+  ToolbarTooltipsMembers = 'toolbar.tooltips.import',
+  ToolbarTooltipsSettings = 'toolbar.tooltips.settings',
+
   Back = 'back',
 
   members = 'members',
