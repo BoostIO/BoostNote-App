@@ -15,6 +15,7 @@ export function makeMentionElement(id: string, defaultName: string) {
   const mentionNode = document.createElement('span')
   mentionNode.setAttribute('data-mention', id)
   mentionNode.setAttribute('data-label', `@${defaultName}`)
+  mentionNode.appendChild(document.createTextNode(`@${defaultName}`))
   mentionNode.addEventListener('focus', () => console.log('afafawfaf'))
   return mentionNode
 }
