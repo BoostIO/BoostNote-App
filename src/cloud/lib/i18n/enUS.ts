@@ -26,7 +26,6 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsTitle]: 'Settings',
   [lngKeys.SettingsPersonalInfo]: 'Settings',
   [lngKeys.SettingsPreferences]: 'Preferences',
-  [lngKeys.SettingsTeamMembers]: 'Members',
   [lngKeys.SettingsTeamUpgrade]: 'Upgrade',
   [lngKeys.SettingsTeamSubscription]: 'Billing',
   [lngKeys.SettingsIntegrations]: 'Integrations',
@@ -222,14 +221,14 @@ const enTranslation: TranslationSource = {
 
   [lngKeys.ToolbarTooltipsSpaces]: 'Spaces',
   [lngKeys.ToolbarTooltipsTree]: 'Tree',
-  [lngKeys.ToolbarTooltipsSearch]: 'Search',
-  [lngKeys.ToolbarTooltipsTimeline]: 'Timeline',
   [lngKeys.ToolbarTooltipsDiscount]: 'Get the new user discount',
-  [lngKeys.ToolbarTooltipsImport]: 'Import',
-  [lngKeys.ToolbarTooltipsMembers]: 'Members',
-  [lngKeys.ToolbarTooltipsSettings]: 'Settings',
 
   //Language
+  [lngKeys.Members]: 'Members',
+  [lngKeys.Settings]: 'Settings',
+  [lngKeys.Timeline]: 'Timeline',
+  [lngKeys.Import]: 'Import',
+  [lngKeys.Search]: 'Search',
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',
   [lngKeys.ProfilePicture]: 'Profile Picture',

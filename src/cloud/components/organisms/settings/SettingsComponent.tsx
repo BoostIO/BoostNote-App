@@ -183,7 +183,7 @@ const SettingsComponent = () => {
                 onClick={() => openSettingsTab('teamInfo')}
               />
               <SettingNavButtonItem
-                label={t(lngKeys.SettingsTeamMembers)}
+                label={t(lngKeys.Members)}
                 active={settingsTab === 'teamMembers'}
                 id='settings-teamMembersTab-btn'
                 onClick={() => openSettingsTab('teamMembers')}

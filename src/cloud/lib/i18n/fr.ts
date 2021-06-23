@@ -26,7 +26,6 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsTitle]: 'Paramètres',
   [lngKeys.SettingsPersonalInfo]: 'Paramètres',
   [lngKeys.SettingsPreferences]: 'Préférences',
-  [lngKeys.SettingsTeamMembers]: 'Membres',
   [lngKeys.SettingsTeamUpgrade]: 'Mise à niveau',
   [lngKeys.SettingsTeamSubscription]: 'Facturation',
   [lngKeys.SettingsIntegrations]: 'Intégrations',
@@ -219,14 +218,10 @@ const frTranslation: TranslationSource = {
 
   [lngKeys.ToolbarTooltipsSpaces]: 'Espaces',
   [lngKeys.ToolbarTooltipsTree]: 'Navigation',
-  [lngKeys.ToolbarTooltipsSearch]: 'Rechercher',
-  [lngKeys.ToolbarTooltipsTimeline]: 'Chronologie',
   [lngKeys.ToolbarTooltipsDiscount]: 'Promotion pour nouveaux utilisateurs!',
-  [lngKeys.ToolbarTooltipsImport]: 'Importer',
-  [lngKeys.ToolbarTooltipsMembers]: 'Membres',
-  [lngKeys.ToolbarTooltipsSettings]: 'Paramètres',
 
   //forms
+  [lngKeys.Members]: 'Membres',
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',
   [lngKeys.SupportGuide]: 'Support',
@@ -234,6 +229,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.KeyboardShortcuts]: 'Raccourcis clavier',
 
   //Language
+  [lngKeys.Settings]: 'Paramètres',
+  [lngKeys.Search]: 'Rechercher',
+  [lngKeys.Timeline]: 'Chronologie',
+  [lngKeys.Import]: 'Importer',
   [lngKeys.members]: 'membres',
   [lngKeys.Help]: 'Aide',
   [lngKeys.ProfilePicture]: 'Image de profil',

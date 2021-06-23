@@ -23,7 +23,6 @@ export enum lngKeys {
   SettingsPersonalInfo = 'settings.personalInfo',
   SettingsPreferences = 'settings.preferences',
   SettingsTeamInfo = 'settings.teamInfo',
-  SettingsTeamMembers = 'settings.teamMembers',
   SettingsTeamUpgrade = 'settings.teamUpgrade',
   SettingsTeamSubscription = 'settings.teamSubscription',
   SettingsIntegrations = 'settings.integrations',
@@ -182,15 +181,15 @@ export enum lngKeys {
 
   ToolbarTooltipsSpaces = 'toolbar.tooltips.spaces',
   ToolbarTooltipsTree = 'toolbar.tooltips.tree',
-  ToolbarTooltipsSearch = 'toolbar.tooltips.search',
-  ToolbarTooltipsTimeline = 'toolbar.tooltips.timeline',
   ToolbarTooltipsDiscount = 'toolbar.tooltips.discount',
-  ToolbarTooltipsImport = 'toolbar.tooltips.import',
-  ToolbarTooltipsMembers = 'toolbar.tooltips.import',
-  ToolbarTooltipsSettings = 'toolbar.tooltips.settings',
 
   Back = 'back',
 
+  Members = 'Members',
+  Settings = 'Settings',
+  Import = 'Import',
+  Timeline = 'Timeline',
+  Search = 'Search',
   members = 'members',
   Help = 'help',
   ThisSpace = 'this.space',
