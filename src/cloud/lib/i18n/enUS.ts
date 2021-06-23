@@ -216,6 +216,10 @@ const enTranslation: TranslationSource = {
     'No credit card information is necessary for now.',
   [lngKeys.FreeTrialModalCTA]: 'Start Free Trial',
 
+  [lngKeys.LogOut]: 'Log out',
+  [lngKeys.CreateNewSpace]: 'Create a new space',
+  [lngKeys.DownloadDesktopApp]: 'Download the desktop app',
+
   //Language
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',

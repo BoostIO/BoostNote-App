@@ -176,6 +176,10 @@ export enum lngKeys {
   FreeTrialModalDisclaimer = 'modals.trial.disclaimer',
   FreeTrialModalCTA = 'modals.trial.cta',
 
+  LogOut = 'log.out',
+  CreateNewSpace = 'spaces.create',
+  DownloadDesktopApp = 'modals.spaces.download',
+
   Back = 'back',
 
   members = 'members',
