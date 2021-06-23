@@ -8,6 +8,8 @@ import { usePage } from '../../../lib/stores/pageStore'
 import { freeTrialPeriodDays } from '../../../lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import Button from '../../../../shared/components/atoms/Button'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface FreeTrialPopupProps {
   team: SerializedTeam
@@ -18,6 +20,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
   const { pushApiErrorMessage } = useToast()
+  const { t } = useI18n()
 
   const onCloseCallback = useCallback(() => {
     if (sending) {
@@ -48,7 +51,9 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
       <StyledFreeTrialPopupBackground onClick={onCloseCallback} />
       <StyledFreeTrialPopupContainer>
         <Flexbox flex='1 1 auto' direction='column' alignItems='flex-start'>
-          <StyledFreeTrialTitle>Try the Pro Plan for free</StyledFreeTrialTitle>
+          <StyledFreeTrialTitle>
+            {t(lngKeys.FreeTrialModalTitle)}
+          </StyledFreeTrialTitle>
           <video
             src='/app/static/videos/pro-intro.mp4'
             className='intro-video'
@@ -58,11 +63,9 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
           ></video>
           <div className='intro-text'>
             <p>
-              You&apos;ll get access to most features of a paid Pro Plan such as
-              unlimited documents, revision history, etc... for{' '}
-              {freeTrialPeriodDays} days.
+              {t(lngKeys.FreeTrialModalBody, { days: freeTrialPeriodDays })}
             </p>
-            <p>No credit card information is necessary for now.</p>
+            <p>{t(lngKeys.FreeTrialModalDisclaimer)}</p>
           </div>
         </Flexbox>
         <Flexbox flex='0 0 auto' direction='column' className='button__group'>
@@ -75,7 +78,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
             {sending ? (
               <Spinner className='relative spinner' />
             ) : (
-              'Start Free Trial'
+              t(lngKeys.FreeTrialModalCTA)
             )}
           </Button>
           <Button
@@ -84,7 +87,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
             onClick={onCloseCallback}
             disabled={sending}
           >
-            Cancel
+            {t(lngKeys.GeneralCancel)}
           </Button>
         </Flexbox>
       </StyledFreeTrialPopupContainer>

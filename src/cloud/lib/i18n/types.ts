@@ -171,6 +171,11 @@ export enum lngKeys {
   DiscountModalTimeRemaining = 'modals.discount.remaining',
   DiscountModalExpired = 'modals.discount.expired',
 
+  FreeTrialModalTitle = 'modals.trial.title',
+  FreeTrialModalBody = 'modals.trial.body',
+  FreeTrialModalDisclaimer = 'modals.trial.disclaimer',
+  FreeTrialModalCTA = 'modals.trial.cta',
+
   Back = 'back',
 
   members = 'members',
