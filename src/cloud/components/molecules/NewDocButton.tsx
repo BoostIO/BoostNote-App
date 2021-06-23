@@ -88,10 +88,22 @@ const Container = styled.div`
   display: flex;
   .button__group {
     flex: 1 1 auto;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #sidebar-newdoc-btn {
     flex: 1 1 auto;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    .button__label {
+      flex: 0 1 auto;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   .sidebar-newdoc-controls {
