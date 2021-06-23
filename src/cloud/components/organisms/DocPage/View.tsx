@@ -299,6 +299,15 @@ const ViewPage = ({
     },
     [loadDoc, team]
   )
+
+  const users = useMemo(() => {
+    if (permissions == null) {
+      return []
+    }
+
+    return permissions.map((permission) => permission.user)
+  }, [permissions])
+
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -448,6 +457,7 @@ const ViewPage = ({
             <CommentManager
               state={normalizedCommentState}
               user={user}
+              users={users}
               {...commentActions}
             />
           ) : null,
