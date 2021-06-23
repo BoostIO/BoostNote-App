@@ -28,7 +28,7 @@ function useCommentManagerState(
     setState({ mode: 'list_loading' })
     return observeDocThreads(docId, (threads) => {
       setState(updateThreads(threads))
-      if (initialThreadRef.current != null) {
+      if (initialThreadRef.current !== '') {
         setState(
           transitionState({
             mode: 'thread',
