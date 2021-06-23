@@ -213,6 +213,10 @@ const frTranslation: TranslationSource = {
     "Aucune information de paiement tel que carte de crédit etc... n'est nécessaire",
   [lngKeys.FreeTrialModalCTA]: "Commencer l'essai gratuit",
 
+  [lngKeys.LogOut]: 'Se déconnecter',
+  [lngKeys.CreateNewSpace]: 'Créer un nouvel espace',
+  [lngKeys.DownloadDesktopApp]: "Télécharger l'application de bureau",
+
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',

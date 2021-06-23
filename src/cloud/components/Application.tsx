@@ -110,6 +110,9 @@ import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 import { useNotifications } from '../../shared/lib/stores/notifications'
 import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import '../lib/i18n'
+import { useI18n } from '../lib/hooks/useI18n'
+import { TFunction } from 'i18next'
+import { lngKeys } from '../lib/i18n/types'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -160,6 +163,7 @@ const Application = ({
   const { popup } = useContextMenu()
   const { treeWithOrderedCategories } = useCloudSidebarTree()
   const { counts } = useNotifications()
+  const { t } = useI18n()
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -483,7 +487,10 @@ const Application = ({
     setPopOverState(null)
   }, [])
 
-  const spaceBottomRows = useMemo(() => buildSpacesBottomRows(push), [push])
+  const spaceBottomRows = useMemo(() => buildSpacesBottomRows(push, t), [
+    push,
+    t,
+  ])
 
   const timelineMore = useMemo(() => {
     return team != null && pathname !== getTeamLinkHref(team, 'timeline')
@@ -887,10 +894,10 @@ function mapSpaces(
   return rows
 }
 
-function buildSpacesBottomRows(push: (url: string) => void) {
+function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
   return [
     {
-      label: 'Create a space',
+      label: t(lngKeys.CreateNewSpace),
       icon: mdiPlusCircleOutline,
       linkProps: {
         href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
@@ -901,7 +908,7 @@ function buildSpacesBottomRows(push: (url: string) => void) {
       },
     },
     {
-      label: 'Download desktop app',
+      label: t(lngKeys.DownloadDesktopApp),
       icon: mdiDownload,
       linkProps: {
         href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
@@ -910,7 +917,7 @@ function buildSpacesBottomRows(push: (url: string) => void) {
       },
     },
     {
-      label: 'Log out',
+      label: t(lngKeys.LogOut),
       icon: mdiLogoutVariant,
       linkProps: {
         href: '/api/oauth/signout',
