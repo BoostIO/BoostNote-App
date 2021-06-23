@@ -62,6 +62,8 @@ import CreateSmartFolderModal from '../../../components/organisms/Modal/contents
 import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
 import { useDialog } from '../../../../shared/lib/stores/dialog'
 import { DocStatus } from '../../../interfaces/db/doc'
+import { useI18n } from '../useI18n'
+import { lngKeys } from '../../i18n/types'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -69,6 +71,7 @@ export function useCloudSidebarTree() {
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
   const { messageBox } = useDialog()
+  const { t } = useI18n()
 
   const {
     initialLoadDone,
@@ -172,7 +175,7 @@ export function useCloudSidebarTree() {
               {
                 icon: mdiFilePlusOutline,
                 onClick: undefined,
-                placeholder: 'Doc title..',
+                placeholder: t(lngKeys.DocTitlePlaceholder),
                 create: (title: string) =>
                   createDoc(team, {
                     workspaceId: wp.id,
@@ -182,7 +185,7 @@ export function useCloudSidebarTree() {
               {
                 icon: mdiFolderPlusOutline,
                 onClick: undefined,
-                placeholder: 'Folder name..',
+                placeholder: t(lngKeys.FolderNamePlaceholder),
                 create: (folderName: string) =>
                   createFolder(team, {
                     workspaceId: wp.id,
@@ -196,7 +199,7 @@ export function useCloudSidebarTree() {
                   {
                     type: MenuTypes.Normal,
                     icon: mdiApplicationCog,
-                    label: 'Edit',
+                    label: t(lngKeys.Edit),
                     onClick: () => openWorkspaceEditForm(wp),
                   },
                 ]
@@ -204,13 +207,13 @@ export function useCloudSidebarTree() {
                   {
                     type: MenuTypes.Normal,
                     icon: mdiApplicationCog,
-                    label: 'Edit',
+                    label: t(lngKeys.Edit),
                     onClick: () => openWorkspaceEditForm(wp),
                   },
                   {
                     type: MenuTypes.Normal,
                     icon: mdiTrashCanOutline,
-                    label: 'Delete',
+                    label: t(lngKeys.GeneralDelete),
                     onClick: () => deleteWorkspace(wp),
                   },
                 ],
@@ -256,7 +259,7 @@ export function useCloudSidebarTree() {
               {
                 icon: mdiFilePlusOutline,
                 onClick: undefined,
-                placeholder: 'Doc title..',
+                placeholder: t(lngKeys.DocTitlePlaceholder),
                 create: (title: string) =>
                   createDoc(team, {
                     parentFolderId: folder.id,
@@ -267,7 +270,7 @@ export function useCloudSidebarTree() {
               {
                 icon: mdiFolderPlusOutline,
                 onClick: undefined,
-                placeholder: 'Folder name..',
+                placeholder: t(lngKeys.FolderNamePlaceholder),
                 create: (folderName: string) =>
                   createFolder(team, {
                     parentFolderId: folder.id,
@@ -285,8 +288,8 @@ export function useCloudSidebarTree() {
                   treeSendingMap.get(folder.id) === 'bookmark'
                     ? '...'
                     : folder.bookmarked
-                    ? 'Bookmarked'
-                    : 'Bookmark',
+                    ? t(lngKeys.Bookmarked)
+                    : t(lngKeys.BookmarkVerb),
                 onClick: () =>
                   toggleFolderBookmark(
                     folder.teamId,
@@ -297,13 +300,13 @@ export function useCloudSidebarTree() {
               {
                 type: MenuTypes.Normal,
                 icon: mdiPencil,
-                label: 'Rename',
+                label: t(lngKeys.Rename),
                 onClick: () => openRenameFolderForm(folder),
               },
               {
                 type: MenuTypes.Normal,
                 icon: mdiTrashCanOutline,
-                label: 'Delete',
+                label: t(lngKeys.GeneralDelete),
                 onClick: () => deleteFolder(folder),
               },
             ],
@@ -374,21 +377,21 @@ export function useCloudSidebarTree() {
                   treeSendingMap.get(doc.id) === 'bookmark'
                     ? '...'
                     : doc.bookmarked
-                    ? 'Bookmarked'
-                    : 'Bookmark',
+                    ? t(lngKeys.Bookmarked)
+                    : t(lngKeys.BookmarkVerb),
                 onClick: () =>
                   toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
               },
               {
                 type: MenuTypes.Normal,
                 icon: mdiPencil,
-                label: 'Rename',
+                label: t(lngKeys.Rename),
                 onClick: () => openRenameDocForm(doc),
               },
               {
                 type: MenuTypes.Normal,
                 icon: mdiTrashCanOutline,
-                label: 'Delete',
+                label: t(lngKeys.GeneralDelete),
                 onClick: () => deleteDoc(doc),
               },
             ],
@@ -518,12 +521,14 @@ export function useCloudSidebarTree() {
     if (orderedBookmarked.length > 0) {
       tree.push({
         label: 'Bookmarks',
+        title: t(lngKeys.Bookmarks),
         rows: orderedBookmarked,
       })
     }
 
     tree.push({
       label: 'Smart Folders',
+      title: t(lngKeys.SmartFolders),
       rows: smartFolders.map((smartFolder) => {
         const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
           smartFolder,
@@ -543,7 +548,7 @@ export function useCloudSidebarTree() {
                 {
                   type: MenuTypes.Normal,
                   icon: mdiPencil,
-                  label: 'Edit',
+                  label: t(lngKeys.Edit),
                   onClick: () => {
                     openModal(
                       <UpdateSmartFolderModal smartFolder={smartFolder} />
@@ -553,7 +558,7 @@ export function useCloudSidebarTree() {
                 {
                   type: MenuTypes.Normal,
                   icon: mdiTrashCanOutline,
-                  label: 'Delete',
+                  label: t(lngKeys.GeneralDelete),
                   onClick: () => {
                     messageBox({
                       title: `Delete ${smartFolder.name}?`,
@@ -561,13 +566,13 @@ export function useCloudSidebarTree() {
                       buttons: [
                         {
                           variant: 'secondary',
-                          label: 'Cancel',
+                          label: t(lngKeys.GeneralCancel),
                           cancelButton: true,
                           defaultButton: true,
                         },
                         {
                           variant: 'danger',
-                          label: 'Delete',
+                          label: t(lngKeys.GeneralDelete),
                           onClick: async () => {
                             await deleteSmartFolder(smartFolder)
                           },
@@ -594,6 +599,7 @@ export function useCloudSidebarTree() {
 
     tree.push({
       label: 'Folders',
+      title: t(lngKeys.Folders),
       rows: navTree,
       controls: currentUserIsCoreMember
         ? [
@@ -608,6 +614,7 @@ export function useCloudSidebarTree() {
     if (!team.personal && currentUserIsCoreMember) {
       tree.push({
         label: 'Private',
+        title: t(lngKeys.Private),
         rows:
           personalWorkspace != null
             ? arrayItems
@@ -630,7 +637,7 @@ export function useCloudSidebarTree() {
           {
             icon: mdiFilePlusOutline,
             onClick: undefined,
-            placeholder: 'Doc title..',
+            placeholder: t(lngKeys.DocTitlePlaceholder),
             create: async (title: string) => {
               if (personalWorkspace == null) {
                 return createWorkspace(
@@ -661,7 +668,7 @@ export function useCloudSidebarTree() {
           {
             icon: mdiFolderPlusOutline,
             onClick: undefined,
-            placeholder: 'Folder name..',
+            placeholder: t(lngKeys.FolderNamePlaceholder),
             create: async (folderName: string) => {
               if (personalWorkspace == null) {
                 return createWorkspace(
@@ -698,16 +705,18 @@ export function useCloudSidebarTree() {
     if (labels.length > 0) {
       tree.push({
         label: 'Labels',
+        title: t(lngKeys.Labels),
         rows: labels,
       })
     }
 
     tree.push({
       label: 'More',
+      title: t(lngKeys.More),
       rows: [
         {
           id: 'sidenav-attachment',
-          label: 'Attachments',
+          label: t(lngKeys.GeneralAttachments),
           defaultIcon: mdiPaperclip,
           href: getTeamLinkHref(team, 'uploads'),
           active: getTeamLinkHref(team, 'uploads') === pathname,
@@ -716,7 +725,7 @@ export function useCloudSidebarTree() {
         },
         {
           id: 'sidenav-shared',
-          label: 'Shared',
+          label: t(lngKeys.Shared),
           defaultIcon: mdiWeb,
           href: getTeamLinkHref(team, 'shared'),
           active: getTeamLinkHref(team, 'shared') === pathname,
@@ -728,6 +737,7 @@ export function useCloudSidebarTree() {
 
     tree.push({
       label: 'Status',
+      title: t(lngKeys.Status),
       rows: [
         {
           id: 'sidenav-status-in-progress',
@@ -780,6 +790,7 @@ export function useCloudSidebarTree() {
 
     return tree as SidebarNavCategory[]
   }, [
+    t,
     initialLoadDone,
     team,
     pathname,
