@@ -200,6 +200,12 @@ const frTranslation: TranslationSource = {
     "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
+  [lngKeys.DiscountModalTitle]:
+    'Abonnez vous dès maintenant pour recevoir une promotion!',
+  [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
+  [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
+  [lngKeys.DiscountModalExpired]:
+    "Vous n'êtes plus apte à recevoir cette promotion",
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',
@@ -242,6 +248,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.Update]: 'Mettre à jour',
   [lngKeys.LearnMore]: 'En apprendre plus',
   [lngKeys.DoYouWishToProceed]: 'Désirez vous continuer?',
+  [lngKeys.days]: 'jours',
+  [lngKeys.hours]: 'heures',
+  [lngKeys.minutes]: 'minutes',
+  [lngKeys.seconds]: 'secondes',
 }
 
 export default {

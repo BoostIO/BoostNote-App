@@ -9,11 +9,16 @@ import { usePage } from '../../../../lib/stores/pageStore'
 import Banner from '../../../../../shared/components/atoms/Banner'
 import { mdiExclamation } from '@mdi/js'
 import TeamSubLimit from '../../settings/TeamSubLimit'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
+import { TFunction } from 'i18next'
+import { withTranslation, Translation } from 'react-i18next'
 
 const DiscountModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
   const { team, subscription } = usePage()
+  const { t } = useI18n()
 
   if (team == null) {
     return null
@@ -23,7 +28,7 @@ const DiscountModal = () => {
     return (
       <Container className='discount__modal'>
         <Banner variant='danger' iconPath={mdiExclamation}>
-          You are already subscribed
+          {t(lngKeys.DiscountModalAlreadySubscribed)}
         </Banner>
       </Container>
     )
@@ -36,10 +41,12 @@ const DiscountModal = () => {
     <Container className='discount__modal'>
       <header className='discount__modal__header'>
         <h3 className='discount__modal__title'>
-          Subscribe now to receive a three months discount!
+          {t(lngKeys.DiscountModalTitle)}
         </h3>
-        <div className='discount__modal__description'>Time remaining</div>
-        <Countdown renderer={DiscountCountdown} date={eligibilityEnd} />
+        <div className='discount__modal__description'>
+          {t(lngKeys.DiscountModalTimeRemaining)}
+        </div>
+        <Countdown renderer={DiscountCountdownRenderer} date={eligibilityEnd} />
         <PlanTables
           team={team}
           selectedPlan={'free'}
@@ -77,7 +84,7 @@ const DiscountModal = () => {
   )
 }
 
-const DiscountCountdown = ({
+const DiscountCountdownRenderer = ({
   days,
   hours,
   minutes,
@@ -91,32 +98,38 @@ const DiscountCountdown = ({
   completed: boolean
 }) => {
   if (completed) {
-    return (
-      <div className='countdown__expired'>
-        Your eligibility for a discount has expired
-      </div>
-    )
+    return withTranslation()(DiscountExpired)
   }
 
   return (
-    <div className='countdown'>
-      <div className='countdown__column'>
-        <div className='countdown__number'>{days}</div>
-        <span className='countdown__description'>days</span>
-      </div>
-      <div className='countdown__column'>
-        <div className='countdown__number'>{hours}</div>
-        <span className='countdown__description'>hours</span>
-      </div>
-      <div className='countdown__column'>
-        <div className='countdown__number'>{minutes}</div>
-        <span className='countdown__description'>minutes</span>
-      </div>
-      <div className='countdown__column'>
-        <div className='countdown__number'>{seconds}</div>
-        <span className='countdown__description'>seconds</span>
-      </div>
-    </div>
+    <Translation>
+      {(t, {}) => (
+        <div className='countdown'>
+          <div className='countdown__column'>
+            <div className='countdown__number'>{days}</div>
+            <span className='countdown__description'>{t(lngKeys.days)}</span>
+          </div>
+          <div className='countdown__column'>
+            <div className='countdown__number'>{hours}</div>
+            <span className='countdown__description'>{t(lngKeys.hours)}</span>
+          </div>
+          <div className='countdown__column'>
+            <div className='countdown__number'>{minutes}</div>
+            <span className='countdown__description'>{t(lngKeys.minutes)}</span>
+          </div>
+          <div className='countdown__column'>
+            <div className='countdown__number'>{seconds}</div>
+            <span className='countdown__description'>{t(lngKeys.seconds)}</span>
+          </div>
+        </div>
+      )}
+    </Translation>
+  )
+}
+
+const DiscountExpired = ({ t }: { t: TFunction }) => {
+  return (
+    <div className='countdown__expired'>{t(lngKeys.DiscountModalExpired)}</div>
   )
 }
 

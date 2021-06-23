@@ -204,6 +204,11 @@ const enTranslation: TranslationSource = {
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     'You will lose access to advanced features such as unlimited document revision history, setting password and expiration date for shared document, unlimited viewers, etc...',
 
+  [lngKeys.DiscountModalTitle]: 'Subscribe now to receive a discount!',
+  [lngKeys.DiscountModalAlreadySubscribed]: 'You are already subscribed',
+  [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
+  [lngKeys.DiscountModalExpired]: 'Your eligibility for a discount has expired',
+
   //Language
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',
@@ -238,6 +243,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.Update]: 'Update',
   [lngKeys.LearnMore]: 'Learn More',
   [lngKeys.DoYouWishToProceed]: 'Do you wish to proceed?',
+  [lngKeys.days]: 'days',
+  [lngKeys.hours]: 'hours',
+  [lngKeys.minutes]: 'minutes',
+  [lngKeys.seconds]: 'seconds',
 }
 
 export default {
