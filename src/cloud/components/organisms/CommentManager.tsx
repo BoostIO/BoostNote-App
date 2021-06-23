@@ -163,7 +163,7 @@ function CommentManager({
                 await createThread({ ...state.data, comment })
               }}
               autoFocus={true}
-              users={users}
+              users={usersOrEmpty}
             />
           </div>
         )
@@ -180,7 +180,7 @@ function CommentManager({
     deleteComment,
     setMode,
     user,
-    users,
+    usersOrEmpty,
     statusFilter,
     partitioned,
   ])
