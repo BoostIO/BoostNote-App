@@ -6,11 +6,14 @@ import {
   Actions,
   ModeTransition,
 } from '../../../cloud/components/organisms/CommentManager'
+import { useRouter } from '../../../cloud/lib/router'
+import { parse as parseQuery } from 'querystring'
 
 function useCommentManagerState(
   docId: string,
   initialThread?: string
 ): [State, Actions] {
+  const location = useRouter()
   const {
     observeDocThreads,
     observeComments,
@@ -23,6 +26,26 @@ function useCommentManagerState(
   useEffect(() => {
     initialThreadRef.current = initialThread
   }, [initialThread])
+
+  useEffect(() => {
+    setState((prev) => {
+      if (prev.mode === 'list_loading') {
+        return prev
+      }
+
+      const { thread: threadId } = parseQuery(location.search.slice(1))
+      if (threadId == null) {
+        return prev
+      }
+
+      const thread = prev.threads.find((thread) => thread.id === threadId)
+      if (thread == null) {
+        return prev
+      }
+
+      return transitionState({ mode: 'thread', thread })(prev)
+    })
+  }, [location])
 
   useEffect(() => {
     setState({ mode: 'list_loading' })
