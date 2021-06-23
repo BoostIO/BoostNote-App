@@ -110,7 +110,7 @@ const TimelineListItem = ({
             id={id}
           >
             <SideNavLabelStyle>
-              <PathLabel>{path}</PathLabel>
+              {path !== null && <PathLabel>{path}</PathLabel>}
               <span>{getDocTitle(item, 'Untitled')}</span>
             </SideNavLabelStyle>
             {item.tags != null && item.tags.length > 0 && (
