@@ -166,6 +166,11 @@ export enum lngKeys {
   BillingChangePlanStandardDisclaimer = 'billing.plan.change.standard.disclaimer',
   BillingChangePlanStripeProration = 'billing.plan.change.stripe.proration',
 
+  DiscountModalTitle = 'modals.discount.title',
+  DiscountModalAlreadySubscribed = 'modals.discount.subscribed',
+  DiscountModalTimeRemaining = 'modals.discount.remaining',
+  DiscountModalExpired = 'modals.discount.expired',
+
   Back = 'back',
 
   members = 'members',
@@ -204,6 +209,10 @@ export enum lngKeys {
   LearnMore = 'learn.more',
   DoYouWishToProceed = 'do.you.wish.to.proceed',
   SettingsUserForum = 'settings.user.forum',
+  days = 'days',
+  hours = 'hours',
+  minutes = 'minutes',
+  seconds = 'seconds',
 }
 
 export type TranslationSource = {
