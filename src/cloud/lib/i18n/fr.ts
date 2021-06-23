@@ -206,6 +206,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
   [lngKeys.DiscountModalExpired]:
     "Vous n'êtes plus apte à recevoir cette promotion",
+  [lngKeys.FreeTrialModalTitle]: 'Pro Plan: Essai gratuit',
+  [lngKeys.FreeTrialModalBody]:
+    'Vous allez pouvoir accéder à toutes les fonctionnalités du pro plan tel que documents illimités, historique de révisions etc... durant {{days}} jours.',
+  [lngKeys.FreeTrialModalDisclaimer]:
+    "Aucune information de paiement tel que carte de crédit etc... n'est nécessaire",
+  [lngKeys.FreeTrialModalCTA]: "Commencer l'essai gratuit",
 
   //forms
   [lngKeys.FormSelectImage]: 'Choisissez une image',

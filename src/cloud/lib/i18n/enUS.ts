@@ -209,6 +209,13 @@ const enTranslation: TranslationSource = {
   [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
   [lngKeys.DiscountModalExpired]: 'Your eligibility for a discount has expired',
 
+  [lngKeys.FreeTrialModalTitle]: 'Try the Pro Plan for free',
+  [lngKeys.FreeTrialModalBody]:
+    "You'll get access to most features of a paid Pro Plan such as unlimited documents, revision history, etc... for {{days}} days.",
+  [lngKeys.FreeTrialModalDisclaimer]:
+    'No credit card information is necessary for now.',
+  [lngKeys.FreeTrialModalCTA]: 'Start Free Trial',
+
   //Language
   [lngKeys.members]: 'members',
   [lngKeys.Help]: 'Help',
