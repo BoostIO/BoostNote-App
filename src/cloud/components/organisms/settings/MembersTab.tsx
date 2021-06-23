@@ -323,7 +323,7 @@ const MembersTab = () => {
             className={cc([tab === 'member' && 'active'])}
             onClick={() => setTab('member')}
           >
-            {t(lngKeys.SettingsTeamMembers)} ({permissions.length})
+            {t(lngKeys.Members)} ({permissions.length})
           </button>
         </SettingTabSelector>
       }

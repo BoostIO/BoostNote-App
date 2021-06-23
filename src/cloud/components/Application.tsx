@@ -792,13 +792,13 @@ function mapToolbarRows(
     onClick: () => openState('tree'),
   })
   rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsSearch),
+    tooltip: t(lngKeys.Search),
     active: sidebarState === 'search',
     icon: mdiMagnify,
     onClick: () => openState('search'),
   })
   rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsTimeline),
+    tooltip: t(lngKeys.Timeline),
     active: sidebarState === 'timeline',
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
@@ -839,20 +839,20 @@ function mapToolbarRows(
   }
 
   rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsImport),
+    tooltip: t(lngKeys.Import),
     icon: mdiDownload,
     position: 'bottom',
     onClick: () => openModal(<ImportModal />, { showCloseIcon: true }),
   })
   rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsMembers),
+    tooltip: t(lngKeys.Members),
     active: sidebarState === 'members',
     icon: mdiAccountMultiplePlusOutline,
     position: 'bottom',
     onClick: () => openSettingsTab('teamMembers'),
   })
   rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsSettings),
+    tooltip: t(lngKeys.Settings),
     active: sidebarState === 'settings',
     icon: mdiCogOutline,
     position: 'bottom',
