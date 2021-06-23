@@ -24,13 +24,10 @@ interface EditorAdmonitionToolDropdownOption {
 
 const options: EditorAdmonitionToolDropdownOption[] = [
   { label: 'Note', format: 'admonitionNote' },
-  { label: 'Info', format: 'admonitionInfo' },
   { label: 'Tip', format: 'admonitionTip' },
   { label: 'Important', format: 'admonitionImportant' },
   { label: 'Danger', format: 'admonitionDanger' },
   { label: 'Warning', format: 'admonitionWarning' },
-  { label: 'Caution', format: 'admonitionCaution' },
-  { label: 'Secondary', format: 'admonitionSecondary' },
 ]
 
 const EditorAdmonitionToolDropdown = ({
