@@ -224,6 +224,15 @@ export enum lngKeys {
   Add = 'Add',
   SelectAll = 'Select.all',
 
+  ModalsImportDestinationTitle = 'modals.import.destination.title',
+  ModalsImportDestinationDisclaimer = 'modals.import.destination.disclaimer',
+  ModalsImportDisclaimer = 'modals.import.disclaimer',
+  Source = 'Source',
+  Destination = 'Destination',
+  Previous = 'Previous',
+  Next = 'Next',
+  Continue = 'Continue',
+
   Shared = 'Shared',
   SmartFolders = 'Smart.Folders',
   Bookmarks = 'Bookmarks',

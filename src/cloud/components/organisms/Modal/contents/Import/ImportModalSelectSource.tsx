@@ -4,7 +4,6 @@ import {
   StyledImportModalFooter,
   StyledSourceRow,
 } from './styled'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
 import SourceButton from './SourceButton'
 import IconMdi from '../../../../atoms/IconMdi'
 import {
@@ -15,6 +14,9 @@ import {
 import { ImportService } from './ImportModalGuide'
 import { AllowedDocTypeImports } from '../../../../../api/teams/docs/import'
 import { ImportStep } from './ImportModalHeader'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
+import Button from '../../../../../../shared/components/atoms/Button'
 
 interface ImportModalSelectSourceProps {
   selectedService?: ImportService
@@ -32,13 +34,14 @@ const ImportModalSelectSource = ({
   showGuide,
   setUploadType,
 }: ImportModalSelectSourceProps) => {
+  const { t } = useI18n()
   return (
     <>
       <StyledImportModalContent tabIndex={-1}>
-        <h2 style={{ margin: 0 }}>Source</h2>
+        <h2 style={{ margin: 0 }}>{t(lngKeys.Source)}</h2>
         {!sending ? (
           <>
-            <p>Select how you want to import files ( 5Mb max per file )</p>
+            <p>{t(lngKeys.ModalsImportDisclaimer)}</p>
             <StyledSourceRow>
               <SourceButton
                 title={'Markdown or text'}
@@ -107,9 +110,9 @@ const ImportModalSelectSource = ({
         )}
       </StyledImportModalContent>
       <StyledImportModalFooter>
-        <CustomButton variant='secondary' onClick={onCancel} disabled={sending}>
-          Cancel
-        </CustomButton>
+        <Button variant='secondary' onClick={onCancel} disabled={sending}>
+          {t(lngKeys.GeneralCancel)}
+        </Button>
       </StyledImportModalFooter>
     </>
   )

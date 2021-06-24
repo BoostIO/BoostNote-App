@@ -269,6 +269,17 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
     'Only the workspace owner can change its access.',
 
+  [lngKeys.ModalsImportDestinationTitle]: 'Select a folder',
+  [lngKeys.ModalsImportDestinationDisclaimer]:
+    'Pick the folder you want your documents to be imported in',
+  [lngKeys.ModalsImportDisclaimer]:
+    'Select how you want to import files ( 5Mb max per file )',
+  [lngKeys.Source]: 'Source',
+  [lngKeys.Destination]: 'Destination',
+  [lngKeys.Previous]: 'Previous',
+  [lngKeys.Next]: 'Next',
+  [lngKeys.Continue]: 'Continue',
+
   //Language
   [lngKeys.Shared]: 'Shared',
   [lngKeys.Rename]: 'Rename',

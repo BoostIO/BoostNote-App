@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react'
 import { StyledImportModalContent, StyledImportModalFooter } from './styled'
 import { useNav } from '../../../../../lib/stores/nav'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
 import { sortByAttributeAsc } from '../../../../../lib/utils/array'
 import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
 import WorkspaceExplorer from '../../../../molecules/WorkspaceExplorer'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
+import Button from '../../../../../../shared/components/atoms/Button'
 
 interface ImportModalSelectFolderProps {
   selectedWorkspaceId?: string
@@ -27,6 +29,7 @@ const ImportModalSelectFolder = ({
 }: ImportModalSelectFolderProps) => {
   const { foldersMap, workspacesMap } = useNav()
   const wrapperRef = React.createRef<HTMLDivElement>()
+  const { t } = useI18n()
 
   const sortedWorkspaces = useMemo(() => {
     const workspaces = [...workspacesMap.values()]
@@ -61,8 +64,8 @@ const ImportModalSelectFolder = ({
   return (
     <>
       <StyledImportModalContent ref={wrapperRef} tabIndex={-1}>
-        <h2 style={{ margin: 0 }}>Select a folder</h2>
-        <p>Pick the folder you want your documents to be imported in</p>
+        <h2 style={{ margin: 0 }}>{t(lngKeys.ModalsImportDestinationTitle)}</h2>
+        <p>{t(lngKeys.ModalsImportDestinationDisclaimer)}</p>
         <WorkspaceExplorer
           folders={sortedFolders}
           workspaces={sortedWorkspaces}
@@ -73,16 +76,16 @@ const ImportModalSelectFolder = ({
         />
       </StyledImportModalContent>
       <StyledImportModalFooter>
-        <CustomButton variant='secondary' onClick={onCancel}>
-          Previous
-        </CustomButton>
-        <CustomButton
+        <Button variant='secondary' onClick={onCancel}>
+          {t(lngKeys.Previous)}
+        </Button>
+        <Button
           variant='primary'
           disabled={selectedWorkspaceId == null && selectedFolderId == null}
           onClick={onSelect}
         >
-          Upload
-        </CustomButton>
+          {t(lngKeys.Import)}
+        </Button>
       </StyledImportModalFooter>
     </>
   )
