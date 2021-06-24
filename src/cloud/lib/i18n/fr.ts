@@ -324,7 +324,16 @@ const frTranslation: TranslationSource = {
   [lngKeys.CreateNewDoc]: 'Créer un nouveau doc',
   [lngKeys.UseATemplate]: "A partir d'un template",
 
+  [lngKeys.DocSaveAsTemplate]: 'Enregistrer comme template',
+  [lngKeys.DocExportPdf]: 'Exporter (PDF)',
+  [lngKeys.DocExportMarkdown]: 'Exporter (Markdown)',
+  [lngKeys.DocExportHtml]: 'Exporter (HTML)',
+  [lngKeys.OpenInBrowser]: 'Ouvrir dans le navigateur',
+  [lngKeys.PickYourDestination]: 'Choisissez la destination',
+
   //Language
+  [lngKeys.CopyLink]: 'Copier le lien',
+  [lngKeys.Move]: 'Déplacer',
   [lngKeys.Shared]: 'Partagé',
   [lngKeys.Rename]: 'Renommer',
   [lngKeys.Edit]: 'Editer',

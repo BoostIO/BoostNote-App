@@ -47,6 +47,8 @@ import { useNav } from '../../../lib/stores/nav'
 import MoveItemModal from '../../organisms/Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import { selectV2Theme } from '../../../../shared/lib/styled/styleFunctions'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 export interface DocActionContextMenuParams {
   team: SerializedTeam
   doc: SerializedDocWithBookmark
@@ -62,6 +64,7 @@ export function useDocActionContextMenu({
   editorRef,
   toggleBookmarkForDoc,
 }: DocActionContextMenuParams) {
+  const { t } = useI18n()
   const { popup } = useContextMenu()
   const { updateDocHandler, deleteDocHandler } = useNav()
 
@@ -202,17 +205,17 @@ export function useDocActionContextMenu({
       const membersRestrictedMenuItems: MenuItem[] = currentUserIsCoreMember
         ? [
             createMenuItem({
-              label: 'Save as Template',
+              label: t(lngKeys.DocSaveAsTemplate),
               iconPath: mdiPaletteOutline,
               onClick: createTemplate,
             }),
             createMenuItem({
-              label: 'Move to',
+              label: t(lngKeys.Move),
               iconPath: mdiArrowRight,
               onClick: openMoveForm,
             }),
             createMenuItem({
-              label: 'Delete',
+              label: t(lngKeys.GeneralDelete),
               iconPath: mdiTrashCanOutline,
               onClick: openDeleteDocDialog,
             }),
@@ -222,17 +225,17 @@ export function useDocActionContextMenu({
       popup(event, [
         doc.bookmarked
           ? createMenuItem({
-              label: 'Remove from Bookmarks',
+              label: t(lngKeys.Bookmarked),
               iconPath: mdiStarRemoveOutline,
               onClick: toggleBookmarkForDoc,
             })
           : createMenuItem({
-              label: 'Add to Bookmarks',
+              label: t(lngKeys.BookmarkVerb),
               iconPath: mdiStarOutline,
               onClick: toggleBookmarkForDoc,
             }),
         createMenuItem({
-          label: 'Copy Link',
+          label: t(lngKeys.CopyLink),
           iconPath: mdiContentCopy,
           onClick: () => {
             copy(docUrl)
@@ -241,7 +244,7 @@ export function useDocActionContextMenu({
         ...(usingElectron
           ? [
               createMenuItem({
-                label: 'Open in Browser',
+                label: t(lngKeys.OpenInBrowser),
                 iconPath: mdiOpenInNew,
                 onClick: () => {
                   sendToHost('open-external-url', docUrl)
@@ -251,17 +254,17 @@ export function useDocActionContextMenu({
           : []),
         { type: MenuTypes.Separator },
         createMenuItem({
-          label: 'Export as Markdown',
+          label: t(lngKeys.DocExportMarkdown),
           iconPath: mdiLanguageMarkdownOutline,
           onClick: exportAsMarkdown,
         }),
         createMenuItem({
-          label: 'Export as HTML',
+          label: t(lngKeys.DocExportHtml),
           iconPath: mdiFileCodeOutline,
           onClick: exportAsHtml,
         }),
         createMenuItem({
-          label: 'Export as PDF',
+          label: t(lngKeys.DocExportPdf),
           iconPath: mdiFilePdfOutline,
           onClick: exportAsPdf,
         }),
@@ -270,6 +273,7 @@ export function useDocActionContextMenu({
       ])
     },
     [
+      t,
       popup,
       doc.bookmarked,
       toggleBookmarkForDoc,
