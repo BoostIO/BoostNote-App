@@ -334,7 +334,10 @@ const TopLevelNavigator = () => {
           icon: mdiClockOutline,
           onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
         },
-        {
+      ]
+
+      if (!boosthubTeam.personal) {
+        rows.push({
           tooltip: 'Notifications',
           icon:
             notificationCount > 0 ? (
@@ -347,8 +350,8 @@ const TopLevelNavigator = () => {
               mdiBellOutline
             ),
           onClick: boostHubToggleSidebarNotificationsEventEmitter.dispatch,
-        },
-      ]
+        })
+      }
 
       if (
         boosthubTeam.subscription == null &&

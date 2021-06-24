@@ -22,6 +22,7 @@ export interface GeneralStatus {
     iconUrl?: string
     createdAt: string
     subscription?: SerializedSubscription
+    personal: boolean
   }[]
   showingNoteContextMenu: boolean
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
