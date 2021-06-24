@@ -29,8 +29,8 @@ const DocLimitReachedBanner = () => {
       <Banner variant='warning' className='doc__edit__limit'>
         <span className='limit__reached__banner__label'>
           {subscription == null
-            ? `Your folder exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
-            : `Your folder exceeds the limit of your current plan. (${subscription.seats} team members)`}
+            ? `Your space exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`
+            : `Your space exceeds the limit of your current plan. (${subscription.seats} team members)`}
         </span>
         <Button
           variant='primary'

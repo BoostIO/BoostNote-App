@@ -77,7 +77,9 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
                 width: 200,
               }}
             >
-              {currentUser == null ? 'Go to homepage' : 'Go to folder'}
+              {currentUser == null
+                ? 'Go to homepage'
+                : 'Go back to your default space'}
             </ButtonLink>
           )}
           {currentUser == null && statusCode === 401 && (
