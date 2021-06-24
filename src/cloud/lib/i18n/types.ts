@@ -316,6 +316,7 @@ export enum lngKeys {
   ModalsSmartFolderPublicDisclaimer = 'modals.sf.public.disclaimer',
 
   EditorToolbarTooltipHeader = 'editor.toolbar.tooltips.header',
+  EditorToolbarTooltipAdmonition = 'editor.toolbar.tooltips.admonition',
   EditorToolbarTooltipCodefence = 'editor.toolbar.tooltips.codefence',
   EditorToolbarTooltipQuote = 'editor.toolbar.tooltips.quote',
   EditorToolbarTooltipList = 'editor.toolbar.tooltips.list',

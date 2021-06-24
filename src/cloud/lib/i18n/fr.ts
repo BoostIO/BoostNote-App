@@ -276,6 +276,7 @@ const frTranslation: TranslationSource = {
     'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'Ajouter un entête',
+  [lngKeys.EditorToolbarTooltipAdmonition]: 'Ajouter une admonition',
   [lngKeys.EditorToolbarTooltipCodefence]: 'Insérér une codefence',
   [lngKeys.EditorToolbarTooltipQuote]: 'Insérer une citation',
   [lngKeys.EditorToolbarTooltipList]: 'Insérér une liste à puces',
