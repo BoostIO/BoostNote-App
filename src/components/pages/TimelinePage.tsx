@@ -249,6 +249,7 @@ const StyledTimelinePage = styled.div`
   .no-document {
     margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   h1 {
