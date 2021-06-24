@@ -350,8 +350,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.ThreadReopen]: 'Reopen',
   [lngKeys.ThreadReplies]: '{{count}} replies',
   [lngKeys.All]: 'All',
+  [lngKeys.Any]: 'Any',
 
   //Language
+  [lngKeys.Select]: 'Select',
   [lngKeys.OpenVerb]: 'Open',
   [lngKeys.CopyLink]: 'Copy the link',
   [lngKeys.Move]: 'Move',

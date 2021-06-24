@@ -296,7 +296,9 @@ export enum lngKeys {
   ThreadReopen = 'threads.reopen',
   ThreadReplies = 'threads.replies',
 
+  Select = 'select',
   All = 'All',
+  Any = 'Any',
   PickYourDestination = 'pick.your.destination',
   OpenVerb = 'open.verb',
   OpenInBrowser = 'open.in.browser',

@@ -16,6 +16,9 @@ import SecondaryConditionValueControl from './SecondaryConditionValueControl'
 import Button from '../../../../../../shared/components/atoms/Button'
 import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../../../shared/components/molecules/Form/templates/FormRowItem'
+import { TFunction } from 'i18next'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 interface SecondaryConditionItemProps {
   condition: EditibleSecondaryCondition
@@ -32,6 +35,7 @@ const SecondaryConditionItem = ({
   remove,
   personalOnly,
 }: SecondaryConditionItemProps) => {
+  const { t } = useI18n()
   const validConditions = personalOnly
     ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
     : [
@@ -50,9 +54,9 @@ const SecondaryConditionItem = ({
         item={{
           type: 'select',
           props: {
-            value: getSecondaryConditionOptionByType(condition.type),
+            value: getSecondaryConditionOptionByType(t, condition.type),
             options: (validConditions as EditibleSecondaryConditionType[]).map(
-              getSecondaryConditionOptionByType
+              (condition) => getSecondaryConditionOptionByType(t, condition)
             ),
             minWidth: 140,
             onChange: (selectedOption: {
@@ -80,24 +84,25 @@ const SecondaryConditionItem = ({
 export default SecondaryConditionItem
 
 function getSecondaryConditionOptionByType(
+  t: TFunction,
   value: EditibleSecondaryConditionType
 ) {
   switch (value) {
     case 'status':
-      return { label: 'Status', value: 'status' }
+      return { label: t(lngKeys.Status), value: 'status' }
     case 'labels':
-      return { label: 'Labels', value: 'labels' }
+      return { label: t(lngKeys.Labels), value: 'labels' }
     case 'due_date':
-      return { label: 'Due Date', value: 'due_date' }
+      return { label: t(lngKeys.DueDate), value: 'due_date' }
     case 'assignees':
-      return { label: 'Assignees', value: 'assignees' }
+      return { label: t(lngKeys.Assignees), value: 'assignees' }
     case 'creation_date':
-      return { label: 'Creation Date', value: 'creation_date' }
+      return { label: t(lngKeys.CreationDate), value: 'creation_date' }
     case 'update_date':
-      return { label: 'Update Date', value: 'update_date' }
+      return { label: t(lngKeys.UpdateDate), value: 'update_date' }
     case 'null':
     default:
-      return { label: 'Select', value: 'null' }
+      return { label: t(lngKeys.Select), value: 'null' }
   }
 }
 

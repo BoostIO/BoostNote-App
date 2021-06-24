@@ -364,9 +364,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.ThreadOutdated]: 'Obsolète',
   [lngKeys.ThreadReopen]: 'Ré-ouvrir',
   [lngKeys.ThreadReplies]: '{{count}} réponses',
-  [lngKeys.All]: 'Tout',
 
   //Language
+  [lngKeys.All]: 'Tout',
+  [lngKeys.Any]: "N'importe lequel",
+  [lngKeys.Select]: 'Sélectionner',
   [lngKeys.OpenVerb]: 'Ouvrir',
   [lngKeys.CopyLink]: 'Copier le lien',
   [lngKeys.Move]: 'Déplacer',

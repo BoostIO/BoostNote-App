@@ -1,4 +1,5 @@
 import { mdiPlus } from '@mdi/js'
+import { TFunction } from 'i18next'
 import React, { useCallback, useState } from 'react'
 import Button, {
   LoadingButton,
@@ -131,10 +132,10 @@ const SmartFolderForm = ({
               type: 'select',
               props: {
                 options: [
-                  { label: 'All', value: 'and' },
-                  { label: 'Any', value: 'or' },
+                  { label: t(lngKeys.All), value: 'and' },
+                  { label: t(lngKeys.Any), value: 'or' },
                 ],
-                value: getPrimaryConditionOptionByType(primaryConditionType),
+                value: getPrimaryConditionOptionByType(t, primaryConditionType),
                 onChange: updatePrimaryConditionType,
               },
             }}
@@ -278,12 +279,12 @@ const Container = styled.div`
   }
 `
 
-function getPrimaryConditionOptionByType(value: 'and' | 'or') {
+function getPrimaryConditionOptionByType(t: TFunction, value: 'and' | 'or') {
   switch (value) {
     case 'and':
-      return { label: 'All', value: 'and' }
+      return { label: t(lngKeys.All), value: 'and' }
     case 'or':
-      return { label: 'Any', value: 'or' }
+      return { label: t(lngKeys.Any), value: 'or' }
   }
 }
 
