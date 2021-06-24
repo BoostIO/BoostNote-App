@@ -405,7 +405,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralTabs]: 'tabulations',
   [lngKeys.GeneralLogo]: 'Logo',
   [lngKeys.GeneralUser]: 'Utilisateur',
-  [lngKeys.Back]: 'Revenir',
+  [lngKeys.GeneralBack]: 'Revenir',
   [lngKeys.GeneralAdmin]: 'Admin',
   [lngKeys.GeneralMember]: 'Membre',
   [lngKeys.GeneralViewer]: 'Observateur',
