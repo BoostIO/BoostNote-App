@@ -104,8 +104,9 @@ const TopLevelNavigator = () => {
   }, [])
 
   useEffect(() => {
-    const handler = (event: CustomEvent<Record<string, number>>) =>
+    const handler = (event: CustomEvent<Record<string, number>>) => {
       setNotificationCounts(event.detail)
+    }
     boosthubNotificationCountsEventEmitter.listen(handler)
     return () => boosthubNotificationCountsEventEmitter.unlisten(handler)
   }, [])

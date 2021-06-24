@@ -135,11 +135,6 @@ function useNotificationStore() {
           cacheRef.current,
           observersRef.current
         )
-        setCounts((prev) => {
-          return {
-            [updated.team]: Math.max(0, (prev[updated.team] || 1) - 1),
-          }
-        })
       } catch (error) {
         pushApiErrorMessage(error)
       }
@@ -167,6 +162,29 @@ function useNotificationStore() {
               [event.data.teamId]: (prev[event.data.teamId] || 0) + 1,
             }
           })
+          break
+        }
+        case 'notificationViewed': {
+          if (cacheRef.current.has(event.data.teamId)) {
+            const notification = await getNotification(
+              event.data.notificationId
+            )
+            insertNotifications(
+              { [notification.team]: [notification] },
+              cacheRef.current,
+              observersRef.current
+            )
+          }
+          setCounts((prev) => {
+            return {
+              ...prev,
+              [event.data.teamId]: Math.max(
+                0,
+                (prev[event.data.teamId] || 0) - 1
+              ),
+            }
+          })
+          break
         }
       }
     },
