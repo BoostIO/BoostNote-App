@@ -20,11 +20,15 @@ import { selectStyle } from '../../../lib/styled/styleFunctions'
 import { isChildNode } from '../../../lib/dom'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 const EditorThemeSelect = () => {
   const { settings, setSettings } = useSettings()
   const editorTheme = settings['general.editorTheme']
   const codeBlockTheme = settings['general.codeBlockTheme']
+
+  const { t } = useI18n()
 
   const [showingMenu, setShowingMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -91,7 +95,7 @@ const EditorThemeSelect = () => {
         >
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='editorTheme'>
-              Editor Theme
+              {t(lngKeys.SettingsEditorTheme)}
             </label>
             <select
               onChange={selectIndentType}
@@ -110,7 +114,7 @@ const EditorThemeSelect = () => {
           </div>
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='codeBlockTheme'>
-              Code Block Theme
+              {t(lngKeys.SettingsCodeBlockTheme)}
             </label>
             <select
               onChange={selectIndentSize}

@@ -9,12 +9,15 @@ import { SelectChangeEventHandler } from '../../../lib/utils/events'
 import { selectStyle } from '../../../lib/styled/styleFunctions'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 const EditorKeyMapSelect = () => {
   const { setSettings, settings } = useSettings()
   const generalEditorKeyMap = settings['general.editorKeyMap']
   const [showingMenu, setShowingMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const { t } = useI18n()
 
   const showMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     setShowingMenu(true)
@@ -66,7 +69,7 @@ const EditorKeyMapSelect = () => {
         >
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='editorKeymapSelect'>
-              Editor Keymap
+              {t(lngKeys.SettingsEditorKeyMap)}
             </label>
             <select
               onChange={selectIndentType}
