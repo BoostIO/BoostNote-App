@@ -449,6 +449,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
             smartFolderDeleteHandler(event)
             break
           case 'notificationCreated':
+          case 'notificationViewed':
             notificationsEventListener(event)
             break
         }

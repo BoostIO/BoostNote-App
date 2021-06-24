@@ -34,6 +34,7 @@ export type SseEventType =
   | 'smartFolderUpdate'
   | 'smartFolderDelete'
   | 'notificationCreated'
+  | 'notificationViewed'
 
 export interface SerializableAppEventProps {
   id: string
