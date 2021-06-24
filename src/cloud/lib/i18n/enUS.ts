@@ -296,8 +296,21 @@ const enTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipTemplate]: 'Use a template',
   [lngKeys.EditorToolbarTooltipScrollSyncEnable]: 'Enable scroll sync',
   [lngKeys.EditorToolbarTooltipScrollSyncDisable]: 'Disable scroll sync',
-  //Language
 
+  [lngKeys.EditorReconnectAttempt]: 'Connecting...',
+  [lngKeys.EditorReconnectAttempt1]: 'Attempting auto-reconnection',
+  [lngKeys.EditorReconnectAttempt2]:
+    'Changes will not be synced with the server until reconnection',
+  [lngKeys.EditorReconnectDisconnected]: 'Reconnect',
+  [lngKeys.EditorReconnectDisconnected1]: 'Please try reconnecting.',
+  [lngKeys.EditorReconnectDisconnected2]:
+    'Changes will not be synced with the server until reconnection',
+  [lngKeys.EditorReconnectSyncing]: 'Syncing...',
+  [lngKeys.EditorReconnectSyncing1]: 'Syncing with the cloud.',
+  [lngKeys.EditorReconnectSyncing2]:
+    'Checking for changes and live updating the document',
+
+  //Language
   [lngKeys.Source]: 'Source',
   [lngKeys.Destination]: 'Destination',
   [lngKeys.Previous]: 'Previous',
