@@ -276,6 +276,13 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsSmartFolderPublicDisclaimer]:
     'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
 
+  [lngKeys.AttachmentsDeleteDisclaimer]:
+    'Êtes vous certain de vouloir supprimer ce fichier? Il ne sera plus visible dans les documents où il a été inclus.',
+  [lngKeys.AttachmentsLimitDisclaimer]: '{{current}} sur {{limit}} utilisé.',
+  [lngKeys.AttachmentsPlanUpgradeDisclaimer]:
+    "Si vous voulez plus d'espace de stockage, veuillez ",
+  [lngKeys.AttachmentsUpgradeLink]: 'upgrader votre plan.',
+
   [lngKeys.EditorToolbarTooltipHeader]: 'Ajouter un entête',
   [lngKeys.EditorToolbarTooltipAdmonition]: 'Ajouter une admonition',
   [lngKeys.EditorToolbarTooltipCodefence]: 'Insérér une codefence',

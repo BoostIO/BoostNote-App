@@ -22,6 +22,8 @@ import {
   proPlanStorageMb,
   standardPlanStorageMb,
 } from '../../lib/subscription'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
 
 const UploadListPage = ({
   files,
@@ -34,6 +36,7 @@ const UploadListPage = ({
   const { pushApiErrorMessage } = useToast()
   const { subscription, permissions, currentUserIsCoreMember } = usePage()
   const { openSettingsTab } = useSettings()
+  const { translate } = useI18n()
 
   const onDeleteHandler = useCallback(
     (team: SerializedTeam, file: SerializedFileInfo) => {
@@ -44,19 +47,19 @@ const UploadListPage = ({
       setSending(true)
 
       messageBox({
-        title: `Cancel?`,
-        message: `Are you sure to delete this file? It won't be visible in your document anymore.`,
+        title: translate(lngKeys.GeneralDelete),
+        message: translate(lngKeys.AttachmentsDeleteDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
             variant: 'secondary',
-            label: 'Cancel',
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: 'Delete',
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               deleteFile(team, file.name)
                 .then(() => {
@@ -73,7 +76,7 @@ const UploadListPage = ({
         ],
       })
     },
-    [messageBox, setCurrentFiles, pushApiErrorMessage, sending]
+    [messageBox, setCurrentFiles, pushApiErrorMessage, sending, translate]
   )
 
   return (
@@ -88,17 +91,21 @@ const UploadListPage = ({
           {permissions != null && (
             <StorageDescription>
               <span>
-                {sizeInMb}MB of{' '}
-                {subscription == null
-                  ? `${freePlanStorageMb}MB `
-                  : subscription.plan === 'standard'
-                  ? `${(permissions.length * standardPlanStorageMb) / 1000}GB `
-                  : `${(permissions.length * proPlanStorageMb) / 1000}GB `}
-                used.{' '}
+                {translate(lngKeys.AttachmentsLimitDisclaimer, {
+                  current: `${sizeInMb}MB`,
+                  limit:
+                    subscription == null
+                      ? `${freePlanStorageMb}MB `
+                      : subscription.plan === 'standard'
+                      ? `${
+                          (permissions.length * standardPlanStorageMb) / 1000
+                        }GB `
+                      : `${(permissions.length * proPlanStorageMb) / 1000}GB `,
+                })}
               </span>
               {(subscription == null || subscription.plan !== 'pro') && (
                 <span>
-                  If you need more space, please{' '}
+                  {translate(lngKeys.AttachmentsPlanUpgradeDisclaimer)}{' '}
                   <a
                     className='upgrade-link'
                     href='#'
@@ -107,7 +114,7 @@ const UploadListPage = ({
                       openSettingsTab('teamUpgrade')
                     }}
                   >
-                    upgrade your plan.
+                    {translate(lngKeys.AttachmentsUpgradeLink)}
                   </a>
                 </span>
               )}

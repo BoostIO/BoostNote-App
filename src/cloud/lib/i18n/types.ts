@@ -307,6 +307,11 @@ export enum lngKeys {
   ModalsWorkspacesWhoHasAcess = 'modals.workspaces.access.who',
   ModalsWorkspacesNonOwnerDisclaimer = 'modals.workspaces.access.nonowner',
 
+  AttachmentsDeleteDisclaimer = 'attachments.delete.disclaimer',
+  AttachmentsLimitDisclaimer = 'attachments.limit.disclaimer',
+  AttachmentsPlanUpgradeDisclaimer = 'attachments.upgrade.disclaimer',
+  AttachmentsUpgradeLink = 'attachments.upgrade.link',
+
   ModalsImportDestinationTitle = 'modals.import.destination.title',
   ModalsImportDestinationDisclaimer = 'modals.import.destination.disclaimer',
   ModalsImportDisclaimer = 'modals.import.disclaimer',

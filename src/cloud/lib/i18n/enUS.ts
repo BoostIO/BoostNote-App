@@ -324,6 +324,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.OpenInBrowser]: 'Open in browser',
   [lngKeys.GeneralPickYourDestination]: 'Pick your destination',
 
+  [lngKeys.AttachmentsDeleteDisclaimer]:
+    "Are you sure to delete this file? It won't be visible in your document anymore.",
+  [lngKeys.AttachmentsLimitDisclaimer]: '{{current}} of {{limit}} used.',
+  [lngKeys.AttachmentsPlanUpgradeDisclaimer]: 'If you need more space, please',
+  [lngKeys.AttachmentsUpgradeLink]: 'upgrade your plan.',
+
   [lngKeys.DocInfo]: 'Doc Info',
   [lngKeys.Assignees]: 'Assignees',
   [lngKeys.Unassigned]: 'Unassigned',
