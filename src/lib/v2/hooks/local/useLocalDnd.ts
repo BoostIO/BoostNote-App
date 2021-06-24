@@ -30,7 +30,7 @@ export function useLocalDnd() {
       if (draggedResource.current.result._id === workspaceId) {
         pushMessage({
           title: 'Oops',
-          description: 'Resource is already present in this folder',
+          description: 'Resource is already present in this space',
         })
         return
       }
