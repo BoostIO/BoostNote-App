@@ -37,7 +37,7 @@ import {
 import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../lib/rehypeHighlight'
 import Spinner from '../../../../shared/components/atoms/Spinner'
-import Icon from '../../../../shared/components/atoms/Icon'
+import Icon from '../../atoms/Icon'
 import PresenceIcons from '../Topbar/PresenceIcons'
 import { useDocActionContextMenu } from '../../molecules/Editor/useDocActionContextMenu'
 import CommentManager from '../CommentManager'
@@ -480,7 +480,7 @@ const ViewPage = ({
                 SelectionMenu={({ selection }) => (
                   <StyledSelectionMenu>
                     <div onClick={() => newRangeThread(selection)}>
-                      <Icon size={34} path={mdiCommentTextOutline} />
+                      <Icon size={21} path={mdiCommentTextOutline} />
                     </div>
                   </StyledSelectionMenu>
                 )}
