@@ -51,8 +51,8 @@ type SidebarProps = {
   users: Map<string, AppUser>
   timelineRows: SidebarTimelineRow[]
   timelineMore?: ButtonProps
-  notificationState: NotificationState
-  getMoreNotifications: () => void
+  notificationState?: NotificationState
+  getMoreNotifications?: () => void
   notificationClick?: (notification: Notification) => void
 } & SidebarSpaceProps
 
@@ -100,14 +100,14 @@ const Sidebar = ({
           />
         </SidebarPopOver>
       )}
-      {popOver === 'notifications' && (
+      {popOver === 'notifications' && notificationState != null && (
         <SidebarPopOver
           onClose={onPopOverBlur}
           className={cc([showToolbar && 'sidebar__popover__indent'])}
         >
           <NotificationList
             state={notificationState}
-            getMore={getMoreNotifications}
+            getMore={getMoreNotifications!}
             onClick={notificationClick}
           />
         </SidebarPopOver>

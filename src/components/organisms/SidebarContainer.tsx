@@ -616,7 +616,7 @@ const SidebarContainer = ({
       <Sidebar
         className={cc(['application__sidebar'])}
         showToolbar={true}
-        showSpaces={showSpaces}
+        popOver={showSpaces ? 'spaces' : null}
         onSpacesBlur={() => setShowSpaces(false)}
         toolbarRows={toolbarRows}
         spaces={spaces}
