@@ -10,11 +10,15 @@ import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import { useRouter } from '../../lib/router'
 import { topParentId } from '../../lib/mappers/topbarTree'
 import DocOnlyContentManager from '../../components/molecules/ContentManager/DocOnlyContentManager'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
+import { capitalize } from 'lodash'
 
 const SharedDocsListPage = () => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, workspacesMap } = useNav()
   const { push } = useRouter()
+  const { translate } = useI18n()
 
   const sharedDocs = useMemo(() => {
     return [...docsMap.values()].filter((doc) => doc.shareLink != null)
@@ -32,7 +36,7 @@ const SharedDocsListPage = () => {
         topbar: {
           breadcrumbs: [
             {
-              label: 'Shared',
+              label: capitalize(translate(lngKeys.GeneralShared)),
               active: true,
               parentId: topParentId,
               icon: mdiWeb,
