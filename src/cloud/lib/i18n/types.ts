@@ -225,7 +225,6 @@ export enum lngKeys {
   SelectAll = 'Select.all',
 
   Shared = 'Shared',
-  Explorer = 'Explorer',
   SmartFolders = 'Smart.Folders',
   Bookmarks = 'Bookmarks',
   Bookmarked = 'Bookmarked',

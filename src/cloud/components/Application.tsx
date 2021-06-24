@@ -204,14 +204,9 @@ const Application = ({
 
   const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
     return mapToolbarRows(
-<<<<<<< HEAD
       popOverState,
       setPopOverState,
-=======
       t,
-      showSpaces,
-      setShowSpaces,
->>>>>>> toolbar tooltips
       openState,
       openModal,
       openSettingsTab,
@@ -557,10 +552,13 @@ const Application = ({
           <Sidebar
             className={cc(['application__sidebar'])}
 <<<<<<< HEAD
+<<<<<<< HEAD
             popOver={popOverState}
 =======
             t={t}
 >>>>>>> Explorer without statuses
+=======
+>>>>>>> remove removable soon change
             showToolbar={!usingElectron}
             onSpacesBlur={onSpacesBlurCallback}
             toolbarRows={toolbarRows}
@@ -752,14 +750,9 @@ function mapHistory(
 }
 
 function mapToolbarRows(
-<<<<<<< HEAD
   popOverState: PopOverState,
   setPopOverState: React.Dispatch<React.SetStateAction<PopOverState>>,
-=======
   t: TFunction,
-  showSpaces: boolean,
-  setShowSpaces: React.Dispatch<React.SetStateAction<boolean>>,
->>>>>>> toolbar tooltips
   openState: (sidebarState: SidebarState) => void,
   openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
   openSettingsTab: (tab: SettingsTab) => void,
@@ -771,13 +764,8 @@ function mapToolbarRows(
   const rows: SidebarToolbarRow[] = []
   if (team != null) {
     rows.push({
-<<<<<<< HEAD
-      tooltip: 'Spaces',
       active: popOverState === 'spaces',
-=======
       tooltip: t(lngKeys.ToolbarTooltipsSpaces),
-      active: showSpaces,
->>>>>>> toolbar tooltips
       icon: (
         <RoundedImage
           size={26}
