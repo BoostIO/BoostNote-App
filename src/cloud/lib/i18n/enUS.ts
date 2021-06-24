@@ -397,7 +397,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralTabs]: 'tab',
   [lngKeys.GeneralLogo]: 'Logo',
   [lngKeys.GeneralUser]: 'User',
-  [lngKeys.Back]: 'Back',
+  [lngKeys.GeneralBack]: 'Back',
   [lngKeys.GeneralAdmin]: 'Admin',
   [lngKeys.GeneralMember]: 'Member',
   [lngKeys.GeneralViewer]: 'Viewer',

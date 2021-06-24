@@ -269,7 +269,7 @@ export enum lngKeys {
   ToolbarTooltipsTree = 'toolbar.tooltips.tree',
   ToolbarTooltipsDiscount = 'toolbar.tooltips.discount',
 
-  Back = 'back',
+  GeneralBack = 'general.Back',
 
   FolderNamePlaceholder = 'placeholders.folder',
   DocTitlePlaceholder = 'placeholders.doc',

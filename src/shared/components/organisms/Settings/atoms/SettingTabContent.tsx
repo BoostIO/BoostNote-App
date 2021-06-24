@@ -26,7 +26,7 @@ const SettingTabContent = ({
         <div className='setting__tab__content__container'>
           {backLink != null && (
             <Button {...backLink} className='settings__tab__content__backlink'>
-              {t(lngKeys.Back)}
+              {t(lngKeys.GeneralBack)}
             </Button>
           )}
           <div className='setting__tab__content__header'>
