@@ -29,7 +29,7 @@ const UpdateBillingPromoForm = ({
   const { pushApiErrorMessage, pushMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [promoCode, setPromoCode] = useState<string>('')
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const onSubmit = async (event: any) => {
     event.preventDefault()
@@ -88,10 +88,10 @@ const UpdateBillingPromoForm = ({
     <Container>
       {sub.couponId != null && (
         <Banner variant='warning' iconPath={mdiGiftOff}>
-          {t(lngKeys.BillingApplyPromoWarning)}
+          {translate(lngKeys.BillingApplyPromoWarning)}
         </Banner>
       )}
-      <p>{t(lngKeys.BillingApplyPromo)}</p>
+      <p>{translate(lngKeys.BillingApplyPromo)}</p>
       <Form onSubmit={onSubmit} rows={[]}>
         <FormRow
           row={{
@@ -99,7 +99,7 @@ const UpdateBillingPromoForm = ({
               {
                 type: 'input',
                 props: {
-                  placeholder: t(lngKeys.PromoCode),
+                  placeholder: translate(lngKeys.PromoCode),
                   value: promoCode,
                   onChange: onPromoInputChangeHandler,
                 },
@@ -110,7 +110,7 @@ const UpdateBillingPromoForm = ({
 
         <ButtonGroup display='flex' layout='spread' className='button__group'>
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
-            {t(lngKeys.GeneralCancel)}
+            {translate(lngKeys.GeneralCancel)}
           </Button>
 
           <LoadingButton
@@ -119,7 +119,7 @@ const UpdateBillingPromoForm = ({
             disabled={sending}
             spinning={sending}
           >
-            {t(lngKeys.Apply)}
+            {translate(lngKeys.GeneralApplyVerb)}
           </LoadingButton>
         </ButtonGroup>
       </Form>

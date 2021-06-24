@@ -46,7 +46,7 @@ const FolderContextMenu = ({
   const { setPartialPageData } = usePage()
   const { pushMessage } = useToast()
   const { openRenameFolderForm } = useCloudResourceModals()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const menuRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
@@ -126,7 +126,7 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiPencil} />
-                    {t(lngKeys.Rename)}
+                    {translate(lngKeys.GeneralRenameVerb)}
                   </StyledMenuItem>
                 </div>
               }
@@ -147,14 +147,14 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiStar} />
-                    {t(lngKeys.Bookmarked)}
+                    {translate(lngKeys.GeneralUnbookmarkVerb)}
                   </StyledMenuItem>
                 </div>
               ) : (
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiStarOutline} />
-                    {t(lngKeys.BookmarkVerb)}
+                    {translate(lngKeys.GeneralBookmarkVerb)}
                   </StyledMenuItem>
                 </div>
               )
@@ -170,7 +170,7 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiTrashCan} />
-                    {t(lngKeys.GeneralDelete)}
+                    {translate(lngKeys.GeneralDelete)}
                   </StyledMenuItem>
                 </div>
               }

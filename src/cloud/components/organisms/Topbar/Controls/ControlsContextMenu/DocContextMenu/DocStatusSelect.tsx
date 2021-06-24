@@ -167,7 +167,7 @@ const ContextMenuItemContainer = styled.div`
 `
 
 const StatusView = ({ status }: { status?: DocStatus | null }) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   switch (status) {
     case 'in_progress':
       return (
@@ -210,5 +210,7 @@ const StatusView = ({ status }: { status?: DocStatus | null }) => {
         </div>
       )
   }
-  return <div className='status status--empty'>{t(lngKeys.NoStatus)}</div>
+  return (
+    <div className='status status--empty'>{translate(lngKeys.NoStatus)}</div>
+  )
 }

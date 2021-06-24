@@ -216,7 +216,7 @@ function getDocBreadcrumb(
         ? [
             {
               icon: mdiPencil,
-              label: t(lngKeys.Rename),
+              label: t(lngKeys.GeneralRenameVerb),
               onClick: () => renameDoc(doc),
             },
           ]
@@ -309,7 +309,7 @@ function getFolderBreadcrumb(
         ? [
             {
               icon: mdiPencil,
-              label: t(lngKeys.Rename),
+              label: t(lngKeys.GeneralRenameVerb),
               onClick: () => renameFolder(folder),
             },
           ]
@@ -396,7 +396,7 @@ export function mapWorkspaceBreadcrumb(
         ? [
             {
               icon: mdiApplicationCog,
-              label: t(lngKeys.Edit),
+              label: t(lngKeys.GeneralEditVerb),
               onClick: () => editWorkspace(workspace),
             },
           ]

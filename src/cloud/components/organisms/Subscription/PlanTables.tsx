@@ -46,7 +46,7 @@ const PlanTables = ({
   discounted,
   freePlanFooter,
 }: PlanTablesProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1080 })
 
   const freeTrialContent = useMemo(() => {
@@ -59,7 +59,7 @@ const PlanTables = ({
       return (
         <p>
           <span className='check'>&#x2713;</span>{' '}
-          {t(lngKeys.PlanInTrial, {
+          {translate(lngKeys.PlanInTrial, {
             remaining: formatDistanceToNow(trialEndDate, {
               includeSeconds: false,
             }),
@@ -81,10 +81,10 @@ const PlanTables = ({
           onTrialCallback()
         }}
       >
-        {t(lngKeys.PlanTrial, { days: 7 })}
+        {translate(lngKeys.PlanTrial, { days: 7 })}
       </Button>
     )
-  }, [subscription, team, onTrialCallback, t])
+  }, [subscription, team, onTrialCallback, translate])
 
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
@@ -94,20 +94,23 @@ const PlanTables = ({
           <div className='plan__item__price'>
             <span className='plan__item__price__default'>$0</span>
             <div className='plan__item__price__description'>
-              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
+              {translate(lngKeys.PlanPerMember)}{' '}
+              {translate(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanFreePerk1)}</span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanFreePerk2, { docs: freePlanDocLimit })}</span>
+            <span>{translate(lngKeys.PlanFreePerk1)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
-              {t(lngKeys.PlanStoragePerk, {
+              {translate(lngKeys.PlanFreePerk2, { docs: freePlanDocLimit })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanStoragePerk, {
                 storageSize: `${freePlanStorageMb}MB`,
               })}
             </span>
@@ -156,13 +159,14 @@ const PlanTables = ({
               </span>
             )}
             <div className='plan__item__price__description'>
-              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
+              {translate(lngKeys.PlanPerMember)}{' '}
+              {translate(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {t(lngKeys.PlanDiscountDetail, {
+            {translate(lngKeys.PlanDiscountDetail, {
               off: discountPlans.newSpace.percentageOff,
               month: discountPlans.newSpace.durationInMonths,
             })}
@@ -171,27 +175,27 @@ const PlanTables = ({
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
             <span>
-              {t(lngKeys.PlanStandardPerk1, {
+              {translate(lngKeys.PlanStandardPerk1, {
                 viewersSize: viewerStandardPlanLimit,
               })}
             </span>
           </div>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanStandardPerk2)}</span>
+            <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanStandardPerk3)}</span>
+            <span>{translate(lngKeys.PlanStandardPerk3)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
-              {t(lngKeys.PlanStandardPerk4, {
+              {translate(lngKeys.PlanStandardPerk4, {
                 days: revisionHistoryStandardDays,
               })}
             </span>
           </div>
           <div className='plan__item__perk'>
             <span>
-              {t(lngKeys.PlanStoragePerk, {
+              {translate(lngKeys.PlanStoragePerk, {
                 storageSize: `${standardPlanStorageMb / 1000}GB`,
               })}
             </span>
@@ -236,13 +240,14 @@ const PlanTables = ({
               </span>
             )}
             <div className='plan__item__price__description'>
-              {t(lngKeys.PlanPerMember)} {t(lngKeys.PlanPerMonth)}
+              {translate(lngKeys.PlanPerMember)}{' '}
+              {translate(lngKeys.PlanPerMonth)}
             </div>
           </div>
         </div>
         {discounted && (
           <div className='plan__item__discount'>
-            {t(lngKeys.PlanDiscountDetail, {
+            {translate(lngKeys.PlanDiscountDetail, {
               off: discountPlans.newSpace.percentageOff,
               month: discountPlans.newSpace.durationInMonths,
             })}
@@ -250,17 +255,17 @@ const PlanTables = ({
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanProPerk1)}</span>
+            <span>{translate(lngKeys.PlanProPerk1)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanProPerk2)}</span>
+            <span>{translate(lngKeys.PlanProPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{t(lngKeys.PlanProPerk3)}</span>
+            <span>{translate(lngKeys.PlanProPerk3)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
-              {t(lngKeys.PlanStoragePerk, {
+              {translate(lngKeys.PlanStoragePerk, {
                 storageSize: `${proPlanStorageMb / 1000}GB`,
               })}
             </span>

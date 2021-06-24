@@ -23,7 +23,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     openWorkspaceEditForm,
     deleteWorkspace,
   } = useCloudResourceModals()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
@@ -31,12 +31,12 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     }
 
     if (!currentUserIsCoreMember) {
-      return [mapWorkspaceBreadcrumb(t, team, workspace, push)]
+      return [mapWorkspaceBreadcrumb(translate, team, workspace, push)]
     }
 
     return [
       mapWorkspaceBreadcrumb(
-        t,
+        translate,
         team,
         workspace,
         push,
@@ -47,7 +47,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
       ),
     ]
   }, [
-    t,
+    translate,
     team,
     workspace,
     push,

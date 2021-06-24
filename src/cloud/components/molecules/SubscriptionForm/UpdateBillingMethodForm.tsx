@@ -32,7 +32,7 @@ const UpdateBillingMethodForm = ({
   onSuccess,
   onCancel,
 }: UpdateBillingMethodFormProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const stripe = useStripe()
   const elements = useElements()
   const { pushApiErrorMessage } = useToast()
@@ -114,16 +114,16 @@ const UpdateBillingMethodForm = ({
   return (
     <Container>
       <SectionIntroduction>
-        <p>{t(lngKeys.BillingUpdateCard)}</p>
+        <p>{translate(lngKeys.BillingUpdateCard)}</p>
         <SectionFlexRow>
-          <label>{t(lngKeys.BillingCurrentCard)}</label>
+          <label>{translate(lngKeys.BillingCurrentCard)}</label>
           <span className='value'>
             **** **** **** {sub.last4}
             {sub.cardBrand != null && ` (${sub.cardBrand})`}
           </span>
         </SectionFlexRow>
         {usingDifferentCurrencyPricing && (
-          <Alert variant='danger'>{t(lngKeys.BillingChangeJCB)}</Alert>
+          <Alert variant='danger'>{translate(lngKeys.BillingChangeJCB)}</Alert>
         )}
 
         <Form rows={[]} onSubmit={onSubmit}>
@@ -137,7 +137,7 @@ const UpdateBillingMethodForm = ({
 
           <ButtonGroup display='flex' layout='spread' className='button__group'>
             <Button onClick={onCancel} variant='secondary' disabled={sending}>
-              {t(lngKeys.GeneralCancel)}
+              {translate(lngKeys.GeneralCancel)}
             </Button>
 
             <LoadingButton
@@ -146,7 +146,7 @@ const UpdateBillingMethodForm = ({
               disabled={usingDifferentCurrencyPricing || sending}
               spinning={sending}
             >
-              {t(lngKeys.Update)}
+              {translate(lngKeys.GeneralUpdateVerb)}
             </LoadingButton>
           </ButtonGroup>
         </Form>

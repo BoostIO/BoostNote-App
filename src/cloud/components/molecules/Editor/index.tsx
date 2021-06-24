@@ -126,7 +126,7 @@ const Editor = ({
   revisionHistory,
   thread,
 }: EditorProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const { currentUserPermissions, permissions } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
@@ -739,7 +739,7 @@ const Editor = ({
 
   const breadcrumbs = useMemo(() => {
     const breadcrumbs = mapTopbarBreadcrumbs(
-      t,
+      translate,
       team,
       foldersMap,
       workspacesMap,
@@ -761,7 +761,7 @@ const Editor = ({
     )
     return breadcrumbs
   }, [
-    t,
+    translate,
     team,
     foldersMap,
     workspacesMap,
@@ -883,12 +883,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: t(lngKeys.EditorReconnectAttempt),
+                    label: translate(lngKeys.EditorReconnectAttempt),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectAttempt1)}
+                        {translate(lngKeys.EditorReconnectAttempt1)}
                         <br />
-                        {t(lngKeys.EditorReconnectAttempt2)}
+                        {translate(lngKeys.EditorReconnectAttempt2)}
                       </>
                     ),
                   },
@@ -899,12 +899,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
-                    label: t(lngKeys.EditorReconnectDisconnected),
+                    label: translate(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectDisconnected1)}
+                        {translate(lngKeys.EditorReconnectDisconnected1)}
                         <br />
-                        {t(lngKeys.EditorReconnectDisconnected2)}
+                        {translate(lngKeys.EditorReconnectDisconnected2)}
                       </>
                     ),
                   },
@@ -915,12 +915,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: t(lngKeys.EditorReconnectSyncing),
+                    label: translate(lngKeys.EditorReconnectSyncing),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectSyncing1)}
+                        {translate(lngKeys.EditorReconnectSyncing1)}
                         <br />
-                        {t(lngKeys.EditorReconnectSyncing2)}
+                        {translate(lngKeys.EditorReconnectSyncing2)}
                       </>
                     ),
                   },
@@ -1007,8 +1007,8 @@ const Editor = ({
                 position={'bottom-right'}
                 tooltip={
                   scrollSync
-                    ? t(lngKeys.EditorToolbarTooltipScrollSyncDisable)
-                    : t(lngKeys.EditorToolbarTooltipScrollSyncEnable)
+                    ? translate(lngKeys.EditorToolbarTooltipScrollSyncDisable)
+                    : translate(lngKeys.EditorToolbarTooltipScrollSyncEnable)
                 }
                 path={scrollSync ? mdiRepeatOff : mdiRepeat}
                 onClick={toggleScrollSync}
@@ -1020,7 +1020,7 @@ const Editor = ({
                 fileUploadHandlerRef={fileUploadHandlerRef}
               />
               <EditorToolButton
-                tooltip={t(lngKeys.EditorToolbarTooltipTemplate)}
+                tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
                 path={mdiFileDocumentOutline}
                 onClick={onEditorTemplateToolClick}
               />

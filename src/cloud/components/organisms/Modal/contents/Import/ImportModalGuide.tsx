@@ -26,7 +26,7 @@ const ImportModalGuide = ({
   onCancel,
   onContinue,
 }: ImportModalGuideProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const guideContent = useMemo(() => {
     switch (selectedService) {
       case 'notion':
@@ -276,10 +276,10 @@ const ImportModalGuide = ({
       <StyledImportModalContent>{guideContent}</StyledImportModalContent>
       <StyledImportModalFooter>
         <Button variant='secondary' onClick={onCancel}>
-          {t(lngKeys.Previous)}
+          {translate(lngKeys.GeneralPrevious)}
         </Button>
         <Button variant='primary' onClick={onSelect}>
-          {t(lngKeys.Continue)}
+          {translate(lngKeys.GeneralContinueVerb)}
         </Button>
       </StyledImportModalFooter>
     </>

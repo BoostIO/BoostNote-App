@@ -26,23 +26,23 @@ export function useCloudResourceModals() {
     deleteFolderApi,
     deleteDocApi,
   } = useCloudApi()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const openWorkspaceCreateForm = useCallback(() => {
     openModal(<WorkspaceModalForm />, {
       showCloseIcon: true,
-      title: t(lngKeys.ModalsWorkspaceCreateTitle),
+      title: translate(lngKeys.ModalsWorkspaceCreateTitle),
     })
-  }, [openModal, t])
+  }, [openModal, translate])
 
   const openWorkspaceEditForm = useCallback(
     (wp: SerializedWorkspace) => {
       openModal(<WorkspaceModalForm workspace={wp} />, {
         showCloseIcon: true,
-        title: t(lngKeys.ModalsWorkspaceEditTitle),
+        title: translate(lngKeys.ModalsWorkspaceEditTitle),
       })
     },
-    [openModal, t]
+    [openModal, translate]
   )
 
   const openRenameFolderForm = useCallback(
@@ -52,9 +52,9 @@ export function useCloudResourceModals() {
           defaultIcon={mdiFolderOutline}
           defaultInputValue={folder.name}
           defaultEmoji={folder.emoji}
-          placeholder={t(lngKeys.FolderNamePlaceholder)}
+          placeholder={translate(lngKeys.FolderNamePlaceholder)}
           submitButtonProps={{
-            label: t(lngKeys.Update),
+            label: translate(lngKeys.GeneralUpdateVerb),
           }}
           onSubmit={async (inputValue: string, emoji?: string) => {
             await updateFolder(folder, {
@@ -68,11 +68,11 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: t(lngKeys.RenameFolder),
+          title: translate(lngKeys.RenameFolder),
         }
       )
     },
-    [openModal, closeLastModal, updateFolder, t]
+    [openModal, closeLastModal, updateFolder, translate]
   )
 
   const openRenameDocForm = useCallback(
@@ -82,9 +82,9 @@ export function useCloudResourceModals() {
           defaultIcon={mdiFileDocumentOutline}
           defaultInputValue={doc.title}
           defaultEmoji={doc.emoji}
-          placeholder={t(lngKeys.DocTitlePlaceholder)}
+          placeholder={translate(lngKeys.DocTitlePlaceholder)}
           submitButtonProps={{
-            label: t(lngKeys.Update),
+            label: translate(lngKeys.GeneralUpdateVerb),
           }}
           onSubmit={async (inputValue: string, emoji?: string) => {
             await updateDoc(doc, {
@@ -98,11 +98,11 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: t(lngKeys.RenameDoc),
+          title: translate(lngKeys.RenameDoc),
         }
       )
     },
-    [openModal, closeLastModal, updateDoc, t]
+    [openModal, closeLastModal, updateDoc, translate]
   )
 
   const openNewFolderForm = useCallback(
@@ -113,9 +113,9 @@ export function useCloudResourceModals() {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFolderOutline}
-          placeholder={t(lngKeys.FolderNamePlaceholder)}
+          placeholder={translate(lngKeys.FolderNamePlaceholder)}
           submitButtonProps={{
-            label: t(lngKeys.GeneralCreate),
+            label: translate(lngKeys.GeneralCreate),
           }}
           prevRows={options?.precedingRows}
           onSubmit={async (inputValue: string, emoji?: string) => {
@@ -147,11 +147,11 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: t(lngKeys.ModalsCreateNewFolder),
+          title: translate(lngKeys.ModalsCreateNewFolder),
         }
       )
     },
-    [openModal, closeLastModal, createFolder, t]
+    [openModal, closeLastModal, createFolder, translate]
   )
 
   const openNewDocForm = useCallback(
@@ -162,9 +162,9 @@ export function useCloudResourceModals() {
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
-          placeholder={t(lngKeys.DocTitlePlaceholder)}
+          placeholder={translate(lngKeys.DocTitlePlaceholder)}
           submitButtonProps={{
-            label: t(lngKeys.GeneralCreate),
+            label: translate(lngKeys.GeneralCreate),
           }}
           prevRows={options?.precedingRows}
           onSubmit={async (inputValue: string, emoji?: string) => {
@@ -195,11 +195,11 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: t(lngKeys.ModalsCreateNewDocument),
+          title: translate(lngKeys.ModalsCreateNewDocument),
         }
       )
     },
-    [openModal, closeLastModal, createDoc, t]
+    [openModal, closeLastModal, createDoc, translate]
   )
 
   const deleteWorkspace = useCallback(
@@ -208,44 +208,44 @@ export function useCloudResourceModals() {
         return
       }
       messageBox({
-        title: t(lngKeys.ModalsDeleteWorkspaceTitle),
-        message: t(lngKeys.ModalsDeleteWorkspaceDisclaimer),
+        title: translate(lngKeys.ModalsDeleteWorkspaceTitle),
+        message: translate(lngKeys.ModalsDeleteWorkspaceDisclaimer),
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: t(lngKeys.GeneralDelete),
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => await deleteWorkspaceApi(workspace),
           },
         ],
       })
     },
-    [messageBox, deleteWorkspaceApi, t]
+    [messageBox, deleteWorkspaceApi, translate]
   )
 
   const deleteFolder = useCallback(
     async (target: { id: string; pathname: string; teamId: string }) => {
       messageBox({
-        title: t(lngKeys.ModalsDeleteDocFolderTitle, {
+        title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
           label: target.pathname,
         }),
-        message: t(lngKeys.ModalsDeleteFolderDisclaimer),
+        message: translate(lngKeys.ModalsDeleteFolderDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: t(lngKeys.GeneralDelete),
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               await deleteFolderApi(target)
             },
@@ -253,7 +253,7 @@ export function useCloudResourceModals() {
         ],
       })
     },
-    [messageBox, deleteFolderApi, t]
+    [messageBox, deleteFolderApi, translate]
   )
 
   const deleteDoc = useCallback(
@@ -262,19 +262,19 @@ export function useCloudResourceModals() {
       title = ''
     ) => {
       messageBox({
-        title: t(lngKeys.ModalsDeleteDocFolderTitle, { label: title }),
-        message: t(lngKeys.ModalsDeleteDocDisclaimer),
+        title: translate(lngKeys.ModalsDeleteDocFolderTitle, { label: title }),
+        message: translate(lngKeys.ModalsDeleteDocDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: t(lngKeys.GeneralDelete),
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               await deleteDocApi(target)
             },
@@ -282,7 +282,7 @@ export function useCloudResourceModals() {
         ],
       })
     },
-    [messageBox, deleteDocApi, t]
+    [messageBox, deleteDocApi, translate]
   )
 
   return {

@@ -11,10 +11,10 @@ import Button from '../../../../shared/components/atoms/Button'
 import { FormSelectOption } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 
 const AppFeedbackForm = () => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const [feedbackType, setFeedbackType] = useState<FormSelectOption>({
-    label: t(lngKeys.CommunityFeatureRequests),
+    label: translate(lngKeys.CommunityFeatureRequests),
     value: 'Feature Request',
   })
   const [feedback, setFeedback] = useState<string>('')
@@ -44,8 +44,8 @@ const AppFeedbackForm = () => {
         setShowSuccessMessage(true)
       } catch (error) {
         pushMessage({
-          title: t(lngKeys.GeneralError),
-          description: t(lngKeys.CommunityFeedbackSendError),
+          title: translate(lngKeys.GeneralError),
+          description: translate(lngKeys.CommunityFeedbackSendError),
         })
       }
       setSending(false)
@@ -57,7 +57,7 @@ const AppFeedbackForm = () => {
       feedback,
       feedbackType,
       setShowSuccessMessage,
-      t,
+      translate,
     ]
   )
 
@@ -78,22 +78,22 @@ const AppFeedbackForm = () => {
 
   const resetForm = useCallback(() => {
     setFeedbackType({
-      label: t(lngKeys.CommunityFeatureRequests),
+      label: translate(lngKeys.CommunityFeatureRequests),
       value: 'Feature Request',
     })
     setFeedback('')
     setShowSuccessMessage(false)
-  }, [t])
+  }, [translate])
 
   if (showSuccessMessage) {
     return (
       <div>
         <ColoredBlock variant='success'>
-          {t(lngKeys.CommunityFeedbackSendSuccess)}
+          {translate(lngKeys.CommunityFeedbackSendSuccess)}
         </ColoredBlock>
 
         <Button variant='secondary' onClick={resetForm}>
-          {t(lngKeys.SendMore)}
+          {translate(lngKeys.GeneralSendMore)}
         </Button>
       </div>
     )
@@ -104,7 +104,7 @@ const AppFeedbackForm = () => {
       onSubmit={sendFeedback}
       rows={[
         {
-          title: t(lngKeys.CommunityFeedbackType),
+          title: translate(lngKeys.CommunityFeedbackType),
           items: [
             {
               type: 'select',
@@ -113,11 +113,11 @@ const AppFeedbackForm = () => {
                 onChange: feedbackTypeChangeHandler,
                 options: [
                   {
-                    label: t(lngKeys.CommunityFeatureRequests),
+                    label: translate(lngKeys.CommunityFeatureRequests),
                     value: 'Feature Request',
                   },
                   {
-                    label: t(lngKeys.CommunityBugReport),
+                    label: translate(lngKeys.CommunityBugReport),
                     value: 'Bug Report',
                   },
                 ],
@@ -126,7 +126,7 @@ const AppFeedbackForm = () => {
           ],
         },
         {
-          title: t(lngKeys.CommunityFeedbackFreeForm),
+          title: translate(lngKeys.CommunityFeedbackFreeForm),
           items: [
             {
               type: 'textarea',
@@ -139,7 +139,7 @@ const AppFeedbackForm = () => {
           ],
         },
       ]}
-      submitButton={{ label: t(lngKeys.Send) }}
+      submitButton={{ label: translate(lngKeys.GeneralSendVerb) }}
     />
   )
 }

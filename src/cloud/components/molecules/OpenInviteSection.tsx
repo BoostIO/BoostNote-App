@@ -32,7 +32,7 @@ interface OpenInvitesSectionProps {
 }
 
 const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
-  const { t, getRoleLabel } = useI18n()
+  const { translate, getRoleLabel } = useI18n()
   const { team } = usePage()
   const [fetching, setFetching] = useState<boolean>(true)
   const [sending, setSending] = useState<boolean>(false)
@@ -41,7 +41,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   const { pushApiErrorMessage } = useToast()
   const mountedRef = useRef(false)
   const [copyButtonLabel, setCopyButtonLabel] = useState<string>(
-    t(lngKeys.Copy)
+    translate(lngKeys.GeneralCopyVerb)
   )
   const [selectedInviteRole, setSelectedInviteRole] = useState<
     TeamPermissionType
@@ -105,8 +105,8 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     }
 
     messageBox({
-      title: t(lngKeys.CancelInvite),
-      message: t(lngKeys.CancelInviteOpenLinkMessage),
+      title: translate(lngKeys.CancelInvite),
+      message: translate(lngKeys.CancelInviteOpenLinkMessage),
       iconType: DialogIconTypes.Warning,
       buttons: [
         {
@@ -117,7 +117,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
         {
           variant: 'danger',
-          label: t(lngKeys.GeneralDelete),
+          label: translate(lngKeys.GeneralDelete),
           onClick: async () => {
             //remove
             setSending(true)
@@ -133,7 +133,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
         },
       ],
     })
-  }, [messageBox, team, pushApiErrorMessage, t])
+  }, [messageBox, team, pushApiErrorMessage, translate])
 
   const toggleOpenInvite = useCallback(() => {
     if (openInvites.length !== 0) {
@@ -170,11 +170,11 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     }
 
     copy(selectedInvite.link)
-    setCopyButtonLabel(`✓ ${t(lngKeys.Copied)}`)
+    setCopyButtonLabel(`✓ ${translate(lngKeys.GeneralCopied)}`)
     setTimeout(() => {
-      setCopyButtonLabel(t(lngKeys.Copy))
+      setCopyButtonLabel(translate(lngKeys.GeneralCopyVerb))
     }, 600)
-  }, [selectedInvite, t])
+  }, [selectedInvite, translate])
 
   if (openInvites.length === 0 && userPermissions.role === 'viewer') {
     return null
@@ -183,7 +183,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   return (
     <section>
       <StyledFlex>
-        <h2 style={{ margin: 0 }}>{t(lngKeys.InviteWithOpenLink)}</h2>
+        <h2 style={{ margin: 0 }}>{translate(lngKeys.InviteWithOpenLink)}</h2>
         {userPermissions.role !== 'viewer' && (
           <Switch
             disabled={fetching || sending}

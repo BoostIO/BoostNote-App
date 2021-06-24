@@ -31,7 +31,7 @@ const DocAssigneeSelect = ({
   const { permissions } = usePage()
   const [focused, setFocused] = useState(false)
   const [value, setValue] = useState(defaultValue)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const options = useMemo(() => {
     if (permissions == null) {
@@ -83,7 +83,7 @@ const DocAssigneeSelect = ({
         value={selectedOptions}
         isClearable={false}
         onChange={updateAssignees}
-        placeholder={t(lngKeys.Unassigned)}
+        placeholder={translate(lngKeys.Unassigned)}
         isLoading={isLoading}
         isSearchable={false}
         onFocus={() => setFocused(true)}

@@ -25,7 +25,7 @@ const DocDueDateSelect = ({
   dueDate: dueDateString,
   onDueDateChange,
 }: DocDueDateSelectProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
     return dueDateString != null ? new Date(dueDateString) : null
   })
@@ -50,7 +50,7 @@ const DocDueDateSelect = ({
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
-              : t(lngKeys.AddDueDate)}
+              : translate(lngKeys.AddDueDate)}
           </DocPropertyValueButton>
         }
       />

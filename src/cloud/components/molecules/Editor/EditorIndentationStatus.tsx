@@ -28,7 +28,7 @@ const EditorIndentationStatus = () => {
   const currentIndentSize = settings['general.editorIndentSize']
   const [showingIndentMenu, setShowingIndentMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const showIndentMenu: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     setShowingIndentMenu(true)
@@ -86,7 +86,9 @@ const EditorIndentationStatus = () => {
     <StyledContainer>
       <BottomBarButton onClick={showIndentMenu}>
         {capitalize(
-          currentIndentType === 'spaces' ? t(lngKeys.Spaces) : t(lngKeys.Tabs)
+          currentIndentType === 'spaces'
+            ? translate(lngKeys.GeneralSpaces)
+            : translate(lngKeys.GeneralTabs)
         )}
         : {currentIndentSize}
       </BottomBarButton>
@@ -99,7 +101,7 @@ const EditorIndentationStatus = () => {
         >
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='indentTypeSelect'>
-              {t(lngKeys.SettingsIndentType)}
+              {translate(lngKeys.SettingsIndentType)}
             </label>
             <select
               onChange={selectIndentType}
@@ -107,13 +109,13 @@ const EditorIndentationStatus = () => {
               className='menu__item__select'
               value={currentIndentType}
             >
-              <option value='spaces'>{t(lngKeys.Spaces)}</option>
-              <option value='tab'>{t(lngKeys.Tabs)}</option>
+              <option value='spaces'>{translate(lngKeys.GeneralSpaces)}</option>
+              <option value='tab'>{translate(lngKeys.GeneralTabs)}</option>
             </select>
           </div>
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='indentSizeSelect'>
-              {t(lngKeys.SettingsIndentSize)}
+              {translate(lngKeys.SettingsIndentSize)}
             </label>
             <select
               onChange={selectIndentSize}

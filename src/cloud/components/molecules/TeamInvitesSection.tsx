@@ -49,7 +49,7 @@ const TeamInvitesSection = ({
     userPermissions.role === 'viewer' ? 'viewer' : 'member'
   )
   const mountedRef = useRef(false)
-  const { t, getRoleLabel } = useI18n()
+  const { translate, getRoleLabel } = useI18n()
 
   useEffect(() => {
     mountedRef.current = true
@@ -125,8 +125,8 @@ const TeamInvitesSection = ({
       }
 
       messageBox({
-        title: t(lngKeys.CancelInvite),
-        message: t(lngKeys.CancelInviteEmailMessage),
+        title: translate(lngKeys.CancelInvite),
+        message: translate(lngKeys.CancelInviteEmailMessage),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
@@ -156,7 +156,7 @@ const TeamInvitesSection = ({
         ],
       })
     },
-    [messageBox, team, t]
+    [messageBox, team, translate]
   )
 
   const selectRole = useCallback(
@@ -175,12 +175,12 @@ const TeamInvitesSection = ({
     switch (userPermissions.role) {
       case 'admin':
         roles = [
-          { label: t(lngKeys.Admin), value: 'admin' },
-          { label: t(lngKeys.Member), value: 'member' },
+          { label: translate(lngKeys.GeneralAdmin), value: 'admin' },
+          { label: translate(lngKeys.GeneralMember), value: 'member' },
         ]
         break
       case 'member':
-        roles = [{ label: t(lngKeys.Member), value: 'member' }]
+        roles = [{ label: translate(lngKeys.GeneralMember), value: 'member' }]
         break
       case 'viewer':
       default:
@@ -188,15 +188,15 @@ const TeamInvitesSection = ({
     }
 
     if (subscription != null) {
-      roles.push({ label: t(lngKeys.Viewer), value: 'viewer' })
+      roles.push({ label: translate(lngKeys.GeneralViewer), value: 'viewer' })
     }
     return roles
-  }, [userPermissions.role, subscription, t])
+  }, [userPermissions.role, subscription, translate])
 
   return (
     <section>
       <Flexbox>
-        <h2>{t(lngKeys.InviteEmail)}</h2>
+        <h2>{translate(lngKeys.InviteEmail)}</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
       <Form onSubmit={submitInvite}>
@@ -228,7 +228,7 @@ const TeamInvitesSection = ({
               type: 'button',
               props: {
                 type: 'submit',
-                label: t(lngKeys.Send),
+                label: translate(lngKeys.GeneralSendVerb),
                 disabled: sending,
               },
             }}
@@ -236,11 +236,11 @@ const TeamInvitesSection = ({
         </FormRow>
       </Form>
       {role === 'admin' ? (
-        <small>{t(lngKeys.RoleAdminDescription)}</small>
+        <small>{translate(lngKeys.RoleAdminDescription)}</small>
       ) : role === 'member' ? (
-        <small>{t(lngKeys.RoleMemberDescription)}</small>
+        <small>{translate(lngKeys.RoleMemberDescription)}</small>
       ) : (
-        <small>{t(lngKeys.RoleViewerDescription)}</small>
+        <small>{translate(lngKeys.RoleViewerDescription)}</small>
       )}
       <SectionList>
         {pendingInvites.map((invite) => (

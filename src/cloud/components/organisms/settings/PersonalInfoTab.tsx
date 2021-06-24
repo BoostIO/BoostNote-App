@@ -116,7 +116,7 @@ const PersonalInfoTab = () => {
             onSubmit={updateHandler}
             rows={[
               {
-                title: t(lngKeys.ProfilePicture),
+                title: t(lngKeys.GeneralProfilePicture),
                 items: [
                   {
                     type: 'image',
@@ -125,7 +125,7 @@ const PersonalInfoTab = () => {
                 ],
               },
               {
-                title: t(lngKeys.Name),
+                title: t(lngKeys.GeneralName),
                 items: [
                   {
                     type: 'input',

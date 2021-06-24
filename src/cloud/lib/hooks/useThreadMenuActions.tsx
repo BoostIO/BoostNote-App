@@ -24,12 +24,12 @@ function useThreadActions({
   onOpen,
   onDelete,
 }: ThreadActionProps) {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const actions: MenuItem[] = useMemo(() => {
     const deleteAction: MenuItem = {
       icon: <Icon path={mdiTrashCanOutline} />,
       type: MenuTypes.Normal,
-      label: t(lngKeys.GeneralDelete),
+      label: translate(lngKeys.GeneralDelete),
       onClick: () => onDelete(thread),
     }
 
@@ -42,7 +42,7 @@ function useThreadActions({
           {
             icon: <SuccessIcon path={mdiAlertCircleOutline} />,
             type: MenuTypes.Normal,
-            label: t(lngKeys.OpenVerb),
+            label: translate(lngKeys.GeneralOpenVerb),
             onClick: () => onOpen(thread),
           },
           deleteAction,
@@ -51,12 +51,12 @@ function useThreadActions({
           {
             icon: <WarningIcon path={mdiAlertCircleCheckOutline} />,
             type: MenuTypes.Normal,
-            label: t(lngKeys.Close),
+            label: translate(lngKeys.GeneralCloseVerb),
             onClick: () => onClose(thread),
           },
           deleteAction,
         ]
-  }, [thread, onClose, onOpen, onDelete, t])
+  }, [thread, onClose, onOpen, onDelete, translate])
 
   return actions
 }

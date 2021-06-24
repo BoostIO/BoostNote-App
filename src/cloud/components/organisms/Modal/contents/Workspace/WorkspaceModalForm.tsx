@@ -55,7 +55,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         )
       : []
   )
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   useEffectOnce(() => {
     if (inputRef.current != null) {
@@ -195,13 +195,13 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
       onSubmit={onSubmit}
       rows={[
         {
-          title: t(lngKeys.Name),
+          title: translate(lngKeys.GeneralName),
           items: [
             {
               type: 'input',
               props: {
                 ref: inputRef,
-                placeholder: t(lngKeys.Name),
+                placeholder: translate(lngKeys.GeneralName),
                 value: name,
                 onChange: onChangeWorkspaceNameHandler,
               },
@@ -213,24 +213,26 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
       {workspace != null && workspace.default ? (
         <FormRow
           row={{
-            title: t(lngKeys.ModalsWorkspaceAccess),
-            description: t(lngKeys.ModalsWorkspaceDefaultDisclaimer),
+            title: translate(lngKeys.ModalsWorkspaceAccess),
+            description: translate(lngKeys.ModalsWorkspaceDefaultDisclaimer),
           }}
         />
       ) : (
         <FormRow
           row={{
-            title: t(lngKeys.ModalsWorkspaceMakePrivate),
+            title: translate(lngKeys.ModalsWorkspaceMakePrivate),
             items: [
               {
                 type: 'node',
                 element: (
                   <small>
                     {isPublic
-                      ? t(lngKeys.ModalsWorkspacePublicDisclaimer)
-                      : `${t(lngKeys.ModalsWorkspacePrivateDisclaimer)} ${
+                      ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
+                      : `${translate(
+                          lngKeys.ModalsWorkspacePrivateDisclaimer
+                        )} ${
                           isOwner != null
-                            ? t(lngKeys.ModalsWorkspacePrivateOwner)
+                            ? translate(lngKeys.ModalsWorkspacePrivateOwner)
                             : ''
                         }`}
                   </small>
@@ -255,7 +257,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
 
       {!isOwner && (
         <div className='form__row'>
-          <small>{t(lngKeys.ModalsWorkspacesNonOwnerDisclaimer)}</small>
+          <small>{translate(lngKeys.ModalsWorkspacesNonOwnerDisclaimer)}</small>
         </div>
       )}
 
@@ -280,7 +282,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
 
       <div className='form__row'>
         <Button variant='secondary' onClick={closeLastModal}>
-          {t(lngKeys.GeneralCancel)}
+          {translate(lngKeys.GeneralCancel)}
         </Button>
         <LoadingButton
           spinning={sending}
@@ -288,7 +290,9 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
           type='submit'
           disabled={sending}
         >
-          {workspace != null ? t(lngKeys.Update) : t(lngKeys.GeneralCreate)}
+          {workspace != null
+            ? translate(lngKeys.GeneralUpdateVerb)
+            : translate(lngKeys.GeneralCreate)}
         </LoadingButton>
       </div>
     </Form>

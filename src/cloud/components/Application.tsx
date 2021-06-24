@@ -163,7 +163,7 @@ const Application = ({
   const { popup } = useContextMenu()
   const { treeWithOrderedCategories } = useCloudSidebarTree()
   const { counts } = useNotifications()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -206,7 +206,7 @@ const Application = ({
     return mapToolbarRows(
       popOverState,
       setPopOverState,
-      t,
+      translate,
       openState,
       openModal,
       openSettingsTab,
@@ -216,7 +216,7 @@ const Application = ({
       team != null ? counts[team.id] : 0
     )
   }, [
-    t,
+    translate,
     sidebarState,
     openModal,
     openSettingsTab,
@@ -468,7 +468,7 @@ const Application = ({
                   setPreferences({
                     sidebarTreeSortingOrder: sort.value,
                   }),
-                label: t(`sort.${sort.value}`),
+                label: translate(`sort.${sort.value}`),
                 icon: sort.icon,
                 active: sort.value === preferences.sidebarTreeSortingOrder,
               }
@@ -477,7 +477,7 @@ const Application = ({
         },
       },
     ]
-  }, [preferences, popup, setPreferences, t])
+  }, [preferences, popup, setPreferences, translate])
 
   const treeTopRows = useMemo(() => {
     return team != null && currentUserIsCoreMember ? (
@@ -489,10 +489,10 @@ const Application = ({
     setPopOverState(null)
   }, [])
 
-  const spaceBottomRows = useMemo(() => buildSpacesBottomRows(push, t), [
-    push,
-    t,
-  ])
+  const spaceBottomRows = useMemo(
+    () => buildSpacesBottomRows(push, translate),
+    [push, translate]
+  )
 
   const timelineMore = useMemo(() => {
     return team != null && pathname !== getTeamLinkHref(team, 'timeline')
@@ -551,14 +551,7 @@ const Application = ({
         sidebar={
           <Sidebar
             className={cc(['application__sidebar'])}
-<<<<<<< HEAD
-<<<<<<< HEAD
             popOver={popOverState}
-=======
-            t={t}
->>>>>>> Explorer without statuses
-=======
->>>>>>> remove removable soon change
             showToolbar={!usingElectron}
             onSpacesBlur={onSpacesBlurCallback}
             toolbarRows={toolbarRows}
@@ -784,13 +777,13 @@ function mapToolbarRows(
     onClick: () => openState('tree'),
   })
   rows.push({
-    tooltip: t(lngKeys.Search),
+    tooltip: t(lngKeys.GeneralSearchVerb),
     active: sidebarState === 'search',
     icon: mdiMagnify,
     onClick: () => openState('search'),
   })
   rows.push({
-    tooltip: t(lngKeys.Timeline),
+    tooltip: t(lngKeys.GeneralTimeline),
     active: sidebarState === 'timeline',
     icon: mdiClockOutline,
     onClick: () => openState('timeline'),
@@ -831,20 +824,20 @@ function mapToolbarRows(
   }
 
   rows.push({
-    tooltip: t(lngKeys.Import),
+    tooltip: t(lngKeys.GeneralImport),
     icon: mdiDownload,
     position: 'bottom',
     onClick: () => openModal(<ImportModal />, { showCloseIcon: true }),
   })
   rows.push({
-    tooltip: t(lngKeys.Members),
+    tooltip: t(lngKeys.GeneralMembers),
     active: sidebarState === 'members',
     icon: mdiAccountMultiplePlusOutline,
     position: 'bottom',
     onClick: () => openSettingsTab('teamMembers'),
   })
   rows.push({
-    tooltip: t(lngKeys.Settings),
+    tooltip: t(lngKeys.GeneralSettings),
     active: sidebarState === 'settings',
     icon: mdiCogOutline,
     position: 'bottom',

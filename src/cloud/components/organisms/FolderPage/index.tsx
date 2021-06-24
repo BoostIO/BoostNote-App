@@ -62,7 +62,7 @@ const FolderPage = () => {
     deleteDoc,
     deleteWorkspace,
   } = useCloudResourceModals()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {
@@ -78,13 +78,20 @@ const FolderPage = () => {
     }
 
     if (!currentUserIsCoreMember) {
-      return mapTopbarBreadcrumbs(t, team, foldersMap, workspacesMap, push, {
-        pageFolder: currentFolder,
-      })
+      return mapTopbarBreadcrumbs(
+        translate,
+        team,
+        foldersMap,
+        workspacesMap,
+        push,
+        {
+          pageFolder: currentFolder,
+        }
+      )
     }
 
     return mapTopbarBreadcrumbs(
-      t,
+      translate,
       team,
       foldersMap,
       workspacesMap,
@@ -102,7 +109,7 @@ const FolderPage = () => {
       deleteWorkspace
     )
   }, [
-    t,
+    translate,
     currentFolder,
     foldersMap,
     workspacesMap,

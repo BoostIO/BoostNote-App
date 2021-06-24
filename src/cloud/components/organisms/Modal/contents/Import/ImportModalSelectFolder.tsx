@@ -29,7 +29,7 @@ const ImportModalSelectFolder = ({
 }: ImportModalSelectFolderProps) => {
   const { foldersMap, workspacesMap } = useNav()
   const wrapperRef = React.createRef<HTMLDivElement>()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const sortedWorkspaces = useMemo(() => {
     const workspaces = [...workspacesMap.values()]
@@ -64,8 +64,10 @@ const ImportModalSelectFolder = ({
   return (
     <>
       <StyledImportModalContent ref={wrapperRef} tabIndex={-1}>
-        <h2 style={{ margin: 0 }}>{t(lngKeys.ModalsImportDestinationTitle)}</h2>
-        <p>{t(lngKeys.ModalsImportDestinationDisclaimer)}</p>
+        <h2 style={{ margin: 0 }}>
+          {translate(lngKeys.ModalsImportDestinationTitle)}
+        </h2>
+        <p>{translate(lngKeys.ModalsImportDestinationDisclaimer)}</p>
         <WorkspaceExplorer
           folders={sortedFolders}
           workspaces={sortedWorkspaces}
@@ -77,14 +79,14 @@ const ImportModalSelectFolder = ({
       </StyledImportModalContent>
       <StyledImportModalFooter>
         <Button variant='secondary' onClick={onCancel}>
-          {t(lngKeys.Previous)}
+          {translate(lngKeys.GeneralPrevious)}
         </Button>
         <Button
           variant='primary'
           disabled={selectedWorkspaceId == null && selectedFolderId == null}
           onClick={onSelect}
         >
-          {t(lngKeys.Import)}
+          {translate(lngKeys.GeneralImport)}
         </Button>
       </StyledImportModalFooter>
     </>
