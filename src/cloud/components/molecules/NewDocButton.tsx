@@ -89,8 +89,6 @@ const Container = styled.div`
   .button__group {
     flex: 1 1 auto;
     width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   #sidebar-newdoc-btn {
