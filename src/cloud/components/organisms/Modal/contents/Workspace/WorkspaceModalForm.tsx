@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import ErrorBlock from '../../../../atoms/ErrorBlock'
 import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
@@ -22,6 +22,7 @@ import Form from '../../../../../../shared/components/molecules/Form'
 import { useI18n } from '../../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../../lib/i18n/types'
 import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
+import { useEffectOnce } from 'react-use'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -35,6 +36,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
   const { pushMessage } = useToast()
   const { closeLastModal } = useModal()
   const { updateWorkspacesMap } = useNav()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [error, setError] = useState<unknown>()
   const [sending, setSending] = useState<boolean>(false)
@@ -54,6 +56,12 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
       : []
   )
   const { t } = useI18n()
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
 
   const togglePrivate = useCallback(() => {
     setIsPublic((prev) => {
@@ -192,6 +200,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
             {
               type: 'input',
               props: {
+                ref: inputRef,
                 placeholder: t(lngKeys.Name),
                 value: name,
                 onChange: onChangeWorkspaceNameHandler,
