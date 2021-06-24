@@ -91,7 +91,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
         <a href='/'>
           <img
             src='/app/static/images/logo_boostnote_forteams.svg'
-            alt='Boost Note for Teams'
+            alt='Boost Note'
           />
         </a>
       </div>

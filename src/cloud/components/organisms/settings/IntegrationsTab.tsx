@@ -41,7 +41,7 @@ const IntegrationsTab = () => {
   return (
     <SettingTabContent
       title='Integrations'
-      description='Connect 3rd party content to your Boost Note for Teams documents.'
+      description='Connect 3rd party content to your Boost Note documents.'
       body={
         <>
           <section>
@@ -49,7 +49,7 @@ const IntegrationsTab = () => {
               <StyledServiceListItem>
                 <div className='item-info zapier'>
                   <img src='/app/static/logos/zapier.png' alt='Zapier' />
-                  <p>Connect Boost Note for Teams to 2,000+ Apps</p>
+                  <p>Connect Boost Note to 3,000+ Apps</p>
                 </div>
                 <a
                   href='https://zapier.com/apps/boost-hub/integrations'
@@ -102,7 +102,7 @@ const IntegrationsTab = () => {
                     <h3>Trello</h3>
                     <p>
                       e.g., When new Trello card is created, create a new
-                      document on Boost Note for Teams and attach it.
+                      document on Boost Note and attach it.
                     </p>
                   </div>
                 </div>
@@ -127,7 +127,7 @@ const IntegrationsTab = () => {
                     <h3>Slack</h3>
                     <p>
                       e.g., Click emoji reaction on the Slack message and
-                      archive it to Boost Note for Teams.
+                      archive it to Boost Note.
                     </p>
                   </div>
                 </div>
@@ -180,7 +180,7 @@ const IntegrationsTab = () => {
                     <h3>Google Calendar</h3>
                     <p>
                       e.g., Create an event on Google Calendar and create a
-                      document on Boost Note for Teams automatically.
+                      document on Boost Note automatically.
                     </p>
                   </div>
                 </div>
@@ -208,7 +208,7 @@ const IntegrationsTab = () => {
                     <h3>Google Sheets</h3>
                     <p>
                       e.g., Create new rows on Google Sheets for new documents
-                      on Boost Note for Teams.
+                      on Boost Note.
                     </p>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ const IntegrationsTab = () => {
                     <h3>Dropbox</h3>
                     <p>
                       e.g., Upload a new text file on Dropbox and create a new
-                      document on Boost Note for Teams.
+                      document on Boost Note.
                     </p>
                   </div>
                 </div>
@@ -308,7 +308,7 @@ const IntegrationsTab = () => {
                     <h3>Airtable</h3>
                     <p>
                       e.g., Create Airtable records and add new tagged notes in
-                      Boost Note for Teams.
+                      Boost Note.
                     </p>
                   </div>
                 </div>
@@ -361,8 +361,8 @@ const IntegrationsTab = () => {
                     <h3>Amazon Web Service</h3>
                     <p>
                       e.g., Added new functions on AWS, and append content to an
-                      existing note by title inside Boost Note for Teams (it
-                      will be created first if it does not exist.)
+                      existing note by title inside Boost Note (it will be
+                      created first if it does not exist.)
                     </p>
                   </div>
                 </div>
@@ -412,7 +412,7 @@ const IntegrationsTab = () => {
                     <h3>Intercom</h3>
                     <p>
                       e.g., A new conversation is created and create a document
-                      on Boost Note for Teams.
+                      on Boost Note.
                     </p>
                   </div>
                 </div>
@@ -481,7 +481,7 @@ const IntegrationsTab = () => {
               <StyledServiceListItem>
                 <div className='item-info zapier'>
                   <img src='/app/static/logos/zapier.png' alt='Zapier' />
-                  <p>Connect Boost Note for Teams to 2,000+ Apps</p>
+                  <p>Connect Boost Note to 3,000+ Apps</p>
                 </div>
                 <a
                   href='https://zapier.com/apps/boost-hub/integrations'
@@ -564,9 +564,9 @@ const IntegrationsTab = () => {
               </StyledServiceListItem>
               <StyledServiceListItem>
                 <p>
-                  Boost Note for Teams will show you the external content such
-                  as Github issues, Trello cards, Google Docs, and much more
-                  automatically. What do you want on Boost Note for Teams?
+                  Boost Note will show you the external content such as Github
+                  issues, Trello cards, Google Docs, and much more
+                  automatically. What do you want on Boost Note?
                   <button
                     className='item-info-request'
                     onClick={() =>

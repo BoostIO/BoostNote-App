@@ -21,9 +21,7 @@ const EditorIntegrationToolButton = () => {
       className={cc(['editor-tool-integrations'])}
     >
       <Tooltip
-        tooltip={
-          'Connect 3rd party content to your documents in Boost Note for teams'
-        }
+        tooltip={'Connect 3rd party content to your documents in Boost Note'}
         side='top'
       >
         <StyledEditorToolButton onClick={settingsOnClickHandler}>

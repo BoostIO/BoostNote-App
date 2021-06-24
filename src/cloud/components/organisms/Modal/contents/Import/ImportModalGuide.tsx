@@ -31,10 +31,10 @@ const ImportModalGuide = ({
           <>
             <h2>Notion</h2>
             <p>
-              You can export your content from Notion to Boost Note for Teams
-              one doc at a time, or all at once. Here&apos;s how:
+              You can export your content from Notion to Boost Note one doc at a
+              time, or all at once. Here&apos;s how:
             </p>
-            <h5>Exporting individual Notion doc into Boost Note for Teams</h5>
+            <h5>Exporting individual Notion doc into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -49,9 +49,9 @@ const ImportModalGuide = ({
                 &ldquo;Export&rdquo;
               </li>
               <li>Export file as Markdown or HTML</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
-            <h5>Exporting Notion docs in bulk into Boost Note for Teams</h5>
+            <h5>Exporting Notion docs in bulk into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -67,7 +67,7 @@ const ImportModalGuide = ({
               </li>
               <li>Scroll down to Export, and click Export all space content</li>
               <li>Export file as Markdown or HTML</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )
@@ -93,7 +93,7 @@ const ImportModalGuide = ({
                 click &ldquo;Export&rdquo;
               </li>
               <li>Export file as markdown or html</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )
@@ -105,9 +105,7 @@ const ImportModalGuide = ({
               You can export your content from Confluence to Boost Note for
               Teams one doc at a time, or all at once. Here&apos;s how:
             </p>
-            <h5>
-              Exporting individual Confluence doc into Boost Note for Teams
-            </h5>
+            <h5>Exporting individual Confluence doc into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -122,9 +120,9 @@ const ImportModalGuide = ({
                 &ldquo;...&rdquo; button in the top right
               </li>
               <li>Export File as Word</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
-            <h5>Exporting Confluence docs in bulk into Boost Note for Teams</h5>
+            <h5>Exporting Confluence docs in bulk into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -140,7 +138,7 @@ const ImportModalGuide = ({
               </li>
               <li>Click the Export tab</li>
               <li>Export as HTML</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )
@@ -149,10 +147,10 @@ const ImportModalGuide = ({
           <>
             <h2>Evernote</h2>
             <p>
-              You can export your content from Evernote to Boost Note for Teams
-              one doc at a time, or all at once. Here&apos;s how:
+              You can export your content from Evernote to Boost Note one doc at
+              a time, or all at once. Here&apos;s how:
             </p>
-            <h5>Exporting individual Evernote doc into Boost Note for Teams</h5>
+            <h5>Exporting individual Evernote doc into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -167,9 +165,9 @@ const ImportModalGuide = ({
                 Notes...&rdquo;
               </li>
               <li>Export File as HTML</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
-            <h5>Exporting Evernote docs in bulk into Boost Note for Teams</h5>
+            <h5>Exporting Evernote docs in bulk into Boost Note</h5>
             <ol>
               <li>
                 In{' '}
@@ -186,7 +184,7 @@ const ImportModalGuide = ({
                 Select <code>File-&gt;Export all Notes...</code>
               </li>
               <li>Export as HTML</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )
@@ -214,7 +212,7 @@ const ImportModalGuide = ({
               <li>
                 Download file as .txt from <code>File-&gt;Download</code>
               </li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )
@@ -240,7 +238,7 @@ const ImportModalGuide = ({
                 &ldquo;Export&rdquo;
               </li>
               <li>Export file as .md</li>
-              <li>Upload files in Boost Note for Teams</li>
+              <li>Upload files in Boost Note</li>
             </ol>
           </>
         )

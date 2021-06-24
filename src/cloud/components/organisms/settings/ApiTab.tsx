@@ -50,7 +50,7 @@ const ApiTab = () => {
                 <p>
                   See the{' '}
                   <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'>
-                    documentation for Boost Note for Teams API{' '}
+                    documentation for Boost Note API{' '}
                     <Icon path={mdiOpenInNew} />
                   </ExternalLink>
                 </p>
