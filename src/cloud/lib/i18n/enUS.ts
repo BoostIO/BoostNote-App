@@ -232,6 +232,20 @@ const enTranslation: TranslationSource = {
   [lngKeys.SortDragAndDrop]: 'Drag and Drop',
   [lngKeys.CreateNewDoc]: 'Create new doc',
   [lngKeys.UseATemplate]: 'Use a template',
+  [lngKeys.RenameFolder]: 'Rename folder',
+  [lngKeys.RenameDoc]: 'Rename doc',
+  [lngKeys.ModalsCreateNewFolder]: 'Create a new folder',
+  [lngKeys.ModalsCreateNewDocument]: 'Create a new document',
+
+  [lngKeys.ModalsDeleteWorkspaceTitle]: 'Delete the workspace',
+  [lngKeys.ModalsDeleteWorkspaceDisclaimer]:
+    'Are you sure to delete this workspace? You will not be able to revert this action.',
+
+  [lngKeys.ModalsDeleteDocFolderTitle]: 'Delete {{label}}',
+  [lngKeys.ModalsDeleteDocDisclaimer]:
+    'Are you sure to remove this document permanently?',
+  [lngKeys.ModalsDeleteFolderDisclaimer]:
+    'Are you sure to remove this folder and delete completely its documents?',
 
   //Language
   [lngKeys.Shared]: 'Shared',
