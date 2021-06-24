@@ -11,8 +11,10 @@ import Icon from '../../../shared/components/atoms/Icon'
 import styled from '../../../shared/lib/styled'
 import useThreadActions, {
   ThreadActionProps,
-} from '../../../shared/lib/hooks/useThreadMenuActions'
+} from '../../lib/hooks/useThreadMenuActions'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
+import { lngKeys } from '../../lib/i18n/types'
+import { useI18n } from '../../lib/hooks/useI18n'
 
 export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
@@ -22,6 +24,7 @@ const smallUserIconStyle = { width: '22px', height: '22px', lineHeight: '18px' }
 function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
   const actions = useThreadActions({ thread, ...rest })
   const { popup } = useContextMenu()
+  const { t } = useI18n()
 
   const openActionMenu: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -52,7 +55,9 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
                 : ''
             }`}
           >
-            {thread.selection != null ? thread.context : 'Full doc thread'}
+            {thread.selection != null
+              ? thread.context
+              : t(lngKeys.ThreadFullDocLabel)}
           </div>
         </div>
         <div onClick={openActionMenu} className='thread__action'>
@@ -64,7 +69,10 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           {thread.contributors.map((user) => (
             <UserIcon key={user.id} style={smallUserIconStyle} user={user} />
           ))}
-          {thread.commentCount} replies {formatDate(thread.lastCommentTime)}
+          {t(lngKeys.ThreadReplies, { count: thread.commentCount })}
+          <span className='thread__info__line__date'>
+            {formatDate(thread.lastCommentTime)}
+          </span>
         </div>
       </div>
     </StyledListItem>
@@ -75,6 +83,11 @@ const StyledListItem = styled.div`
   padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   cursor: default;
+  .thread__info__line__date {
+    color: ${({ theme }) => theme.colors.text.subtle};
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    padding-left: 4px;
+  }
 
   &:hover .thread__action {
     opacity: 1;
@@ -123,7 +136,7 @@ const StyledListItem = styled.div`
   }
   & .thread__action {
     height: 20px;
-    opacity 0;
+    opacity: 0;
     color: ${({ theme }) => theme.colors.text.subtle};
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary};

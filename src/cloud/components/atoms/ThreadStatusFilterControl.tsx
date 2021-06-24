@@ -14,6 +14,9 @@ import Icon, {
 } from '../../../shared/components/atoms/Icon'
 import { RoundButton } from '../../../shared/components/atoms/Button'
 import styled from '../../../shared/lib/styled'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { TFunction } from 'i18next'
+import { lngKeys } from '../../lib/i18n/types'
 
 export type StatusFilter = Thread['status']['type'] | 'all'
 
@@ -28,21 +31,22 @@ function ThreadStatusFilterControl({
   onChange,
   counts,
 }: StatusFilterControlProps) {
+  const { getThreadStatusLabel, t } = useI18n()
   const { popup } = useContextMenu()
 
   const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, buildMenu(onChange, counts))
+      popup(event, buildMenu(t, onChange, counts))
     },
-    [popup, onChange, counts]
+    [popup, onChange, counts, t]
   )
 
   return (
     <FilterButton variant='icon_secondary' onClick={openActionMenu}>
       <ThreadFilterIcon status={value} />
       <span className='filter__text'>
-        {capitalize(value)} ({counts[value]})
+        {capitalize(getThreadStatusLabel(value))} ({counts[value]})
       </span>
       <Icon path={mdiChevronDown} />
     </FilterButton>
@@ -67,6 +71,7 @@ const FilterButton = styled(RoundButton)`
 `
 
 function buildMenu(
+  t: TFunction,
   action: StatusFilterControlProps['onChange'],
   counts: StatusFilterControlProps['counts']
 ): MenuItem[] {
@@ -74,25 +79,25 @@ function buildMenu(
     {
       icon: <PrimaryIcon path={mdiAlertCircleOutline} />,
       type: MenuTypes.Normal,
-      label: `All (${counts.all})`,
+      label: `${capitalize(t(lngKeys.All))} (${counts.all})`,
       onClick: () => action('all'),
     },
     {
       icon: <SuccessIcon path={mdiAlertCircleOutline} />,
       type: MenuTypes.Normal,
-      label: `Open (${counts.open})`,
+      label: `${capitalize(t(lngKeys.ThreadOpen))} (${counts.open})`,
       onClick: () => action('open'),
     },
     {
       icon: <WarningIcon path={mdiAlertCircleOutline} />,
       type: MenuTypes.Normal,
-      label: `Closed (${counts.closed})`,
+      label: `${capitalize(t(lngKeys.ThreadClosed))} (${counts.closed})`,
       onClick: () => action('closed'),
     },
     {
       icon: <Icon path={mdiAlertCircleOutline} />,
       type: MenuTypes.Normal,
-      label: `Outdated (${counts.outdated})`,
+      label: `${capitalize(t(lngKeys.ThreadOutdated))} (${counts.outdated})`,
       onClick: () => action('outdated'),
     },
   ]

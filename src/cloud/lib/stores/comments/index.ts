@@ -1,6 +1,6 @@
-import { createStoreContext } from '../../utils/context'
+import { createStoreContext } from '../../../../shared/lib/utils/context'
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Thread, Comment } from '../../../../cloud/interfaces/db/comments'
+import { Thread, Comment } from '../../../interfaces/db/comments'
 import {
   getThreads,
   createThread,
@@ -8,18 +8,18 @@ import {
   setThreadStatus,
   deleteThread,
   getThread,
-} from '../../../../cloud/api/comments/thread'
-import { useToast } from '../toast'
+} from '../../../api/comments/thread'
+import { useToast } from '../../../../shared/lib/stores/toast'
 import {
   listThreadComments,
   createComment,
   updateCommentMessage,
   deleteComment,
   getComment,
-} from '../../../../cloud/api/comments/comment'
+} from '../../../api/comments/comment'
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
-import { SerializedAppEvent } from '../../../../cloud/interfaces/db/appEvents'
+import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 import { max } from 'date-fns'
 import sortBy from 'ramda/es/sortBy'
 import take from 'ramda/es/take'

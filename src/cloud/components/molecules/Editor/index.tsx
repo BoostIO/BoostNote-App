@@ -85,7 +85,7 @@ import { TopbarControlProps } from '../../../../shared/components/organisms/Topb
 import { useDocActionContextMenu } from './useDocActionContextMenu'
 import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
-import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
+import useCommentManagerState from '../../../lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../lib/rehypeHighlight'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import throttle from 'lodash.throttle'

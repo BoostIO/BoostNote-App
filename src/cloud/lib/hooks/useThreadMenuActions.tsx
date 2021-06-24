@@ -1,13 +1,15 @@
 import React, { useMemo } from 'react'
-import { Thread } from '../../../cloud/interfaces/db/comments'
-import Icon from '../../components/atoms/Icon'
-import styled from '../styled'
-import { MenuItem, MenuTypes } from '../stores/contextMenu'
+import { Thread } from '../../interfaces/db/comments'
+import Icon from '../../../shared/components/atoms/Icon'
+import styled from '../../../shared/lib/styled'
+import { MenuItem, MenuTypes } from '../../../shared/lib/stores/contextMenu'
 import {
   mdiAlertCircleOutline,
   mdiAlertCircleCheckOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
+import { useI18n } from './useI18n'
+import { lngKeys } from '../i18n/types'
 
 export interface ThreadActionProps {
   thread: Thread
@@ -22,11 +24,12 @@ function useThreadActions({
   onOpen,
   onDelete,
 }: ThreadActionProps) {
+  const { t } = useI18n()
   const actions: MenuItem[] = useMemo(() => {
     const deleteAction: MenuItem = {
       icon: <Icon path={mdiTrashCanOutline} />,
       type: MenuTypes.Normal,
-      label: 'Delete',
+      label: t(lngKeys.GeneralDelete),
       onClick: () => onDelete(thread),
     }
 
@@ -39,7 +42,7 @@ function useThreadActions({
           {
             icon: <SuccessIcon path={mdiAlertCircleOutline} />,
             type: MenuTypes.Normal,
-            label: 'Open',
+            label: t(lngKeys.OpenVerb),
             onClick: () => onOpen(thread),
           },
           deleteAction,
@@ -48,12 +51,12 @@ function useThreadActions({
           {
             icon: <WarningIcon path={mdiAlertCircleCheckOutline} />,
             type: MenuTypes.Normal,
-            label: 'Close',
+            label: t(lngKeys.Close),
             onClick: () => onClose(thread),
           },
           deleteAction,
         ]
-  }, [thread, onClose, onOpen, onDelete])
+  }, [thread, onClose, onOpen, onDelete, t])
 
   return actions
 }

@@ -18,8 +18,8 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { getTemplate } from '../../api/teams/docs/templates'
 import { getUniqueFolderAndDocIdsFromResourcesIds } from '../../lib/utils/patterns'
 import { getAccessToken, useElectron } from '../../lib/stores/electron'
-import { useComments } from '../../../shared/lib/stores/comments'
 import { useNotifications } from '../../../shared/lib/stores/notifications'
+import { useComments } from '../../lib/stores/comments'
 
 interface EventSourceProps {
   teamId: string
