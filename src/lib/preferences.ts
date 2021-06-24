@@ -55,7 +55,7 @@ export interface Preferences {
   'general.noteSorting': NoteSortingOptions
   'general.enableAnalytics': boolean
 
-  // Cloud Folder
+  // Cloud Space
   'cloud.user': {
     id: string
     uniqueName: string

@@ -17,7 +17,7 @@ const StorageCreatePage = () => {
               style={{ marginRight: 10 }}
               size={16}
             />
-            <span style={{ marginRight: 10 }}>Create Local Folder</span>
+            <span style={{ marginRight: 10 }}>Create Local Space</span>
           </>
         ),
       }}
