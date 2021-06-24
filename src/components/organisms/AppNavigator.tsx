@@ -300,6 +300,7 @@ const TopLevelNavigator = () => {
         : null
 
     if (boosthubTeam != null) {
+      const notificationCount = notificationCounts[boosthubTeam.id] || 0
       const rows: SidebarToolbarRow[] = [
         {
           tooltip: 'Spaces',
@@ -335,7 +336,7 @@ const TopLevelNavigator = () => {
         {
           tooltip: 'Notifications',
           icon:
-            notificationCounts[boosthubTeam.id] != null ? (
+            notificationCount > 0 ? (
               <NotifyIcon
                 size={26}
                 count={notificationCounts[boosthubTeam.id]}
