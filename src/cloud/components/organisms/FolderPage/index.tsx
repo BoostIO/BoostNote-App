@@ -36,6 +36,7 @@ import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderCont
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -61,6 +62,7 @@ const FolderPage = () => {
     deleteDoc,
     deleteWorkspace,
   } = useCloudResourceModals()
+  const { t } = useI18n()
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {
@@ -76,12 +78,13 @@ const FolderPage = () => {
     }
 
     if (!currentUserIsCoreMember) {
-      return mapTopbarBreadcrumbs(team, foldersMap, workspacesMap, push, {
+      return mapTopbarBreadcrumbs(t, team, foldersMap, workspacesMap, push, {
         pageFolder: currentFolder,
       })
     }
 
     return mapTopbarBreadcrumbs(
+      t,
       team,
       foldersMap,
       workspacesMap,
@@ -99,6 +102,7 @@ const FolderPage = () => {
       deleteWorkspace
     )
   }, [
+    t,
     currentFolder,
     foldersMap,
     workspacesMap,

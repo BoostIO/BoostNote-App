@@ -89,6 +89,7 @@ import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManag
 import { HighlightRange } from '../../../lib/rehypeHighlight'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import throttle from 'lodash.throttle'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -124,6 +125,7 @@ const Editor = ({
   revisionHistory,
   thread,
 }: EditorProps) => {
+  const { t } = useI18n()
   const { currentUserPermissions, permissions } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
@@ -736,6 +738,7 @@ const Editor = ({
 
   const breadcrumbs = useMemo(() => {
     const breadcrumbs = mapTopbarBreadcrumbs(
+      t,
       team,
       foldersMap,
       workspacesMap,
@@ -757,6 +760,7 @@ const Editor = ({
     )
     return breadcrumbs
   }, [
+    t,
     team,
     foldersMap,
     workspacesMap,

@@ -7,6 +7,7 @@ import Application from '../../Application'
 import { useRouter } from '../../../lib/router'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -22,6 +23,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     openWorkspaceEditForm,
     deleteWorkspace,
   } = useCloudResourceModals()
+  const { t } = useI18n()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
@@ -29,11 +31,12 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     }
 
     if (!currentUserIsCoreMember) {
-      return [mapWorkspaceBreadcrumb(team, workspace, push)]
+      return [mapWorkspaceBreadcrumb(t, team, workspace, push)]
     }
 
     return [
       mapWorkspaceBreadcrumb(
+        t,
         team,
         workspace,
         push,
@@ -44,6 +47,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
       ),
     ]
   }, [
+    t,
     team,
     workspace,
     push,
