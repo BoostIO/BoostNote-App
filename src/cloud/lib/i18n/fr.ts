@@ -339,7 +339,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.Edit]: 'Editer',
   [lngKeys.SmartFolders]: 'Dossiers intelligents',
   [lngKeys.Bookmarks]: 'Favoris',
-  [lngKeys.Bookmarked]: 'Favorisé',
+  [lngKeys.Bookmarked]: 'Retirer des favoris',
   [lngKeys.BookmarkVerb]: 'Ajouter aux favoris',
   [lngKeys.Workspaces]: 'Espaces de travail',
   [lngKeys.Private]: 'Privé',
