@@ -227,12 +227,17 @@ export enum lngKeys {
   ModalsImportDestinationTitle = 'modals.import.destination.title',
   ModalsImportDestinationDisclaimer = 'modals.import.destination.disclaimer',
   ModalsImportDisclaimer = 'modals.import.disclaimer',
+
+  ModalsSmartFolderCreateTitle = 'modals.sf.create.title',
+  ModalsSmartFolderEditTitle = 'modals.sf.edit.title',
+  ModalsSmartFolderPrivateDisclaimer = 'modals.sf.private.disclaimer',
+  ModalsSmartFolderPublicDisclaimer = 'modals.sf.public.disclaimer',
+
   Source = 'Source',
   Destination = 'Destination',
   Previous = 'Previous',
   Next = 'Next',
   Continue = 'Continue',
-
   Shared = 'Shared',
   SmartFolders = 'Smart.Folders',
   Bookmarks = 'Bookmarks',

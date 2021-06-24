@@ -274,13 +274,21 @@ const enTranslation: TranslationSource = {
     'Pick the folder you want your documents to be imported in',
   [lngKeys.ModalsImportDisclaimer]:
     'Select how you want to import files ( 5Mb max per file )',
+
+  [lngKeys.ModalsSmartFolderCreateTitle]: 'Create a smart folder',
+  [lngKeys.ModalsSmartFolderEditTitle]: 'Edit a smart folder',
+  [lngKeys.ModalsSmartFolderPrivateDisclaimer]:
+    'This smart folder will become private. Only you can see it.',
+  [lngKeys.ModalsSmartFolderPublicDisclaimer]:
+    'The smart folder will become public. Every member can see it.',
+
+  //Language
+
   [lngKeys.Source]: 'Source',
   [lngKeys.Destination]: 'Destination',
   [lngKeys.Previous]: 'Previous',
   [lngKeys.Next]: 'Next',
   [lngKeys.Continue]: 'Continue',
-
-  //Language
   [lngKeys.Shared]: 'Shared',
   [lngKeys.Rename]: 'Rename',
   [lngKeys.Edit]: 'Edit',
