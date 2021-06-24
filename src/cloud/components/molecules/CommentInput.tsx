@@ -12,6 +12,8 @@ import {
   toFragment,
   isMention,
 } from '../../lib/comments'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -33,6 +35,7 @@ export function CommentInput({
     if (inputRef.current == null) {
       return
     }
+    const { t } = useI18n()
 
     const selection = getSelection()
     if (selection == null) {
@@ -160,7 +163,7 @@ export function CommentInput({
       ></div>
       <Flexbox justifyContent='flex-end'>
         <Button disabled={working} onClick={submit}>
-          Post
+          {t(lngKeys.ThreadPost)}
         </Button>
       </Flexbox>
       {state.type === 'enabled' && state.suggestions.length > 0 && (

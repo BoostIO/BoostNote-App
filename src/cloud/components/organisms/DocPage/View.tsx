@@ -34,7 +34,7 @@ import {
   createAbsolutePositionFromRelativePosition,
   createRelativePositionFromTypeIndex,
 } from 'yjs'
-import useCommentManagerState from '../../../../shared/lib/hooks/useCommentManagerState'
+import useCommentManagerState from '../../../lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../lib/rehypeHighlight'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import Icon from '../../atoms/Icon'

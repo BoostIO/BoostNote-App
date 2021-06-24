@@ -1,6 +1,6 @@
 import { useComments } from '.'
 import { useState, useEffect } from 'react'
-import { Thread, Comment } from '../../../../cloud/interfaces/db/comments'
+import { Thread, Comment } from '../../../interfaces/db/comments'
 
 export function useDocThreads(docId: string) {
   const { observeDocThreads } = useComments()

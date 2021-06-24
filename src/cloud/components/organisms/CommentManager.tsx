@@ -16,6 +16,8 @@ import ThreadStatusFilterControl, {
   StatusFilter,
 } from '../atoms/ThreadStatusFilterControl'
 import { partitionOnStatus } from '../../../shared/lib/utils/comments'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
 
 export type State =
   | { mode: 'list_loading' }
@@ -70,6 +72,7 @@ function CommentManager({
   user,
   users,
 }: CommentManagerProps) {
+  const { t } = useI18n()
   const [statusFilter, setStatusFitler] = useState<StatusFilter>('open')
   const partitioned = useMemo(() => {
     return partitionOnStatus(state.mode === 'list_loading' ? [] : state.threads)
@@ -117,7 +120,8 @@ function CommentManager({
               className='thread__create'
               onClick={() => setMode({ mode: 'new_thread' })}
             >
-              <Icon path={mdiPlusBoxOutline} /> <span>Create a new thread</span>
+              <Icon path={mdiPlusBoxOutline} />{' '}
+              <span>{t(lngKeys.ThreadCreate)}</span>
             </div>
           </>
         )
@@ -147,7 +151,7 @@ function CommentManager({
                   onClick={() => reopenThread(state.thread)}
                   variant='secondary'
                 >
-                  Reopen
+                  {t(lngKeys.ThreadReopen)}
                 </Button>
               )}
             </div>
@@ -170,6 +174,7 @@ function CommentManager({
       }
     }
   }, [
+    t,
     state,
     createThread,
     reopenThread,
@@ -196,7 +201,7 @@ function CommentManager({
             <Icon size={20} path={mdiArrowLeft} />
           </div>
         )}
-        <h4>Thread</h4>
+        <h4>{t(lngKeys.ThreadsTitle)}</h4>
         {state.mode === 'list' && (
           <ThreadStatusFilterControl
             value={statusFilter}

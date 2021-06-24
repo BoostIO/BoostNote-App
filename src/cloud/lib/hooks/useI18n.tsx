@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StatusFilter } from '../../components/atoms/ThreadStatusFilterControl'
 import { TeamPermissionType } from '../../interfaces/db/userTeamPermissions'
 import { lngKeys } from '../i18n/types'
 
@@ -19,8 +20,27 @@ export function useI18n() {
     [t]
   )
 
+  const getThreadStatusLabel = useCallback(
+    (status: StatusFilter) => {
+      switch (status) {
+        case 'all':
+          return t(lngKeys.All)
+        case 'open':
+          return t(lngKeys.ThreadOpen)
+        case 'closed':
+          return t(lngKeys.ThreadClosed)
+        case 'outdated':
+          return t(lngKeys.ThreadOutdated)
+        default:
+          return 'uknown'
+      }
+    },
+    [t]
+  )
+
   return {
     t,
     getRoleLabel,
+    getThreadStatusLabel,
   }
 }

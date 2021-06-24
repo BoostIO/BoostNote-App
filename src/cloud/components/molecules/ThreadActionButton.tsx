@@ -9,8 +9,9 @@ import Icon from '../../../shared/components/atoms/Icon'
 import { capitalize } from '../../lib/utils/string'
 import { useContextMenu } from '../../../shared/lib/stores/contextMenu'
 import Flexbox from '../atoms/Flexbox'
-import useThreadActions from '../../../shared/lib/hooks/useThreadMenuActions'
+import useThreadActions from '../../lib/hooks/useThreadMenuActions'
 import { RoundButton } from '../../../shared/components/atoms/Button'
+import { useI18n } from '../../lib/hooks/useI18n'
 
 interface ThreadActionButtonProps {
   thread: Thread
@@ -27,6 +28,7 @@ function ThreadActionButton({
 }: ThreadActionButtonProps) {
   const { popup } = useContextMenu()
   const actions = useThreadActions({ thread, onClose, onOpen, onDelete })
+  const { getThreadStatusLabel } = useI18n()
 
   const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
@@ -50,7 +52,7 @@ function ThreadActionButton({
   return (
     <RoundButton iconPath={iconPath} variant={variant} onClick={openActionMenu}>
       <Flexbox alignItems='center'>
-        {capitalize(thread.status.type)}
+        {capitalize(getThreadStatusLabel(thread.status.type))}
         <Icon path={mdiChevronDown} />
       </Flexbox>
     </RoundButton>
