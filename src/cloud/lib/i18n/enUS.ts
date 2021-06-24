@@ -21,6 +21,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralTitle]: 'Title',
   [lngKeys.GeneralUse]: 'Use',
   [lngKeys.GeneralChangeIcon]: 'Change icon',
+  [lngKeys.GeneralFolders]: 'Folders',
 
   // settings
   [lngKeys.SettingsInfo]: 'My Info',
@@ -241,9 +242,9 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsCreateNewFolder]: 'Create a new folder',
   [lngKeys.ModalsCreateNewDocument]: 'Create a new document',
 
-  [lngKeys.ModalsDeleteWorkspaceTitle]: 'Delete the workspace',
+  [lngKeys.ModalsDeleteWorkspaceTitle]: 'Delete the folder',
   [lngKeys.ModalsDeleteWorkspaceDisclaimer]:
-    'Are you sure to delete this workspace? You will not be able to revert this action.',
+    'Are you sure to delete this folder? You will not be able to revert this action.',
 
   [lngKeys.ModalsDeleteDocFolderTitle]: 'Delete {{label}}',
   [lngKeys.ModalsDeleteDocDisclaimer]:
@@ -251,8 +252,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Are you sure to remove this folder and delete completely its documents?',
 
-  [lngKeys.ModalsWorkspaceCreateTitle]: 'Create a workspace',
-  [lngKeys.ModalsWorkspaceEditTitle]: 'Edit your workspace',
+  [lngKeys.ModalsWorkspaceCreateTitle]: 'Create a folder',
+  [lngKeys.ModalsWorkspaceEditTitle]: 'Edit your folder',
 
   [lngKeys.ModalsWorkspaceMakePrivate]: 'Make private',
   [lngKeys.ModalsWorkspaceAccess]: 'Access',
@@ -260,7 +261,7 @@ const enTranslation: TranslationSource = {
     "This default workspace is public and can't have its access modified.",
   [lngKeys.ModalsWorkspacePublicDisclaimer]:
     'This workspace is public. Anyone from the team can access it.',
-  [lngKeys.ModalsWorkspacePrivateDisclaimer]: 'This workspace is private.',
+  [lngKeys.ModalsWorkspacePrivateDisclaimer]: 'This folder is private.',
   [lngKeys.ModalsWorkspacePrivateOwner]:
     'You can set individual member access below.',
 
@@ -271,7 +272,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralSelectAll]: 'Select all',
   [lngKeys.ModalsWorkspacesWhoHasAcess]: 'Who has access',
   [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
-    'Only the workspace owner can change its access.',
+    'Only the folder owner can change its access.',
 
   [lngKeys.ModalsImportDestinationTitle]: 'Select a folder',
   [lngKeys.ModalsImportDestinationDisclaimer]:

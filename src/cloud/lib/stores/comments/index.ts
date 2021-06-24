@@ -24,7 +24,7 @@ import { max } from 'date-fns'
 import sortBy from 'ramda/es/sortBy'
 import take from 'ramda/es/take'
 import uniqBy from 'ramda/es/uniqBy'
-import { mergeOnId } from '../../utils/array'
+import { mergeOnId } from '../../../../shared/lib/utils/array'
 
 type DocThreadsObserver = (threads: Thread[]) => void
 type ThreadObserver = (comments: Comment[]) => void
