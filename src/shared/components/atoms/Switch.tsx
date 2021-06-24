@@ -3,7 +3,7 @@ import ReactSwitch from 'react-switch'
 import cc from 'classcat'
 import styled from '../../lib/styled'
 
-interface SwitchProps {
+export interface SwitchProps {
   disabled?: boolean
   id?: string
   className?: string

@@ -12,6 +12,7 @@ import FormTextarea, { FormTextareaProps } from '../atoms/FormTextArea'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
 import { AppComponent } from '../../../../lib/types'
+import FormSwitch, { SwitchProps } from '../../../atoms/Switch'
 
 export type FormRowButtonProps = ButtonProps & {
   label: React.ReactNode
@@ -45,6 +46,7 @@ export type FormItemProps =
     }
   | { type: 'image'; props: FormImageProps }
   | { type: 'node'; element: React.ReactNode }
+  | { type: 'switch'; props: SwitchProps }
 
 const FormRowItem: AppComponent<FormRowItemProps> = ({
   item,
@@ -78,6 +80,8 @@ const FormRowItem: AppComponent<FormRowItemProps> = ({
           <FormEmoji {...item.props} />
         ) : item.type === 'button' ? (
           <LoadingButton {...item.props}>{item.props.label}</LoadingButton>
+        ) : item.type === 'switch' ? (
+          <FormSwitch {...item.props} />
         ) : (
           item.element
         )
@@ -97,12 +101,13 @@ const Container = styled.div<{ alignItems: string; flex?: string }>`
     flex == null
       ? `
   &.form__row__item--emoji,
-  &.form__row__item--button {
+  &.form__row__item--button,
+  &.form__row__item--switch {
     flex: 0 0 auto;
   }
 
-  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button),
-  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button)
+  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button):not(.form__row__item--switch),
+  &.form__row__item:not(.form__row__item--emoji):not(.form__row__item--button):not(.form__row__item--switch)
     > * {
       flex: 1 1 auto;
     }

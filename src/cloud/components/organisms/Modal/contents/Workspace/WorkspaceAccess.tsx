@@ -1,17 +1,19 @@
-import React, { useCallback, useState, useMemo, useRef } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { SerializedUser } from '../../../../../interfaces/db/user'
 import { SerializedUserTeamPermissions } from '../../../../../interfaces/db/userTeamPermissions'
 import styled from '../../../../../lib/styled'
-import { ModalLine } from '../styled'
 import Flexbox from '../../../../atoms/Flexbox'
 import Checkbox from '../../../../atoms/Checkbox'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiClose } from '@mdi/js'
-import { useEffectOnce, useSet } from 'react-use'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
+import { useSet } from 'react-use'
 import UserIcon from '../../../../atoms/UserIcon'
 import cc from 'classcat'
 import { linkText } from '../../../../../lib/styled/styleFunctions'
+import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
+import Button from '../../../../../../shared/components/atoms/Button'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 interface WorkspaceAccessProps {
   selectedPermissions: SerializedUserTeamPermissions[]
@@ -32,16 +34,12 @@ const WorkspaceAccess = ({
   currentUser,
   setSelectedPermissions,
 }: WorkspaceAccessProps) => {
-  const nodeRef = useRef<HTMLDivElement>(null)
   const [showSelector, setShowSelector] = useState<boolean>(false)
   const [
     newPermissionsIds,
     { toggle, add: addNewPermissionsId, reset: resetNewPermissionsIds },
   ] = useSet<string>(new Set())
-
-  useEffectOnce(() => {
-    nodeRef.current!.focus()
-  })
+  const { t } = useI18n()
 
   const onShowSelector = useCallback(() => {
     resetNewPermissionsIds()
@@ -113,109 +111,128 @@ const WorkspaceAccess = ({
   ])
 
   return (
-    <div style={{ width: '100%', marginTop: 30 }} ref={nodeRef}>
-      <ModalLine style={{ marginBottom: 10 }}>Who has access</ModalLine>
-      <Flexbox justifyContent='space-between' style={{ marginBottom: 5 }}>
-        {ownerOrUserNode}
-        <StyledRemoveAccessButton disabled={true}>
-          Owner
-        </StyledRemoveAccessButton>
-      </Flexbox>
-      {selectedPermissions.map((p) => {
-        return (
+    <Container>
+      <FormRow
+        fullWidth={true}
+        row={{ title: t(lngKeys.ModalsWorkspacesWhoHasAcess) }}
+      >
+        <Flexbox direction='column' className='workspace__access__col'>
           <Flexbox
-            key={p.id}
             justifyContent='space-between'
-            style={{ marginBottom: 5 }}
+            className='workspace__access__row'
           >
-            <Flexbox>
-              <UserIcon style={{ marginRight: 4 }} user={p.user} />
-              <span>{p.user.displayName}</span>
-            </Flexbox>
-            {currentUserIsOwner && (
-              <StyledRemoveAccessButton
-                onClick={() =>
-                  setSelectedPermissions((prev) =>
-                    prev.filter((permission) => permission.id !== p.id)
-                  )
-                }
-              >
-                <IconMdi path={mdiClose} />
-              </StyledRemoveAccessButton>
-            )}
+            {ownerOrUserNode}
+            <StyledRemoveAccessButton disabled={true}>
+              {t(lngKeys.Owner)}
+            </StyledRemoveAccessButton>
           </Flexbox>
-        )
-      })}
+          {selectedPermissions.map((p) => {
+            return (
+              <Flexbox
+                key={p.id}
+                justifyContent='space-between'
+                className='workspace__access__row'
+              >
+                <Flexbox>
+                  <UserIcon style={{ marginRight: 4 }} user={p.user} />
+                  <span>{p.user.displayName}</span>
+                </Flexbox>
+                {currentUserIsOwner && (
+                  <StyledRemoveAccessButton
+                    onClick={() =>
+                      setSelectedPermissions((prev) =>
+                        prev.filter((permission) => permission.id !== p.id)
+                      )
+                    }
+                  >
+                    <IconMdi path={mdiClose} />
+                  </StyledRemoveAccessButton>
+                )}
+              </Flexbox>
+            )
+          })}
+        </Flexbox>
+      </FormRow>
 
       {leftoverPermissions.length !== 0 && currentUserIsOwner && (
-        <>
-          <ModalLine style={{ marginTop: 20, marginBottom: 10 }}>
-            Set access
-          </ModalLine>
-          {currentUserIsOwner && (
-            <>
-              {!showSelector ? (
-                <CustomButton
-                  style={{ marginTop: 10 }}
-                  variant='secondary'
-                  onClick={onShowSelector}
+        <FormRow
+          fullWidth={true}
+          row={{ title: t(lngKeys.ModalsWorkspaceSetAccess) }}
+        >
+          <>
+            {!showSelector ? (
+              <Button variant='secondary' onClick={onShowSelector}>
+                {t(lngKeys.ModalsWorkspacesSetAccessMembers)}
+              </Button>
+            ) : (
+              <StyledSelector>
+                <StyledSelectorRow style={{ marginTop: 10, marginBottom: 20 }}>
+                  <Checkbox
+                    checked={
+                      newPermissionsIds.size === leftoverPermissions.length
+                    }
+                    className={cc([
+                      newPermissionsIds.size !== 0 &&
+                        newPermissionsIds.size !== leftoverPermissions.length &&
+                        'reducer',
+                    ])}
+                    label={t(lngKeys.SelectAll)}
+                    onChange={onSelectAllCheckboxClick}
+                  />
+                </StyledSelectorRow>
+                {leftoverPermissions.length !== 0 &&
+                  leftoverPermissions.map((p) => (
+                    <StyledSelectorRow key={p.id}>
+                      <Checkbox
+                        checked={newPermissionsIds.has(p.id)}
+                        onChange={() => toggle(p.id)}
+                        label={
+                          <Flexbox>
+                            <UserIcon
+                              style={{ marginRight: 4 }}
+                              user={p.user}
+                            />
+                            <span>{p.user.displayName}</span>
+                          </Flexbox>
+                        }
+                      />
+                    </StyledSelectorRow>
+                  ))}
+                <Button
+                  variant='primary'
+                  onClick={addMembers}
+                  disabled={newPermissionsIds.size === 0}
+                  className='workspace__access__add'
                 >
-                  Add Members
-                </CustomButton>
-              ) : (
-                <StyledSelector>
-                  <StyledSelectorRow
-                    style={{ marginTop: 10, marginBottom: 20 }}
-                  >
-                    <Checkbox
-                      checked={
-                        newPermissionsIds.size === leftoverPermissions.length
-                      }
-                      className={cc([
-                        newPermissionsIds.size !== 0 &&
-                          newPermissionsIds.size !==
-                            leftoverPermissions.length &&
-                          'reducer',
-                      ])}
-                      label='Select all'
-                      onChange={onSelectAllCheckboxClick}
-                    />
-                  </StyledSelectorRow>
-                  {leftoverPermissions.length !== 0 &&
-                    leftoverPermissions.map((p) => (
-                      <StyledSelectorRow key={p.id}>
-                        <Checkbox
-                          checked={newPermissionsIds.has(p.id)}
-                          onChange={() => toggle(p.id)}
-                          label={
-                            <Flexbox>
-                              <UserIcon
-                                style={{ marginRight: 4 }}
-                                user={p.user}
-                              />
-                              <span>{p.user.displayName}</span>
-                            </Flexbox>
-                          }
-                        />
-                      </StyledSelectorRow>
-                    ))}
-                  <CustomButton
-                    variant='primary'
-                    style={{ lineHeight: '30px', width: '80px' }}
-                    onClick={addMembers}
-                    disabled={newPermissionsIds.size === 0}
-                  >
-                    Add
-                  </CustomButton>
-                </StyledSelector>
-              )}
-            </>
-          )}
-        </>
+                  {t(lngKeys.Add)}
+                </Button>
+              </StyledSelector>
+            )}
+          </>
+        </FormRow>
       )}
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  .workspace__access__add {
+    width: fit-content;
+    flex: 0 0 auto;
+  }
+
+  .workspace__access__col {
+    width: 100%;
+  }
+
+  .workspace__access__row {
+    width: 100%;
+  }
+
+  .workspace__access__row + .workspace__access__row {
+    margin-top: 4px;
+  }
+`
 
 const StyledSelectorRow = styled.div`
   display: flex;

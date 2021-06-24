@@ -1,9 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
-import { ModalBody, ModalContainer, ModalLine, ModaLineHeader } from '../styled'
-import { Spinner } from '../../../../atoms/Spinner'
 import ErrorBlock from '../../../../atoms/ErrorBlock'
-import { StyledModalForm, StyledModalFormInput } from '../Forms/styled'
 import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
 import { useGlobalData } from '../../../../../lib/stores/globalData'
 import { SerializedUserTeamPermissions } from '../../../../../interfaces/db/userTeamPermissions'
@@ -15,12 +12,16 @@ import {
 } from '../../../../../api/teams/workspaces'
 import { SerializedTeam } from '../../../../../interfaces/db/team'
 import { useNav } from '../../../../../lib/stores/nav'
-import Flexbox from '../../../../atoms/Flexbox'
 import WorkspaceAccess from './WorkspaceAccess'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
-import Switch from '../../../../../../shared/components/atoms/Switch'
-import Button from '../../../../../../shared/components/atoms/Button'
+import Button, {
+  LoadingButton,
+} from '../../../../../../shared/components/atoms/Button'
+import Form from '../../../../../../shared/components/molecules/Form'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
+import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -52,7 +53,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         )
       : []
   )
-  const formRef = React.createRef<HTMLDivElement>()
+  const { t } = useI18n()
 
   const togglePrivate = useCallback(() => {
     setIsPublic((prev) => {
@@ -174,78 +175,83 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
   )
 
   if (currentUser == null) {
-    return <ModalContainer>You need to be connected.</ModalContainer>
+    return <p>You need to be connected.</p>
   }
 
   if (team == null) {
-    return <ModalContainer>You need to select a valid team.</ModalContainer>
+    return <p>You need to select a valid team.</p>
   }
 
   return (
-    <ModalBody ref={formRef} tabIndex={0}>
-      <StyledModalForm onSubmit={onSubmit}>
-        <ModalLine>
-          <ModaLineHeader>Name</ModaLineHeader>
-        </ModalLine>
-        <ModalLine className='svg-initial-style' style={{ marginBottom: 30 }}>
-          <StyledModalFormInput
-            placeholder='Folder name'
-            value={name}
-            onChange={onChangeWorkspaceNameHandler}
-          />
-        </ModalLine>
+    <Form
+      onSubmit={onSubmit}
+      rows={[
+        {
+          title: t(lngKeys.Name),
+          items: [
+            {
+              type: 'input',
+              props: {
+                placeholder: t(lngKeys.Name),
+                value: name,
+                onChange: onChangeWorkspaceNameHandler,
+              },
+            },
+          ],
+        },
+      ]}
+    >
+      {workspace != null && workspace.default ? (
+        <FormRow
+          row={{
+            title: t(lngKeys.ModalsWorkspaceAccess),
+            description: t(lngKeys.ModalsWorkspaceDefaultDisclaimer),
+          }}
+        />
+      ) : (
+        <FormRow
+          row={{
+            title: t(lngKeys.ModalsWorkspaceMakePrivate),
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <small>
+                    {isPublic
+                      ? t(lngKeys.ModalsWorkspacePublicDisclaimer)
+                      : `${t(lngKeys.ModalsWorkspacePrivateDisclaimer)} ${
+                          isOwner != null
+                            ? t(lngKeys.ModalsWorkspacePrivateOwner)
+                            : ''
+                        }`}
+                  </small>
+                ),
+              },
+              {
+                type: 'switch',
+                props: {
+                  disabled:
+                    sending ||
+                    (workspace != null && workspace.default) ||
+                    !isOwner,
+                  id: 'make-private-switch',
+                  onChange: togglePrivate,
+                  checked: !isPublic,
+                },
+              },
+            ],
+          }}
+        />
+      )}
 
-        {workspace != null && workspace.default ? (
-          <>
-            <ModalLine>
-              <ModaLineHeader>Access</ModaLineHeader>
-            </ModalLine>
-            <ModalLine style={{ marginBottom: 30 }}>
-              <span>
-                This default folder is public and can&apos;t have its access
-                modified.
-              </span>
-            </ModalLine>
-          </>
-        ) : (
-          <>
-            <ModalLine>
-              <ModaLineHeader>Make private</ModaLineHeader>
-            </ModalLine>
-            <ModalLine style={{ marginBottom: 30 }}>
-              <Flexbox justifyContent='space-between'>
-                {isPublic ? (
-                  <span>
-                    This folder is public. Anyone from the team can access it
-                  </span>
-                ) : (
-                  <span>
-                    This folder is private.{' '}
-                    {isOwner && 'You can set individual member access below.'}
-                  </span>
-                )}
-                <Flexbox flex='0 0 auto'>
-                  <Switch
-                    disabled={
-                      sending ||
-                      (workspace != null && workspace.default) ||
-                      !isOwner
-                    }
-                    id='make-private-switch'
-                    onChange={togglePrivate}
-                    checked={!isPublic}
-                  />
-                </Flexbox>
-              </Flexbox>
-            </ModalLine>{' '}
-          </>
-        )}
+      {!isOwner && (
+        <div className='form__row'>
+          <small>{t(lngKeys.ModalsWorkspacesNonOwnerDisclaimer)}</small>
+        </div>
+      )}
 
-        {!isOwner && (
-          <small>Only the folder owner can change its access.</small>
-        )}
-
-        {!isPublic && (
+      {!isPublic && (
+        <div className='form__row'>
           <WorkspaceAccess
             permissions={permissions}
             ownerPermissions={ownerPermissions}
@@ -254,33 +260,29 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
             setSelectedPermissions={setSelectedPermissions}
             currentUser={currentUser}
           />
-        )}
+        </div>
+      )}
 
-        {error != null && (
-          <ModalLine>
-            <ErrorBlock
-              error={error}
-              style={{ margin: 0, width: '100%', marginTop: 20 }}
-            />
-          </ModalLine>
-        )}
-        <ModalLine className='justify-end svg-initial-style'>
-          <Button variant='transparent' onClick={closeLastModal} type='button'>
-            Cancel
-          </Button>
-          <div className='spacer-sm'></div>
-          <Button variant='primary' type='submit' disabled={sending}>
-            {sending ? (
-              <Spinner size={16} style={{ fontSize: 16, marginRight: 0 }} />
-            ) : workspace != null ? (
-              'Update'
-            ) : (
-              'Create'
-            )}
-          </Button>
-        </ModalLine>
-      </StyledModalForm>
-    </ModalBody>
+      {error != null && (
+        <div className='form__row'>
+          <ErrorBlock error={error} style={{ margin: 0, width: '100%' }} />
+        </div>
+      )}
+
+      <div className='form__row'>
+        <Button variant='secondary' onClick={closeLastModal}>
+          {t(lngKeys.GeneralCancel)}
+        </Button>
+        <LoadingButton
+          spinning={sending}
+          variant='primary'
+          type='submit'
+          disabled={sending}
+        >
+          {workspace != null ? t(lngKeys.Update) : t(lngKeys.GeneralCreate)}
+        </LoadingButton>
+      </div>
+    </Form>
   )
 }
 
