@@ -1,13 +1,15 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { ModalContainer } from '../styled'
 import styled from '../../../../../lib/styled'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
 import Flexbox from '../../../../atoms/Flexbox'
 import WorkspaceExplorer from '../../../../molecules/WorkspaceExplorer'
 import { useNav } from '../../../../../lib/stores/nav'
 import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
 import { sortByAttributeAsc } from '../../../../../lib/utils/array'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
+import Button from '../../../../../../shared/components/atoms/Button'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 interface MoveItemModalProps {
   onSubmit: (workspaceId: string, parentFolderId?: string) => void
@@ -18,6 +20,7 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
   const { workspacesMap, foldersMap } = useNav()
+  const { t } = useI18n()
 
   const sortedWorkspaces = useMemo(() => {
     const workspaces = [...workspacesMap.values()]
@@ -70,7 +73,7 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
         onSubmit={onSubmitForm}
         style={{ height: '100%', margin: 0 }}
       >
-        <h3>Pick your destination</h3>
+        <h3>{t(lngKeys.PickYourDestination)}</h3>
         <Flexbox
           direction='column'
           flex='1 1 auto'
@@ -89,13 +92,13 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
             justifyContent='flex-end'
             style={{ width: '100%', marginTop: 20 }}
           >
-            <CustomButton
+            <Button
               variant='primary'
               type='submit'
               disabled={selectedWorkspaceId == null}
             >
-              Move
-            </CustomButton>
+              {t(lngKeys.Move)}
+            </Button>
           </Flexbox>
         </Flexbox>
       </StyledModalForm>

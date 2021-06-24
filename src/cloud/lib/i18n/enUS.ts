@@ -310,7 +310,16 @@ const enTranslation: TranslationSource = {
   [lngKeys.EditorReconnectSyncing2]:
     'Checking for changes and live updating the document',
 
+  [lngKeys.DocSaveAsTemplate]: 'Save as a template',
+  [lngKeys.DocExportPdf]: 'Export as PDF',
+  [lngKeys.DocExportMarkdown]: 'Export as Markdown',
+  [lngKeys.DocExportHtml]: 'Export as HTML',
+  [lngKeys.OpenInBrowser]: 'Open in browser',
+  [lngKeys.PickYourDestination]: 'Pick your destination',
+
   //Language
+  [lngKeys.CopyLink]: 'Copy the link',
+  [lngKeys.Move]: 'Move',
   [lngKeys.Source]: 'Source',
   [lngKeys.Destination]: 'Destination',
   [lngKeys.Previous]: 'Previous',
@@ -320,7 +329,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.Rename]: 'Rename',
   [lngKeys.Edit]: 'Edit',
   [lngKeys.Bookmarks]: 'Bookmarks',
-  [lngKeys.Bookmarked]: 'Bookmarked',
+  [lngKeys.Bookmarked]: 'Remove from Bookmarks',
   [lngKeys.BookmarkVerb]: 'Add to bookmarks',
   [lngKeys.SmartFolders]: 'Smart Folders',
   [lngKeys.Workspaces]: 'Workspaces',

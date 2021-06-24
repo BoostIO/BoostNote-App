@@ -258,6 +258,15 @@ export enum lngKeys {
   EditorReconnectSyncing1 = 'editor.reconnect.syncing1',
   EditorReconnectSyncing2 = 'editor.reconnect.syncing2',
 
+  DocSaveAsTemplate = 'doc.save.as.template',
+  DocExportPdf = 'doc.export.pdf',
+  DocExportMarkdown = 'doc.export.markdown',
+  DocExportHtml = 'doc.export.html',
+
+  PickYourDestination = 'pick.your.destination',
+  OpenInBrowser = 'open.in.browser',
+  CopyLink = 'Copy.link',
+  Move = 'Move',
   Source = 'Source',
   Destination = 'Destination',
   Previous = 'Previous',
