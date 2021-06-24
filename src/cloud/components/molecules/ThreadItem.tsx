@@ -102,7 +102,7 @@ const StyledListItem = styled.div`
 
   & .thread__info__line {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     overflow: hidden;
     & > * {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
