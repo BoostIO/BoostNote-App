@@ -7,6 +7,8 @@ import {
 import cc from 'classcat'
 import IconMdi from '../../../../atoms/IconMdi'
 import { mdiChevronRight } from '@mdi/js'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 export type ImportStep = 'destination' | 'source' | 'import' | 'guide'
 
@@ -16,28 +18,43 @@ interface ImportModalHeaderProps {
   currentStep: ImportStep
 }
 
-const ImportModalHeader = ({ currentStep }: ImportModalHeaderProps) => (
-  <StyledImportModalHeader>
-    {ImportStepValues.reduce<JSX.Element[]>((acc, value, index) => {
-      acc.push(
-        <StyledImportStep
-          className={cc([currentStep === value && 'active'])}
-          key={value}
-        >
-          {value}
-        </StyledImportStep>
-      )
+const ImportModalHeader = ({ currentStep }: ImportModalHeaderProps) => {
+  const { t } = useI18n()
 
-      if (index !== ImportStepValues.length - 1) {
+  const getTranslatedLabel = (step: ImportStep) => {
+    switch (step) {
+      case 'destination':
+        return t(lngKeys.Destination)
+      case 'import':
+        return t(lngKeys.Import)
+      default:
+        return t(lngKeys.Source)
+    }
+  }
+
+  return (
+    <StyledImportModalHeader>
+      {ImportStepValues.reduce<JSX.Element[]>((acc, value, index) => {
         acc.push(
-          <StyledImportStepSeparator key={`sep-${index}`}>
-            <IconMdi path={mdiChevronRight} size={20} />
-          </StyledImportStepSeparator>
+          <StyledImportStep
+            className={cc([currentStep === value && 'active'])}
+            key={value}
+          >
+            {getTranslatedLabel(value as ImportStep)}
+          </StyledImportStep>
         )
-      }
-      return acc
-    }, [])}
-  </StyledImportModalHeader>
-)
+
+        if (index !== ImportStepValues.length - 1) {
+          acc.push(
+            <StyledImportStepSeparator key={`sep-${index}`}>
+              <IconMdi path={mdiChevronRight} size={20} />
+            </StyledImportStepSeparator>
+          )
+        }
+        return acc
+      }, [])}
+    </StyledImportModalHeader>
+  )
+}
 
 export default ImportModalHeader

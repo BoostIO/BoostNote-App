@@ -1,7 +1,9 @@
 import React, { useMemo, useCallback } from 'react'
 import { StyledImportModalContent, StyledImportModalFooter } from './styled'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
 import { AllowedDocTypeImports } from '../../../../../api/teams/docs/import'
+import Button from '../../../../../../shared/components/atoms/Button'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 export type ImportService =
   | 'notion'
@@ -24,6 +26,7 @@ const ImportModalGuide = ({
   onCancel,
   onContinue,
 }: ImportModalGuideProps) => {
+  const { t } = useI18n()
   const guideContent = useMemo(() => {
     switch (selectedService) {
       case 'notion':
@@ -272,12 +275,12 @@ const ImportModalGuide = ({
     <>
       <StyledImportModalContent>{guideContent}</StyledImportModalContent>
       <StyledImportModalFooter>
-        <CustomButton variant='secondary' onClick={onCancel}>
-          Previous
-        </CustomButton>
-        <CustomButton variant='primary' onClick={onSelect}>
-          Continue
-        </CustomButton>
+        <Button variant='secondary' onClick={onCancel}>
+          {t(lngKeys.Previous)}
+        </Button>
+        <Button variant='primary' onClick={onSelect}>
+          {t(lngKeys.Continue)}
+        </Button>
       </StyledImportModalFooter>
     </>
   )

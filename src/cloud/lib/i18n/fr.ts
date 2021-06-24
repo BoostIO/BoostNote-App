@@ -258,6 +258,17 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
     "Seul le propriétaire de l'espace de travail peut modifier son accès.",
 
+  [lngKeys.ModalsImportDestinationTitle]: 'Choisissez un dossier',
+  [lngKeys.ModalsImportDestinationDisclaimer]:
+    'Choisissez le dossier dans lequel vous voulez importer vos fichiers',
+  [lngKeys.ModalsImportDisclaimer]:
+    'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
+  [lngKeys.Source]: 'Origine',
+  [lngKeys.Destination]: 'Destination',
+  [lngKeys.Previous]: 'Précédent',
+  [lngKeys.Next]: 'Suivant',
+  [lngKeys.Continue]: 'Continuer',
+
   //forms
   [lngKeys.Members]: 'Membres',
   [lngKeys.FormSelectImage]: 'Choisissez une image',
