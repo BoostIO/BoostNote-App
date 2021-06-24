@@ -288,6 +288,19 @@ const frTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipScrollSyncDisable]:
     'Désactiver le défilement synchronisé',
 
+  [lngKeys.EditorReconnectAttempt]: 'Connexion...',
+  [lngKeys.EditorReconnectAttempt1]: 'Nous essayons de vous reconnecter.',
+  [lngKeys.EditorReconnectAttempt2]:
+    "Les changements ne seront pas synchronisés avec le serveur jusqu'à la reconnection.",
+  [lngKeys.EditorReconnectDisconnected]: 'Se reconnecter',
+  [lngKeys.EditorReconnectDisconnected1]: 'Essayez de vous reconnecter.',
+  [lngKeys.EditorReconnectDisconnected2]:
+    "Les changements ne seront pas synchronisés avec le serveur jusqu'à la reconnection.",
+  [lngKeys.EditorReconnectSyncing]: 'Synchronisation...',
+  [lngKeys.EditorReconnectSyncing1]: 'Synchronisation avec le cloud.',
+  [lngKeys.EditorReconnectSyncing2]:
+    'Vérification des changements et mise à jour en temps réel du document.',
+
   //forms
   [lngKeys.Source]: 'Origine',
   [lngKeys.Destination]: 'Destination',

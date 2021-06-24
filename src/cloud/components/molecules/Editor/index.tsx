@@ -883,13 +883,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: 'Connecting...',
+                    label: t(lngKeys.EditorReconnectAttempt),
                     tooltip: (
                       <>
-                        Attempting auto-reconnection
+                        {t(lngKeys.EditorReconnectAttempt1)}
                         <br />
-                        Changes will not be synced with the server until
-                        reconnection
+                        {t(lngKeys.EditorReconnectAttempt2)}
                       </>
                     ),
                   },
@@ -900,13 +899,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
-                    label: 'Reconnect',
+                    label: t(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
                       <>
-                        Please try reconnecting.
+                        {t(lngKeys.EditorReconnectDisconnected1)}
                         <br />
-                        Changes will not be synced with the server until
-                        reconnection
+                        {t(lngKeys.EditorReconnectDisconnected2)}
                       </>
                     ),
                   },
@@ -917,12 +915,12 @@ const Editor = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: 'Syncing...',
+                    label: t(lngKeys.EditorReconnectSyncing),
                     tooltip: (
                       <>
-                        Syncing with the cloud.
+                        {t(lngKeys.EditorReconnectSyncing1)}
                         <br />
-                        Checking for changes and live updating the document
+                        {t(lngKeys.EditorReconnectSyncing2)}
                       </>
                     ),
                   },

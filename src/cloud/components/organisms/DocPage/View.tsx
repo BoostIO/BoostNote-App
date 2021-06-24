@@ -45,6 +45,7 @@ import { SerializedRevision } from '../../../interfaces/db/revision'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -373,13 +374,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: 'Connecting...',
+                    label: t(lngKeys.EditorReconnectAttempt),
                     tooltip: (
                       <>
-                        Attempting auto-reconnection
+                        {t(lngKeys.EditorReconnectAttempt1)}
                         <br />
-                        Changes will not be synced with the server until
-                        reconnection
+                        {t(lngKeys.EditorReconnectAttempt2)}
                       </>
                     ),
                   },
@@ -390,13 +390,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
-                    label: 'Reconnect',
+                    label: t(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
                       <>
-                        Please try reconnecting.
+                        {t(lngKeys.EditorReconnectDisconnected1)}
                         <br />
-                        Changes will not be synced with the server until
-                        reconnection
+                        {t(lngKeys.EditorReconnectDisconnected2)}
                       </>
                     ),
                   },
@@ -407,12 +406,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: 'Syncing...',
+                    label: t(lngKeys.EditorReconnectSyncing),
                     tooltip: (
                       <>
-                        Syncing with the cloud.
+                        {t(lngKeys.EditorReconnectSyncing1)}
                         <br />
-                        Checking for changes and live updating the document
+                        {t(lngKeys.EditorReconnectSyncing2)}
                       </>
                     ),
                   },

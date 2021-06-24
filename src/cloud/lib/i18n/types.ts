@@ -248,6 +248,16 @@ export enum lngKeys {
   EditorToolbarTooltipScrollSyncEnable = 'editor.toolbar.tooltips.scrollsync.enable',
   EditorToolbarTooltipScrollSyncDisable = 'editor.toolbar.tooltips.scrollsync.disable',
 
+  EditorReconnectAttempt = 'editor.reconnect.attempt',
+  EditorReconnectAttempt1 = 'editor.reconnect.attempt1',
+  EditorReconnectAttempt2 = 'editor.reconnect.attempt2',
+  EditorReconnectDisconnected = 'editor.reconnect.reconnect',
+  EditorReconnectDisconnected1 = 'editor.reconnect.reconnect1',
+  EditorReconnectDisconnected2 = 'editor.reconnect.reconnect2',
+  EditorReconnectSyncing = 'editor.reconnect.syncing',
+  EditorReconnectSyncing1 = 'editor.reconnect.syncing1',
+  EditorReconnectSyncing2 = 'editor.reconnect.syncing2',
+
   Source = 'Source',
   Destination = 'Destination',
   Previous = 'Previous',
