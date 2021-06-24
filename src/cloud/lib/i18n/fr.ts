@@ -22,6 +22,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralUse]: 'Utiliser',
   [lngKeys.GeneralChangeIcon]: "Changer l'icône",
   [lngKeys.GeneralFolders]: 'Dossiers',
+  [lngKeys.GeneralShowMore]: 'En montrer plus',
 
   // settings
   [lngKeys.SettingsInfo]: 'Mon Profile',

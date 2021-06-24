@@ -22,6 +22,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralUse]: 'Use',
   [lngKeys.GeneralChangeIcon]: 'Change icon',
   [lngKeys.GeneralFolders]: 'Folders',
+  [lngKeys.GeneralShowMore]: 'Show more',
 
   // settings
   [lngKeys.SettingsInfo]: 'My Info',

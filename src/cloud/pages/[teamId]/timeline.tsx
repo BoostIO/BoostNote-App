@@ -22,6 +22,8 @@ import { useRouter } from '../../lib/router'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
 import { topParentId } from '../../lib/mappers/topbarTree'
 import { useNav } from '../../lib/stores/nav'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
 
 export interface TimelineUser {
   user: SerializedUser
@@ -33,6 +35,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
   const { push } = useRouter()
   const { permissions = [] } = usePage()
   const { workspacesMap } = useNav()
+  const { translate } = useI18n()
 
   const { today, thisWeek, others } = useMemo(() => {
     const todayDate = new Date()
@@ -81,7 +84,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
           topbar: {
             breadcrumbs: [
               {
-                label: 'Timeline',
+                label: translate(lngKeys.GeneralTimeline),
                 active: true,
                 parentId: topParentId,
                 icon: mdiClockOutline,
@@ -99,7 +102,9 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                 style={{ marginRight: 10 }}
                 size={16}
               />
-              <span style={{ marginRight: 10 }}>Timeline</span>
+              <span style={{ marginRight: 10 }}>
+                {translate(lngKeys.GeneralTimeline)}
+              </span>
             </>
           ),
         }}
@@ -122,7 +127,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
             topbar: {
               breadcrumbs: [
                 {
-                  label: 'Timeline',
+                  label: translate(lngKeys.GeneralTimeline),
                   active: true,
                   parentId: topParentId,
                   icon: mdiClockOutline,
@@ -173,7 +178,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                   query={{ amount: Math.max(events.length, 20) + 10 }}
                   intent='timeline'
                 >
-                  Show More..
+                  {translate(lngKeys.GeneralShowMore)}
                 </TeamLink>
               </div>
             )}
