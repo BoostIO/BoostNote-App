@@ -14,6 +14,8 @@ import {
   UpdateSmartFolderRequestBody,
   CreateSmartFolderRequestBody,
 } from '../../../../../api/teams/smart-folder'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 import { StyledModalSeparator } from '../Forms/styled'
 import { EditibleSecondaryCondition } from './interfaces'
 import SecondaryConditionItem from './SecondaryConditionItem'
@@ -48,6 +50,7 @@ const SmartFolderForm = ({
   const [primaryConditionType, setPrimaryConditionType] = useState<
     'and' | 'or'
   >(defaultConditionType)
+  const { t } = useI18n()
 
   const [secondaryConditions, setSecondaryConditions] = useState<
     EditibleSecondaryCondition[]
@@ -101,13 +104,15 @@ const SmartFolderForm = ({
   return (
     <Container>
       <h2 className='modal__heading'>
-        {action === 'Create' ? 'Create a ' : 'Edit '}Smart Folder
+        {action === 'Create'
+          ? t(lngKeys.ModalsSmartFolderCreateTitle)
+          : t(lngKeys.ModalsSmartFolderEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
         <FormRow
           fullWidth={true}
           row={{
-            title: 'Name',
+            title: t(lngKeys.Name),
             items: [
               { type: 'input', props: { value: name, onChange: updateName } },
             ],
@@ -190,17 +195,14 @@ const SmartFolderForm = ({
         <FormRow fullWidth={true} className='privacy-row'>
           <FormRowItem>
             <div>
-              <h3 className='privacy-row__label'>Make Private</h3>
+              <h3 className='privacy-row__label'>
+                {t(lngKeys.ModalsWorkspaceMakePrivate)}
+              </h3>
               <p>
                 {makingPrivate ? (
-                  <>
-                    This smart folder will become private. Only you can see it.
-                  </>
+                  <>{t(lngKeys.ModalsSmartFolderPrivateDisclaimer)}</>
                 ) : (
-                  <>
-                    The smart folder will become public. Every member on space
-                    can see it.
-                  </>
+                  <>{t(lngKeys.ModalsSmartFolderPublicDisclaimer)}</>
                 )}
               </p>
             </div>
@@ -226,7 +228,7 @@ const SmartFolderForm = ({
                 onClick={onCancel}
                 disabled={buttonsAreDisabled}
               >
-                Cancel
+                {t(lngKeys.GeneralCancel)}
               </Button>
             )}
             <LoadingButton
@@ -235,7 +237,9 @@ const SmartFolderForm = ({
               variant='primary'
               disabled={buttonsAreDisabled}
             >
-              {action}
+              {action === 'Create'
+                ? t(lngKeys.GeneralCreate)
+                : t(lngKeys.Update)}
             </LoadingButton>
           </ButtonGroup>
         </FormRow>

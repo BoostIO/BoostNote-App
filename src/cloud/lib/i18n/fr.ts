@@ -263,13 +263,20 @@ const frTranslation: TranslationSource = {
     'Choisissez le dossier dans lequel vous voulez importer vos fichiers',
   [lngKeys.ModalsImportDisclaimer]:
     'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
+
+  [lngKeys.ModalsSmartFolderCreateTitle]: 'Créer un dossier intelligent',
+  [lngKeys.ModalsSmartFolderEditTitle]: 'Editer un dossier intelligent',
+  [lngKeys.ModalsSmartFolderPrivateDisclaimer]:
+    'Ce dossier intelligent va devenir privé. Seulement vous pourrez le voir.',
+  [lngKeys.ModalsSmartFolderPublicDisclaimer]:
+    'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
+
+  //forms
   [lngKeys.Source]: 'Origine',
   [lngKeys.Destination]: 'Destination',
   [lngKeys.Previous]: 'Précédent',
   [lngKeys.Next]: 'Suivant',
   [lngKeys.Continue]: 'Continuer',
-
-  //forms
   [lngKeys.Members]: 'Membres',
   [lngKeys.FormSelectImage]: 'Choisissez une image',
   [lngKeys.FormChangeImage]: 'Changez votre image',
