@@ -216,7 +216,7 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
       />
       <EditorAdmonitionToolDropdown
         path={mdiPageNextOutline}
-        tooltip='Add admonition'
+        tooltip={translate(lngKeys.EditorToolbarTooltipAdmonition)}
         onFormatCallback={onFormatCallback}
       />
       <EditorToolButton

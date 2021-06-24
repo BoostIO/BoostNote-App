@@ -288,6 +288,7 @@ const enTranslation: TranslationSource = {
     'The smart folder will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'Add header text',
+  [lngKeys.EditorToolbarTooltipAdmonition]: 'Add admonition',
   [lngKeys.EditorToolbarTooltipCodefence]: 'Insert a codefence',
   [lngKeys.EditorToolbarTooltipQuote]: 'Insert a quote',
   [lngKeys.EditorToolbarTooltipList]: 'Add a bulleted list',
