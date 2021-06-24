@@ -15,6 +15,8 @@ import {
 import styled from '../../../../../../lib/styled'
 import { DocStatus } from '../../../../../../interfaces/db/doc'
 import DocPropertyValueButton from './DocPropertyValueButton'
+import { useI18n } from '../../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../../lib/i18n/types'
 
 interface DocStatusSelectProps {
   sending?: boolean
@@ -165,6 +167,7 @@ const ContextMenuItemContainer = styled.div`
 `
 
 const StatusView = ({ status }: { status?: DocStatus | null }) => {
+  const { t } = useI18n()
   switch (status) {
     case 'in_progress':
       return (
@@ -207,5 +210,5 @@ const StatusView = ({ status }: { status?: DocStatus | null }) => {
         </div>
       )
   }
-  return <div className='status status--empty'>No status</div>
+  return <div className='status status--empty'>{t(lngKeys.NoStatus)}</div>
 }

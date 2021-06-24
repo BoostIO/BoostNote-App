@@ -13,6 +13,8 @@ import { contextMenuFormItem } from '../../../../shared/lib/styled/styleFunction
 import styled from '../../../../shared/lib/styled'
 import FormInput from '../../../../shared/components/molecules/Form/atoms/FormInput'
 import cc from 'classcat'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
@@ -29,6 +31,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   const [sending, setSending] = useState<boolean>(false)
   const { pushApiErrorMessage } = useToast()
   const [tagText, setTagText] = useState<string>('')
+  const { t } = useI18n()
 
   useEffect(() => {
     if (showInput && inputRef.current != null) {
@@ -91,7 +94,10 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
     const options: { label: string; value: string }[] = []
     if (tagsMap.size === 0) {
       if (tagText.trim() !== '') {
-        options.push({ label: `Create "${tagText}"`, value: tagText })
+        options.push({
+          label: `${t(lngKeys.GeneralCreate)}: "${tagText}"`,
+          value: tagText,
+        })
       }
       return options
     }
@@ -125,7 +131,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
     )
 
     return options
-  }, [tagsMap, tagsIdsAlreadyInDoc, tagText])
+  }, [tagsMap, tagsIdsAlreadyInDoc, tagText, t])
 
   const selectOptionHandler = useCallback(
     async (event: any, option: string) => {
@@ -157,7 +163,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
             id='tag__add__btn'
             onClick={activateAndFocus}
           >
-            Add a label
+            {t(lngKeys.AddALabel)}
           </button>
         ) : (
           <button

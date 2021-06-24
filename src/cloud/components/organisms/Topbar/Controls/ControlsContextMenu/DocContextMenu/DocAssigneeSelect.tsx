@@ -10,6 +10,8 @@ import {
   contextMenuFormItem,
   textOverflow,
 } from '../../../../../../../shared/lib/styled/styleFunctions'
+import { useI18n } from '../../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../../lib/i18n/types'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -29,6 +31,7 @@ const DocAssigneeSelect = ({
   const { permissions } = usePage()
   const [focused, setFocused] = useState(false)
   const [value, setValue] = useState(defaultValue)
+  const { t } = useI18n()
 
   const options = useMemo(() => {
     if (permissions == null) {
@@ -80,7 +83,7 @@ const DocAssigneeSelect = ({
         value={selectedOptions}
         isClearable={false}
         onChange={updateAssignees}
-        placeholder={'Unassigned'}
+        placeholder={t(lngKeys.Unassigned)}
         isLoading={isLoading}
         isSearchable={false}
         onFocus={() => setFocused(true)}

@@ -41,6 +41,9 @@ import { useToast } from '../../../shared/lib/stores/toast'
 import Button from '../../../shared/components/atoms/Button'
 import Switch from '../../../shared/components/atoms/Switch'
 import UpgradeIntroButton from '../UpgradeIntroButton'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
+import { capitalize } from '../../lib/utils/string'
 
 interface DocShareProps {
   currentDoc: SerializedDocWithBookmark
@@ -55,6 +58,7 @@ type SendingState =
   | 'expireDate'
 
 const DocShare = ({ currentDoc, team }: DocShareProps) => {
+  const { t } = useI18n()
   const [sending, setSending] = useState<SendingState>('idle')
   const { updateDocsMap } = useNav()
   const { setPartialPageData, subscription } = usePage()
@@ -394,10 +398,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           >
             <label className='context__label'>
               <IconMdi path={mdiWeb} size={18} className='context__icon' />
-              Public Sharing
+              {t(lngKeys.PublicSharing)}
             </label>
             <span className='context__label__description'>
-              Anyone with this link can access
+              {t(lngKeys.PublicSharingDisclaimer)}
             </span>
           </Flexbox>
           <div className='share__row__switch'>
@@ -438,13 +442,13 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
               onClick={() => setShowSettings((prev) => !prev)}
             >
               <Icon path={showSettings ? mdiChevronDown : mdiChevronRight} />{' '}
-              Sharing settings
+              {capitalize(t(lngKeys.SharingSettings))}
             </button>
             {showSettings && (
               <>
                 <Flexbox justifyContent='space-between' className='share__row'>
                   <Flexbox flex='1 1 auto' wrap='wrap'>
-                    Regenerate Link
+                    {capitalize(t(lngKeys.SharingRegenerateLink))}
                   </Flexbox>
                   <Button
                     variant='secondary'
@@ -455,7 +459,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     {sending === 'regenerating' ? (
                       <Spinner className='relative' />
                     ) : (
-                      'Regenerate'
+                      t(lngKeys.Regenerate)
                     )}
                   </Button>
                 </Flexbox>
@@ -466,7 +470,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row'
                     justifyContent='space-between'
                   >
-                    <span>Password Protect</span>
+                    <span>{capitalize(t(lngKeys.PasswordProtect))}</span>
                     {(subscription == null ||
                       subscription.plan === 'standard') && (
                       <UpgradeIntroButton
@@ -512,7 +516,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       {sending === 'password' ? (
                         <Spinner className='relative' />
                       ) : (
-                        'Save'
+                        capitalize(t(lngKeys.Save))
                       )}
                     </button>
                   </form>
@@ -524,7 +528,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row'
                     justifyContent='space-between'
                   >
-                    <span>Expiration Date</span>
+                    <span>{capitalize(t(lngKeys.ExpirationDate))}</span>
                     {!havingPro && (
                       <UpgradeIntroButton
                         tabIndex={-1}
@@ -571,7 +575,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       {sending === 'expireDate' ? (
                         <Spinner className='relative' />
                       ) : (
-                        'Save'
+                        capitalize(t(lngKeys.Save))
                       )}
                     </button>
                   </form>
