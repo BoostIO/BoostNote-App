@@ -235,6 +235,29 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce dossier et ses documents? Cette action est irréversible.',
 
+  [lngKeys.ModalsWorkspaceCreateTitle]: 'Créer un espace de travail',
+  [lngKeys.ModalsWorkspaceEditTitle]: "Editer l'espace de travail",
+
+  [lngKeys.ModalsWorkspaceMakePrivate]: 'Privatiser',
+  [lngKeys.ModalsWorkspaceAccess]: 'Accès',
+  [lngKeys.ModalsWorkspaceDefaultDisclaimer]:
+    'Cet espace de travail de défaut est publique et ne peut avoir son accès modifié.',
+  [lngKeys.ModalsWorkspacePublicDisclaimer]:
+    "Cet espace de travail est publique. Tout membre de l'équipe peut y accéder.",
+  [lngKeys.ModalsWorkspacePrivateDisclaimer]:
+    'Cet espace de travail est privé.',
+  [lngKeys.ModalsWorkspacePrivateOwner]:
+    "Vous pouvez gérer l'accès des différents membres ci-dessous.",
+
+  [lngKeys.ModalsWorkspaceSetAccess]: "Modifier l'accès",
+  [lngKeys.ModalsWorkspacesSetAccessMembers]: 'Ajouter des membres',
+  [lngKeys.Owner]: 'Propriétaire',
+  [lngKeys.Add]: 'Ajouter',
+  [lngKeys.SelectAll]: 'Tout selectionner',
+  [lngKeys.ModalsWorkspacesWhoHasAcess]: 'Qui a accès',
+  [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
+    "Seul le propriétaire de l'espace de travail peut modifier son accès.",
+
   //forms
   [lngKeys.Members]: 'Membres',
   [lngKeys.FormSelectImage]: 'Choisissez une image',

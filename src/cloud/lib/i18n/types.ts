@@ -207,6 +207,23 @@ export enum lngKeys {
   ModalsDeleteDocDisclaimer = 'modals.docs.delete.disclaimer',
   ModalsDeleteFolderDisclaimer = 'modals.folders.delete.disclaimer',
 
+  ModalsWorkspaceCreateTitle = 'modals.workspaces.create.title',
+  ModalsWorkspaceEditTitle = 'modals.workspaces.edit.title',
+
+  ModalsWorkspaceMakePrivate = 'modals.workspaces.privatize',
+  ModalsWorkspaceAccess = 'modals.workspaces.access',
+  ModalsWorkspaceDefaultDisclaimer = 'modals.workspaces.default.disclaimer',
+  ModalsWorkspacePublicDisclaimer = 'modals.workspaces.public.disclaimer',
+  ModalsWorkspacePrivateDisclaimer = 'modals.workspaces.private.disclaimer',
+  ModalsWorkspacePrivateOwner = 'modals.workspaces.private.owner',
+  ModalsWorkspaceSetAccess = 'modals.workspaces.access.set',
+  ModalsWorkspacesSetAccessMembers = 'modals.workspaces.access.members',
+  ModalsWorkspacesWhoHasAcess = 'modals.workspaces.access.who',
+  ModalsWorkspacesNonOwnerDisclaimer = 'modals.workspaces.access.nonowner',
+  Owner = 'Owner',
+  Add = 'Add',
+  SelectAll = 'Select.all',
+
   Shared = 'Shared',
   Explorer = 'Explorer',
   SmartFolders = 'Smart.Folders',

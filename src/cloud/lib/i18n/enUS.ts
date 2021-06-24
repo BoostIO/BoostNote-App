@@ -247,6 +247,28 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Are you sure to remove this folder and delete completely its documents?',
 
+  [lngKeys.ModalsWorkspaceCreateTitle]: 'Create a workspace',
+  [lngKeys.ModalsWorkspaceEditTitle]: 'Edit your workspace',
+
+  [lngKeys.ModalsWorkspaceMakePrivate]: 'Make private',
+  [lngKeys.ModalsWorkspaceAccess]: 'Access',
+  [lngKeys.ModalsWorkspaceDefaultDisclaimer]:
+    "This default workspace is public and can't have its access modified.",
+  [lngKeys.ModalsWorkspacePublicDisclaimer]:
+    'This workspace is public. Anyone from the team can access it.',
+  [lngKeys.ModalsWorkspacePrivateDisclaimer]: 'This workspace is private.',
+  [lngKeys.ModalsWorkspacePrivateOwner]:
+    'You can set individual member access below.',
+
+  [lngKeys.ModalsWorkspaceSetAccess]: 'Set access',
+  [lngKeys.ModalsWorkspacesSetAccessMembers]: 'Add members',
+  [lngKeys.Owner]: 'Owner',
+  [lngKeys.Add]: 'Add',
+  [lngKeys.SelectAll]: 'Select all',
+  [lngKeys.ModalsWorkspacesWhoHasAcess]: 'Who has access',
+  [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
+    'Only the workspace owner can change its access.',
+
   //Language
   [lngKeys.Shared]: 'Shared',
   [lngKeys.Explorer]: 'Explorer',

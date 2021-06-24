@@ -39,7 +39,6 @@ import { getFolderHref } from '../../../components/atoms/Link/FolderLink'
 import { getTagHref } from '../../../components/atoms/Link/TagLink'
 import { getTeamLinkHref } from '../../../components/atoms/Link/TeamLink'
 import { getWorkspaceHref } from '../../../components/atoms/Link/WorkspaceLink'
-import CreateWorkspaceModal from '../../../components/organisms/Modal/contents/Workspace/CreateWorkspaceModal'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useRouter } from '../../router'
 import {
@@ -117,6 +116,7 @@ export function useCloudSidebarTree() {
     openRenameFolderForm,
     openRenameDocForm,
     openWorkspaceEditForm,
+    openWorkspaceCreateForm,
   } = useCloudResourceModals()
 
   const getFoldEvents = useCallback(
@@ -605,7 +605,7 @@ export function useCloudSidebarTree() {
         ? [
             {
               icon: mdiPlus,
-              onClick: () => openModal(<CreateWorkspaceModal />),
+              onClick: openWorkspaceCreateForm,
             },
           ]
         : undefined,
@@ -827,6 +827,7 @@ export function useCloudSidebarTree() {
     sideBarOpenedLinksIdsSet,
     toggleItem,
     currentUserIsCoreMember,
+    openWorkspaceCreateForm,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

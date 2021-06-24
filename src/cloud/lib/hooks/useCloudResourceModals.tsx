@@ -5,7 +5,7 @@ import EmojiInputForm from '../../../shared/components/organisms/EmojiInputForm'
 import { DialogIconTypes, useDialog } from '../../../shared/lib/stores/dialog'
 import { useModal } from '../../../shared/lib/stores/modal'
 import { SubmissionWrappers } from '../../../shared/lib/types'
-import EditWorkspaceModal from '../../components/organisms/Modal/contents/Workspace/EditWorkspaceModal'
+import WorkspaceModalForm from '../../components/organisms/Modal/contents/Workspace/WorkspaceModalForm'
 import { SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -28,11 +28,21 @@ export function useCloudResourceModals() {
   } = useCloudApi()
   const { t } = useI18n()
 
+  const openWorkspaceCreateForm = useCallback(() => {
+    openModal(<WorkspaceModalForm />, {
+      showCloseIcon: true,
+      title: t(lngKeys.ModalsWorkspaceCreateTitle),
+    })
+  }, [openModal, t])
+
   const openWorkspaceEditForm = useCallback(
     (wp: SerializedWorkspace) => {
-      openModal(<EditWorkspaceModal workspace={wp} />)
+      openModal(<WorkspaceModalForm workspace={wp} />, {
+        showCloseIcon: true,
+        title: t(lngKeys.ModalsWorkspaceEditTitle),
+      })
     },
-    [openModal]
+    [openModal, t]
   )
 
   const openRenameFolderForm = useCallback(
@@ -276,6 +286,7 @@ export function useCloudResourceModals() {
   )
 
   return {
+    openWorkspaceCreateForm,
     openWorkspaceEditForm,
     openNewDocForm,
     openNewFolderForm,
