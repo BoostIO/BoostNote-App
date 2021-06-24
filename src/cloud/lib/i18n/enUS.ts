@@ -17,6 +17,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralDaily]: 'daily',
   [lngKeys.GeneralWeekly]: 'weekly',
   [lngKeys.GeneralNever]: 'never',
+  [lngKeys.GeneralTemplates]: 'Templates',
+  [lngKeys.GeneralTitle]: 'Title',
+  [lngKeys.GeneralUse]: 'Use',
+  [lngKeys.GeneralChangeIcon]: 'Change icon',
 
   // settings
   [lngKeys.SettingsInfo]: 'My Info',
@@ -349,6 +353,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.ThreadOutdated]: 'Outdated',
   [lngKeys.ThreadReopen]: 'Reopen',
   [lngKeys.ThreadReplies]: '{{count}} replies',
+  [lngKeys.ModalsTemplatesDeleteDisclaimer]: `Are you sure to delete this template?`,
+  [lngKeys.ModalsTemplatesSearchEmpty]: 'Could not find any template',
+  [lngKeys.ModalsTemplatesSelectTemplate]: 'Select a template',
+  [lngKeys.ModalsTemplatesUseInDoc]: 'Use in your doc',
   [lngKeys.All]: 'All',
   [lngKeys.Any]: 'Any',
 

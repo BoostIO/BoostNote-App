@@ -17,6 +17,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralDaily]: 'Chaque jour',
   [lngKeys.GeneralWeekly]: 'Chaque semaine',
   [lngKeys.GeneralNever]: 'Jamais',
+  [lngKeys.GeneralTemplates]: 'Templates',
+  [lngKeys.GeneralTitle]: 'Titre',
+  [lngKeys.GeneralUse]: 'Utiliser',
+  [lngKeys.GeneralChangeIcon]: "Changer l'icône",
 
   // settings
   [lngKeys.SettingsInfo]: 'Mon Profile',
@@ -364,6 +368,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.ThreadOutdated]: 'Obsolète',
   [lngKeys.ThreadReopen]: 'Ré-ouvrir',
   [lngKeys.ThreadReplies]: '{{count}} réponses',
+  [lngKeys.ModalsTemplatesDeleteDisclaimer]: `Êtes vous sûr de vouloir supprimer template?`,
+  [lngKeys.ModalsTemplatesSearchEmpty]: "Aucun template n'a pu être trouvé",
+  [lngKeys.ModalsTemplatesSelectTemplate]: 'Sélectionnez un template',
+  [lngKeys.ModalsTemplatesUseInDoc]: 'Utiliser dans le document',
 
   //Language
   [lngKeys.All]: 'Tout',
