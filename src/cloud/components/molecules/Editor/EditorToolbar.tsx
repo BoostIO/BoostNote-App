@@ -22,6 +22,8 @@ import {
   applyBoldStyleEventEmitter,
   applyItalicStyleEventEmitter,
 } from '../../../lib/utils/events'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface EditorToolbarProps {
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
@@ -30,6 +32,7 @@ interface EditorToolbarProps {
 const spaceRegex = /^$|\s+/
 
 const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
+  const { t } = useI18n()
   const onFormatCallback = useCallback(
     (format: FormattingTool) => {
       if (editorRef == null || editorRef.current == null) {
@@ -198,17 +201,17 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
     <StyledEditorToolList>
       <EditorHeaderToolDropdown
         path={mdiFormatHeaderPound}
-        tooltip='Add header text'
+        tooltip={t(lngKeys.EditorToolbarTooltipHeader)}
         onFormatCallback={onFormatCallback}
       />
       <EditorToolButton
         path={mdiCodeNotEqualVariant}
-        tooltip='Insert a codefence'
+        tooltip={t(lngKeys.EditorToolbarTooltipCodefence)}
         onClick={() => onFormatCallback('codefence')}
       />
       <EditorToolButton
         path={mdiFormatQuoteClose}
-        tooltip='Insert a quote'
+        tooltip={t(lngKeys.EditorToolbarTooltipQuote)}
         onClick={() => onFormatCallback('quote')}
       />
       <EditorAdmonitionToolDropdown
@@ -218,37 +221,38 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
       />
       <EditorToolButton
         path={mdiFormatListBulleted}
-        tooltip='Add a bulleted list'
+        tooltip={t(lngKeys.EditorToolbarTooltipList)}
         onClick={() => onFormatCallback('bulletedList')}
       />
       <EditorToolButton
         path={mdiFormatListNumbered}
-        tooltip='Add a numbered list'
+        tooltip={t(lngKeys.EditorToolbarTooltipNumberedList)}
         onClick={() => onFormatCallback('numberedList')}
       />
       <EditorToolButton
         path={mdiCheckboxMarkedOutline}
-        tooltip='Add a task list'
+        tooltip={t(lngKeys.EditorToolbarTooltipTaskList)}
+        style={{ marginRight: 20 }}
         onClick={() => onFormatCallback('taskList')}
       />
       <EditorToolButton
         path={mdiFormatBold}
-        tooltip='Add bold text'
+        tooltip={t(lngKeys.EditorToolbarTooltipBold)}
         onClick={applyBoldStyle}
       />
       <EditorToolButton
         path={mdiFormatItalic}
-        tooltip='Add italic text'
+        tooltip={t(lngKeys.EditorToolbarTooltipItalic)}
         onClick={applyItalicStyle}
       />
       <EditorToolButton
         path={mdiCodeTags}
-        tooltip='Insert code'
+        tooltip={t(lngKeys.EditorToolbarTooltipCode)}
         onClick={() => onFormatCallback('code')}
       />
       <EditorToolButton
         path={mdiLinkVariant}
-        tooltip='Add a link'
+        tooltip={t(lngKeys.EditorToolbarTooltipLink)}
         onClick={() => onFormatCallback('link')}
       />
     </StyledEditorToolList>

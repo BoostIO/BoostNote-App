@@ -271,6 +271,23 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsSmartFolderPublicDisclaimer]:
     'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
 
+  [lngKeys.EditorToolbarTooltipHeader]: 'Ajouter un entête',
+  [lngKeys.EditorToolbarTooltipCodefence]: 'Insérér une codefence',
+  [lngKeys.EditorToolbarTooltipQuote]: 'Insérer une citation',
+  [lngKeys.EditorToolbarTooltipList]: 'Insérér une liste à puces',
+  [lngKeys.EditorToolbarTooltipNumberedList]: 'Insérér une liste numérique',
+  [lngKeys.EditorToolbarTooltipTaskList]: 'Insérer une liste de tâches',
+  [lngKeys.EditorToolbarTooltipBold]: 'Ajouter un texte en gras',
+  [lngKeys.EditorToolbarTooltipItalic]: 'Ajouter un texte en italique',
+  [lngKeys.EditorToolbarTooltipCode]: 'Insérer du code',
+  [lngKeys.EditorToolbarTooltipLink]: 'Ajouter un lien',
+  [lngKeys.EditorToolbarTooltipUpload]: 'Envoyer une image',
+  [lngKeys.EditorToolbarTooltipTemplate]: 'Utiliser un template',
+  [lngKeys.EditorToolbarTooltipScrollSyncEnable]:
+    'Activer le défilement synchronisé',
+  [lngKeys.EditorToolbarTooltipScrollSyncDisable]:
+    'Désactiver le défilement synchronisé',
+
   //forms
   [lngKeys.Source]: 'Origine',
   [lngKeys.Destination]: 'Destination',

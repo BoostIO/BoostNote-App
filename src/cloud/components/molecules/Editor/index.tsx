@@ -90,6 +90,7 @@ import { HighlightRange } from '../../../lib/rehypeHighlight'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import throttle from 'lodash.throttle'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -1005,7 +1006,12 @@ const Editor = ({
           <StyledLayoutDimensions className={editorLayout}>
             <ToolbarRow>
               <EditorToolButton
-                tooltip={`${scrollSync ? 'Disable' : 'Enable'} scroll sync`}
+                position={'bottom-right'}
+                tooltip={
+                  scrollSync
+                    ? t(lngKeys.EditorToolbarTooltipScrollSyncDisable)
+                    : t(lngKeys.EditorToolbarTooltipScrollSyncEnable)
+                }
                 path={scrollSync ? mdiRepeatOff : mdiRepeat}
                 onClick={toggleScrollSync}
                 className='scroll-sync'
@@ -1016,7 +1022,7 @@ const Editor = ({
                 fileUploadHandlerRef={fileUploadHandlerRef}
               />
               <EditorToolButton
-                tooltip='Use a template'
+                tooltip={t(lngKeys.EditorToolbarTooltipTemplate)}
                 path={mdiFileDocumentOutline}
                 onClick={onEditorTemplateToolClick}
               />

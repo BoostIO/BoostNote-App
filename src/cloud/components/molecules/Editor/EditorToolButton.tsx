@@ -13,6 +13,7 @@ interface EditorToolButtonProps {
   dropdown?: React.ReactNode
   onClick?: () => void
   className?: string
+  position?: 'bottom' | 'bottom-right'
 }
 
 const EditorToolButton = ({
@@ -21,9 +22,10 @@ const EditorToolButton = ({
   style,
   onClick,
   className,
+  position = 'bottom',
 }: EditorToolButtonProps) => (
   <StyledEditorToolButtonContainer className={className}>
-    <Tooltip tooltip={tooltip} side='bottom'>
+    <Tooltip tooltip={tooltip} side={position}>
       <StyledEditorToolButton onClick={onClick} style={style}>
         <IconMdi path={path} />
       </StyledEditorToolButton>

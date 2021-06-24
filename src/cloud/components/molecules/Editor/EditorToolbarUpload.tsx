@@ -6,6 +6,8 @@ import {
   buildDefaultUploadWidget,
   OnFileCallback,
 } from '../../../lib/editor/plugins/fileHandler'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
 interface EditorToolbarUploadProps {
   editorRef: React.MutableRefObject<CodeMirror.Editor | null>
@@ -20,6 +22,7 @@ const EditorToolbarUpload = ({
 }: EditorToolbarUploadProps) => {
   const imageUploaderRef = useRef<HTMLInputElement>(null)
   const formUploaderRef = useRef<HTMLFormElement>(null)
+  const { t } = useI18n()
 
   const handler = useCallback(
     async (
@@ -93,7 +96,7 @@ const EditorToolbarUpload = ({
     <>
       <EditorToolButton
         path={mdiImagePlus}
-        tooltip='Upload Image'
+        tooltip={t(lngKeys.EditorToolbarTooltipUpload)}
         onClick={onClick}
       />
       <form ref={formUploaderRef}>
