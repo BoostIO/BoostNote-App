@@ -87,7 +87,7 @@ const SidebarSpace = ({
       <RoundedImage url={row.icon} alt={row.label} size={30} />
     </div>
     <span className='sidebar__spaces__label'>{row.label}</span>
-    {row.notificationCount != null && (
+    {row.notificationCount != null && row.notificationCount > 0 && (
       <div className='sidebar__spaces__notifications'>
         {row.notificationCount}
       </div>
