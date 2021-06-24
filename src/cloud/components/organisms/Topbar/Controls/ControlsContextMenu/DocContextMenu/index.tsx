@@ -61,6 +61,8 @@ import DocDueDateSelect from './DocDueDateSelect'
 import DocAssigneeSelect from './DocAssigneeSelect'
 import styled from '../../../../../../../shared/lib/styled'
 import { format as formatDate } from 'date-fns'
+import { useI18n } from '../../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../../lib/i18n/types'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
@@ -93,6 +95,7 @@ const DocContextMenu = ({
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences } = usePreferences()
   const menuRef = useRef<HTMLDivElement>(null)
+  const { t } = useI18n()
 
   const usersMap = useMemo(() => {
     const users = permissions.reduce((acc, val) => {
@@ -277,7 +280,7 @@ const DocContextMenu = ({
           <div className='context__scroll__container'>
             <div className='context__scroll'>
               <div className='context__row'>
-                <div className='context__header'>DOC INFO</div>
+                <div className='context__header'>{t(lngKeys.DocInfo)}</div>
               </div>
               {!team.personal && (
                 <div className='context__row'>
@@ -287,7 +290,7 @@ const DocContextMenu = ({
                       size={18}
                       className='context__icon'
                     />{' '}
-                    Assignees
+                    {t(lngKeys.Assignees)}
                   </label>
                   <div className='context__content'>
                     <span>
@@ -316,7 +319,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Status
+                  {t(lngKeys.Status)}
                 </label>
                 <div className='context__content'>
                   <DocStatusSelect
@@ -336,7 +339,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Due Date
+                  {t(lngKeys.DueDate)}
                 </label>
                 <div className='context__content'>
                   <DocDueDateSelect
@@ -357,7 +360,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Labels
+                  {t(lngKeys.Labels)}
                 </label>
                 <div className='context__content'>
                   <DocTagsList
@@ -377,7 +380,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Creation Date
+                  {t(lngKeys.CreationDate)}
                 </label>
                 <div className='context__content'>
                   <span>
@@ -397,7 +400,7 @@ const DocContextMenu = ({
                       size={18}
                       className='context__icon'
                     />{' '}
-                    Created by
+                    {t(lngKeys.CreatedBy)}
                   </label>
                   <div className='context__content'>
                     <Flexbox wrap='wrap'>
@@ -417,7 +420,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  Update Date
+                  {t(lngKeys.UpdateDate)}
                 </label>
                 <div className='context__content'>
                   <Flexbox wrap='wrap'>
@@ -443,7 +446,7 @@ const DocContextMenu = ({
                       size={18}
                       className='context__icon'
                     />{' '}
-                    Updated by
+                    {t(lngKeys.UpdatedBy)}
                   </label>
                   <div className='context__content'>
                     <Flexbox wrap='wrap'>
@@ -476,7 +479,7 @@ const DocContextMenu = ({
                       size={18}
                       className='context__icon'
                     />{' '}
-                    {plur('Contributor', contributorsState.contributors.length)}
+                    {t(lngKeys.Contributors)}
                   </label>
                   <div className='context__content'>
                     <Flexbox wrap='wrap'>
@@ -509,7 +512,7 @@ const DocContextMenu = ({
                     size={18}
                     className='context__icon'
                   />{' '}
-                  History
+                  {t(lngKeys.History)}
                 </label>
                 <Flexbox className='context__content' justifyContent='flex-end'>
                   {subscription == null ? (
@@ -527,8 +530,10 @@ const DocContextMenu = ({
                       size='sm'
                     >
                       {subscription != null && subscription.plan === 'standard'
-                        ? `See last ${revisionHistoryStandardDays} days`
-                        : 'See full history'}
+                        ? t(lngKeys.SeeLimitedHistory, {
+                            days: revisionHistoryStandardDays,
+                          })
+                        : t(lngKeys.SeeFullHistory)}
                     </Button>
                   )}
                 </Flexbox>
@@ -537,7 +542,7 @@ const DocContextMenu = ({
               {currentUserPermissions != null && (
                 <>
                   <div className='context__row'>
-                    <div className='context__header'>SHARE</div>
+                    <div className='context__header'>{t(lngKeys.Share)}</div>
                   </div>
                   <DocShare currentDoc={currentDoc} team={team} />
                   {backLinks.length > 0 && (
@@ -662,6 +667,7 @@ const Container = styled.div`
   .context__header {
     font-size: ${({ theme }) => theme.sizes.fonts.md}px !important;
     color: ${({ theme }) => theme.colors.text.secondary} !important;
+    text-transform: uppercase;
   }
 
   .context__column {

@@ -5,6 +5,8 @@ import { format as formatDate } from 'date-fns'
 import styled from '../../../../../../../shared/lib/styled'
 import Button from '../../../../../../../shared/components/atoms/Button'
 import { mdiClose } from '@mdi/js'
+import { useI18n } from '../../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../../lib/i18n/types'
 
 interface DocDueDateSelectProps {
   className?: string
@@ -23,6 +25,7 @@ const DocDueDateSelect = ({
   dueDate: dueDateString,
   onDueDateChange,
 }: DocDueDateSelectProps) => {
+  const { t } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
     return dueDateString != null ? new Date(dueDateString) : null
   })
@@ -47,7 +50,7 @@ const DocDueDateSelect = ({
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
-              : 'Add due date'}
+              : t(lngKeys.AddDueDate)}
           </DocPropertyValueButton>
         }
       />

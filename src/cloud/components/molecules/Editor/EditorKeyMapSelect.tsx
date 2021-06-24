@@ -93,7 +93,7 @@ const StyledContainer = styled.div`
   justify-content: center;
   align-items: center;
   .menu {
-    position: absolute
+    position: absolute;
     z-index: 2;
     border-radius: 5px;
     bottom: 30px;
