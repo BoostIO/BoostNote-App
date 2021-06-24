@@ -84,7 +84,7 @@ const UploadListPage = ({
       <LazyDefaultLayout>
         <Application
           content={{
-            header: 'Attachments',
+            header: translate(lngKeys.GeneralAttachments),
             reduced: true,
           }}
         >
