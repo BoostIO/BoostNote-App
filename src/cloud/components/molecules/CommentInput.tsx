@@ -12,8 +12,8 @@ import {
   toFragment,
   isMention,
 } from '../../lib/comments'
-import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import { useI18n } from '../../lib/hooks/useI18n'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -31,11 +31,11 @@ export function CommentInput({
 }: CommentInputProps) {
   const [working, setWorking] = useState(false)
   const inputRef = useRef<HTMLDivElement>(null)
+  const { translate } = useI18n()
   const onSuggestionSelect = useRef((item: SerializedUser, hint: string) => {
     if (inputRef.current == null) {
       return
     }
-    const { translate } = useI18n()
 
     const selection = getSelection()
     if (selection == null) {

@@ -21,6 +21,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralTitle]: 'Titre',
   [lngKeys.GeneralUse]: 'Utiliser',
   [lngKeys.GeneralChangeIcon]: "Changer l'icône",
+  [lngKeys.GeneralFolders]: 'Dossiers',
 
   // settings
   [lngKeys.SettingsInfo]: 'Mon Profile',
@@ -229,9 +230,9 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsCreateNewFolder]: 'Créer un nouveau dossier',
   [lngKeys.ModalsCreateNewDocument]: 'Créer un nouveau document',
 
-  [lngKeys.ModalsDeleteWorkspaceTitle]: "Supprimer l'espace de travail",
+  [lngKeys.ModalsDeleteWorkspaceTitle]: 'Supprimer le dossier',
   [lngKeys.ModalsDeleteWorkspaceDisclaimer]:
-    'Êtes vous certain de vouloir supprimer cet espace de travail? Ses dossiers et documents seront supprimés. Cette action est irréversible.',
+    'Êtes vous certain de vouloir supprimer ce dossier? Ses sous-dossiers et documents seront supprimés. Cette action est irréversible.',
 
   [lngKeys.ModalsDeleteDocFolderTitle]: 'Supprimer {{label}}',
   [lngKeys.ModalsDeleteDocDisclaimer]:
@@ -239,17 +240,16 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce dossier et ses documents? Cette action est irréversible.',
 
-  [lngKeys.ModalsWorkspaceCreateTitle]: 'Créer un espace de travail',
-  [lngKeys.ModalsWorkspaceEditTitle]: "Editer l'espace de travail",
+  [lngKeys.ModalsWorkspaceCreateTitle]: 'Créer un dossier',
+  [lngKeys.ModalsWorkspaceEditTitle]: 'Editer le dossier',
 
   [lngKeys.ModalsWorkspaceMakePrivate]: 'Privatiser',
   [lngKeys.ModalsWorkspaceAccess]: 'Accès',
   [lngKeys.ModalsWorkspaceDefaultDisclaimer]:
-    'Cet espace de travail de défaut est publique et ne peut avoir son accès modifié.',
+    'Ce dossier par défaut est publique et ne peut avoir son accès modifié.',
   [lngKeys.ModalsWorkspacePublicDisclaimer]:
-    "Cet espace de travail est publique. Tout membre de l'équipe peut y accéder.",
-  [lngKeys.ModalsWorkspacePrivateDisclaimer]:
-    'Cet espace de travail est privé.',
+    "Cet dossier est publique. Tout membre de l'équipe peut y accéder.",
+  [lngKeys.ModalsWorkspacePrivateDisclaimer]: 'Cet dossier est privé.',
   [lngKeys.ModalsWorkspacePrivateOwner]:
     "Vous pouvez gérer l'accès des différents membres ci-dessous.",
 
@@ -260,7 +260,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralSelectAll]: 'Tout selectionner',
   [lngKeys.ModalsWorkspacesWhoHasAcess]: 'Qui a accès',
   [lngKeys.ModalsWorkspacesNonOwnerDisclaimer]:
-    "Seul le propriétaire de l'espace de travail peut modifier son accès.",
+    'Seul le propriétaire du dossier peut modifier son accès.',
 
   [lngKeys.ModalsImportDestinationTitle]: 'Choisissez un dossier',
   [lngKeys.ModalsImportDestinationDisclaimer]:
