@@ -194,6 +194,18 @@ export enum lngKeys {
   SortDragAndDrop = 'sort.drag',
   CreateNewDoc = 'create.new.doc',
   UseATemplate = 'use.a.template',
+  RenameFolder = 'Rename.folder',
+  RenameDoc = 'Rename.doc',
+
+  ModalsCreateNewFolder = 'modals.create.folder',
+  ModalsCreateNewDocument = 'modals.create.doc',
+
+  ModalsDeleteWorkspaceTitle = 'modals.workspaces.delete.title',
+  ModalsDeleteWorkspaceDisclaimer = 'modals.workspaces.delete.disclaimer',
+
+  ModalsDeleteDocFolderTitle = 'modals.docs.folders.delete.title',
+  ModalsDeleteDocDisclaimer = 'modals.docs.delete.disclaimer',
+  ModalsDeleteFolderDisclaimer = 'modals.folders.delete.disclaimer',
 
   Shared = 'Shared',
   Explorer = 'Explorer',

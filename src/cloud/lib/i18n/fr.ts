@@ -220,6 +220,21 @@ const frTranslation: TranslationSource = {
   [lngKeys.ToolbarTooltipsTree]: 'Navigation',
   [lngKeys.ToolbarTooltipsDiscount]: 'Promotion pour nouveaux utilisateurs!',
 
+  [lngKeys.RenameFolder]: 'Renommer le dossier',
+  [lngKeys.RenameDoc]: 'Renommer le document',
+  [lngKeys.ModalsCreateNewFolder]: 'Créer un nouveau dossier',
+  [lngKeys.ModalsCreateNewDocument]: 'Créer un nouveau document',
+
+  [lngKeys.ModalsDeleteWorkspaceTitle]: "Supprimer l'espace de travail",
+  [lngKeys.ModalsDeleteWorkspaceDisclaimer]:
+    'Êtes vous certain de vouloir supprimer cet espace de travail? Ses dossiers et documents seront supprimés. Cette action est irréversible.',
+
+  [lngKeys.ModalsDeleteDocFolderTitle]: 'Supprimer {{label}}',
+  [lngKeys.ModalsDeleteDocDisclaimer]:
+    'Êtes vous certain de vouloir supprimer ce document? Cette action est irréversible.',
+  [lngKeys.ModalsDeleteFolderDisclaimer]:
+    'Êtes vous certain de vouloir supprimer ce dossier et ses documents? Cette action est irréversible.',
+
   //forms
   [lngKeys.Members]: 'Membres',
   [lngKeys.FormSelectImage]: 'Choisissez une image',
