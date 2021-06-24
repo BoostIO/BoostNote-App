@@ -39,7 +39,7 @@ const UpgradeTab = ({
   showTrialPopup: defaultShowTrial = false,
   initialPlan: defaultInitialPlan = 'standard',
 }: UpgradeTabOpeningOptions) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const {
     team,
     subscription,
@@ -98,8 +98,8 @@ const UpgradeTab = ({
   if (tabState === 'plans') {
     return (
       <SettingTabContent
-        title={t(lngKeys.SettingsTeamUpgrade)}
-        description={t(lngKeys.PlanChoose)}
+        title={translate(lngKeys.SettingsTeamUpgrade)}
+        description={translate(lngKeys.PlanChoose)}
         body={
           <>
             {showTrialPopup && (
@@ -111,7 +111,7 @@ const UpgradeTab = ({
             <section>
               {teamIsEligibleForDiscount && (
                 <Banner variant='warning' iconPath={mdiGift}>
-                  {t(lngKeys.PlanDiscountUntil)}{' '}
+                  {translate(lngKeys.PlanDiscountUntil)}{' '}
                   <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
                 </Banner>
               )}
@@ -125,9 +125,9 @@ const UpgradeTab = ({
                 discounted={teamIsEligibleForDiscount}
               />
               <StyledFYI>
-                * {t(lngKeys.PlanBusinessIntro)}{' '}
+                * {translate(lngKeys.PlanBusinessIntro)}{' '}
                 <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>
-                  {t(lngKeys.PlanBusinessLink)}
+                  {translate(lngKeys.PlanBusinessLink)}
                 </ExternalLink>
                 .
               </StyledFYI>
@@ -140,10 +140,10 @@ const UpgradeTab = ({
 
   return (
     <SettingTabContent
-      title={t(lngKeys.SettingsTeamUpgrade)}
+      title={translate(lngKeys.SettingsTeamUpgrade)}
       description={
         <>
-          {t(lngKeys.UpgradeSubtitle)} (Service provided by{' '}
+          {translate(lngKeys.UpgradeSubtitle)} (Service provided by{' '}
           <ExternalLink href='https://stripe.com/'>Stripe</ExternalLink>)
         </>
       }

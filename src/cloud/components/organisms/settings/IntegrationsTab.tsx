@@ -23,7 +23,7 @@ const IntegrationsTab = () => {
   const { openModal } = useModal()
   const connectionState = useServiceConnections()
   const { team } = usePage()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const githubConnection = useMemo(() => {
     return connectionState.type !== 'initialising'
@@ -43,8 +43,8 @@ const IntegrationsTab = () => {
 
   return (
     <SettingTabContent
-      title={t(lngKeys.SettingsIntegrations)}
-      description={t(lngKeys.ManageIntegrations)}
+      title={translate(lngKeys.SettingsIntegrations)}
+      description={translate(lngKeys.ManageIntegrations)}
       body={
         <>
           <section>
@@ -64,7 +64,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('global')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -94,7 +94,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('github')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -119,7 +119,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('trello')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -144,7 +144,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('slack')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -169,7 +169,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('gmail')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -197,7 +197,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-calendar')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -225,7 +225,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('google-drive')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -250,7 +250,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('jira')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -275,7 +275,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('miro')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -300,7 +300,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('dropbox')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -325,7 +325,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('airtable')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -350,7 +350,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('clickup')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -379,7 +379,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('lambda')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -404,7 +404,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('mailchimp')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -429,7 +429,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('intercom')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -455,7 +455,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('stripe')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -477,7 +477,7 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('asana')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
@@ -496,14 +496,14 @@ const IntegrationsTab = () => {
                     className='item-btn'
                     onClick={() => onIntegrationLinkClick('zapier')}
                   >
-                    {t(lngKeys.See)}
+                    {translate(lngKeys.GeneralSeeVerb)}
                   </Button>
                 </a>
               </StyledServiceListItem>
             </StyledServiceList>
           </section>
           <section>
-            <h2>{t(lngKeys.ExternalEntity)}</h2>
+            <h2>{translate(lngKeys.ExternalEntity)}</h2>
             <StyledServiceList>
               <StyledServiceListItem>
                 <div className='item-info'>
@@ -541,7 +541,7 @@ const IntegrationsTab = () => {
                             openNew(`${boostHubBaseUrl}/${team?.domain}`)
                           }}
                         >
-                          {t(lngKeys.ExternalEntityOpenInBrowser)}
+                          {translate(lngKeys.ExternalEntityOpenInBrowser)}
                         </Button>
                       ) : (
                         <ServiceConnect
@@ -550,7 +550,7 @@ const IntegrationsTab = () => {
                           service='github'
                           onConnect={connectionState.actions.addConnection}
                         >
-                          {t(lngKeys.Enable)}
+                          {translate(lngKeys.GeneralEnableVerb)}
                         </ServiceConnect>
                       )
                     ) : (
@@ -559,7 +559,7 @@ const IntegrationsTab = () => {
                         className='item-btn'
                         onClick={removeGithubConnection}
                       >
-                        {t(lngKeys.Disable)}
+                        {translate(lngKeys.GeneralDisableVerb)}
                       </Button>
                     )}
                   </>
@@ -567,14 +567,14 @@ const IntegrationsTab = () => {
               </StyledServiceListItem>
               <StyledServiceListItem>
                 <p>
-                  {t(lngKeys.ExternalEntityDescription)}
+                  {translate(lngKeys.ExternalEntityDescription)}
                   <button
                     className='item-info-request'
                     onClick={() =>
                       openModal(<FeedbackModal />, { width: 'large' })
                     }
                   >
-                    {t(lngKeys.ExternalEntityRequest)}
+                    {translate(lngKeys.ExternalEntityRequest)}
                   </button>
                 </p>
               </StyledServiceListItem>

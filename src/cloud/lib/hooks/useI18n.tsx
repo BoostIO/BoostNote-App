@@ -10,11 +10,11 @@ export function useI18n() {
   const getRoleLabel = useCallback(
     (role: TeamPermissionType) => {
       return role === 'admin'
-        ? t(lngKeys.Admin)
+        ? t(lngKeys.GeneralAdmin)
         : role === 'member'
-        ? t(lngKeys.Member)
+        ? t(lngKeys.GeneralMember)
         : role === 'viewer'
-        ? t(lngKeys.Viewer)
+        ? t(lngKeys.GeneralViewer)
         : 'Unknown'
     },
     [t]
@@ -24,7 +24,7 @@ export function useI18n() {
     (status: StatusFilter) => {
       switch (status) {
         case 'all':
-          return t(lngKeys.All)
+          return t(lngKeys.GeneralAll)
         case 'open':
           return t(lngKeys.ThreadOpen)
         case 'closed':
@@ -39,7 +39,7 @@ export function useI18n() {
   )
 
   return {
-    t,
+    translate: t,
     getRoleLabel,
     getThreadStatusLabel,
   }

@@ -15,7 +15,7 @@ const TeamSubLimit = ({
 }) => {
   const { subscription, team, currentSubInfo } = usePage()
   const { openSettingsTab } = useSettings()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   if (
     (subscription != null && subscription.status === 'active') ||
@@ -42,14 +42,14 @@ const TeamSubLimit = ({
             openSettingsTab('teamUpgrade')
           }}
         >
-          <h6>{t(lngKeys.SettingsSubLimitTrialTitle)}</h6>
+          <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
           <p className='note-limit'>
-            {t(lngKeys.SettingsSubLimitTrialDate, {
+            {translate(lngKeys.SettingsSubLimitTrialDate, {
               date: currentSubInfo.info.formattedEndDate,
             })}
           </p>
           <p className='note-limit'>
-            {t(lngKeys.SettingsSubLimitTrialUpgrade)}
+            {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
           </p>
         </a>
       </Container>
@@ -73,7 +73,7 @@ const TeamSubLimit = ({
         }}
       >
         <p className='note-limit'>
-          {t(lngKeys.SettingsSubLimitUsed, {
+          {translate(lngKeys.SettingsSubLimitUsed, {
             docsNb: currentSubInfo.info.progressLabel,
           })}
         </p>
@@ -88,13 +88,15 @@ const TeamSubLimit = ({
         </div>
         {currentSubInfo.info.docLimit != null && (
           <p>
-            {t(lngKeys.SettingsSubLimitUnderFreePlan, {
+            {translate(lngKeys.SettingsSubLimitUnderFreePlan, {
               limit: currentSubInfo.info.docLimit,
             })}
           </p>
         )}
         {currentSubInfo.info.trialIsOver && (
-          <p className='text-danger'>{t(lngKeys.SettingsSubLimitTrialEnd)}</p>
+          <p className='text-danger'>
+            {translate(lngKeys.SettingsSubLimitTrialEnd)}
+          </p>
         )}
       </a>
     </Container>

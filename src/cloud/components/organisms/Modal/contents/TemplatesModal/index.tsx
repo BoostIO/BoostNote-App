@@ -84,7 +84,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const { settings } = useSettings()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
   const { openEmojiPicker } = useEmoji()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   useEffect(() => {
     if (selectedTemplateId == null || templatesMap.has(selectedTemplateId)) {
@@ -222,21 +222,21 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const deleteTemplate = useCallback(
     (template: SerializedTemplate) => {
       messageBox({
-        title: `${t(lngKeys.GeneralDelete)}${
+        title: `${translate(lngKeys.GeneralDelete)}${
           template.title.trim() !== '' ? `: ${template.title}` : ''
         }`,
-        message: t(lngKeys.ModalsTemplatesDeleteDisclaimer),
+        message: translate(lngKeys.ModalsTemplatesDeleteDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: t(lngKeys.GeneralUpdate),
+            label: translate(lngKeys.GeneralUpdate),
             onClick: async () => {
               //remove
               setSendingState('delete')
@@ -253,7 +253,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
         ],
       })
     },
-    [messageBox, pushApiErrorMessage, removeFromTemplatesMap, t]
+    [messageBox, pushApiErrorMessage, removeFromTemplatesMap, translate]
   )
 
   const saveTemplate = useCallback(async () => {
@@ -312,11 +312,11 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     <ModalContainer style={{ padding: 0 }}>
       <StyledTemplatesModal>
         <div className='list' ref={menuRef}>
-          <h5>{capitalize(t(lngKeys.GeneralTemplates))}</h5>
+          <h5>{capitalize(translate(lngKeys.GeneralTemplates))}</h5>
           <FormInput
             value={filter}
             onChange={onFilterChangeHandler}
-            placeholder={capitalize(t(lngKeys.Search))}
+            placeholder={capitalize(translate(lngKeys.GeneralSearchVerb))}
           />
           {filteredTemplates.length > 0 ? (
             filteredTemplates.map((template) => (
@@ -338,7 +338,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
               />
             ))
           ) : (
-            <small>{t(lngKeys.ModalsTemplatesSearchEmpty)}</small>
+            <small>{translate(lngKeys.ModalsTemplatesSearchEmpty)}</small>
           )}
         </div>
         <div className='content' ref={contentSideRef}>
@@ -360,7 +360,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
               </div>
               <div className='scroll preview'>
                 <div className='preview'>
-                  <p>{t(lngKeys.ModalsTemplatesSelectTemplate)}</p>
+                  <p>{translate(lngKeys.ModalsTemplatesSelectTemplate)}</p>
                 </div>
               </div>
             </Flexbox>
@@ -372,7 +372,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
             >
               <div className='topbar'>
                 <Flexbox flex='1 1 0'>
-                  <Tooltip tooltip={t(lngKeys.GeneralChangeIcon)}>
+                  <Tooltip tooltip={translate(lngKeys.GeneralChangeIcon)}>
                     <EmojiIcon
                       defaultIcon={mdiFileDocumentOutline}
                       emoji={emoji}
@@ -381,7 +381,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                     />
                   </Tooltip>
                   <EditableInput
-                    placeholder={t(lngKeys.GeneralTitle)}
+                    placeholder={translate(lngKeys.GeneralTitle)}
                     text={templateTitle}
                     onTextChange={setTemplateTitle}
                   />
@@ -413,7 +413,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                       <Flexbox>
                         <Icon path={mdiContentSaveOutline} size={18} />
                         <span style={{ paddingLeft: 4 }}>
-                          {t(lngKeys.Save)}
+                          {translate(lngKeys.GeneralSaveVerb)}
                         </span>
                       </Flexbox>
                     </LoadingButton>
@@ -424,7 +424,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                       onClick={useTemplateCallback}
                       disabled={sendingState != null}
                     >
-                      <span>{t(lngKeys.GeneralUse)}</span>
+                      <span>{translate(lngKeys.GeneralUse)}</span>
                     </LoadingButton>
                   ) : (
                     <Button
@@ -438,7 +438,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                         closeModal()
                       }}
                     >
-                      <span>{t(lngKeys.ModalsTemplatesUseInDoc)}</span>
+                      <span>{translate(lngKeys.ModalsTemplatesUseInDoc)}</span>
                     </Button>
                   )}
                   <Button

@@ -18,7 +18,7 @@ const DiscountModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
   const { team, subscription } = usePage()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   if (team == null) {
     return null
@@ -28,7 +28,7 @@ const DiscountModal = () => {
     return (
       <Container className='discount__modal'>
         <Banner variant='danger' iconPath={mdiExclamation}>
-          {t(lngKeys.DiscountModalAlreadySubscribed)}
+          {translate(lngKeys.DiscountModalAlreadySubscribed)}
         </Banner>
       </Container>
     )
@@ -41,10 +41,10 @@ const DiscountModal = () => {
     <Container className='discount__modal'>
       <header className='discount__modal__header'>
         <h3 className='discount__modal__title'>
-          {t(lngKeys.DiscountModalTitle)}
+          {translate(lngKeys.DiscountModalTitle)}
         </h3>
         <div className='discount__modal__description'>
-          {t(lngKeys.DiscountModalTimeRemaining)}
+          {translate(lngKeys.DiscountModalTimeRemaining)}
         </div>
         <Countdown renderer={DiscountCountdownRenderer} date={eligibilityEnd} />
         <PlanTables
@@ -107,19 +107,27 @@ const DiscountCountdownRenderer = ({
         <div className='countdown'>
           <div className='countdown__column'>
             <div className='countdown__number'>{days}</div>
-            <span className='countdown__description'>{t(lngKeys.days)}</span>
+            <span className='countdown__description'>
+              {t(lngKeys.GeneralDays)}
+            </span>
           </div>
           <div className='countdown__column'>
             <div className='countdown__number'>{hours}</div>
-            <span className='countdown__description'>{t(lngKeys.hours)}</span>
+            <span className='countdown__description'>
+              {t(lngKeys.GeneralHours)}
+            </span>
           </div>
           <div className='countdown__column'>
             <div className='countdown__number'>{minutes}</div>
-            <span className='countdown__description'>{t(lngKeys.minutes)}</span>
+            <span className='countdown__description'>
+              {t(lngKeys.GeneralMinutes)}
+            </span>
           </div>
           <div className='countdown__column'>
             <div className='countdown__number'>{seconds}</div>
-            <span className='countdown__description'>{t(lngKeys.seconds)}</span>
+            <span className='countdown__description'>
+              {t(lngKeys.GeneralSeconds)}
+            </span>
           </div>
         </div>
       )}

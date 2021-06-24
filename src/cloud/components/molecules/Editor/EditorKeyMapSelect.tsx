@@ -17,7 +17,7 @@ const EditorKeyMapSelect = () => {
   const generalEditorKeyMap = settings['general.editorKeyMap']
   const [showingMenu, setShowingMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const showMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     setShowingMenu(true)
@@ -69,7 +69,7 @@ const EditorKeyMapSelect = () => {
         >
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='editorKeymapSelect'>
-              {t(lngKeys.SettingsEditorKeyMap)}
+              {translate(lngKeys.SettingsEditorKeyMap)}
             </label>
             <select
               onChange={selectIndentType}

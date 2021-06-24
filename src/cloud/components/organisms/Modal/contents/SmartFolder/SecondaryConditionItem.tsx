@@ -35,7 +35,7 @@ const SecondaryConditionItem = ({
   remove,
   personalOnly,
 }: SecondaryConditionItemProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const validConditions = personalOnly
     ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
     : [
@@ -54,9 +54,10 @@ const SecondaryConditionItem = ({
         item={{
           type: 'select',
           props: {
-            value: getSecondaryConditionOptionByType(t, condition.type),
+            value: getSecondaryConditionOptionByType(translate, condition.type),
             options: (validConditions as EditibleSecondaryConditionType[]).map(
-              (condition) => getSecondaryConditionOptionByType(t, condition)
+              (condition) =>
+                getSecondaryConditionOptionByType(translate, condition)
             ),
             minWidth: 140,
             onChange: (selectedOption: {
@@ -89,9 +90,9 @@ function getSecondaryConditionOptionByType(
 ) {
   switch (value) {
     case 'status':
-      return { label: t(lngKeys.Status), value: 'status' }
+      return { label: t(lngKeys.GeneralStatus), value: 'status' }
     case 'labels':
-      return { label: t(lngKeys.Labels), value: 'labels' }
+      return { label: t(lngKeys.GeneralLabels), value: 'labels' }
     case 'due_date':
       return { label: t(lngKeys.DueDate), value: 'due_date' }
     case 'assignees':
@@ -102,7 +103,7 @@ function getSecondaryConditionOptionByType(
       return { label: t(lngKeys.UpdateDate), value: 'update_date' }
     case 'null':
     default:
-      return { label: t(lngKeys.Select), value: 'null' }
+      return { label: t(lngKeys.GeneralSelectVerb), value: 'null' }
   }
 }
 

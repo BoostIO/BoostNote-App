@@ -34,14 +34,14 @@ const ImportModalSelectSource = ({
   showGuide,
   setUploadType,
 }: ImportModalSelectSourceProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   return (
     <>
       <StyledImportModalContent tabIndex={-1}>
-        <h2 style={{ margin: 0 }}>{t(lngKeys.Source)}</h2>
+        <h2 style={{ margin: 0 }}>{translate(lngKeys.GeneralSource)}</h2>
         {!sending ? (
           <>
-            <p>{t(lngKeys.ModalsImportDisclaimer)}</p>
+            <p>{translate(lngKeys.ModalsImportDisclaimer)}</p>
             <StyledSourceRow>
               <SourceButton
                 title={'Markdown or text'}
@@ -111,7 +111,7 @@ const ImportModalSelectSource = ({
       </StyledImportModalContent>
       <StyledImportModalFooter>
         <Button variant='secondary' onClick={onCancel} disabled={sending}>
-          {t(lngKeys.GeneralCancel)}
+          {translate(lngKeys.GeneralCancel)}
         </Button>
       </StyledImportModalFooter>
     </>

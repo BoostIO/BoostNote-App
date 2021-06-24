@@ -65,7 +65,7 @@ const MembersTab = () => {
     false
   )
   const mountedRef = useRef(false)
-  const { t, getRoleLabel } = useI18n()
+  const { translate, getRoleLabel } = useI18n()
 
   useEffect(() => {
     mountedRef.current = true
@@ -128,14 +128,14 @@ const MembersTab = () => {
       }
 
       const mboxContent = {
-        title: t(lngKeys.TeamLeave),
-        message: t(lngKeys.TeamLeaveWarning),
+        title: translate(lngKeys.TeamLeave),
+        message: translate(lngKeys.TeamLeaveWarning),
       }
 
       const currentUserId = currentUser != null ? currentUser.id : ''
       if (currentUserId !== permission.user.id) {
-        mboxContent.title = t(lngKeys.RemovingMember)
-        mboxContent.message = t(lngKeys.RemovingMemberWarning, {
+        mboxContent.title = translate(lngKeys.RemovingMember)
+        mboxContent.message = translate(lngKeys.RemovingMemberWarning, {
           user: permission.user.displayName,
         })
       }
@@ -147,13 +147,13 @@ const MembersTab = () => {
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: t(lngKeys.GeneralDelete),
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               //remove
               setSending(`${permission.id}-delete`)
@@ -188,7 +188,7 @@ const MembersTab = () => {
       setPartialPageData,
       team,
       setClosed,
-      t,
+      translate,
     ]
   )
 
@@ -212,8 +212,8 @@ const MembersTab = () => {
       switch (targetedRole) {
         case 'admin':
           mboxContent = {
-            title: t(lngKeys.Promote),
-            message: t(lngKeys.RoleAdminPromote, {
+            title: translate(lngKeys.GeneralPromoteVerb),
+            message: translate(lngKeys.RoleAdminPromote, {
               user: targetedPermissions.user.displayName,
             }),
           }
@@ -222,9 +222,9 @@ const MembersTab = () => {
           mboxContent = {
             title:
               targetedPermissions.role === 'viewer'
-                ? t(lngKeys.Promote)
-                : t(lngKeys.Demote),
-            message: t(lngKeys.RoleMemberChange, {
+                ? translate(lngKeys.GeneralPromoteVerb)
+                : translate(lngKeys.GeneralDemoteVerb),
+            message: translate(lngKeys.RoleMemberChange, {
               user: targetedPermissions.user.displayName,
             }),
           }
@@ -234,8 +234,8 @@ const MembersTab = () => {
           break
         case 'viewer':
           mboxContent = {
-            title: t(lngKeys.Demote),
-            message: t(lngKeys.RoleViewerDemote, {
+            title: translate(lngKeys.GeneralDemoteVerb),
+            message: translate(lngKeys.RoleViewerDemote, {
               user: targetedPermissions.user.displayName,
             }),
           }
@@ -250,13 +250,15 @@ const MembersTab = () => {
         buttons: [
           {
             variant: 'secondary',
-            label: t(lngKeys.GeneralCancel),
+            label: translate(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: changeIsDemotion ? 'danger' : 'primary',
-            label: changeIsDemotion ? t(lngKeys.Demote) : t(lngKeys.Promote),
+            label: changeIsDemotion
+              ? translate(lngKeys.GeneralDemoteVerb)
+              : translate(lngKeys.GeneralPromoteVerb),
             onClick: async () => {
               setSending(`${targetedPermissions.id}-change`)
               try {
@@ -281,13 +283,20 @@ const MembersTab = () => {
         ],
       })
     },
-    [pushApiErrorMessage, messageBox, permissions, setPartialPageData, team, t]
+    [
+      pushApiErrorMessage,
+      messageBox,
+      permissions,
+      setPartialPageData,
+      team,
+      translate,
+    ]
   )
 
   if (currentUserPermissions == null || team == null) {
     return (
       <SettingTabContent
-        title={t('settings.teamMembers')}
+        title={translate('settings.teamMembers')}
         body={
           <ColoredBlock variant='danger'>
             You don&apos;t own any permissions.
@@ -302,8 +311,8 @@ const MembersTab = () => {
   if (team.personal && showTeamPersonalForm) {
     return (
       <SettingTabContent
-        title={t(lngKeys.TeamCreate)}
-        description={t(lngKeys.TeamCreateSubtitle)}
+        title={translate(lngKeys.TeamCreate)}
+        description={translate(lngKeys.TeamCreateSubtitle)}
         backLink={{
           variant: 'icon',
           iconPath: mdiArrowLeft,
@@ -323,17 +332,17 @@ const MembersTab = () => {
             className={cc([tab === 'member' && 'active'])}
             onClick={() => setTab('member')}
           >
-            {t(lngKeys.Members)} ({permissions.length})
+            {translate(lngKeys.GeneralMembers)} ({permissions.length})
           </button>
         </SettingTabSelector>
       }
-      description={t(lngKeys.ManageTeamMembers)}
+      description={translate(lngKeys.ManageTeamMembers)}
       body={
         <>
           {team.personal ? (
             <section>
               <Flexbox>
-                <h2>{t(lngKeys.CurrentMembers)}</h2>
+                <h2>{translate(lngKeys.CurrentMembers)}</h2>
                 {fetching.has('userEmails') && (
                   <Spinner className='relative' style={{ top: 2 }} />
                 )}
@@ -342,13 +351,13 @@ const MembersTab = () => {
                 variant='primary'
                 onClick={() => setShowTeamPersonalForm(true)}
               >
-                {t(lngKeys.AddMembers)}
+                {translate(lngKeys.AddMembers)}
               </Button>
               <TopMargin />
               <StyledMembersTable>
                 <thead className='table-header'>
                   <tr>
-                    <th>{t(lngKeys.User)}</th>
+                    <th>{translate(lngKeys.GeneralUser)}</th>
                   </tr>
                 </thead>
                 <tbody className='table-body'>
@@ -382,7 +391,7 @@ const MembersTab = () => {
               />
               <section>
                 <Flexbox>
-                  <h2>{t(lngKeys.AddMembers)}</h2>
+                  <h2>{translate(lngKeys.AddMembers)}</h2>
                   {fetching.has('userEmails') && (
                     <Spinner className='relative' style={{ top: 2 }} />
                   )}
@@ -390,8 +399,8 @@ const MembersTab = () => {
                 <StyledMembersTable>
                   <thead className='table-header'>
                     <tr>
-                      <th>{t(lngKeys.User)}</th>
-                      <th>{t(lngKeys.MembersAccessLevel)}</th>
+                      <th>{translate(lngKeys.GeneralUser)}</th>
+                      <th>{translate(lngKeys.MembersAccessLevel)}</th>
                     </tr>
                   </thead>
                   <tbody className='table-body'>
@@ -447,13 +456,16 @@ const MembersTab = () => {
                                     targetPermissionsAreUsersOwn
                                   }
                                   options={[
-                                    { label: t(lngKeys.Admin), value: 'admin' },
                                     {
-                                      label: t(lngKeys.Member),
+                                      label: translate(lngKeys.GeneralAdmin),
+                                      value: 'admin',
+                                    },
+                                    {
+                                      label: translate(lngKeys.GeneralMember),
                                       value: 'member',
                                     },
                                     {
-                                      label: t(lngKeys.Viewer),
+                                      label: translate(lngKeys.GeneralViewer),
                                       value: 'viewer',
                                     },
                                   ]}
@@ -471,9 +483,9 @@ const MembersTab = () => {
                                     <Spinner />
                                   ) : currentUserPermissions.id ===
                                     permission.id ? (
-                                    t(lngKeys.Leave)
+                                    translate(lngKeys.GeneralLeaveVerb)
                                   ) : (
-                                    t(lngKeys.Remove)
+                                    translate(lngKeys.GeneralRemoveVerb)
                                   )}
                                 </CustomButton>
                               )}

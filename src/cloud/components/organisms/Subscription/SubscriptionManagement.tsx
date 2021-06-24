@@ -43,7 +43,7 @@ const SubscriptionManagement = ({
   onEmailClick,
   onPromoClick,
 }: SubscriptionManagementProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const [showPlanTables, setShowPlanTables] = useState(false)
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
@@ -182,14 +182,14 @@ const SubscriptionManagement = ({
       <SectionIntroduction>
         {subscription.status === 'incomplete' && (
           <Alert variant='danger'>
-            <h2>{t(lngKeys.BillingActionRequired)}</h2>
-            <p>{t(lngKeys.BillingHistoryCheck)}</p>
+            <h2>{translate(lngKeys.BillingActionRequired)}</h2>
+            <p>{translate(lngKeys.BillingHistoryCheck)}</p>
             <Button
               onClick={onInvoiceHistory}
               disabled={fetchingHistory}
               className='subscription__management__warning'
             >
-              {t(lngKeys.BillingHistory)}
+              {translate(lngKeys.BillingHistory)}
             </Button>
           </Alert>
         )}
@@ -200,13 +200,15 @@ const SubscriptionManagement = ({
           discount={currentSubscriptionDiscount}
         />
         {usingJpyPricing && (
-          <Alert variant='secondary'>{t(lngKeys.PaymentMethodJpy)}</Alert>
+          <Alert variant='secondary'>
+            {translate(lngKeys.PaymentMethodJpy)}
+          </Alert>
         )}
         <StyledBillingDescription>
           {subscription.currentPeriodEnd !== 0 ? (
             subscription.status === 'canceled' ? (
               <p>
-                {t(lngKeys.BillingCancelledAt, {
+                {translate(lngKeys.BillingCancelledAt, {
                   date: getFormattedDateFromUnixTimestamp(
                     subscription.currentPeriodEnd
                   ),
@@ -214,7 +216,7 @@ const SubscriptionManagement = ({
               </p>
             ) : (
               <p>
-                {t(lngKeys.BillingToCard, {
+                {translate(lngKeys.BillingToCard, {
                   cardEnd: `${subscription.last4} ${
                     subscription.cardBrand != null
                       ? `(${subscription.cardBrand})`
@@ -225,28 +227,28 @@ const SubscriptionManagement = ({
                   ),
                 })}{' '}
                 <StyledBillingButton disabled={sending} onClick={onMethodClick}>
-                  {t(lngKeys.BillingEditCard)}
+                  {translate(lngKeys.BillingEditCard)}
                 </StyledBillingButton>
               </p>
             )
           ) : null}
 
           <p>
-            {t(lngKeys.BillingEmail, {
+            {translate(lngKeys.BillingEmail, {
               email: subscription.email,
             })}
             .{' '}
             <StyledBillingButton onClick={onEmailClick} disabled={sending}>
-              {t(lngKeys.BillingEditEmail)}
+              {translate(lngKeys.BillingEditEmail)}
             </StyledBillingButton>
           </p>
           <p>
-            {t(lngKeys.BillingCanSeeThe)}
+            {translate(lngKeys.BillingCanSeeThe)}
             <StyledBillingButton
               disabled={fetchingHistory}
               onClick={onInvoiceHistory}
             >
-              {t(lngKeys.BillingHistory)}
+              {translate(lngKeys.BillingHistory)}
               {fetchingHistory ? (
                 <Spinner
                   style={{
@@ -263,7 +265,7 @@ const SubscriptionManagement = ({
           </p>
           <p>
             <StyledBillingButton onClick={onPromoClick} disabled={sending}>
-              {t(lngKeys.ApplyCoupon)}
+              {translate(lngKeys.ApplyCoupon)}
             </StyledBillingButton>
           </p>
           <p>
@@ -272,14 +274,14 @@ const SubscriptionManagement = ({
                 disabled={fetchingHistory}
                 onClick={() => setShowPlanTables(false)}
               >
-                {t(lngKeys.Hide)}
+                {translate(lngKeys.GeneralHideVerb)}
               </StyledBillingButton>
             ) : (
               <StyledBillingButton
                 disabled={fetchingHistory}
                 onClick={() => setShowPlanTables(true)}
               >
-                {t(lngKeys.BillingChangePlan)}
+                {translate(lngKeys.BillingChangePlan)}
               </StyledBillingButton>
             )}
           </p>
@@ -315,26 +317,26 @@ const SubscriptionManagement = ({
                   newSpaceCouponId,
                 ].includes(subscription.couponId) && (
                   <Banner variant='warning' iconPath={mdiGiftOff}>
-                    {t(lngKeys.BillingChangePlanDiscountStop)}
+                    {translate(lngKeys.BillingChangePlanDiscountStop)}
                   </Banner>
                 )}
               {targetedPlan === 'Free' ? (
                 <>
-                  <p>{t(lngKeys.BillingChangePlanFreeDisclaimer)}</p>
-                  <p>{t(lngKeys.DoYouWishToProceed)}</p>
+                  <p>{translate(lngKeys.BillingChangePlanFreeDisclaimer)}</p>
+                  <p>{translate(lngKeys.GeneralDoYouWishToProceed)}</p>
                 </>
               ) : targetedPlan === 'Pro' ? (
                 <>
-                  <p>{t(lngKeys.BillingChangePlanProDisclaimer)}</p>
+                  <p>{translate(lngKeys.BillingChangePlanProDisclaimer)}</p>
                   <p>
-                    {t(lngKeys.BillingChangePlanStripeProration)}
+                    {translate(lngKeys.BillingChangePlanStripeProration)}
                     <a
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
                       style={{ marginLeft: 3 }}
                     >
-                      {t(lngKeys.LearnMore)}
+                      {translate(lngKeys.GeneralLearnMore)}
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
@@ -347,16 +349,18 @@ const SubscriptionManagement = ({
                 </>
               ) : (
                 <>
-                  <p>{t(lngKeys.BillingChangePlanStandardDisclaimer)}</p>
                   <p>
-                    {t(lngKeys.BillingChangePlanStripeProration)}
+                    {translate(lngKeys.BillingChangePlanStandardDisclaimer)}
+                  </p>
+                  <p>
+                    {translate(lngKeys.BillingChangePlanStripeProration)}
                     <a
                       href='https://stripe.com/docs/billing/subscriptions/prorations'
                       target='__blank'
                       rel='noreferrer'
                       style={{ marginLeft: 3 }}
                     >
-                      {t(lngKeys.LearnMore)}
+                      {translate(lngKeys.GeneralLearnMore)}
                       <Icon path={mdiOpenInNew} />
                     </a>
                   </p>
@@ -394,7 +398,7 @@ const SubscriptionManagement = ({
                 disabled={sending}
                 type='button'
               >
-                {t(lngKeys.GeneralCancel)}
+                {translate(lngKeys.GeneralCancel)}
               </Button>
             </Flexbox>
           </div>

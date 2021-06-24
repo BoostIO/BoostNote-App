@@ -86,7 +86,7 @@ const ViewPage = ({
   const [realtimeContent, setRealtimeContent] = useState('')
   const [color] = useState(() => getColorFromString(user.id))
   const [initialLoadDone, setInitialLoadDone] = useState(false)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const userInfo = useMemo(() => {
     return {
@@ -331,7 +331,7 @@ const ViewPage = ({
         topbar: {
           breadcrumbs: currentUserIsCoreMember
             ? mapTopbarBreadcrumbs(
-                t,
+                translate,
                 team,
                 foldersMap,
                 workspacesMap,
@@ -346,9 +346,16 @@ const ViewPage = ({
                 deleteFolder,
                 deleteWorkspace
               )
-            : mapTopbarBreadcrumbs(t, team, foldersMap, workspacesMap, push, {
-                pageDoc: doc,
-              }),
+            : mapTopbarBreadcrumbs(
+                translate,
+                team,
+                foldersMap,
+                workspacesMap,
+                push,
+                {
+                  pageDoc: doc,
+                }
+              ),
           children: (
             <StyledTopbarChildrenContainer>
               <LoadingButton
@@ -374,12 +381,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: t(lngKeys.EditorReconnectAttempt),
+                    label: translate(lngKeys.EditorReconnectAttempt),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectAttempt1)}
+                        {translate(lngKeys.EditorReconnectAttempt1)}
                         <br />
-                        {t(lngKeys.EditorReconnectAttempt2)}
+                        {translate(lngKeys.EditorReconnectAttempt2)}
                       </>
                     ),
                   },
@@ -390,12 +397,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'warning' as const,
                     onClick: () => realtime.connect(),
-                    label: t(lngKeys.EditorReconnectDisconnected),
+                    label: translate(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectDisconnected1)}
+                        {translate(lngKeys.EditorReconnectDisconnected1)}
                         <br />
-                        {t(lngKeys.EditorReconnectDisconnected2)}
+                        {translate(lngKeys.EditorReconnectDisconnected2)}
                       </>
                     ),
                   },
@@ -406,12 +413,12 @@ const ViewPage = ({
                     type: 'button',
                     variant: 'secondary' as const,
                     disabled: true,
-                    label: t(lngKeys.EditorReconnectSyncing),
+                    label: translate(lngKeys.EditorReconnectSyncing),
                     tooltip: (
                       <>
-                        {t(lngKeys.EditorReconnectSyncing1)}
+                        {translate(lngKeys.EditorReconnectSyncing1)}
                         <br />
-                        {t(lngKeys.EditorReconnectSyncing2)}
+                        {translate(lngKeys.EditorReconnectSyncing2)}
                       </>
                     ),
                   },

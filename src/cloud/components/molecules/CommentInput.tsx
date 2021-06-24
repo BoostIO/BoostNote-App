@@ -35,7 +35,7 @@ export function CommentInput({
     if (inputRef.current == null) {
       return
     }
-    const { t } = useI18n()
+    const { translate } = useI18n()
 
     const selection = getSelection()
     if (selection == null) {
@@ -163,7 +163,7 @@ export function CommentInput({
       ></div>
       <Flexbox justifyContent='flex-end'>
         <Button disabled={working} onClick={submit}>
-          {t(lngKeys.ThreadPost)}
+          {translate(lngKeys.ThreadPost)}
         </Button>
       </Flexbox>
       {state.type === 'enabled' && state.suggestions.length > 0 && (

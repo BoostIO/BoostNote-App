@@ -28,7 +28,7 @@ const EditorThemeSelect = () => {
   const editorTheme = settings['general.editorTheme']
   const codeBlockTheme = settings['general.codeBlockTheme']
 
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const [showingMenu, setShowingMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -95,7 +95,7 @@ const EditorThemeSelect = () => {
         >
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='editorTheme'>
-              {t(lngKeys.SettingsEditorTheme)}
+              {translate(lngKeys.SettingsEditorTheme)}
             </label>
             <select
               onChange={selectIndentType}
@@ -114,7 +114,7 @@ const EditorThemeSelect = () => {
           </div>
           <div className='menu__item'>
             <label className='menu__item__label' htmlFor='codeBlockTheme'>
-              {t(lngKeys.SettingsCodeBlockTheme)}
+              {translate(lngKeys.SettingsCodeBlockTheme)}
             </label>
             <select
               onChange={selectIndentSize}

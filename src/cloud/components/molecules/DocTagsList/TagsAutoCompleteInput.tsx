@@ -31,7 +31,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   const [sending, setSending] = useState<boolean>(false)
   const { pushApiErrorMessage } = useToast()
   const [tagText, setTagText] = useState<string>('')
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   useEffect(() => {
     if (showInput && inputRef.current != null) {
@@ -95,7 +95,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
     if (tagsMap.size === 0) {
       if (tagText.trim() !== '') {
         options.push({
-          label: `${t(lngKeys.GeneralCreate)}: "${tagText}"`,
+          label: `${translate(lngKeys.GeneralCreate)}: "${tagText}"`,
           value: tagText,
         })
       }
@@ -131,7 +131,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
     )
 
     return options
-  }, [tagsMap, tagsIdsAlreadyInDoc, tagText, t])
+  }, [tagsMap, tagsIdsAlreadyInDoc, tagText, translate])
 
   const selectOptionHandler = useCallback(
     async (event: any, option: string) => {
@@ -163,7 +163,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
             id='tag__add__btn'
             onClick={activateAndFocus}
           >
-            {t(lngKeys.AddALabel)}
+            {translate(lngKeys.AddALabel)}
           </button>
         ) : (
           <button

@@ -29,7 +29,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { openNewDocForm } = useCloudResourceModals()
   const { popup } = useContextMenu()
   const { openModal } = useModal()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   return (
     <Container>
@@ -59,7 +59,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
             )
           }
         >
-          {t(lngKeys.CreateNewDoc)}
+          {translate(lngKeys.CreateNewDoc)}
         </Button>
         <Button
           variant='primary'
@@ -72,7 +72,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
               {
                 icon: mdiPencilBoxMultipleOutline,
                 type: MenuTypes.Normal,
-                label: t(lngKeys.UseATemplate),
+                label: translate(lngKeys.UseATemplate),
                 onClick: () =>
                   openModal(<TemplatesModal />, { width: 'large' }),
               },

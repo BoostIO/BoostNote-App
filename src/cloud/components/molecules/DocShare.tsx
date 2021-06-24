@@ -58,7 +58,7 @@ type SendingState =
   | 'expireDate'
 
 const DocShare = ({ currentDoc, team }: DocShareProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const [sending, setSending] = useState<SendingState>('idle')
   const { updateDocsMap } = useNav()
   const { setPartialPageData, subscription } = usePage()
@@ -398,10 +398,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
           >
             <label className='context__label'>
               <IconMdi path={mdiWeb} size={18} className='context__icon' />
-              {t(lngKeys.PublicSharing)}
+              {translate(lngKeys.PublicSharing)}
             </label>
             <span className='context__label__description'>
-              {t(lngKeys.PublicSharingDisclaimer)}
+              {translate(lngKeys.PublicSharingDisclaimer)}
             </span>
           </Flexbox>
           <div className='share__row__switch'>
@@ -442,13 +442,13 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
               onClick={() => setShowSettings((prev) => !prev)}
             >
               <Icon path={showSettings ? mdiChevronDown : mdiChevronRight} />{' '}
-              {capitalize(t(lngKeys.SharingSettings))}
+              {capitalize(translate(lngKeys.SharingSettings))}
             </button>
             {showSettings && (
               <>
                 <Flexbox justifyContent='space-between' className='share__row'>
                   <Flexbox flex='1 1 auto' wrap='wrap'>
-                    {capitalize(t(lngKeys.SharingRegenerateLink))}
+                    {capitalize(translate(lngKeys.SharingRegenerateLink))}
                   </Flexbox>
                   <Button
                     variant='secondary'
@@ -459,7 +459,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     {sending === 'regenerating' ? (
                       <Spinner className='relative' />
                     ) : (
-                      t(lngKeys.Regenerate)
+                      translate(lngKeys.Regenerate)
                     )}
                   </Button>
                 </Flexbox>
@@ -470,7 +470,9 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row'
                     justifyContent='space-between'
                   >
-                    <span>{capitalize(t(lngKeys.PasswordProtect))}</span>
+                    <span>
+                      {capitalize(translate(lngKeys.PasswordProtect))}
+                    </span>
                     {(subscription == null ||
                       subscription.plan === 'standard') && (
                       <UpgradeIntroButton
@@ -516,7 +518,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       {sending === 'password' ? (
                         <Spinner className='relative' />
                       ) : (
-                        capitalize(t(lngKeys.Save))
+                        capitalize(translate(lngKeys.GeneralSaveVerb))
                       )}
                     </button>
                   </form>
@@ -528,7 +530,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     className='share__row'
                     justifyContent='space-between'
                   >
-                    <span>{capitalize(t(lngKeys.ExpirationDate))}</span>
+                    <span>{capitalize(translate(lngKeys.ExpirationDate))}</span>
                     {!havingPro && (
                       <UpgradeIntroButton
                         tabIndex={-1}
@@ -575,7 +577,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                       {sending === 'expireDate' ? (
                         <Spinner className='relative' />
                       ) : (
-                        capitalize(t(lngKeys.Save))
+                        capitalize(translate(lngKeys.GeneralSaveVerb))
                       )}
                     </button>
                   </form>

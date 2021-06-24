@@ -39,7 +39,7 @@ const WorkspaceAccess = ({
     newPermissionsIds,
     { toggle, add: addNewPermissionsId, reset: resetNewPermissionsIds },
   ] = useSet<string>(new Set())
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const onShowSelector = useCallback(() => {
     resetNewPermissionsIds()
@@ -114,7 +114,7 @@ const WorkspaceAccess = ({
     <Container>
       <FormRow
         fullWidth={true}
-        row={{ title: t(lngKeys.ModalsWorkspacesWhoHasAcess) }}
+        row={{ title: translate(lngKeys.ModalsWorkspacesWhoHasAcess) }}
       >
         <Flexbox direction='column' className='workspace__access__col'>
           <Flexbox
@@ -123,7 +123,7 @@ const WorkspaceAccess = ({
           >
             {ownerOrUserNode}
             <StyledRemoveAccessButton disabled={true}>
-              {t(lngKeys.Owner)}
+              {translate(lngKeys.GeneralOwner)}
             </StyledRemoveAccessButton>
           </Flexbox>
           {selectedPermissions.map((p) => {
@@ -157,12 +157,12 @@ const WorkspaceAccess = ({
       {leftoverPermissions.length !== 0 && currentUserIsOwner && (
         <FormRow
           fullWidth={true}
-          row={{ title: t(lngKeys.ModalsWorkspaceSetAccess) }}
+          row={{ title: translate(lngKeys.ModalsWorkspaceSetAccess) }}
         >
           <>
             {!showSelector ? (
               <Button variant='secondary' onClick={onShowSelector}>
-                {t(lngKeys.ModalsWorkspacesSetAccessMembers)}
+                {translate(lngKeys.ModalsWorkspacesSetAccessMembers)}
               </Button>
             ) : (
               <StyledSelector>
@@ -176,7 +176,7 @@ const WorkspaceAccess = ({
                         newPermissionsIds.size !== leftoverPermissions.length &&
                         'reducer',
                     ])}
-                    label={t(lngKeys.SelectAll)}
+                    label={translate(lngKeys.GeneralSelectAll)}
                     onChange={onSelectAllCheckboxClick}
                   />
                 </StyledSelectorRow>
@@ -204,7 +204,7 @@ const WorkspaceAccess = ({
                   disabled={newPermissionsIds.size === 0}
                   className='workspace__access__add'
                 >
-                  {t(lngKeys.Add)}
+                  {translate(lngKeys.GeneralAddVerb)}
                 </Button>
               </StyledSelector>
             )}

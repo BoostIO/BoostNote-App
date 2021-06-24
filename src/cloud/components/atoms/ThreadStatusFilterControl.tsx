@@ -31,15 +31,15 @@ function ThreadStatusFilterControl({
   onChange,
   counts,
 }: StatusFilterControlProps) {
-  const { getThreadStatusLabel, t } = useI18n()
+  const { getThreadStatusLabel, translate } = useI18n()
   const { popup } = useContextMenu()
 
   const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
       event.preventDefault()
-      popup(event, buildMenu(t, onChange, counts))
+      popup(event, buildMenu(translate, onChange, counts))
     },
-    [popup, onChange, counts, t]
+    [popup, onChange, counts, translate]
   )
 
   return (
@@ -79,7 +79,7 @@ function buildMenu(
     {
       icon: <PrimaryIcon path={mdiAlertCircleOutline} />,
       type: MenuTypes.Normal,
-      label: `${capitalize(t(lngKeys.All))} (${counts.all})`,
+      label: `${capitalize(t(lngKeys.GeneralAll))} (${counts.all})`,
       onClick: () => action('all'),
     },
     {

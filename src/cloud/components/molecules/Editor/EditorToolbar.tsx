@@ -32,7 +32,7 @@ interface EditorToolbarProps {
 const spaceRegex = /^$|\s+/
 
 const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const onFormatCallback = useCallback(
     (format: FormattingTool) => {
       if (editorRef == null || editorRef.current == null) {
@@ -201,17 +201,17 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
     <StyledEditorToolList>
       <EditorHeaderToolDropdown
         path={mdiFormatHeaderPound}
-        tooltip={t(lngKeys.EditorToolbarTooltipHeader)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipHeader)}
         onFormatCallback={onFormatCallback}
       />
       <EditorToolButton
         path={mdiCodeNotEqualVariant}
-        tooltip={t(lngKeys.EditorToolbarTooltipCodefence)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipCodefence)}
         onClick={() => onFormatCallback('codefence')}
       />
       <EditorToolButton
         path={mdiFormatQuoteClose}
-        tooltip={t(lngKeys.EditorToolbarTooltipQuote)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipQuote)}
         onClick={() => onFormatCallback('quote')}
       />
       <EditorAdmonitionToolDropdown
@@ -221,38 +221,38 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
       />
       <EditorToolButton
         path={mdiFormatListBulleted}
-        tooltip={t(lngKeys.EditorToolbarTooltipList)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipList)}
         onClick={() => onFormatCallback('bulletedList')}
       />
       <EditorToolButton
         path={mdiFormatListNumbered}
-        tooltip={t(lngKeys.EditorToolbarTooltipNumberedList)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipNumberedList)}
         onClick={() => onFormatCallback('numberedList')}
       />
       <EditorToolButton
         path={mdiCheckboxMarkedOutline}
-        tooltip={t(lngKeys.EditorToolbarTooltipTaskList)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipTaskList)}
         style={{ marginRight: 20 }}
         onClick={() => onFormatCallback('taskList')}
       />
       <EditorToolButton
         path={mdiFormatBold}
-        tooltip={t(lngKeys.EditorToolbarTooltipBold)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipBold)}
         onClick={applyBoldStyle}
       />
       <EditorToolButton
         path={mdiFormatItalic}
-        tooltip={t(lngKeys.EditorToolbarTooltipItalic)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipItalic)}
         onClick={applyItalicStyle}
       />
       <EditorToolButton
         path={mdiCodeTags}
-        tooltip={t(lngKeys.EditorToolbarTooltipCode)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipCode)}
         onClick={() => onFormatCallback('code')}
       />
       <EditorToolButton
         path={mdiLinkVariant}
-        tooltip={t(lngKeys.EditorToolbarTooltipLink)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipLink)}
         onClick={() => onFormatCallback('link')}
       />
     </StyledEditorToolList>

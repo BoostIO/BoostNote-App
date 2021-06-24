@@ -16,6 +16,7 @@ import { mdiGiftOutline } from '@mdi/js'
 import { viewerStandardPlanLimit } from '../../../lib/subscription'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import { lowerCase } from 'lodash'
 
 interface SubscriptionCostSummaryProps {
   plan: UpgradePlans
@@ -32,7 +33,7 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
   children,
   className,
 }) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const currencyMarker = usingJpyPricing ? '¥' : '$'
 
   const pricePerUnit = useMemo(() => {
@@ -53,8 +54,9 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
         <div className='subscription__cost__summary__row__description'>
           <span className='subscription__cost__summary__plan'>{plan}</span>
           {currencyMarker}
-          {pricePerUnit} &times; {seats} {t(lngKeys.members)} &times; 1{' '}
-          {t(lngKeys.Month)}
+          {pricePerUnit} &times; {seats}{' '}
+          {lowerCase(translate(lngKeys.GeneralMembers))} &times; 1{' '}
+          {translate(lngKeys.Month)}
         </div>
         <div className='subscription__cost__summary__row__calcuration'>
           {currencyMarker}
@@ -81,11 +83,11 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
       <div className='subscription__cost__summary__row'>
         <div className='subscription__cost__summary__row__description'>
           {plan === 'pro'
-            ? t(lngKeys.UnlimitedViewers)
-            : `${viewerStandardPlanLimit} ${t(lngKeys.Viewers)}`}
+            ? translate(lngKeys.UnlimitedViewers)
+            : `${viewerStandardPlanLimit} ${translate(lngKeys.Viewers)}`}
           <div className='context__tooltip'>
             <div className='context__tooltip__text'>
-              {t(lngKeys.RoleViewerDescription)}
+              {translate(lngKeys.RoleViewerDescription)}
             </div>
             ?
           </div>
@@ -94,7 +96,7 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
       </div>
       <div className='subscription__cost__summary__row--total'>
         <strong className='subscription__cost__summary__row__description'>
-          {t(lngKeys.TotalMonthlyPrice)}
+          {translate(lngKeys.TotalMonthlyPrice)}
         </strong>
         <strong className='subscription__cost__summary__row__calcuration'>
           {currencyMarker}

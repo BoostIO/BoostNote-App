@@ -207,14 +207,14 @@ const UserPreferencesForm = () => {
                 value: {
                   label:
                     settings['general.editorIndentType'] === 'spaces'
-                      ? t(lngKeys.Spaces)
-                      : t(lngKeys.Tabs),
+                      ? t(lngKeys.GeneralSpaces)
+                      : t(lngKeys.GeneralTabs),
                   value: settings['general.editorIndentType'],
                 },
                 onChange: selectIndentType,
                 options: [
-                  { label: t(lngKeys.Spaces), value: 'spaces' },
-                  { label: t(lngKeys.Tabs), value: 'tab' },
+                  { label: t(lngKeys.GeneralSpaces), value: 'spaces' },
+                  { label: t(lngKeys.GeneralTabs), value: 'tab' },
                 ],
               },
             },

@@ -20,7 +20,7 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
   const { workspacesMap, foldersMap } = useNav()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const sortedWorkspaces = useMemo(() => {
     const workspaces = [...workspacesMap.values()]
@@ -73,7 +73,7 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
         onSubmit={onSubmitForm}
         style={{ height: '100%', margin: 0 }}
       >
-        <h3>{t(lngKeys.PickYourDestination)}</h3>
+        <h3>{translate(lngKeys.GeneralPickYourDestination)}</h3>
         <Flexbox
           direction='column'
           flex='1 1 auto'
@@ -97,7 +97,7 @@ const MoveItemModal = ({ onSubmit }: MoveItemModalProps) => {
               type='submit'
               disabled={selectedWorkspaceId == null}
             >
-              {t(lngKeys.Move)}
+              {translate(lngKeys.GeneralMoveVerb)}
             </Button>
           </Flexbox>
         </Flexbox>

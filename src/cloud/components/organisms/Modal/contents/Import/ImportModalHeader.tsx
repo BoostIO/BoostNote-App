@@ -19,16 +19,16 @@ interface ImportModalHeaderProps {
 }
 
 const ImportModalHeader = ({ currentStep }: ImportModalHeaderProps) => {
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const getTranslatedLabel = (step: ImportStep) => {
     switch (step) {
       case 'destination':
-        return t(lngKeys.Destination)
+        return translate(lngKeys.GeneralDestination)
       case 'import':
-        return t(lngKeys.Import)
+        return translate(lngKeys.GeneralImport)
       default:
-        return t(lngKeys.Source)
+        return translate(lngKeys.GeneralSource)
     }
   }
 

@@ -20,7 +20,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
   const [sending, setSending] = useState(false)
   const { updateTeamSubscription } = usePage()
   const { pushApiErrorMessage } = useToast()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const onCloseCallback = useCallback(() => {
     if (sending) {
@@ -52,7 +52,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
       <StyledFreeTrialPopupContainer>
         <Flexbox flex='1 1 auto' direction='column' alignItems='flex-start'>
           <StyledFreeTrialTitle>
-            {t(lngKeys.FreeTrialModalTitle)}
+            {translate(lngKeys.FreeTrialModalTitle)}
           </StyledFreeTrialTitle>
           <video
             src='/app/static/videos/pro-intro.mp4'
@@ -63,9 +63,11 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
           ></video>
           <div className='intro-text'>
             <p>
-              {t(lngKeys.FreeTrialModalBody, { days: freeTrialPeriodDays })}
+              {translate(lngKeys.FreeTrialModalBody, {
+                days: freeTrialPeriodDays,
+              })}
             </p>
-            <p>{t(lngKeys.FreeTrialModalDisclaimer)}</p>
+            <p>{translate(lngKeys.FreeTrialModalDisclaimer)}</p>
           </div>
         </Flexbox>
         <Flexbox flex='0 0 auto' direction='column' className='button__group'>
@@ -78,7 +80,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
             {sending ? (
               <Spinner className='relative spinner' />
             ) : (
-              t(lngKeys.FreeTrialModalCTA)
+              translate(lngKeys.FreeTrialModalCTA)
             )}
           </Button>
           <Button
@@ -87,7 +89,7 @@ const FreeTrialPopup = ({ team, close }: FreeTrialPopupProps) => {
             onClick={onCloseCallback}
             disabled={sending}
           >
-            {t(lngKeys.GeneralCancel)}
+            {translate(lngKeys.GeneralCancel)}
           </Button>
         </Flexbox>
       </StyledFreeTrialPopupContainer>

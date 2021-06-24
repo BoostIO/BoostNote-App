@@ -22,7 +22,7 @@ const EditorToolbarUpload = ({
 }: EditorToolbarUploadProps) => {
   const imageUploaderRef = useRef<HTMLInputElement>(null)
   const formUploaderRef = useRef<HTMLFormElement>(null)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const handler = useCallback(
     async (
@@ -96,7 +96,7 @@ const EditorToolbarUpload = ({
     <>
       <EditorToolButton
         path={mdiImagePlus}
-        tooltip={t(lngKeys.EditorToolbarTooltipUpload)}
+        tooltip={translate(lngKeys.EditorToolbarTooltipUpload)}
         onClick={onClick}
       />
       <form ref={formUploaderRef}>

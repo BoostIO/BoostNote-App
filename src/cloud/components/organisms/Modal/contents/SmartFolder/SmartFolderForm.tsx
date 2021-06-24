@@ -51,7 +51,7 @@ const SmartFolderForm = ({
   const [primaryConditionType, setPrimaryConditionType] = useState<
     'and' | 'or'
   >(defaultConditionType)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const [secondaryConditions, setSecondaryConditions] = useState<
     EditibleSecondaryCondition[]
@@ -106,14 +106,14 @@ const SmartFolderForm = ({
     <Container>
       <h2 className='modal__heading'>
         {action === 'Create'
-          ? t(lngKeys.ModalsSmartFolderCreateTitle)
-          : t(lngKeys.ModalsSmartFolderEditTitle)}
+          ? translate(lngKeys.ModalsSmartFolderCreateTitle)
+          : translate(lngKeys.ModalsSmartFolderEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
         <FormRow
           fullWidth={true}
           row={{
-            title: t(lngKeys.Name),
+            title: translate(lngKeys.GeneralName),
             items: [
               { type: 'input', props: { value: name, onChange: updateName } },
             ],
@@ -132,10 +132,13 @@ const SmartFolderForm = ({
               type: 'select',
               props: {
                 options: [
-                  { label: t(lngKeys.All), value: 'and' },
-                  { label: t(lngKeys.Any), value: 'or' },
+                  { label: translate(lngKeys.GeneralAll), value: 'and' },
+                  { label: translate(lngKeys.GeneralAny), value: 'or' },
                 ],
-                value: getPrimaryConditionOptionByType(t, primaryConditionType),
+                value: getPrimaryConditionOptionByType(
+                  translate,
+                  primaryConditionType
+                ),
                 onChange: updatePrimaryConditionType,
               },
             }}
@@ -197,13 +200,13 @@ const SmartFolderForm = ({
           <FormRowItem>
             <div>
               <h3 className='privacy-row__label'>
-                {t(lngKeys.ModalsWorkspaceMakePrivate)}
+                {translate(lngKeys.ModalsWorkspaceMakePrivate)}
               </h3>
               <p>
                 {makingPrivate ? (
-                  <>{t(lngKeys.ModalsSmartFolderPrivateDisclaimer)}</>
+                  <>{translate(lngKeys.ModalsSmartFolderPrivateDisclaimer)}</>
                 ) : (
-                  <>{t(lngKeys.ModalsSmartFolderPublicDisclaimer)}</>
+                  <>{translate(lngKeys.ModalsSmartFolderPublicDisclaimer)}</>
                 )}
               </p>
             </div>
@@ -229,7 +232,7 @@ const SmartFolderForm = ({
                 onClick={onCancel}
                 disabled={buttonsAreDisabled}
               >
-                {t(lngKeys.GeneralCancel)}
+                {translate(lngKeys.GeneralCancel)}
               </Button>
             )}
             <LoadingButton
@@ -239,8 +242,8 @@ const SmartFolderForm = ({
               disabled={buttonsAreDisabled}
             >
               {action === 'Create'
-                ? t(lngKeys.GeneralCreate)
-                : t(lngKeys.Update)}
+                ? translate(lngKeys.GeneralCreate)
+                : translate(lngKeys.GeneralUpdateVerb)}
             </LoadingButton>
           </ButtonGroup>
         </FormRow>
@@ -282,9 +285,9 @@ const Container = styled.div`
 function getPrimaryConditionOptionByType(t: TFunction, value: 'and' | 'or') {
   switch (value) {
     case 'and':
-      return { label: t(lngKeys.All), value: 'and' }
+      return { label: t(lngKeys.GeneralAll), value: 'and' }
     case 'or':
-      return { label: t(lngKeys.Any), value: 'or' }
+      return { label: t(lngKeys.GeneralAny), value: 'or' }
   }
 }
 

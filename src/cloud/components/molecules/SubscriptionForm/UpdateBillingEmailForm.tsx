@@ -30,7 +30,7 @@ const UpdateBillingEmailForm = ({
   const { pushApiErrorMessage } = useToast()
   const [sending, setSending] = useState<boolean>(false)
   const [email, setEmail] = useState<string>(sub != null ? sub.email : '')
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const onSubmit = async (event: any) => {
     event.preventDefault()
@@ -70,9 +70,9 @@ const UpdateBillingEmailForm = ({
 
   return (
     <Container>
-      <p>{t(lngKeys.BillingUpdateEmail)}</p>
+      <p>{translate(lngKeys.BillingUpdateEmail)}</p>
       <SectionFlexRow>
-        <label>{t(lngKeys.BillingCurrentEmail)}</label>
+        <label>{translate(lngKeys.BillingCurrentEmail)}</label>
         <span className='value'>{sub.email}</span>
       </SectionFlexRow>
 
@@ -93,7 +93,7 @@ const UpdateBillingEmailForm = ({
         />
         <ButtonGroup display='flex' layout='spread' className='button__group'>
           <Button onClick={onCancel} variant='secondary' disabled={sending}>
-            {t(lngKeys.GeneralCancel)}
+            {translate(lngKeys.GeneralCancel)}
           </Button>
 
           <LoadingButton
@@ -102,7 +102,7 @@ const UpdateBillingEmailForm = ({
             disabled={sending}
             spinning={sending}
           >
-            {t(lngKeys.Update)}
+            {translate(lngKeys.GeneralUpdateVerb)}
           </LoadingButton>
         </ButtonGroup>
       </Form>

@@ -72,7 +72,7 @@ function CommentManager({
   user,
   users,
 }: CommentManagerProps) {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const [statusFilter, setStatusFitler] = useState<StatusFilter>('open')
   const partitioned = useMemo(() => {
     return partitionOnStatus(state.mode === 'list_loading' ? [] : state.threads)
@@ -121,7 +121,7 @@ function CommentManager({
               onClick={() => setMode({ mode: 'new_thread' })}
             >
               <Icon path={mdiPlusBoxOutline} />{' '}
-              <span>{t(lngKeys.ThreadCreate)}</span>
+              <span>{translate(lngKeys.ThreadCreate)}</span>
             </div>
           </>
         )
@@ -151,7 +151,7 @@ function CommentManager({
                   onClick={() => reopenThread(state.thread)}
                   variant='secondary'
                 >
-                  {t(lngKeys.ThreadReopen)}
+                  {translate(lngKeys.ThreadReopen)}
                 </Button>
               )}
             </div>
@@ -174,7 +174,7 @@ function CommentManager({
       }
     }
   }, [
-    t,
+    translate,
     state,
     createThread,
     reopenThread,
@@ -201,7 +201,7 @@ function CommentManager({
             <Icon size={20} path={mdiArrowLeft} />
           </div>
         )}
-        <h4>{t(lngKeys.ThreadsTitle)}</h4>
+        <h4>{translate(lngKeys.ThreadsTitle)}</h4>
         {state.mode === 'list' && (
           <ThreadStatusFilterControl
             value={statusFilter}

@@ -64,7 +64,7 @@ export function useDocActionContextMenu({
   editorRef,
   toggleBookmarkForDoc,
 }: DocActionContextMenuParams) {
-  const { t } = useI18n()
+  const { translate } = useI18n()
   const { popup } = useContextMenu()
   const { updateDocHandler, deleteDocHandler } = useNav()
 
@@ -205,17 +205,17 @@ export function useDocActionContextMenu({
       const membersRestrictedMenuItems: MenuItem[] = currentUserIsCoreMember
         ? [
             createMenuItem({
-              label: t(lngKeys.DocSaveAsTemplate),
+              label: translate(lngKeys.DocSaveAsTemplate),
               iconPath: mdiPaletteOutline,
               onClick: createTemplate,
             }),
             createMenuItem({
-              label: t(lngKeys.Move),
+              label: translate(lngKeys.GeneralMoveVerb),
               iconPath: mdiArrowRight,
               onClick: openMoveForm,
             }),
             createMenuItem({
-              label: t(lngKeys.GeneralDelete),
+              label: translate(lngKeys.GeneralDelete),
               iconPath: mdiTrashCanOutline,
               onClick: openDeleteDocDialog,
             }),
@@ -225,17 +225,17 @@ export function useDocActionContextMenu({
       popup(event, [
         doc.bookmarked
           ? createMenuItem({
-              label: t(lngKeys.Bookmarked),
+              label: translate(lngKeys.GeneralUnbookmarkVerb),
               iconPath: mdiStarRemoveOutline,
               onClick: toggleBookmarkForDoc,
             })
           : createMenuItem({
-              label: t(lngKeys.BookmarkVerb),
+              label: translate(lngKeys.GeneralBookmarkVerb),
               iconPath: mdiStarOutline,
               onClick: toggleBookmarkForDoc,
             }),
         createMenuItem({
-          label: t(lngKeys.CopyLink),
+          label: translate(lngKeys.GeneralCopyTheLink),
           iconPath: mdiContentCopy,
           onClick: () => {
             copy(docUrl)
@@ -244,7 +244,7 @@ export function useDocActionContextMenu({
         ...(usingElectron
           ? [
               createMenuItem({
-                label: t(lngKeys.OpenInBrowser),
+                label: translate(lngKeys.OpenInBrowser),
                 iconPath: mdiOpenInNew,
                 onClick: () => {
                   sendToHost('open-external-url', docUrl)
@@ -254,17 +254,17 @@ export function useDocActionContextMenu({
           : []),
         { type: MenuTypes.Separator },
         createMenuItem({
-          label: t(lngKeys.DocExportMarkdown),
+          label: translate(lngKeys.DocExportMarkdown),
           iconPath: mdiLanguageMarkdownOutline,
           onClick: exportAsMarkdown,
         }),
         createMenuItem({
-          label: t(lngKeys.DocExportHtml),
+          label: translate(lngKeys.DocExportHtml),
           iconPath: mdiFileCodeOutline,
           onClick: exportAsHtml,
         }),
         createMenuItem({
-          label: t(lngKeys.DocExportPdf),
+          label: translate(lngKeys.DocExportPdf),
           iconPath: mdiFilePdfOutline,
           onClick: exportAsPdf,
         }),
@@ -273,7 +273,7 @@ export function useDocActionContextMenu({
       ])
     },
     [
-      t,
+      translate,
       popup,
       doc.bookmarked,
       toggleBookmarkForDoc,

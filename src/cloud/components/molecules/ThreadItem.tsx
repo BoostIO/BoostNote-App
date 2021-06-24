@@ -24,7 +24,7 @@ const smallUserIconStyle = { width: '22px', height: '22px', lineHeight: '18px' }
 function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
   const actions = useThreadActions({ thread, ...rest })
   const { popup } = useContextMenu()
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const openActionMenu: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -57,7 +57,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           >
             {thread.selection != null
               ? thread.context
-              : t(lngKeys.ThreadFullDocLabel)}
+              : translate(lngKeys.ThreadFullDocLabel)}
           </div>
         </div>
         <div onClick={openActionMenu} className='thread__action'>
@@ -69,7 +69,7 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
           {thread.contributors.map((user) => (
             <UserIcon key={user.id} style={smallUserIconStyle} user={user} />
           ))}
-          {t(lngKeys.ThreadReplies, { count: thread.commentCount })}
+          {translate(lngKeys.ThreadReplies, { count: thread.commentCount })}
           <span className='thread__info__line__date'>
             {formatDate(thread.lastCommentTime)}
           </span>

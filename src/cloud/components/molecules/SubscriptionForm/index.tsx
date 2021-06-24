@@ -53,7 +53,7 @@ const SubscriptionForm = ({
   const [currentPlan] = useState<UpgradePlans>(
     initialPlan != null ? initialPlan : 'standard'
   )
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const onEmailInputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,9 +160,13 @@ const SubscriptionForm = ({
           discount={eligibleDiscount}
         />
         {usingJpyPricing && (
-          <Alert variant='secondary'>{t(lngKeys.PaymentMethodJpy)}</Alert>
+          <Alert variant='secondary'>
+            {translate(lngKeys.PaymentMethodJpy)}
+          </Alert>
         )}
-        <StyledPaymentHeader>{t(lngKeys.PaymentMethod)}</StyledPaymentHeader>
+        <StyledPaymentHeader>
+          {translate(lngKeys.PaymentMethod)}
+        </StyledPaymentHeader>
         <FormRow>
           <FormStripeInput
             theme={settings['general.theme']}
@@ -186,7 +190,9 @@ const SubscriptionForm = ({
         />
         <FormRow
           row={{
-            title: ongoingTrial ? t(lngKeys.TrialWillBeStopped) : undefined,
+            title: ongoingTrial
+              ? translate(lngKeys.TrialWillBeStopped)
+              : undefined,
           }}
         >
           <Button
@@ -198,7 +204,7 @@ const SubscriptionForm = ({
             }}
             disabled={sending}
           >
-            {t(lngKeys.ApplyCoupon)}
+            {translate(lngKeys.ApplyCoupon)}
           </Button>
         </FormRow>
 
@@ -206,7 +212,7 @@ const SubscriptionForm = ({
           <>
             {isEligibleForDiscount(team) && (
               <Banner variant='warning'>
-                {t(lngKeys.PlanDiscountCouponWarning)}
+                {translate(lngKeys.PlanDiscountCouponWarning)}
               </Banner>
             )}
             <FormRow
@@ -215,7 +221,7 @@ const SubscriptionForm = ({
                   {
                     type: 'input',
                     props: {
-                      placeholder: t(lngKeys.PromoCode),
+                      placeholder: translate(lngKeys.PromoCode),
                       value: promoCode,
                       onChange: onPromoCodeInputChangeHandler,
                     },
@@ -233,7 +239,7 @@ const SubscriptionForm = ({
               onClick={onCancel}
               variant='secondary'
             >
-              {t(lngKeys.GeneralCancel)}
+              {translate(lngKeys.GeneralCancel)}
             </Button>
           )}
           <LoadingButton
@@ -241,7 +247,7 @@ const SubscriptionForm = ({
             disabled={!stripe || sending || currentPlan == null}
             spinning={sending}
           >
-            {t(lngKeys.Subscribe)}
+            {translate(lngKeys.Subscribe)}
           </LoadingButton>
         </ButtonGroup>
       </Form>

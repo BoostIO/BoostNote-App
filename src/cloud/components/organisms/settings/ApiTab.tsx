@@ -20,7 +20,7 @@ const ApiTab = () => {
   const { team } = usePage()
   const apiTokenState = useApiTokens()
   const [tokenCreateMode, setTokenCreateMode] = useState(false)
-  const { t } = useI18n()
+  const { translate } = useI18n()
 
   const createToken = useCallback(
     (name: string) => {
@@ -41,19 +41,21 @@ const ApiTab = () => {
   return (
     <SettingTabContent
       title='API'
-      description={t(lngKeys.ManageApi, {
-        space: team != null ? team.name : t(lngKeys.ThisSpace),
+      description={translate(lngKeys.ManageApi, {
+        space: team != null ? team.name : translate(lngKeys.GeneralThisSpace),
       })}
       body={
         <ViewerRestrictedWrapper>
           <section>
             <Flexbox justifyContent='space-between' alignItems='start'>
               <div>
-                <h2 style={{ margin: '0' }}>{t(lngKeys.AccessTokens)}</h2>
+                <h2 style={{ margin: '0' }}>
+                  {translate(lngKeys.AccessTokens)}
+                </h2>
                 <p>
-                  {t(lngKeys.See)}:{' '}
+                  {translate(lngKeys.GeneralSeeVerb)}:{' '}
                   <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4590937-public-api-documentation'>
-                    {t(lngKeys.TokensDocumentation)}{' '}
+                    {translate(lngKeys.TokensDocumentation)}{' '}
                     <Icon path={mdiOpenInNew} />
                   </ExternalLink>
                 </p>
@@ -62,13 +64,15 @@ const ApiTab = () => {
                 onClick={() => setTokenCreateMode(!tokenCreateMode)}
                 disabled={apiTokenState.state === 'initialising'}
               >
-                {tokenCreateMode ? t(lngKeys.Close) : t(lngKeys.GenerateToken)}
+                {tokenCreateMode
+                  ? translate(lngKeys.GeneralCloseVerb)
+                  : translate(lngKeys.GenerateToken)}
               </Button>
             </Flexbox>
             {tokenCreateMode && (
               <StyledServiceList>
                 <StyledServiceListItem>
-                  <SettingTokenCreate onCreate={createToken} t={t} />
+                  <SettingTokenCreate onCreate={createToken} t={translate} />
                 </StyledServiceListItem>
               </StyledServiceList>
             )}
@@ -123,7 +127,7 @@ const SettingTokenCreate = ({
         }}
         rows={[
           {
-            title: t(lngKeys.Name),
+            title: t(lngKeys.GeneralName),
             required: true,
             items: [
               {
