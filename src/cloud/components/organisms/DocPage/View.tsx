@@ -44,6 +44,7 @@ import CommentManager from '../CommentManager'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
+import { useI18n } from '../../../lib/hooks/useI18n'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -84,6 +85,7 @@ const ViewPage = ({
   const [realtimeContent, setRealtimeContent] = useState('')
   const [color] = useState(() => getColorFromString(user.id))
   const [initialLoadDone, setInitialLoadDone] = useState(false)
+  const { t } = useI18n()
 
   const userInfo = useMemo(() => {
     return {
@@ -328,6 +330,7 @@ const ViewPage = ({
         topbar: {
           breadcrumbs: currentUserIsCoreMember
             ? mapTopbarBreadcrumbs(
+                t,
                 team,
                 foldersMap,
                 workspacesMap,
@@ -342,7 +345,7 @@ const ViewPage = ({
                 deleteFolder,
                 deleteWorkspace
               )
-            : mapTopbarBreadcrumbs(team, foldersMap, workspacesMap, push, {
+            : mapTopbarBreadcrumbs(t, team, foldersMap, workspacesMap, push, {
                 pageDoc: doc,
               }),
           children: (

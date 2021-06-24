@@ -7,6 +7,7 @@ import {
   mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
+import { TFunction } from 'i18next'
 import { TopbarBreadcrumbProps } from '../../../shared/components/organisms/Topbar'
 import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
 import { getFolderHref } from '../../components/atoms/Link/FolderLink'
@@ -23,6 +24,7 @@ import {
   CloudNewResourceRequestBody,
   UIFormOptions,
 } from '../hooks/useCloudResourceModals'
+import { lngKeys } from '../i18n/types'
 import { getDocTitle, prefixFolders } from '../utils/patterns'
 import { getHexFromUUID } from '../utils/string'
 import { topParentId } from './topbarTree'
@@ -34,6 +36,7 @@ type AddedProperties =
   | { type: undefined; item: undefined }
 
 export function mapTopbarBreadcrumbs(
+  t: TFunction,
   team: SerializedTeam,
   foldersMap: Map<string, SerializedFolderWithBookmark>,
   workspacesMap: Map<string, SerializedWorkspace>,
@@ -74,7 +77,7 @@ export function mapTopbarBreadcrumbs(
         : { type: 'workspace', item: workspacesMap.get(pageDoc.workspaceId) }
 
     items.unshift(
-      getDocBreadcrumb(team, pageDoc, true, push, renameDoc, deleteDoc)
+      getDocBreadcrumb(t, team, pageDoc, true, push, renameDoc, deleteDoc)
     )
   }
 
@@ -88,6 +91,7 @@ export function mapTopbarBreadcrumbs(
 
     items.unshift(
       getFolderBreadcrumb(
+        t,
         team,
         pageFolder,
         workspacesMap,
@@ -141,6 +145,7 @@ export function mapTopbarBreadcrumbs(
       if (parent.type === 'folder') {
         items.unshift(
           getFolderBreadcrumb(
+            t,
             team,
             parent.item,
             workspacesMap,
@@ -154,6 +159,7 @@ export function mapTopbarBreadcrumbs(
       } else {
         items.unshift(
           mapWorkspaceBreadcrumb(
+            t,
             team,
             parent.item,
             push,
@@ -185,6 +191,7 @@ export function mapTopbarBreadcrumbs(
 }
 
 function getDocBreadcrumb(
+  t: TFunction,
   team: SerializedTeam,
   doc: SerializedDoc,
   active: boolean,
@@ -209,7 +216,7 @@ function getDocBreadcrumb(
         ? [
             {
               icon: mdiPencil,
-              label: 'Rename',
+              label: t(lngKeys.Rename),
               onClick: () => renameDoc(doc),
             },
           ]
@@ -218,7 +225,7 @@ function getDocBreadcrumb(
         ? [
             {
               icon: mdiTrashCanOutline,
-              label: 'Delete',
+              label: t(lngKeys.GeneralDelete),
               onClick: () => deleteDoc(doc),
             },
           ]
@@ -228,6 +235,7 @@ function getDocBreadcrumb(
 }
 
 function getFolderBreadcrumb(
+  t: TFunction,
   team: SerializedTeam,
   folder: SerializedFolder,
   workspacesMap: Map<string, SerializedWorkspace>,
@@ -269,7 +277,7 @@ function getFolderBreadcrumb(
         ? [
             {
               icon: mdiTextBoxPlusOutline,
-              label: 'Create a document',
+              label: t(lngKeys.ModalsCreateNewDocument),
               onClick: () =>
                 openNewDocForm(newResourceBody, {
                   precedingRows: [
@@ -285,7 +293,7 @@ function getFolderBreadcrumb(
         ? [
             {
               icon: mdiFolderPlusOutline,
-              label: 'Create a folder',
+              label: t(lngKeys.ModalsCreateNewFolder),
               onClick: () =>
                 openNewFolderForm(newResourceBody, {
                   precedingRows: [
@@ -301,7 +309,7 @@ function getFolderBreadcrumb(
         ? [
             {
               icon: mdiPencil,
-              label: 'Rename',
+              label: t(lngKeys.Rename),
               onClick: () => renameFolder(folder),
             },
           ]
@@ -310,7 +318,7 @@ function getFolderBreadcrumb(
         ? [
             {
               icon: mdiTrashCanOutline,
-              label: 'Delete',
+              label: t(lngKeys.GeneralDelete),
               onClick: () => deleteFolder(folder),
             },
           ]
@@ -320,6 +328,7 @@ function getFolderBreadcrumb(
 }
 
 export function mapWorkspaceBreadcrumb(
+  t: TFunction,
   team: SerializedTeam,
   workspace: SerializedWorkspace,
   push: (url: string) => void,
@@ -355,7 +364,7 @@ export function mapWorkspaceBreadcrumb(
         ? [
             {
               icon: mdiTextBoxPlusOutline,
-              label: 'Create a document',
+              label: t(lngKeys.ModalsCreateNewDocument),
               onClick: () =>
                 openNewDocForm(newResourceBody, {
                   precedingRows: [
@@ -371,7 +380,7 @@ export function mapWorkspaceBreadcrumb(
         ? [
             {
               icon: mdiFolderPlusOutline,
-              label: 'Create a folder',
+              label: t(lngKeys.ModalsCreateNewFolder),
               onClick: () =>
                 openNewFolderForm(newResourceBody, {
                   precedingRows: [
@@ -387,7 +396,7 @@ export function mapWorkspaceBreadcrumb(
         ? [
             {
               icon: mdiApplicationCog,
-              label: 'Edit',
+              label: t(lngKeys.Edit),
               onClick: () => editWorkspace(workspace),
             },
           ]
@@ -396,7 +405,7 @@ export function mapWorkspaceBreadcrumb(
         ? [
             {
               icon: mdiTrashCanOutline,
-              label: 'Delete',
+              label: t(lngKeys.GeneralDelete),
               onClick: () => deleteWorkspace(workspace),
             },
           ]
