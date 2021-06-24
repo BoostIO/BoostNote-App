@@ -271,7 +271,6 @@ const enTranslation: TranslationSource = {
 
   //Language
   [lngKeys.Shared]: 'Shared',
-  [lngKeys.Explorer]: 'Explorer',
   [lngKeys.Rename]: 'Rename',
   [lngKeys.Edit]: 'Edit',
   [lngKeys.Bookmarks]: 'Bookmarks',

@@ -14,14 +14,11 @@ import { mdiDotsHorizontal } from '@mdi/js'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { useContextMenu } from '../../../../lib/stores/contextMenu'
 import VerticalScroller from '../../../atoms/VerticalScroller'
-import { TFunction } from 'i18next'
-import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
   treeControls?: ControlButtonProps[]
   topRows?: React.ReactNode
-  t: TFunction
 }
 
 export type SidebarTreeControl = {
@@ -89,14 +86,13 @@ const SidebarTree = ({
   tree,
   treeControls = [],
   topRows,
-  t,
 }: SidebarTreeProps) => {
   const { popup } = useContextMenu()
   const [draggingCategory, setDraggingCategory] = useState(false)
 
   return (
     <Container className='sidebar__tree'>
-      <SidebarHeader label={t(lngKeys.Explorer)}>
+      <SidebarHeader label={'Explorer'}>
         {treeControls.map((control, i) => (
           <Button
             variant='icon'

@@ -278,7 +278,6 @@ const frTranslation: TranslationSource = {
 
   //Language
   [lngKeys.Shared]: 'Partagé',
-  [lngKeys.Explorer]: 'Explorateur',
   [lngKeys.Rename]: 'Renommer',
   [lngKeys.Edit]: 'Editer',
   [lngKeys.SmartFolders]: 'Dossiers intelligents',

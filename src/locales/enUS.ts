@@ -187,7 +187,5 @@ export default {
     'preferences.marginType': 'Margins',
     'preferences.pageSize': 'Page Size',
     'preferences.includeFrontMatter': 'Include Front Matter',
-
-    Explorer: 'Explorer',
   },
 }
