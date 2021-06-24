@@ -294,7 +294,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.Edit]: 'Edit',
   [lngKeys.Bookmarks]: 'Bookmarks',
   [lngKeys.Bookmarked]: 'Bookmarked',
-  [lngKeys.BookmarkVerb]: 'Bookmark',
+  [lngKeys.BookmarkVerb]: 'Add to bookmarks',
   [lngKeys.SmartFolders]: 'Smart Folders',
   [lngKeys.Workspaces]: 'Workspaces',
   [lngKeys.Private]: 'Private',
