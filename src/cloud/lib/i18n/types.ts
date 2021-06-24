@@ -1,3 +1,10 @@
+/***
+ * RULES *
+ *
+ * general usage / word for word translation: precede by General / general.
+ * componentSpecific: precede by component name for easier identification
+ */
+
 export enum lngKeys {
   GeneralError = 'general.error',
   GeneralCreate = 'general.create',

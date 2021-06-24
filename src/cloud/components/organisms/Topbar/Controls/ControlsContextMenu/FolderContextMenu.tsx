@@ -27,6 +27,8 @@ import IconMdi from '../../../../atoms/IconMdi'
 import { mdiStar, mdiTrashCan, mdiStarOutline, mdiPencil } from '@mdi/js'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useCloudResourceModals } from '../../../../../lib/hooks/useCloudResourceModals'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -44,6 +46,7 @@ const FolderContextMenu = ({
   const { setPartialPageData } = usePage()
   const { pushMessage } = useToast()
   const { openRenameFolderForm } = useCloudResourceModals()
+  const { t } = useI18n()
 
   const menuRef = React.createRef<HTMLDivElement>()
   useEffectOnce(() => {
@@ -123,7 +126,7 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiPencil} />
-                    Rename
+                    {t(lngKeys.Rename)}
                   </StyledMenuItem>
                 </div>
               }
@@ -144,14 +147,14 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiStar} />
-                    Unbookmark
+                    {t(lngKeys.Bookmarked)}
                   </StyledMenuItem>
                 </div>
               ) : (
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiStarOutline} />
-                    Bookmark
+                    {t(lngKeys.BookmarkVerb)}
                   </StyledMenuItem>
                 </div>
               )
@@ -167,7 +170,7 @@ const FolderContextMenu = ({
                 <div>
                   <StyledMenuItem>
                     <IconMdi className='icon' size={16} path={mdiTrashCan} />
-                    Delete
+                    {t(lngKeys.GeneralDelete)}
                   </StyledMenuItem>
                 </div>
               }
