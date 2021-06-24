@@ -29,7 +29,7 @@ const PouchDbDeprecationPage = () => {
               {
                 type: 'button',
                 props: {
-                  label: 'Convert to File System Folder',
+                  label: 'Convert to File System based Local Space',
                   onClick: () => openTab('storage'),
                 },
               },
