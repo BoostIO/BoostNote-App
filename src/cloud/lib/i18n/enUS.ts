@@ -282,6 +282,20 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsSmartFolderPublicDisclaimer]:
     'The smart folder will become public. Every member can see it.',
 
+  [lngKeys.EditorToolbarTooltipHeader]: 'Add header text',
+  [lngKeys.EditorToolbarTooltipCodefence]: 'Insert a codefence',
+  [lngKeys.EditorToolbarTooltipQuote]: 'Insert a quote',
+  [lngKeys.EditorToolbarTooltipList]: 'Add a bulleted list',
+  [lngKeys.EditorToolbarTooltipNumberedList]: 'Add a numbered list',
+  [lngKeys.EditorToolbarTooltipTaskList]: 'Add a task list',
+  [lngKeys.EditorToolbarTooltipBold]: 'Add bold text',
+  [lngKeys.EditorToolbarTooltipItalic]: 'Add italic text',
+  [lngKeys.EditorToolbarTooltipCode]: 'Insert code',
+  [lngKeys.EditorToolbarTooltipLink]: 'Add a link',
+  [lngKeys.EditorToolbarTooltipUpload]: 'Upload Image',
+  [lngKeys.EditorToolbarTooltipTemplate]: 'Use a template',
+  [lngKeys.EditorToolbarTooltipScrollSyncEnable]: 'Enable scroll sync',
+  [lngKeys.EditorToolbarTooltipScrollSyncDisable]: 'Disable scroll sync',
   //Language
 
   [lngKeys.Source]: 'Source',

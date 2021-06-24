@@ -69,7 +69,7 @@ const StyledTooltip = styled.div`
 
   &.bottom-right {
     left: 100%;
-    transform: translateX(-20%);
+    transform: translateX(-5%);
   }
 
   > div {
