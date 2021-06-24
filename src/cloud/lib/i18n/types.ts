@@ -21,6 +21,10 @@ export enum lngKeys {
   GeneralDaily = 'general.daily',
   GeneralWeekly = 'general.weekly',
   GeneralNever = 'general.never',
+  GeneralTemplates = 'general.templates',
+  GeneralTitle = 'general.title',
+  GeneralUse = 'general.use',
+  GeneralChangeIcon = 'general.changeicon',
 
   //settings
   SettingsInfo = 'settings.info',
@@ -302,6 +306,11 @@ export enum lngKeys {
   ThreadOutdated = 'threads.outdated',
   ThreadReopen = 'threads.reopen',
   ThreadReplies = 'threads.replies',
+
+  ModalsTemplatesDeleteDisclaimer = 'modals.templates.delete.disclaimer',
+  ModalsTemplatesSearchEmpty = 'modals.templates.search.empty',
+  ModalsTemplatesSelectTemplate = 'modals.templates.select.one',
+  ModalsTemplatesUseInDoc = 'modals.templates.use.indoc',
 
   Select = 'select',
   All = 'All',

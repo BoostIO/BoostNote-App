@@ -2,11 +2,6 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { ModalContainer } from '../styled'
 import { useNav } from '../../../../../lib/stores/nav'
 import { usePage } from '../../../../../lib/stores/pageStore'
-import styled from '../../../../../lib/styled'
-import {
-  inputStyle,
-  baseIconStyle,
-} from '../../../../../lib/styled/styleFunctions'
 import {
   isFocusLeftSideShortcut,
   isFocusRightSideShortcut,
@@ -17,9 +12,7 @@ import {
   useUpDownNavigationListener,
 } from '../../../../../lib/keyboard'
 import { focusFirstChildFromElement } from '../../../../../lib/dom'
-import Spinner from '../../../../atoms/CustomSpinner'
-import { getHexFromUUID } from '../../../../../lib/utils/string'
-import CustomButton from '../../../../atoms/buttons/CustomButton'
+import { capitalize, getHexFromUUID } from '../../../../../lib/utils/string'
 import { trackEvent } from '../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../interfaces/analytics/mixpanel'
 import { SerializedTemplate } from '../../../../../interfaces/db/template'
@@ -51,6 +44,13 @@ import { useToast } from '../../../../../../shared/lib/stores/toast'
 import { useModal } from '../../../../../../shared/lib/stores/modal'
 import Switch from '../../../../../../shared/components/atoms/Switch'
 import { useEmoji } from '../../../../../../shared/lib/stores/emoji'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
+import Button, {
+  LoadingButton,
+} from '../../../../../../shared/components/atoms/Button'
+import FormInput from '../../../../../../shared/components/molecules/Form/atoms/FormInput'
+import styled from '../../../../../../shared/lib/styled'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -84,6 +84,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const { settings } = useSettings()
   const editorRef = useRef<CodeMirror.Editor | null>(null)
   const { openEmojiPicker } = useEmoji()
+  const { t } = useI18n()
 
   useEffect(() => {
     if (selectedTemplateId == null || templatesMap.has(selectedTemplateId)) {
@@ -221,21 +222,21 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
   const deleteTemplate = useCallback(
     (template: SerializedTemplate) => {
       messageBox({
-        title: `Delete template?`,
-        message: `Are you sure to delete ${
-          template.title.trim() !== '' ? template.title : 'this template'
-        }?`,
+        title: `${t(lngKeys.GeneralDelete)}${
+          template.title.trim() !== '' ? `: ${template.title}` : ''
+        }`,
+        message: t(lngKeys.ModalsTemplatesDeleteDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
             variant: 'secondary',
-            label: 'Cancel',
+            label: t(lngKeys.GeneralCancel),
             cancelButton: true,
             defaultButton: true,
           },
           {
             variant: 'danger',
-            label: 'Delete',
+            label: t(lngKeys.GeneralUpdate),
             onClick: async () => {
               //remove
               setSendingState('delete')
@@ -252,7 +253,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
         ],
       })
     },
-    [messageBox, pushApiErrorMessage, removeFromTemplatesMap]
+    [messageBox, pushApiErrorMessage, removeFromTemplatesMap, t]
   )
 
   const saveTemplate = useCallback(async () => {
@@ -311,11 +312,11 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     <ModalContainer style={{ padding: 0 }}>
       <StyledTemplatesModal>
         <div className='list' ref={menuRef}>
-          <h5>Templates</h5>
-          <input
+          <h5>{capitalize(t(lngKeys.GeneralTemplates))}</h5>
+          <FormInput
             value={filter}
             onChange={onFilterChangeHandler}
-            placeholder='Search templates'
+            placeholder={capitalize(t(lngKeys.Search))}
           />
           {filteredTemplates.length > 0 ? (
             filteredTemplates.map((template) => (
@@ -337,7 +338,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
               />
             ))
           ) : (
-            <small>Could not find any templates</small>
+            <small>{t(lngKeys.ModalsTemplatesSearchEmpty)}</small>
           )}
         </div>
         <div className='content' ref={contentSideRef}>
@@ -349,14 +350,17 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
             >
               <div className='topbar'>
                 <Flexbox justifyContent='flex-end' flex='1 1 auto'>
-                  <button className='smallButton' onClick={closeModal}>
-                    <Icon path={mdiClose} />
-                  </button>
+                  <Button
+                    variant='icon'
+                    iconPath={mdiClose}
+                    className='smallButton'
+                    onClick={closeModal}
+                  />
                 </Flexbox>
               </div>
               <div className='scroll preview'>
                 <div className='preview'>
-                  <p>Select a template</p>
+                  <p>{t(lngKeys.ModalsTemplatesSelectTemplate)}</p>
                 </div>
               </div>
             </Flexbox>
@@ -368,7 +372,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
             >
               <div className='topbar'>
                 <Flexbox flex='1 1 0'>
-                  <Tooltip tooltip='Change icon'>
+                  <Tooltip tooltip={t(lngKeys.GeneralChangeIcon)}>
                     <EmojiIcon
                       defaultIcon={mdiFileDocumentOutline}
                       emoji={emoji}
@@ -377,7 +381,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                     />
                   </Tooltip>
                   <EditableInput
-                    placeholder='Template title...'
+                    placeholder={t(lngKeys.GeneralTitle)}
                     text={templateTitle}
                     onTextChange={setTemplateTitle}
                   />
@@ -389,49 +393,41 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                     width={50}
                     height={20}
                     onChange={toggleMode}
-                  />
-                  <button
+                  />{' '}
+                  <LoadingButton
+                    spinning={sendingState === 'delete'}
+                    variant='icon'
+                    iconPath={mdiTrashCanOutline}
                     className='smallButton'
                     disabled={sendingState != null}
                     onClick={() => deleteTemplate(selectedTemplate)}
-                  >
-                    {sendingState === 'delete' ? (
-                      <Spinner style={{ width: 16, height: 16 }} />
-                    ) : (
-                      <Icon path={mdiTrashCanOutline} />
-                    )}
-                  </button>
+                  />
                   <div className='separator' />
                   {changesAreUnsaved ? (
-                    <CustomButton
+                    <LoadingButton
+                      spinning={sendingState === 'update'}
                       variant='primary'
                       onClick={saveTemplate}
                       disabled={sendingState != null}
                     >
-                      {sendingState === 'update' ? (
-                        <Spinner className='emphasized' />
-                      ) : (
-                        <Flexbox>
-                          <Icon path={mdiContentSaveOutline} size={18} />
-                          <span>Save</span>
-                        </Flexbox>
-                      )}
-                    </CustomButton>
+                      <Flexbox>
+                        <Icon path={mdiContentSaveOutline} size={18} />
+                        <span style={{ paddingLeft: 4 }}>
+                          {t(lngKeys.Save)}
+                        </span>
+                      </Flexbox>
+                    </LoadingButton>
                   ) : callback == null ? (
-                    <CustomButton
+                    <LoadingButton
+                      spinning={sendingState === 'newDoc'}
                       variant='primary'
                       onClick={useTemplateCallback}
                       disabled={sendingState != null}
-                      style={{ marginLeft: '10px' }}
                     >
-                      {sendingState === 'newDoc' ? (
-                        <Spinner className='emphasized' />
-                      ) : (
-                        <span>Use template</span>
-                      )}
-                    </CustomButton>
+                      <span>{t(lngKeys.GeneralUse)}</span>
+                    </LoadingButton>
                   ) : (
-                    <CustomButton
+                    <Button
                       variant='primary'
                       onClick={(e) => {
                         e.preventDefault()
@@ -442,12 +438,15 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                         closeModal()
                       }}
                     >
-                      <span>Use in your doc</span>
-                    </CustomButton>
+                      <span>{t(lngKeys.ModalsTemplatesUseInDoc)}</span>
+                    </Button>
                   )}
-                  <button className='smallButton' onClick={closeModal}>
-                    <Icon path={mdiClose} />
-                  </button>
+                  <Button
+                    variant='icon'
+                    iconPath={mdiClose}
+                    className='smallButton'
+                    onClick={closeModal}
+                  />
                 </Flexbox>
               </div>
               <div className={cc(['scroll', inPreview && 'preview'])}>
@@ -473,29 +472,28 @@ const StyledTemplatesModal = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
+  h5 {
+    margin-top: 0;
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+  }
 
   .list {
     width: 250px;
     height: 100%;
-    padding: ${({ theme }) => theme.space.default}px;
+    padding: ${({ theme }) => theme.sizes.spaces.df}px;
     border: 0;
-    border-right: 1px solid ${({ theme }) => theme.baseBorderColor};
+    border-right: 1px solid ${({ theme }) => theme.colors.border.main};
 
     input {
-      ${inputStyle}
-      padding-left: ${({ theme }) => theme.space.small}px;
-      height: 30px;
-      width: 100%;
-      margin-bottom: ${({ theme }) => theme.space.small}px;
+      margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
 
     .sideNavItemStyle {
-      padding-left: ${({ theme }) => theme.space.xxsmall}px;
+      padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
       .emoji-mart-emoji {
         display: flex !important;
       }
     }
-
 
     h3 {
       margin: 0;
@@ -505,8 +503,8 @@ const StyledTemplatesModal = styled.div`
   .separator {
     width: 1px;
     height: 30px;
-    background: ${({ theme }) => theme.subtleBackgroundColor};
-    margin: 0 ${({ theme }) => theme.space.xsmall}px;
+    background: ${({ theme }) => theme.colors.border.second};
+    margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   .content {
@@ -518,8 +516,8 @@ const StyledTemplatesModal = styled.div`
     resize: none;
     background: none;
     padding: 0;
-    color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.default}px;
+    color: ${({ theme }) => theme.colors.text.primary};
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: block;
 
     .CodeMirrorWrapper,
@@ -528,12 +526,8 @@ const StyledTemplatesModal = styled.div`
     }
 
     .btn-primary {
-      height: 30px;
-      line-height: 30px;
-      font-size: ${({ theme }) => theme.fontSizes.small}px;
-
       svg + span {
-        padding-left: ${({ theme }) => theme.space.xsmall}px;
+        padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
       }
     }
 
@@ -545,9 +539,9 @@ const StyledTemplatesModal = styled.div`
 
       .preview {
         display: none;
-        padding: ${({ theme }) => theme.space.default}px
-        ${({ theme }) => theme.space.large}px
-        ${({ theme }) => theme.space.large}px;
+        padding: ${({ theme }) => theme.sizes.spaces.df}px
+          ${({ theme }) => theme.sizes.spaces.l}px
+          ${({ theme }) => theme.sizes.spaces.l}px;
       }
 
       &.preview {
@@ -560,57 +554,22 @@ const StyledTemplatesModal = styled.div`
       }
     }
 
-    .switch {
-      .react-switch-bg {
-        padding: 0 3px;
-
-        svg {
-          color: ${({ theme }) => theme.whiteTextColor};
-        }
-
-        > div {
-          line-height: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
-    }
-
     .topbar {
       display: flex;
       flex: 0 0 auto;
       width: 100%;
       height: 44px;
-      background: ${({ theme }) => theme.baseBackgroundColor};
-      border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
+      background: ${({ theme }) => theme.colors.background.primary};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
       align-items: center;
       justify-content: space-between;
       min-width: 0;
-      font-size: ${({ theme }) => theme.fontSizes.small}px !important;
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px !important;
       flex: 0 0 auto;
-      padding-left: ${({ theme }) => theme.space.small}px;
+      padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
 
       & > div {
-        height: 100%
-      }
-
-      .smallButton {
-        ${baseIconStyle}
-        display: flex;
-        flex: 0 0 auto;
-        line-height: 18px;
-        background: none;
-        border: 0;
-        cursor: pointer;
-        font-size: ${({ theme }) => theme.fontSizes.xxlarge}px;
-        margin-left: ${({ theme }) => theme.space.xsmall}px;
-        flex: 0 0 auto;
-        min-width: 0;
-
-        span {
-          font-size: ${({ theme }) => theme.fontSizes.default}px;
-        }
+        height: 100%;
       }
     }
   }
