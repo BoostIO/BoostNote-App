@@ -22,6 +22,7 @@ import Application from '../../Application'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { useRouter } from '../../../lib/router'
+import { parse } from 'querystring'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
