@@ -19,7 +19,9 @@ const TeamIcon = ({ team }: TeamIconProps) => {
   if (team.icon == null) {
     return (
       <StyledFillerIcon>
-        <span className='wrapper'>{team.name.substr(0, 2)}</span>
+        <span className='wrapper'>
+          {team.name != null ? team.name.substr(0, 2) : '...'}
+        </span>
       </StyledFillerIcon>
     )
   }
