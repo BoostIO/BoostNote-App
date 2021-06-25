@@ -20,7 +20,7 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 
 export type State =
-  | { mode: 'list_loading' }
+  | { mode: 'list_loading'; thread?: { id: string } }
   | { mode: 'list'; threads: Thread[]; filter?: (thread: Thread) => boolean }
   | { mode: 'thread_loading'; thread: Thread; threads: Thread[] }
   | { mode: 'thread'; thread: Thread; comments: Comment[]; threads: Thread[] }
@@ -31,7 +31,7 @@ export type State =
     }
 
 export type ModeTransition =
-  | { mode: 'thread'; thread: Thread }
+  | { mode: 'thread'; thread: { id: string } }
   | { mode: 'list'; filter?: (thread: Thread) => boolean }
   | {
       mode: 'new_thread'

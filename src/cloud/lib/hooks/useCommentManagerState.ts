@@ -6,14 +6,8 @@ import {
   Actions,
   ModeTransition,
 } from '../../../cloud/components/organisms/CommentManager'
-import { useRouter } from '../../../cloud/lib/router'
-import { parse as parseQuery } from 'querystring'
 
-function useCommentManagerState(
-  docId: string,
-  initialThread?: string
-): [State, Actions] {
-  const location = useRouter()
+function useCommentManagerState(docId: string): [State, Actions] {
   const {
     observeDocThreads,
     observeComments,
@@ -21,45 +15,11 @@ function useCommentManagerState(
     commentActions,
   } = useComments()
   const [state, setState] = useState<State>({ mode: 'list_loading' })
-  const initialThreadRef = useRef(initialThread)
-
-  useEffect(() => {
-    initialThreadRef.current = initialThread
-  }, [initialThread])
-
-  useEffect(() => {
-    setState((prev) => {
-      if (prev.mode === 'list_loading') {
-        return prev
-      }
-
-      const { thread: threadId } = parseQuery(location.search.slice(1))
-      if (threadId == null) {
-        return prev
-      }
-
-      const thread = prev.threads.find((thread) => thread.id === threadId)
-      if (thread == null) {
-        return prev
-      }
-
-      return transitionState({ mode: 'thread', thread })(prev)
-    })
-  }, [location])
 
   useEffect(() => {
     setState({ mode: 'list_loading' })
     return observeDocThreads(docId, (threads) => {
       setState(updateThreads(threads))
-      if (initialThreadRef.current !== '') {
-        setState(
-          transitionState({
-            mode: 'thread',
-            thread: { id: initialThreadRef.current } as Thread,
-          })
-        )
-        initialThreadRef.current = ''
-      }
     })
   }, [docId, observeDocThreads])
 
@@ -121,11 +81,18 @@ function useCommentManagerState(
 function updateThreads(threads: Thread[]) {
   return (oldState: State): State => {
     switch (oldState.mode) {
-      case 'list_loading': {
-        return { mode: 'list', threads }
-      }
       case 'list': {
         return { mode: 'list', threads }
+      }
+      case 'list_loading': {
+        if (oldState.thread == null) {
+          return { mode: 'list', threads }
+        }
+        const threadId = oldState.thread.id
+        const updated = threads.find((thread) => thread.id === threadId)
+        return updated != null
+          ? { mode: 'thread_loading', thread: updated, threads }
+          : { mode: 'list', threads }
       }
       case 'thread_loading': {
         const updated = threads.find(
@@ -166,6 +133,9 @@ function updateComments(comments: Comment[]) {
 function transitionState(transition: ModeTransition) {
   return (state: State): State => {
     if (state.mode === 'list_loading') {
+      if (transition.mode === 'thread') {
+        return { ...state, thread: transition.thread }
+      }
       return state
     }
 
