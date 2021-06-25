@@ -113,6 +113,7 @@ const BoostHubSignInForm = () => {
                 team.icon != null
                   ? getBoostHubTeamIconUrl(team.icon.location)
                   : undefined,
+              personal: team.personal,
             }
           }),
         })
