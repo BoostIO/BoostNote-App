@@ -46,6 +46,7 @@ import { TopbarControlProps } from '../../../../shared/components/organisms/Topb
 import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import { parse } from 'querystring'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -68,7 +69,8 @@ const ViewPage = ({
 }: ViewPageProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { foldersMap, workspacesMap, loadDoc } = useNav()
-  const { push } = useRouter()
+  const router = useRouter()
+  const { push } = router
   const { currentUserIsCoreMember, permissions } = usePage()
   const { sendingMap, toggleDocBookmark } = useCloudApi()
   const {
@@ -118,6 +120,15 @@ const ViewPage = ({
   })
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  useEffect(() => {
+    const { thread } = parse(router.search.slice(1))
+    const threadId = Array.isArray(thread) ? thread[0] : thread
+    if (threadId != null) {
+      commentActions.setMode({ mode: 'thread', thread: { id: threadId } })
+      setPreferences({ docContextMode: 'comment' })
+    }
+  }, [router, commentActions, setPreferences])
 
   const normalizedCommentState = useMemo(() => {
     if (commentState.mode === 'list_loading' || permissions == null) {

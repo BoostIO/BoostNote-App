@@ -91,6 +91,7 @@ import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import throttle from 'lodash.throttle'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import { parse } from 'querystring'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -101,7 +102,6 @@ interface EditorProps {
   revisionHistory: SerializedRevision[]
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
-  thread?: string
 }
 
 interface EditorPosition {
@@ -124,7 +124,6 @@ const Editor = ({
   contributors,
   backLinks,
   revisionHistory,
-  thread,
 }: EditorProps) => {
   const { translate } = useI18n()
   const { currentUserPermissions, permissions } = usePage()
@@ -141,7 +140,8 @@ const Editor = ({
   )
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
-  const { state, push } = useRouter()
+  const router = useRouter()
+  const { state, push } = router
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
@@ -195,7 +195,16 @@ const Editor = ({
     userInfo,
   })
 
-  const [commentState, commentActions] = useCommentManagerState(doc.id, thread)
+  const [commentState, commentActions] = useCommentManagerState(doc.id)
+
+  useEffect(() => {
+    const { thread } = parse(router.search.slice(1))
+    const threadId = Array.isArray(thread) ? thread[0] : thread
+    if (threadId != null) {
+      commentActions.setMode({ mode: 'thread', thread: { id: threadId } })
+      setPreferences({ docContextMode: 'comment' })
+    }
+  }, [router, commentActions, setPreferences])
 
   const normalizedCommentState = useMemo(() => {
     if (commentState.mode === 'list_loading' || permissions == null) {
