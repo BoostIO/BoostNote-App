@@ -71,6 +71,9 @@ const TopbarItem = ({
             }
             event.preventDefault()
             item.link.navigateTo()
+            if ((document.activeElement as HTMLElement)?.blur != null) {
+              ;(document.activeElement as HTMLElement).blur()
+            }
           }}
           href={item.link.href}
           id={`tree-${item.id}`}
