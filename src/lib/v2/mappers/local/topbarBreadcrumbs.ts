@@ -3,7 +3,6 @@ import {
   mdiArchive,
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
-  mdiLock,
   mdiPencil,
   mdiTextBoxPlusOutline,
   mdiTrashCanOutline,
@@ -369,7 +368,6 @@ export function mapStorageBreadcrumb(
     item: workspace,
     label: workspace.name,
     active: true,
-    icon: mdiLock, // Default workspace Icon/Emoji
     parentId: topParentId,
     link: {
       href: getWorkspaceHref(workspace),

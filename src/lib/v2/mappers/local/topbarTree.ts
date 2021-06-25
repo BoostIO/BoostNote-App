@@ -20,8 +20,7 @@ export function mapTopBarTree(
   const items = new Map<string, BreadCrumbTreeItem[]>()
 
   const [notes, folders] = [values(noteMap), values(foldersMap)]
-  // todo: maybe implement all file system storages and navigate through them?
-  const href = `/app/storage/${storage.id}`
+  const href = `/app/storages/${storage.id}`
   items.set(topParentId, [
     {
       id: storage.id,
