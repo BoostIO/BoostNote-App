@@ -236,7 +236,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
           },
           {
             variant: 'danger',
-            label: translate(lngKeys.GeneralUpdate),
+            label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               //remove
               setSendingState('delete')
