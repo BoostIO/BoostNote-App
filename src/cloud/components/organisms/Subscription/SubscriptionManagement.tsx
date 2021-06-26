@@ -460,6 +460,8 @@ const StyledPopup = styled.div`
     background-color: ${({ theme }) => theme.baseBackgroundColor};
     box-shadow: ${({ theme }) => theme.baseShadowColor};
     border-radius: 4px;
+    font-size: ${({ theme }) => theme.fontSizes.medium}px;
+    line-height: 1.6;
     overflow: auto;
 
     .btn {
@@ -473,6 +475,10 @@ const StyledPopup = styled.div`
     .spinner {
       border-color: ${({ theme }) => theme.whiteBorderColor};
       border-right-color: transparent;
+    }
+
+    h3 {
+      font-size: ${({ theme }) => theme.fontSizes.large}px;
     }
 
     a {
@@ -497,6 +503,8 @@ const StyledPopup = styled.div`
 
   .popup__billing {
     width: 100%;
+    margin-top: ${({ theme }) => theme.space.small}px;
+    margin-bottom: ${({ theme }) => theme.space.large}px;
   }
 `
 
