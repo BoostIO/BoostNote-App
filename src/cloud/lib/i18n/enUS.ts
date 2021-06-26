@@ -60,7 +60,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.ManageSpaceSettings]: "Manage your space's settings.",
   [lngKeys.ManageTeamMembers]: 'Manage who has access to this space.',
   [lngKeys.ManageIntegrations]:
-    'Connect 3rd party content to your Boost Note for Teams documents.',
+    'Connect 3rd party content to your Boost Note documents.',
   [lngKeys.CurrentMembers]: 'Current members',
   [lngKeys.MembersAccessLevel]: 'Access level',
   [lngKeys.AddMembers]: 'Add members',
@@ -118,7 +118,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GenerateToken]: 'Generate Token',
   [lngKeys.CreateTokens]: 'Create a new token',
   [lngKeys.TokensName]: 'Your token name...',
-  [lngKeys.TokensDocumentation]: 'documentation for Boost Note for Teams API',
+  [lngKeys.TokensDocumentation]: 'documentation for Boost Note API',
 
   [lngKeys.FormSelectImage]: 'Select Image',
   [lngKeys.FormChangeImage]: 'Change Image',

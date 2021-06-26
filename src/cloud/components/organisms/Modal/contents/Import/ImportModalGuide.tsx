@@ -105,8 +105,8 @@ const ImportModalGuide = ({
           <>
             <h2>Confluence</h2>
             <p>
-              You can export your content from Confluence to Boost Note for
-              Teams one doc at a time, or all at once. Here&apos;s how:
+              You can export your content from Confluence to Boost Note one doc
+              at a time, or all at once. Here&apos;s how:
             </p>
             <h5>Exporting individual Confluence doc into Boost Note</h5>
             <ol>

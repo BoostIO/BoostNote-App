@@ -100,7 +100,7 @@ export default {
     'about.boostnoteDescription':
       'Note-taking app made for programmers just like you.',
     'about.website': 'Official Website',
-    'about.boostWiki': 'Boost Note for Team',
+    'about.boostWiki': 'Boost Note',
     'about.platform': 'Cross-platform',
     'about.community': 'Community',
     'about.github': 'GitHub Repository',
