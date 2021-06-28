@@ -146,7 +146,7 @@ const DatePickerButton = forwardRef<HTMLButtonElement, DatePickerButtonProps>(
     placeholder = 'Select Date',
   }: DatePickerButtonProps) => {
     return (
-      <ButtonContainer onClick={onClick}>
+      <ButtonContainer type='button' onClick={onClick}>
         <Icon path={customIconPath} />
         {date != null ? formatDate(date, 'MMM dd, yyyy') : placeholder}
       </ButtonContainer>
