@@ -55,11 +55,9 @@ const SettingsComponent = () => {
   } = useSettings()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
-  const {
-    team,
-    subscription,
-    currentUserPermissions,
-  } = usePage<PageStoreWithTeam>()
+  const { team, subscription, currentUserPermissions } = usePage<
+    PageStoreWithTeam
+  >()
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {

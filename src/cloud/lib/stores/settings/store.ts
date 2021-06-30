@@ -42,10 +42,9 @@ function useSettingsStore() {
   const { globalData, setPartialGlobalData } = useGlobalData()
   const { currentUserSettings, currentUser } = globalData
   const [settingsTab, setSettingsTab] = useState<SettingsTab>('personalInfo')
-  const [
-    settingsOpeningOptions,
-    setSettingsOpeningOptions,
-  ] = useState<SettingsTabOpeningOptions>()
+  const [settingsOpeningOptions, setSettingsOpeningOptions] = useState<
+    SettingsTabOpeningOptions
+  >()
 
   const { pushMessage } = useToast()
   const { t } = useTranslation()
