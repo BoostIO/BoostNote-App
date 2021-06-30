@@ -33,6 +33,7 @@ import Settings from '../../../../shared/components/organisms/Settings'
 import SettingSidenavHeader from '../../../../shared/components/organisms/Settings/molecules/SettingSidenavHeader'
 import SettingNavButtonItem, {
   SettingNavLinkItem,
+  SettingsNavSubMenu,
 } from '../../../../shared/components/organisms/Settings/atoms/SettingNavItem'
 import Button from '../../../../shared/components/atoms/Button'
 import SettingSidenav from '../../../../shared/components/organisms/Settings/molecules/SettingSidenav'
@@ -40,6 +41,8 @@ import AppFeedbackForm from '../../molecules/AppFeedbackForm'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import { intercomAppId } from '../../../lib/consts'
 import { lngKeys } from '../../../lib/i18n/types'
+import GithubIntegration from './GithubIntegration'
+import SlackIntegration from './SlackIntegration'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -52,9 +55,11 @@ const SettingsComponent = () => {
   } = useSettings()
   const contentSideRef = React.createRef<HTMLDivElement>()
   const menuRef = React.createRef<HTMLDivElement>()
-  const { team, subscription, currentUserPermissions } = usePage<
-    PageStoreWithTeam
-  >()
+  const {
+    team,
+    subscription,
+    currentUserPermissions,
+  } = usePage<PageStoreWithTeam>()
 
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
@@ -112,6 +117,10 @@ const SettingsComponent = () => {
         return <SubscriptionTab />
       case 'integrations':
         return <IntegrationsTab />
+      case 'integrations.github':
+        return <GithubIntegration />
+      case 'integrations.slack':
+        return <SlackIntegration />
       case 'api':
         return <ApiTab />
       case 'feedback':
@@ -188,12 +197,26 @@ const SettingsComponent = () => {
                 id='settings-teamMembersTab-btn'
                 onClick={() => openSettingsTab('teamMembers')}
               />
-              <SettingNavButtonItem
-                label={t(lngKeys.SettingsIntegrations)}
-                active={settingsTab === 'integrations'}
-                id='settings-integrationsTab-btn'
-                onClick={() => openSettingsTab('integrations')}
-              />
+              <SettingsNavSubMenu label={t(lngKeys.SettingsIntegrations)}>
+                <SettingNavButtonItem
+                  label={'Zapier'}
+                  active={settingsTab === 'integrations'}
+                  id='settings-integrationsTab-btn'
+                  onClick={() => openSettingsTab('integrations')}
+                />
+                <SettingNavButtonItem
+                  label={'Github'}
+                  active={settingsTab === 'integrations.github'}
+                  id='settings-integrationsTab-btn'
+                  onClick={() => openSettingsTab('integrations.github')}
+                />
+                <SettingNavButtonItem
+                  label={'Slack'}
+                  active={settingsTab === 'integrations.slack'}
+                  id='settings-integrationsTab-btn'
+                  onClick={() => openSettingsTab('integrations.slack')}
+                />
+              </SettingsNavSubMenu>
               <SettingNavButtonItem
                 label='API'
                 active={settingsTab === 'api'}

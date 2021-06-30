@@ -1,41 +1,14 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import styled from '../../../lib/styled'
-import ServiceConnect from '../../atoms/ServiceConnect'
-import Spinner from '../../atoms/CustomSpinner'
-import {
-  useServiceConnections,
-  withServiceConnections,
-} from '../../../lib/stores/serviceConnections'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
-import FeedbackModal from '../Modal/contents/FeedbackModal'
-import { githubOauthId, boostHubBaseUrl } from '../../../lib/consts'
-import { usingElectron } from '../../../lib/stores/electron'
-import { openNew } from '../../../lib/utils/platform'
-import { usePage } from '../../../lib/stores/pageStore'
-import { useModal } from '../../../../shared/lib/stores/modal'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import Button from '../../../../shared/components/atoms/Button'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 
 const IntegrationsTab = () => {
-  const { openModal } = useModal()
-  const connectionState = useServiceConnections()
-  const { team } = usePage()
   const { translate } = useI18n()
-
-  const githubConnection = useMemo(() => {
-    return connectionState.type !== 'initialising'
-      ? connectionState.connections.find((conn) => conn.service === 'github')
-      : null
-  }, [connectionState])
-
-  const removeGithubConnection = useCallback(() => {
-    if (connectionState.type !== 'initialising' && githubConnection != null) {
-      connectionState.actions.removeConnection(githubConnection)
-    }
-  }, [githubConnection, connectionState])
 
   const onIntegrationLinkClick = useCallback((target: string) => {
     return trackEvent(MixpanelActionTrackTypes.ZapierLinkOpen, { target })
@@ -502,84 +475,6 @@ const IntegrationsTab = () => {
               </StyledServiceListItem>
             </StyledServiceList>
           </section>
-          <section>
-            <h2>{translate(lngKeys.ExternalEntity)}</h2>
-            <StyledServiceList>
-              <StyledServiceListItem>
-                <div className='item-info'>
-                  <img src='/app/static/logos/github.png' alt='GitHub' />
-                  <div className='item-info-text'>
-                    <h3>GitHub</h3>
-                    <p>
-                      You can embed the Private GitHub issues and pull requests.
-                    </p>
-                    <small>
-                      Manage access via GitHub{' '}
-                      <a
-                        target='_blank'
-                        rel='noreferrer noopener'
-                        href={`https://github.com/settings/connections/applications/${githubOauthId}`}
-                      >
-                        here
-                      </a>
-                    </small>
-                  </div>
-                </div>
-                {(connectionState.type === 'initialising' ||
-                  connectionState.type === 'working') && (
-                  <Button variant='secondary' className='item-btn'>
-                    <Spinner />
-                  </Button>
-                )}
-                {connectionState.type === 'initialised' && (
-                  <>
-                    {githubConnection == null ? (
-                      usingElectron ? (
-                        <Button
-                          variant='secondary'
-                          onClick={() => {
-                            openNew(`${boostHubBaseUrl}/${team?.domain}`)
-                          }}
-                        >
-                          {translate(lngKeys.ExternalEntityOpenInBrowser)}
-                        </Button>
-                      ) : (
-                        <ServiceConnect
-                          variant='secondary'
-                          className='item-btn'
-                          service='github'
-                          onConnect={connectionState.actions.addConnection}
-                        >
-                          {translate(lngKeys.GeneralEnableVerb)}
-                        </ServiceConnect>
-                      )
-                    ) : (
-                      <Button
-                        variant='danger'
-                        className='item-btn'
-                        onClick={removeGithubConnection}
-                      >
-                        {translate(lngKeys.GeneralDisableVerb)}
-                      </Button>
-                    )}
-                  </>
-                )}
-              </StyledServiceListItem>
-              <StyledServiceListItem>
-                <p>
-                  {translate(lngKeys.ExternalEntityDescription)}
-                  <button
-                    className='item-info-request'
-                    onClick={() =>
-                      openModal(<FeedbackModal />, { width: 'large' })
-                    }
-                  >
-                    {translate(lngKeys.ExternalEntityRequest)}
-                  </button>
-                </p>
-              </StyledServiceListItem>
-            </StyledServiceList>
-          </section>
         </>
       }
     ></SettingTabContent>
@@ -661,4 +556,4 @@ const StyledServiceListItem = styled.li`
   }
 `
 
-export default withServiceConnections(IntegrationsTab)
+export default IntegrationsTab
