@@ -1,4 +1,7 @@
-import { SerializedServiceConnection } from '../../interfaces/db/connections'
+import {
+  SerializedServiceConnection,
+  SerializedTeamIntegration,
+} from '../../interfaces/db/connections'
 import { callApi } from '../../lib/client'
 
 export interface OAuthInfo {
@@ -6,9 +9,12 @@ export interface OAuthInfo {
   state: string
 }
 
-export interface CreateServiceConnectionFromOAuthResponseBody {
-  connection: SerializedServiceConnection
-}
+export type CreateServiceConnectionFromOAuthResponseBody =
+  | {
+      type: 'user'
+      integration: SerializedServiceConnection
+    }
+  | { type: 'team'; integration: SerializedTeamIntegration }
 
 export async function createServiceConnectionFromOAuth(
   service: string,
