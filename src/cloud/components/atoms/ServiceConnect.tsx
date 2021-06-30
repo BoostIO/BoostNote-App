@@ -1,21 +1,30 @@
 import React, { useCallback, useRef, useEffect } from 'react'
 import CustomButton, { PrimaryButtonProps } from './buttons/CustomButton'
-import { SerializedServiceConnection } from '../../interfaces/db/connections'
+import {
+  SerializedServiceConnection,
+  SerializedTeamIntegration,
+} from '../../interfaces/db/connections'
 import { createServiceConnectionFromOAuth } from '../../api/connections'
 import { useToast } from '../../../shared/lib/stores/toast'
+import { SerializedTeam } from '../../interfaces/db/team'
+
+export type Integration =
+  | { type: 'team'; integration: SerializedTeamIntegration }
+  | { type: 'user'; integration: SerializedServiceConnection }
 
 interface ServiceConnectProps extends PrimaryButtonProps {
   service: string
-  onConnect: (connection: SerializedServiceConnection) => void
+  onConnect: (Integration: Integration) => void
+  team?: SerializedTeam
   children?: React.ReactNode
 }
 
-const windowFeatures =
-  'toolbar=no, menubar=no, width=600, height=700, top=100, left=100, location=no'
+const windowFeatures = 'location=yes, width=600, height=700, top=100, left=100'
 
 const ServiceConnect = ({
   service,
   onConnect,
+  team,
   children = 'Connect',
   ...buttonProps
 }: ServiceConnectProps) => {
@@ -30,11 +39,11 @@ const ServiceConnect = ({
       const { service: eventService, state, code } = message.data
       if (eventService == service || state != null || code != null) {
         try {
-          const { connection } = await createServiceConnectionFromOAuth(
-            `sc-${service}`,
+          const integration = await createServiceConnectionFromOAuth(
+            service,
             message.data
           )
-          onConnect(connection)
+          onConnect(integration)
         } catch (err) {
           pushApiErrorMessage(err)
         }
@@ -63,12 +72,16 @@ const ServiceConnect = ({
       childRef.current.focus()
       return
     }
+    let url = `/api/oauth/${service}/authorize`
+    if (team != null) {
+      url = `${url}?team=${team.id}`
+    }
     childRef.current = window.open(
-      `/api/oauth/${service}/authorize`,
+      url,
       `service-popup-${service}`,
       windowFeatures
     )
-  }, [service])
+  }, [service, team])
 
   return (
     <CustomButton {...buttonProps} onClick={onClick}>
