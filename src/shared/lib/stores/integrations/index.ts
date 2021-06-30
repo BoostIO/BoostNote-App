@@ -41,7 +41,6 @@ function useTeamIntegrationsStore(): State {
   const prevTeamRef = useRef('')
   const prevUserRef = useRef('')
   useEffect(() => {
-    console.log(team, currentUserPermissions)
     if (team == null || currentUserPermissions == null) {
       setLoadingState('initialising')
       setIntegrations([])
@@ -49,7 +48,7 @@ function useTeamIntegrationsStore(): State {
     }
 
     if (
-      team.id === prevTeamRef.current ||
+      team.id === prevTeamRef.current &&
       currentUserPermissions.user.id === prevUserRef.current
     ) {
       return undefined
