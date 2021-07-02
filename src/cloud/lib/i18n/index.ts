@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from './enUS'
+import zhCN from './zhCN'
 import fr from './fr'
 import ja from './ja'
 
@@ -9,6 +10,7 @@ const resources = {
   fr: fr,
   ja: ja,
   kr: enUS,
+  'zh-CN': zhCN
 }
 
 i18n
